@@ -1,0 +1,29 @@
+#!/usr/local/bin/python2.7
+from generator import generate_output
+import argparse
+import os
+
+parser = argparse.ArgumentParser(description="""Generate files, given some 
+files to read and a template to use.
+
+The main use case is to generate static-files-based blogs, to ease DVCSes as
+storages, but it could be used with others goal in mind.""")
+parser.add_argument('-p', '--path', default='.', dest='path',
+    help='Path where to find the content files (default is ".").')
+parser.add_argument('-t', '--templates-path', default=None, dest='templates',
+    help='Path where to find the templates. If not specified, will uses the'
+         ' ones included with pelican.')
+parser.add_argument('-o', '--output', default=None, dest='output',
+    help='Where to output the generated files. If not specified, a directory'
+         ' will be created, named "output" in the current path.')
+parser.add_argument('-m', '--markup', default='rest', dest='markup',
+    help='the markup language to use. Currently only ReSTreucturedtext is'
+          ' available.')
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    files = []
+    for root, dirs, temp_files in os.walk(args.path, followlinks=True):
+        files.extend([os.sep.join((root, f)) for f in temp_files])
+    generate_output(files, args.templates, args.output, args.markup)
+    print 'Done !'
