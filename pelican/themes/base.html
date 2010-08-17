@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>{% block title %}{{ blogtitle }}{%endblock%}</title>
+        <meta charset="utf-8" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="{{ blogurl }}">{{ blogtitle }} <strong>{{ blogsubtitle }}</strong></a></h1>
+        </header><!-- /#banner -->
+        {% block content %}
+        {% endblock %}
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="#">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+                </address><!-- /#about -->
+        </footer><!-- /#contentinfo -->
+</body>
+</html>
