@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Archives for {{ blogname }}</h1>
+
+<dl>
+{% for date, articles in dates %}
+    {% for article in articles %}
+        <dt>{{ date }}</dt>
+        <dd><a href='{{ article.url }}'>{{ article.title }}</a></dd>
+    {% endfor %}
+{% endfor %}
+</dl>
+{% endblock %}

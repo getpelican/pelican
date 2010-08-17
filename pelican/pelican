@@ -19,11 +19,14 @@ parser.add_argument('-o', '--output', default=None, dest='output',
 parser.add_argument('-m', '--markup', default='rest', dest='markup',
     help='the markup language to use. Currently only ReSTreucturedtext is'
           ' available.')
+parser.add_argument('-s', '--settings', default=None, dest='settings',
+    help='the settings of the application. Default to None.')
 
 if __name__ == '__main__':
     args = parser.parse_args()
     files = []
     for root, dirs, temp_files in os.walk(args.path, followlinks=True):
         files.extend([os.sep.join((root, f)) for f in temp_files])
-    generate_output(files, args.templates, args.output, args.markup)
+    generate_output(files, args.templates, args.output, args.markup, 
+                    args.settings)
     print 'Done !'

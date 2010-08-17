@@ -5,6 +5,7 @@ from codecs import open
 from datetime import datetime
 from docutils import core
 from functools import partial
+from operator import attrgetter
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -14,10 +15,11 @@ _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives')
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 _DEFAULT_TEMPLATE_PATH =\
-    os.sep.join([os.path.dirname(os.path.abspath(__file__)), "templates"])
+    os.sep.join([os.path.dirname(os.path.abspath(__file__)), "themes"])
 
 
-def generate_output(files, templates_path=None, output_path=None, markup=None):
+def generate_output(files, templates_path=None, output_path=None, markup=None, 
+                    settings=None):
     """Given a list of files, a template and a destination,
     output the static files.
 
@@ -25,6 +27,7 @@ def generate_output(files, templates_path=None, output_path=None, markup=None):
     :param templates_path: where to search for templates
     :param output_path: where to output the generated files
     :param markup: the markup language to use while parsing
+    :param settings: the settings file to use
     """
     if not templates_path:
         templates_path = _DEFAULT_TEMPLATE_PATH
@@ -32,7 +35,7 @@ def generate_output(files, templates_path=None, output_path=None, markup=None):
         output_path = './output'
     output_path = os.path.realpath(output_path)
 
-    articles, months, years, tags, categories = [], {}, {}, {}, {}
+    articles, dates, years, tags, categories = [], {}, {}, {}, {}
 
     # for each file, get the informations.
     for f in files:
@@ -40,7 +43,7 @@ def generate_output(files, templates_path=None, output_path=None, markup=None):
         article = Article(open(f, encoding='utf-8').read(), markup)
         articles.append(article)
         if hasattr(article, 'date'):
-            update_dict(months, article.date.month, article)
+            update_dict(dates, article.date.strftime('%Y-%m-%d'), article)
             update_dict(years, article.date.year, article)
         if hasattr(article, 'tags'):
             for tag in article.tags:
@@ -48,18 +51,24 @@ def generate_output(files, templates_path=None, output_path=None, markup=None):
         if hasattr(article, 'category'):
             update_dict(categories, article.category, article)
 
+    # order the articles by date 
+    articles.sort(key=attrgetter('date'), reverse=True)
     templates = get_templates(templates_path)
     context = {}
-    for item in ('articles', 'months', 'years', 'tags', 'categories'):
-        context[item] = locals()[item]
+    for item in ('articles', 'dates', 'years', 'tags', 'categories'):
+        value = locals()[item]
+        if hasattr(value, 'items'):
+            value = value.items()
+        context[item] = value
+    read_settings(context, settings)
 
     generate = partial(generate_file, output_path)
     for template in _DIRECT_TEMPLATES:
-        generate(template, templates[template], context)
+        generate('%s.html' % template, templates[template], context)
     for tag in tags:
-        generate('tag/%s' % tag, templates['tag'], context, tag=tag)
+        generate('tag/%s.html' % tag, templates['tag'], context, tag=tag)
     for cat in categories:
-        generate('category/%s' % cat, templates['category'], context,
+        generate('category/%s.html' % cat, templates['category'], context,
                       category=cat)
     for article in articles:
         generate('%s' % article.url,
@@ -69,7 +78,7 @@ def generate_output(files, templates_path=None, output_path=None, markup=None):
 def generate_file(path, name, template, context, **kwargs):
     context.update(kwargs)
     output = template.render(context)
-    filename = os.sep.join((path, '%s.html' % name))
+    filename = os.sep.join((path, name))
     try:
         os.makedirs(os.path.dirname(filename))
     except Exception:
@@ -86,11 +95,6 @@ def get_templates(path=None):
         templates[template] = env.get_template('%s.html' % template)
     return templates
 
-_METADATA = re.compile('.. ([a-z]+): (.*)', re.M)
-_METADATAS_FIELDS = {'tags': lambda x: x.split(', '),
-                     'date': lambda x: datetime.strptime(x, '%Y/%m/%d %H:%M'),
-                     'category': lambda x: x}
-
 
 def update_dict(mapping, key, value):
     if key not in mapping:
@@ -98,8 +102,29 @@ def update_dict(mapping, key, value):
     mapping[key].append(value)
 
 
-def parse_metadatas(string):
-    """Return a dict, containing a list of metadatas informations, found
+def read_settings(context, filename):
+    """Load a Python file into a dictionary. 
+    """
+    if filename:
+        from importlib import import_module
+        d = import_module(filename)
+         
+        for key in dir(d):
+            if key.isupper():
+                context[key] = getattr(d, key)
+        from ipdb import set_trace
+        set_trace()
+    return context
+
+_METADATA = re.compile('.. ([a-z]+): (.*)', re.M)
+_METADATAS_FIELDS = {'tags': lambda x: x.split(', '),
+                     'date': lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M'),
+                     'category': lambda x: x,
+                     'author': lambda x: x}
+
+
+def parse_metadata(string):
+    """Return a dict, containing a list of metadata informations, found
     whithin the given string.
 
     :param string: the string to search the metadata in
@@ -138,7 +163,7 @@ class Article(object):
         if markup == None:
             markup = 'rest'
 
-        for key, value in parse_metadatas(string).items():
+        for key, value in parse_metadata(string).items():
             setattr(self, key, value)
         if markup == 'rest':
             extra_params = {'input_encoding': 'unicode',
@@ -150,7 +175,11 @@ class Article(object):
     
     @property
     def url(self):
-        return slugify(self.title)
+        return '%s.html' % slugify(self.title)
 
+    @property
+    def summary(self):
+        return self.content
+    
     def __repr__(self):
         return '<%s "%s">' % (self.__class__.__name__, self.title)
