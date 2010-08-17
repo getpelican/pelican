@@ -1,9 +1,14 @@
-from docutils import core
-from datetime import datetime
-import re
+# -*- coding: utf-8 -*-
 import os
-from jinja2 import Environment, FileSystemLoader
+import re
+from codecs import open
+from datetime import datetime
+from docutils import core
 from functools import partial
+
+from jinja2 import Environment, FileSystemLoader
+
+import rstdirectives   # import the directives to have pygments support
 
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives')
@@ -32,7 +37,7 @@ def generate_output(files, templates_path=None, output_path=None, markup=None):
     # for each file, get the informations.
     for f in files:
         f = os.path.abspath(f)
-        article = Article(file(f).read(), markup)
+        article = Article(open(f, encoding='utf-8').read(), markup)
         articles.append(article)
         if hasattr(article, 'date'):
             update_dict(months, article.date.month, article)
@@ -69,7 +74,7 @@ def generate_file(path, name, template, context, **kwargs):
         os.makedirs(os.path.dirname(filename))
     except Exception:
         pass
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write(output)
     print filename
 
@@ -136,7 +141,10 @@ class Article(object):
         for key, value in parse_metadatas(string).items():
             setattr(self, key, value)
         if markup == 'rest':
-            rendered_content = core.publish_parts(string, writer_name='html')
+            extra_params = {'input_encoding': 'unicode',
+                            'initial_header_level': '2'}
+            rendered_content = core.publish_parts(string, writer_name='html',
+                settings_overrides=extra_params)
             self.title = rendered_content.get('title')
             self.content = rendered_content.get('body')
     
