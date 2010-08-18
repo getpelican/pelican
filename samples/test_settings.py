@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 PATH = 'samples/content' 
 THEME = 'samples/themes/notmyidea'
+AUTHOR = u'Alexis Métaireau'
 
 BLOGNAME = 'NotMyIdea.org'
-BLOGSUBTITLE = u"Alexis Métaireau's weblog"
+BLOGSUBTITLE = u"%s's weblog" % AUTHOR
 BLOGURL = 'http://blog.notmyidea.org'
 
 BLOGROLL = (('Biologeek', 'http://biologeek.org'),

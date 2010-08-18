@@ -51,7 +51,7 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
     # for each file, get the informations.
     for f in files:
         f = os.path.abspath(f)
-        article = Article(open(f, encoding='utf-8').read(), markup)
+        article = Article(open(f, encoding='utf-8').read(), markup, context)
         articles.append(article)
         if hasattr(article, 'date'):
             update_dict(dates, article.date.strftime('%Y-%m-%d'), article)
@@ -175,7 +175,7 @@ class Article(object):
     :param markup: the markup language to use while parsing.
     """
 
-    def __init__(self, string, markup=None):
+    def __init__(self, string, markup=None, config={}):
         if markup == None:
             markup = 'rst'
 
@@ -188,6 +188,10 @@ class Article(object):
                 settings_overrides=extra_params)
             self.title = rendered_content.get('title')
             self.content = rendered_content.get('body')
+
+        if not hasattr(self, 'author'):
+            if 'AUTHOR' in config:
+                self.author = config['AUTHOR']
 
     @property
     def url(self):
