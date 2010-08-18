@@ -1,4 +1,3 @@
 * Fall back to settings + date of files when no metadata available
 * Add RSS generation
-* Add a licence
 * package it !
