@@ -1,4 +1,3 @@
-* Add separated CSS files somewhere
 * Fall back to settings + date of files when no metadata available
 * Filter to generate only the files with .rst extension
 * Add a licence

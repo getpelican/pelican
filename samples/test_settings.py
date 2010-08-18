@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+PATH = 'samples/content' 
+THEME = 'samples/themes/notmyidea'
 
 BLOGNAME = 'NotMyIdea.org'
 BLOGSUBTITLE = u"Alexis Métaireau's weblog"

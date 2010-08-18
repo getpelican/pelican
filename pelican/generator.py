@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import shutil
 from codecs import open
 from datetime import datetime
 from docutils import core
@@ -14,29 +15,38 @@ import rstdirectives   # import the directives to have pygments support
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives')
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
-_DEFAULT_TEMPLATE_PATH =\
+_DEFAULT_THEME =\
     os.sep.join([os.path.dirname(os.path.abspath(__file__)), "themes"])
+_DEFAULT_CONFIG = {'PATH': None, 
+                   'THEME': _DEFAULT_THEME,
+                   'OUTPUT_PATH': 'output/',
+                   'MARKUP': 'rst'}
 
-
-def generate_output(files, templates_path=None, output_path=None, markup=None,
+def generate_output(path=None, theme=None, output_path=None, markup=None,
                     settings=None):
     """Given a list of files, a template and a destination,
     output the static files.
 
-    :param files: the list of files to parse
-    :param templates_path: where to search for templates
+    :param path: the path where to find the files to parse
+    :param theme: where to search for templates
     :param output_path: where to output the generated files
     :param markup: the markup language to use while parsing
     :param settings: the settings file to use
     """
-    if not templates_path:
-        templates_path = _DEFAULT_TEMPLATE_PATH
-    if not output_path:
-        output_path = './output'
+    # get the settings
+    context = read_settings(settings)
+    path = path or context['PATH']
+    theme = theme or context['THEME']
+    output_path = output_path or context['OUTPUT_PATH']
     output_path = os.path.realpath(output_path)
+    markup = markup or context['MARKUP']
+    
+    # get the list of files to parse
+    files = []
+    for root, dirs, temp_files in os.walk(path, followlinks=True):
+        files.extend([os.sep.join((root, f)) for f in temp_files])
 
     articles, dates, years, tags, categories = [], {}, {}, {}, {}
-
     # for each file, get the informations.
     for f in files:
         f = os.path.abspath(f)
@@ -53,15 +63,14 @@ def generate_output(files, templates_path=None, output_path=None, markup=None,
 
     # order the articles by date
     articles.sort(key=attrgetter('date'), reverse=True)
-    templates = get_templates(templates_path)
-    context = {}
+    templates = get_templates(theme)
     for item in ('articles', 'dates', 'years', 'tags', 'categories'):
         value = locals()[item]
         if hasattr(value, 'items'):
             value = value.items()
         context[item] = value
-    read_settings(context, settings)
-
+    
+    # generate the output
     generate = partial(generate_file, output_path)
     for template in _DIRECT_TEMPLATES:
         generate('%s.html' % template, templates[template], context)
@@ -73,6 +82,13 @@ def generate_output(files, templates_path=None, output_path=None, markup=None,
     for article in articles:
         generate('%s' % article.url,
                       templates['article'], context, article=article)
+
+    # copy css path to output/css
+    try:
+        shutil.copytree(os.path.join(theme, 'css'), 
+                        os.path.join(output_path, 'css'))
+    except OSError:
+        pass
 
 
 def generate_file(path, name, template, context, **kwargs):
@@ -89,6 +105,7 @@ def generate_file(path, name, template, context, **kwargs):
 
 
 def get_templates(path=None):
+    path = os.path.join(path, 'templates')
     env = Environment(loader=FileSystemLoader(path))
     templates = {}
     for template in _TEMPLATES:
@@ -102,9 +119,10 @@ def update_dict(mapping, key, value):
     mapping[key].append(value)
 
 
-def read_settings(context, filename):
+def read_settings(filename):
     """Load a Python file into a dictionary.
     """
+    context = _DEFAULT_CONFIG.copy()
     if filename:
         tempdict = {}
         execfile(filename, tempdict)
@@ -158,11 +176,11 @@ class Article(object):
 
     def __init__(self, string, markup=None):
         if markup == None:
-            markup = 'rest'
+            markup = 'rst'
 
         for key, value in parse_metadata(string).items():
             setattr(self, key, value)
-        if markup == 'rest':
+        if markup == 'rst':
             extra_params = {'input_encoding': 'unicode',
                             'initial_header_level': '2'}
             rendered_content = core.publish_parts(string, writer_name='html',
