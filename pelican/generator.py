@@ -44,7 +44,8 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
     # get the list of files to parse
     files = []
     for root, dirs, temp_files in os.walk(path, followlinks=True):
-        files.extend([os.sep.join((root, f)) for f in temp_files])
+        files.extend([os.sep.join((root, f)) for f in temp_files 
+                      if f.endswith('.%s' % markup)])
 
     articles, dates, years, tags, categories = [], {}, {}, {}, {}
     # for each file, get the informations.
