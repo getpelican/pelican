@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>{% block title %}{{ blogtitle }}{%endblock%}</title>
+        <title>{% block title %}{{ BLOGNAME }}{%endblock%}</title>
         <meta charset="utf-8" />
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="{{ blogurl }}">{{ blogtitle }} <strong>{{ blogsubtitle }}</strong></a></h1>
+                <h1><a href="{{ BLOGURL }}">{{ BLOGNAME }} <strong>{{ BLOGSUBTITLE }}</strong></a></h1>
         </header><!-- /#banner -->
         {% block content %}
         {% endblock %}

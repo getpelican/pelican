@@ -103,17 +103,14 @@ def update_dict(mapping, key, value):
 
 
 def read_settings(context, filename):
-    """Load a Python file into a dictionary. 
+    """Load a Python file into a dictionary.
     """
     if filename:
-        from importlib import import_module
-        d = import_module(filename)
-         
-        for key in dir(d):
+        tempdict = {}
+        execfile(filename, tempdict)
+        for key in tempdict:
             if key.isupper():
-                context[key] = getattr(d, key)
-        from ipdb import set_trace
-        set_trace()
+                context[key] = tempdict[key]
     return context
 
 _METADATA = re.compile('.. ([a-z]+): (.*)', re.M)
