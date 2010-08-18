@@ -18,7 +18,7 @@ _DEFAULT_TEMPLATE_PATH =\
     os.sep.join([os.path.dirname(os.path.abspath(__file__)), "themes"])
 
 
-def generate_output(files, templates_path=None, output_path=None, markup=None, 
+def generate_output(files, templates_path=None, output_path=None, markup=None,
                     settings=None):
     """Given a list of files, a template and a destination,
     output the static files.
@@ -51,7 +51,7 @@ def generate_output(files, templates_path=None, output_path=None, markup=None,
         if hasattr(article, 'category'):
             update_dict(categories, article.category, article)
 
-    # order the articles by date 
+    # order the articles by date
     articles.sort(key=attrgetter('date'), reverse=True)
     templates = get_templates(templates_path)
     context = {}
@@ -169,7 +169,7 @@ class Article(object):
                 settings_overrides=extra_params)
             self.title = rendered_content.get('title')
             self.content = rendered_content.get('body')
-    
+
     @property
     def url(self):
         return '%s.html' % slugify(self.title)
@@ -177,6 +177,6 @@ class Article(object):
     @property
     def summary(self):
         return self.content
-    
+
     def __repr__(self):
         return '<%s "%s">' % (self.__class__.__name__, self.title)
