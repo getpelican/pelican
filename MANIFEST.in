@@ -1,1 +1,3 @@
 include *.rst
+recursive-include pelican *.html
+include LICENSE
