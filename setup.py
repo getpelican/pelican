@@ -1,4 +1,9 @@
 from distutils.core import setup
+import sys
+
+requires = ['feedgenerator', 'jinja2', 'pygments']
+if sys.version_info < (2,7):
+    requires.append('argparse')
 
 setup(
     name = "pelican",
@@ -9,6 +14,7 @@ setup(
     description = "A tool to generate a static blog, with restructured text input files.",
     packages = ['pelican'],
     package_data = {'pelican': ['themes/templates/*']},
+    install_requires = requires, 
     scripts = ['bin/pelican'],
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',

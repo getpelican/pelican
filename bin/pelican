@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+#!/usr/bin/python
 from pelican.generator import generate_output
 import argparse
 
