@@ -1,13 +1,9 @@
 #!/usr/local/bin/python2.7
-from generator import generate_output
+from pelican.generator import generate_output
 import argparse
-import os
 
-parser = argparse.ArgumentParser(description="""Generate files, given some 
-files to read and a template to use.
-
-The main use case is to generate static-files-based blogs, to ease DVCSes as
-storages, but it could be used with others goal in mind.""")
+parser = argparse.ArgumentParser(description="""A tool to generate a 
+static blog, with restructured text input files.""")
 
 parser.add_argument('-p', '--path', dest='path',
     help='Path where to find the content files (default is "content").')

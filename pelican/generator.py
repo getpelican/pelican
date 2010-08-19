@@ -23,7 +23,10 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': 'rst', 
                    'STATIC_PATHS': ['css', 'images'], 
-                   'FEED_FILENAME': 'atom.xml'}
+                   'FEED_FILENAME': 'atom.xml',
+                   'BLOGNAME': 'A Pelican Blog',
+                   'BLOGURL': ''}
+
 
 def generate_output(path=None, theme=None, output_path=None, markup=None,
                     settings=None):
@@ -92,13 +95,13 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
         title=context['BLOGNAME'],
         link=context['BLOGURL'],
         feed_url='%s/%s' % (context['BLOGURL'], context['FEED_FILENAME']),
-        description=context['BLOGSUBTITLE'])
+        description=context.get('BLOGSUBTITLE', ''))
     for article in articles:
         feed.add_item(
             title=article.title,
             link='%s/%s' % (context['BLOGURL'], article.url),
             description=article.content,
-            author_name=article.author,
+            author_name=getattr(article, 'author', 'John Doe'),
             pubdate=article.date)
 
     fp = open(os.path.join(output_path, context['FEED_FILENAME']), 'w')
