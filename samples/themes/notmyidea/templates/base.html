@@ -4,6 +4,8 @@
         <title>{% block title %}{{ BLOGNAME }}{%endblock%}</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="css/main.css" type="text/css" />
+        <link href="atom.xml" type="application/atom+xml" rel="alternate" title="{{ BLOGNAME }} ATOM Feed" />
+
 
         <!--[if IE]>
                 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -45,7 +47,7 @@
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="{{ FEEDURL }}" rel="alternate">rss</a></li>
+                            <li><a href="atom.xml" rel="alternate">atom feed</a></li>
                         {% for name, link in SOCIAL %}
                             <li><a href="{{ link }}">{{ name }}</a></li>
                         {% endfor %}

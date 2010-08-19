@@ -9,6 +9,7 @@ from functools import partial
 from operator import attrgetter
 
 from jinja2 import Environment, FileSystemLoader
+from feedgenerator import Atom1Feed
 
 import rstdirectives   # import the directives to have pygments support
 
@@ -20,7 +21,9 @@ _DEFAULT_THEME =\
 _DEFAULT_CONFIG = {'PATH': None, 
                    'THEME': _DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
-                   'MARKUP': 'rst'}
+                   'MARKUP': 'rst', 
+                   'STATIC_PATHS': ['css', 'images'], 
+                   'FEED_FILENAME': 'atom.xml'}
 
 def generate_output(path=None, theme=None, output_path=None, markup=None,
                     settings=None):
@@ -84,12 +87,31 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
         generate('%s' % article.url,
                       templates['article'], context, article=article)
 
-    # copy css path to output/css
-    try:
-        shutil.copytree(os.path.join(theme, 'css'), 
-                        os.path.join(output_path, 'css'))
-    except OSError:
-        pass
+    # generate atom feed
+    feed = Atom1Feed(
+        title=context['BLOGNAME'],
+        link=context['BLOGURL'],
+        feed_url='%s/%s' % (context['BLOGURL'], context['FEED_FILENAME']),
+        description=context['BLOGSUBTITLE'])
+    for article in articles:
+        feed.add_item(
+            title=article.title,
+            link='%s/%s' % (context['BLOGURL'], article.url),
+            description=article.content,
+            author_name=article.author,
+            pubdate=article.date)
+
+    fp = open(os.path.join(output_path, context['FEED_FILENAME']), 'w')
+    feed.write(fp, 'utf-8')
+    fp.close()
+
+    # copy static paths to output
+    for path in context['STATIC_PATHS']:
+        try:
+            shutil.copytree(os.path.join(theme, path), 
+                            os.path.join(output_path, path))
+        except OSError:
+            pass
 
 
 def generate_file(path, name, template, context, **kwargs):
