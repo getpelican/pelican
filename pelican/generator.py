@@ -48,6 +48,8 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
     markup = markup or context['MARKUP']
     
     # get the list of files to parse
+    if not path:
+        raise Exception('you need to speciffy a path to search the docs on !')
     files = []
     for root, dirs, temp_files in os.walk(path, followlinks=True):
         files.extend([os.sep.join((root, f)) for f in temp_files 

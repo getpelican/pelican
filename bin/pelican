@@ -22,6 +22,9 @@ parser.add_argument('-s', '--settings', dest='settings',
 if __name__ == '__main__':
     args = parser.parse_args()
     files = []
-    generate_output(args.path, args.templates, args.output, args.markup, 
+    try:
+        generate_output(args.path, args.templates, args.output, args.markup, 
                     args.settings)
-    print 'Done !'
+        print 'Done !'
+    except Exception, e:
+        print 'Error ! %s' % e
