@@ -15,7 +15,7 @@ setup(
     long_description=open('README.rst').read(),
     packages = ['pelican'],
     package_data = {'pelican': ['themes/templates/*']},
-    install_requires = requires, 
+    requires = requires, 
     scripts = ['bin/pelican'],
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
