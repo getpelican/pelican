@@ -62,7 +62,8 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
     # for each file, get the informations.
     for f in files:
         f = os.path.abspath(f)
-        article = Article(open(f, encoding='utf-8').read(), markup, context)
+        content = open(f, encoding='utf-8').read()
+        article = Article(content, markup, context, os.stat(f))
         articles.append(article)
         if hasattr(article, 'date'):
             update_dict(dates, article.date.strftime('%Y-%m-%d'), article)
@@ -198,10 +199,23 @@ def read_settings(filename):
 
 _METADATA = re.compile('.. ([a-z]+): (.*)', re.M)
 _METADATAS_FIELDS = {'tags': lambda x: x.split(', '),
-                     'date': lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M'),
+                     'date': lambda x: get_date(x),
                      'category': lambda x: x,
                      'author': lambda x: x}
 
+def get_date(string):
+    """Return a datetime object from a string.
+
+    If no format matches the given date, raise a ValuEerror
+    """
+    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M', '%Y-%m-%d', '%Y/%m/%d',
+               '%d/%m/%Y']
+    for date_format in formats:
+        try:
+            return datetime.strptime(string, date_format)
+        except ValueError:
+            pass
+    raise ValueError("%s is not a valid date" % string)
 
 def parse_metadata(string):
     """Return a dict, containing a list of metadata informations, found
@@ -239,7 +253,7 @@ class Article(object):
     :param markup: the markup language to use while parsing.
     """
 
-    def __init__(self, string, markup=None, config={}):
+    def __init__(self, string, markup=None, config={}, file_infos=None):
         if markup == None:
             markup = 'rst'
 
@@ -256,6 +270,9 @@ class Article(object):
         if not hasattr(self, 'author'):
             if 'AUTHOR' in config:
                 self.author = config['AUTHOR']
+
+        if not hasattr(self, 'date'):
+            self.date = datetime.fromtimestamp(file_infos.st_ctime)
 
     @property
     def url(self):
