@@ -18,12 +18,12 @@ _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 _DEFAULT_THEME =\
     os.sep.join([os.path.dirname(os.path.abspath(__file__)), "themes"])
-_DEFAULT_CONFIG = {'PATH': None, 
+_DEFAULT_CONFIG = {'PATH': None,
                    'THEME': _DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
-                   'MARKUP': 'rst', 
-                   'STATIC_PATHS': ['css', 'images'], 
                    'FEED_FILENAME': 'atom.xml',
+                   'MARKUP': 'rst',
+                   'STATIC_PATHS': ['css', 'images'],
                    'BLOGNAME': 'A Pelican Blog',
                    'BLOGURL': ''}
 
@@ -32,6 +32,8 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
                     settings=None):
     """Given a list of files, a template and a destination,
     output the static files.
+
+    That's the main logic of pelican.
 
     :param path: the path where to find the files to parse
     :param theme: where to search for templates
@@ -46,13 +48,13 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
     output_path = output_path or context['OUTPUT_PATH']
     output_path = os.path.realpath(output_path)
     markup = markup or context['MARKUP']
-    
+
     # get the list of files to parse
     if not path:
         raise Exception('you need to speciffy a path to search the docs on !')
     files = []
     for root, dirs, temp_files in os.walk(path, followlinks=True):
-        files.extend([os.sep.join((root, f)) for f in temp_files 
+        files.extend([os.sep.join((root, f)) for f in temp_files
                       if f.endswith('.%s' % markup)])
 
     articles, dates, years, tags, categories = [], {}, {}, {}, {}
@@ -78,7 +80,7 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
         if hasattr(value, 'items'):
             value = value.items()
         context[item] = value
-    
+
     # generate the output
     generate = partial(generate_file, output_path)
     for template in _DIRECT_TEMPLATES:
@@ -120,6 +122,14 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
 
 
 def generate_file(path, name, template, context, **kwargs):
+    """Write the file with the given informations
+
+    :param path: where to generate the file.
+    :param name: name of the file to output
+    :param template: template to use to generate the content
+    :param context: dict to pass to the templates.
+    :param **kwargs: additional variables to pass to the templates
+    """
     context.update(kwargs)
     output = template.render(context)
     filename = os.sep.join((path, name))
@@ -133,6 +143,7 @@ def generate_file(path, name, template, context, **kwargs):
 
 
 def get_templates(path=None):
+    """Return the templates to use"""
     path = os.path.join(path, 'templates')
     env = Environment(loader=FileSystemLoader(path))
     templates = {}
@@ -142,6 +153,12 @@ def get_templates(path=None):
 
 
 def update_dict(mapping, key, value):
+    """Update a dict intenal list
+    
+    :param mapping: the mapping to update
+    :param key: the key of the mapping to update.
+    :param value: the value to append to the list.
+    """
     if key not in mapping:
         mapping[key] = []
     mapping[key].append(value)
