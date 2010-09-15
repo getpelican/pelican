@@ -21,9 +21,10 @@ _DEFAULT_THEME =\
 _DEFAULT_CONFIG = {'PATH': None,
                    'THEME': _DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
-                   'FEED_FILENAME': 'atom.xml',
                    'MARKUP': 'rst',
                    'STATIC_PATHS': ['css', 'images'],
+                   'FEED': 'atom.xml',
+                   'CATEGORY_FEED': '%s.xml',
                    'BLOGNAME': 'A Pelican Blog',
                    'BLOGURL': ''}
 
@@ -94,11 +95,36 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
         generate('%s' % article.url,
                       templates['article'], context, article=article)
 
-    # generate atom feed
+    generate_feed(articles, context, output_path, context['FEED'])
+    for category, articles in categories.values():
+        articles.sort(key=attrgetter('date'), reverse=True)
+        generate_feed(articles, context, output_path,
+                      context['CATEGORY_FEED'] % category)
+
+    # copy static paths to output
+    for path in context['STATIC_PATHS']:
+        try:
+            shutil.copytree(os.path.join(theme, path),
+                            os.path.join(output_path, path))
+        except OSError:
+            pass
+
+
+def generate_feed(articles, context, output_path=None, filename=None):
+    """Generate a feed with the list of articles provided
+
+    Return the feed. If no output_path or filename is specified, just return
+    the feed object.
+
+    :param articles: the articles to put on the feed.
+    :param context: the context to get the feed metadatas.
+    :param output_path: where to output the file.
+    :param filename: the filename to output.
+    """
     feed = Atom1Feed(
         title=context['BLOGNAME'],
         link=context['BLOGURL'],
-        feed_url='%s/%s' % (context['BLOGURL'], context['FEED_FILENAME']),
+        feed_url='%s/%s' % (context['BLOGURL'], filename),
         description=context.get('BLOGSUBTITLE', ''))
     for article in articles:
         feed.add_item(
@@ -108,17 +134,11 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
             author_name=getattr(article, 'author', 'John Doe'),
             pubdate=article.date)
 
-    fp = open(os.path.join(output_path, context['FEED_FILENAME']), 'w')
-    feed.write(fp, 'utf-8')
-    fp.close()
-
-    # copy static paths to output
-    for path in context['STATIC_PATHS']:
-        try:
-            shutil.copytree(os.path.join(theme, path), 
-                            os.path.join(output_path, path))
-        except OSError:
-            pass
+    if output_path and filename:
+        fp = open(os.path.join(output_path, context['FEED']), 'w')
+        feed.write(fp, 'utf-8')
+        fp.close()
+    return feed
 
 
 def generate_file(path, name, template, context, **kwargs):
@@ -154,7 +174,7 @@ def get_templates(path=None):
 
 def update_dict(mapping, key, value):
     """Update a dict intenal list
-    
+
     :param mapping: the mapping to update
     :param key: the key of the mapping to update.
     :param value: the value to append to the list.
