@@ -18,13 +18,25 @@ parser.add_argument('-m', '--markup', default='rst', dest='markup',
           ' available.')
 parser.add_argument('-s', '--settings', dest='settings',
     help='the settings of the application. Default to None.')
+parser.add_argument('-b', '--debug', dest='debug', action='store_true')
+
+
+def run(args):
+    generate_output(args.path, args.templates, args.output, args.markup, 
+                    args.settings)
+    print 'Done !'
+
 
 if __name__ == '__main__':
     args = parser.parse_args()
     files = []
-    try:
-        generate_output(args.path, args.templates, args.output, args.markup, 
-                    args.settings)
-        print 'Done !'
-    except Exception, e:
-        print 'Error ! %s' % e
+    if args.debug:
+        run(args)
+    else:
+        try:
+            run(args)
+        except Exception, e:
+            if args.debug:
+                raise e
+            else:
+                print 'Error ! %s' % e
