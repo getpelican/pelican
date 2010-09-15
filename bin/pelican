@@ -5,7 +5,7 @@ import argparse
 parser = argparse.ArgumentParser(description="""A tool to generate a 
 static blog, with restructured text input files.""")
 
-parser.add_argument('-p', '--path', dest='path',
+parser.add_argument(dest='path',
     help='Path where to find the content files (default is "content").')
 parser.add_argument('-t', '--templates-path', dest='templates',
     help='Path where to find the templates. If not specified, will uses the'
