@@ -1,17 +1,8 @@
 * Add a way to support pictures (see how sphinx makes that)
-* Create templates for tags/categories: they're not implemented !
-* Add a way to categorize by paths, and to add dates by filenames. This will
-  allow users to avoid the need of metadatas. I'm thinking about a repository
-  like that:
+* Add a way to categorize by paths. 
       .
       ├── category1
-      │   ├── 2010-12-15-hello-world.rst
-      │   └── 2010-12-20-my-super-article.rst
-
-  I dont consider the tags as something mandatory, so they will be provided by
-  metadatas whithin the files themselves. That's also important to note that
-  there will be a need to actually change *something* in the files. A better way
-  to work would be to avoid any change if possible (I'm wondering if removing
-  the date is a good option…)
-* Add a way to have multiple feeds (one by category), plus one global, and to
-  send this to the templates.
+      │   ├── hello-world.rst
+      │   └── my-super-article.rst
+* Find a way to extend the existing templates instead of rewriting all from
+  scratch.
