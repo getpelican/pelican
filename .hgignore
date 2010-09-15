@@ -1,3 +1,6 @@
 syntax: glob
 output/*
 *.pyc
+MANIFEST
+build
+dist
