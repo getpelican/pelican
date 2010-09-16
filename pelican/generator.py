@@ -23,8 +23,8 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': 'rst',
                    'STATIC_PATHS': ['css', 'images'],
-                   'FEED': 'atom.xml',
-                   'CATEGORY_FEED': '%s.xml',
+                   'FEED': 'feeds/all.atom.xml',
+                   'CATEGORY_FEED': 'feeds/%s.atom.xml',
                    'BLOGNAME': 'A Pelican Blog',
                    'BLOGURL': ''}
 
@@ -64,6 +64,12 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
         f = os.path.abspath(f)
         content = open(f, encoding='utf-8').read()
         article = Article(content, markup, context, os.stat(f))
+        if not hasattr(article, 'category'):
+            # try to get the category from the dirname
+            category = os.path.dirname(f).replace(os.path.abspath(path)+'/', '')
+            if category != '':
+                article.category = unicode(category)
+
         articles.append(article)
         if hasattr(article, 'date'):
             update_dict(dates, article.date.strftime('%Y-%m-%d'), article)
@@ -91,13 +97,13 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
         generate('tag/%s.html' % tag, templates['tag'], context, tag=tag)
     for cat in categories:
         generate('category/%s.html' % cat, templates['category'], context,
-                      category=cat)
+                      category=cat, articles=categories[cat])
     for article in articles:
         generate('%s' % article.url,
                       templates['article'], context, article=article)
 
     generate_feed(articles, context, output_path, context['FEED'])
-    for category, articles in categories.values():
+    for category, articles in categories.items():
         articles.sort(key=attrgetter('date'), reverse=True)
         generate_feed(articles, context, output_path,
                       context['CATEGORY_FEED'] % category)
@@ -136,7 +142,12 @@ def generate_feed(articles, context, output_path=None, filename=None):
             pubdate=article.date)
 
     if output_path and filename:
-        fp = open(os.path.join(output_path, context['FEED']), 'w')
+        complete_path = os.path.join(output_path, filename)
+        try:
+            os.makedirs(os.path.dirname(complete_path))
+        except Exception:
+            pass
+        fp = open(complete_path, 'w')
         feed.write(fp, 'utf-8')
         fp.close()
     return feed
@@ -281,6 +292,3 @@ class Article(object):
     @property
     def summary(self):
         return self.content
-
-    def __repr__(self):
-        return '<%s "%s">' % (self.__class__.__name__, self.title)

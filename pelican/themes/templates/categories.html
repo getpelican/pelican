@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <ul>
-{% for category in categories %}
+{% for category, articles in categories %}
     <li>{{ category }}</li>
 {% endfor %}
 </ul>
