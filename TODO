@@ -1,8 +1,3 @@
 * Add a way to support pictures (see how sphinx makes that)
-* Add a way to categorize by paths. 
-      .
-      ├── category1
-      │   ├── hello-world.rst
-      │   └── my-super-article.rst
 * Find a way to extend the existing templates instead of rewriting all from
   scratch.
