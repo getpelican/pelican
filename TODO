@@ -1,3 +1,4 @@
 * Add a way to support pictures (see how sphinx makes that)
 * Find a way to extend the existing templates instead of rewriting all from
   scratch.
+* update the templates for notmyidea.
