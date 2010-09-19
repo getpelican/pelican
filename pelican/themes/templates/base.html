@@ -9,6 +9,11 @@
         <header id="banner" class="body">
                 <h1><a href="{{ BLOGURL }}">{{ BLOGNAME }} <strong>{{ BLOGSUBTITLE }}</strong></a></h1>
         </header><!-- /#banner -->
+        {% if categories %}<ul>
+        {% for category, articles in categories %}
+            <li><a href="category/{{category}}.html">{{ category }}</a></li> 
+        {% endfor %}
+        </ul> {% endif %}
         {% block content %}
         {% endblock %}
         <footer id="contentinfo" class="body">

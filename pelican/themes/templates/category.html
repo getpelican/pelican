@@ -1,10 +1,5 @@
-{% extends "base.html" %}
-{% block content %}
-Articles in the {{ category }} category.
-<ul>
-{% for article in articles %}
-    <li><a href="../{{ article.url }}">{{ article.title }}</a></li>
-{% endfor %}
-</ul>
+{% extends "index.html" %}
+{% block content_title %}
+<h2>Articles in the {{ category }} category</h2>
 {% endblock %}
 

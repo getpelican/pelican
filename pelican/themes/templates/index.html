@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}        
 <section id="content">
+{% block content_title %}
+<h2>All articles</h2>
+{% endblock %}
+
 <ol id="post-list">
 {% for article in articles %}        
         <li><article class="hentry">    
