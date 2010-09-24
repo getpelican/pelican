@@ -2,3 +2,4 @@
 * Find a way to extend the existing templates instead of rewriting all from
   scratch.
 * update the templates for notmyidea.
+* put the output base folder in some variable

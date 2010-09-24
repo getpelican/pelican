@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}        
+{% block content_title %}{% endblock %}
 {% for article in articles %}        
     {% if loop.index == 1 %}
         <aside id="featured" class="body"><article>
@@ -14,6 +15,7 @@
                         <h2 class="entry-title"><a href="{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2>
                 </header>
                 
+                <div class="entry-content">
                 <footer class="post-info">
                         <abbr class="published" title="{{ article.date.isoformat() }}">
                                 {{ article.date.strftime('%Y-%m-%d %H:%M') }}
@@ -23,7 +25,6 @@
                                 By <a class="url fn" href="#">{{ article.author }}</a>
                         </address>
                 </footer><!-- /.post-info -->
-                <div class="entry-content">
                 {{ article.summary }}
                 </div><!-- /.entry-content -->
         </article></li>

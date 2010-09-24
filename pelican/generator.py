@@ -26,7 +26,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'FEED': 'feeds/all.atom.xml',
                    'CATEGORY_FEED': 'feeds/%s.atom.xml',
                    'BLOGNAME': 'A Pelican Blog',
-                   'BLOGURL': ''}
+                  }
 
 
 def generate_output(path=None, theme=None, output_path=None, markup=None,
@@ -52,7 +52,7 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
 
     # get the list of files to parse
     if not path:
-        raise Exception('you need to speciffy a path to search the docs on !')
+        raise Exception('you need to specify a path to search the docs on !')
     files = []
     for root, dirs, temp_files in os.walk(path, followlinks=True):
         files.extend([os.sep.join((root, f)) for f in temp_files
@@ -89,10 +89,13 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
             value = value.items()
         context[item] = value
 
+    if 'BLOGURL' not in context:
+        context['BLOGURL'] = output_path
+
     # generate the output
     generate = partial(generate_file, output_path)
     for template in _DIRECT_TEMPLATES:
-        generate('%s.html' % template, templates[template], context)
+        generate('%s.html' % template, templates[template], context, blog=True)
     for tag in tags:
         generate('tag/%s.html' % tag, templates['tag'], context, tag=tag)
     for cat in categories:

@@ -34,6 +34,7 @@ h2, h3, h4, h5, h6 {
 	font-weight: 400;
 	line-height: 1.1;
 	margin-bottom: .8em;
+	margin-top: .8em;
 }
 	
 /* Anchors */
@@ -323,7 +324,7 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 #content > .hentry {padding: 1em 0;}
 
-.entry-title {font-size: 1.429em; margin-bottom: 0;}
+.entry-title {font-size: 1.429em; margin-bottom: 5px; margin-top: 0; }
 .entry-title a:link, .entry-title a:visited {text-decoration: none;}
 
 .hentry .post-info * {font-style: normal;}
@@ -335,20 +336,13 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 
 	/* Blog Index */
 	#posts-list {list-style: none; margin: 0;}
-	#posts-list .hentry {padding-left: 200px; position: relative;}
-	#posts-list .hentry:hover {
-		background: #C64350;
-		color: #fff;
-	}
-	#posts-list .hentry:hover a:link, #posts-list .hentry:hover a:visited {
-		color: #F6CF74;
-		text-shadow: 1px 1px 1px #333;
-	}
+	#posts-list .hentry {padding-left: 10px; position: relative;}
 	
 	#posts-list footer {
 		left: 10px;
-		position: absolute;
-		top: 1.5em;
+		position: relative;
+        float: left;
+		top: 0.5em;
 		width: 190px;
 	}
 	
