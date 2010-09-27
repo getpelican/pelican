@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from pelican.generator import generate_output
+from pelican.bloggenerator import generate_blog
 import argparse
 
 parser = argparse.ArgumentParser(description="""A tool to generate a 
@@ -22,7 +22,7 @@ parser.add_argument('-b', '--debug', dest='debug', action='store_true')
 
 
 def run(args):
-    generate_output(args.path, args.templates, args.output, args.markup, 
+    generate_blog(args.path, args.templates, args.output, args.markup, 
                     args.settings)
     print 'Done !'
 

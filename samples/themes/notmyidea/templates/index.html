@@ -4,7 +4,7 @@
 {% for article in articles %}        
     {% if loop.index == 1 %}
         <aside id="featured" class="body"><article>
-                <hgroup> <h2>Last article</h2> <h3><a href="{{ article.url }}">{{ article.title }}</a></h3> </hgroup>
+                <hgroup> <h2>Last article</h2> <h3><a href="{{ BLOGURL }}/{{ article.url }}">{{ article.title }}</a></h3> </hgroup>
                 {{ article.summary }}
         </article></aside><!-- /#featured -->
         <section id="content" class="body">
@@ -12,7 +12,7 @@
     {% else %} 
         <li><article class="hentry">    
                 <header>
-                        <h2 class="entry-title"><a href="{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2>
+                        <h2 class="entry-title"><a href="{{ BLOGURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2>
                 </header>
                 
                 <div class="entry-content">

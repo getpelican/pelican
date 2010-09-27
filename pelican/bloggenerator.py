@@ -11,13 +11,18 @@ from operator import attrgetter
 from jinja2 import Environment, FileSystemLoader
 from feedgenerator import Atom1Feed
 
-import rstdirectives   # import the directives to have pygments support
+# import the directives to have pygments support
+import rstdirectives
+
+## Constants ##########################################################
 
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives')
+
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
-_DEFAULT_THEME =\
-    os.sep.join([os.path.dirname(os.path.abspath(__file__)), "themes"])
+
+_DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
+                              "themes"])
 _DEFAULT_CONFIG = {'PATH': None,
                    'THEME': _DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
@@ -29,10 +34,10 @@ _DEFAULT_CONFIG = {'PATH': None,
                   }
 
 
-def generate_output(path=None, theme=None, output_path=None, markup=None,
-                    settings=None):
-    """Given a list of files, a template and a destination,
-    output the static files.
+def generate_blog(path=None, theme=None, output_path=None, markup=None, 
+                  settings=None):
+    """Search the given path for files, and generate a static blog in output,
+    using the given theme.
 
     That's the main logic of pelican.
 
@@ -114,9 +119,14 @@ def generate_output(path=None, theme=None, output_path=None, markup=None,
     # copy static paths to output
     for path in context['STATIC_PATHS']:
         try:
-            shutil.copytree(os.path.join(theme, path),
-                            os.path.join(output_path, path))
-        except OSError:
+            real_output = os.path.join(output_path, path)
+            theme_path = os.path.join(theme, path)
+
+            print "updating %s" % real_output
+            shutil.rmtree(real_output)
+            shutil.copytree(theme_path, real_output)
+
+        except OSError as e:
             pass
 
 
@@ -174,7 +184,7 @@ def generate_file(path, name, template, context, **kwargs):
         pass
     with open(filename, 'w', encoding='utf-8') as f:
         f.write(output)
-    print filename
+    print 'writing %s' % filename
 
 
 def get_templates(path=None):
