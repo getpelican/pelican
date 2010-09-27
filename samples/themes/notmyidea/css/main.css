@@ -9,6 +9,7 @@
 
 /* Imports */
 @import url("reset.css");
+@import url("pygment.css");
 
 /***** Global *****/
 /* Body */
@@ -86,6 +87,8 @@ ol {
 dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
+
+pre{background-color: #000; padding: 10px; color: #fff; margin: 10px;}
 
 /* Quotes */
 blockquote {font-style: italic;}
