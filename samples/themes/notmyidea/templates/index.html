@@ -4,28 +4,42 @@
 {% for article in articles %}        
     {% if loop.index == 1 %}
         <aside id="featured" class="body"><article>
-                <hgroup> <h2>Last article</h2> <h3><a href="{{ BLOGURL }}/{{ article.url }}">{{ article.title }}</a></h3> </hgroup>
-                {{ article.summary }}
+                <h2 class="entry-title"><a href="{{ BLOGURL }}/{{ article.url }}">{{ article.title }}</a></h2> 
+                <footer class="post-info">
+                        <abbr class="published" title="{{ article.date.isoformat() }}">
+                                {{ article.date.strftime('%a %d %B %Y') }}
+                        </abbr>
+
+                        <address class="vcard author">
+                                By <a class="url fn" href="#">{{ article.author }}</a>
+                        </address>In <a href="{{ BLOGURL }}/category/{{ article.category }}.html">{{ article.category }}</a>
+                </footer><!-- /.post-info -->
+                {{ article.content }}
         </article></aside><!-- /#featured -->
-        <section id="content" class="body">
-                <ol id="posts-list" class="hfeed">
+        {% if loop.length  > 1 %}
+            <section id="content" class="body">
+                <h2>Others articles</h2>
+                <hr />
+                    <ol id="posts-list" class="hfeed">
+        {% endif %}
     {% else %} 
         <li><article class="hentry">    
                 <header>
-                        <h2 class="entry-title"><a href="{{ BLOGURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2>
+                        <h2><a href="{{ BLOGURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2>
                 </header>
                 
                 <div class="entry-content">
                 <footer class="post-info">
                         <abbr class="published" title="{{ article.date.isoformat() }}">
-                                {{ article.date.strftime('%Y-%m-%d %H:%M') }}
+                                {{ article.date.strftime('%a %d %B %Y') }}
                         </abbr>
 
                         <address class="vcard author">
                                 By <a class="url fn" href="#">{{ article.author }}</a>
-                        </address>
+                        </address>In <a href="{{ BLOGURL }}/category/{{ article.category }}.html">{{ article.category }}</a>
                 </footer><!-- /.post-info -->
                 {{ article.summary }}
+                <a class="readmore" href="{{ BLOGURL }}/{{ article.url }}">read more</a>
                 </div><!-- /.entry-content -->
         </article></li>
     {% endif %}

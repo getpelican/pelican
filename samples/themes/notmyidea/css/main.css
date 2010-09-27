@@ -34,9 +34,12 @@ h2, h3, h4, h5, h6 {
 	font-weight: 400;
 	line-height: 1.1;
 	margin-bottom: .8em;
-	margin-top: .8em;
 }
+
+h3, h4, h5, h6 { margin-top: .8em; }
 	
+hr { border: 2px solid #EEEEEE; }
+
 /* Anchors */
 a {outline: 0;}
 a img {border: 0px; text-decoration: none;}
@@ -54,7 +57,6 @@ a:hover, a:active {
 	
 /* Paragraphs */
 p {margin-bottom: 1.143em;}
-* p:last-child {margin-bottom: 0;}
 
 strong, b {font-weight: bold;}
 em, i {font-style: italic;}
@@ -72,6 +74,14 @@ ol {
 	list-style: outside decimal;
 	margin: 1em 0 1.5em 1.5em;
 }
+
+.post-info {
+    float:right;
+    margin:10px;
+    padding:5px;
+}
+
+.readmore { float: right }
 
 dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
@@ -121,7 +131,7 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 }
 
 	/* Banner */
-	#banner h1 {font-size: 3.571em; line-height: .6;}
+	#banner h1 {font-size: 3.571em; line-height: 0;}
 	#banner h1 a:link, #banner h1 a:visited {
 		color: #000305;
 		display: block;
@@ -324,7 +334,7 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 #content > .hentry {padding: 1em 0;}
 
-.entry-title {font-size: 1.429em; margin-bottom: 5px; margin-top: 0; }
+.entry-title {font-size: 2em; margin-bottom: 5px; margin-top: 0; }
 .entry-title a:link, .entry-title a:visited {text-decoration: none;}
 
 .hentry .post-info * {font-style: normal;}

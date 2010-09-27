@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block content %}        
 <section id="content" class="body">    
-<div class="hentry">
+<article>
         <header> <h2 class="entry-title"><a href="{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2> </header>
         <div class="entry-content">
         <footer class="post-info">
                 <abbr class="published" title="{{ article.date.isoformat() }}">
-                        {{ article.date.strftime('%Y-%m-%d %H:%M') }}
+                    {{ article.date.strftime('%a %d %B %Y') }}
                 </abbr>
                 <address class="vcard author">
                         By <a class="url fn" href="#">{{ article.author }}</a>
-                </address>
+                </address>In <a href="{{ BLOGURL }}/category/{{ article.category }}.html">{{ article.category }}</a>
         </footer><!-- /.post-info -->
         {{ article.content }}
         </div><!-- /.entry-content -->
-</div>
+</article>
 </section>
 {% endblock %}

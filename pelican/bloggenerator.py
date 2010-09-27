@@ -13,6 +13,7 @@ from feedgenerator import Atom1Feed
 
 # import the directives to have pygments support
 import rstdirectives
+from utils import truncate_html_words
 
 ## Constants ##########################################################
 
@@ -58,6 +59,13 @@ def generate_blog(path=None, theme=None, output_path=None, markup=None,
     # get the list of files to parse
     if not path:
         raise Exception('you need to specify a path to search the docs on !')
+
+    # remove all the existing content from the output folder
+    try:
+        shutil.rmtree(os.path.join(output_path))
+    except:
+        pass
+
     files = []
     for root, dirs, temp_files in os.walk(path, followlinks=True):
         files.extend([os.sep.join((root, f)) for f in temp_files
@@ -119,14 +127,9 @@ def generate_blog(path=None, theme=None, output_path=None, markup=None,
     # copy static paths to output
     for path in context['STATIC_PATHS']:
         try:
-            real_output = os.path.join(output_path, path)
-            theme_path = os.path.join(theme, path)
-
-            print "updating %s" % real_output
-            shutil.rmtree(real_output)
-            shutil.copytree(theme_path, real_output)
-
-        except OSError as e:
+            shutil.copytree(os.path.join(theme, path),
+                            os.path.join(output_path, path))
+        except OSError:
             pass
 
 
@@ -304,4 +307,4 @@ class Article(object):
 
     @property
     def summary(self):
-        return self.content
+        return truncate_html_words(self.content, 50)

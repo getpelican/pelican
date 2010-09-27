@@ -22,7 +22,7 @@
 <body id="index" class="home">
         
         <header id="banner" class="body">
-                <h1><a href="#">{{ BLOGNAME }} <strong>{{ BLOGSUBTITLE }}</strong></a></h1>
+                <h1><a href="{{ BLOGURL }}">{{ BLOGNAME }} {% if BLOGSUBTITLE %} <strong>{{ BLOGSUBTITLE }}</strong>{% endif %}</a></h1>
                 <nav><ul>
                 {% for title, link in MENUITEMS %}
                     <li><a href="{{ link }}">{{ title }}</a></li>
@@ -40,7 +40,7 @@
                         <h2>blogroll</h2>
                         <ul>
                         {% for name, link in BLOGROLL %}
-                            <li><a href="{{ BLOGURL }}/{{ link }}">{{ name }}</a></li>
+                            <li><a href="{{ link }}">{{ name }}</a></li>
                         {% endfor %}
                         </ul>
                 </div><!-- /.blogroll -->
@@ -49,7 +49,7 @@
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="{{ BLOGURL }}/atom.xml" rel="alternate">atom feed</a></li>
+                            <li><a href="{{ BLOGURL }}/feeds/all.atom.xml" rel="alternate">atom feed</a></li>
                         {% for name, link in SOCIAL %}
                             <li><a href="{{ link }}">{{ name }}</a></li>
                         {% endfor %}
@@ -63,7 +63,7 @@
                 Proudly powered by <a href="http://hg.lolnet.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
                 </address><!-- /#about -->
                 
-                <p>The theme is by<a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
+                <p>The theme is by <a href="http://smashingmagazine.com">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
 </body>
