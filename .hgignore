@@ -4,3 +4,4 @@ output/*
 MANIFEST
 build
 dist
+docs/_build
