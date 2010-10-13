@@ -1,13 +1,13 @@
-from distutils.core import setup
+from setuptools import setup
 import sys
 
-requires = ['feedgenerator', 'jinja2', 'pygments']
+requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils']
 if sys.version_info < (2,7):
     requires.append('argparse')
 
 setup(
     name = "pelican",
-    version = '1.2',
+    version = '1.2.1',
     url = 'http://hg.lolnet.org/pelican/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
@@ -15,7 +15,7 @@ setup(
     long_description=open('README.rst').read(),
     packages = ['pelican'],
     package_data = {'pelican': ['themes/templates/*']},
-    requires = requires, 
+    install_requires = requires, 
     scripts = ['bin/pelican'],
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
