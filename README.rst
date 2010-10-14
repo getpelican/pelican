@@ -11,6 +11,10 @@ The goals are quite simple:
 * A simple cli-tool to (re)generate the weblog.
 * Easy to interface with DVCSes and web hooks
 
+Source code
+-----------
+
+Get the source code from http://alexis.notmyidea.org/pelican/
 
 Getting started
 ---------------
