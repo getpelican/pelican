@@ -1,5 +1,5 @@
 * Add a way to support pictures (see how sphinx makes that)
 * Find a way to extend the existing templates instead of rewriting all from
   scratch.
-* update the templates for notmyidea.
-* put the output base folder in some variable
+* find a better way to specify the templates
+* find a better way to get the date (replaced in dvcses for instances)
