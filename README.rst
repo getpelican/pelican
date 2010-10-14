@@ -12,7 +12,7 @@ Pelican is a simple weblog generator, writen in python.
 Source code
 -----------
 
-Get the source code from http://alexis.notmyidea.org/pelican/
+Get the source code from http://hg.notmyidea.org/pelican/
 
 Getting started
 ---------------
