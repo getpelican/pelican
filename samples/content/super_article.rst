@@ -1,10 +1,10 @@
 This is a super article !
 #########################
 
-.. tags: foo, bar, foobar
-.. date: 2010-10-02 10:14
-.. category: yeah
-.. author: Alexis Métaireau
+:tags: foo, bar, foobar
+:date: 2010-10-02 10:14
+:category: yeah
+:author: Alexis Métaireau
 
 Some content here !
 

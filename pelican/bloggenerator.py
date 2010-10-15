@@ -224,7 +224,7 @@ def read_settings(filename):
                 context[key] = tempdict[key]
     return context
 
-_METADATA = re.compile('.. ([a-z]+): (.*)', re.M)
+_METADATA = re.compile(':([a-z]+): (.*)', re.M)
 _METADATAS_FIELDS = {'tags': lambda x: x.split(', '),
                      'date': lambda x: get_date(x),
                      'category': lambda x: x,
@@ -252,7 +252,7 @@ def parse_metadata(string):
     """
     output = {}
     for m in _METADATA.finditer(string):
-        name = m.group(1)
+        name = m.group(1).lower()
         value = m.group(2)
         if name in _METADATAS_FIELDS:
             output[name] = _METADATAS_FIELDS[name](value)
