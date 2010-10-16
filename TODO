@@ -1,4 +1,3 @@
 * Add a way to support pictures (see how sphinx makes that)
-* Find a way to extend the existing templates instead of rewriting all from
-  scratch.
-* find a better way to specify the templates
+* Find a way to extend the existing templates instead of rewriting all from scratch.
+* find a better way to specify the templates. an idea is simply to install the templates in a default path, and to add a way to specify them by default under a "_themes" dir.
