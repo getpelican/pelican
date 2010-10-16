@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
 {% block content %}        
 <section id="content" class="body">    
 <article>
-        <header> <h2 class="entry-title"><a href="{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2> </header>
+        <header> <h2 class="entry-title"><a href="{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title }}">{{ article.title }}</a></h2> </header>
         <div class="entry-content">
         <footer class="post-info">
                 <abbr class="published" title="{{ article.date.isoformat() }}">

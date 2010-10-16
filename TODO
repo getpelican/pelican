@@ -2,4 +2,3 @@
 * Find a way to extend the existing templates instead of rewriting all from
   scratch.
 * find a better way to specify the templates
-* find a better way to get the date (replaced in dvcses for instances)
