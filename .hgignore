@@ -5,3 +5,5 @@ MANIFEST
 build
 dist
 docs/_build
+Paste-*
+*.egg-info
