@@ -224,7 +224,7 @@ def read_settings(filename):
                 context[key] = tempdict[key]
     return context
 
-_METADATA = re.compile(':([a-z]+): (.*)', re.M)
+_METADATA = re.compile(':([a-z]+): (.*)\s', re.M)
 _METADATAS_FIELDS = {'tags': lambda x: x.split(', '),
                      'date': lambda x: get_date(x),
                      'category': lambda x: x,
@@ -242,7 +242,7 @@ def get_date(string):
             return datetime.strptime(string, date_format)
         except ValueError:
             pass
-    raise ValueError("%s is not a valid date" % string)
+    raise ValueError("'%s' is not a valid date" % string)
 
 def parse_metadata(string):
     """Return a dict, containing a list of metadata informations, found

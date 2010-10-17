@@ -24,6 +24,10 @@
 		text-align: left;
 	}
 
+article img{
+   float: right;
+}
+
 /* Headings */
 h2 {font-size: 1.571em}	/* 22px */
 h3 {font-size: 1.429em}	/* 20px */
