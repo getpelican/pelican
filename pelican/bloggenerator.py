@@ -105,6 +105,12 @@ def generate_blog(path=None, theme=None, output_path=None, markup=None,
     if 'BLOGURL' not in context:
         context['BLOGURL'] = output_path
 
+    generate_feed(articles, context, output_path, context['FEED'])
+    for cat, arts in categories.items():
+        arts.sort(key=attrgetter('date'), reverse=True)
+        generate_feed(arts, context, output_path,
+                      context['CATEGORY_FEED'] % cat)
+
     # generate the output
     generate = partial(generate_file, output_path)
     for template in _DIRECT_TEMPLATES:
@@ -117,12 +123,6 @@ def generate_blog(path=None, theme=None, output_path=None, markup=None,
     for article in articles:
         generate('%s' % article.url,
                       templates['article'], context, article=article)
-
-    generate_feed(articles, context, output_path, context['FEED'])
-    for category, articles in categories.items():
-        articles.sort(key=attrgetter('date'), reverse=True)
-        generate_feed(articles, context, output_path,
-                      context['CATEGORY_FEED'] % category)
 
     # copy static paths to output
     for path in context['STATIC_PATHS']:
