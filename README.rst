@@ -9,11 +9,6 @@ Pelican is a simple weblog generator, writen in python.
 * Easy to interface with DVCSes and web hooks
 * Completely static output, so easy to host anywhere !
 
-Source code
------------
-
-Get the source code from http://hg.notmyidea.org/pelican/
-
 Getting started
 ---------------
 
@@ -54,3 +49,9 @@ Feedback !
 
 If you want to see new features in Pelican, dont hesitate to tell me, to clone
 the repository, etc. That's open source, dude!
+
+Source code
+-----------
+
+Get the source code from http://hg.notmyidea.org/pelican/
+
