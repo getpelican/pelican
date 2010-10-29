@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <title>{% block title %}{{ BLOGNAME }}{%endblock%}</title>
+        <title>{% block title %}{{ SITENAME }}{%endblock%}</title>
         <meta charset="utf-8" />
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="{{ BLOGURL }}">{{ BLOGNAME }} <strong>{{ BLOGSUBTITLE }}</strong></a></h1>
+                <h1><a href="{{ SITEURL }}">{{ SITENAME }} <strong>{{ SITESUBTITLE }}</strong></a></h1>
         </header><!-- /#banner -->
         {% if categories %}<ul>
         {% for category, articles in categories %}
