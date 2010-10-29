@@ -1,15 +1,16 @@
-#!/usr/bin/python
-from pelican.bloggenerator import generate_blog
+#!/usr/bin/env python
 import argparse
 
-parser = argparse.ArgumentParser(description="""A tool to generate a 
+from pelican.generators import ArticlesGenerator
+
+parser = argparse.ArgumentParser(description="""A tool to generate a
 static blog, with restructured text input files.""")
 
 parser.add_argument(dest='path',
     help='Path where to find the content files (default is "content").')
-parser.add_argument('-t', '--templates-path', dest='templates',
-    help='Path where to find the templates. If not specified, will uses the'
-         ' ones included with pelican.')
+parser.add_argument('-t', '--theme-path', dest='theme',
+    help='Path where to find the theme templates. If not specified, it will'
+         'use the ones included with pelican.')
 parser.add_argument('-o', '--output', dest='output',
     help='Where to output the generated files. If not specified, a directory'
          ' will be created, named "output" in the current path.')
@@ -18,25 +19,10 @@ parser.add_argument('-m', '--markup', default='rst', dest='markup',
           ' available.')
 parser.add_argument('-s', '--settings', dest='settings',
     help='the settings of the application. Default to None.')
-parser.add_argument('-b', '--debug', dest='debug', action='store_true')
-
-
-def run(args):
-    generate_blog(args.path, args.templates, args.output, args.markup, 
-                    args.settings)
-    print 'Done !'
 
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    files = []
-    if args.debug:
-        run(args)
-    else:
-        try:
-            run(args)
-        except Exception, e:
-            if args.debug:
-                raise e
-            else:
-                print 'Error ! %s' % e
+    gen = ArticlesGenerator(args.settings)
+    gen.generate(args.path, args.theme, args.output, args.markup)
+    print 'Done !'

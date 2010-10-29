@@ -7,7 +7,7 @@ if sys.version_info < (2,7):
 
 setup(
     name = "pelican",
-    version = '1.2.5',
+    version = '2.0',
     url = 'http://hg.lolnet.org/pelican/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
