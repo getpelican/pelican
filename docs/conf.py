@@ -27,9 +27,8 @@ html_theme = 'flask_small'
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'index_logo': 'pelican.gif',
+    'index_logo': 'pelican.png',
     'github_fork': 'ametaireau/pelican',
-    'index_logo_height': '200px',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
