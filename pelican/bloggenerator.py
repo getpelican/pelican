@@ -122,7 +122,8 @@ def generate_blog(path=None, theme=None, output_path=None, markup=None,
                       category=cat, articles=categories[cat])
     for article in articles:
         generate('%s' % article.url,
-                      templates['article'], context, article=article)
+                      templates['article'], context, article=article,
+                      category=article.category)
 
     # copy static paths to output
     for path in context['STATIC_PATHS']:
