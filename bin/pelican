@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import argparse
 
-from pelican.generators import ArticlesGenerator
+from pelican.generators import ArticlesGenerator, PagesGenerator
 
 parser = argparse.ArgumentParser(description="""A tool to generate a
 static blog, with restructured text input files.""")
@@ -23,6 +23,15 @@ parser.add_argument('-s', '--settings', dest='settings',
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    gen = ArticlesGenerator(args.settings)
-    gen.generate(args.path, args.theme, args.output, args.markup)
+
+    articles = ArticlesGenerator(args.settings)
+    pages = PagesGenerator(args.settings)
+    context = {}
+
+    for gen in articles, pages:
+        context.update(gen.create_context(args.path, args.theme, args.output,
+                       args.markup))
+
+    for gen in articles, pages:
+        gen.generate(context)
     print "Enjoy !"

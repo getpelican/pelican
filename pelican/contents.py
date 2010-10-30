@@ -8,7 +8,7 @@ class Page(object):
     :param string: the string to parse, containing the original content.
     :param markup: the markup language to use while parsing.
     """
-    mandatory_properties = ('title')
+    mandatory_properties = ('title',)
 
     def __init__(self, content, metadatas={}, settings={}):
         self.content = content

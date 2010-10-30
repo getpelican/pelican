@@ -30,6 +30,9 @@
                 {% for title, link in MENUITEMS %}
                     <li><a href="{{ link }}">{{ title }}</a></li>
                 {% endfor %}
+                {% for title, link in PAGES %}
+                    <li><a href="{{ SITEURL }}/{{ link }}">{{ title }}</a></li>
+                {% endfor %}
                 {% for cat, null in categories %}
                     <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/category/{{ cat }}.html">{{ cat }}</a></li>
                 {% endfor %}
@@ -38,11 +41,11 @@
         {% block content %}
         {% endblock %}
         <section id="extras" class="body">
-        {% if SITEROLL %}
+        {% if LINKS %}
                 <div class="blogroll">
                         <h2>blogroll</h2>
                         <ul>
-                        {% for name, link in SITEROLL %}
+                        {% for name, link in LINKS %}
                             <li><a href="{{ link }}">{{ name }}</a></li>
                         {% endfor %}
                         </ul>

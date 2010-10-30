@@ -10,13 +10,13 @@ from feedgenerator import Atom1Feed
 
 from pelican.utils import update_dict
 from pelican.settings import read_settings
-from pelican.contents import Article
+from pelican.contents import Article, Page
 from pelican.readers import read_file
 
 ## Constants ##########################################################
 
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
-              'archives')
+              'archives', 'page')
 
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 
@@ -92,6 +92,7 @@ class Generator(object):
         :param context: dict to pass to the templates.
         :param **kwargs: additional variables to pass to the templates
         """
+        context = context.copy()
         context.update(kwargs)
         output = template.render(context)
         filename = os.sep.join((self.output_path, name))
@@ -128,7 +129,47 @@ class Generator(object):
         except:
             pass
 
+    def _get_context(self, items):
+        """Return the context to be used in templates"""
+
+        # create a new context only if none currently exists.
+        if not hasattr(self, "context"):
+            context = self.settings.copy()
+        else:
+            context = self.context
+
+        # put all we need in the context, to generate the output
+        for item in items:
+            value = getattr(self, item)
+            if hasattr(value, 'items'):
+                value = value.items()
+            context[item] = value
+        return context
+
+    def get_files(self, path, exclude=[]):
+        """Return the files to use to use in this generator
+
+        :param path: the path to search the file on
+        :param exclude: the list of path to exclude
+        """
+        files = []
+        for root, dirs, temp_files in os.walk(path, followlinks=True):
+            for e in exclude:
+                if e in dirs:
+                    dirs.remove(e)
+            files.extend([os.sep.join((root, f)) for f in temp_files
+                if f.endswith(self.format)])
+        return files
+
+    def is_valid_content(self, content, f):
+        try:
+            content.check_properties()
+            return True
+        except NameError as e:
+            print u" [info] Skipping %s: impossible to find informations about '%s'" % (f, e)
+            return False
     
+
 class ArticlesGenerator(Generator):
 
     def __init__(self, settings=None):
@@ -139,14 +180,6 @@ class ArticlesGenerator(Generator):
         self.tags = {}
         self.categories = {} 
         
-    def get_files(self, path):
-        """Return the files to use to use in this generator"""
-        files = []
-        for root, dirs, temp_files in os.walk(path, followlinks=True):
-            files.extend([os.sep.join((root, f)) for f in temp_files
-                if f.endswith(self.format)])
-        return files
-
     def process_files(self, files):
         """Process all the files and build the lists and dicts of
         articles/categories/etc.
@@ -161,10 +194,7 @@ class ArticlesGenerator(Generator):
                     metadatas['category'] = unicode(category)
 
             article = Article(content, metadatas, settings=self.settings)
-            try:
-                article.check_properties()
-            except NameError as e:
-                print u"[info] Skipping %s: impossible to find informations about '%s'" % (f, e)
+            if not self.is_valid_content(article, f):
                 continue
 
             update_dict(self.dates, article.date.strftime('%Y-%m-%d'), article)
@@ -174,18 +204,6 @@ class ArticlesGenerator(Generator):
                 for tag in article.tags:
                     update_dict(self.tags, tag, article)
             self.articles.append(article)
-
-    def _get_context(self):
-        """Return the context to be used in templates"""
-
-        context = self.settings.copy()
-        # put all we need in the context, to generate the output
-        for item in ('articles', 'dates', 'years', 'tags', 'categories'):
-            value = getattr(self, item)
-            if hasattr(value, 'items'):
-                value = value.items()
-            context[item] = value
-        return context
 
     def generate_feeds(self, context):
         """Generate the feeds from the current context, and output files.""" 
@@ -231,26 +249,52 @@ class ArticlesGenerator(Generator):
             except OSError:
                 pass
 
-    def generate(self, path=None, theme=None, output_path=None, fmt=None):
-        """Search the given path for files, and generate a static blog in output,
-        using the given theme.
-
-        :param path: the path where to find the files to parse
-        :param theme: where to search for templates
-        :param output_path: where to output the generated files
-        :param settings: the settings file to use
-        :param fmt: the format of the files to read. It's a list.
-        """
-
+    def create_context(self, path=None, theme=None, output_path=None, fmt=None):
         self._init_params(path, theme, output_path, fmt)
 
         # build the list of articles / categories / etc.
-        self.process_files(self.get_files(path))
+        self.process_files(self.get_files(path, ['pages',]))
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         # and generate the output :)
-        context = self._get_context()
+        return self._get_context(('articles', 'dates', 'years', 'tags', 
+                                  'categories'))
+
+    def generate(self, context):
         self.generate_feeds(context)
         self.generate_pages(context)
         self.generate_static_content()
+
+
+class PagesGenerator(Generator):
+    """Generate pages"""
+
+    def __init__(self, settings=None):
+        super(PagesGenerator, self).__init__(settings)
+        self.pages = []
+
+    def process_files(self, files):
+        """Process all the files and build the lists and dicts of
+        articles/categories/etc.
+        """
+        for f in files:
+            content, metadatas = read_file(f)
+            page = Page(content, metadatas, settings=self.settings)
+            if not self.is_valid_content(page, f):
+                continue
+            self.pages.append(page)
+        
+    def generate_pages(self, context):
+        templates = self.get_templates(self.theme)
+        for page in self.pages:
+            self.generate_file('pages/%s' % page.url, 
+                               templates['page'], context, page=page)
+        
+    def create_context(self, path=None, theme=None, output_path=None, fmt=None):
+        self._init_params(path, theme, output_path, fmt)
+        self.process_files(self.get_files(os.sep.join((path, 'pages'))))
+        return self._get_context(('pages',))
+
+    def generate(self, context):
+        self.generate_pages(context)
