@@ -14,7 +14,7 @@ parser.add_argument('-t', '--theme-path', dest='theme',
 parser.add_argument('-o', '--output', dest='output',
     help='Where to output the generated files. If not specified, a directory'
          ' will be created, named "output" in the current path.')
-parser.add_argument('-m', '--markup', default='rst', dest='markup',
+parser.add_argument('-m', '--markup', default='rst, md', dest='markup',
     help='the markup language to use. Currently only ReSTreucturedtext is'
           ' available.')
 parser.add_argument('-s', '--settings', dest='settings',
@@ -27,10 +27,11 @@ if __name__ == '__main__':
     articles = ArticlesGenerator(args.settings)
     pages = PagesGenerator(args.settings)
     context = {}
-
+    
     for gen in articles, pages:
+        markup = [a.split()[0] for a in args.markup.split(',')]
         context.update(gen.create_context(args.path, args.theme, args.output,
-                       args.markup))
+                       markup))
 
     for gen in articles, pages:
         gen.generate(context)

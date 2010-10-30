@@ -27,21 +27,22 @@ class Generator(object):
     def __init__(self, settings):
         self.settings = read_settings(settings)
     
-    def _init_params(self, path=None, theme=None, output_path=None, fmt=None):
+    def _init_params(self, path=None, theme=None, output_path=None, 
+        markup=None):
         """Initialize parameters for this object.
 
         :param path: the path where to find the files to parse
         :param theme: where to search for templates
         :param output_path: where to output the generated files
         :param settings: the settings file to use
-        :param fmt: the format of the files to read. It's a list.
+        :param markup: the markup of the files to read. It's a list.
         """
         # get the settings
         self.path = path or self.settings['PATH']
         self.theme = theme or self.settings['THEME']
         output_path = output_path or self.settings['OUTPUT_PATH']
         self.output_path = os.path.realpath(output_path)
-        self.format = fmt or self.settings['FORMAT']
+        self.markup = markup or self.settings['MARKUP']
 
         # get the list of files to parse
         if not path:
@@ -158,7 +159,7 @@ class Generator(object):
                 if e in dirs:
                     dirs.remove(e)
             files.extend([os.sep.join((root, f)) for f in temp_files
-                if f.endswith(self.format)])
+                if True in [f.endswith(markup) for markup in self.markup]])
         return files
 
     def is_valid_content(self, content, f):
@@ -249,8 +250,9 @@ class ArticlesGenerator(Generator):
             except OSError:
                 pass
 
-    def create_context(self, path=None, theme=None, output_path=None, fmt=None):
-        self._init_params(path, theme, output_path, fmt)
+    def create_context(self, path=None, theme=None, output_path=None, 
+        markup=None):
+        self._init_params(path, theme, output_path, markup)
 
         # build the list of articles / categories / etc.
         self.process_files(self.get_files(path, ['pages',]))
@@ -291,8 +293,9 @@ class PagesGenerator(Generator):
             self.generate_file('pages/%s' % page.url, 
                                templates['page'], context, page=page)
         
-    def create_context(self, path=None, theme=None, output_path=None, fmt=None):
-        self._init_params(path, theme, output_path, fmt)
+    def create_context(self, path=None, theme=None, output_path=None, 
+        markup=None):
+        self._init_params(path, theme, output_path, markup)
         self.process_files(self.get_files(os.sep.join((path, 'pages'))))
         return self._get_context(('pages',))
 

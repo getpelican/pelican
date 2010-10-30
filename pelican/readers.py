@@ -1,4 +1,5 @@
 from docutils import core
+from markdown import Markdown
 import re
 
 # import the directives to have pygments support
@@ -38,14 +39,27 @@ class RstReader(object):
             metadatas['title'] = title
         return content, metadatas
 
-_EXTENSIONS = {'rst': RstReader}  # supported formats
+class MarkdownReader(object):
+
+    def read(self, filename):
+        """Parse content and metadata of markdown files"""
+        text = open(filename)
+        md = Markdown(extensions = ['meta'])
+        content = md.convert(text)
+        
+        metadatas = {}
+        for name, value in md.Meta.items():
+            metadatas[name.lower()] = value[0] 
+        return content, metadatas
+
+_EXTENSIONS = {'rst': RstReader, 'md': MarkdownReader}  # supported formats
 
 
 def read_file(filename, fmt=None):
     """Return a reader object using the given format."""
     if not fmt:
-        fmt = 'rst'
+        fmt = filename.split('.')[-1]
     if fmt not in _EXTENSIONS.keys():
-        raise TypeError('Pelican does not know how to parse %s files' % fmt)
+        raise TypeError('Pelican does not know how to parse %s' % filename)
     reader = _EXTENSIONS[fmt]()
     return reader.read(filename)
