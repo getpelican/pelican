@@ -30,8 +30,6 @@ class RstReader(object):
         metadatas = self._parse_metadata(text)
         extra_params = {'input_encoding': 'unicode',
                         'initial_header_level': '2'}
-        from ipdb import set_trace
-        set_trace()
         rendered_content = core.publish_parts(text, writer_name='html',
                                               settings_overrides=extra_params)
         title = rendered_content.get('title')
