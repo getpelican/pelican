@@ -3,11 +3,11 @@ PATH = 'samples/content'
 THEME = 'samples/themes/notmyidea'
 AUTHOR = u'Alexis Métaireau'
 
-BLOGNAME = 'NotMyIdea.org'
-BLOGSUBTITLE = u"%s's weblog" % AUTHOR
-BLOGURL = 'http://blog.notmyidea.org'
+SITENAME = 'Pelican'
+SITESUBTITLE = u"%s's weblog" % AUTHOR
+SITEURL = 'http://blog.notmyidea.org'
 
-BLOGROLL = (('Biologeek', 'http://biologeek.org'),
+SITEROLL = (('Biologeek', 'http://biologeek.org'),
             ('Filyb', "http://filyb.info/"),
             ('Libert-fr', "http://www.libert-fr.com"),
             ('N1k0', "http://prendreuncafe.com/blog/"),

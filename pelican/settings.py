@@ -1,7 +1,7 @@
 import os
 
 _DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
-                              "themes"])
+                              "themes/notmyidea"])
 _DEFAULT_CONFIG = {'PATH': None,
                    'THEME': _DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',

@@ -7,14 +7,14 @@ if sys.version_info < (2,7):
 
 setup(
     name = "pelican",
-    version = '2.0',
+    version = '2.1',
     url = 'http://hg.lolnet.org/pelican/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
     description = "A tool to generate a static blog, with restructured text input files.",
     long_description=open('README.rst').read(),
     packages = ['pelican'],
-    package_data = {'pelican': ['themes/templates/*']},
+    include_package_data = True,
     install_requires = requires, 
     scripts = ['bin/pelican'],
     classifiers = ['Development Status :: 5 - Production/Stable',
