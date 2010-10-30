@@ -226,7 +226,7 @@ class ArticlesGenerator(Generator):
                 fromp = os.path.expanduser(os.path.join(self.theme, path))
                 to = os.path.expanduser(os.path.join(self.output_path, path))
                 shutil.copytree(fromp, to)
-                print u' ✔ copying %s to %s' % (fromp, to)
+                print u' ✔ copying %s' % fromp
 
             except OSError:
                 pass

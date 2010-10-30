@@ -20,7 +20,8 @@ class RstReader(object):
         output = {}
         for m in re.compile(':([a-z]+): (.*)\s', re.M).finditer(content):
             name, value = m.group(1).lower(), m.group(2)
-            output[name] = _METADATAS_FIELDS[name](value)
+            if name in _METADATAS_FIELDS:
+                output[name] = _METADATAS_FIELDS[name](value)
         return output
 
     def read(self, filename):
@@ -29,6 +30,8 @@ class RstReader(object):
         metadatas = self._parse_metadata(text)
         extra_params = {'input_encoding': 'unicode',
                         'initial_header_level': '2'}
+        from ipdb import set_trace
+        set_trace()
         rendered_content = core.publish_parts(text, writer_name='html',
                                               settings_overrides=extra_params)
         title = rendered_content.get('title')
