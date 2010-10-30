@@ -25,4 +25,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     gen = ArticlesGenerator(args.settings)
     gen.generate(args.path, args.theme, args.output, args.markup)
-    print 'Done !'
+    print "Enjoy !"
