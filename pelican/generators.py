@@ -79,7 +79,7 @@ class Generator(object):
                 pass
             fp = open(complete_path, 'w')
             feed.write(fp, 'utf-8')
-            print u' [OK] writing %s' % complete_path
+            print u' [ok] writing %s' % complete_path
             
             fp.close()
         return feed
@@ -164,7 +164,7 @@ class ArticlesGenerator(Generator):
             try:
                 article.check_properties()
             except NameError as e:
-                print u"[INFO] Skipping %s: impossible to find informations about '%s'" % (f, e)
+                print u"[info] Skipping %s: impossible to find informations about '%s'" % (f, e)
                 continue
 
             update_dict(self.dates, article.date.strftime('%Y-%m-%d'), article)
@@ -226,7 +226,7 @@ class ArticlesGenerator(Generator):
                 fromp = os.path.expanduser(os.path.join(self.theme, path))
                 to = os.path.expanduser(os.path.join(self.output_path, path))
                 shutil.copytree(fromp, to)
-                print u' [OK] copying %s' % fromp
+                print u' [ok] copying %s' % fromp
 
             except OSError:
                 pass
