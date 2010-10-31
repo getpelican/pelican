@@ -10,35 +10,38 @@
 /* Imports */
 @import url("reset.css");
 @import url("pygment.css");
+@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&subset=latin);
 
 /***** Global *****/
 /* Body */
-	body {
-		background: #F5F4EF url('../images/bg.png');
-		color: #000305;
-		font-size: 87.5%; /* Base font size: 14px */
-		font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-		line-height: 1.429;
-		margin: 0;
-		padding: 0;
-		text-align: left;
-	}
+body {
+    background: #F5F4EF url('../images/bg.png');
+    color: #000305;
+    font-size: 87.5%; /* Base font size: 14px */
+    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    line-height: 1.429;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
 
 article img{
    float: right;
 }
 
 /* Headings */
+h1 {font-size: 2em }
 h2 {font-size: 1.571em}	/* 22px */
 h3 {font-size: 1.429em}	/* 20px */
 h4 {font-size: 1.286em}	/* 18px */
 h5 {font-size: 1.143em}	/* 16px */
 h6 {font-size: 1em}		/* 14px */
 
-h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6 {
 	font-weight: 400;
 	line-height: 1.1;
 	margin-bottom: .8em;
+    font-family: 'Yanone Kaffeesatz', arial, serif;
 }
 
 h3, h4, h5, h6 { margin-top: .8em; }
@@ -92,10 +95,13 @@ dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
 
-pre{background-color: #000; padding: 10px; color: #fff; margin: 10px;}
+pre{background-color: #000; padding: 10px; color: #fff; margin: 10px; overflow: auto;}
 
 /* Quotes */
-blockquote {font-style: italic;}
+blockquote {
+    margin: 20px;
+    font-style: italic;
+}
 cite {}
 
 q {}
@@ -341,8 +347,9 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 #content > .hentry {padding: 1em 0;}
 
-.entry-title {font-size: 2em; margin-bottom: 5px; margin-top: 0; }
-.entry-title a:link, .entry-title a:visited {text-decoration: none;}
+.entry-title {font-size: 3em; margin-bottom: 10px; margin-top: 0;}
+.entry-title a:link, .entry-title a:visited {text-decoration: none; color: #333;}
+.entry-title a:visited {background-color: #fff;}
 
 .hentry .post-info * {font-style: normal;}
 
