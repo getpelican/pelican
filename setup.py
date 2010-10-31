@@ -1,7 +1,7 @@
 from setuptools import setup
 import sys
 
-requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils']
+requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'Markdown']
 if sys.version_info < (2,7):
     requires.append('argparse')
 
