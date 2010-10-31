@@ -4,7 +4,7 @@ Pelican
 Pelican is a simple weblog generator, writen in python.
 
 * Write your weblog entries directly with your editor of choice (vim!) and
-  directly in restructured text.
+  directly in restructured text, or markdown.
 * A simple cli-tool to (re)generate the weblog.
 * Easy to interface with DVCSes and web hooks
 * Completely static output, so easy to host anywhere !
@@ -26,6 +26,14 @@ following syntax::
     :tags: thats, awesome
     :category: yeah
     :author: Alexis Metaireau
+
+
+You can also use a mardown syntax::
+
+    Date: 2010-12-03
+    Title: My super title
+
+    Put you content here.
 
 Note that only the `date` metadata is mandatory, so you just have to add that in i
 your files. The category can also be determined by the directory where the rst file
