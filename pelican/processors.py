@@ -106,6 +106,8 @@ class PagesProcessor(Processor):
             if not is_valid_content(page, f):
                 continue
             self.pages.append(page)
+
+        context['PAGES'] = self.pages
         
     def process(self, context, generator):
         templates = generator.get_templates()

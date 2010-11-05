@@ -30,9 +30,11 @@
                 {% for title, link in MENUITEMS %}
                     <li><a href="{{ link }}">{{ title }}</a></li>
                 {% endfor %}
-                {% for title, link in PAGES %}
-                    <li><a href="{{ SITEURL }}/{{ link }}">{{ title }}</a></li>
+                {% if DISPLAY_PAGES_ON_MENU %}
+                {% for page in PAGES %}
+                    <li><a href="{{ SITEURL }}/pages/{{ page.url }}">{{ page.title }}</a></li>
                 {% endfor %}
+                {% endif %}
                 {% for cat, null in categories %}
                     <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/category/{{ cat }}.html">{{ cat }}</a></li>
                 {% endfor %}

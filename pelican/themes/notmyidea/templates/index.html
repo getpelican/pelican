@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}        
 {% block content_title %}{% endblock %}
+{% if articles %}
 {% for article in articles %}        
     {% if loop.index == 1 %}
         <aside id="featured" class="body"><article>
@@ -49,4 +50,12 @@
 {% endfor %}
 </ol><!-- /#posts-list -->
 </section><!-- /#content -->
+{% else %}
+<section id="content" class="body">    
+<h2>Pages</h2>
+{% for page in PAGES %}
+    <li><a href="{{ SITEURL }}/pages/{{ page.url }}">{{ page.title }}</a></li>
+{% endfor %}
+</section>
+{% endif %}
 {% endblock content %}

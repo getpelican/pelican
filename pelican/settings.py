@@ -10,6 +10,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'FEED': 'feeds/all.atom.xml',
                    'CATEGORY_FEED': 'feeds/%s.atom.xml',
                    'SITENAME': 'A Pelican Blog',
+                   'DISPLAY_PAGES_ON_MENU': True,
                   }
 
 def read_settings(filename):
