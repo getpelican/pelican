@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
+import os
+import shutil
 from datetime import datetime
 from codecs import open as _open
 
@@ -48,6 +50,26 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
+def copytree(path, origin, destination):
+    """Copy path from origin to destination, silent any errors"""
+
+    try:
+        fromp = os.path.expanduser(os.path.join(origin, path))
+        to = os.path.expanduser(os.path.join(destination, path))
+        shutil.copytree(fromp, to)
+        print u' [ok] copying %s' % fromp
+
+    except OSError:
+        pass
+
+def clean_output_dir(path):
+    """Remove all the files from the output directory"""
+
+    # remove all the existing content from the output folder
+    try:
+        shutil.rmtree(path)
+    except Exception as e:
+        pass
 
 def truncate_html_words(s, num, end_text='...'):
     """Truncates HTML to a certain number of words (not counting tags and
