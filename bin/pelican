@@ -31,6 +31,5 @@ if __name__ == '__main__':
     generator = Generator(args.settings, args.path, args.theme, 
                           args.output, markup)
     clean_output_dir(args.output)
-    generator.run([ArticlesProcessor, PagesProcessor, StaticProcessor,
-                   PdfProcessor])
+    generator.run([ArticlesProcessor, PagesProcessor, StaticProcessor])
     print "Enjoy !"
