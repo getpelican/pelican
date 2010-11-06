@@ -16,7 +16,7 @@
                         By <a class="url fn" href="#">{{ article.author }}</a>
                 </address>
                 {% endif %}
-                <p>In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></p>
+                <p>In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
         </footer><!-- /.post-info -->
         {{ article.content }}
         </div><!-- /.entry-content -->

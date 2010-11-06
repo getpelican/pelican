@@ -89,6 +89,10 @@ ol {
     padding:5px;
 }
 
+.post-info p{
+    margin-bottom: 1px;
+}
+
 .readmore { float: right }
 
 dl {margin: 0 0 1.5em 0;}
