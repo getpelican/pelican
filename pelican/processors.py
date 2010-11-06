@@ -1,6 +1,8 @@
 from operator import attrgetter
 import os
 
+from rst2pdf.createpdf import RstToPdf
+
 from pelican.utils import update_dict, copytree
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
@@ -70,7 +72,8 @@ class ArticlesProcessor(Processor):
                 if category != '':
                     metadatas['category'] = unicode(category)
 
-            article = Article(content, metadatas, settings=generator.settings)
+            article = Article(content, metadatas, settings=generator.settings,
+                              filename=f)
             if not is_valid_content(article, f):
                 continue
 
@@ -102,7 +105,8 @@ class PagesProcessor(Processor):
     def preprocess(self, context, generator):
         for f in generator.get_files(os.sep.join((generator.path, 'pages'))):
             content, metadatas = read_file(f)
-            page = Page(content, metadatas, settings=generator.settings)
+            page = Page(content, metadatas, settings=generator.settings,
+                        filename=f)
             if not is_valid_content(page, f):
                 continue
             self.pages.append(page)
@@ -125,3 +129,27 @@ class StaticProcessor(Processor):
             copytree(path, generator.theme, generator.output_path)
         copytree('pics', generator.path, generator.output_path)
 
+
+class PdfProcessor(Processor):
+    """Generate PDFs on the output dir, for all articles and pages coming from
+    rst"""
+
+    def _create_pdf(self, creator, obj, output_path):
+        if obj.filename.endswith(".rst"):
+            creator.createPdf(text=open(obj.filename).read(),
+                output=os.path.join(output_path, "%s.pdf" % obj.slug))
+
+    def process(self, context, generator):
+        pdf_path = os.path.join(generator.output_path, 'pdf')
+        try:
+            os.mkdir(pdf_path)
+        except OSError:
+            pass
+
+        pdfcreator = RstToPdf(breakside=0, stylesheets=['twelvepoint'])
+
+        for article in context['articles']:
+            self._create_pdf(pdfcreator, article, pdf_path)
+
+        for page in context['pages']:
+            self._create_pdf(pdfcreator, page, pdf_path)

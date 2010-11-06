@@ -4,7 +4,7 @@ import argparse
 from pelican.utils import clean_output_dir
 from pelican.generators import Generator
 from pelican.processors import (ArticlesProcessor, PagesProcessor, 
-                                StaticProcessor)
+                                StaticProcessor, PdfProcessor)
 
 parser = argparse.ArgumentParser(description="""A tool to generate a
 static blog, with restructured text input files.""")
@@ -31,5 +31,6 @@ if __name__ == '__main__':
     generator = Generator(args.settings, args.path, args.theme, 
                           args.output, markup)
     clean_output_dir(args.output)
-    generator.run([ArticlesProcessor, PagesProcessor, StaticProcessor])
+    generator.run([ArticlesProcessor, PagesProcessor, StaticProcessor,
+                   PdfProcessor])
     print "Enjoy !"

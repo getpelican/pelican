@@ -10,7 +10,7 @@ class Page(object):
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content, metadatas={}, settings={}):
+    def __init__(self, content, metadatas={}, settings={}, filename=None):
         self.content = content
         for key, value in metadatas.items():
             setattr(self, key, value)
@@ -18,6 +18,9 @@ class Page(object):
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
                 self.author = settings['AUTHOR']
+
+        if filename:
+            self.filename = filename
 
     def check_properties(self):
         """test that each mandatory property is set."""
@@ -27,7 +30,11 @@ class Page(object):
 
     @property
     def url(self):
-        return '%s.html' % slugify(self.title)
+        return '%s.html' % self.slug
+
+    @property
+    def slug(self):
+        return slugify(self.title)
 
     @property
     def summary(self):
@@ -49,4 +56,3 @@ def is_valid_content(content, f):
     except NameError as e:
         print u" [info] Skipping %s: impossible to find informations about '%s'" % (f, e)
         return False
-    

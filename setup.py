@@ -1,13 +1,14 @@
 from setuptools import setup
 import sys
 
-requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'Markdown']
+requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'Markdown',
+            'rst2pdf']
 if sys.version_info < (2,7):
     requires.append('argparse')
 
 setup(
     name = "pelican",
-    version = '2.3',
+    version = '2.4',
     url = 'http://alexis.notmyidea.org/pelican/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
