@@ -39,6 +39,18 @@ Note that only the `date` metadata is mandatory, so you just have to add that in
 your files. The category can also be determined by the directory where the rst file
 is. For instance, the category of `python/foobar/myfoobar.rst` is `foobar`.
 
+Features
+--------
+
+Pelican currently supports:
+
+* blog articles
+* comments, via an external service (disqus). Please notice that while 
+  it's useful, it's an external service, and you'll not manage the 
+  comments by yourself. It could potentially eat your data.
+* theming support (themes are done using `jinja2 <http://jinjna.pocoo.org>`_)
+* PDF generation of the articles/pages (optional).
+
 Getting started — Generate your blog
 -------------------------------------
 
