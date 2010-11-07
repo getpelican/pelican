@@ -12,6 +12,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'SITENAME': 'A Pelican Blog',
                    'DISPLAY_PAGES_ON_MENU': True,
                    'PDF_PROCESSOR': False,
+                   'DEFAULT_CATEGORY': 'misc',
                   }
 
 def read_settings(filename):

@@ -69,6 +69,9 @@ class ArticlesProcessor(Processor):
                 category = os.path.dirname(f).replace(
                     os.path.expanduser(generator.path)+'/', '')
 
+                if category == generator.path:
+                    category = context['DEFAULT_CATEGORY']
+
                 if category != '':
                     metadatas['category'] = unicode(category)
 
