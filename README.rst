@@ -78,6 +78,21 @@ Why the name "Pelican" ?
 
 Heh, you didnt noticed? "Pelican" is an anagram for "Calepin" ;)
 
+Dependencies
+------------
+
+At this time, pelican is dependent of the following python packages:
+
+* feedgenerator, to generate the ATOM feeds.
+* jinja2, for templating support.
+* pygments, to have syntactic colorization
+* docutils and Markdown
+
+If you're not using python 2.7, you will also need `argparse`.
+
+All those dependencies will be processed automaticaly if you install pelican
+using setuptools/distribute or pip.
+
 Source code
 -----------
 
