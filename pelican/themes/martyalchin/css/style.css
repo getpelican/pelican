@@ -1,0 +1,404 @@
+/* Resets to avoid browser differences */
+
+body, button, div, fieldset, form, h1, h2, h3, input, label, li, p, pre, td, textarea, .typygmentdown {
+    margin: 0;
+    padding: 0;
+    text-align: justify;
+    font-family: Georgia, serif;
+    font-size: 100%;
+    line-height: 1.25;
+    letter-spacing: 0;
+    border: none;
+    background: none;
+}
+
+/* Overall page layout */
+
+body {
+    background: white;
+    color: black;
+    color: #303030;
+}
+
+@media screen {
+    body {
+        width: 700px;
+        margin: 20px auto;
+    }
+}
+
+@media print {
+    body {
+        margin: 0 2em;
+    }
+}
+
+/* Headings */
+
+h1, h2, h3, h4, h5, h6, .info, .info p {
+    font-family: Times, serif;
+    font-weight: normal;
+    page-break-inside: avoid;
+}
+
+h1 .caps, h2 .caps, h3 .caps {
+    letter-spacing: -.05em;
+}
+
+h1 {
+    font-family: Times, serif;
+    text-align: center;
+    font-size: 2.25em;
+    line-height: 1.111;
+    padding-right: 0.08em;
+    letter-spacing: -.07em;
+}
+
+h2 {
+    margin-top: 0.714em;
+    font-size: 1.75em;
+    line-height: 0.714;
+    letter-spacing: -.05em;
+}
+
+h3 {
+    margin-top: 0.926em;
+    font-size: 1.35em;
+    line-height: 0.926;
+    letter-spacing: -.03em;
+}
+
+h1 .dquo, h2 .dquo, h3 .dquo, h4 .dquo, h5 .dquo, h6 .dquo {
+    margin-left: -.4em;
+}
+
+.info, .info p {
+    text-align: center;
+    letter-spacing: -.03em;
+}
+
+.info p {
+    margin: 0;
+}
+
+.info img.g {
+    width: 24px;
+    height: 24px;
+    margin: -7px 0;
+}
+
+#home h2 a[href*="http://"] {
+    padding-right: 28px;
+    background: url("/static/link.png") right center no-repeat;
+}
+
+#home h2 a[href*="http://"]:visited {
+    padding-right: 28px;
+    background: url("/static/visited.png") right center no-repeat;
+}
+
+h2 + p.published {
+    float: right;
+    margin-top: -1.25em;
+}
+
+.copyright {
+    margin: 1.25em 0;
+}
+
+/* Page text */
+
+p, p[class] + p {
+    margin-top: 1.25em;
+    widows: 2;
+    orphans: 2;
+    text-indent: 0;
+    clear: left;
+}
+
+p + p {
+    text-indent: 1.5em;
+    margin-top: 0;
+}
+
+p ~ img {
+    display: block;
+    margin: 1.25em auto;
+}
+
+.caps {
+    letter-spacing: 0.1em;
+    font-size: 75%;
+}
+
+abbr {
+    border-bottom: 1px dotted black;
+}
+
+blockquote {
+    margin: 0 1em;
+    font-style: italic;
+    letter-spacing: -0.0625em;
+}
+
+blockquote em {
+    font-style: normal;
+    letter-spacing: 0;
+}
+
+div.image {
+    text-align: center;
+    margin: 1.25em 0;
+}
+
+img {
+    border: none;
+}
+
+
+
+.side {
+    position: absolute;
+    width: 150px;
+    height: auto;
+    margin-left: 710px;
+}
+
+.left.side {
+    margin-left: -160px;
+}
+
+.right.side {
+    margin-left: 710px;
+}
+
+@media screen {
+    h1 a, h2 a, h3 a, .info a {
+        text-decoration: none;
+    }
+
+    a:link {
+        color: #85ac40;
+    }
+
+    a:visited {
+        color: #61883b;
+    }
+
+    ::selection {
+        background: #dcff9d;
+    }
+
+    ::-moz-selection {
+        background: #e2ffaf;
+    }
+}
+
+@media print {
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    abbr {
+        border-bottom: none;
+    }
+}
+
+/* Lists */
+
+ul, ol {
+    margin: 1.25em 0 1.25em -1.5em;
+    padding-left: 1.5em;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+    margin: 0;
+}
+
+ul li {
+    list-style: disc;
+}
+
+li p {
+    margin: 0;
+}
+
+/* Code */
+
+pre {
+    margin-top: 1.47em;
+    font-family: Courier;
+    font-size: .85em;
+    line-height: 1.47;
+    overflow: visible;
+}
+
+code {
+    font-family: Courier;
+    font-size: .85em;
+    line-height: 1;
+}
+
+.typygmentdown .c {
+    font-style: italic;
+}
+
+.typygmentdown .k, .typygmentdown .ow {
+    color: #404040;
+}
+
+.typygmentdown .c, .typygmentdown .sd {
+    color: #808080;
+}
+
+/* Comments */
+
+#comment-list {
+    margin: 0;
+    padding: 0;
+}
+
+#comment-list li {
+    padding-bottom: 1.25em;
+}
+
+#comment-list cite {
+    font-style: normal;
+}
+
+#comment-list cite + blockquote {
+    margin-top: 0;
+}
+
+#comment-list blockquote {
+    margin: 0;
+}
+
+#comment-list p {
+    margin-top: 1.25em;
+    text-indent: 0;
+}
+
+#comment-form th {
+    width: 25%;
+}
+
+#comment-form input, #comment-form select, #comment-form textarea {
+    width: 100%;
+}
+
+@media print {
+    #comment-list, #comment-form {
+        display: none;
+    }
+}
+
+/* Friends */
+
+#friends li {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+#friends a[rel] {
+    margin-left: 20px;
+}
+
+#friends a[rel~="colleague"] {
+    background: url("/static/dj.png") left center no-repeat;
+    margin-left: 0;
+    padding-left: 20px;
+}
+
+/* Forms */
+
+form, form p {
+    text-indent: 0;
+    text-align: left;
+}
+
+from th, form td {
+    margin: 0;
+    padding: 0;
+}
+
+input, select, textarea {
+    background: white;
+    line-height: 1.5;
+}
+
+input[type="submit"], button {
+    border: 1px outset;
+    text-align: center;
+    background: #85ac40;
+    padding: .2em;
+}
+
+input[type="text"], textarea {
+    vertical-align: top;
+    border: 1px solid #e0e0e0;
+}
+
+input[type="text"], select {
+    width: 15em;
+}
+
+textarea {
+    width: 45em;
+    height: 7.5em;
+    overflow: auto;
+}
+
+#honeypot {
+    display: none;
+}
+
+/* Tables */
+
+table {
+    border-collapse: collapse;
+    border: none;
+    margin: 1.25em auto;
+}
+
+caption {
+    border-bottom: 1px solid #303030;
+}
+
+thead th {
+    border-bottom: 1px solid #303030;
+}
+
+tfoot th,
+tfoot td {
+    border-top: 1px solid #303030;
+}
+
+th[scope="row"],
+th[scope="col"] {
+    text-align: left;
+}
+
+tbody + tbody th, tbody + tbody td {
+    border-top: 1px solid #d0d0d0;
+}
+
+tbody + tbody tr + tr th,
+tbody + tbody tr + tr td,
+tfoot tr + tr th,
+tfoot tr + tr td {
+    border-top: none;
+}
+
+th, td {
+    padding: 0 0.5em;
+    font-weight: normal;
+    vertical-align: top;
+}
+
+table.numeric td, table.numeric th[scope="col"] {
+    text-align: right;
+}
+

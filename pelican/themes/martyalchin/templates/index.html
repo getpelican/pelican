@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+        <h1><a href="{{ SITEURL }}">{{ SITENAME }}</a></h1>
+        {% if SITESUBTITLE %} <div class="info">{{ SITESUBTITLE }}</div> {% endif %}
+        {% for article in articles %}        
+        <h2><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2> 
+        <p class="published">{{ article.date.strftime('%a %d %B %Y') }}</p>
+        {{ article.summary }}
+        {% endfor %}
+{% endblock %}

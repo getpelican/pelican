@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     generator = Generator(args.settings, args.path, args.theme, 
                           args.output, markup)
-    clean_output_dir(args.output)
+    clean_output_dir(generator.output_path)
 
     processors = [ArticlesProcessor, PagesProcessor, StaticProcessor]
     if generator.settings['PDF_PROCESSOR']:

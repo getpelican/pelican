@@ -26,6 +26,14 @@ class Generator(object):
         self.output_path = os.path.realpath(output_path)
         self.markup = markup or self.settings['MARKUP']
 
+        if not os.path.exists(self.theme):
+            theme_path = os.sep.join([os.path.dirname(
+                os.path.abspath(__file__)), "themes/%s" % self.theme])
+            if os.path.exists(theme_path):
+                self.theme = theme_path
+            else:
+                raise Exception("Impossible to find the theme %s" % self.theme)
+
         if 'SITEURL' not in self.settings:
             self.settings['SITEURL'] = self.output_path
 
@@ -102,10 +110,7 @@ class Generator(object):
         print u' [ok] writing %s' % filename
 
     def get_templates(self):
-        """Return the templates to use.
-
-        :param path: the path to load the templates from
-        """
+        """Return the templates to use."""
         path = os.path.expanduser(os.path.join(self.theme, 'templates'))
         env = Environment(loader=FileSystemLoader(path))
         templates = {}
