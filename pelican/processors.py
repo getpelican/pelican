@@ -1,8 +1,6 @@
 from operator import attrgetter
 import os
 
-from rst2pdf.createpdf import RstToPdf
-
 from pelican.utils import update_dict, copytree
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
@@ -136,10 +134,16 @@ class StaticProcessor(Processor):
 class PdfProcessor(Processor):
     """Generate PDFs on the output dir, for all articles and pages coming from
     rst"""
+    def __init__(self):
+        try:
+            from rst2pdf.createpdf import RstToPdf
+            self.pdfcreator = RstToPdf(breakside=0, stylesheets=['twelvepoint'])
+        except ImportError:
+            raise Exception("unable to find rst2pdf")
 
-    def _create_pdf(self, creator, obj, output_path):
+    def _create_pdf(self, obj, output_path):
         if obj.filename.endswith(".rst"):
-            creator.createPdf(text=open(obj.filename).read(),
+            self.pdfcreator.createPdf(text=open(obj.filename).read(),
                 output=os.path.join(output_path, "%s.pdf" % obj.slug))
 
     def process(self, context, generator):
@@ -149,10 +153,8 @@ class PdfProcessor(Processor):
         except OSError:
             pass
 
-        pdfcreator = RstToPdf(breakside=0, stylesheets=['twelvepoint'])
-
         for article in context['articles']:
-            self._create_pdf(pdfcreator, article, pdf_path)
+            self._create_pdf(article, pdf_path)
 
         for page in context['pages']:
-            self._create_pdf(pdfcreator, page, pdf_path)
+            self._create_pdf(page, pdf_path)
