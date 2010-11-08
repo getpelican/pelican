@@ -21,6 +21,9 @@ class Generator(object):
             settings = {}
         self.settings = read_settings(settings)
         self.path = path or self.settings['PATH']
+        if self.path.endswith('/'):
+            self.path = self.path[:-1]
+
         self.theme = theme or self.settings['THEME']
         output_path = output_path or self.settings['OUTPUT_PATH']
         self.output_path = os.path.realpath(output_path)
