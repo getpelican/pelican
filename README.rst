@@ -1,3 +1,5 @@
+:date: 2010-10-03 10:20
+
 Pelican
 #######
 
@@ -17,7 +19,7 @@ filesystem (for instance, about the category of your articles), but you need to
 provide by hand some of those informations in your files.
 
 You could provide the metadata in the restructured text files, using the
-following syntax::
+following syntax (give your file the `.rst` extension)::
 
     My super title
     ##############
@@ -28,7 +30,7 @@ following syntax::
     :author: Alexis Metaireau
 
 
-You can also use a mardown syntax::
+You can also use a mardown syntax (with a file ending in `.md`)::
 
     Date: 2010-12-03
     Title: My super title
