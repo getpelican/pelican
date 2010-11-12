@@ -13,6 +13,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DISPLAY_PAGES_ON_MENU': True,
                    'PDF_PROCESSOR': False,
                    'DEFAULT_CATEGORY': 'misc',
+                   'FALLBACK_ON_FS_DATE': True,
                   }
 
 def read_settings(filename):
