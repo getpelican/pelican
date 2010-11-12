@@ -73,6 +73,55 @@ the options you can use::
 
     $ pelican --help
 
+Settings
+--------
+
+Pelican try to be configurable via a configuration file, that you can pass to
+the command line. Here are the settings you can use, with some basic
+description.
+
+Please note that all the settings you put in this file will be passed to the
+templates as well.
+
+* `PATH` is the path to look at for input files.
+* `THEME`: the theme to use to product the output. can be the complete static
+  path to a theme folder, or choosed between the default pelican themes (see
+  below)
+* `OUTPUT_PATH`: Where to output the generated files. Default to "output"
+* `SITENAME`: You site name,
+* `DISPLAY_PAGES_ON_MENU`: Display or not the pages on the menu of the
+  template. Templates can follow or not this settings.
+* `PDF_PROCESSOR`: Put True if you want to have PDF outputs as well as HTML
+  pages,
+* `DEFAULT_CATEGORY`: The default category. `misc` by default.
+* `FALLBACK_ON_FS_DATE`: Choose to fallback on filesystem dates informations if
+  any other way to retreive the date currrently exists.,
+* `MARKUP`: A list of available markup languages you want to use. At the
+  moment, only available values are `rst` and `md`.
+* `STATIC_PATHS`: The static paths you want to copy under "static"
+* `FEED`: url to output the feed.,
+* `CATEGORY_FEED`: Where to put the categories feeds. default is `feeds/%s.atom.xml`
+
+Themes
+------
+
+3 themes are available. You can specify them using the `-t` option:
+
+* notmyidea
+* default
+* martylachin 
+
+You can define your own theme too, and specify it's emplacement in the same
+way.
+
+The `notmyidea` theme can make good use of the following settings:
+
+* `GITHUB_URL` = your github URL (if you have one)
+* `DISQUS_SITENAME` can handle disqus comments
+* `LINKS` is a list of tuples Title, Url, for links
+* `SOCIAL` (('twitter', 'yourtwitter complete url'),) and any other name/link
+  you want to put under "social"
+
 Why the name "Pelican" ?
 ------------------------
 

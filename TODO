@@ -3,4 +3,3 @@
 * find a better way to specify the templates. an idea is simply to install the templates in a default path, and to add a way to specify them by default under a "_themes" dir.
 * Make the program support UTF8-encoded files as input (and later: any encoding?)
 * Change the directory structure ?
-* update the doc

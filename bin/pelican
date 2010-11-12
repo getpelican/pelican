@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser(description="""A tool to generate a
 static blog, with restructured text input files.""")
 
 parser.add_argument(dest='path',
-    help='Path where to find the content files (default is "content").')
+    help='Path where to find the content files')
 parser.add_argument('-t', '--theme-path', dest='theme',
     help='Path where to find the theme templates. If not specified, it will'
          'use the default one included with pelican.')
