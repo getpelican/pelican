@@ -73,6 +73,10 @@ class ArticlesProcessor(Processor):
                 if category != '':
                     metadatas['category'] = unicode(category)
 
+            # fallback on filesystem date
+            if 'date' not in metadatas.keys():
+                    metadatas['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
+
             article = Article(content, metadatas, settings=generator.settings,
                               filename=f)
             if not is_valid_content(article, f):
