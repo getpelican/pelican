@@ -5,3 +5,4 @@
 * Change the directory structure ?
 * Add status support (draft, published, hidden)
 * Add a serve + automatic generation behaviour.
+* Recompile only the changed files, not all.
