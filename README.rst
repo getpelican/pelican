@@ -155,3 +155,16 @@ If you want to see new features in Pelican, dont hesitate to tell me, to clone
 the repository, etc. That's open source, dude!
 
 Contact me at "alexis at notmyidea dot org" for any request/feedback !
+
+FAQ
+---
+
+Here are some frequently asqued questions.
+
+How do I specify my site URL? I dont want to use the default "/home/…" folder.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configure the `SITENAME` to your site base url, let's say
+`http://myswebsite.tld`, in your settings file::
+
+    SITENAME = "http://mywebsite.tld"
