@@ -161,10 +161,10 @@ FAQ
 
 Here are some frequently asqued questions.
 
-How do I specify my site URL? I dont want to use the default "/home/…" folder.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+How can I specify the url of my website ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Configure the `SITENAME` to your site base url, let's say
+Configure the `SITEURL` to your site base url, let's say
 `http://myswebsite.tld`, in your settings file::
 
-    SITENAME = "http://mywebsite.tld"
+    SITEURL = "http://mywebsite.tld"

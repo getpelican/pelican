@@ -11,7 +11,8 @@ from pelican.utils import get_date, open
 _METADATAS_FIELDS = {'tags': lambda x: x.split(', '),
                      'date': lambda x: get_date(x),
                      'category': lambda x: x,
-                     'author': lambda x: x}
+                     'author': lambda x: x,
+                     'status': lambda x:x.strip(),}
 
 
 class RstReader(object):
