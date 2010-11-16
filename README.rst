@@ -83,12 +83,13 @@ description.
 Please note that all the settings you put in this file will be passed to the
 templates as well.
 
+* `SITEURL` is the base URL of your website.
 * `PATH` is the path to look at for input files.
 * `THEME`: the theme to use to product the output. can be the complete static
   path to a theme folder, or choosed between the default pelican themes (see
   below)
 * `OUTPUT_PATH`: Where to output the generated files. Default to "output"
-* `SITENAME`: You site name,
+* `SITENAME`: Your site name,
 * `DISPLAY_PAGES_ON_MENU`: Display or not the pages on the menu of the
   template. Templates can follow or not this settings.
 * `PDF_PROCESSOR`: Put True if you want to have PDF outputs as well as HTML
@@ -121,6 +122,7 @@ The `notmyidea` theme can make good use of the following settings:
 * `LINKS` is a list of tuples Title, Url, for links
 * `SOCIAL` (('twitter', 'yourtwitter complete url'),) and any other name/link
   you want to put under "social"
+* `GOOGLE_ANALYTICS` = 'UA-XXXX-YYYY' to activate google analytics.
 
 Why the name "Pelican" ?
 ------------------------
