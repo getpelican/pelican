@@ -159,8 +159,6 @@ Contact me at "alexis at notmyidea dot org" for any request/feedback !
 FAQ
 ---
 
-Here are some frequently asqued questions.
-
 How can I specify the url of my website ?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
