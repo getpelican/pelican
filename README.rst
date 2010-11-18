@@ -102,6 +102,7 @@ templates as well.
 * `STATIC_PATHS`: The static paths you want to copy under "static"
 * `FEED`: url to output the feed.,
 * `CATEGORY_FEED`: Where to put the categories feeds. default is `feeds/%s.atom.xml`
+* `CSS_FILE`: To specify the CSS file you want to load.
 
 Themes
 ------

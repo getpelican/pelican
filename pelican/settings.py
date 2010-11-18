@@ -14,6 +14,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'PDF_PROCESSOR': False,
                    'DEFAULT_CATEGORY': 'misc',
                    'FALLBACK_ON_FS_DATE': True,
+                   'CSS_FILE': 'main.css',
                   }
 
 def read_settings(filename):
