@@ -13,8 +13,28 @@ body {
     margin-bottom: 0px;
 }
 
+#banner nav ul{
+    padding-right: 50px;
+}
+
+#banner nav li{
+    float: right;
+}
+
+#banner nav li:first-child a {
+    -moz-border-radius: 0px;
+}
+
+#banner h1 {
+    margin-bottom: -18px;
+}
+
 #featured, #extras {
     padding: 50px;
+}
+
+#featured {
+    padding-top: 20px;
 }
 
 #extras {
