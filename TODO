@@ -2,3 +2,9 @@
 * Find a way to extend the existing templates instead of rewriting all from scratch.
 * find a better way to specify the templates. an idea is simply to install the templates in a default path, and to add a way to specify them by default under a "_themes" dir.
 * Make the program support UTF8-encoded files as input (and later: any encoding?)
+* Change the directory structure ?
+* Add status support (draft, published, hidden)
+* Add a serve + automatic generation behaviour.
+* Recompile only the changed files, not all.
+* Add a way to make the cofee (it's really something useful)
+

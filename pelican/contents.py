@@ -12,6 +12,7 @@ class Page(object):
 
     def __init__(self, content, metadatas={}, settings={}, filename=None):
         self.content = content
+        self.status = "published"  # default value
         for key, value in metadatas.items():
             setattr(self, key, value)
 
