@@ -14,10 +14,14 @@ _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
 
 
 class Generator(object):
-    """Base class generator"""
-    
-    def __init__(self, settings=None, path=None, theme=None, output_path=None, 
+    """Handle all generation process: files writes, feed creation, and this
+    kind of basic stuff"""
+
+    def __init__(self, settings=None, path=None, theme=None, output_path=None,
         markup=None):
+        """Read the settings, and performs some checks on the environement
+        before doing anything else.
+        """
         if settings is None:
             settings = {}
         self.settings = read_settings(settings)
@@ -46,6 +50,7 @@ class Generator(object):
             raise Exception('you need to specify a path to search the docs on !')
 
     def run(self, processors):
+        """Get the context from each processor, and then process them"""
         context = self.settings.copy()
         processors = [p() for p in processors]
 
@@ -92,7 +97,7 @@ class Generator(object):
             fp = open(complete_path, 'w')
             feed.write(fp, 'utf-8')
             print u' [ok] writing %s' % complete_path
-            
+
             fp.close()
         return feed
 
@@ -117,7 +122,10 @@ class Generator(object):
         print u' [ok] writing %s' % filename
 
     def get_templates(self):
-        """Return the templates to use."""
+        """Return the templates to use.
+        Use self.theme to get the templates to use, and return a list of
+        templates ready to use with Jinja2.
+        """
         path = os.path.expanduser(os.path.join(self.theme, 'templates'))
         env = Environment(loader=FileSystemLoader(path))
         templates = {}
@@ -125,21 +133,24 @@ class Generator(object):
             try:
                 templates[template] = env.get_template('%s.html' % template)
             except TemplateNotFound:
-                raise Exception('Unable to load %s.html from %s' % (
+                raise Exception('[templates] unable to load %s.html from %s' % (
                     template, path))
         return templates
 
-    def get_files(self, path, exclude=[]):
-        """Return the files to use to use in this generator
+    def get_files(self, path, exclude=[], extensions=None):
+        """Return a list of files to use, based on rules
 
         :param path: the path to search the file on
         :param exclude: the list of path to exclude
         """
+        if not extensions:
+            extensions = self.markup
+
         files = []
         for root, dirs, temp_files in os.walk(path, followlinks=True):
             for e in exclude:
                 if e in dirs:
                     dirs.remove(e)
             files.extend([os.sep.join((root, f)) for f in temp_files
-                if True in [f.endswith(markup) for markup in self.markup]])
+                if True in [f.endswith(ext) for ext in extensions]])
         return files
