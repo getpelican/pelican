@@ -9,11 +9,11 @@ Pelican is a simple weblog generator, writen in python.
 * Easy to interface with DVCSes and web hooks
 * Completely static output, so easy to host anywhere !
 
-Files metadatas
----------------
+Files metadata
+--------------
 
 Pelican tries to be smart enough to get the informations he needs from the
-filesystem (for instance, about the category of your articles), but you need to
+file system (for instance, about the category of your articles), but you need to
 provide by hand some of those informations in your files.
 
 You could provide the metadata in the restructured text files, using the
@@ -28,14 +28,14 @@ following syntax (give your file the `.rst` extension)::
     :author: Alexis Metaireau
 
 
-You can also use a mardown syntax (with a file ending in `.md`)::
+You can also use a markdown syntax (with a file ending in `.md`)::
 
     Date: 2010-12-03
     Title: My super title
 
     Put you content here.
 
-Note that none of those are mendatory: if the date is not specified, pelican will
+Note that none of those are mandatory: if the date is not specified, pelican will
 rely on the mtime of your file, and the category can also be determined by the 
 directory where the rst file is. For instance, the category of 
 `python/foobar/myfoobar.rst` is `foobar`.
@@ -56,7 +56,7 @@ Getting started — Generate your blog
 -------------------------------------
 
 You're ready? Let's go ! You can install pelican in a lot of different ways, 
-the simpler one is via `pip <http://pip.openplans.org/>`_.
+the simpler one is via `pip <http://pip.openplans.org/>`_::
 
     $ pip install pelican
 
@@ -91,7 +91,7 @@ Setting name              what it does ?
 `SITEURL`                 base URL of your website.
 `PATH`                    path to look at for input files.
 `THEME`                   theme to use to product the output. can be the
-                          complete static path to a theme folder, or choosed
+                          complete static path to a theme folder, or chosen
                           between the list of default themes (see below)
 `OUTPUT_PATH`             Where to output the generated files. Default to
                           "output"
@@ -101,9 +101,9 @@ Setting name              what it does ?
 `PDF_PROCESSOR`           Put True if you want to have PDF versions of your
                           documents. You will need to install `rst2pdf`.
 `DEFAULT_CATEGORY`        The default category to fallback on. `misc` by default.
-`FALLBACK_ON_FS_DATE`     If True, pelican will use the filesystem dates infos
+`FALLBACK_ON_FS_DATE`     If True, pelican will use the file system dates infos
                           (mtime) if it can't get informations from the
-                          metadatas?
+                          metadata?
 `MARKUP`                  A list of available markup languages you want to use.
                           moment, only available values are `rst` and `md`.
 `STATIC_PATHS`            The static paths you want to copy under "static"
@@ -127,7 +127,7 @@ Themes
 You can define your own theme too, and specify it's emplacement in the same
 way (be sure to specify the full absolute path to it).
 
-The `notmyidea` theme can make good use of the following settings. I recommand
+The `notmyidea` theme can make good use of the following settings. I recommend
 to use them too in your themes.
 
 =======================   =======================================================
@@ -152,7 +152,7 @@ adding that in your configuration::
 Why the name "Pelican" ?
 ------------------------
 
-Heh, you didnt noticed? "Pelican" is an anagram for "Calepin" ;)
+Heh, you didn't noticed? "Pelican" is an anagram for "Calepin" ;)
 
 Dependencies
 ------------
@@ -166,7 +166,7 @@ At this time, pelican is dependent of the following python packages:
 
 If you're not using python 2.7, you will also need `argparse`.
 
-All those dependencies will be processed automaticaly if you install pelican
+All those dependencies will be processed automatically if you install pelican
 using setuptools/distribute or pip.
 
 Source code
