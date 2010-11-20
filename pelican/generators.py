@@ -64,7 +64,8 @@ class Generator(object):
         for p in processors:
             p.process(context, self)
 
-    def generate_feed(self, elements, context, filename=None):
+    def generate_feed(self, elements, context, filename=None,
+        relative_urls=True):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no output_path or filename is specified, just return
@@ -74,16 +75,22 @@ class Generator(object):
         :param context: the context to get the feed metadatas.
         :param output_path: where to output the file.
         :param filename: the filename to output.
+        :param relative_urls: use relative urls or absolutes ones
         """
+        if relative_urls:
+            site_url = self._get_relative_siteurl(filename)
+        else:
+            site_url = context['SITEURL']
+
         feed = Atom1Feed(
             title=context['SITENAME'],
-            link=context['SITEURL'],
-            feed_url='%s/%s' % (context['SITEURL'], filename),
+            link=site_url,
+            feed_url= filename,
             description=context.get('SITESUBTITLE', ''))
         for element in elements:
             feed.add_item(
                 title=element.title,
-                link='%s/%s' % (context['SITEURL'], element.url),
+                link= element.url,
                 description=element.content,
                 author_name=getattr(element, 'author', 'John Doe'),
                 pubdate=element.date)
@@ -101,15 +108,20 @@ class Generator(object):
             fp.close()
         return feed
 
-    def generate_file(self, name, template, context, **kwargs):
+    def generate_file(self, name, template, context, relative_urls=True,
+        **kwargs):
         """Write the file with the given informations
 
         :param name: name of the file to output
         :param template: template to use to generate the content
         :param context: dict to pass to the templates.
+        :param relative_urls: use relative urls or absolutes ones
         :param **kwargs: additional variables to pass to the templates
         """
         context = context.copy()
+        if relative_urls:
+            context['SITEURL'] = self._get_relative_siteurl(name)
+
         context.update(kwargs)
         output = template.render(context)
         filename = os.sep.join((self.output_path, name))
@@ -154,3 +166,7 @@ class Generator(object):
             files.extend([os.sep.join((root, f)) for f in temp_files
                 if True in [f.endswith(ext) for ext in extensions]])
         return files
+
+    def _get_relative_siteurl(self, filename):
+        """Return the siteurl relative to the given filename"""
+        return '../' * filename.count('/') + '.'
