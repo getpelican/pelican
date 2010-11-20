@@ -7,6 +7,7 @@ from jinja2.exceptions import TemplateNotFound
 from feedgenerator import Atom1Feed
 
 from pelican.settings import read_settings
+from pelican.utils import clean_output_dir
 
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
@@ -51,6 +52,9 @@ class Generator(object):
         for p in processors:
             if hasattr(p, 'preprocess'):
                 p.preprocess(context, self)
+
+        if self.output_path not in os.path.realpath(self.path):
+            clean_output_dir(self.output_path)
 
         for p in processors:
             p.process(context, self)
