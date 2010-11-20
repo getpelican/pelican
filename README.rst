@@ -111,7 +111,7 @@ Themes
 
 * notmyidea
 * default
-* martylachin 
+* martyalchin 
 
 You can define your own theme too, and specify it's emplacement in the same
 way.
@@ -124,6 +124,11 @@ The `notmyidea` theme can make good use of the following settings:
 * `SOCIAL` (('twitter', 'yourtwitter complete url'),) and any other name/link
   you want to put under "social"
 * `GOOGLE_ANALYTICS` = 'UA-XXXX-YYYY' to activate google analytics.
+
+In addition, you can use the "wide" version of the `notmyidea` theme, by
+adding that in your configuration::
+
+    CSS_FILE = "wide.css"
 
 Why the name "Pelican" ?
 ------------------------

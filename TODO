@@ -6,4 +6,5 @@
 * Add status support (draft, published, hidden)
 * Add a serve + automatic generation behaviour.
 * Recompile only the changed files, not all.
-* Add a way to make the cofee (it's really something useful)
+* Add a way to make the coffee (or not)
+* Add a sitemap generator.
