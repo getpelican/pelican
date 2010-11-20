@@ -35,9 +35,10 @@ You can also use a mardown syntax (with a file ending in `.md`)::
 
     Put you content here.
 
-Note that only the `date` metadata is mandatory, so you just have to add that in i
-your files. The category can also be determined by the directory where the rst file
-is. For instance, the category of `python/foobar/myfoobar.rst` is `foobar`.
+Note that none of those are mendatory: if the date is not specified, pelican will
+rely on the mtime of your file, and the category can also be determined by the 
+directory where the rst file is. For instance, the category of 
+`python/foobar/myfoobar.rst` is `foobar`.
 
 Features
 --------
@@ -54,8 +55,8 @@ Pelican currently supports:
 Getting started — Generate your blog
 -------------------------------------
 
-Yeah? You're ready? Let's go ! You can install pelican in a lot of different
-ways, the simpler one is via pip::
+You're ready? Let's go ! You can install pelican in a lot of different ways, 
+the simpler one is via `pip <http://pip.openplans.org/>`_.
 
     $ pip install pelican
 
@@ -63,7 +64,7 @@ Then, you have just to launch pelican, like this::
 
     $ pelican /path/to/your/content/
 
-And… that's all! You can see your weblog generated on the content/ folder.
+And… that's all! You can see your weblog generated on the `content/` folder.
 
 This one will just generate a simple output, with the default theme. It's not
 really sexy, as it's a simple HTML output (without any style). 
@@ -76,33 +77,43 @@ the options you can use::
 Settings
 --------
 
-Pelican try to be configurable via a configuration file, that you can pass to
-the command line. Here are the settings you can use, with some basic
-description.
+Pelican is configurable thanks a configuration file, that you can pass to
+the command line::
 
-Please note that all the settings you put in this file will be passed to the
-templates as well.
+    $ pelican -s path/to/your/settingsfile.py path
 
-* `SITEURL` is the base URL of your website.
-* `PATH` is the path to look at for input files.
-* `THEME`: the theme to use to product the output. can be the complete static
-  path to a theme folder, or choosed between the default pelican themes (see
-  below)
-* `OUTPUT_PATH`: Where to output the generated files. Default to "output"
-* `SITENAME`: Your site name,
-* `DISPLAY_PAGES_ON_MENU`: Display or not the pages on the menu of the
-  template. Templates can follow or not this settings.
-* `PDF_PROCESSOR`: Put True if you want to have PDF outputs as well as HTML
-  pages,
-* `DEFAULT_CATEGORY`: The default category. `misc` by default.
-* `FALLBACK_ON_FS_DATE`: Choose to fallback on filesystem dates informations if
-  any other way to retreive the date currrently exists.,
-* `MARKUP`: A list of available markup languages you want to use. At the
-  moment, only available values are `rst` and `md`.
-* `STATIC_PATHS`: The static paths you want to copy under "static"
-* `FEED`: url to output the feed.,
-* `CATEGORY_FEED`: Where to put the categories feeds. default is `feeds/%s.atom.xml`
-* `CSS_FILE`: To specify the CSS file you want to load.
+Here are the available settings. Please note that all the settings you put in 
+this file will be passed to the templates as well.
+
+=======================   =======================================================
+Setting name              what it does ?
+=======================   =======================================================
+`SITEURL`                 base URL of your website.
+`PATH`                    path to look at for input files.
+`THEME`                   theme to use to product the output. can be the
+                          complete static path to a theme folder, or choosed
+                          between the list of default themes (see below)
+`OUTPUT_PATH`             Where to output the generated files. Default to
+                          "output"
+`SITENAME`                Your site name,
+`DISPLAY_PAGES_ON_MENU`   Display or not the pages on the menu of the template. 
+                          Templates can follow or not this settings.
+`PDF_PROCESSOR`           Put True if you want to have PDF versions of your
+                          documents. You will need to install `rst2pdf`.
+`DEFAULT_CATEGORY`        The default category to fallback on. `misc` by default.
+`FALLBACK_ON_FS_DATE`     If True, pelican will use the filesystem dates infos
+                          (mtime) if it can't get informations from the
+                          metadatas?
+`MARKUP`                  A list of available markup languages you want to use.
+                          moment, only available values are `rst` and `md`.
+`STATIC_PATHS`            The static paths you want to copy under "static"
+`FEED`                    relative url to output the feed. Default is
+                          `feeds/all.atom.xml`
+`CATEGORY_FEED`           Where to put the categories feeds. default is 
+                          `feeds/%s.atom.xml`
+`CSS_FILE`                To specify the CSS file you want to load, if it's not 
+                          the default one ('main.css')
+=======================   =======================================================
 
 Themes
 ------
@@ -110,20 +121,28 @@ Themes
 3 themes are available. You can specify them using the `-t` option:
 
 * notmyidea
-* default
+* simple (a synonym for "full text" :)
 * martyalchin 
 
 You can define your own theme too, and specify it's emplacement in the same
-way.
+way (be sure to specify the full absolute path to it).
 
-The `notmyidea` theme can make good use of the following settings:
+The `notmyidea` theme can make good use of the following settings. I recommand
+to use them too in your themes.
 
-* `GITHUB_URL` = your github URL (if you have one)
-* `DISQUS_SITENAME` can handle disqus comments
-* `LINKS` is a list of tuples Title, Url, for links
-* `SOCIAL` (('twitter', 'yourtwitter complete url'),) and any other name/link
-  you want to put under "social"
-* `GOOGLE_ANALYTICS` = 'UA-XXXX-YYYY' to activate google analytics.
+=======================   =======================================================
+Setting name              what it does ?
+=======================   =======================================================
+`GITHUB_URL`              Your github URL (if you have one), it will then
+                          use it to create a github ribbon.
+`DISQUS_SITENAME`         Pelican can handle disqus comments, specify the
+                          sitename you've filled in on disqus
+`LINKS`                   A list of tuples (Title, Url) for links to appear on
+                          the header.
+`SOCIAL`                  A list of tuples (Title, Url) to appear in the "social"
+                          section. 
+`GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate google analytics.
+=======================   =======================================================
 
 In addition, you can use the "wide" version of the `notmyidea` theme, by
 adding that in your configuration::
@@ -163,14 +182,3 @@ If you want to see new features in Pelican, dont hesitate to tell me, to clone
 the repository, etc. That's open source, dude!
 
 Contact me at "alexis at notmyidea dot org" for any request/feedback !
-
-FAQ
----
-
-How can I specify the url of my website ?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Configure the `SITEURL` to your site base url, let's say
-`http://myswebsite.tld`, in your settings file::
-
-    SITEURL = "http://mywebsite.tld"
