@@ -16,10 +16,10 @@ _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
 class Generator(object):
     """Handle all generation process: files writes, feed creation, and this
     kind of basic stuff"""
-
-    def __init__(self, settings=None, path=None, theme=None, output_path=None,
+    
+    def __init__(self, settings=None, path=None, theme=None, output_path=None, 
         markup=None):
-        """Read the settings, and performs some checks on the environement
+        """Read the settings, and performs some checks on the environment 
         before doing anything else.
         """
         if settings is None:
@@ -64,7 +64,7 @@ class Generator(object):
         for p in processors:
             p.process(context, self)
 
-    def generate_feed(self, elements, context, filename=None,
+    def generate_feed(self, elements, context, filename=None, 
         relative_urls=True):
         """Generate a feed with the list of articles provided
 
@@ -72,7 +72,7 @@ class Generator(object):
         the feed object.
 
         :param articles: the articles to put on the feed.
-        :param context: the context to get the feed metadatas.
+        :param context: the context to get the feed metadata.
         :param output_path: where to output the file.
         :param filename: the filename to output.
         :param relative_urls: use relative urls or absolutes ones
@@ -104,11 +104,11 @@ class Generator(object):
             fp = open(complete_path, 'w')
             feed.write(fp, 'utf-8')
             print u' [ok] writing %s' % complete_path
-
+            
             fp.close()
         return feed
 
-    def generate_file(self, name, template, context, relative_urls=True,
+    def generate_file(self, name, template, context, relative_urls=True, 
         **kwargs):
         """Write the file with the given informations
 
@@ -166,7 +166,7 @@ class Generator(object):
             files.extend([os.sep.join((root, f)) for f in temp_files
                 if True in [f.endswith(ext) for ext in extensions]])
         return files
-
+    
     def _get_relative_siteurl(self, filename):
         """Return the siteurl relative to the given filename"""
         return '../' * filename.count('/') + '.'

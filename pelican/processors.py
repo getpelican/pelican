@@ -11,7 +11,7 @@ _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 class Processor(object):
 
     def _update_context(self, context, items):
-        """Update the context with the given items from the currrent 
+        """Update the context with the given items from the currrent
         processor.
         """
         for item in items:
@@ -24,20 +24,20 @@ class Processor(object):
 class ArticlesProcessor(Processor):
 
     def __init__(self, settings=None):
-        self.articles = [] 
+        self.articles = []
         self.dates = {}
         self.years = {}
         self.tags = {}
-        self.categories = {} 
-        
+        self.categories = {}
+
     def generate_feeds(self, context, generator):
-        """Generate the feeds from the current context, and output files.""" 
+        """Generate the feeds from the current context, and output files."""
 
         generator.generate_feed(self.articles, context, context['FEED'])
 
         for cat, arts in self.categories.items():
             arts.sort(key=attrgetter('date'), reverse=True)
-            generator.generate_feed(arts, context, 
+            generator.generate_feed(arts, context,
                                     context['CATEGORY_FEED'] % cat)
 
     def generate_pages(self, context, generator):
@@ -92,7 +92,7 @@ class ArticlesProcessor(Processor):
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         # and generate the output :)
-        self._update_context(context, ('articles', 'dates', 'years', 
+        self._update_context(context, ('articles', 'dates', 'years',
                                        'tags', 'categories'))
 
     def process(self, context, generator):
@@ -116,11 +116,11 @@ class PagesProcessor(Processor):
             self.pages.append(page)
 
         context['PAGES'] = self.pages
-        
+
     def process(self, context, generator):
         templates = generator.get_templates()
         for page in self.pages:
-            generator.generate_file('pages/%s' % page.url, 
+            generator.generate_file('pages/%s' % page.url,
                                templates['page'], context, page=page)
         self._update_context(context, ('pages',))
 
@@ -128,10 +128,17 @@ class PagesProcessor(Processor):
 class StaticProcessor(Processor):
     """copy static paths to output"""
 
+    def _copy_paths(self, paths, source, destination, output_path,
+            final_path=None):
+        for path in paths:
+            copytree(path, source, os.path.join(output_path, destination),
+                    final_path)
+
     def process(self, context, generator):
-        for path in generator.settings['STATIC_PATHS']:
-            copytree(path, generator.theme, generator.output_path)
-        copytree('pics', generator.path, generator.output_path)
+        self._copy_paths(generator.settings['STATIC_PATHS'], generator.path,
+                         'static', generator.output_path)
+        self._copy_paths(generator.settings['THEME_PATHS'], generator.theme,
+                         'theme', generator.output_path, '.')
 
 
 class PdfProcessor(Processor):

@@ -50,14 +50,16 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
-def copytree(path, origin, destination):
+def copytree(path, origin, destination, topath=None):
     """Copy path from origin to destination, silent any errors"""
-
+    
+    if not topath:
+        topath = path
     try:
         fromp = os.path.expanduser(os.path.join(origin, path))
-        to = os.path.expanduser(os.path.join(destination, path))
+        to = os.path.expanduser(os.path.join(destination, topath))
         shutil.copytree(fromp, to)
-        print u' [ok] copying %s' % fromp
+        print u' [ok] copying %s to %s' % (fromp, to)
 
     except OSError:
         pass
