@@ -45,7 +45,7 @@ class MarkdownReader(object):
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         text = open(filename)
-        md = Markdown(extensions = ['meta'])
+        md = Markdown(extensions = ['meta', 'codehilite'])
         content = md.convert(text)
         
         metadatas = {}
