@@ -27,7 +27,6 @@ class ArticlesProcessor(Processor):
     def __init__(self, settings=None):
         self.articles = []
         self.dates = {}
-        self.years = {}
         self.tags = {}
         self.categories = {}
 
@@ -82,8 +81,6 @@ class ArticlesProcessor(Processor):
             if not is_valid_content(article, f):
                 continue
 
-            update_dict(self.dates, article.date.strftime('%Y-%m-%d'), article)
-            update_dict(self.years, article.date.year, article)
             update_dict(self.categories, article.category, article)
             if hasattr(article, 'tags'):
                 for tag in article.tags:
@@ -92,9 +89,10 @@ class ArticlesProcessor(Processor):
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
+        self.dates = self.articles
+        self.dates.sort(key=attrgetter('date'))
         # and generate the output :)
-        self._update_context(context, ('articles', 'dates', 'years',
-                                       'tags', 'categories'))
+        self._update_context(context, ('articles', 'dates', 'tags', 'categories'))
 
     def process(self, context, generator):
         self.generate_feeds(context, generator)
