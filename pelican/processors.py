@@ -89,7 +89,7 @@ class ArticlesProcessor(Processor):
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
-        self.dates = self.articles
+        self.dates = list(self.articles)
         self.dates.sort(key=attrgetter('date'))
         # and generate the output :)
         self._update_context(context, ('articles', 'dates', 'tags', 'categories'))
