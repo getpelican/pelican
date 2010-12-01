@@ -64,8 +64,7 @@ class Generator(object):
         for p in processors:
             p.process(context, self)
 
-    def generate_feed(self, elements, context, filename=None, 
-        relative_urls=True):
+    def generate_feed(self, elements, context, filename=None):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no output_path or filename is specified, just return
@@ -75,22 +74,18 @@ class Generator(object):
         :param context: the context to get the feed metadata.
         :param output_path: where to output the file.
         :param filename: the filename to output.
-        :param relative_urls: use relative urls or absolutes ones
         """
-        if relative_urls:
-            site_url = self._get_relative_siteurl(filename)
-        else:
-            site_url = context['SITEURL']
+        site_url = context.get('SITEURL', self._get_relative_siteurl(filename))
 
         feed = Atom1Feed(
             title=context['SITENAME'],
             link=site_url,
-            feed_url= filename,
+            feed_url= "%s/%s" % (site_url, filename),
             description=context.get('SITESUBTITLE', ''))
         for element in elements:
             feed.add_item(
                 title=element.title,
-                link= element.url,
+                link= "%s/%s" % (site_url, element.url),
                 description=element.content,
                 author_name=getattr(element, 'author', 'John Doe'),
                 pubdate=element.date)
