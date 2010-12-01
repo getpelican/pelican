@@ -91,7 +91,7 @@ class Generator(object):
                 title=element.title,
                 link= "%s/%s" % (site_url, element.url),
                 description=element.content,
-                categories=element.tags,
+                categories=element.tags if hasattr(element, "tags") else None,
                 author_name=getattr(element, 'author', 'John Doe'),
                 pubdate=element.date)
 
