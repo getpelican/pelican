@@ -4,7 +4,7 @@ from codecs import open
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
-from feedgenerator import Atom1Feed
+from feedgenerator import Atom1Feed, Rss201rev2Feed
 
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir
@@ -64,7 +64,8 @@ class Generator(object):
         for p in processors:
             p.process(context, self)
 
-    def generate_feed(self, elements, context, filename=None):
+    def generate_feed(self, elements, context, filename=None,
+            feed_type='atom'):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no output_path or filename is specified, just return
@@ -74,10 +75,13 @@ class Generator(object):
         :param context: the context to get the feed metadata.
         :param output_path: where to output the file.
         :param filename: the filename to output.
+        :param feed_type: the feed type to use (atom or rss)
         """
         site_url = context.get('SITEURL', self._get_relative_siteurl(filename))
 
-        feed = Atom1Feed(
+        feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
+
+        feed = feed_class(
             title=context['SITENAME'],
             link=site_url,
             feed_url= "%s/%s" % (site_url, filename),

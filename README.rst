@@ -109,8 +109,10 @@ Setting name              what it does ?
 `STATIC_PATHS`            The static paths you want to copy under "static"
 `FEED`                    relative url to output the feed. Default is
                           `feeds/all.atom.xml`
+`FEED_RSS`                relative url to output the rss feed. Default is None (no rss)
 `CATEGORY_FEED`           Where to put the categories feeds. default is 
                           `feeds/%s.atom.xml`
+`CATEGORY_FEED_RSS`       Where to put the categories rss feeds. default is None (no rss)
 `CSS_FILE`                To specify the CSS file you want to load, if it's not 
                           the default one ('main.css')
 =======================   =======================================================

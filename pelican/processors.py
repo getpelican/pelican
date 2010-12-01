@@ -35,10 +35,20 @@ class ArticlesProcessor(Processor):
 
         generator.generate_feed(self.articles, context, context['FEED'])
 
+        if 'FEED_RSS' in context:
+            generator.generate_feed(self.articles, context,
+                    context['FEED_RSS'], feed_type='rss')
+
         for cat, arts in self.categories.items():
             arts.sort(key=attrgetter('date'), reverse=True)
             generator.generate_feed(arts, context,
                                     context['CATEGORY_FEED'] % cat)
+
+            if 'CATEGORY_FEED_RSS' in context:
+                generator.generate_feed(arts, context,
+                        context['CATEGORY_FEED_RSS'] % cat,
+                        feed_type='rss')
+
 
     def generate_pages(self, context, generator):
         """Generate the pages on the disk"""
