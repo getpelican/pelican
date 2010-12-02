@@ -1,137 +1,29 @@
-# -*- coding: utf-8 -*-
+from operator import attrgetter
+from datetime import datetime
 import os
-from codecs import open
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
-from feedgenerator import Atom1Feed, Rss201rev2Feed
 
-from pelican.settings import read_settings
-from pelican.utils import clean_output_dir
+from pelican.utils import update_dict, copytree
+from pelican.contents import Article, Page, is_valid_content
+from pelican.readers import read_file
 
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
+_DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 
 
 class Generator(object):
-    """Handle all generation process: files writes, feed creation, and this
-    kind of basic stuff"""
-    
-    def __init__(self, settings=None, path=None, theme=None, output_path=None, 
-        markup=None):
-        """Read the settings, and performs some checks on the environment 
-        before doing anything else.
-        """
-        if settings is None:
-            settings = {}
-        self.settings = read_settings(settings)
-        self.path = path or self.settings['PATH']
-        if self.path.endswith('/'):
-            self.path = self.path[:-1]
+    """Baseclass generator"""
 
-        self.theme = theme or self.settings['THEME']
-        output_path = output_path or self.settings['OUTPUT_PATH']
-        self.output_path = os.path.realpath(output_path)
-        self.markup = markup or self.settings['MARKUP']
+    def __init__(self, *args, **kwargs):
+        for idx, item in enumerate(('context', 'settings', 'path', 'theme',
+                'output_path', 'markup')):
+            setattr(self, item, args[idx])
 
-        if not os.path.exists(self.theme):
-            theme_path = os.sep.join([os.path.dirname(
-                os.path.abspath(__file__)), "themes/%s" % self.theme])
-            if os.path.exists(theme_path):
-                self.theme = theme_path
-            else:
-                raise Exception("Impossible to find the theme %s" % self.theme)
-
-        if 'SITEURL' not in self.settings:
-            self.settings['SITEURL'] = self.output_path
-
-        # get the list of files to parse
-        if not path:
-            raise Exception('you need to specify a path to search the docs on !')
-
-    def run(self, processors):
-        """Get the context from each processor, and then process them"""
-        context = self.settings.copy()
-        processors = [p() for p in processors]
-
-        for p in processors:
-            if hasattr(p, 'preprocess'):
-                p.preprocess(context, self)
-
-        if self.output_path not in os.path.realpath(self.path):
-            clean_output_dir(self.output_path)
-
-        for p in processors:
-            p.process(context, self)
-
-    def generate_feed(self, elements, context, filename=None,
-            feed_type='atom'):
-        """Generate a feed with the list of articles provided
-
-        Return the feed. If no output_path or filename is specified, just return
-        the feed object.
-
-        :param articles: the articles to put on the feed.
-        :param context: the context to get the feed metadata.
-        :param output_path: where to output the file.
-        :param filename: the filename to output.
-        :param feed_type: the feed type to use (atom or rss)
-        """
-        site_url = context.get('SITEURL', self._get_relative_siteurl(filename))
-
-        feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
-
-        feed = feed_class(
-            title=context['SITENAME'],
-            link=site_url,
-            feed_url= "%s/%s" % (site_url, filename),
-            description=context.get('SITESUBTITLE', ''))
-        for element in elements:
-            feed.add_item(
-                title=element.title,
-                link= "%s/%s" % (site_url, element.url),
-                description=element.content,
-                categories=element.tags if hasattr(element, "tags") else None,
-                author_name=getattr(element, 'author', 'John Doe'),
-                pubdate=element.date)
-
-        if filename:
-            complete_path = os.path.join(self.output_path, filename)
-            try:
-                os.makedirs(os.path.dirname(complete_path))
-            except Exception:
-                pass
-            fp = open(complete_path, 'w')
-            feed.write(fp, 'utf-8')
-            print u' [ok] writing %s' % complete_path
-            
-            fp.close()
-        return feed
-
-    def generate_file(self, name, template, context, relative_urls=True, 
-        **kwargs):
-        """Write the file with the given informations
-
-        :param name: name of the file to output
-        :param template: template to use to generate the content
-        :param context: dict to pass to the templates.
-        :param relative_urls: use relative urls or absolutes ones
-        :param **kwargs: additional variables to pass to the templates
-        """
-        context = context.copy()
-        if relative_urls:
-            context['SITEURL'] = self._get_relative_siteurl(name)
-
-        context.update(kwargs)
-        output = template.render(context)
-        filename = os.sep.join((self.output_path, name))
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except Exception:
-            pass
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(output)
-        print u' [ok] writing %s' % filename
+        for arg, value in kwargs.items():
+            setattr(self, arg, value)
 
     def get_templates(self):
         """Return the templates to use.
@@ -166,7 +58,181 @@ class Generator(object):
             files.extend([os.sep.join((root, f)) for f in temp_files
                 if True in [f.endswith(ext) for ext in extensions]])
         return files
-    
-    def _get_relative_siteurl(self, filename):
-        """Return the siteurl relative to the given filename"""
-        return '../' * filename.count('/') + '.'
+
+    def _update_context(self, items):
+        """Update the context with the given items from the currrent
+        processor.
+        """
+        for item in items:
+            value = getattr(self, item)
+            if hasattr(value, 'items'):
+                value = value.items()
+            self.context[item] = value
+
+
+class ArticlesGenerator(Generator):
+    """Generate blog articles"""
+
+    def __init__(self, *args, **kwargs):
+        """initialize properties"""
+        self.articles = []
+        self.dates = {}
+        self.tags = {}
+        self.categories = {}
+        super(ArticlesGenerator, self).__init__(*args, **kwargs)
+
+    def generate_feeds(self, writer):
+        """Generate the feeds from the current context, and output files."""
+
+        writer.write_feed(self.articles, self.context, self.settings['FEED'])
+
+        if 'FEED_RSS' in self.settings:
+            writer.write_feed(self.articles, self.context,
+                    self.settings['FEED_RSS'], feed_type='rss')
+
+        for cat, arts in self.categories.items():
+            arts.sort(key=attrgetter('date'), reverse=True)
+            writer.write_feed(arts, self.context,
+                              self.settings['CATEGORY_FEED'] % cat)
+
+            if 'CATEGORY_FEED_RSS' in self.settings:
+                writer.write_feed(arts, self.context,
+                        self.settings['CATEGORY_FEED_RSS'] % cat,
+                        feed_type='rss')
+
+
+    def generate_pages(self, writer):
+        """Generate the pages on the disk
+        TODO: change the name"""
+
+        templates = self.get_templates()
+        write = writer.write_file
+        for template in _DIRECT_TEMPLATES:
+            write('%s.html' % template, templates[template], self.context,
+                    blog=True)
+        for tag in self.tags:
+            write('tag/%s.html' % tag, templates['tag'], self.context, tag=tag)
+        for cat in self.categories:
+            write('category/%s.html' % cat, templates['category'], self.context,
+                          category=cat, articles=self.categories[cat])
+        for article in self.articles:
+            write('%s' % article.url,
+                          templates['article'], self.context, article=article,
+                          category=article.category)
+
+    def generate_context(self):
+        """change the context"""
+
+        # return the list of files to use
+        files = self.get_files(self.path, exclude=['pages',])
+        for f in files:
+            content, metadatas = read_file(f)
+
+            # if no category is set, use the name of the path as a category
+            if 'category' not in metadatas.keys():
+                category = os.path.dirname(f).replace(
+                    os.path.expanduser(self.path)+'/', '')
+
+                if category == self.path:
+                    category = self.settings['DEFAULT_CATEGORY']
+
+                if category != '':
+                    metadatas['category'] = unicode(category)
+
+            if 'date' not in metadatas.keys()\
+                and self.settings['FALLBACK_ON_FS_DATE']:
+                    metadatas['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
+
+            article = Article(content, metadatas, settings=self.settings,
+                              filename=f)
+            if not is_valid_content(article, f):
+                continue
+
+            update_dict(self.categories, article.category, article)
+            if hasattr(article, 'tags'):
+                for tag in article.tags:
+                    update_dict(self.tags, tag, article)
+            self.articles.append(article)
+
+        # sort the articles by date
+        self.articles.sort(key=attrgetter('date'), reverse=True)
+        self.dates = list(self.articles)
+        self.dates.sort(key=attrgetter('date'))
+        # and generate the output :)
+        self._update_context(('articles', 'dates', 'tags', 'categories'))
+
+    def generate_output(self, writer):
+        self.generate_feeds(writer)
+        self.generate_pages(writer)
+
+
+class PagesGenerator(Generator):
+    """Generate pages"""
+
+    def __init__(self, *args, **kwargs):
+        self.pages = []
+        super(PagesGenerator, self).__init__(*args, **kwargs)
+
+    def generate_context(self):
+        for f in self.get_files(os.sep.join((self.path, 'pages'))):
+            content, metadatas = read_file(f)
+            page = Page(content, metadatas, settings=self.settings,
+                        filename=f)
+            if not is_valid_content(page, f):
+                continue
+            self.pages.append(page)
+
+        self._update_context(('pages', ))
+
+    def generate_output(self, writer):
+        templates = self.get_templates()
+        for page in self.pages:
+            writer.write_file('pages/%s' % page.url, templates['page'],
+                    self.context, page=page)
+        self._update_context(('pages',))
+
+
+class StaticGenerator(Generator):
+    """copy static paths to output"""
+
+    def _copy_paths(self, paths, source, destination, output_path,
+            final_path=None):
+        for path in paths:
+            copytree(path, source, os.path.join(output_path, destination),
+                    final_path)
+
+    def generate_output(self, writer):
+        self._copy_paths(self.settings['STATIC_PATHS'], self.path,
+                         'static', self.output_path)
+        self._copy_paths(self.settings['THEME_PATHS'], self.theme,
+                         'theme', self.output_path, '.')
+
+
+class PdfGenerator(Generator):
+    """Generate PDFs on the output dir, for all articles and pages coming from
+    rst"""
+    def __init__(self, *args, **kwargs):
+        try:
+            from rst2pdf.createpdf import RstToPdf
+            self.pdfcreator = RstToPdf(breakside=0, stylesheets=['twelvepoint'])
+        except ImportError:
+            raise Exception("unable to find rst2pdf")
+        super(PdfGenerator, self).__init(*args, **kwargs)
+
+    def _create_pdf(self, obj, output_path):
+        if obj.filename.endswith(".rst"):
+            self.pdfcreator.createPdf(text=open(obj.filename).read(),
+                output=os.path.join(output_path, "%s.pdf" % obj.slug))
+
+    def generate_context(self):
+        pdf_path = os.path.join(self.output_path, 'pdf')
+        try:
+            os.mkdir(pdf_path)
+        except OSError:
+            pass
+
+        for article in self.context['articles']:
+            self._create_pdf(article, pdf_path)
+
+        for page in self.context['pages']:
+            self._create_pdf(page, pdf_path)

@@ -2,7 +2,7 @@ from pelican.utils import slugify, truncate_html_words
 
 
 class Page(object):
-    """Represents a page..
+    """Represents a page
     Given a content, and metadatas, create an adequate object.
 
     :param string: the string to parse, containing the original content.

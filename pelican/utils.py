@@ -64,6 +64,7 @@ def copytree(path, origin, destination, topath=None):
     except OSError:
         pass
 
+
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
 
@@ -72,6 +73,12 @@ def clean_output_dir(path):
         shutil.rmtree(path)
     except Exception as e:
         pass
+
+
+def get_relative_path(filename):
+    """Return the relative path to the given filename"""
+    return '../' * filename.count('/') + '.'
+
 
 def truncate_html_words(s, num, end_text='...'):
     """Truncates HTML to a certain number of words (not counting tags and

@@ -177,6 +177,10 @@ Source code
 You can access the source code via mercurial at http://hg.notmyidea.org/pelican/
 or via git on http://github.com/ametaireau/pelican/
 
+If you feel hackish, have a look to the `pelican's internals explanations
+<http://alexis.notmyidea.org/pelican/internals.html>`_.
+
+
 Feedback !
 ----------
 
