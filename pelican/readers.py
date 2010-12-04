@@ -40,22 +40,20 @@ class RstReader(object):
             metadatas['title'] = title
         return content, metadatas
 
-import codecs
 class MarkdownReader(object):
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
-        text = codecs.open(filename, encoding='utf8').read()
+        text = open(filename)
         md = Markdown(extensions = ['meta'])
         content = md.convert(text)
-        print "meta: ", md.Meta
+        
         metadatas = {}
         for name, value in md.Meta.items():
             if name in _METADATAS_FIELDS:
                 meta = _METADATAS_FIELDS[name](value[0])
             else:
                 meta = value[0]
-            print "metadata: ", name, ":", value[0]
             metadatas[name.lower()] = meta
         return content, metadatas
 

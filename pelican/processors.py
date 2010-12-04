@@ -4,7 +4,6 @@ import os
 from pelican.utils import update_dict, copytree
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
-from datetime import datetime
 
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 
