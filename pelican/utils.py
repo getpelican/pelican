@@ -4,6 +4,7 @@ import os
 import shutil
 from datetime import datetime
 from codecs import open as _open
+import codecs
 
 def update_dict(mapping, key, value):
     """Update a dict intenal list
@@ -34,7 +35,8 @@ def get_date(string):
 
 def open(filename):
     """Open a file and return it's content"""
-    return _open(filename, encoding='utf-8').read()
+    file = codecs.open(filename, "r", 'utf-8')
+    return file.read()
 
 
 def slugify(value):
