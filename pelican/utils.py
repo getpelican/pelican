@@ -50,17 +50,20 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
-def copytree(path, origin, destination):
+def copytree(path, origin, destination, topath=None):
     """Copy path from origin to destination, silent any errors"""
-
+    
+    if not topath:
+        topath = path
     try:
         fromp = os.path.expanduser(os.path.join(origin, path))
-        to = os.path.expanduser(os.path.join(destination, path))
+        to = os.path.expanduser(os.path.join(destination, topath))
         shutil.copytree(fromp, to)
-        print u' [ok] copying %s' % fromp
+        print u' [ok] copying %s to %s' % (fromp, to)
 
     except OSError:
         pass
+
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
@@ -70,6 +73,12 @@ def clean_output_dir(path):
         shutil.rmtree(path)
     except Exception as e:
         pass
+
+
+def get_relative_path(filename):
+    """Return the relative path to the given filename"""
+    return '../' * filename.count('/') + '.'
+
 
 def truncate_html_words(s, num, end_text='...'):
     """Truncates HTML to a certain number of words (not counting tags and
