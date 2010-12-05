@@ -36,8 +36,8 @@ You can also use a markdown syntax (with a file ending in `.md`)::
     Put you content here.
 
 Note that none of those are mandatory: if the date is not specified, pelican will
-rely on the mtime of your file, and the category can also be determined by the 
-directory where the rst file is. For instance, the category of 
+rely on the mtime of your file, and the category can also be determined by the
+directory where the rst file is. For instance, the category of
 `python/foobar/myfoobar.rst` is `foobar`.
 
 Features
@@ -46,8 +46,8 @@ Features
 Pelican currently supports:
 
 * blog articles
-* comments, via an external service (disqus). Please notice that while 
-  it's useful, it's an external service, and you'll not manage the 
+* comments, via an external service (disqus). Please notice that while
+  it's useful, it's an external service, and you'll not manage the
   comments by yourself. It could potentially eat your data.
 * theming support (themes are done using `jinja2 <http://jinjna.pocoo.org>`_)
 * PDF generation of the articles/pages (optional).
@@ -55,7 +55,7 @@ Pelican currently supports:
 Getting started — Generate your blog
 -------------------------------------
 
-You're ready? Let's go ! You can install pelican in a lot of different ways, 
+You're ready? Let's go ! You can install pelican in a lot of different ways,
 the simpler one is via `pip <http://pip.openplans.org/>`_::
 
     $ pip install pelican
@@ -67,7 +67,7 @@ Then, you have just to launch pelican, like this::
 And… that's all! You can see your weblog generated on the `content/` folder.
 
 This one will just generate a simple output, with the default theme. It's not
-really sexy, as it's a simple HTML output (without any style). 
+really sexy, as it's a simple HTML output (without any style).
 
 You can create your own style if you want, have a look to the help to see all
 the options you can use::
@@ -82,7 +82,7 @@ the command line::
 
     $ pelican -s path/to/your/settingsfile.py path
 
-Here are the available settings. Please note that all the settings you put in 
+Here are the available settings. Please note that all the settings you put in
 this file will be passed to the templates as well.
 
 =======================   =======================================================
@@ -96,7 +96,7 @@ Setting name              what it does ?
 `OUTPUT_PATH`             Where to output the generated files. Default to
                           "output"
 `SITENAME`                Your site name,
-`DISPLAY_PAGES_ON_MENU`   Display or not the pages on the menu of the template. 
+`DISPLAY_PAGES_ON_MENU`   Display or not the pages on the menu of the template.
                           Templates can follow or not this settings.
 `PDF_PROCESSOR`           Put True if you want to have PDF versions of your
                           documents. You will need to install `rst2pdf`.
@@ -106,14 +106,22 @@ Setting name              what it does ?
                           metadata?
 `MARKUP`                  A list of available markup languages you want to use.
                           moment, only available values are `rst` and `md`.
-`STATIC_PATHS`            The static paths you want to copy under "static"
-`FEED`                    relative url to output the feed. Default is
+`STATIC_PATHS`            The static paths you want to have accessible on the
+                          output path "static". By default, pelican will copy
+                          the 'images' folder to the output folder.
+`STATIC_THEME_PATHS`      Static theme paths you want to copy. Default values
+                          is `static`, but if your theme have others static paths,
+                          you can put them here.
+`FEED`                    relative url to output the atom feed. Default is
                           `feeds/all.atom.xml`
-`FEED_RSS`                relative url to output the rss feed. Default is None (no rss)
-`CATEGORY_FEED`           Where to put the categories feeds. default is 
-                          `feeds/%s.atom.xml`
-`CATEGORY_FEED_RSS`       Where to put the categories rss feeds. default is None (no rss)
-`CSS_FILE`                To specify the CSS file you want to load, if it's not 
+`FEED_RSS`                relative url to output the rss feed. Default is
+                          None (no rss)
+`CATEGORY_FEED`           Where to put the atom categories feeds. default is
+                          `feeds/%s.atom.xml`, where %s is the name of the
+                          category.
+`CATEGORY_FEED_RSS`       Where to put the categories rss feeds. default is None
+                          (no rss)
+`CSS_FILE`                To specify the CSS file you want to load, if it's not
                           the default one ('main.css')
 =======================   =======================================================
 
@@ -124,10 +132,13 @@ Themes
 
 * notmyidea
 * simple (a synonym for "full text" :)
-* martyalchin 
+* martyalchin
 
 You can define your own theme too, and specify it's emplacement in the same
 way (be sure to specify the full absolute path to it).
+
+Here is `a guide on how to create your theme
+<http://alexis.notmyidea.org/pelican/themes.html>`_
 
 The `notmyidea` theme can make good use of the following settings. I recommend
 to use them too in your themes.
@@ -142,7 +153,7 @@ Setting name              what it does ?
 `LINKS`                   A list of tuples (Title, Url) for links to appear on
                           the header.
 `SOCIAL`                  A list of tuples (Title, Url) to appear in the "social"
-                          section. 
+                          section.
 `GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate google analytics.
 =======================   =======================================================
 

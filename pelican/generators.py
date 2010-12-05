@@ -110,8 +110,9 @@ class ArticlesGenerator(Generator):
         for template in _DIRECT_TEMPLATES:
             write('%s.html' % template, templates[template], self.context,
                     blog=True)
-        for tag in self.tags:
-            write('tag/%s.html' % tag, templates['tag'], self.context, tag=tag)
+        for tag, articles in self.tags.items():
+            write('tag/%s.html' % tag, templates['tag'], self.context, tag=tag, 
+                    articles=articles)
         for cat in self.categories:
             write('category/%s.html' % cat, templates['category'], self.context,
                           category=cat, articles=self.categories[cat])
@@ -193,7 +194,8 @@ class PagesGenerator(Generator):
 
 
 class StaticGenerator(Generator):
-    """copy static paths to output"""
+    """copy static paths (what you want to cpy, like images, medias etc.
+    to output"""
 
     def _copy_paths(self, paths, source, destination, output_path,
             final_path=None):
@@ -204,7 +206,7 @@ class StaticGenerator(Generator):
     def generate_output(self, writer):
         self._copy_paths(self.settings['STATIC_PATHS'], self.path,
                          'static', self.output_path)
-        self._copy_paths(self.settings['THEME_PATHS'], self.theme,
+        self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
 
 
