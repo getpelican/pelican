@@ -1,0 +1,1 @@
+/home/alexis/projets/notmyidea.org/blog/pelican.conf.py
