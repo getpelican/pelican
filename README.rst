@@ -74,6 +74,12 @@ the options you can use::
 
     $ pelican --help
 
+Pages
+-----
+
+If you create a folder named `pages`, all the files in it will be used to
+generate static pages.
+
 Settings
 --------
 
