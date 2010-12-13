@@ -52,8 +52,6 @@ def run_generators(generators, settings, path, theme, output_path, markup):
     generators = [p(context, settings, path, theme, output_path, markup) 
             for p in generators]
 
-    writer = Writer(output_path)
-
     for p in generators:
         if hasattr(p, 'generate_context'):
             p.generate_context()
@@ -61,6 +59,8 @@ def run_generators(generators, settings, path, theme, output_path, markup):
     # erase the directory if it is not the source
     if output_path not in os.path.realpath(path):
         clean_output_dir(output_path)
+
+    writer = Writer(output_path)
 
     for p in generators:
         if hasattr(p, 'generate_output'):
