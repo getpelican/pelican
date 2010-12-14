@@ -184,13 +184,13 @@ class PagesGenerator(Generator):
             self.pages.append(page)
 
         self._update_context(('pages', ))
+        self.context['PAGES'] = self.pages
 
     def generate_output(self, writer):
         templates = self.get_templates()
         for page in self.pages:
             writer.write_file('pages/%s' % page.url, templates['page'],
                     self.context, page=page)
-        self._update_context(('pages',))
 
 
 class StaticGenerator(Generator):
