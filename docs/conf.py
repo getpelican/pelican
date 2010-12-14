@@ -21,14 +21,14 @@ pygments_style = 'sphinx'
 # a list of builtin themes.
 sys.path.append(os.path.abspath('_themes'))
 html_theme_path = ['_themes']
-html_theme = 'flask_small'
+html_theme = 'flask'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'index_logo': 'pelican.png',
-    'github_fork': 'ametaireau/pelican',
+#    'index_logo': 'pelican.png',
+#    'github_fork': 'ametaireau/pelican',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
