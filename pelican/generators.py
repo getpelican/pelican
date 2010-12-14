@@ -158,7 +158,7 @@ class ArticlesGenerator(Generator):
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
-        self.dates.sort(key=attrgetter('date'))
+        self.dates.sort(key=attrgetter('date'), reverse=self.context['REVERSE_ARCHIVE_ORDER'])
         # and generate the output :)
         self._update_context(('articles', 'dates', 'tags', 'categories'))
 

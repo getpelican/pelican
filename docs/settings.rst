@@ -50,6 +50,8 @@ Setting name              what it does ?
                           (no rss)
 `CSS_FILE`                To specify the CSS file you want to load, if it's not
                           the default one ('main.css')
+`REVERSE_ARCHIVE_ORDER`   Reverse the archives order. (True makes it in
+                          descending order: the newer first)
 =======================   =======================================================
 
 Themes

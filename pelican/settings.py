@@ -16,6 +16,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_CATEGORY': 'misc',
                    'FALLBACK_ON_FS_DATE': True,
                    'CSS_FILE': 'main.css',
+                   'REVERSE_ARCHIVE_ORDER': False,
                   }
 
 def read_settings(filename):
