@@ -52,6 +52,8 @@ Setting name              what it does ?
                           the default one ('main.css')
 `REVERSE_ARCHIVE_ORDER`   Reverse the archives order. (True makes it in
                           descending order: the newer first)
+`KEEP_OUTPUT_DIRECTORY`   Keep the output directory and just update all the generated files. 
+                          Default is to delete the output directory.   
 =======================   =======================================================
 
 Themes
