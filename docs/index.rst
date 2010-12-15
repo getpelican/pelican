@@ -9,17 +9,6 @@ Pelican is a simple weblog generator, writen in python.
 * Easy to interface with DVCSes and web hooks
 * Completely static output, so easy to host anywhere !
 
-Documentation
-=============
-
-.. toctree::
-   :maxdepth: 2
-   
-   getting_started
-   settings
-   themes
-   internals
-
 Features
 ========
 
@@ -51,3 +40,13 @@ the repository, etc. That's open source, dude!
 
 Contact me at "alexis at notmyidea dot org" for any request/feedback !
 
+Documentation
+=============
+
+.. toctree::
+   :maxdepth: 2
+   
+   getting_started
+   settings
+   themes
+   internals
