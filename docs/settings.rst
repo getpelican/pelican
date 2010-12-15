@@ -13,6 +13,9 @@ Settings are given as the form of a python module (a file). You can have an
 example by looking at `/samples/pelican.conf.py
 <https://github.com/ametaireau/pelican/raw/master/samples/pelican.conf.py>`_
 
+All the settings identifiers must be set in caps, otherwise they will not be
+processed.
+
 Here are the available settings. Please note that all the settings you put in
 this file will be passed to the templates as well.
 
