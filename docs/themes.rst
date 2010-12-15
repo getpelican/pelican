@@ -13,14 +13,14 @@ To make your own theme, you must follow the following structure::
     │   ├── css
     │   └── images
     └── templates
-        ├── archives.html
-        ├── article.html
-        ├── categories.html
-        ├── category.html
-        ├── index.html
-        ├── page.html
-        ├── tag.html
-        └── tags.html
+        ├── archives.html    // to display archives
+        ├── article.html     // processed for each article
+        ├── categories.html  // must list all the categories
+        ├── category.html    // processed for each category
+        ├── index.html       // the index. List all the articles
+        ├── page.html        // processed for each page
+        ├── tag.html         // processed for each tag
+        └── tags.html        // must list all the tags. Can be a tag cloud.
 
 * `static` contains all the static content. It will be copied on the output
   `theme/static` folder then. I've put the css and image folders, but they are
