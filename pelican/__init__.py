@@ -95,7 +95,7 @@ def main():
               ' available.')
     parser.add_argument('-s', '--settings', dest='settings',
         help='the settings of the application. Default to None.')
-    parser.add_argument('-k', '--keep-output-directory', action='store_true',
+    parser.add_argument('-k', '--keep-output-directory', dest='keep', action='store_true',
         help='Keep the output directory and just update all the generated files. Default is to delete the output directory.')
     args = parser.parse_args()
     markup = [a.split()[0] for a in args.markup.split(',')]
