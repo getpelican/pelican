@@ -85,15 +85,15 @@ to use them too in your themes.
 =======================   =======================================================
 Setting name              what it does ?
 =======================   =======================================================
-`GITHUB_URL`              Your github URL (if you have one), it will then
-                          use it to create a github ribbon.
 `DISQUS_SITENAME`         Pelican can handle disqus comments, specify the
                           sitename you've filled in on disqus
+`GITHUB_URL`              Your github URL (if you have one), it will then
+                          use it to create a github ribbon.
+`GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate google analytics.
 `LINKS`                   A list of tuples (Title, Url) for links to appear on
                           the header.
 `SOCIAL`                  A list of tuples (Title, Url) to appear in the "social"
                           section.
-`GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate google analytics.
 =======================   =======================================================
 
 In addition, you can use the "wide" version of the `notmyidea` theme, by
