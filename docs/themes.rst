@@ -43,6 +43,8 @@ are in caps. You can access them directly.
 Common variables
 ----------------
 
+All of those settings will be given to all templates.
+
 =============   ===================================================
 Variable        Description
 =============   ===================================================
@@ -62,6 +64,9 @@ pages           The list of pages
 category.html
 -------------
 
+This template will be processed for each of the existing categories, and will
+finally remain at output/category/`category_name`.html.
+
 =============   ===================================================
 Variable        Description
 =============   ===================================================
@@ -72,6 +77,9 @@ category        The name of the category being processed
 article.html
 -------------
 
+This template will be processed for each article. .html files will be outputed
+in output/`article_name`.html. Here are the specific variables it gets.
+
 =============   ===================================================
 Variable        Description
 =============   ===================================================
@@ -81,6 +89,9 @@ category        The name of the category of the current article
 
 tag.html
 --------
+
+For each tag, this template will be processed. It will create .html files in
+/output/tag/`tag_name`.html
 
 =============   ===================================================
 Variable        Description
