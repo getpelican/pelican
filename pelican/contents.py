@@ -20,6 +20,12 @@ class Page(object):
             if 'AUTHOR' in settings:
                 self.author = settings['AUTHOR']
 
+        if not hasattr(self, 'slug'):
+            self.slug = slugify(self.title)
+
+        if not hasattr(self, 'url'):
+            self.url = '%s.html' % self.slug
+
         if filename:
             self.filename = filename
 
@@ -28,14 +34,6 @@ class Page(object):
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
                 raise NameError(prop)
-
-    @property
-    def url(self):
-        return '%s.html' % self.slug
-
-    @property
-    def slug(self):
-        return slugify(self.title)
 
     @property
     def summary(self):
