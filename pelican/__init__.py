@@ -90,15 +90,14 @@ def main():
     parser.add_argument('-o', '--output', dest='output',
         help='Where to output the generated files. If not specified, a directory'
              ' will be created, named "output" in the current path.')
-    parser.add_argument('-m', '--markup', default='rst, md', dest='markup',
-        help='the markup language to use. Currently only ReSTreucturedtext is'
-              ' available.')
+    parser.add_argument('-m', '--markup', default='', dest='markup',
+        help='the markup language to use (rst or md).')
     parser.add_argument('-s', '--settings', dest='settings',
         help='the settings of the application. Default to None.')
     parser.add_argument('-k', '--keep-output-directory', dest='keep', action='store_true',
         help='Keep the output directory and just update all the generated files. Default is to delete the output directory.')
     args = parser.parse_args()
-    markup = [a.split()[0] for a in args.markup.split(',')]
+    markup = [a.strip().lower() for a in args.markup.split(',')]
 
     run_pelican(args.settings, args.path, args.theme, args.output, markup, args.keep)
 
