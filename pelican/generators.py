@@ -108,7 +108,7 @@ class ArticlesGenerator(Generator):
 
 	    if 'TAG_FEED_RSS' in self.settings:
                	writer.write_feed(arts, self.context,
-                       	self.settings['TAG_FEED_RSS'] % cat,
+                       	self.settings['TAG_FEED_RSS'] % tag,
                        	feed_type='rss')
 
     def generate_pages(self, writer):
