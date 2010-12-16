@@ -43,7 +43,7 @@ Setting name              what it does ?
 `KEEP_OUTPUT_DIRECTORY`   Keep the output directory and just update all the generated files. 
                           Default is to delete the output directory.   
 `MARKUP`                  A list of available markup languages you want to use.
-                          moment, only available values are `rst` and `md`.
+                          For the moment, only available values are `rst` and `md`.
 `OUTPUT_PATH`             Where to output the generated files. Default to
                           "output"
 `PATH`                    path to look at for input files.
