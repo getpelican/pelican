@@ -50,11 +50,12 @@ class MarkdownReader(object):
         
         metadatas = {}
         for name, value in md.Meta.items():
+            name = name.lower()
             if name in _METADATAS_FIELDS:
                 meta = _METADATAS_FIELDS[name](value[0])
             else:
                 meta = value[0]
-            metadatas[name.lower()] = meta
+            metadatas[name] = meta
         return content, metadatas
 
 _EXTENSIONS = {'rst': RstReader, 'md': MarkdownReader}  # supported formats
