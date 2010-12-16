@@ -106,10 +106,10 @@ class ArticlesGenerator(Generator):
                 writer.write_feed(arts, self.context,
                         self.settings['TAG_FEED'] % tag)
 
-		if 'TAG_FEED_RSS' in self.settings:
-                	writer.write_feed(arts, self.context,
-                        	self.settings['TAG_FEED_RSS'] % cat,
-                        	feed_type='rss')
+	     if 'TAG_FEED_RSS' in self.settings:
+               	writer.write_feed(arts, self.context,
+                       	self.settings['TAG_FEED_RSS'] % cat,
+                       	feed_type='rss')
 
     def generate_pages(self, writer):
         """Generate the pages on the disk
