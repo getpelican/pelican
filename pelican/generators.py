@@ -100,6 +100,14 @@ class ArticlesGenerator(Generator):
                         self.settings['CATEGORY_FEED_RSS'] % cat,
                         feed_type='rss')
 
+        if 'TAG_FEEDS' in self.settings:
+            for tag, arts in self.tags.items():
+                arts.sort(key=attrgetter('date'), reverse=True)
+                writer.write_feed(arts, self.context, self.settings['TAG_FEED'] % tag)
+
+                if 'TAG_FEED_RSS' in self.settings:
+                    writer.write_feed(arts, self.context, self.settings['TAG_FEED_RSS'] % tag, feed_type='rss')
+
 
     def generate_pages(self, writer):
         """Generate the pages on the disk
@@ -111,7 +119,7 @@ class ArticlesGenerator(Generator):
             write('%s.html' % template, templates[template], self.context,
                     blog=True)
         for tag, articles in self.tags.items():
-            write('tag/%s.html' % tag, templates['tag'], self.context, tag=tag, 
+            write('tag/%s.html' % tag, templates['tag'], self.context, tag=tag,
                     articles=articles)
         for cat in self.categories:
             write('category/%s.html' % cat, templates['category'], self.context,
