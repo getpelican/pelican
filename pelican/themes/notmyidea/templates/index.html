@@ -18,12 +18,13 @@
                         </address>
                         {% endif %}
                 <p>In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
+                {% include 'taglist.html' %}
                 </footer><!-- /.post-info -->
                 {{ article.content }}
         </article></aside><!-- /#featured -->
         {% if loop.length  > 1 %}
             <section id="content" class="body">
-                <h1>Others articles</h1>
+                <h1>Other articles</h1>
                 <hr />
                     <ol id="posts-list" class="hfeed">
         {% endif %}
@@ -43,6 +44,7 @@
                                 By <a class="url fn" href="#">{{ article.author }}</a>
                         </address>
                         <p> In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></p>
+                        {% include 'taglist.html' %}
                     <p>{% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">pdf</a>{% endif %}</p>
                 </footer><!-- /.post-info -->
                 {{ article.summary }}

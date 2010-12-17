@@ -7,7 +7,7 @@ if sys.version_info < (2,7):
 
 setup(
     name = "pelican",
-    version = '2.5.0',
+    version = '2.5.1',
     url = 'http://alexis.notmyidea.org/pelican/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',

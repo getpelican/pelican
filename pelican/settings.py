@@ -7,7 +7,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': ('rst', 'md'),
                    'STATIC_PATHS': ['images',],
-                   'THEME_PATHS': ['static',],
+                   'THEME_STATIC_PATHS': ['static',],
                    'FEED': 'feeds/all.atom.xml',
                    'CATEGORY_FEED': 'feeds/%s.atom.xml',
                    'SITENAME': 'A Pelican Blog',
@@ -16,6 +16,8 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_CATEGORY': 'misc',
                    'FALLBACK_ON_FS_DATE': True,
                    'CSS_FILE': 'main.css',
+                   'REVERSE_ARCHIVE_ORDER': False,
+                   'KEEP_OUTPUT_DIRECTORY': False,
                   }
 
 def read_settings(filename):

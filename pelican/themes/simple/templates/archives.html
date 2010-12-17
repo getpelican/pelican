@@ -3,11 +3,9 @@
 <h1>Archives for {{ SITENAME }}</h2>
 
 <dl>
-{% for date, articles in dates %}
-    {% for article in articles %}
-        <dt>{{ date }}</dt>
-        <dd><a href='{{ article.url }}'>{{ article.title }}</a></dd>
-    {% endfor %}
+{% for article in dates %}
+    <dt>{{ article.date.strftime('%Y-%m-%d %H:%M') }}</dt>
+    <dd><a href='{{ article.url }}'>{{ article.title }}</a></dd>
 {% endfor %}
 </dl>
 {% endblock %}
