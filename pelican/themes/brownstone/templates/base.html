@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+
+Name       : Brown Stone  
+Description: A two-column, fixed-width design with dark color scheme.
+Version    : 1.0
+Released   : 20100928
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>{% block title %}{{ SITENAME }}{%endblock%}</title>
+<link href="{{ SITEURL }}/theme/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="{{ SITEURL }}/{{ FEED }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} ATOM Feed" />
+<link href="{{ SITEURL }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+</head>
+<body>
+<div id="wrapper">
+	<div id="page">
+		<div id="page-bgtop">
+			<div id="page-bgbtm">
+				{% block content %}
+                                {% endblock %}
+				<div id="sidebar">
+					<div id="logo">
+						<h1><a href="{{ SITEURL }}">{{ SITENAME }}</h1>
+						{% if SITESUBTITLE %}<p>{{ SITESUBTITLE }}</p>{% endif %}
+					</div>
+					<div id="menu">
+						<ul>
+							<li class="current_page_item"><a href="{{ SITEURL }}">Home</a></li>
+							<li><a href="{{ SITEURL }}/archives.html">Archives</a></li>
+							{% if DISPLAY_PAGES_ON_MENU %}
+                                                        {% for page in PAGES %}
+                                                            <li><a href="{{ SITEURL }}/pages/{{ page.url }}">{{ page.title }}</a></li>
+                                                        {% endfor %}
+                                                        {% endif %}
+						</ul>
+					</div>
+					<ul>
+						<li>
+							<h2>Catégories</h2>
+							<ul>
+							{% for cat, null in categories %}
+								 <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/category/{{ cat }}.html">{{ cat }}</a></li>
+							{% endfor %}
+							</ul>
+						</li>
+						{% if LINKS %}
+						<li>
+							<h2>Blogroll</h2>
+							<ul>
+							{% for name, link in LINKS %}
+                                                            <li><a href="{{ link }}">{{ name }}</a></li>
+                                                        {% endfor %}
+							</ul>
+						</li>
+						{% endif %}
+						{% if SOCIAL %}
+                                                <li>
+                                                        <h2>Social</h2>
+                                                        <ul>
+                                                            <li><a href="{{ SITEURL }}/{{ FEED }}" rel="alternate">Flux Atom</a></li>
+                                                            {% if FEED_RSS %}
+                                                            <li><a href="{{ SITEURL }}/{{ FEED_RSS }}" rel="alternate">Flux Rss</a></li>
+                                                            {% endif %}
+                                                        {% for name, link in SOCIAL %}
+                                                            <li><a href="{{ link }}">{{ name }}</a></li>
+                                                        {% endfor %}
+                                                        </ul>
+                                                </li><!-- /.social -->
+                                                {% endif %}
+						<li>
+						        <h2>Tags</h2>
+						        <ul>
+						        {% for tag, articles in tags %}
+                                                                <li><a href="{{ SITEURL }}/tag/{{ tag }}.html">{{ tag }}</a></li>
+                                                        {% endfor %}
+						        </ul>
+						</li>
+						
+						
+					</ul>
+				</div>
+				<!-- end #sidebar -->
+				<div style="clear: both;">&nbsp;</div>
+			</div>
+		</div>
+	</div>
+	<!-- end #page -->
+
+<div id="footer">
+	<p>Copyright (c) 2008 Sitename.com. All rights reserved. Design by <a href="http://www.freecsstemplates.org/">CSS Templates</a>.</p>
+	<p>Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+</p>
+</div>
+{% include 'analytics.html' %}
+<!-- end #footer -->
+</body>
+</html>

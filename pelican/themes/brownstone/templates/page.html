@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}        
+<div id="content">
+<div class="post">    
+    <h2 class="title"><a href="{{ SITEURL }}/pages/{{ page.url }}">{{ page.title }}</a></h1>
+    {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ page.slug }}.pdf">get
+    the pdf</a>{% endif %}
+    <div style="clear: both;">&nbsp;</div>
+    <div class="entry">
+    {{ page.content }}
+    {% include 'twitter.html' %}
+    </div>
+    </div>
+</div>
+
+{% endblock %}

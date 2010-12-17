@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="content">
+<div class="post">  
+                        {% if articles %}
+                        {% for article in articles %}        
+                            {% if loop.index == 1 %}
+				<ul>
+                                {% for category, articles in categories %}
+                                    <li>{{ category }}</li>
+                                {% endfor %}
+                                </ul>
+		            {% endif %}
+                        {% endfor %}
+                        {% endif %}
+				</div>
+				</div>
+{% endblock %}
