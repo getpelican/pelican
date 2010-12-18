@@ -4,11 +4,11 @@ import os
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir
 from pelican.writers import Writer
-from pelican.generators import (ArticlesGenerator, PagesGenerator, 
+from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, PdfGenerator)
 
 
-def init_params(settings=None, path=None, theme=None, output_path=None, 
+def init_params(settings=None, path=None, theme=None, output_path=None,
         markup=None, keep=False):
     """Read the settings, and performs some checks on the environment
     before doing anything else.
@@ -50,7 +50,7 @@ def run_generators(generators, settings, path, theme, output_path, markup, keep)
     """Run the generators and return"""
 
     context = settings.copy()
-    generators = [p(context, settings, path, theme, output_path, markup, keep) 
+    generators = [p(context, settings, path, theme, output_path, markup, keep)
             for p in generators]
 
     for p in generators:
