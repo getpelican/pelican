@@ -12,6 +12,8 @@ class Page(object):
 
     def __init__(self, content, metadatas={}, settings={}, filename=None):
         self.content = content
+        self.translations = []
+
         self.status = "published"  # default value
         for key, value in metadatas.items():
             setattr(self, key, value)
@@ -20,11 +22,20 @@ class Page(object):
             if 'AUTHOR' in settings:
                 self.author = settings['AUTHOR']
 
+        default_lang = settings.get('DEFAULT_LANG', 'en').lower()
+        if not hasattr(self, 'lang'):
+            self.lang = default_lang
+
+        self.in_default_lang = (self.lang == default_lang)
+
         if not hasattr(self, 'slug'):
             self.slug = slugify(self.title)
 
         if not hasattr(self, 'url'):
-            self.url = '%s.html' % self.slug
+            if self.in_default_lang:
+                self.url = '%s.html' % self.slug
+            else:
+                self.url = '%s-%s.html' % (self.slug, self.lang)
 
         if filename:
             self.filename = filename

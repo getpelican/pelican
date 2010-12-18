@@ -4,6 +4,8 @@ import os
 import shutil
 from datetime import datetime
 from codecs import open as _open
+from itertools import groupby
+from operator import attrgetter
 
 def update_dict(mapping, key, value):
     """Update a dict intenal list
@@ -147,3 +149,38 @@ def truncate_html_words(s, num, end_text='...'):
     # Return string
     return out
 
+
+def process_translations(content_list):
+    """ Finds all translation and returns
+        tuple with two lists (index, translations).
+        Index list includes items in default language
+        or items which have no variant in default language.
+
+        Also, for each content_list item, it
+        sets attribute 'translations'
+    """
+    grouped_by_slugs = groupby(content_list, attrgetter('slug'))
+    index = []
+    translations = []
+
+    for slug, items in grouped_by_slugs:
+        items = list(items)
+        # find items with default language
+        default_lang_items = filter(
+            attrgetter('in_default_lang'),
+            items
+        )
+        len_ = len(default_lang_items)
+        if len_ > 1:
+            print u' [warning] there are %s varianits of "%s"' % (len_, slug)
+        elif len_ == 0:
+            default_lang_items = items[:1]
+
+        index.extend(default_lang_items)
+        translations.extend(filter(
+            lambda x: x not in default_lang_items,
+            items
+        ))
+        for a in items:
+            a.translations = filter(lambda x: x != a, items)
+    return index, translations
