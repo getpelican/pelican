@@ -90,8 +90,9 @@ def main():
     parser.add_argument('-o', '--output', dest='output',
         help='Where to output the generated files. If not specified, a directory'
              ' will be created, named "output" in the current path.')
-    parser.add_argument('-m', '--markup', default='', dest='markup',
-        help='the markup language to use (rst or md).')
+    parser.add_argument('-m', '--markup', default=None, dest='markup',
+        help='the list of markup language to use (rst or md). Please indicate them'
+             'separated by commas')
     parser.add_argument('-s', '--settings', dest='settings',
         help='the settings of the application. Default to None.')
     parser.add_argument('-k', '--keep-output-directory', dest='keep',
@@ -99,7 +100,10 @@ def main():
         help='Keep the output directory and just update all the generated files.'
              'Default is to delete the output directory.')
     args = parser.parse_args()
-    markup = [a.strip().lower() for a in args.markup.split(',')]
+
+    # Split the markup languages only if some have been given. Otherwise, populate
+    # the variable with None.
+    markup = [a.strip().lower() for a in args.markup.split(',')] if args.markup else None
 
     run_pelican(args.settings, args.path, args.theme, args.output, markup, args.keep)
 
