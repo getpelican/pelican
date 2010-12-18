@@ -38,9 +38,6 @@ def init_params(settings=None, path=None, theme=None, output_path=None,
         else:
             raise Exception("Impossible to find the theme %s" % theme)
 
-    if 'SITEURL' not in settings:
-        settings['SITEURL'] = output_path
-
     # get the list of files to parse
     if not path:
         raise Exception('you need to specify a path to search the docs on !')
