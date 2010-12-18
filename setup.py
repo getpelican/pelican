@@ -1,4 +1,5 @@
 from setuptools import setup
+from pelican import VERSION
 import sys
 
 requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'Markdown']
@@ -7,7 +8,7 @@ if sys.version_info < (2,7):
 
 setup(
     name = "pelican",
-    version = '2.5.1',
+    version = VERSION,
     url = 'http://alexis.notmyidea.org/pelican/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',

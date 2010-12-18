@@ -7,6 +7,8 @@ from pelican.writers import Writer
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, PdfGenerator)
 
+VERSION = "2.5.1"
+
 
 def init_params(settings=None, path=None, theme=None, output_path=None,
         markup=None, keep=False):
@@ -99,6 +101,8 @@ def main():
             action='store_true',
         help='Keep the output directory and just update all the generated files.'
              'Default is to delete the output directory.')
+    parser.add_argument('--version', action='version', version=VERSION,
+            help="Print the pelican version and exit")
     args = parser.parse_args()
 
     # Split the markup languages only if some have been given. Otherwise, populate
