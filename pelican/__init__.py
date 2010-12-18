@@ -94,8 +94,10 @@ def main():
         help='the markup language to use (rst or md).')
     parser.add_argument('-s', '--settings', dest='settings',
         help='the settings of the application. Default to None.')
-    parser.add_argument('-k', '--keep-output-directory', dest='keep', action='store_true',
-        help='Keep the output directory and just update all the generated files. Default is to delete the output directory.')
+    parser.add_argument('-k', '--keep-output-directory', dest='keep',
+            action='store_true',
+        help='Keep the output directory and just update all the generated files.'
+             'Default is to delete the output directory.')
     args = parser.parse_args()
     markup = [a.strip().lower() for a in args.markup.split(',')]
 
