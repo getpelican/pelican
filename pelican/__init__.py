@@ -7,7 +7,7 @@ from pelican.writers import Writer
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, PdfGenerator)
 
-VERSION = "2.5.1"
+VERSION = "2.5.2"
 
 
 def init_params(settings=None, path=None, theme=None, output_path=None,
