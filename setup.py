@@ -1,6 +1,7 @@
 from setuptools import setup
 import sys
-VERSION = "2.5.2"
+
+VERSION = "2.5.3" # find a better way to do so.
 
 requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'Markdown']
 if sys.version_info < (2,7):
