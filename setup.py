@@ -1,6 +1,6 @@
 from setuptools import setup
-from pelican import VERSION
 import sys
+VERSION = "2.5.2"
 
 requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'Markdown']
 if sys.version_info < (2,7):
