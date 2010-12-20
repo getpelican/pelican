@@ -22,7 +22,7 @@ class Page(object):
             if 'AUTHOR' in settings:
                 self.author = settings['AUTHOR']
 
-        default_lang = settings.get('DEFAULT_LANG', 'en').lower()
+        default_lang = settings.get('DEFAULT_LANG').lower()
         if not hasattr(self, 'lang'):
             self.lang = default_lang
 

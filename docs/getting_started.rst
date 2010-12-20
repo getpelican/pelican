@@ -87,3 +87,11 @@ generate static pages.
 
 Then, use the `DISPLAY_PAGES_ON_MENU` setting, which will add all the pages to 
 the menu.
+
+Translations
+============
+
+It is possible to translate articles. To do so, you need to add a `Lang` meta
+in your articles/pages, and to set a `DEFAULT_LANG` setting (which is en by
+default). Then, only articles with this default language will be listed, and
+each article will have a translation list.
