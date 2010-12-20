@@ -129,7 +129,7 @@ class ArticlesGenerator(Generator):
             write('category/%s.html' % cat, templates['category'], self.context,
                           category=cat, articles=self.categories[cat])
         for article in chain(self.translations, self.articles):
-            write('%s' % article.url,
+            write(article.save_as,
                           templates['article'], self.context, article=article,
                           category=article.category)
 
@@ -211,7 +211,7 @@ class PagesGenerator(Generator):
     def generate_output(self, writer):
         templates = self.get_templates()
         for page in chain(self.translations, self.pages):
-            writer.write_file('pages/%s' % page.url, templates['page'],
+            writer.write_file('pages/%s' % page.save_as, templates['page'],
                     self.context, page=page)
 
 

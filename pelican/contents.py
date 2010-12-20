@@ -31,11 +31,18 @@ class Page(object):
         if not hasattr(self, 'slug'):
             self.slug = slugify(self.title)
 
-        if not hasattr(self, 'url'):
+        if not hasattr(self, 'save_as'):
             if self.in_default_lang:
-                self.url = '%s.html' % self.slug
+                self.save_as = '%s.html' % self.slug
+                clean_url = '%s/' % self.slug
             else:
-                self.url = '%s-%s.html' % (self.slug, self.lang)
+                self.save_as = '%s-%s.html' % (self.slug, self.lang)
+                clean_url = '%s-%s/' % (self.slug, self.lang)
+
+        if settings.get('CLEAN_URLS', False):
+            self.url = clean_url
+        else:
+            self.url = self.save_as
 
         if filename:
             self.filename = filename

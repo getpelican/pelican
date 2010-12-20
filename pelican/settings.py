@@ -19,6 +19,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'CSS_FILE': 'main.css',
                    'REVERSE_ARCHIVE_ORDER': False,
                    'KEEP_OUTPUT_DIRECTORY': False,
+                   'CLEAN_URLS': False, # use /blah/ instead /blah.html in urls
                   }
 
 def read_settings(filename):
