@@ -172,7 +172,7 @@ def process_translations(content_list):
         )
         len_ = len(default_lang_items)
         if len_ > 1:
-            print u' [warning] there are %s varianits of "%s"' % (len_, slug)
+            print u' [warning] there are %s variants of "%s"' % (len_, slug)
         elif len_ == 0:
             default_lang_items = items[:1]
 
