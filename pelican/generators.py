@@ -1,11 +1,13 @@
 from operator import attrgetter
+from itertools import chain
 from datetime import datetime
+from collections import defaultdict
 import os
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import update_dict, copytree
+from pelican.utils import update_dict, copytree, process_translations
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 
@@ -75,7 +77,8 @@ class ArticlesGenerator(Generator):
 
     def __init__(self, *args, **kwargs):
         """initialize properties"""
-        self.articles = []
+        self.articles = [] # only articles in default language
+        self.translations = []
         self.dates = {}
         self.tags = {}
         self.categories = {}
@@ -103,10 +106,21 @@ class ArticlesGenerator(Generator):
         if 'TAG_FEED' in self.settings:
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(arts, self.context, self.settings['TAG_FEED'] % tag)
+                writer.write_feed(arts, self.context, 
+                        self.settings['TAG_FEED'] % tag)
 
                 if 'TAG_FEED_RSS' in self.settings:
-                    writer.write_feed(arts, self.context, self.settings['TAG_FEED_RSS'] % tag, feed_type='rss')
+                    writer.write_feed(arts, self.context, 
+                            self.settings['TAG_FEED_RSS'] % tag, feed_type='rss')
+
+        translations_feeds = defaultdict(list)
+        for article in self.translations:
+            translations_feeds[article.lang].append(article)
+
+        for lang, items in translations_feeds.items():
+            items.sort(key=attrgetter('date'), reverse=True)
+            writer.write_feed(items, self.context,
+                              self.settings['TRANSLATION_FEED'] % lang)
 
 
     def generate_pages(self, writer):
@@ -124,8 +138,8 @@ class ArticlesGenerator(Generator):
         for cat in self.categories:
             write('category/%s.html' % cat, templates['category'], self.context,
                           category=cat, articles=self.categories[cat])
-        for article in self.articles:
-            write('%s' % article.url,
+        for article in chain(self.translations, self.articles):
+            write(article.save_as,
                           templates['article'], self.context, article=article,
                           category=article.category)
 
@@ -134,6 +148,7 @@ class ArticlesGenerator(Generator):
 
         # return the list of files to use
         files = self.get_files(self.path, exclude=['pages',])
+        all_articles = []
         for f in files:
             content, metadatas = read_file(f)
 
@@ -157,16 +172,23 @@ class ArticlesGenerator(Generator):
             if not is_valid_content(article, f):
                 continue
 
-            update_dict(self.categories, article.category, article)
             if hasattr(article, 'tags'):
                 for tag in article.tags:
                     update_dict(self.tags, tag, article)
-            self.articles.append(article)
+            all_articles.append(article)
+
+        self.articles, self.translations = process_translations(all_articles)
+
+        for article in self.articles:
+            # only main articles are listed in categories, not translations
+            update_dict(self.categories, article.category, article)
+
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
-        self.dates.sort(key=attrgetter('date'), reverse=self.context['REVERSE_ARCHIVE_ORDER'])
+        self.dates.sort(key=attrgetter('date'), 
+                reverse=self.context['REVERSE_ARCHIVE_ORDER'])
         # and generate the output :)
         self._update_context(('articles', 'dates', 'tags', 'categories'))
 
@@ -183,21 +205,24 @@ class PagesGenerator(Generator):
         super(PagesGenerator, self).__init__(*args, **kwargs)
 
     def generate_context(self):
+        all_pages = []
         for f in self.get_files(os.sep.join((self.path, 'pages'))):
             content, metadatas = read_file(f)
             page = Page(content, metadatas, settings=self.settings,
                         filename=f)
             if not is_valid_content(page, f):
                 continue
-            self.pages.append(page)
+            all_pages.append(page)
+
+        self.pages, self.translations = process_translations(all_pages)
 
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
     def generate_output(self, writer):
         templates = self.get_templates()
-        for page in self.pages:
-            writer.write_file('pages/%s' % page.url, templates['page'],
+        for page in chain(self.translations, self.pages):
+            writer.write_file('pages/%s' % page.save_as, templates['page'],
                     self.context, page=page)
 
 
