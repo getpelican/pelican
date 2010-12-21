@@ -114,7 +114,7 @@ class ArticlesGenerator(Generator):
                             self.settings['TAG_FEED_RSS'] % tag, feed_type='rss')
 
         translations_feeds = defaultdict(list)
-        for article in self.translations:
+        for article in chain(self.articles, self.translations):
             translations_feeds[article.lang].append(article)
 
         for lang, items in translations_feeds.items():
