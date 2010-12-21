@@ -10,6 +10,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'THEME_STATIC_PATHS': ['static',],
                    'FEED': 'feeds/all.atom.xml',
                    'CATEGORY_FEED': 'feeds/%s.atom.xml',
+                   'TRANSLATION_FEED': 'feeds/all-%s.atom.xml',
                    'SITENAME': 'A Pelican Blog',
                    'DISPLAY_PAGES_ON_MENU': True,
                    'PDF_GENERATOR': False,
@@ -18,6 +19,8 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'CSS_FILE': 'main.css',
                    'REVERSE_ARCHIVE_ORDER': False,
                    'KEEP_OUTPUT_DIRECTORY': False,
+                   'CLEAN_URLS': False, # use /blah/ instead /blah.html in urls
+                   'DEFAULT_LANG': 'en',
                   }
 
 def read_settings(filename):

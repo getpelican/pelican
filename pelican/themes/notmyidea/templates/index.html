@@ -21,7 +21,9 @@
                 {% include 'taglist.html' %}
                 </footer><!-- /.post-info -->
                 {{ article.content }}
-        </article></aside><!-- /#featured -->
+                {% include 'comments.html' %}
+                </article>
+                </aside><!-- /#featured -->
         {% if loop.length  > 1 %}
             <section id="content" class="body">
                 <h1>Other articles</h1>
@@ -49,6 +51,7 @@
                 </footer><!-- /.post-info -->
                 {{ article.summary }}
                 <a class="readmore" href="{{ SITEURL }}/{{ article.url }}">read more</a>
+                {% include 'comments.html' %}
                 </div><!-- /.entry-content -->
         </article></li>
     {% endif %}

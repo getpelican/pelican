@@ -4,11 +4,13 @@ import os
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir
 from pelican.writers import Writer
-from pelican.generators import (ArticlesGenerator, PagesGenerator, 
+from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, PdfGenerator)
 
+VERSION = "2.5.3"
 
-def init_params(settings=None, path=None, theme=None, output_path=None, 
+
+def init_params(settings=None, path=None, theme=None, output_path=None,
         markup=None, keep=False):
     """Read the settings, and performs some checks on the environment
     before doing anything else.
@@ -36,9 +38,6 @@ def init_params(settings=None, path=None, theme=None, output_path=None,
         else:
             raise Exception("Impossible to find the theme %s" % theme)
 
-    if 'SITEURL' not in settings:
-        settings['SITEURL'] = output_path
-
     # get the list of files to parse
     if not path:
         raise Exception('you need to specify a path to search the docs on !')
@@ -50,7 +49,7 @@ def run_generators(generators, settings, path, theme, output_path, markup, keep)
     """Run the generators and return"""
 
     context = settings.copy()
-    generators = [p(context, settings, path, theme, output_path, markup, keep) 
+    generators = [p(context, settings, path, theme, output_path, markup, keep)
             for p in generators]
 
     for p in generators:
@@ -90,14 +89,22 @@ def main():
     parser.add_argument('-o', '--output', dest='output',
         help='Where to output the generated files. If not specified, a directory'
              ' will be created, named "output" in the current path.')
-    parser.add_argument('-m', '--markup', default='', dest='markup',
-        help='the markup language to use (rst or md).')
+    parser.add_argument('-m', '--markup', default=None, dest='markup',
+        help='the list of markup language to use (rst or md). Please indicate them'
+             'separated by commas')
     parser.add_argument('-s', '--settings', dest='settings',
         help='the settings of the application. Default to None.')
-    parser.add_argument('-k', '--keep-output-directory', dest='keep', action='store_true',
-        help='Keep the output directory and just update all the generated files. Default is to delete the output directory.')
+    parser.add_argument('-k', '--keep-output-directory', dest='keep',
+            action='store_true',
+        help='Keep the output directory and just update all the generated files.'
+             'Default is to delete the output directory.')
+    parser.add_argument('--version', action='version', version=VERSION,
+            help="Print the pelican version and exit")
     args = parser.parse_args()
-    markup = [a.strip().lower() for a in args.markup.split(',')]
+
+    # Split the markup languages only if some have been given. Otherwise, populate
+    # the variable with None.
+    markup = [a.strip().lower() for a in args.markup.split(',')] if args.markup else None
 
     run_pelican(args.settings, args.path, args.theme, args.output, markup, args.keep)
 

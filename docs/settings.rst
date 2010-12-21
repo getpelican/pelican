@@ -31,6 +31,7 @@ Setting name              what it does ?
 `CSS_FILE`                To specify the CSS file you want to load, if it's not
                           the default one ('main.css')
 `DEFAULT_CATEGORY`        The default category to fallback on. `misc` by default.
+`DEFAULT_LANG`            The default language to use. Default is 'en'.
 `DISPLAY_PAGES_ON_MENU`   Display or not the pages on the menu of the template.
                           Templates can follow or not this settings.
 `FALLBACK_ON_FS_DATE`     If True, pelican will use the file system dates infos
@@ -62,6 +63,9 @@ Setting name              what it does ?
 `THEME`                   theme to use to product the output. can be the
                           complete static path to a theme folder, or chosen
                           between the list of default themes (see below)
+`TRANSLATION_FEED`        Where to put the RSS feed for translations. Default
+                          is feeds/all-%s.atom.xml where %s is the name of the
+                          lang.
 =======================   =======================================================
 
 Themes
