@@ -73,7 +73,7 @@ def run_pelican(settings, path, theme, output_path, markup, delete):
     params = init_params(settings, path, theme, output_path, markup, delete)
     generators = [ArticlesGenerator, PagesGenerator, StaticGenerator]
     if params[0]['PDF_GENERATOR']:  # param[0] is settings
-        processors.append(PdfGenerator)
+        generators.append(PdfGenerator)
     run_generators(generators, *params)
 
 
