@@ -7,7 +7,7 @@ import os
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import update_dict, copytree, process_translations
+from pelican.utils import update_dict, copytree, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 
@@ -252,18 +252,27 @@ class PdfGenerator(Generator):
             self.pdfcreator = RstToPdf(breakside=0, stylesheets=['twelvepoint'])
         except ImportError:
             raise Exception("unable to find rst2pdf")
-        super(PdfGenerator, self).__init(*args, **kwargs)
+        super(PdfGenerator, self).__init__(*args, **kwargs)
 
     def _create_pdf(self, obj, output_path):
         if obj.filename.endswith(".rst"):
-            self.pdfcreator.createPdf(text=open(obj.filename).read(),
-                output=os.path.join(output_path, "%s.pdf" % obj.slug))
-
+            filename = obj.slug + ".pdf"
+            output_pdf=os.path.join(output_path, filename)
+            # print "Generating pdf for", obj.filename, " in ", output_pdf
+            self.pdfcreator.createPdf(text=open(obj.filename), output=output_pdf)
+            print u' [ok] writing %s' % output_pdf
+    
     def generate_context(self):
+        pass
+
+    def generate_output(self, writer=None):
+        # we don't use the writer passed as argument here, since we write our own files
+        print u' Generating PDF files...'
         pdf_path = os.path.join(self.output_path, 'pdf')
         try:
             os.mkdir(pdf_path)
         except OSError:
+            print "Couldn't create the pdf output folder in ", pdf_path
             pass
 
         for article in self.context['articles']:

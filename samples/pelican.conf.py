@@ -5,7 +5,7 @@ SITEURL = 'http://blog.notmyidea.org'
 
 GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"
-PDF_PROCESSOR = False
+PDF_GENERATOR = False
 
 LINKS = (('Biologeek', 'http://biologeek.org'),
             ('Filyb', "http://filyb.info/"),
