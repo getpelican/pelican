@@ -1,6 +1,7 @@
 from docutils import core
 from markdown import Markdown
 import re
+import string
 
 # import the directives to have pygments support
 import rstdirectives
@@ -8,11 +9,11 @@ import rstdirectives
 from pelican.utils import get_date, open
 
 
-_METADATAS_FIELDS = {'tags': lambda x: x.split(', '),
-                     'date': lambda x: get_date(x),
-                     'category': lambda x: x,
-                     'author': lambda x: x,
-                     'status': lambda x:x.strip(),}
+_METADATAS_PROCESSORS = {
+    'tags': lambda x: map(string.strip, x.split(',')),
+    'date': lambda x: get_date(x),
+    'status': string.strip,
+}
 
 
 class RstReader(object):
@@ -20,10 +21,11 @@ class RstReader(object):
     def _parse_metadata(self, content):
         """Return the dict containing metadatas"""
         output = {}
-        for m in re.compile(':([a-z]+): (.*)\s', re.M).finditer(content):
+        for m in re.compile('^:([a-z]+): (.*)\s', re.M).finditer(content):
             name, value = m.group(1).lower(), m.group(2)
-            if name in _METADATAS_FIELDS:
-                output[name] = _METADATAS_FIELDS[name](value)
+            output[name] = _METADATAS_PROCESSORS.get(
+                name, lambda x:x
+            )(value)
         return output
 
     def read(self, filename):
@@ -51,7 +53,7 @@ class MarkdownReader(object):
         metadatas = {}
         for name, value in md.Meta.items():
             name = name.lower()
-            metadatas[name] = _METADATAS_FIELDS.get(
+            metadatas[name] = _METADATAS_PROCESSORS.get(
                 name, lambda x:x
             )(value[0])
         return content, metadatas
