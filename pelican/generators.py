@@ -1,5 +1,6 @@
 from operator import attrgetter
 from itertools import chain
+from functools import partial
 from datetime import datetime
 from collections import defaultdict
 import os
@@ -128,7 +129,10 @@ class ArticlesGenerator(Generator):
         TODO: change the name"""
 
         templates = self.get_templates()
-        write = writer.write_file
+        write = partial(
+            writer.write_file,
+            relative_urls = self.settings.get('RELATIVE_URLS')
+        )
         for template in _DIRECT_TEMPLATES:
             write('%s.html' % template, templates[template], self.context,
                     blog=True)
@@ -223,7 +227,8 @@ class PagesGenerator(Generator):
         templates = self.get_templates()
         for page in chain(self.translations, self.pages):
             writer.write_file('pages/%s' % page.save_as, templates['page'],
-                    self.context, page=page)
+                    self.context, page=page,
+                    relative_urls = self.settings.get('RELATIVE_URLS'))
 
 
 class StaticGenerator(Generator):
