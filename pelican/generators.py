@@ -8,7 +8,7 @@ import os
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import update_dict, copytree, process_translations, open
+from pelican.utils import copytree, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 
@@ -81,8 +81,8 @@ class ArticlesGenerator(Generator):
         self.articles = [] # only articles in default language
         self.translations = []
         self.dates = {}
-        self.tags = {}
-        self.categories = {}
+        self.tags = defaultdict(list)
+        self.categories = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
 
     def generate_feeds(self, writer):
@@ -178,14 +178,14 @@ class ArticlesGenerator(Generator):
 
             if hasattr(article, 'tags'):
                 for tag in article.tags:
-                    update_dict(self.tags, tag, article)
+                    self.tags[tag].append(article)
             all_articles.append(article)
 
         self.articles, self.translations = process_translations(all_articles)
 
         for article in self.articles:
             # only main articles are listed in categories, not translations
-            update_dict(self.categories, article.category, article)
+            self.categories[article.category].append(article)
 
 
         # sort the articles by date

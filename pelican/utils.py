@@ -7,17 +7,6 @@ from codecs import open as _open
 from itertools import groupby
 from operator import attrgetter
 
-def update_dict(mapping, key, value):
-    """Update a dict intenal list
-
-    :param mapping: the mapping to update
-    :param key: the key of the mapping to update.
-    :param value: the value to append to the list.
-    """
-    if key not in mapping:
-        mapping[key] = []
-    mapping[key].append(value)
-
 
 def get_date(string):
     """Return a datetime object from a string.
