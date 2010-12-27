@@ -34,7 +34,7 @@ class Generator(object):
         templates ready to use with Jinja2.
         """
         path = os.path.expanduser(os.path.join(self.theme, 'templates'))
-        env = Environment(loader=FileSystemLoader(path))
+        env = Environment(loader=FileSystemLoader(path),extensions=self.settings.get('JINJA_EXTENSIONS', []))
         templates = {}
         for template in _TEMPLATES:
             try:
