@@ -42,7 +42,7 @@ Setting name              what it does ?
 `FEED_RSS`                relative url to output the rss feed. Default is
                           None (no rss)
 `JINJA_EXTENSIONS`        A list of any Jinja2 extensions you want to use.
-                          Default is no extensions (the empty list)
+                          Default is no extensions (the empty list).
 `KEEP_OUTPUT_DIRECTORY`   Keep the output directory and just update all the generated files. 
                           Default is to delete the output directory.   
 `MARKUP`                  A list of available markup languages you want to use.
