@@ -4,11 +4,12 @@ from functools import partial
 from datetime import datetime
 from collections import defaultdict
 import os
+import re
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import update_dict, copytree, process_translations, open
+from pelican.utils import update_dict, copytree, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 
@@ -16,6 +17,32 @@ _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 
+def update_object_content(name, input):
+    """Change all the relatives paths of the input content to relatives paths
+       suitable fot the ouput content
+
+    :param name: path of the output.
+    :param input: input resource that will be passed to the templates.
+    """
+    content = input._content
+
+    hrefs = re.compile(r'<\s*[^\>]*href\s*=\s*(["\'])(.*?)\1')
+    srcs = re.compile(r'<\s*[^\>]*src\s*=\s*(["\'])(.*?)\1')
+
+    matches = hrefs.findall(content)
+    matches.extend(srcs.findall(content))
+    relative_paths = []
+    for found in matches:
+        found = found[1]
+        if found not in relative_paths:
+            relative_paths.append(found)
+
+    for relative_path in relative_paths:
+        if not relative_path.startswith("http://"):
+            dest_path = os.sep.join((get_relative_path(name), "static", relative_path))
+            content = content.replace(relative_path, dest_path)
+
+    return content
 
 class Generator(object):
     """Baseclass generator"""
@@ -133,19 +160,25 @@ class ArticlesGenerator(Generator):
             writer.write_file,
             relative_urls = self.settings.get('RELATIVE_URLS')
         )
+        # to minimize the number of relative path stuff modification in writer, articles pass first
+        for article in chain(self.translations, self.articles):
+            write('%s' % article.save_as,
+                templates['article'], self.context, article=article,
+                category=article.category)
+
         for template in _DIRECT_TEMPLATES:
             write('%s.html' % template, templates[template], self.context,
-                    blog=True)
+                blog=True)
+
+        # and subfolders after that
         for tag, articles in self.tags.items():
-            write('tag/%s.html' % tag, templates['tag'], self.context, tag=tag,
-                    articles=articles)
+            for article in articles:
+                write('tag/%s.html' % tag, templates['tag'], self.context,
+                    tag=tag, articles=articles)
+
         for cat in self.categories:
             write('category/%s.html' % cat, templates['category'], self.context,
-                          category=cat, articles=self.categories[cat])
-        for article in chain(self.translations, self.articles):
-            write(article.save_as,
-                          templates['article'], self.context, article=article,
-                          category=article.category)
+                category=cat, articles=self.categories[cat])
 
     def generate_context(self):
         """change the context"""

@@ -11,7 +11,17 @@ Some content here !
 This is a simple title
 ======================
 
-And here comes the cool stuff.
+And here comes the cool stuff_.
+
+.. image:: pictures/Sushi.jpg
+   :height: 450 px
+   :width: 600 px
+   :alt: alternate text
+
+.. image:: pictures/Sushi_Macro.jpg
+   :height: 450 px
+   :width: 600 px
+   :alt: alternate text
 
 .. code-block:: python
 
@@ -20,3 +30,4 @@ And here comes the cool stuff.
 
 → And now try with some utf8 hell: ééé
 
+.. _stuff: http://books.couchdb.org/relax/design-documents/views
