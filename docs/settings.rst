@@ -60,6 +60,8 @@ Setting name              what it does ?
 `STATIC_THEME_PATHS`      Static theme paths you want to copy. Default values
                           is `static`, but if your theme have others static paths,
                           you can put them here.
+`TAG_CLOUD_STEPS`         Count of different font sizes in the tag cloud.
+`TAG_CLOUD_MAX_ITEMS`     Maximum tags count in the cloud.
 `THEME`                   theme to use to product the output. can be the
                           complete static path to a theme folder, or chosen
                           between the list of default themes (see below)

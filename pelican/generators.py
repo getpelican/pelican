@@ -1,9 +1,11 @@
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 from itertools import chain
 from functools import partial
 from datetime import datetime
 from collections import defaultdict
 import os
+import math
+import random
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
@@ -193,8 +195,34 @@ class ArticlesGenerator(Generator):
         self.dates = list(self.articles)
         self.dates.sort(key=attrgetter('date'), 
                 reverse=self.context['REVERSE_ARCHIVE_ORDER'])
+
+        # create tag cloud
+        tag_cloud = defaultdict(int)
+        for article in self.articles:
+            for tag in article.tags:
+                tag_cloud[tag] += 1
+
+        tag_cloud = sorted(tag_cloud.items(), key = itemgetter(1), reverse = True)
+        tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
+
+        max_count = max(map(itemgetter(1), tag_cloud))
+        steps = self.settings.get('TAG_CLOUD_STEPS')
+
+        # calculate word sizes
+        self.tag_cloud = [
+            (
+                tag,
+                int(
+                    math.floor(steps - (steps - 1) * math.log(count) / math.log(max_count))
+                )
+            )
+            for tag, count in tag_cloud
+        ]
+        # put words in chaos
+        random.shuffle(self.tag_cloud)
+
         # and generate the output :)
-        self._update_context(('articles', 'dates', 'tags', 'categories'))
+        self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud'))
 
     def generate_output(self, writer):
         self.generate_feeds(writer)

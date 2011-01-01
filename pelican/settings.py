@@ -22,6 +22,8 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'CLEAN_URLS': False, # use /blah/ instead /blah.html in urls
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
+                   'TAG_CLOUD_STEPS': 4,
+                   'TAG_CLOUD_MAX_ITEMS': 100,
                   }
 
 def read_settings(filename):
