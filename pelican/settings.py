@@ -24,6 +24,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
+                   'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
                   }
 
 def read_settings(filename):
