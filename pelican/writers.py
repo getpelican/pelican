@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 from codecs import open
+from functools import partial
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 
-from functools import partial
-
 from pelican.utils import get_relative_path
-from pelican.generators import update_object_content
+
 
 class Writer(object):
 
@@ -127,6 +127,34 @@ class Writer(object):
         """Replace the content attribute getter of an element by a function that will deals with its
            relatives paths.
         """
+
+        def _update_object_content(name, input):
+            """Change all the relatives paths of the input content to relatives paths
+               suitable fot the ouput content
+
+            :param name: path of the output.
+            :param input: input resource that will be passed to the templates.
+            """
+            content = input._content
+
+            hrefs = re.compile(r'<\s*[^\>]*href\s*=\s*(["\'])(.*?)\1')
+            srcs = re.compile(r'<\s*[^\>]*src\s*=\s*(["\'])(.*?)\1')
+
+            matches = hrefs.findall(content)
+            matches.extend(srcs.findall(content))
+            relative_paths = []
+            for found in matches:
+                found = found[1]
+                if found not in relative_paths:
+                    relative_paths.append(found)
+
+            for relative_path in relative_paths:
+                if not relative_path.startswith("http://"):
+                    dest_path = os.sep.join((get_relative_path(name), "static", relative_path))
+                    content = content.replace(relative_path, dest_path)
+
+            return content
+
         if item:
             setattr(item, "_get_content",
-                partial(update_object_content, name, item))
+                partial(_update_object_content, name, item))

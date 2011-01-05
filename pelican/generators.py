@@ -4,7 +4,6 @@ from functools import partial
 from datetime import datetime
 from collections import defaultdict
 import os
-import re
 
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
@@ -17,32 +16,6 @@ _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
 
-def update_object_content(name, input):
-    """Change all the relatives paths of the input content to relatives paths
-       suitable fot the ouput content
-
-    :param name: path of the output.
-    :param input: input resource that will be passed to the templates.
-    """
-    content = input._content
-
-    hrefs = re.compile(r'<\s*[^\>]*href\s*=\s*(["\'])(.*?)\1')
-    srcs = re.compile(r'<\s*[^\>]*src\s*=\s*(["\'])(.*?)\1')
-
-    matches = hrefs.findall(content)
-    matches.extend(srcs.findall(content))
-    relative_paths = []
-    for found in matches:
-        found = found[1]
-        if found not in relative_paths:
-            relative_paths.append(found)
-
-    for relative_path in relative_paths:
-        if not relative_path.startswith("http://"):
-            dest_path = os.sep.join((get_relative_path(name), "static", relative_path))
-            content = content.replace(relative_path, dest_path)
-
-    return content
 
 class Generator(object):
     """Baseclass generator"""
