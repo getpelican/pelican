@@ -148,6 +148,7 @@ def process_translations(content_list):
         Also, for each content_list item, it
         sets attribute 'translations'
     """
+    content_list.sort(key=attrgetter('slug'))
     grouped_by_slugs = groupby(content_list, attrgetter('slug'))
     index = []
     translations = []

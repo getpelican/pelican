@@ -11,12 +11,12 @@ class Page(object):
     mandatory_properties = ('title',)
 
     def __init__(self, content, metadatas={}, settings={}, filename=None):
-        self.content = content
+        self._content = content
         self.translations = []
 
         self.status = "published"  # default value
         for key, value in metadatas.items():
-            setattr(self, key, value)
+            setattr(self, key.lower(), value)
 
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
@@ -52,6 +52,14 @@ class Page(object):
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
                 raise NameError(prop)
+
+    @property
+    def content(self):
+        if hasattr(self, "_get_content"):
+            content = self._get_content()
+        else:
+            content = self._content
+        return content
 
     @property
     def summary(self):

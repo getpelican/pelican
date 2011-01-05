@@ -17,3 +17,5 @@ LINKS = (('Biologeek', 'http://biologeek.org'),
 SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
           ('lastfm', 'http://lastfm.com/user/akounet'),
           ('github', 'http://github.com/ametaireau'),)
+
+STATIC_PATHS = ["pictures",]

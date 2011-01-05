@@ -23,6 +23,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
                    'PELICAN_CLASS': 'pelican.Pelican',
+                   'JINJA_EXTENSIONS': [],
                   }
 
 def read_settings(filename):

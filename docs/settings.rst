@@ -41,6 +41,8 @@ Setting name              what it does ?
                           `feeds/all.atom.xml`
 `FEED_RSS`                relative url to output the rss feed. Default is
                           None (no rss)
+`JINJA_EXTENSIONS`        A list of any Jinja2 extensions you want to use.
+                          Default is no extensions (the empty list).
 `KEEP_OUTPUT_DIRECTORY`   Keep the output directory and just update all the generated files. 
                           Default is to delete the output directory.   
 `MARKUP`                  A list of available markup languages you want to use.
@@ -98,6 +100,9 @@ Setting name              what it does ?
                           the header.
 `SOCIAL`                  A list of tuples (Title, Url) to appear in the "social"
                           section.
+`TWITTER_USERNAME`        Allows to add a button on the articles to tweet about
+                          them. Add you twitter username if you want this
+                          button to appear.
 =======================   =======================================================
 
 In addition, you can use the "wide" version of the `notmyidea` theme, by
