@@ -100,6 +100,9 @@ Setting name              what it does ?
                           the header.
 `SOCIAL`                  A list of tuples (Title, Url) to appear in the "social"
                           section.
+`TWITTER_USERNAME`        Allows to add a button on the articles to tweet about
+                          them. Add you twitter username if you want this
+                          button to appear.
 =======================   =======================================================
 
 In addition, you can use the "wide" version of the `notmyidea` theme, by
