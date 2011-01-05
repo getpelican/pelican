@@ -25,7 +25,7 @@ And here comes the cool stuff_.
 
 .. code-block:: python
 
-   >>> from ipdb import set trace
+   >>> from ipdb import set_trace
    >>> set_trace()
 
 → And now try with some utf8 hell: ééé

@@ -16,7 +16,7 @@ class Page(object):
 
         self.status = "published"  # default value
         for key, value in metadatas.items():
-            setattr(self, key, value)
+            setattr(self, key.lower(), value)
 
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
