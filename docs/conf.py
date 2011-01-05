@@ -8,10 +8,11 @@ import sys, os
 
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
+extensions = ['sphinx.ext.autodoc',]
 source_suffix = '.rst'
 master_doc = 'index'
 project = u'Pelican'
-copyright = u'2010, Alexis Metaireau'
+copyright = u'2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
 

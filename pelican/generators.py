@@ -8,7 +8,7 @@ import os
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import update_dict, copytree, process_translations, open
+from pelican.utils import update_dict, copytree, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 
@@ -133,19 +133,25 @@ class ArticlesGenerator(Generator):
             writer.write_file,
             relative_urls = self.settings.get('RELATIVE_URLS')
         )
+        # to minimize the number of relative path stuff modification in writer, articles pass first
+        for article in chain(self.translations, self.articles):
+            write('%s' % article.save_as,
+                templates['article'], self.context, article=article,
+                category=article.category)
+
         for template in _DIRECT_TEMPLATES:
             write('%s.html' % template, templates[template], self.context,
-                    blog=True)
+                blog=True)
+
+        # and subfolders after that
         for tag, articles in self.tags.items():
-            write('tag/%s.html' % tag, templates['tag'], self.context, tag=tag,
-                    articles=articles)
+            for article in articles:
+                write('tag/%s.html' % tag, templates['tag'], self.context,
+                    tag=tag, articles=articles)
+
         for cat in self.categories:
             write('category/%s.html' % cat, templates['category'], self.context,
-                          category=cat, articles=self.categories[cat])
-        for article in chain(self.translations, self.articles):
-            write(article.save_as,
-                          templates['article'], self.context, article=article,
-                          category=article.category)
+                category=cat, articles=self.categories[cat])
 
     def generate_context(self):
         """change the context"""

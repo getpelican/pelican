@@ -3,3 +3,5 @@
 .*.swo
 *.pyc
 docs/_build
+build
+dist

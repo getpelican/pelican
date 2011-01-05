@@ -7,19 +7,7 @@
         <aside id="featured" class="body"><article>
                 <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url
                 }}">{{ article.title }}</a></h1> 
-                <footer class="post-info">
-                        <abbr class="published" title="{{ article.date.isoformat() }}">
-                                {{ article.date.strftime('%a %d %B %Y') }}
-                        </abbr>
-
-                        {% if article.author %}
-                        <address class="vcard author">
-                                By <a class="url fn" href="#">{{ article.author }}</a>
-                        </address>
-                        {% endif %}
-                <p>In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
-                {% include 'taglist.html' %}
-                </footer><!-- /.post-info -->
+                {% include 'article_infos.html' %}
                 {{ article.content }}
                 {% include 'comments.html' %}
                 </article>
@@ -37,18 +25,7 @@
                 </header>
                 
                 <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="{{ article.date.isoformat() }}">
-                                {{ article.date.strftime('%a %d %B %Y') }}
-                        </abbr>
-
-                        <address class="vcard author">
-                                By <a class="url fn" href="#">{{ article.author }}</a>
-                        </address>
-                        <p> In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></p>
-                        {% include 'taglist.html' %}
-                    <p>{% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">pdf</a>{% endif %}</p>
-                </footer><!-- /.post-info -->
+                {% include 'article_infos.html' %}
                 {{ article.summary }}
                 <a class="readmore" href="{{ SITEURL }}/{{ article.url }}">read more</a>
                 {% include 'comments.html' %}
