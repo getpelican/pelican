@@ -91,7 +91,39 @@ the menu.
 Translations
 ============
 
-It is possible to translate articles. To do so, you need to add a `Lang` meta
+It is possible to translate articles. To do so, you need to add a `lang` meta
 in your articles/pages, and to set a `DEFAULT_LANG` setting (which is en by
-default). Then, only articles with this default language will be listed, and
+default). 
+Then, only articles with this default language will be listed, and
 each article will have a translation list.
+
+Pelican uses the "slug" of two articles to compare if they are translations of
+each others. So it's possible to define (in restructured text) the slug
+directly.
+
+Here is an exemple of two articles (one in english and the other one in
+french).
+
+The english one::
+
+    Foobar is not dead
+    ##################
+
+    :slug: foobar-is-not-dead
+    :lang: en
+
+    That's true, foobar is still alive !
+
+And the french one::
+
+    Foobar n'est pas mort !
+    #######################
+
+    :slug: foobar-is-not-dead
+    :lang: fr
+
+    Oui oui, foobar est toujours vivant !
+
+Despite the text quality, you can see that only the slug is the same here.
+You're not forced to define the slug that way, and it's completely possible to
+have two translations with the same title (which defines the slug)
