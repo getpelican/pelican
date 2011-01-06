@@ -15,6 +15,8 @@ project = u'Pelican'
 copyright = u'2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
+version = "2"
+release = version
 
 # -- Options for HTML output ---------------------------------------------------
 
