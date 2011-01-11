@@ -22,6 +22,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'CLEAN_URLS': False, # use /blah/ instead /blah.html in urls
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
+                   'PELICAN_CLASS': 'pelican.Pelican',
                    'JINJA_EXTENSIONS': [],
                   }
 
