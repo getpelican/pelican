@@ -23,13 +23,11 @@ class TestPage(TestCase):
 
         page = Page('content', metadatas={'title': 'foobar'})
         page.check_properties()
-        
 
     def test_slug(self):
         # if a title is given, it should be used to generate the slug
         page = Page('content', {'title': 'foobar is foo'})
         self.assertEqual(page.slug, 'foobar-is-foo')
-
 
     def test_defaultlang(self):
         # if no lang is given, default to the default one

@@ -1,4 +1,5 @@
 from pelican.utils import slugify, truncate_html_words
+from pelican.settings import DEFAULT_CONFIG
 
 
 class Page(object):
@@ -22,16 +23,17 @@ class Page(object):
             if 'AUTHOR' in settings:
                 self.author = settings['AUTHOR']
 
-        default_lang = settings.get('DEFAULT_LANG').lower()
+        default_lang = settings.get('DEFAULT_LANG', 
+                DEFAULT_CONFIG['DEFAULT_LANG']).lower()
         if not hasattr(self, 'lang'):
             self.lang = default_lang
 
         self.in_default_lang = (self.lang == default_lang)
 
-        if not hasattr(self, 'slug'):
+        if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
-        if not hasattr(self, 'save_as'):
+        if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
             if self.in_default_lang:
                 self.save_as = '%s.html' % self.slug
                 clean_url = '%s/' % self.slug
@@ -41,7 +43,7 @@ class Page(object):
 
         if settings.get('CLEAN_URLS', False):
             self.url = clean_url
-        else:
+        elif hasattr(self, 'save_as'):
             self.url = self.save_as
 
         if filename:
