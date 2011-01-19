@@ -50,3 +50,4 @@ Documentation
    settings
    themes
    internals
+   faq

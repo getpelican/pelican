@@ -1,5 +1,6 @@
 How to create themes for pelican
 ################################
+.. _theming-pelican:
 
 Pelican uses the great `jinja2 <http://jinjna.pocoo.org>`_ templating engine to
 generate it's HTML output. The jinja2 syntax is really simple. If you want to
