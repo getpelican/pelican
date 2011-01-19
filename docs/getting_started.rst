@@ -127,3 +127,10 @@ And the french one::
 Despite the text quality, you can see that only the slug is the same here.
 You're not forced to define the slug that way, and it's completely possible to
 have two translations with the same title (which defines the slug)
+
+Autoreload
+==========
+
+It's possible to tell pelican to watch for your modifications, instead of
+manually launching it each time you need. Use the `-r` option, or
+`--autoreload`.

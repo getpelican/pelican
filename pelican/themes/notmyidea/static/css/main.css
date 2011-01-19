@@ -276,14 +276,6 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 	padding: .3em .25em;
 }
 
-#extras li:last-child,
-#extras li:last-child a {border: 0}
-
-#extras .blogroll li:nth-last-child(2),
-#extras .blogroll li:nth-last-child(3),
-#extras .blogroll li:nth-last-child(2) a,
-#extras .blogroll li:nth-last-child(3) a {border: 0;}
-
 #extras a:hover, #extras a:active {color: #fff;}
 
 	/* Blogroll */

@@ -1,11 +1,12 @@
 import argparse
 import os
+from functools import partial
 
-from pelican.settings import read_settings
-from pelican.utils import clean_output_dir
-from pelican.writers import Writer
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-                                StaticGenerator, PdfGenerator)
+        StaticGenerator, PdfGenerator)
+from pelican.settings import read_settings
+from pelican.utils import clean_output_dir, files_changed
+from pelican.writers import Writer
 
 VERSION = "2.5.3"
 
@@ -107,7 +108,10 @@ def main():
         help='Keep the output directory and just update all the generated files.'
              'Default is to delete the output directory.')
     parser.add_argument('--version', action='version', version=VERSION,
-            help="Print the pelican version and exit")
+            help='Print the pelican version and exit')
+    parser.add_argument('-r', '--autoreload', dest='autoreload', action='store_true',
+            help="Relaunch pelican each time a modification occurs on the content"
+                 "files")
     args = parser.parse_args()
 
     # Split the markup languages only if some have been given. Otherwise, populate
@@ -125,7 +129,16 @@ def main():
         cls = getattr(module, cls_name)
 
     pelican = cls(settings, args.path, args.theme, args.output, markup, args.keep)
-    pelican.run()
+
+    if args.autoreload:
+        while True:
+            try:
+                if files_changed(pelican.path, pelican.markup):
+                    pelican.run()
+            except KeyboardInterrupt:
+                break
+    else:
+        pelican.run()
 
 
 if __name__ == '__main__':
