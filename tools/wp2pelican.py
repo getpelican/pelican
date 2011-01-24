@@ -21,7 +21,11 @@ def wp2html(xml):
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
             
             author = item.fetch('dc:creator')[0].contents[0].title()
-            yield (title, content, filename, date, author)
+            categories = [(cat['nicename'],cat.contents[0]) for cat in item.fetch(domain='category')]
+            
+            tags = [tag.contents[0].title() for tag in item.fetch(domain='tag', nicename=None)]
+            
+            yield (title, content, filename, date, author, categories, tags)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="""Transform a wordpress xml export into rst files """)
@@ -30,14 +34,22 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', dest='output', default='output', help='Output path')
     args = parser.parse_args() 
 
-    for title, content, filename, date, author in wp2html(args.xml): 
+    for title, content, filename, date, author, categories in wp2html(args.xml): 
         html_filename = os.path.join(args.output, filename+'.html')
-        rst_filename = os.path.join(args.output, filename+'.rst')
+        
+        if(len(categories) == 1):
+            rst_filename = os.path.join(args.output, categories[0][0], filename+'.rst.dr')
+            if not os.path.isdir(os.path.join(args.output, categories[0][0])):
+                os.mkdir(os.path.join(args.output, categories[0][0]))
+        else:
+            rst_filename = os.path.join(args.output, filename+'.rst.dr')
 
         with open(html_filename, 'w', encoding='utf-8') as fp:
             fp.write(content)
+            
         os.system('pandoc --from=html --to=rst -o %s %s' % (rst_filename,
             html_filename))
+            
         with open(rst_filename, 'r', encoding='utf-8') as fs:
             content = fs.read()
         with open(rst_filename, 'w', encoding='utf-8') as fs:
