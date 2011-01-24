@@ -15,7 +15,9 @@ def wp2html(xml):
             title = item.title.contents[0]
             content = item.fetch('content:encoded')[0].contents[0]
             filename = item.fetch('wp:post_name')[0].contents[0]
-            yield (title, content, filename)
+            date = item.fetch('wp:post_date')[0].contents[0]
+            author = item.fetch('dc:creator')[0].contents[0].title()
+            yield (title, content, filename, date, author)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="""Transform a wordpress xml export into rst files """)
@@ -24,7 +26,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', dest='output', default='output', help='Output path')
     args = parser.parse_args() 
 
-    for title, content, filename in wp2html(args.xml): 
+    for title, content, filename, date, author in wp2html(args.xml): 
         html_filename = os.path.join(args.output, filename+'.html')
         rst_filename = os.path.join(args.output, filename+'.rst')
 
@@ -32,3 +34,8 @@ if __name__ == '__main__':
             fp.write(content)
         os.system('pandoc --from=html --to=rst -o %s %s' % (rst_filename,
             html_filename))
+        with open(rst_filename, 'r', encoding='utf-8') as fs:
+            content = fs.read()
+        with open(rst_filename, 'w', encoding='utf-8') as fs:
+            header = '%s\n%s\n\n:date: %s\n:author: %s\n\n' % (title, '#' * len(title) ,date, author)
+            fs.write(header+content)
