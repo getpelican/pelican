@@ -15,7 +15,11 @@ def wp2html(xml):
             title = item.title.contents[0]
             content = item.fetch('content:encoded')[0].contents[0]
             filename = item.fetch('wp:post_name')[0].contents[0]
-            date = item.fetch('wp:post_date')[0].contents[0]
+            
+            raw_date = item.fetch('wp:post_date')[0].contents[0]
+            date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
+            date = time.strftime("%Y-%m-%d %H:%M", date_object)
+            
             author = item.fetch('dc:creator')[0].contents[0].title()
             yield (title, content, filename, date, author)
 
