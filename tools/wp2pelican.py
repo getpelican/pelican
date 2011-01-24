@@ -4,6 +4,7 @@ from BeautifulSoup import BeautifulStoneSoup
 from codecs import open
 import os
 import argparse
+import time
 
 def wp2html(xml):
     xmlfile = open(xml, encoding='utf-8').read()
@@ -26,6 +27,17 @@ def wp2html(xml):
             tags = [tag.contents[0].title() for tag in item.fetch(domain='tag', nicename=None)]
             
             yield (title, content, filename, date, author, categories, tags)
+
+def buildHeader(title, date, author, categories, tags):
+    header = '%s\n%s\n' % (title, '#' * len(title))
+    if (date != None):
+        header += ':date: %s\n' % (date)
+    if (categories != []):
+        header += ':category: %s\n' % (', '.join(categories))
+    if (tags != []):
+        header += ':tags: %s\n' % (', '.join(tags))
+    header += '\n'
+    return header
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="""Transform a wordpress xml export into rst files """)
@@ -55,5 +67,6 @@ if __name__ == '__main__':
         with open(rst_filename, 'r', encoding='utf-8') as fs:
             content = fs.read()
         with open(rst_filename, 'w', encoding='utf-8') as fs:
-            header = '%s\n%s\n\n:date: %s\n:author: %s\n\n' % (title, '#' * len(title) ,date, author)
+            categories = [x[1] for x in categories]
+            header = buildHeader(title, date, author, categories, tags)
             fs.write(header+content)
