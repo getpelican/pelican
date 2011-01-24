@@ -49,6 +49,8 @@ if __name__ == '__main__':
             
         os.system('pandoc --from=html --to=rst -o %s %s' % (rst_filename,
             html_filename))
+        
+        os.remove(html_filename)
             
         with open(rst_filename, 'r', encoding='utf-8') as fs:
             content = fs.read()
