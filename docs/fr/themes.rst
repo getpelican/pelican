@@ -1,4 +1,4 @@
-.. _theming-pelican:
+.. _theming-pelican-fr:
 
 How to create themes for pelican
 ################################

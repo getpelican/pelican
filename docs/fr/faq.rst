@@ -1,38 +1,35 @@
-Frequently Asked Questions (FAQ)
-################################
+*Foire aux questions (FAQ)*
 
-Here is a summary of the frequently asked questions for pelican.
+Voici un résumé des questions fréquemment posées pour pelican.
 
-Is it mandatory to have a configuration file ?
-==============================================
+*Est-il obligatoire d'avoir un fichier de configuration ?*
 
-No, it's not. Configurations files are just an easy way to configure pelican.
-For the basic operations, it's possible to specify options while invoking
-pelican with the command line (see `pelican --help` for more informations about
-that)
+Non. Les fichiers de configuration sont juste un moyen facile de configurer
+pelican. Pour les opérations de base, il est possible de spécifier des
+options
+en invoquant pelican avec la ligne de commande (voir pelican --help pour
+plus
+d'informations à ce sujet)
 
-I'm creating my own theme, how to use pygments ?
-================================================
+*Je crée mon propre thème, comment utiliser pygments?*
 
-Pygment add some classes to the generated content, so the theming of your theme
-will be done thanks to a css file. You can have a look to the one proposed by
-default `on the project website <http://pygments.org/demo/15101/>`_
+Pygment ajoute quelques classes au contenu généré, de sorte qua colorisation
+de votre thème se fait grâce à un fichier css. Vous pouvez jeter un oeil à
+celui proposé par`sur le site du projet <http://pygments.org/demo/15101/>`_
 
-How do I create my own theme ?
-==============================
+*Comment puis-je créer mon propre thèm*
 
-Please refer yourself to :ref:`theming-pelican`.
+Vueillez vous référer à :ref:`theming-pelican-fr`.
 
-How can I help ?
-================
+*Comment puis-je aider?*
 
-You have different options to help. First, you can use pelican, and report any
-idea or problem you have on `the bugtracker
-<http://github.com/ametaireau/pelican/issues>`_.
+Vous avez plusieurs options pour aider. Tout d'abord, vous pouvez utiliser
+le
+pélican, et signaler toute idée ou problème que vous avez sur le bugtracker
+.
 
-If you want to contribute, please have a look to `the git repository
-<https://github.com/ametaireau/pelican/>`_, fork it, add your changes and do
-a pull request, I'll review them as soon as possible.
+Si vous voulez contribuer, jeter un oeil au dépôt git , ajoutez vos
+modifications et faites une demande, je les regarderai dès que possible
 
-You can also contribute by creating themes, and making the documentation
-better.
+Vous pouvez aussi contribuer en créant des thèmes, et/ou compléter la
+documentation.
