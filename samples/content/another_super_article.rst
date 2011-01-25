@@ -5,6 +5,7 @@ Oh yeah !
 :date: 2010-10-20 10:14
 :category: bar
 :author: Alexis Métaireau
+:slug: oh-yeah
 
 Why not ?
 =========
