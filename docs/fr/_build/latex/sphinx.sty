@@ -1,0 +1,744 @@
+%
+% sphinx.sty
+%
+% Adapted from the old python.sty, mostly written by Fred Drake,
+% by Georg Brandl.
+%
+
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{sphinx}[2008/05/01 LaTeX package (Sphinx markup)]
+
+\RequirePackage{textcomp}
+\RequirePackage{fancyhdr}
+\RequirePackage{fancybox}
+\RequirePackage{titlesec}
+\RequirePackage{tabulary}
+\RequirePackage{amsmath} % for \text
+\RequirePackage{makeidx}
+\RequirePackage{framed}
+\RequirePackage{color}
+% For highlighted code.
+\RequirePackage{fancyvrb}
+% For table captions.
+\RequirePackage{threeparttable}
+% Handle footnotes in tables.
+\RequirePackage{footnote}
+\makesavenoteenv{tabulary}
+% For floating figures in the text.
+\RequirePackage{wrapfig}
+% Separate paragraphs by space by default.
+\RequirePackage{parskip}
+
+% Redefine these colors to your liking in the preamble.
+\definecolor{TitleColor}{rgb}{0.126,0.263,0.361}
+\definecolor{InnerLinkColor}{rgb}{0.208,0.374,0.486}
+\definecolor{OuterLinkColor}{rgb}{0.216,0.439,0.388}
+% Redefine these colors to something not white if you want to have colored
+% background and border for code examples.
+\definecolor{VerbatimColor}{rgb}{1,1,1}
+\definecolor{VerbatimBorderColor}{rgb}{1,1,1}
+
+% Uncomment these two lines to ignore the paper size and make the page 
+% size more like a typical published manual.
+%\renewcommand{\paperheight}{9in}
+%\renewcommand{\paperwidth}{8.5in}   % typical squarish manual
+%\renewcommand{\paperwidth}{7in}     % O'Reilly ``Programmming Python''
+
+% For graphicx, check if we are compiling under latex or pdflatex.
+\ifx\pdftexversion\undefined
+  \usepackage{graphicx}
+\else
+  \usepackage[pdftex]{graphicx}
+\fi
+
+% for PDF output, use colors and maximal compression
+\newif\ifsphinxpdfoutput\sphinxpdfoutputfalse
+\ifx\pdfoutput\undefined\else\ifcase\pdfoutput
+  \let\py@NormalColor\relax
+  \let\py@TitleColor\relax
+\else
+  \sphinxpdfoutputtrue
+  \input{pdfcolor}
+  \def\py@NormalColor{\color[rgb]{0.0,0.0,0.0}}
+  \def\py@TitleColor{\color{TitleColor}}
+  \pdfcompresslevel=9
+\fi\fi
+
+% XeLaTeX can do colors, too
+\ifx\XeTeXrevision\undefined\else
+  \def\py@NormalColor{\color[rgb]{0.0,0.0,0.0}}
+  \def\py@TitleColor{\color{TitleColor}}
+\fi
+
+% Increase printable page size (copied from fullpage.sty)
+\topmargin 0pt
+\advance \topmargin by -\headheight
+\advance \topmargin by -\headsep
+
+% attempt to work a little better for A4 users
+\textheight \paperheight
+\advance\textheight by -2in
+
+\oddsidemargin 0pt
+\evensidemargin 0pt
+%\evensidemargin -.25in  % for ``manual size'' documents
+\marginparwidth 0.5in
+
+\textwidth \paperwidth
+\advance\textwidth by -2in
+
+
+% Style parameters and macros used by most documents here
+\raggedbottom
+\sloppy
+\hbadness = 5000                % don't print trivial gripes
+
+\pagestyle{empty}               % start this way; change for
+\pagenumbering{roman}           % ToC & chapters
+
+% Use this to set the font family for headers and other decor:
+\newcommand{\py@HeaderFamily}{\sffamily\bfseries}
+
+% Redefine the 'normal' header/footer style when using "fancyhdr" package:
+\@ifundefined{fancyhf}{}{
+  % Use \pagestyle{normal} as the primary pagestyle for text.
+  \fancypagestyle{normal}{
+    \fancyhf{}
+    \fancyfoot[LE,RO]{{\py@HeaderFamily\thepage}}
+    \fancyfoot[LO]{{\py@HeaderFamily\nouppercase{\rightmark}}}
+    \fancyfoot[RE]{{\py@HeaderFamily\nouppercase{\leftmark}}}
+    \fancyhead[LE,RO]{{\py@HeaderFamily \@title, \py@release}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+  }
+  % Update the plain style so we get the page number & footer line,
+  % but not a chapter or section title.  This is to keep the first
+  % page of a chapter and the blank page between chapters `clean.'
+  \fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[LE,RO]{{\py@HeaderFamily\thepage}}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+  }
+}
+
+% Some custom font markup commands.
+%
+\newcommand{\strong}[1]{{\bf #1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\bfcode}[1]{\code{\bfseries#1}}
+\newcommand{\samp}[1]{`\code{#1}'}
+\newcommand{\email}[1]{\textsf{#1}}
+
+\newcommand{\py@modulebadkey}{{--just-some-junk--}}
+
+% Redefine the Verbatim environment to allow border and background colors.
+% The original environment is still used for verbatims within tables.
+\let\OriginalVerbatim=\Verbatim
+\let\endOriginalVerbatim=\endVerbatim
+
+% Play with vspace to be able to keep the indentation.
+\newlength\distancetoright
+\newlength\leftsidespace
+\def\mycolorbox#1{%
+  \setlength\leftsidespace{\@totalleftmargin}%
+  \setlength\distancetoright{\textwidth}%
+  \advance\distancetoright -\@totalleftmargin %
+  \noindent\hspace*{\@totalleftmargin}%
+  \fcolorbox{VerbatimBorderColor}{VerbatimColor}{%
+  \begin{minipage}{\distancetoright}%
+    \smallskip%
+    \noindent\hspace*{-\leftsidespace}%
+    #1
+  \end{minipage}%
+  }%
+}
+\def\FrameCommand{\mycolorbox}
+
+\renewcommand{\Verbatim}[1][1]{%
+  % The list environement is needed to control perfectly the vertical
+  % space.
+  \list{}{%
+  \setlength\parskip{0pt}%
+  \setlength\itemsep{0ex}%
+  \setlength\topsep{0ex}%
+  \setlength\partopsep{0pt}%
+  \setlength\leftmargin{0pt}%
+  }%
+  \item\MakeFramed {\FrameRestore}%
+     \small%
+    \OriginalVerbatim[#1]%
+}
+\renewcommand{\endVerbatim}{%
+    \endOriginalVerbatim%
+  \endMakeFramed%
+  \endlist%
+}
+
+
+% Index-entry generation support.
+%
+
+% Command to generate two index entries (using subentries)
+\newcommand{\indexii}[2]{\index{#1!#2}\index{#2!#1}}
+
+% And three entries (using only one level of subentries)
+\newcommand{\indexiii}[3]{\index{#1!#2 #3}\index{#2!#3, #1}\index{#3!#1 #2}}
+
+% And four (again, using only one level of subentries)
+\newcommand{\indexiv}[4]{
+\index{#1!#2 #3 #4}
+\index{#2!#3 #4, #1}
+\index{#3!#4, #1 #2}
+\index{#4!#1 #2 #3}
+}
+
+% support for the module index
+\newif\ifpy@UseModuleIndex
+\py@UseModuleIndexfalse
+
+\newcommand{\makemodindex}{
+  \newwrite\modindexfile
+  \openout\modindexfile=mod\jobname.idx
+  \py@UseModuleIndextrue
+}
+
+\newcommand{\printmodindex}{
+  \@input@{mod\jobname.ind}
+}
+
+% Add the defining entry for a module
+\newcommand{\py@modindex}[2]{%
+  \renewcommand{\py@thismodule}{#1}
+  \ifpy@UseModuleIndex%
+    \@ifundefined{py@modplat@\py@thismodulekey}{
+      \write\modindexfile{\protect\indexentry{#1@{\texttt{#1}}|hyperpage}{\thepage}}%
+    }{\write\modindexfile{\protect\indexentry{#1@{\texttt{#1 }%
+        \emph{(\platformof{\py@thismodulekey})}}|hyperpage}{\thepage}}%
+    }
+  \fi%
+}
+
+% "Current" keys
+\newcommand{\py@thisclass}{}
+\newcommand{\py@thismodule}{}
+\newcommand{\py@thismodulekey}{}
+\newcommand{\py@thismoduletype}{}
+\newcommand{\py@emptymodule}{}
+
+% \declaremodule[key]{type}{name}
+\newcommand{\declaremodule}[3][\py@modulebadkey]{
+  \renewcommand{\py@thismoduletype}{#2}
+  \ifx\py@modulebadkey#1
+    \renewcommand{\py@thismodulekey}{#3}
+  \else
+    \renewcommand{\py@thismodulekey}{#1}
+  \fi
+  \py@modindex{#3}{}
+  %\label{module-\py@thismodulekey}
+}
+
+% Record module platforms for the Module Index
+\newif\ifpy@ModPlatformFileIsOpen \py@ModPlatformFileIsOpenfalse
+\long\def\py@writeModPlatformFile#1{%
+  \protected@write\py@ModPlatformFile%
+    {\let\label\@gobble \let\index\@gobble \let\glossary\@gobble}%
+    {\string#1}%
+}
+\newcommand{\py@ModPlatformFilename}{\jobname.pla}
+\newcommand{\platform}[1]{
+  \ifpy@ModPlatformFileIsOpen\else
+    \newwrite\py@ModPlatformFile
+    \openout\py@ModPlatformFile=\py@ModPlatformFilename
+    \py@ModPlatformFileIsOpentrue
+  \fi
+  \py@writeModPlatformFile{\py@defplatform{\py@thismodulekey}{#1}}
+}
+\newcommand{\py@defplatform}[2]{\expandafter\def\csname py@modplat@#1\endcsname{#2}}
+\newcommand{\platformof}[1]{\csname py@modplat@#1\endcsname}
+
+\InputIfFileExists{\jobname.pla}{}{}
+
+% \moduleauthor{name}{email}
+\newcommand{\moduleauthor}[2]{}
+
+% \sectionauthor{name}{email}
+\newcommand{\sectionauthor}[2]{}
+
+% Ignore module synopsis.
+\newcommand{\modulesynopsis}[1]{}
+
+% Reset "current" objects.
+\newcommand{\resetcurrentobjects}{
+  \renewcommand{\py@thisclass}{}
+  \renewcommand{\py@thismodule}{}
+  \renewcommand{\py@thismodulekey}{}
+  \renewcommand{\py@thismoduletype}{}
+}
+
+% Augment the sectioning commands used to get our own font family in place,
+% and reset some internal data items:
+\titleformat{\section}{\Large\py@HeaderFamily}%
+            {\py@TitleColor\thesection}{0.5em}{\py@TitleColor}{\py@NormalColor}
+\titleformat{\subsection}{\large\py@HeaderFamily}%
+            {\py@TitleColor\thesubsection}{0.5em}{\py@TitleColor}{\py@NormalColor}
+\titleformat{\subsubsection}{\py@HeaderFamily}%
+            {\py@TitleColor\thesubsubsection}{0.5em}{\py@TitleColor}{\py@NormalColor}
+\titleformat{\paragraph}{\large\py@HeaderFamily}%
+            {\py@TitleColor}{0em}{\py@TitleColor}{\py@NormalColor}
+
+
+% Now for a lot of semantically-loaded environments that do a ton of magical
+% things to get the right formatting and index entries for the stuff in
+% Python modules and C API.
+
+
+% {fulllineitems} is used in one place in libregex.tex, but is really for
+% internal use in this file.
+%
+\newcommand{\py@itemnewline}[1]{%
+  \@tempdima\linewidth%
+  \advance\@tempdima \leftmargin\makebox[\@tempdima][l]{#1}%
+}
+
+\newenvironment{fulllineitems}{
+  \begin{list}{}{\labelwidth \leftmargin \labelsep 0pt
+                 \rightmargin 0pt \topsep -\parskip \partopsep \parskip
+                 \itemsep -\parsep
+                 \let\makelabel=\py@itemnewline}
+}{\end{list}}
+
+% \optional is mostly for use in the arguments parameters to the various
+% {*desc} environments defined below, but may be used elsewhere.  Known to
+% be used in the debugger chapter.
+%
+% Typical usage:
+%
+%     \begin{funcdesc}{myfunc}{reqparm\optional{, optparm}}
+%                                    ^^^       ^^^
+%                          No space here       No space here
+%
+% When a function has multiple optional parameters, \optional should be
+% nested, not chained.  This is right:
+%
+%     \begin{funcdesc}{myfunc}{\optional{parm1\optional{, parm2}}}
+%
+\let\py@badkey=\@undefined
+
+\newcommand{\optional}[1]{%
+  {\textnormal{\Large[}}{#1}\hspace{0.5mm}{\textnormal{\Large]}}}
+
+% This can be used when a function or method accepts an varying number 
+% of arguments, such as by using the *args syntax in the parameter list.
+\newcommand{\py@moreargs}{...}
+
+% This can be used when you don't want to document the parameters to a 
+% function or method, but simply state that it's an alias for
+% something else.
+\newcommand{\py@unspecified}{...}
+
+\newcommand{\py@varvars}[1]{{%
+    {\let\unspecified=\py@unspecified%
+      \let\moreargs=\py@moreargs%
+      \emph{#1}}}}
+
+\newlength{\py@argswidth}
+\newcommand{\py@sigparams}[1]{%
+  \parbox[t]{\py@argswidth}{\py@varvars{#1}\code{)}}}
+\newcommand{\py@sigline}[2]{%
+  \settowidth{\py@argswidth}{#1\code{(}}%
+  \addtolength{\py@argswidth}{-2\py@argswidth}%
+  \addtolength{\py@argswidth}{\textwidth}%
+  \item[#1\code{(}\py@sigparams{#2}]}
+
+% C functions ------------------------------------------------------------
+% \begin{cfuncdesc}[refcount]{type}{name}{arglist}
+% Note that the [refcount] slot should only be filled in by
+% tools/anno-api.py; it pulls the value from the refcounts database.
+\newcommand{\cfuncline}[3]{
+  \py@sigline{\code{#1 \bfcode{#2}}}{#3}%
+}
+\newenvironment{cfuncdesc}[3]{
+  \begin{fulllineitems}
+    \cfuncline{#1}{#2}{#3}
+}{\end{fulllineitems}}
+
+% C variables ------------------------------------------------------------
+% \begin{cvardesc}{type}{name}
+\newenvironment{cvardesc}[2]{
+  \begin{fulllineitems}
+    \item[\code{#1 \bfcode{#2}}]
+}{\end{fulllineitems}}
+
+% C data types -----------------------------------------------------------
+% \begin{ctypedesc}[index name]{typedef name}
+\newenvironment{ctypedesc}[2][\py@badkey]{
+  \begin{fulllineitems}
+    \item[\bfcode{#2}]
+}{\end{fulllineitems}}
+
+% C type fields ----------------------------------------------------------
+% \begin{cmemberdesc}{container type}{ctype}{membername}
+\newcommand{\cmemberline}[3]{
+  \item[\code{#2 \bfcode{#3}}]
+}
+\newenvironment{cmemberdesc}[3]{
+  \begin{fulllineitems}
+    \cmemberline{#1}{#2}{#3}
+}{\end{fulllineitems}}
+
+% Funky macros -----------------------------------------------------------
+% \begin{csimplemacrodesc}{name}
+% -- "simple" because it has no args; NOT for constant definitions!
+\newenvironment{csimplemacrodesc}[1]{
+  \begin{fulllineitems}
+    \item[\bfcode{#1}]
+}{\end{fulllineitems}}
+
+% simple functions (not methods) -----------------------------------------
+% \begin{funcdesc}{name}{args}
+\newcommand{\funcline}[2]{%
+  \py@sigline{\bfcode{#1}}{#2}}
+\newenvironment{funcdesc}[2]{
+  \begin{fulllineitems}
+    \funcline{#1}{#2}
+}{\end{fulllineitems}}
+
+% classes ----------------------------------------------------------------
+% \begin{classdesc}{name}{constructor args}
+\newcommand{\classline}[2]{
+  \py@sigline{\strong{class }\bfcode{#1}}{#2}}
+\newenvironment{classdesc}[2]{
+  % Using \renewcommand doesn't work for this, for unknown reasons:
+  \global\def\py@thisclass{#1}
+  \begin{fulllineitems}
+    \classline{#1}{#2}
+}{\end{fulllineitems}}
+
+% \begin{excclassdesc}{name}{constructor args}
+% but indexes as an exception
+\newenvironment{excclassdesc}[2]{
+  % Using \renewcommand doesn't work for this, for unknown reasons:
+  \global\def\py@thisclass{#1}
+  \begin{fulllineitems}
+    \py@sigline{\strong{exception }\bfcode{#1}}{#2}%
+}{\end{fulllineitems}}
+
+% There is no corresponding {excclassdesc*} environment.  To describe
+% a class exception without parameters, use the {excdesc} environment.
+
+
+\let\py@classbadkey=\@undefined
+
+% object method ----------------------------------------------------------
+% \begin{methoddesc}[classname]{methodname}{args}
+\newcommand{\methodline}[3][\@undefined]{
+  \py@sigline{\bfcode{#2}}{#3}}
+\newenvironment{methoddesc}[3][\@undefined]{
+  \begin{fulllineitems}
+    \ifx\@undefined#1\relax
+      \methodline{#2}{#3}
+    \else
+      \def\py@thisclass{#1}
+      \methodline{#2}{#3}
+    \fi
+}{\end{fulllineitems}}
+
+% static method ----------------------------------------------------------
+% \begin{staticmethoddesc}[classname]{methodname}{args}
+\newcommand{\staticmethodline}[3][\@undefined]{
+  \py@sigline{static \bfcode{#2}}{#3}}
+\newenvironment{staticmethoddesc}[3][\@undefined]{
+  \begin{fulllineitems}
+    \ifx\@undefined#1\relax
+      \staticmethodline{#2}{#3}
+    \else
+      \def\py@thisclass{#1}
+      \staticmethodline{#2}{#3}
+    \fi
+}{\end{fulllineitems}}
+
+% class method ----------------------------------------------------------
+% \begin{classmethoddesc}[classname]{methodname}{args}
+\newcommand{\classmethodline}[3][\@undefined]{
+  \py@sigline{class \bfcode{#2}}{#3}}
+\newenvironment{classmethoddesc}[3][\@undefined]{
+  \begin{fulllineitems}
+    \ifx\@undefined#1\relax
+      \classmethodline{#2}{#3}
+    \else
+      \def\py@thisclass{#1}
+      \classmethodline{#2}{#3}
+    \fi
+}{\end{fulllineitems}}
+
+% object data attribute --------------------------------------------------
+% \begin{memberdesc}[classname]{membername}
+\newcommand{\memberline}[2][\py@classbadkey]{%
+  \ifx\@undefined#1\relax
+    \item[\bfcode{#2}]
+  \else
+    \item[\bfcode{#2}]
+  \fi
+}
+\newenvironment{memberdesc}[2][\py@classbadkey]{
+  \begin{fulllineitems}
+    \ifx\@undefined#1\relax
+      \memberline{#2}
+    \else
+      \def\py@thisclass{#1}
+      \memberline{#2}
+    \fi
+}{\end{fulllineitems}}
+
+% For exceptions: --------------------------------------------------------
+% \begin{excdesc}{name}
+%  -- for constructor information, use excclassdesc instead
+\newenvironment{excdesc}[1]{
+  \begin{fulllineitems}
+    \item[\strong{exception }\bfcode{#1}]
+}{\end{fulllineitems}}
+
+% Module data or constants: ----------------------------------------------
+% \begin{datadesc}{name}
+\newcommand{\dataline}[1]{%
+  \item[\bfcode{#1}]\nopagebreak}
+\newenvironment{datadesc}[1]{
+  \begin{fulllineitems}
+    \dataline{#1}
+}{\end{fulllineitems}}
+
+% bytecode instruction ---------------------------------------------------
+% \begin{opcodedesc}{name}{var}
+% -- {var} may be {}
+\newenvironment{opcodedesc}[2]{
+  \begin{fulllineitems}
+    \item[\bfcode{#1}\quad\emph{#2}]
+}{\end{fulllineitems}}
+
+% generic description ----------------------------------------------------
+\newcommand{\descline}[1]{%
+  \item[\bfcode{#1}]\nopagebreak%
+}
+\newenvironment{describe}[1]{
+  \begin{fulllineitems}
+    \descline{#1}
+}{\end{fulllineitems}}
+
+% This version is being checked in for the historical record; it shows
+% how I've managed to get some aspects of this to work.  It will not
+% be used in practice, so a subsequent revision will change things
+% again.  This version has problems, but shows how to do something
+% that proved more tedious than I'd expected, so I don't want to lose
+% the example completely.
+%
+\newcommand{\grammartoken}[1]{\texttt{#1}}
+\newenvironment{productionlist}[1][\py@badkey]{
+  \def\optional##1{{\Large[}##1{\Large]}}
+  \def\production##1##2{\code{##1}&::=&\code{##2}\\}
+  \def\productioncont##1{& &\code{##1}\\}
+  \def\token##1{##1}
+  \let\grammartoken=\token
+  \parindent=2em
+  \indent
+  \begin{tabular}{lcl}
+}{%
+  \end{tabular}
+}
+
+% Notices / Admonitions
+%
+\newlength{\py@noticelength}
+
+\newcommand{\py@heavybox}{
+  \setlength{\fboxrule}{1pt}
+  \setlength{\fboxsep}{7pt}
+  \setlength{\py@noticelength}{\linewidth}
+  \addtolength{\py@noticelength}{-2\fboxsep}
+  \addtolength{\py@noticelength}{-2\fboxrule}
+  \setlength{\shadowsize}{3pt}
+  \Sbox
+  \minipage{\py@noticelength}
+}
+\newcommand{\py@endheavybox}{
+  \endminipage
+  \endSbox
+  \fbox{\TheSbox}
+}
+
+% Some are quite plain:
+\newcommand{\py@noticestart@note}{}
+\newcommand{\py@noticeend@note}{}
+\newcommand{\py@noticestart@hint}{}
+\newcommand{\py@noticeend@hint}{}
+\newcommand{\py@noticestart@important}{}
+\newcommand{\py@noticeend@important}{}
+\newcommand{\py@noticestart@tip}{}
+\newcommand{\py@noticeend@tip}{}
+
+% Others gets more visible distinction:
+\newcommand{\py@noticestart@warning}{\py@heavybox}
+\newcommand{\py@noticeend@warning}{\py@endheavybox}
+\newcommand{\py@noticestart@caution}{\py@heavybox}
+\newcommand{\py@noticeend@caution}{\py@endheavybox}
+\newcommand{\py@noticestart@attention}{\py@heavybox}
+\newcommand{\py@noticeend@attention}{\py@endheavybox}
+\newcommand{\py@noticestart@danger}{\py@heavybox}
+\newcommand{\py@noticeend@danger}{\py@endheavybox}
+\newcommand{\py@noticestart@error}{\py@heavybox}
+\newcommand{\py@noticeend@error}{\py@endheavybox}
+
+\newenvironment{notice}[2]{
+  \def\py@noticetype{#1}
+  \csname py@noticestart@#1\endcsname
+  \par\strong{#2}
+}{\csname py@noticeend@\py@noticetype\endcsname}
+
+% Allow the release number to be specified independently of the
+% \date{}.  This allows the date to reflect the document's date and
+% release to specify the release that is documented.
+%
+\newcommand{\py@release}{}
+\newcommand{\version}{}
+\newcommand{\shortversion}{}
+\newcommand{\releaseinfo}{}
+\newcommand{\releasename}{Release}
+\newcommand{\release}[1]{%
+  \renewcommand{\py@release}{\releasename\space\version}%
+  \renewcommand{\version}{#1}}
+\newcommand{\setshortversion}[1]{%
+  \renewcommand{\shortversion}{#1}}
+\newcommand{\setreleaseinfo}[1]{%
+  \renewcommand{\releaseinfo}{#1}}
+
+% Allow specification of the author's address separately from the
+% author's name.  This can be used to format them differently, which
+% is a good thing.
+%
+\newcommand{\py@authoraddress}{}
+\newcommand{\authoraddress}[1]{\renewcommand{\py@authoraddress}{#1}}
+
+% This sets up the fancy chapter headings that make the documents look
+% at least a little better than the usual LaTeX output.
+%
+\@ifundefined{ChTitleVar}{}{
+  \ChNameVar{\raggedleft\normalsize\py@HeaderFamily}
+  \ChNumVar{\raggedleft \bfseries\Large\py@HeaderFamily}
+  \ChTitleVar{\raggedleft \rm\Huge\py@HeaderFamily}
+  % This creates chapter heads without the leading \vspace*{}:
+  \def\@makechapterhead#1{%
+    {\parindent \z@ \raggedright \normalfont
+      \ifnum \c@secnumdepth >\m@ne
+        \DOCH
+      \fi
+      \interlinepenalty\@M
+      \DOTI{#1}
+    }
+  }
+}
+
+% Redefine description environment so that it is usable inside fulllineitems.
+%
+\renewcommand{\description}{%
+  \list{}{\labelwidth\z@%
+          \itemindent-\leftmargin%
+	  \labelsep5pt%
+          \let\makelabel=\descriptionlabel}}
+
+% Definition lists; requested by AMK for HOWTO documents.  Probably useful
+% elsewhere as well, so keep in in the general style support.
+%
+\newenvironment{definitions}{%
+  \begin{description}%
+  \def\term##1{\item[##1]\mbox{}\\*[0mm]}
+}{%
+  \end{description}%
+}
+
+% Tell TeX about pathological hyphenation cases:
+\hyphenation{Base-HTTP-Re-quest-Hand-ler}
+
+
+% The following is stuff copied from docutils' latex writer.
+%
+\newcommand{\optionlistlabel}[1]{\bf #1 \hfill}
+\newenvironment{optionlist}[1]
+{\begin{list}{}
+  {\setlength{\labelwidth}{#1}
+   \setlength{\rightmargin}{1cm}
+   \setlength{\leftmargin}{\rightmargin}
+   \addtolength{\leftmargin}{\labelwidth}
+   \addtolength{\leftmargin}{\labelsep}
+   \renewcommand{\makelabel}{\optionlistlabel}}
+}{\end{list}}
+
+\newlength{\lineblockindentation}
+\setlength{\lineblockindentation}{2.5em}
+\newenvironment{lineblock}[1]
+{\begin{list}{}
+  {\setlength{\partopsep}{\parskip}
+   \addtolength{\partopsep}{\baselineskip}
+   \topsep0pt\itemsep0.15\baselineskip\parsep0pt
+   \leftmargin#1}
+ \raggedright}
+{\end{list}}
+
+% Redefine includgraphics for avoiding images larger than the screen size
+% If the size is not specified.
+\let\py@Oldincludegraphics\includegraphics
+
+\newbox\image@box%
+\newdimen\image@width%
+\renewcommand\includegraphics[2][\@empty]{%
+  \ifx#1\@empty%
+    \setbox\image@box=\hbox{\py@Oldincludegraphics{#2}}%
+    \image@width\wd\image@box%
+    \ifdim \image@width>\linewidth%
+      \setbox\image@box=\hbox{\py@Oldincludegraphics[width=\linewidth]{#2}}%
+      \box\image@box%
+    \else%
+      \py@Oldincludegraphics{#2}%
+    \fi%
+  \else%
+    \py@Oldincludegraphics[#1]{#2}%
+  \fi%
+}
+
+
+% Fix the index and bibliography environments to add an entry to the Table of
+% Contents; this is much nicer than just having to jump to the end of the book
+% and flip around, especially with multiple indexes.
+%
+\let\py@OldTheindex=\theindex
+\renewcommand{\theindex}{
+  \cleardoublepage
+  \phantomsection
+  \py@OldTheindex
+  \addcontentsline{toc}{chapter}{\indexname}
+}
+
+\let\py@OldThebibliography=\thebibliography
+\renewcommand{\thebibliography}[1]{
+  \cleardoublepage
+  \phantomsection
+  \py@OldThebibliography{1}
+  \addcontentsline{toc}{chapter}{\bibname}
+}
+
+% Include hyperref last.
+\RequirePackage[colorlinks,breaklinks,
+                linkcolor=InnerLinkColor,filecolor=OuterLinkColor,
+                menucolor=OuterLinkColor,pagecolor=OuterLinkColor,
+                urlcolor=OuterLinkColor,citecolor=InnerLinkColor]{hyperref}
+
+% From docutils.writers.latex2e
+\providecommand{\DUspan}[2]{%
+  {% group ("span") to limit the scope of styling commands
+    \@for\node@class@name:=#1\do{%
+    \ifcsname docutilsrole\node@class@name\endcsname%
+      \csname docutilsrole\node@class@name\endcsname%
+    \fi%
+    }%
+    {#2}% node content
+  }% close "span"
+}
