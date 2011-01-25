@@ -42,6 +42,8 @@ Contact me at "alexis at notmyidea dot org" for any request/feedback !
 Documentation
 =============
 
+A french version of the documentation is available at :doc:`fr/index`.
+
 .. toctree::
    :maxdepth: 2
    
