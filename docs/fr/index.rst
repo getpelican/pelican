@@ -29,8 +29,8 @@ Vous n'avez pas remarqué ? "Pelican" est un anagramme pour "Calepin"  ;)
 Code source
 ===========
 
-Vous pouvez accéder au code source via mercurial sur  http://hg.notmyidea.org/pelican/
-ou via git à l'adresse http://github.com/ametaireau/pelican/
+Vous pouvez accéder au code source via git à l'adresse 
+http://github.com/ametaireau/pelican/
 
 Feedback !
 ==========
@@ -46,9 +46,7 @@ Documentation
 .. toctree::
    :maxdepth: 2
    
-   install
-   basis
-   settings
-   themes
-   internals
-   faq
+   conventions
+   installation
+   bases
+   configuration
