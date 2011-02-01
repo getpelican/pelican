@@ -19,58 +19,60 @@ processed.
 Here are the available settings. Please note that all the settings you put in
 this file will be passed to the templates as well.
 
-=======================   =======================================================
-Setting name              what it does ?
-=======================   =======================================================
-`AUTHOR`                  Default author (put your name)
-`CATEGORY_FEED`           Where to put the atom categories feeds. default is
-                          `feeds/%s.atom.xml`, where %s is the name of the
-                          category.
-`CATEGORY_FEED_RSS`       Where to put the categories rss feeds. default is None
-                          (no rss)
-`CSS_FILE`                To specify the CSS file you want to load, if it's not
-                          the default one ('main.css')
-`DEFAULT_CATEGORY`        The default category to fallback on. `misc` by default.
-`DEFAULT_LANG`            The default language to use. Default is 'en'.
-`DISPLAY_PAGES_ON_MENU`   Display or not the pages on the menu of the template.
-                          Templates can follow or not this settings.
-`FALLBACK_ON_FS_DATE`     If True, pelican will use the file system dates infos
-                          (mtime) if it can't get informations from the
-                          metadata?
-`FEED`                    relative url to output the atom feed. Default is
-                          `feeds/all.atom.xml`
-`FEED_RSS`                relative url to output the rss feed. Default is
-                          None (no rss)
-`JINJA_EXTENSIONS`        A list of any Jinja2 extensions you want to use.
-                          Default is no extensions (the empty list).
-`KEEP_OUTPUT_DIRECTORY`   Keep the output directory and just update all the generated files. 
-                          Default is to delete the output directory.   
-`MARKUP`                  A list of available markup languages you want to use.
-                          For the moment, only available values are `rst` and `md`.
-`OUTPUT_PATH`             Where to output the generated files. Default to
-                          "output"
-`PATH`                    path to look at for input files.
-`PDF_PROCESSOR`           Put True if you want to have PDF versions of your
-                          documents. You will need to install `rst2pdf`.
-`REVERSE_ARCHIVE_ORDER`   Reverse the archives order. (True makes it in
-                          descending order: the newer first)
-`REVERSE_CATEGORY_ORDER`  Reverse the category order. (True makes it in
-                          descending order, default is alphabetically)
-`SITEURL`                 base URL of your website.
-`SITENAME`                Your site name,
-`STATIC_PATHS`            The static paths you want to have accessible on the
-                          output path "static". By default, pelican will copy
-                          the 'images' folder to the output folder.
-`STATIC_THEME_PATHS`      Static theme paths you want to copy. Default values
-                          is `static`, but if your theme have others static paths,
-                          you can put them here.
-`THEME`                   theme to use to product the output. can be the
-                          complete static path to a theme folder, or chosen
-                          between the list of default themes (see below)
-`TRANSLATION_FEED`        Where to put the RSS feed for translations. Default
-                          is feeds/all-%s.atom.xml where %s is the name of the
-                          lang.
-=======================   =======================================================
+
+========================    =======================================================
+Setting name                what it does ?
+========================    =======================================================
+`AUTHOR`                    Default author (put your name)
+`CATEGORY_FEED`             Where to put the atom categories feeds. default is
+                            `feeds/%s.atom.xml`, where %s is the name of the
+                            category.
+`CATEGORY_FEED_RSS`         Where to put the categories rss feeds. default is None
+                            (no rss)
+`CSS_FILE`                  To specify the CSS file you want to load, if it's not
+                            the default one ('main.css')
+`DEFAULT_CATEGORY`          The default category to fallback on. `misc` by default.
+`DEFAULT_LANG`              The default language to use. Default is 'en'.
+`DISPLAY_PAGES_ON_MENU`     Display or not the pages on the menu of the template.
+                            Templates can follow or not this settings.
+`FALLBACK_ON_FS_DATE`       If True, pelican will use the file system dates infos
+                            (mtime) if it can't get informations from the
+                            metadata?
+`FEED`                      relative url to output the atom feed. Default is
+                            `feeds/all.atom.xml`
+`FEED_RSS`                  relative url to output the rss feed. Default is
+                            None (no rss)
+`JINJA_EXTENSIONS`          A list of any Jinja2 extensions you want to use.
+                            Default is no extensions (the empty list).
+`KEEP_OUTPUT_DIRECTORY`     Keep the output directory and just update all the 
+                            generated files. 
+                            Default is to delete the output directory.   
+`MARKUP`                    A list of available markup languages you want to use.
+                            For the moment, only available values are `rst` and `md`.
+`OUTPUT_PATH`               Where to output the generated files. Default to
+                            "output"
+`PATH`                      path to look at for input files.
+`PDF_PROCESSOR`             Put True if you want to have PDF versions of your
+                            documents. You will need to install `rst2pdf`.
+`REVERSE_ARCHIVE_ORDER`     Reverse the archives order. (True makes it in
+                            descending order: the newer first)
+`REVERSE_CATEGORY_ORDER`    Reverse the category order. (True makes it in
+                            descending order, default is alphabetically)
+`SITEURL`                   base URL of your website.
+`SITENAME`                  Your site name,
+`STATIC_PATHS`              The static paths you want to have accessible on the
+                            output path "static". By default, pelican will copy
+                            the 'images' folder to the output folder.
+`STATIC_THEME_PATHS`        Static theme paths you want to copy. Default values
+                            is `static`, but if your theme have others static paths,
+                            you can put them here.
+`THEME`                     theme to use to product the output. can be the
+                            complete static path to a theme folder, or chosen
+                            between the list of default themes (see below)
+`TRANSLATION_FEED`          Where to put the RSS feed for translations. Default
+                            is feeds/all-%s.atom.xml where %s is the name of the
+                            lang.
+========================    =======================================================
 
 Themes
 ======
