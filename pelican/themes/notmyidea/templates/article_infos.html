@@ -1,6 +1,6 @@
 <footer class="post-info">
         <abbr class="published" title="{{ article.date.isoformat() }}">
-                {{ article.date.strftime('%a %d %B %Y') }}
+                {{ article.locale_date }}
         </abbr>
 
         {% if article.author %}

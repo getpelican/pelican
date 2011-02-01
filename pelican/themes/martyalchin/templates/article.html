@@ -6,7 +6,7 @@
     {% if article.author %}
      By <a class="url fn" href="#">{{ article.author }}</a>
     {% endif %}
-     on <a>{{ article.date.strftime('%a %d %B %Y') }}</a>
+     on <a>{{ article.date.locale_date }}</a>
      about <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a>
     </div>
     {{ article.content }}

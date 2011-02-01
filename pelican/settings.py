@@ -1,4 +1,5 @@
 import os
+import locale
 
 _DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
@@ -24,7 +25,10 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
                    'PELICAN_CLASS': 'pelican.Pelican',
+                   'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
+                   'DATE_FORMATS': {},
                    'JINJA_EXTENSIONS': [],
+                   'LOCALE': '', # default to user locale
                   }
 
 def read_settings(filename):
@@ -37,4 +41,7 @@ def read_settings(filename):
         for key in tempdict:
             if key.isupper():
                 context[key] = tempdict[key]
+
+    # set the locale
+    locale.setlocale(locale.LC_ALL, context['LOCALE'])
     return context

@@ -31,7 +31,10 @@ Setting name                what it does ?
                             (no rss)
 `CSS_FILE`                  To specify the CSS file you want to load, if it's not
                             the default one ('main.css')
+`DATE_FORMATS`              If you do manage multiple languages, you can set
+                            the date formatting here.
 `DEFAULT_CATEGORY`          The default category to fallback on. `misc` by default.
+`DEFAULT_DATE_FORMAT`       The default date format you want to use.
 `DEFAULT_LANG`              The default language to use. Default is 'en'.
 `DISPLAY_PAGES_ON_MENU`     Display or not the pages on the menu of the template.
                             Templates can follow or not this settings.
@@ -46,6 +49,7 @@ Setting name                what it does ?
                             Default is no extensions (the empty list).
 `KEEP_OUTPUT_DIRECTORY`     Keep the output directory and just update all the 
                             generated files. 
+`LOCALE`                    Change the locale. Default is the system locale.
                             Default is to delete the output directory.   
 `MARKUP`                    A list of available markup languages you want to use.
                             For the moment, only available values are `rst` and `md`.

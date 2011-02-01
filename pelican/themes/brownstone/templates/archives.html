@@ -6,7 +6,7 @@
 					<dl>
 						<h2 class="title">Archives de {{ SITENAME }}</h2>
 						{% for article in dates %}
-                                                    <dt>{{ article.date.strftime('%a %d %B %Y') }}</dt>
+                                                    <dt>{{ article.locale_date }}</dt>
                                                     <dd><a href='{{ article.url }}'>{{ article.title }}</a></dd>
                                                     <dd>Catégorie : <a href="{{ article.category }}">{{ article.category }}</a></dd>
                                                 {% endfor %}

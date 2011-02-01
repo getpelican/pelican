@@ -7,7 +7,7 @@
 				<div id="content">
 					<div class="post">
 						<h2 class="title"><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
-						<p class="meta"><span class="date">Le {{ article.date.strftime('%a %d %B %Y') }} </span><span class="posted">Par <a href="#">{{ article.author }}</a></span><span>&nbsp; | Catégorie : <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></span></p>
+						<p class="meta"><span class="date">Le {{ article.date.locale_date }} </span><span class="posted">Par <a href="#">{{ article.author }}</a></span><span>&nbsp; | Catégorie : <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></span></p>
 					<p class="meta">Tags : {% for tag in article.tags %}
 <span><a href="{{ SITEURL }}/tag/{{ tag }}.html">{{ tag }}</a> / </span>
 {% endfor %}</p>
@@ -25,7 +25,7 @@
 			    {% else %} 
 			                <div class="post summary">
 						<h2 class="title"><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
-						<p class="meta"><span class="date">Le {{ article.date.strftime('%a %d %B %Y') }}</span><span class="posted">Par <a href="#">{{ article.author }}</a></span></p>
+						<p class="meta"><span class="date">Le {{ article.locale_date }}</span><span class="posted">Par <a href="#">{{ article.author }}</a></span></p>
 						<div style="clear: both;">&nbsp;</div>
 						<div class="entry">
 						 {{ article.summary }}	

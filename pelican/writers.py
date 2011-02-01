@@ -115,7 +115,7 @@ class Writer(object):
                 context[i] = self.update_context_contents(name, context[i])
 
             elif type(context[i]) == dict:
-                context[i] = self.update_context_content(name, context[i].values())
+                context[i] = self.update_context_contents(name, context[i].values())
 
             elif hasattr(context[i], '_content'):
                 relative_path = get_relative_path(name)

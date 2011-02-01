@@ -47,6 +47,15 @@ class Page(object):
         if filename:
             self.filename = filename
 
+        if not hasattr(self, 'date_format'):
+            if self.lang in settings['DATE_FORMATS']:
+                self.date_format = settings['DATE_FORMATS'][self.lang]
+            else:
+                self.date_format = settings['DEFAULT_DATE_FORMAT']
+
+        # store the settings ref.
+        self._settings = settings
+
     def check_properties(self):
         """test that each mandatory property is set."""
         for prop in self.mandatory_properties:
@@ -64,6 +73,11 @@ class Page(object):
     @property
     def summary(self):
         return truncate_html_words(self.content, 50)
+
+    @property
+    def locale_date(self):
+        return self.date.strftime(self.date_format)
+
 
 
 class Article(Page):
