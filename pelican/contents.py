@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pelican.utils import slugify, truncate_html_words
 
 
@@ -53,6 +54,9 @@ class Page(object):
             else:
                 self.date_format = settings['DEFAULT_DATE_FORMAT']
 
+        if hasattr(self, 'date'):
+            self.locale_date = self.date.strftime(self.date_format).decode('utf')
+
         # store the settings ref.
         self._settings = settings
 
@@ -73,10 +77,6 @@ class Page(object):
     @property
     def summary(self):
         return truncate_html_words(self.content, 50)
-
-    @property
-    def locale_date(self):
-        return self.date.strftime(self.date_format)
 
 
 

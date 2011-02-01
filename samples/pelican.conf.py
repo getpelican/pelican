@@ -7,7 +7,7 @@ GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"
 PDF_GENERATOR = False
 REVERSE_CATEGORY_ORDER = True
-LOCALE = 'en_US.utf8'
+LOCALE = 'fr_FR.utf8'
 
 LINKS = (('Biologeek', 'http://biologeek.org'),
             ('Filyb', "http://filyb.info/"),

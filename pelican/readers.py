@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from docutils import core
 from markdown import Markdown
 import re

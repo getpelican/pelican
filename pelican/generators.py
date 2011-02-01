@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from operator import attrgetter
 from itertools import chain
 from functools import partial
