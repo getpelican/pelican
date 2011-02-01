@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  
+  <title>{% block title %}{{ SITENAME }}{%endblock%}</title>
+<link href="{{ SITEURL }}/theme/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="{{ SITEURL }}/{{ FEED }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} ATOM Feed" />
+{% if FEED_RSS %}
+<link href="{{ SITEURL }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+{% endif %}
+  
+  <!--[if IE]>
+  <style type="text/css"> 
+  .twoColFixRtHdr #mainContent { zoom: 1; }
+  </style>
+  <![endif]-->
+
+</head>
+
+<body>
+
+<div id="container">
+
+  <div id="header">
+  <h1><a href="{{ SITEURL }}">{{ SITENAME }}</h1>
+  {% if SITESUBTITLE %}<h2>{{ SITESUBTITLE }}</h2>{% endif %}
+  
+  </div><!-- end #header -->
+  
+  <div id="topMenu">
+  
+    <ul>
+    	<li><a href="{{ SITEURL }}">Home</a></li>
+        <li>&ndash;</li>
+        <li><a href="{{ SITEURL }}/archives.html">Archives</a></li>
+        
+    </ul>
+  
+  </div><!-- end #topMenu -->
+
+  <div id="sidebar">
+  	{% if DISPLAY_PAGES_ON_MENU %}
+	<h3>Pages</h3>
+	<ul>
+        {% for page in PAGES %}
+            <li><a href="{{ SITEURL }}/pages/{{ page.url }}">{{ page.title }}</a></li>
+        {% endfor %}
+	</ul>
+        {% endif %}
+    <h3>Categories</h3>
+    <ul>
+	{% for cat, null in categories %}
+		 <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/category/{{ cat }}.html">{{ cat }}</a></li>
+	{% endfor %}
+	</ul>
+    {% if LINKS %}
+	<li>
+		<h3>Blogroll</h3>
+		<ul>
+		{% for name, link in LINKS %}
+                    <li><a href="{{ link }}">{{ name }}</a></li>
+                {% endfor %}
+		</ul>
+	</li>
+	{% endif %}
+	{% if SOCIAL %}
+        <li>
+                <h3>Social</h3>
+                <ul>
+                    <li><a href="{{ SITEURL }}/{{ FEED }}" rel="alternate">Flux Atom</a></li>
+                    {% if FEED_RSS %}
+                    <li><a href="{{ SITEURL }}/{{ FEED_RSS }}" rel="alternate">Flux Rss</a></li>
+                    {% endif %}
+                {% for name, link in SOCIAL %}
+                    <li><a href="{{ link }}">{{ name }}</a></li>
+                {% endfor %}
+                </ul>
+        </li><!-- /.social -->
+        {% endif %}
+<li>
+        <h3>Tags</h3>
+        <ul>
+        {% for tag, articles in tags %}
+                <li><a href="{{ SITEURL }}/tag/{{ tag }}.html">{{ tag }}</a></li>
+        {% endfor %}
+        </ul>
+</li>
+    
+  
+  </div><!-- end #sidebar -->
+
+  <div id="mainContent">
+  	
+    {% block content %}
+    {% endblock %}
+  
+  </div><!-- end #mainContent -->
+
+<div class="clearfloat"></div>
+
+  <div id="footer">
+  
+    <p><a href="http://css4free.com/" title="free CSS web site designs">Free CSS Gallery</a></p>
+    <p>Proudly powered by <a href="http://alexis.notmyidea.org/pelican/">pelican</a>, which takes great advantages of <a href="http://python.org">python</a>.
+  </div><!-- end #footer -->
+
+</div><!-- end #container -->
+{% include 'analytics.html' %}
+</body>
+</html>

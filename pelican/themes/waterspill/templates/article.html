@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %} 
+
+
+<div class="blogItem">
+    
+      <h2><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
+      <h3>Le {{ article.date.strftime('%a %d %B %Y') }}</h3>
+      
+  {{ article.content }}	
+  {% include 'twitter.html' %}
+      
+      <h3 class="blogMeta">Par <a href="#">{{ article.author }}</a>, Catégorie : <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></h3>
+	<h3 class="blogMeta">Tags : {% for tag in article.tags %}
+<span><a href="{{ SITEURL }}/tag/{{ tag }}.html">{{ tag }}</a> / </span>
+{% endfor %}</h3>
+    
+    </div><!-- end #blogItem -->
+{% if DISQUS_SITENAME %}
+<div class="blogItem">
+    
+      <h2>Commentaires</h2>
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+       var disqus_identifier = "{{ article.url }}";
+       (function() {
+       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+       dsq.src = 'http://{{ DISQUS_SITENAME }}.disqus.com/embed.js';
+       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+  </div>
+                                        {% endif %}
+				
+				<!-- end #content -->
+{% endblock %}	

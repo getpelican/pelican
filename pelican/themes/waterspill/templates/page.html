@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}        
+
+<div class="blogItem">
+    <h2><a href="{{ SITEURL }}/pages/{{ page.url }}">{{ page.title }}</a></h3>
+	{{ page.content }}
+    {% include 'twitter.html' %}
+
+    {% if PDF_PROCESSOR %}<h3 class="blogMeta"><a href="{{ SITEURL }}/pdf/{{ page.slug }}.pdf">get
+    the pdf</a></h3>{% endif %}
+ 
+   
+</div>
+
+{% endblock %}
