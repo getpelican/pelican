@@ -18,6 +18,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'FALLBACK_ON_FS_DATE': True,
                    'CSS_FILE': 'main.css',
                    'REVERSE_ARCHIVE_ORDER': False,
+                   'REVERSE_CATEGORY_ORDER': False,
                    'KEEP_OUTPUT_DIRECTORY': False,
                    'CLEAN_URLS': False, # use /blah/ instead /blah.html in urls
                    'RELATIVE_URLS': True,

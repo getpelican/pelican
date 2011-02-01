@@ -54,6 +54,8 @@ Setting name              what it does ?
                           documents. You will need to install `rst2pdf`.
 `REVERSE_ARCHIVE_ORDER`   Reverse the archives order. (True makes it in
                           descending order: the newer first)
+`REVERSE_CATEGORY_ORDER`  Reverse the category order. (True makes it in
+                          descending order, default is alphabetically)
 `SITEURL`                 base URL of your website.
 `SITENAME`                Your site name,
 `STATIC_PATHS`            The static paths you want to have accessible on the

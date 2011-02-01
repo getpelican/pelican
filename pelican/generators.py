@@ -94,7 +94,7 @@ class ArticlesGenerator(Generator):
             writer.write_feed(self.articles, self.context,
                     self.settings['FEED_RSS'], feed_type='rss')
 
-        for cat, arts in self.categories.items():
+        for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
             writer.write_feed(arts, self.context,
                               self.settings['CATEGORY_FEED'] % cat)
@@ -149,9 +149,9 @@ class ArticlesGenerator(Generator):
                 write('tag/%s.html' % tag, templates['tag'], self.context,
                     tag=tag, articles=articles)
 
-        for cat in self.categories:
+        for cat, articles in self.categories:
             write('category/%s.html' % cat, templates['category'], self.context,
-                category=cat, articles=self.categories[cat])
+                category=cat, articles=articles)
 
     def generate_context(self):
         """change the context"""
@@ -200,6 +200,10 @@ class ArticlesGenerator(Generator):
         self.dates.sort(key=attrgetter('date'), 
                 reverse=self.context['REVERSE_ARCHIVE_ORDER'])
         # and generate the output :)
+
+        # order the categories per name
+        self.categories = list(self.categories.items())
+        self.categories.sort(reverse=self.settings.get('REVERSE_CATEGORY_ORDER'))
         self._update_context(('articles', 'dates', 'tags', 'categories'))
 
     def generate_output(self, writer):
