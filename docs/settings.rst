@@ -81,17 +81,18 @@ Setting name                what it does ?
 Themes
 ======
 
-3 themes are available. You can specify them using the `-t` option:
+By default, two themes are availablee. You can specify them using the `-t` option:
 
 * notmyidea
 * simple (a synonym for "full text" :)
-* martyalchin
 
 You can define your own theme too, and specify it's emplacement in the same
 way (be sure to specify the full absolute path to it).
 
 Here is `a guide on how to create your theme
 <http://alexis.notmyidea.org/pelican/themes.html>`_
+
+You can find a list of themes at http://github.com/ametaireau/pelican-themes.
 
 The `notmyidea` theme can make good use of the following settings. I recommend
 to use them too in your themes.

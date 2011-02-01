@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block title %}{{ category }}{%endblock%}
-<h1>{{ category }}</h1>
-<div class="info"></div>
-{% for article in articles %}        
-<h2><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2> 
-<p class="published">{{ article.locale_date }}</p>
-{{ article.summary }}
-{% endfor %}
