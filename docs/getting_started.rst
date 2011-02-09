@@ -17,7 +17,7 @@ install. I recommend to do so in a virtualenv::
     $ python setup.py install
 
 Dependencies
-============
+------------
 
 At this time, pelican is dependent of the following python packages:
 
@@ -31,8 +31,11 @@ If you're not using python 2.7, you will also need `argparse`.
 All those dependencies will be processed automatically if you install pelican
 using setuptools/distribute or pip.
 
+Writing articles using pelican
+==============================
+
 Files metadata
-==============
+--------------
 
 Pelican tries to be smart enough to get the informations he needs from the
 file system (for instance, about the category of your articles), but you need to
@@ -63,7 +66,7 @@ directory where the rst file is. For instance, the category of
 `python/foobar/myfoobar.rst` is `foobar`.
 
 Generate your blog
-==================
+------------------
 
 To launch pelican, just use the `pelican` command::
 
@@ -80,7 +83,7 @@ the options you can use::
     $ pelican --help
 
 Pages
-=====
+-----
 
 If you create a folder named `pages`, all the files in it will be used to
 generate static pages.
@@ -89,7 +92,7 @@ Then, use the `DISPLAY_PAGES_ON_MENU` setting, which will add all the pages to
 the menu.
 
 Translations
-============
+------------
 
 It is possible to translate articles. To do so, you need to add a `lang` meta
 in your articles/pages, and to set a `DEFAULT_LANG` setting (which is en by
@@ -128,8 +131,20 @@ Despite the text quality, you can see that only the slug is the same here.
 You're not forced to define the slug that way, and it's completely possible to
 have two translations with the same title (which defines the slug)
 
+Syntactic recognition
+---------------------
+
+Pelican is able to regognise the syntax you are using, and to colorize the
+right way your block codes. To do so, you have to use the following syntax::
+
+    ::code-block identifier
+    your code goes here
+
+The identifier is one of the lexers available `here
+<http://pygments.org/docs/lexers/>`_.
+
 Autoreload
-==========
+----------
 
 It's possible to tell pelican to watch for your modifications, instead of
 manually launching it each time you need. Use the `-r` option, or
