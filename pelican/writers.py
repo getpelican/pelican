@@ -3,9 +3,9 @@ import os
 import re
 from codecs import open
 from functools import partial
+import locale
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
-
 from pelican.utils import get_relative_path
 
 
@@ -26,6 +26,7 @@ class Writer(object):
 
 
     def _add_item_to_the_feed(self, feed, item):
+
         feed.add_item(
             title=item.title,
             link='%s/%s' % (self.site_url, item.url),
@@ -46,26 +47,31 @@ class Writer(object):
         :param filename: the filename to output.
         :param feed_type: the feed type to use (atom or rss)
         """
-        self.site_url = context.get('SITEURL', get_relative_path(filename))
-        self.feed_url= '%s/%s' % (self.site_url, filename)
+        old_locale = locale.getlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, 'C')
+        try:
+            self.site_url = context.get('SITEURL', get_relative_path(filename))
+            self.feed_url= '%s/%s' % (self.site_url, filename)
 
-        feed = self._create_new_feed(feed_type, context)
+            feed = self._create_new_feed(feed_type, context)
 
-        for item in elements:
-            self._add_item_to_the_feed(feed, item)
+            for item in elements:
+                self._add_item_to_the_feed(feed, item)
 
-        if filename:
-            complete_path = os.path.join(self.output_path, filename)
-            try:
-                os.makedirs(os.path.dirname(complete_path))
-            except Exception:
-                pass
-            fp = open(complete_path, 'w')
-            feed.write(fp, 'utf-8')
-            print u' [ok] writing %s' % complete_path
+            if filename:
+                complete_path = os.path.join(self.output_path, filename)
+                try:
+                    os.makedirs(os.path.dirname(complete_path))
+                except Exception:
+                    pass
+                fp = open(complete_path, 'w')
+                feed.write(fp, 'utf-8')
+                print u' [ok] writing %s' % complete_path
 
-            fp.close()
-        return feed
+                fp.close()
+            return feed
+        finally:
+            locale.setlocale(locale.LC_ALL, old_locale)
 
     def write_file(self, name, template, context, relative_urls=True,
         **kwargs):
