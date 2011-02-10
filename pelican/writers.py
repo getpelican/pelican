@@ -55,8 +55,13 @@ class Writer(object):
 
             feed = self._create_new_feed(feed_type, context)
 
-            for item in elements:
-                self._add_item_to_the_feed(feed, item)
+            self.feed_length = context.get('FEED_LENGTH')
+            if self.feed_length:
+                for items in elements[:self.feed_length]:
+                    self.add_item_to_the_feed(feed,item)
+            else:
+                for item in elements:
+                    self._add_item_to_the_feed(feed, item)
 
             if filename:
                 complete_path = os.path.join(self.output_path, filename)

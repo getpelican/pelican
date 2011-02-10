@@ -61,6 +61,8 @@ CATEGORY_FEED_RSS :
 FEED :
 	Chemin du flux Atom global ;
 
+FEED_LENGTH :
+        Nombre d'article dans les flux (Optionnel);
 FEED_RSS :
 	Chemin du flux Rss global (Optionnel);
 

@@ -43,6 +43,7 @@ Setting name                what it does ?
                             metadata?
 `FEED`                      relative url to output the atom feed. Default is
                             `feeds/all.atom.xml`
+`FEED_LENGTH`               Number of articles in each of your feed.
 `FEED_RSS`                  relative url to output the rss feed. Default is
                             None (no rss)
 `JINJA_EXTENSIONS`          A list of any Jinja2 extensions you want to use.
