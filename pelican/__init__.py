@@ -18,7 +18,7 @@ class Pelican(object):
         before doing anything else.
         """
         self.path = path or settings['PATH']
-        if self.path.endswith('/'):
+        if path or self.path.endswith('/'):
             self.path = path[:-1]
 
         # define the default settings
@@ -90,7 +90,7 @@ def main():
     parser = argparse.ArgumentParser(description="""A tool to generate a
     static blog, with restructured text input files.""")
 
-    parser.add_argument(dest='path',
+    parser.add_argument(dest='path', nargs='?',
         help='Path where to find the content files')
     parser.add_argument('-t', '--theme-path', dest='theme',
         help='Path where to find the theme templates. If not specified, it will'
