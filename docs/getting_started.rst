@@ -137,8 +137,8 @@ Syntactic recognition
 Pelican is able to regognise the syntax you are using, and to colorize the
 right way your block codes. To do so, you have to use the following syntax::
 
-    ::code-block identifier
-    your code goes here
+    .. code-block:: identifier
+        your code goes here
 
 The identifier is one of the lexers available `here
 <http://pygments.org/docs/lexers/>`_.
