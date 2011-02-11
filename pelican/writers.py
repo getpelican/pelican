@@ -47,16 +47,22 @@ class Writer(object):
         :param filename: the filename to output.
         :param feed_type: the feed type to use (atom or rss)
         """
+        feed_length = context.get('FEED_LENGTH', None)
         old_locale = locale.getlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
+
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
             self.feed_url= '%s/%s' % (self.site_url, filename)
 
             feed = self._create_new_feed(feed_type, context)
-
-            for item in elements:
-                self._add_item_to_the_feed(feed, item)
+            
+            if feed_length:
+                for item in elements[:feed_length]:
+                    self._add_item_to_the_feed(feed,item)
+            else:
+                for item in elements:
+                    self._add_item_to_the_feed(feed, item)
 
             if filename:
                 complete_path = os.path.join(self.output_path, filename)

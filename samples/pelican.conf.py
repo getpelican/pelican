@@ -11,6 +11,7 @@ LOCALE = 'fr_FR.utf8'
 
 FEED_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
+FEED_LENGTH = 20
 
 LINKS = (('Biologeek', 'http://biologeek.org'),
             ('Filyb', "http://filyb.info/"),
