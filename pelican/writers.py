@@ -56,10 +56,18 @@ class Writer(object):
             self.feed_url= '%s/%s' % (self.site_url, filename)
 
             feed = self._create_new_feed(feed_type, context)
+<<<<<<< HEAD
             
             if feed_length:
                 for item in elements[:feed_length]:
                     self._add_item_to_the_feed(feed,item)
+=======
+
+            self.feed_length = context.get('FEED_LENGTH')
+            if self.feed_length:
+                for items in elements[:self.feed_length]:
+                    self.add_item_to_the_feed(feed,item)
+>>>>>>> 14f5af1d52c7c8f31e5f59f9d03b3cfc658a2868
             else:
                 for item in elements:
                     self._add_item_to_the_feed(feed, item)
