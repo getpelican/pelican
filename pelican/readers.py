@@ -59,7 +59,25 @@ class MarkdownReader(object):
             )(value[0])
         return content, metadatas
 
-_EXTENSIONS = {'rst': RstReader, 'md': MarkdownReader}  # supported formats
+
+class HtmlReader(object):
+    _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
+
+    def read(self, filename):
+        """Parse content and metadata of (x)HTML files"""
+        content = open(filename)
+        metadatas = {'title':'unnamed'}
+        for i in self._re.findall(content):
+            key = i.split(':')[0][5:].strip()
+            value = i.split(':')[-1][:-3].strip()
+            print [key,value]
+            metadatas[key.lower()] = value
+
+        return content, metadatas
+
+
+
+_EXTENSIONS = {'rst': RstReader, 'md': MarkdownReader, 'html': HtmlReader}  # supported formats
 
 
 def read_file(filename, fmt=None):
