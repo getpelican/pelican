@@ -30,6 +30,9 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DATE_FORMATS': {},
                    'JINJA_EXTENSIONS': [],
                    'LOCALE': '', # default to user locale
+                   'WITH_PAGINATION': True,
+                   'DEFAULT_PAGINATION': 5,
+                   'DEFAULT_ORPHANS': 0,
                   }
 
 def read_settings(filename):

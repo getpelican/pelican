@@ -2,8 +2,8 @@
 {% block content_title %}{% endblock %}
 {% block content %}        
 {% if articles %}
-{% for article in articles %}        
-    {% if loop.index == 1 %}
+{% for article in articles_page.object_list %}        
+    {% if loop.first and not articles_page.has_previous() %}
         <aside id="featured" class="body"><article>
                 <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url
                 }}">{{ article.title }}</a></h1> 
@@ -11,14 +11,21 @@
                 {{ article.content }}
                 {% include 'comments.html' %}
                 </article>
+                {% if loop.length == 1 %}
+                    {% include 'paginator.html' %}
+                {% endif %}
                 </aside><!-- /#featured -->
-        {% if loop.length  > 1 %}
+        {% if loop.length > 1 %}
             <section id="content" class="body">
                 <h1>Other articles</h1>
                 <hr />
                     <ol id="posts-list" class="hfeed">
         {% endif %}
     {% else %} 
+    {% if loop.first and articles_page.has_previous %}
+    <section id="content" class="body">
+        <ol id="posts-list" class="hfeed" start="{{ articles_paginator.per_page -1 }}">
+    {% endif %}
         <li><article class="hentry">    
                 <header>
                         <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h1>
@@ -32,9 +39,14 @@
                 </div><!-- /.entry-content -->
         </article></li>
     {% endif %}
+    {% if loop.last and (articles_page.has_previous() or not articles_page.has_previous() and loop.length > 1) %}
+        {% include 'paginator.html' %}
+    {% endif %}
 {% endfor %}
 </ol><!-- /#posts-list -->
+{% if loop.length > 1 %}
 </section><!-- /#content -->
+{% endif %}
 {% else %}
 <section id="content" class="body">    
 <h2>Pages</h2>

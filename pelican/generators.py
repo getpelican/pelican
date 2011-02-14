@@ -12,10 +12,12 @@ from jinja2.exceptions import TemplateNotFound
 from pelican.utils import copytree, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
+from pelican.paginator import Paginator
 
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
+_PAGINATED_DIRECT_TEMPLATES = ('index', 'tag', 'category')
 
 
 class Generator(object):
@@ -141,18 +143,58 @@ class ArticlesGenerator(Generator):
                 category=article.category)
 
         for template in _DIRECT_TEMPLATES:
-            write('%s.html' % template, templates[template], self.context,
-                blog=True)
+            if self.settings.get('WITH_PAGINATION') and template in _PAGINATED_DIRECT_TEMPLATES:
+                articles_paginator = Paginator(self.articles,
+                                               self.settings.get('DEFAULT_PAGINATION'),
+                                               self.settings.get('DEFAULT_ORPHANS'))
+                dates_paginator = Paginator(self.dates,
+                                            self.settings.get('DEFAULT_PAGINATION'),
+                                            self.settings.get('DEFAULT_ORPHANS'))
+                for page_num in range(articles_paginator.num_pages):
+                    # update context with paginator object and current page
+                    self.context.update({'articles_paginator': articles_paginator,
+                                         'articles_page': articles_paginator.page(page_num+1),
+                                         'dates_paginator': dates_paginator,
+                                         'dates_page': dates_paginator.page(page_num+1),
+                                         'page_name': 'index'})
+                    write('%s%s.html' % (template, '%s' % (page_num > 0 and page_num+1 or '')),
+                          templates[template], self.context, blog=True)
+            else:
+                write('%s.html' % template, templates[template], self.context,
+                    blog=True)
 
         # and subfolders after that
         for tag, articles in self.tags.items():
-            for article in articles:
+            if self.settings.get('WITH_PAGINATION') and 'tag' in _PAGINATED_DIRECT_TEMPLATES:
+                articles_paginator = Paginator(articles,
+                                               self.settings.get('DEFAULT_PAGINATION'),
+                                               self.settings.get('DEFAULT_ORPHANS'))
+                for page_num in range(articles_paginator.num_pages):
+                    # update context with paginator object and current page
+                    self.context.update({'articles_paginator': articles_paginator,
+                                         'articles_page': articles_paginator.page(page_num+1),
+                                         'page_name': 'tag/%s' % tag})
+                    write('tag/%s%s.html' % (tag, '%s' % (page_num > 0 and page_num+1 or '')),
+                          templates['tag'], self.context, blog=True)
+            else:
                 write('tag/%s.html' % tag, templates['tag'], self.context,
                     tag=tag, articles=articles)
 
         for cat, articles in self.categories:
-            write('category/%s.html' % cat, templates['category'], self.context,
-                category=cat, articles=articles)
+            if self.settings.get('WITH_PAGINATION') and 'tag' in _PAGINATED_DIRECT_TEMPLATES:
+                articles_paginator = Paginator(articles,
+                                               self.settings.get('DEFAULT_PAGINATION'),
+                                               self.settings.get('DEFAULT_ORPHANS'))
+                for page_num in range(articles_paginator.num_pages):
+                    # update context with paginator object and current page
+                    self.context.update({'articles_paginator': articles_paginator,
+                                         'articles_page': articles_paginator.page(page_num+1),
+                                         'page_name': 'category/%s' % cat})
+                    write('category/%s%s.html' % (cat, '%s' % (page_num > 0 and page_num+1 or '')),
+                          templates['category'], self.context, blog=True)
+            else:
+                write('category/%s.html' % cat, templates['category'], self.context,
+                    category=cat, articles=articles)
 
     def generate_context(self):
         """change the context"""
