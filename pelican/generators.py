@@ -151,14 +151,11 @@ class ArticlesGenerator(Generator):
                                             self.settings.get('DEFAULT_PAGINATION'),
                                             self.settings.get('DEFAULT_ORPHANS'))
                 for page_num in range(articles_paginator.num_pages):
-                    # update context with paginator object and current page
-                    self.context.update({'articles_paginator': articles_paginator,
-                                         'articles_page': articles_paginator.page(page_num+1),
-                                         'dates_paginator': dates_paginator,
-                                         'dates_page': dates_paginator.page(page_num+1),
-                                         'page_name': 'index'})
                     write('%s%s.html' % (template, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates[template], self.context, blog=True)
+                          templates[template], self.context, blog=True,
+                          articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
+                          dates_paginator=dates_paginator, dates_page=dates_paginator.page(page_num+1),
+                          page_name='index')
             else:
                 write('%s.html' % template, templates[template], self.context,
                     blog=True)
@@ -170,12 +167,10 @@ class ArticlesGenerator(Generator):
                                                self.settings.get('DEFAULT_PAGINATION'),
                                                self.settings.get('DEFAULT_ORPHANS'))
                 for page_num in range(articles_paginator.num_pages):
-                    # update context with paginator object and current page
-                    self.context.update({'articles_paginator': articles_paginator,
-                                         'articles_page': articles_paginator.page(page_num+1),
-                                         'page_name': 'tag/%s' % tag})
                     write('tag/%s%s.html' % (tag, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates['tag'], self.context, blog=True)
+                          templates['tag'], self.context, tag=tag, articles=articles,
+                          articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
+                          page_name='tag/%s'%tag)
             else:
                 write('tag/%s.html' % tag, templates['tag'], self.context,
                     tag=tag, articles=articles)
@@ -186,12 +181,10 @@ class ArticlesGenerator(Generator):
                                                self.settings.get('DEFAULT_PAGINATION'),
                                                self.settings.get('DEFAULT_ORPHANS'))
                 for page_num in range(articles_paginator.num_pages):
-                    # update context with paginator object and current page
-                    self.context.update({'articles_paginator': articles_paginator,
-                                         'articles_page': articles_paginator.page(page_num+1),
-                                         'page_name': 'category/%s' % cat})
                     write('category/%s%s.html' % (cat, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates['category'], self.context, blog=True)
+                          templates['category'], self.context, category=cat, articles=articles,
+                          articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
+                          page_name='category/%s' % cat)
             else:
                 write('category/%s.html' % cat, templates['category'], self.context,
                     category=cat, articles=articles)
