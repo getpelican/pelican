@@ -70,7 +70,7 @@ Generate your blog
 
 To launch pelican, just use the `pelican` command::
 
-    $ pelican /path/to/your/content/
+    $ pelican /path/to/your/content/ [-s path/to/your/settings.py]
 
 And… that's all! You can see your weblog generated on the `content/` folder.
 
