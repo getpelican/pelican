@@ -18,13 +18,14 @@ class Pelican(object):
         before doing anything else.
         """
         self.path = path or settings['PATH']
-        if path or self.path.endswith('/'):
+        if not self.path:
+            raise Exception('you need to specify a path to search the docs on !')
+        if self.path.endswith('/'):
             self.path = path[:-1]
 
         # define the default settings
         self.settings = settings
         self.theme = theme or settings['THEME']
-        self.path = path
         output_path = output_path or settings['OUTPUT_PATH']
         self.output_path = os.path.realpath(output_path)
         self.markup = markup or settings['MARKUP']
@@ -38,11 +39,6 @@ class Pelican(object):
                 self.theme = theme_path
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
-
-        # get the list of files to parse
-        if not self.path:
-            raise Exception('you need to specify a path to search the docs on !')
-
 
     def run(self):
         """Run the generators and return"""
