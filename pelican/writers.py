@@ -47,7 +47,7 @@ class Writer(object):
         :param filename: the filename to output.
         :param feed_type: the feed type to use (atom or rss)
         """
-        old_locale = locale.getlocale(locale.LC_ALL)
+        old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
