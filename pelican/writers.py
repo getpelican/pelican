@@ -83,7 +83,8 @@ class Writer(object):
         :param template: template to use to generate the content
         :param context: dict to pass to the templates.
         :param relative_urls: use relative urls or absolutes ones
-        :param paginated: dict of article list to paginate - must have the same length (same list in different orders)
+        :param paginated: dict of article list to paginate - must have the
+                          same length (same list in different orders)
         :param **kwargs: additional variables to pass to the templates
         """
 
@@ -114,8 +115,8 @@ class Writer(object):
             for key in paginated.iterkeys():
                 object_list = paginated[key]
                 paginators[key] = Paginator(object_list,
-                                            self.settings.get('DEFAULT_PAGINATION'),
-                                            self.settings.get('DEFAULT_ORPHANS'))
+                        self.settings.get('DEFAULT_PAGINATION'),
+                        self.settings.get('DEFAULT_ORPHANS'))
             # generated pages, and write
             for page_num in range(paginators.values()[0].num_pages):
                 paginated_localcontext = localcontext.copy()
@@ -127,19 +128,22 @@ class Writer(object):
                                                    '%s_page' % key: page})
                 if page_num > 0:
                     # FIXME file extension
-                    paginated_name = paginated_name.replace('.html', '%s.html' % (page_num+1))
+                    paginated_name = paginated_name.replace('.html',
+                            '%s.html' % (page_num+1))
 
-                _write_file(template, paginated_localcontext, self.output_path, paginated_name)
+                _write_file(template, paginated_localcontext, self.output_path,
+                        paginated_name)
         else:
             # no pagination
             _write_file(template, localcontext, self.output_path, name)
 
     def update_context_contents(self, name, context):
-        """Recursively run the context to find elements (articles, pages, etc) whose content getter needs to
-           be modified in order to deal with relative paths.
+        """Recursively run the context to find elements (articles, pages, etc) 
+        whose content getter needs to
+        be modified in order to deal with relative paths.
 
-           :param name: name of the file to output.
-           :param context: dict that will be passed to the templates.
+        :param name: name of the file to output.
+        :param context: dict that will be passed to the templates.
         """
         if context is None:
             return None
@@ -173,13 +177,13 @@ class Writer(object):
         return context
 
     def inject_update_method(self, name, item):
-        """Replace the content attribute getter of an element by a function that will deals with its
-           relatives paths.
+        """Replace the content attribute getter of an element by a function 
+        that will deals with its relatives paths.
         """
 
         def _update_object_content(name, input):
-            """Change all the relatives paths of the input content to relatives paths
-               suitable fot the ouput content
+            """Change all the relatives paths of the input content to relatives 
+            paths suitable fot the ouput content
 
             :param name: path of the output.
             :param input: input resource that will be passed to the templates.
