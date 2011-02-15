@@ -61,7 +61,7 @@ class Pelican(object):
                 p.generate_context()
 
         # erase the directory if it is not the source
-        if os.path.realpath(self.path).startswith(self.output_path) and not keep:
+        if os.path.realpath(self.path).startswith(self.output_path) and not self.keep:
             clean_output_dir(self.output_path)
 
         writer = self.get_writer()
