@@ -36,7 +36,8 @@ class Generator(object):
         templates ready to use with Jinja2.
         """
         path = os.path.expanduser(os.path.join(self.theme, 'templates'))
-        env = Environment(loader=FileSystemLoader(path),extensions=self.settings.get('JINJA_EXTENSIONS', []))
+        env = Environment(loader=FileSystemLoader(path), 
+                extensions=self.settings.get('JINJA_EXTENSIONS', []))
         templates = {}
         for template in _TEMPLATES:
             try:
@@ -135,7 +136,8 @@ class ArticlesGenerator(Generator):
             writer.write_file,
             relative_urls = self.settings.get('RELATIVE_URLS')
         )
-        # to minimize the number of relative path stuff modification in writer, articles pass first
+        # to minimize the number of relative path stuff modification 
+        # in writer, articles pass first
         for article in chain(self.translations, self.articles):
             write('%s' % article.save_as,
                 templates['article'], self.context, article=article,
@@ -290,7 +292,8 @@ class PdfGenerator(Generator):
         pass
 
     def generate_output(self, writer=None):
-        # we don't use the writer passed as argument here, since we write our own files
+        # we don't use the writer passed as argument here
+        # since we write our own files
         print u' Generating PDF files...'
         pdf_path = os.path.join(self.output_path, 'pdf')
         try:
