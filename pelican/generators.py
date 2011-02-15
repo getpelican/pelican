@@ -12,7 +12,6 @@ from jinja2.exceptions import TemplateNotFound
 from pelican.utils import copytree, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
-from pelican.paginator import Paginator
 
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
@@ -143,61 +142,26 @@ class ArticlesGenerator(Generator):
                 category=article.category)
 
         for template in _DIRECT_TEMPLATES:
-            if self.settings.get('WITH_PAGINATION') and template in _PAGINATED_DIRECT_TEMPLATES:
-                articles_paginator = Paginator(self.articles,
-                                               self.settings.get('DEFAULT_PAGINATION'),
-                                               self.settings.get('DEFAULT_ORPHANS'))
-                dates_paginator = Paginator(self.dates,
-                                            self.settings.get('DEFAULT_PAGINATION'),
-                                            self.settings.get('DEFAULT_ORPHANS'))
-                for page_num in range(articles_paginator.num_pages):
-                    write('%s%s.html' % (template, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates[template], self.context, blog=True,
-                          articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
-                          dates_paginator=dates_paginator, dates_page=dates_paginator.page(page_num+1),
-                          page_name='index')
-            else:
-                write('%s.html' % template, templates[template], self.context,
-                    blog=True)
+            paginated = {}
+            if template in _PAGINATED_DIRECT_TEMPLATES:
+                paginated = {'articles': self.articles, 'dates': self.dates}
+            write('%s.html' % template, templates[template], self.context,
+                blog=True, paginated=paginated, page_name=template)
 
         # and subfolders after that
         for tag, articles in self.tags.items():
             dates = [article for article in self.dates if article in articles]
-            if self.settings.get('WITH_PAGINATION'):
-                articles_paginator = Paginator(articles,
-                                               self.settings.get('DEFAULT_PAGINATION'),
-                                               self.settings.get('DEFAULT_ORPHANS'))
-                dates_paginator = Paginator(dates,
-                                            self.settings.get('DEFAULT_PAGINATION'),
-                                            self.settings.get('DEFAULT_ORPHANS'))
-                for page_num in range(articles_paginator.num_pages):
-                    write('tag/%s%s.html' % (tag, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates['tag'], self.context, tag=tag, articles=articles, dates=dates,
-                          articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
-                          dates_paginator=dates_paginator, dates_page=dates_paginator.page(page_num+1),
-                          page_name='tag/%s'%tag)
-            else:
-                write('tag/%s.html' % tag, templates['tag'], self.context,
-                    tag=tag, articles=articles, dates=dates)
+            write('tag/%s.html' % tag, templates['tag'], self.context,
+                tag=tag, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='tag/%s'%tag)
 
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            if self.settings.get('WITH_PAGINATION'):
-                articles_paginator = Paginator(articles,
-                                               self.settings.get('DEFAULT_PAGINATION'),
-                                               self.settings.get('DEFAULT_ORPHANS'))
-                dates_paginator = Paginator(dates,
-                                            self.settings.get('DEFAULT_PAGINATION'),
-                                            self.settings.get('DEFAULT_ORPHANS'))
-                for page_num in range(articles_paginator.num_pages):
-                    write('category/%s%s.html' % (cat, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates['category'], self.context, category=cat, articles=articles, dates=dates,
-                          articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
-                          dates_paginator=dates_paginator, dates_page=dates_paginator.page(page_num+1),
-                          page_name='category/%s' % cat)
-            else:
-                write('category/%s.html' % cat, templates['category'], self.context,
-                    category=cat, articles=articles, dates=dates)
+            write('category/%s.html' % cat, templates['category'], self.context,
+                category=cat, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='category/%s' % cat)
 
     def generate_context(self):
         """change the context"""

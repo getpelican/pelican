@@ -7,13 +7,15 @@ import locale
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from pelican.utils import get_relative_path
+from pelican.paginator import Paginator
 
 
 class Writer(object):
 
-    def __init__(self, output_path):
+    def __init__(self, output_path, settings=None):
         self.output_path = output_path
         self.reminder = dict()
+        self.settings = settings or {}
 
     def _create_new_feed(self, feed_type, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
@@ -74,15 +76,29 @@ class Writer(object):
             locale.setlocale(locale.LC_ALL, old_locale)
 
     def write_file(self, name, template, context, relative_urls=True,
-        **kwargs):
+        paginated=None, **kwargs):
         """Render the template and write the file.
 
         :param name: name of the file to output
         :param template: template to use to generate the content
         :param context: dict to pass to the templates.
         :param relative_urls: use relative urls or absolutes ones
+        :param paginated: dict of article list to paginate - must have the same length (same list in different orders)
         :param **kwargs: additional variables to pass to the templates
         """
+
+        def _write_file(template, localcontext, output_path, name):
+            """Render the template write the file."""
+            output = template.render(localcontext)
+            filename = os.sep.join((output_path, name))
+            try:
+                os.makedirs(os.path.dirname(filename))
+            except Exception:
+                pass
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(output)
+            print u' [ok] writing %s' % filename
+
         localcontext = context.copy()
         if relative_urls:
             localcontext['SITEURL'] = get_relative_path(name)
@@ -90,15 +106,33 @@ class Writer(object):
         localcontext.update(kwargs)
         self.update_context_contents(name, localcontext)
 
-        output = template.render(localcontext)
-        filename = os.sep.join((self.output_path, name))
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except Exception:
-            pass
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write(output)
-        print u' [ok] writing %s' % filename
+        # check paginated
+        paginated = paginated or {}
+        if self.settings.get('WITH_PAGINATION') and paginated:
+            # pagination needed, init paginators
+            paginators = {}
+            for key in paginated.iterkeys():
+                object_list = paginated[key]
+                paginators[key] = Paginator(object_list,
+                                            self.settings.get('DEFAULT_PAGINATION'),
+                                            self.settings.get('DEFAULT_ORPHANS'))
+            # generated pages, and write
+            for page_num in range(paginators.values()[0].num_pages):
+                paginated_localcontext = localcontext.copy()
+                paginated_name = name
+                for key in paginators.iterkeys():
+                    paginator = paginators[key]
+                    page = paginator.page(page_num+1)
+                    paginated_localcontext.update({'%s_paginator' % key: paginator,
+                                                   '%s_page' % key: page})
+                if page_num > 0:
+                    # FIXME file extension
+                    paginated_name = paginated_name.replace('.html', '%s.html' % (page_num+1))
+
+                _write_file(template, paginated_localcontext, self.output_path, paginated_name)
+        else:
+            # no pagination
+            _write_file(template, localcontext, self.output_path, name)
 
     def update_context_contents(self, name, context):
         """Recursively run the context to find elements (articles, pages, etc) whose content getter needs to

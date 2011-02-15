@@ -82,7 +82,7 @@ class Pelican(object):
         return generators
 
     def get_writer(self):
-        return Writer(self.output_path)
+        return Writer(self.output_path, settings=self.settings)
 
 
 
