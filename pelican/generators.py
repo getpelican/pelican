@@ -162,32 +162,34 @@ class ArticlesGenerator(Generator):
 
         # and subfolders after that
         for tag, articles in self.tags.items():
+            dates = [article for article in self.dates if article in articles]
             if self.settings.get('WITH_PAGINATION'):
                 articles_paginator = Paginator(articles,
                                                self.settings.get('DEFAULT_PAGINATION'),
                                                self.settings.get('DEFAULT_ORPHANS'))
                 for page_num in range(articles_paginator.num_pages):
                     write('tag/%s%s.html' % (tag, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates['tag'], self.context, tag=tag, articles=articles,
+                          templates['tag'], self.context, tag=tag, articles=articles, dates=dates,
                           articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
                           page_name='tag/%s'%tag)
             else:
                 write('tag/%s.html' % tag, templates['tag'], self.context,
-                    tag=tag, articles=articles)
+                    tag=tag, articles=articles, dates=dates)
 
         for cat, articles in self.categories:
+            dates = [article for article in self.dates if article in articles]
             if self.settings.get('WITH_PAGINATION'):
                 articles_paginator = Paginator(articles,
                                                self.settings.get('DEFAULT_PAGINATION'),
                                                self.settings.get('DEFAULT_ORPHANS'))
                 for page_num in range(articles_paginator.num_pages):
                     write('category/%s%s.html' % (cat, '%s' % (page_num > 0 and page_num+1 or '')),
-                          templates['category'], self.context, category=cat, articles=articles,
+                          templates['category'], self.context, category=cat, articles=articles, dates=dates,
                           articles_paginator=articles_paginator, articles_page=articles_paginator.page(page_num+1),
                           page_name='category/%s' % cat)
             else:
                 write('category/%s.html' % cat, templates['category'], self.context,
-                    category=cat, articles=articles)
+                    category=cat, articles=articles, dates=dates)
 
     def generate_context(self):
         """change the context"""
