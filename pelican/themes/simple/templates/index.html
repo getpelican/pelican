@@ -6,7 +6,7 @@
 {% endblock %}
 
 <ol id="post-list">
-{% for article in articles %}        
+{% for article in articles_page.object_list %}        
         <li><article class="hentry">    
                 <header> <h2 class="entry-title"><a href="{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h2> </header>
                 <footer class="post-info">
@@ -17,5 +17,18 @@
         </article></li>
 {% endfor %}
 </ol><!-- /#posts-list -->
+<p class="paginator">
+    {% if articles_page.has_previous() %}
+        {% if articles_page.previous_page_number() == 1 %}
+            <a href="{{ SITEURL }}/{{ page_name }}.html">&laquo;</a>
+        {% else %}
+            <a href="{{ SITEURL }}/{{ page_name }}{{ articles_page.previous_page_number() }}.html">&laquo;</a>
+        {% endif %}
+    {% endif %}
+    Page {{ articles_page.number }} / {{ articles_paginator.num_pages }}
+    {% if articles_page.has_next() %}
+        <a href="{{ SITEURL }}/{{ page_name }}{{ articles_page.next_page_number() }}.html">&raquo;</a>
+    {% endif %}
+</p>
 </section><!-- /#content -->
 {% endblock content %}
