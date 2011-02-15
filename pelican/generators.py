@@ -165,8 +165,7 @@ class ArticlesGenerator(Generator):
 
             # if no category is set, use the name of the path as a category
             if 'category' not in metadatas.keys():
-                category = os.path.dirname(f).replace(
-                    os.path.expanduser(self.path)+'/', '')
+                category = os.path.basename(os.path.dirname(f))
 
                 if category == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
