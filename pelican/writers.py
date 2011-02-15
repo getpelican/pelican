@@ -127,9 +127,9 @@ class Writer(object):
                     paginated_localcontext.update({'%s_paginator' % key: paginator,
                                                    '%s_page' % key: page})
                 if page_num > 0:
-                    # FIXME file extension
-                    paginated_name = paginated_name.replace('.html',
-                            '%s.html' % (page_num+1))
+                    ext = '.' + paginated_name.rsplit('.')[-1]
+                    paginated_name = paginated_name.replace(ext, 
+                            '%s%s' % (page_num + 1, ext))
 
                 _write_file(template, paginated_localcontext, self.output_path,
                         paginated_name)
