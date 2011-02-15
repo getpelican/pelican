@@ -17,7 +17,7 @@ from pelican.paginator import Paginator
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
-_PAGINATED_DIRECT_TEMPLATES = ('index', 'tag', 'category')
+_PAGINATED_DIRECT_TEMPLATES = ('index', )
 
 
 class Generator(object):
@@ -162,7 +162,7 @@ class ArticlesGenerator(Generator):
 
         # and subfolders after that
         for tag, articles in self.tags.items():
-            if self.settings.get('WITH_PAGINATION') and 'tag' in _PAGINATED_DIRECT_TEMPLATES:
+            if self.settings.get('WITH_PAGINATION'):
                 articles_paginator = Paginator(articles,
                                                self.settings.get('DEFAULT_PAGINATION'),
                                                self.settings.get('DEFAULT_ORPHANS'))
@@ -176,7 +176,7 @@ class ArticlesGenerator(Generator):
                     tag=tag, articles=articles)
 
         for cat, articles in self.categories:
-            if self.settings.get('WITH_PAGINATION') and 'tag' in _PAGINATED_DIRECT_TEMPLATES:
+            if self.settings.get('WITH_PAGINATION'):
                 articles_paginator = Paginator(articles,
                                                self.settings.get('DEFAULT_PAGINATION'),
                                                self.settings.get('DEFAULT_ORPHANS'))
