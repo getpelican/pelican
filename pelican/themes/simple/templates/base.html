@@ -11,7 +11,7 @@
         </header><!-- /#banner -->
         {% if categories %}<ul>
         {% for category, articles in categories %}
-            <li><a href="category/{{category}}.html">{{ category }}</a></li> 
+            <li><a href="{{ SITEURL }}/category/{{category}}.html">{{ category }}</a></li> 
         {% endfor %}
         </ul> {% endif %}
         {% block content %}
