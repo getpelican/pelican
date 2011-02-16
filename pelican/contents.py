@@ -55,7 +55,7 @@ class Page(object):
                 self.date_format = settings['DEFAULT_DATE_FORMAT']
 
         if hasattr(self, 'date'):
-            self.locale_date = self.date.strftime(self.date_format).decode('utf')
+            self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
 
         # store the settings ref.
         self._settings = settings
