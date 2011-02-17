@@ -70,7 +70,6 @@ class HtmlReader(object):
         for i in self._re.findall(content):
             key = i.split(':')[0][5:].strip()
             value = i.split(':')[-1][:-3].strip()
-            print [key,value]
             metadatas[key.lower()] = value
 
         return content, metadatas
