@@ -16,6 +16,7 @@ from pelican.readers import read_file
 _TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
               'archives', 'page')
 _DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
+_PAGINATED_DIRECT_TEMPLATES = ('index', )
 
 
 class Generator(object):
@@ -35,7 +36,8 @@ class Generator(object):
         templates ready to use with Jinja2.
         """
         path = os.path.expanduser(os.path.join(self.theme, 'templates'))
-        env = Environment(loader=FileSystemLoader(path),extensions=self.settings.get('JINJA_EXTENSIONS', []))
+        env = Environment(loader=FileSystemLoader(path), 
+                extensions=self.settings.get('JINJA_EXTENSIONS', []))
         templates = {}
         for template in _TEMPLATES:
             try:
@@ -134,25 +136,34 @@ class ArticlesGenerator(Generator):
             writer.write_file,
             relative_urls = self.settings.get('RELATIVE_URLS')
         )
-        # to minimize the number of relative path stuff modification in writer, articles pass first
+        # to minimize the number of relative path stuff modification 
+        # in writer, articles pass first
         for article in chain(self.translations, self.articles):
             write('%s' % article.save_as,
                 templates['article'], self.context, article=article,
                 category=article.category)
 
         for template in _DIRECT_TEMPLATES:
+            paginated = {}
+            if template in _PAGINATED_DIRECT_TEMPLATES:
+                paginated = {'articles': self.articles, 'dates': self.dates}
             write('%s.html' % template, templates[template], self.context,
-                blog=True)
+                blog=True, paginated=paginated, page_name=template)
 
         # and subfolders after that
         for tag, articles in self.tags.items():
-            for article in articles:
-                write('tag/%s.html' % tag, templates['tag'], self.context,
-                    tag=tag, articles=articles)
+            dates = [article for article in self.dates if article in articles]
+            write('tag/%s.html' % tag, templates['tag'], self.context,
+                tag=tag, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='tag/%s'%tag)
 
         for cat, articles in self.categories:
+            dates = [article for article in self.dates if article in articles]
             write('category/%s.html' % cat, templates['category'], self.context,
-                category=cat, articles=articles)
+                category=cat, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='category/%s' % cat)
 
     def generate_context(self):
         """change the context"""
@@ -281,7 +292,8 @@ class PdfGenerator(Generator):
         pass
 
     def generate_output(self, writer=None):
-        # we don't use the writer passed as argument here, since we write our own files
+        # we don't use the writer passed as argument here
+        # since we write our own files
         print u' Generating PDF files...'
         pdf_path = os.path.join(self.output_path, 'pdf')
         try:
