@@ -66,18 +66,50 @@ categories      A dict containing each category (keys), and the
 pages           The list of pages
 =============   ===================================================
 
+index.html
+----------
+
+Home page of your blog, will finally remain at output/index.html.
+
+If pagination is active, next pages will remain at output/index`n`.html.
+
+===================     ===================================================
+Variable                Description
+===================     ===================================================
+articles_paginator      A paginator object of article list
+articles_page           The current page of articles
+dates_paginator         A paginator object of article list, ordered by date,
+                        ascending
+dates_page              The current page of articles, ordered by date,
+                        ascending
+page_name               'index'. Usefull for pagination links.
+===================     ===================================================
+
 category.html
 -------------
 
 This template will be processed for each of the existing categories, and will
 finally remain at output/category/`category_name`.html.
 
-=============   ===================================================
-Variable        Description
-=============   ===================================================
-articles        The articles of this category
-category        The name of the category being processed
-=============   ===================================================
+If pagination is active, next pages will remain at
+output/category/`category_name``n`.html.
+
+===================     ===================================================
+Variable                Description
+===================     ===================================================
+category                The name of the category being processed
+articles                Articles of this category
+dates                   Articles of this category, but ordered by date,
+                        ascending
+articles_paginator      A paginator object of article list
+articles_page           The current page of articles
+dates_paginator         A paginator object of article list, ordered by date,
+                        ascending
+dates_page              The current page of articles, ordered by date,
+                        ascending
+page_name               'category/`category_name`'. Usefull for pagination
+                        links.
+===================     ===================================================
 
 article.html
 -------------
@@ -96,11 +128,23 @@ tag.html
 --------
 
 For each tag, this template will be processed. It will create .html files in
-/output/tag/`tag_name`.html
+/output/tag/`tag_name`.html.
 
-=============   ===================================================
-Variable        Description
-=============   ===================================================
-tag             The name of the tag being processed
-articles        Articles related to this tag
-=============   ===================================================
+If pagination is active, next pages will remain at
+output/tag/`tag_name``n`.html.
+
+===================     ===================================================
+Variable                Description
+===================     ===================================================
+tag                     The name of the tag being processed
+articles                Articles related to this tag
+dates                   Articles related to this tag, but ordered by date,
+                        ascending
+articles_paginator      A paginator object of article list
+articles_page           The current page of articles
+dates_paginator         A paginator object of article list, ordered by date,
+                        ascending
+dates_page              The current page of articles, ordered by date,
+                        ascending
+page_name               'tag/`tag_name`'. Usefull for pagination links.
+===================     ===================================================
