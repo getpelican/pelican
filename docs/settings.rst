@@ -76,6 +76,12 @@ Setting name                what it does ?
 `TRANSLATION_FEED`          Where to put the RSS feed for translations. Default
                             is feeds/all-%s.atom.xml where %s is the name of the
                             lang.
+`WITH_PAGINATION`           Activate pagination. Default is True.
+`DEFAULT_PAGINATION`        The maximum number of articles to include on a page,
+                            not including orphans. Default is 5.
+`DEFAULT_ORPHANS`           The minimum number of articles allowed on the last
+                            page, defaults to zero. Use this when you don't want
+                            to have a last page with very few articles.
 ========================    =======================================================
 
 Themes
