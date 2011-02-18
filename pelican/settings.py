@@ -30,7 +30,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DATE_FORMATS': {},
                    'JINJA_EXTENSIONS': [],
                    'LOCALE': '', # default to user locale
-                   'WITH_PAGINATION': True,
+                   'WITH_PAGINATION': False,
                    'DEFAULT_PAGINATION': 5,
                    'DEFAULT_ORPHANS': 0,
                   }
