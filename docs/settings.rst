@@ -36,6 +36,11 @@ Setting name                what it does ?
 `DEFAULT_CATEGORY`          The default category to fallback on. `misc` by default.
 `DEFAULT_DATE_FORMAT`       The default date format you want to use.
 `DEFAULT_LANG`              The default language to use. Default is 'en'.
+`DEFAULT_ORPHANS`           The minimum number of articles allowed on the last
+                            page, defaults to zero. Use this when you don't want
+                            to have a last page with very few articles.
+`DEFAULT_PAGINATION`        The maximum number of articles to include on a page,
+                            not including orphans. Default is 5.
 `DISPLAY_PAGES_ON_MENU`     Display or not the pages on the menu of the template.
                             Templates can follow or not this settings.
 `FALLBACK_ON_FS_DATE`       If True, pelican will use the file system dates infos
@@ -76,12 +81,7 @@ Setting name                what it does ?
 `TRANSLATION_FEED`          Where to put the RSS feed for translations. Default
                             is feeds/all-%s.atom.xml where %s is the name of the
                             lang.
-`WITH_PAGINATION`           Activate pagination. Default is True.
-`DEFAULT_PAGINATION`        The maximum number of articles to include on a page,
-                            not including orphans. Default is 5.
-`DEFAULT_ORPHANS`           The minimum number of articles allowed on the last
-                            page, defaults to zero. Use this when you don't want
-                            to have a last page with very few articles.
+`WITH_PAGINATION`           Activate pagination. Default is False.
 ========================    =======================================================
 
 Themes
