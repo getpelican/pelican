@@ -62,7 +62,7 @@ def clean_output_dir(path):
     # remove all the existing content from the output folder
     try:
         shutil.rmtree(path)
-    except Exception as e:
+    except Exception:
         pass
 
 
