@@ -82,7 +82,7 @@ dates_paginator         A paginator object of article list, ordered by date,
                         ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'index'. Usefull for pagination links.
+page_name               'index'. Useful for pagination links.
 ===================     ===================================================
 
 category.html
@@ -107,7 +107,7 @@ dates_paginator         A paginator object of article list, ordered by date,
                         ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'category/`category_name`'. Usefull for pagination
+page_name               'category/`category_name`'. Useful for pagination
                         links.
 ===================     ===================================================
 
@@ -146,5 +146,5 @@ dates_paginator         A paginator object of article list, ordered by date,
                         ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'tag/`tag_name`'. Usefull for pagination links.
+page_name               'tag/`tag_name`'. Useful for pagination links.
 ===================     ===================================================
