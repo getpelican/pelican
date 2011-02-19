@@ -33,6 +33,12 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'WITH_PAGINATION': False,
                    'DEFAULT_PAGINATION': 5,
                    'DEFAULT_ORPHANS': 0,
+                   'SKRIBIT_TYPE': 'TAB',
+                   'SKRIBIT_TAB_PLACEMENT': 'right',
+                   'SKRIBIT_TAB_COLOR': '#333333',
+                   'SKRIBIT_TAB_TEXT_COLOR': 'white',
+                   'SKRIBIT_TAB_DISTANCE_VERT': '20%',
+                   'SKRIBIT_TAB_DISTANCE_HORIZ': '',
                   }
 
 def read_settings(filename):
