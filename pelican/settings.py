@@ -37,8 +37,8 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'SKRIBIT_TAB_PLACEMENT': 'right',
                    'SKRIBIT_TAB_COLOR': '#333333',
                    'SKRIBIT_TAB_TEXT_COLOR': 'white',
-                   'SKRIBIT_TAB_DISTANCE_VERT': '20%',
-                   'SKRIBIT_TAB_DISTANCE_HORIZ': '',
+                   'SKRIBIT_TAB_VERT': '20%',
+                   'SKRIBIT_TAB_HORIZ': '',
                   }
 
 def read_settings(filename):
