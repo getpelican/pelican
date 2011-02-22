@@ -69,6 +69,15 @@ Setting name                what it does ?
                             descending order, default is alphabetically)
 `SITEURL`                   base URL of your website.
 `SITENAME`                  Your site name,
+`SKRIBIT_TYPE`              The type of skribit widget (TAB or WIDGET, default
+                            TAB).
+`SKRIBIT_TAB_COLOR`         Tab color (#XXXXXX, default #333333).
+`SKRIBIT_TAB_HORIZ`         Tab Distance from Left (% or distance, default Null).
+`SKRIBIT_TAB_VERT`          Tab Distance from Top (% or distance, default 20%).
+`SKRIBIT_TAB_PLACEMENT`     Tab placement (Top, Bottom, Left or Right, default
+                            LEFT).
+`SKRIBIT_TAB_SITENAME`      Tab identifier (See Skribit part below).
+`SKRIBIT_WIDGET_ID`         Widget identifier (See Skribit part below).
 `STATIC_PATHS`              The static paths you want to have accessible on the
                             output path "static". By default, pelican will copy
                             the 'images' folder to the output folder.
@@ -83,6 +92,52 @@ Setting name                what it does ?
                             lang.
 `WITH_PAGINATION`           Activate pagination. Default is False.
 ========================    =======================================================
+
+Skribit
+=======
+
+Skribit has two ways to display suggestions : as a sidebar widget or as a
+suggestions tab. You can choose one of the display by setting the SKRIBIT_TYPE
+in your config.
+
+Sidebar widget
+--------------
+
+The settings for sidebar widget is :
+
+ * SKRIBIT_WIDGET_ID
+
+All the customizations are done in the skribit web interface.
+
+To retrieve your identifier from the code snippet, you can use this python code::
+
+    import re
+    regex = re.compile('.*http://assets.skribit.com/javascripts/SkribitWidget.\
+        js\?renderTo=writeSkribitHere&amp;blog=(.*)&amp;.*')
+    snippet = '''SNIPPET CONTENT'''
+    snippet = snippet.replace('\n', '')
+    identifier = regex.match(snippet).groups()[0]
+
+Suggestion tab
+--------------
+
+The setting for suggestion tab are :
+
+ * SKRIBIT_TAB_COLOR
+ * SKRIBIT_TAB_DISTANCE_HORIZ
+ * SKRIBIT_TAB_DISTANCE_VERT
+ * SKRIBIT_TAB_PLACEMENT
+ * SKRIBIT_TAB_SITENAME
+
+These settings are used for customization.
+
+To retrieve your sitename from the code snippet, you can use this python code::
+
+    import re
+    regex = re.compile('.*http://skribit.com/lightbox/(.*)\',.*')
+    snippet = '''SNIPPET CONTENT'''
+    snippet = snippet.replace('\n', '')
+    identifier = regex.match(snippet).groups()[0]
 
 Themes
 ======

@@ -148,3 +148,18 @@ dates_page              The current page of articles, ordered by date,
                         ascending
 page_name               'tag/`tag_name`'. Useful for pagination links.
 ===================     ===================================================
+
+Include skribit script
+======================
+
+In order to support skribit scripts in your themes, you must following these
+actions :
+
+ * Copy `skribit_tab_script.html` and `skribit_widget_script.html` in your
+   templates directory.
+ * Add {% include 'skribit_tab_script.html' %} in your <head> part in order to
+   support suggestions tab.
+ * Add {% include 'skribit_widget_script.html' %} where you want in order to
+   support sidebar widget.
+
+You can take a look at notmyidea default theme for working example.
