@@ -69,8 +69,7 @@ Setting name                what it does ?
                             descending order, default is alphabetically)
 `SITEURL`                   base URL of your website.
 `SITENAME`                  Your site name,
-`SKRIBIT_TYPE`              The type of skribit widget (TAB or WIDGET, default
-                            TAB).
+`SKRIBIT_TYPE`              The type of skribit widget (TAB or WIDGET).
 `SKRIBIT_TAB_COLOR`         Tab color (#XXXXXX, default #333333).
 `SKRIBIT_TAB_HORIZ`         Tab Distance from Left (% or distance, default Null).
 `SKRIBIT_TAB_VERT`          Tab Distance from Top (% or distance, default 20%).
@@ -105,7 +104,7 @@ Sidebar widget
 
 The settings for sidebar widget is :
 
- * SKRIBIT_WIDGET_ID
+ * SKRIBIT_WIDGET_ID : the identifier of your blog.
 
 All the customizations are done in the skribit web interface.
 
@@ -121,15 +120,16 @@ To retrieve your identifier from the code snippet, you can use this python code:
 Suggestion tab
 --------------
 
-The setting for suggestion tab are :
+The setting for suggestion tab's customizations are :
 
  * SKRIBIT_TAB_COLOR
  * SKRIBIT_TAB_DISTANCE_HORIZ
  * SKRIBIT_TAB_DISTANCE_VERT
  * SKRIBIT_TAB_PLACEMENT
- * SKRIBIT_TAB_SITENAME
 
-These settings are used for customization.
+The identifier is :
+
+ * SKRIBIT_TAB_SITENAME : the identifier of your blog
 
 To retrieve your sitename from the code snippet, you can use this python code::
 
