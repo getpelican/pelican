@@ -7,8 +7,8 @@
       skribit_settings.placement = "{{ SKRIBIT_TAB_PLACEMENT or 'right' }}";
       skribit_settings.color = "{{ SKRIBIT_TAB_COLOR or '#333333' }}";
       skribit_settings.text_color = "{{ SKRIBIT_TAB_TEXT_COLOR or 'white' }}";
-      skribit_settings.distance_vert = "{{ SKRIBIT_TAB_DISTANCE_VERT or '20%' }}";
-      skribit_settings.distance_horiz = "{{ SKRIBIT_TAB_DISTANCE_HORIZ or '' }}";
+      skribit_settings.distance_vert = "{{ SKRIBIT_TAB_VERT or '20%' }}";
+      skribit_settings.distance_horiz = "{{ SKRIBIT_TAB_HORIZ or '' }}";
       SkribitSuggest.suggest('http://skribit.com/lightbox/{{ SKRIBIT_TAB_SITENAME }}', skribit_settings);
 </script>
 {% endif %}
