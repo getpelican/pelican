@@ -23,13 +23,18 @@ At this time, pelican is dependent of the following python packages:
 
 * feedgenerator, to generate the ATOM feeds.
 * jinja2, for templating support.
-* pygments, to have syntactic colorization
-* docutils and Markdown
+
+Optionally:
+
+* docutils, for reST support
+* pygments, to have syntactic colorization with resT input
+* Markdown, for Markdown as an input format
 
 If you're not using python 2.7, you will also need `argparse`.
 
 All those dependencies will be processed automatically if you install pelican
-using setuptools/distribute or pip.
+using setuptools/distribute or pip.  Use the `reST` and/or `Markdown` tokens in
+the package spec to install the optional packages.
 
 Writing articles using pelican
 ==============================

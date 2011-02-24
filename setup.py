@@ -3,7 +3,8 @@ import sys
 
 VERSION = "2.5.3" # find a better way to do so.
 
-requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'Markdown']
+requires = ['feedgenerator', 'jinja2']
+extras_require = {"reST": ["docutils", "pygments"], "Markdown": ["Markdown", ]}
 if sys.version_info < (2,7):
     requires.append('argparse')
 
@@ -18,6 +19,7 @@ setup(
     packages = ['pelican'],
     include_package_data = True,
     install_requires = requires, 
+    extras_require = extras_require,
     scripts = ['bin/pelican'],
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
