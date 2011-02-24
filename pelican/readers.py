@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
-from docutils import core
-from markdown import Markdown
+try:
+    from docutils import core
+
+    # import the directives to have pygments support
+    import rstdirectives
+except ImportError:
+    core = False
+try:
+    from markdown import Markdown
+except ImportError:
+    Markdown = False
 import re
 import string
-
-# import the directives to have pygments support
-import rstdirectives
 
 from pelican.utils import get_date, open
 
@@ -17,7 +23,12 @@ _METADATAS_PROCESSORS = {
 }
 
 
-class RstReader(object):
+class Reader(object):
+    enabled = True
+
+class RstReader(Reader):
+    enabled = bool(core)
+    extension = "rst"
 
     def _parse_metadata(self, content):
         """Return the dict containing metadatas"""
@@ -43,7 +54,9 @@ class RstReader(object):
             metadatas['title'] = title
         return content, metadatas
 
-class MarkdownReader(object):
+class MarkdownReader(Reader):
+    enabled = bool(Markdown)
+    extension = "md"
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
@@ -60,7 +73,8 @@ class MarkdownReader(object):
         return content, metadatas
 
 
-class HtmlReader(object):
+class HtmlReader(Reader):
+    extension = "html"
     _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
 
     def read(self, filename):
@@ -76,8 +90,7 @@ class HtmlReader(object):
 
 
 
-_EXTENSIONS = {'rst': RstReader, 'md': MarkdownReader, 'html': HtmlReader}  # supported formats
-
+_EXTENSIONS = dict((cls.extension, cls) for cls in Reader.__subclasses__())
 
 def read_file(filename, fmt=None):
     """Return a reader object using the given format."""
@@ -86,4 +99,6 @@ def read_file(filename, fmt=None):
     if fmt not in _EXTENSIONS.keys():
         raise TypeError('Pelican does not know how to parse %s' % filename)
     reader = _EXTENSIONS[fmt]()
+    if not reader.enabled:
+        raise ValueError("Missing dependencies for %s" % fmt)
     return reader.read(filename)
