@@ -2,17 +2,28 @@
 {% block content_title %}{% endblock %}
 {% block content %}        
 {% if articles %}
+<<<<<<< HEAD
     {% for article in articles_page.object_list %}        
 
         {# First item #}
         {% if loop.first and not articles_page.has_previous() %}
+=======
+    {% for article in (articles_page.object_list if articles_page else articles) %}        
+
+        {# First item #}
+        {% if loop.first and not (articles_page.has_previous() if articles_page else False) %}
+>>>>>>> d67afaa21a5e85bed102fe878fd7c279359e7734
             <aside id="featured" class="body">
                 <article>
                     <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h1> 
                     {% include 'article_infos.html' %}{{ article.content }}{% include 'comments.html' %}
                 </article>
                 {% if loop.length == 1 %}
+<<<<<<< HEAD
                     {% include 'pagination.html' %}
+=======
+                    {%if articles_page%}{% include 'pagination.html' %}{%endif%}
+>>>>>>> d67afaa21a5e85bed102fe878fd7c279359e7734
                 {% endif %}
             </aside><!-- /#featured -->
             {% if loop.length > 1 %}
@@ -23,9 +34,15 @@
             {% endif %}
         {# other items #}
         {% else %} 
+<<<<<<< HEAD
             {% if loop.first and articles_page.has_previous %}
                 <section id="content" class="body">
                     <ol id="posts-list" class="hfeed" start="{{ articles_paginator.per_page -1 }}">
+=======
+            {% if loop.first and (articles_page.has_previous if articles_page else False) %}
+                <section id="content" class="body">
+                    <ol id="posts-list" class="hfeed" {%if articles_page%}start="{{ articles_paginator.per_page -1 }}{%endif%}">
+>>>>>>> d67afaa21a5e85bed102fe878fd7c279359e7734
             {% endif %}
             <li><article class="hentry">    
                 <header>
@@ -40,12 +57,20 @@
                 </div><!-- /.entry-content -->
             </article></li>
         {% endif %}
+<<<<<<< HEAD
         {% if loop.last and (articles_page.has_previous() 
+=======
+        {% if articles_page and loop.last and (articles_page.has_previous() 
+>>>>>>> d67afaa21a5e85bed102fe878fd7c279359e7734
            or not articles_page.has_previous() and loop.length > 1) %}
             {% include 'pagination.html' %}
         {% endif %}
 {% endfor %}
+<<<<<<< HEAD
     {% if loop.length > 1 or articles_page.has_previous() %}
+=======
+    {% if loop.length > 1 or (articles_page.has_previous() if articles_page else False) %}
+>>>>>>> d67afaa21a5e85bed102fe878fd7c279359e7734
     </ol><!-- /#posts-list -->
     </section><!-- /#content -->
 {% endif %}
