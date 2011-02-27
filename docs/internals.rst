@@ -40,7 +40,8 @@ method, that is returning an HTML content and some metadata.
 
 Take a look to the Markdown reader::
 
-    class MarkdownReader(object):
+    class MarkdownReader(Reader):
+        enabled = bool(Markdown)
 
         def read(self, filename):
             """Parse content and metadata of markdown files"""
@@ -58,6 +59,12 @@ Take a look to the Markdown reader::
             return content, metadatas
 
 Simple isn't it ?
+
+If your new reader requires additional Python dependencies then you should wrap
+their `imports` statements in `try...except`.  Then inside the reader's class
+set the `enabled` class attribute to mark import success or failure.  This makes
+it possible for users to continue using their favourite markup method without
+needing to install modules for all the additional formats they don't use.
 
 How to implement a new generator ?
 ==================================
