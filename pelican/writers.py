@@ -109,14 +109,19 @@ class Writer(object):
 
         # check paginated
         paginated = paginated or {}
-        if self.settings.get('WITH_PAGINATION') and paginated:
+        if paginated:
             # pagination needed, init paginators
             paginators = {}
             for key in paginated.iterkeys():
                 object_list = paginated[key]
-                paginators[key] = Paginator(object_list,
+
+                if self.settings.get('WITH_PAGINATION'):
+                    paginators[key] = Paginator(object_list,
                         self.settings.get('DEFAULT_PAGINATION'),
                         self.settings.get('DEFAULT_ORPHANS'))
+                else:
+                    paginators[key] = Paginator(object_list, len(object_list), 0)
+
             # generated pages, and write
             for page_num in range(paginators.values()[0].num_pages):
                 paginated_localcontext = localcontext.copy()
