@@ -1,0 +1,14 @@
+{% if SKRIBIT_TYPE and SKRIBIT_TYPE == 'TAB' and SKRIBIT_TAB_SITENAME %}
+<link rel="stylesheet" type="text/css" media="screen" charset="utf-8" href="http://assets.skribit.com/stylesheets/SkribitSuggest.css"></link>
+<style type="text/css" media="print" charset="utf-8">a#sk_tab{display:none !important;}</style>
+<script src="http://assets.skribit.com/javascripts/SkribitSuggest.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+      var skribit_settings = {};
+      skribit_settings.placement = "{{ SKRIBIT_TAB_PLACEMENT or 'right' }}";
+      skribit_settings.color = "{{ SKRIBIT_TAB_COLOR or '#333333' }}";
+      skribit_settings.text_color = "{{ SKRIBIT_TAB_TEXT_COLOR or 'white' }}";
+      skribit_settings.distance_vert = "{{ SKRIBIT_TAB_VERT or '20%' }}";
+      skribit_settings.distance_horiz = "{{ SKRIBIT_TAB_HORIZ or '' }}";
+      SkribitSuggest.suggest('http://skribit.com/lightbox/{{ SKRIBIT_TAB_SITENAME }}', skribit_settings);
+</script>
+{% endif %}

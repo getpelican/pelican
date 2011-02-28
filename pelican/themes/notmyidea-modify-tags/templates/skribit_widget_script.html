@@ -1,0 +1,8 @@
+{% if SKRIBIT_TYPE == 'WIDGET' and SKRIBIT_WIDGET_ID %}
+<div id="writeSkribitHere"></div>
+<script src="http://assets.skribit.com/javascripts/SkribitWidget.js?renderTo=writeSkribitHere&amp;blog={{ SKRIBIT_WIDGET_ID }}&amp;cnt=5"></script>
+<noscript>Sorry, but the
+    <a href="http://skribit.com" title="Skribit - Cure Writer's Block">Skribit</a> widget only works on browsers with JavaScript support.
+    <a href="http://skribit.com/blogs/think-different-think-open" title="Skribit Suggestions for Think Different, Think Open">View suggestions for this blog here.</a>
+</noscript>
+{% endif %}
