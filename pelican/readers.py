@@ -50,6 +50,12 @@ class RstReader(Reader):
                                               settings_overrides=extra_params)
         title = rendered_content.get('title')
         content = rendered_content.get('body')
+        
+        # construct link between internal pages or article
+        for slug, title in re.compile(u':link:(.*):(.*):').findall(content):
+            content = content.replace(u':link:' + slug + ':' + title + ':',
+                                      u'<a href="../' + slug + '.html" alt="' + title + '" title="' + title + '">'+ title +u'</a>')
+        
         if not metadatas.has_key('title'):
             metadatas['title'] = title
         return content, metadatas
