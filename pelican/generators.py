@@ -85,6 +85,8 @@ class ArticlesGenerator(Generator):
         self.translations = []
         self.dates = {}
         self.tags = defaultdict(list)
+        self.tags_weight = dict()
+        self.tags_weight_max = 0
         self.categories = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
 
@@ -196,6 +198,17 @@ class ArticlesGenerator(Generator):
             if hasattr(article, 'tags'):
                 for tag in article.tags:
                     self.tags[tag].append(article)
+
+                    # get how many times appear this tag and give him a weight
+                    if tag in self.tags_weight.keys():
+                        self.tags_weight[tag] = int(self.tags_weight[tag]) + 1
+                    else:
+                        self.tags_weight[tag] = 1
+                        
+                    # put max value if it is
+                    if self.tags_weight[tag] > self.tags_weight_max:
+                        self.tags_weight_max = self.tags_weight[tag]
+                        
             all_articles.append(article)
 
         self.articles, self.translations = process_translations(all_articles)
@@ -215,7 +228,7 @@ class ArticlesGenerator(Generator):
         # order the categories per name
         self.categories = list(self.categories.items())
         self.categories.sort(reverse=self.settings.get('REVERSE_CATEGORY_ORDER'))
-        self._update_context(('articles', 'dates', 'tags', 'categories'))
+        self._update_context(('articles', 'dates', 'tags', 'tags_weight', 'tags_weight_max', 'categories'))
 
     def generate_output(self, writer):
         self.generate_feeds(writer)
