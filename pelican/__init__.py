@@ -8,7 +8,7 @@ from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
 
-VERSION = "2.5.3"
+VERSION = "2.6.0"
 
 
 class Pelican(object):
