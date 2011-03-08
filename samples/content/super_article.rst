@@ -5,6 +5,7 @@ This is a super article !
 :date: 2010-12-02 10:14
 :category: yeah
 :author: Alexis Métaireau
+:summary: This is a simple test
 
 Some content here !
 

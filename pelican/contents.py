@@ -57,6 +57,9 @@ class Page(object):
         if hasattr(self, 'date'):
             self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
 
+        if not hasattr(self, 'summary'):
+            self.summary = property(lambda self: truncate_html_words(self.content, 50))
+
         # store the settings ref.
         self._settings = settings
 
@@ -73,11 +76,6 @@ class Page(object):
         else:
             content = self._content
         return content
-
-    @property
-    def summary(self):
-        return truncate_html_words(self.content, 50)
-
 
 
 class Article(Page):
