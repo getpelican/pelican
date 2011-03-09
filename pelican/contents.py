@@ -58,7 +58,7 @@ class Page(object):
             self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
 
         if not hasattr(self, 'summary'):
-            self.summary = property(lambda self: truncate_html_words(self.content, 50))
+            self.summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
 
         # store the settings ref.
         self._settings = settings
