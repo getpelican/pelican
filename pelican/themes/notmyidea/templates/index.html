@@ -2,62 +2,53 @@
 {% block content_title %}{% endblock %}
 {% block content %}        
 {% if articles %}
-{% for article in articles %}        
-    {% if loop.index == 1 %}
-        <aside id="featured" class="body"><article>
-                <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url
-                }}">{{ article.title }}</a></h1> 
-                <footer class="post-info">
-                        <abbr class="published" title="{{ article.date.isoformat() }}">
-                                {{ article.date.strftime('%a %d %B %Y') }}
-                        </abbr>
+    {% for article in articles_page.object_list %}        
 
-                        {% if article.author %}
-                        <address class="vcard author">
-                                By <a class="url fn" href="#">{{ article.author }}</a>
-                        </address>
-                        {% endif %}
-                <p>In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
-                {% include 'taglist.html' %}
-                </footer><!-- /.post-info -->
-                {{ article.content }}
-                {% include 'comments.html' %}
+        {# First item #}
+        {% if loop.first and not articles_page.has_previous() %}
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h1> 
+                    {% include 'article_infos.html' %}{{ article.content }}{% include 'comments.html' %}
                 </article>
-                </aside><!-- /#featured -->
-        {% if loop.length  > 1 %}
-            <section id="content" class="body">
-                <h1>Other articles</h1>
-                <hr />
-                    <ol id="posts-list" class="hfeed">
-        {% endif %}
-    {% else %} 
-        <li><article class="hentry">    
+                {% if loop.length == 1 %}
+                    {% include 'pagination.html' %}
+                {% endif %}
+            </aside><!-- /#featured -->
+            {% if loop.length > 1 %}
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                        <ol id="posts-list" class="hfeed">
+            {% endif %}
+        {# other items #}
+        {% else %} 
+            {% if loop.first and articles_page.has_previous %}
+                <section id="content" class="body">
+                    <ol id="posts-list" class="hfeed" start="{{ articles_paginator.per_page -1 }}">
+            {% endif %}
+            <li><article class="hentry">    
                 <header>
                         <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title}}">{{ article.title }}</a></h1>
                 </header>
                 
                 <div class="entry-content">
-                <footer class="post-info">
-                        <abbr class="published" title="{{ article.date.isoformat() }}">
-                                {{ article.date.strftime('%a %d %B %Y') }}
-                        </abbr>
-
-                        <address class="vcard author">
-                                By <a class="url fn" href="#">{{ article.author }}</a>
-                        </address>
-                        <p> In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></p>
-                        {% include 'taglist.html' %}
-                    <p>{% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">pdf</a>{% endif %}</p>
-                </footer><!-- /.post-info -->
+                {% include 'article_infos.html' %}
                 {{ article.summary }}
                 <a class="readmore" href="{{ SITEURL }}/{{ article.url }}">read more</a>
                 {% include 'comments.html' %}
                 </div><!-- /.entry-content -->
-        </article></li>
-    {% endif %}
+            </article></li>
+        {% endif %}
+        {% if loop.last and (articles_page.has_previous() 
+           or not articles_page.has_previous() and loop.length > 1) %}
+            {% include 'pagination.html' %}
+        {% endif %}
 {% endfor %}
-</ol><!-- /#posts-list -->
-</section><!-- /#content -->
+    {% if loop.length > 1 or articles_page.has_previous() %}
+    </ol><!-- /#posts-list -->
+    </section><!-- /#content -->
+{% endif %}
 {% else %}
 <section id="content" class="body">    
 <h2>Pages</h2>

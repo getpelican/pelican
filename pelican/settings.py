@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 import os
+import locale
 
 _DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
@@ -18,6 +20,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'FALLBACK_ON_FS_DATE': True,
                    'CSS_FILE': 'main.css',
                    'REVERSE_ARCHIVE_ORDER': False,
+                   'REVERSE_CATEGORY_ORDER': False,
                    'KEEP_OUTPUT_DIRECTORY': False,
                    'CLEAN_URLS': False, # use /blah/ instead /blah.html in urls
                    'RELATIVE_URLS': True,
@@ -25,6 +28,15 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
                    'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
+                   'PAGINATED_DIRECT_TEMPLATES': ('index', ),
+                   'PELICAN_CLASS': 'pelican.Pelican',
+                   'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
+                   'DATE_FORMATS': {},
+                   'JINJA_EXTENSIONS': [],
+                   'LOCALE': '', # default to user locale
+                   'WITH_PAGINATION': False,
+                   'DEFAULT_PAGINATION': 5,
+                   'DEFAULT_ORPHANS': 0,
                   }
 
 def read_settings(filename):
@@ -37,4 +49,7 @@ def read_settings(filename):
         for key in tempdict:
             if key.isupper():
                 context[key] = tempdict[key]
+
+    # set the locale
+    locale.setlocale(locale.LC_ALL, context['LOCALE'])
     return context

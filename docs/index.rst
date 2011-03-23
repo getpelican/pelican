@@ -29,8 +29,7 @@ Heh, you didn't noticed? "Pelican" is an anagram for "Calepin" ;)
 Source code
 ===========
 
-You can access the source code via mercurial at http://hg.notmyidea.org/pelican/
-or via git on http://github.com/ametaireau/pelican/
+You can access the source code via git on http://github.com/ametaireau/pelican/
 
 Feedback !
 ==========
@@ -43,6 +42,8 @@ Contact me at "alexis at notmyidea dot org" for any request/feedback !
 Documentation
 =============
 
+A french version of the documentation is available at :doc:`fr/index`.
+
 .. toctree::
    :maxdepth: 2
    
@@ -50,3 +51,4 @@ Documentation
    settings
    themes
    internals
+   faq

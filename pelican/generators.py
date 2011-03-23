@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from operator import attrgetter, itemgetter
 from itertools import chain
 from functools import partial
@@ -10,12 +11,9 @@ import random
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import update_dict, copytree, process_translations, open
+from pelican.utils import copytree, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
-
-_TEMPLATES = ('index', 'tag', 'tags', 'article', 'category', 'categories',
-              'archives', 'page')
 
 
 class Generator(object):
@@ -32,7 +30,10 @@ class Generator(object):
         # templates cache
         self._templates = {}
         self._templates_path = os.path.expanduser(os.path.join(self.theme, 'templates'))
-        self._env = Environment(loader = FileSystemLoader(self._templates_path))
+        self._env = Environment(
+            loader=FileSystemLoader(self._templates_path),
+            extensions=self.settings.get('JINJA_EXTENSIONS', []),
+        )
 
     def get_template(self, name):
         """Return the template by name.
@@ -84,8 +85,8 @@ class ArticlesGenerator(Generator):
         self.articles = [] # only articles in default language
         self.translations = []
         self.dates = {}
-        self.tags = {}
-        self.categories = {}
+        self.tags = defaultdict(list)
+        self.categories = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
 
     def generate_feeds(self, writer):
@@ -97,7 +98,7 @@ class ArticlesGenerator(Generator):
             writer.write_feed(self.articles, self.context,
                     self.settings['FEED_RSS'], feed_type='rss')
 
-        for cat, arts in self.categories.items():
+        for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
             writer.write_feed(arts, self.context,
                               self.settings['CATEGORY_FEED'] % cat)
@@ -135,25 +136,40 @@ class ArticlesGenerator(Generator):
             writer.write_file,
             relative_urls = self.settings.get('RELATIVE_URLS')
         )
-        for template in self.settings.get('DIRECT_TEMPLATES'):
-            write('%s.html' % template, self.get_template(template), self.context,
-                    blog=True)
 
-        tag_template = self.get_template('tag')
-        for tag, articles in self.tags.items():
-            write('tag/%s.html' % tag, tag_template, self.context, tag=tag,
-                    articles=articles)
-
-        category_template = self.get_template('category')
-        for cat in self.categories:
-            write('category/%s.html' % cat, category_template, self.context,
-                          category=cat, articles=self.categories[cat])
-
+        # to minimize the number of relative path stuff modification 
+        # in writer, articles pass first
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
             write(article.save_as,
                           article_template, self.context, article=article,
                           category=article.category)
+
+        PAGINATED_TEMPLATES = self.settings.get('PAGINATED_DIRECT_TEMPLATES')
+        for template in self.settings.get('DIRECT_TEMPLATES'):
+            paginated = {}
+            if template in PAGINATED_TEMPLATES:
+                paginated = {'articles': self.articles, 'dates': self.dates}
+            write('%s.html' % template, self.get_template(template), self.context,
+                    blog=True, paginated=paginated, page_name=template)
+
+        # and subfolders after that
+        tag_template = self.get_template('tag')
+        for tag, articles in self.tags.items():
+            dates = [article for article in self.dates if article in articles]
+            write('tag/%s.html' % tag, tag_template, self.context, tag=tag,
+                articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='tag/%s' % tag)
+
+        category_template = self.get_template('category')
+        for cat, articles in self.categories:
+            dates = [article for article in self.dates if article in articles]
+            write('category/%s.html' % cat, category_template, self.context,
+                category=cat, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='category/%s' % cat)
+
 
     def generate_context(self):
         """change the context"""
@@ -166,8 +182,7 @@ class ArticlesGenerator(Generator):
 
             # if no category is set, use the name of the path as a category
             if 'category' not in metadatas.keys():
-                category = os.path.dirname(f).replace(
-                    os.path.expanduser(self.path)+'/', '')
+                category = os.path.basename(os.path.dirname(f))
 
                 if category == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
@@ -186,14 +201,14 @@ class ArticlesGenerator(Generator):
 
             if hasattr(article, 'tags'):
                 for tag in article.tags:
-                    update_dict(self.tags, tag, article)
+                    self.tags[tag].append(article)
             all_articles.append(article)
 
         self.articles, self.translations = process_translations(all_articles)
 
         for article in self.articles:
             # only main articles are listed in categories, not translations
-            update_dict(self.categories, article.category, article)
+            self.categories[article.category].append(article)
 
 
         # sort the articles by date
@@ -228,7 +243,12 @@ class ArticlesGenerator(Generator):
         random.shuffle(self.tag_cloud)
 
         # and generate the output :)
+
+        # order the categories per name
+        self.categories = list(self.categories.items())
+        self.categories.sort(reverse=self.settings.get('REVERSE_CATEGORY_ORDER'))
         self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud'))
+
 
     def generate_output(self, writer):
         self.generate_feeds(writer)
@@ -304,7 +324,8 @@ class PdfGenerator(Generator):
         pass
 
     def generate_output(self, writer=None):
-        # we don't use the writer passed as argument here, since we write our own files
+        # we don't use the writer passed as argument here
+        # since we write our own files
         print u' Generating PDF files...'
         pdf_path = os.path.join(self.output_path, 'pdf')
         try:

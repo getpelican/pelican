@@ -5,7 +5,7 @@
 
 <dl>
 {% for article in dates %}
-    <dt>{{ article.date.strftime('%a %d %B %Y') }}</dt>
+    <dt>{{ article.locale_date }}</dt>
     <dd><a href='{{ article.url }}'>{{ article.title }}</a></dd>
 {% endfor %}
 </dl>

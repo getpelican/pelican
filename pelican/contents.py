@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pelican.utils import slugify, truncate_html_words
 
 
@@ -11,12 +12,12 @@ class Page(object):
     mandatory_properties = ('title',)
 
     def __init__(self, content, metadatas={}, settings={}, filename=None):
-        self.content = content
+        self._content = content
         self.translations = []
 
         self.status = "published"  # default value
         for key, value in metadatas.items():
-            setattr(self, key, value)
+            setattr(self, key.lower(), value)
 
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
@@ -47,6 +48,21 @@ class Page(object):
         if filename:
             self.filename = filename
 
+        if not hasattr(self, 'date_format'):
+            if self.lang in settings['DATE_FORMATS']:
+                self.date_format = settings['DATE_FORMATS'][self.lang]
+            else:
+                self.date_format = settings['DEFAULT_DATE_FORMAT']
+
+        if hasattr(self, 'date'):
+            self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
+
+        if not hasattr(self, 'summary'):
+            self.summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
+
+        # store the settings ref.
+        self._settings = settings
+
     def check_properties(self):
         """test that each mandatory property is set."""
         for prop in self.mandatory_properties:
@@ -54,8 +70,12 @@ class Page(object):
                 raise NameError(prop)
 
     @property
-    def summary(self):
-        return truncate_html_words(self.content, 50)
+    def content(self):
+        if hasattr(self, "_get_content"):
+            content = self._get_content()
+        else:
+            content = self._content
+        return content
 
 
 class Article(Page):

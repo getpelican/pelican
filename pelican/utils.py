@@ -7,17 +7,6 @@ from codecs import open as _open
 from itertools import groupby
 from operator import attrgetter
 
-def update_dict(mapping, key, value):
-    """Update a dict intenal list
-
-    :param mapping: the mapping to update
-    :param key: the key of the mapping to update.
-    :param value: the value to append to the list.
-    """
-    if key not in mapping:
-        mapping[key] = []
-    mapping[key].append(value)
-
 
 def get_date(string):
     """Return a datetime object from a string.
@@ -73,7 +62,7 @@ def clean_output_dir(path):
     # remove all the existing content from the output folder
     try:
         shutil.rmtree(path)
-    except Exception as e:
+    except Exception:
         pass
 
 
@@ -159,6 +148,7 @@ def process_translations(content_list):
         Also, for each content_list item, it
         sets attribute 'translations'
     """
+    content_list.sort(key=attrgetter('slug'))
     grouped_by_slugs = groupby(content_list, attrgetter('slug'))
     index = []
     translations = []
@@ -184,3 +174,27 @@ def process_translations(content_list):
         for a in items:
             a.translations = filter(lambda x: x != a, items)
     return index, translations
+
+
+LAST_MTIME = 0
+
+
+def files_changed(path, extensions):
+    """Return True if the files have changed since the last check"""
+
+    def with_extension(f):
+        return True if True in [f.endswith(ext) for ext in extensions] else False
+
+    def file_times(path):
+        """Return the last time files have been modified"""
+        for top_level in os.listdir(path):
+            for root, dirs, files in os.walk(top_level):
+                for file in filter(with_extension, files):
+                    yield os.stat(os.path.join(root, file)).st_mtime
+
+    global LAST_MTIME
+    mtime = max(file_times(path))
+    if mtime > LAST_MTIME:
+        LAST_MTIME = mtime
+        return True
+    return False
