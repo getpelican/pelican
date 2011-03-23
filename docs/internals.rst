@@ -61,7 +61,7 @@ Take a look to the Markdown reader::
 Simple isn't it ?
 
 If your new reader requires additional Python dependencies then you should wrap
-their `imports` statements in `try...except`.  Then inside the reader's class
+their `import` statements in `try...except`.  Then inside the reader's class
 set the `enabled` class attribute to mark import success or failure.  This makes
 it possible for users to continue using their favourite markup method without
 needing to install modules for all the additional formats they don't use.
