@@ -220,7 +220,7 @@ class ArticlesGenerator(Generator):
         # create tag cloud
         tag_cloud = defaultdict(int)
         for article in self.articles:
-            for tag in article.tags:
+            for tag in getattr(article, 'tags', []):
                 tag_cloud[tag] += 1
 
         tag_cloud = sorted(tag_cloud.items(), key = itemgetter(1), reverse = True)
