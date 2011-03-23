@@ -212,7 +212,7 @@ class Writer(object):
                     relative_paths.append(found)
 
             for relative_path in relative_paths:
-                if not "://" in relative_path: # we don't want to rewrite protocols
+                if not ":" in relative_path: # we don't want to rewrite protocols
                     dest_path = os.sep.join((get_relative_path(name), "static",
                         relative_path))
                     content = content.replace(relative_path, dest_path)
