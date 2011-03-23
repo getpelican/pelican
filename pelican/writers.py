@@ -90,7 +90,12 @@ class Writer(object):
 
         def _write_file(template, localcontext, output_path, name):
             """Render the template write the file."""
-            output = template.render(localcontext)
+            old_locale = locale.setlocale(locale.LC_ALL)
+            locale.setlocale(locale.LC_ALL, 'C')
+            try:
+                output = template.render(localcontext)
+            finally:
+                locale.setlocale(locale.LC_ALL, old_locale)
             filename = os.sep.join((output_path, name))
             try:
                 os.makedirs(os.path.dirname(filename))
