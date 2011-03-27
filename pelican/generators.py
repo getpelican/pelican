@@ -182,10 +182,11 @@ class ArticlesGenerator(Generator):
 
             # if no category is set, use the name of the path as a category
             if 'category' not in metadatas.keys():
-                category = os.path.basename(os.path.dirname(f))
 
-                if category == self.path:
+                if os.path.dirname(f) == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
+		else:
+		    category = os.path.basename(os.path.dirname(f))
 
                 if category != '':
                     metadatas['category'] = unicode(category)
@@ -226,7 +227,9 @@ class ArticlesGenerator(Generator):
         tag_cloud = sorted(tag_cloud.items(), key = itemgetter(1), reverse = True)
         tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
 
-        max_count = max(map(itemgetter(1), tag_cloud))
+        tags = map(itemgetter(1), tag_cloud)
+	if tags:
+        	max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
 
         # calculate word sizes
