@@ -185,8 +185,8 @@ class ArticlesGenerator(Generator):
 
                 if os.path.dirname(f) == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
-		else:
-		    category = os.path.basename(os.path.dirname(f))
+                else:
+                    category = os.path.basename(os.path.dirname(f))
 
                 if category != '':
                     metadatas['category'] = unicode(category)
@@ -228,8 +228,8 @@ class ArticlesGenerator(Generator):
         tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
 
         tags = map(itemgetter(1), tag_cloud)
-	if tags:
-        	max_count = max(tags)
+        if tags:
+                max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
 
         # calculate word sizes
