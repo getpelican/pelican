@@ -35,6 +35,10 @@ class Generator(object):
             loader=FileSystemLoader(self._templates_path),
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
+        
+        # get custom Jinja filters from user settings
+        custom_filters = self.settings.get('JINJA_FILTERS', {})
+        self._env.filters.update(custom_filters)
 
     def get_template(self, name):
         """Return the template by name.
