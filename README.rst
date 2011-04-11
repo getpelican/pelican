@@ -1,10 +1,10 @@
 Pelican
 #######
 
-Pelican is a simple weblog generator, writen in python.
+Pelican is a simple weblog generator, written in `Python <http://www.python.org/>`_.
 
 * Write your weblog entries directly with your editor of choice (vim!) and
-  directly in restructured text, or markdown.
+  directly in `reStructuredText <http://docutils.sourceforge.net/rst.html>`_, or `Markdown <http://daringfireball.net/projects/markdown/>`_.
 * A simple cli-tool to (re)generate the weblog.
 * Easy to interface with DVCSes and web hooks
 * Completely static output, so easy to host anywhere !
