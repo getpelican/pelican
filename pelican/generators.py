@@ -76,8 +76,6 @@ class Generator(object):
         """
         for item in items:
             value = getattr(self, item)
-            if hasattr(value, 'items'):
-                value = value.items()
             self.context[item] = value
 
 
@@ -102,7 +100,7 @@ class ArticlesGenerator(Generator):
             writer.write_feed(self.articles, self.context,
                     self.settings['FEED_RSS'], feed_type='rss')
 
-        for cat, arts in self.categories:
+        for cat, arts in self.categories.iteritems():
             arts.sort(key=attrgetter('date'), reverse=True)
             writer.write_feed(arts, self.context,
                               self.settings['CATEGORY_FEED'] % cat)
@@ -167,7 +165,7 @@ class ArticlesGenerator(Generator):
                 page_name='tag/%s' % tag)
 
         category_template = self.get_template('category')
-        for cat, articles in self.categories:
+        for cat, articles in self.categories.iteritems():
             dates = [article for article in self.dates if article in articles]
             write('category/%s.html' % cat, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
@@ -250,10 +248,6 @@ class ArticlesGenerator(Generator):
         random.shuffle(self.tag_cloud)
 
         # and generate the output :)
-
-        # order the categories per name
-        self.categories = list(self.categories.items())
-        self.categories.sort(reverse=self.settings.get('REVERSE_CATEGORY_ORDER'))
         self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud'))
 
 
