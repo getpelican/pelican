@@ -232,13 +232,13 @@ class ArticlesGenerator(Generator):
         if tags:
                 max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
-
+        
         # calculate word sizes
         self.tag_cloud = [
             (
                 tag,
                 int(
-                    math.floor(steps - (steps - 1) * math.log(count) / math.log(max_count))
+                    math.floor(steps - (steps - 1) * math.log(count) / (math.log(max_count)or 1))
                 )
             )
             for tag, count in tag_cloud
