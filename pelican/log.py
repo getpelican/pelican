@@ -4,23 +4,23 @@ import os
 
 global ANSI
 ANSI = {
-    'gray' : lambda(text) : '\033[1;30m' + str(text) + '\033[1;m',
-    'red' : lambda(text) : '\033[1;31m' + str(text) + '\033[1;m',
-    'green' : lambda(text) : '\033[1;32m' + str(text) + '\033[1;m',
-    'yellow' : lambda(text) : '\033[1;33m' + str(text) + '\033[1;m',
-    'blue' : lambda(text) : '\033[1;34m' + str(text) + '\033[1;m',
-    'magenta' : lambda(text) : '\033[1;35m' + str(text) + '\033[1;m',
-    'cyan' : lambda(text) : '\033[1;36m' + str(text) + '\033[1;m',
-    'white' : lambda(text) : '\033[1;37m' + str(text) + '\033[1;m',
-    'crimson' : lambda(text) : '\033[1;38m' + str(text) + '\033[1;m',
-    'bgred' : lambda(text) : '\033[1;41m' + str(text) + '\033[1;m',
-    'bggreen' : lambda(text) : '\033[1;42m' + str(text) + '\033[1;m',
-    'bgbrown' : lambda(text) : '\033[1;43m' + str(text) + '\033[1;m',
-    'bgblue' : lambda(text) : '\033[1;44m' + str(text) + '\033[1;m',
-    'bgmagenta' : lambda(text) : '\033[1;45m' + str(text) + '\033[1;m',
-    'bgcyan' : lambda(text) : '\033[1;46m' + str(text) + '\033[1;m',
-    'bggray' : lambda(text) : '\033[1;47m' + str(text) + '\033[1;m',
-    'bgcrimson' : lambda(text) : '\033[1;48m' + str(text) + '\033[1;m'
+    'gray' : lambda(text) : '\033[1;30m' + unicode(text) + '\033[1;m',
+    'red' : lambda(text) : '\033[1;31m' + unicode(text) + '\033[1;m',
+    'green' : lambda(text) : '\033[1;32m' + unicode(text) + '\033[1;m',
+    'yellow' : lambda(text) : '\033[1;33m' + unicode(text) + '\033[1;m',
+    'blue' : lambda(text) : '\033[1;34m' + unicode(text) + '\033[1;m',
+    'magenta' : lambda(text) : '\033[1;35m' + unicode(text) + '\033[1;m',
+    'cyan' : lambda(text) : '\033[1;36m' + unicode(text) + '\033[1;m',
+    'white' : lambda(text) : '\033[1;37m' + unicode(text) + '\033[1;m',
+    'crimson' : lambda(text) : '\033[1;38m' + unicode(text) + '\033[1;m',
+    'bgred' : lambda(text) : '\033[1;41m' + unicode(text) + '\033[1;m',
+    'bggreen' : lambda(text) : '\033[1;42m' + unicode(text) + '\033[1;m',
+    'bgbrown' : lambda(text) : '\033[1;43m' + unicode(text) + '\033[1;m',
+    'bgblue' : lambda(text) : '\033[1;44m' + unicode(text) + '\033[1;m',
+    'bgmagenta' : lambda(text) : '\033[1;45m' + unicode(text) + '\033[1;m',
+    'bgcyan' : lambda(text) : '\033[1;46m' + unicode(text) + '\033[1;m',
+    'bggray' : lambda(text) : '\033[1;47m' + unicode(text) + '\033[1;m',
+    'bgcrimson' : lambda(text) : '\033[1;48m' + unicode(text) + '\033[1;m'
 }
 
 class ANSIFormatter(logging.Formatter):
