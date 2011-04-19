@@ -66,6 +66,14 @@ class Formatter(object):
 
 
 
+# shortcuts
+debug, info, warn, error, critical = (logging.debug,
+                                      logging.info,
+                                      logging.warn,
+                                      logging.error,
+                                      logging.critical)
+
+
 def init(logger=logging.getLogger(), handler=logging.StreamHandler()):
     fmt = Formatter()
     handler.setFormatter(fmt)
