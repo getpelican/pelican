@@ -8,6 +8,7 @@ import locale
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from pelican.utils import get_relative_path
 from pelican.paginator import Paginator
+from pelican.log import *
 
 
 class Writer(object):
@@ -68,7 +69,7 @@ class Writer(object):
                     pass
                 fp = open(complete_path, 'w')
                 feed.write(fp, 'utf-8')
-                print u' [ok] writing %s' % complete_path
+                info('writing %s' % complete_path)
 
                 fp.close()
             return feed
@@ -103,7 +104,7 @@ class Writer(object):
                 pass
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write(output)
-            print u' [ok] writing %s' % filename
+            info(u'writing %s' % filename)
 
         localcontext = context.copy()
         if relative_urls:

@@ -31,7 +31,7 @@ class ANSIFormatter(logging.Formatter):
 
     def format(self, record):
         if not record.levelname or record.levelname is 'INFO':
-            return ANSI['cyan'](record.msg)
+            return ANSI['white'](record.msg)
         elif record.levelname is 'WARNING':
             return ANSI['yellow'](record.levelname) + ': ' + record.msg
         elif record.levelname is 'ERROR':
@@ -72,16 +72,22 @@ debug, info, warn, error, critical = (logging.debug,
                                       logging.warn,
                                       logging.error,
                                       logging.critical)
+DEBUG, INFO, WARN, ERROR, CRITICAL = (logging.DEBUG,
+                                      logging.INFO,
+                                      logging.WARN,
+                                      logging.ERROR,
+                                      logging.CRITICAL)
 
 
-def init(logger=logging.getLogger(), handler=logging.StreamHandler()):
+def init(level=None, logger=logging.getLogger(), handler=logging.StreamHandler()):
     fmt = Formatter()
     handler.setFormatter(fmt)
     logger.addHandler(handler)
+    if level:   logger.setLevel(level)
 
-init()
 
 if __name__ == '__main__':
+    init()
     logging.basicConfig(filename='example.log',level=logging.DEBUG)
     logging.debug('Logging test')
     logging.info('info')

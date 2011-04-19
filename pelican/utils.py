@@ -6,6 +6,7 @@ from datetime import datetime
 from codecs import open as _open
 from itertools import groupby
 from operator import attrgetter
+from pelican.log import *
 
 
 def get_date(string):
@@ -50,7 +51,7 @@ def copytree(path, origin, destination, topath=None):
         fromp = os.path.expanduser(os.path.join(origin, path))
         to = os.path.expanduser(os.path.join(destination, topath))
         shutil.copytree(fromp, to)
-        print u' [ok] copying %s to %s' % (fromp, to)
+        info('copying %s to %s' % (fromp, to))
 
     except OSError:
         pass
@@ -162,7 +163,7 @@ def process_translations(content_list):
         )
         len_ = len(default_lang_items)
         if len_ > 1:
-            print u' [warning] there are %s variants of "%s"' % (len_, slug)
+            warning(u'there are %s variants of "%s"' % (len_, slug))
         elif len_ == 0:
             default_lang_items = items[:1]
 
