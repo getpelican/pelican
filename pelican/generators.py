@@ -14,6 +14,7 @@ from jinja2.exceptions import TemplateNotFound
 from pelican.utils import copytree, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
+from pelican.log import *
 
 
 class Generator(object):
@@ -321,7 +322,7 @@ class PdfGenerator(Generator):
             output_pdf=os.path.join(output_path, filename)
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             self.pdfcreator.createPdf(text=open(obj.filename), output=output_pdf)
-            print u' [ok] writing %s' % output_pdf
+            info(u' [ok] writing %s' % output_pdf)
     
     def generate_context(self):
         pass
@@ -329,12 +330,12 @@ class PdfGenerator(Generator):
     def generate_output(self, writer=None):
         # we don't use the writer passed as argument here
         # since we write our own files
-        print u' Generating PDF files...'
+        info(u' Generating PDF files...')
         pdf_path = os.path.join(self.output_path, 'pdf')
         try:
             os.mkdir(pdf_path)
         except OSError:
-            print "Couldn't create the pdf output folder in ", pdf_path
+            error("Couldn't create the pdf output folder in " + pdf_path)
             pass
 
         for article in self.context['articles']:

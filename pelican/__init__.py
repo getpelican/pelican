@@ -7,6 +7,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
+from pelican import log
 
 VERSION = "2.6.0"
 
@@ -103,6 +104,12 @@ def main():
             action='store_true',
         help='Keep the output directory and just update all the generated files.'
              'Default is to delete the output directory.')
+    parser.add_argument('-v', '--verbose', action='store_const', const=log.INFO, dest='verbosity',
+            help='Show all messages')
+    parser.add_argument('-q', '--quiet', action='store_const', const=log.CRITICAL, dest='verbosity',
+            help='Show only critical errors')
+    parser.add_argument('-D', '--debug', action='store_const', const=log.DEBUG, dest='verbosity',
+            help='Show all message, including debug messages')
     parser.add_argument('--version', action='version', version=VERSION,
             help='Print the pelican version and exit')
     parser.add_argument('-r', '--autoreload', dest='autoreload', action='store_true',
@@ -110,6 +117,7 @@ def main():
                  "files")
     args = parser.parse_args()
 
+    log.init(args.verbosity)
     # Split the markup languages only if some have been given. Otherwise, populate
     # the variable with None.
     markup = [a.strip().lower() for a in args.markup.split(',')] if args.markup else None
@@ -134,7 +142,10 @@ def main():
             except KeyboardInterrupt:
                 break
     else:
-        pelican.run()
+        try:
+            pelican.run()
+        except Exception, e:
+            log.critical(str(e))
 
 
 if __name__ == '__main__':

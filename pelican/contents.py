@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from pelican.utils import slugify, truncate_html_words
-
+from pelican.log import *
 
 class Page(object):
     """Represents a page
@@ -91,5 +91,5 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError as e:
-        print u" [info] Skipping %s: impossible to find informations about '%s'" % (f, e)
+        error(u"Skipping %s: impossible to find informations about '%s'" % (f, e))
         return False
