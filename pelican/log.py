@@ -83,7 +83,8 @@ def init(level=None, logger=logging.getLogger(), handler=logging.StreamHandler()
     fmt = Formatter()
     handler.setFormatter(fmt)
     logger.addHandler(handler)
-    if level:   logger.setLevel(level)
+    if level:
+        logger.setLevel(level)
 
 
 if __name__ == '__main__':

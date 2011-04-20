@@ -20,7 +20,9 @@ class Pelican(object):
         """
         self.path = path or settings['PATH']
         if not self.path:
-            raise Exception('you need to specify a path to search the docs on !')
+            raise Exception('you need to specify a path containing the content'
+                    ' (see pelican --help for more information)')
+
         if self.path.endswith('/'):
             self.path = path[:-1]
 
@@ -132,20 +134,19 @@ def main():
         module = __import__(module)
         cls = getattr(module, cls_name)
 
-    pelican = cls(settings, args.path, args.theme, args.output, markup, args.keep)
-
-    if args.autoreload:
-        while True:
-            try:
-                if files_changed(pelican.path, pelican.markup):
-                    pelican.run()
-            except KeyboardInterrupt:
-                break
-    else:
-        try:
+    try:
+        pelican = cls(settings, args.path, args.theme, args.output, markup, args.keep)
+        if args.autoreload:
+            while True:
+                try:
+                    if files_changed(pelican.path, pelican.markup):
+                        pelican.run()
+                except KeyboardInterrupt:
+                    break
+        else:
             pelican.run()
-        except Exception, e:
-            log.critical(str(e))
+    except Exception, e:
+        log.critical(str(e))
 
 
 if __name__ == '__main__':
