@@ -6,6 +6,7 @@ Oh yeah !
 :category: bar
 :author: Alexis Métaireau
 :slug: oh-yeah
+:license: WTFPL
 
 Why not ?
 =========
