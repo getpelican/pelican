@@ -63,11 +63,16 @@ Setting name                what it does ?
 `PATH`                      path to look at for input files.
 `PDF_PROCESSOR`             Put True if you want to have PDF versions of your
                             documents. You will need to install `rst2pdf`.
+`RELATIVE_URL`              Defines if pelican should use relative urls or not.
+                            It is set to True per default.
 `REVERSE_ARCHIVE_ORDER`     Reverse the archives order. (True makes it in
                             descending order: the newer first)
 `REVERSE_CATEGORY_ORDER`    Reverse the category order. (True makes it in
                             descending order, default is alphabetically)
-`SITEURL`                   base URL of your website.
+`SITEURL`                   base URL of your website. Note that this is not
+                            a way to tell pelican to use relative urls or
+                            static ones. You should rather use the `RELATIVE_URL`
+                            setting for such use.
 `SITENAME`                  Your site name,
 `SKRIBIT_TYPE`              The type of skribit widget (TAB or WIDGET).
 `SKRIBIT_TAB_COLOR`         Tab color (#XXXXXX, default #333333).
