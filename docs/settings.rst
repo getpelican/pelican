@@ -81,12 +81,12 @@ Setting name (default value)                        what does it do?
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
-                                                    values is `static`, but if your theme have
-                                                    others static paths, you can put them here.
+                                                    values is `static`, but if your theme has
+                                                    other static paths, you can put them here.
 `TAG_CLOUD_STEPS` (4)                               Count of different font sizes in the tag
                                                     cloud.
 `TAG_CLOUD_MAX_ITEMS` (100)                         Maximum tags count in the cloud.
-`THEME`                                             theme to use to product the output. can be the
+`THEME`                                             theme to use to produce the output. can be the
                                                     complete static path to a theme folder, or
                                                     chosen between the list of default themes (see
                                                     below)
