@@ -42,7 +42,7 @@ Setting name (default value)                        what does it do?
                                                     settings.
 `FALLBACK_ON_FS_DATE` (``True``)                    If True, pelican will use the file system
                                                     dates infos (mtime) if it can't get
-                                                    informations from the metadata?
+                                                    informations from the metadata
 `FEED` (``'feeds/all.atom.xml'``)                   relative url to output the atom feed.
 `FEED_RSS` (``None``, i.e. no RSS)                  relative url to output the rss feed.
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
