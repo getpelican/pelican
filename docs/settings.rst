@@ -67,7 +67,7 @@ Setting name (default value)                        what does it do?
                                                     not a way to tell pelican to use relative urls
                                                     or static ones. You should rather use the
                                                     `RELATIVE_URL` setting for such use.
-`SITENAME` (``'A Pelican Blog'``)                   Your site name,
+`SITENAME` (``'A Pelican Blog'``)                   Your site name
 `SKRIBIT_TYPE`                                      The type of skribit widget (TAB or WIDGET).
 `SKRIBIT_TAB_COLOR`                                 Tab color (#XXXXXX, default #333333).
 `SKRIBIT_TAB_HORIZ`                                 Tab Distance from Left (% or distance, default Null).
