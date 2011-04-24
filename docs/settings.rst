@@ -54,7 +54,7 @@ Setting name (default value)                        what does it do?
                                                     are `rst` and `md`.
 `OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
 `PATH` (``None``)                                   path to look at for input files.
-`PDF_PROCESSOR` (``False``)                         Set to True if you want to have PDF versions
+`PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
                                                     of your documents. You will need to install
                                                     `rst2pdf`.
 `RELATIVE_URL` (``True``)                           Defines if pelican should use relative urls or
@@ -80,7 +80,7 @@ Setting name (default value)                        what does it do?
 (``['images']``)                                    on the output path "static". By default,
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
-`STATIC_THEME_PATHS` (``['static']``)               Static theme paths you want to copy. Default
+`THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
                                                     values is `static`, but if your theme have
                                                     others static paths, you can put them here.
 `TAG_CLOUD_STEPS` (4)                               Count of different font sizes in the tag
