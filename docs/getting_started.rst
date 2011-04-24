@@ -38,7 +38,7 @@ Writing articles using pelican
 Files metadata
 --------------
 
-Pelican tries to be smart enough to get the informations he needs from the
+Pelican tries to be smart enough to get the informations it needs from the
 file system (for instance, about the category of your articles), but you need to
 provide by hand some of those informations in your files.
 
