@@ -34,7 +34,6 @@ hr {
 }
  
 div.document {
-    background-color: #eee;
 }
  
 div.body {
@@ -153,12 +152,20 @@ div.body h6 {
     text-shadow: 0px 1px 0 white
 }
  
+{% if theme_index_logo %}
+div.indexwrapper h1 {
+    text-indent: -999999px;
+    background: url({{ theme_index_logo }}) no-repeat center center;
+    height: {{ theme_index_logo_height }};
+}
+{% endif %}
 div.body h1 { 
     border-top: 20px solid white; 
     margin-top: 0; 
     font-size: 250%; 
     text-align: center;
 }
+
 div.body h2 { font-size: 150%; background-color: #C8D5E3; }
 div.body h3 { font-size: 120%; background-color: #D8DEE3; }
 div.body h4 { font-size: 110%; background-color: #D8DEE3; }
