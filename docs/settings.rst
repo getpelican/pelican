@@ -167,7 +167,7 @@ The `notmyidea` theme can make good use of the following settings. I recommend
 to use them too in your themes.
 
 =======================   =======================================================
-Setting name              what it does ?
+Setting name              what does it do ?
 =======================   =======================================================
 `DISQUS_SITENAME`         Pelican can handle disqus comments, specify the
                           sitename you've filled in on disqus
