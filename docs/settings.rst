@@ -20,84 +20,85 @@ Here are the available settings. Please note that all the settings you put in
 this file will be passed to the templates as well.
 
 
-========================    =======================================================
-Setting name                what it does ?
-========================    =======================================================
-`AUTHOR`                    Default author (put your name)
-`CATEGORY_FEED`             Where to put the atom categories feeds. default is
-                            `feeds/%s.atom.xml`, where %s is the name of the
-                            category.
-`CATEGORY_FEED_RSS`         Where to put the categories rss feeds. default is None
-                            (no rss)
-`CSS_FILE`                  To specify the CSS file you want to load, if it's not
-                            the default one ('main.css')
-`DATE_FORMATS`              If you do manage multiple languages, you can set
-                            the date formatting here.
-`DEFAULT_CATEGORY`          The default category to fallback on. `misc` by default.
-`DEFAULT_DATE_FORMAT`       The default date format you want to use.
-`DEFAULT_LANG`              The default language to use. Default is 'en'.
-`DEFAULT_ORPHANS`           The minimum number of articles allowed on the last
-                            page, defaults to zero. Use this when you don't want
-                            to have a last page with very few articles.
-`DEFAULT_PAGINATION`        The maximum number of articles to include on a page,
-                            not including orphans. Default is 5.
-`DISPLAY_PAGES_ON_MENU`     Display or not the pages on the menu of the template.
-                            Templates can follow or not this settings.
-`FALLBACK_ON_FS_DATE`       If True, pelican will use the file system dates infos
-                            (mtime) if it can't get informations from the
-                            metadata?
-`FEED`                      relative url to output the atom feed. Default is
-                            `feeds/all.atom.xml`
-`FEED_RSS`                  relative url to output the rss feed. Default is
-                            None (no rss)
-`JINJA_EXTENSIONS`          A list of any Jinja2 extensions you want to use.
-                            Default is no extensions (the empty list).
-`KEEP_OUTPUT_DIRECTORY`     Keep the output directory and just update all the 
-                            generated files. 
-`LOCALE`                    Change the locale. Default is the system locale.
-                            Default is to delete the output directory.   
-`MARKUP`                    A list of available markup languages you want to use.
-                            For the moment, only available values are `rst` and `md`.
-`OUTPUT_PATH`               Where to output the generated files. Default to
-                            "output"
-`PATH`                      path to look at for input files.
-`PDF_PROCESSOR`             Put True if you want to have PDF versions of your
-                            documents. You will need to install `rst2pdf`.
-`RELATIVE_URL`              Defines if pelican should use relative urls or not.
-                            It is set to True per default.
-`REVERSE_ARCHIVE_ORDER`     Reverse the archives order. (True makes it in
-                            descending order: the newer first)
-`REVERSE_CATEGORY_ORDER`    Reverse the category order. (True makes it in
-                            descending order, default is alphabetically)
-`SITEURL`                   base URL of your website. Note that this is not
-                            a way to tell pelican to use relative urls or
-                            static ones. You should rather use the `RELATIVE_URL`
-                            setting for such use.
-`SITENAME`                  Your site name,
-`SKRIBIT_TYPE`              The type of skribit widget (TAB or WIDGET).
-`SKRIBIT_TAB_COLOR`         Tab color (#XXXXXX, default #333333).
-`SKRIBIT_TAB_HORIZ`         Tab Distance from Left (% or distance, default Null).
-`SKRIBIT_TAB_VERT`          Tab Distance from Top (% or distance, default 20%).
-`SKRIBIT_TAB_PLACEMENT`     Tab placement (Top, Bottom, Left or Right, default
-                            LEFT).
-`SKRIBIT_TAB_SITENAME`      Tab identifier (See Skribit part below).
-`SKRIBIT_WIDGET_ID`         Widget identifier (See Skribit part below).
-`STATIC_PATHS`              The static paths you want to have accessible on the
-                            output path "static". By default, pelican will copy
-                            the 'images' folder to the output folder.
-`STATIC_THEME_PATHS`        Static theme paths you want to copy. Default values
-                            is `static`, but if your theme have others static paths,
-                            you can put them here.
-`TAG_CLOUD_STEPS`           Count of different font sizes in the tag cloud.
-`TAG_CLOUD_MAX_ITEMS`       Maximum tags count in the cloud.
-`THEME`                     theme to use to product the output. can be the
-                            complete static path to a theme folder, or chosen
-                            between the list of default themes (see below)
-`TRANSLATION_FEED`          Where to put the RSS feed for translations. Default
-                            is feeds/all-%s.atom.xml where %s is the name of the
-                            lang.
-`WITH_PAGINATION`           Activate pagination. Default is False.
-========================    =======================================================
+================================================    =====================================================
+Setting name (default value)                        what does it do?                              
+================================================    =====================================================
+`AUTHOR`                                            Default author (put your name)
+`CATEGORY_FEED` ('feeds/%s.atom.xml'[1]_)           Where to put the atom categories feeds.
+`CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the categories rss feeds.
+`CSS_FILE` (``'main.css'``)                         specify the CSS file you want to load
+`DATE_FORMATS` (``{}``)                             If you do manage multiple languages, you can
+                                                    set the date formatting here.
+`DEFAULT_CATEGORY` (``'misc'``)                     The default category to fallback on.
+`DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)           The default date format you want to use.
+`DEFAULT_LANG` (``'en'``)                           The default language to use.
+`DEFAULT_ORPHANS` (0)                               The minimum number of articles allowed on the
+                                                    last page. Use this when you don't want to
+                                                    have a last page with very few articles.
+`DEFAULT_PAGINATION` (5)                            The maximum number of articles to include on a
+                                                    page, not including orphans.
+`DISPLAY_PAGES_ON_MENU` (``True``)                  Display or not the pages on the menu of the
+                                                    template. Templates can follow or not this
+                                                    settings.
+`FALLBACK_ON_FS_DATE` (``True``)                    If True, pelican will use the file system
+                                                    dates infos (mtime) if it can't get
+                                                    informations from the metadata
+`FEED` (``'feeds/all.atom.xml'``)                   relative url to output the atom feed.
+`FEED_RSS` (``None``, i.e. no RSS)                  relative url to output the rss feed.
+`JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
+`KEEP_OUTPUT_DIRECTORY` (``False``)                 Keep the output directory and just update all
+                                                    the generated files.
+`LOCALE` (''[2]_)                                   Change the locale.
+`MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want
+                                                    to use. For the moment, only available values
+                                                    are `rst` and `md`.
+`OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
+`PATH` (``None``)                                   path to look at for input files.
+`PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
+                                                    of your documents. You will need to install
+                                                    `rst2pdf`.
+`RELATIVE_URL` (``True``)                           Defines if pelican should use relative urls or
+                                                    not.
+`REVERSE_ARCHIVE_ORDER` (``False``)                 Reverse the archives order. (True makes it in
+                                                    descending order: the newer first)
+`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True makes it in
+                                                    descending order, default is alphabetically)
+`SITEURL`                                           base URL of your website. Note that this is
+                                                    not a way to tell pelican to use relative urls
+                                                    or static ones. You should rather use the
+                                                    `RELATIVE_URL` setting for such use.
+`SITENAME` (``'A Pelican Blog'``)                   Your site name
+`SKRIBIT_TYPE`                                      The type of skribit widget (TAB or WIDGET).
+`SKRIBIT_TAB_COLOR`                                 Tab color (#XXXXXX, default #333333).
+`SKRIBIT_TAB_HORIZ`                                 Tab Distance from Left (% or distance, default Null).
+`SKRIBIT_TAB_VERT`                                  Tab Distance from Top (% or distance, default 20%).
+`SKRIBIT_TAB_PLACEMENT`                             Tab placement (Top, Bottom, Left or Right,
+                                                    default LEFT).
+`SKRIBIT_TAB_SITENAME`                              Tab identifier (See Skribit part below).
+`SKRIBIT_WIDGET_ID`                                 Widget identifier (See Skribit part below).
+`STATIC_PATHS`                                      The static paths you want to have accessible
+(``['images']``)                                    on the output path "static". By default,
+                                                    pelican will copy the 'images' folder to the
+                                                    output folder.
+`THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
+                                                    values is `static`, but if your theme has
+                                                    other static paths, you can put them here.
+`TAG_CLOUD_STEPS` (4)                               Count of different font sizes in the tag
+                                                    cloud.
+`TAG_CLOUD_MAX_ITEMS` (100)                         Maximum tags count in the cloud.
+`THEME`                                             theme to use to produce the output. can be the
+                                                    complete static path to a theme folder, or
+                                                    chosen between the list of default themes (see
+                                                    below)
+`TRANSLATION_FEED` ('feeds/all-%s.atom.xml'[3]_)    Where to put the RSS feed for translations.
+`WITH_PAGINATION` (``False``)                       Activate pagination.
+================================================    =====================================================
+
+.. [1] %s is the name of the category.
+
+.. [2] Default is the system locale. Default is to delete the output directory.
+
+.. [3] %s is the language
 
 Skribit
 =======
