@@ -1,6 +1,5 @@
 import argparse
 import os
-from functools import partial
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
