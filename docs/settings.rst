@@ -76,8 +76,8 @@ Setting name (default value)                        what does it do?
                                                     default LEFT).
 `SKRIBIT_TAB_SITENAME`                              Tab identifier (See Skribit part below).
 `SKRIBIT_WIDGET_ID`                                 Widget identifier (See Skribit part below).
-`STATIC_PATHS`                                      The static paths you want to have accessible
-(``['images']``)                                    on the output path "static". By default,
+`STATIC_PATHS` (``['images']``)                     The static paths you want to have accessible
+                                                    on the output path "static". By default,
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
