@@ -1,46 +1,51 @@
-import logging
+from  logging import *
 import sys
 import os
 
 global ANSI
 ANSI = {
-    'gray' : lambda(text) : '\033[1;30m' + unicode(text) + '\033[1;m',
-    'red' : lambda(text) : '\033[1;31m' + unicode(text) + '\033[1;m',
-    'green' : lambda(text) : '\033[1;32m' + unicode(text) + '\033[1;m',
-    'yellow' : lambda(text) : '\033[1;33m' + unicode(text) + '\033[1;m',
-    'blue' : lambda(text) : '\033[1;34m' + unicode(text) + '\033[1;m',
-    'magenta' : lambda(text) : '\033[1;35m' + unicode(text) + '\033[1;m',
-    'cyan' : lambda(text) : '\033[1;36m' + unicode(text) + '\033[1;m',
-    'white' : lambda(text) : '\033[1;37m' + unicode(text) + '\033[1;m',
-    'crimson' : lambda(text) : '\033[1;38m' + unicode(text) + '\033[1;m',
-    'bgred' : lambda(text) : '\033[1;41m' + unicode(text) + '\033[1;m',
-    'bggreen' : lambda(text) : '\033[1;42m' + unicode(text) + '\033[1;m',
-    'bgbrown' : lambda(text) : '\033[1;43m' + unicode(text) + '\033[1;m',
-    'bgblue' : lambda(text) : '\033[1;44m' + unicode(text) + '\033[1;m',
-    'bgmagenta' : lambda(text) : '\033[1;45m' + unicode(text) + '\033[1;m',
-    'bgcyan' : lambda(text) : '\033[1;46m' + unicode(text) + '\033[1;m',
-    'bggray' : lambda(text) : '\033[1;47m' + unicode(text) + '\033[1;m',
-    'bgcrimson' : lambda(text) : '\033[1;48m' + unicode(text) + '\033[1;m'
+    'gray' : lambda(text) : u'\033[1;30m' + unicode(text) + u'\033[1;m',
+    'red' : lambda(text) : u'\033[1;31m' + unicode(text) + u'\033[1;m',
+    'green' : lambda(text) : u'\033[1;32m' + unicode(text) + u'\033[1;m',
+    'yellow' : lambda(text) : u'\033[1;33m' + unicode(text) + u'\033[1;m',
+    'blue' : lambda(text) : u'\033[1;34m' + unicode(text) + u'\033[1;m',
+    'magenta' : lambda(text) : u'\033[1;35m' + unicode(text) + u'\033[1;m',
+    'cyan' : lambda(text) : u'\033[1;36m' + unicode(text) + u'\033[1;m',
+    'white' : lambda(text) : u'\033[1;37m' + unicode(text) + u'\033[1;m',
+    'bgred' : lambda(text) : u'\033[1;41m' + unicode(text) + u'\033[1;m',
+    'bggreen' : lambda(text) : u'\033[1;42m' + unicode(text) + u'\033[1;m',
+    'bgbrown' : lambda(text) : u'\033[1;43m' + unicode(text) + u'\033[1;m',
+    'bgblue' : lambda(text) : u'\033[1;44m' + unicode(text) + u'\033[1;m',
+    'bgmagenta' : lambda(text) : u'\033[1;45m' + unicode(text) + u'\033[1;m',
+    'bgcyan' : lambda(text) : u'\033[1;46m' + unicode(text) + u'\033[1;m',
+    'bggray' : lambda(text) : u'\033[1;47m' + unicode(text) + u'\033[1;m',
+    'bgyellow' : lambda(text) : u'\033[1;43m' + unicode(text) + u'\033[1;m',
+    'bggrey' : lambda(text) : u'\033[1;100m' + unicode(text) + u'\033[1;m'
 }
 
-class ANSIFormatter(logging.Formatter):
+
+class ANSIFormatter(Formatter):
     """
     Convert a `logging.LogReport' object into colored text, using ANSI escape sequences.
     """
     ## colors:
 
     def format(self, record):
-        if not record.levelname or record.levelname is 'INFO':
-            return ANSI['white'](record.msg)
+        if record.levelname is 'INFO':
+            return ANSI['cyan']('-> ') + unicode(record.msg)
         elif record.levelname is 'WARNING':
-            return ANSI['yellow'](record.levelname) + ': ' + record.msg
+            return ANSI['yellow'](record.levelname) + ': ' + unicode(record.msg)
         elif record.levelname is 'ERROR':
-            return ANSI['red'](record.levelname) + ': ' + record.msg
+            return ANSI['red'](record.levelname) + ': ' + unicode(record.msg)
         elif record.levelname is 'CRITICAL':
-            return ANSI['bgred'](record.levelname) + ': ' + record.msg
+            return ANSI['bgred'](record.levelname) + ': ' + unicode(record.msg)
+        elif record.levelname is 'DEBUG':
+            return ANSI['bggrey'](record.levelname) + ': ' + unicode(record.msg)
+        else:
+            return ANSI['white'](record.levelname) + ': ' + unicode(record.msg)
 
 
-class TextFormatter(logging.Formatter):
+class TextFormatter(Formatter):
     """
     Convert a `logging.LogReport' object into text.
     """
@@ -52,7 +57,7 @@ class TextFormatter(logging.Formatter):
             return record.levelname + ': ' + record.msg
 
 
-class Formatter(object):
+class DummyFormatter(object):
     """
     A dummy class.
     Return an instance of the appropriate formatter (ANSIFormatter if sys.stdout.isatty() is True, else TextFormatter)
@@ -66,21 +71,10 @@ class Formatter(object):
 
 
 
-# shortcuts
-debug, info, warn, error, critical = (logging.debug,
-                                      logging.info,
-                                      logging.warn,
-                                      logging.error,
-                                      logging.critical)
-DEBUG, INFO, WARN, ERROR, CRITICAL = (logging.DEBUG,
-                                      logging.INFO,
-                                      logging.WARN,
-                                      logging.ERROR,
-                                      logging.CRITICAL)
 
 
-def init(level=None, logger=logging.getLogger(), handler=logging.StreamHandler()):
-    fmt = Formatter()
+def init(level=None, logger=getLogger(), handler=StreamHandler()):
+    fmt = DummyFormatter()
     handler.setFormatter(fmt)
     logger.addHandler(handler)
     if level:
@@ -88,11 +82,23 @@ def init(level=None, logger=logging.getLogger(), handler=logging.StreamHandler()
 
 
 if __name__ == '__main__':
-    init()
-    logging.basicConfig(filename='example.log',level=logging.DEBUG)
-    logging.debug('Logging test')
-    logging.info('info')
-    logging.warning('warning')
-    logging.error('error')
-    logging.critical('critical')
+    init(level=DEBUG)
+    debug('debug')
+    info('info')
+    warning('warning')
+    error('error')
+    critical('critical')
 
+
+__all__ = [
+    "debug", 
+    "info", 
+    "warn", 
+    "error", 
+    "critical", 
+    "DEBUG", 
+    "INFO", 
+    "WARN", 
+    "ERROR", 
+    "CRITICAL"
+] 
