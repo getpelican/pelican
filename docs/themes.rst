@@ -32,17 +32,17 @@ To make your own theme, you must follow the following structure::
   just examples. Put what you need here.
 
 * `templates` contains all the templates that will be used to generate the content.
-  I've just put the mandatory templates here, you can define your own if it helps 
+  I've just put the mandatory templates here, you can define your own if it helps
   you to organize yourself while doing the theme.
  
 Templates and variables
 =======================
 
 It's using a simple syntax, that you can embbed into your html pages.
-This document describes which templates should exists on a theme, and which
+This document describes which templates should exist on a theme, and which
 variables will be passed to each template, while generating it.
 
-All templates will receive the variables defined in your settings file, if they 
+All templates will receive the variables defined in your settings file, if they
 are in caps. You can access them directly. 
 
 Common variables
@@ -114,7 +114,7 @@ page_name               'category/`category_name`'. Useful for pagination
 article.html
 -------------
 
-This template will be processed for each article. .html files will be outputed
+This template will be processed for each article. .html files will be output
 in output/`article_name`.html. Here are the specific variables it gets.
 
 =============   ===================================================
@@ -152,8 +152,8 @@ page_name               'tag/`tag_name`'. Useful for pagination links.
 Include skribit script
 ======================
 
-In order to support skribit scripts in your themes, you must following these
-actions :
+In order to support skribit scripts in your themes, you must perform these
+actions:
 
  * Copy `skribit_tab_script.html` and `skribit_widget_script.html` in your
    templates directory.
