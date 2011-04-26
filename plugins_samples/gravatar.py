@@ -1,7 +1,26 @@
 import hashlib
 
 from blinker import signal
+"""
+Gravata plugin for Pelican
+==========================
 
+Simply add author_gravatar variable in article's context, which contain 
+the gravatar url.
+
+Settings:
+---------
+
+Add AUTHOR_EMAIL to your settings file to define default author email
+
+Article metadatas:
+------------------
+
+:email:  article's author email
+
+If one of them are defined the author_gravatar variable is added to 
+article's context.
+"""
 
 def add_gravatar(generator, metadatas):
     
@@ -17,4 +36,4 @@ def add_gravatar(generator, metadatas):
         metadatas["author_gravatar"] = gravatar_url
     
     
-signal('pelican_generate_context').connect(add_gravatar)
+signal('pelican_article_generate_context').connect(add_gravatar)
