@@ -1,5 +1,8 @@
 import argparse
 import os
+import pkgutil
+
+from blinker import signal
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
@@ -13,7 +16,7 @@ VERSION = "2.6.0"
 
 class Pelican(object):
     def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, keep=False):
+            markup=None, keep=False, plugins_path=None):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
@@ -41,6 +44,15 @@ class Pelican(object):
                 self.theme = theme_path
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
+        
+        plugins_path = plugins_path or settings['PLUGINS_PATH']
+        if plugins_path:
+            plugins_path = os.path.abspath(plugins_path)
+            self.load_plugins(plugins_path)
+        else:
+            self.plugins = None
+        
+        signal('pelican_initialized').send(self)
 
     def run(self):
         """Run the generators and return"""
@@ -81,6 +93,13 @@ class Pelican(object):
 
     def get_writer(self):
         return Writer(self.output_path, settings=self.settings)
+    
+    def load_plugins(self,path):
+        loaded = []
+        for module_loader, name, ispkg in pkgutil.walk_packages(path=[path,]):
+            loaded.append( module_loader.find_module(name).load_module(name) )
+        self.plugins = loaded
+        
 
 
 
@@ -116,6 +135,8 @@ def main():
     parser.add_argument('-r', '--autoreload', dest='autoreload', action='store_true',
             help="Relaunch pelican each time a modification occurs on the content"
                  "files")
+    parser.add_argument('-p', '--plugins', default=None, dest='plugins_path',
+            help='the path of plugins to use')
     args = parser.parse_args()
 
     log.init(args.verbosity)
@@ -134,7 +155,7 @@ def main():
         cls = getattr(module, cls_name)
 
     try:
-        pelican = cls(settings, args.path, args.theme, args.output, markup, args.keep)
+        pelican = cls(settings, args.path, args.theme, args.output, markup, args.keep, args.plugins_path)
         if args.autoreload:
             while True:
                 try:
