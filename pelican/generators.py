@@ -94,7 +94,7 @@ class ArticlesGenerator(Generator):
         self.dates = {}
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
-        self.signal = {'pelican_generate_context' : signal('pelican_generate_context')}
+        self.signal = {'pelican_article_generate_context' : signal('pelican_article_generate_context')}
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
 
     def generate_feeds(self, writer):
@@ -203,7 +203,7 @@ class ArticlesGenerator(Generator):
                 and self.settings['FALLBACK_ON_FS_DATE']:
                     metadatas['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
 
-            self.signal['pelican_generate_context'].send(self, metadatas=metadatas)
+            self.signal['pelican_article_generate_context'].send(self, metadatas=metadatas)
 
             article = Article(content, metadatas, settings=self.settings,
                               filename=f)
