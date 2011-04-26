@@ -91,14 +91,14 @@ def main():
     parser.add_argument(dest='path', nargs='?',
         help='Path where to find the content files')
     parser.add_argument('-t', '--theme-path', dest='theme',
-        help='Path where to find the theme templates. If not specified, it will'
-             'use the default one included with pelican.')
+        help='Path where to find the theme templates. If not specified, it'
+             'will use the default one included with pelican.')
     parser.add_argument('-o', '--output', dest='output',
         help='Where to output the generated files. If not specified, a directory'
              ' will be created, named "output" in the current path.')
     parser.add_argument('-m', '--markup', default=None, dest='markup',
-        help='the list of markup language to use (rst or md). Please indicate them'
-             'separated by commas')
+        help='the list of markup language to use (rst or md). Please indicate '
+             'them separated by commas')
     parser.add_argument('-s', '--settings', dest='settings',
         help='the settings of the application. Default to None.')
     parser.add_argument('-k', '--keep-output-directory', dest='keep',
