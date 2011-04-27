@@ -47,7 +47,7 @@ class Pelican(object):
         
         plugins_path = plugins_path or settings['PLUGINS_PATH']
         if plugins_path:
-            plugins_path = os.path.abspath(plugins_path)
+            plugins_path = os.path.abspath(os.path.expanduser(plugins_path))
             self.load_plugins(plugins_path)
         else:
             self.plugins = None
