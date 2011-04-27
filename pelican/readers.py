@@ -49,9 +49,14 @@ class RstReader(Reader):
         rendered_content = core.publish_parts(text, writer_name='html',
                                               settings_overrides=extra_params)
         title = rendered_content.get('title')
+        subtitle = rendered_content.get('subtitle') or ''
         content = rendered_content.get('body')
+        
         if not metadatas.has_key('title'):
             metadatas['title'] = title
+        if not metadatas.has_key('subtitle'):
+            metadatas['subtitle'] = subtitle
+            
         return content, metadatas
 
 class MarkdownReader(Reader):
