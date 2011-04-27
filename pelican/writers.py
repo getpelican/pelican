@@ -201,7 +201,7 @@ class Writer(object):
             """
             content = input._content
 
-            hrefs = re.compile(r'<\s*[^\>]*href\s*=\s*(["\'])(.*?)\1')
+            hrefs = re.compile(r'<\s*[^\>]*href\s*=(^!#)\s*(["\'])(.*?)\1')
             srcs = re.compile(r'<\s*[^\>]*src\s*=\s*(["\'])(.*?)\1')
 
             matches = hrefs.findall(content)
