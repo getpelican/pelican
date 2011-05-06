@@ -45,7 +45,9 @@ class RstReader(Reader):
         metadatas = self._parse_metadata(text)
         extra_params = {'input_encoding': 'unicode',
                         'initial_header_level': '2'}
-        rendered_content = core.publish_parts(text, writer_name='html',
+        rendered_content = core.publish_parts(text,
+                                              source_path=filename,
+                                              writer_name='html',
                                               settings_overrides=extra_params)
         title = rendered_content.get('title')
         content = rendered_content.get('body')
