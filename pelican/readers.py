@@ -3,7 +3,7 @@ try:
     from docutils import core
 
     # import the directives to have pygments support
-    import rstdirectives
+    from pelican import rstdirectives
 except ImportError:
     core = False
 try:
