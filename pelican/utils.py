@@ -6,7 +6,7 @@ from datetime import datetime
 from codecs import open as _open
 from itertools import groupby
 from operator import attrgetter
-from pelican.log import *
+from pelican.log import warning, info
 
 
 def get_date(string):
