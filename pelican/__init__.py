@@ -141,9 +141,9 @@ def main():
                 try:
                     if files_changed(pelican.path, pelican.markup):
                         pelican.run()
+                    time.sleep(.5)  # sleep to avoid cpu load
                 except KeyboardInterrupt:
                     break
-                time.sleep(.5)  # sleep to avoid cpu load
         else:
             pelican.run()
     except Exception, e:
