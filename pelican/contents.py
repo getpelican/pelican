@@ -89,6 +89,6 @@ def is_valid_content(content, f):
     try:
         content.check_properties()
         return True
-    except NameError as e:
+    except NameError, e:
         error(u"Skipping %s: impossible to find informations about '%s'" % (f, e))
         return False
