@@ -6,8 +6,7 @@ class Page(object):
     """Represents a page
     Given a content, and metadatas, create an adequate object.
 
-    :param string: the string to parse, containing the original content.
-    :param markup: the markup language to use while parsing.
+    :param content: the string to parse, containing the original content.
     """
     mandatory_properties = ('title',)
 
