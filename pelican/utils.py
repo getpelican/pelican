@@ -192,9 +192,10 @@ def files_changed(path, extensions):
 
     def file_times(path):
         """Return the last time files have been modified"""
-        for top_level in os.listdir(path):
-            for root, dirs, files in os.walk(top_level):
-                for file in filter(with_extension, files):
+        for root, dirs, files in os.walk(path):
+            dirs[:] = [x for x in dirs if x[0] != '.']
+            for file in files:
+                if any(file.endswith(ext) for ext in extensions):
                     yield os.stat(os.path.join(root, file)).st_mtime
 
     global LAST_MTIME
