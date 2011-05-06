@@ -11,15 +11,14 @@ try:
 except ImportError:
     Markdown = False
 import re
-import string
 
 from pelican.utils import get_date, open
 
 
 _METADATAS_PROCESSORS = {
-    'tags': lambda x: map(string.strip, x.split(',')),
+    'tags': lambda x: map(unicode.strip, x.split(',')),
     'date': lambda x: get_date(x),
-    'status': string.strip,
+    'status': unicode.strip,
 }
 
 
