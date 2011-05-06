@@ -164,9 +164,13 @@ def process_translations(content_list):
         len_ = len(default_lang_items)
         if len_ > 1:
             warning(u'there are %s variants of "%s"' % (len_, slug))
+            for x in default_lang_items:
+                warning('    %s' % x.filename)
         elif len_ == 0:
             default_lang_items = items[:1]
 
+        if not slug:
+            warning('empty slug for %r' %( default_lang_items[0].filename,))
         index.extend(default_lang_items)
         translations.extend(filter(
             lambda x: x not in default_lang_items,
