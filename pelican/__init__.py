@@ -1,5 +1,6 @@
 import argparse
 import os
+import time
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
@@ -142,6 +143,7 @@ def main():
                         pelican.run()
                 except KeyboardInterrupt:
                     break
+                time.sleep(.5)  # sleep to avoid cpu load
         else:
             pelican.run()
     except Exception, e:
