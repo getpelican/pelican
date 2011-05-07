@@ -94,6 +94,7 @@ __all__ = [
     "debug", 
     "info", 
     "warn", 
+    "warning",
     "error", 
     "critical", 
     "DEBUG", 
