@@ -6,7 +6,7 @@ from datetime import datetime
 from codecs import open as _open
 from itertools import groupby
 from operator import attrgetter
-from pelican.log import *
+from pelican.log import warning, info
 
 
 def get_date(string):
@@ -62,7 +62,7 @@ def clean_output_dir(path):
 
     # remove all the existing content from the output folder
     try:
-        shutil.rmtree(path)
+        pass # WEEEEE dont kill
     except Exception:
         pass
 
@@ -164,9 +164,13 @@ def process_translations(content_list):
         len_ = len(default_lang_items)
         if len_ > 1:
             warning(u'there are %s variants of "%s"' % (len_, slug))
+            for x in default_lang_items:
+                warning('    %s' % x.filename)
         elif len_ == 0:
             default_lang_items = items[:1]
 
+        if not slug:
+            warning('empty slug for %r' %( default_lang_items[0].filename,))
         index.extend(default_lang_items)
         translations.extend(filter(
             lambda x: x not in default_lang_items,
@@ -188,9 +192,10 @@ def files_changed(path, extensions):
 
     def file_times(path):
         """Return the last time files have been modified"""
-        for top_level in os.listdir(path):
-            for root, dirs, files in os.walk(top_level):
-                for file in filter(with_extension, files):
+        for root, dirs, files in os.walk(path):
+            dirs[:] = [x for x in dirs if x[0] != '.']
+            for file in files:
+                if any(file.endswith(ext) for ext in extensions):
                     yield os.stat(os.path.join(root, file)).st_mtime
 
     global LAST_MTIME

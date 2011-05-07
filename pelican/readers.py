@@ -3,7 +3,7 @@ try:
     from docutils import core
 
     # import the directives to have pygments support
-    import rstdirectives
+    from pelican import rstdirectives
 except ImportError:
     core = False
 try:
@@ -11,15 +11,14 @@ try:
 except ImportError:
     Markdown = False
 import re
-import string
 
 from pelican.utils import get_date, open
 
 
 _METADATAS_PROCESSORS = {
-    'tags': lambda x: map(string.strip, x.split(',')),
+    'tags': lambda x: map(unicode.strip, x.split(',')),
     'date': lambda x: get_date(x),
-    'status': string.strip,
+    'status': unicode.strip,
 }
 
 
@@ -46,7 +45,9 @@ class RstReader(Reader):
         metadatas = self._parse_metadata(text)
         extra_params = {'input_encoding': 'unicode',
                         'initial_header_level': '2'}
-        rendered_content = core.publish_parts(text, writer_name='html',
+        rendered_content = core.publish_parts(text,
+                                              source_path=filename,
+                                              writer_name='html',
                                               settings_overrides=extra_params)
         title = rendered_content.get('title')
         content = rendered_content.get('body')
