@@ -16,7 +16,10 @@ class Page(object):
         self.translations = []
 
         self.status = "published"  # default value
-        for key, value in metadatas.items():
+
+        local_metadata = dict(settings['DEFAULT_METADATA'])
+        local_metadata.update(metadatas)
+        for key, value in local_metadata.items():
             setattr(self, key.lower(), value)
 
         if not hasattr(self, 'author'):

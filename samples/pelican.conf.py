@@ -24,4 +24,7 @@ SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
           ('lastfm', 'http://lastfm.com/user/akounet'),
           ('github', 'http://github.com/ametaireau'),)
 
+# global metadata to all the contents
+DEFAULT_METADATA = (('yeah', 'it is'),)
+
 STATIC_PATHS = ["pictures",]

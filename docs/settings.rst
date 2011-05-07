@@ -32,6 +32,8 @@ Setting name (default value)                        what does it do?
 `DEFAULT_CATEGORY` (``'misc'``)                     The default category to fallback on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)           The default date format you want to use.
 `DEFAULT_LANG` (``'en'``)                           The default language to use.
+`DEFAULT_METADATA` (``()``)                         A list containing the default metadata for 
+                                                    each content (articles, pages, etc.)
 `DEFAULT_ORPHANS` (0)                               The minimum number of articles allowed on the
                                                     last page. Use this when you don't want to
                                                     have a last page with very few articles.

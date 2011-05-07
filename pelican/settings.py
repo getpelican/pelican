@@ -37,6 +37,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'WITH_PAGINATION': False,
                    'DEFAULT_PAGINATION': 5,
                    'DEFAULT_ORPHANS': 0,
+                   'DEFAULT_METADATA': (),
                   }
 
 def read_settings(filename):
