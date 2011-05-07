@@ -6,8 +6,7 @@ class Page(object):
     """Represents a page
     Given a content, and metadata, create an adequate object.
 
-    :param string: the string to parse, containing the original content.
-    :param markup: the markup language to use while parsing.
+    :param content: the string to parse, containing the original content.
     """
     mandatory_properties = ('title',)
 
@@ -93,6 +92,6 @@ def is_valid_content(content, f):
     try:
         content.check_properties()
         return True
-    except NameError as e:
+    except NameError, e:
         error(u"Skipping %s: impossible to find informations about '%s'" % (f, e))
         return False

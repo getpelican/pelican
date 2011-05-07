@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import with_statement
 import os
 import re
 from codecs import open
@@ -44,9 +45,8 @@ class Writer(object):
         Return the feed. If no output_path or filename is specified, just return
         the feed object.
 
-        :param articles: the articles to put on the feed.
+        :param elements: the articles to put on the feed.
         :param context: the context to get the feed metadata.
-        :param output_path: where to output the file.
         :param filename: the filename to output.
         :param feed_type: the feed type to use (atom or rss)
         """
@@ -139,7 +139,7 @@ class Writer(object):
                                                    '%s_page' % key: page})
                 if page_num > 0:
                     ext = '.' + paginated_name.rsplit('.')[-1]
-                    paginated_name = paginated_name.replace(ext, 
+                    paginated_name = paginated_name.replace(ext,
                             '%s%s' % (page_num + 1, ext))
 
                 _write_file(template, paginated_localcontext, self.output_path,
@@ -149,7 +149,7 @@ class Writer(object):
             _write_file(template, localcontext, self.output_path, name)
 
     def update_context_contents(self, name, context):
-        """Recursively run the context to find elements (articles, pages, etc) 
+        """Recursively run the context to find elements (articles, pages, etc)
         whose content getter needs to
         be modified in order to deal with relative paths.
 
@@ -188,12 +188,12 @@ class Writer(object):
         return context
 
     def inject_update_method(self, name, item):
-        """Replace the content attribute getter of an element by a function 
+        """Replace the content attribute getter of an element by a function
         that will deals with its relatives paths.
         """
 
         def _update_object_content(name, input):
-            """Change all the relatives paths of the input content to relatives 
+            """Change all the relatives paths of the input content to relatives
             paths suitable fot the ouput content
 
             :param name: path of the output.

@@ -35,7 +35,7 @@ class Generator(object):
             loader=FileSystemLoader(self._templates_path),
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
-        
+
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self._env.filters.update(custom_filters)
@@ -63,7 +63,13 @@ class Generator(object):
             extensions = self.markup
 
         files = []
-        for root, dirs, temp_files in os.walk(path, followlinks=True):
+
+        try:
+            iter = os.walk(path, followlinks=True)
+        except TypeError: # python 2.5 does not support followlinks
+            iter = os.walk(path)
+
+        for root, dirs, temp_files in iter:
             for e in exclude:
                 if e in dirs:
                     dirs.remove(e)
@@ -116,11 +122,11 @@ class ArticlesGenerator(Generator):
         if 'TAG_FEED' in self.settings:
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(arts, self.context, 
+                writer.write_feed(arts, self.context,
                         self.settings['TAG_FEED'] % tag)
 
                 if 'TAG_FEED_RSS' in self.settings:
-                    writer.write_feed(arts, self.context, 
+                    writer.write_feed(arts, self.context,
                             self.settings['TAG_FEED_RSS'] % tag, feed_type='rss')
 
         translations_feeds = defaultdict(list)
@@ -142,7 +148,7 @@ class ArticlesGenerator(Generator):
             relative_urls = self.settings.get('RELATIVE_URLS')
         )
 
-        # to minimize the number of relative path stuff modification 
+        # to minimize the number of relative path stuff modification
         # in writer, articles pass first
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
@@ -220,7 +226,7 @@ class ArticlesGenerator(Generator):
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
-        self.dates.sort(key=attrgetter('date'), 
+        self.dates.sort(key=attrgetter('date'),
                 reverse=self.context['REVERSE_ARCHIVE_ORDER'])
 
         # create tag cloud
@@ -236,7 +242,7 @@ class ArticlesGenerator(Generator):
         if tags:
                 max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
-        
+
         # calculate word sizes
         self.tag_cloud = [
             (
@@ -332,7 +338,7 @@ class PdfGenerator(Generator):
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             self.pdfcreator.createPdf(text=open(obj.filename), output=output_pdf)
             info(u' [ok] writing %s' % output_pdf)
-    
+
     def generate_context(self):
         pass
 
