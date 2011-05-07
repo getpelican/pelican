@@ -46,7 +46,7 @@ Setting name (default value)                        what does it do?
 `FEED` (``'feeds/all.atom.xml'``)                   relative url to output the atom feed.
 `FEED_RSS` (``None``, i.e. no RSS)                  relative url to output the rss feed.
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
-`KEEP_OUTPUT_DIRECTORY` (``False``)                 Keep the output directory and just update all
+`DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory instead of just updating all 
                                                     the generated files.
 `LOCALE` (''[2]_)                                   Change the locale.
 `MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want

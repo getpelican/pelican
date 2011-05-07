@@ -14,7 +14,7 @@ VERSION = "2.6.0"
 
 class Pelican(object):
     def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, keep=False):
+            markup=None, delete_outputdir=False):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
@@ -32,7 +32,7 @@ class Pelican(object):
         output_path = output_path or settings['OUTPUT_PATH']
         self.output_path = os.path.realpath(output_path)
         self.markup = markup or settings['MARKUP']
-        self.keep = keep or settings['KEEP_OUTPUT_DIRECTORY']
+        self.delete_outputdir = delete_outputdir or settings['DELETE_OUTPUT_DIRECTORY']
 
         # find the theme in pelican.theme if the given one does not exists
         if not os.path.exists(self.theme):
@@ -55,7 +55,7 @@ class Pelican(object):
                 self.theme,
                 self.output_path,
                 self.markup,
-                self.keep
+                self.delete_outputdir
             ) for cls in self.get_generator_classes()
         ]
 
@@ -63,8 +63,10 @@ class Pelican(object):
             if hasattr(p, 'generate_context'):
                 p.generate_context()
 
-        # erase the directory if it is not the source
-        if os.path.realpath(self.path).startswith(self.output_path) and not self.keep:
+        # erase the directory if it is not the source and if that's 
+        # explicitely asked
+        if (self.delete_outputdir and 
+                os.path.realpath(self.path).startswith(self.output_path)):
             clean_output_dir(self.output_path)
 
         writer = self.get_writer()
@@ -101,11 +103,9 @@ def main():
         help='the list of markup language to use (rst or md). Please indicate '
              'them separated by commas')
     parser.add_argument('-s', '--settings', dest='settings',
-        help='the settings of the application. Default to None.')
-    parser.add_argument('-k', '--keep-output-directory', dest='keep',
-            action='store_true',
-        help='Keep the output directory and just update all the generated files.'
-             'Default is to delete the output directory.')
+        help='the settings of the application. Default to False.')
+    parser.add_argument('-d', '--delete-output-directory', dest='delete_outputdir',
+        action='store_true', help='Delete the output directory.')
     parser.add_argument('-v', '--verbose', action='store_const', const=log.INFO, dest='verbosity',
             help='Show all messages')
     parser.add_argument('-q', '--quiet', action='store_const', const=log.CRITICAL, dest='verbosity',
@@ -135,7 +135,8 @@ def main():
         cls = getattr(module, cls_name)
 
     try:
-        pelican = cls(settings, args.path, args.theme, args.output, markup, args.keep)
+        pelican = cls(settings, args.path, args.theme, args.output, markup,
+                args.delete_outputdir)
         if args.autoreload:
             while True:
                 try:
