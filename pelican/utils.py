@@ -42,20 +42,38 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
-def copytree(path, origin, destination, topath=None):
-    """Copy path from origin to destination, silent any errors"""
-    
-    if not topath:
-        topath = path
-    try:
-        fromp = os.path.expanduser(os.path.join(origin, path))
-        to = os.path.expanduser(os.path.join(destination, topath))
-        shutil.copytree(fromp, to)
-        info('copying %s to %s' % (fromp, to))
+def copy(path, source, destination, destination_path=None, overwrite=False):
+    """Copy path from origin to destination.
 
-    except OSError:
-        pass
+    The function is able to copy either files or directories.
 
+    :param path: the path to be copied from the source to the destination
+    :param source: the source dir
+    :param destination: the destination dir
+    :param destination_path: the destination path (optional)
+    :param overwrite: wether to overwrite the destination if already exists or not
+
+    """
+    if not destination_path:
+        destination_path = path
+
+    source_ = os.path.abspath(os.path.expanduser(os.path.join(source, path)))
+    destination_ = os.path.abspath(
+            os.path.expanduser(os.path.join(destination, destination_path)))
+
+    if os.path.isdir(source_):
+        try:
+            shutil.copytree(source_, destination_)
+            info('copying %s to %s' % (source_, destination_))
+        except OSError:
+            if overwrite:
+                shutil.rmtree(destination_)
+                shutil.copytree(source_, destination_)
+                info('replacement of %s with %s' % (source_, destination_))
+
+    elif os.path.isfile(source_):
+        shutil.copy(source_, destination_)
+        info('copying %s to %s' % (source_, destination_))
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""

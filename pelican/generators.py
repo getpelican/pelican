@@ -11,7 +11,7 @@ import random
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import copytree, get_relative_path, process_translations, open
+from pelican.utils import copy, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 from pelican.log import *
@@ -298,15 +298,20 @@ class StaticGenerator(Generator):
 
     def _copy_paths(self, paths, source, destination, output_path,
             final_path=None):
+        """Copy all the paths from source to destination"""
         for path in paths:
-            copytree(path, source, os.path.join(output_path, destination),
-                    final_path)
+            copy(path, source, os.path.join(output_path, destination), final_path, 
+                    overwrite=True)
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['STATIC_PATHS'], self.path,
                          'static', self.output_path)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
+
+        # copy all the files needed
+        for source, destination in self.settings['FILES_TO_COPY']:
+            copy(source, self.path, self.output_path, destination, overwrite=True)
 
 
 class PdfGenerator(Generator):

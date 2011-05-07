@@ -21,7 +21,7 @@ this file will be passed to the templates as well.
 
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `AUTHOR`                                            Default author (put your name)
 `CATEGORY_FEED` ('feeds/%s.atom.xml'[1]_)           Where to put the atom categories feeds.
@@ -32,7 +32,7 @@ Setting name (default value)                        what does it do?
 `DEFAULT_CATEGORY` (``'misc'``)                     The default category to fallback on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)           The default date format you want to use.
 `DEFAULT_LANG` (``'en'``)                           The default language to use.
-`DEFAULT_METADATA` (``()``)                         A list containing the default metadata for 
+`DEFAULT_METADATA` (``()``)                         A list containing the default metadata for
                                                     each content (articles, pages, etc.)
 `DEFAULT_ORPHANS` (0)                               The minimum number of articles allowed on the
                                                     last page. Use this when you don't want to
@@ -47,8 +47,11 @@ Setting name (default value)                        what does it do?
                                                     informations from the metadata
 `FEED` (``'feeds/all.atom.xml'``)                   relative url to output the atom feed.
 `FEED_RSS` (``None``, i.e. no RSS)                  relative url to output the rss feed.
+`FILES_TO_COPY` (``()``, no files)                  A list of tuples (source, destination) of files
+                                                    to copy from the source directory to the
+                                                    output path
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
-`DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory instead of just updating all 
+`DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory instead of just updating all
                                                     the generated files.
 `LOCALE` (''[2]_)                                   Change the locale.
 `MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want

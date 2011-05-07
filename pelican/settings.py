@@ -38,6 +38,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_PAGINATION': 5,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
+                   'FILES_TO_COPY': (),
                   }
 
 def read_settings(filename):
