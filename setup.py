@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from setuptools import setup
 import sys
 
@@ -17,7 +18,7 @@ setup(
     long_description=open('README.rst').read(),
     packages = ['pelican'],
     include_package_data = True,
-    install_requires = requires, 
+    install_requires = requires,
     scripts = ['bin/pelican'],
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
