@@ -49,14 +49,14 @@ Take a look to the Markdown reader::
             md = Markdown(extensions = ['meta', 'codehilite'])
             content = md.convert(text)
             
-            metadatas = {}
+            metadata = {}
             for name, value in md.Meta.items():
-                if name in _METADATAS_FIELDS:
-                    meta = _METADATAS_FIELDS[name](value[0])
+                if name in _METADATA_FIELDS:
+                    meta = _METADATA_FIELDS[name](value[0])
                 else:
                     meta = value[0]
-                metadatas[name.lower()] = meta
-            return content, metadatas
+                metadata[name.lower()] = meta
+            return content, metadata
 
 Simple isn't it ?
 

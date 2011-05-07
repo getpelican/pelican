@@ -4,21 +4,21 @@ from pelican.log import *
 
 class Page(object):
     """Represents a page
-    Given a content, and metadatas, create an adequate object.
+    Given a content, and metadata, create an adequate object.
 
     :param string: the string to parse, containing the original content.
     :param markup: the markup language to use while parsing.
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content, metadatas={}, settings={}, filename=None):
+    def __init__(self, content, metadata={}, settings={}, filename=None):
         self._content = content
         self.translations = []
 
         self.status = "published"  # default value
 
         local_metadata = dict(settings['DEFAULT_METADATA'])
-        local_metadata.update(metadatas)
+        local_metadata.update(metadata)
         for key, value in local_metadata.items():
             setattr(self, key.lower(), value)
 

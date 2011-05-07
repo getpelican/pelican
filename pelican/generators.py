@@ -183,10 +183,10 @@ class ArticlesGenerator(Generator):
         files = self.get_files(self.path, exclude=['pages',])
         all_articles = []
         for f in files:
-            content, metadatas = read_file(f)
+            content, metadata = read_file(f)
 
             # if no category is set, use the name of the path as a category
-            if 'category' not in metadatas.keys():
+            if 'category' not in metadata.keys():
 
                 if os.path.dirname(f) == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
@@ -194,13 +194,13 @@ class ArticlesGenerator(Generator):
                     category = os.path.basename(os.path.dirname(f))
 
                 if category != '':
-                    metadatas['category'] = unicode(category)
+                    metadata['category'] = unicode(category)
 
-            if 'date' not in metadatas.keys()\
+            if 'date' not in metadata.keys()\
                 and self.settings['FALLBACK_ON_FS_DATE']:
-                    metadatas['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
+                    metadata['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
 
-            article = Article(content, metadatas, settings=self.settings,
+            article = Article(content, metadata, settings=self.settings,
                               filename=f)
             if not is_valid_content(article, f):
                 continue
@@ -273,8 +273,8 @@ class PagesGenerator(Generator):
     def generate_context(self):
         all_pages = []
         for f in self.get_files(os.sep.join((self.path, 'pages'))):
-            content, metadatas = read_file(f)
-            page = Page(content, metadatas, settings=self.settings,
+            content, metadata = read_file(f)
+            page = Page(content, metadata, settings=self.settings,
                         filename=f)
             if not is_valid_content(page, f):
                 continue
