@@ -99,6 +99,7 @@ class ArticlesGenerator(Generator):
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
+        self.drafts = []
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
@@ -140,8 +141,7 @@ class ArticlesGenerator(Generator):
 
 
     def generate_pages(self, writer):
-        """Generate the pages on the disk
-        TODO: change the name"""
+        """Generate the pages on the disk"""
 
         write = partial(
             writer.write_file,
@@ -181,6 +181,10 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name='category/%s' % cat)
 
+        for article in self.drafts:
+            write('drafts/%s.html' % article.slug, article_template, self.context,
+                    article=article, category=article.category)
+
 
     def generate_context(self):
         """change the context"""
@@ -211,10 +215,13 @@ class ArticlesGenerator(Generator):
             if not is_valid_content(article, f):
                 continue
 
-            if hasattr(article, 'tags'):
-                for tag in article.tags:
-                    self.tags[tag].append(article)
-            all_articles.append(article)
+            if article.status == "published":
+                if hasattr(article, 'tags'):
+                    for tag in article.tags:
+                        self.tags[tag].append(article)
+                all_articles.append(article)
+            elif article.status == "draft":
+                self.drafts.append(article)
 
         self.articles, self.translations = process_translations(all_articles)
 

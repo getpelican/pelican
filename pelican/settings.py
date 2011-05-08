@@ -39,6 +39,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
                    'FILES_TO_COPY': (),
+                   'DEFAULT_STATUS': 'published',
                   }
 
 def read_settings(filename):

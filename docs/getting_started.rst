@@ -150,3 +150,11 @@ Autoreload
 It's possible to tell pelican to watch for your modifications, instead of
 manually launching it each time you need. Use the `-r` option, or
 `--autoreload`.
+
+Publishing drafts
+-----------------
+
+If you want to publish an article as a draft, for friends to review it for
+instance, you can add a `status: draft` to its metadata, it will then be
+available under the `drafts` folder, and not be listed under the index page nor
+any category page.

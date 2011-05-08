@@ -62,6 +62,9 @@ class Page(object):
         if not hasattr(self, 'summary'):
             self.summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
 
+        if not hasattr(self, 'status'):
+            self.status = settings['DEFAULT_STATUS']
+
         # store the settings ref.
         self._settings = settings
 
