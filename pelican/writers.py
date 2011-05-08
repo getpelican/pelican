@@ -150,49 +150,14 @@ class Writer(object):
 
     def update_context_contents(self, name, context):
         """Recursively run the context to find elements (articles, pages, etc)
-        whose content getter needs to
-        be modified in order to deal with relative paths.
+        whose content getter needs to be modified in order to deal with
+        relative paths.
 
         :param name: name of the file to output.
-        :param context: dict that will be passed to the templates.
+        :param context: dict that will be passed to the templates, which need to
+                        be updated.
         """
-        if context is None:
-            return None
-
-        if type(context) == tuple:
-            context = list(context)
-
-        if type(context) == dict:
-            context = list(context.values())
-
-        for i in xrange(len(context)):
-            if type(context[i]) == tuple or type(context[i]) == list:
-                context[i] = self.update_context_contents(name, context[i])
-
-            elif type(context[i]) == dict:
-                context[i] = self.update_context_contents(name, context[i].values())
-
-            elif hasattr(context[i], '_content'):
-                relative_path = get_relative_path(name)
-                item = context[i]
-
-                if item in self.reminder:
-                    if relative_path not in self.reminder[item]:
-                        l = self.reminder[item]
-                        l.append(relative_path)
-                        self.inject_update_method(name, item)
-                else:
-                    l = list(relative_path)
-                    self.reminder[item] = l
-                    self.inject_update_method(name, item)
-        return context
-
-    def inject_update_method(self, name, item):
-        """Replace the content attribute getter of an element by a function
-        that will deals with its relatives paths.
-        """
-
-        def _update_object_content(name, input):
+        def _update_content(name, input):
             """Change all the relatives paths of the input content to relatives
             paths suitable fot the ouput content
 
@@ -219,7 +184,25 @@ class Writer(object):
                     content = content.replace(relative_path, dest_path)
 
             return content
+        
+        if context is None:
+            return
+        if hasattr(context, 'values'):
+            context = context.values()
 
-        if item:
-            setattr(item, "_get_content",
-                partial(_update_object_content, name, item))
+        for item in context:
+            # run recursively on iterables
+            if hasattr(item, '__iter__'):
+                self.update_context_contents(name, item)
+
+            # if it is a content, patch it
+            elif hasattr(item, '_content'):
+                info("content detected %s" % item)
+                relative_path = get_relative_path(name)
+
+                paths = self.reminder.setdefault(item, [])
+                if relative_path not in paths:
+                    paths.append(relative_path)
+                    info("patch _get_content method for %s" % item.title)
+                    setattr(item, "_get_content",
+                            partial(_update_content, name, item))
