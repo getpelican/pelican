@@ -6,7 +6,7 @@ from datetime import datetime
 from codecs import open as _open
 from itertools import groupby
 from operator import attrgetter
-from pelican.log import *
+from pelican.log import warning, info
 
 
 def get_date(string):
@@ -42,20 +42,38 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
-def copytree(path, origin, destination, topath=None):
-    """Copy path from origin to destination, silent any errors"""
-    
-    if not topath:
-        topath = path
-    try:
-        fromp = os.path.expanduser(os.path.join(origin, path))
-        to = os.path.expanduser(os.path.join(destination, topath))
-        shutil.copytree(fromp, to)
-        info('copying %s to %s' % (fromp, to))
+def copy(path, source, destination, destination_path=None, overwrite=False):
+    """Copy path from origin to destination.
 
-    except OSError:
-        pass
+    The function is able to copy either files or directories.
 
+    :param path: the path to be copied from the source to the destination
+    :param source: the source dir
+    :param destination: the destination dir
+    :param destination_path: the destination path (optional)
+    :param overwrite: wether to overwrite the destination if already exists or not
+
+    """
+    if not destination_path:
+        destination_path = path
+
+    source_ = os.path.abspath(os.path.expanduser(os.path.join(source, path)))
+    destination_ = os.path.abspath(
+            os.path.expanduser(os.path.join(destination, destination_path)))
+
+    if os.path.isdir(source_):
+        try:
+            shutil.copytree(source_, destination_)
+            info('copying %s to %s' % (source_, destination_))
+        except OSError:
+            if overwrite:
+                shutil.rmtree(destination_)
+                shutil.copytree(source_, destination_)
+                info('replacement of %s with %s' % (source_, destination_))
+
+    elif os.path.isfile(source_):
+        shutil.copy(source_, destination_)
+        info('copying %s to %s' % (source_, destination_))
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
@@ -164,9 +182,13 @@ def process_translations(content_list):
         len_ = len(default_lang_items)
         if len_ > 1:
             warning(u'there are %s variants of "%s"' % (len_, slug))
+            for x in default_lang_items:
+                warning('    %s' % x.filename)
         elif len_ == 0:
             default_lang_items = items[:1]
 
+        if not slug:
+            warning('empty slug for %r' %( default_lang_items[0].filename,))
         index.extend(default_lang_items)
         translations.extend(filter(
             lambda x: x not in default_lang_items,
@@ -188,9 +210,10 @@ def files_changed(path, extensions):
 
     def file_times(path):
         """Return the last time files have been modified"""
-        for top_level in os.listdir(path):
-            for root, dirs, files in os.walk(top_level):
-                for file in filter(with_extension, files):
+        for root, dirs, files in os.walk(path):
+            dirs[:] = [x for x in dirs if x[0] != '.']
+            for file in files:
+                if any(file.endswith(ext) for ext in extensions):
                     yield os.stat(os.path.join(root, file)).st_mtime
 
     global LAST_MTIME

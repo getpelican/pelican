@@ -11,7 +11,7 @@ import random
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import copytree, get_relative_path, process_translations, open
+from pelican.utils import copy, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 from pelican.log import *
@@ -35,7 +35,7 @@ class Generator(object):
             loader=FileSystemLoader(self._templates_path),
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
-        
+
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self._env.filters.update(custom_filters)
@@ -63,7 +63,13 @@ class Generator(object):
             extensions = self.markup
 
         files = []
-        for root, dirs, temp_files in os.walk(path, followlinks=True):
+
+        try:
+            iter = os.walk(path, followlinks=True)
+        except TypeError: # python 2.5 does not support followlinks
+            iter = os.walk(path)
+
+        for root, dirs, temp_files in iter:
             for e in exclude:
                 if e in dirs:
                     dirs.remove(e)
@@ -116,11 +122,11 @@ class ArticlesGenerator(Generator):
         if 'TAG_FEED' in self.settings:
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(arts, self.context, 
+                writer.write_feed(arts, self.context,
                         self.settings['TAG_FEED'] % tag)
 
                 if 'TAG_FEED_RSS' in self.settings:
-                    writer.write_feed(arts, self.context, 
+                    writer.write_feed(arts, self.context,
                             self.settings['TAG_FEED_RSS'] % tag, feed_type='rss')
 
         translations_feeds = defaultdict(list)
@@ -142,7 +148,7 @@ class ArticlesGenerator(Generator):
             relative_urls = self.settings.get('RELATIVE_URLS')
         )
 
-        # to minimize the number of relative path stuff modification 
+        # to minimize the number of relative path stuff modification
         # in writer, articles pass first
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
@@ -183,10 +189,10 @@ class ArticlesGenerator(Generator):
         files = self.get_files(self.path, exclude=['pages',])
         all_articles = []
         for f in files:
-            content, metadatas = read_file(f)
+            content, metadata = read_file(f)
 
             # if no category is set, use the name of the path as a category
-            if 'category' not in metadatas.keys():
+            if 'category' not in metadata.keys():
 
                 if os.path.dirname(f) == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
@@ -194,13 +200,13 @@ class ArticlesGenerator(Generator):
                     category = os.path.basename(os.path.dirname(f))
 
                 if category != '':
-                    metadatas['category'] = unicode(category)
+                    metadata['category'] = unicode(category)
 
-            if 'date' not in metadatas.keys()\
+            if 'date' not in metadata.keys()\
                 and self.settings['FALLBACK_ON_FS_DATE']:
-                    metadatas['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
+                    metadata['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
 
-            article = Article(content, metadatas, settings=self.settings,
+            article = Article(content, metadata, settings=self.settings,
                               filename=f)
             if not is_valid_content(article, f):
                 continue
@@ -220,7 +226,7 @@ class ArticlesGenerator(Generator):
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
-        self.dates.sort(key=attrgetter('date'), 
+        self.dates.sort(key=attrgetter('date'),
                 reverse=self.context['REVERSE_ARCHIVE_ORDER'])
 
         # create tag cloud
@@ -236,7 +242,7 @@ class ArticlesGenerator(Generator):
         if tags:
                 max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
-        
+
         # calculate word sizes
         self.tag_cloud = [
             (
@@ -273,8 +279,8 @@ class PagesGenerator(Generator):
     def generate_context(self):
         all_pages = []
         for f in self.get_files(os.sep.join((self.path, 'pages'))):
-            content, metadatas = read_file(f)
-            page = Page(content, metadatas, settings=self.settings,
+            content, metadata = read_file(f)
+            page = Page(content, metadata, settings=self.settings,
                         filename=f)
             if not is_valid_content(page, f):
                 continue
@@ -298,15 +304,20 @@ class StaticGenerator(Generator):
 
     def _copy_paths(self, paths, source, destination, output_path,
             final_path=None):
+        """Copy all the paths from source to destination"""
         for path in paths:
-            copytree(path, source, os.path.join(output_path, destination),
-                    final_path)
+            copy(path, source, os.path.join(output_path, destination), final_path, 
+                    overwrite=True)
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['STATIC_PATHS'], self.path,
                          'static', self.output_path)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
+
+        # copy all the files needed
+        for source, destination in self.settings['FILES_TO_COPY']:
+            copy(source, self.path, self.output_path, destination, overwrite=True)
 
 
 class PdfGenerator(Generator):
@@ -327,7 +338,7 @@ class PdfGenerator(Generator):
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             self.pdfcreator.createPdf(text=open(obj.filename), output=output_pdf)
             info(u' [ok] writing %s' % output_pdf)
-    
+
     def generate_context(self):
         pass
 

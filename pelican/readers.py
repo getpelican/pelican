@@ -3,7 +3,7 @@ try:
     from docutils import core
 
     # import the directives to have pygments support
-    import rstdirectives
+    from pelican import rstdirectives
 except ImportError:
     core = False
 try:
@@ -11,15 +11,14 @@ try:
 except ImportError:
     Markdown = False
 import re
-import string
 
 from pelican.utils import get_date, open
 
 
-_METADATAS_PROCESSORS = {
-    'tags': lambda x: map(string.strip, x.split(',')),
+_METADATA_PROCESSORS = {
+    'tags': lambda x: map(unicode.strip, x.split(',')),
     'date': lambda x: get_date(x),
-    'status': string.strip,
+    'status': unicode.strip,
 }
 
 
@@ -31,11 +30,11 @@ class RstReader(Reader):
     extension = "rst"
 
     def _parse_metadata(self, content):
-        """Return the dict containing metadatas"""
+        """Return the dict containing metadata"""
         output = {}
         for m in re.compile('^:([a-z]+): (.*)\s', re.M).finditer(content):
             name, value = m.group(1).lower(), m.group(2)
-            output[name] = _METADATAS_PROCESSORS.get(
+            output[name] = _METADATA_PROCESSORS.get(
                 name, lambda x:x
             )(value)
         return output
@@ -43,16 +42,18 @@ class RstReader(Reader):
     def read(self, filename):
         """Parse restructured text"""
         text = open(filename)
-        metadatas = self._parse_metadata(text)
+        metadata = self._parse_metadata(text)
         extra_params = {'input_encoding': 'unicode',
                         'initial_header_level': '2'}
-        rendered_content = core.publish_parts(text, writer_name='html',
+        rendered_content = core.publish_parts(text,
+                                              source_path=filename,
+                                              writer_name='html',
                                               settings_overrides=extra_params)
         title = rendered_content.get('title')
         content = rendered_content.get('body')
-        if not metadatas.has_key('title'):
-            metadatas['title'] = title
-        return content, metadatas
+        if not metadata.has_key('title'):
+            metadata['title'] = title
+        return content, metadata
 
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
@@ -64,13 +65,13 @@ class MarkdownReader(Reader):
         md = Markdown(extensions = ['meta', 'codehilite'])
         content = md.convert(text)
         
-        metadatas = {}
+        metadata = {}
         for name, value in md.Meta.items():
             name = name.lower()
-            metadatas[name] = _METADATAS_PROCESSORS.get(
+            metadata[name] = _METADATA_PROCESSORS.get(
                 name, lambda x:x
             )(value[0])
-        return content, metadatas
+        return content, metadata
 
 
 class HtmlReader(Reader):
@@ -80,13 +81,13 @@ class HtmlReader(Reader):
     def read(self, filename):
         """Parse content and metadata of (x)HTML files"""
         content = open(filename)
-        metadatas = {'title':'unnamed'}
+        metadata = {'title':'unnamed'}
         for i in self._re.findall(content):
             key = i.split(':')[0][5:].strip()
             value = i.split(':')[-1][:-3].strip()
-            metadatas[key.lower()] = value
+            metadata[key.lower()] = value
 
-        return content, metadatas
+        return content, metadata
 
 
 

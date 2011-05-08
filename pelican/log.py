@@ -1,4 +1,6 @@
-from  logging import *
+from logging import CRITICAL, ERROR,  WARN, INFO, DEBUG
+from logging import critical, error, info, warning, warn, debug
+from logging import Formatter, getLogger, StreamHandler
 import sys
 import os
 
