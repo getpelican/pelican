@@ -155,6 +155,6 @@ Publishing drafts
 -----------------
 
 If you want to publish an article as a draft, for friends to review it for
-instance, you can add a `status: draft` to its metadata, it will then be
-available under the `drafts` folder, and not be listed under the index page nor
+instance, you can add a ``status: draft`` to its metadata, it will then be
+available under the ``drafts`` folder, and not be listed under the index page nor
 any category page.
