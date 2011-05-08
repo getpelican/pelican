@@ -197,12 +197,10 @@ class Writer(object):
 
             # if it is a content, patch it
             elif hasattr(item, '_content'):
-                info("content detected %s" % item)
                 relative_path = get_relative_path(name)
 
                 paths = self.reminder.setdefault(item, [])
                 if relative_path not in paths:
                     paths.append(relative_path)
-                    info("patch _get_content method for %s" % item.title)
                     setattr(item, "_get_content",
                             partial(_update_content, name, item))
