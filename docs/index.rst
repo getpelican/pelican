@@ -52,3 +52,4 @@ A french version of the documentation is available at :doc:`fr/index`.
    themes
    internals
    faq
+   contribute
