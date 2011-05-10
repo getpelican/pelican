@@ -14,11 +14,11 @@ FEED_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 
 LINKS = (('Biologeek', 'http://biologeek.org'),
-            ('Filyb', "http://filyb.info/"),
-            ('Libert-fr', "http://www.libert-fr.com"),
-            ('N1k0', "http://prendreuncafe.com/blog/"),
-            (u'Tarek Ziadé', "http://ziade.org/blog"),
-            ('Zubin Mithra', "http://zubin71.wordpress.com/"),)
+         ('Filyb', "http://filyb.info/"),
+         ('Libert-fr', "http://www.libert-fr.com"),
+         ('N1k0', "http://prendreuncafe.com/blog/"),
+         (u'Tarek Ziadé', "http://ziade.org/blog"),
+         ('Zubin Mithra', "http://zubin71.wordpress.com/"),)
 
 SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
           ('lastfm', 'http://lastfm.com/user/akounet'),
@@ -32,3 +32,7 @@ STATIC_PATHS = ["pictures",]
 
 # A list of files to copy from the source to the destination
 FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
+
+# foobar will not be used, because it's not in caps. All configuration keys 
+# have to be in caps
+foobar = "barbaz"

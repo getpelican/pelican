@@ -2,10 +2,10 @@
 import os
 import locale
 
-_DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
+DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
 _DEFAULT_CONFIG = {'PATH': None,
-                   'THEME': _DEFAULT_THEME,
+                   'THEME': DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': ('rst', 'md'),
                    'STATIC_PATHS': ['images',],
@@ -40,7 +40,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_METADATA': (),
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
-                  }
+                   }
 
 def read_settings(filename):
     """Load a Python file into a dictionary.
