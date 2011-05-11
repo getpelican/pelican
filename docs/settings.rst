@@ -22,7 +22,7 @@ Basic settings
 ==============
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `AUTHOR`                                            Default author (put your name)
 `SITENAME` (``'A Pelican Blog'``)                   Your site name
@@ -69,15 +69,21 @@ Feed settings
 By default, pelican uses atom feeds. However, it is possible to use RSS feeds
 instead, at your covenience.
 
-Pelican generates category feeds as well as feeds for all your articles.
+Pelican generates category feeds as well as feeds for all your articles. It does
+not generate feeds for tags per default, but it is possible to do so using
+the ``TAG_FEED`` and ``TAG_FEED_RSS`` settings:
+
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `CATEGORY_FEED` ('feeds/%s.atom.xml'[2]_)           Where to put the atom categories feeds.
 `CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the categories rss feeds.
 `FEED` (``'feeds/all.atom.xml'``)                   relative url to output the atom feed.
 `FEED_RSS` (``None``, i.e. no RSS)                  relative url to output the rss feed.
+`TAG_FEED` (``None``, ie no tag feed)               relative url to output the tags atom feed. It should
+                                                    be defined using a "%s" matchin the tag name
+`TAG_FEED_RSS` (``None``, ie no RSS tag feed)       relative url to output the tag RSS feed
 ================================================    =====================================================
 
 .. [2] %s is the name of the category.
@@ -92,7 +98,7 @@ for little to medium blogs, it is convenient to have a way to paginate this.
 You can use the following settings to configure the pagination.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `DEFAULT_ORPHANS` (0)                               The minimum number of articles allowed on the
                                                     last page. Use this when you don't want to
@@ -109,7 +115,7 @@ If you want to generate a tag cloud with all your tags, you can do so using the
 following settings.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `TAG_CLOUD_STEPS` (4)                               Count of different font sizes in the tag
                                                     cloud.
@@ -130,11 +136,11 @@ N matches `TAG_CLOUD_STEPS` -1.
 Translations
 ============
 
-Pelican offers a way to translate articles. See the section on getting started for 
+Pelican offers a way to translate articles. See the section on getting started for
 more information about that.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `DEFAULT_LANG` (``'en'``)                           The default language to use.
 `TRANSLATION_FEED` ('feeds/all-%s.atom.xml'[3]_)    Where to put the RSS feed for translations.
@@ -146,7 +152,7 @@ Ordering contents
 =================
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `REVERSE_ARCHIVE_ORDER` (``False``)                 Reverse the archives order. (True makes it in
                                                     descending order: the newer first)
@@ -161,7 +167,7 @@ Theming is addressed in a dedicated section (see  :ref:`theming-pelican`).
 However, here are the settings that are related to theming.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `THEME`                                             theme to use to produce the output. can be the
                                                     complete static path to a theme folder, or
@@ -257,7 +263,7 @@ Skribit settings
 ----------------
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?                              
+Setting name (default value)                        what does it do?
 ================================================    =====================================================
 `SKRIBIT_TYPE`                                      The type of skribit widget (TAB or WIDGET).
 `SKRIBIT_TAB_COLOR`                                 Tab color (#XXXXXX, default #333333).
