@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 try:
-    from docutils import core
+    import docutils
+    import docutils.core
+    import docutils.io
+    from docutils.writers.html4css1 import HTMLTranslator
 
     # import the directives to have pygments support
     from pelican import rstdirectives
@@ -21,39 +24,77 @@ _METADATA_PROCESSORS = {
     'status': unicode.strip,
 }
 
+def _process_metadata(name, value):
+    if name in _METADATA_PROCESSORS:
+        return _METADATA_PROCESSORS[name](value)
+    return value
+
 
 class Reader(object):
     enabled = True
 
+
+class _FieldBodyTranslator(HTMLTranslator):
+
+    def astext(self):
+        return ''.join(self.body)
+
+    def visit_field_body(self, node):
+        pass
+
+    def depart_field_body(self, node):
+        pass
+
+
+def render_node_to_html(document, node):
+    visitor = _FieldBodyTranslator(document)
+    node.walkabout(visitor)
+    return visitor.astext()
+
+def get_metadata(document):
+    """Return the dict containing document metadata"""
+    output = {}
+    for docinfo in document.traverse(docutils.nodes.docinfo):
+        for element in docinfo.children:
+            if element.tagname == 'field': # custom fields (e.g. summary)
+                name_elem, body_elem = element.children
+                name = name_elem.astext()
+                value = render_node_to_html(document, body_elem)
+            else: # standard fields (e.g. address)
+                name = element.tagname
+                value = element.astext()
+
+            output[name] = _process_metadata(name, value)
+    return output
+
+
 class RstReader(Reader):
-    enabled = bool(core)
+    enabled = bool(docutils)
     extension = "rst"
 
-    def _parse_metadata(self, content):
-        """Return the dict containing metadata"""
-        output = {}
-        for m in re.compile('^:([a-z]+): (.*)\s', re.M).finditer(content):
-            name, value = m.group(1).lower(), m.group(2)
-            output[name] = _METADATA_PROCESSORS.get(
-                name, lambda x:x
-            )(value)
-        return output
+    def _parse_metadata(self, document):
+        return get_metadata(document)
+
+    def _get_publisher(self, filename):
+        extra_params = {'initial_header_level': '2'}
+        pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
+        pub.set_components('standalone', 'restructuredtext', 'html')
+        pub.process_programmatic_settings(None, extra_params, None)
+        pub.set_source(source_path=filename)
+        pub.publish()
+        return pub
 
     def read(self, filename):
-        """Parse restructured text"""
-        text = open(filename)
-        metadata = self._parse_metadata(text)
-        extra_params = {'input_encoding': 'unicode',
-                        'initial_header_level': '2'}
-        rendered_content = core.publish_parts(text,
-                                              source_path=filename,
-                                              writer_name='html',
-                                              settings_overrides=extra_params)
-        title = rendered_content.get('title')
-        content = rendered_content.get('body')
-        if not metadata.has_key('title'):
-            metadata['title'] = title
+        """Parses restructured text"""
+        pub = self._get_publisher(filename)
+        parts = pub.writer.parts
+        content = parts.get('body')
+
+        metadata = self._parse_metadata(pub.document)
+        metadata.setdefault('title', parts.get('title'))
+
         return content, metadata
+
 
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
@@ -64,13 +105,11 @@ class MarkdownReader(Reader):
         text = open(filename)
         md = Markdown(extensions = ['meta', 'codehilite'])
         content = md.convert(text)
-        
+
         metadata = {}
         for name, value in md.Meta.items():
             name = name.lower()
-            metadata[name] = _METADATA_PROCESSORS.get(
-                name, lambda x:x
-            )(value[0])
+            metadata[name] = _process_metadata(name, value[0])
         return content, metadata
 
 
@@ -85,7 +124,8 @@ class HtmlReader(Reader):
         for i in self._re.findall(content):
             key = i.split(':')[0][5:].strip()
             value = i.split(':')[-1][:-3].strip()
-            metadata[key.lower()] = value
+            name = key.lower()
+            metadata[name] = _process_metadata(name, value)
 
         return content, metadata
 
