@@ -36,4 +36,4 @@ the feature you are working on or the bug you're fixing.
 The tests leaves under "pelican/tests" and you can run them using the
 "discover" feature of unittest2::
 
-    python -m unittest2 discover
+    $ unit2 discover
