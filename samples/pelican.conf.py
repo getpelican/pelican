@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 AUTHOR = u'Alexis Métaireau'
-SITENAME = u"Alexis' log" 
+SITENAME = u"Alexis' log"
 SITEURL = 'http://blog.notmyidea.org'
 
 GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"
 PDF_GENERATOR = False
 REVERSE_CATEGORY_ORDER = True
-LOCALE = 'fr_FR.utf8'
+LOCALE = 'fr_FR.utf-8'
 DEFAULT_PAGINATION = 2
 
 FEED_RSS = 'feeds/all.rss.xml'
@@ -33,6 +33,6 @@ STATIC_PATHS = ["pictures",]
 # A list of files to copy from the source to the destination
 FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
 
-# foobar will not be used, because it's not in caps. All configuration keys 
+# foobar will not be used, because it's not in caps. All configuration keys
 # have to be in caps
 foobar = "barbaz"
