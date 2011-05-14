@@ -25,8 +25,8 @@ _METADATA_PROCESSORS = {
 }
 
 def _process_metadata(name, value):
-    if name in _METADATA_PROCESSORS:
-        return _METADATA_PROCESSORS[name](value)
+    if name.lower() in _METADATA_PROCESSORS:
+        return _METADATA_PROCESSORS[name.lower()](value)
     return value
 
 
