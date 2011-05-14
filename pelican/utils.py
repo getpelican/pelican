@@ -206,7 +206,7 @@ def files_changed(path, extensions):
     """Return True if the files have changed since the last check"""
 
     def with_extension(f):
-        return True if True in [f.endswith(ext) for ext in extensions] else False
+        return any(f.endswith(ext) for ext in extensions)
 
     def file_times(path):
         """Return the last time files have been modified"""
