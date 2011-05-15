@@ -140,7 +140,13 @@ def main():
         if args.autoreload:
             while True:
                 try:
-                    if files_changed(pelican.path, pelican.markup):
+                    # Check source dir for changed files ending with the given
+                    # extension in the settings. In the theme dir is no such
+                    # restriction; all files are recursively checked if they
+                    # have changed, no matter what extension the filenames
+                    # have.
+                    if files_changed(pelican.path, pelican.markup) or \
+                            files_changed(pelican.theme, ['']):
                         pelican.run()
                     time.sleep(.5)  # sleep to avoid cpu load
                 except KeyboardInterrupt:
