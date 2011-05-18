@@ -19,7 +19,7 @@ setup(
     packages = ['pelican'],
     include_package_data = True,
     install_requires = requires,
-    scripts = ['bin/pelican'],
+    scripts = ['bin/pelican', 'tools/pelican-themes'],
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
                    'License :: OSI Approved :: GNU Affero General Public License v3',
