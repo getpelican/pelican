@@ -56,8 +56,8 @@ def read_settings(filename):
     # if locales is not a list, make it one
     locales = context['LOCALE']
 
-    if type(locales) is str:
-        locales = [str]
+    if isinstance(locales, basestring):
+        locales = [locales]
 
     # try to set the different locales, fallback on the default.
     for locale_ in context['LOCALE']:
