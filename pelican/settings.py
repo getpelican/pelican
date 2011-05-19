@@ -60,12 +60,14 @@ def read_settings(filename):
         locales = [locales]
 
     # try to set the different locales, fallback on the default.
-    for locale_ in context['LOCALE']:
+    for locale_ in locales:
         try:
             locale.setlocale(locale.LC_ALL, locale_)
             break # break if it is successfull
         except locale.Error:
             pass
+    else:
+        warnings.warn("LOCALE option doesn't contain a correct value")
 
     # set the locale
     return context
