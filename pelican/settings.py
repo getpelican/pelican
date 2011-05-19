@@ -53,6 +53,19 @@ def read_settings(filename):
             if key.isupper():
                 context[key] = tempdict[key]
 
+    # if locales is not a list, make it one
+    locales = context['LOCALE']
+
+    if type(locales) is str:
+        locales = [str]
+
+    # try to set the different locales, fallback on the default.
+    for locale_ in context['LOCALE']:
+        try:
+            locale.setlocale(locale.LC_ALL, locale_)
+            break # break if it is successfull
+        except locale.Error:
+            pass
+
     # set the locale
-    locale.setlocale(locale.LC_ALL, context['LOCALE'])
     return context

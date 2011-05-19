@@ -39,7 +39,10 @@ Setting name (default value)                        what does it do?
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
 `DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory and just
                                                     the generated files.
-`LOCALE` (''[1]_)                                   Change the locale.
+`LOCALE` (''[1]_)                                   Change the locale. A list of locales can be provided 
+                                                    here or a single string representing one locale.
+                                                    When providing a list, all the locales will be tried 
+                                                    until one works.
 `MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want
                                                     to use. For the moment, only available values
                                                     are `rst` and `md`.
