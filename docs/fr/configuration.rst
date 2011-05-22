@@ -123,7 +123,7 @@ THEME :
 TWITTER_USERNAME :
 	Permet d'afficher un bouton permettant le tweet des articles. 
 
-
+Pelican est fournit avec :doc:`pelican-themes`, un script permettant de gérer les thèmes
 
 
 

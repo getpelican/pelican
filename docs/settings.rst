@@ -195,6 +195,8 @@ Here is `a guide on how to create your theme
 
 You can find a list of themes at http://github.com/ametaireau/pelican-themes.
 
+Pelican comes with :doc:`pelican-themes` a small script for managing themes.
+
 The `notmyidea` theme can make good use of the following settings. I recommend
 to use them too in your themes.
 
@@ -278,3 +280,4 @@ Setting name (default value)                        what does it do?
 `SKRIBIT_WIDGET_ID`                                 Widget identifier (See Skribit part below).
 ================================================    =====================================================
 
+.. _pelican-themes: :doc:`pelican-themes`
