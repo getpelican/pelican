@@ -4,53 +4,70 @@
 import os, sys, shutil
 import argparse
 
-
-def err(msg, die=None):
-    sys.stderr.write(str(msg) + '\n')
-    if die:
-        sys.exit((die if type(die) is int else 1))
-
 try:
     import pelican
-
-    global themes_path
-    themes_path = os.path.join(
-        os.path.dirname(
-            os.path.abspath(
-                pelican.__file__
-            )
-        ),
-        'themes'
-    )
 except:
     err('Cannot import pelican.\nYou must install Pelican in order to run this script.', -1)
 
 
-__version__ = '0.1'
+global _THEMES_PATH
+_THEMES_PATH = os.path.join(
+    os.path.dirname(
+        os.path.abspath(
+            pelican.__file__
+    )
+    ),
+    'themes'
+)
+
+__version__ = '0.2'
 _BUILTIN_THEMES = ['simple', 'notmyidea']
 
 
+def err(msg, die=None):
+    """Print an error message and exits if an exit code is given"""
+    sys.stderr.write(str(msg) + '\n')
+    if die:
+        sys.exit((die if type(die) is int else 1))
+
+
 def main():
+    """Main function"""
+
     parser = argparse.ArgumentParser(description="""Install themes for Pelican""")
 
-    parser.add_argument('-l', '--list', dest='list', action="store_true",
-                        help="Show the themes already installed")
+    excl= parser.add_mutually_exclusive_group()
+    excl.add_argument('-l', '--list', dest='action', action="store_const", const='list',
+                        help="Show the themes already installed and exit")
+    excl.add_argument('-p', '--path', dest='action', action="store_const", const='path',
+                        help="Show the themes path and exit")
+    excl.add_argument('-V', '--version', action='version', version='pelican-themes v{0}'.format(__version__),
+            help='Print the version of this script')
+
+
     parser.add_argument('-i', '--install', dest='to_install', nargs='+', metavar="theme path",
         help='The themes to install ')
     parser.add_argument('-r', '--remove', dest='to_remove', nargs='+', metavar="theme name",
         help='The themes to remove')
     parser.add_argument('-s', '--symlink', dest='to_symlink', nargs='+', metavar="theme path",
         help="Same as `--install', but create a symbolic link instead of copying the theme. Useful for theme development")
+    parser.add_argument('-c', '--clean', dest='clean', action="store_true",
+                        help="Remove the broken symbolic links of the theme path")
+
+
     parser.add_argument('-v', '--verbose', dest='verbose', action="store_true",
                         help="Verbose output")
-    parser.add_argument('--version', action='version', version=__version__,
-            help='Print the version of this script')
+
+
     args = parser.parse_args()
 
-
-    if args.list:
-        list_themes(args.verbose)
-    else:
+    
+    if args.action:
+        if args.action is 'list':
+            list_themes(args.verbose)
+        elif args.action is 'path':
+            print(_THEMES_PATH)
+    elif args.to_install or args.to_remove or args.to_symlink or args.clean:
 
         if args.to_remove:
             if args.verbose:
@@ -73,20 +90,29 @@ def main():
             for i in args.to_symlink:
                 symlink(i, v=args.verbose)
 
+        if args.clean:
+            if args.verbose:
+                print('Cleaning the themes directory...')
+            
+            clean(v=args.verbose)
+    else:
+        print('No argument given... exiting.')
 
 
 def themes():
-    for i in os.listdir(themes_path):
-        e = os.path.join(themes_path, i)
+    """Returns the list of the themes"""
+    for i in os.listdir(_THEMES_PATH):
+        e = os.path.join(_THEMES_PATH, i)
 
         if os.path.isdir(e):
             if os.path.islink(e):
-                yield (e, os.path.realpath(e))
+                yield (e, os.readlink(e))
             else:
                 yield (e, None)
 
 
 def list_themes(v=False):
+    """Display the list of the themes"""
     for t, l in themes():
         if not v:
             t = os.path.basename(t)
@@ -100,14 +126,13 @@ def list_themes(v=False):
 
 
 def remove(theme_name, v=False):
+    """Removes a theme"""
 
     theme_name = theme_name.replace('/','')
-    target = os.path.join(themes_path, theme_name)
+    target = os.path.join(_THEMES_PATH, theme_name)
 
     if theme_name in _BUILTIN_THEMES:
         err(theme_name + ' is a builtin theme.\nYou cannot remove a builtin theme with this script, remove it by hand if you want.')
-    elif not os.path.exists(target):
-        err(target + ' : no such file or directory')
     elif os.path.islink(target):
         if v:
             print('Removing link `' + target + "'")
@@ -116,18 +141,21 @@ def remove(theme_name, v=False):
         if v:
             print('Removing directory `' + target + "'")
         shutil.rmtree(target)
-    else:
+    elif os.path.exists(target):
         err(target + ' : not a valid theme') 
+    else:
+        err(target + ' : no such file or directory')
 
 
 def install(path, v=False):
+    """Installs a theme"""
     if not os.path.exists(path):
         err(path + ' : no such file or directory')
     elif not os.path.isdir(path):
         err(path + ' : no a directory')
     else:
         theme_name = os.path.basename(os.path.normpath(path))
-        theme_path = os.path.join(themes_path, theme_name)
+        theme_path = os.path.join(_THEMES_PATH, theme_name)
         if os.path.exists(theme_path):
             err(path + ' : already exists')
         else:
@@ -138,14 +166,16 @@ def install(path, v=False):
             except Exception, e:
                 err("Cannot copy `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
+
 def symlink(path, v=False):
+    """Symbolically link a theme"""
     if not os.path.exists(path):
         err(path + ' : no such file or directory')
     elif not os.path.isdir(path):
         err(path + ' : no a directory')
     else:
         theme_name = os.path.basename(os.path.normpath(path))
-        theme_path = os.path.join(themes_path, theme_name)
+        theme_path = os.path.join(_THEMES_PATH, theme_name)
         if os.path.exists(theme_path):
             err(path + ' : already exists')
         else:
@@ -157,6 +187,29 @@ def symlink(path, v=False):
                 err("Cannot link `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
 
+def is_broken_link(path):
+    """Returns True if the path given as is a broken symlink"""
+    path = os.readlink(path)
+    return not os.path.exists(path)
+
+
+def clean(v=False):
+    """Removes the broken symbolic links"""
+    c=0
+    for path in os.listdir(_THEMES_PATH):
+        path = os.path.join(_THEMES_PATH, path)
+        if os.path.islink(path):
+            if is_broken_link(path):
+                if v:
+                    print('Removing {0}'.format(path))
+                try:
+                    os.remove(path)
+                except OSError, e:
+                    print('Error: cannot remove {0}'.format(path))
+                else:
+                    c+=1
+
+    print("\nRemoved {0} broken links".format(c))
     
 if __name__ == '__main__':
     main()

@@ -147,6 +147,10 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'raclette', u'Raclette Documentation',
-     [u'Alexis Métaireau'], 1)
+    ('index', 'raclette', u'Raclette Documentation',  # why "raclette" ?!
+     [u'Alexis Métaireau'], 1),
+    ('pelican-themes', 'pelican-themes', u'A theme manager for Pelican',
+     [u'Mickaël Raybaud'], 'en.1'),
+    ('fr/pelican-themes', 'pelican-themes', u'Un gestionnaire de thèmes pour Pelican',
+     [u'Mickaël Raybaud'], 'fr.1')
 ]
