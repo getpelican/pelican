@@ -2,6 +2,8 @@
 import os
 import locale
 
+from pelican import log
+
 DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
 _DEFAULT_CONFIG = {'PATH': None,
@@ -60,6 +62,9 @@ def read_settings(filename):
         locales = [locales]
 
     # try to set the different locales, fallback on the default.
+    if not locales:
+        locales = _DEFAULT_CONFIG['LOCALE']
+
     for locale_ in locales:
         try:
             locale.setlocale(locale.LC_ALL, locale_)
@@ -67,7 +72,7 @@ def read_settings(filename):
         except locale.Error:
             pass
     else:
-        warnings.warn("LOCALE option doesn't contain a correct value")
+        log.warn("LOCALE option doesn't contain a correct value")
 
     # set the locale
     return context
