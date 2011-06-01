@@ -340,6 +340,8 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 /***** Sections *****/
 /* Blog */
 .hentry {
+	display: block;
+	clear: both;
 	border-bottom: 1px solid #eee;
 	padding: 1.5em 0;
 }
