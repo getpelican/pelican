@@ -3,7 +3,7 @@
 How to create themes for pelican
 ################################
 
-Pelican uses the great `jinja2 <http://jinjna.pocoo.org>`_ templating engine to
+Pelican uses the great `jinja2 <http://jinja.pocoo.org>`_ templating engine to
 generate it's HTML output. The jinja2 syntax is really simple. If you want to
 create your own theme, feel free to take inspiration from the "simple" theme,
 which is available `here
@@ -53,17 +53,17 @@ All of those settings will be given to all templates.
 =============   ===================================================
 Variable        Description
 =============   ===================================================
-articles        That's the list of articles, ordsered desc. by date
+articles        That's the list of articles, ordered desc. by date
                 all the elements are `Article` objects, so you can 
                 access their properties (e.g. title, summary, author
-                etc. 
+                etc.).
 dates           The same list of article, but ordered by date,
-                ascending
+                ascending.
 tags            A dict containing each tags (keys), and the list of
                 relative articles.
 categories      A dict containing each category (keys), and the 
                 list of relative articles.
-pages           The list of pages
+pages           The list of pages.
 =============   ===================================================
 
 index.html
@@ -76,12 +76,12 @@ If pagination is active, next pages will remain at output/index`n`.html.
 ===================     ===================================================
 Variable                Description
 ===================     ===================================================
-articles_paginator      A paginator object of article list
-articles_page           The current page of articles
+articles_paginator      A paginator object of article list.
+articles_page           The current page of articles.
 dates_paginator         A paginator object of article list, ordered by date,
-                        ascending
+                        ascending.
 dates_page              The current page of articles, ordered by date,
-                        ascending
+                        ascending.
 page_name               'index'. Useful for pagination links.
 ===================     ===================================================
 
@@ -97,16 +97,16 @@ output/category/`category_name``n`.html.
 ===================     ===================================================
 Variable                Description
 ===================     ===================================================
-category                The name of the category being processed
-articles                Articles of this category
+category                The name of the category being processed.
+articles                Articles of this category.
 dates                   Articles of this category, but ordered by date,
-                        ascending
-articles_paginator      A paginator object of article list
-articles_page           The current page of articles
+                        ascending.
+articles_paginator      A paginator object of article list.
+articles_page           The current page of articles.
 dates_paginator         A paginator object of article list, ordered by date,
-                        ascending
+                        ascending.
 dates_page              The current page of articles, ordered by date,
-                        ascending
+                        ascending.
 page_name               'category/`category_name`'. Useful for pagination
                         links.
 ===================     ===================================================
@@ -120,15 +120,28 @@ in output/`article_name`.html. Here are the specific variables it gets.
 =============   ===================================================
 Variable        Description
 =============   ===================================================
-article         The article object to be displayed
-category        The name of the category of the current article
+article         The article object to be displayed.
+category        The name of the category of the current article.
+=============   ===================================================
+
+page.html
+---------
+
+For each page, this template will be processed. It will create .html files in
+output/`page_name`.html.
+
+=============   ===================================================
+Variable        Description
+=============   ===================================================
+page            The page object to be displayed. You can access to
+                its title, slug and content.
 =============   ===================================================
 
 tag.html
 --------
 
 For each tag, this template will be processed. It will create .html files in
-/output/tag/`tag_name`.html.
+output/tag/`tag_name`.html.
 
 If pagination is active, next pages will remain at
 output/tag/`tag_name``n`.html.
@@ -136,16 +149,16 @@ output/tag/`tag_name``n`.html.
 ===================     ===================================================
 Variable                Description
 ===================     ===================================================
-tag                     The name of the tag being processed
-articles                Articles related to this tag
+tag                     The name of the tag being processed.
+articles                Articles related to this tag.
 dates                   Articles related to this tag, but ordered by date,
-                        ascending
-articles_paginator      A paginator object of article list
-articles_page           The current page of articles
+                        ascending.
+articles_paginator      A paginator object of article list.
+articles_page           The current page of articles.
 dates_paginator         A paginator object of article list, ordered by date,
-                        ascending
+                        ascending.
 dates_page              The current page of articles, ordered by date,
-                        ascending
+                        ascending.
 page_name               'tag/`tag_name`'. Useful for pagination links.
 ===================     ===================================================
 

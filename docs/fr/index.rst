@@ -50,6 +50,7 @@ Documentation
    installation
    bases
    configuration
+   themes
    parametres_article
    astuces
    faq
