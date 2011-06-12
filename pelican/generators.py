@@ -167,6 +167,7 @@ class ArticlesGenerator(Generator):
         # and subfolders after that
         tag_template = self.get_template('tag')
         for tag, articles in self.tags.items():
+            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write('tag/%s.html' % tag, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
