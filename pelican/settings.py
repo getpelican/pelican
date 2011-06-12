@@ -74,5 +74,11 @@ def read_settings(filename):
     else:
         log.warn("LOCALE option doesn't contain a correct value")
 
+    # Make the paths relative to the settings file
+    for path in ['PATH']:
+        if path in context:
+            if not os.path.isabs(context[path]):
+                context[path] = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(filename), context[path])))
+
     # set the locale
     return context
