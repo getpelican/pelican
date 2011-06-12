@@ -24,7 +24,7 @@ class Pelican(object):
                     ' (see pelican --help for more information)')
 
         if self.path.endswith('/'):
-            self.path = path[:-1]
+            self.path = self.path[:-1]
 
         # define the default settings
         self.settings = settings
