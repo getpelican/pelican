@@ -45,4 +45,5 @@ Feedback !
 If you want to see new features in Pelican, dont hesitate to tell me, to clone
 the repository, etc. That's open source, dude!
 
-Contact me at "alexis at notmyidea dot org" for any request/feedback !
+Contact me at "alexis at notmyidea dot org" for any request/feedback! You can
+also join the team at #pelican on irc.freenode.org for quick feedback.
