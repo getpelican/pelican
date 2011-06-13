@@ -31,8 +31,8 @@ Source code
 
 You can access the source code via git on http://github.com/ametaireau/pelican/
 
-Feedback / Contact us!
-======================
+Feedback / Contact us
+=====================
 
 If you want to see new features in Pelican, dont hesitate to tell me, to clone
 the repository, etc. That's open source, dude!
