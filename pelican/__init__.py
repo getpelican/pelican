@@ -102,7 +102,7 @@ def main():
     parser.add_argument('-m', '--markup', default=None, dest='markup',
         help='the list of markup language to use (rst or md). Please indicate '
              'them separated by commas')
-    parser.add_argument('-s', '--settings', dest='settings',
+    parser.add_argument('-s', '--settings', dest='settings', default='',
         help='the settings of the application. Default to False.')
     parser.add_argument('-d', '--delete-output-directory', dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')
@@ -124,8 +124,6 @@ def main():
     # the variable with None.
     markup = [a.strip().lower() for a in args.markup.split(',')] if args.markup else None
 
-    if args.settings is None:
-        settings = {}
     settings = read_settings(args.settings)
 
     cls = settings.get('PELICAN_CLASS')
