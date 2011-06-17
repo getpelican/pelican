@@ -8,10 +8,12 @@ import os
 import math
 import random
 
+from blinker import signal
+
 from jinja2 import Environment, FileSystemLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import copy, get_relative_path, process_translations, open
+from pelican.utils import copytree, get_relative_path, process_translations, open
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 from pelican.log import *
@@ -98,6 +100,7 @@ class ArticlesGenerator(Generator):
         self.dates = {}
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
+        self.signal = {'pelican_article_generate_context' : signal('pelican_article_generate_context')}
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
 
@@ -211,6 +214,7 @@ class ArticlesGenerator(Generator):
                 and self.settings['FALLBACK_ON_FS_DATE']:
                     metadata['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
 
+            self.signal['pelican_article_generate_context'].send(self, metadatas=metadatas)
             article = Article(content, metadata, settings=self.settings,
                               filename=f)
             if not is_valid_content(article, f):

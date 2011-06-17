@@ -42,7 +42,8 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_METADATA': (),
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
-                   }
+                   'PLUGINS_PATH': None,
+                  }
 
 def read_settings(filename):
     """Load a Python file into a dictionary.

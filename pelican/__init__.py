@@ -1,6 +1,9 @@
 import argparse
 import os
 import time
+import pkgutil
+
+from blinker import signal
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
@@ -14,7 +17,7 @@ VERSION = "2.7.2"
 
 class Pelican(object):
     def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, delete_outputdir=False):
+            markup=None, delete_outputdir=False, plugin_path=None):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
@@ -42,6 +45,15 @@ class Pelican(object):
                 self.theme = theme_path
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
+        
+        plugins_path = plugins_path or settings['PLUGINS_PATH']
+        if plugins_path:
+            plugins_path = os.path.abspath(os.path.expanduser(plugins_path))
+            self.load_plugins(plugins_path)
+        else:
+            self.plugins = None
+        
+        signal('pelican_initialized').send(self)
 
     def run(self):
         """Run the generators and return"""
@@ -84,6 +96,13 @@ class Pelican(object):
 
     def get_writer(self):
         return Writer(self.output_path, settings=self.settings)
+    
+    def load_plugins(self, path):
+        loaded = []
+        for module_loader, name, ispkg in pkgutil.walk_packages(path=[path,]):
+            loaded.append(module_loader.find_module(name).load_module(name))
+        self.plugins = loaded
+        
 
 
 
@@ -103,7 +122,7 @@ def main():
         help='the list of markup language to use (rst or md). Please indicate '
              'them separated by commas')
     parser.add_argument('-s', '--settings', dest='settings', default='',
-        help='the settings of the application. Default to False.')
+        help='the settings of the application.')
     parser.add_argument('-d', '--delete-output-directory', dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')
     parser.add_argument('-v', '--verbose', action='store_const', const=log.INFO, dest='verbosity',
@@ -117,6 +136,8 @@ def main():
     parser.add_argument('-r', '--autoreload', dest='autoreload', action='store_true',
             help="Relaunch pelican each time a modification occurs on the content"
                  "files")
+    parser.add_argument('-p', '--plugins', default=None, dest='plugins_path',
+            help='the path of plugins to use')
     args = parser.parse_args()
 
     log.init(args.verbosity)
@@ -134,7 +155,7 @@ def main():
 
     try:
         pelican = cls(settings, args.path, args.theme, args.output, markup,
-                args.delete_outputdir)
+                args.delete_outputdir, args.plugins_path)
         if args.autoreload:
             while True:
                 try:
