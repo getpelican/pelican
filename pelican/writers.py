@@ -166,24 +166,23 @@ class Writer(object):
             """
             content = input._content
 
-            hrefs = re.compile(r'<\s*[^\>]*href\s*=(^!#)\s*(["\'])(.*?)\1')
-            srcs = re.compile(r'<\s*[^\>]*src\s*=\s*(["\'])(.*?)\1')
+            hrefs = re.compile(r"""
+                (?P<markup><\s*[^\>]*  # match tag with src and href attr
+                    (?:href|src)\s*=\s*
+                )
+                (?P<quote>["\'])       # require value to be quoted
+                (?![#?])               # don't match fragment or query URLs
+                (?![a-z]+:)            # don't match protocol URLS
+                (?P<path>.*?)          # the url value
+                \2""", re.X)
 
-            matches = hrefs.findall(content)
-            matches.extend(srcs.findall(content))
-            relative_paths = []
-            for found in matches:
-                found = found[1]
-                if found not in relative_paths:
-                    relative_paths.append(found)
+            def replacer(m):
+                relative_path = m.group('path')
+                dest_path = os.path.normpath( os.sep.join( (get_relative_path(name),
+                                    "static", relative_path) ) )
+                return m.group('markup') + m.group('quote') + dest_path + m.group('quote')
 
-            for relative_path in relative_paths:
-                if not ":" in relative_path: # we don't want to rewrite protocols
-                    dest_path = os.sep.join((get_relative_path(name), "static",
-                        relative_path))
-                    content = content.replace(relative_path, dest_path)
-
-            return content
+            return hrefs.sub(replacer, content)
         
         if context is None:
             return
