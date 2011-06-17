@@ -1,8 +1,7 @@
-from blinker import signal
-
+from pelican import signals
 
 def test(sender):
     print "%s initialized !!" % sender
 
 def register():
-    signal('pelican_initialized').connect(test)
+    signals.initialized.connect(test)

@@ -42,7 +42,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_METADATA': (),
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
-                   'PLUGINS_PATH': None,
+                   'PLUGINS': [],
                   }
 
 def read_settings(filename):

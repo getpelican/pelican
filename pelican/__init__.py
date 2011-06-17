@@ -2,7 +2,7 @@ import argparse
 import os
 import time
 
-from blinker import signal
+from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
@@ -46,7 +46,7 @@ class Pelican(object):
                 raise Exception("Impossible to find the theme %s" % theme)
         
         self.init_plugins()
-        signal('pelican_initialized').send(self)
+        signals.initialized.send(self)
 
     def init_plugins(self):
         self.plugins = self.settings['PLUGINS']

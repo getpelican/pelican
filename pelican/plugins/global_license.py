@@ -1,4 +1,4 @@
-from blinker import signal
+from pelican import signals
 
 """
 License plugin for Pelican
@@ -19,5 +19,5 @@ def add_license(generator, metadata):
         and 'LICENSE' in generator.settings.keys():
             metadata['license'] = generator.settings['LICENSE']
 
-
-signal('pelican_article_generate_context').connect(add_license)
+def register():
+    signals.article_generate_context.connect(add_license)

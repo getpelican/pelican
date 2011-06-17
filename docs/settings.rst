@@ -51,6 +51,7 @@ Setting name (default value)                        what does it do?
 `PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
                                                     of your documents. You will need to install
                                                     `rst2pdf`.
+`PLUGINS` (``[]``)                                  The list of plugins to load. See :ref:`plugins`.
 `RELATIVE_URL` (``True``)                           Defines if pelican should use relative urls or
                                                     not.
 `SITEURL`                                           base URL of your website. Note that this is
@@ -208,14 +209,14 @@ Setting name              what does it do ?
 `GITHUB_URL`              Your github URL (if you have one), it will then
                           use it to create a github ribbon.
 `GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate google analytics.
+`LINKS`                   A list of tuples (Title, Url) for links to appear on
+                          the header.
 `PIWIK_URL`               URL to your Piwik server - without 'http://' at the
                           beginning.
 `PIWIK_SSL_URL`           If the SSL-URL differs from the normal Piwik-URL
                           you have to include this setting too. (optional)
 `PIWIK_SITE_ID`           ID for the monitored website. You can find the ID
                           in the Piwik admin interface > settings > websites.
-`LINKS`                   A list of tuples (Title, Url) for links to appear on
-                          the header.
 `SOCIAL`                  A list of tuples (Title, Url) to appear in the "social"
                           section.
 `TWITTER_USERNAME`        Allows to add a button on the articles to tweet about

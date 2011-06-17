@@ -1,6 +1,6 @@
 import hashlib
 
-from blinker import signal
+from pelican import signals
 """
 Gravata plugin for Pelican
 ==========================
@@ -37,4 +37,4 @@ def add_gravatar(generator, metadata):
     
 
 def register():    
-    signal('pelican_article_generate_context').connect(add_gravatar)
+    signals.article_generate_context.connect(add_gravatar)
