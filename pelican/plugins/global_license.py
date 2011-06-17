@@ -14,10 +14,10 @@ Add LICENSE to your settings file to define default license.
 
 """
 
-def add_license(generator, metadatas):
-    if 'license' not in metadatas.keys()\
+def add_license(generator, metadata):
+    if 'license' not in metadata.keys()\
         and 'LICENSE' in generator.settings.keys():
-            metadatas['license'] = generator.settings['LICENSE']
+            metadata['license'] = generator.settings['LICENSE']
 
 
 signal('pelican_article_generate_context').connect(add_license)

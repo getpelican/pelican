@@ -1,7 +1,6 @@
 import argparse
 import os
 import time
-import pkgutil
 
 from blinker import signal
 
@@ -46,14 +45,17 @@ class Pelican(object):
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
         
-        plugins_path = plugins_path or settings['PLUGINS_PATH']
-        if plugins_path:
-            plugins_path = os.path.abspath(os.path.expanduser(plugins_path))
-            self.load_plugins(plugins_path)
-        else:
-            self.plugins = None
-        
+        self.init_plugins()
         signal('pelican_initialized').send(self)
+
+    def init_plugins(self):
+        self.plugins = self.settings['PLUGINS']
+        for plugin in self.plugins:
+            # if it's a string, then import it
+            if isinstance(plugin, str):
+                plugin = __import__(plugin, globals(), locals(), 'module')
+
+            plugin.register()
 
     def run(self):
         """Run the generators and return"""
@@ -97,13 +99,6 @@ class Pelican(object):
     def get_writer(self):
         return Writer(self.output_path, settings=self.settings)
     
-    def load_plugins(self, path):
-        loaded = []
-        for module_loader, name, ispkg in pkgutil.walk_packages(path=[path,]):
-            loaded.append(module_loader.find_module(name).load_module(name))
-        self.plugins = loaded
-        
-
 
 
 def main():
@@ -136,8 +131,6 @@ def main():
     parser.add_argument('-r', '--autoreload', dest='autoreload', action='store_true',
             help="Relaunch pelican each time a modification occurs on the content"
                  "files")
-    parser.add_argument('-p', '--plugins', default=None, dest='plugins_path',
-            help='the path of plugins to use')
     args = parser.parse_args()
 
     log.init(args.verbosity)
@@ -155,7 +148,7 @@ def main():
 
     try:
         pelican = cls(settings, args.path, args.theme, args.output, markup,
-                args.delete_outputdir, args.plugins_path)
+                args.delete_outputdir)
         if args.autoreload:
             while True:
                 try:
