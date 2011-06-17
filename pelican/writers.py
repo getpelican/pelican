@@ -111,7 +111,8 @@ class Writer(object):
             localcontext['SITEURL'] = get_relative_path(name)
 
         localcontext.update(kwargs)
-        self.update_context_contents(name, localcontext)
+        if relative_urls:
+            self.update_context_contents(name, localcontext)
 
         # check paginated
         paginated = paginated or {}
