@@ -92,6 +92,20 @@ generate static pages.
 Then, use the `DISPLAY_PAGES_ON_MENU` setting, which will add all the pages to 
 the menu.
 
+Importing an existing blog
+--------------------------
+
+It is possible to import wordpress themes and RSS themes using a script which
+is living in `tools`: importer.
+
+You can call it this way for a wordpress import::
+
+    $ python importer.py --wpfile /your/wordpress/export -o output_dir
+
+And like this for an import from an RSS feed::
+
+    $ python importer.py --feed http://your/rss/feed -o output_dir
+
 Translations
 ------------
 
