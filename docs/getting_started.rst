@@ -159,6 +159,14 @@ right way your block codes. To do so, you have to use the following syntax::
 The identifier is one of the lexers available `here
 <http://pygments.org/docs/lexers/>`_.
 
+You also can use the default `::` syntax::
+
+    ::
+        
+        your code goes here
+
+It will be assumed that your code is witten in python.
+
 Autoreload
 ----------
 
