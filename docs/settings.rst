@@ -51,7 +51,7 @@ Setting name (default value)                        what does it do?
 `PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
                                                     of your documents. You will need to install
                                                     `rst2pdf`.
-`RELATIVE_URL` (``True``)                           Defines if pelican should use relative urls or
+`RELATIVE_URLS` (``True``)                          Defines if pelican should use relative urls or
                                                     not.
 `SITEURL`                                           base URL of your website. Note that this is
                                                     not a way to tell pelican to use relative urls
