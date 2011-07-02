@@ -152,7 +152,7 @@ def main():
         else:
             pelican.run()
     except Exception, e:
-        log.critical(str(e))
+        log.critical(unicode(e))
 
 
 if __name__ == '__main__':
