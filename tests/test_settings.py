@@ -4,12 +4,11 @@ import os
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 
 SETTINGS = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
-        "../../samples/pelican.conf.py"])
+        "default_conf.py"])
 
 class SettingsTest(TestCase):
 
-
-    def test_read_settings(self):
+    def test_read_settings_from_file(self):
         # providing a file, it should read it, replace the default values and append 
         # new values to the settings, if any
         settings = read_settings(SETTINGS)
