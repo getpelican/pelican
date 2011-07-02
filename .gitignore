@@ -8,3 +8,4 @@ build
 dist
 output
 tags
+.tox
