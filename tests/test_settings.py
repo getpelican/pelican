@@ -1,33 +1,33 @@
-from unittest2 import TestCase
-import os
+import unittest2
+from os.path import dirname, abspath, join
 
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 
-SETTINGS = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
-        "default_conf.py"])
 
-class SettingsTest(TestCase):
+class TestSettingsFromFile(unittest2.TestCase):
+    """Providing a file, it should read it, replace the default values and
+    append new values to the settings, if any
+    """
+    def setUp(self):
+        self.PATH = abspath(dirname(__file__))
+        default_conf = join(self.PATH, 'default_conf.py')
+        self.settings = read_settings(default_conf)
 
-    def test_read_settings_from_file(self):
-        # providing a file, it should read it, replace the default values and append 
-        # new values to the settings, if any
-        settings = read_settings(SETTINGS)
+    def test_overwrite_existing_settings(self):
+        self.assertEqual(self.settings.get('SITENAME'), u"Alexis' log")
+        self.assertEqual(self.settings.get('SITEURL'),
+                'http://blog.notmyidea.org')
 
-        # overwrite existing settings
-        self.assertEqual(settings.get('SITENAME'), u"Alexis' log")
-        
-        # add new settings
-        self.assertEqual(settings.get('SITEURL'), 'http://blog.notmyidea.org')
-
-        # keep default settings if not defined
-        self.assertEqual(settings.get('DEFAULT_CATEGORY'), 
+    def test_keep_default_settings(self):
+        """keep default settings if not defined"""
+        self.assertEqual(self.settings.get('DEFAULT_CATEGORY'),
             _DEFAULT_CONFIG['DEFAULT_CATEGORY'])
 
-        # do not copy keys not in caps
-        self.assertNotIn('foobar', settings)
+    def test_dont_copy_small_keys(self):
+        """do not copy keys not in caps."""
+        self.assertNotIn('foobar', self.settings)
 
-
-    def test_empty_read_settings(self):
-        # providing no file should return the default values
+    def test_read_empty_settings(self):
+        """providing no file should return the default values."""
         settings = read_settings(None)
         self.assertDictEqual(settings, _DEFAULT_CONFIG)
