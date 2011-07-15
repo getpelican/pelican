@@ -1,5 +1,0 @@
-Jinja2==2.5.5
-Pygments==1.4
-docutils==0.7
-feedgenerator==1.2.1
-unittest2
