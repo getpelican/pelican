@@ -20,6 +20,8 @@ To make your own theme, you must follow the following structure::
     └── templates
         ├── archives.html    // to display archives
         ├── article.html     // processed for each article
+        ├── author.html      // processed for each author
+        ├── authors.html     // must list all the authors
         ├── categories.html  // must list all the categories
         ├── category.html    // processed for each category
         ├── index.html       // the index. List all the articles
@@ -83,6 +85,32 @@ dates_paginator         A paginator object of article list, ordered by date,
 dates_page              The current page of articles, ordered by date,
                         ascending.
 page_name               'index'. Useful for pagination links.
+===================     ===================================================
+
+author.html
+-------------
+
+This template will be processed for each of the existing authors, and will
+finally remain at output/author/`author_name`.html.
+
+If pagination is active, next pages will remain at
+output/author/`author_name``n`.html.
+
+===================     ===================================================
+Variable                Description
+===================     ===================================================
+author                  The name of the author being processed.
+articles                Articles of this author.
+dates                   Articles of this author, but ordered by date,
+                        ascending.
+articles_paginator      A paginator object of article list.
+articles_page           The current page of articles.
+dates_paginator         A paginator object of article list, ordered by date,
+                        ascending.
+dates_page              The current page of articles, ordered by date,
+                        ascending.
+page_name               'author/`author_name`'. Useful for pagination
+                        links.
 ===================     ===================================================
 
 category.html
