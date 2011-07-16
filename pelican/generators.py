@@ -98,6 +98,7 @@ class ArticlesGenerator(Generator):
         self.dates = {}
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
+        self.authors = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
 
@@ -182,6 +183,14 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name='category/%s' % cat)
 
+        author_template = self.get_template('author')
+        for aut, articles in self.authors:
+            dates = [article for article in self.dates if article in articles]
+            write('author/%s.html' % aut, author_template, self.context,
+                author=aut, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='author/%s' % aut)
+
         for article in self.drafts:
             write('drafts/%s.html' % article.slug, article_template, self.context,
                     article=article, category=article.category)
@@ -229,7 +238,7 @@ class ArticlesGenerator(Generator):
         for article in self.articles:
             # only main articles are listed in categories, not translations
             self.categories[article.category].append(article)
-
+            self.authors[article.author].append(article)
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
@@ -269,7 +278,12 @@ class ArticlesGenerator(Generator):
         # order the categories per name
         self.categories = list(self.categories.items())
         self.categories.sort(reverse=self.settings.get('REVERSE_CATEGORY_ORDER'))
-        self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud'))
+
+        self.authors = list(self.authors.items())
+        self.authors.sort()
+
+        self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud', 'authors'))
+
 
 
     def generate_output(self, writer):
