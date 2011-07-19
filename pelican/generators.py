@@ -8,7 +8,7 @@ import os
 import math
 import random
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
 from pelican.utils import copy, get_relative_path, process_translations, open
@@ -32,7 +32,10 @@ class Generator(object):
         self._templates = {}
         self._templates_path = os.path.expanduser(os.path.join(self.theme, 'templates'))
         self._env = Environment(
-            loader=FileSystemLoader(self._templates_path),
+            loader=ChoiceLoader([
+                FileSystemLoader(self._templates_path),
+                PrefixLoader({'simple' : FileSystemLoader(os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes", "simple", "templates"))})
+            ]),
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
 
@@ -49,6 +52,7 @@ class Generator(object):
             try:
                 self._templates[name] = self._env.get_template(name + '.html')
             except TemplateNotFound:
+                debug('self._env.list_templates(): {0}'.format(self._env.list_templates())) 
                 raise Exception('[templates] unable to load %s.html from %s' % (
                     name, self._templates_path))
         return self._templates[name]
