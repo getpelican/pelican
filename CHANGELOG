@@ -1,0 +1,80 @@
+3.0
+
+* dotclear importer
+* Markdown extensions
+* Theme extensions
+* Plugins support
+
+2.7
+
+* Uses logging rather than echoing to stdout
+* Support custom jinja filters
+* Compatibility with python 2.5
+* Add a theme manager
+* Packaged for debian
+* Add draft support
+
+2.6
+
+* changes in the output directory structure
+* makes templates easier to work with / create
+* Add RSS support (was only atom previously)
+* Add tag support for the feeds
+* Enhance the documentation
+* Add another theme (brownstone)
+* Add translations
+* Add a way to use "cleaner urls" with a rewrite url module (or equivalent)
+* Add a tag cloud
+* Add an autoreloading feature: the blog is automatically regenerated each time a modification is detected
+* Translate the documentation in french
+* import a blog from an rss feed
+* Pagination support
+* Add skribit support
+
+2.5
+
+* import from wordpress
+* add some new themes (martyalchin / wide-notmyidea)
+* first bug report !
+* linkedin support
+* added a FAQ
+* google analytics support
+* twitter support
+* use relative urls not static ones
+
+2.4
+
+* minor themes changes
+* add disqus support (so we have comments)
+* another code refactoring
+* add config settings about pages
+* blog entries can also be generated in pdf
+
+2.3
+
+* markdown support
+
+2.2
+
+* Prettify output
+* Manages static pages as well
+
+2.1
+
+* Put the notmyidea theme by default
+
+2.0
+
+* Refactoring to be more extensible
+* Change into the setting variables
+
+1.2
+
+* Add a debug option
+* Add feeds per category
+* Use filsystem to get dates if no metadata provided
+* Add pygment support
+
+1.1:
+
+* first working version
