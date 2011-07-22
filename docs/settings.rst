@@ -287,3 +287,9 @@ Setting name (default value)                        what does it do?
 ================================================    =====================================================
 
 .. _pelican-themes: :doc:`pelican-themes`
+
+Example settings
+================
+
+.. literalinclude:: ../samples/pelican.conf.py
+    :language: python
