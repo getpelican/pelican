@@ -31,13 +31,16 @@ class Generator(object):
         # templates cache
         self._templates = {}
         self._templates_path = os.path.expanduser(os.path.join(self.theme, 'templates'))
+        simple_loader = FileSystemLoader(os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes", "simple", "templates"))
         self._env = Environment(
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
-                PrefixLoader({'simple' : FileSystemLoader(os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes", "simple", "templates"))})
+                simple_loader,                              # implicit inheritance
+                PrefixLoader({'!simple' : simple_loader})   # explicit inheritance
             ]),
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
+        debug('self._env.list_templates(): {0}'.format(self._env.list_templates())) 
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
@@ -52,7 +55,6 @@ class Generator(object):
             try:
                 self._templates[name] = self._env.get_template(name + '.html')
             except TemplateNotFound:
-                debug('self._env.list_templates(): {0}'.format(self._env.list_templates())) 
                 raise Exception('[templates] unable to load %s.html from %s' % (
                     name, self._templates_path))
         return self._templates[name]
