@@ -54,3 +54,4 @@ Documentation
    parametres_article
    astuces
    faq
+   pelican-themes
