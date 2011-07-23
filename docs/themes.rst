@@ -204,3 +204,99 @@ actions:
    support sidebar widget.
 
 You can take a look at notmyidea default theme for working example.
+
+
+Inheritance
+===========
+
+The last version of Pelican supports inheritance from the ``simple`` theme, so you can reuse the templates of the ``simple`` theme in your own themes:
+
+If one of the mandatory files in the ``templates/`` directory of your theme is missing, it will be replaced by the corresponding template from the ``simple`` theme, so if the HTML structure of a template of the ``simple`` theme is right for you, you don't have to rewrite it from scratch.
+
+You can also extend templates of the ``simple`` themes in your own themes by using the ``{% extends %}`` directove as in the following example:
+
+.. code-block:: html+jinja
+
+    {% extends "!simple/index.html" %}   <!-- extends the ``index.html`` template of the ``simple`` theme -->
+
+    {% extends "index.html" %}   <!-- "regular" extending -->
+
+
+Example
+-------
+
+With this system, it is possible to create a theme with just two file.
+
+base.html
+"""""""""
+
+The first file is the ``templates/base.html`` template:
+
+.. code-block:: html+jinja
+
+    {% extends "!simple/base.html" %}
+
+    {% block head %}
+    {{ super() }}
+       <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/style.css" />
+    {% endblock %}
+
+
+1.    On the first line, we extends the ``base.html`` template of the ``simple`` theme, so we don't have to rewrite the entire file.
+2.    On the third line, we open the ``head`` block, that has already been defined in the ``simple`` theme
+3.    On the fourth line, the function ``super()`` keeps the content previously inserted in the ``head`` block.
+4.    On the fifth line, we append a stylesheet to the page
+5.    On the last line, we close the ``head`` block.
+
+This file will be extended by all the others templates, so the stylesheet will be included in all pages.
+
+style.css
+"""""""""
+
+The second file is the ``static/css/style.css`` CSS stylesheet:
+
+.. code-block:: css
+
+    body {
+        font-family : monospace ;
+        font-size : 100% ;
+        background-color : white ;
+        color : #111 ;
+        width : 80% ;
+        min-width : 400px ;
+        min-height : 200px ;
+        padding : 1em ;
+        margin : 5% 10% ;
+        border : thin solid gray ;
+        border-radius : 5px ;
+        display : block ;
+    }
+
+    a:link    { color : blue ; text-decoration : none ;      }
+    a:hover   { color : blue ; text-decoration : underline ; }
+    a:visited { color : blue ;                               }
+
+    h1 a { color : inherit !important }
+    h2 a { color : inherit !important }
+    h3 a { color : inherit !important }
+    h4 a { color : inherit !important }
+    h5 a { color : inherit !important }
+    h6 a { color : inherit !important }
+
+    pre {
+        margin : 2em 1em 2em 4em ;
+    }
+
+    #menu li {
+        display : inline ;
+    }
+
+    #post-list {
+        margin-bottom : 1em ;
+        margin-top : 1em ;
+    }
+
+Download
+""""""""
+
+You can download this example theme :download:`here <_static/theme-basic.zip>`.
