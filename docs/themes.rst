@@ -209,11 +209,11 @@ You can take a look at notmyidea default theme for working example.
 Inheritance
 ===========
 
-The last version of Pelican supports inheritance from the ``simple`` theme, so you can reuse the templates of the ``simple`` theme in your own themes:
+Since version 3, pelican supports inheritance from the ``simple`` theme, so you can reuse the templates of the ``simple`` theme in your own themes:
 
-If one of the mandatory files in the ``templates/`` directory of your theme is missing, it will be replaced by the corresponding template from the ``simple`` theme, so if the HTML structure of a template of the ``simple`` theme is right for you, you don't have to rewrite it from scratch.
+If one of the mandatory files in the ``templates/`` directory of your theme is missing, it will be replaced by the matching template from the ``simple`` theme, so if the HTML structure of a template of the ``simple`` theme is right for you, you don't have to rewrite it from scratch.
 
-You can also extend templates of the ``simple`` themes in your own themes by using the ``{% extends %}`` directove as in the following example:
+You can also extend templates of the ``simple`` themes in your own themes by using the ``{% extends %}`` directive as in the following example:
 
 .. code-block:: html+jinja
 
@@ -225,7 +225,7 @@ You can also extend templates of the ``simple`` themes in your own themes by usi
 Example
 -------
 
-With this system, it is possible to create a theme with just two file.
+With this system, it is possible to create a theme with just two files.
 
 base.html
 """""""""
@@ -242,13 +242,13 @@ The first file is the ``templates/base.html`` template:
     {% endblock %}
 
 
-1.    On the first line, we extends the ``base.html`` template of the ``simple`` theme, so we don't have to rewrite the entire file.
-2.    On the third line, we open the ``head`` block, that has already been defined in the ``simple`` theme
+1.    On the first line, we extend the ``base.html`` template of the ``simple`` theme, so we don't have to rewrite the entire file.
+2.    On the third line, we open the ``head`` block which has already been defined in the ``simple`` theme
 3.    On the fourth line, the function ``super()`` keeps the content previously inserted in the ``head`` block.
 4.    On the fifth line, we append a stylesheet to the page
 5.    On the last line, we close the ``head`` block.
 
-This file will be extended by all the others templates, so the stylesheet will be included in all pages.
+This file will be extended by all the other templates, so the stylesheet will be linked from all pages.
 
 style.css
 """""""""
