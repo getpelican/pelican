@@ -61,6 +61,10 @@ Setting name (default value)                        what does it do?
                                                     on the output path "static". By default,
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
+`PERMALINK_STRUCTURE` (``'/%Y/%m/'``)               Allows to render URLs for articles sorted by date, 
+                                                    in case you specify a format as specified in the 
+                                                    example. Also, you can specify any other word 
+                                                    that you want.
 ================================================    =====================================================
 
 

@@ -7,6 +7,7 @@ from collections import defaultdict
 import os
 import math
 import random
+import urlparse
 
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
@@ -159,6 +160,17 @@ class ArticlesGenerator(Generator):
         # in writer, articles pass first
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
+            add_to_url = u''
+            if self.settings.has_key('PERMALINK_STRUCTURE'):
+                permalink_structure = self.settings.get('PERMALINK_STRUCTURE')
+                permalink_structure = permalink_structure.lstrip('/')
+                try:
+                    add_to_url = article.date.strftime(permalink_structure)
+                except:
+                    pass
+
+            article.url = urlparse.urljoin(add_to_url, article.url)
+            article.save_as = urlparse.urljoin(add_to_url, article.save_as)
             write(article.save_as,
                           article_template, self.context, article=article,
                           category=article.category)
