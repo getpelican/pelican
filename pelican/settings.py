@@ -42,7 +42,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_METADATA': (),
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
-                   'PERMALINK_STRUCTURE': ''
+                   'ARTICLE_PERMALINK_STRUCTURE': '/%Y/%m/'
                    }
 
 def read_settings(filename):

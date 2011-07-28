@@ -61,10 +61,22 @@ Setting name (default value)                        what does it do?
                                                     on the output path "static". By default,
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
-`PERMALINK_STRUCTURE` (``'/%Y/%m/'``)               Allows to render URLs for articles sorted by date, 
+`ARTICLE_PERMALINK_STRUCTURE` (``'/%Y/%m/'``)       Allows to render URLs for articles sorted by date, 
                                                     in case you specify a format as specified in the 
-                                                    example. Also, you can specify any other word 
-                                                    that you want.
+                                                    example. It follows the python datetime directives:
+                                                     * %Y: Year with century as a decimal number.
+                                                     * %m: Month as a decimal number [01,12].
+                                                     * %d: Day of the month as a decimal number [01,31].
+
+                                                     Check the python datetime documentation 
+                                                     at http://bit.ly/cNcJUC for more information.
+                                                    
+                                                    Also, you can use any metadata in the 
+                                                    restructured text files:
+                                                     * category: '%(category)s'
+                                                     * author: '%(author)s'
+                                                     * tags: '%(tags)s'
+                                                     * date: '%(date)s'
 ================================================    =====================================================
 
 
