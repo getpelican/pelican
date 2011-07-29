@@ -9,9 +9,6 @@ PDF_GENERATOR = False
 REVERSE_CATEGORY_ORDER = True
 LOCALE = ""
 DEFAULT_PAGINATION = 2
-# Allows to construct an url like /2011/07/sample-post.html
-# See documentation for more info.
-ARTICLE_PERMALINK_STRUCTURE = ''
 
 FEED_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'

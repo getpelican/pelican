@@ -61,12 +61,18 @@ Setting name (default value)                        what does it do?
                                                     on the output path "static". By default,
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
-`ARTICLE_PERMALINK_STRUCTURE` (``'/%Y/%m/'``)       Allows to render URLs for articles sorted by date, 
-                                                    in case you specify a format as specified in the 
-                                                    example. It follows the python datetime directives:
+`ARTICLE_PERMALINK_STRUCTURE` (``''``)              Empty by default. Allows to render URLs for 
+                                                    articles sorted by date, in case you specify a 
+                                                    format as specified in the example.
+                                                    It follows the python datetime directives:
                                                      * %Y: Year with century as a decimal number.
                                                      * %m: Month as a decimal number [01,12].
                                                      * %d: Day of the month as a decimal number [01,31].
+
+                                                     Note: if you specify a datetime directive, it will
+                                                     be substituted using the date metadata field into 
+                                                     the rest file. if the date is not specified, pelican
+                                                     will rely on the mtime of your file.
 
                                                      Check the python datetime documentation 
                                                      at http://bit.ly/cNcJUC for more information.
@@ -77,6 +83,12 @@ Setting name (default value)                        what does it do?
                                                      * author: '%(author)s'
                                                      * tags: '%(tags)s'
                                                      * date: '%(date)s'
+
+                                                    Example usage:
+                                                     * '/%Y/%m/' it will be something like 
+                                                       '/2011/07/sample-post.html'.
+                                                     * '/%Y/%(category)s/' it will be something like
+                                                       '/2011/life/sample-post.html'.
 ================================================    =====================================================
 
 

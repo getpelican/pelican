@@ -162,14 +162,13 @@ class ArticlesGenerator(Generator):
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
             add_to_url = u''
-            if self.settings.has_key('ARTICLE_PERMALINK_STRUCTURE'):
-                article_permalink_structure = self.settings.get('ARTICLE_PERMALINK_STRUCTURE')
+            if 'ARTICLE_PERMALINK_STRUCTURE' in self.settings:
+                article_permalink_structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
                 article_permalink_structure = article_permalink_structure.lstrip('/')
-                try:
-                    add_to_url = article.date.strftime(article_permalink_structure)
-                except:
-                    pass
 
+                # try to substitute any python datetime directive
+                add_to_url = article.date.strftime(article_permalink_structure)
+                # try to substitute any article metadata in rest file
                 add_to_url = add_to_url % article.__dict__
                 add_to_url = [slugify(i) for i in add_to_url.split('/')]
                 add_to_url = os.path.join(*add_to_url)
