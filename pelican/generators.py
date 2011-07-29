@@ -7,11 +7,13 @@ from collections import defaultdict
 import os
 import math
 import random
+import urlparse
 
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
 from pelican.utils import copy, get_relative_path, process_translations, open
+from pelican.utils import slugify
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 from pelican.log import *
@@ -159,6 +161,20 @@ class ArticlesGenerator(Generator):
         # in writer, articles pass first
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
+            add_to_url = u''
+            if 'ARTICLE_PERMALINK_STRUCTURE' in self.settings:
+                article_permalink_structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
+                article_permalink_structure = article_permalink_structure.lstrip('/')
+
+                # try to substitute any python datetime directive
+                add_to_url = article.date.strftime(article_permalink_structure)
+                # try to substitute any article metadata in rest file
+                add_to_url = add_to_url % article.__dict__
+                add_to_url = [slugify(i) for i in add_to_url.split('/')]
+                add_to_url = os.path.join(*add_to_url)
+
+            article.url = urlparse.urljoin(add_to_url, article.url)
+            article.save_as = urlparse.urljoin(add_to_url, article.save_as)
             write(article.save_as,
                           article_template, self.context, article=article,
                           category=article.category)
