@@ -21,47 +21,55 @@ Here is a list of settings for pelican, regarding the different features.
 Basic settings
 ==============
 
-================================================    =====================================================
-Setting name (default value)                        what does it do?
-================================================    =====================================================
-`AUTHOR`                                            Default author (put your name)
-`SITENAME` (``'A Pelican Blog'``)                   Your site name
-`DATE_FORMATS` (``{}``)                             If you do manage multiple languages, you can
-                                                    set the date formatting here.
-`DEFAULT_CATEGORY` (``'misc'``)                     The default category to fallback on.
-`DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)           The default date format you want to use.
-`DISPLAY_PAGES_ON_MENU` (``True``)                  Display or not the pages on the menu of the
-                                                    template. Templates can follow or not this
-                                                    settings.
-`FALLBACK_ON_FS_DATE` (``True``)                    If True, pelican will use the file system
-                                                    dates infos (mtime) if it can't get
-                                                    informations from the metadata
-`JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
-`DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory and just
-                                                    the generated files.
-`LOCALE` (''[1]_)                                   Change the locale. A list of locales can be provided 
-                                                    here or a single string representing one locale.
-                                                    When providing a list, all the locales will be tried 
-                                                    until one works.
-`MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want
-                                                    to use. For the moment, only available values
-                                                    are `rst` and `md`.
-`OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
-`PATH` (``None``)                                   path to look at for input files.
-`PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
-                                                    of your documents. You will need to install
-                                                    `rst2pdf`.
-`RELATIVE_URL` (``True``)                           Defines if pelican should use relative urls or
-                                                    not.
-`SITEURL`                                           base URL of your website. Note that this is
-                                                    not a way to tell pelican to use relative urls
-                                                    or static ones. You should rather use the
-                                                    `RELATIVE_URL` setting for such use.
-`STATIC_PATHS` (``['images']``)                     The static paths you want to have accessible
-                                                    on the output path "static". By default,
-                                                    pelican will copy the 'images' folder to the
-                                                    output folder.
-================================================    =====================================================
+=====================================================    =====================================================
+Setting name (default value)                             what does it do?
+=====================================================    =====================================================
+`AUTHOR`                                                 Default author (put your name)
+`SITENAME` (``'A Pelican Blog'``)                        Your site name
+`DATE_FORMATS` (``{}``)                                  If you do manage multiple languages, you can
+                                                         set the date formatting here.
+`DEFAULT_CATEGORY` (``'misc'``)                          The default category to fallback on.
+`DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                The default date format you want to use.
+`DISPLAY_PAGES_ON_MENU` (``True``)                       Display or not the pages on the menu of the
+                                                         template. Templates can follow or not this
+                                                         settings.
+`FALLBACK_ON_FS_DATE` (``True``)                         If True, pelican will use the file system
+                                                         dates infos (mtime) if it can't get
+                                                         informations from the metadata
+`JINJA_EXTENSIONS` (``[]``)                              A list of any Jinja2 extensions you want to use.
+`DELETE_OUTPUT_DIRECTORY` (``False``)                    Delete the output directory and just
+                                                         the generated files.
+`LOCALE` (''[1]_)                                        Change the locale. A list of locales can be provided
+                                                         here or a single string representing one locale.
+                                                         When providing a list, all the locales will be tried
+                                                         until one works.
+`MARKUP` (``('rst', 'md')``)                             A list of available markup languages you want
+                                                         to use. For the moment, only available values
+                                                         are `rst` and `md`.
+`MD_EXTRA_PARAMS` (``('codehilite','extra')``)           A list of the extensions that the markdown processor
+                                                         will use. Refer to the extensions chapter in the
+                                                         Python-Markdown documentation for a complete list of
+                                                         supported extensions.
+`RST_EXTRA_PARAMS` (``{'initial_header_level':'2'}``)    A dict of the settings that the rst processor will
+                                                         use. Refer to the reStructuredText configuration
+                                                         chapter docutils documentation for a complete list
+                                                         of supported settings.
+`OUTPUT_PATH` (``'output/'``)                            Where to output the generated files.
+`PATH` (``None``)                                        path to look at for input files.
+`PDF_GENERATOR` (``False``)                              Set to True if you want to have PDF versions
+                                                         of your documents. You will need to install
+                                                         `rst2pdf`.
+`RELATIVE_URL` (``True``)                                Defines if pelican should use relative urls or
+                                                         not.
+`SITEURL`                                                base URL of your website. Note that this is
+                                                         not a way to tell pelican to use relative urls
+                                                         or static ones. You should rather use the
+                                                         `RELATIVE_URL` setting for such use.
+`STATIC_PATHS` (``['images']``)                          The static paths you want to have accessible
+                                                         on the output path "static". By default,
+                                                         pelican will copy the 'images' folder to the
+                                                         output folder.
+=====================================================    =====================================================
 
 
 .. [1] Default is the system locale. Default is to delete the output directory.
