@@ -21,30 +21,112 @@ def wp2fields(xml):
             title = item.title.contents[0]
             content = item.fetch('content:encoded')[0].contents[0]
             filename = item.fetch('wp:post_name')[0].contents[0]
-            
+
             raw_date = item.fetch('wp:post_date')[0].contents[0]
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
-            
+
             author = item.fetch('dc:creator')[0].contents[0].title()
             categories = [(cat['nicename'],cat.contents[0]) for cat in item.fetch(domain='category')]
-            
+
             tags = [tag.contents[0].title() for tag in item.fetch(domain='tag', nicename=None)]
-            
-            yield (title, content, filename, date, author, categories, tags)
+
+            yield (title, content, filename, date, author, categories, tags, "html")
+
+def dc2fields(file):
+    """Opens a Dotclear export file, and yield pelican fields"""
+    in_cat = False
+    in_post = False
+    category_list = {}
+    posts = []
+
+    with open(file, 'r', encoding='utf-8') as f:
+
+        for line in f:
+            # remove final \n
+            line = line[:-1]
+
+            if line.startswith('[category'):
+                in_cat = True
+            elif line.startswith('[post'):
+                in_post = True
+            elif in_cat:
+                fields = line.split('","')
+                if not line:
+                    in_cat = False
+                else:
+                    # remove 1st and last ""
+                    fields[0] = fields[0][1:]
+                    # fields[-1] = fields[-1][:-1]
+                    category_list[fields[0]]=fields[2]
+            elif in_post:
+                if not line:
+                    in_post = False
+                    break
+                else:
+                    posts.append(line)
+
+    print "%i posts read." % len(posts)
+
+    for post in posts:
+        fields = post.split('","')
+
+        # post_id = fields[0][1:]
+        # blog_id = fields[1]
+        # user_id = fields[2]
+        cat_id = fields[3]
+        # post_dt = fields[4]
+        # post_tz = fields[5]
+        post_creadt = fields[6]
+        # post_upddt = fields[7]
+        # post_password = fields[8]
+        post_type = fields[9]
+        post_format = fields[10]
+        post_url = fields[11]
+        post_lang = fields[12]
+        post_title = fields[13]
+        post_excerpt = fields[14]
+        post_excerpt_xhtml = fields[15]
+        post_content = fields[16]
+        post_content_xhtml = fields[17]
+        # post_notes = fields[18]
+        # post_words = fields[19]
+        # post_status = fields[20]
+        # post_selected = fields[21]
+        # post_position = fields[22]
+        # post_open_comment = fields[23]
+        # post_open_tb = fields[24]
+        # nb_comment = fields[25]
+        # nb_trackback = fields[26]
+        # post_meta = fields[27]
+        # redirect_url = fields[28][:-1]
+
+        author = ""
+        categories = ""
+        if cat_id:
+            categories = category_list[cat_id]
+        tags = ""
+
+        if post_format == "markdown":
+            content = post_excerpt + post_content
+        else:
+            content = post_excerpt_xhtml + post_content_xhtml
+
+        yield (post_title, content, post_url, post_creadt, author, categories, tags, post_format)
+
 
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
     d = feedparser.parse(file)
     for entry in d.entries:
-        date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed) 
+        date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
                 if hasattr(entry, "updated_parsed") else None)
         author = entry.author if hasattr(entry, "author") else None
         tags = [e['term'] for e in entry.tags] if hasattr(entry, "tags") else None
 
         slug = slugify(entry.title)
-        yield (entry.title, entry.description, slug, date, author, [], tags)
+        yield (entry.title, entry.description, slug, date, author, [], tags, "html")
 
 
 def build_header(title, date, author, categories, tags):
@@ -53,43 +135,68 @@ def build_header(title, date, author, categories, tags):
     if date:
         header += ':date: %s\n' % date
     if categories:
-        header += ':category: %s\n' % ', '.join(categories)
+        header += ':category: %s\n' % categories
     if tags:
         header += ':tags: %s\n' % ', '.join(tags)
     header += '\n'
     return header
 
+def build_markdown_header(title, date, author, categories, tags):
+    """Build a header from a list of fields"""
+    header = 'Title: %s\n' % title
+    if date:
+        header += 'Date: %s\n' % date
+    if categories:
+        header += 'Category: %s\n' % categories
+    if tags:
+        header += 'Tags: %s\n' % ', '.join(tags)
+    header += '\n'
+    return header
 
 def fields2pelican(fields, output_path):
-    for title, content, filename, date, author, categories, tags in fields: 
-        html_filename = os.path.join(output_path, filename+'.html')
-        
-        if(len(categories) == 1):
-            rst_filename = os.path.join(output_path, categories[0][0], filename+'.rst')
-            if not os.path.isdir(os.path.join(output_path, categories[0][0])):
-                os.mkdir(os.path.join(output_path, categories[0][0]))
+    for title, content, filename, date, author, categories, tags, markup in fields:
+        if markup == "markdown":
+            md_filename = os.path.join(output_path, filename+'.md')
+            header = build_markdown_header(title, date, author, categories, tags)
+
+            # content.replace('\r\n', '\n')
+
+            with open(md_filename, 'w', encoding='utf-8') as fp:
+                fp.write(header+content)
+
         else:
+            filename = os.path.basename(filename)
+            html_filename = os.path.join(output_path, filename+'.html')
+
+            # if(len(categories) == 1):
+            #     rst_filename = os.path.join(output_path, categories[0][0], filename+'.rst')
+            #     if not os.path.isdir(os.path.join(output_path, categories[0][0])):
+            #         os.mkdir(os.path.join(output_path, categories[0][0]))
+            # else:
             rst_filename = os.path.join(output_path, filename+'.rst')
 
-        with open(html_filename, 'w', encoding='utf-8') as fp:
-            fp.write(content)
-            
-        os.system('pandoc --from=html --to=rst -o %s %s' % (rst_filename,
-            html_filename))
-        
-        os.remove(html_filename)
-            
-        with open(rst_filename, 'r', encoding='utf-8') as fs:
-            content = fs.read()
-        with open(rst_filename, 'w', encoding='utf-8') as fs:
-            categories = [x[1] for x in categories]
-            header = build_header(title, date, author, categories, tags)
-            fs.write(header + content)
+            with open(html_filename, 'w', encoding='utf-8') as fp:
+                fp.write(content)
+
+            print rst_filename
+            os.system('pandoc --normalize --reference-links --from=html --to=rst -o %s %s' % (rst_filename,
+                html_filename))
+
+            os.remove(html_filename)
+
+            with open(rst_filename, 'r', encoding='utf-8') as fs:
+                content = fs.read()
+            with open(rst_filename, 'w', encoding='utf-8') as fs:
+                # categories = [x[1] for x in categories]
+                header = build_header(title, date, author, categories, tags)
+                fs.write(header + content)
 
 
 def main(input_type, input, output_path):
     if input_type == 'wordpress':
         fields = wp2fields(input)
+    elif input_type == 'dotclear':
+        fields = dc2fields(input)
     elif input_type == 'feed':
         fields = feed2fields(input)
 
@@ -102,17 +209,21 @@ if __name__ == '__main__':
                     "Be sure to have pandoc installed")
 
     parser.add_argument(dest='input', help='The input file to read')
-    parser.add_argument('--wpfile', action='store_true', dest='wpfile', 
+    parser.add_argument('--wpfile', action='store_true', dest='wpfile',
             help='Wordpress XML export')
-    parser.add_argument('--feed', action='store_true', dest='feed', 
+    parser.add_argument('--dotclear', action='store_true', dest='dotclear',
+            help='Dotclear export')
+    parser.add_argument('--feed', action='store_true', dest='feed',
             help='feed to parse')
-    parser.add_argument('-o', '--output', dest='output', default='output', 
+    parser.add_argument('-o', '--output', dest='output', default='output',
             help='Output path')
-    args = parser.parse_args() 
-    
+    args = parser.parse_args()
+
     input_type = None
     if args.wpfile:
         input_type = 'wordpress'
+    elif args.dotclear:
+        input_type = 'dotclear'
     elif args.feed:
         input_type = 'feed'
     else:

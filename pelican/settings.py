@@ -42,6 +42,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_METADATA': (),
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
+                   'ARTICLE_PERMALINK_STRUCTURE': ''
                    }
 
 def read_settings(filename):
@@ -54,6 +55,13 @@ def read_settings(filename):
         for key in tempdict:
             if key.isupper():
                 context[key] = tempdict[key]
+
+        # Make the paths relative to the settings file
+        for path in ['PATH', 'OUTPUT_PATH']:
+            if path in context:
+                if context[path] is not None and not os.path.isabs(context[path]):
+                    # FIXME:
+                    context[path] = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(filename), context[path])))
 
     # if locales is not a list, make it one
     locales = context['LOCALE']
@@ -73,12 +81,6 @@ def read_settings(filename):
             pass
     else:
         log.warn("LOCALE option doesn't contain a correct value")
-
-    # Make the paths relative to the settings file
-    for path in ['PATH', 'OUTPUT_PATH']:
-        if path in context:
-            if context[path] is not None and not os.path.isabs(context[path]):
-                context[path] = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(filename), context[path])))
 
     # set the locale
     return context

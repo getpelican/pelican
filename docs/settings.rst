@@ -39,9 +39,9 @@ Setting name (default value)                             what does it do?
 `JINJA_EXTENSIONS` (``[]``)                              A list of any Jinja2 extensions you want to use.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                    Delete the output directory and just
                                                          the generated files.
-`LOCALE` (''[1]_)                                        Change the locale. A list of locales can be provided
+`LOCALE` (''[1]_)                                        Change the locale. A list of locales can be provided 
                                                          here or a single string representing one locale.
-                                                         When providing a list, all the locales will be tried
+                                                         When providing a list, all the locales will be tried 
                                                          until one works.
 `MARKUP` (``('rst', 'md')``)                             A list of available markup languages you want
                                                          to use. For the moment, only available values
@@ -59,7 +59,7 @@ Setting name (default value)                             what does it do?
 `PDF_GENERATOR` (``False``)                              Set to True if you want to have PDF versions
                                                          of your documents. You will need to install
                                                          `rst2pdf`.
-`RELATIVE_URL` (``True``)                                Defines if pelican should use relative urls or
+`RELATIVE_URLS` (``True``)                               Defines if pelican should use relative urls or
                                                          not.
 `SITEURL`                                                base URL of your website. Note that this is
                                                          not a way to tell pelican to use relative urls
@@ -69,8 +69,35 @@ Setting name (default value)                             what does it do?
                                                          on the output path "static". By default,
                                                          pelican will copy the 'images' folder to the
                                                          output folder.
+`ARTICLE_PERMALINK_STRUCTURE` (``''``)                   Empty by default. Allows to render URLs for 
+                                                         articles sorted by date, in case you specify a 
+                                                         format as specified in the example.
+                                                         It follows the python datetime directives:
+                                                          * %Y: Year with century as a decimal number.
+                                                          * %m: Month as a decimal number [01,12].
+                                                          * %d: Day of the month as a decimal number [01,31].
+                                                         
+                                                          Note: if you specify a datetime directive, it will
+                                                          be substituted using the date metadata field into 
+                                                          the rest file. if the date is not specified, pelican
+                                                          will rely on the mtime of your file.
+                                                         
+                                                          Check the python datetime documentation 
+                                                          at http://bit.ly/cNcJUC for more information.
+                                                         
+                                                         Also, you can use any metadata in the 
+                                                         restructured text files:
+                                                          * category: '%(category)s'
+                                                          * author: '%(author)s'
+                                                          * tags: '%(tags)s'
+                                                          * date: '%(date)s'
+                                                        
+                                                         Example usage:
+                                                          * '/%Y/%m/' it will be something like 
+                                                            '/2011/07/sample-post.html'.
+                                                          * '/%Y/%(category)s/' it will be something like
+                                                            '/2011/life/sample-post.html'.
 =====================================================    =====================================================
-
 
 .. [1] Default is the system locale. Default is to delete the output directory.
 
@@ -295,3 +322,9 @@ Setting name (default value)                        what does it do?
 ================================================    =====================================================
 
 .. _pelican-themes: :doc:`pelican-themes`
+
+Example settings
+================
+
+.. literalinclude:: ../samples/pelican.conf.py
+    :language: python

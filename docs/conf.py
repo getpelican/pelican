@@ -40,7 +40,7 @@ man_pages = [
     ('index', 'pelican', u'pelican documentation',
      [u'Alexis Métaireau'], 1),
     ('pelican-themes', 'pelican-themes', u'A theme manager for Pelican',
-     [u'Mickaël Raybaud'], 'en.1'),
-    ('fr/pelican-themes', 'pelican-themes', u'Un gestionnaire de thèmes pour Pelican',
-     [u'Mickaël Raybaud'], 'fr.1')
+     [u'Mickaël Raybaud'], 1),
+    ('themes', 'pelican-theming', u'How to create themes for Pelican',
+     [u'The Pelican contributors'], 1)
 ]

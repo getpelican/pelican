@@ -7,11 +7,13 @@ from collections import defaultdict
 import os
 import math
 import random
+import urlparse
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
 from pelican.utils import copy, get_relative_path, process_translations, open
+from pelican.utils import slugify
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file
 from pelican.log import *
@@ -31,10 +33,16 @@ class Generator(object):
         # templates cache
         self._templates = {}
         self._templates_path = os.path.expanduser(os.path.join(self.theme, 'templates'))
+        simple_loader = FileSystemLoader(os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes", "simple", "templates"))
         self._env = Environment(
-            loader=FileSystemLoader(self._templates_path),
+            loader=ChoiceLoader([
+                FileSystemLoader(self._templates_path),
+                simple_loader,                              # implicit inheritance
+                PrefixLoader({'!simple' : simple_loader})   # explicit inheritance
+            ]),
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
+        debug('self._env.list_templates(): {0}'.format(self._env.list_templates())) 
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
@@ -98,6 +106,7 @@ class ArticlesGenerator(Generator):
         self.dates = {}
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
+        self.authors = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
 
@@ -152,6 +161,20 @@ class ArticlesGenerator(Generator):
         # in writer, articles pass first
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
+            add_to_url = u''
+            if 'ARTICLE_PERMALINK_STRUCTURE' in self.settings:
+                article_permalink_structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
+                article_permalink_structure = article_permalink_structure.lstrip('/')
+
+                # try to substitute any python datetime directive
+                add_to_url = article.date.strftime(article_permalink_structure)
+                # try to substitute any article metadata in rest file
+                add_to_url = add_to_url % article.__dict__
+                add_to_url = [slugify(i) for i in add_to_url.split('/')]
+                add_to_url = os.path.join(*add_to_url)
+
+            article.url = urlparse.urljoin(add_to_url, article.url)
+            article.save_as = urlparse.urljoin(add_to_url, article.save_as)
             write(article.save_as,
                           article_template, self.context, article=article,
                           category=article.category)
@@ -181,6 +204,14 @@ class ArticlesGenerator(Generator):
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='category/%s' % cat)
+
+        author_template = self.get_template('author')
+        for aut, articles in self.authors:
+            dates = [article for article in self.dates if article in articles]
+            write('author/%s.html' % aut, author_template, self.context,
+                author=aut, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name='author/%s' % aut)
 
         for article in self.drafts:
             write('drafts/%s.html' % article.slug, article_template, self.context,
@@ -229,7 +260,7 @@ class ArticlesGenerator(Generator):
         for article in self.articles:
             # only main articles are listed in categories, not translations
             self.categories[article.category].append(article)
-
+            self.authors[article.author].append(article)
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
@@ -269,7 +300,12 @@ class ArticlesGenerator(Generator):
         # order the categories per name
         self.categories = list(self.categories.items())
         self.categories.sort(reverse=self.settings.get('REVERSE_CATEGORY_ORDER'))
-        self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud'))
+
+        self.authors = list(self.authors.items())
+        self.authors.sort()
+
+        self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud', 'authors'))
+
 
 
     def generate_output(self, writer):
