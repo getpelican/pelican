@@ -115,6 +115,10 @@ Setting name (default value)                        what does it do?
 `TAG_FEED` (``None``, ie no tag feed)               relative url to output the tags atom feed. It should
                                                     be defined using a "%s" matchin the tag name
 `TAG_FEED_RSS` (``None``, ie no RSS tag feed)       relative url to output the tag RSS feed
+`FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feeds are
+                                                    unrestricted by default.
+`FEED_USES_SUMMARY` (``False``)                     Use summary for feed descriptions rather than
+                                                    full text.
 ================================================    =====================================================
 
 .. [2] %s is the name of the category.

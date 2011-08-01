@@ -30,11 +30,11 @@ class Writer(object):
 
 
     def _add_item_to_the_feed(self, feed, item):
-
+        use_summary = self.settings['FEED_USES_SUMMARY']
         feed.add_item(
             title=item.title,
             link='%s/%s' % (self.site_url, item.url),
-            description=item.content,
+            description=item.summary if use_summary else item.content,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', 'John Doe'),
             pubdate=item.date)
@@ -58,8 +58,11 @@ class Writer(object):
 
             feed = self._create_new_feed(feed_type, context)
 
-            for item in elements:
-                self._add_item_to_the_feed(feed, item)
+            max_items = len(elements)
+            if self.settings['FEED_MAX_ITEMS']:
+                max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
+            for i in xrange(max_items):
+                self._add_item_to_the_feed(feed, elements[i])
 
             if filename:
                 complete_path = os.path.join(self.output_path, filename)
