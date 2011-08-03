@@ -214,8 +214,8 @@ def main(input_type, input, output_path, dircat=False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description="Transform even feed or XML files to rst files."
-                    "Be sure to have pandoc installed")
+            description="Transform feed, Wordpress or Dotclear files to rst files."
+                        "Be sure to have pandoc installed")
 
     parser.add_argument(dest='input', help='The input file to read')
     parser.add_argument('--wpfile', action='store_true', dest='wpfile',
@@ -223,7 +223,7 @@ if __name__ == '__main__':
     parser.add_argument('--dotclear', action='store_true', dest='dotclear',
             help='Dotclear export')
     parser.add_argument('--feed', action='store_true', dest='feed',
-            help='feed to parse')
+            help='Feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
             help='Output path')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
@@ -238,6 +238,6 @@ if __name__ == '__main__':
     elif args.feed:
         input_type = 'feed'
     else:
-        print "you must provide either --wpfile or --feed options"
+        print "you must provide either --wpfile, --dotclear or --feed options"
         exit()
     main(input_type, args.input, args.output, dircat=args.dircat)
