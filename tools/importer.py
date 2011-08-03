@@ -161,7 +161,7 @@ def build_markdown_header(title, date, author, categories, tags):
     header += '\n'
     return header
 
-def fields2pelican(fields, output_path):
+def fields2pelican(fields, output_path, dircat=False):
     for title, content, filename, date, author, categories, tags, markup in fields:
         if markup == "markdown":
             ext = '.md'
@@ -170,15 +170,17 @@ def fields2pelican(fields, output_path):
             ext = '.rst'
             header = build_header(title, date, author, categories, tags)
 
-        # TODO: add options to put files in directories by categories
-        # if(len(categories) == 1):
-        #     out_filename = os.path.join(output_path, categories[0], filename+'.rst')
-        #     if not os.path.isdir(os.path.join(output_path, categories[0])):
-        #         os.mkdir(os.path.join(output_path, categories[0]))
-        # else:
-
         filename = os.path.basename(filename)
-        out_filename = os.path.join(output_path, filename+ext)
+
+        # option to put files in directories with categories names
+        if dircat and (len(categories) == 1):
+            catname = categories[0]
+            out_filename = os.path.join(output_path, catname, filename+'.rst')
+            if not os.path.isdir(os.path.join(output_path, catname)):
+                os.mkdir(os.path.join(output_path, catname))
+        else:
+            out_filename = os.path.join(output_path, filename+ext)
+
         print out_filename
 
         if markup == "html":
@@ -187,7 +189,7 @@ def fields2pelican(fields, output_path):
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 fp.write(content)
 
-            os.system('pandoc --normalize --reference-links --from=html --to=rst -o %s %s' % (out_filename,
+            os.system('pandoc --normalize --reference-links --from=html --to=rst -o "%s" "%s"' % (out_filename,
                 html_filename))
 
             os.remove(html_filename)
@@ -199,7 +201,7 @@ def fields2pelican(fields, output_path):
             fs.write(header + content)
 
 
-def main(input_type, input, output_path):
+def main(input_type, input, output_path, dircat=False):
     if input_type == 'wordpress':
         fields = wp2fields(input)
     elif input_type == 'dotclear':
@@ -207,7 +209,7 @@ def main(input_type, input, output_path):
     elif input_type == 'feed':
         fields = feed2fields(input)
 
-    fields2pelican(fields, output_path)
+    fields2pelican(fields, output_path, dircat=dircat)
 
 
 if __name__ == '__main__':
@@ -224,6 +226,8 @@ if __name__ == '__main__':
             help='feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
             help='Output path')
+    parser.add_argument('--dir-cat', action='store_true', dest='dircat',
+            help='Put files in directories with categories name')
     args = parser.parse_args()
 
     input_type = None
@@ -236,4 +240,4 @@ if __name__ == '__main__':
     else:
         print "you must provide either --wpfile or --feed options"
         exit()
-    main(input_type, args.input, args.output)
+    main(input_type, args.input, args.output, dircat=args.dircat)
