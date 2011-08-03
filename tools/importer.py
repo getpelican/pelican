@@ -27,7 +27,9 @@ def wp2fields(xml):
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
 
             author = item.fetch('dc:creator')[0].contents[0].title()
-            categories = [(cat['nicename'],cat.contents[0]) for cat in item.fetch(domain='category')]
+
+            categories = [cat.contents[0] for cat in item.fetch(domain='category')]
+            # caturl = [cat['nicename'] for cat in item.fetch(domain='category')]
 
             tags = [tag.contents[0].title() for tag in item.fetch(domain='tag', nicename=None)]
 
@@ -101,16 +103,22 @@ def dc2fields(file):
         # post_meta = fields[27]
         # redirect_url = fields[28][:-1]
 
+        # remove seconds
+        post_creadt = ':'.join(post_creadt.split(':')[0:2])
+
         author = ""
-        categories = ""
+        categories = []
+        tags = []
+
         if cat_id:
-            categories = category_list[cat_id]
-        tags = ""
+            categories = [category_list[id].strip() for id in cat_id.split(',')]
 
         if post_format == "markdown":
             content = post_excerpt + post_content
         else:
             content = post_excerpt_xhtml + post_content_xhtml
+            content = content.replace('\\n', '')
+            post_format = "html"
 
         yield (post_title, content, post_url, post_creadt, author, categories, tags, post_format)
 
@@ -135,7 +143,7 @@ def build_header(title, date, author, categories, tags):
     if date:
         header += ':date: %s\n' % date
     if categories:
-        header += ':category: %s\n' % categories
+        header += ':category: %s\n' % ', '.join(categories)
     if tags:
         header += ':tags: %s\n' % ', '.join(tags)
     header += '\n'
@@ -147,7 +155,7 @@ def build_markdown_header(title, date, author, categories, tags):
     if date:
         header += 'Date: %s\n' % date
     if categories:
-        header += 'Category: %s\n' % categories
+        header += 'Category: %s\n' % ', '.join(categories)
     if tags:
         header += 'Tags: %s\n' % ', '.join(tags)
     header += '\n'
@@ -156,40 +164,39 @@ def build_markdown_header(title, date, author, categories, tags):
 def fields2pelican(fields, output_path):
     for title, content, filename, date, author, categories, tags, markup in fields:
         if markup == "markdown":
-            md_filename = os.path.join(output_path, filename+'.md')
+            ext = '.md'
             header = build_markdown_header(title, date, author, categories, tags)
-
-            # content.replace('\r\n', '\n')
-
-            with open(md_filename, 'w', encoding='utf-8') as fp:
-                fp.write(header+content)
-
         else:
-            filename = os.path.basename(filename)
-            html_filename = os.path.join(output_path, filename+'.html')
+            ext = '.rst'
+            header = build_header(title, date, author, categories, tags)
 
-            # if(len(categories) == 1):
-            #     rst_filename = os.path.join(output_path, categories[0][0], filename+'.rst')
-            #     if not os.path.isdir(os.path.join(output_path, categories[0][0])):
-            #         os.mkdir(os.path.join(output_path, categories[0][0]))
-            # else:
-            rst_filename = os.path.join(output_path, filename+'.rst')
+        # TODO: add options to put files in directories by categories
+        # if(len(categories) == 1):
+        #     out_filename = os.path.join(output_path, categories[0], filename+'.rst')
+        #     if not os.path.isdir(os.path.join(output_path, categories[0])):
+        #         os.mkdir(os.path.join(output_path, categories[0]))
+        # else:
+
+        filename = os.path.basename(filename)
+        out_filename = os.path.join(output_path, filename+ext)
+        print out_filename
+
+        if markup == "html":
+            html_filename = os.path.join(output_path, filename+'.html')
 
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 fp.write(content)
 
-            print rst_filename
-            os.system('pandoc --normalize --reference-links --from=html --to=rst -o %s %s' % (rst_filename,
+            os.system('pandoc --normalize --reference-links --from=html --to=rst -o %s %s' % (out_filename,
                 html_filename))
 
             os.remove(html_filename)
 
-            with open(rst_filename, 'r', encoding='utf-8') as fs:
+            with open(out_filename, 'r', encoding='utf-8') as fs:
                 content = fs.read()
-            with open(rst_filename, 'w', encoding='utf-8') as fs:
-                # categories = [x[1] for x in categories]
-                header = build_header(title, date, author, categories, tags)
-                fs.write(header + content)
+
+        with open(out_filename, 'w', encoding='utf-8') as fs:
+            fs.write(header + content)
 
 
 def main(input_type, input, output_path):
