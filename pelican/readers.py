@@ -32,7 +32,7 @@ def _process_metadata(name, value):
 
 class Reader(object):
     enabled = True
-
+    extra_params = None
 
 class _FieldBodyTranslator(HTMLTranslator):
 
@@ -71,15 +71,15 @@ def get_metadata(document):
 class RstReader(Reader):
     enabled = bool(docutils)
     extension = "rst"
+    extra_params = {'initial_header_level': '2'}
 
     def _parse_metadata(self, document):
         return get_metadata(document)
 
     def _get_publisher(self, filename):
-        extra_params = {'initial_header_level': '2'}
         pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
-        pub.process_programmatic_settings(None, extra_params, None)
+        pub.process_programmatic_settings(None, self.extra_params, None)
         pub.set_source(source_path=filename)
         pub.publish()
         return pub
@@ -99,11 +99,12 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     extension = "md"
+    extra_params = ['codehilite', 'extra']
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         text = open(filename)
-        md = Markdown(extensions = ['meta', 'codehilite', 'extra'])
+        md = Markdown(extensions = list(set(self.extra_params+['meta'])) )
         content = md.convert(text)
 
         metadata = {}
@@ -133,13 +134,16 @@ class HtmlReader(Reader):
 
 _EXTENSIONS = dict((cls.extension, cls) for cls in Reader.__subclasses__())
 
-def read_file(filename, fmt=None):
+def read_file(filename, fmt=None, settings=None):
     """Return a reader object using the given format."""
     if not fmt:
         fmt = filename.split('.')[-1]
     if fmt not in _EXTENSIONS.keys():
         raise TypeError('Pelican does not know how to parse %s' % filename)
     reader = _EXTENSIONS[fmt]()
+    settings_key = '%s_EXTRA_PARAMS' % fmt.upper()
+    if settings and settings_key in settings:
+        reader.extra_params = settings[settings_key]
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
     return reader.read(filename)
