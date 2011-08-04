@@ -178,15 +178,16 @@ class ArticlesGenerator(Generator):
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
-            write('tag/%s.html' % tag, tag_template, self.context, tag=tag,
+            write(article.tag_save_as % tag, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='tag/%s' % tag)
 
+        ### TODO: mviera
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            write('category/%s.html' % cat, category_template, self.context,
+            write(article.category_save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='category/%s' % cat)
@@ -194,13 +195,13 @@ class ArticlesGenerator(Generator):
         author_template = self.get_template('author')
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
-            write('author/%s.html' % aut, author_template, self.context,
+            write(article.author_save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='author/%s' % aut)
 
         for article in self.drafts:
-            write('drafts/%s.html' % article.slug, article_template, self.context,
+            write(article.drafts_save_as % article.slug, article_template, self.context,
                     article=article, category=article.category)
 
 
@@ -247,6 +248,43 @@ class ArticlesGenerator(Generator):
 
             article.url = urlparse.urljoin(add_to_url, article.url)
             article.save_as = urlparse.urljoin(add_to_url, article.save_as)
+
+            ### TODO: mviera
+            if self.settings.get('CLEAN_URLS_NO_PROXY'):
+                article.save_as = os.path.splitext(article.save_as)[0]
+                article.url = article.save_as + '/'
+                article.save_as = os.path.join(article.save_as, 'index.html')
+                ### FIXME: author url and author save_as
+                article.author_url = 'author/%s/' % slugify(article.author)
+                article.author_save_as = os.path.join(article.author_url, 'index.html')
+                article.category_url = 'category/%s/' % article.category
+                article.category_save_as = os.path.join(article.category_url, 'index.html')
+
+                article.tag_url = 'tag/%s/'
+                article.tag_save_as = os.path.join(article.tag_url, 'index.html')
+                if hasattr(article, 'tags'):
+                    article.tags_data = {}
+                    for tag in article.tags:
+                        article.tag_url = 'tag/%s/' % tag
+                        article.tags_data[tag] = article.tag_url
+
+                article.drafts_url = 'drafts/%s/'
+                article.drafts_save_as = os.path.join(article.drafts_url, 'index.html')
+            else:
+                article.author_save_as = 'author/%s.html' % slugify(article.author)
+                article.author_url = article.author_save_as
+                article.category_save_as = 'category/%s.html' % article.category
+                article.category_url = article.category_save_as
+                article.tag_url = 'tag/%s.html'
+                article.tag_save_as = article.tag_url
+                if hasattr(article, 'tags'):
+                    article.tags_data = {}
+                    for tag in article.tags:
+                        article.tag_url = 'tag/%s.html' % tag
+                        article.tags_data[tag] = article.tag_url
+
+                article.drafts_url = 'drafts/%s.html'
+                article.drafts_save_as = article.drafts_url
 
             if article.status == "published":
                 if hasattr(article, 'tags'):
