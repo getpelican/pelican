@@ -20,8 +20,8 @@
             <li{% if p == page %} class="active"{% endif %}><a href="{{ SITEURL }}/pages/{{ p.url }}">{{ p.title }}</a></li>
           {% endfor %}
         {% else %}
-          {% for cat, null in categories %}
-            <li{% if cat == category %} class="active"{% endif %}><a href="{{ SITEURL }}/category/{{ cat }}.html">{{ cat }}</a></li>
+          {% for cat, cat_url in categories_data %}
+            <li{% if cat == category %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat_url }}">{{ cat }}</a></li>
           {% endfor %}
         {% endif %}
         </ul></nav><!-- /#menu -->

@@ -89,6 +89,15 @@ Setting name (default value)                        what does it do?
                                                        '/2011/07/sample-post.html'.
                                                      * '/%Y/%(category)s/' it will be something like
                                                        '/2011/life/sample-post.html'.
+`CLEAN_URLS_NO_PROXY` (``False``)                   Clean urls are simply much nicer and easier to remember.
+                                                    This option allows to render clean urls like this:
+                                    
+                                                    http://www.example.com/pages/this-is-a-test-page/
+                                                    
+                                                    The "_NO_PROXY" means that you will not require any
+                                                    additional configuration using url rewriting in 
+                                                    your web server, for example. So you will get clean 
+                                                    urls out of the box.
 ================================================    =====================================================
 
 
