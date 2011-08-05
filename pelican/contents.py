@@ -2,6 +2,7 @@
 from pelican.utils import slugify, truncate_html_words
 from pelican.log import *
 from pelican.settings import _DEFAULT_CONFIG
+from os import getenv
 
 class Page(object):
     """Represents a page
@@ -34,6 +35,9 @@ class Page(object):
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
                 self.author = settings['AUTHOR']
+            else:
+                self.author = getenv('USER', 'John Doe')
+                warning("Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author).decode("utf-8"))
 
         # manage languages
         self.in_default_lang = True

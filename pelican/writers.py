@@ -58,8 +58,11 @@ class Writer(object):
 
             feed = self._create_new_feed(feed_type, context)
 
-            for item in elements:
-                self._add_item_to_the_feed(feed, item)
+            max_items = len(elements)
+            if self.settings['FEED_MAX_ITEMS']:
+                max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
+            for i in xrange(max_items):
+                self._add_item_to_the_feed(feed, elements[i])
 
             if filename:
                 complete_path = os.path.join(self.output_path, filename)
