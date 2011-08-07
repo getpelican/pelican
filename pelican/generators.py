@@ -185,7 +185,7 @@ class ArticlesGenerator(Generator):
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
-            write(article.tag_save_as % tag, tag_template, self.context, tag=tag,
+            write(article.tag_save_as % slugify(tag), tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='tag/%s' % tag)
@@ -262,7 +262,7 @@ class ArticlesGenerator(Generator):
                 if hasattr(article, 'tags'):
                     article.tags_data = {}
                     for tag in article.tags:
-                        article.tag_url = 'tag/%s.html' % tag
+                        article.tag_url = 'tag/%s.html' % slugify(tag)
                         article.tags_data[tag] = article.tag_url
 
                 # cleaning drafts url too
