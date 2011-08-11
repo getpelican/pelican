@@ -23,7 +23,7 @@ Pelican currently supports:
 * publication of articles in various languages
 * RSS/Atom feeds
 * wordpress/dotclear or RSS imports
-* integration with various tools: twitter/google analytics/skribit (optional)
+* integration with various tools: twitter/google analytics (optional)
 
 Why the name "Pelican" ?
 ========================

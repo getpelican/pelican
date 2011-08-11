@@ -169,19 +169,3 @@ dates_pages             La page actuelle d'articles, ordonnée par date
                         croissante.
 page_name               'tag/`nom du tag`'.
 ===================     ===================================================
-
-Inclure le script skribit
-=========================
-
-Pour pouvoir supporter les scripts skribit dans vos thèmes, vous devez
-faire ceci :
-
- * Copier `skribit_tab_script.html` et `skribit_widget_script.html` dans
-   votre dossier de templates.
- * Ajouter {% include 'skribit_tab_script' %} dans votre <head> pour
-   ajouter le support de l'onglet de suggestions.
- * Ajouter {% include 'skribit_widget_script' %} là où vous le souhaitez
-   pour ajouter le widget dans la sidebar.
-
-Vous pouvez regarder le thème par défault (notmyidea) pour voir un
-exemple de thème fonctionnel.

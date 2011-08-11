@@ -262,64 +262,6 @@ adding that in your configuration::
 
     CSS_FILE = "wide.css"
 
-Skribit
--------
-
-Skribit has two ways to display suggestions : as a sidebar widget or as a
-suggestions tab. You can choose one of the display by setting the SKRIBIT_TYPE
-in your config.
-
- * SKRIBIT_WIDGET_ID : the identifier of your blog.
-
-All the customizations are done in the skribit web interface.
-
-To retrieve your identifier from the code snippet, you can use this python code::
-
-    import re
-    regex = re.compile('.*http://assets.skribit.com/javascripts/SkribitWidget.\
-        js\?renderTo=writeSkribitHere&amp;blog=(.*)&amp;.*')
-    snippet = '''SNIPPET CONTENT'''
-    snippet = snippet.replace('\n', '')
-    identifier = regex.match(snippet).groups()[0]
-
-Suggestion tab
---------------
-
-The setting for suggestion tab's customizations are :
-
- * SKRIBIT_TAB_COLOR
- * SKRIBIT_TAB_DISTANCE_HORIZ
- * SKRIBIT_TAB_DISTANCE_VERT
- * SKRIBIT_TAB_PLACEMENT
-
-The identifier is :
-
- * SKRIBIT_TAB_SITENAME : the identifier of your blog
-
-To retrieve your sitename from the code snippet, you can use this python code::
-
-    import re
-    regex = re.compile('.*http://skribit.com/lightbox/(.*)\',.*')
-    snippet = '''SNIPPET CONTENT'''
-    snippet = snippet.replace('\n', '')
-    identifier = regex.match(snippet).groups()[0]
-
-Skribit settings
-----------------
-
-================================================    =====================================================
-Setting name (default value)                        what does it do?
-================================================    =====================================================
-`SKRIBIT_TYPE`                                      The type of skribit widget (TAB or WIDGET).
-`SKRIBIT_TAB_COLOR`                                 Tab color (#XXXXXX, default #333333).
-`SKRIBIT_TAB_HORIZ`                                 Tab Distance from Left (% or distance, default Null).
-`SKRIBIT_TAB_VERT`                                  Tab Distance from Top (% or distance, default 20%).
-`SKRIBIT_TAB_PLACEMENT`                             Tab placement (Top, Bottom, Left or Right,
-                                                    default LEFT).
-`SKRIBIT_TAB_SITENAME`                              Tab identifier (See Skribit part below).
-`SKRIBIT_WIDGET_ID`                                 Widget identifier (See Skribit part below).
-================================================    =====================================================
-
 .. _pelican-themes: :doc:`pelican-themes`
 
 Example settings
