@@ -1,7 +1,7 @@
 Pelican
 #######
 
-Pelican is a simple weblog generator, writen in python.
+Pelican is a simple weblog generator, written in python.
 
 * Write your weblog entries directly with your editor of choice (vim!) and
   directly in restructured text, or markdown.
@@ -18,7 +18,7 @@ Pelican currently supports:
 * comments, via an external service (disqus). Please notice that while
   it's useful, it's an external service, and you'll not manage the
   comments by yourself. It could potentially eat your data. (optional)
-* easy theming (themes are done using `jinja2 <http://jinjna.pocoo.org>`_)
+* easy theming (themes are done using `jinja2 <http://jinja.pocoo.org>`_)
 * PDF generation of the articles/pages (optional).
 * publication of articles in various languages
 * RSS/Atom feeds
