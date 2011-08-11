@@ -9,7 +9,7 @@ from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
 from pelican import log
 
-VERSION = "2.7.2"
+__version__ = "2.7.2"
 
 
 class Pelican(object):
@@ -112,7 +112,7 @@ def main():
             help='Show only critical errors')
     parser.add_argument('-D', '--debug', action='store_const', const=log.DEBUG, dest='verbosity',
             help='Show all message, including debug messages')
-    parser.add_argument('--version', action='version', version=VERSION,
+    parser.add_argument('--version', action='version', version=__version__,
             help='Print the pelican version and exit')
     parser.add_argument('-r', '--autoreload', dest='autoreload', action='store_true',
             help="Relaunch pelican each time a modification occurs on the content"

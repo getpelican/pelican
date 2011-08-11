@@ -200,7 +200,7 @@ Setting name (default value)                        what does it do?
 Theming
 =======
 
-Theming is addressed in a dedicated section (see  :ref:`theming-pelican`).
+Theming is addressed in a dedicated section (see :ref:`theming-pelican`).
 However, here are the settings that are related to theming.
 
 ================================================    =====================================================

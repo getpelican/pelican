@@ -83,6 +83,13 @@ the options you can use::
 
     $ pelican --help
 
+Kickstart a blog
+----------------
+
+You also can use the `pelican-quickstart` script to start a new blog in
+seconds, by just answering few questions. Just run `pelican-quickstart` and
+you're done! (Added in pelican 3)
+
 Pages
 -----
 
@@ -95,16 +102,8 @@ the menu.
 Importing an existing blog
 --------------------------
 
-It is possible to import wordpress themes and RSS themes using a script which
-is living in `tools`: importer.
-
-You can call it this way for a wordpress import::
-
-    $ python importer.py --wpfile /your/wordpress/export -o output_dir
-
-And like this for an import from an RSS feed::
-
-    $ python importer.py --feed http://your/rss/feed -o output_dir
+It is possible to import your blog from dotclear, wordpress and an RSS feed using 
+a simple script. See :ref:`import`.
 
 Translations
 ------------

@@ -1,3 +1,5 @@
+.. _import:
+
 =================================
  Import from other blog software
 =================================
@@ -5,7 +7,7 @@
 Description
 ===========
 
-``importer.py`` is a command line tool for converting articles from other
+``pelican-import`` is a command line tool for converting articles from other
 software to ReStructuredText. The supported formats are:
 
 - Wordpress XML export
@@ -20,9 +22,9 @@ supports Markdown).
 Usage
 """""
 
-| importer.py [-h] [--wpfile] [--dotclear] [--feed] [-o OUTPUT]
-|                    [--dir-cat]
-|                    input
+| pelican-import [-h] [--wpfile] [--dotclear] [--feed] [-o OUTPUT]
+|                [--dir-cat]
+|                input
 
 Optional arguments:
 """""""""""""""""""
@@ -40,12 +42,11 @@ Examples
 
 for Wordpress::
 
-    $ python2 tools/importer.py --wpfile -o ~/output ~/posts.xml
+    $ pelican-import --wpfile -o ~/output ~/posts.xml
 
 for Dotclear::
 
-    $ python2 tools/importer.py --dotclear -o ~/output ~/backup.txt
-
+    $ pelican-import --dotclear -o ~/output ~/backup.txt
 
 Tests
 =====
