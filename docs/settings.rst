@@ -46,6 +46,10 @@ Setting name (default value)                        what does it do?
 `MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want
                                                     to use. For the moment, only available values
                                                     are `rst` and `md`.
+`MD_EXTENSIONS` (``('codehilite','extra')``)        A list of the extensions that the markdown processor
+                                                    will use. Refer to the extensions chapter in the
+                                                    Python-Markdown documentation for a complete list of
+                                                    supported extensions.
 `OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
 `PATH` (``None``)                                   path to look at for input files.
 `PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions

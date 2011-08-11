@@ -32,7 +32,7 @@ def _process_metadata(name, value):
 
 class Reader(object):
     enabled = True
-
+    extensions = None
 
 class _FieldBodyTranslator(HTMLTranslator):
 
@@ -99,11 +99,12 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     extension = "md"
+    extensions = ['codehilite', 'extra']
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         text = open(filename)
-        md = Markdown(extensions = ['meta', 'codehilite', 'extra'])
+        md = Markdown(extensions=set(self.extensions+['meta']))
         content = md.convert(text)
 
         metadata = {}
@@ -133,13 +134,16 @@ class HtmlReader(Reader):
 
 _EXTENSIONS = dict((cls.extension, cls) for cls in Reader.__subclasses__())
 
-def read_file(filename, fmt=None):
+def read_file(filename, fmt=None, settings=None):
     """Return a reader object using the given format."""
     if not fmt:
         fmt = filename.split('.')[-1]
     if fmt not in _EXTENSIONS.keys():
         raise TypeError('Pelican does not know how to parse %s' % filename)
     reader = _EXTENSIONS[fmt]()
+    settings_key = '%s_EXTENSIONS' % fmt.upper()
+    if settings and settings_key in settings:
+        reader.extensions = settings[settings_key]
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
     return reader.read(filename)
