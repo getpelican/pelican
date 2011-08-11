@@ -5,3 +5,5 @@
 * Recompile only the changed files, not all.
 * Add a way to make the coffee (or not)
 * Add a sitemap generator.
+* read templates from the templates folder per default
+* add support of github via ghg import
