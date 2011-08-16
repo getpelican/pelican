@@ -9,7 +9,7 @@ TEMPLATES={
 PELICAN=$pelican
 PELICANOPTS=$pelicanopts
 
-BASEDIR=$basedir
+BASEDIR=$$(PWD)
 INPUTDIR=$$(BASEDIR)/src
 OUTPUTDIR=$$(BASEDIR)/output
 CONFFILE=$$(BASEDIR)/pelican.conf.py
@@ -36,20 +36,21 @@ help:
 \t@echo '                                                                      '
 
 
-html: $$(OUTPUTDIR)/index.html
+html: clean $$(OUTPUTDIR)/index.html
 \t@echo 'Done'
 
 $$(OUTPUTDIR)/%.html:
 \t$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE)
 
 clean:
-\trm -r $$(OUTPUTDIR)/*
+\trm -fr $$(OUTPUTDIR)
+\tmkdir $$(OUTPUTDIR)
 
 dropbox_upload: $$(OUTPUTDIR)/index.html
 \tcp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
 
 ssh_upload: $$(OUTPUTDIR)/index.html
-\tscp -rv $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST)/$$(SSH_TARGET_DIR)
+\tscp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
 ftp_upload: $$(OUTPUTDIR)/index.html
 \tlftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUT_DIR)/* $$(FTP_TARGET_DIR) ; quit"
