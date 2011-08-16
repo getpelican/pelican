@@ -65,6 +65,8 @@ AUTHOR = u"$author"
 SITENAME = u"$sitename"
 SITEURL = '/'
 
+TIMEZONE = 'Europe/Paris'
+
 DEFAULT_LANG='$lang'
 
 # Blogroll
