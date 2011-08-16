@@ -219,7 +219,7 @@ class ArticlesGenerator(Generator):
                 if os.path.dirname(f) == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
                 else:
-                    category = os.path.basename(os.path.dirname(f))
+                    category = os.path.basename(os.path.dirname(f)).decode('utf-8')
 
                 if category != '':
                     metadata['category'] = unicode(category)
