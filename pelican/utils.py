@@ -2,6 +2,8 @@
 import re
 import os
 import shutil
+import time
+import calendar
 from datetime import datetime
 from codecs import open as _open
 from itertools import groupby
@@ -222,3 +224,10 @@ def files_changed(path, extensions):
         LAST_MTIME = mtime
         return True
     return False
+
+def local_to_utc(t):
+    "Convert article time to UTC time for ATOM feeds"
+    secs = time.mktime(t)
+    gmtime = list(time.gmtime(secs))
+    gmtime[8] = 1
+    return datetime.fromtimestamp(time.mktime(gmtime))
