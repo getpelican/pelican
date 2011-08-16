@@ -170,7 +170,14 @@ class ArticlesGenerator(Generator):
             paginated = {}
             if template in PAGINATED_TEMPLATES:
                 paginated = {'articles': self.articles, 'dates': self.dates}
-            write('%s.html' % template, self.get_template(template), self.context,
+
+            template_save_as = '%s.html' % template
+            if self.settings.get('CLEAN_URLS_NO_PROXY'):
+                # also, cleaning archives, categories and tags urls
+                if template not in ('index',):
+                    template_save_as = '%s/index.html' % template
+
+            write(template_save_as, self.get_template(template), self.context,
                     blog=True, paginated=paginated, page_name=template)
 
         # and subfolders after that
@@ -178,7 +185,7 @@ class ArticlesGenerator(Generator):
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
-            write('tag/%s.html' % tag, tag_template, self.context, tag=tag,
+            write(article.tag_save_as % slugify(tag), tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='tag/%s' % tag)
@@ -186,7 +193,7 @@ class ArticlesGenerator(Generator):
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            write('category/%s.html' % cat, category_template, self.context,
+            write(article.category_save_as % cat, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='category/%s' % cat)
@@ -194,18 +201,75 @@ class ArticlesGenerator(Generator):
         author_template = self.get_template('author')
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
-            write('author/%s.html' % aut, author_template, self.context,
+            write(article.author_save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='author/%s' % aut)
 
         for article in self.drafts:
-            write('drafts/%s.html' % article.slug, article_template, self.context,
+            write(article.drafts_save_as % article.slug, article_template, self.context,
                     article=article, category=article.category)
 
 
     def generate_context(self):
         """change the context"""
+
+        def generate_urls(article):
+            """
+            returns the article with clean urls depending on 
+            CLEAN_URLS_NO_PROXY option is enabled or not
+            """
+
+            if self.settings.get('CLEAN_URLS_NO_PROXY'):
+                # cleaning urls
+                article.save_as = os.path.splitext(article.save_as)[0]
+                article.url = article.save_as + '/'
+                article.save_as = os.path.join(article.save_as, 'index.html')
+                article.author_url = 'author/%s/' % slugify(article.author)
+                article.author_save_as = \
+                        os.path.join(article.author_url, 'index.html')
+                article.category_save_as = 'category/%s/index.html'
+                article.category_url = \
+                        os.path.dirname(
+                                article.category_save_as % article.category
+                                ) + '/'
+
+                # saving url for each tag
+                article.tag_url = 'tag/%s/'
+                article.tag_save_as = os.path.join(article.tag_url, 'index.html')
+                if hasattr(article, 'tags'):
+                    article.tags_data = {}
+                    for tag in article.tags:
+                        article.tag_url = 'tag/%s/' % tag
+                        article.tags_data[tag] = article.tag_url
+
+                # cleaning drafts url too
+                article.drafts_url = 'drafts/%s/'
+                article.drafts_save_as = \
+                        os.path.join(article.drafts_url, 'index.html')
+            else:
+                # cleaning urls
+                article.author_save_as = \
+                        'author/%s.html' % slugify(article.author)
+                article.author_url = article.author_save_as
+                article.category_save_as = 'category/%s.html'
+                article.category_url = \
+                        article.category_save_as % article.category
+
+                # saving url for each tag
+                article.tag_url = 'tag/%s.html'
+                article.tag_save_as = article.tag_url
+                if hasattr(article, 'tags'):
+                    article.tags_data = {}
+                    for tag in article.tags:
+                        article.tag_url = 'tag/%s.html' % slugify(tag)
+                        article.tags_data[tag] = article.tag_url
+
+                # cleaning drafts url too
+                article.drafts_url = 'drafts/%s.html'
+                article.drafts_save_as = article.drafts_url
+            
+            return article
 
         # return the list of files to use
         files = self.get_files(self.path, exclude=['pages',])
@@ -247,6 +311,8 @@ class ArticlesGenerator(Generator):
 
             article.url = urlparse.urljoin(add_to_url, article.url)
             article.save_as = urlparse.urljoin(add_to_url, article.save_as)
+
+            article = generate_urls(article)
 
             if article.status == "published":
                 if hasattr(article, 'tags'):
@@ -302,10 +368,18 @@ class ArticlesGenerator(Generator):
         self.categories = list(self.categories.items())
         self.categories.sort(reverse=self.settings.get('REVERSE_CATEGORY_ORDER'))
 
+        self.categories_data = {}
+        for category, null in self.categories:
+            if self.settings.get('CLEAN_URLS_NO_PROXY'):
+                self.categories_data[category] = 'category/%s/' % category
+            else:
+                self.categories_data[category] = 'category/%s.html' % category
+
         self.authors = list(self.authors.items())
         self.authors.sort()
 
-        self._update_context(('articles', 'dates', 'tags', 'categories', 'tag_cloud', 'authors'))
+        self._update_context(('articles', 'dates', 'tags', 'categories', 
+            'categories_data', 'tag_cloud', 'authors'))
 
 
 
@@ -329,6 +403,12 @@ class PagesGenerator(Generator):
                         filename=f)
             if not is_valid_content(page, f):
                 continue
+
+            if self.settings.get('CLEAN_URLS_NO_PROXY'):
+                # cleaning page url
+                page.save_as = os.path.join(page.slug, 'index.html')
+                page.url = os.path.dirname(page.save_as) + '/'
+
             all_pages.append(page)
 
         self.pages, self.translations = process_translations(all_pages)

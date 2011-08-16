@@ -1,2 +1,8 @@
-{% if article.tags %}<p>tags: {% for tag in article.tags %}<a href="{{ SITEURL }}/tag/{{ tag }}.html">{{ tag }}</a>{% endfor %}</p>{% endif %}
-{% if PDF_PROCESSOR %}<p><a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a></p>{% endif %}
+{% if article.tags %}
+    <p>tags: {% for tag, tag_url in article.tags_data.items() %}
+        <a href="{{ SITEURL }}/{{ tag_url }}">{{ tag }}</a>
+    {% endfor %}</p>
+{% endif %}
+{% if PDF_PROCESSOR %}
+    <p><a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a></p>
+{% endif %}
