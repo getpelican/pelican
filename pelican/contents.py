@@ -3,6 +3,7 @@ from pelican.utils import slugify, truncate_html_words
 from pelican.log import *
 from pelican.settings import _DEFAULT_CONFIG
 from os import getenv
+from sys import platform, stdin
 
 class Page(object):
     """Represents a page
@@ -78,8 +79,11 @@ class Page(object):
                 self.date_format = settings['DEFAULT_DATE_FORMAT']
 
         if hasattr(self, 'date'):
-            self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
-
+            if platform == 'win32':
+                self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode(stdin.encoding)
+            else:
+                self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
+        
         # manage summary
         if not hasattr(self, 'summary'):
             self.summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
