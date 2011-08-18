@@ -7,7 +7,7 @@ from functools import partial
 import locale
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
-from pelican.utils import get_relative_path
+from pelican.utils import get_relative_path, set_date_tzinfo
 from pelican.paginator import Paginator
 from pelican.log import *
 
@@ -37,7 +37,8 @@ class Writer(object):
             description=item.content,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', 'John Doe'),
-            pubdate=item.date)
+            pubdate=set_date_tzinfo(item.date, 
+                                    self.settings.get('TIMEZONE', None)))
 
     def write_feed(self, elements, context, filename=None, feed_type='atom'):
         """Generate a feed with the list of articles provided
