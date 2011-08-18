@@ -83,5 +83,11 @@ def read_settings(filename):
     else:
         log.warn("LOCALE option doesn't contain a correct value")
 
+    if not 'TIMEZONE' in context:
+        log.warn("No timezone information specified in the settings. Assuming your "\
+                "timezone is UTC for feed generation. "\
+                "Check http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "\
+                "for more information")
+
     # set the locale
     return context

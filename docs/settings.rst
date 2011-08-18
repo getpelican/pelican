@@ -67,13 +67,10 @@ Setting name (default value)                        what does it do?
                                                     on the output path "static". By default,
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
-`TIMEZONE` (Optional)                               The timezone used in the date information, to
+`TIMEZONE`                                          The timezone used in the date information, to
                                                     generate atom and rss feeds.
-                                                    Have a look at `the wikipedia page`_ for more 
-                                                    information
 ================================================    =====================================================
 
-.. _the wikipedia page: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 .. [1] Default is the system locale. Default is to delete the output directory.
 
 Article permalink structure
@@ -103,6 +100,20 @@ Example usage:
 
 * '/%Y/%m/' it will be something like '/2011/07/sample-post.html'.  
 * '/%Y/%(category)s/' it will be something like '/2011/life/sample-post.html'.
+
+Timezone
+--------
+
+If no timezone is defined, UTC is assumed. This means that the generated atom
+and rss feeds will have wrong date information if your locale is not UTC.
+
+Pelican issues a warning in case this setting is not defined, as it was not
+mandatory in old versions.
+
+Have a look at `the wikipedia page`_ to get a list of values to set your
+timezone.
+
+.. _the wikipedia page: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 Feed settings
 =============
