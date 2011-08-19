@@ -55,7 +55,11 @@ ssh_upload: $$(OUTPUTDIR)/index.html
 ftp_upload: $$(OUTPUTDIR)/index.html
 \tlftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUT_DIR)/* $$(FTP_TARGET_DIR) ; quit"
 
-.PHONY: html help clean ftp_upload ssh_upload dropbox_upload
+github: $$(OUTPUTDIR)/index.html
+\tghp-import $$(OUTPUTDIR)
+\tgit push origin gh-pages
+
+.PHONY: html help clean ftp_upload ssh_upload dropbox_upload github
     ''',
 
     'pelican.conf.py': '''#!/usr/bin/env python

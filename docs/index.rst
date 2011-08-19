@@ -63,4 +63,5 @@ A french version of the documentation is available at :doc:`fr/index`.
    pelican-themes
    importer
    faq
+   tips
    contribute
