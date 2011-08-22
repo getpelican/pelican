@@ -42,7 +42,7 @@ class Generator(object):
             ]),
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
-        debug('self._env.list_templates(): {0}'.format(self._env.list_templates())) 
+        debug('self._env.list_templates(): {0}'.format(self._env.list_templates()))
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
@@ -236,7 +236,7 @@ class ArticlesGenerator(Generator):
             add_to_url = u''
             if 'ARTICLE_PERMALINK_STRUCTURE' in self.settings:
                 article_permalink_structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
-                article_permalink_structure = article_permalink_structure.lstrip('/')
+                article_permalink_structure = article_permalink_structure.lstrip('/').replace('%(', "%%(")
 
                 # try to substitute any python datetime directive
                 add_to_url = article.date.strftime(article_permalink_structure)
@@ -280,7 +280,7 @@ class ArticlesGenerator(Generator):
 
         tags = map(itemgetter(1), tag_cloud)
         if tags:
-                max_count = max(tags)
+            max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
 
         # calculate word sizes
@@ -351,7 +351,7 @@ class StaticGenerator(Generator):
             final_path=None):
         """Copy all the paths from source to destination"""
         for path in paths:
-            copy(path, source, os.path.join(output_path, destination), final_path, 
+            copy(path, source, os.path.join(output_path, destination), final_path,
                     overwrite=True)
 
     def generate_output(self, writer):
