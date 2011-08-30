@@ -113,7 +113,7 @@ def dc2fields(file):
         if cat_id:
             categories = [category_list[id].strip() for id in cat_id.split(',')]
 
-        if post_format == "markdown":
+        if (post_format == "markdown") or (post_format == "wiki"):
             content = post_excerpt + post_content
         else:
             content = post_excerpt_xhtml + post_content_xhtml
@@ -163,7 +163,7 @@ def build_markdown_header(title, date, author, categories, tags):
 
 def fields2pelican(fields, output_path, dircat=False):
     for title, content, filename, date, author, categories, tags, markup in fields:
-        if markup == "markdown":
+        if (markup == "markdown") or (markup == "wiki"):
             ext = '.md'
             header = build_markdown_header(title, date, author, categories, tags)
         else:
