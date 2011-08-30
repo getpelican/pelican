@@ -37,6 +37,8 @@ def wp2fields(xml):
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
+    from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup
+
     in_cat = False
     in_post = False
     category_list = {}
@@ -100,7 +102,7 @@ def dc2fields(file):
         # post_open_tb = fields[24]
         # nb_comment = fields[25]
         # nb_trackback = fields[26]
-        # post_meta = fields[27]
+        post_meta = fields[27]
         # redirect_url = fields[28][:-1]
 
         # remove seconds
@@ -112,6 +114,22 @@ def dc2fields(file):
 
         if cat_id:
             categories = [category_list[id].strip() for id in cat_id.split(',')]
+
+        tag = post_meta.replace('{', '').replace('}', '').replace('a:1:s:3:\\"tag\\";a:', '').replace('a:0:', '')
+        # We handle only line that have tags syntax
+        if len(tag) > 1:
+            if int(tag[:1]) == 1:
+                newtag = tag.split('"')[1]
+                tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
+            else:
+                i=1
+                j=1
+                while(i <= int(tag[:1])):
+                    newtag = tag.split('"')[j].replace('\\','')
+                    tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
+                    i=i+1
+                    if j < int(tag[:1])*2:
+                        j=j+2
 
         """
         Weird - dotclear2 at least does not use markdown ; so wonder about the use case on "markdown"
