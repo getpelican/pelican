@@ -174,7 +174,7 @@ def fields2pelican(fields, output_path, dircat=False):
 
         # option to put files in directories with categories names
         if dircat and (len(categories) == 1):
-            catname = categories[0]
+            catname = slugify(categories[0])
             out_filename = os.path.join(output_path, catname, filename+'.rst')
             if not os.path.isdir(os.path.join(output_path, catname)):
                 os.mkdir(os.path.join(output_path, catname))
