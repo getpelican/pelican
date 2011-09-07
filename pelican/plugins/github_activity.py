@@ -19,10 +19,8 @@
 """
 
 from pelican import signals
-from pelican.utils import singleton
 
 
-@singleton
 class GitHubActivity():
     """
         A class created to fetch github activity with feedparser
@@ -30,7 +28,7 @@ class GitHubActivity():
     def __init__(self, generator):
         try:
             import feedparser
-            self.ga = feedparser.parse(
+            self.activities = feedparser.parse(
                 generator.settings['GITHUB_ACTIVITY_FEED'])
         except ImportError:
             raise Exception("unable to find feedparser")
@@ -40,23 +38,31 @@ class GitHubActivity():
             returns a list of html snippets fetched from github actitivy feed
         """
         return [activity['content'][0]['value'].strip()
-            for activity in self.ga['entries']]
+            for activity in self.activities['entries']]
 
 
-def add_github_activity(generator, metadata):
+def fetch_github_activity(gen, metadata):
     """
         registered handler for the github activity plugin
+        it puts in generator.context the html needed to be displayed on a
+        template
     """
-    if 'GITHUB_ACTIVITY_FEED' in generator.settings.keys():
 
-        ga = GitHubActivity(generator)
+    if 'GITHUB_ACTIVITY_FEED' in gen.settings.keys():
+        gen.context['github_activity'] = gen.plugin_instance.fetch()
 
-        ga_html_snippets = ga.fetch()
-        generator.context['github_activity'] = ga_html_snippets
+
+def feed_parser_initialization(generator):
+    """
+        Initialization of feed parser
+    """
+
+    generator.plugin_instance = GitHubActivity(generator)
 
 
 def register():
     """
         Plugin registration
     """
-    signals.article_generate_context.connect(add_github_activity)
+    signals.article_generator_init.connect(feed_parser_initialization)
+    signals.article_generate_context.connect(fetch_github_activity)

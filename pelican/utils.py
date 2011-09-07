@@ -222,15 +222,3 @@ def files_changed(path, extensions):
         LAST_MTIME = mtime
         return True
     return False
-
-def singleton(cls):
-    """
-        Singleton decorator for multiple calls inside plugins
-        for an example see pelican/plugins/github_activity.py
-    """
-    instances = {}
-    def getinstance(*args, **kwargs):
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
-    return getinstance
