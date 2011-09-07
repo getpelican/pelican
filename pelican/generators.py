@@ -101,6 +101,7 @@ class ArticlesGenerator(Generator):
         self.categories = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
+        signals.article_generator_init.send(self)
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
