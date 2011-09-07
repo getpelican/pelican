@@ -52,12 +52,13 @@ List of signals
 
 Here is the list of currently implemented signals:
 
-=========================   ============================   =====================
+=========================   ============================   =========================================
 Signal                      Arguments                      Description
-=========================   ============================   =====================
+=========================   ============================   =========================================
 initialized                 pelican object
 article_generate_context    article_generator, metadata
-=========================   ============================   =====================
+article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
+=========================   ============================   =========================================
 
 The list is currently small, don't hesitate to add signals and make a pull
 request if you need them!
@@ -73,3 +74,41 @@ Tag cloud
 
 Translation
 -----------
+
+Github Activity
+_______________
+
+This plugins introduces a new depencency, you have to install feedparser 
+if you want to use it, these are some ways to do it::
+
+     apt-get install python-feedparser # on debian based distributions like ubuntu
+     sudo easy_install feedparser
+     sudo pip install feedparser
+
+To enable it set in your pelican config file the GITHUB_ACTIVITY_FEED
+parameter pointing to your github activity feed.
+
+for example my personal activity feed is::
+
+     https://github.com/kpanic.atom
+
+and the config line could be::
+
+     GITHUB_ACTIVITY_FEED = 'https://github.com/kpanic.atom'
+
+in your template just write a for in jinja2 syntax against the
+github_activity variable, like for example::
+
+     {% if GITHUB_ACTIVITY_FEED %}
+             <div class="social">
+                     <h2>Github Activity</h2>
+                     {% for activity in github_activity %}
+                             {{ activity }}
+                     {% endfor %}
+             </div><!-- /.social -->
+     {% endif %}
+
+
+github_activity is a list containing raw html from github so you can include it
+directly in your (for example base.html) template and style it in a way that
+your prefer using your css skills
