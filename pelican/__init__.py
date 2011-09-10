@@ -154,6 +154,8 @@ def main():
     except Exception, e:
         log.critical(unicode(e))
 
+        exit(getattr(e, 'exitcode', 1))
+
 
 if __name__ == '__main__':
     main()
