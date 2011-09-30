@@ -154,7 +154,10 @@ def main():
     except Exception, e:
         log.critical(unicode(e))
 
-        exit(getattr(e, 'exitcode', 1))
+        if (args.verbosity == log.DEBUG):
+            raise
+        else:
+            exit(getattr(e, 'exitcode', 1))
 
 
 if __name__ == '__main__':
