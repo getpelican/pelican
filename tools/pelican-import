@@ -115,8 +115,8 @@ def dc2fields(file):
         if cat_id:
             categories = [category_list[id].strip() for id in cat_id.split(',')]
 
+        # Get tags related to a post
         tag = post_meta.replace('{', '').replace('}', '').replace('a:1:s:3:\\"tag\\";a:', '').replace('a:0:', '')
-        # We handle only line that have tags syntax
         if len(tag) > 1:
             if int(tag[:1]) == 1:
                 newtag = tag.split('"')[1]
@@ -132,7 +132,8 @@ def dc2fields(file):
                         j=j+2
 
         """
-        Weird - dotclear2 at least does not use markdown ; so wonder about the use case on "markdown"
+        dotclear2 does not use markdown by default unless you use the markdown plugin 
+        Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
         """
         if post_format == "markdown":
             content = post_excerpt + post_content
