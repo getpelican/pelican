@@ -16,8 +16,7 @@ class Writer(object):
 
     def __init__(self, output_path, settings=None):
         self.output_path = output_path
-        self.reminder_content = dict()
-        self.reminder_summary = dict()
+        self.reminder = dict()
         self.settings = settings or {}
 
     def _create_new_feed(self, feed_type, context):
@@ -201,20 +200,11 @@ class Writer(object):
                 self.update_context_contents(name, item)
 
             # if it is a content, patch it
-            else:
-                
-                if hasattr(item, '_content'):
-                    relative_path = get_relative_path(name)
-                paths = self.reminder_content.setdefault(item, [])
+            elif hasattr(item, '_content'):
+                relative_path = get_relative_path(name)
+
+                paths = self.reminder.setdefault(item, [])
                 if relative_path not in paths:
                     paths.append(relative_path)
                     setattr(item, "_get_content",
-                            partial(_update_content, name, item))
-                            
-                if hasattr(item, '_summary'):
-                    relative_path = get_relative_path(name)
-                paths = self.reminder_summary.setdefault(item, [])
-                if relative_path not in paths:
-                    paths.append(relative_path)
-                    setattr(item, "_get_summary",
                             partial(_update_content, name, item))

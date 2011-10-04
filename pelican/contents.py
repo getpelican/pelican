@@ -85,8 +85,8 @@ class Page(object):
                 self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
         
         # manage summary
-        if not hasattr(self, '_summary'):
-            self._summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
+        if not hasattr(self, 'summary'):
+            self.summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
 
         # manage status
         if not hasattr(self, 'status'):
@@ -105,15 +105,6 @@ class Page(object):
         else:
             content = self._content
         return content
-
-    @property
-    def summary(self):
-        if hasattr(self, "_get_summary"):
-            summary = self._get_summary()
-        else:
-            summary = self._summary
-        return summary
-
 
 
 class Article(Page):
