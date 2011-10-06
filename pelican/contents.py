@@ -84,10 +84,6 @@ class Page(object):
             else:
                 self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
         
-        # manage summary
-        if not hasattr(self, 'summary'):
-            self.summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
-
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
@@ -106,6 +102,9 @@ class Page(object):
             content = self._content
         return content
 
+    @property
+    def summary(self):
+        return truncate_html_words(self.content, 50)
 
 class Article(Page):
     mandatory_properties = ('title', 'date', 'category')
