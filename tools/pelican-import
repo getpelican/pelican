@@ -37,6 +37,8 @@ def wp2fields(xml):
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
+    from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup
+
     in_cat = False
     in_post = False
     category_list = {}
@@ -100,7 +102,7 @@ def dc2fields(file):
         # post_open_tb = fields[24]
         # nb_comment = fields[25]
         # nb_trackback = fields[26]
-        # post_meta = fields[27]
+        post_meta = fields[27]
         # redirect_url = fields[28][:-1]
 
         # remove seconds
@@ -113,6 +115,26 @@ def dc2fields(file):
         if cat_id:
             categories = [category_list[id].strip() for id in cat_id.split(',')]
 
+        # Get tags related to a post
+        tag = post_meta.replace('{', '').replace('}', '').replace('a:1:s:3:\\"tag\\";a:', '').replace('a:0:', '')
+        if len(tag) > 1:
+            if int(tag[:1]) == 1:
+                newtag = tag.split('"')[1]
+                tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
+            else:
+                i=1
+                j=1
+                while(i <= int(tag[:1])):
+                    newtag = tag.split('"')[j].replace('\\','')
+                    tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
+                    i=i+1
+                    if j < int(tag[:1])*2:
+                        j=j+2
+
+        """
+        dotclear2 does not use markdown by default unless you use the markdown plugin 
+        Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
+        """
         if post_format == "markdown":
             content = post_excerpt + post_content
         else:
@@ -163,7 +185,7 @@ def build_markdown_header(title, date, author, categories, tags):
 
 def fields2pelican(fields, output_path, dircat=False):
     for title, content, filename, date, author, categories, tags, markup in fields:
-        if markup == "markdown":
+        if (markup == "markdown"):
             ext = '.md'
             header = build_markdown_header(title, date, author, categories, tags)
         else:
@@ -174,7 +196,7 @@ def fields2pelican(fields, output_path, dircat=False):
 
         # option to put files in directories with categories names
         if dircat and (len(categories) == 1):
-            catname = categories[0]
+            catname = slugify(categories[0])
             out_filename = os.path.join(output_path, catname, filename+ext)
             if not os.path.isdir(os.path.join(output_path, catname)):
                 os.mkdir(os.path.join(output_path, catname))
@@ -189,8 +211,7 @@ def fields2pelican(fields, output_path, dircat=False):
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 fp.write(content)
 
-            os.system('pandoc --normalize --reference-links --from=html --to=rst -o "%s" "%s"' % (out_filename,
-                html_filename))
+            os.system('pandoc --normalize --reference-links --from=html --to=rst -o "%s" "%s"' % (out_filename, html_filename))
 
             os.remove(html_filename)
 
