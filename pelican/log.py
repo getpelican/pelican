@@ -66,7 +66,8 @@ class DummyFormatter(object):
     """
 
     def __new__(cls, *args, **kwargs):
-        if os.isatty(sys.stdout.fileno()): # thanks to http://stackoverflow.com/questions/2086961/how-can-i-determine-if-a-python-script-is-executed-from-crontab/2087031#2087031
+        if os.isatty(sys.stdout.fileno())\
+           and not sys.platform.startswith('win'): 
             return ANSIFormatter(*args, **kwargs)
         else:
             return TextFormatter( *args, **kwargs)
