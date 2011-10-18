@@ -13,9 +13,20 @@
     in your template just write a for in jinja2 syntax against the
     github_activity variable.
 
-    github_activity is a list containing raw html from github so you can
-    include it directly in your template
+    i.e.
 
+        <div class="social">
+                <h2>Github Activity</h2>
+                <ul>
+
+                {% for entry in github_activity %}
+                    <li><b>{{ entry[0] }}</b><br /> {{ entry[1] }}</li>
+                {% endfor %}
+                </ul>
+        </div><!-- /.github_activity -->
+
+    github_activity is a list containing a list. The first element is the title
+    and the second element is the raw html from github
 """
 
 from pelican import signals
@@ -31,14 +42,20 @@ class GitHubActivity():
             self.activities = feedparser.parse(
                 generator.settings['GITHUB_ACTIVITY_FEED'])
         except ImportError:
-            raise Exception("unable to find feedparser")
+            raise Exception("Unable to find feedparser")
 
     def fetch(self):
         """
             returns a list of html snippets fetched from github actitivy feed
         """
-        return [activity['content'][0]['value'].strip()
-            for activity in self.activities['entries']]
+
+        entries = []
+        for activity in self.activities['entries']:
+            entries.append(
+                    [element for element in [activity['title'],
+                        activity['content'][0]['value']]])
+
+        return entries
 
 
 def fetch_github_activity(gen, metadata):
