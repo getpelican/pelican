@@ -100,15 +100,20 @@ in your template just write a for in jinja2 syntax against the
 github_activity variable, like for example::
 
      {% if GITHUB_ACTIVITY_FEED %}
-             <div class="social">
-                     <h2>Github Activity</h2>
-                     {% for activity in github_activity %}
-                             {{ activity }}
-                     {% endfor %}
-             </div><!-- /.social -->
+        <div class="social">
+                <h2>Github Activity</h2>
+                <ul>
+
+                {% for entry in github_activity %}
+                    <li><b>{{ entry[0] }}</b><br /> {{ entry[1] }}</li>
+                {% endfor %}
+                </ul>
+        </div><!-- /.github_activity -->
      {% endif %}
 
 
-github_activity is a list containing raw html from github so you can include it
-directly in your (for example base.html) template and style it in a way that
-your prefer using your css skills
+
+github_activity is a list containing a list. The first element is the title and
+the second element is the raw html from github so you can include it directly
+in your (for example base.html) template and style it in a way that your prefer
+using your css skills
