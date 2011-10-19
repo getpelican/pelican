@@ -12,7 +12,7 @@ import urlparse
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import copy, get_relative_path, process_translations, open
+from pelican.utils import copy, process_translations, open
 from pelican.utils import slugify
 from pelican.contents import Article, Page, is_valid_content
 from pelican.readers import read_file

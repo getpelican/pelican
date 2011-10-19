@@ -2,8 +2,6 @@
 import re
 import os
 import shutil
-import time
-import calendar
 import pytz
 from datetime import datetime
 from codecs import open as _open
