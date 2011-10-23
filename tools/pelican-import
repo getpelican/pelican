@@ -271,4 +271,12 @@ if __name__ == '__main__':
     else:
         print "you must provide either --wpfile, --dotclear or --feed options"
         exit()
+
+    if not os.path.exists(args.output):
+        try:
+            os.mkdir(args.output)
+        except OSError:
+            error("Couldn't create the output folder: " + args.output)
+            exit()
+
     main(input_type, args.input, args.markup, args.output, dircat=args.dircat)
