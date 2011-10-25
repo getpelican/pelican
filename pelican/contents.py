@@ -88,6 +88,10 @@ class Page(object):
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
 
+        # set summary
+        if not hasattr(self, 'summary'):
+            self.summary = truncate_html_words(self.content, 50)
+
     def check_properties(self):
         """test that each mandatory property is set."""
         for prop in self.mandatory_properties:
@@ -102,9 +106,6 @@ class Page(object):
             content = self._content
         return content
 
-    @property
-    def summary(self):
-        return truncate_html_words(self.content, 50)
 
 class Article(Page):
     mandatory_properties = ('title', 'date', 'category')
