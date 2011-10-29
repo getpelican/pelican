@@ -106,6 +106,18 @@ class Page(object):
             content = self._content
         return content
 
+    def _get_summary(self):
+        """Returns the summary of an article, based on to the content"""
+        return truncate_html_words(self.content, 50)
+
+    def _set_summary(self, summary):
+        """Dummy function"""
+        pass
+
+    summary = property(_get_summary, _set_summary, \
+                       "Summary of the article. Based on the content. Can't be set")
+
+
 
 class Article(Page):
     mandatory_properties = ('title', 'date', 'category')
