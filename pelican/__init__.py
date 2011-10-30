@@ -53,8 +53,10 @@ class Pelican(object):
         for plugin in self.plugins:
             # if it's a string, then import it
             if isinstance(plugin, str):
+                log.debug("Loading plugin `{0}' ...".format(plugin))
                 plugin = __import__(plugin, globals(), locals(), 'module')
 
+            log.debug("Registering plugin `{0}' ...".format(plugin.__name__))
             plugin.register()
 
     def run(self):
