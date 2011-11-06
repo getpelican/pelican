@@ -19,7 +19,7 @@ from pelican.utils import get_date, open
 
 
 _METADATA_PROCESSORS = {
-    'tags': lambda x: map(unicode.strip, x.split(',')),
+    'tags': lambda x: map(unicode.strip, unicode(x).split(',')),
     'date': lambda x: get_date(x),
     'status': unicode.strip,
 }
