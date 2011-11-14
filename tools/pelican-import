@@ -217,7 +217,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
 
             os.system('pandoc --normalize --reference-links --from=html --to=%s -o "%s" "%s"' % (out_markup, out_filename, html_filename))
 
-            #os.remove(html_filename)
+            os.remove(html_filename)
 
             with open(out_filename, 'r', encoding='utf-8') as fs:
                 content = fs.read()
