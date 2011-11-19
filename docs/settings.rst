@@ -38,6 +38,7 @@ Setting name (default value)                        what does it do?
                                                     dates infos (mtime) if it can't get
                                                     informations from the metadata
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
+`KEEP_ORIGINAL_FILENAME` (``False``)                If True, don't slugify the filename output
 `DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory and just
                                                     the generated files.
 `LOCALE` (''[1]_)                                   Change the locale. A list of locales can be provided 

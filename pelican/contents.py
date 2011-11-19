@@ -31,7 +31,7 @@ class Page(object):
         # set metadata as attributes
         for key, value in local_metadata.items():
             setattr(self, key.lower(), value)
-        
+
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
@@ -51,7 +51,10 @@ class Page(object):
 
         # create the slug if not existing, fro mthe title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
-            self.slug = slugify(self.title)
+            if settings.get('KEEP_ORIGINAL_FILENAME', False):
+                self.slug = self.title
+            else:
+                self.slug = slugify(self.title)
 
         # create save_as from the slug (+lang)
         if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
@@ -83,7 +86,7 @@ class Page(object):
                 self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode(stdin.encoding)
             else:
                 self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
-        
+
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
