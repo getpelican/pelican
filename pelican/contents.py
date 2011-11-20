@@ -51,7 +51,7 @@ class Page(object):
 
         # create the slug if not existing, fro mthe title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
-            if settings.get('KEEP_ORIGINAL_FILENAME', False):
+            if settings.get('FILENAME_IS_TITLE', False):
                 self.slug = self.title
             else:
                 self.slug = slugify(self.title)
