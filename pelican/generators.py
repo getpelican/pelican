@@ -211,7 +211,12 @@ class ArticlesGenerator(Generator):
         files = self.get_files(self.path, exclude=['pages',])
         all_articles = []
         for f in files:
-            content, metadata = read_file(f, settings=self.settings)
+            
+            try:
+                content, metadata = read_file(f, settings=self.settings)
+            except Exception, e:
+                warning(u'Could not process %s\n%s' % (f, str(e)))
+                continue
 
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata.keys():
@@ -324,7 +329,11 @@ class PagesGenerator(Generator):
     def generate_context(self):
         all_pages = []
         for f in self.get_files(os.sep.join((self.path, 'pages'))):
-            content, metadata = read_file(f)
+            try:
+                content, metadata = read_file(f)
+            except Exception, e:
+                error(u'Could not process %s\n%s' % (filename, str(e)))
+                continue
             page = Page(content, metadata, settings=self.settings,
                         filename=f)
             if not is_valid_content(page, f):
