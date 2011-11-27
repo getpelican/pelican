@@ -36,3 +36,15 @@ a pull request, I'll review them as soon as possible.
 
 You can also contribute by creating themes, and making the documentation
 better.
+
+I want to use markdown, but I got an error
+==========================================
+
+Markdown is not a hard dependency for pelican, so you will need to install it
+by yourself. You can do so by typing::
+
+    $ (sudo) pip install markdown
+
+In case you don't have pip installed, consider installing it by doing::
+
+    $ (sudo) easy_install pip
