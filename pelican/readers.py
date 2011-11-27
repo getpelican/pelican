@@ -76,7 +76,9 @@ class RstReader(Reader):
         return get_metadata(document)
 
     def _get_publisher(self, filename):
-        extra_params = {'initial_header_level': '2'}
+        extra_params = {'initial_header_level': '2',
+                        'file_insertion_enabled': 0,
+                        'raw_enabled': 0}
         pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.process_programmatic_settings(None, extra_params, None)
