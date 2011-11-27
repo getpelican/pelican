@@ -17,8 +17,12 @@ def get_date(string):
 
     If no format matches the given date, raise a ValuEerror
     """
-    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M', '%Y-%m-%d', '%Y/%m/%d',
-               '%d/%m/%Y', '%d.%m.%Y', '%d.%m.%Y %H:%M', '%Y-%m-%d %H:%M:%S']
+    string = re.sub(' +', ' ', string)
+    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M', 
+               '%Y-%m-%d', '%Y/%m/%d',
+               '%d-%m-%Y', '%Y-%d-%m', # Weird ones
+               '%d/%m/%Y', '%d.%m.%Y', 
+               '%d.%m.%Y %H:%M', '%Y-%m-%d %H:%M:%S']
     for date_format in formats:
         try:
             return datetime.strptime(string, date_format)
