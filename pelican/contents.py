@@ -2,6 +2,7 @@
 from pelican.utils import slugify, truncate_html_words
 from pelican.log import *
 from pelican.settings import _DEFAULT_CONFIG
+from datetime import datetime
 from os import getenv
 from sys import platform, stdin
 
@@ -23,8 +24,6 @@ class Page(object):
         self._content = content
         self.translations = []
 
-        self.status = "published"  # default value
-
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
         local_metadata.update(metadata)
 
@@ -38,7 +37,7 @@ class Page(object):
                 self.author = settings['AUTHOR']
             else:
                 self.author = getenv('USER', 'John Doe')
-                warning("Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author).decode("utf-8"))
+                warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author))
 
         # manage languages
         self.in_default_lang = True
@@ -87,7 +86,10 @@ class Page(object):
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
-
+            if not settings['WITH_FUTURE_DATES']:
+                if hasattr(self, 'date') and self.date > datetime.now():
+                    self.status = 'draft'
+        
         # set summary
         if not hasattr(self, 'summary'):
             self.summary = truncate_html_words(self.content, 50)
