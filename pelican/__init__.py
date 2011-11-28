@@ -1,5 +1,5 @@
 import argparse
-import os
+import os, sys
 import time
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
@@ -157,7 +157,7 @@ def main():
         if (args.verbosity == log.DEBUG):
             raise
         else:
-            exit(getattr(e, 'exitcode', 1))
+            sys.exit(getattr(e, 'exitcode', 1))
 
 
 if __name__ == '__main__':

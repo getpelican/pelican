@@ -27,6 +27,9 @@ Setting name (default value)                        what does it do?
 `ARTICLE_PERMALINK_STRUCTURE` (``''``)              Empty by default. Allows to render URLs in a
                                                     particular way, see below.
 `AUTHOR`                                            Default author (put your name)
+`CLEAN_URL` (``False``)                             If set to `True`, the URLs will not be suffixed by
+                                                    `.html`, so you will have to setup URL rewriting on 
+                                                    your web server.
 `DATE_FORMATS` (``{}``)                             If you do manage multiple languages, you can
                                                     set the date formatting here.
 `DEFAULT_CATEGORY` (``'misc'``)                     The default category to fallback on.
