@@ -12,7 +12,7 @@ the simpler one is via `pip <http://pip.openplans.org/>`_::
 If you have the sources, you can install pelican using the distutils command
 install. I recommend to do so in a virtualenv::
 
-    $ virtualenv .
+    $ virtualenv pelican_venv
     $ source bin/activate
     $ python setup.py install
 
