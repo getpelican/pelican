@@ -34,6 +34,7 @@ class Writer(object):
         feed.add_item(
             title=item.title,
             link='%s/%s' % (self.site_url, item.url),
+            unique_id='%s/%s' % (self.site_url, item.url),
             description=item.content,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', 'John Doe'),
