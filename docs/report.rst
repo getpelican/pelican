@@ -4,7 +4,7 @@ Some history about pelican
 .. warning::
 
     This page comes from a report the original author (Alexis Métaireau) wrote
-    right after writting pelican, in december 2010. The information may not be 
+    right after writing pelican, in december 2010. The information may not be 
     up to date.
 
 Pelican is a simple static blog generator. It parses markup files
