@@ -106,6 +106,11 @@ class MarkdownReader(Reader):
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         text = open(filename)
+        # Remove BOM character, usually at beginning of text 
+        # string. Usually `Title` is the first string, but with 
+        # a BOM it never matches, and the file is not processed 
+        # because Title is compulsary metadata.
+        text = text.replace(u'\ufeff', '') 
         md = Markdown(extensions=set(self.extensions + ['meta']))
         content = md.convert(text)
 
