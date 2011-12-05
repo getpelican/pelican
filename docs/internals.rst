@@ -4,6 +4,11 @@ Pelican internals
 This section describe how pelican is working internally. As you'll see, it's
 quite simple, but a bit of documentation doesn't hurt :)
 
+You can also find in :doc:`report` an excerpt of a report the original author
+wrote, with some software design information.
+
+.. _report: :doc:`report`
+
 Overall structure
 =================
 

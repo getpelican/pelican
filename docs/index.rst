@@ -65,3 +65,4 @@ A french version of the documentation is available at :doc:`fr/index`.
    faq
    tips
    contribute
+   report
