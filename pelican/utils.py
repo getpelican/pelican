@@ -35,6 +35,9 @@ def open(filename):
     """Open a file and return it's content"""
     return _open(filename, encoding='utf-8').read()
 
+def slug_from_file_path(path):
+    slug = unicode(re.sub('[\s/\\\\]', '_', path)).strip().lower()
+    return slug
 
 def slugify(value):
     """
