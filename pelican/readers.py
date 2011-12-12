@@ -111,7 +111,11 @@ class MarkdownReader(Reader):
         # a BOM it never matches, and the file is not processed 
         # because Title is compulsary metadata.
         text = text.replace(u'\ufeff', '') 
-        md = Markdown(extensions=set(self.extensions + ['meta']))
+        md = Markdown(extensions=set(self.extensions + ['meta']), 
+                      extension_configs={
+                        'codehilite': dict(guess_lang=False) 
+                      },
+                      output_format='html5')
         content = md.convert(text)
 
         metadata = {}
