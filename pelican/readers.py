@@ -95,7 +95,7 @@ class RstReader(Reader):
         metadata = self._parse_metadata(pub.document)
         metadata.setdefault('title', parts.get('title'))
 
-        return content, metadata, open(filename).read()
+        return content, metadata, open(filename)
 
 
 class MarkdownReader(Reader):

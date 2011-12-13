@@ -38,7 +38,7 @@ class Page(object):
                 self.author = settings['AUTHOR']
             else:
                 self.author = getenv('USER', 'John Doe')
-                warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author))
+                warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename, self.author))
 
         # manage languages
         self.in_default_lang = True
@@ -62,7 +62,8 @@ class Page(object):
                 self.save_as = '%s-%s.html' % (self.slug, self.lang)
                 clean_url = '%s-%s/' % (self.slug, self.lang)
         
-        self.source_url = self.save_as.rsplit('.', 1)[0] + '.txt'
+        if self.source:
+            self.source_url = self.save_as.rsplit('.', 1)[0] + '.txt'
 
         # change the save_as regarding the settings
         if settings.get('CLEAN_URLS', False):

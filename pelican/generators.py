@@ -338,7 +338,7 @@ class PagesGenerator(Generator):
                 error(u'Could not process %s\n%s' % (filename, str(e)))
                 continue
             page = Page(content, metadata, settings=self.settings,
-                        filename=f)
+                        filename=f, source=source)
             if not is_valid_content(page, f):
                 continue
             all_pages.append(page)
@@ -353,6 +353,8 @@ class PagesGenerator(Generator):
             writer.write_file('pages/%s' % page.save_as, self.get_template('page'),
                     self.context, page=page,
                     relative_urls = self.settings.get('RELATIVE_URLS'))
+            if page.source and self.settings.get('OUTPUT_SOURCE'):
+                writer.write_source(page.source_url, page.source)
 
 
 class StaticGenerator(Generator):

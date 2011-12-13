@@ -90,7 +90,6 @@ class Writer(object):
         with open(filename, 'w', encoding='utf-8') as f:
             f.write(content)
         info(u'writing %s' % filename)
-        
 
     def write_file(self, name, template, context, relative_urls=True,
         paginated=None, **kwargs):

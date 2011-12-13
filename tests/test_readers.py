@@ -15,7 +15,7 @@ class RstReaderTest(unittest2.TestCase):
 
     def test_article_with_metadata(self):
         reader = readers.RstReader()
-        content, metadata = reader.read(_filename('article_with_metadata.rst'))
+        content, metadata, source = reader.read(_filename('article_with_metadata.rst'))
         expected = {
             'category': 'yeah',
             'author': u'Alexis Métaireau',
