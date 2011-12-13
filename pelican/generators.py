@@ -164,6 +164,8 @@ class ArticlesGenerator(Generator):
             write(article.save_as,
                           article_template, self.context, article=article,
                           category=article.category)
+            if article.source and self.settings.get('OUTPUT_SOURCE'):
+                writer.write_source(article.source_url, article.source)
 
         PAGINATED_TEMPLATES = self.settings.get('PAGINATED_DIRECT_TEMPLATES')
         for template in self.settings.get('DIRECT_TEMPLATES'):
@@ -213,7 +215,7 @@ class ArticlesGenerator(Generator):
         for f in files:
             
             try:
-                content, metadata = read_file(f, settings=self.settings)
+                content, metadata, source = read_file(f, settings=self.settings)
             except Exception, e:
                 warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
@@ -234,7 +236,7 @@ class ArticlesGenerator(Generator):
                     metadata['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
 
             article = Article(content, metadata, settings=self.settings,
-                              filename=f)
+                              filename=f, source=source)
             if not is_valid_content(article, f):
                 continue
 
@@ -252,6 +254,7 @@ class ArticlesGenerator(Generator):
 
             article.url = urlparse.urljoin(add_to_url, article.url)
             article.save_as = urlparse.urljoin(add_to_url, article.save_as)
+            article.source_url = urlparse.urljoin(add_to_url, article.source_url)
 
             if article.status == "published":
                 if hasattr(article, 'tags'):
@@ -330,7 +333,7 @@ class PagesGenerator(Generator):
         all_pages = []
         for f in self.get_files(os.sep.join((self.path, 'pages'))):
             try:
-                content, metadata = read_file(f)
+                content, metadata, source = read_file(f)
             except Exception, e:
                 error(u'Could not process %s\n%s' % (filename, str(e)))
                 continue

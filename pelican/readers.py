@@ -95,7 +95,7 @@ class RstReader(Reader):
         metadata = self._parse_metadata(pub.document)
         metadata.setdefault('title', parts.get('title'))
 
-        return content, metadata
+        return content, metadata, open(filename).read()
 
 
 class MarkdownReader(Reader):
@@ -122,7 +122,7 @@ class MarkdownReader(Reader):
         for name, value in md.Meta.items():
             name = name.lower()
             metadata[name] = _process_metadata(name, value[0])
-        return content, metadata
+        return content, metadata, text
 
 
 class HtmlReader(Reader):
@@ -139,7 +139,7 @@ class HtmlReader(Reader):
             name = key.lower()
             metadata[name] = _process_metadata(name, value)
 
-        return content, metadata
+        return content, metadata, content.read()
 
 
 

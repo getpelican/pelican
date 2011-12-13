@@ -14,7 +14,7 @@ class Page(object):
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content, metadata=None, settings=None, filename=None):
+    def __init__(self, content, metadata=None, settings=None, filename=None, source=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -23,6 +23,7 @@ class Page(object):
 
         self._content = content
         self.translations = []
+        self.source = source
 
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
         local_metadata.update(metadata)
@@ -48,7 +49,7 @@ class Page(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, fro mthe title
+        # create the slug if not existing, from the title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
@@ -60,6 +61,8 @@ class Page(object):
             else:
                 self.save_as = '%s-%s.html' % (self.slug, self.lang)
                 clean_url = '%s-%s/' % (self.slug, self.lang)
+        
+        self.source_url = self.save_as.rsplit('.', 1)[0] + '.txt'
 
         # change the save_as regarding the settings
         if settings.get('CLEAN_URLS', False):
