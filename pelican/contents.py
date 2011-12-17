@@ -67,7 +67,7 @@ class Page(object):
             else:
                 self.save_as = '%s.html' % self.slug
                 self.url = self.save_as
-                self.source_url = re.sub(r'.html$', '.txt', self.slug)
+                self.source_url = '%s.txt' % self.slug
         
         else:
             self.url = self.save_as
