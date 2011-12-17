@@ -5,6 +5,7 @@ from pelican.settings import _DEFAULT_CONFIG
 from datetime import datetime
 from os import getenv
 from sys import platform, stdin
+import re
 
 class Page(object):
     """Represents a page
@@ -55,28 +56,20 @@ class Page(object):
 
         # create save_as from the slug (+lang)
         if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
-            if self.in_default_lang:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s/index.html' % self.slug
-                else:
-                    self.save_as = '%s.html' % self.slug
-
-                clean_url = '%s/' % self.slug
+            
+            if not self.in_default_lang:
+                self.url = '%s-%s' % (self.slug, self.lang)
+            
+            if settings.get('CLEAN_URLS', False):
+                self.save_as = '%s/index.html' % self.slug
+                self.url = '%s/' % self.slug
+                self.source_url = '%s.txt' % self.slug
             else:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s-%s/index.html' % (self.slug, self.lang)
-                else:
-                    self.save_as = '%s-%s.html' % (self.slug, self.lang)
-
-                clean_url = '%s-%s/' % (self.slug, self.lang)
+                self.save_as = '%s.html' % self.slug
+                self.url = self.save_as
+                self.source_url = re.sub(r'.html$', '.txt', self.slug)
         
-        if self.source:
-            self.source_url = self.save_as.rsplit('.', 1)[0] + '.txt'
-
-        # change the save_as regarding the settings
-        if settings.get('CLEAN_URLS', False):
-            self.url = clean_url
-        elif hasattr(self, 'save_as'):
+        else:
             self.url = self.save_as
 
         if filename:
