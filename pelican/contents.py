@@ -56,10 +56,18 @@ class Page(object):
         # create save_as from the slug (+lang)
         if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
             if self.in_default_lang:
-                self.save_as = '%s.html' % self.slug
+                if settings.get('CLEAN_URLS', False):
+                    self.save_as = '%s/index.html' % self.slug
+                else:
+                    self.save_as = '%s.html' % self.slug
+
                 clean_url = '%s/' % self.slug
             else:
-                self.save_as = '%s-%s.html' % (self.slug, self.lang)
+                if settings.get('CLEAN_URLS', False):
+                    self.save_as = '%s-%s/index.html' % (self.slug, self.lang)
+                else:
+                    self.save_as = '%s-%s.html' % (self.slug, self.lang)
+
                 clean_url = '%s-%s/' % (self.slug, self.lang)
         
         if self.source:
