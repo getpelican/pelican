@@ -69,8 +69,9 @@ class Page(object):
                 self.url = self.save_as
                 self.source_url = '%s.txt' % self.slug
         
-        else:
+        elif hasattr(self, 'save_as'):
             self.url = self.save_as
+            self.source_url = self.save_as
 
         if filename:
             self.filename = filename
