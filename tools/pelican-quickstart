@@ -86,7 +86,6 @@ SOCIAL = (
           ('You can add links in your config file', '#'),
          )
 
-WITH_PAGINATION = $with_pagination
 DEFAULT_PAGINATION = $default_pagination
 
 
@@ -104,7 +103,6 @@ CONF = {
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
     'dropbox_dir' : '~/Dropbox/Public/',
-    'with_pagination' : True,
     'default_pagination' : 7,
     'lang': 'en'
 }
@@ -221,10 +219,12 @@ Please answer the following questions so this script can generate the files need
     CONF['author'] = ask('Who will be the author of this Web site ?', answer=str, default=args.author)
     CONF['lang'] = ask('What will be the default language  of this Web site ?', str, args.lang or CONF['lang'], 2)
 
-    CONF['with_pagination'] = ask('Do you want to enable article pagination ?', bool, CONF['with_pagination'])
+    CONF['with_pagination'] = ask('Do you want to enable article pagination ?', bool, bool(CONF['default_pagination']))
 
     if CONF['with_pagination']:
         CONF['default_pagination'] = ask('So how many articles per page do you want ?', int, CONF['default_pagination'])
+    else:
+        CONF['default_pagination'] = False
 
     mkfile = ask('Do you want to generate a Makefile to easily manage your website ?', bool, True)
     
