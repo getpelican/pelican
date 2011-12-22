@@ -8,7 +8,7 @@
                 By <a class="url fn" href="{{ SITEURL }}/author/{{ article.author }}.html">{{ article.author }}</a>
         </address>
         {% endif %}
-<p>In <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
+<p>In <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
 {% include 'taglist.html' %}
 {% include 'translations.html' %}
 </footer><!-- /.post-info -->

@@ -187,7 +187,7 @@ class ArticlesGenerator(Generator):
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            write('category/%s.html' % cat, category_template, self.context,
+            write(cat.url, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='category/%s' % cat)
@@ -228,7 +228,7 @@ class ArticlesGenerator(Generator):
                     category = os.path.basename(os.path.dirname(f)).decode('utf-8')
 
                 if category != '':
-                    metadata['category'] = unicode(category)
+                    metadata['category'] = Category(category)
 
             if 'date' not in metadata.keys()\
                 and self.settings['FALLBACK_ON_FS_DATE']:

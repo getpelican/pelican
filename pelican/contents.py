@@ -143,6 +143,26 @@ class Quote(Page):
     base_properties = ('author', 'date')
 
 
+class Category(object):
+    def __init__(self, category):
+        self.category = unicode(category)
+
+    def __hash__(self):
+        return hash(self.category)
+
+    def __eq__(self, other):
+        return self.category == unicode(other)
+
+    def __str__(self):
+        return str(self.category)
+
+    def __unicode__(self):
+        return self.category
+
+    @property
+    def url(self):
+        return 'category/%s.html' % self
+
 def is_valid_content(content, f):
     try:
         content.check_properties()
