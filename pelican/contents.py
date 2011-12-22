@@ -37,9 +37,9 @@ class Page(object):
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
-                self.author = settings['AUTHOR']
+                self.author = Author(settings['AUTHOR'])
             else:
-                self.author = getenv('USER', 'John Doe')
+                self.author = Author(getenv('USER', 'John Doe'))
                 warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author))
 
         # manage languages
@@ -142,46 +142,43 @@ class Article(Page):
 class Quote(Page):
     base_properties = ('author', 'date')
 
-
-class Category(object):
-    def __init__(self, category):
-        self.category = unicode(category)
+class URLWrapper(object):
+    def __init__(self, name):
+        self.name = unicode(name)
 
     def __hash__(self):
-        return hash(self.category)
+        return hash(self.name)
 
     def __eq__(self, other):
-        return self.category == unicode(other)
+        return self.name == unicode(other)
 
     def __str__(self):
-        return str(self.category)
+        return str(self.name)
 
     def __unicode__(self):
-        return self.category
+        return self.name
 
+    @property
+    def url(self):
+        return '%s.html' % self.name
+
+class Category(URLWrapper):
     @property
     def url(self):
         return 'category/%s.html' % self
 
-class Tag(object):
-    def __init__(self, tag):
-        self.tag = unicode.strip(tag)
-
-    def __hash__(self):
-        return hash(self.tag)
-
-    def __eq__(self, other):
-        return self.tag == unicode(tag)
-
-    def __str__(self):
-        return str(self.tag)
-
-    def __unicode__(self):
-        return self.tag
+class Tag(URLWrapper):
+    def __init__(self, name):
+        self.name = unicode.strip(name)
 
     @property
     def url(self):
         return 'tag/%s.html' % self
+
+class Author(URLWrapper):
+    @property
+    def url(self):
+        return 'author/%s.html' % self 
 
 def is_valid_content(content, f):
     try:

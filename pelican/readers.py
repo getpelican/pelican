@@ -15,7 +15,7 @@ except ImportError:
     Markdown = False
 import re
 
-from pelican.contents import Category, Tag
+from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, open
 
 
@@ -24,6 +24,7 @@ _METADATA_PROCESSORS = {
     'date': lambda x: get_date(x),
     'status': unicode.strip,
     'category': Category,
+    'author': Author,
 }
 
 def _process_metadata(name, value):

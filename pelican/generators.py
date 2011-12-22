@@ -195,7 +195,7 @@ class ArticlesGenerator(Generator):
         author_template = self.get_template('author')
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
-            write('author/%s.html' % aut, author_template, self.context,
+            write(aut.url, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='author/%s' % aut)
