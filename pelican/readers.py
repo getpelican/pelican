@@ -15,12 +15,12 @@ except ImportError:
     Markdown = False
 import re
 
-from pelican.contents import Category
+from pelican.contents import Category, Tag
 from pelican.utils import get_date, open
 
 
 _METADATA_PROCESSORS = {
-    'tags': lambda x: map(unicode.strip, unicode(x).split(',')),
+    'tags': lambda x: map(Tag, unicode(x).split(',')),
     'date': lambda x: get_date(x),
     'status': unicode.strip,
     'category': Category,

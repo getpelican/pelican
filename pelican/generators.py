@@ -179,7 +179,7 @@ class ArticlesGenerator(Generator):
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
-            write('tag/%s.html' % tag, tag_template, self.context, tag=tag,
+            write(tag.url, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='tag/%s' % tag)

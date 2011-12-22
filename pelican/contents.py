@@ -163,6 +163,26 @@ class Category(object):
     def url(self):
         return 'category/%s.html' % self
 
+class Tag(object):
+    def __init__(self, tag):
+        self.tag = unicode.strip(tag)
+
+    def __hash__(self):
+        return hash(self.tag)
+
+    def __eq__(self, other):
+        return self.tag == unicode(tag)
+
+    def __str__(self):
+        return str(self.tag)
+
+    def __unicode__(self):
+        return self.tag
+
+    @property
+    def url(self):
+        return 'tag/%s.html' % self
+
 def is_valid_content(content, f):
     try:
         content.check_properties()
