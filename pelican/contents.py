@@ -24,6 +24,7 @@ class Page(object):
         if not settings:
             settings = _DEFAULT_CONFIG
 
+        self.settings = settings
         self._content = content
         self.translations = []
 
@@ -54,29 +55,6 @@ class Page(object):
         # create the slug if not existing, fro mthe title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
-
-        # create save_as from the slug (+lang)
-        if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
-            if self.in_default_lang:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s/index.html' % self.slug
-                else:
-                    self.save_as = '%s.html' % self.slug
-
-                clean_url = '%s/' % self.slug
-            else:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s-%s/index.html' % (self.slug, self.lang)
-                else:
-                    self.save_as = '%s-%s.html' % (self.slug, self.lang)
-
-                clean_url = '%s-%s/' % (self.slug, self.lang)
-
-        # change the save_as regarding the settings
-        if settings.get('CLEAN_URLS', False):
-            self.url = clean_url
-        elif hasattr(self, 'save_as'):
-            self.url = self.save_as
 
         if filename:
             self.filename = filename
@@ -116,6 +94,30 @@ class Page(object):
                 raise NameError(prop)
 
     @property
+    def url_format(self):
+        return {
+            'slug': getattr(self, 'slug', ''),
+            'lang': getattr(self, 'lang', 'en'),
+            'date': getattr(self, 'date', datetime.now()),
+            'author': self.author,
+            'category': getattr(self, 'category', 'misc'),
+        }
+
+    @property
+    def url(self):
+        if self.in_default_lang:
+            return self.settings.get('PAGE_URL', 'pages/{slug}.html').format(**self.url_format)
+
+        return self.settings.get('PAGE_LANG_URL', 'pages/{slug}-{lang}.html').format(**self.url_format)
+
+    @property
+    def save_as(self):
+        if self.in_default_lang:
+            return self.settings.get('PAGE_SAVE_AS', 'pages/{slug}.html').format(**self.url_format)
+
+        return self.settings.get('PAGE_LANG_SAVE_AS', 'pages/{slug}-{lang}.html').format(**self.url_format)
+
+    @property
     def content(self):
         if hasattr(self, "_get_content"):
             content = self._get_content()
@@ -137,6 +139,20 @@ class Page(object):
 
 class Article(Page):
     mandatory_properties = ('title', 'date', 'category')
+
+    @property
+    def url(self):
+        if self.in_default_lang:
+            return self.settings.get('ARTICLE_URL', '{slug}.html').format(**self.url_format)
+
+        return self.settings.get('ARTICLE_LANG_URL', '{slug}-{lang}.html').format(**self.url_format)
+
+    @property
+    def save_as(self):
+        if self.in_default_lang:
+            return self.settings.get('ARTICLE_SAVE_AS', '{slug}.html').format(**self.url_format)
+
+        return self.settings.get('ARTICLE_LANG_SAVE_AS', '{slug}-{lang}.html').format(**self.url_format)
 
 
 class Quote(Page):
