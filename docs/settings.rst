@@ -121,6 +121,12 @@ Setting name (default value)                        what does it do?
                                                     use the default language.
 `PAGE_LANG_SAVE_AS` ('pages/{slug}-{lang}.html')    The location we will save the page which doesn't
                                                     use the default language.
+`AUTHOR_URL` ('author/{name}.html')                 The URL to use for an author.
+`AUTHOR_SAVE_AS` ('author/{name}.html')             The location to save an author.
+`CATEGORY_URL` ('category/{name}.html')             The URL to use for a category.
+`CATEGORY_SAVE_AS` ('category/{name}.html')         The location to save a category.
+`TAG_URL` ('tag/{name}.html')                       The URL to use for a tag.
+`TAG_SAVE_AS` ('tag/{name}.html')                   The location to save the tag page.
 ================================================    =====================================================
 
 Timezone

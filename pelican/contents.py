@@ -38,9 +38,9 @@ class Page(object):
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
-                self.author = Author(settings['AUTHOR'])
+                self.author = Author(settings['AUTHOR'], settings)
             else:
-                self.author = Author(getenv('USER', 'John Doe'))
+                self.author = Author(getenv('USER', 'John Doe'), settings)
                 warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author))
 
         # manage languages
@@ -159,8 +159,9 @@ class Quote(Page):
     base_properties = ('author', 'date')
 
 class URLWrapper(object):
-    def __init__(self, name):
+    def __init__(self, name, settings):
         self.name = unicode(name)
+        self.settings = settings
 
     def __hash__(self):
         return hash(self.name)
@@ -181,20 +182,32 @@ class URLWrapper(object):
 class Category(URLWrapper):
     @property
     def url(self):
-        return 'category/%s.html' % self
+        return self.settings.get('CATEGORY_URL', 'category/{name}.html').format(name=self.name)
+
+    @property
+    def save_as(self):
+        return self.settings.get('CATEGORY_SAVE_AS', 'category/{name}.html').format(name=self.name)
 
 class Tag(URLWrapper):
-    def __init__(self, name):
-        self.name = unicode.strip(name)
+    def __init__(self, name, *args, **kwargs):
+        super(Tag, self).__init__(unicode.strip(name), *args, **kwargs)
 
     @property
     def url(self):
-        return 'tag/%s.html' % self
+        return self.settings.get('TAG_URL', 'tag/{name}.html').format(name=self.name)
+
+    @property
+    def save_as(self):
+        return self.settings.get('TAG_SAVE_AS', 'tag/{name}.html').format(name=self.name)
 
 class Author(URLWrapper):
     @property
     def url(self):
-        return 'author/%s.html' % self 
+        return self.settings.get('AUTHOR_URL', 'author/{name}.html').format(name=self.name)
+
+    @property
+    def save_as(self):
+        return self.settings.get('AUTHOR_SAVE_AS', 'author/{name}.html').format(name=self.name)
 
 def is_valid_content(content, f):
     try:

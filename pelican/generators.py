@@ -179,7 +179,7 @@ class ArticlesGenerator(Generator):
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
-            write(tag.url, tag_template, self.context, tag=tag,
+            write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='tag/%s' % tag)
@@ -187,7 +187,7 @@ class ArticlesGenerator(Generator):
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            write(cat.url, category_template, self.context,
+            write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='category/%s' % cat)
@@ -195,7 +195,7 @@ class ArticlesGenerator(Generator):
         author_template = self.get_template('author')
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
-            write(aut.url, author_template, self.context,
+            write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
                 page_name='author/%s' % aut)
@@ -228,7 +228,7 @@ class ArticlesGenerator(Generator):
                     category = os.path.basename(os.path.dirname(f)).decode('utf-8')
 
                 if category != '':
-                    metadata['category'] = Category(category)
+                    metadata['category'] = Category(category, self.settings)
 
             if 'date' not in metadata.keys()\
                 and self.settings['FALLBACK_ON_FS_DATE']:
