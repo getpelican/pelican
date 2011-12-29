@@ -71,7 +71,8 @@ Setting name (default value)                        what does it do?
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
 `TIMEZONE`                                          The timezone used in the date information, to
-                                                    generate atom and rss feeds.
+                                                    generate atom and rss feeds. See the "timezone"
+                                                    section below for more info.
 ================================================    =====================================================
 
 .. [1] Default is the system locale. Default is to delete the output directory.
