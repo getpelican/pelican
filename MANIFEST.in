@@ -1,5 +1,4 @@
 include *.rst
-global-include *.pyc
-global-exclude *.py
+global-include *.py
 recursive-include pelican *.html *.css *png
 include LICENSE

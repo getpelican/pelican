@@ -2,6 +2,7 @@
 AUTHOR = u'Alexis Métaireau'
 SITENAME = u"Alexis' log"
 SITEURL = 'http://blog.notmyidea.org'
+TIMEZONE = "Europe/Paris"
 
 GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"
@@ -36,3 +37,4 @@ FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
 # foobar will not be used, because it's not in caps. All configuration keys
 # have to be in caps
 foobar = "barbaz"
+

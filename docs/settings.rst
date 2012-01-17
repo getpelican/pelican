@@ -71,7 +71,8 @@ Setting name (default value)                        what does it do?
                                                     pelican will copy the 'images' folder to the
                                                     output folder.
 `TIMEZONE`                                          The timezone used in the date information, to
-                                                    generate atom and rss feeds.
+                                                    generate atom and rss feeds. See the "timezone"
+                                                    section below for more info.
 ================================================    =====================================================
 
 .. [1] Default is the system locale. Default is to delete the output directory.
@@ -160,9 +161,9 @@ Setting name (default value)                        what does it do?
 `DEFAULT_ORPHANS` (0)                               The minimum number of articles allowed on the
                                                     last page. Use this when you don't want to
                                                     have a last page with very few articles.
-`DEFAULT_PAGINATION` (5)                            The maximum number of articles to include on a
-                                                    page, not including orphans.
-`WITH_PAGINATION` (``False``)                       Activate pagination.
+`DEFAULT_PAGINATION` (False)                        The maximum number of articles to include on a
+                                                    page, not including orphans. False to disable
+                                                    pagination.
 ================================================    =====================================================
 
 Tag cloud
