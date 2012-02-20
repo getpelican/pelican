@@ -17,7 +17,7 @@ class TestPage(TestCase):
         }
 
     def test_use_args(self):
-        """Creating a page with arguments passed to the connstructor should use
+        """Creating a page with arguments passed to the constructor should use
         them to initialise object's attributes.
 
         """

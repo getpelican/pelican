@@ -14,7 +14,7 @@ class Page(object):
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content=None, metadata=None, settings=None,
+    def __init__(self, content, metadata=None, settings=None,
                  filename=None):
         # init parameters
         if not metadata:
