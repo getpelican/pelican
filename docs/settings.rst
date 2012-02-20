@@ -263,6 +263,8 @@ Setting name              what does it do ?
 `GITHUB_URL`              Your github URL (if you have one), it will then
                           use it to create a github ribbon.
 `GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate google analytics.
+`MENUITEMS`               A list of tuples (Title, Url) for additional menu
+                          items to appear at the beginning of the main menu.
 `PIWIK_URL`               URL to your Piwik server - without 'http://' at the
                           beginning.
 `PIWIK_SSL_URL`           If the SSL-URL differs from the normal Piwik-URL
@@ -271,8 +273,8 @@ Setting name              what does it do ?
                           in the Piwik admin interface > settings > websites.
 `LINKS`                   A list of tuples (Title, Url) for links to appear on
                           the header.
-`SOCIAL`                  A list of tuples (Title, Url) to appear in the "social"
-                          section.
+`SOCIAL`                  A list of tuples (Title, Url) to appear in the
+                          "social" section.
 `TWITTER_USERNAME`        Allows to add a button on the articles to tweet about
                           them. Add you twitter username if you want this
                           button to appear.
