@@ -51,3 +51,5 @@ class TestPage(TestCase):
         # if no title is given, there is no save_as
         page = Page('content')
         self.assertFalse(hasattr(page, 'save_as'))
+
+

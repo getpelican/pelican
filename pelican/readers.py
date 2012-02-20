@@ -76,7 +76,9 @@ class RstReader(Reader):
         return get_metadata(document)
 
     def _get_publisher(self, filename):
-        extra_params = {'initial_header_level': '2'}
+        extra_params = {'initial_header_level': '2',
+                        'file_insertion_enabled': 0,
+                        'raw_enabled': 0}
         pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.process_programmatic_settings(None, extra_params, None)
@@ -93,7 +95,7 @@ class RstReader(Reader):
         metadata = self._parse_metadata(pub.document)
         metadata.setdefault('title', parts.get('title'))
 
-        return content, metadata
+        return content, metadata, open(filename)
 
 
 class MarkdownReader(Reader):
@@ -104,14 +106,23 @@ class MarkdownReader(Reader):
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         text = open(filename)
-        md = Markdown(extensions=set(self.extensions + ['meta']))
+        # Remove BOM character, usually at beginning of text 
+        # string. Usually `Title` is the first string, but with 
+        # a BOM it never matches, and the file is not processed 
+        # because Title is compulsary metadata.
+        text = text.replace(u'\ufeff', '') 
+        md = Markdown(extensions=set(self.extensions + ['meta']), 
+                      extension_configs={
+                        'codehilite': dict(guess_lang=False) 
+                      },
+                      output_format='html5')
         content = md.convert(text)
 
         metadata = {}
         for name, value in md.Meta.items():
             name = name.lower()
             metadata[name] = _process_metadata(name, value[0])
-        return content, metadata
+        return content, metadata, text
 
 
 class HtmlReader(Reader):
@@ -128,7 +139,7 @@ class HtmlReader(Reader):
             name = key.lower()
             metadata[name] = _process_metadata(name, value)
 
-        return content, metadata
+        return content, metadata, content.read()
 
 
 

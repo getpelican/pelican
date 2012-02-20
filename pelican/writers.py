@@ -80,6 +80,16 @@ class Writer(object):
             return feed
         finally:
             locale.setlocale(locale.LC_ALL, old_locale)
+    
+    def write_source(self, name, content):
+        filename = os.sep.join((self.output_path, name))
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except Exception:
+            pass
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write(content)
+        info(u'writing %s' % filename)
 
     def write_file(self, name, template, context, relative_urls=True,
         paginated=None, **kwargs):

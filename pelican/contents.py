@@ -5,6 +5,7 @@ from pelican.settings import _DEFAULT_CONFIG
 from datetime import datetime
 from os import getenv
 from sys import platform, stdin
+import re
 
 class Page(object):
     """Represents a page
@@ -14,7 +15,7 @@ class Page(object):
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content, metadata=None, settings=None, filename=None):
+    def __init__(self, content, metadata=None, settings=None, filename=None, source=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -23,6 +24,7 @@ class Page(object):
 
         self._content = content
         self.translations = []
+        self.source = source
 
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
         local_metadata.update(metadata)
@@ -37,7 +39,7 @@ class Page(object):
                 self.author = settings['AUTHOR']
             else:
                 self.author = getenv('USER', 'John Doe')
-                warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author))
+                warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename, self.author))
 
         # manage languages
         self.in_default_lang = True
@@ -48,32 +50,28 @@ class Page(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, fro mthe title
+        # create the slug if not existing, from the title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
         # create save_as from the slug (+lang)
         if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
-            if self.in_default_lang:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s/index.html' % self.slug
-                else:
-                    self.save_as = '%s.html' % self.slug
-
-                clean_url = '%s/' % self.slug
+            
+            if not self.in_default_lang:
+                self.url = '%s-%s' % (self.slug, self.lang)
+            
+            if settings.get('CLEAN_URLS', False):
+                self.save_as = '%s/index.html' % self.slug
+                self.url = '%s/' % self.slug
+                self.source_url = '%s.txt' % self.slug
             else:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s-%s/index.html' % (self.slug, self.lang)
-                else:
-                    self.save_as = '%s-%s.html' % (self.slug, self.lang)
-
-                clean_url = '%s-%s/' % (self.slug, self.lang)
-
-        # change the save_as regarding the settings
-        if settings.get('CLEAN_URLS', False):
-            self.url = clean_url
+                self.save_as = '%s.html' % self.slug
+                self.url = self.save_as
+                self.source_url = '%s.txt' % self.slug
+        
         elif hasattr(self, 'save_as'):
             self.url = self.save_as
+            self.source_url = self.save_as
 
         if filename:
             self.filename = filename
