@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from pelican.utils import slugify, truncate_html_words
+from os.path import normpath, relpath
+from pelican.utils import slugify, truncate_html_words, slug_from_file_path
 from pelican.log import *
 from pelican.settings import _DEFAULT_CONFIG
 from datetime import datetime
@@ -14,7 +15,7 @@ class Page(object):
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content, metadata=None, settings=None, filename=None):
+    def __init__(self, content, metadata=None, settings=None, filename=None, source_dir=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -48,9 +49,18 @@ class Page(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, fro mthe title
-        if not hasattr(self, 'slug') and hasattr(self, 'title'):
-            self.slug = slugify(self.title)
+        # create the slug if not existing, generate slug according to 
+        # setting of SLUG_ATTRIBUTE
+        if not hasattr(self, 'slug'):
+            if settings['SLUGIFY_ATTRIBUTE'] == 'title' and hasattr(self, 'title'):
+                self.slug = slugify(self.title)
+            elif settings['SLUGIFY_ATTRIBUTE'] == 'filepath' and filename != None:
+                self.slug = slug_from_file_path(relpath(filename, source_dir))
+
+
+        # fallback to file path as slug if we could not have non-empty slug
+        if len(self.slug) == 0 and filename != None:
+            self.slug = slug_from_file_path(filename)
 
         # create save_as from the slug (+lang)
         if not hasattr(self, 'save_as') and hasattr(self, 'slug'):

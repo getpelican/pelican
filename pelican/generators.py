@@ -234,7 +234,7 @@ class ArticlesGenerator(Generator):
                     metadata['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
 
             article = Article(content, metadata, settings=self.settings,
-                              filename=f)
+                              filename=f, source_dir = self.path)
             if not is_valid_content(article, f):
                 continue
 
