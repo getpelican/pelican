@@ -8,4 +8,5 @@ build
 dist
 output
 tags
+.ropeproject
 .tox

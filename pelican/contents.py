@@ -14,7 +14,8 @@ class Page(object):
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content, metadata=None, settings=None, filename=None):
+    def __init__(self, content=None, metadata=None, settings=None,
+                 filename=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -30,7 +31,7 @@ class Page(object):
         # set metadata as attributes
         for key, value in local_metadata.items():
             setattr(self, key.lower(), value)
-        
+
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
@@ -90,14 +91,14 @@ class Page(object):
                 self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode(stdin.encoding)
             else:
                 self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
-        
+
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
             if not settings['WITH_FUTURE_DATES']:
                 if hasattr(self, 'date') and self.date > datetime.now():
                     self.status = 'draft'
-        
+
         # set summary
         if not hasattr(self, 'summary'):
             self.summary = truncate_html_words(self.content, 50)
