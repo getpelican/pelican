@@ -1,8 +1,8 @@
+import os
+import sys
 from logging import CRITICAL, ERROR,  WARN, INFO, DEBUG
 from logging import critical, error, info, warning, warn, debug
 from logging import Formatter, getLogger, StreamHandler
-import sys
-import os
 
 global ANSI
 ANSI = {
@@ -62,18 +62,16 @@ class TextFormatter(Formatter):
 class DummyFormatter(object):
     """
     A dummy class.
-    Return an instance of the appropriate formatter (ANSIFormatter if sys.stdout.isatty() is True, else TextFormatter)
+    Return an instance of the appropriate formatter (ANSIFormatter if
+    sys.stdout.isatty() is True, else TextFormatter)
     """
 
     def __new__(cls, *args, **kwargs):
         if os.isatty(sys.stdout.fileno())\
-           and not sys.platform.startswith('win'): 
+           and not sys.platform.startswith('win'):
             return ANSIFormatter(*args, **kwargs)
         else:
             return TextFormatter( *args, **kwargs)
-
-
-
 
 
 def init(level=None, logger=getLogger(), handler=StreamHandler()):
@@ -94,15 +92,15 @@ if __name__ == '__main__':
 
 
 __all__ = [
-    "debug", 
-    "info", 
-    "warn", 
+    "debug",
+    "info",
+    "warn",
     "warning",
-    "error", 
-    "critical", 
-    "DEBUG", 
-    "INFO", 
-    "WARN", 
-    "ERROR", 
+    "error",
+    "critical",
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
     "CRITICAL"
-] 
+]

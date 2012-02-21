@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import re
 import os
-import shutil
 import pytz
-from datetime import datetime
+import re
+import shutil
+
 from codecs import open as _open
+from datetime import datetime
 from itertools import groupby
 from operator import attrgetter
 from pelican.log import warning, info
@@ -16,10 +17,10 @@ def get_date(string):
     If no format matches the given date, raise a ValuEerror
     """
     string = re.sub(' +', ' ', string)
-    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M', 
+    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M',
                '%Y-%m-%d', '%Y/%m/%d',
                '%d-%m-%Y', '%Y-%d-%m', # Weird ones
-               '%d/%m/%Y', '%d.%m.%Y', 
+               '%d/%m/%Y', '%d.%m.%Y',
                '%d.%m.%Y %H:%M', '%Y-%m-%d %H:%M:%S']
     for date_format in formats:
         try:
@@ -64,7 +65,7 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
 
     source_ = os.path.abspath(os.path.expanduser(os.path.join(source, path)))
     destination_ = os.path.abspath(
-            os.path.expanduser(os.path.join(destination, destination_path)))
+        os.path.expanduser(os.path.join(destination, destination_path)))
 
     if os.path.isdir(source_):
         try:
@@ -79,6 +80,7 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     elif os.path.isfile(source_):
         shutil.copy(source_, destination_)
         info('copying %s to %s' % (source_, destination_))
+
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
@@ -227,6 +229,7 @@ def files_changed(path, extensions):
         LAST_MTIME = mtime
         return True
     return False
+
 
 def set_date_tzinfo(d, tz_name=None):
     """ Date without tzinfo shoudbe utc.

@@ -1,11 +1,12 @@
 #! /usr/bin/env python
 
-from pelican.utils import slugify
+import argparse
+import os
+import time
 
 from codecs import open
-import os
-import argparse
-import time
+
+from pelican.utils import slugify
 
 
 def wp2fields(xml):
@@ -132,7 +133,7 @@ def dc2fields(file):
                         j=j+2
 
         """
-        dotclear2 does not use markdown by default unless you use the markdown plugin 
+        dotclear2 does not use markdown by default unless you use the markdown plugin
         Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
         """
         if post_format == "markdown":
@@ -151,7 +152,7 @@ def feed2fields(file):
     d = feedparser.parse(file)
     for entry in d.entries:
         date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
-                if hasattr(entry, "updated_parsed") else None)
+            if hasattr(entry, "updated_parsed") else None)
         author = entry.author if hasattr(entry, "author") else None
         tags = [e['term'] for e in entry.tags] if hasattr(entry, "tags") else None
 
@@ -243,22 +244,22 @@ def main(input_type, input, out_markup, output_path, dircat=False):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description="Transform feed, Wordpress or Dotclear files to rst files."
-                        "Be sure to have pandoc installed")
+        description="Transform feed, Wordpress or Dotclear files to rst files."
+            "Be sure to have pandoc installed")
 
     parser.add_argument(dest='input', help='The input file to read')
     parser.add_argument('--wpfile', action='store_true', dest='wpfile',
-            help='Wordpress XML export')
+        help='Wordpress XML export')
     parser.add_argument('--dotclear', action='store_true', dest='dotclear',
-            help='Dotclear export')
+        help='Dotclear export')
     parser.add_argument('--feed', action='store_true', dest='feed',
-            help='Feed to parse')
+        help='Feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
-            help='Output path')
+        help='Output path')
     parser.add_argument('-m', '--markup', dest='markup', default='rst',
-            help='Output markup format (supports rst & markdown)')
+        help='Output markup format (supports rst & markdown)')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
-            help='Put files in directories with categories name')
+        help='Put files in directories with categories name')
     args = parser.parse_args()
 
     input_type = None
