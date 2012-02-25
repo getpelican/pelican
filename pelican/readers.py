@@ -99,12 +99,12 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     extension = "md"
-    extensions = ['codehilite', 'extra']
+    extensions = ['codehilite', 'extra', 'meta']
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         text = open(filename)
-        md = Markdown(extensions=set(self.extensions + ['meta']))
+        md = Markdown(extensions=self.extensions)
         content = md.convert(text)
 
         metadata = {}
