@@ -6,48 +6,59 @@ from pelican.settings import _DEFAULT_CONFIG
 
 class TestPage(TestCase):
 
+    def setUp(self):
+        super(TestPage, self).setUp()
+        self.page_kwargs = {
+            'content': 'content',
+            'metadata':{
+                'title': 'foo bar',
+                'author': 'Blogger',
+            },
+        }
+
     def test_use_args(self):
-        # creating a page with arguments passed to the connstructor should use
-        # them to initialise object's attributes
-        metadata = {'foo': 'bar', 'foobar': 'baz'}
+        """Creating a page with arguments passed to the constructor should use
+        them to initialise object's attributes.
+
+        """
+        metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
         page = Page('content', metadata=metadata)
         for key, value in metadata.items():
             self.assertTrue(hasattr(page, key))
             self.assertEqual(value, getattr(page, key))
-        self.assertEqual(page.content, "content")
+        self.assertEqual(page.content, 'content')
 
     def test_mandatory_properties(self):
-        # if the title is not set, must throw an exception
-        page = Page('content')
-        with self.assertRaises(NameError) as cm:
-            page.check_properties()
-
-        page = Page('content', metadata={'title': 'foobar'})
+        """If the title is not set, must throw an exception."""
+        self.assertRaises(AttributeError, Page, 'content')
+        page = Page(**self.page_kwargs)
         page.check_properties()
 
     def test_slug(self):
-        # if a title is given, it should be used to generate the slug
-        page = Page('content', {'title': 'foobar is foo'})
-        self.assertEqual(page.slug, 'foobar-is-foo')
+        """If a title is given, it should be used to generate the slug."""
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.slug, 'foo-bar')
 
     def test_defaultlang(self):
-        # if no lang is given, default to the default one
-        page = Page('content')
+        """If no lang is given, default to the default one."""
+        page = Page(**self.page_kwargs)
         self.assertEqual(page.lang, _DEFAULT_CONFIG['DEFAULT_LANG'])
 
         # it is possible to specify the lang in the metadata infos
-        page = Page('content', {'lang': 'fr'})
+        self.page_kwargs['metadata'].update({'lang': 'fr', })
+        page = Page(**self.page_kwargs)
         self.assertEqual(page.lang, 'fr')
 
     def test_save_as(self):
-        # if a lang is not the default lang, save_as should be set accordingly
-        page = Page('content', {'title': 'foobar', 'lang': 'fr'}) #default lang is en
-        self.assertEqual(page.save_as, "foobar-fr.html")
+        """If a lang is not the default lang, save_as should be set
+        accordingly.
 
-        # otherwise, if a title is defined, save_as should be set
-        page = Page('content', {'title': 'foobar'})
-        page.save_as = 'foobar.html'
+        """
+        # if a title is defined, save_as should be set
+        page = Page(**self.page_kwargs)
+        page.save_as = 'foo-bar.html'
 
-        # if no title is given, there is no save_as
-        page = Page('content')
-        self.assertFalse(hasattr(page, 'save_as'))
+        # if a language is defined, save_as should include it accordingly
+        self.page_kwargs['metadata'].update({'lang': 'fr', })
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.save_as, "foo-bar-fr.html")
