@@ -1,5 +1,8 @@
 from __future__ import with_statement
-from unittest2 import TestCase
+try:
+    from unittest2 import TestCase
+except ImportError, e:
+    from unittest import TestCase
 
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
@@ -62,3 +65,36 @@ class TestPage(TestCase):
         self.page_kwargs['metadata'].update({'lang': 'fr', })
         page = Page(**self.page_kwargs)
         self.assertEqual(page.save_as, "foo-bar-fr.html")
+
+    def test_datetime(self):
+        """If DATETIME is set to a tuple, it should be used to override LOCALE
+        """
+        from datetime import datetime
+        from sys import platform
+        dt = datetime(2015,9,13)
+        # make a deep copy of page_kawgs
+        page_kwargs = {key:self.page_kwargs[key] for key in self.page_kwargs}
+        for key in page_kwargs:
+            if not isinstance(page_kwargs[key], dict): break
+            page_kwargs[key] = {subkey:page_kwargs[key][subkey] for subkey in page_kwargs[key]}
+        # set its date to dt
+        page_kwargs['metadata']['date'] = dt
+        page = Page( **page_kwargs)
+
+        self.assertEqual(page.locale_date, dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
+
+        
+        page_kwargs['settings'] = {x:_DEFAULT_CONFIG[x] for x in _DEFAULT_CONFIG}
+        # I doubt this can work on all platforms ...
+        if platform == "win32":
+            locale = 'jpn'
+        else:
+            locale = 'ja_JP'
+        page_kwargs['settings']['DATE_FORMATS'] = {'jp':(locale,'%Y-%m-%d(%a)')} 
+        page_kwargs['metadata']['lang'] = 'jp'
+        page = Page( **page_kwargs)
+        self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
+        # above is unicode in Japanese: 2015-09-13(“ú)
+
+
+

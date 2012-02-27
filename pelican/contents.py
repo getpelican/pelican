@@ -87,9 +87,9 @@ class Page(object):
             else:
                 self.date_format = settings['DEFAULT_DATE_FORMAT']
 
-	if isinstance(self.date_format, tuple):
-		locale.setlocale(locale.LC_ALL, self.date_format[0])
-		self.date_format = self.date_format[1]
+        if isinstance(self.date_format, tuple):
+            locale.setlocale(locale.LC_ALL, self.date_format[0])
+            self.date_format = self.date_format[1]
 	
         if hasattr(self, 'date'):
             if platform == 'win32':

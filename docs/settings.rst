@@ -31,7 +31,8 @@ Setting name (default value)                        what does it do?
                                                     `.html`, so you will have to setup URL rewriting on 
                                                     your web server.
 `DATE_FORMATS` (``{}``)                             If you do manage multiple languages, you can
-                                                    set the date formatting here.
+                                                    set the date formatting here. See "Date format and locales"
+                                                    section below for details.
 `DEFAULT_CATEGORY` (``'misc'``)                     The default category to fallback on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)           The default date format you want to use.
 `DISPLAY_PAGES_ON_MENU` (``True``)                  Display or not the pages on the menu of the
@@ -43,7 +44,7 @@ Setting name (default value)                        what does it do?
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
 `DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory and just
                                                     the generated files.
-`LOCALE` (''[1]_)                                   Change the locale. A list of locales can be provided 
+`LOCALE` (''[#]_)                                   Change the locale. A list of locales can be provided 
                                                     here or a single string representing one locale.
                                                     When providing a list, all the locales will be tried 
                                                     until one works.
@@ -75,7 +76,7 @@ Setting name (default value)                        what does it do?
                                                     section below for more info.
 ================================================    =====================================================
 
-.. [1] Default is the system locale. Default is to delete the output directory.
+.. [#] Default is the system locale. Default is to delete the output directory.
 
 Article permalink structure
 ---------------------------
@@ -118,6 +119,52 @@ Have a look at `the wikipedia page`_ to get a list of values to set your
 timezone.
 
 .. _the wikipedia page: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+
+Date format and locale
+----------------------
+
+If no DATE_FORMAT is set, fallback to DEFAULT_DATE_FORMAT. If you need to
+maintain multiple languages with different date format, you can set this dict
+using language name (``lang`` in your posts) as key. About available format
+codes, see `strftime document of python`_ :
+
+    DATE_FORMAT = {
+        'en': '%a, %d %b %Y',
+        'jp': '%Y-%m-%d(%a)',
+    }
+
+You can set locale to further control date format:
+
+    LOCALE = ('usa', 'jpn',  # On Windows
+        'en_US', 'ja_JP'     # On Unix/Linux
+        )
+
+Also, it is possible to set different locale settings for each language, if you
+put (locale, format) tuple in dict, and this will override the LOCALE setting
+above:
+
+    # On Unix/Linux
+    DATE_FORMAT = {
+        'en': ('en_US','%a, %d %b %Y'),
+        'jp': ('ja_JP','%Y-%m-%d(%a)'),
+    }
+
+    # On Windows
+    DATE_FORMAT = {
+        'en': ('usa','%a, %d %b %Y'),
+        'jp': ('jpn','%Y-%m-%d(%a)'),
+    }
+
+For available list of `locales on Windows`_ . On Unix/Linux usually you can get
+a list of available locales with command ``locale -a``, see manpage `locale(1)`_ for help.
+
+
+.. _strftime document of python: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
+
+.. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
+
+.. _locale(1): http://linux.die.net/man/1/locale
 
 Feed settings
 =============
