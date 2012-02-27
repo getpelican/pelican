@@ -124,9 +124,9 @@ timezone.
 Date format and locale
 ----------------------
 
-If no DATE_FORMAT is set, failback to DEFAULT_DATE_FORMAT. If you need to
+If no DATE_FORMAT is set, fallback to DEFAULT_DATE_FORMAT. If you need to
 maintain multiple languages with different date format, you can set this dict
-using language name( ``lang`` in your posts) as key. About available format
+using language name (``lang`` in your posts) as key. About available format
 codes, see `strftime document of python`_ :
 
     DATE_FORMAT = {
@@ -156,9 +156,8 @@ above:
         'jp': ('jpn','%Y-%m-%d(%a)'),
     }
 
-For available list of `locales on Windows` . On Unix/Linux usually you can get
-a list of available locales with command ``locale -a``, see manpage `locale(1)`
-for help.
+For available list of `locales on Windows`_ . On Unix/Linux usually you can get
+a list of available locales with command ``locale -a``, see manpage `locale(1)`_ for help.
 
 
 .. _strftime document of python: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
