@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import with_statement
 try:
     from unittest2 import TestCase
@@ -83,18 +84,15 @@ class TestPage(TestCase):
 
         self.assertEqual(page.locale_date, dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
 
-        
+
         page_kwargs['settings'] = {x:_DEFAULT_CONFIG[x] for x in _DEFAULT_CONFIG}
         # I doubt this can work on all platforms ...
         if platform == "win32":
             locale = 'jpn'
         else:
-            locale = 'ja_JP'
-        page_kwargs['settings']['DATE_FORMATS'] = {'jp':(locale,'%Y-%m-%d(%a)')} 
+            locale = 'ja_JP.utf8'
+        page_kwargs['settings']['DATE_FORMATS'] = {'jp':(locale,'%Y-%m-%d(%a)')}
         page_kwargs['metadata']['lang'] = 'jp'
         page = Page( **page_kwargs)
         self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
         # above is unicode in Japanese: 2015-09-13(“ú)
-
-
-
