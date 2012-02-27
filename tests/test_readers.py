@@ -1,5 +1,9 @@
 # coding: utf-8
-import unittest2
+try:
+    import unittest2
+except ImportError, e:
+    import unittest as unittest2
+
 import os
 import datetime
 from pelican import readers

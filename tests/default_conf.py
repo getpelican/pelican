@@ -2,6 +2,7 @@
 AUTHOR = u'Alexis Métaireau'
 SITENAME = u"Alexis' log"
 SITEURL = 'http://blog.notmyidea.org'
+TIMEZONE = 'UTC'
 
 GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"

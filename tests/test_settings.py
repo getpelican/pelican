@@ -1,4 +1,8 @@
-import unittest2
+try:
+    import unittest2
+except ImportError, e:
+    import unittest as unittest2
+
 from os.path import dirname, abspath, join
 
 from pelican.settings import read_settings, _DEFAULT_CONFIG

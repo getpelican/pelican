@@ -25,6 +25,7 @@ To create the virtualenv environment, you have to do::
 Then you would have to install all the dependencies::
 
     $ pip install -r dev_requirements.txt
+    $ python setup.py develop
 
 Running the test suite
 ======================
