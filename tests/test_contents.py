@@ -1,5 +1,8 @@
 from __future__ import with_statement
-from unittest2 import TestCase
+try:
+    from unittest2 import TestCase
+except ImportError, e:
+    from unittest import TestCase
 
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
