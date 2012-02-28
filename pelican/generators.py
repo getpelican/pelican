@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
-from operator import attrgetter, itemgetter
-from itertools import chain
-from functools import partial
-from datetime import datetime
-from collections import defaultdict
 import os
+import datetime
 import math
 import random
 import urlparse
 
+from collections import defaultdict
+from functools import partial
+from itertools import chain
+from operator import attrgetter, itemgetter
+
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.utils import copy, get_relative_path, process_translations, open
-from pelican.utils import slugify
 from pelican.contents import Article, Page, is_valid_content
-from pelican.readers import read_file
 from pelican.log import *
+from pelican.readers import read_file
+from pelican.utils import copy, process_translations, open
+from pelican.utils import slugify
 
 
 class Generator(object):
@@ -231,7 +232,7 @@ class ArticlesGenerator(Generator):
 
             if 'date' not in metadata.keys()\
                 and self.settings['FALLBACK_ON_FS_DATE']:
-                    metadata['date'] = datetime.fromtimestamp(os.stat(f).st_ctime)
+                    metadata['date'] = datetime.datetime.fromtimestamp(os.stat(f).st_ctime)
 
             article = Article(content, metadata, settings=self.settings,
                               filename=f)
