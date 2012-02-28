@@ -5,7 +5,7 @@ import os, sys, argparse, string
 from pelican import __version__
 
 TEMPLATES={
-	'Makefile' : '''
+    'Makefile' : '''
 PELICAN=$pelican
 PELICANOPTS=$pelicanopts
 
@@ -75,10 +75,10 @@ DEFAULT_LANG='$lang'
 
 # Blogroll
 LINKS =  (
-          ('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
-          ('Python.org', 'http://python.org'),
-          ('Jinja2', 'http://jinja.pocoo.org'),
-          ('You can modify those links in your config file', '#')
+    ('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
+    ('Python.org', 'http://python.org'),
+    ('Jinja2', 'http://jinja.pocoo.org'),
+    ('You can modify those links in your config file', '#')
          )
 
 # Social widget
@@ -129,7 +129,7 @@ def ask(question, answer=str, default=None, l=None):
                 r = raw_input('> {0} '.format(question, default))
 
             r = r.strip()
-            
+
             if len(r) <= 0:
                 if default:
                     r = default
@@ -194,17 +194,16 @@ def ask(question, answer=str, default=None, l=None):
 
 def main():
     parser = argparse.ArgumentParser(description="A kickstarter for pelican")
-    parser.add_argument('-p', '--path', default=".", 
+    parser.add_argument('-p', '--path', default=".",
             help="The path to generate the blog into")
     parser.add_argument('-t', '--title', default=None, metavar="title",
             help='Set the title of the website')
     parser.add_argument('-a', '--author', default=None, metavar="author",
             help='Set the author name of the website')
-    parser.add_argument('-l', '--lang', default=None, metavar="lang", 
+    parser.add_argument('-l', '--lang', default=None, metavar="lang",
             help='Set the default lang of the website')
 
     args = parser.parse_args()
-    
 
     print('''Welcome to pelican-quickstart v{v}.
 
@@ -213,7 +212,7 @@ This script will help you creating a new Pelican based website.
 Please answer the following questions so this script can generate the files needed by Pelican.
 
     '''.format(v=__version__))
-    
+
     CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new Web site ?', answer=str, default=args.path))
     CONF['sitename'] = ask('How will you call your Web site ?', answer=str, default=args.title)
     CONF['author'] = ask('Who will be the author of this Web site ?', answer=str, default=args.author)
@@ -227,7 +226,7 @@ Please answer the following questions so this script can generate the files need
         CONF['default_pagination'] = False
 
     mkfile = ask('Do you want to generate a Makefile to easily manage your website ?', bool, True)
-    
+
     if mkfile:
         if ask('Do you want to upload your website using FTP ?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server ?', str, CONF['ftp_host'])

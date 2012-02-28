@@ -3,3 +3,4 @@ Pygments
 docutils
 feedgenerator
 unittest2
+pytz

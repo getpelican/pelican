@@ -4,8 +4,9 @@ try:
 except ImportError, e:
     import unittest as unittest2
 
-import os
 import datetime
+import os
+
 from pelican import readers
 
 CUR_DIR = os.path.dirname(__file__)

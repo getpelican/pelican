@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from pelican.utils import slugify, truncate_html_words
-from pelican.log import *
-from pelican.settings import _DEFAULT_CONFIG
-from datetime import datetime
+import datetime
 from os import getenv
 from sys import platform, stdin
 import locale
+
+from pelican.log import *
+from pelican.settings import _DEFAULT_CONFIG
+from pelican.utils import slugify, truncate_html_words
 
 class Page(object):
     """Represents a page
@@ -90,7 +91,7 @@ class Page(object):
         if isinstance(self.date_format, tuple):
             locale.setlocale(locale.LC_ALL, self.date_format[0])
             self.date_format = self.date_format[1]
-	
+
         if hasattr(self, 'date'):
             if platform == 'win32':
                 self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode(stdin.encoding)
@@ -101,7 +102,7 @@ class Page(object):
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
             if not settings['WITH_FUTURE_DATES']:
-                if hasattr(self, 'date') and self.date > datetime.now():
+                if hasattr(self, 'date') and self.date > datetime.datetime.now():
                     self.status = 'draft'
 
         # set summary
@@ -130,9 +131,8 @@ class Page(object):
         """Dummy function"""
         pass
 
-    summary = property(_get_summary, _set_summary, \
+    summary = property(_get_summary, _set_summary,
                        "Summary of the article. Based on the content. Can't be set")
-
 
 
 class Article(Page):
