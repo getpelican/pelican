@@ -13,7 +13,7 @@ from operator import attrgetter, itemgetter
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.contents import Article, Page, is_valid_content
+from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.log import *
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, open

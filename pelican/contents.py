@@ -98,7 +98,7 @@ class Page(object):
         return {
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
-            'date': getattr(self, 'date', datetime.now()),
+            'date': getattr(self, 'date', datetime.datetime.now()),
             'author': self.author,
             'category': getattr(self, 'category', 'misc'),
         }
