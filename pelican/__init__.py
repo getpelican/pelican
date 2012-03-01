@@ -9,7 +9,7 @@ from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
 from pelican import log
 
-__version__ = "2.7.2"
+__version__ = "3.0"
 
 
 class Pelican(object):
@@ -63,10 +63,10 @@ class Pelican(object):
             if hasattr(p, 'generate_context'):
                 p.generate_context()
 
-        # erase the directory if it is not the source and if that's 
+        # erase the directory if it is not the source and if that's
         # explicitely asked
         if (self.delete_outputdir and not
-                os.path.realpath(self.path).startswith(self.output_path)): 
+                os.path.realpath(self.path).startswith(self.output_path)):
             clean_output_dir(self.output_path)
 
         writer = self.get_writer()

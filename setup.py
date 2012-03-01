@@ -3,7 +3,7 @@ from setuptools import setup
 import sys
 import platform
 
-VERSION = "2.7.2" # find a better way to do so.
+VERSION = "3.0" # find a better way to do so.
 
 requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'pytz']
 if sys.version_info < (2,7):
@@ -13,7 +13,7 @@ scripts = ['bin/pelican', 'tools/pelican-themes', 'tools/pelican-import', 'tools
 
 if sys.platform.startswith('win'):
     scripts += [
-        'bin/pelican.bat', 'tools/pelican-themes.bat', 
+        'bin/pelican.bat', 'tools/pelican-themes.bat',
         'tools/pelican-import.bat', 'tools/pelican-quickstart.bat'
     ]
 
