@@ -182,7 +182,7 @@ class ArticlesGenerator(Generator):
             write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name='tag/%s' % tag)
+                page_name=u'tag/%s' % tag)
 
         category_template = self.get_template('category')
         for cat, articles in self.categories:
@@ -190,7 +190,7 @@ class ArticlesGenerator(Generator):
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name='category/%s' % cat)
+                page_name=u'category/%s' % cat)
 
         author_template = self.get_template('author')
         for aut, articles in self.authors:
@@ -198,7 +198,7 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name='author/%s' % aut)
+                page_name=u'author/%s' % aut)
 
         for article in self.drafts:
             write('drafts/%s.html' % article.slug, article_template, self.context,
@@ -212,7 +212,6 @@ class ArticlesGenerator(Generator):
         files = self.get_files(self.path, exclude=['pages',])
         all_articles = []
         for f in files:
-            
             try:
                 content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
