@@ -1,10 +1,10 @@
 .. _theming-pelican:
 
-How to create themes for pelican
+How to create themes for Pelican
 ################################
 
 Pelican uses the great `jinja2 <http://jinja.pocoo.org>`_ templating engine to
-generate it's HTML output. The jinja2 syntax is really simple. If you want to
+generate its HTML output. The jinja2 syntax is really simple. If you want to
 create your own theme, feel free to take inspiration from the "simple" theme,
 which is available `here
 <https://github.com/ametaireau/pelican/tree/master/pelican/themes/simple/templates>`_
@@ -29,179 +29,183 @@ To make your own theme, you must follow the following structure::
         ├── tag.html         // processed for each tag
         └── tags.html        // must list all the tags. Can be a tag cloud.
 
-* `static` contains all the static content. It will be copied on the output
-  `theme/static` folder then. I've put the css and image folders, but they are
+* `static` contains all the static assets, which will be copied to the output
+  `theme/static` folder. I've put the CSS and image folders here, but they are
   just examples. Put what you need here.
 
 * `templates` contains all the templates that will be used to generate the content.
-  I've just put the mandatory templates here, you can define your own if it helps
-  you to organize yourself while doing the theme.
+  I've just put the mandatory templates here; you can define your own if it helps
+  you keep things organized while creating your theme.
  
 Templates and variables
 =======================
 
-It's using a simple syntax, that you can embbed into your html pages.
-This document describes which templates should exist on a theme, and which
-variables will be passed to each template, while generating it.
+The idea is to use a simple syntax that you can embed into your HTML pages.
+This document describes which templates should exist in a theme, and which
+variables will be passed to each template at generation time.
 
 All templates will receive the variables defined in your settings file, if they
-are in caps. You can access them directly. 
+are in all-caps. You can access them directly. 
 
 Common variables
 ----------------
 
-All of those settings will be given to all templates.
+All of these settings will be available to all templates.
 
 =============   ===================================================
 Variable        Description
 =============   ===================================================
-articles        That's the list of articles, ordered desc. by date
-                all the elements are `Article` objects, so you can 
-                access their properties (e.g. title, summary, author
-                etc.).
-dates           The same list of article, but ordered by date,
-                ascending.
-tags            A dict containing each tags (keys), and the list of
-                relative articles.
-categories      A dict containing each category (keys), and the 
-                list of relative articles.
-pages           The list of pages.
+articles        The list of articles, ordered descending by date
+                All the elements are `Article` objects, so you can 
+                access their attributes (e.g. title, summary, author
+                etc.)
+dates           The same list of articles, but ordered by date,
+                ascending
+tags            A key-value dict containing the tags (the keys) and
+                the list of respective articles (the values)
+categories      A key-value dict containing the categories (keys) 
+                and the list of respective articles (values)
+pages           The list of pages
 =============   ===================================================
 
 index.html
 ----------
 
-Home page of your blog, will finally remain at output/index.html.
+This is the home page of your blog, generated at output/index.html.
 
-If pagination is active, next pages will remain at output/index`n`.html.
+If pagination is active, subsequent pages will reside in output/index`n`.html.
 
 ===================     ===================================================
 Variable                Description
 ===================     ===================================================
-articles_paginator      A paginator object of article list.
-articles_page           The current page of articles.
-dates_paginator         A paginator object of article list, ordered by date,
-                        ascending.
+articles_paginator      A paginator object for the list of articles
+articles_page           The current page of articles
+dates_paginator         A paginator object for the article list, ordered by
+                        date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
-page_name               'index'. Useful for pagination links.
+page_name               'index' -- useful for pagination links
 ===================     ===================================================
 
 author.html
 -------------
 
-This template will be processed for each of the existing authors, and will
-finally remain at output/author/`author_name`.html.
+This template will be processed for each of the existing authors, with
+output generated at output/author/`author_name`.html.
 
-If pagination is active, next pages will remain at
+If pagination is active, subsequent pages will reside at
 output/author/`author_name``n`.html.
 
 ===================     ===================================================
 Variable                Description
 ===================     ===================================================
-author                  The name of the author being processed.
-articles                Articles of this author.
-dates                   Articles of this author, but ordered by date,
-                        ascending.
-articles_paginator      A paginator object of article list.
-articles_page           The current page of articles.
-dates_paginator         A paginator object of article list, ordered by date,
-                        ascending.
+author                  The name of the author being processed
+articles                Articles by this author
+dates                   Articles by this author, but ordered by date,
+                        ascending
+articles_paginator      A paginator object for the list of articles
+articles_page           The current page of articles
+dates_paginator         A paginator object for the article list, ordered by
+                        date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
-page_name               'author/`author_name`'. Useful for pagination
-                        links.
+page_name               'author/`author_name`' -- useful for pagination
+                        links
 ===================     ===================================================
 
 category.html
 -------------
 
-This template will be processed for each of the existing categories, and will
-finally remain at output/category/`category_name`.html.
+This template will be processed for each of the existing categories, with
+output generated at output/category/`category_name`.html.
 
-If pagination is active, next pages will remain at
+If pagination is active, subsequent pages will reside at
 output/category/`category_name``n`.html.
 
 ===================     ===================================================
 Variable                Description
 ===================     ===================================================
-category                The name of the category being processed.
-articles                Articles of this category.
-dates                   Articles of this category, but ordered by date,
-                        ascending.
-articles_paginator      A paginator object of article list.
-articles_page           The current page of articles.
-dates_paginator         A paginator object of article list, ordered by date,
-                        ascending.
+category                The name of the category being processed
+articles                Articles for this category
+dates                   Articles for this category, but ordered by date,
+                        ascending
+articles_paginator      A paginator object for the list of articles
+articles_page           The current page of articles
+dates_paginator         A paginator object for the list of articles,
+                        ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
-                        ascending.
-page_name               'category/`category_name`'. Useful for pagination
-                        links.
+                        ascending
+page_name               'category/`category_name`' -- useful for pagination
+                        links
 ===================     ===================================================
 
 article.html
 -------------
 
-This template will be processed for each article. .html files will be output
-in output/`article_name`.html. Here are the specific variables it gets.
+This template will be processed for each article, with .html files saved
+as output/`article_name`.html. Here are the specific variables it gets.
 
 =============   ===================================================
 Variable        Description
 =============   ===================================================
-article         The article object to be displayed.
-category        The name of the category of the current article.
+article         The article object to be displayed
+category        The name of the category for the current article
 =============   ===================================================
 
 page.html
 ---------
 
-For each page, this template will be processed. It will create .html files in
-output/`page_name`.html.
+This template will be processed for each page, with corresponding .html files
+saved as output/`page_name`.html.
 
 =============   ===================================================
 Variable        Description
 =============   ===================================================
-page            The page object to be displayed. You can access to
-                its title, slug and content.
+page            The page object to be displayed. You can access its
+                title, slug, and content.
 =============   ===================================================
 
 tag.html
 --------
 
-For each tag, this template will be processed. It will create .html files in
-output/tag/`tag_name`.html.
+This template will be processed for each tag, with corresponding .html files
+saved as output/tag/`tag_name`.html.
 
-If pagination is active, next pages will remain at
+If pagination is active, subsequent pages will reside at
 output/tag/`tag_name``n`.html.
 
 ===================     ===================================================
 Variable                Description
 ===================     ===================================================
-tag                     The name of the tag being processed.
-articles                Articles related to this tag.
+tag                     The name of the tag being processed
+articles                Articles related to this tag
 dates                   Articles related to this tag, but ordered by date,
-                        ascending.
-articles_paginator      A paginator object of article list.
-articles_page           The current page of articles.
-dates_paginator         A paginator object of article list, ordered by date,
-                        ascending.
+                        ascending
+articles_paginator      A paginator object for the list of articles
+articles_page           The current page of articles
+dates_paginator         A paginator object for the list of articles, 
+                        ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
-                        ascending.
-page_name               'tag/`tag_name`'. Useful for pagination links.
+                        ascending
+page_name               'tag/`tag_name`' -- useful for pagination links
 ===================     ===================================================
 
 Inheritance
 ===========
 
-Since version 3, pelican supports inheritance from the ``simple`` theme, so you can reuse the templates of the ``simple`` theme in your own themes:
+Since version 3.0, Pelican supports inheritance from the ``simple`` theme, so
+you can re-use the ``simple`` theme templates in your own themes.
 
-If one of the mandatory files in the ``templates/`` directory of your theme is missing, it will be replaced by the matching template from the ``simple`` theme, so if the HTML structure of a template of the ``simple`` theme is right for you, you don't have to rewrite it from scratch.
+If one of the mandatory files in the ``templates/`` directory of your theme is
+missing, it will be replaced by the matching template from the ``simple`` theme.
+So if the HTML structure of a template in the ``simple`` theme is right for you,
+you don't have to write a new template from scratch.
 
-You can also extend templates of the ``simple`` themes in your own themes by using the ``{% extends %}`` directive as in the following example:
+You can also extend templates from the ``simple`` themes in your own themes by using the ``{% extends %}`` directive as in the following example:
 
 .. code-block:: html+jinja
 
-    {% extends "!simple/index.html" %}   <!-- extends the ``index.html`` template of the ``simple`` theme -->
+    {% extends "!simple/index.html" %}   <!-- extends the ``index.html`` template from the ``simple`` theme -->
 
     {% extends "index.html" %}   <!-- "regular" extending -->
 
@@ -226,10 +230,10 @@ The first file is the ``templates/base.html`` template:
     {% endblock %}
 
 
-1.    On the first line, we extend the ``base.html`` template of the ``simple`` theme, so we don't have to rewrite the entire file.
-2.    On the third line, we open the ``head`` block which has already been defined in the ``simple`` theme
+1.    On the first line, we extend the ``base.html`` template from the ``simple`` theme, so we don't have to rewrite the entire file.
+2.    On the third line, we open the ``head`` block which has already been defined in the ``simple`` theme.
 3.    On the fourth line, the function ``super()`` keeps the content previously inserted in the ``head`` block.
-4.    On the fifth line, we append a stylesheet to the page
+4.    On the fifth line, we append a stylesheet to the page.
 5.    On the last line, we close the ``head`` block.
 
 This file will be extended by all the other templates, so the stylesheet will be linked from all pages.

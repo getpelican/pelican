@@ -6,26 +6,26 @@ the command line::
 
     $ pelican -s path/to/your/settingsfile.py path
 
-Settings are given as the form of a python module (a file). You can have an
+Settings are configured in the form of a Python module (a file). You can see an
 example by looking at `/samples/pelican.conf.py
 <https://github.com/ametaireau/pelican/raw/master/samples/pelican.conf.py>`_
 
-All the settings identifiers must be set in caps, otherwise they will not be
+All the setting identifiers must be set in all-caps, otherwise they will not be
 processed.
 
 The settings you define in the configuration file will be passed to the
-templates, it allows you to use them to add site-wide contents if you need.
+templates, which allows you to use your settings to add site-wide content.
 
-Here is a list of settings for pelican, regarding the different features.
+Here is a list of settings for Pelican:
 
 Basic settings
 ==============
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?
+Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`ARTICLE_PERMALINK_STRUCTURE` (``''``)              Empty by default. Allows to render URLs in a
-                                                    particular way, see below.
+`ARTICLE_PERMALINK_STRUCTURE` (``''``)              Empty by default. Enables some customization of URL
+                                                    structure (see below for more detail).
 `AUTHOR`                                            Default author (put your name)
 `CLEAN_URLS` (``False``)                             If set to `True`, the URLs will not be suffixed by
                                                     `.html`, so you will have to setup URL rewriting on 
@@ -33,68 +33,71 @@ Setting name (default value)                        what does it do?
 `DATE_FORMATS` (``{}``)                             If you do manage multiple languages, you can
                                                     set the date formatting here. See "Date format and locales"
                                                     section below for details.
-`DEFAULT_CATEGORY` (``'misc'``)                     The default category to fallback on.
+`DEFAULT_CATEGORY` (``'misc'``)                     The default category to fall back on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)           The default date format you want to use.
-`DISPLAY_PAGES_ON_MENU` (``True``)                  Display or not the pages on the menu of the
-                                                    template. Templates can follow or not this
-                                                    settings.
-`FALLBACK_ON_FS_DATE` (``True``)                    If True, pelican will use the file system
-                                                    dates infos (mtime) if it can't get
-                                                    informations from the metadata
+`DISPLAY_PAGES_ON_MENU` (``True``)                  Whether to display pages on the menu of the
+                                                    template. Templates may or not honor this
+                                                    setting.
+`FALLBACK_ON_FS_DATE` (``True``)                    If True, Pelican will use the file system
+                                                    timestamp information (mtime) if it can't get
+                                                    date information from the metadata.
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
-`DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory and just
+`DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory as well as
                                                     the generated files.
 `LOCALE` (''[#]_)                                   Change the locale. A list of locales can be provided 
                                                     here or a single string representing one locale.
                                                     When providing a list, all the locales will be tried 
                                                     until one works.
 `MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want
-                                                    to use. For the moment, only available values
+                                                    to use. For the moment, the only available values
                                                     are `rst` and `md`.
-`MD_EXTENSIONS` (``('codehilite','extra')``)        A list of the extensions that the markdown processor
+`MD_EXTENSIONS` (``('codehilite','extra')``)        A list of the extensions that the Markdown processor
                                                     will use. Refer to the extensions chapter in the
                                                     Python-Markdown documentation for a complete list of
                                                     supported extensions.
 `OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
-`PATH` (``None``)                                   path to look at for input files.
+`PATH` (``None``)                                   Path to look at for input files.
 `PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
                                                     of your documents. You will need to install
                                                     `rst2pdf`.
-`RELATIVE_URLS` (``True``)                          Defines if pelican should use relative urls or
+`RELATIVE_URLS` (``True``)                          Defines whether Pelican should use relative URLs or
                                                     not.
 `SITENAME` (``'A Pelican Blog'``)                   Your site name
-`SITEURL`                                           base URL of your website. Note that this is
-                                                    not a way to tell pelican to use relative urls
-                                                    or static ones. You should rather use the
-                                                    `RELATIVE_URL` setting for such use.
+`SITEURL`                                           Base URL of your website. Note that this is
+                                                    not a way to tell Pelican whether to use relative URLs
+                                                    or static ones. You should instead use the
+                                                    `RELATIVE_URL` setting for that purpose.
 `STATIC_PATHS` (``['images']``)                     The static paths you want to have accessible
                                                     on the output path "static". By default,
-                                                    pelican will copy the 'images' folder to the
+                                                    Pelican will copy the 'images' folder to the
                                                     output folder.
 `TIMEZONE`                                          The timezone used in the date information, to
-                                                    generate atom and rss feeds. See the "timezone"
+                                                    generate Atom and RSS feeds. See the "timezone"
                                                     section below for more info.
 ================================================    =====================================================
 
-.. [#] Default is the system locale. Default is to delete the output directory.
+.. [#] Default is the system locale.
+
 
 Article permalink structure
 ---------------------------
-Allow to render articles sorted by date, in case you specify a format as
-specified in the example.  It follows the python datetime directives: 
+
+This setting allows you to output your articles sorted by date, provided that
+you specify a format as specified below. This format follows the Python
+``datetime`` directives: 
 
 * %Y: Year with century as a decimal number.  
 * %m: Month as a decimal number [01,12].  
 * %d: Day of the month as a decimal number [01,31].
 
-Note: if you specify a datetime directive, it will be substituted using the
-date metadata field into the rest file. if the date is not specified, pelican
-will rely on the mtime of your file.
+Note: If you specify a datetime directive, it will be substituted using the
+input files' date metadata attribute. If the date is not specified for a
+particular file, Pelican will rely on the file's mtime timestamp.
 
-Check the python datetime documentation at http://bit.ly/cNcJUC for more
+Check the Python datetime documentation at http://bit.ly/cNcJUC for more
 information.
 
-Also, you can use any metadata in the restructured text files: 
+Also, you can use other file metadata attributes as well: 
 
 * category: '%(category)s' 
 * author: '%(author)s' 
@@ -103,20 +106,19 @@ Also, you can use any metadata in the restructured text files:
 
 Example usage: 
 
-* '/%Y/%m/' it will be something like '/2011/07/sample-post.html'.  
-* '/%Y/%(category)s/' it will be something like '/2011/life/sample-post.html'.
+* '/%Y/%m/' will render something like '/2011/07/sample-post.html'.  
+* '/%Y/%(category)s/' will render something like '/2011/life/sample-post.html'.
 
 Timezone
 --------
 
-If no timezone is defined, UTC is assumed. This means that the generated atom
-and rss feeds will have wrong date information if your locale is not UTC.
+If no timezone is defined, UTC is assumed. This means that the generated Atom
+and RSS feeds will contain incorrect date information if your locale is not UTC.
 
 Pelican issues a warning in case this setting is not defined, as it was not
-mandatory in old versions.
+mandatory in previous versions.
 
-Have a look at `the wikipedia page`_ to get a list of values to set your
-timezone.
+Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 
 .. _the wikipedia page: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
@@ -124,9 +126,9 @@ timezone.
 Date format and locale
 ----------------------
 
-If no DATE_FORMAT is set, fallback to DEFAULT_DATE_FORMAT. If you need to
-maintain multiple languages with different date format, you can set this dict
-using language name (``lang`` in your posts) as key. About available format
+If no DATE_FORMAT is set, fall back to DEFAULT_DATE_FORMAT. If you need to
+maintain multiple languages with different date formats, you can set this dict
+using language name (``lang`` in your posts) as key. Regarding available format
 codes, see `strftime document of python`_ :
 
     DATE_FORMAT = {
@@ -140,8 +142,8 @@ You can set locale to further control date format:
         'en_US', 'ja_JP'     # On Unix/Linux
         )
 
-Also, it is possible to set different locale settings for each language, if you
-put (locale, format) tuple in dict, and this will override the LOCALE setting
+Also, it is possible to set different locale settings for each language. If you
+put (locale, format) tuples in the dict, this will override the LOCALE setting
 above:
 
     # On Unix/Linux
@@ -156,8 +158,9 @@ above:
         'jp': ('jpn','%Y-%m-%d(%a)'),
     }
 
-For available list of `locales on Windows`_ . On Unix/Linux usually you can get
-a list of available locales with command ``locale -a``, see manpage `locale(1)`_ for help.
+This is a list of available `locales on Windows`_ . On Unix/Linux, usually you
+can get a list of available locales via the ``locale -a`` command; see manpage
+`locale(1)`_ for more information.
 
 
 .. _strftime document of python: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
@@ -169,26 +172,26 @@ a list of available locales with command ``locale -a``, see manpage `locale(1)`_
 Feed settings
 =============
 
-By default, pelican uses atom feeds. However, it is possible to use RSS feeds
-instead, at your covenience.
+By default, Pelican uses Atom feeds. However, it is also possible to use RSS
+feeds if you prefer.
 
 Pelican generates category feeds as well as feeds for all your articles. It does
-not generate feeds for tags per default, but it is possible to do so using
+not generate feeds for tags by default, but it is possible to do so using
 the ``TAG_FEED`` and ``TAG_FEED_RSS`` settings:
 
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?
+Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`CATEGORY_FEED` ('feeds/%s.atom.xml'[2]_)           Where to put the atom categories feeds.
-`CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the categories rss feeds.
-`FEED` (``'feeds/all.atom.xml'``)                   relative url to output the atom feed.
-`FEED_RSS` (``None``, i.e. no RSS)                  relative url to output the rss feed.
-`TAG_FEED` (``None``, ie no tag feed)               relative url to output the tags atom feed. It should
-                                                    be defined using a "%s" matchin the tag name
-`TAG_FEED_RSS` (``None``, ie no RSS tag feed)       relative url to output the tag RSS feed
-`FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feeds are
-                                                    unrestricted by default.
+`CATEGORY_FEED` ('feeds/%s.atom.xml'[2]_)           Where to put the category Atom feeds.
+`CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
+`FEED` (``'feeds/all.atom.xml'``)                   Relative URL to output the Atom feed.
+`FEED_RSS` (``None``, i.e. no RSS)                  Relative URL to output the RSS feed.
+`TAG_FEED` (``None``, ie no tag feed)               Relative URL to output the tag Atom feed. It should
+                                                    be defined using a "%s" match in the tag name.
+`TAG_FEED_RSS` (``None``, ie no RSS tag feed)       Relative URL to output the tag RSS feed
+`FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feed item
+                                                    quantity is unrestricted by default.
 ================================================    =====================================================
 
 .. [2] %s is the name of the category.
@@ -196,14 +199,15 @@ Setting name (default value)                        what does it do?
 Pagination
 ==========
 
-The default behaviour of pelican is to list all the articles titles alongside
-with a short description of them on the index page. While it works pretty well
-for little to medium blogs, it is convenient to have a way to paginate this.
+The default behaviour of Pelican is to list all the article titles along
+with a short description on the index page. While it works pretty well
+for small-to-medium blogs, for sites with large quantity of articles it would
+be convenient to have a way to paginate the list.
 
 You can use the following settings to configure the pagination.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?
+Setting name (default value)                        What does it do?
 ================================================    =====================================================
 `DEFAULT_ORPHANS` (0)                               The minimum number of articles allowed on the
                                                     last page. Use this when you don't want to
@@ -220,11 +224,11 @@ If you want to generate a tag cloud with all your tags, you can do so using the
 following settings.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?
+Setting name (default value)                        What does it do?
 ================================================    =====================================================
 `TAG_CLOUD_STEPS` (4)                               Count of different font sizes in the tag
                                                     cloud.
-`TAG_CLOUD_MAX_ITEMS` (100)                         Maximum tags count in the cloud.
+`TAG_CLOUD_MAX_ITEMS` (100)                         Maximum number of tags in the cloud.
 ================================================    =====================================================
 
 The default theme does not support tag clouds, but it is pretty easy to add::
@@ -235,34 +239,34 @@ The default theme does not support tag clouds, but it is pretty easy to add::
         {% endfor %}
     </ul>
 
-You should then also define a CSS with the appropriate classes (tag-0 to tag-N, where
-N matches `TAG_CLOUD_STEPS` -1.
+You should then also define a CSS style with the appropriate classes (tag-0 to tag-N, where
+N matches `TAG_CLOUD_STEPS` -1).
 
 Translations
 ============
 
-Pelican offers a way to translate articles. See the section on getting started for
-more information about that.
+Pelican offers a way to translate articles. See the Getting Started section for
+more information.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?
+Setting name (default value)                        What does it do?
 ================================================    =====================================================
 `DEFAULT_LANG` (``'en'``)                           The default language to use.
-`TRANSLATION_FEED` ('feeds/all-%s.atom.xml'[3]_)    Where to put the RSS feed for translations.
+`TRANSLATION_FEED` ('feeds/all-%s.atom.xml'[3]_)    Where to put the feed for translations.
 ================================================    =====================================================
 
 .. [3] %s is the language
 
-Ordering contents
+Ordering content
 =================
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?
+Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`REVERSE_ARCHIVE_ORDER` (``False``)                 Reverse the archives order. (True makes it in
-                                                    descending order: the newer first)
-`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True makes it in
-                                                    descending order, default is alphabetically)
+`REVERSE_ARCHIVE_ORDER` (``False``)                 Reverse the archives list order. (True: orders by date
+                                                    in descending order, with newer articles first.)
+`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse 
+                                                    alphabetical order; default lists alphabetically.)
 ================================================    =====================================================
 
 Theming
@@ -272,45 +276,45 @@ Theming is addressed in a dedicated section (see :ref:`theming-pelican`).
 However, here are the settings that are related to theming.
 
 ================================================    =====================================================
-Setting name (default value)                        what does it do?
+Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`THEME`                                             theme to use to produce the output. can be the
+`THEME`                                             Theme to use to produce the output. Can be the
                                                     complete static path to a theme folder, or
                                                     chosen between the list of default themes (see
                                                     below)
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
-                                                    values is `static`, but if your theme has
+                                                    value is `static`, but if your theme has
                                                     other static paths, you can put them here.
-`CSS_FILE` (``'main.css'``)                         specify the CSS file you want to load
+`CSS_FILE` (``'main.css'``)                         Specify the CSS file you want to load.
 ================================================    =====================================================
 
-By default, two themes are availablee. You can specify them using the `-t` option:
+By default, two themes are available. You can specify them using the `-t` option:
 
 * notmyidea
 * simple (a synonym for "full text" :)
 
-You can define your own theme too, and specify it's emplacement in the same
-way (be sure to specify the full absolute path to it).
+You can define your own theme too, and specify its placement in the same
+manner. (Be sure to specify the full absolute path to it.)
 
 Here is `a guide on how to create your theme
-<http://alexis.notmyidea.org/pelican/themes.html>`_
+<http://pelican.notmyidea.org/en/latest/themes.html>`_
 
 You can find a list of themes at http://github.com/ametaireau/pelican-themes.
 
-Pelican comes with :doc:`pelican-themes` a small script for managing themes.
+Pelican comes with :doc:`pelican-themes`, a small script for managing themes.
 
 The `notmyidea` theme can make good use of the following settings. I recommend
-to use them too in your themes.
+using them in your themes as well.
 
 =======================   =======================================================
-Setting name              what does it do ?
+Setting name              What does it do ?
 =======================   =======================================================
-`DISQUS_SITENAME`         Pelican can handle disqus comments, specify the
-                          sitename you've filled in on disqus
-`GITHUB_URL`              Your github URL (if you have one), it will then
-                          use it to create a github ribbon.
-`GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate google analytics.
-`MENUITEMS`               A list of tuples (Title, Url) for additional menu
+`DISQUS_SITENAME`         Pelican can handle Disqus comments. Specify the
+                          Disqus sitename identifier here.
+`GITHUB_URL`              Your GitHub URL (if you have one). It will then
+                          use this information to create a GitHub ribbon.
+`GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate Google Analytics.
+`MENUITEMS`               A list of tuples (Title, URL) for additional menu
                           items to appear at the beginning of the main menu.
 `PIWIK_URL`               URL to your Piwik server - without 'http://' at the
                           beginning.
@@ -318,17 +322,17 @@ Setting name              what does it do ?
                           you have to include this setting too. (optional)
 `PIWIK_SITE_ID`           ID for the monitored website. You can find the ID
                           in the Piwik admin interface > settings > websites.
-`LINKS`                   A list of tuples (Title, Url) for links to appear on
+`LINKS`                   A list of tuples (Title, URL) for links to appear on
                           the header.
-`SOCIAL`                  A list of tuples (Title, Url) to appear in the
+`SOCIAL`                  A list of tuples (Title, URL) to appear in the
                           "social" section.
-`TWITTER_USERNAME`        Allows to add a button on the articles to tweet about
-                          them. Add you twitter username if you want this
-                          button to appear.
+`TWITTER_USERNAME`        Allows for adding a button to articles to encourage
+                          others to tweet about them. Add your Twitter username
+                          if you want this button to appear.
 =======================   =======================================================
 
-In addition, you can use the "wide" version of the `notmyidea` theme, by
-adding that in your configuration::
+In addition, you can use the "wide" version of the `notmyidea` theme by
+adding the following to your configuration::
 
     CSS_FILE = "wide.css"
 

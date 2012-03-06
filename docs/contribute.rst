@@ -1,28 +1,28 @@
-How to contribute ?
+How to contribute?
 ###################
-There are many ways to contribute to pelican. You can enhance the
-documentation, add missing features, fix bugs or just report them.
+There are many ways to contribute to Pelican. You can enhance the
+documentation, add missing features, and fix bugs (or just report them).
 
-Don't hesitate to fork and make a pull request on github.
+Don't hesitate to fork and make a pull request on GitHub.
 
-Set up the development environment
-==================================
+Setting up the development environment
+======================================
 
-You're free to setup up the environment in any way you like. Here is a way
-using virtualenv and virtualenvwrapper. If you don't have them, you can install
-them using::
+You're free to set up your development environment any way you like. Here is a
+way using virtualenv and virtualenvwrapper. If you don't have them, you can
+install these packages via::
 
     $ pip install virtualenvwrapper
 
-Virtual environments allow you to work on an installation of python which is
-not the one installed on your system. Especially, it will install the different
-projects under a different location.
+Virtual environments allow you to work on Python projects which are isolated
+from one another so you can use different packages (and package versions) with
+different projects.
 
-To create the virtualenv environment, you have to do::
+To create a virtual environment, use the following syntax::
 
-    $ mkvirtualenv pelican --no-site-package
+    $ mkvirtualenv pelican 
 
-Then you would have to install all the dependencies::
+To manually install the dependencies::
 
     $ pip install -r dev_requirements.txt
     $ python setup.py develop
@@ -31,10 +31,10 @@ Running the test suite
 ======================
 
 Each time you add a feature, there are two things to do regarding tests:
-checking that the tests run in a right way, and be sure that you add tests for
-the feature you are working on or the bug you're fixing.
+checking that the existing tests pass, and adding tests for your new feature
+or for the bug you're fixing.
 
-The tests leaves under "pelican/tests" and you can run them using the
+The tests live in "pelican/tests" and you can run them using the
 "discover" feature of unittest2::
 
     $ unit2 discover
