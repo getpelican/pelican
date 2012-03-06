@@ -32,7 +32,7 @@ more information.
 Why the name "Pelican"?
 ------------------------
 
-Heh, you didn't notice? "Pelican" is an anagram for "Calepin" ;)
+Heh, you didn't notice? "Pelican" is an anagram for « Calepin » ;)
 
 Source code
 -----------
