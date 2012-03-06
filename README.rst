@@ -39,14 +39,15 @@ Source code
 
 You can access the source code via git at: https://github.com/ametaireau/pelican
 
-If you feel hackish, have a look at the `pelican's internals explanation
+If you feel hackish, have a look at the explanation of `Pelican's internals
 <http://pelican.notmyidea.org/en/latest/internals.html>`_.
 
 Feedback / Contact us
-=====================
+---------------------
 
-If you want to see new features in Pelican, don't hesitate to tell me, to clone
-the repository, etc. That's open source, dude!
+If you want to see new features in Pelican, don't hesitate to offer suggestions,
+clone the repository, etc. There are many ways to `contribute 
+<http://pelican.notmyidea.org/en/latest/contribute.html>`_. That's open source, dude!
 
 Contact me at "alexis at notmyidea dot org" for any request/feedback! You can
 also join the team at `#pelican on irc.freenode.org 

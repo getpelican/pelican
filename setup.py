@@ -20,10 +20,10 @@ if sys.platform.startswith('win'):
 setup(
     name = "pelican",
     version = VERSION,
-    url = 'http://alexis.notmyidea.org/pelican/',
+    url = 'http://pelican.notmyidea.org/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
-    description = "A tool to generate a static blog, with restructured text (or markdown) input files.",
+    description = "A tool to generate a static blog from reStructuredText or Markdown input files.",
     long_description=open('README.rst').read(),
     packages = ['pelican'],
     include_package_data = True,
