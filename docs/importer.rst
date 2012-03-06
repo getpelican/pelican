@@ -10,11 +10,11 @@ Description
 ``pelican-import`` is a command line tool for converting articles from other
 software to ReStructuredText. The supported formats are:
 
-- Wordpress XML export
+- WordPress XML export
 - Dotclear export
-- RSS/ATOM feed
+- RSS/Atom feed
 
-The conversion from HTML to ReStructuredText relies on `pandoc
+The conversion from HTML to reStructuredText relies on `pandoc
 <http://johnmacfarlane.net/pandoc/>`_. For Dotclear, if the source posts are
 written with Markdown syntax, they will not be converted (as Pelican also
 supports Markdown).
@@ -40,7 +40,7 @@ Optional arguments:
 Examples
 ========
 
-for Wordpress::
+for WordPress::
 
     $ pelican-import --wpfile -o ~/output ~/posts.xml
 

@@ -57,11 +57,11 @@ With ``pelican-themes``, you can see the available themes by using the ``-l`` or
     two-column@
     simple
 
-In this example, we can see there is 3 themes available: ``notmyidea``, ``simple`` and ``two-column``.
+In this example, we can see there are three themes available: ``notmyidea``, ``simple``, and ``two-column``.
 
-``two-column`` is prefixed with an ``@`` because this theme is not copied to the Pelican theme path, but just linked to it (see `Creating symbolic links`_ for details about creating symbolic links).
+``two-column`` is prefixed with an ``@`` because this theme is not copied to the Pelican theme path, but is instead just linked to it (see `Creating symbolic links`_ for details about creating symbolic links).
 
-Note that you can combine the ``--list`` option with the ``-v`` or ``--verbose`` option to get a more verbose output, like this:
+Note that you can combine the ``--list`` option with the ``-v`` or ``--verbose`` option to get more verbose output, like this:
 
 .. code-block:: console
     
@@ -95,8 +95,8 @@ This option takes as argument the path(s) of the theme(s) you want to install, a
 Removing themes
 """""""""""""""
 
-Pelican themes can also removes themes from the Pelican themes path.
-The ``-r`` or ``--remove`` takes as argument the name(s) of the theme(s) you want to remove, and can be combined with the ``--verbose`` option.
+The ``pelican-themes`` command can also remove themes from the Pelican themes path.
+The ``-r`` or ``--remove`` option takes as argument the name(s) of the theme(s) you want to remove, and can be combined with the ``--verbose`` option.
 
 .. code-block:: console
 
@@ -113,7 +113,7 @@ The ``-r`` or ``--remove`` takes as argument the name(s) of the theme(s) you wan
 Creating symbolic links
 """""""""""""""""""""""
 
-``pelican-themes`` can also install themes by creating symbolic links instead of copying the whole themes in the Pelican themes path.
+``pelican-themes`` can also install themes by creating symbolic links instead of copying entire themes into the Pelican themes path.
 
 To symbolically link a theme, you can use the ``-s`` or ``--symlink``, which works exactly as the ``--install`` option:
 
@@ -152,7 +152,7 @@ The ``--install``, ``--remove`` and ``--symlink`` option are not mutually exclus
                      --symlink ~/Dev/Python/pelican-themes/two-column \
                      --verbose
 
-In this example,  the theme ``notmyidea-cms`` is replaced by the theme ``notmyidea-cms-fr`` 
+In this example, the theme ``notmyidea-cms`` is replaced by the theme ``notmyidea-cms-fr`` 
 
 
 
