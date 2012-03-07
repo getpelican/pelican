@@ -231,18 +231,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
             fs.write(header + content)
 
 
-def main(input_type, input, out_markup, output_path, dircat=False):
-    if input_type == 'wordpress':
-        fields = wp2fields(input)
-    elif input_type == 'dotclear':
-        fields = dc2fields(input)
-    elif input_type == 'feed':
-        fields = feed2fields(input)
-
-    fields2pelican(fields, out_markup, output_path, dircat=dircat)
-
-
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
         description="Transform feed, Wordpress or Dotclear files to rst files."
             "Be sure to have pandoc installed")
@@ -280,4 +269,13 @@ if __name__ == '__main__':
             error("Couldn't create the output folder: " + args.output)
             exit()
 
-    main(input_type, args.input, args.markup, args.output, dircat=args.dircat)
+    input_type, input, out_markup, output_path, dircat=False = input_type, args.input, args.markup, args.output, args.dircat
+
+    if input_type == 'wordpress':
+        fields = wp2fields(input)
+    elif input_type == 'dotclear':
+        fields = dc2fields(input)
+    elif input_type == 'feed':
+        fields = feed2fields(input)
+
+    fields2pelican(fields, out_markup, output_path, dircat=dircat)

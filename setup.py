@@ -12,13 +12,14 @@ try:
 except ImportError:
     requires.append('argparse')
 
-scripts = ['bin/pelican', 'tools/pelican-themes', 'tools/pelican-import', 'tools/pelican-quickstart']
-
-if sys.platform.startswith('win'):
-    scripts += [
-        'bin/pelican.bat', 'tools/pelican-themes.bat',
-        'tools/pelican-import.bat', 'tools/pelican-quickstart.bat'
-    ]
+entry_points = {
+    'console_scripts': [
+        'pelican = pelican:main',
+        'pelican-import = tools.pelican_import:main',
+        'pelican-quickstart = tools.pelican_quickstart:main',
+        'pelican-themes = tools.pelican_themes:main'
+   ]     
+}
 
 setup(
     name = "pelican",
@@ -31,7 +32,7 @@ setup(
     packages = ['pelican'],
     include_package_data = True,
     install_requires = requires,
-    scripts = scripts,
+    entry_points = entry_points,
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
                    'License :: OSI Approved :: GNU Affero General Public License v3',
