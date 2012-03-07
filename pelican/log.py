@@ -4,25 +4,35 @@ from logging import CRITICAL, ERROR,  WARN, INFO, DEBUG
 from logging import critical, error, info, warning, warn, debug
 from logging import Formatter, getLogger, StreamHandler
 
-ANSI = {
-    'gray' : lambda(text) : u'\033[1;30m' + unicode(text) + u'\033[1;m',
-    'red' : lambda(text) : u'\033[1;31m' + unicode(text) + u'\033[1;m',
-    'green' : lambda(text) : u'\033[1;32m' + unicode(text) + u'\033[1;m',
-    'yellow' : lambda(text) : u'\033[1;33m' + unicode(text) + u'\033[1;m',
-    'blue' : lambda(text) : u'\033[1;34m' + unicode(text) + u'\033[1;m',
-    'magenta' : lambda(text) : u'\033[1;35m' + unicode(text) + u'\033[1;m',
-    'cyan' : lambda(text) : u'\033[1;36m' + unicode(text) + u'\033[1;m',
-    'white' : lambda(text) : u'\033[1;37m' + unicode(text) + u'\033[1;m',
-    'bgred' : lambda(text) : u'\033[1;41m' + unicode(text) + u'\033[1;m',
-    'bggreen' : lambda(text) : u'\033[1;42m' + unicode(text) + u'\033[1;m',
-    'bgbrown' : lambda(text) : u'\033[1;43m' + unicode(text) + u'\033[1;m',
-    'bgblue' : lambda(text) : u'\033[1;44m' + unicode(text) + u'\033[1;m',
-    'bgmagenta' : lambda(text) : u'\033[1;45m' + unicode(text) + u'\033[1;m',
-    'bgcyan' : lambda(text) : u'\033[1;46m' + unicode(text) + u'\033[1;m',
-    'bggray' : lambda(text) : u'\033[1;47m' + unicode(text) + u'\033[1;m',
-    'bgyellow' : lambda(text) : u'\033[1;43m' + unicode(text) + u'\033[1;m',
-    'bggrey' : lambda(text) : u'\033[1;100m' + unicode(text) + u'\033[1;m'
+
+RESET_TERM = u'\033[1;m'
+
+
+def term_color(code):
+    return lambda text: code + unicode(text) + RESET_TERM
+
+
+COLOR_CODES = {
+    'gray': u'\033[1;30m',
+    'red': u'\033[1;31m',
+    'green': u'\033[1;32m',
+    'yellow': u'\033[1;33m',
+    'blue': u'\033[1;34m',
+    'magenta': u'\033[1;35m',
+    'cyan': u'\033[1;36m',
+    'white': u'\033[1;37m',
+    'bgred': u'\033[1;41m',
+    'bggreen': u'\033[1;42m',
+    'bgbrown': u'\033[1;43m',
+    'bgblue': u'\033[1;44m',
+    'bgmagenta': u'\033[1;45m',
+    'bgcyan': u'\033[1;46m',
+    'bggray': u'\033[1;47m',
+    'bgyellow': u'\033[1;43m',
+    'bggrey': u'\033[1;100m',
 }
+
+ANSI = dict((col, term_color(code)) for col, code in COLOR_CODES.items())
 
 
 class ANSIFormatter(Formatter):
