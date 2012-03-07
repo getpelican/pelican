@@ -4,7 +4,6 @@ from logging import CRITICAL, ERROR,  WARN, INFO, DEBUG
 from logging import critical, error, info, warning, warn, debug
 from logging import Formatter, getLogger, StreamHandler
 
-global ANSI
 ANSI = {
     'gray' : lambda(text) : u'\033[1;30m' + unicode(text) + u'\033[1;m',
     'red' : lambda(text) : u'\033[1;31m' + unicode(text) + u'\033[1;m',
