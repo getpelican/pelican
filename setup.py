@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 from setuptools import setup
-import sys
-import platform
 
 VERSION = "3.0" # find a better way to do so.
 
