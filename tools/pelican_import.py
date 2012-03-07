@@ -71,7 +71,7 @@ def dc2fields(file):
                 else:
                     posts.append(line)
 
-    print "%i posts read." % len(posts)
+    print("%i posts read." % len(posts))
 
     for post in posts:
         fields = post.split('","')
@@ -205,7 +205,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
         else:
             out_filename = os.path.join(output_path, filename+ext)
 
-        print out_filename
+        print(out_filename)
 
         if in_markup == "html":
             html_filename = os.path.join(output_path, filename+'.html')
@@ -259,7 +259,7 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        print "you must provide either --wpfile, --dotclear or --feed options"
+        print("you must provide either --wpfile, --dotclear or --feed options")
         exit()
 
     if not os.path.exists(args.output):
