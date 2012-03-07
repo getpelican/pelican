@@ -270,6 +270,3 @@ Please answer the following questions so this script can generate the files need
             print('Error: {0}'.format(e))
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
-
-if __name__ == '__main__':
-    main()
