@@ -269,6 +269,7 @@ def main():
             error("Couldn't create the output folder: " + args.output)
             exit()
 
+    # TODO: refactor this long assignment
     input_type, input, out_markup, output_path, dircat=False = input_type, args.input, args.markup, args.output, args.dircat
 
     if input_type == 'wordpress':
