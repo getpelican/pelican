@@ -38,3 +38,12 @@ The tests live in "pelican/tests" and you can run them using the
 "discover" feature of unittest2::
 
     $ unit2 discover
+
+Coding standards
+================
+
+Try to respect what is described in the PEP8
+(http://www.python.org/dev/peps/pep-0008/) when providing patches. This can be
+eased by the pep8 tool (http://pypi.python.org/pypi/pep8) or by Flake8, which
+will give you some other cool hints about what's good or wrong
+(http://pypi.python.org/pypi/flake8/)
