@@ -82,7 +82,8 @@ class TestPage(TestCase):
         page_kwargs['metadata']['date'] = dt
         page = Page( **page_kwargs)
 
-        self.assertEqual(page.locale_date, dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
+        self.assertEqual(page.locale_date,
+            unicode(dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']), 'utf-8'))
 
 
         page_kwargs['settings'] = {x:_DEFAULT_CONFIG[x] for x in _DEFAULT_CONFIG}
