@@ -111,16 +111,14 @@ class Page(object):
     @property
     def url(self):
         if self.in_default_lang:
-            return self.settings.get('PAGE_URL', u'pages/{slug}.html').format(**self.url_format)
-
-        return self.settings.get('PAGE_LANG_URL', u'pages/{slug}-{lang}.html').format(**self.url_format)
+            return self.settings['PAGE_URL'].format(**self.url_format)
+        return self.settings['PAGE_LANG_URL'].format(**self.url_format)
 
     @property
     def save_as(self):
         if self.in_default_lang:
-            return self.settings.get('PAGE_SAVE_AS', u'pages/{slug}.html').format(**self.url_format)
-
-        return self.settings.get('PAGE_LANG_SAVE_AS', u'pages/{slug}-{lang}.html').format(**self.url_format)
+            return self.settings['PAGE_SAVE_AS'].format(**self.url_format)
+        return self.settings['PAGE_LANG_SAVE_AS'].format(**self.url_format)
 
     @property
     def content(self):
@@ -148,20 +146,19 @@ class Article(Page):
     @property
     def url(self):
         if self.in_default_lang:
-            return self.settings.get('ARTICLE_URL', u'{slug}.html').format(**self.url_format)
-
-        return self.settings.get('ARTICLE_LANG_URL', u'{slug}-{lang}.html').format(**self.url_format)
+            return self.settings['ARTICLE_URL'].format(**self.url_format)
+        return self.settings['ARTICLE_LANG_URL'].format(**self.url_format)
 
     @property
     def save_as(self):
         if self.in_default_lang:
-            return self.settings.get('ARTICLE_SAVE_AS', u'{slug}.html').format(**self.url_format)
-
-        return self.settings.get('ARTICLE_LANG_SAVE_AS', u'{slug}-{lang}.html').format(**self.url_format)
+            return self.settings['ARTICLE_SAVE_AS'].format(**self.url_format)
+        return self.settings['ARTICLE_LANG_SAVE_AS'].format(**self.url_format)
 
 
 class Quote(Page):
     base_properties = ('author', 'date')
+
 
 class URLWrapper(object):
     def __init__(self, name, settings):
@@ -184,14 +181,16 @@ class URLWrapper(object):
     def url(self):
         return '%s.html' % self.name
 
+
 class Category(URLWrapper):
     @property
     def url(self):
-        return self.settings.get('CATEGORY_URL', u'category/{name}.html').format(name=self.name)
+        return self.settings['CATEGORY_URL'].format(name=self.name)
 
     @property
     def save_as(self):
-        return self.settings.get('CATEGORY_SAVE_AS', u'category/{name}.html').format(name=self.name)
+        return self.settings['CATEGORY_SAVE_AS'].format(name=self.name)
+
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
@@ -199,20 +198,22 @@ class Tag(URLWrapper):
 
     @property
     def url(self):
-        return self.settings.get('TAG_URL', u'tag/{name}.html').format(name=self.name)
+        return self.settings['TAG_URL'].format(name=self.name)
 
     @property
     def save_as(self):
-        return self.settings.get('TAG_SAVE_AS', u'tag/{name}.html').format(name=self.name)
+        return self.settings['TAG_SAVE_AS'].format(name=self.name)
+
 
 class Author(URLWrapper):
     @property
     def url(self):
-        return self.settings.get('AUTHOR_URL', u'author/{name}.html').format(name=self.name)
+        return self.settings['AUTHOR_URL'].format(name=self.name)
 
     @property
     def save_as(self):
-        return self.settings.get('AUTHOR_SAVE_AS', u'author/{name}.html').format(name=self.name)
+        return self.settings['AUTHOR_SAVE_AS'].format(name=self.name)
+
 
 def is_valid_content(content, f):
     try:
