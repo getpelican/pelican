@@ -24,6 +24,7 @@ class Page(object):
         if not settings:
             settings = _DEFAULT_CONFIG
 
+        self.settings = settings
         self._content = content
         self.translations = []
 
@@ -37,9 +38,9 @@ class Page(object):
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
-                self.author = settings['AUTHOR']
+                self.author = Author(settings['AUTHOR'], settings)
             else:
-                self.author = getenv('USER', 'John Doe')
+                self.author = Author(getenv('USER', 'John Doe'), settings)
                 warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author))
 
         # manage languages
@@ -54,29 +55,6 @@ class Page(object):
         # create the slug if not existing, fro mthe title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
-
-        # create save_as from the slug (+lang)
-        if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
-            if self.in_default_lang:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s/index.html' % self.slug
-                else:
-                    self.save_as = '%s.html' % self.slug
-
-                clean_url = '%s/' % self.slug
-            else:
-                if settings.get('CLEAN_URLS', False):
-                    self.save_as = '%s-%s/index.html' % (self.slug, self.lang)
-                else:
-                    self.save_as = '%s-%s.html' % (self.slug, self.lang)
-
-                clean_url = '%s-%s/' % (self.slug, self.lang)
-
-        # change the save_as regarding the settings
-        if settings.get('CLEAN_URLS', False):
-            self.url = clean_url
-        elif hasattr(self, 'save_as'):
-            self.url = self.save_as
 
         if filename:
             self.filename = filename
@@ -116,6 +94,30 @@ class Page(object):
                 raise NameError(prop)
 
     @property
+    def url_format(self):
+        return {
+            'slug': getattr(self, 'slug', ''),
+            'lang': getattr(self, 'lang', 'en'),
+            'date': getattr(self, 'date', datetime.datetime.now()),
+            'author': self.author,
+            'category': getattr(self, 'category', 'misc'),
+        }
+
+    @property
+    def url(self):
+        if self.in_default_lang:
+            return self.settings.get('PAGE_URL', u'pages/{slug}.html').format(**self.url_format)
+
+        return self.settings.get('PAGE_LANG_URL', u'pages/{slug}-{lang}.html').format(**self.url_format)
+
+    @property
+    def save_as(self):
+        if self.in_default_lang:
+            return self.settings.get('PAGE_SAVE_AS', u'pages/{slug}.html').format(**self.url_format)
+
+        return self.settings.get('PAGE_LANG_SAVE_AS', u'pages/{slug}-{lang}.html').format(**self.url_format)
+
+    @property
     def content(self):
         if hasattr(self, "_get_content"):
             content = self._get_content()
@@ -138,10 +140,74 @@ class Page(object):
 class Article(Page):
     mandatory_properties = ('title', 'date', 'category')
 
+    @property
+    def url(self):
+        if self.in_default_lang:
+            return self.settings.get('ARTICLE_URL', u'{slug}.html').format(**self.url_format)
+
+        return self.settings.get('ARTICLE_LANG_URL', u'{slug}-{lang}.html').format(**self.url_format)
+
+    @property
+    def save_as(self):
+        if self.in_default_lang:
+            return self.settings.get('ARTICLE_SAVE_AS', u'{slug}.html').format(**self.url_format)
+
+        return self.settings.get('ARTICLE_LANG_SAVE_AS', u'{slug}-{lang}.html').format(**self.url_format)
+
 
 class Quote(Page):
     base_properties = ('author', 'date')
 
+class URLWrapper(object):
+    def __init__(self, name, settings):
+        self.name = unicode(name)
+        self.settings = settings
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        return self.name == unicode(other)
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def url(self):
+        return '%s.html' % self.name
+
+class Category(URLWrapper):
+    @property
+    def url(self):
+        return self.settings.get('CATEGORY_URL', u'category/{name}.html').format(name=self.name)
+
+    @property
+    def save_as(self):
+        return self.settings.get('CATEGORY_SAVE_AS', u'category/{name}.html').format(name=self.name)
+
+class Tag(URLWrapper):
+    def __init__(self, name, *args, **kwargs):
+        super(Tag, self).__init__(unicode.strip(name), *args, **kwargs)
+
+    @property
+    def url(self):
+        return self.settings.get('TAG_URL', u'tag/{name}.html').format(name=self.name)
+
+    @property
+    def save_as(self):
+        return self.settings.get('TAG_SAVE_AS', u'tag/{name}.html').format(name=self.name)
+
+class Author(URLWrapper):
+    @property
+    def url(self):
+        return self.settings.get('AUTHOR_URL', u'author/{name}.html').format(name=self.name)
+
+    @property
+    def save_as(self):
+        return self.settings.get('AUTHOR_SAVE_AS', u'author/{name}.html').format(name=self.name)
 
 def is_valid_content(content, f):
     try:
