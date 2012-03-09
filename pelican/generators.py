@@ -375,7 +375,8 @@ class PdfGenerator(Generator):
             filename = obj.slug + ".pdf"
             output_pdf=os.path.join(output_path, filename)
             # print "Generating pdf for", obj.filename, " in ", output_pdf
-            self.pdfcreator.createPdf(text=open(obj.filename), output=output_pdf)
+            with open(obj.filename) as f:
+                self.pdfcreator.createPdf(text=f, output=output_pdf)
             info(u' [ok] writing %s' % output_pdf)
 
     def generate_context(self):

@@ -121,19 +121,19 @@ class HtmlReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of (x)HTML files"""
-        content = open(filename)
-        metadata = {'title':'unnamed'}
-        for i in self._re.findall(content):
-            key = i.split(':')[0][5:].strip()
-            value = i.split(':')[-1][:-3].strip()
-            name = key.lower()
-            metadata[name] = self.process_metadata(name, value)
+        with open(filename) as content:
+            metadata = {'title': 'unnamed'}
+            for i in self._re.findall(content):
+                key = i.split(':')[0][5:].strip()
+                value = i.split(':')[-1][:-3].strip()
+                name = key.lower()
+                metadata[name] = self.process_metadata(name, value)
 
-        return content, metadata
-
+            return content, metadata
 
 
 _EXTENSIONS = dict((cls.extension, cls) for cls in Reader.__subclasses__())
+
 
 def read_file(filename, fmt=None, settings=None):
     """Return a reader object using the given format."""
