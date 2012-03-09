@@ -6,26 +6,27 @@ try:
     from docutils.writers.html4css1 import HTMLTranslator
 
     # import the directives to have pygments support
-    from pelican import rstdirectives
+    from pelican import rstdirectives  # NOQA
 except ImportError:
     core = False
 try:
     from markdown import Markdown
 except ImportError:
-    Markdown = False
+    Markdown = False  # NOQA
 import re
 
-from pelican.contents import Category, Tag, Author, URLWrapper
+from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, open
 
 
 _METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
     'date': lambda x, y: get_date(x),
-    'status': lambda x,y: unicode.strip(x),
+    'status': lambda x, y: unicode.strip(x),
     'category': Category,
     'author': Author,
 }
+
 
 class Reader(object):
     enabled = True
@@ -38,6 +39,7 @@ class Reader(object):
         if name.lower() in _METADATA_PROCESSORS:
             return _METADATA_PROCESSORS[name.lower()](value, self.settings)
         return value
+
 
 class _FieldBodyTranslator(HTMLTranslator):
 
@@ -56,6 +58,7 @@ def render_node_to_html(document, node):
     node.walkabout(visitor)
     return visitor.astext()
 
+
 class RstReader(Reader):
     enabled = bool(docutils)
     extension = "rst"
@@ -65,11 +68,11 @@ class RstReader(Reader):
         output = {}
         for docinfo in document.traverse(docutils.nodes.docinfo):
             for element in docinfo.children:
-                if element.tagname == 'field': # custom fields (e.g. summary)
+                if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
                     value = render_node_to_html(document, body_elem)
-                else: # standard fields (e.g. address)
+                else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()
 
@@ -78,7 +81,8 @@ class RstReader(Reader):
 
     def _get_publisher(self, filename):
         extra_params = {'initial_header_level': '2'}
-        pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
+        pub = docutils.core.Publisher(
+                destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=filename)

@@ -1,5 +1,6 @@
 import argparse
-import os, sys
+import os
+import sys
 import re
 import time
 
@@ -69,7 +70,8 @@ class Pelican(object):
         output_path = output_path or settings['OUTPUT_PATH']
         self.output_path = os.path.realpath(output_path)
         self.markup = markup or settings['MARKUP']
-        self.delete_outputdir = delete_outputdir or settings['DELETE_OUTPUT_DIRECTORY']
+        self.delete_outputdir = delete_outputdir \
+                                    or settings['DELETE_OUTPUT_DIRECTORY']
 
         # find the theme in pelican.theme if the given one does not exists
         if not os.path.exists(self.theme):
@@ -112,7 +114,6 @@ class Pelican(object):
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
 
-
     def get_generator_classes(self):
         generators = [ArticlesGenerator, PagesGenerator, StaticGenerator]
         if self.settings['PDF_GENERATOR']:
@@ -121,7 +122,6 @@ class Pelican(object):
 
     def get_writer(self):
         return Writer(self.output_path, settings=self.settings)
-
 
 
 def main():
@@ -134,32 +134,38 @@ def main():
         help='Path where to find the theme templates. If not specified, it'
              'will use the default one included with pelican.')
     parser.add_argument('-o', '--output', dest='output',
-        help='Where to output the generated files. If not specified, a directory'
-             ' will be created, named "output" in the current path.')
+        help='Where to output the generated files. If not specified, a '
+             'directory will be created, named "output" in the current path.')
     parser.add_argument('-m', '--markup', default=None, dest='markup',
         help='the list of markup language to use (rst or md). Please indicate '
              'them separated by commas')
     parser.add_argument('-s', '--settings', dest='settings', default='',
         help='the settings of the application. Default to False.')
-    parser.add_argument('-d', '--delete-output-directory', dest='delete_outputdir',
+    parser.add_argument('-d', '--delete-output-directory',
+                        dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')
-    parser.add_argument('-v', '--verbose', action='store_const', const=log.INFO, dest='verbosity',
-            help='Show all messages')
-    parser.add_argument('-q', '--quiet', action='store_const', const=log.CRITICAL, dest='verbosity',
-            help='Show only critical errors')
-    parser.add_argument('-D', '--debug', action='store_const', const=log.DEBUG, dest='verbosity',
-            help='Show all message, including debug messages')
+    parser.add_argument('-v', '--verbose', action='store_const',
+                        const=log.INFO, dest='verbosity',
+                        help='Show all messages')
+    parser.add_argument('-q', '--quiet', action='store_const',
+                        const=log.CRITICAL, dest='verbosity',
+                        help='Show only critical errors')
+    parser.add_argument('-D', '--debug', action='store_const',
+                        const=log.DEBUG, dest='verbosity',
+                        help='Show all message, including debug messages')
     parser.add_argument('--version', action='version', version=__version__,
             help='Print the pelican version and exit')
-    parser.add_argument('-r', '--autoreload', dest='autoreload', action='store_true',
-            help="Relaunch pelican each time a modification occurs on the content"
-                 "files")
+    parser.add_argument('-r', '--autoreload', dest='autoreload',
+                        action='store_true',
+                        help="Relaunch pelican each time a modification occurs"
+                             " on the content files")
     args = parser.parse_args()
 
     log.init(args.verbosity)
-    # Split the markup languages only if some have been given. Otherwise, populate
-    # the variable with None.
-    markup = [a.strip().lower() for a in args.markup.split(',')] if args.markup else None
+    # Split the markup languages only if some have been given. Otherwise,
+    # populate the variable with None.
+    markup = [a.strip().lower() for a in args.markup.split(',')]\
+              if args.markup else None
 
     settings = read_settings(args.settings)
 

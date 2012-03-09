@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-import datetime
+from datetime import datetime
 from os import getenv
 from sys import platform, stdin
 import locale
 
-from pelican.log import *
+from pelican.log import warning, error
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import slugify, truncate_html_words
+
 
 class Page(object):
     """Represents a page
@@ -41,7 +42,8 @@ class Page(object):
                 self.author = Author(settings['AUTHOR'], settings)
             else:
                 self.author = Author(getenv('USER', 'John Doe'), settings)
-                warning(u"Author of `{0}' unknow, assuming that his name is `{1}'".format(filename or self.title, self.author))
+                warning(u"Author of `{0}' unknow, assuming that his name is "
+                         "`{1}'".format(filename or self.title, self.author))
 
         # manage languages
         self.in_default_lang = True
@@ -71,16 +73,19 @@ class Page(object):
             self.date_format = self.date_format[1]
 
         if hasattr(self, 'date'):
+            encoded_date = self.date.strftime(
+                    self.date_format.encode('ascii', 'xmlcharrefreplace'))
+
             if platform == 'win32':
-                self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode(stdin.encoding)
+                self.locale_date = encoded_date.decode(stdin.encoding)
             else:
-                self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
+                self.locale_date = encoded_date.decode('utf')
 
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
             if not settings['WITH_FUTURE_DATES']:
-                if hasattr(self, 'date') and self.date > datetime.datetime.now():
+                if hasattr(self, 'date') and self.date > datetime.now():
                     self.status = 'draft'
 
         # set summary
@@ -98,7 +103,7 @@ class Page(object):
         return {
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
-            'date': getattr(self, 'date', datetime.datetime.now()),
+            'date': getattr(self, 'date', datetime.now()),
             'author': self.author,
             'category': getattr(self, 'category', 'misc'),
         }
@@ -133,8 +138,8 @@ class Page(object):
         """Dummy function"""
         pass
 
-    summary = property(_get_summary, _set_summary,
-                       "Summary of the article. Based on the content. Can't be set")
+    summary = property(_get_summary, _set_summary, "Summary of the article."
+                       "Based on the content. Can't be set")
 
 
 class Article(Page):
@@ -214,5 +219,6 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError, e:
-        error(u"Skipping %s: impossible to find informations about '%s'" % (f, e))
+        error(u"Skipping %s: impossible to find informations about '%s'"\
+                % (f, e))
         return False

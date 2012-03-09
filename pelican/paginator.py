@@ -1,6 +1,7 @@
 # From django.core.paginator
 from math import ceil
 
+
 class Paginator(object):
     def __init__(self, object_list, per_page, orphans=0):
         self.object_list = object_list
@@ -38,6 +39,7 @@ class Paginator(object):
         """
         return range(1, self.num_pages + 1)
     page_range = property(_get_page_range)
+
 
 class Page(object):
     def __init__(self, object_list, number, paginator):
@@ -82,4 +84,3 @@ class Page(object):
         if self.number == self.paginator.num_pages:
             return self.paginator.count
         return self.number * self.paginator.per_page
-
