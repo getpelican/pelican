@@ -1,5 +1,6 @@
 import argparse
 import os, sys
+import re
 import time
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
@@ -25,6 +26,42 @@ class Pelican(object):
 
         if self.path.endswith('/'):
             self.path = self.path[:-1]
+
+        if settings.get('CLEAN_URLS', False):
+            log.warning('Found deprecated `CLEAN_URLS` in settings. Modifing'
+                        ' the following settings for the same behaviour.')
+
+            settings['ARTICLE_URL'] = '{slug}/'
+            settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
+            settings['PAGE_URL'] = 'pages/{slug}/'
+            settings['PAGE_LANG_URL'] = 'pages/{slug}-{lang}/'
+
+            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                            'PAGE_LANG_URL'):
+                log.warning("%s = '%s'" % (setting, settings[setting]))
+
+        if settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
+            log.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
+                        ' settings.  Modifing the following settings for'
+                        ' the same behaviour.')
+
+            structure = settings['ARTICLE_PERMALINK_STRUCTURE']
+
+            # Convert %(variable) into {variable}.
+            structure = re.sub('%\((\w+)\)s', '{\g<1>}', structure)
+
+            # Convert %x into {date:%x} for strftime
+            structure = re.sub('(%[A-z])', '{date:\g<1>}', structure)
+
+            # Strip a / prefix
+            structure = re.sub('^/', '', structure)
+
+            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                            'PAGE_LANG_URL', 'ARTICLE_SAVE_AS',
+                            'ARTICLE_LANG_SAVE_AS', 'PAGE_SAVE_AS',
+                            'PAGE_LANG_SAVE_AS'):
+                settings[setting] = os.path.join(structure, settings[setting])
+                log.warning("%s = '%s'" % (setting, settings[setting]))
 
         # define the default settings
         self.settings = settings

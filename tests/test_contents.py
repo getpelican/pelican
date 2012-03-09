@@ -60,12 +60,12 @@ class TestPage(TestCase):
         """
         # if a title is defined, save_as should be set
         page = Page(**self.page_kwargs)
-        page.save_as = 'foo-bar.html'
+        self.assertEqual(page.save_as, "pages/foo-bar.html")
 
         # if a language is defined, save_as should include it accordingly
         self.page_kwargs['metadata'].update({'lang': 'fr', })
         page = Page(**self.page_kwargs)
-        self.assertEqual(page.save_as, "foo-bar-fr.html")
+        self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
 
     def test_datetime(self):
         """If DATETIME is set to a tuple, it should be used to override LOCALE

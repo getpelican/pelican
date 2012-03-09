@@ -19,7 +19,7 @@ def _filename(*args):
 class RstReaderTest(unittest2.TestCase):
 
     def test_article_with_metadata(self):
-        reader = readers.RstReader()
+        reader = readers.RstReader({})
         content, metadata = reader.read(_filename('article_with_metadata.rst'))
         expected = {
             'category': 'yeah',

@@ -13,7 +13,7 @@ from operator import attrgetter, itemgetter
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.contents import Article, Page, is_valid_content
+from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.log import *
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, open
@@ -179,26 +179,26 @@ class ArticlesGenerator(Generator):
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
-            write('tag/%s.html' % tag, tag_template, self.context, tag=tag,
+            write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name='tag/%s' % tag)
+                page_name=u'tag/%s' % tag)
 
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            write('category/%s.html' % cat, category_template, self.context,
+            write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name='category/%s' % cat)
+                page_name=u'category/%s' % cat)
 
         author_template = self.get_template('author')
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
-            write('author/%s.html' % aut, author_template, self.context,
+            write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name='author/%s' % aut)
+                page_name=u'author/%s' % aut)
 
         for article in self.drafts:
             write('drafts/%s.html' % article.slug, article_template, self.context,
@@ -212,7 +212,6 @@ class ArticlesGenerator(Generator):
         files = self.get_files(self.path, exclude=['pages',])
         all_articles = []
         for f in files:
-            
             try:
                 content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
@@ -228,7 +227,7 @@ class ArticlesGenerator(Generator):
                     category = os.path.basename(os.path.dirname(f)).decode('utf-8')
 
                 if category != '':
-                    metadata['category'] = unicode(category)
+                    metadata['category'] = Category(category, self.settings)
 
             if 'date' not in metadata.keys()\
                 and self.settings['FALLBACK_ON_FS_DATE']:
@@ -238,21 +237,6 @@ class ArticlesGenerator(Generator):
                               filename=f)
             if not is_valid_content(article, f):
                 continue
-
-            add_to_url = u''
-            if 'ARTICLE_PERMALINK_STRUCTURE' in self.settings:
-                article_permalink_structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
-                article_permalink_structure = article_permalink_structure.lstrip('/').replace('%(', "%%(")
-
-                # try to substitute any python datetime directive
-                add_to_url = article.date.strftime(article_permalink_structure)
-                # try to substitute any article metadata in rest file
-                add_to_url = add_to_url % article.__dict__
-                add_to_url = [slugify(i) for i in add_to_url.split('/')]
-                add_to_url = os.path.join(*add_to_url)
-
-            article.url = urlparse.urljoin(add_to_url, article.url)
-            article.save_as = urlparse.urljoin(add_to_url, article.save_as)
 
             if article.status == "published":
                 if hasattr(article, 'tags'):
@@ -348,7 +332,7 @@ class PagesGenerator(Generator):
 
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages):
-            writer.write_file('pages/%s' % page.save_as, self.get_template('page'),
+            writer.write_file(page.save_as, self.get_template('page'),
                     self.context, page=page,
                     relative_urls = self.settings.get('RELATIVE_URLS'))
 
