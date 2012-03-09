@@ -1,3 +1,9 @@
+X.X
+
+* Refactored the way URL are handled.
+* Improved the english documentation
+* Fixed packaging using setuptools entrypoints
+
 2.8
 
 * dotclear importer
