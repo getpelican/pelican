@@ -8,7 +8,7 @@ import re
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from pelican.paginator import Paginator
-from pelican.log import *
+from pelican.log import info
 from pelican.utils import get_relative_path, set_date_tzinfo
 
 
@@ -28,7 +28,6 @@ class Writer(object):
             description=context.get('SITESUBTITLE', ''))
         return feed
 
-
     def _add_item_to_the_feed(self, feed, item):
 
         feed.add_item(
@@ -44,8 +43,8 @@ class Writer(object):
     def write_feed(self, elements, context, filename=None, feed_type='atom'):
         """Generate a feed with the list of articles provided
 
-        Return the feed. If no output_path or filename is specified, just return
-        the feed object.
+        Return the feed. If no output_path or filename is specified, just
+        return the feed object.
 
         :param elements: the articles to put on the feed.
         :param context: the context to get the feed metadata.
@@ -56,7 +55,7 @@ class Writer(object):
         locale.setlocale(locale.LC_ALL, 'C')
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
-            self.feed_url= '%s/%s' % (self.site_url, filename)
+            self.feed_url = '%s/%s' % (self.site_url, filename)
 
             feed = self._create_new_feed(feed_type, context)
 
@@ -132,7 +131,7 @@ class Writer(object):
                         self.settings.get('DEFAULT_PAGINATION'),
                         self.settings.get('DEFAULT_ORPHANS'))
                 else:
-                    paginators[key] = Paginator(object_list, len(object_list), 0)
+                    paginators[key] = Paginator(object_list, len(object_list))
 
             # generated pages, and write
             for page_num in range(paginators.values()[0].num_pages):
@@ -140,9 +139,10 @@ class Writer(object):
                 paginated_name = name
                 for key in paginators.iterkeys():
                     paginator = paginators[key]
-                    page = paginator.page(page_num+1)
-                    paginated_localcontext.update({'%s_paginator' % key: paginator,
-                        '%s_page' % key: page})
+                    page = paginator.page(page_num + 1)
+                    paginated_localcontext.update(
+                            {'%s_paginator' % key: paginator,
+                             '%s_page' % key: page})
                 if page_num > 0:
                     ext = '.' + paginated_name.rsplit('.')[-1]
                     paginated_name = paginated_name.replace(ext,
@@ -160,8 +160,8 @@ class Writer(object):
         relative paths.
 
         :param name: name of the file to output.
-        :param context: dict that will be passed to the templates, which need to
-            be updated.
+        :param context: dict that will be passed to the templates, which need
+                        to be updated.
         """
         def _update_content(name, input):
             """Change all the relatives paths of the input content to relatives
@@ -184,9 +184,12 @@ class Writer(object):
 
             def replacer(m):
                 relative_path = m.group('path')
-                dest_path = os.path.normpath( os.sep.join( (get_relative_path(name),
-                    "static", relative_path) ) )
-                return m.group('markup') + m.group('quote') + dest_path + m.group('quote')
+                dest_path = os.path.normpath(
+                                os.sep.join((get_relative_path(name), "static",
+                                relative_path)))
+
+                return m.group('markup') + m.group('quote') + dest_path \
+                        + m.group('quote')
 
             return hrefs.sub(replacer, content)
 

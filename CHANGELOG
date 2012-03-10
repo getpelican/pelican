@@ -1,9 +1,27 @@
-3.0
+X.X
+
+* Refactored the way URL are handled.
+* Improved the english documentation
+* Fixed packaging using setuptools entrypoints
+
+2.8
 
 * dotclear importer
-* Markdown extensions
-* Theme extensions
-* Plugins support
+* Allow the usage of markdown extensions
+* Themes are now easily extensible
+* Don't output pagination information if there is only one page.
+* Add a page per author, with all their articles
+* Improved the test suite
+* Made the themes more easy to extend
+* Removed Skribit support
+* Added a "pelican-quickstart" script
+* Fixed timezone-related issues
+* Add some scripts for windows support
+* Date can be specified in seconds
+* Never fail when generating posts (skip and continue)
+* Allow the use of future dates
+* Support having different timezones per languages.
+* Enhanced the documentation
 
 2.7
 

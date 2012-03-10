@@ -17,7 +17,7 @@
         {% endfor %}
         {% if DISPLAY_PAGES_ON_MENU %}
           {% for p in PAGES %}
-            <li{% if p == page %} class="active"{% endif %}><a href="{{ SITEURL }}/pages/{{ p.url }}">{{ p.title }}</a></li>
+            <li{% if p == page %} class="active"{% endif %}><a href="{{ SITEURL }}/{{ p.url }}">{{ p.title }}</a></li>
           {% endfor %}
         {% else %}
           {% for cat, null in categories %}
@@ -29,8 +29,8 @@
         {% endblock %}
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://docs.notmyidea.org/alexis/pelican/">pelican</a>,
-                and obviously <a href="http://python.org">python</a>!
+                Proudly powered by <a href="http://pelican.notmyidea.org/">Pelican</a>,
+                which takes great advantage of <a href="http://python.org">Python</a>.
                 </address><!-- /#about -->
         </footer><!-- /#contentinfo -->
 </body>

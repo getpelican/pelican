@@ -71,7 +71,7 @@ def dc2fields(file):
                 else:
                     posts.append(line)
 
-    print "%i posts read." % len(posts)
+    print("%i posts read." % len(posts))
 
     for post in posts:
         fields = post.split('","')
@@ -205,7 +205,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
         else:
             out_filename = os.path.join(output_path, filename+ext)
 
-        print out_filename
+        print(out_filename)
 
         if in_markup == "html":
             html_filename = os.path.join(output_path, filename+'.html')
@@ -231,18 +231,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
             fs.write(header + content)
 
 
-def main(input_type, input, out_markup, output_path, dircat=False):
-    if input_type == 'wordpress':
-        fields = wp2fields(input)
-    elif input_type == 'dotclear':
-        fields = dc2fields(input)
-    elif input_type == 'feed':
-        fields = feed2fields(input)
-
-    fields2pelican(fields, out_markup, output_path, dircat=dircat)
-
-
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
         description="Transform feed, Wordpress or Dotclear files to rst files."
             "Be sure to have pandoc installed")
@@ -270,7 +259,7 @@ if __name__ == '__main__':
     elif args.feed:
         input_type = 'feed'
     else:
-        print "you must provide either --wpfile, --dotclear or --feed options"
+        print("you must provide either --wpfile, --dotclear or --feed options")
         exit()
 
     if not os.path.exists(args.output):
@@ -280,4 +269,14 @@ if __name__ == '__main__':
             error("Couldn't create the output folder: " + args.output)
             exit()
 
-    main(input_type, args.input, args.markup, args.output, dircat=args.dircat)
+    # TODO: refactor this long assignment
+    input_type, input, out_markup, output_path, dircat=False = input_type, args.input, args.markup, args.output, args.dircat
+
+    if input_type == 'wordpress':
+        fields = wp2fields(input)
+    elif input_type == 'dotclear':
+        fields = dc2fields(input)
+    elif input_type == 'feed':
+        fields = feed2fields(input)
+
+    fields2pelican(fields, out_markup, output_path, dircat=dircat)

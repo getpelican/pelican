@@ -19,7 +19,7 @@ def get_date(string):
     string = re.sub(' +', ' ', string)
     formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M',
                '%Y-%m-%d', '%Y/%m/%d',
-               '%d-%m-%Y', '%Y-%d-%m', # Weird ones
+               '%d-%m-%Y', '%Y-%d-%m',  # Weird ones
                '%d/%m/%Y', '%d.%m.%Y',
                '%d.%m.%Y %H:%M', '%Y-%m-%d %H:%M:%S']
     for date_format in formats:
@@ -48,6 +48,7 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
+
 def copy(path, source, destination, destination_path=None, overwrite=False):
     """Copy path from origin to destination.
 
@@ -57,8 +58,8 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     :param source: the source dir
     :param destination: the destination dir
     :param destination_path: the destination path (optional)
-    :param overwrite: wether to overwrite the destination if already exists or not
-
+    :param overwrite: wether to overwrite the destination if already exists or
+                      not
     """
     if not destination_path:
         destination_path = path
@@ -109,7 +110,8 @@ def truncate_html_words(s, num, end_text='...'):
     length = int(num)
     if length <= 0:
         return u''
-    html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area', 'hr', 'input')
+    html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
+                      'hr', 'input')
 
     # Set up regular expressions
     re_words = re.compile(r'&.*?;|<.*?>|(\w[\w-]*)', re.U)
@@ -147,8 +149,9 @@ def truncate_html_words(s, num, end_text='...'):
             except ValueError:
                 pass
             else:
-                # SGML: An end tag closes, back to the matching start tag, all unclosed intervening start tags with omitted end tags
-                open_tags = open_tags[i+1:]
+                # SGML: An end tag closes, back to the matching start tag,
+                # all unclosed intervening start tags with omitted end tags
+                open_tags = open_tags[i + 1:]
         else:
             # Add it to the start of the open tags list
             open_tags.insert(0, tagname)
@@ -195,7 +198,7 @@ def process_translations(content_list):
             default_lang_items = items[:1]
 
         if not slug:
-            warning('empty slug for %r' %( default_lang_items[0].filename,))
+            warning('empty slug for %r' % (default_lang_items[0].filename,))
         index.extend(default_lang_items)
         translations.extend(filter(
             lambda x: x not in default_lang_items,
@@ -233,7 +236,8 @@ def files_changed(path, extensions):
 
 def set_date_tzinfo(d, tz_name=None):
     """ Date without tzinfo shoudbe utc.
-    This function set the right tz to date that aren't utc and don't have tzinfo
+    This function set the right tz to date that aren't utc and don't have
+    tzinfo.
     """
     if tz_name is not None:
         tz = pytz.timezone(tz_name)

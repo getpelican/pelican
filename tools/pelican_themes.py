@@ -212,6 +212,3 @@ def clean(v=False):
                     c+=1
 
     print("\nRemoved {0} broken links".format(c))
-
-if __name__ == '__main__':
-    main()

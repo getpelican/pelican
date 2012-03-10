@@ -2,3 +2,4 @@ include *.rst
 global-include *.py
 recursive-include pelican *.html *.css *png
 include LICENSE
+global-include *.bat

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 try:
-    from unittest2 import TestCase
+    from unittest2 import TestCase, skip
 except ImportError, e:
-    from unittest import TestCase
+    from unittest import TestCase, skip
 
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
@@ -60,12 +60,12 @@ class TestPage(TestCase):
         """
         # if a title is defined, save_as should be set
         page = Page(**self.page_kwargs)
-        page.save_as = 'foo-bar.html'
+        self.assertEqual(page.save_as, "pages/foo-bar.html")
 
         # if a language is defined, save_as should include it accordingly
         self.page_kwargs['metadata'].update({'lang': 'fr', })
         page = Page(**self.page_kwargs)
-        self.assertEqual(page.save_as, "foo-bar-fr.html")
+        self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
 
     def test_datetime(self):
         """If DATETIME is set to a tuple, it should be used to override LOCALE
@@ -82,7 +82,8 @@ class TestPage(TestCase):
         page_kwargs['metadata']['date'] = dt
         page = Page( **page_kwargs)
 
-        self.assertEqual(page.locale_date, dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
+        self.assertEqual(page.locale_date,
+            unicode(dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']), 'utf-8'))
 
 
         page_kwargs['settings'] = {x:_DEFAULT_CONFIG[x] for x in _DEFAULT_CONFIG}
@@ -93,6 +94,18 @@ class TestPage(TestCase):
             locale = 'ja_JP.utf8'
         page_kwargs['settings']['DATE_FORMATS'] = {'jp':(locale,'%Y-%m-%d(%a)')}
         page_kwargs['metadata']['lang'] = 'jp'
-        page = Page( **page_kwargs)
-        self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
-        # above is unicode in Japanese: 2015-09-13(“ú)
+
+        import locale as locale_module
+        try:
+            page = Page( **page_kwargs)
+            self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
+            # above is unicode in Japanese: 2015-09-13(“ú)
+        except locale_module.Error:
+            # The constructor of ``Page`` will try to set the locale to
+            # ``ja_JP.utf8``. But this attempt will failed when there is no
+            # such locale in the system. You can see which locales there are
+            # in your system with ``locale -a`` command.
+            #
+            # Until we find some other method to test this functionality, we
+            # will simply skip this test.
+            skip("There is no locale %s in this system." % locale)

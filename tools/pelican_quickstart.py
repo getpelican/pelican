@@ -40,7 +40,7 @@ html: clean $$(OUTPUTDIR)/index.html
 \t@echo 'Done'
 
 $$(OUTPUTDIR)/%.html:
-\t$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE)
+\t$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 
 clean:
 \trm -fr $$(OUTPUTDIR)
@@ -94,7 +94,7 @@ DEFAULT_PAGINATION = $default_pagination
 
 CONF = {
     'pelican' : 'pelican',
-    'pelicanopts' : None,
+    'pelicanopts' : '',
     'basedir': '.',
     'ftp_host': 'localhost',
     'ftp_user': 'anonymous',
@@ -103,7 +103,7 @@ CONF = {
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
     'dropbox_dir' : '~/Dropbox/Public/',
-    'default_pagination' : 7,
+    'default_pagination' : 10,
     'lang': 'en'
 }
 
@@ -270,6 +270,3 @@ Please answer the following questions so this script can generate the files need
             print('Error: {0}'.format(e))
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
-
-if __name__ == '__main__':
-    main()

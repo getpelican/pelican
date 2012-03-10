@@ -6,33 +6,40 @@ try:
     from docutils.writers.html4css1 import HTMLTranslator
 
     # import the directives to have pygments support
-    from pelican import rstdirectives
+    from pelican import rstdirectives  # NOQA
 except ImportError:
     core = False
 try:
     from markdown import Markdown
 except ImportError:
-    Markdown = False
+    Markdown = False  # NOQA
 import re
 
+from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, open
 
 
 _METADATA_PROCESSORS = {
-    'tags': lambda x: map(unicode.strip, unicode(x).split(',')),
-    'date': lambda x: get_date(x),
-    'status': unicode.strip,
+    'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
+    'date': lambda x, y: get_date(x),
+    'status': lambda x, y: unicode.strip(x),
+    'category': Category,
+    'author': Author,
 }
-
-def _process_metadata(name, value):
-    if name.lower() in _METADATA_PROCESSORS:
-        return _METADATA_PROCESSORS[name.lower()](value)
-    return value
 
 
 class Reader(object):
     enabled = True
     extensions = None
+
+    def __init__(self, settings):
+        self.settings = settings
+
+    def process_metadata(self, name, value):
+        if name.lower() in _METADATA_PROCESSORS:
+            return _METADATA_PROCESSORS[name.lower()](value, self.settings)
+        return value
+
 
 class _FieldBodyTranslator(HTMLTranslator):
 
@@ -51,33 +58,31 @@ def render_node_to_html(document, node):
     node.walkabout(visitor)
     return visitor.astext()
 
-def get_metadata(document):
-    """Return the dict containing document metadata"""
-    output = {}
-    for docinfo in document.traverse(docutils.nodes.docinfo):
-        for element in docinfo.children:
-            if element.tagname == 'field': # custom fields (e.g. summary)
-                name_elem, body_elem = element.children
-                name = name_elem.astext()
-                value = render_node_to_html(document, body_elem)
-            else: # standard fields (e.g. address)
-                name = element.tagname
-                value = element.astext()
-
-            output[name] = _process_metadata(name, value)
-    return output
-
 
 class RstReader(Reader):
     enabled = bool(docutils)
     extension = "rst"
 
     def _parse_metadata(self, document):
-        return get_metadata(document)
+        """Return the dict containing document metadata"""
+        output = {}
+        for docinfo in document.traverse(docutils.nodes.docinfo):
+            for element in docinfo.children:
+                if element.tagname == 'field':  # custom fields (e.g. summary)
+                    name_elem, body_elem = element.children
+                    name = name_elem.astext()
+                    value = render_node_to_html(document, body_elem)
+                else:  # standard fields (e.g. address)
+                    name = element.tagname
+                    value = element.astext()
+
+                output[name] = self.process_metadata(name, value)
+        return output
 
     def _get_publisher(self, filename):
         extra_params = {'initial_header_level': '2'}
-        pub = docutils.core.Publisher(destination_class=docutils.io.StringOutput)
+        pub = docutils.core.Publisher(
+                destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=filename)
@@ -110,7 +115,7 @@ class MarkdownReader(Reader):
         metadata = {}
         for name, value in md.Meta.items():
             name = name.lower()
-            metadata[name] = _process_metadata(name, value[0])
+            metadata[name] = self.process_metadata(name, value[0])
         return content, metadata
 
 
@@ -120,19 +125,19 @@ class HtmlReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of (x)HTML files"""
-        content = open(filename)
-        metadata = {'title':'unnamed'}
-        for i in self._re.findall(content):
-            key = i.split(':')[0][5:].strip()
-            value = i.split(':')[-1][:-3].strip()
-            name = key.lower()
-            metadata[name] = _process_metadata(name, value)
+        with open(filename) as content:
+            metadata = {'title': 'unnamed'}
+            for i in self._re.findall(content):
+                key = i.split(':')[0][5:].strip()
+                value = i.split(':')[-1][:-3].strip()
+                name = key.lower()
+                metadata[name] = self.process_metadata(name, value)
 
-        return content, metadata
-
+            return content, metadata
 
 
 _EXTENSIONS = dict((cls.extension, cls) for cls in Reader.__subclasses__())
+
 
 def read_file(filename, fmt=None, settings=None):
     """Return a reader object using the given format."""
@@ -140,7 +145,7 @@ def read_file(filename, fmt=None, settings=None):
         fmt = filename.split('.')[-1]
     if fmt not in _EXTENSIONS.keys():
         raise TypeError('Pelican does not know how to parse %s' % filename)
-    reader = _EXTENSIONS[fmt]()
+    reader = _EXTENSIONS[fmt](settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()
     if settings and settings_key in settings:
         reader.extensions = settings[settings_key]

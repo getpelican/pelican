@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from os.path import isabs
 import locale
 
 from pelican import log
@@ -10,8 +11,8 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'THEME': DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': ('rst', 'md'),
-                   'STATIC_PATHS': ['images',],
-                   'THEME_STATIC_PATHS': ['static',],
+                   'STATIC_PATHS': ['images', ],
+                   'THEME_STATIC_PATHS': ['static', ],
                    'FEED': 'feeds/all.atom.xml',
                    'CATEGORY_FEED': 'feeds/%s.atom.xml',
                    'TRANSLATION_FEED': 'feeds/all-%s.atom.xml',
@@ -26,7 +27,20 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'REVERSE_ARCHIVE_ORDER': False,
                    'REVERSE_CATEGORY_ORDER': False,
                    'DELETE_OUTPUT_DIRECTORY': False,
-                   'CLEAN_URLS': False, # use /blah/ instead /blah.html in urls
+                   'ARTICLE_URL': '{slug}.html',
+                   'ARTICLE_SAVE_AS': '{slug}.html',
+                   'ARTICLE_LANG_URL': '{slug}-{lang}.html',
+                   'ARTICLE_LANG_SAVE_AS': '{slug}-{lang}.html',
+                   'PAGE_URL': 'pages/{slug}.html',
+                   'PAGE_SAVE_AS': 'pages/{slug}.html',
+                   'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
+                   'PAGE_LANG_SAVE_AS': 'pages/{slug}-{lang}.html',
+                   'CATEGORY_URL': 'category/{name}.html',
+                   'CATEGORY_SAVE_AS': 'category/{name}.html',
+                   'TAG_URL': 'tag/{name}.html',
+                   'TAG_SAVE_AS': 'tag/{name}.html',
+                   'AUTHOR_URL': u'author/{name}.html',
+                   'AUTHOR_SAVE_AS': u'author/{name}.html',
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
@@ -37,7 +51,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
                    'DATE_FORMATS': {},
                    'JINJA_EXTENSIONS': [],
-                   'LOCALE': '', # default to user locale
+                   'LOCALE': '',  # default to user locale
                    'DEFAULT_PAGINATION': False,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
@@ -45,6 +59,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': ''
                    }
+
 
 def read_settings(filename):
     """Load a Python file into a dictionary.
@@ -60,9 +75,10 @@ def read_settings(filename):
         # Make the paths relative to the settings file
         for path in ['PATH', 'OUTPUT_PATH']:
             if path in context:
-                if context[path] is not None and not os.path.isabs(context[path]):
-                    # FIXME:
-                    context[path] = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(filename), context[path])))
+                if context[path] is not None and not isabs(context[path]):
+                    context[path] = os.path.abspath(os.path.normpath(
+                        os.path.join(os.path.dirname(filename), context[path]))
+                    )
 
     # if locales is not a list, make it one
     locales = context['LOCALE']
@@ -77,17 +93,17 @@ def read_settings(filename):
     for locale_ in locales:
         try:
             locale.setlocale(locale.LC_ALL, locale_)
-            break # break if it is successfull
+            break  # break if it is successfull
         except locale.Error:
             pass
     else:
         log.warn("LOCALE option doesn't contain a correct value")
 
     if not 'TIMEZONE' in context:
-        log.warn("No timezone information specified in the settings. Assuming your "\
-                "timezone is UTC for feed generation. "\
-                "Check http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "\
-                "for more information")
+        log.warn("No timezone information specified in the settings. Assuming"
+                 " your timezone is UTC for feed generation. Check "
+                 "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
+                 "for more information")
 
     # set the locale
     return context

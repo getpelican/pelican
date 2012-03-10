@@ -1,50 +1,51 @@
 Frequently Asked Questions (FAQ)
 ################################
 
-Here is a summary of the frequently asked questions for pelican.
+Here is a summary of the frequently asked questions for Pelican.
 
-Is it mandatory to have a configuration file ?
-==============================================
+Is it mandatory to have a configuration file?
+=============================================
 
-No, it's not. Configurations files are just an easy way to configure pelican.
-For the basic operations, it's possible to specify options while invoking
-pelican with the command line (see `pelican --help` for more informations about
-that)
+No, it's not. Configuration files are just an easy way to configure Pelican.
+For basic operations, it's possible to specify options while invoking Pelican
+via the command line. See `pelican --help` for more information.
 
-I'm creating my own theme, how to use pygments ?
-================================================
+I'm creating my own theme. How do I use Pygments for syntax highlighting?
+=========================================================================
 
-Pygment add some classes to the generated content, so the theming of your theme
-will be done thanks to a css file. You can have a look to the one proposed by
-default `on the project website <http://pygments.org/demo/15101/>`_
+Pygments adds some classes to the generated content. These classes are used by
+themes to style code syntax highlighting via CSS. Specifically, you can
+customize the appearance of your syntax highlighting via the `.codehilite pre` 
+class in your theme's CSS file. To see how various styles can be used to render
+Django code, for example, you can use the demo `on the project website
+<http://pygments.org/demo/15101/>`_.
 
-How do I create my own theme ?
+How do I create my own theme?
 ==============================
 
-Please refer yourself to :ref:`theming-pelican`.
+Please refer to :ref:`theming-pelican`.
 
-How can I help ?
+How can I help?
 ================
 
-You have different options to help. First, you can use pelican, and report any
-idea or problem you have on `the bugtracker
+There are several ways to help out. First, you can use Pelican and report any
+suggestions or problems you might have on `the bugtracker
 <http://github.com/ametaireau/pelican/issues>`_.
 
-If you want to contribute, please have a look to `the git repository
-<https://github.com/ametaireau/pelican/>`_, fork it, add your changes and do
-a pull request, I'll review them as soon as possible.
+If you want to contribute, please fork `the git repository
+<https://github.com/ametaireau/pelican/>`_, make your changes, and issue
+a pull request. I'll review your changes as soon as possible.
 
-You can also contribute by creating themes, and making the documentation
-better.
+You can also contribute by creating themes and improving the documentation.
 
-I want to use markdown, but I got an error
-==========================================
+I want to use Markdown, but I got an error.
+===========================================
 
-Markdown is not a hard dependency for pelican, so you will need to install it
-by yourself. You can do so by typing::
+Markdown is not a hard dependency for Pelican, so you will need to explicitly
+install it. You can do so by typing::
 
     $ (sudo) pip install markdown
 
-In case you don't have pip installed, consider installing it by doing::
+In case you don't have pip installed, consider installing it via::
 
     $ (sudo) easy_install pip
