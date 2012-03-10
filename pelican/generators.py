@@ -36,8 +36,8 @@ class Generator(object):
 
         theme_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
-        simple_loader = FileSystemLoader(theme_path,
-                                         "themes", "simple", "templates")
+        simple_loader = FileSystemLoader(os.path.join(theme_path,
+                                         "themes", "simple", "templates"))
         self._env = Environment(
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
