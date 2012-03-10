@@ -199,7 +199,6 @@ Pelican generates category feeds as well as feeds for all your articles. It does
 not generate feeds for tags by default, but it is possible to do so using
 the ``TAG_FEED`` and ``TAG_FEED_RSS`` settings:
 
-
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
@@ -213,6 +212,9 @@ Setting name (default value)                        What does it do?
 `FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feed item
                                                     quantity is unrestricted by default.
 ================================================    =====================================================
+
+If you don't want to generate some of these feeds, set ``None`` to the
+variables above.
 
 .. [2] %s is the name of the category.
 
