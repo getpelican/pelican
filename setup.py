@@ -13,9 +13,9 @@ except ImportError:
 entry_points = {
     'console_scripts': [
         'pelican = pelican:main',
-        'pelican-import = tools.pelican_import:main',
-        'pelican-quickstart = tools.pelican_quickstart:main',
-        'pelican-themes = tools.pelican_themes:main'
+        'pelican-import = pelican.tools.pelican_import:main',
+        'pelican-quickstart = pelican.tools.pelican_quickstart:main',
+        'pelican-themes = pelican.tools.pelican_themes:main'
    ]     
 }
 
