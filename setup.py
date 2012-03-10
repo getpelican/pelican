@@ -27,7 +27,7 @@ setup(
     author_email = 'alexis@notmyidea.org',
     description = "A tool to generate a static blog from reStructuredText or Markdown input files.",
     long_description=open('README.rst').read(),
-    packages = ['pelican'],
+    packages = ['pelican', 'pelican.tools'],
     include_package_data = True,
     install_requires = requires,
     entry_points = entry_points,
