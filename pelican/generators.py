@@ -34,7 +34,7 @@ class Generator(object):
         self._templates_path = os.path.expanduser(
                 os.path.join(self.theme, 'templates'))
 
-        theme_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+        theme_path = os.path.dirname(os.path.abspath(__file__))
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
