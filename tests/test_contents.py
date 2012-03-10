@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 try:
-    from unittest2 import TestCase
+    from unittest2 import TestCase, skip
 except ImportError, e:
-    from unittest import TestCase
+    from unittest import TestCase, skip
 
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
@@ -94,6 +94,18 @@ class TestPage(TestCase):
             locale = 'ja_JP.utf8'
         page_kwargs['settings']['DATE_FORMATS'] = {'jp':(locale,'%Y-%m-%d(%a)')}
         page_kwargs['metadata']['lang'] = 'jp'
-        page = Page( **page_kwargs)
-        self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
-        # above is unicode in Japanese: 2015-09-13(“ú)
+
+        import locale as locale_module
+        try:
+            page = Page( **page_kwargs)
+            self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
+            # above is unicode in Japanese: 2015-09-13(“ú)
+        except locale_module.Error:
+            # The constructor of ``Page`` will try to set the locale to
+            # ``ja_JP.utf8``. But this attempt will failed when there is no
+            # such locale in the system. You can see which locales there are
+            # in your system with ``locale -a`` command.
+            #
+            # Until we find some other method to test this functionality, we
+            # will simply skip this test.
+            skip("There is no locale %s in this system." % locale)
