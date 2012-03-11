@@ -36,8 +36,8 @@ class Reader(object):
         self.settings = settings
 
     def process_metadata(self, name, value):
-        if name.lower() in _METADATA_PROCESSORS:
-            return _METADATA_PROCESSORS[name.lower()](value, self.settings)
+        if name in _METADATA_PROCESSORS:
+            return _METADATA_PROCESSORS[name](value, self.settings)
         return value
 
 
@@ -75,6 +75,7 @@ class RstReader(Reader):
                 else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()
+                name = name.lower()
 
                 output[name] = self.process_metadata(name, value)
         return output
