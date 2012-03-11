@@ -3,10 +3,11 @@ from __future__ import with_statement
 try:
     from unittest2 import TestCase, skip
 except ImportError, e:
-    from unittest import TestCase, skip
+    from unittest import TestCase, skip  # NOQA
 
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
+
 
 class TestPage(TestCase):
 
@@ -14,7 +15,7 @@ class TestPage(TestCase):
         super(TestPage, self).setUp()
         self.page_kwargs = {
             'content': 'content',
-            'metadata':{
+            'metadata': {
                 'title': 'foo bar',
                 'author': 'Blogger',
             },
@@ -72,32 +73,38 @@ class TestPage(TestCase):
         """
         from datetime import datetime
         from sys import platform
-        dt = datetime(2015,9,13)
+        dt = datetime(2015, 9, 13)
         # make a deep copy of page_kawgs
-        page_kwargs = {key:self.page_kwargs[key] for key in self.page_kwargs}
+        page_kwargs = dict([(key, self.page_kwargs[key]) for key in
+                            self.page_kwargs])
         for key in page_kwargs:
-            if not isinstance(page_kwargs[key], dict): break
-            page_kwargs[key] = {subkey:page_kwargs[key][subkey] for subkey in page_kwargs[key]}
+            if not isinstance(page_kwargs[key], dict):
+                break
+            page_kwargs[key] = dict([(subkey, page_kwargs[key][subkey])
+                                     for subkey in page_kwargs[key]])
         # set its date to dt
         page_kwargs['metadata']['date'] = dt
-        page = Page( **page_kwargs)
+        page = Page(**page_kwargs)
 
         self.assertEqual(page.locale_date,
-            unicode(dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']), 'utf-8'))
+            unicode(dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']),
+                                'utf-8'))
 
+        page_kwargs['settings'] = dict([(x, _DEFAULT_CONFIG[x]) for x in
+                                        _DEFAULT_CONFIG])
 
-        page_kwargs['settings'] = {x:_DEFAULT_CONFIG[x] for x in _DEFAULT_CONFIG}
         # I doubt this can work on all platforms ...
         if platform == "win32":
             locale = 'jpn'
         else:
             locale = 'ja_JP.utf8'
-        page_kwargs['settings']['DATE_FORMATS'] = {'jp':(locale,'%Y-%m-%d(%a)')}
+        page_kwargs['settings']['DATE_FORMATS'] = {'jp': (locale,
+                                                          '%Y-%m-%d(%a)')}
         page_kwargs['metadata']['lang'] = 'jp'
 
         import locale as locale_module
         try:
-            page = Page( **page_kwargs)
+            page = Page(**page_kwargs)
             self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
             # above is unicode in Japanese: 2015-09-13(“ú)
         except locale_module.Error:
