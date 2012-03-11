@@ -14,7 +14,7 @@ from pelican.log import warning, info
 def get_date(string):
     """Return a datetime object from a string.
 
-    If no format matches the given date, raise a ValuEerror
+    If no format matches the given date, raise a ValueError.
     """
     string = re.sub(' +', ' ', string)
     formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M',
@@ -58,8 +58,8 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     :param source: the source dir
     :param destination: the destination dir
     :param destination_path: the destination path (optional)
-    :param overwrite: wether to overwrite the destination if already exists or
-                      not
+    :param overwrite: whether to overwrite the destination if already exists
+                      or not
     """
     if not destination_path:
         destination_path = path

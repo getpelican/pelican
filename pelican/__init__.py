@@ -25,7 +25,7 @@ class Pelican(object):
 
         self.path = path or settings['PATH']
         if not self.path:
-            raise Exception('you need to specify a path containing the content'
+            raise Exception('You need to specify a path containing the content'
                     ' (see pelican --help for more information)')
 
         if self.path.endswith('/'):
@@ -138,7 +138,7 @@ def main():
     static blog, with restructured text input files.""")
 
     parser.add_argument(dest='path', nargs='?',
-        help='Path where to find the content files')
+        help='Path where to find the content files.')
     parser.add_argument('-t', '--theme-path', dest='theme',
         help='Path where to find the theme templates. If not specified, it'
              'will use the default one included with pelican.')
@@ -146,28 +146,28 @@ def main():
         help='Where to output the generated files. If not specified, a '
              'directory will be created, named "output" in the current path.')
     parser.add_argument('-m', '--markup', default=None, dest='markup',
-        help='the list of markup language to use (rst or md). Please indicate '
-             'them separated by commas')
+        help='The list of markup language to use (rst or md). Please indicate '
+             'them separated by commas.')
     parser.add_argument('-s', '--settings', dest='settings', default='',
-        help='the settings of the application. Default to False.')
+        help='The settings of the application. Default to False.')
     parser.add_argument('-d', '--delete-output-directory',
                         dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')
     parser.add_argument('-v', '--verbose', action='store_const',
                         const=log.INFO, dest='verbosity',
-                        help='Show all messages')
+                        help='Show all messages.')
     parser.add_argument('-q', '--quiet', action='store_const',
                         const=log.CRITICAL, dest='verbosity',
-                        help='Show only critical errors')
+                        help='Show only critical errors.')
     parser.add_argument('-D', '--debug', action='store_const',
                         const=log.DEBUG, dest='verbosity',
-                        help='Show all message, including debug messages')
+                        help='Show all message, including debug messages.')
     parser.add_argument('--version', action='version', version=__version__,
-            help='Print the pelican version and exit')
+            help='Print the pelican version and exit.')
     parser.add_argument('-r', '--autoreload', dest='autoreload',
                         action='store_true',
                         help="Relaunch pelican each time a modification occurs"
-                             " on the content files")
+                             " on the content files.")
     args = parser.parse_args()
 
     log.init(args.verbosity)
