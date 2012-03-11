@@ -4,3 +4,4 @@ docutils
 feedgenerator
 unittest2
 pytz
+mock
