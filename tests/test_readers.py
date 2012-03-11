@@ -26,7 +26,8 @@ class RstReaderTest(unittest.TestCase):
             'category': 'yeah',
             'author': u'Alexis Métaireau',
             'title': 'This is a super article !',
-            'summary': 'Multi-line metadata should be supported\nas well as <strong>inline markup</strong>.',
+            'summary': 'Multi-line metadata should be supported\nas well as'\
+                       ' <strong>inline markup</strong>.',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
         }
@@ -43,10 +44,13 @@ class RstReaderTest(unittest.TestCase):
 
         self.assertEqual(content, expected)
 
-        # otherwise, typogrify should be applied
-        content, _ = readers.read_file(_filename('article.rst'),
-                                       settings={'TYPOGRIFY': True})
-        expected = "<p>This is some content. With some stuff to&nbsp;"\
-                   "&#8220;typogrify&#8221;.</p>\n"
+        try:
+            # otherwise, typogrify should be applied
+            content, _ = readers.read_file(_filename('article.rst'),
+                                           settings={'TYPOGRIFY': True})
+            expected = "<p>This is some content. With some stuff to&nbsp;"\
+                       "&#8220;typogrify&#8221;.</p>\n"
 
-        self.assertEqual(content, expected)
+            self.assertEqual(content, expected)
+        except ImportError:
+            return unittest.skip('need the typogrify distribution')
