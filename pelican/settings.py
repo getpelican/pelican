@@ -61,7 +61,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    }
 
 
-def read_settings(filename):
+def read_settings(filename=None):
     """Load a Python file into a dictionary.
     """
     context = _DEFAULT_CONFIG.copy()
