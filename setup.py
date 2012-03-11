@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import os
 from setuptools import setup
 
 VERSION = "3.0" # find a better way to do so.
@@ -19,6 +20,9 @@ entry_points = {
    ]     
 }
 
+def find_packages(toplevel):
+    return [directory.replace(os.path.sep, '.') for directory, subdirs, files in os.walk(toplevel) if '__init__.py' in files]
+
 setup(
     name = "pelican",
     version = VERSION,
@@ -27,7 +31,7 @@ setup(
     author_email = 'alexis@notmyidea.org',
     description = "A tool to generate a static blog from reStructuredText or Markdown input files.",
     long_description=open('README.rst').read(),
-    packages = ['pelican', 'pelican.tools'],
+    packages = find_packages('pelican'),
     include_package_data = True,
     install_requires = requires,
     entry_points = entry_points,
