@@ -69,6 +69,11 @@ Setting name (default value)                        What does it do?
 `TIMEZONE`                                          The timezone used in the date information, to
                                                     generate Atom and RSS feeds. See the "timezone"
                                                     section below for more info.
+`TYPOGRIFY` (``False``)                             If set to true, some
+                                                    additional transformations will be done on the
+                                                    generated HTML, using the `Typogrify
+                                                    <http://static.mintchaos.com/projects/typogrify/>`_
+                                                    library
 ================================================    =====================================================
 
 .. [#] Default is the system locale.

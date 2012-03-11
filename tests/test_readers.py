@@ -33,3 +33,20 @@ class RstReaderTest(unittest.TestCase):
 
         for key, value in expected.items():
             self.assertEquals(value, metadata[key], key)
+
+    def test_typogrify(self):
+        # if nothing is specified in the settings, the content should be
+        # unmodified
+        content, _ = readers.read_file(_filename('article.rst'))
+        expected = "<p>This is some content. With some stuff to "\
+                   "&quot;typogrify&quot;.</p>\n"
+
+        self.assertEqual(content, expected)
+
+        # otherwise, typogrify should be applied
+        content, _ = readers.read_file(_filename('article.rst'),
+                                       settings={'TYPOGRIFY': True})
+        expected = "<p>This is some content. With some stuff to&nbsp;"\
+                   "&#8220;typogrify&#8221;.</p>\n"
+
+        self.assertEqual(content, expected)
