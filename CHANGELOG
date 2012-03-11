@@ -3,6 +3,7 @@ X.X
 * Refactored the way URL are handled.
 * Improved the english documentation
 * Fixed packaging using setuptools entrypoints
+* Added typogrify support
 
 2.8
 
