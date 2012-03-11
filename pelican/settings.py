@@ -8,6 +8,10 @@ from pelican import log
 DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
 _DEFAULT_CONFIG = {'PATH': None,
+                   'ARTICLE_DIR': '',
+                   'ARTICLE_EXCLUDES': ('pages',),
+                   'PAGE_DIR': 'pages',
+                   'PAGE_EXCLUDES': (),
                    'THEME': DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': ('rst', 'md'),
