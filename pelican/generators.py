@@ -211,10 +211,10 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """change the context"""
 
-        # return the list of files to use
-        files = self.get_files(self.path, exclude=['pages', ])
         all_articles = []
-        for f in files:
+        for f in self.get_files(
+                os.path.join(self.path, self.settings['ARTICLE_DIR']),
+                exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
                 content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
@@ -316,7 +316,9 @@ class PagesGenerator(Generator):
 
     def generate_context(self):
         all_pages = []
-        for f in self.get_files(os.sep.join((self.path, 'pages'))):
+        for f in self.get_files(
+                os.path.join(self.path, self.settings['PAGE_DIR']),
+                exclude=self.settings['PAGE_EXCLUDES']):
             try:
                 content, metadata = read_file(f)
             except Exception, e:
