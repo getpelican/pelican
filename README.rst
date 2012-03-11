@@ -1,6 +1,8 @@
 Pelican
 #######
 
+.. image:: https://secure.travis-ci.org/ametaireau/pelican.png?branch=master
+
 Pelican is a simple weblog generator, written in `Python <http://www.python.org/>`_.
 
 * Write your weblog entries directly with your editor of choice (vim!) 
