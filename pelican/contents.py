@@ -2,6 +2,7 @@
 from datetime import datetime
 from os import getenv
 from sys import platform, stdin
+import functools
 import locale
 
 from pelican.log import warning, error
@@ -42,7 +43,7 @@ class Page(object):
                 self.author = Author(settings['AUTHOR'], settings)
             else:
                 self.author = Author(getenv('USER', 'John Doe'), settings)
-                warning(u"Author of `{0}' unknow, assuming that his name is "
+                warning(u"Author of `{0}' unknown, assuming that his name is "
                          "`{1}'".format(filename or self.title, self.author))
 
         # manage languages
@@ -108,17 +109,13 @@ class Page(object):
             'category': getattr(self, 'category', 'misc'),
         }
 
-    @property
-    def url(self):
-        if self.in_default_lang:
-            return self.settings['PAGE_URL'].format(**self.url_format)
-        return self.settings['PAGE_LANG_URL'].format(**self.url_format)
+    def _expand_settings(self, key):
+        fq_key = ('%s_%s' % (self.__class__.__name__, key)).upper()
+        return self.settings[fq_key].format(**self.url_format)
 
-    @property
-    def save_as(self):
-        if self.in_default_lang:
-            return self.settings['PAGE_SAVE_AS'].format(**self.url_format)
-        return self.settings['PAGE_LANG_SAVE_AS'].format(**self.url_format)
+    def get_url_setting(self, key):
+        key = key if self.in_default_lang else 'lang_%s' % key
+        return self._expand_settings(key)
 
     @property
     def content(self):
@@ -139,21 +136,12 @@ class Page(object):
     summary = property(_get_summary, _set_summary, "Summary of the article."
                        "Based on the content. Can't be set")
 
+    url = property(functools.partial(get_url_setting, key='url'))
+    save_as = property(functools.partial(get_url_setting, key='save_as'))
+
 
 class Article(Page):
     mandatory_properties = ('title', 'date', 'category')
-
-    @property
-    def url(self):
-        if self.in_default_lang:
-            return self.settings['ARTICLE_URL'].format(**self.url_format)
-        return self.settings['ARTICLE_LANG_URL'].format(**self.url_format)
-
-    @property
-    def save_as(self):
-        if self.in_default_lang:
-            return self.settings['ARTICLE_SAVE_AS'].format(**self.url_format)
-        return self.settings['ARTICLE_LANG_SAVE_AS'].format(**self.url_format)
 
 
 class Quote(Page):
@@ -163,7 +151,11 @@ class Quote(Page):
 class URLWrapper(object):
     def __init__(self, name, settings):
         self.name = unicode(name)
+        self.slug = slugify(self.name)
         self.settings = settings
+
+    def as_dict(self):
+        return self.__dict__
 
     def __hash__(self):
         return hash(self.name)
@@ -177,42 +169,25 @@ class URLWrapper(object):
     def __unicode__(self):
         return self.name
 
-    @property
-    def url(self):
-        return '%s.html' % self.name
+    def _from_settings(self, key):
+        setting = "%s_%s" % (self.__class__.__name__.upper(), key)
+        return self.settings[setting].format(**self.as_dict())
+
+    url = property(functools.partial(_from_settings, key='URL'))
+    save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
 
 
 class Category(URLWrapper):
-    @property
-    def url(self):
-        return self.settings['CATEGORY_URL'].format(name=self.name)
-
-    @property
-    def save_as(self):
-        return self.settings['CATEGORY_SAVE_AS'].format(name=self.name)
+    pass
 
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
         super(Tag, self).__init__(unicode.strip(name), *args, **kwargs)
 
-    @property
-    def url(self):
-        return self.settings['TAG_URL'].format(name=self.name)
-
-    @property
-    def save_as(self):
-        return self.settings['TAG_SAVE_AS'].format(name=self.name)
-
 
 class Author(URLWrapper):
-    @property
-    def url(self):
-        return self.settings['AUTHOR_URL'].format(name=self.name)
-
-    @property
-    def save_as(self):
-        return self.settings['AUTHOR_SAVE_AS'].format(name=self.name)
+    pass
 
 
 def is_valid_content(content, f):

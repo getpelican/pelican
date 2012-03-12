@@ -52,6 +52,10 @@ Setting name (default value)                        What does it do?
                                                     supported extensions.
 `OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
 `PATH` (``None``)                                   Path to look at for input files.
+`PAGE_DIR' (``'pages'``)                            Directory to look at for pages.
+`PAGE_EXCLUDES' (``()``)                            A list of directories to exclude when looking for pages.
+`ARTICLE_DIR' (``''``)                              Directory to look at for articles.
+`ARTICLE_EXCLUDES': (``('pages',)``)                A list of directories to exclude when looking for articles.
 `PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
                                                     of your documents. You will need to install
                                                     `rst2pdf`.
@@ -69,6 +73,11 @@ Setting name (default value)                        What does it do?
 `TIMEZONE`                                          The timezone used in the date information, to
                                                     generate Atom and RSS feeds. See the "timezone"
                                                     section below for more info.
+`TYPOGRIFY` (``False``)                             If set to true, some
+                                                    additional transformations will be done on the
+                                                    generated HTML, using the `Typogrify
+                                                    <http://static.mintchaos.com/projects/typogrify/>`_
+                                                    library
 ================================================    =====================================================
 
 .. [#] Default is the system locale.
@@ -199,7 +208,6 @@ Pelican generates category feeds as well as feeds for all your articles. It does
 not generate feeds for tags by default, but it is possible to do so using
 the ``TAG_FEED`` and ``TAG_FEED_RSS`` settings:
 
-
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
@@ -213,6 +221,9 @@ Setting name (default value)                        What does it do?
 `FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feed item
                                                     quantity is unrestricted by default.
 ================================================    =====================================================
+
+If you don't want to generate some of these feeds, set ``None`` to the
+variables above.
 
 .. [2] %s is the name of the category.
 

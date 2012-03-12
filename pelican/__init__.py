@@ -6,7 +6,7 @@ import time
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
-from pelican.settings import read_settings
+from pelican.settings import read_settings, _DEFAULT_CONFIG
 from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
 from pelican import log
@@ -20,52 +20,22 @@ class Pelican(object):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
+        if settings is None:
+            settings = _DEFAULT_CONFIG
+
         self.path = path or settings['PATH']
         if not self.path:
-            raise Exception('you need to specify a path containing the content'
+            raise Exception('You need to specify a path containing the content'
                     ' (see pelican --help for more information)')
 
         if self.path.endswith('/'):
             self.path = self.path[:-1]
 
-        if settings.get('CLEAN_URLS', False):
-            log.warning('Found deprecated `CLEAN_URLS` in settings. Modifing'
-                        ' the following settings for the same behaviour.')
-
-            settings['ARTICLE_URL'] = '{slug}/'
-            settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
-            settings['PAGE_URL'] = 'pages/{slug}/'
-            settings['PAGE_LANG_URL'] = 'pages/{slug}-{lang}/'
-
-            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
-                            'PAGE_LANG_URL'):
-                log.warning("%s = '%s'" % (setting, settings[setting]))
-
-        if settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
-            log.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
-                        ' settings.  Modifing the following settings for'
-                        ' the same behaviour.')
-
-            structure = settings['ARTICLE_PERMALINK_STRUCTURE']
-
-            # Convert %(variable) into {variable}.
-            structure = re.sub('%\((\w+)\)s', '{\g<1>}', structure)
-
-            # Convert %x into {date:%x} for strftime
-            structure = re.sub('(%[A-z])', '{date:\g<1>}', structure)
-
-            # Strip a / prefix
-            structure = re.sub('^/', '', structure)
-
-            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
-                            'PAGE_LANG_URL', 'ARTICLE_SAVE_AS',
-                            'ARTICLE_LANG_SAVE_AS', 'PAGE_SAVE_AS',
-                            'PAGE_LANG_SAVE_AS'):
-                settings[setting] = os.path.join(structure, settings[setting])
-                log.warning("%s = '%s'" % (setting, settings[setting]))
-
         # define the default settings
         self.settings = settings
+
+        self._handle_deprecation()
+
         self.theme = theme or settings['THEME']
         output_path = output_path or settings['OUTPUT_PATH']
         self.output_path = os.path.realpath(output_path)
@@ -81,6 +51,45 @@ class Pelican(object):
                 self.theme = theme_path
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
+
+    def _handle_deprecation(self):
+
+        if self.settings.get('CLEAN_URLS', False):
+            log.warning('Found deprecated `CLEAN_URLS` in settings. Modifing'
+                        ' the following settings for the same behaviour.')
+
+            self.settings['ARTICLE_URL'] = '{slug}/'
+            self.settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
+            self.settings['PAGE_URL'] = 'pages/{slug}/'
+            self.settings['PAGE_LANG_URL'] = 'pages/{slug}-{lang}/'
+
+            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                            'PAGE_LANG_URL'):
+                log.warning("%s = '%s'" % (setting, self.settings[setting]))
+
+        if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
+            log.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
+                        ' settings.  Modifing the following settings for'
+                        ' the same behaviour.')
+
+            structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
+
+            # Convert %(variable) into {variable}.
+            structure = re.sub('%\((\w+)\)s', '{\g<1>}', structure)
+
+            # Convert %x into {date:%x} for strftime
+            structure = re.sub('(%[A-z])', '{date:\g<1>}', structure)
+
+            # Strip a / prefix
+            structure = re.sub('^/', '', structure)
+
+            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                            'PAGE_LANG_URL', 'ARTICLE_SAVE_AS',
+                            'ARTICLE_LANG_SAVE_AS', 'PAGE_SAVE_AS',
+                            'PAGE_LANG_SAVE_AS'):
+                self.settings[setting] = os.path.join(structure,
+                                                      self.settings[setting])
+                log.warning("%s = '%s'" % (setting, self.settings[setting]))
 
     def run(self):
         """Run the generators and return"""
@@ -129,7 +138,7 @@ def main():
     static blog, with restructured text input files.""")
 
     parser.add_argument(dest='path', nargs='?',
-        help='Path where to find the content files')
+        help='Path where to find the content files.')
     parser.add_argument('-t', '--theme-path', dest='theme',
         help='Path where to find the theme templates. If not specified, it'
              'will use the default one included with pelican.')
@@ -137,28 +146,28 @@ def main():
         help='Where to output the generated files. If not specified, a '
              'directory will be created, named "output" in the current path.')
     parser.add_argument('-m', '--markup', default=None, dest='markup',
-        help='the list of markup language to use (rst or md). Please indicate '
-             'them separated by commas')
+        help='The list of markup language to use (rst or md). Please indicate '
+             'them separated by commas.')
     parser.add_argument('-s', '--settings', dest='settings', default='',
-        help='the settings of the application. Default to False.')
+        help='The settings of the application. Default to False.')
     parser.add_argument('-d', '--delete-output-directory',
                         dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')
     parser.add_argument('-v', '--verbose', action='store_const',
                         const=log.INFO, dest='verbosity',
-                        help='Show all messages')
+                        help='Show all messages.')
     parser.add_argument('-q', '--quiet', action='store_const',
                         const=log.CRITICAL, dest='verbosity',
-                        help='Show only critical errors')
+                        help='Show only critical errors.')
     parser.add_argument('-D', '--debug', action='store_const',
                         const=log.DEBUG, dest='verbosity',
-                        help='Show all message, including debug messages')
+                        help='Show all message, including debug messages.')
     parser.add_argument('--version', action='version', version=__version__,
-            help='Print the pelican version and exit')
+            help='Print the pelican version and exit.')
     parser.add_argument('-r', '--autoreload', dest='autoreload',
                         action='store_true',
                         help="Relaunch pelican each time a modification occurs"
-                             " on the content files")
+                             " on the content files.")
     args = parser.parse_args()
 
     log.init(args.verbosity)

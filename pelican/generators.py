@@ -118,41 +118,46 @@ class ArticlesGenerator(Generator):
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
 
-        writer.write_feed(self.articles, self.context, self.settings['FEED'])
-
-        if 'FEED_RSS' in self.settings:
+        if self.settings.get('FEED'):
             writer.write_feed(self.articles, self.context,
-                    self.settings['FEED_RSS'], feed_type='rss')
+                              self.settings['FEED'])
+
+        if self.settings.get('FEED_RSS'):
+            writer.write_feed(self.articles, self.context,
+                              self.settings['FEED_RSS'], feed_type='rss')
 
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
-            writer.write_feed(arts, self.context,
-                              self.settings['CATEGORY_FEED'] % cat)
-
-            if 'CATEGORY_FEED_RSS' in self.settings:
+            if self.settings.get('CATEGORY_FEED'):
                 writer.write_feed(arts, self.context,
-                        self.settings['CATEGORY_FEED_RSS'] % cat,
-                        feed_type='rss')
+                                  self.settings['CATEGORY_FEED'] % cat)
 
-        if 'TAG_FEED' in self.settings:
+            if self.settings.get('CATEGORY_FEED_RSS'):
+                writer.write_feed(arts, self.context,
+                                  self.settings['CATEGORY_FEED_RSS'] % cat,
+                                  feed_type='rss')
+
+        if self.settings.get('TAG_FEED') or self.settings.get('TAG_FEED_RSS'):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(arts, self.context,
-                        self.settings['TAG_FEED'] % tag)
+                if self.settings.get('TAG_FEED'):
+                    writer.write_feed(arts, self.context,
+                                      self.settings['TAG_FEED'] % tag)
 
-                if 'TAG_FEED_RSS' in self.settings:
+                if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,
                                       self.settings['TAG_FEED_RSS'] % tag,
                                       feed_type='rss')
 
-        translations_feeds = defaultdict(list)
-        for article in chain(self.articles, self.translations):
-            translations_feeds[article.lang].append(article)
+        if self.settings.get('TRANSLATION_FEED'):
+            translations_feeds = defaultdict(list)
+            for article in chain(self.articles, self.translations):
+                translations_feeds[article.lang].append(article)
 
-        for lang, items in translations_feeds.items():
-            items.sort(key=attrgetter('date'), reverse=True)
-            writer.write_feed(items, self.context,
-                              self.settings['TRANSLATION_FEED'] % lang)
+            for lang, items in translations_feeds.items():
+                items.sort(key=attrgetter('date'), reverse=True)
+                writer.write_feed(items, self.context,
+                                  self.settings['TRANSLATION_FEED'] % lang)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -211,10 +216,10 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """change the context"""
 
-        # return the list of files to use
-        files = self.get_files(self.path, exclude=['pages', ])
         all_articles = []
-        for f in files:
+        for f in self.get_files(
+                os.path.join(self.path, self.settings['ARTICLE_DIR']),
+                exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
                 content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
@@ -316,7 +321,9 @@ class PagesGenerator(Generator):
 
     def generate_context(self):
         all_pages = []
-        for f in self.get_files(os.sep.join((self.path, 'pages'))):
+        for f in self.get_files(
+                os.path.join(self.path, self.settings['PAGE_DIR']),
+                exclude=self.settings['PAGE_EXCLUDES']):
             try:
                 content, metadata = read_file(f)
             except Exception, e:

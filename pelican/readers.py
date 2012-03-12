@@ -143,12 +143,24 @@ def read_file(filename, fmt=None, settings=None):
     """Return a reader object using the given format."""
     if not fmt:
         fmt = filename.split('.')[-1]
+
     if fmt not in _EXTENSIONS.keys():
         raise TypeError('Pelican does not know how to parse %s' % filename)
+
     reader = _EXTENSIONS[fmt](settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()
+
     if settings and settings_key in settings:
         reader.extensions = settings[settings_key]
+
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
-    return reader.read(filename)
+
+    content, metadata = reader.read(filename)
+
+    # eventually filter the content with typogrify if asked so
+    if settings and settings['TYPOGRIFY']:
+        from typogrify import Typogrify
+        content = Typogrify.typogrify(content)
+
+    return content, metadata

@@ -14,7 +14,7 @@ from pelican.log import warning, info
 def get_date(string):
     """Return a datetime object from a string.
 
-    If no format matches the given date, raise a ValuEerror
+    If no format matches the given date, raise a ValueError.
     """
     string = re.sub(' +', ' ', string)
     formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M',
@@ -58,8 +58,8 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     :param source: the source dir
     :param destination: the destination dir
     :param destination_path: the destination path (optional)
-    :param overwrite: wether to overwrite the destination if already exists or
-                      not
+    :param overwrite: whether to overwrite the destination if already exists
+                      or not
     """
     if not destination_path:
         destination_path = path
@@ -169,13 +169,11 @@ def truncate_html_words(s, num, end_text='...'):
 
 
 def process_translations(content_list):
-    """ Finds all translation and returns
-        tuple with two lists (index, translations).
-        Index list includes items in default language
-        or items which have no variant in default language.
+    """ Finds all translation and returns tuple with two lists (index,
+    translations).  Index list includes items in default language or items
+    which have no variant in default language.
 
-        Also, for each content_list item, it
-        sets attribute 'translations'
+    Also, for each content_list item, it sets attribute 'translations'
     """
     content_list.sort(key=attrgetter('slug'))
     grouped_by_slugs = groupby(content_list, attrgetter('slug'))
@@ -185,10 +183,7 @@ def process_translations(content_list):
     for slug, items in grouped_by_slugs:
         items = list(items)
         # find items with default language
-        default_lang_items = filter(
-            attrgetter('in_default_lang'),
-            items
-        )
+        default_lang_items = filter(attrgetter('in_default_lang'), items)
         len_ = len(default_lang_items)
         if len_ > 1:
             warning(u'there are %s variants of "%s"' % (len_, slug))

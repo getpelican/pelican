@@ -8,6 +8,10 @@ from pelican import log
 DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
 _DEFAULT_CONFIG = {'PATH': None,
+                   'ARTICLE_DIR': '',
+                   'ARTICLE_EXCLUDES': ('pages',),
+                   'PAGE_DIR': 'pages',
+                   'PAGE_EXCLUDES': (),
                    'THEME': DEFAULT_THEME,
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': ('rst', 'md'),
@@ -37,10 +41,10 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'PAGE_LANG_SAVE_AS': 'pages/{slug}-{lang}.html',
                    'CATEGORY_URL': 'category/{name}.html',
                    'CATEGORY_SAVE_AS': 'category/{name}.html',
-                   'TAG_URL': 'tag/{name}.html',
-                   'TAG_SAVE_AS': 'tag/{name}.html',
-                   'AUTHOR_URL': u'author/{name}.html',
-                   'AUTHOR_SAVE_AS': u'author/{name}.html',
+                   'TAG_URL': 'tag/{slug}.html',
+                   'TAG_SAVE_AS': 'tag/{slug}.html',
+                   'AUTHOR_URL': u'author/{slug}.html',
+                   'AUTHOR_SAVE_AS': u'author/{slug}.html',
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
@@ -57,11 +61,12 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_METADATA': (),
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
-                   'ARTICLE_PERMALINK_STRUCTURE': ''
+                   'ARTICLE_PERMALINK_STRUCTURE': '',
+                   'TYPOGRIFY': False,
                    }
 
 
-def read_settings(filename):
+def read_settings(filename=None):
     """Load a Python file into a dictionary.
     """
     context = _DEFAULT_CONFIG.copy()
