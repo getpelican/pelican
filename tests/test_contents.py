@@ -8,14 +8,20 @@ except ImportError, e:
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
 
+from jinja2.utils import generate_lorem_ipsum
+
+# generate one paragraph, enclosed with <p>
+TEST_CONTENT = str(generate_lorem_ipsum(n=1))
+TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
 class TestPage(TestCase):
 
     def setUp(self):
         super(TestPage, self).setUp()
         self.page_kwargs = {
-            'content': 'content',
+            'content': TEST_CONTENT,
             'metadata': {
+                'summary': TEST_SUMMARY,
                 'title': 'foo bar',
                 'author': 'Blogger',
             },
@@ -27,17 +33,22 @@ class TestPage(TestCase):
 
         """
         metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
-        page = Page('content', metadata=metadata)
+        page = Page(TEST_CONTENT, metadata=metadata)
         for key, value in metadata.items():
             self.assertTrue(hasattr(page, key))
             self.assertEqual(value, getattr(page, key))
-        self.assertEqual(page.content, 'content')
+        self.assertEqual(page.content, TEST_CONTENT)
 
     def test_mandatory_properties(self):
         """If the title is not set, must throw an exception."""
         self.assertRaises(AttributeError, Page, 'content')
         page = Page(**self.page_kwargs)
         page.check_properties()
+
+    def test_summary_from_metadata(self):
+        """If a :summary: metadata is given, it should be used."""
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.summary, TEST_SUMMARY)
 
     def test_slug(self):
         """If a title is given, it should be used to generate the slug."""
