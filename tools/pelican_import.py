@@ -270,14 +270,11 @@ def main():
             print("Unable to create the output folder: " + args.output)
             exit()
 
-    # TODO: refactor this long assignment
-    input_type, input, out_markup, output_path, dircat=False = input_type, args.input, args.markup, args.output, args.dircat
-
     if input_type == 'wordpress':
-        fields = wp2fields(input)
+        fields = wp2fields(args.input)
     elif input_type == 'dotclear':
-        fields = dc2fields(input)
+        fields = dc2fields(args.input)
     elif input_type == 'feed':
-        fields = feed2fields(input)
+        fields = feed2fields(args.input)
 
-    fields2pelican(fields, out_markup, output_path, dircat=dircat)
+    fields2pelican(fields, args.markup, args.output, dircat=args.dircat or False)
