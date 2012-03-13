@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import subprocess
 import sys
 import time
 
@@ -217,7 +218,20 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
                 content = content.replace("\n", "<br />\n")
                 fp.write(content)
 
-            os.system('pandoc --normalize --reference-links --from=html --to=%s -o "%s" "%s"' % (out_markup, out_filename, html_filename))
+            cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
+                out_markup, out_filename, html_filename)
+
+            try:
+                rc = subprocess.call(cmd, shell=True)
+                if rc < 0:
+                    print("Child was terminated by signal %d" % -rc)
+                    exit()
+                elif rc > 0:
+                    print("Please, check your Pandoc installation.")
+                    exit()
+            except OSError, e:
+                print("Pandoc execution failed: %s" % e)
+                exit()
 
             os.remove(html_filename)
 
