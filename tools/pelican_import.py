@@ -38,7 +38,7 @@ def wp2fields(xml):
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
-    from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup
+    from BeautifulSoup import BeautifulStoneSoup
 
     in_cat = False
     in_post = False
