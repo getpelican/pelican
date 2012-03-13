@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 import time
 
 from codecs import open
@@ -259,14 +260,14 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        print("you must provide either --wpfile, --dotclear or --feed options")
+        print("You must provide either --wpfile, --dotclear or --feed options")
         exit()
 
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
         except OSError:
-            error("Couldn't create the output folder: " + args.output)
+            print("Unable to create the output folder: " + args.output)
             exit()
 
     # TODO: refactor this long assignment
