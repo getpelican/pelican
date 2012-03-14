@@ -109,17 +109,6 @@ CONF = {
 }
 
 
-class _dict(dict):
-    def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
-
-    def __getitem__(self, i):
-        return dict.get(self,i,None)
-
-    def has_key(k):
-        return True
-
-
 def ask(question, answer=str, default=None, l=None):
     if answer == str:
         r = ''
