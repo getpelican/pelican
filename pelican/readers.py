@@ -145,7 +145,7 @@ def read_file(filename, fmt=None, settings=None):
     if not fmt:
         fmt = filename.split('.')[-1]
 
-    if fmt not in _EXTENSIONS.keys():
+    if fmt not in _EXTENSIONS:
         raise TypeError('Pelican does not know how to parse %s' % filename)
 
     reader = _EXTENSIONS[fmt](settings)
