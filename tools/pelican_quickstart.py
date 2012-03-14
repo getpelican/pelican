@@ -193,14 +193,16 @@ def ask(question, answer=str, default=None, l=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="A kickstarter for pelican")
+    parser = argparse.ArgumentParser(
+        description="A kickstarter for pelican",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-p', '--path', default=".",
             help="The path to generate the blog into")
-    parser.add_argument('-t', '--title', default=None, metavar="title",
+    parser.add_argument('-t', '--title', metavar="title",
             help='Set the title of the website')
-    parser.add_argument('-a', '--author', default=None, metavar="author",
+    parser.add_argument('-a', '--author', metavar="author",
             help='Set the author name of the website')
-    parser.add_argument('-l', '--lang', default=None, metavar="lang",
+    parser.add_argument('-l', '--lang', metavar="lang",
             help='Set the default lang of the website')
 
     args = parser.parse_args()
