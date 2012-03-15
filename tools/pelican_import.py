@@ -2,6 +2,8 @@
 
 import argparse
 import os
+import subprocess
+import sys
 import time
 
 from codecs import open
@@ -38,7 +40,7 @@ def wp2fields(xml):
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
-    from BeautifulSoup import BeautifulStoneSoup, BeautifulSoup
+    from BeautifulSoup import BeautifulStoneSoup
 
     in_cat = False
     in_post = False
@@ -85,10 +87,10 @@ def dc2fields(file):
         post_creadt = fields[6]
         # post_upddt = fields[7]
         # post_password = fields[8]
-        post_type = fields[9]
+        # post_type = fields[9]
         post_format = fields[10]
-        post_url = fields[11]
-        post_lang = fields[12]
+        # post_url = fields[11]
+        # post_lang = fields[12]
         post_title = fields[13]
         post_excerpt = fields[14]
         post_excerpt_xhtml = fields[15]
@@ -216,7 +218,20 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
                 content = content.replace("\n", "<br />\n")
                 fp.write(content)
 
-            os.system('pandoc --normalize --reference-links --from=html --to=%s -o "%s" "%s"' % (out_markup, out_filename, html_filename))
+            cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
+                out_markup, out_filename, html_filename)
+
+            try:
+                rc = subprocess.call(cmd, shell=True)
+                if rc < 0:
+                    print("Child was terminated by signal %d" % -rc)
+                    exit()
+                elif rc > 0:
+                    print("Please, check your Pandoc installation.")
+                    exit()
+            except OSError, e:
+                print("Pandoc execution failed: %s" % e)
+                exit()
 
             os.remove(html_filename)
 
@@ -259,24 +274,21 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        print("you must provide either --wpfile, --dotclear or --feed options")
+        print("You must provide either --wpfile, --dotclear or --feed options")
         exit()
 
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
         except OSError:
-            error("Couldn't create the output folder: " + args.output)
+            print("Unable to create the output folder: " + args.output)
             exit()
 
-    # TODO: refactor this long assignment
-    input_type, input, out_markup, output_path, dircat=False = input_type, args.input, args.markup, args.output, args.dircat
-
     if input_type == 'wordpress':
-        fields = wp2fields(input)
+        fields = wp2fields(args.input)
     elif input_type == 'dotclear':
-        fields = dc2fields(input)
+        fields = dc2fields(args.input)
     elif input_type == 'feed':
-        fields = feed2fields(input)
+        fields = feed2fields(args.input)
 
-    fields2pelican(fields, out_markup, output_path, dircat=dircat)
+    fields2pelican(fields, args.markup, args.output, dircat=args.dircat or False)
