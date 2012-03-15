@@ -5,7 +5,7 @@ from logging import critical, error, info, warning, warn, debug
 from logging import Formatter, getLogger, StreamHandler
 
 
-RESET_TERM = u'\033[1;m'
+RESET_TERM = u'\033[0;m'
 
 
 def term_color(code):
