@@ -227,7 +227,7 @@ class ArticlesGenerator(Generator):
                 continue
 
             # if no category is set, use the name of the path as a category
-            if 'category' not in metadata.keys():
+            if 'category' not in metadata:
 
                 if os.path.dirname(f) == self.path:
                     category = self.settings['DEFAULT_CATEGORY']
@@ -238,8 +238,7 @@ class ArticlesGenerator(Generator):
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
 
-            if 'date' not in metadata.keys()\
-                and self.settings['FALLBACK_ON_FS_DATE']:
+            if 'date' not in metadata and self.settings['FALLBACK_ON_FS_DATE']:
                     metadata['date'] = datetime.datetime.fromtimestamp(
                                         os.stat(f).st_ctime)
 
