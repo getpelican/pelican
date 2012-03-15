@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 
-import os, sys, argparse, string
+import os
+import string
+import argparse
+
 from pelican import __version__
 
-TEMPLATES={
+TEMPLATES = {
     'Makefile' : '''
 PELICAN=$pelican
 PELICANOPTS=$pelicanopts
@@ -60,7 +63,7 @@ github: $$(OUTPUTDIR)/index.html
 \tgit push origin gh-pages
 
 .PHONY: html help clean ftp_upload ssh_upload dropbox_upload github
-    ''',
+''',
 
     'pelican.conf.py': '''#!/usr/bin/env python
 # -*- coding: utf-8 -*- #
@@ -87,9 +90,7 @@ SOCIAL = (
          )
 
 DEFAULT_PAGINATION = $default_pagination
-
-
-    '''
+'''
 }
 
 CONF = {
@@ -106,17 +107,6 @@ CONF = {
     'default_pagination' : 10,
     'lang': 'en'
 }
-
-
-class _dict(dict):
-    def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
-
-    def __getitem__(self, i):
-        return dict.get(self,i,None)
-
-    def has_key(k):
-        return True
 
 
 def ask(question, answer=str, default=None, l=None):
