@@ -249,7 +249,8 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
 def main():
     parser = argparse.ArgumentParser(
         description="Transform feed, Wordpress or Dotclear files to rst files."
-            "Be sure to have pandoc installed")
+            "Be sure to have pandoc installed",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='input', help='The input file to read')
     parser.add_argument('--wpfile', action='store_true', dest='wpfile',
