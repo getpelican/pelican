@@ -14,7 +14,6 @@ release = version
 
 # -- Options for HTML output ---------------------------------------------------
 
-sys.path.append(os.path.abspath('_themes'))
 html_theme_path = ['_themes']
 html_theme = 'pelican'
 
