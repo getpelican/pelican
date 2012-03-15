@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-VERSION = "3.0" # find a better way to do so.
+execfile('version.py')
 
 requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'pytz']
 

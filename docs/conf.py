@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys, os
 
+execfile('../version.py')
+
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
 extensions = ['sphinx.ext.autodoc',]
@@ -9,8 +11,8 @@ master_doc = 'index'
 project = u'Pelican'
 copyright = u'2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
-version = "2"
-release = version
+version = VERSION
+release = VERSION
 
 # -- Options for HTML output ---------------------------------------------------
 
