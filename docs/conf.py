@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys, os
 
+sys.path.append(os.path.abspath('..'))
+
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
 extensions = ['sphinx.ext.autodoc',]
@@ -14,7 +16,6 @@ release = version
 
 # -- Options for HTML output ---------------------------------------------------
 
-sys.path.append(os.path.abspath('_themes'))
 html_theme_path = ['_themes']
 html_theme = 'pelican'
 

@@ -160,12 +160,16 @@ maintain multiple languages with different date formats, you can set this dict
 using language name (``lang`` in your posts) as key. Regarding available format
 codes, see `strftime document of python`_ :
 
+.. parsed-literal::
+
     DATE_FORMAT = {
         'en': '%a, %d %b %Y',
         'jp': '%Y-%m-%d(%a)',
     }
 
 You can set locale to further control date format:
+
+.. parsed-literal::
 
     LOCALE = ('usa', 'jpn',  # On Windows
         'en_US', 'ja_JP'     # On Unix/Linux
@@ -175,6 +179,7 @@ Also, it is possible to set different locale settings for each language. If you
 put (locale, format) tuples in the dict, this will override the LOCALE setting
 above:
 
+.. parsed-literal::
     # On Unix/Linux
     DATE_FORMAT = {
         'en': ('en_US','%a, %d %b %Y'),
