@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys, os
 
+sys.path.append(os.path.abspath('..'))
+
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
 extensions = ['sphinx.ext.autodoc',]
