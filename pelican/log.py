@@ -1,6 +1,6 @@
 import os
 import sys
-from logging import CRITICAL, ERROR,  WARN, INFO, DEBUG
+from logging import CRITICAL, ERROR, WARN, INFO, DEBUG
 from logging import critical, error, info, warning, warn, debug
 from logging import Formatter, getLogger, StreamHandler
 
@@ -74,7 +74,7 @@ class DummyFormatter(object):
            and not sys.platform.startswith('win'):
             return ANSIFormatter(*args, **kwargs)
         else:
-            return TextFormatter( *args, **kwargs)
+            return TextFormatter(*args, **kwargs)
 
 
 def init(level=None, logger=getLogger(), handler=StreamHandler()):
