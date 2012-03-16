@@ -42,9 +42,10 @@ class Page(object):
             if 'AUTHOR' in settings:
                 self.author = Author(settings['AUTHOR'], settings)
             else:
+                title = filename.decode('utf-8') if filename else self.title
                 self.author = Author(getenv('USER', 'John Doe'), settings)
                 warning(u"Author of `{0}' unknown, assuming that his name is "
-                         "`{1}'".format(filename or self.title, self.author))
+                         "`{1}'".format(title, self.author))
 
         # manage languages
         self.in_default_lang = True
