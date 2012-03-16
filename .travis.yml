@@ -7,4 +7,7 @@ install:
     - pip install . --use-mirrors
 script: nosetests -s tests
 notifications:
-  irc: "irc.freenode.org#pelican"
+    irc:
+        channels: 
+            - "irc.freenode.org#pelican"
+        on_success: change
