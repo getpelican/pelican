@@ -171,8 +171,10 @@ class Pelican(object):
         signals.finalized.send(self)
 
     def get_generator_classes(self):
-        generators = [StaticGenerator, ArticlesGenerator, PagesGenerator,
-                StaticPageGenerator]
+        generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
+
+        if self.settings['STATIC_PAGES']:
+            generators.append(StaticPageGenerator)
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
         if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
