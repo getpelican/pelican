@@ -3,6 +3,8 @@ import sys, os
 
 sys.path.append(os.path.abspath('..'))
 
+from pelican import __version__, __major__
+
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
 extensions = ['sphinx.ext.autodoc',]
@@ -11,8 +13,8 @@ master_doc = 'index'
 project = u'Pelican'
 copyright = u'2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
-version = "2"
-release = version
+version = __version__
+release = __major__
 
 # -- Options for HTML output ---------------------------------------------------
 

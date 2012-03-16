@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-VERSION = "3.0" # find a better way to do so.
+from pelican import __version__
 
 requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'pytz']
 
@@ -21,7 +21,7 @@ entry_points = {
 
 setup(
     name = "pelican",
-    version = VERSION,
+    version = __version__,
     url = 'http://pelican.notmyidea.org/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
