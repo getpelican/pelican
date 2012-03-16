@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-from pelican import __version__
-
 requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'pytz']
 
 try:
@@ -16,12 +14,12 @@ entry_points = {
         'pelican-import = pelican.tools.pelican_import:main',
         'pelican-quickstart = pelican.tools.pelican_quickstart:main',
         'pelican-themes = pelican.tools.pelican_themes:main'
-   ]     
+   ]
 }
 
 setup(
     name = "pelican",
-    version = __version__,
+    version = "3.0",
     url = 'http://pelican.notmyidea.org/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
