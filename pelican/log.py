@@ -8,31 +8,25 @@ from logging import Formatter, getLogger, StreamHandler
 RESET_TERM = u'\033[0;m'
 
 
-def term_color(code):
-    return lambda text: code + unicode(text) + RESET_TERM
+def start_color(index):
+    return u'\033[1;{0}m'.format(index)
+
+
+def term_color(color):
+    code = COLOR_CODES[color]
+    return lambda text: start_color(code) + unicode(text) + RESET_TERM
 
 
 COLOR_CODES = {
-    'gray': u'\033[1;30m',
-    'red': u'\033[1;31m',
-    'green': u'\033[1;32m',
-    'yellow': u'\033[1;33m',
-    'blue': u'\033[1;34m',
-    'magenta': u'\033[1;35m',
-    'cyan': u'\033[1;36m',
-    'white': u'\033[1;37m',
-    'bgred': u'\033[1;41m',
-    'bggreen': u'\033[1;42m',
-    'bgbrown': u'\033[1;43m',
-    'bgblue': u'\033[1;44m',
-    'bgmagenta': u'\033[1;45m',
-    'bgcyan': u'\033[1;46m',
-    'bggray': u'\033[1;47m',
-    'bgyellow': u'\033[1;43m',
-    'bggrey': u'\033[1;100m',
+    'red': 31,
+    'yellow': 33,
+    'cyan': 36,
+    'white': 37,
+    'bgred': 41,
+    'bggrey': 100,
 }
 
-ANSI = dict((col, term_color(code)) for col, code in COLOR_CODES.items())
+ANSI = dict((col, term_color(col)) for col in COLOR_CODES)
 
 
 class ANSIFormatter(Formatter):
