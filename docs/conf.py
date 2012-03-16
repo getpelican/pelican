@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys, os
 
-execfile('../version.py')
+sys.path.append(os.path.abspath('..'))
+from pelican import __version__, __major__
 
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
@@ -11,8 +12,9 @@ master_doc = 'index'
 project = u'Pelican'
 copyright = u'2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
-version = VERSION
-release = VERSION
+
+version = __version__
+release = __major__
 
 # -- Options for HTML output ---------------------------------------------------
 
