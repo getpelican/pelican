@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'pytz']
+requires = ['feedgenerator', 'Jinja2', 'Pygments', 'docutils', 'pytz']
 
 try:
     import argparse
