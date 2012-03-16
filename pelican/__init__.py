@@ -11,7 +11,10 @@ from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
 from pelican import log
 
-__version__ = "3.0"
+
+__major__ = 3
+__minor__ = 0
+__version__ = "{0}.{1}".format(__major__, __minor__)
 
 
 class Pelican(object):
