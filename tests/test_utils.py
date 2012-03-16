@@ -3,11 +3,12 @@ try:
     import unittest2 as unittest
 except ImportError:
     import unittest  # NOQA
+
+import os
 import datetime
+import time
 
 from pelican import utils
-from pelican.contents import Article
-
 from support import get_article
 
 
@@ -73,3 +74,20 @@ class TestUtils(unittest.TestCase):
         self.assertIn(fr_article1, trans)
         self.assertNotIn(en_article1, trans)
         self.assertNotIn(fr_article1, index)
+
+    def test_files_changed(self):
+        "Test if file changes are correctly detected"
+
+        path = os.path.join(os.path.dirname(__file__), 'content')
+        filename = os.path.join(path, 'article_with_metadata.rst')
+        changed = utils.files_changed(path, 'rst')
+        self.assertEquals(changed, True)
+
+        changed = utils.files_changed(path, 'rst')
+        self.assertEquals(changed, False)
+
+        t = time.time()
+        os.utime(filename, (t, t))
+        changed = utils.files_changed(path, 'rst')
+        self.assertEquals(changed, True)
+        self.assertAlmostEqual(utils.LAST_MTIME, t, places=2)
