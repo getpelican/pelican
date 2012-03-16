@@ -89,7 +89,7 @@ class Page(object):
                 if hasattr(self, 'date') and self.date > datetime.now():
                     self.status = 'draft'
 
-        # store the :summary: metadata if it is set
+        # store the summary metadata if it is set
         if 'summary' in metadata:
             self._summary = metadata['summary']
 
@@ -126,7 +126,7 @@ class Page(object):
         return content
 
     def _get_summary(self):
-        """Returns the summary of an article, based on the :summary: metadata
+        """Returns the summary of an article, based on the summary metadata
         if it is set, else troncate the content."""
         if hasattr(self, '_summary'):
             return self._summary
