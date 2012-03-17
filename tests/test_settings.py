@@ -8,7 +8,7 @@ from os.path import dirname, abspath, join
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 
 
-class TestSettingsFromFile(unittest2.TestCase):
+class TestSettingsFromFile(unittest.TestCase):
     """Providing a file, it should read it, replace the default values and
     append new values to the settings, if any
     """
