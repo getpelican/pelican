@@ -30,6 +30,7 @@ class RstReaderTest(unittest.TestCase):
                        ' <strong>inline markup</strong>.',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
+            'custom_field': 'http://notmyidea.org',
         }
 
         for key, value in expected.items():

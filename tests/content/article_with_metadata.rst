@@ -9,3 +9,4 @@ This is a super article !
 :summary:
     Multi-line metadata should be supported
     as well as **inline markup**.
+:custom_field: http://notmyidea.org
