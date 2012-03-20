@@ -119,7 +119,7 @@ class Pelican(object):
                 os.path.realpath(self.path).startswith(self.output_path)):
             clean_output_dir(self.output_path)
 
-        writer = self.get_writer()
+        writer = Writer(self.output_path, settings=self.settings)
 
         for p in generators:
             if hasattr(p, 'generate_output'):
@@ -130,9 +130,6 @@ class Pelican(object):
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
         return generators
-
-    def get_writer(self):
-        return Writer(self.output_path, settings=self.settings)
 
 
 def main():
