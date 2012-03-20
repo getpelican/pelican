@@ -3,17 +3,18 @@
 Plugins
 #######
 
-Since version 3.0, pelican manages plugins. Plugins are a way to add feature to
-pelican without having to directly hack pelican code.
+Since version 3.0, pelican manages plugins. Plugins are a way to add features
+to pelican without having to directly hack pelican code.
 
 Pelican is shipped with a set of core plugins, but you can easily implement
-your own (and this page describes how)
+your own (and this page describes how).
 
 How to use plugins?
 ====================
 
-To load plugins, you have to specify a them in your settings file. You have two
-ways to do so:  by specifying strings with the path to the callables: ::
+To load plugins, you have to specify them in your settings file. You have two
+ways to do so.
+Either by specifying strings with the path to the callables::
 
     PLUGINS = ['pelican.plugins.gravatar',] 
 
@@ -76,28 +77,18 @@ Translation
 -----------
 
 Github Activity
-_______________
+---------------
 
-This plugins introduces a new depencency, you have to install feedparser 
-if you want to use it, these are some ways to do it::
+This plugin makes use of the ``feedparser`` library that you'll need to
+install.
 
-     apt-get install python-feedparser # on debian based distributions like ubuntu
-     sudo easy_install feedparser
-     sudo pip install feedparser
-
-To enable it set in your pelican config file the GITHUB_ACTIVITY_FEED
-parameter pointing to your github activity feed.
-
-for example my personal activity feed is::
-
-     https://github.com/kpanic.atom
-
-and the config line could be::
+Set the GITHUB_ACTIVITY_FEED parameter to your github activity feed.
+For example, my setting would look like::
 
      GITHUB_ACTIVITY_FEED = 'https://github.com/kpanic.atom'
 
-in your template just write a for in jinja2 syntax against the
-github_activity variable, like for example::
+On the templates side, you just have to iterate over the ``github_activity``
+variable, as in the example::
 
      {% if GITHUB_ACTIVITY_FEED %}
         <div class="social">
@@ -113,7 +104,5 @@ github_activity variable, like for example::
 
 
 
-github_activity is a list containing a list. The first element is the title and
-the second element is the raw html from github so you can include it directly
-in your (for example base.html) template and style it in a way that your prefer
-using your css skills
+``github_activity`` is a list of lists. The first element is the title
+and the second element is the raw html from github.
