@@ -3,7 +3,7 @@
 Plugins
 #######
 
-Since version 2.8, pelican manages plugins. Plugins are a way to add feature to
+Since version 3.0, pelican manages plugins. Plugins are a way to add feature to
 pelican without having to directly hack pelican code.
 
 Pelican is shipped with a set of core plugins, but you can easily implement
