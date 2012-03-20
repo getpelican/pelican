@@ -63,6 +63,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
+                   'PLUGINS': [],
                    }
 
 

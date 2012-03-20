@@ -59,6 +59,7 @@ Setting name (default value)                        What does it do?
 `PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
                                                     of your documents. You will need to install
                                                     `rst2pdf`.
+`PLUGINS` (``[]``)                                  The list of plugins to load. See :ref:`plugins`.
 `RELATIVE_URLS` (``True``)                          Defines whether Pelican should use relative URLs or
                                                     not.
 `SITENAME` (``'A Pelican Blog'``)                   Your site name

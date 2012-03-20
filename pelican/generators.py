@@ -16,6 +16,7 @@ from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.log import warning, error, debug, info
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, open
+from pelican import signals
 
 
 class Generator(object):
@@ -114,6 +115,7 @@ class ArticlesGenerator(Generator):
         self.authors = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
+        signals.article_generator_init.send(self)
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
@@ -242,6 +244,7 @@ class ArticlesGenerator(Generator):
                     metadata['date'] = datetime.datetime.fromtimestamp(
                                         os.stat(f).st_ctime)
 
+            signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
                               filename=f)
             if not is_valid_content(article, f):

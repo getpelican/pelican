@@ -4,6 +4,8 @@ import sys
 import re
 import time
 
+from pelican import signals
+
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
 from pelican.settings import read_settings, _DEFAULT_CONFIG
@@ -18,7 +20,7 @@ __version__ = "{0}.{1}".format(__major__, __minor__)
 
 class Pelican(object):
     def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, delete_outputdir=False):
+            markup=None, delete_outputdir=False, plugin_path=None):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
@@ -53,6 +55,20 @@ class Pelican(object):
                 self.theme = theme_path
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
+
+        self.init_plugins()
+        signals.initialized.send(self)
+
+    def init_plugins(self):
+        self.plugins = self.settings['PLUGINS']
+        for plugin in self.plugins:
+            # if it's a string, then import it
+            if isinstance(plugin, str):
+                log.debug("Loading plugin `{0}' ...".format(plugin))
+                plugin = __import__(plugin, globals(), locals(), 'module')
+
+            log.debug("Registering plugin `{0}' ...".format(plugin.__name__))
+            plugin.register()
 
     def _handle_deprecation(self):
 
