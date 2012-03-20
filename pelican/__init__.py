@@ -1,19 +1,23 @@
-import argparse
 import os
-import sys
 import re
+import sys
 import time
+import logging
+import argparse
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator)
+from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
-from pelican import log
 
 __major__ = 3
 __minor__ = 0
 __version__ = "{0}.{1}".format(__major__, __minor__)
+
+
+logger = logging.getLogger(__name__)
 
 
 class Pelican(object):
@@ -57,7 +61,7 @@ class Pelican(object):
     def _handle_deprecation(self):
 
         if self.settings.get('CLEAN_URLS', False):
-            log.warning('Found deprecated `CLEAN_URLS` in settings. Modifing'
+            logger.warning('Found deprecated `CLEAN_URLS` in settings. Modifing'
                         ' the following settings for the same behaviour.')
 
             self.settings['ARTICLE_URL'] = '{slug}/'
@@ -67,10 +71,10 @@ class Pelican(object):
 
             for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
                             'PAGE_LANG_URL'):
-                log.warning("%s = '%s'" % (setting, self.settings[setting]))
+                logger.warning("%s = '%s'" % (setting, self.settings[setting]))
 
         if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
-            log.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
+            logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
                         ' settings.  Modifing the following settings for'
                         ' the same behaviour.')
 
@@ -91,7 +95,7 @@ class Pelican(object):
                             'PAGE_LANG_SAVE_AS'):
                 self.settings[setting] = os.path.join(structure,
                                                       self.settings[setting])
-                log.warning("%s = '%s'" % (setting, self.settings[setting]))
+                logger.warning("%s = '%s'" % (setting, self.settings[setting]))
 
     def run(self):
         """Run the generators and return"""
@@ -157,13 +161,13 @@ def main():
                         dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')
     parser.add_argument('-v', '--verbose', action='store_const',
-                        const=log.INFO, dest='verbosity',
+                        const=logging.INFO, dest='verbosity',
                         help='Show all messages.')
     parser.add_argument('-q', '--quiet', action='store_const',
-                        const=log.CRITICAL, dest='verbosity',
+                        const=logging.CRITICAL, dest='verbosity',
                         help='Show only critical errors.')
     parser.add_argument('-D', '--debug', action='store_const',
-                        const=log.DEBUG, dest='verbosity',
+                        const=logging.DEBUG, dest='verbosity',
                         help='Show all message, including debug messages.')
     parser.add_argument('--version', action='version', version=__version__,
             help='Print the pelican version and exit.')
@@ -173,7 +177,7 @@ def main():
                              " on the content files.")
     args = parser.parse_args()
 
-    log.init(args.verbosity)
+    init(args.verbosity)
     # Split the markup languages only if some have been given. Otherwise,
     # populate the variable with None.
     markup = [a.strip().lower() for a in args.markup.split(',')]\
@@ -207,9 +211,9 @@ def main():
         else:
             pelican.run()
     except Exception, e:
-        log.critical(unicode(e))
+        logger.critical(unicode(e))
 
-        if (args.verbosity == log.DEBUG):
+        if (args.verbosity == logging.DEBUG):
             raise
         else:
             sys.exit(getattr(e, 'exitcode', 1))

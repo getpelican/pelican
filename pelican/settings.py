@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
-from os.path import isabs
 import locale
+import logging
 
-from pelican import log
+from os.path import isabs
+
+
+logger = logging.getLogger(__name__)
+
 
 DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
@@ -102,10 +106,10 @@ def read_settings(filename=None):
         except locale.Error:
             pass
     else:
-        log.warn("LOCALE option doesn't contain a correct value")
+        logger.warn("LOCALE option doesn't contain a correct value")
 
     if not 'TIMEZONE' in context:
-        log.warn("No timezone information specified in the settings. Assuming"
+        logger.warn("No timezone information specified in the settings. Assuming"
                  " your timezone is UTC for feed generation. Check "
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")
