@@ -63,7 +63,7 @@ class Pelican(object):
         self.plugins = self.settings['PLUGINS']
         for plugin in self.plugins:
             # if it's a string, then import it
-            if isinstance(plugin, str):
+            if isinstance(plugin, basestring):
                 log.debug("Loading plugin `{0}' ...".format(plugin))
                 plugin = __import__(plugin, globals(), locals(), 'module')
 
