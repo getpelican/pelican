@@ -7,3 +7,5 @@ docs/fr/_build
 build
 dist
 output
+tags
+.tox

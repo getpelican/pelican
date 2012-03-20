@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import re
 import os
+import pytz
+import re
 import shutil
-from datetime import datetime
+
 from codecs import open as _open
+from datetime import datetime
 from itertools import groupby
 from operator import attrgetter
 from pelican.log import warning, info
@@ -12,10 +14,14 @@ from pelican.log import warning, info
 def get_date(string):
     """Return a datetime object from a string.
 
-    If no format matches the given date, raise a ValuEerror
+    If no format matches the given date, raise a ValueError.
     """
-    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M', '%Y-%m-%d', '%Y/%m/%d',
-               '%d/%m/%Y', '%d.%m.%Y', '%d.%m.%Y %H:%M']
+    string = re.sub(' +', ' ', string)
+    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M',
+               '%Y-%m-%d', '%Y/%m/%d',
+               '%d-%m-%Y', '%Y-%d-%m',  # Weird ones
+               '%d/%m/%Y', '%d.%m.%Y',
+               '%d.%m.%Y %H:%M', '%Y-%m-%d %H:%M:%S']
     for date_format in formats:
         try:
             return datetime.strptime(string, date_format)
@@ -42,6 +48,7 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
+
 def copy(path, source, destination, destination_path=None, overwrite=False):
     """Copy path from origin to destination.
 
@@ -51,15 +58,15 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     :param source: the source dir
     :param destination: the destination dir
     :param destination_path: the destination path (optional)
-    :param overwrite: wether to overwrite the destination if already exists or not
-
+    :param overwrite: whether to overwrite the destination if already exists
+                      or not
     """
     if not destination_path:
         destination_path = path
 
     source_ = os.path.abspath(os.path.expanduser(os.path.join(source, path)))
     destination_ = os.path.abspath(
-            os.path.expanduser(os.path.join(destination, destination_path)))
+        os.path.expanduser(os.path.join(destination, destination_path)))
 
     if os.path.isdir(source_):
         try:
@@ -74,6 +81,7 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     elif os.path.isfile(source_):
         shutil.copy(source_, destination_)
         info('copying %s to %s' % (source_, destination_))
+
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
@@ -102,7 +110,8 @@ def truncate_html_words(s, num, end_text='...'):
     length = int(num)
     if length <= 0:
         return u''
-    html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area', 'hr', 'input')
+    html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
+                      'hr', 'input')
 
     # Set up regular expressions
     re_words = re.compile(r'&.*?;|<.*?>|(\w[\w-]*)', re.U)
@@ -140,8 +149,9 @@ def truncate_html_words(s, num, end_text='...'):
             except ValueError:
                 pass
             else:
-                # SGML: An end tag closes, back to the matching start tag, all unclosed intervening start tags with omitted end tags
-                open_tags = open_tags[i+1:]
+                # SGML: An end tag closes, back to the matching start tag,
+                # all unclosed intervening start tags with omitted end tags
+                open_tags = open_tags[i + 1:]
         else:
             # Add it to the start of the open tags list
             open_tags.insert(0, tagname)
@@ -159,13 +169,11 @@ def truncate_html_words(s, num, end_text='...'):
 
 
 def process_translations(content_list):
-    """ Finds all translation and returns
-        tuple with two lists (index, translations).
-        Index list includes items in default language
-        or items which have no variant in default language.
+    """ Finds all translation and returns tuple with two lists (index,
+    translations).  Index list includes items in default language or items
+    which have no variant in default language.
 
-        Also, for each content_list item, it
-        sets attribute 'translations'
+    Also, for each content_list item, it sets attribute 'translations'
     """
     content_list.sort(key=attrgetter('slug'))
     grouped_by_slugs = groupby(content_list, attrgetter('slug'))
@@ -175,10 +183,7 @@ def process_translations(content_list):
     for slug, items in grouped_by_slugs:
         items = list(items)
         # find items with default language
-        default_lang_items = filter(
-            attrgetter('in_default_lang'),
-            items
-        )
+        default_lang_items = filter(attrgetter('in_default_lang'), items)
         len_ = len(default_lang_items)
         if len_ > 1:
             warning(u'there are %s variants of "%s"' % (len_, slug))
@@ -188,7 +193,7 @@ def process_translations(content_list):
             default_lang_items = items[:1]
 
         if not slug:
-            warning('empty slug for %r' %( default_lang_items[0].filename,))
+            warning('empty slug for %r' % (default_lang_items[0].filename,))
         index.extend(default_lang_items)
         translations.extend(filter(
             lambda x: x not in default_lang_items,
@@ -205,9 +210,6 @@ LAST_MTIME = 0
 def files_changed(path, extensions):
     """Return True if the files have changed since the last check"""
 
-    def with_extension(f):
-        return any(f.endswith(ext) for ext in extensions)
-
     def file_times(path):
         """Return the last time files have been modified"""
         for root, dirs, files in os.walk(path):
@@ -222,3 +224,15 @@ def files_changed(path, extensions):
         LAST_MTIME = mtime
         return True
     return False
+
+
+def set_date_tzinfo(d, tz_name=None):
+    """ Date without tzinfo shoudbe utc.
+    This function set the right tz to date that aren't utc and don't have
+    tzinfo.
+    """
+    if tz_name is not None:
+        tz = pytz.timezone(tz_name)
+        return tz.localize(d)
+    else:
+        return d

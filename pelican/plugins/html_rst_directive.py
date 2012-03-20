@@ -10,7 +10,7 @@ Directives
 ----------
 
 .. html::
-    
+
     (HTML code)
 
 
@@ -25,12 +25,12 @@ A search engine:
      <input type="hidden" name="lang" value="en" />
      <input type="submit" value="Seeks !" id="search_button" />
    </form>
-   
+
 
 A contact form:
 
 .. html::
-   
+
     <form method="GET" action="mailto:some email">
       <p>
         <input type="text" placeholder="Subject" name="subject">

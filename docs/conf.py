@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 import sys, os
 
+sys.path.append(os.path.abspath('..'))
+
+from pelican import __version__, __major__
+
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
 extensions = ['sphinx.ext.autodoc',]
@@ -9,12 +13,11 @@ master_doc = 'index'
 project = u'Pelican'
 copyright = u'2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
-version = "2"
-release = version
+version = __version__
+release = __major__
 
 # -- Options for HTML output ---------------------------------------------------
 
-sys.path.append(os.path.abspath('_themes'))
 html_theme_path = ['_themes']
 html_theme = 'pelican'
 
@@ -40,7 +43,7 @@ man_pages = [
     ('index', 'pelican', u'pelican documentation',
      [u'Alexis Métaireau'], 1),
     ('pelican-themes', 'pelican-themes', u'A theme manager for Pelican',
-     [u'Mickaël Raybaud'], 'en.1'),
-    ('fr/pelican-themes', 'pelican-themes', u'Un gestionnaire de thèmes pour Pelican',
-     [u'Mickaël Raybaud'], 'fr.1')
+     [u'Mickaël Raybaud'], 1),
+    ('themes', 'pelican-theming', u'How to create themes for Pelican',
+     [u'The Pelican contributors'], 1)
 ]

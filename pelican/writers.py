@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 import os
-import re
 from codecs import open
 from functools import partial
 import locale
+import re
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
-from pelican.utils import get_relative_path
 from pelican.paginator import Paginator
-from pelican.log import *
+from pelican.log import info
+from pelican.utils import get_relative_path, set_date_tzinfo
 
 
 class Writer(object):
@@ -28,22 +28,23 @@ class Writer(object):
             description=context.get('SITESUBTITLE', ''))
         return feed
 
-
     def _add_item_to_the_feed(self, feed, item):
 
         feed.add_item(
             title=item.title,
             link='%s/%s' % (self.site_url, item.url),
+            unique_id='%s/%s' % (self.site_url, item.url),
             description=item.content,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', 'John Doe'),
-            pubdate=item.date)
+            pubdate=set_date_tzinfo(item.date,
+                self.settings.get('TIMEZONE', None)))
 
     def write_feed(self, elements, context, filename=None, feed_type='atom'):
         """Generate a feed with the list of articles provided
 
-        Return the feed. If no output_path or filename is specified, just return
-        the feed object.
+        Return the feed. If no output_path or filename is specified, just
+        return the feed object.
 
         :param elements: the articles to put on the feed.
         :param context: the context to get the feed metadata.
@@ -54,12 +55,15 @@ class Writer(object):
         locale.setlocale(locale.LC_ALL, 'C')
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
-            self.feed_url= '%s/%s' % (self.site_url, filename)
+            self.feed_url = '%s/%s' % (self.site_url, filename)
 
             feed = self._create_new_feed(feed_type, context)
 
-            for item in elements:
-                self._add_item_to_the_feed(feed, item)
+            max_items = len(elements)
+            if self.settings['FEED_MAX_ITEMS']:
+                max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
+            for i in xrange(max_items):
+                self._add_item_to_the_feed(feed, elements[i])
 
             if filename:
                 complete_path = os.path.join(self.output_path, filename)
@@ -85,7 +89,7 @@ class Writer(object):
         :param context: dict to pass to the templates.
         :param relative_urls: use relative urls or absolutes ones
         :param paginated: dict of article list to paginate - must have the
-                          same length (same list in different orders)
+            same length (same list in different orders)
         :param **kwargs: additional variables to pass to the templates
         """
 
@@ -111,7 +115,8 @@ class Writer(object):
             localcontext['SITEURL'] = get_relative_path(name)
 
         localcontext.update(kwargs)
-        self.update_context_contents(name, localcontext)
+        if relative_urls:
+            self.update_context_contents(name, localcontext)
 
         # check paginated
         paginated = paginated or {}
@@ -121,12 +126,12 @@ class Writer(object):
             for key in paginated.iterkeys():
                 object_list = paginated[key]
 
-                if self.settings.get('WITH_PAGINATION'):
+                if self.settings.get('DEFAULT_PAGINATION'):
                     paginators[key] = Paginator(object_list,
                         self.settings.get('DEFAULT_PAGINATION'),
                         self.settings.get('DEFAULT_ORPHANS'))
                 else:
-                    paginators[key] = Paginator(object_list, len(object_list), 0)
+                    paginators[key] = Paginator(object_list, len(object_list))
 
             # generated pages, and write
             for page_num in range(paginators.values()[0].num_pages):
@@ -134,16 +139,17 @@ class Writer(object):
                 paginated_name = name
                 for key in paginators.iterkeys():
                     paginator = paginators[key]
-                    page = paginator.page(page_num+1)
-                    paginated_localcontext.update({'%s_paginator' % key: paginator,
-                                                   '%s_page' % key: page})
+                    page = paginator.page(page_num + 1)
+                    paginated_localcontext.update(
+                            {'%s_paginator' % key: paginator,
+                             '%s_page' % key: page})
                 if page_num > 0:
                     ext = '.' + paginated_name.rsplit('.')[-1]
                     paginated_name = paginated_name.replace(ext,
-                            '%s%s' % (page_num + 1, ext))
+                        '%s%s' % (page_num + 1, ext))
 
                 _write_file(template, paginated_localcontext, self.output_path,
-                        paginated_name)
+                    paginated_name)
         else:
             # no pagination
             _write_file(template, localcontext, self.output_path, name)
@@ -154,8 +160,8 @@ class Writer(object):
         relative paths.
 
         :param name: name of the file to output.
-        :param context: dict that will be passed to the templates, which need to
-                        be updated.
+        :param context: dict that will be passed to the templates, which need
+                        to be updated.
         """
         def _update_content(name, input):
             """Change all the relatives paths of the input content to relatives
@@ -166,25 +172,27 @@ class Writer(object):
             """
             content = input._content
 
-            hrefs = re.compile(r'<\s*[^\>]*href\s*=(^!#)\s*(["\'])(.*?)\1')
-            srcs = re.compile(r'<\s*[^\>]*src\s*=\s*(["\'])(.*?)\1')
+            hrefs = re.compile(r"""
+                (?P<markup><\s*[^\>]*  # match tag with src and href attr
+                    (?:href|src)\s*=\s*
+                )
+                (?P<quote>["\'])       # require value to be quoted
+                (?![#?])               # don't match fragment or query URLs
+                (?![a-z]+:)            # don't match protocol URLS
+                (?P<path>.*?)          # the url value
+                \2""", re.X)
 
-            matches = hrefs.findall(content)
-            matches.extend(srcs.findall(content))
-            relative_paths = []
-            for found in matches:
-                found = found[1]
-                if found not in relative_paths:
-                    relative_paths.append(found)
+            def replacer(m):
+                relative_path = m.group('path')
+                dest_path = os.path.normpath(
+                                os.sep.join((get_relative_path(name), "static",
+                                relative_path)))
 
-            for relative_path in relative_paths:
-                if not ":" in relative_path: # we don't want to rewrite protocols
-                    dest_path = os.sep.join((get_relative_path(name), "static",
-                        relative_path))
-                    content = content.replace(relative_path, dest_path)
+                return m.group('markup') + m.group('quote') + dest_path \
+                        + m.group('quote')
 
-            return content
-        
+            return hrefs.sub(replacer, content)
+
         if context is None:
             return
         if hasattr(context, 'values'):
@@ -203,4 +211,4 @@ class Writer(object):
                 if relative_path not in paths:
                     paths.append(relative_path)
                     setattr(item, "_get_content",
-                            partial(_update_content, name, item))
+                        partial(_update_content, name, item))
