@@ -30,10 +30,19 @@ class RstReaderTest(unittest.TestCase):
                        ' <strong>inline markup</strong>.',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
+            'custom_field': 'http://notmyidea.org',
         }
 
         for key, value in expected.items():
             self.assertEquals(value, metadata[key], key)
+
+    def test_article_metadata_key_lowercase(self):
+        """Keys of metadata should be lowercase."""
+        reader = readers.RstReader({})
+        content, metadata = reader.read(_filename('article_with_uppercase_metadata.rst'))
+
+        self.assertIn('category', metadata, "Key should be lowercase.")
+        self.assertEquals('Yeah', metadata.get('category'), "Value keeps cases.")
 
     def test_typogrify(self):
         # if nothing is specified in the settings, the content should be

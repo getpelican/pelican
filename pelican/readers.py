@@ -36,8 +36,8 @@ class Reader(object):
         self.settings = settings
 
     def process_metadata(self, name, value):
-        if name.lower() in _METADATA_PROCESSORS:
-            return _METADATA_PROCESSORS[name.lower()](value, self.settings)
+        if name in _METADATA_PROCESSORS:
+            return _METADATA_PROCESSORS[name](value, self.settings)
         return value
 
 
@@ -71,10 +71,14 @@ class RstReader(Reader):
                 if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
-                    value = render_node_to_html(document, body_elem)
+                    if name == 'summary':
+                        value = render_node_to_html(document, body_elem)
+                    else:
+                        value = body_elem.astext()
                 else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()
+                name = name.lower()
 
                 output[name] = self.process_metadata(name, value)
         return output
@@ -144,7 +148,7 @@ def read_file(filename, fmt=None, settings=None):
     if not fmt:
         fmt = filename.split('.')[-1]
 
-    if fmt not in _EXTENSIONS.keys():
+    if fmt not in _EXTENSIONS:
         raise TypeError('Pelican does not know how to parse %s' % filename)
 
     reader = _EXTENSIONS[fmt](settings)

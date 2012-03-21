@@ -6,3 +6,8 @@ install:
     - pip install nose unittest2 mock --use-mirrors
     - pip install . --use-mirrors
 script: nosetests -s tests
+notifications:
+    irc:
+        channels: 
+            - "irc.freenode.org#pelican"
+        on_success: change

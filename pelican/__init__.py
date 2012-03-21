@@ -11,7 +11,9 @@ from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
 from pelican import log
 
-__version__ = "3.0"
+__major__ = 3
+__minor__ = 0
+__version__ = "{0}.{1}".format(__major__, __minor__)
 
 
 class Pelican(object):
@@ -135,7 +137,8 @@ class Pelican(object):
 
 def main():
     parser = argparse.ArgumentParser(description="""A tool to generate a
-    static blog, with restructured text input files.""")
+    static blog, with restructured text input files.""",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='path', nargs='?',
         help='Path where to find the content files.')
@@ -145,11 +148,11 @@ def main():
     parser.add_argument('-o', '--output', dest='output',
         help='Where to output the generated files. If not specified, a '
              'directory will be created, named "output" in the current path.')
-    parser.add_argument('-m', '--markup', default=None, dest='markup',
+    parser.add_argument('-m', '--markup', dest='markup',
         help='The list of markup language to use (rst or md). Please indicate '
              'them separated by commas.')
-    parser.add_argument('-s', '--settings', dest='settings', default='',
-        help='The settings of the application. Default to False.')
+    parser.add_argument('-s', '--settings', dest='settings',
+        help='The settings of the application.')
     parser.add_argument('-d', '--delete-output-directory',
                         dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')

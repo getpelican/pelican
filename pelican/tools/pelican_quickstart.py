@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 
-import os, sys, argparse, string
+import os
+import string
+import argparse
+
 from pelican import __version__
 
-TEMPLATES={
+TEMPLATES = {
     'Makefile' : '''
 PELICAN=$pelican
 PELICANOPTS=$pelicanopts
@@ -60,7 +63,7 @@ github: $$(OUTPUTDIR)/index.html
 \tgit push origin gh-pages
 
 .PHONY: html help clean ftp_upload ssh_upload dropbox_upload github
-    ''',
+''',
 
     'pelican.conf.py': '''#!/usr/bin/env python
 # -*- coding: utf-8 -*- #
@@ -87,9 +90,7 @@ SOCIAL = (
          )
 
 DEFAULT_PAGINATION = $default_pagination
-
-
-    '''
+'''
 }
 
 CONF = {
@@ -106,17 +107,6 @@ CONF = {
     'default_pagination' : 10,
     'lang': 'en'
 }
-
-
-class _dict(dict):
-    def __init__(self, *args, **kwargs):
-        dict.__init__(self, *args, **kwargs)
-
-    def __getitem__(self, i):
-        return dict.get(self,i,None)
-
-    def has_key(k):
-        return True
 
 
 def ask(question, answer=str, default=None, l=None):
@@ -193,14 +183,16 @@ def ask(question, answer=str, default=None, l=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="A kickstarter for pelican")
+    parser = argparse.ArgumentParser(
+        description="A kickstarter for pelican",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-p', '--path', default=".",
             help="The path to generate the blog into")
-    parser.add_argument('-t', '--title', default=None, metavar="title",
+    parser.add_argument('-t', '--title', metavar="title",
             help='Set the title of the website')
-    parser.add_argument('-a', '--author', default=None, metavar="author",
+    parser.add_argument('-a', '--author', metavar="author",
             help='Set the author name of the website')
-    parser.add_argument('-l', '--lang', default=None, metavar="lang",
+    parser.add_argument('-l', '--lang', metavar="lang",
             help='Set the default lang of the website')
 
     args = parser.parse_args()
