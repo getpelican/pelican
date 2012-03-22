@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
-import pytz
 import re
+import pytz
 import shutil
+import logging
 
 from codecs import open as _open
 from datetime import datetime
 from itertools import groupby
 from operator import attrgetter
-from pelican.log import warning, info
+
+logger = logging.getLogger(__name__)
 
 
 def get_date(string):
@@ -71,16 +73,16 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     if os.path.isdir(source_):
         try:
             shutil.copytree(source_, destination_)
-            info('copying %s to %s' % (source_, destination_))
+            logger.info('copying %s to %s' % (source_, destination_))
         except OSError:
             if overwrite:
                 shutil.rmtree(destination_)
                 shutil.copytree(source_, destination_)
-                info('replacement of %s with %s' % (source_, destination_))
+                logger.info('replacement of %s with %s' % (source_, destination_))
 
     elif os.path.isfile(source_):
         shutil.copy(source_, destination_)
-        info('copying %s to %s' % (source_, destination_))
+        logger.info('copying %s to %s' % (source_, destination_))
 
 
 def clean_output_dir(path):
@@ -186,14 +188,14 @@ def process_translations(content_list):
         default_lang_items = filter(attrgetter('in_default_lang'), items)
         len_ = len(default_lang_items)
         if len_ > 1:
-            warning(u'there are %s variants of "%s"' % (len_, slug))
+            logger.warning(u'there are %s variants of "%s"' % (len_, slug))
             for x in default_lang_items:
-                warning('    %s' % x.filename)
+                logger.warning('    %s' % x.filename)
         elif len_ == 0:
             default_lang_items = items[:1]
 
         if not slug:
-            warning('empty slug for %r' % (default_lang_items[0].filename,))
+            logger.warning('empty slug for %r' % (default_lang_items[0].filename,))
         index.extend(default_lang_items)
         translations.extend(filter(
             lambda x: x not in default_lang_items,
