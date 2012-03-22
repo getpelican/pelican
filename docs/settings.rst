@@ -62,10 +62,13 @@ Setting name (default value)                        What does it do?
 `RELATIVE_URLS` (``True``)                          Defines whether Pelican should use relative URLs or
                                                     not.
 `SITENAME` (``'A Pelican Blog'``)                   Your site name
-`SITEURL`                                           Base URL of your website. Note that this is
-                                                    not a way to tell Pelican whether to use relative URLs
-                                                    or static ones. You should instead use the
-                                                    `RELATIVE_URL` setting for that purpose.
+`SITEURL`                                           Base URL of your website. Not defined by default,
+                                                    which means the base URL is assumed to be "/" with a
+                                                    root-relative URL structure. If `SITEURL` is specified
+                                                    explicitly, URLs will be generated with an absolute
+                                                    URL structure (including the domain). If you want to
+                                                    use relative URLs instead of root-relative or absolute
+                                                    URLs, you should instead use the `RELATIVE_URL` setting.
 `STATIC_PATHS` (``['images']``)                     The static paths you want to have accessible
                                                     on the output path "static". By default,
                                                     Pelican will copy the 'images' folder to the
@@ -86,10 +89,10 @@ Setting name (default value)                        What does it do?
 URL settings
 ------------
 
-You can customize the URL's and locations where files will be saved. The URL's and
-SAVE_AS variables use python's format strings. These variables allow you to place
-your articles in a location such as '{slug}/index.html' and link to then as
-'{slug}' for clean urls. These settings give you the flexibility to place your
+You can customize the URLs and locations where files will be saved. The URLs and
+SAVE_AS variables use Python's format strings. These variables allow you to place
+your articles in a location such as '{slug}/index.html' and link to them as
+'{slug}' for clean URLs. These settings give you the flexibility to place your
 articles and pages anywhere you want.
 
 Note: If you specify a datetime directive, it will be substituted using the
@@ -216,21 +219,51 @@ the ``TAG_FEED`` and ``TAG_FEED_RSS`` settings:
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`CATEGORY_FEED` ('feeds/%s.atom.xml'[2]_)           Where to put the category Atom feeds.
-`CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
+`FEED_DOMAIN` (``None``, i.e. base URL is "/")      The domain prepended to feed URLs. Since feed URLs
+                                                    should always be absolute, it is highly recommended
+                                                    to define this (e.g., "http://feeds.example.com"). If
+                                                    you have already explicitly defined SITEURL (see
+                                                    above) and want to use the same domain for your
+                                                    feeds, you can just set:  `FEED_DOMAIN = SITEURL`
 `FEED` (``'feeds/all.atom.xml'``)                   Relative URL to output the Atom feed.
 `FEED_RSS` (``None``, i.e. no RSS)                  Relative URL to output the RSS feed.
-`TAG_FEED` (``None``, ie no tag feed)               Relative URL to output the tag Atom feed. It should
+`CATEGORY_FEED` ('feeds/%s.atom.xml'[2]_)           Where to put the category Atom feeds.
+`CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
+`TAG_FEED` (``None``, i.e. no tag feed)             Relative URL to output the tag Atom feed. It should
                                                     be defined using a "%s" match in the tag name.
 `TAG_FEED_RSS` (``None``, ie no RSS tag feed)       Relative URL to output the tag RSS feed
 `FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feed item
                                                     quantity is unrestricted by default.
+`FEED_MAIN_URL` (``'feeds/all.atom.xml'``)          URL appended to domain for the main Atom feed and
+                                                    used to populate its `<link>` in the base template.
+                                                    Useful when you want the feed link to differ from the 
+                                                    filesystem path, such as when using web server
+                                                    aliases/rewrites or FeedBurner (see below).
 ================================================    =====================================================
 
 If you don't want to generate some of these feeds, set ``None`` to the
 variables above.
 
 .. [2] %s is the name of the category.
+
+FeedBurner
+----------
+
+If you want to use FeedBurner for your primary Atom feed, there are two
+primary fields to configure in the `FeedBurner
+<http://feedburner.google.com>`_ interface: "Original Feed" and "Feed Address".
+If using the default Pelican `FEED` attribute and assuming your feeds
+are served from the `www.example.com` domain, you would enter
+`http://www.example.com/feeds/all.atom.xml` in the "Original Feed" field in
+FeedBurner.
+
+For the "Feed Address" field in the FeedBurner interface, you may choose
+whatever suffix you prefer. In your Pelican settings, assign this suffix to
+the `FEED_MAIN_URL` setting. So if your FeedBurner feed address is set to
+`http://feeds.feedburner.com/myblogfeed`, in your Pelican settings you would
+set: `FEED_MAIN_URL = "myblogfeed"`. Then set the `FEED_DOMAIN` setting to
+`http://feeds.feedburner.com`, or `http://feeds.example.com` if you are using
+a CNAME on your own domain (i.e., FeedBurner's "MyBrand" feature).
 
 Pagination
 ==========

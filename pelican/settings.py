@@ -22,6 +22,7 @@ _DEFAULT_CONFIG = {'PATH': None,
                    'STATIC_PATHS': ['images', ],
                    'THEME_STATIC_PATHS': ['static', ],
                    'FEED': 'feeds/all.atom.xml',
+                   'FEED_MAIN_URL': 'feeds/all.atom.xml',
                    'CATEGORY_FEED': 'feeds/%s.atom.xml',
                    'TRANSLATION_FEED': 'feeds/all-%s.atom.xml',
                    'FEED_MAX_ITEMS': '',
@@ -71,26 +72,45 @@ _DEFAULT_CONFIG = {'PATH': None,
 
 
 def read_settings(filename=None):
+    if filename:
+        local_settings = get_settings_from_file(filename)
+    else:
+        local_settings = _DEFAULT_CONFIG
+    configured_settings = configure_settings(local_settings, None, filename)
+    return configured_settings
+
+
+def get_settings_from_file(filename, default_settings=None):
     """Load a Python file into a dictionary.
     """
-    context = _DEFAULT_CONFIG.copy()
+    if default_settings == None:
+        default_settings = _DEFAULT_CONFIG
+    context = default_settings.copy()
     if filename:
         tempdict = {}
         execfile(filename, tempdict)
         for key in tempdict:
             if key.isupper():
                 context[key] = tempdict[key]
+    return context
 
-        # Make the paths relative to the settings file
+
+def configure_settings(settings, default_settings=None, filename=None):
+    """Provide optimizations, error checking, and warnings for loaded settings"""
+    if default_settings is None:
+        default_settings = _DEFAULT_CONFIG
+
+    # Make the paths relative to the settings file
+    if filename:
         for path in ['PATH', 'OUTPUT_PATH']:
-            if path in context:
-                if context[path] is not None and not isabs(context[path]):
-                    context[path] = os.path.abspath(os.path.normpath(
-                        os.path.join(os.path.dirname(filename), context[path]))
+            if path in settings:
+                if settings[path] is not None and not isabs(settings[path]):
+                    settings[path] = os.path.abspath(os.path.normpath(
+                        os.path.join(os.path.dirname(filename), settings[path]))
                     )
 
     # if locales is not a list, make it one
-    locales = context['LOCALE']
+    locales = settings['LOCALE']
 
     if isinstance(locales, basestring):
         locales = [locales]
@@ -108,11 +128,20 @@ def read_settings(filename=None):
     else:
         logger.warn("LOCALE option doesn't contain a correct value")
 
-    if not 'TIMEZONE' in context:
+    # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL
+    if ('SITEURL' in settings) and (not 'FEED_DOMAIN' in settings):
+        settings['FEED_DOMAIN'] = settings['SITEURL']
+
+    # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
+    if (('FEED' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
+        logger.warn("Since feed URLs should always be absolute, you should specify "
+                 "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
+                 "http://www.example.com')")
+
+    if not 'TIMEZONE' in settings:
         logger.warn("No timezone information specified in the settings. Assuming"
                  " your timezone is UTC for feed generation. Check "
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")
 
-    # set the locale
-    return context
+    return settings
