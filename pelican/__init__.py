@@ -139,44 +139,58 @@ class Pelican(object):
         return Writer(self.output_path, settings=self.settings)
 
 
-def main():
+def parse_arguments():
     parser = argparse.ArgumentParser(description="""A tool to generate a
     static blog, with restructured text input files.""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='path', nargs='?',
-        help='Path where to find the content files.')
+        help='Path where to find the content files.',
+        default='.')
+
     parser.add_argument('-t', '--theme-path', dest='theme',
         help='Path where to find the theme templates. If not specified, it'
              'will use the default one included with pelican.')
+
     parser.add_argument('-o', '--output', dest='output',
         help='Where to output the generated files. If not specified, a '
              'directory will be created, named "output" in the current path.')
+
     parser.add_argument('-m', '--markup', dest='markup',
         help='The list of markup language to use (rst or md). Please indicate '
              'them separated by commas.')
+
     parser.add_argument('-s', '--settings', dest='settings',
         help='The settings of the application.')
-    parser.add_argument('-d', '--delete-output-directory',
-                        dest='delete_outputdir',
-        action='store_true', help='Delete the output directory.')
-    parser.add_argument('-v', '--verbose', action='store_const',
-                        const=logging.INFO, dest='verbosity',
-                        help='Show all messages.')
-    parser.add_argument('-q', '--quiet', action='store_const',
-                        const=logging.CRITICAL, dest='verbosity',
-                        help='Show only critical errors.')
-    parser.add_argument('-D', '--debug', action='store_const',
-                        const=logging.DEBUG, dest='verbosity',
-                        help='Show all message, including debug messages.')
-    parser.add_argument('--version', action='version', version=__version__,
-            help='Print the pelican version and exit.')
-    parser.add_argument('-r', '--autoreload', dest='autoreload',
-                        action='store_true',
-                        help="Relaunch pelican each time a modification occurs"
-                             " on the content files.")
-    args = parser.parse_args()
 
+    parser.add_argument('-d', '--delete-output-directory',
+        dest='delete_outputdir',
+        action='store_true', help='Delete the output directory.')
+
+    parser.add_argument('-v', '--verbose', action='store_const',
+        const=logging.INFO, dest='verbosity',
+        help='Show all messages.')
+
+    parser.add_argument('-q', '--quiet', action='store_const',
+        const=logging.CRITICAL, dest='verbosity',
+        help='Show only critical errors.')
+
+    parser.add_argument('-D', '--debug', action='store_const',
+        const=logging.DEBUG, dest='verbosity',
+        help='Show all message, including debug messages.')
+
+    parser.add_argument('--version', action='version', version=__version__,
+        help='Print the pelican version and exit.')
+
+    parser.add_argument('-r', '--autoreload', dest='autoreload',
+        action='store_true',
+        help="Relaunch pelican each time a modification occurs"
+                             " on the content files.")
+    return parser.parse_args()
+
+
+def main():
+    args = parse_arguments()
     init(args.verbosity)
     # Split the markup languages only if some have been given. Otherwise,
     # populate the variable with None.
