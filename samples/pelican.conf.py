@@ -11,7 +11,6 @@ REVERSE_CATEGORY_ORDER = True
 LOCALE = ""
 DEFAULT_PAGINATION = 4
 
-FEED_DOMAIN = SITEURL
 FEED_RSS = 'feeds/all.rss.xml'
 CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
 
@@ -30,7 +29,7 @@ SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
 DEFAULT_METADATA = (('yeah', 'it is'),)
 
 # static paths will be copied under the same name
-STATIC_PATHS = ["pictures",]
+STATIC_PATHS = ["pictures", ]
 
 # A list of files to copy from the source to the destination
 FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
@@ -38,4 +37,3 @@ FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
 # foobar will not be used, because it's not in caps. All configuration keys
 # have to be in caps
 foobar = "barbaz"
-

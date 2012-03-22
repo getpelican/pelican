@@ -5,12 +5,13 @@ except ImportError, e:
 
 from os.path import dirname, abspath, join
 
-from pelican.settings import read_settings, _DEFAULT_CONFIG
+from pelican.settings import read_settings, configure_settings, _DEFAULT_CONFIG
 
 
-class TestSettingsFromFile(unittest2.TestCase):
-    """Providing a file, it should read it, replace the default values and
-    append new values to the settings, if any
+class TestSettingsConfiguration(unittest2.TestCase):
+    """Provided a file, it should read it, replace the default values,
+    append new values to the settings (if any), and apply basic settings
+    optimizations.
     """
     def setUp(self):
         self.PATH = abspath(dirname(__file__))
@@ -35,3 +36,15 @@ class TestSettingsFromFile(unittest2.TestCase):
         """providing no file should return the default values."""
         settings = read_settings(None)
         self.assertDictEqual(settings, _DEFAULT_CONFIG)
+
+    def test_configure_settings(self):
+        """Manipulations to settings should be applied correctly."""
+
+        # FEED_DOMAIN, if undefined, should default to SITEURL
+        settings = {'SITEURL': 'http://blog.notmyidea.org', 'LOCALE': ''}
+        configure_settings(settings)
+        self.assertEqual(settings['FEED_DOMAIN'], 'http://blog.notmyidea.org')
+
+        settings = {'FEED_DOMAIN': 'http://feeds.example.com', 'LOCALE': ''}
+        configure_settings(settings)
+        self.assertEqual(settings['FEED_DOMAIN'], 'http://feeds.example.com')
