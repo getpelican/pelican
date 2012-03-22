@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest  # NOQA
-
 import os
 import datetime
 import time
 
 from pelican import utils
-from support import get_article
+from .support import get_article, unittest
 
 
 class TestUtils(unittest.TestCase):
