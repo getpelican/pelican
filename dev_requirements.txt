@@ -1,7 +1,0 @@
-Jinja2
-Pygments
-docutils
-feedgenerator
-unittest2
-pytz
-mock

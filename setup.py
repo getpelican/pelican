@@ -1,12 +1,13 @@
-#!/usr/bin/env python
+import sys
+
 from setuptools import setup
 
-requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'pytz']
+requires = ['feedgenerator', 'Jinja2', 'Pygments', 'docutils', 'pytz']
 
-try:
-    import argparse
-except ImportError:
-    requires.append('argparse')
+tests_require = ['mock', 'nose']
+
+if sys.version < '2.7':
+    tests_require.append('unittest2')
 
 entry_points = {
     'console_scripts': [
@@ -28,6 +29,8 @@ setup(
     packages = ['pelican', 'pelican.tools'],
     include_package_data = True,
     install_requires = requires,
+    tests_require = tests_require,
+    test_suite = 'nose.collector',
     entry_points = entry_points,
     classifiers = ['Development Status :: 5 - Production/Stable',
                    'Environment :: Console',
