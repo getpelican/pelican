@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-try:
-    import unittest2 as unittest
-except ImportError, e:
-    import unittest  # NOQA
+
+from mock import MagicMock
 
 from pelican.generators import ArticlesGenerator
 from pelican.settings import _DEFAULT_CONFIG
-
-from mock import MagicMock
+from .support import unittest
 
 
 class TestArticlesGenerator(unittest.TestCase):

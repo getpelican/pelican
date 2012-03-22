@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
-from os.path import isabs
 import locale
+import logging
 
-from pelican import log
+from os.path import isabs
+
+
+logger = logging.getLogger(__name__)
+
 
 DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
@@ -122,7 +126,7 @@ def configure_settings(settings, default_settings=None, filename=None):
         except locale.Error:
             pass
     else:
-        log.warn("LOCALE option doesn't contain a correct value")
+        logger.warn("LOCALE option doesn't contain a correct value")
 
     # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL
     if ('SITEURL' in settings) and (not 'FEED_DOMAIN' in settings):
@@ -130,12 +134,12 @@ def configure_settings(settings, default_settings=None, filename=None):
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     if (('FEED' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
-        log.warn("Since feed URLs should always be absolute, you should specify "
+        logger.warn("Since feed URLs should always be absolute, you should specify "
                  "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
                  "http://www.example.com')")
 
     if not 'TIMEZONE' in settings:
-        log.warn("No timezone information specified in the settings. Assuming"
+        logger.warn("No timezone information specified in the settings. Assuming"
                  " your timezone is UTC for feed generation. Check "
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")

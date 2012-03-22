@@ -1,8 +1,19 @@
+__all__ = [
+    'temporary_folder',
+    'get_article',
+    'unittest',
+]
+
 from contextlib import contextmanager
 from tempfile import mkdtemp
 from shutil import rmtree
 
 from pelican.contents import Article
+
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 
 @contextmanager

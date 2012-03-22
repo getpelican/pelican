@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
+
 import os
+import re
+import locale
+import logging
+
 from codecs import open
 from functools import partial
-import locale
-import re
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from pelican.paginator import Paginator
-from pelican.log import info
 from pelican.utils import get_relative_path, set_date_tzinfo
+
+logger = logging.getLogger(__name__)
 
 
 class Writer(object):
@@ -73,7 +77,7 @@ class Writer(object):
                     pass
                 fp = open(complete_path, 'w')
                 feed.write(fp, 'utf-8')
-                info('writing %s' % complete_path)
+                logger.info('writing %s' % complete_path)
 
                 fp.close()
             return feed
@@ -108,7 +112,7 @@ class Writer(object):
                 pass
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write(output)
-            info(u'writing %s' % filename)
+            logger.info(u'writing %s' % filename)
 
         localcontext = context.copy()
         if relative_urls:

@@ -71,7 +71,10 @@ class RstReader(Reader):
                 if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
-                    value = render_node_to_html(document, body_elem)
+                    if name == 'summary':
+                        value = render_node_to_html(document, body_elem)
+                    else:
+                        value = body_elem.astext()
                 else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()

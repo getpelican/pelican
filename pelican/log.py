@@ -1,8 +1,12 @@
+__all__ = [
+    'init'
+]
+
 import os
 import sys
-from logging import CRITICAL, ERROR, WARN, INFO, DEBUG
-from logging import critical, error, info, warning, warn, debug
-from logging import Formatter, getLogger, StreamHandler
+import logging
+
+from logging import Formatter, getLogger, StreamHandler, DEBUG
 
 
 RESET_TERM = u'\033[0;m'
@@ -78,32 +82,21 @@ class DummyFormatter(object):
 
 
 def init(level=None, logger=getLogger(), handler=StreamHandler()):
+    logger = logging.getLogger()
     fmt = DummyFormatter()
     handler.setFormatter(fmt)
     logger.addHandler(handler)
+
     if level:
         logger.setLevel(level)
 
 
 if __name__ == '__main__':
     init(level=DEBUG)
-    debug('debug')
-    info('info')
-    warning('warning')
-    error('error')
-    critical('critical')
 
-
-__all__ = [
-    "debug",
-    "info",
-    "warn",
-    "warning",
-    "error",
-    "critical",
-    "DEBUG",
-    "INFO",
-    "WARN",
-    "ERROR",
-    "CRITICAL"
-]
+    root_logger = logging.getLogger()
+    root_logger.debug('debug')
+    root_logger.info('info')
+    root_logger.warning('warning')
+    root_logger.error('error')
+    root_logger.critical('critical')

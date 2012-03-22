@@ -86,7 +86,7 @@ Setting name (default value)                        What does it do?
 .. [#] Default is the system locale.
 
 
-URL Settings
+URL settings
 ------------
 
 You can customize the URLs and locations where files will be saved. The URLs and

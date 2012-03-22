@@ -1,14 +1,10 @@
-try:
-    import unittest2
-except ImportError, e:
-    import unittest as unittest2
-
 from os.path import dirname, abspath, join
 
 from pelican.settings import read_settings, configure_settings, _DEFAULT_CONFIG
+from .support import unittest
 
 
-class TestSettingsConfiguration(unittest2.TestCase):
+class TestSettingsConfiguration(unittest.TestCase):
     """Provided a file, it should read it, replace the default values,
     append new values to the settings (if any), and apply basic settings
     optimizations.

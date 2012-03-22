@@ -1,13 +1,10 @@
 # coding: utf-8
-try:
-    import unittest2 as unittest
-except ImportError, e:
-    import unittest
 
 import datetime
 import os
 
 from pelican import readers
+from .support import unittest
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_PATH = os.path.join(CUR_DIR, 'content')
@@ -30,6 +27,7 @@ class RstReaderTest(unittest.TestCase):
                        ' <strong>inline markup</strong>.',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
+            'custom_field': 'http://notmyidea.org',
         }
 
         for key, value in expected.items():
