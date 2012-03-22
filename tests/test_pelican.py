@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from support import temporary_folder
+from .support import temporary_folder
 
 from pelican import Pelican
 from pelican.settings import read_settings
