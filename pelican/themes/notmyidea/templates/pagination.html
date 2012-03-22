@@ -1,3 +1,4 @@
+{% if DEFAULT_PAGINATION %}
 <p class="paginator">
     {% if articles_page.has_previous() %}
         {% if articles_page.previous_page_number() == 1 %}
@@ -11,3 +12,4 @@
         <a href="{{ SITEURL }}/{{ page_name }}{{ articles_page.next_page_number() }}.html">&raquo;</a>
     {% endif %}
 </p>
+{% endif %}

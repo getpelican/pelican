@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
-from pelican.utils import slugify, truncate_html_words
-from pelican.log import *
+from datetime import datetime
+from os import getenv
+from sys import platform, stdin
+import functools
+import locale
+
+from pelican.log import warning, error
 from pelican.settings import _DEFAULT_CONFIG
+from pelican.utils import slugify, truncate_html_words
+
 
 class Page(object):
     """Represents a page
@@ -11,17 +18,17 @@ class Page(object):
     """
     mandatory_properties = ('title',)
 
-    def __init__(self, content, metadata=None, settings=None, filename=None):
+    def __init__(self, content, metadata=None, settings=None,
+                 filename=None):
         # init parameters
         if not metadata:
             metadata = {}
         if not settings:
             settings = _DEFAULT_CONFIG
 
+        self.settings = settings
         self._content = content
         self.translations = []
-
-        self.status = "published"  # default value
 
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
         local_metadata.update(metadata)
@@ -29,11 +36,16 @@ class Page(object):
         # set metadata as attributes
         for key, value in local_metadata.items():
             setattr(self, key.lower(), value)
-        
+
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
-                self.author = settings['AUTHOR']
+                self.author = Author(settings['AUTHOR'], settings)
+            else:
+                title = filename.decode('utf-8') if filename else self.title
+                self.author = Author(getenv('USER', 'John Doe'), settings)
+                warning(u"Author of `{0}' unknown, assuming that his name is "
+                         "`{1}'".format(title, self.author))
 
         # manage languages
         self.in_default_lang = True
@@ -48,21 +60,6 @@ class Page(object):
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
-        # create save_as from the slug (+lang)
-        if not hasattr(self, 'save_as') and hasattr(self, 'slug'):
-            if self.in_default_lang:
-                self.save_as = '%s.html' % self.slug
-                clean_url = '%s/' % self.slug
-            else:
-                self.save_as = '%s-%s.html' % (self.slug, self.lang)
-                clean_url = '%s-%s/' % (self.slug, self.lang)
-
-        # change the save_as regarding the settings
-        if settings.get('CLEAN_URLS', False):
-            self.url = clean_url
-        elif hasattr(self, 'save_as'):
-            self.url = self.save_as
-
         if filename:
             self.filename = filename
 
@@ -73,16 +70,29 @@ class Page(object):
             else:
                 self.date_format = settings['DEFAULT_DATE_FORMAT']
 
-        if hasattr(self, 'date'):
-            self.locale_date = self.date.strftime(self.date_format.encode('ascii','xmlcharrefreplace')).decode('utf')
+        if isinstance(self.date_format, tuple):
+            locale.setlocale(locale.LC_ALL, self.date_format[0])
+            self.date_format = self.date_format[1]
 
-        # manage summary
-        if not hasattr(self, 'summary'):
-            self.summary = property(lambda self: truncate_html_words(self.content, 50)).__get__(self, Page)
+        if hasattr(self, 'date'):
+            encoded_date = self.date.strftime(
+                    self.date_format.encode('ascii', 'xmlcharrefreplace'))
+
+            if platform == 'win32':
+                self.locale_date = encoded_date.decode(stdin.encoding)
+            else:
+                self.locale_date = encoded_date.decode('utf')
 
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
+            if not settings['WITH_FUTURE_DATES']:
+                if hasattr(self, 'date') and self.date > datetime.now():
+                    self.status = 'draft'
+
+        # store the summary metadata if it is set
+        if 'summary' in metadata:
+            self._summary = metadata['summary']
 
     def check_properties(self):
         """test that each mandatory property is set."""
@@ -91,12 +101,48 @@ class Page(object):
                 raise NameError(prop)
 
     @property
+    def url_format(self):
+        return {
+            'slug': getattr(self, 'slug', ''),
+            'lang': getattr(self, 'lang', 'en'),
+            'date': getattr(self, 'date', datetime.now()),
+            'author': self.author,
+            'category': getattr(self, 'category', 'misc'),
+        }
+
+    def _expand_settings(self, key):
+        fq_key = ('%s_%s' % (self.__class__.__name__, key)).upper()
+        return self.settings[fq_key].format(**self.url_format)
+
+    def get_url_setting(self, key):
+        key = key if self.in_default_lang else 'lang_%s' % key
+        return self._expand_settings(key)
+
+    @property
     def content(self):
         if hasattr(self, "_get_content"):
             content = self._get_content()
         else:
             content = self._content
         return content
+
+    def _get_summary(self):
+        """Returns the summary of an article, based on the summary metadata
+        if it is set, else troncate the content."""
+        if hasattr(self, '_summary'):
+            return self._summary
+        else:
+            return truncate_html_words(self.content, 50)
+
+    def _set_summary(self, summary):
+        """Dummy function"""
+        pass
+
+    summary = property(_get_summary, _set_summary, "Summary of the article."
+                       "Based on the content. Can't be set")
+
+    url = property(functools.partial(get_url_setting, key='url'))
+    save_as = property(functools.partial(get_url_setting, key='save_as'))
 
 
 class Article(Page):
@@ -107,10 +153,53 @@ class Quote(Page):
     base_properties = ('author', 'date')
 
 
+class URLWrapper(object):
+    def __init__(self, name, settings):
+        self.name = unicode(name)
+        self.slug = slugify(self.name)
+        self.settings = settings
+
+    def as_dict(self):
+        return self.__dict__
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def __eq__(self, other):
+        return self.name == unicode(other)
+
+    def __str__(self):
+        return str(self.name)
+
+    def __unicode__(self):
+        return self.name
+
+    def _from_settings(self, key):
+        setting = "%s_%s" % (self.__class__.__name__.upper(), key)
+        return self.settings[setting].format(**self.as_dict())
+
+    url = property(functools.partial(_from_settings, key='URL'))
+    save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
+
+
+class Category(URLWrapper):
+    pass
+
+
+class Tag(URLWrapper):
+    def __init__(self, name, *args, **kwargs):
+        super(Tag, self).__init__(unicode.strip(name), *args, **kwargs)
+
+
+class Author(URLWrapper):
+    pass
+
+
 def is_valid_content(content, f):
     try:
         content.check_properties()
         return True
     except NameError, e:
-        error(u"Skipping %s: impossible to find informations about '%s'" % (f, e))
+        error(u"Skipping %s: impossible to find informations about '%s'"\
+                % (f, e))
         return False

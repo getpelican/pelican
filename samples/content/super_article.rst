@@ -26,7 +26,7 @@ And here comes the cool stuff_.
    :width: 600 px
    :alt: alternate text
 
-.. code-block:: python
+::
 
    >>> from ipdb import set_trace
    >>> set_trace()
