@@ -65,10 +65,11 @@ Setting name (default value)                        What does it do?
 `SITEURL`                                           Base URL of your website. Not defined by default,
                                                     which means the base URL is assumed to be "/" with a
                                                     root-relative URL structure. If `SITEURL` is specified
-                                                    explicitly, URLs will be generated with an absolute
-                                                    URL structure (including the domain). If you want to
-                                                    use relative URLs instead of root-relative or absolute
-                                                    URLs, you should instead use the `RELATIVE_URL` setting.
+                                                    explicitly, there should be no trailing slash at the end,
+                                                    and URLs will be generated with an absolute URL structure
+                                                    (including the domain). If you want to use relative URLs
+                                                    instead of root-relative or absolute URLs, you should
+                                                    instead use the `RELATIVE_URL` setting.
 `STATIC_PATHS` (``['images']``)                     The static paths you want to have accessible
                                                     on the output path "static". By default,
                                                     Pelican will copy the 'images' folder to the

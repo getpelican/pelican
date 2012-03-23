@@ -36,6 +36,11 @@ class TestSettingsConfiguration(unittest.TestCase):
     def test_configure_settings(self):
         """Manipulations to settings should be applied correctly."""
 
+        # SITEURL should not have a trailing slash
+        settings = {'SITEURL': 'http://blog.notmyidea.org/', 'LOCALE': ''}
+        configure_settings(settings)
+        self.assertEqual(settings['SITEURL'], 'http://blog.notmyidea.org')
+
         # FEED_DOMAIN, if undefined, should default to SITEURL
         settings = {'SITEURL': 'http://blog.notmyidea.org', 'LOCALE': ''}
         configure_settings(settings)
