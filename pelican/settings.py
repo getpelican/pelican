@@ -128,9 +128,15 @@ def configure_settings(settings, default_settings=None, filename=None):
     else:
         logger.warn("LOCALE option doesn't contain a correct value")
 
-    # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL
-    if ('SITEURL' in settings) and (not 'FEED_DOMAIN' in settings):
-        settings['FEED_DOMAIN'] = settings['SITEURL']
+    if ('SITEURL' in settings):
+        # If SITEURL has a trailing slash, remove it and provide a warning
+        siteurl = settings['SITEURL']
+        if (siteurl[len(siteurl) - 1:] == '/'):
+            settings['SITEURL'] = siteurl[:-1]
+            logger.warn("Removed extraneous trailing slash from SITEURL.")
+        # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL
+        if not 'FEED_DOMAIN' in settings:
+            settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     if (('FEED' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
