@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
                               "themes/notmyidea"])
-_DEFAULT_CONFIG = {'PATH': None,
+_DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_DIR': '',
                    'ARTICLE_EXCLUDES': ('pages',),
                    'PAGE_DIR': 'pages',

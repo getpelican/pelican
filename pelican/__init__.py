@@ -146,7 +146,7 @@ def parse_arguments():
 
     parser.add_argument(dest='path', nargs='?',
         help='Path where to find the content files.',
-        default='.')
+        default=None)
 
     parser.add_argument('-t', '--theme-path', dest='theme',
         help='Path where to find the theme templates. If not specified, it'
