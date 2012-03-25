@@ -23,8 +23,9 @@ class RstReaderTest(unittest.TestCase):
             'category': 'yeah',
             'author': u'Alexis Métaireau',
             'title': 'This is a super article !',
-            'summary': 'Multi-line metadata should be supported\nas well as'\
-                       ' <strong>inline markup</strong>.',
+            'summary': u'<p class="first last">Multi-line metadata should be'\
+                       u' supported\nas well as <strong>inline'\
+                       u' markup</strong>.</p>\n',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
