@@ -219,9 +219,10 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """change the context"""
 
+        article_path = os.path.join(self.path, self.settings['ARTICLE_DIR'])
         all_articles = []
         for f in self.get_files(
-                os.path.join(self.path, self.settings['ARTICLE_DIR']),
+                article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
                 content, metadata = read_file(f, settings=self.settings)
@@ -232,7 +233,7 @@ class ArticlesGenerator(Generator):
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata:
 
-                if os.path.dirname(f) == self.path:
+                if os.path.dirname(f) == article_path:
                     category = self.settings['DEFAULT_CATEGORY']
                 else:
                     category = os.path.basename(os.path.dirname(f))\
