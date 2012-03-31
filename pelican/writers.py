@@ -59,7 +59,8 @@ class Writer(object):
         locale.setlocale(locale.LC_ALL, 'C')
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
-            self.feed_url = '%s/%s' % (self.site_url, filename)
+            self.feed_domain = context.get('FEED_DOMAIN')
+            self.feed_url = '%s/%s' % (self.feed_domain, filename)
 
             feed = self._create_new_feed(feed_type, context)
 
