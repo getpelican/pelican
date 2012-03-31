@@ -235,11 +235,6 @@ Setting name (default value)                        What does it do?
 `TAG_FEED_RSS` (``None``, ie no RSS tag feed)       Relative URL to output the tag RSS feed
 `FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feed item
                                                     quantity is unrestricted by default.
-`FEED_MAIN_URL` (``'feeds/all.atom.xml'``)          URL appended to domain for the main Atom feed and
-                                                    used to populate its `<link>` in the base template.
-                                                    Useful when you want the feed link to differ from the 
-                                                    filesystem path, such as when using web server
-                                                    aliases/rewrites or FeedBurner (see below).
 ================================================    =====================================================
 
 If you don't want to generate some of these feeds, set ``None`` to the
@@ -250,21 +245,21 @@ variables above.
 FeedBurner
 ----------
 
-If you want to use FeedBurner for your primary Atom feed, there are two
-primary fields to configure in the `FeedBurner
-<http://feedburner.google.com>`_ interface: "Original Feed" and "Feed Address".
-If using the default Pelican `FEED` attribute and assuming your feeds
-are served from the `www.example.com` domain, you would enter
-`http://www.example.com/feeds/all.atom.xml` in the "Original Feed" field in
-FeedBurner.
+If you want to use FeedBurner for your feed, you will likely need to decide
+upon a unique identifier. For example, if your site were called "Thyme" and
+hosted on the www.example.com domain, you might use "thymefeeds" as your
+unique identifier, which we'll use throughout this section for illustrative
+purposes. In your Pelican settings, set the `FEED` attribute to
+"thymefeeds/main.xml" to create an Atom feed with an original address of
+`http://www.example.com/thymefeeds/main.xml`. Set the `FEED_DOMAIN` attribute
+to `http://feeds.feedburner.com`, or `http://feeds.example.com` if you are
+using a CNAME on your own domain (i.e., FeedBurner's "MyBrand" feature).
 
-For the "Feed Address" field in the FeedBurner interface, you may choose
-whatever suffix you prefer. In your Pelican settings, assign this suffix to
-the `FEED_MAIN_URL` setting. So if your FeedBurner feed address is set to
-`http://feeds.feedburner.com/myblogfeed`, in your Pelican settings you would
-set: `FEED_MAIN_URL = "myblogfeed"`. Then set the `FEED_DOMAIN` setting to
-`http://feeds.feedburner.com`, or `http://feeds.example.com` if you are using
-a CNAME on your own domain (i.e., FeedBurner's "MyBrand" feature).
+There are two fields to configure in the `FeedBurner
+<http://feedburner.google.com>`_ interface: "Original Feed" and "Feed
+Address". In this example, the "Original Feed" would be
+`http://www.example.com/thymefeeds/main.xml` and the "Feed Address" suffix
+would be `thymefeeds/main.xml`.
 
 Pagination
 ==========

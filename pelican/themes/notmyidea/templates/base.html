@@ -4,7 +4,7 @@
         <title>{% block title %}{{ SITENAME }}{%endblock%}</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{{ SITEURL }}/theme/css/{{ CSS_FILE }}" type="text/css" />
-        <link href="{{ FEED_DOMAIN }}/{{ FEED_MAIN_URL }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+        <link href="{{ FEED_DOMAIN }}/{{ FEED }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
         {% if FEED_RSS %}
         <link href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
         {% endif %}
@@ -56,7 +56,7 @@
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="{{ FEED_DOMAIN }}/{{ FEED_MAIN_URL }}" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            <li><a href="{{ FEED_DOMAIN }}/{{ FEED }}" type="application/atom+xml" rel="alternate">atom feed</a></li>
                             {% if FEED_RSS %}
                             <li><a href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate">rss feed</a></li>
                             {% endif %}
