@@ -27,7 +27,7 @@ class Writer(object):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
         feed = feed_class(
             title=context['SITENAME'],
-            link=self.site_url,
+            link=(self.site_url + '/'),
             feed_url=self.feed_url,
             description=context.get('SITESUBTITLE', ''))
         return feed
@@ -36,8 +36,9 @@ class Writer(object):
 
         feed.add_item(
             title=item.title,
-            link='%s/%s' % (self.site_url, item.url),
-            unique_id='%s/%s' % (self.site_url, item.url),
+            link='%s%s' % (self.site_url, item.url),
+            unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
+                                        item.date.date(), item.url),
             description=item.content,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', 'John Doe'),
