@@ -34,7 +34,7 @@ def wp2fields(xml):
             categories = [cat.contents[0] for cat in item.fetch(domain='category')]
             # caturl = [cat['nicename'] for cat in item.fetch(domain='category')]
 
-            tags = [tag.contents[0].title() for tag in item.fetch(domain='tag', nicename=None)]
+            tags = [tag.contents[0] for tag in item.fetch(domain='post_tag')]
 
             yield (title, content, filename, date, author, categories, tags, "html")
 
