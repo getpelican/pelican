@@ -11,16 +11,6 @@ from logging import Formatter, getLogger, StreamHandler, DEBUG
 
 RESET_TERM = u'\033[0;m'
 
-
-def start_color(index):
-    return u'\033[1;{0}m'.format(index)
-
-
-def term_color(color):
-    code = COLOR_CODES[color]
-    return lambda text: start_color(code) + unicode(text) + RESET_TERM
-
-
 COLOR_CODES = {
     'red': 31,
     'yellow': 33,
@@ -30,7 +20,11 @@ COLOR_CODES = {
     'bggrey': 100,
 }
 
-ANSI = dict((col, term_color(col)) for col in COLOR_CODES)
+
+def ansi(color, text):
+    """Wrap text in an ansi escape sequence"""
+    code = COLOR_CODES[color]
+    return u'\033[1;{0}m{1}{2}'.format(code, text, RESET_TERM)
 
 
 class ANSIFormatter(Formatter):
@@ -41,17 +35,17 @@ class ANSIFormatter(Formatter):
 
     def format(self, record):
         if record.levelname is 'INFO':
-            return ANSI['cyan']('-> ') + unicode(record.msg)
+            return ansi('cyan', '-> ') + unicode(record.msg)
         elif record.levelname is 'WARNING':
-            return ANSI['yellow'](record.levelname) + ': ' + unicode(record.msg)
+            return ansi('yellow', record.levelname) + ': ' + unicode(record.msg)
         elif record.levelname is 'ERROR':
-            return ANSI['red'](record.levelname) + ': ' + unicode(record.msg)
+            return ansi('red', record.levelname) + ': ' + unicode(record.msg)
         elif record.levelname is 'CRITICAL':
-            return ANSI['bgred'](record.levelname) + ': ' + unicode(record.msg)
+            return ansi('bgred', record.levelname) + ': ' + unicode(record.msg)
         elif record.levelname is 'DEBUG':
-            return ANSI['bggrey'](record.levelname) + ': ' + unicode(record.msg)
+            return ansi('bggrey', record.levelname) + ': ' + unicode(record.msg)
         else:
-            return ANSI['white'](record.levelname) + ': ' + unicode(record.msg)
+            return ansi('white', record.levelname) + ': ' + unicode(record.msg)
 
 
 class TextFormatter(Formatter):
@@ -66,24 +60,14 @@ class TextFormatter(Formatter):
             return record.levelname + ': ' + record.msg
 
 
-class DummyFormatter(object):
-    """
-    A dummy class.
-    Return an instance of the appropriate formatter (ANSIFormatter if
-    sys.stdout.isatty() is True, else TextFormatter)
-    """
-
-    def __new__(cls, *args, **kwargs):
-        if os.isatty(sys.stdout.fileno())\
-           and not sys.platform.startswith('win'):
-            return ANSIFormatter(*args, **kwargs)
-        else:
-            return TextFormatter(*args, **kwargs)
-
-
 def init(level=None, logger=getLogger(), handler=StreamHandler()):
     logger = logging.getLogger()
-    fmt = DummyFormatter()
+
+    if os.isatty(sys.stdout.fileno()) \
+       and not sys.platform.startswith('win'):
+        fmt = ANSIFormatter()
+    else:
+        fmt = TextFormatter()
     handler.setFormatter(fmt)
     logger.addHandler(handler)
 
