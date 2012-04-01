@@ -168,18 +168,6 @@ For Markdown, format your code blocks thusly:
 The specified identifier should be one that appears on the 
 `list of available lexers <http://pygments.org/docs/lexers/>`_.
 
-You also can use the default `::` syntax, in which case it will be assumed
-that your code is written in Python. For reStructuredText::
-
-    ::
-        
-        your code goes here
-
-For Markdown:
-
-    ::
-    your code goes here
-
 Autoreload
 ----------
 
