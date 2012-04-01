@@ -28,7 +28,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_context(self):
 
-        settings = _DEFAULT_CONFIG
+        settings = _DEFAULT_CONFIG.copy()
         settings['ARTICLE_DIR'] = 'content'
         settings['DEFAULT_CATEGORY'] = 'Default'
         generator = ArticlesGenerator(settings.copy(), settings, CUR_DIR,
