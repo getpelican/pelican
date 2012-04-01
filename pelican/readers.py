@@ -43,6 +43,10 @@ class Reader(object):
 
 class _FieldBodyTranslator(HTMLTranslator):
 
+    def __init__(self, document):
+        HTMLTranslator.__init__(self, document)
+        self.compact_p = None
+
     def astext(self):
         return ''.join(self.body)
 
