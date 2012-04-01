@@ -1,0 +1,43 @@
+@import url("main.css");
+
+body {
+    font:1.3em/1.3 "Hoefler Text","Georgia",Georgia,serif,sans-serif;
+}
+
+.body, #banner nav, #banner nav ul, #about, #featured, #content{
+    width: inherit;
+}
+
+#banner nav {
+    -moz-border-radius: 0px;
+    margin-bottom: 0px;
+}
+
+#banner nav ul{
+    padding-right: 50px;
+}
+
+#banner nav li{
+    float: right;
+}
+
+#banner nav li:first-child a {
+    -moz-border-radius: 0px;
+}
+
+#banner h1 {
+    margin-bottom: -18px;
+}
+
+#featured, #extras {
+    padding: 50px;
+}
+
+#featured {
+    padding-top: 20px;
+}
+
+#extras {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
