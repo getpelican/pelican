@@ -173,14 +173,14 @@ class URLWrapper(object):
         return self.name == unicode(other)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name.encode('utf-8', 'replace'))
 
     def __unicode__(self):
         return self.name
 
     def _from_settings(self, key):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
-        return self.settings[setting].format(**self.as_dict())
+        return unicode(self.settings[setting]).format(**self.as_dict())
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
