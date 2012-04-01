@@ -154,13 +154,16 @@ Syntax highlighting
 ---------------------
 
 Pelican is able to provide colorized syntax highlighting for your code blocks.
-To do so, you have to use the following convention for reStructuredText::
+To do so, you have to use the following conventions (you need to put this in
+your content files).
+
+For RestructuredText::
 
     .. code-block:: identifier
 
        your code goes here
 
-For Markdown, format your code blocks thusly:
+For Markdown, format your code blocks thusly::
 
     ::identifier
     your code goes here
