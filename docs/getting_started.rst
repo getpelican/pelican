@@ -22,13 +22,13 @@ At this time, Pelican is dependent on the following Python packages:
 
 * feedgenerator, to generate the Atom feeds
 * jinja2, for templating support
+* docutils, for supporting reStructuredText as an input format
 
 If you're not using Python 2.7, you will also need `argparse`.
 
 Optionally:
 
 * pygments, for syntax highlighting
-* docutils, for supporting reStructuredText as an input format
 * Markdown, for supporting Markdown as an input format
 
 Writing articles using Pelican
@@ -53,7 +53,11 @@ following syntax (give your file the `.rst` extension)::
     :author: Alexis Metaireau
 
 
-You can also use Markdown syntax (with a file ending in `.md`)::
+You can also use Markdown syntax (with a file ending in `.md`).
+Markdown generation will not work until you explicitly install the `markdown`
+distribution. You can do so on a normal system using `pip install markdown`
+
+::
 
     Date: 2010-12-03
     Title: My super title
