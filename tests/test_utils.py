@@ -85,4 +85,4 @@ class TestUtils(unittest.TestCase):
         os.utime(filename, (t, t))
         changed = utils.files_changed(path, 'rst')
         self.assertEquals(changed, True)
-        self.assertAlmostEqual(utils.LAST_MTIME, t, places=0)
+        self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
