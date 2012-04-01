@@ -195,7 +195,10 @@ def process_translations(content_list):
             default_lang_items = items[:1]
 
         if not slug:
-            logger.warning('empty slug for %r' % (default_lang_items[0].filename,))
+            msg = 'empty slug for %r. ' % default_lang_items[0].filename\
+                + 'You can fix this by adding a title or a slug to your '\
+                + 'content'
+            logger.warning(msg)
         index.extend(default_lang_items)
         translations.extend(filter(
             lambda x: x not in default_lang_items,
