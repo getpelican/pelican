@@ -19,7 +19,7 @@
                 <section id="content" class="body">
                     <h1>Other articles</h1>
                     <hr />
-                        <ol id="posts-list" class="hfeed">
+                    <ol id="posts-list" class="hfeed">
             {% endif %}
         {# other items #}
         {% else %} 
@@ -44,17 +44,17 @@
            or not articles_page.has_previous() and loop.length > 1) %}
             {% include 'pagination.html' %}
         {% endif %}
-{% endfor %}
-    {% if loop.length > 1 or articles_page.has_previous() %}
-    </ol><!-- /#posts-list -->
-    </section><!-- /#content -->
-{% endif %}
+        {% if loop.last %}
+            </ol><!-- /#posts-list -->
+            </section><!-- /#content -->
+        {% endif %}
+    {% endfor %}
 {% else %}
 <section id="content" class="body">    
 <h2>Pages</h2>
-{% for page in PAGES %}
-    <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
-{% endfor %}
+    {% for page in PAGES %}
+        <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
+    {% endfor %}
 </section>
 {% endif %}
 {% endblock content %}
