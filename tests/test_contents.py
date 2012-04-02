@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import with_statement
-try:
-    from unittest2 import TestCase, skip
-except ImportError, e:
-    from unittest import TestCase, skip  # NOQA
+
+from .support import unittest
 
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
@@ -14,7 +11,8 @@ from jinja2.utils import generate_lorem_ipsum
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
-class TestPage(TestCase):
+
+class TestPage(unittest.TestCase):
 
     def setUp(self):
         super(TestPage, self).setUp()
@@ -117,7 +115,6 @@ class TestPage(TestCase):
         try:
             page = Page(**page_kwargs)
             self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
-            # above is unicode in Japanese: 2015-09-13(“ú)
         except locale_module.Error:
             # The constructor of ``Page`` will try to set the locale to
             # ``ja_JP.utf8``. But this attempt will failed when there is no
@@ -126,4 +123,4 @@ class TestPage(TestCase):
             #
             # Until we find some other method to test this functionality, we
             # will simply skip this test.
-            skip("There is no locale %s in this system." % locale)
+            unittest.skip("There is no locale %s in this system." % locale)

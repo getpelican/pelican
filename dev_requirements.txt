@@ -5,3 +5,4 @@ feedgenerator
 unittest2
 pytz
 mock
+Markdown

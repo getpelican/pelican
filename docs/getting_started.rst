@@ -22,13 +22,13 @@ At this time, Pelican is dependent on the following Python packages:
 
 * feedgenerator, to generate the Atom feeds
 * jinja2, for templating support
+* docutils, for supporting reStructuredText as an input format
 
 If you're not using Python 2.7, you will also need `argparse`.
 
 Optionally:
 
 * pygments, for syntax highlighting
-* docutils, for supporting reStructuredText as an input format
 * Markdown, for supporting Markdown as an input format
 
 Writing articles using Pelican
@@ -53,7 +53,11 @@ following syntax (give your file the `.rst` extension)::
     :author: Alexis Metaireau
 
 
-You can also use Markdown syntax (with a file ending in `.md`)::
+You can also use Markdown syntax (with a file ending in `.md`).
+Markdown generation will not work until you explicitly install the `markdown`
+distribution. You can do so on a normal system using `pip install markdown`
+
+::
 
     Date: 2010-12-03
     Title: My super title
@@ -154,31 +158,22 @@ Syntax highlighting
 ---------------------
 
 Pelican is able to provide colorized syntax highlighting for your code blocks.
-To do so, you have to use the following convention for reStructuredText::
+To do so, you have to use the following conventions (you need to put this in
+your content files).
+
+For RestructuredText::
 
     .. code-block:: identifier
 
        your code goes here
 
-For Markdown, format your code blocks thusly:
+For Markdown, format your code blocks thusly::
 
     ::identifier
     your code goes here
 
 The specified identifier should be one that appears on the 
 `list of available lexers <http://pygments.org/docs/lexers/>`_.
-
-You also can use the default `::` syntax, in which case it will be assumed
-that your code is written in Python. For reStructuredText::
-
-    ::
-        
-        your code goes here
-
-For Markdown:
-
-    ::
-    your code goes here
 
 Autoreload
 ----------

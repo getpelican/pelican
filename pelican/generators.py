@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
-import datetime
 import math
 import random
+import logging
+import datetime
 
 from collections import defaultdict
 from functools import partial
@@ -13,9 +14,11 @@ from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
 from pelican.contents import Article, Page, Category, is_valid_content
-from pelican.log import warning, error, debug, info
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, open
+
+
+logger = logging.getLogger(__name__)
 
 
 class Generator(object):
@@ -47,7 +50,7 @@ class Generator(object):
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
 
-        debug('template list: {0}'.format(self._env.list_templates()))
+        logger.debug('template list: {0}'.format(self._env.list_templates()))
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
@@ -216,20 +219,21 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """change the context"""
 
+        article_path = os.path.join(self.path, self.settings['ARTICLE_DIR'])
         all_articles = []
         for f in self.get_files(
-                os.path.join(self.path, self.settings['ARTICLE_DIR']),
+                article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
                 content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
-                warning(u'Could not process %s\n%s' % (f, str(e)))
+                logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
 
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata:
 
-                if os.path.dirname(f) == self.path:
+                if os.path.dirname(f) == article_path:
                     category = self.settings['DEFAULT_CATEGORY']
                 else:
                     category = os.path.basename(os.path.dirname(f))\
@@ -326,7 +330,7 @@ class PagesGenerator(Generator):
             try:
                 content, metadata = read_file(f)
             except Exception, e:
-                error(u'Could not process %s\n%s' % (f, str(e)))
+                logger.error(u'Could not process %s\n%s' % (f, str(e)))
                 continue
             page = Page(content, metadata, settings=self.settings,
                         filename=f)
@@ -388,7 +392,7 @@ class PdfGenerator(Generator):
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             with open(obj.filename) as f:
                 self.pdfcreator.createPdf(text=f, output=output_pdf)
-            info(u' [ok] writing %s' % output_pdf)
+            logger.info(u' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
         pass
@@ -396,13 +400,13 @@ class PdfGenerator(Generator):
     def generate_output(self, writer=None):
         # we don't use the writer passed as argument here
         # since we write our own files
-        info(u' Generating PDF files...')
+        logger.info(u' Generating PDF files...')
         pdf_path = os.path.join(self.output_path, 'pdf')
         if not os.path.exists(pdf_path):
             try:
                 os.mkdir(pdf_path)
             except OSError:
-                error("Couldn't create the pdf output folder in " + pdf_path)
+                logger.error("Couldn't create the pdf output folder in " + pdf_path)
                 pass
 
         for article in self.context['articles']:

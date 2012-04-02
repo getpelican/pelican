@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
+
 import os
+import re
+import locale
+import logging
+
 from codecs import open
 from functools import partial
-import locale
-import re
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from pelican.paginator import Paginator
-from pelican.log import info
 from pelican.utils import get_relative_path, set_date_tzinfo
+
+logger = logging.getLogger(__name__)
 
 
 class Writer(object):
@@ -23,7 +27,7 @@ class Writer(object):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
         feed = feed_class(
             title=context['SITENAME'],
-            link=self.site_url,
+            link=(self.site_url + '/'),
             feed_url=self.feed_url,
             description=context.get('SITESUBTITLE', ''))
         return feed
@@ -32,8 +36,9 @@ class Writer(object):
 
         feed.add_item(
             title=item.title,
-            link='%s/%s' % (self.site_url, item.url),
-            unique_id='%s/%s' % (self.site_url, item.url),
+            link='%s%s' % (self.site_url, item.url),
+            unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
+                                        item.date.date(), item.url),
             description=item.content,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', 'John Doe'),
@@ -55,7 +60,8 @@ class Writer(object):
         locale.setlocale(locale.LC_ALL, 'C')
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
-            self.feed_url = '%s/%s' % (self.site_url, filename)
+            self.feed_domain = context.get('FEED_DOMAIN')
+            self.feed_url = '%s/%s' % (self.feed_domain, filename)
 
             feed = self._create_new_feed(feed_type, context)
 
@@ -73,7 +79,7 @@ class Writer(object):
                     pass
                 fp = open(complete_path, 'w')
                 feed.write(fp, 'utf-8')
-                info('writing %s' % complete_path)
+                logger.info('writing %s' % complete_path)
 
                 fp.close()
             return feed
@@ -108,7 +114,7 @@ class Writer(object):
                 pass
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write(output)
-            info(u'writing %s' % filename)
+            logger.info(u'writing %s' % filename)
 
         localcontext = context.copy()
         if relative_urls:

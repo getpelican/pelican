@@ -56,7 +56,7 @@ ssh_upload: $$(OUTPUTDIR)/index.html
 \tscp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
 ftp_upload: $$(OUTPUTDIR)/index.html
-\tlftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUT_DIR)/* $$(FTP_TARGET_DIR) ; quit"
+\tlftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUTDIR) $$(FTP_TARGET_DIR) ; quit"
 
 github: $$(OUTPUTDIR)/index.html
 \tghp-import $$(OUTPUTDIR)

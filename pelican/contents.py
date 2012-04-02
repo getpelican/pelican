@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
+import locale
+import logging
+import functools
+
 from datetime import datetime
 from os import getenv
 from sys import platform, stdin
-import functools
-import locale
 
-from pelican.log import warning, error
+
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import slugify, truncate_html_words
 
+
+logger = logging.getLogger(__name__)
 
 class Page(object):
     """Represents a page
@@ -44,7 +48,7 @@ class Page(object):
             else:
                 title = filename.decode('utf-8') if filename else self.title
                 self.author = Author(getenv('USER', 'John Doe'), settings)
-                warning(u"Author of `{0}' unknown, assuming that his name is "
+                logger.warning(u"Author of `{0}' unknown, assuming that his name is "
                          "`{1}'".format(title, self.author))
 
         # manage languages
@@ -169,14 +173,14 @@ class URLWrapper(object):
         return self.name == unicode(other)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name.encode('utf-8', 'replace'))
 
     def __unicode__(self):
         return self.name
 
     def _from_settings(self, key):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
-        return self.settings[setting].format(**self.as_dict())
+        return unicode(self.settings[setting]).format(**self.as_dict())
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
@@ -200,6 +204,6 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError, e:
-        error(u"Skipping %s: impossible to find informations about '%s'"\
+        logger.error(u"Skipping %s: impossible to find informations about '%s'"\
                 % (f, e))
         return False
