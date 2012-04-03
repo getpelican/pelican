@@ -41,6 +41,9 @@ class Page(object):
         for key, value in local_metadata.items():
             setattr(self, key.lower(), value)
 
+        # also keep track of the metadata attributes available
+        self.metadata = local_metadata
+
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
