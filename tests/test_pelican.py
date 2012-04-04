@@ -6,6 +6,8 @@ except ImportError:
 import os
 from filecmp import dircmp
 
+from mock import patch
+
 from .support import temporary_folder
 
 from pelican import Pelican
@@ -28,12 +30,15 @@ class TestPelican(unittest.TestCase):
         # ones and generate the output without raising any exception / issuing
         # any warning.
         with temporary_folder() as temp_path:
-            pelican = Pelican(path=INPUT_PATH, output_path=temp_path)
-            pelican.run()
-            diff = dircmp(temp_path, os.sep.join((OUTPUT_PATH, "basic")))
-            self.assertEqual(diff.left_only, [])
-            self.assertEqual(diff.right_only, [])
-            self.assertEqual(diff.diff_files, [])
+            with patch("pelican.contents.getenv") as mock_getenv:
+                # force getenv('USER') to always return the same value
+                mock_getenv.return_value = "Dummy Author"
+                pelican = Pelican(path=INPUT_PATH, output_path=temp_path)
+                pelican.run()
+                diff = dircmp(temp_path, os.sep.join((OUTPUT_PATH, "basic")))
+                self.assertEqual(diff.left_only, [])
+                self.assertEqual(diff.right_only, [])
+                self.assertEqual(diff.diff_files, [])
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
