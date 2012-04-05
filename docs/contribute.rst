@@ -45,7 +45,7 @@ To do so, you can use the 2 following commands::
 
     $ pelican -o tests/output/custom/ -s samples/pelican.conf.py \
         samples/content/
-    $ pelican -o tests/output/basic/ samples/content/
+    $ USER="Dummy Author" pelican -o tests/output/basic/ samples/content/
 
 Coding standards
 ================
