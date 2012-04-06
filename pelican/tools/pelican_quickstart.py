@@ -52,6 +52,9 @@ clean:
 dropbox_upload: $$(OUTPUTDIR)/index.html
 \tcp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
 
+rsync_upload: $$(OUTPUTDIR)/index.html
+\trsync --delete -rvz -e ssh $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+
 ssh_upload: $$(OUTPUTDIR)/index.html
 \tscp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
