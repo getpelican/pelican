@@ -59,7 +59,7 @@ rsync_upload: $$(OUTPUTDIR)/index.html
 ssh_upload: $$(OUTPUTDIR)/index.html
 \tscp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
-rsync_upload: $$(OUTPUTDIR)/index.
+rsync_upload: $$(OUTPUTDIR)/index.html
 \trsync -e ssh -P -r $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
 
 ftp_upload: $$(OUTPUTDIR)/index.html
