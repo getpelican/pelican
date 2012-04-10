@@ -65,11 +65,7 @@ def render_node_to_html(document, node):
 
 class RstReader(Reader):
     enabled = bool(docutils)
-<<<<<<< HEAD
-    extension = "rst"
-=======
     extension = ['rst']
->>>>>>> f1de695... Add support for multiple file extensions per file reader.
 
     def _parse_metadata(self, document):
         """Return the dict containing document metadata"""
@@ -115,11 +111,7 @@ class RstReader(Reader):
 
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
-<<<<<<< HEAD
-    extension = "md"
-=======
     extension = ['md', 'markdown', 'mkd']
->>>>>>> f1de695... Add support for multiple file extensions per file reader.
     extensions = ['codehilite', 'extra']
 
     def read(self, filename):
@@ -136,11 +128,7 @@ class MarkdownReader(Reader):
 
 
 class HtmlReader(Reader):
-<<<<<<< HEAD
-    extension = "html"
-=======
     extension = ['html', 'htm']
->>>>>>> f1de695... Add support for multiple file extensions per file reader.
     _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
 
     def read(self, filename):
