@@ -144,7 +144,11 @@ class HtmlReader(Reader):
             return content, metadata
 
 
-_EXTENSIONS = dict((cls.extension, cls) for cls in Reader.__subclasses__())
+_EXTENSIONS = {}
+
+for cls in Reader.__subclasses__():
+    for ext in cls.extension:
+        _EXTENSIONS[ext] = cls
 
 
 def read_file(filename, fmt=None, settings=None):
