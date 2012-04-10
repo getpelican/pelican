@@ -23,7 +23,7 @@ Usage
 """""
 
 | pelican-import [-h] [--wpfile] [--dotclear] [--feed] [-o OUTPUT]
-|                [--dir-cat]
+|                [-m MARKUP][--dir-cat]
 |                input
 
 Optional arguments:
@@ -35,6 +35,7 @@ Optional arguments:
   --feed                Feed to parse
   -o OUTPUT, --output OUTPUT
                         Output path
+  -m MARKUP             Output markup
   --dir-cat             Put files in directories with categories name
 
 Examples
