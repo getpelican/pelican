@@ -426,7 +426,7 @@ class LessCSSGenerator(Generator):
     def _compile(self, less_file, source_dir, dest_dir):
         base = os.path.relpath(less_file, source_dir)
         target = os.path.splitext(
-                os.path.join(self.output_path, base))[0] + '.css'
+                os.path.join(dest_dir, base))[0] + '.css'
         target_dir = os.path.dirname(target)
 
         if not os.path.exists(target_dir):
@@ -435,7 +435,6 @@ class LessCSSGenerator(Generator):
             except OSError:
                 logger.error("Couldn't create the pdf output folder in " +
                         target_dir)
-                pass
 
         cmd = ' '.join([self.settings['LESS_COMPILER'], less_file, target])
         subprocess.call(cmd, shell=True)
@@ -444,9 +443,21 @@ class LessCSSGenerator(Generator):
     def generate_output(self, writer=None):
         logger.info(u' Compiling less css')
 
+        # walk static paths
         for static_path in self.settings['STATIC_PATHS']:
             for f in self.get_files(
                     os.path.join(self.path, static_path),
                     extensions=['less']):
 
                 self._compile(f, self.path, self.output_path)
+
+        # walk theme static paths
+        theme_output_path = os.path.join(self.output_path, 'theme')
+
+        for static_path in self.settings['THEME_STATIC_PATHS']:
+            theme_static_path = os.path.join(self.theme, static_path)
+            for f in self.get_files(
+                    theme_static_path,
+                    extensions=['less']):
+
+                self._compile(f, theme_static_path, theme_output_path)
