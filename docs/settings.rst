@@ -361,8 +361,7 @@ By default, two themes are available. You can specify them using the `-t` option
 You can define your own theme too, and specify its placement in the same
 manner. (Be sure to specify the full absolute path to it.)
 
-Here is `a guide on how to create your theme
-<http://pelican.notmyidea.org/en/latest/themes.html>`_
+Here is :doc:`a guide on how to create your theme <themes>`
 
 You can find a list of themes at http://github.com/ametaireau/pelican-themes.
 
