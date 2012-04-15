@@ -61,8 +61,9 @@ class Pelican(object):
     def _handle_deprecation(self):
 
         if self.settings.get('CLEAN_URLS', False):
-            logger.warning('Found deprecated `CLEAN_URLS` in settings. Modifing'
-                        ' the following settings for the same behaviour.')
+            logger.warning('Found deprecated `CLEAN_URLS` in settings. '
+                        ' Modifying the following settings for the 
+                        ' same behaviour.')
 
             self.settings['ARTICLE_URL'] = '{slug}/'
             self.settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
@@ -75,7 +76,7 @@ class Pelican(object):
 
         if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
             logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
-                        ' settings.  Modifing the following settings for'
+                        ' settings.  Modifying the following settings for'
                         ' the same behaviour.')
 
             structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
