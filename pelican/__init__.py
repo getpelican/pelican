@@ -61,8 +61,8 @@ class Pelican(object):
     def _handle_deprecation(self):
 
         if self.settings.get('CLEAN_URLS', False):
-            logger.warning('Found deprecated `CLEAN_URLS` in settings. '
-                        ' Modifying the following settings for the 
+            logger.warning('Found deprecated `CLEAN_URLS` in settings.'
+                        ' Modifying the following settings for the'
                         ' same behaviour.')
 
             self.settings['ARTICLE_URL'] = '{slug}/'
