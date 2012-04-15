@@ -6,7 +6,7 @@ Installing
 
 You're ready? Let's go! You can install Pelican via several different methods. The simplest is via `pip <http://pip.openplans.org/>`_::
 
-    $ pip install pelican
+    $ pip install git+git://github.com/ametaireau/pelican.git
 
 If you have the project source, you can install Pelican using the distutils 
 method. I recommend doing so in a virtualenv::
