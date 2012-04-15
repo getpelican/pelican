@@ -226,7 +226,7 @@ Please answer the following questions so this script can generate the files need
         if ask('Do you want to upload your website using FTP ?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server ?', str, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on this server ?', str, CONF['ftp_user'])
-            CONF['ftp_traget_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ftp_target_dir'])
+            CONF['ftp_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ftp_target_dir'])
 
         if ask('Do you want to upload your website using SSH ?', answer=bool, default=False):
             CONF['ssh_host'] = ask('What is the hostname of your SSH server ?', str, CONF['ssh_host'])
