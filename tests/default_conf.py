@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 AUTHOR = u'Alexis Métaireau'
 SITENAME = u"Alexis' log"
-SITEURL = 'http://blog.notmyidea.org'
+SITEURL = 'http://blog.notmyidea.org/'
 TIMEZONE = 'UTC'
 
 GITHUB_URL = 'http://github.com/ametaireau/'

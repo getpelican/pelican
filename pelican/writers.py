@@ -7,6 +7,7 @@ import locale
 import logging
 
 from codecs import open
+from urlparse import urljoin
 from functools import partial
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
@@ -27,7 +28,7 @@ class Writer(object):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
         feed = feed_class(
             title=context['SITENAME'],
-            link=(self.site_url + '/'),
+            link=self.site_url,
             feed_url=self.feed_url,
             description=context.get('SITESUBTITLE', ''))
         return feed
@@ -36,7 +37,7 @@ class Writer(object):
 
         feed.add_item(
             title=item.title,
-            link='%s%s' % (self.site_url, item.url),
+            link=urljoin(self.site_url, item.url),
             unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
                                         item.date.date(), item.url),
             description=item.content,
@@ -60,8 +61,7 @@ class Writer(object):
         locale.setlocale(locale.LC_ALL, 'C')
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
-            self.feed_domain = context.get('FEED_DOMAIN')
-            self.feed_url = '%s/%s' % (self.feed_domain, filename)
+            self.feed_url = urljoin(self.site_url, filename)
 
             feed = self._create_new_feed(feed_type, context)
 
