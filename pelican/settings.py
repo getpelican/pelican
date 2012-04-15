@@ -128,7 +128,7 @@ def configure_settings(settings, default_settings=None, filename=None):
         logger.warn("LOCALE option doesn't contain a correct value")
 
     if ('SITEURL' in settings):
-      # If SITEURL has no trailing slash, add it and provide a warning
+        # If SITEURL has no trailing slash, add it and provide a warning
         siteurl = settings['SITEURL']
         if (not siteurl.endswith('/')):
             settings['SITEURL'] += '/'
