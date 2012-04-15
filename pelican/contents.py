@@ -63,7 +63,7 @@ class Page(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, fro mthe title
+        # create the slug if not existing, from the title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
@@ -135,7 +135,7 @@ class Page(object):
 
     def _get_summary(self):
         """Returns the summary of an article, based on the summary metadata
-        if it is set, else troncate the content."""
+        if it is set, else truncate the content."""
         if hasattr(self, '_summary'):
             return self._summary
         else:

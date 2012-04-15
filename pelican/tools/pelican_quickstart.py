@@ -202,7 +202,7 @@ def main():
 
     print('''Welcome to pelican-quickstart v{v}.
 
-This script will help you creating a new Pelican based website.
+This script will help you create a new Pelican-based website.
 
 Please answer the following questions so this script can generate the files needed by Pelican.
 
@@ -211,7 +211,7 @@ Please answer the following questions so this script can generate the files need
     CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new Web site ?', answer=str, default=args.path))
     CONF['sitename'] = ask('How will you call your Web site ?', answer=str, default=args.title)
     CONF['author'] = ask('Who will be the author of this Web site ?', answer=str, default=args.author)
-    CONF['lang'] = ask('What will be the default language  of this Web site ?', str, args.lang or CONF['lang'], 2)
+    CONF['lang'] = ask('What will be the default language of this Web site ?', str, args.lang or CONF['lang'], 2)
 
     CONF['with_pagination'] = ask('Do you want to enable article pagination ?', bool, bool(CONF['default_pagination']))
 
