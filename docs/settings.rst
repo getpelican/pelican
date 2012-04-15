@@ -52,10 +52,10 @@ Setting name (default value)                        What does it do?
                                                     supported extensions.
 `OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
 `PATH` (``None``)                                   Path to look at for input files.
-`PAGE_DIR' (``'pages'``)                            Directory to look at for pages.
-`PAGE_EXCLUDES' (``()``)                            A list of directories to exclude when looking for pages.
-`ARTICLE_DIR' (``''``)                              Directory to look at for articles.
-`ARTICLE_EXCLUDES': (``('pages',)``)                A list of directories to exclude when looking for articles.
+`PAGE_DIR` (``'pages'``)                            Directory to look at for pages.
+`PAGE_EXCLUDES` (``()``)                            A list of directories to exclude when looking for pages.
+`ARTICLE_DIR` (``''``)                              Directory to look at for articles.
+`ARTICLE_EXCLUDES`: (``('pages',)``)                A list of directories to exclude when looking for articles.
 `PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
                                                     of your documents. You will need to install
                                                     `rst2pdf`.
