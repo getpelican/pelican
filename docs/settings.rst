@@ -82,6 +82,8 @@ Setting name (default value)                        What does it do?
                                                     generated HTML, using the `Typogrify
                                                     <http://static.mintchaos.com/projects/typogrify/>`_
                                                     library
+`FORCE_AUTHORS` (``True``)                          If set to False, pelican will not create `authors` folder
+                                                    if there only one author
 ================================================    =====================================================
 
 .. [#] Default is the system locale.
