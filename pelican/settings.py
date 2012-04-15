@@ -67,6 +67,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
+                   'FORCE_AUTHORS': True,
                    }
 
 
