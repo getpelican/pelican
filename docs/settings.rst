@@ -83,7 +83,7 @@ Setting name (default value)                        What does it do?
                                                     <http://static.mintchaos.com/projects/typogrify/>`_
                                                     library
 `LESS_GENERATOR` (``FALSE``)                        Set to True if you want to enable compiling less
-                                                    files. Requires installtion of `less css`_.
+                                                    files. Requires installation of `less css`_.
 `LESS_COMPILER` (``'/usr/bin/lessc'``)              The path to less css compiler (`lessc`)
 ================================================    =====================================================
 
