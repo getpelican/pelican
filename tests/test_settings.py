@@ -17,7 +17,7 @@ class TestSettingsConfiguration(unittest.TestCase):
     def test_overwrite_existing_settings(self):
         self.assertEqual(self.settings.get('SITENAME'), u"Alexis' log")
         self.assertEqual(self.settings.get('SITEURL'),
-                'http://blog.notmyidea.org')
+                'http://blog.notmyidea.org/')
 
     def test_keep_default_settings(self):
         """keep default settings if not defined"""
@@ -36,15 +36,15 @@ class TestSettingsConfiguration(unittest.TestCase):
     def test_configure_settings(self):
         """Manipulations to settings should be applied correctly."""
 
-        # SITEURL should not have a trailing slash
-        settings = {'SITEURL': 'http://blog.notmyidea.org/', 'LOCALE': ''}
+        # SITEURL should have a trailing slash
+        settings = {'SITEURL': 'http://blog.notmyidea.org/blog', 'LOCALE': ''}
         configure_settings(settings)
-        self.assertEqual(settings['SITEURL'], 'http://blog.notmyidea.org')
+        self.assertEqual(settings['SITEURL'], 'http://blog.notmyidea.org/blog/')
 
         # FEED_DOMAIN, if undefined, should default to SITEURL
-        settings = {'SITEURL': 'http://blog.notmyidea.org', 'LOCALE': ''}
+        settings = {'SITEURL': 'http://blog.notmyidea.org/', 'LOCALE': ''}
         configure_settings(settings)
-        self.assertEqual(settings['FEED_DOMAIN'], 'http://blog.notmyidea.org')
+        self.assertEqual(settings['FEED_DOMAIN'], 'http://blog.notmyidea.org/')
 
         settings = {'FEED_DOMAIN': 'http://feeds.example.com', 'LOCALE': ''}
         configure_settings(settings)
