@@ -209,7 +209,7 @@ Please answer the following questions so this script can generate the files need
     '''.format(v=__version__))
 
     CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new Web site ?', answer=str, default=args.path))
-    CONF['sitename'] = ask('How will you call your Web site ?', answer=str, default=args.title)
+    CONF['sitename'] = ask('What will be the title of this Web site ?', answer=str, default=args.title)
     CONF['author'] = ask('Who will be the author of this Web site ?', answer=str, default=args.author)
     CONF['lang'] = ask('What will be the default language of this Web site ?', str, args.lang or CONF['lang'], 2)
 
