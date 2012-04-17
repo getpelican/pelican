@@ -19,6 +19,23 @@ The conversion from HTML to reStructuredText relies on `pandoc
 written with Markdown syntax, they will not be converted (as Pelican also
 supports Markdown).
 
+Dependencies
+""""""""""""
+
+``pelican-import`` has two additional dependencies not included with pelican
+by default:
+
+- BeautifulSoup
+- pandoc
+
+BeatifulSoup can be installed like any other Python package::
+
+    $ pip install BeautifulSoup
+
+For pandoc, install a package for your operating system from the 
+`pandoc site <http://johnmacfarlane.net/pandoc/installing.html>`_.
+
+
 Usage
 """""
 
@@ -26,8 +43,8 @@ Usage
 |                [--dir-cat]
 |                input
 
-Optional arguments:
-"""""""""""""""""""
+Optional arguments
+""""""""""""""""""
 
   -h, --help            show this help message and exit
   --wpfile              Wordpress XML export
