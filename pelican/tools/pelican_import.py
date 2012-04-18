@@ -224,10 +224,10 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
             html_filename = os.path.join(output_path, filename+'.html')
 
             with open(html_filename, 'w', encoding='utf-8') as fp:
-                # Replace simple newlines with <br />+newline so that the HTML file
-                # represents the original post more accurately
+                # Replace newlines with paragraphs wrapped with <p> so
+                # HTML is valid before conversion
                 paragraphs = content.split('\n\n')
-                paragraphs = ['<p>%s</p>' % p for p in paragraphs]
+                paragraphs = ['<p>{}</p>'.format(p) for p in paragraphs]
                 new_content = ''.join(paragraphs)
 
                 fp.write(content)
