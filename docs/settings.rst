@@ -142,8 +142,7 @@ Setting name (default value)                        what does it do?
 `TAG_SAVE_AS` ('tag/{name}.html')                   The location to save the tag page.
 ================================================    =====================================================
 
-Note: when any of `*_SAVE_AS` setting is set to none-value (including an empty string), files will not be
-created.
+Note: when any of `*_SAVE_AS` is set to False, files will not be created.
 
 Timezone
 --------
