@@ -183,7 +183,8 @@ class URLWrapper(object):
 
     def _from_settings(self, key):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
-        return unicode(self.settings[setting]).format(**self.as_dict())
+        value = self.settings[setting] or ''
+        return unicode(value).format(**self.as_dict())
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
