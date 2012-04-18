@@ -232,7 +232,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
 
                 fp.write(content)
 
-            cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
+            cmd = 'pandoc --normalize --no-wrap --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
                 out_markup, out_filename, html_filename)
 
             try:
