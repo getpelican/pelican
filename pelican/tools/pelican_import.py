@@ -17,7 +17,7 @@ def wp2fields(xml):
         from BeautifulSoup import BeautifulStoneSoup
     except ImportError:
         error = 'Missing dependency ' + \
-                '"BeautifulSoup" required to import Wordpress files.'
+                '"BeautifulSoup" required to import Wordpress XML files.'
         sys.exit(error)
 
     xmlfile = open(xml, encoding='utf-8').read()
@@ -226,7 +226,10 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 # Replace simple newlines with <br />+newline so that the HTML file
                 # represents the original post more accurately
-                content = content.replace("\n", "<br />\n")
+                paragraphs = content.split('\n\n')
+                paragraphs = ['<p>%s</p>' % p for p in paragraphs]
+                new_content = ''.join(paragraphs)
+
                 fp.write(content)
 
             cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
