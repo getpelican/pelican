@@ -130,7 +130,7 @@ def configure_settings(settings, default_settings=None, filename=None):
     if ('SITEURL' in settings):
         # If SITEURL has a trailing slash, remove it and provide a warning
         siteurl = settings['SITEURL']
-        if (siteurl[len(siteurl) - 1:] == '/'):
+        if (siteurl.endswith('/')):
             settings['SITEURL'] = siteurl[:-1]
             logger.warn("Removed extraneous trailing slash from SITEURL.")
         # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL
