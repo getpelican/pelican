@@ -227,12 +227,12 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
                 paragraphs = content.split('\n\n')
-                paragraphs = ['<p>{}</p>'.format(p) for p in paragraphs]
+                paragraphs = [u'<p>{}</p>'.format(p) for p in paragraphs]
                 new_content = ''.join(paragraphs)
 
                 fp.write(content)
 
-            cmd = 'pandoc --normalize --no-wrap --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
+            cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
                 out_markup, out_filename, html_filename)
 
             try:
