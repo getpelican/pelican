@@ -22,8 +22,7 @@ supports Markdown).
 Dependencies
 """"""""""""
 
-``pelican-import`` has two additional dependencies not included with pelican
-by default:
+``pelican-import`` has two dependencies not required by the rest of pelican:
 
 - BeautifulSoup
 - pandoc
