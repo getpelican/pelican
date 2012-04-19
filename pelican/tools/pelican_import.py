@@ -16,8 +16,8 @@ def wp2fields(xml):
     try:
         from BeautifulSoup import BeautifulStoneSoup
     except ImportError:
-        error = 'Missing dependency ' + \
-                '"BeautifulSoup" required to import Wordpress XML files.'
+        error = ('Missing dependency '
+                 '"BeautifulSoup" required to import Wordpress XML files.')
         sys.exit(error)
 
     xmlfile = open(xml, encoding='utf-8').read()
@@ -48,8 +48,8 @@ def dc2fields(file):
     try:
         from BeautifulSoup import BeautifulStoneSoup
     except ImportError:
-        error = 'Missing dependency ' + \
-                '"BeautifulSoup" required to import Dotclear files.'
+        error = ('Missing dependency '
+                 '"BeautifulSoup" required to import Dotclear files.')
         sys.exit(error)
 
 
