@@ -99,6 +99,12 @@ class Writer(object):
         :param **kwargs: additional variables to pass to the templates
         """
 
+        if name is False:
+            return
+        elif not name:
+            # other stuff, just return for now
+            return
+
         def _write_file(template, localcontext, output_path, name):
             """Render the template write the file."""
             old_locale = locale.setlocale(locale.LC_ALL)
