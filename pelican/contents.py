@@ -184,10 +184,11 @@ class URLWrapper(object):
     def _from_settings(self, key):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
-        value = value is not False and value or ''  # change to '' only False
-        if value == '':
-            logger.warning(u'%s is disabled' % setting)
-        return unicode(value).format(**self.as_dict())
+        if not isinstance(value, (str, unicode)):
+            logger.warning(u'%s is set to %s' % (setting, value))
+            return value
+        else:
+            return unicode(value).format(**self.as_dict())
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
