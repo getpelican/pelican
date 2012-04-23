@@ -52,6 +52,9 @@ clean:
 dropbox_upload: $$(OUTPUTDIR)/index.html
 \tcp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
 
+rsync_upload: $$(OUTPUTDIR)/index.html
+\trsync --delete -rvz -e ssh $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+
 ssh_upload: $$(OUTPUTDIR)/index.html
 \tscp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
@@ -199,16 +202,16 @@ def main():
 
     print('''Welcome to pelican-quickstart v{v}.
 
-This script will help you creating a new Pelican based website.
+This script will help you create a new Pelican-based website.
 
 Please answer the following questions so this script can generate the files needed by Pelican.
 
     '''.format(v=__version__))
 
     CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new Web site ?', answer=str, default=args.path))
-    CONF['sitename'] = ask('How will you call your Web site ?', answer=str, default=args.title)
+    CONF['sitename'] = ask('What will be the title of this Web site ?', answer=str, default=args.title)
     CONF['author'] = ask('Who will be the author of this Web site ?', answer=str, default=args.author)
-    CONF['lang'] = ask('What will be the default language  of this Web site ?', str, args.lang or CONF['lang'], 2)
+    CONF['lang'] = ask('What will be the default language of this Web site ?', str, args.lang or CONF['lang'], 2)
 
     CONF['with_pagination'] = ask('Do you want to enable article pagination ?', bool, bool(CONF['default_pagination']))
 
@@ -223,12 +226,12 @@ Please answer the following questions so this script can generate the files need
         if ask('Do you want to upload your website using FTP ?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server ?', str, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on this server ?', str, CONF['ftp_user'])
-            CONF['ftp_traget_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ftp_target_dir'])
+            CONF['ftp_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ftp_target_dir'])
 
         if ask('Do you want to upload your website using SSH ?', answer=bool, default=False):
             CONF['ssh_host'] = ask('What is the hostname of your SSH server ?', str, CONF['ssh_host'])
             CONF['ssh_user'] = ask('What is your username on this server ?', str, CONF['ssh_user'])
-            CONF['ssh_traget_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ssh_target_dir'])
+            CONF['ssh_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ssh_target_dir'])
 
         if ask('Do you want to upload your website using Dropbox ?', answer=bool, default=False):
             CONF['dropbox_dir'] = ask('Where is your Dropbox directory ?', str, CONF['dropbox_dir'])
