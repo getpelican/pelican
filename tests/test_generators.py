@@ -46,3 +46,7 @@ class TestArticlesGenerator(unittest.TestCase):
             elif relfilepath == "article_without_category.rst":
                 self.assertEquals(article.category.name, 'Default')
 
+        categories = [cat.name for cat, _ in generator.categories]
+        # assert that the categories are ordered as expected
+        self.assertEquals(
+                categories, ['Default', 'TestCategory', 'Yeah', 'yeah'])
