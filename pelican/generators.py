@@ -352,7 +352,7 @@ class PagesGenerator(Generator):
 
 
 class StaticGenerator(Generator):
-    """copy static paths (what you want to cpy, like images, medias etc.
+    """copy static paths (what you want to copy, like images, medias etc.
     to output"""
 
     def _copy_paths(self, paths, source, destination, output_path,
