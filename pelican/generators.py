@@ -430,7 +430,7 @@ class LessCSSGenerator(Generator):
             try:
                 os.makedirs(target_dir)
             except OSError:
-                logger.error("Couldn't create the pdf output folder in " +
+                logger.error("Couldn't create the less css output folder in " +
                         target_dir)
 
         cmd = ' '.join([self._lessc, less_file, target])
