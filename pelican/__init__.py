@@ -134,7 +134,7 @@ class Pelican(object):
         generators = [ArticlesGenerator, PagesGenerator, StaticGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
-        if self.settings['LESS_GENERATOR']:
+        if self.settings['LESS_GENERATOR']: # can be True or PATH to lessc
             generators.append(LessCSSGenerator)
         return generators
 

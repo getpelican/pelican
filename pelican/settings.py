@@ -68,7 +68,6 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
                    'LESS_GENERATOR': False,
-                   'LESS_COMPILER': '/usr/bin/lessc',
                    }
 
 

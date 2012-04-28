@@ -418,7 +418,7 @@ class PdfGenerator(Generator):
 
 
 class LessCSSGenerator(Generator):
-    """Compile less css files. This assumes we have `lessc` in our PATH."""
+    """Compile less css files."""
 
     def _compile(self, less_file, source_dir, dest_dir):
         base = os.path.relpath(less_file, source_dir)
@@ -433,12 +433,17 @@ class LessCSSGenerator(Generator):
                 logger.error("Couldn't create the pdf output folder in " +
                         target_dir)
 
-        cmd = ' '.join([self.settings['LESS_COMPILER'], less_file, target])
+        cmd = ' '.join([self._lessc, less_file, target])
         subprocess.call(cmd, shell=True)
         logger.info(u' [ok] compiled %s' % base)
 
     def generate_output(self, writer=None):
         logger.info(u' Compiling less css')
+
+        # store out compiler here, so it won't be evaulted on each run of
+        # _compile
+        lg = self.settings['LESS_GENERATOR']
+        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
 
         # walk static paths
         for static_path in self.settings['STATIC_PATHS']:

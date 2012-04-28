@@ -68,7 +68,6 @@ class TestLessCSSGenerator(unittest.TestCase):
         settings = _DEFAULT_CONFIG.copy()
         settings['STATIC_PATHS'] = ['static']
         settings['LESS_GENERATOR'] = True
-        settings['LESS_COMPILER'] = 'lessc'
 
         # we'll nest here for py < 2.7 compat
         with temporary_folder() as temp_content:
