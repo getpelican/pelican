@@ -39,9 +39,9 @@ Setting name (default value)                        What does it do?
 `JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
 `DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory as well as
                                                     the generated files.
-`LOCALE` (''[#]_)                                   Change the locale. A list of locales can be provided 
+`LOCALE` (''[#]_)                                   Change the locale. A list of locales can be provided
                                                     here or a single string representing one locale.
-                                                    When providing a list, all the locales will be tried 
+                                                    When providing a list, all the locales will be tried
                                                     until one works.
 `MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want
                                                     to use. For the moment, the only available values
@@ -96,14 +96,15 @@ your articles in a location such as '{slug}/index.html' and link to them as
 '{slug}' for clean URLs. These settings give you the flexibility to place your
 articles and pages anywhere you want.
 
-Note: If you specify a datetime directive, it will be substituted using the
-input files' date metadata attribute. If the date is not specified for a
-particular file, Pelican will rely on the file's mtime timestamp.
+.. note:: 
+    If you specify a datetime directive, it will be substituted using the
+    input files' date metadata attribute. If the date is not specified for a
+    particular file, Pelican will rely on the file's mtime timestamp.
 
 Check the Python datetime documentation at http://bit.ly/cNcJUC for more
 information.
 
-Also, you can use other file metadata attributes as well: 
+Also, you can use other file metadata attributes as well:
 
 * slug
 * date
@@ -111,7 +112,7 @@ Also, you can use other file metadata attributes as well:
 * author
 * category
 
-Example usage: 
+Example usage:
 
 * ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'
 * ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
@@ -142,7 +143,14 @@ Setting name (default value)                        what does it do?
 `TAG_SAVE_AS` ('tag/{name}.html')                   The location to save the tag page.
 ================================================    =====================================================
 
-Note: when any of `*_SAVE_AS` is set to False, files will not be created.
+.. note::
+
+    When any of `*_SAVE_AS` is set to False, files will not be created.
+
+    You can change the file output location of any pages listed in DIRECT_TEMPLATES
+    by providing a setting <TEMPLATE_NAME>_SAVE_AS, where <TEMPLATE_NAME> is the template
+    name in uppercase; e.g. CATEGORIES. If False it will not be created.
+
 
 Timezone
 --------
@@ -332,7 +340,7 @@ Setting name (default value)                        What does it do?
 ================================================    =====================================================
 `REVERSE_ARCHIVE_ORDER` (``False``)                 Reverse the archives list order. (True: orders by date
                                                     in descending order, with newer articles first.)
-`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse 
+`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse
                                                     alphabetical order; default lists alphabetically.)
 ================================================    =====================================================
 
