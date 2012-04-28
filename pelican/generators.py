@@ -433,8 +433,7 @@ class LessCSSGenerator(Generator):
                 logger.error("Couldn't create the less css output folder in " +
                         target_dir)
 
-        cmd = ' '.join([self._lessc, less_file, target])
-        subprocess.call(cmd, shell=True)
+        subprocess.call([self._lessc, less_file, target])
         logger.info(u' [ok] compiled %s' % base)
 
     def generate_output(self, writer=None):
