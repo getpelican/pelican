@@ -420,9 +420,6 @@ class PdfGenerator(Generator):
 class LessCSSGenerator(Generator):
     """Compile less css files. This assumes we have `lessc` in our PATH."""
 
-    def generate_context(self):
-        pass
-
     def _compile(self, less_file, source_dir, dest_dir):
         base = os.path.relpath(less_file, source_dir)
         target = os.path.splitext(
