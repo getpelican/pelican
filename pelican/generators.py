@@ -182,7 +182,15 @@ class ArticlesGenerator(Generator):
             if template in PAGINATED_TEMPLATES:
                 paginated = {'articles': self.articles, 'dates': self.dates}
 
-            write('%s.html' % template, self.get_template(template),
+            save_as = self.settings.get("%s_SAVE_AS" % template.upper(), None)
+            if save_as is None:
+                file_name = '%s.html' % template
+            elif save_as:
+                file_name = save_as
+            else:
+                continue
+
+            write(file_name, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
                   page_name=template)
 
