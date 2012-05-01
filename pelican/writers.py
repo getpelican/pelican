@@ -36,7 +36,7 @@ class Writer(object):
 
         feed.add_item(
             title=item.title,
-            link='%s%s' % (self.site_url, item.url),
+            link='%s/%s' % (self.site_url, item.url),
             unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
                                         item.date.date(), item.url),
             description=item.content,
