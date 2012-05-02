@@ -1,3 +1,6 @@
+title: Test mkd File
+category: test
+
 Test Markdown File Header
 =========================
 
