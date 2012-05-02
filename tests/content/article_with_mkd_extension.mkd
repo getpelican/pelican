@@ -1,0 +1,7 @@
+Test Markdown File Header
+=========================
+
+Used for pelican test
+---------------------
+
+This is another markdown test file.  Uses the mkd extension.
