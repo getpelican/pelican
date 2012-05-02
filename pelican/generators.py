@@ -162,45 +162,32 @@ class ArticlesGenerator(Generator):
                 writer.write_feed(items, self.context,
                                   self.settings['TRANSLATION_FEED'] % lang)
 
-    def generate_articles(self, writer):
+    def generate_articles(self, write):
         """Generate the articles."""
-        write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
-
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
             write(article.save_as,
                           article_template, self.context, article=article,
                           category=article.category)
 
-    def generate_direct_templates(self, writer):
+    def generate_direct_templates(self, write):
         """Generate direct templates pages"""
-        write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
-
         PAGINATED_TEMPLATES = self.settings.get('PAGINATED_DIRECT_TEMPLATES')
         for template in self.settings.get('DIRECT_TEMPLATES'):
             paginated = {}
             if template in PAGINATED_TEMPLATES:
                 paginated = {'articles': self.articles, 'dates': self.dates}
+            save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
+                                                        '%s.html' % template)
+            if not save_as:
+                 continue
 
-            save_as = self.settings.get("%s_SAVE_AS" % template.upper(), None)
-            if save_as is None:
-                file_name = '%s.html' % template
-            elif save_as:
-                file_name = save_as
-            else:
-                continue
-
-            write(file_name, self.get_template(template),
+            write(save_as, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
                   page_name=template)
 
-    def generate_tags(self, writer):
+    def generate_tags(self, write):
         """Generate Tags pages."""
-        write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
-
         tag_template = self.get_template('tag')
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
@@ -210,11 +197,8 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name=u'tag/%s' % tag)
 
-    def generate_categories(self, writer):
+    def generate_categories(self, write):
         """Generate category pages."""
-        write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
-
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
@@ -223,11 +207,8 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name=u'category/%s' % cat)
 
-    def generate_authors(self, writer):
+    def generate_authors(self, write):
         """Generate Author pages."""
-        write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
-
         author_template = self.get_template('author')
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
@@ -236,11 +217,8 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name=u'author/%s' % aut)
 
-    def generate_drafts(self, writer):
+    def generate_drafts(self, write):
         """Generate drafts pages."""
-        write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
-
         article_template = self.get_template('article')
         for article in self.drafts:
             write('drafts/%s.html' % article.slug, article_template,
@@ -248,17 +226,20 @@ class ArticlesGenerator(Generator):
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
+        write = partial(writer.write_file,
+                        relative_urls=self.settings.get('RELATIVE_URLS'))
 
         # to minimize the number of relative path stuff modification
         # in writer, articles pass first
-        self.generate_articles(writer)
-        self.generate_direct_templates(writer)
+        self.generate_articles(write)
+        self.generate_direct_templates(write)
+
 
         # and subfolders after that
-        self.generate_tags(writer)
-        self.generate_categories(writer)
-        self.generate_authors(writer)
-        self.generate_drafts(writer)
+        self.generate_tags(write)
+        self.generate_categories(write)
+        self.generate_authors(write)
+        self.generate_drafts(write)
 
     def generate_context(self):
         """change the context"""
