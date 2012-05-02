@@ -65,7 +65,7 @@ def render_node_to_html(document, node):
 
 class RstReader(Reader):
     enabled = bool(docutils)
-    extension = ['rst']
+    file_extensions = ['rst']
 
     def _parse_metadata(self, document):
         """Return the dict containing document metadata"""
@@ -111,7 +111,7 @@ class RstReader(Reader):
 
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
-    extension = ['md', 'markdown', 'mkd']
+    file_extensions = ['md', 'markdown', 'mkd']
     extensions = ['codehilite', 'extra']
 
     def read(self, filename):
@@ -128,7 +128,7 @@ class MarkdownReader(Reader):
 
 
 class HtmlReader(Reader):
-    extension = ['html', 'htm']
+    file_extensions = ['html', 'htm']
     _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
 
     def read(self, filename):
@@ -147,7 +147,7 @@ class HtmlReader(Reader):
 _EXTENSIONS = {}
 
 for cls in Reader.__subclasses__():
-    for ext in cls.extension:
+    for ext in cls.file_extensions:
         _EXTENSIONS[ext] = cls
 
 
