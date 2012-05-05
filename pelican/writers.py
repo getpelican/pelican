@@ -36,7 +36,7 @@ class Writer(object):
 
         feed.add_item(
             title=item.title,
-            link='%s%s' % (self.site_url, item.url),
+            link='%s/%s' % (self.site_url, item.url),
             unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
                                         item.date.date(), item.url),
             description=item.content,
@@ -98,6 +98,12 @@ class Writer(object):
             same length (same list in different orders)
         :param **kwargs: additional variables to pass to the templates
         """
+
+        if name is False:
+            return
+        elif not name:
+            # other stuff, just return for now
+            return
 
         def _write_file(template, localcontext, output_path, name):
             """Render the template write the file."""
