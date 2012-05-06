@@ -184,7 +184,7 @@ class URLWrapper(object):
     def _from_settings(self, key):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
-        if not isinstance(value, (str, unicode)):
+        if not isinstance(value, basestring):
             logger.warning(u'%s is set to %s' % (setting, value))
             return value
         else:
