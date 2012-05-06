@@ -61,3 +61,25 @@ class RstReaderTest(unittest.TestCase):
             self.assertEqual(content, expected)
         except ImportError:
             return unittest.skip('need the typogrify distribution')
+
+class MdReaderTest(unittest.TestCase):
+
+    def test_article_with_md_extention(self):
+        # test to ensure the md extension is being processed by the correct reader
+        reader = readers.MarkdownReader({})
+        content, metadata = reader.read(_filename('article_with_md_extension.md'))
+        expected = "<h1>Test Markdown File Header</h1>\n"\
+                "<h2>Used for pelican test</h2>\n"\
+                "<p>The quick brown fox jumped over the lazy dog's back.</p>"
+        
+        self.assertEqual(content, expected)
+
+    def test_article_with_mkd_extension(self):
+        # test to ensure the mkd extension is being processed by the correct reader
+        reader = readers.MarkdownReader({})
+        content, metadata = reader.read(_filename('article_with_mkd_extension.mkd'))
+        expected = "<h1>Test Markdown File Header</h1>\n"\
+                "<h2>Used for pelican test</h2>\n"\
+                "<p>This is another markdown test file.  Uses the mkd extension.</p>"
+        
+        self.assertEqual(content, expected)
