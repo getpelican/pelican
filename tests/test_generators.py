@@ -9,6 +9,7 @@ from .support import unittest
 
 CUR_DIR = os.path.dirname(__file__)
 
+
 class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_feeds(self):
@@ -46,3 +47,41 @@ class TestArticlesGenerator(unittest.TestCase):
             elif relfilepath == "article_without_category.rst":
                 self.assertEquals(article.category.name, 'Default')
 
+    def test_direct_templates_save_as_default(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['DIRECT_TEMPLATES'] = ['archives']
+        generator = ArticlesGenerator(settings.copy(), settings, None,
+                                      _DEFAULT_CONFIG['THEME'], None,
+                                      _DEFAULT_CONFIG['MARKUP'])
+        write = MagicMock()
+        generator.generate_direct_templates(write)
+        write.assert_called_with("archives.html",
+            generator.get_template("archives"), settings,
+            blog=True, paginated={}, page_name='archives')
+
+    def test_direct_templates_save_as_modified(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['DIRECT_TEMPLATES'] = ['archives']
+        settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        generator = ArticlesGenerator(settings, settings, None,
+                                      _DEFAULT_CONFIG['THEME'], None,
+                                      _DEFAULT_CONFIG['MARKUP'])
+        write = MagicMock()
+        generator.generate_direct_templates(write)
+        write.assert_called_with("archives/index.html",
+            generator.get_template("archives"), settings,
+            blog=True, paginated={}, page_name='archives')
+
+    def test_direct_templates_save_as_false(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['DIRECT_TEMPLATES'] = ['archives']
+        settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        generator = ArticlesGenerator(settings, settings, None,
+                                      _DEFAULT_CONFIG['THEME'], None,
+                                      _DEFAULT_CONFIG['MARKUP'])
+        write = MagicMock()
+        generator.generate_direct_templates(write)
+        write.assert_called_count == 0
