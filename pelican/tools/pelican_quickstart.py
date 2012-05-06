@@ -28,15 +28,16 @@ SSH_TARGET_DIR=$ssh_target_dir
 DROPBOX_DIR=$dropbox_dir
 
 help:
-\t@echo 'Makefile for a pelican Web site                                       '
-\t@echo '                                                                      '
-\t@echo 'Usage:                                                                '
-\t@echo '   make html                        (re)generate the web site         '
-\t@echo '   make clean                       remove the generated files        '
-\t@echo '   ftp_upload                       upload the web site using FTP     '
-\t@echo '   ssh_upload                       upload the web site using SSH     '
-\t@echo '   dropbox_upload                   upload the web site using Dropbox '
-\t@echo '                                                                      '
+\t@echo 'Makefile for a pelican Web site                                        '
+\t@echo '                                                                       '
+\t@echo 'Usage:                                                                 '
+\t@echo '   make html                        (re)generate the web site          '
+\t@echo '   make clean                       remove the generated files         '
+\t@echo '   ftp_upload                       upload the web site using FTP      '
+\t@echo '   ssh_upload                       upload the web site using SSH      '
+\t@echo '   dropbox_upload                   upload the web site using Dropbox  '
+\t@echo '   rsync_upload                     upload the web site using rsync/ssh'
+\t@echo '                                                                       '
 
 
 html: clean $$(OUTPUTDIR)/index.html
@@ -52,11 +53,11 @@ clean:
 dropbox_upload: $$(OUTPUTDIR)/index.html
 \tcp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
 
-rsync_upload: $$(OUTPUTDIR)/index.html
-\trsync --delete -rvz -e ssh $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
-
 ssh_upload: $$(OUTPUTDIR)/index.html
 \tscp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
+
+rsync_upload: $$(OUTPUTDIR)/index.html
+\trsync -e ssh -P -rvz --delete $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
 
 ftp_upload: $$(OUTPUTDIR)/index.html
 \tlftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUTDIR) $$(FTP_TARGET_DIR) ; quit"
@@ -65,7 +66,7 @@ github: $$(OUTPUTDIR)/index.html
 \tghp-import $$(OUTPUTDIR)
 \tgit push origin gh-pages
 
-.PHONY: html help clean ftp_upload ssh_upload dropbox_upload github
+.PHONY: html help clean ftp_upload ssh_upload rsync_upload dropbox_upload github
 ''',
 
     'pelican.conf.py': '''#!/usr/bin/env python
