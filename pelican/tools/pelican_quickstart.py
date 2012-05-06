@@ -7,95 +7,9 @@ import argparse
 
 from pelican import __version__
 
-TEMPLATES = {
-    'Makefile' : '''
-PELICAN=$pelican
-PELICANOPTS=$pelicanopts
+_TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), \
+                              "templates")
 
-BASEDIR=$$(PWD)
-INPUTDIR=$$(BASEDIR)/src
-OUTPUTDIR=$$(BASEDIR)/output
-CONFFILE=$$(BASEDIR)/pelican.conf.py
-
-FTP_HOST=$ftp_host
-FTP_USER=$ftp_user
-FTP_TARGET_DIR=$ftp_target_dir
-
-SSH_HOST=$ssh_host
-SSH_USER=$ssh_user
-SSH_TARGET_DIR=$ssh_target_dir
-
-DROPBOX_DIR=$dropbox_dir
-
-help:
-\t@echo 'Makefile for a pelican Web site                                        '
-\t@echo '                                                                       '
-\t@echo 'Usage:                                                                 '
-\t@echo '   make html                        (re)generate the web site          '
-\t@echo '   make clean                       remove the generated files         '
-\t@echo '   ftp_upload                       upload the web site using FTP      '
-\t@echo '   ssh_upload                       upload the web site using SSH      '
-\t@echo '   dropbox_upload                   upload the web site using Dropbox  '
-\t@echo '   rsync_upload                     upload the web site using rsync/ssh'
-\t@echo '                                                                       '
-
-
-html: clean $$(OUTPUTDIR)/index.html
-\t@echo 'Done'
-
-$$(OUTPUTDIR)/%.html:
-\t$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
-
-clean:
-\trm -fr $$(OUTPUTDIR)
-\tmkdir $$(OUTPUTDIR)
-
-dropbox_upload: $$(OUTPUTDIR)/index.html
-\tcp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
-
-ssh_upload: $$(OUTPUTDIR)/index.html
-\tscp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
-
-rsync_upload: $$(OUTPUTDIR)/index.html
-\trsync -e ssh -P -rvz --delete $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
-
-ftp_upload: $$(OUTPUTDIR)/index.html
-\tlftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUTDIR) $$(FTP_TARGET_DIR) ; quit"
-
-github: $$(OUTPUTDIR)/index.html
-\tghp-import $$(OUTPUTDIR)
-\tgit push origin gh-pages
-
-.PHONY: html help clean ftp_upload ssh_upload rsync_upload dropbox_upload github
-''',
-
-    'pelican.conf.py': '''#!/usr/bin/env python
-# -*- coding: utf-8 -*- #
-
-AUTHOR = u"$author"
-SITENAME = u"$sitename"
-SITEURL = '/'
-
-TIMEZONE = 'Europe/Paris'
-
-DEFAULT_LANG='$lang'
-
-# Blogroll
-LINKS =  (
-    ('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
-    ('Python.org', 'http://python.org'),
-    ('Jinja2', 'http://jinja.pocoo.org'),
-    ('You can modify those links in your config file', '#')
-         )
-
-# Social widget
-SOCIAL = (
-          ('You can add links in your config file', '#'),
-         )
-
-DEFAULT_PAGINATION = $default_pagination
-'''
-}
 
 CONF = {
     'pelican' : 'pelican',
@@ -111,6 +25,20 @@ CONF = {
     'default_pagination' : 10,
     'lang': 'en'
 }
+
+
+def get_template(name):
+    template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
+
+    if os.path.isfile(template):
+        raise RuntimeError("Cannot open {0}".format(template))
+
+    with open(tempalte, 'r') as fd:
+        line = fd.readline()
+        while line:
+            yield line
+            line = fd.readline()
+        fd.close()
 
 
 def ask(question, answer=str, default=None, l=None):
@@ -247,20 +175,22 @@ Please answer the following questions so this script can generate the files need
     except OSError, e:
         print('Error: {0}'.format(e))
 
-    conf = string.Template(TEMPLATES['pelican.conf.py'])
     try:
         with open(os.path.join(CONF['basedir'], 'pelican.conf.py'), 'w') as fd:
-            fd.write(conf.safe_substitute(CONF))
+            for line in get_template('pelican.conf.py'):
+                template = string.Template(line)
+                fd.write(template.safe_substitute(CONF))
             fd.close()
     except OSError, e:
         print('Error: {0}'.format(e))
 
     if mkfile:
-        Makefile = string.Template(TEMPLATES['Makefile'])
 
         try:
             with open(os.path.join(CONF['basedir'], 'Makefile'), 'w') as fd:
-                fd.write(Makefile.safe_substitute(CONF))
+                for line in get_template('Makefile'):
+                    template = string.Template(line)
+                    fd.write(template.safe_substitute(CONF))
                 fd.close()
         except OSError, e:
             print('Error: {0}'.format(e))
