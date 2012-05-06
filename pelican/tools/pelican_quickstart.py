@@ -30,10 +30,10 @@ CONF = {
 def get_template(name):
     template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
 
-    if os.path.isfile(template):
+    if not os.path.isfile(template):
         raise RuntimeError("Cannot open {0}".format(template))
 
-    with open(tempalte, 'r') as fd:
+    with open(template, 'r') as fd:
         line = fd.readline()
         while line:
             yield line
