@@ -3,13 +3,13 @@
 from mock import MagicMock
 import os
 import re
-import subprocess
 
 from pelican.generators import ArticlesGenerator, LessCSSGenerator
 from pelican.settings import _DEFAULT_CONFIG
 from .support import unittest, temporary_folder, skipIfNoExecutable
 
 CUR_DIR = os.path.dirname(__file__)
+
 
 class TestArticlesGenerator(unittest.TestCase):
 
@@ -47,6 +47,12 @@ class TestArticlesGenerator(unittest.TestCase):
                 self.assertEquals(article.category.name, 'TestCategory')
             elif relfilepath == "article_without_category.rst":
                 self.assertEquals(article.category.name, 'Default')
+
+        categories = [cat.name for cat, _ in generator.categories]
+        # assert that the categories are ordered as expected
+        self.assertEquals(
+                categories, ['Default', 'TestCategory', 'Yeah', 'test',
+                             'yeah'])
 
 
 class TestLessCSSGenerator(unittest.TestCase):
