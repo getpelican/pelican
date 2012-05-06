@@ -4,6 +4,7 @@ import math
 import random
 import logging
 import datetime
+import subprocess
 
 from collections import defaultdict
 from functools import partial
@@ -414,3 +415,50 @@ class PdfGenerator(Generator):
 
         for page in self.context['pages']:
             self._create_pdf(page, pdf_path)
+
+
+class LessCSSGenerator(Generator):
+    """Compile less css files."""
+
+    def _compile(self, less_file, source_dir, dest_dir):
+        base = os.path.relpath(less_file, source_dir)
+        target = os.path.splitext(
+                os.path.join(dest_dir, base))[0] + '.css'
+        target_dir = os.path.dirname(target)
+
+        if not os.path.exists(target_dir):
+            try:
+                os.makedirs(target_dir)
+            except OSError:
+                logger.error("Couldn't create the less css output folder in " +
+                        target_dir)
+
+        subprocess.call([self._lessc, less_file, target])
+        logger.info(u' [ok] compiled %s' % base)
+
+    def generate_output(self, writer=None):
+        logger.info(u' Compiling less css')
+
+        # store out compiler here, so it won't be evaulted on each run of
+        # _compile
+        lg = self.settings['LESS_GENERATOR']
+        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
+
+        # walk static paths
+        for static_path in self.settings['STATIC_PATHS']:
+            for f in self.get_files(
+                    os.path.join(self.path, static_path),
+                    extensions=['less']):
+
+                self._compile(f, self.path, self.output_path)
+
+        # walk theme static paths
+        theme_output_path = os.path.join(self.output_path, 'theme')
+
+        for static_path in self.settings['THEME_STATIC_PATHS']:
+            theme_static_path = os.path.join(self.theme, static_path)
+            for f in self.get_files(
+                    theme_static_path,
+                    extensions=['less']):
+
+                self._compile(f, theme_static_path, theme_output_path)
