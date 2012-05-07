@@ -42,7 +42,7 @@ class Generator(object):
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
-        self._env = Environment(
+        self.env = Environment(
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
@@ -51,11 +51,11 @@ class Generator(object):
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
 
-        logger.debug('template list: {0}'.format(self._env.list_templates()))
+        logger.debug('template list: {0}'.format(self.env.list_templates()))
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
-        self._env.filters.update(custom_filters)
+        self.env.filters.update(custom_filters)
 
     def get_template(self, name):
         """Return the template by name.
@@ -64,7 +64,7 @@ class Generator(object):
         """
         if name not in self._templates:
             try:
-                self._templates[name] = self._env.get_template(name + '.html')
+                self._templates[name] = self.env.get_template(name + '.html')
             except TemplateNotFound:
                 raise Exception('[templates] unable to load %s.html from %s' \
                         % (name, self._templates_path))
@@ -364,7 +364,20 @@ class StaticGenerator(Generator):
             copy(path, source, os.path.join(output_path, destination),
                  final_path, overwrite=True)
 
+    def generate_context(self):
+
+        if self.settings['WEBASSETS']:
+            from webassets import Environment as AssetsEnvironment
+
+            assets_url = self.settings['SITEURL'] + '/theme/'
+            assets_src = os.path.join(self.output_path, 'theme')
+            self.assets_env = AssetsEnvironment(assets_src, assets_url)
+
+            if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
+                self.assets_env.debug = True
+
     def generate_output(self, writer):
+
         self._copy_paths(self.settings['STATIC_PATHS'], self.path,
                          'static', self.output_path)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
