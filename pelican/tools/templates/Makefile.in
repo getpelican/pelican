@@ -1,0 +1,58 @@
+PELICAN=$pelican
+PELICANOPTS=$pelicanopts
+
+BASEDIR=$$(PWD)
+INPUTDIR=$$(BASEDIR)/src
+OUTPUTDIR=$$(BASEDIR)/output
+CONFFILE=$$(BASEDIR)/pelican.conf.py
+
+FTP_HOST=$ftp_host
+FTP_USER=$ftp_user
+FTP_TARGET_DIR=$ftp_target_dir
+
+SSH_HOST=$ssh_host
+SSH_USER=$ssh_user
+SSH_TARGET_DIR=$ssh_target_dir
+
+DROPBOX_DIR=$dropbox_dir
+
+help:
+	@echo 'Makefile for a pelican Web site                                        '
+	@echo '                                                                       '
+	@echo 'Usage:                                                                 '
+	@echo '   make html                        (re)generate the web site          '
+	@echo '   make clean                       remove the generated files         '
+	@echo '   ftp_upload                       upload the web site using FTP      '
+	@echo '   ssh_upload                       upload the web site using SSH      '
+	@echo '   dropbox_upload                   upload the web site using Dropbox  '
+	@echo '   rsync_upload                     upload the web site using rsync/ssh'
+	@echo '                                                                       '
+
+
+html: clean $$(OUTPUTDIR)/index.html
+	@echo 'Done'
+
+$$(OUTPUTDIR)/%.html:
+	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
+
+clean:
+	rm -fr $$(OUTPUTDIR)
+	mkdir $$(OUTPUTDIR)
+
+dropbox_upload: $$(OUTPUTDIR)/index.html
+	cp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
+
+ssh_upload: $$(OUTPUTDIR)/index.html
+	scp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
+
+rsync_upload: $$(OUTPUTDIR)/index.html
+	rsync -e ssh -P -rvz --delete $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+
+ftp_upload: $$(OUTPUTDIR)/index.html
+	lftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUTDIR) $$(FTP_TARGET_DIR) ; quit"
+
+github: $$(OUTPUTDIR)/index.html
+	ghp-import $$(OUTPUTDIR)
+	git push origin gh-pages
+
+.PHONY: html help clean ftp_upload ssh_upload rsync_upload dropbox_upload github
