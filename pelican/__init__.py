@@ -126,12 +126,15 @@ class Pelican(object):
 
         writer = self.get_writer()
 
+        generators[1].env.assets_environment = generators[0].assets_env
+        generators[2].env.assets_environment = generators[0].assets_env
+
         for p in generators:
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
 
     def get_generator_classes(self):
-        generators = [ArticlesGenerator, PagesGenerator, StaticGenerator]
+        generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
         if self.settings['LESS_GENERATOR']: # can be True or PATH to lessc
