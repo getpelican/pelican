@@ -1,30 +1,34 @@
 {% extends "base.html" %}
-{% block title %}{{ article.title }}{% endblock %}
-{% block content %}        
-<section id="content" class="body">    
-<article>
-        <header> <h1 class="entry-title"><a href="{{ pagename }}"
-        rel="bookmark" title="Permalink to {{ article.title }}">{{ article.title
-        }}</a></h1> {% include 'twitter.html' %} </header>
-        <div class="entry-content">
-        {% include 'article_infos.html' %}
-        {{ article.content }}
-        </div><!-- /.entry-content -->
-        {% if DISQUS_SITENAME %}
-        <div class="comments">
-        <h2>Comments !</h2>
-            <div id="disqus_thread"></div>
-            <script type="text/javascript">
-               var disqus_identifier = "{{ article.url }}";
-               (function() {
-               var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-               dsq.src = 'http://{{ DISQUS_SITENAME }}.disqus.com/embed.js';
-               (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-              })();
-            </script>
-        </div>
-        {% endif %}
+{% block title %}{{ article.title|striptags }}{% endblock %}
+{% block content %}
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="{{ article.url }}" rel="bookmark"
+           title="Permalink to {{ article.title|striptags }}">{{ article.title}}</a></h1>
+      {% include 'twitter.html' %}
+    </header>
 
-</article>
+    <div class="entry-content">
+      {% include 'article_infos.html' %}
+      {{ article.content }}
+    </div><!-- /.entry-content -->
+    {% if DISQUS_SITENAME %}
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_identifier = "{{ article.url }}";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://{{ DISQUS_SITENAME }}.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+    </div>
+    {% endif %}
+
+  </article>
 </section>
 {% endblock %}
