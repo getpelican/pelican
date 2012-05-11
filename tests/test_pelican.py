@@ -36,9 +36,27 @@ class TestPelican(unittest.TestCase):
                 pelican = Pelican(path=INPUT_PATH, output_path=temp_path)
                 pelican.run()
                 diff = dircmp(temp_path, os.sep.join((OUTPUT_PATH, "basic")))
-                self.assertEqual(diff.left_only, [])
-                self.assertEqual(diff.right_only, [])
-                self.assertEqual(diff.diff_files, [])
+                self.assertEqual(diff.left_only, [], msg="some generated " \
+                        "files are absent from the expected functional " \
+                        "tests output.\n" \
+                        "This is probably because the HTML generated files " \
+                        "changed. If these changes are normal, please refer " \
+                        "to docs/contribute.rst to update the expected " \
+                        "output of the functional tests.")
+                self.assertEqual(diff.right_only, [], msg="some files from " \
+                        "the expected functional tests output are absent " \
+                        "from the current output.\n" \
+                        "This is probably because the HTML generated files " \
+                        "changed. If these changes are normal, please refer " \
+                        "to docs/contribute.rst to update the expected " \
+                        "output of the functional tests.")
+                self.assertEqual(diff.diff_files, [], msg="some generated " \
+                        "files differ from the expected functional tests " \
+                        "output.\n" \
+                        "This is probably because the HTML generated files " \
+                        "changed. If these changes are normal, please refer " \
+                        "to docs/contribute.rst to update the expected " \
+                        "output of the functional tests.")
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
@@ -47,6 +65,24 @@ class TestPelican(unittest.TestCase):
                               settings=read_settings(SAMPLE_CONFIG))
             pelican.run()
             diff = dircmp(temp_path, os.sep.join((OUTPUT_PATH, "custom")))
-            self.assertEqual(diff.left_only, [])
-            self.assertEqual(diff.right_only, [])
-            self.assertEqual(diff.diff_files, [])
+            self.assertEqual(diff.left_only, [], msg="some generated " \
+                    "files are absent from the expected functional " \
+                    "tests output.\n" \
+                    "This is probably because the HTML generated files " \
+                    "changed. If these changes are normal, please refer " \
+                    "to docs/contribute.rst to update the expected " \
+                    "output of the functional tests.")
+            self.assertEqual(diff.right_only, [], msg="some files from " \
+                    "the expected functional tests output are absent " \
+                    "from the current output.\n" \
+                    "This is probably because the HTML generated files " \
+                    "changed. If these changes are normal, please refer " \
+                    "to docs/contribute.rst to update the expected " \
+                    "output of the functional tests.")
+            self.assertEqual(diff.diff_files, [], msg="some generated " \
+                    "files differ from the expected functional tests " \
+                    "output.\n" \
+                    "This is probably because the HTML generated files " \
+                    "changed. If these changes are normal, please refer " \
+                    "to docs/contribute.rst to update the expected " \
+                    "output of the functional tests.")
