@@ -174,5 +174,6 @@ def read_file(filename, fmt=None, settings=None):
     if settings and settings['TYPOGRIFY']:
         from typogrify import Typogrify
         content = Typogrify.typogrify(content)
+        metadata['title'] = Typogrify.typogrify(metadata['title'])
 
     return content, metadata
