@@ -8,8 +8,8 @@ import logging
 
 from codecs import open
 from functools import partial
-
 from feedgenerator import Atom1Feed, Rss201rev2Feed
+from jinja2 import Markup
 from pelican.paginator import Paginator
 from pelican.utils import get_relative_path, set_date_tzinfo
 
@@ -25,8 +25,9 @@ class Writer(object):
 
     def _create_new_feed(self, feed_type, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
+        sitename = Markup(context['SITENAME']).striptags()
         feed = feed_class(
-            title=context['SITENAME'],
+            title=sitename,
             link=(self.site_url + '/'),
             feed_url=self.feed_url,
             description=context.get('SITESUBTITLE', ''))
@@ -34,8 +35,9 @@ class Writer(object):
 
     def _add_item_to_the_feed(self, feed, item):
 
+        title = Markup(item.title).striptags()
         feed.add_item(
-            title=item.title,
+            title=title,
             link='%s/%s' % (self.site_url, item.url),
             unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
                                         item.date.date(), item.url),
@@ -98,6 +100,12 @@ class Writer(object):
             same length (same list in different orders)
         :param **kwargs: additional variables to pass to the templates
         """
+
+        if name is False:
+            return
+        elif not name:
+            # other stuff, just return for now
+            return
 
         def _write_file(template, localcontext, output_path, name):
             """Render the template write the file."""

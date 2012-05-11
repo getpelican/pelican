@@ -8,6 +8,7 @@ import logging
 from codecs import open as _open
 from datetime import datetime
 from itertools import groupby
+from jinja2 import Markup
 from operator import attrgetter
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ def slugify(value):
 
     Took from django sources.
     """
+    value = Markup(value).striptags()
     if type(value) == unicode:
         import unicodedata
         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')

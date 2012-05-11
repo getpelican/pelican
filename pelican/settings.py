@@ -43,8 +43,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'PAGE_SAVE_AS': 'pages/{slug}.html',
                    'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
                    'PAGE_LANG_SAVE_AS': 'pages/{slug}-{lang}.html',
-                   'CATEGORY_URL': 'category/{name}.html',
-                   'CATEGORY_SAVE_AS': 'category/{name}.html',
+                   'CATEGORY_URL': 'category/{slug}.html',
+                   'CATEGORY_SAVE_AS': 'category/{slug}.html',
                    'TAG_URL': 'tag/{slug}.html',
                    'TAG_SAVE_AS': 'tag/{slug}.html',
                    'AUTHOR_URL': u'author/{slug}.html',
@@ -67,6 +67,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
+                   'LESS_GENERATOR': False,
                    }
 
 

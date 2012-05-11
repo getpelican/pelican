@@ -6,7 +6,7 @@ import logging
 import argparse
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-        StaticGenerator, PdfGenerator)
+        StaticGenerator, PdfGenerator, LessCSSGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 from pelican.utils import clean_output_dir, files_changed
@@ -134,6 +134,8 @@ class Pelican(object):
         generators = [ArticlesGenerator, PagesGenerator, StaticGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
+        if self.settings['LESS_GENERATOR']: # can be True or PATH to lessc
+            generators.append(LessCSSGenerator)
         return generators
 
     def get_writer(self):
