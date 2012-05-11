@@ -54,6 +54,45 @@ class TestArticlesGenerator(unittest.TestCase):
                 categories, ['Default', 'TestCategory', 'Yeah', 'test',
                              'yeah'])
 
+    def test_direct_templates_save_as_default(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['DIRECT_TEMPLATES'] = ['archives']
+        generator = ArticlesGenerator(settings.copy(), settings, None,
+                                      _DEFAULT_CONFIG['THEME'], None,
+                                      _DEFAULT_CONFIG['MARKUP'])
+        write = MagicMock()
+        generator.generate_direct_templates(write)
+        write.assert_called_with("archives.html",
+            generator.get_template("archives"), settings,
+            blog=True, paginated={}, page_name='archives')
+
+    def test_direct_templates_save_as_modified(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['DIRECT_TEMPLATES'] = ['archives']
+        settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        generator = ArticlesGenerator(settings, settings, None,
+                                      _DEFAULT_CONFIG['THEME'], None,
+                                      _DEFAULT_CONFIG['MARKUP'])
+        write = MagicMock()
+        generator.generate_direct_templates(write)
+        write.assert_called_with("archives/index.html",
+            generator.get_template("archives"), settings,
+            blog=True, paginated={}, page_name='archives')
+
+    def test_direct_templates_save_as_false(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['DIRECT_TEMPLATES'] = ['archives']
+        settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        generator = ArticlesGenerator(settings, settings, None,
+                                      _DEFAULT_CONFIG['THEME'], None,
+                                      _DEFAULT_CONFIG['MARKUP'])
+        write = MagicMock()
+        generator.generate_direct_templates(write)
+        write.assert_called_count == 0
+
 
 class TestLessCSSGenerator(unittest.TestCase):
 
@@ -79,7 +118,7 @@ class TestLessCSSGenerator(unittest.TestCase):
         with temporary_folder() as temp_content:
             with temporary_folder() as temp_output:
                 generator = LessCSSGenerator(None, settings, temp_content,
-                                    _DEFAULT_CONFIG['THEME'], temp_output, None)
+                                _DEFAULT_CONFIG['THEME'], temp_output, None)
 
                 # create a dummy less file
                 less_dir = os.path.join(temp_content, 'static', 'css')
