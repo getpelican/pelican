@@ -126,8 +126,10 @@ class Pelican(object):
 
         writer = self.get_writer()
 
-        generators[1].env.assets_environment = generators[0].assets_env
-        generators[2].env.assets_environment = generators[0].assets_env
+        # pass the assets environment to the generators
+        if self.settings['WEBASSETS']:
+            generators[1].env.assets_environment = generators[0].assets_env
+            generators[2].env.assets_environment = generators[0].assets_env
 
         for p in generators:
             if hasattr(p, 'generate_output'):

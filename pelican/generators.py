@@ -394,6 +394,9 @@ class StaticGenerator(Generator):
         if self.settings['WEBASSETS']:
             from webassets import Environment as AssetsEnvironment
 
+            # Define the assets environment that will be passed to the
+            # generators. The StaticGenerator must then be run first to have
+            # the assets in the output_path before generating the templates.
             assets_url = self.settings['SITEURL'] + '/theme/'
             assets_src = os.path.join(self.output_path, 'theme')
             self.assets_env = AssetsEnvironment(assets_src, assets_url)
