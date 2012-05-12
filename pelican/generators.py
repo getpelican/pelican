@@ -245,7 +245,9 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """change the context"""
 
-        article_path = os.path.join(self.path, self.settings['ARTICLE_DIR'])
+        article_path = os.path.normpath(  # we have to remove trailing slashes
+            os.path.join(self.path, self.settings['ARTICLE_DIR'])
+        )
         all_articles = []
         for f in self.get_files(
                 article_path,
@@ -259,8 +261,8 @@ class ArticlesGenerator(Generator):
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata:
 
-                if os.path.dirname(f) == article_path:
-                    category = self.settings['DEFAULT_CATEGORY']
+                if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
+                    category = self.settings['DEFAULT_CATEGORY'] 
                 else:
                     category = os.path.basename(os.path.dirname(f))\
                                 .decode('utf-8')
