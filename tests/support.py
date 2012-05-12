@@ -1,14 +1,10 @@
 __all__ = [
-    'temporary_folder',
     'get_article',
     'unittest',
 ]
 
 import os
 import subprocess
-from contextlib import contextmanager
-from tempfile import mkdtemp
-from shutil import rmtree
 
 from pelican.contents import Article
 
@@ -16,20 +12,6 @@ try:
     import unittest2 as unittest
 except ImportError:
     import unittest
-
-
-@contextmanager
-def temporary_folder():
-    """creates a temporary folder, return it and delete it afterwards.
-
-    This allows to do something like this in tests:
-
-        >>> with temporary_folder() as d:
-            # do whatever you want
-    """
-    tempdir = mkdtemp()
-    yield tempdir
-    rmtree(tempdir)
 
 
 def get_article(title, slug, content, lang, extra_metadata=None):
