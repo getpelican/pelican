@@ -25,8 +25,14 @@ def wp2fields(xml):
     items = soup.rss.channel.findAll('item')
 
     for item in items:
+
         if item.fetch('wp:status')[0].contents[0] == "publish":
-            title = item.title.contents[0]
+
+            try:
+                title = item.title.contents[0]
+            except IndexError:
+                continue
+
             content = item.fetch('content:encoded')[0].contents[0]
             filename = item.fetch('wp:post_name')[0].contents[0]
 
@@ -197,7 +203,7 @@ def build_markdown_header(title, date, author, categories, tags):
     header += '\n'
     return header
 
-def fields2pelican(fields, out_markup, output_path, dircat=False):
+def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=False):
     for title, content, filename, date, author, categories, tags, in_markup in fields:
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
@@ -232,8 +238,10 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
 
                 fp.write(content)
 
-            cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
-                out_markup, out_filename, html_filename)
+            parse_raw = '' if not strip_raw else '--parse-raw'
+            cmd = ('pandoc --normalize --reference-links {0} --from=html'
+                   ' --to={1} -o "{2}" "{3}"').format(
+                    parse_raw, out_markup, out_filename, html_filename)
 
             try:
                 rc = subprocess.call(cmd, shell=True)
@@ -279,6 +287,10 @@ def main():
         help='Output markup format (supports rst & markdown)')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
         help='Put files in directories with categories name')
+    parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
+        help="Strip raw HTML code that can't be converted to "
+             "markup such as flash embeds or iframes (wordpress import only)")
+
     args = parser.parse_args()
 
     input_type = None
@@ -306,4 +318,6 @@ def main():
     elif input_type == 'feed':
         fields = feed2fields(args.input)
 
-    fields2pelican(fields, args.markup, args.output, dircat=args.dircat or False)
+    fields2pelican(fields, args.markup, args.output,
+                   dircat=args.dircat or False,
+                   strip_raw=args.strip_raw or False)
