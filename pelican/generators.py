@@ -284,6 +284,10 @@ class ArticlesGenerator(Generator):
                 all_articles.append(article)
             elif article.status == "draft":
                 self.drafts.append(article)
+            else:
+                logger.warning(u"Unknown status %s for file %s, skipping it." %
+                               (repr(unicode.encode(article.status, 'utf-8')),
+                                repr(f)))
 
         self.articles, self.translations = process_translations(all_articles)
 
