@@ -9,7 +9,7 @@ from pelican.utils import clean_output_dir, files_changed
 from pelican.writers import Writer
 from pelican import log
 
-__version__ = "2.8.0"
+__version__ = "2.8.1"
 
 
 class Pelican(object):
