@@ -1,10 +1,18 @@
-X.X
+3.0 - XX/XX/XXXX
 
 * Refactored the way URL are handled.
 * Improved the english documentation
 * Fixed packaging using setuptools entrypoints
 * Added typogrify support
 * Added a way to disable feed generation
+* Added support for DIRECT_TEMPLATES
+* Allow multiple extensions for content files
+* Added less support
+* Improved the import script
+* Fixed a bunch of bugs :-)
+* Added functional tests
+* Rsync support in the generated Makefile
+* Improved feed support (easily pluggable with feedburner for instance)
 
 2.8
 
