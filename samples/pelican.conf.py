@@ -8,7 +8,7 @@ GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"
 PDF_GENERATOR = False
 REVERSE_CATEGORY_ORDER = True
-LOCALE = ""
+LOCALE = "C"
 DEFAULT_PAGINATION = 4
 
 FEED_RSS = 'feeds/all.rss.xml'

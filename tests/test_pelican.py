@@ -7,6 +7,7 @@ import os
 from filecmp import dircmp
 from tempfile import mkdtemp
 from shutil import rmtree
+import locale
 
 from mock import patch
 
@@ -27,9 +28,12 @@ class TestPelican(unittest.TestCase):
 
     def setUp(self):
         self.temp_path = mkdtemp()
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, 'C')
 
     def tearDown(self):
         rmtree(self.temp_path)
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
