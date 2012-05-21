@@ -169,7 +169,7 @@ For RestructuredText::
 
 For Markdown, format your code blocks thusly::
 
-    ::identifier
+    :::identifier
     your code goes here
 
 The specified identifier should be one that appears on the 
