@@ -6,7 +6,7 @@ import logging
 import argparse
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-        StaticGenerator, PdfGenerator)
+        StaticGenerator, PdfGenerator, LessCSSGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 from pelican.utils import clean_output_dir, files_changed
@@ -61,8 +61,9 @@ class Pelican(object):
     def _handle_deprecation(self):
 
         if self.settings.get('CLEAN_URLS', False):
-            logger.warning('Found deprecated `CLEAN_URLS` in settings. Modifing'
-                        ' the following settings for the same behaviour.')
+            logger.warning('Found deprecated `CLEAN_URLS` in settings.'
+                        ' Modifying the following settings for the'
+                        ' same behaviour.')
 
             self.settings['ARTICLE_URL'] = '{slug}/'
             self.settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
@@ -75,7 +76,7 @@ class Pelican(object):
 
         if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
             logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
-                        ' settings.  Modifing the following settings for'
+                        ' settings.  Modifying the following settings for'
                         ' the same behaviour.')
 
             structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
@@ -133,6 +134,8 @@ class Pelican(object):
         generators = [ArticlesGenerator, PagesGenerator, StaticGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
+        if self.settings['LESS_GENERATOR']: # can be True or PATH to lessc
+            generators.append(LessCSSGenerator)
         return generators
 
     def get_writer(self):

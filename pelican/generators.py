@@ -4,6 +4,7 @@ import math
 import random
 import logging
 import datetime
+import subprocess
 
 from collections import defaultdict
 from functools import partial
@@ -162,31 +163,32 @@ class ArticlesGenerator(Generator):
                 writer.write_feed(items, self.context,
                                   self.settings['TRANSLATION_FEED'] % lang)
 
-    def generate_pages(self, writer):
-        """Generate the pages on the disk"""
-
-        write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
-
-        # to minimize the number of relative path stuff modification
-        # in writer, articles pass first
+    def generate_articles(self, write):
+        """Generate the articles."""
         article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
             write(article.save_as,
                           article_template, self.context, article=article,
                           category=article.category)
 
+    def generate_direct_templates(self, write):
+        """Generate direct templates pages"""
         PAGINATED_TEMPLATES = self.settings.get('PAGINATED_DIRECT_TEMPLATES')
         for template in self.settings.get('DIRECT_TEMPLATES'):
             paginated = {}
             if template in PAGINATED_TEMPLATES:
                 paginated = {'articles': self.articles, 'dates': self.dates}
+            save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
+                                                        '%s.html' % template)
+            if not save_as:
+                 continue
 
-            write('%s.html' % template, self.get_template(template),
+            write(save_as, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
                   page_name=template)
 
-        # and subfolders after that
+    def generate_tags(self, write):
+        """Generate Tags pages."""
         tag_template = self.get_template('tag')
         for tag, articles in self.tags.items():
             articles.sort(key=attrgetter('date'), reverse=True)
@@ -196,6 +198,8 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name=u'tag/%s' % tag)
 
+    def generate_categories(self, write):
+        """Generate category pages."""
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
@@ -204,6 +208,8 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name=u'category/%s' % cat)
 
+    def generate_authors(self, write):
+        """Generate Author pages."""
         author_template = self.get_template('author')
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
@@ -212,9 +218,29 @@ class ArticlesGenerator(Generator):
                 paginated={'articles': articles, 'dates': dates},
                 page_name=u'author/%s' % aut)
 
+    def generate_drafts(self, write):
+        """Generate drafts pages."""
+        article_template = self.get_template('article')
         for article in self.drafts:
             write('drafts/%s.html' % article.slug, article_template,
                   self.context, article=article, category=article.category)
+
+    def generate_pages(self, writer):
+        """Generate the pages on the disk"""
+        write = partial(writer.write_file,
+                        relative_urls=self.settings.get('RELATIVE_URLS'))
+
+        # to minimize the number of relative path stuff modification
+        # in writer, articles pass first
+        self.generate_articles(write)
+        self.generate_direct_templates(write)
+
+
+        # and subfolders after that
+        self.generate_tags(write)
+        self.generate_categories(write)
+        self.generate_authors(write)
+        self.generate_drafts(write)
 
     def generate_context(self):
         """change the context"""
@@ -302,10 +328,12 @@ class ArticlesGenerator(Generator):
 
         # order the categories per name
         self.categories = list(self.categories.items())
-        self.categories.sort(reverse=self.settings['REVERSE_CATEGORY_ORDER'])
+        self.categories.sort(
+                key=lambda item: item[0].name,
+                reverse=self.settings['REVERSE_CATEGORY_ORDER'])
 
         self.authors = list(self.authors.items())
-        self.authors.sort()
+        self.authors.sort(key=lambda item: item[0].name)
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors'))
@@ -351,7 +379,7 @@ class PagesGenerator(Generator):
 
 
 class StaticGenerator(Generator):
-    """copy static paths (what you want to cpy, like images, medias etc.
+    """copy static paths (what you want to copy, like images, medias etc.
     to output"""
 
     def _copy_paths(self, paths, source, destination, output_path,
@@ -414,3 +442,50 @@ class PdfGenerator(Generator):
 
         for page in self.context['pages']:
             self._create_pdf(page, pdf_path)
+
+
+class LessCSSGenerator(Generator):
+    """Compile less css files."""
+
+    def _compile(self, less_file, source_dir, dest_dir):
+        base = os.path.relpath(less_file, source_dir)
+        target = os.path.splitext(
+                os.path.join(dest_dir, base))[0] + '.css'
+        target_dir = os.path.dirname(target)
+
+        if not os.path.exists(target_dir):
+            try:
+                os.makedirs(target_dir)
+            except OSError:
+                logger.error("Couldn't create the less css output folder in " +
+                        target_dir)
+
+        subprocess.call([self._lessc, less_file, target])
+        logger.info(u' [ok] compiled %s' % base)
+
+    def generate_output(self, writer=None):
+        logger.info(u' Compiling less css')
+
+        # store out compiler here, so it won't be evaulted on each run of
+        # _compile
+        lg = self.settings['LESS_GENERATOR']
+        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
+
+        # walk static paths
+        for static_path in self.settings['STATIC_PATHS']:
+            for f in self.get_files(
+                    os.path.join(self.path, static_path),
+                    extensions=['less']):
+
+                self._compile(f, self.path, self.output_path)
+
+        # walk theme static paths
+        theme_output_path = os.path.join(self.output_path, 'theme')
+
+        for static_path in self.settings['THEME_STATIC_PATHS']:
+            theme_static_path = os.path.join(self.theme, static_path)
+            for f in self.get_files(
+                    theme_static_path,
+                    extensions=['less']):
+
+                self._compile(f, theme_static_path, theme_output_path)

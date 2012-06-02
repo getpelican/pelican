@@ -13,7 +13,12 @@ from pelican.utils import slugify
 
 def wp2fields(xml):
     """Opens a wordpress XML file, and yield pelican fields"""
-    from BeautifulSoup import BeautifulStoneSoup
+    try:
+        from BeautifulSoup import BeautifulStoneSoup
+    except ImportError:
+        error = ('Missing dependency '
+                 '"BeautifulSoup" required to import Wordpress XML files.')
+        sys.exit(error)
 
     xmlfile = open(xml, encoding='utf-8').read()
     soup = BeautifulStoneSoup(xmlfile)
@@ -34,13 +39,19 @@ def wp2fields(xml):
             categories = [cat.contents[0] for cat in item.fetch(domain='category')]
             # caturl = [cat['nicename'] for cat in item.fetch(domain='category')]
 
-            tags = [tag.contents[0].title() for tag in item.fetch(domain='tag', nicename=None)]
+            tags = [tag.contents[0] for tag in item.fetch(domain='post_tag')]
 
             yield (title, content, filename, date, author, categories, tags, "html")
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
-    from BeautifulSoup import BeautifulStoneSoup
+    try:
+        from BeautifulSoup import BeautifulStoneSoup
+    except ImportError:
+        error = ('Missing dependency '
+                 '"BeautifulSoup" required to import Dotclear files.')
+        sys.exit(error)
+
 
     in_cat = False
     in_post = False
@@ -213,9 +224,12 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
             html_filename = os.path.join(output_path, filename+'.html')
 
             with open(html_filename, 'w', encoding='utf-8') as fp:
-                # Replace simple newlines with <br />+newline so that the HTML file
-                # represents the original post more accurately
-                content = content.replace("\n", "<br />\n")
+                # Replace newlines with paragraphs wrapped with <p> so
+                # HTML is valid before conversion
+                paragraphs = content.split('\n\n')
+                paragraphs = [u'<p>{}</p>'.format(p) for p in paragraphs]
+                new_content = ''.join(paragraphs)
+
                 fp.write(content)
 
             cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(

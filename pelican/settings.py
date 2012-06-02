@@ -43,8 +43,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'PAGE_SAVE_AS': 'pages/{slug}.html',
                    'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
                    'PAGE_LANG_SAVE_AS': 'pages/{slug}-{lang}.html',
-                   'CATEGORY_URL': 'category/{name}.html',
-                   'CATEGORY_SAVE_AS': 'category/{name}.html',
+                   'CATEGORY_URL': 'category/{slug}.html',
+                   'CATEGORY_SAVE_AS': 'category/{slug}.html',
                    'TAG_URL': 'tag/{slug}.html',
                    'TAG_SAVE_AS': 'tag/{slug}.html',
                    'AUTHOR_URL': u'author/{slug}.html',
@@ -67,6 +67,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
+                   'LESS_GENERATOR': False,
                    }
 
 
@@ -130,7 +131,7 @@ def configure_settings(settings, default_settings=None, filename=None):
     if ('SITEURL' in settings):
         # If SITEURL has a trailing slash, remove it and provide a warning
         siteurl = settings['SITEURL']
-        if (siteurl[len(siteurl) - 1:] == '/'):
+        if (siteurl.endswith('/')):
             settings['SITEURL'] = siteurl[:-1]
             logger.warn("Removed extraneous trailing slash from SITEURL.")
         # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL

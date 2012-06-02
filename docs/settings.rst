@@ -21,70 +21,80 @@ Here is a list of settings for Pelican:
 Basic settings
 ==============
 
-================================================    =====================================================
-Setting name (default value)                        What does it do?
-================================================    =====================================================
-`AUTHOR`                                            Default author (put your name)
-`DATE_FORMATS` (``{}``)                             If you do manage multiple languages, you can
-                                                    set the date formatting here. See "Date format and locales"
-                                                    section below for details.
-`DEFAULT_CATEGORY` (``'misc'``)                     The default category to fall back on.
-`DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)           The default date format you want to use.
-`DISPLAY_PAGES_ON_MENU` (``True``)                  Whether to display pages on the menu of the
-                                                    template. Templates may or not honor this
-                                                    setting.
-`FALLBACK_ON_FS_DATE` (``True``)                    If True, Pelican will use the file system
-                                                    timestamp information (mtime) if it can't get
-                                                    date information from the metadata.
-`JINJA_EXTENSIONS` (``[]``)                         A list of any Jinja2 extensions you want to use.
-`DELETE_OUTPUT_DIRECTORY` (``False``)               Delete the output directory as well as
-                                                    the generated files.
-`LOCALE` (''[#]_)                                   Change the locale. A list of locales can be provided 
-                                                    here or a single string representing one locale.
-                                                    When providing a list, all the locales will be tried 
-                                                    until one works.
-`MARKUP` (``('rst', 'md')``)                        A list of available markup languages you want
-                                                    to use. For the moment, the only available values
-                                                    are `rst` and `md`.
-`MD_EXTENSIONS` (``['codehilite','extra']``)        A list of the extensions that the Markdown processor
-                                                    will use. Refer to the extensions chapter in the
-                                                    Python-Markdown documentation for a complete list of
-                                                    supported extensions.
-`OUTPUT_PATH` (``'output/'``)                       Where to output the generated files.
-`PATH` (``None``)                                   Path to look at for input files.
-`PAGE_DIR' (``'pages'``)                            Directory to look at for pages.
-`PAGE_EXCLUDES' (``()``)                            A list of directories to exclude when looking for pages.
-`ARTICLE_DIR' (``''``)                              Directory to look at for articles.
-`ARTICLE_EXCLUDES': (``('pages',)``)                A list of directories to exclude when looking for articles.
-`PDF_GENERATOR` (``False``)                         Set to True if you want to have PDF versions
-                                                    of your documents. You will need to install
-                                                    `rst2pdf`.
-`RELATIVE_URLS` (``True``)                          Defines whether Pelican should use relative URLs or
-                                                    not.
-`SITENAME` (``'A Pelican Blog'``)                   Your site name
-`SITEURL`                                           Base URL of your website. Not defined by default,
-                                                    which means the base URL is assumed to be "/" with a
-                                                    root-relative URL structure. If `SITEURL` is specified
-                                                    explicitly, there should be no trailing slash at the end,
-                                                    and URLs will be generated with an absolute URL structure
-                                                    (including the domain). If you want to use relative URLs
-                                                    instead of root-relative or absolute URLs, you should
-                                                    instead use the `RELATIVE_URL` setting.
-`STATIC_PATHS` (``['images']``)                     The static paths you want to have accessible
-                                                    on the output path "static". By default,
-                                                    Pelican will copy the 'images' folder to the
-                                                    output folder.
-`TIMEZONE`                                          The timezone used in the date information, to
-                                                    generate Atom and RSS feeds. See the "timezone"
-                                                    section below for more info.
-`TYPOGRIFY` (``False``)                             If set to true, some
-                                                    additional transformations will be done on the
-                                                    generated HTML, using the `Typogrify
-                                                    <http://static.mintchaos.com/projects/typogrify/>`_
-                                                    library
-================================================    =====================================================
+=====================================================================   =====================================================================
+Setting name (default value)                                            What does it do?
+=====================================================================   =====================================================================
+`AUTHOR`                                                                Default author (put your name)
+`DATE_FORMATS` (``{}``)                                                 If you do manage multiple languages, you can
+                                                                        set the date formatting here. See "Date format and locales"
+                                                                        section below for details.
+`DEFAULT_CATEGORY` (``'misc'``)                                         The default category to fall back on.
+`DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                               The default date format you want to use.
+`DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
+                                                                        template. Templates may or not honor this
+                                                                        setting.
+`FALLBACK_ON_FS_DATE` (``True``)                                        If True, Pelican will use the file system
+                                                                        timestamp information (mtime) if it can't get
+                                                                        date information from the metadata.
+`JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
+`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the output directory as well as
+                                                                        the generated files.
+`LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
+                                                                        here or a single string representing one locale.
+                                                                        When providing a list, all the locales will be tried
+                                                                        until one works.
+`MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
+                                                                        to use. For the moment, the only available values
+                                                                        are `rst` and `md`.
+`MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
+                                                                        will use. Refer to the extensions chapter in the
+                                                                        Python-Markdown documentation for a complete list of
+                                                                        supported extensions.
+`OUTPUT_PATH` (``'output/'``)                                           Where to output the generated files.
+`PATH` (``None``)                                                       Path to look at for input files.
+`PAGE_DIR` (``'pages'``)                                                Directory to look at for pages.
+`PAGE_EXCLUDES` (``()``)                                                A list of directories to exclude when looking for pages.
+`ARTICLE_DIR` (``''``)                                                  Directory to look at for articles.
+`ARTICLE_EXCLUDES`: (``('pages',)``)                                    A list of directories to exclude when looking for articles.
+`PDF_GENERATOR` (``False``)                                             Set to True if you want to have PDF versions
+                                                                        of your documents. You will need to install
+                                                                        `rst2pdf`.
+`RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use relative URLs or
+                                                                        not.
+`SITENAME` (``'A Pelican Blog'``)                                       Your site name
+`SITEURL`                                                               Base URL of your website. Not defined by default,
+                                                                        which means the base URL is assumed to be "/" with a
+                                                                        root-relative URL structure. If `SITEURL` is specified
+                                                                        explicitly, there should be no trailing slash at the end,
+                                                                        and URLs will be generated with an absolute URL structure
+                                                                        (including the domain). If you want to use relative URLs
+                                                                        instead of root-relative or absolute URLs, you should
+                                                                        instead use the `RELATIVE_URL` setting.
+`STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
+                                                                        on the output path "static". By default,
+                                                                        Pelican will copy the 'images' folder to the
+                                                                        output folder.
+`TIMEZONE`                                                              The timezone used in the date information, to
+                                                                        generate Atom and RSS feeds. See the "timezone"
+                                                                        section below for more info.
+`TYPOGRIFY` (``False``)                                                 If set to true, some
+                                                                        additional transformations will be done on the
+                                                                        generated HTML, using the `Typogrify
+                                                                        <http://static.mintchaos.com/projects/typogrify/>`_
+                                                                        library
+`LESS_GENERATOR` (``FALSE``)                                            Set to True or complete path to `lessc` (if not
+                                                                        found in system PATH) to enable compiling less
+                                                                        css files. Requires installation of `less css`_.
+`DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'archives')``)    List of templates that are used directly to render
+                                                                        content. Typically direct templates are used to generate
+                                                                        index pages for collections of content e.g. tags and
+                                                                        category index pages.
+`PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
+=====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
+
+.. _less css: http://lesscss.org/
 
 
 URL settings
@@ -96,14 +106,15 @@ your articles in a location such as '{slug}/index.html' and link to them as
 '{slug}' for clean URLs. These settings give you the flexibility to place your
 articles and pages anywhere you want.
 
-Note: If you specify a datetime directive, it will be substituted using the
-input files' date metadata attribute. If the date is not specified for a
-particular file, Pelican will rely on the file's mtime timestamp.
+.. note::
+    If you specify a datetime directive, it will be substituted using the
+    input files' date metadata attribute. If the date is not specified for a
+    particular file, Pelican will rely on the file's mtime timestamp.
 
 Check the Python datetime documentation at http://bit.ly/cNcJUC for more
 information.
 
-Also, you can use other file metadata attributes as well: 
+Also, you can use other file metadata attributes as well:
 
 * slug
 * date
@@ -111,7 +122,7 @@ Also, you can use other file metadata attributes as well:
 * author
 * category
 
-Example usage: 
+Example usage:
 
 * ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'
 * ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
@@ -140,7 +151,14 @@ Setting name (default value)                        what does it do?
 `CATEGORY_SAVE_AS` ('category/{name}.html')         The location to save a category.
 `TAG_URL` ('tag/{name}.html')                       The URL to use for a tag.
 `TAG_SAVE_AS` ('tag/{name}.html')                   The location to save the tag page.
+`<DIRECT_TEMPLATE_NAME>_SAVE_AS`                    The location to save content generated from direct
+                                                    templates. Where <DIRECT_TEMPLATE_NAME> is the
+                                                    upper case template name.
 ================================================    =====================================================
+
+.. note::
+
+    When any of `*_SAVE_AS` is set to False, files will not be created.
 
 Timezone
 --------
@@ -330,7 +348,7 @@ Setting name (default value)                        What does it do?
 ================================================    =====================================================
 `REVERSE_ARCHIVE_ORDER` (``False``)                 Reverse the archives list order. (True: orders by date
                                                     in descending order, with newer articles first.)
-`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse 
+`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse
                                                     alphabetical order; default lists alphabetically.)
 ================================================    =====================================================
 
@@ -361,8 +379,7 @@ By default, two themes are available. You can specify them using the `-t` option
 You can define your own theme too, and specify its placement in the same
 manner. (Be sure to specify the full absolute path to it.)
 
-Here is `a guide on how to create your theme
-<http://pelican.notmyidea.org/en/latest/themes.html>`_
+Here is :doc:`a guide on how to create your theme <themes>`
 
 You can find a list of themes at http://github.com/ametaireau/pelican-themes.
 

@@ -41,6 +41,9 @@ class Page(object):
         for key, value in local_metadata.items():
             setattr(self, key.lower(), value)
 
+        # also keep track of the metadata attributes available
+        self.metadata = local_metadata
+
         # default author to the one in settings if not defined
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
@@ -60,7 +63,7 @@ class Page(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, fro mthe title
+        # create the slug if not existing, from the title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
@@ -132,7 +135,7 @@ class Page(object):
 
     def _get_summary(self):
         """Returns the summary of an article, based on the summary metadata
-        if it is set, else troncate the content."""
+        if it is set, else truncate the content."""
         if hasattr(self, '_summary'):
             return self._summary
         else:
@@ -180,7 +183,12 @@ class URLWrapper(object):
 
     def _from_settings(self, key):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
-        return unicode(self.settings[setting]).format(**self.as_dict())
+        value = self.settings[setting]
+        if not isinstance(value, basestring):
+            logger.warning(u'%s is set to %s' % (setting, value))
+            return value
+        else:
+            return unicode(value).format(**self.as_dict())
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
