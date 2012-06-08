@@ -41,6 +41,8 @@ directives.register_directive('sourcecode', Pygments)
 class YouTube(Directive):
     """ Embed YouTube video in posts.
 
+    Courtesy of Brian Hsu: https://gist.github.com/1422773
+
     VIDEO_ID is required, with / height are optional integer,
     and align could be left / center / right.
 
