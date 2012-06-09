@@ -8,7 +8,7 @@ import time
 
 from codecs import open
 
-from pelican.utils import slugify
+from pelican.utils import slugify, truncate_html_words
 
 
 def wp2fields(xml):
@@ -25,10 +25,33 @@ def wp2fields(xml):
     items = soup.rss.channel.findAll('item')
 
     for item in items:
-        if item.fetch('wp:status')[0].contents[0] == "publish":
-            title = item.title.contents[0]
-            content = item.fetch('content:encoded')[0].contents[0]
-            filename = item.fetch('wp:post_name')[0].contents[0]
+
+        status = item.fetch('wp:status')[0].contents[0]
+        if status in ("publish", "draft"):
+
+            # Skip empty published post
+            # Accept draft posts with an empty content or title but not both
+            try:
+                title = item.title.contents[0]
+            except IndexError:
+                if status == "publish":
+                    continue
+                title = ""
+
+            try:
+                content = item.fetch('content:encoded')[0].contents[0]
+            except IndexError:
+                if status == "publish":
+                    continue
+                content = ""
+
+            try:
+                filename = item.fetch('wp:post_name')[0].contents[0]
+            except IndexError:
+                stitle = title.strip() or content.strip()
+                if status == "publish" or not stitle:
+                    continue
+                filename = slugify(truncate_html_words(stitle, 5))
 
             raw_date = item.fetch('wp:post_date')[0].contents[0]
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
@@ -41,7 +64,9 @@ def wp2fields(xml):
 
             tags = [tag.contents[0] for tag in item.fetch(domain='post_tag')]
 
-            yield (title, content, filename, date, author, categories, tags, "html")
+            yield (title, content, filename, date, author, categories, tags,
+                  "html", status)
+
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
@@ -173,7 +198,7 @@ def feed2fields(file):
         yield (entry.title, entry.description, slug, date, author, [], tags, "html")
 
 
-def build_header(title, date, author, categories, tags):
+def build_header(title, date, author, categories, tags, status):
     """Build a header from a list of fields"""
     header = '%s\n%s\n' % (title, '#' * len(title))
     if date:
@@ -182,10 +207,12 @@ def build_header(title, date, author, categories, tags):
         header += ':category: %s\n' % ', '.join(categories)
     if tags:
         header += ':tags: %s\n' % ', '.join(tags)
+    if status == "draft":
+        header += ':status: draft\n'
     header += '\n'
     return header
 
-def build_markdown_header(title, date, author, categories, tags):
+def build_markdown_header(title, date, author, categories, tags, status):
     """Build a header from a list of fields"""
     header = 'Title: %s\n' % title
     if date:
@@ -194,18 +221,20 @@ def build_markdown_header(title, date, author, categories, tags):
         header += 'Category: %s\n' % ', '.join(categories)
     if tags:
         header += 'Tags: %s\n' % ', '.join(tags)
+    if status == "draft":
+        header += 'Status: draft\n'
     header += '\n'
     return header
 
 def fields2pelican(fields, out_markup, output_path, dircat=False):
-    for title, content, filename, date, author, categories, tags, in_markup in fields:
+    for title, content, filename, date, author, categories, tags, in_markup, status in fields:
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
-            header = build_markdown_header(title, date, author, categories, tags)
+            header = build_markdown_header(title, date, author, categories, tags, status)
         else:
             out_markup = "rst"
             ext = '.rst'
-            header = build_header(title, date, author, categories, tags)
+            header = build_header(title, date, author, categories, tags, status)
 
         filename = os.path.basename(filename)
 
