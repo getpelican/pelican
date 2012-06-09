@@ -69,6 +69,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'TYPOGRIFY': False,
                    'LESS_GENERATOR': False,
                    'WEBASSETS': False,
+                   'PLUGINS': [],
                    }
 
 

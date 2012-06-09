@@ -61,6 +61,7 @@ Setting name (default value)                                            What doe
                                                                         `rst2pdf`.
 `RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use relative URLs or
                                                                         not.
+`PLUGINS` (``[]``)                                                      The list of plugins to load. See :ref:`plugins`.
 `SITENAME` (``'A Pelican Blog'``)                                       Your site name
 `SITEURL`                                                               Base URL of your website. Not defined by default,
                                                                         which means the base URL is assumed to be "/" with a

@@ -5,6 +5,8 @@ import time
 import logging
 import argparse
 
+from pelican import signals
+
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator, LessCSSGenerator)
 from pelican.log import init
@@ -22,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class Pelican(object):
     def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, delete_outputdir=False):
+            markup=None, delete_outputdir=False, plugin_path=None):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
@@ -57,6 +59,20 @@ class Pelican(object):
                 self.theme = theme_path
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
+
+        self.init_plugins()
+        signals.initialized.send(self)
+
+    def init_plugins(self):
+        self.plugins = self.settings['PLUGINS']
+        for plugin in self.plugins:
+            # if it's a string, then import it
+            if isinstance(plugin, basestring):
+                log.debug("Loading plugin `{0}' ...".format(plugin))
+                plugin = __import__(plugin, globals(), locals(), 'module')
+
+            log.debug("Registering plugin `{0}' ...".format(plugin.__name__))
+            plugin.register()
 
     def _handle_deprecation(self):
 
