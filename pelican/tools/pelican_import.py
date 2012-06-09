@@ -25,8 +25,14 @@ def wp2fields(xml):
     items = soup.rss.channel.findAll('item')
 
     for item in items:
+
         if item.fetch('wp:status')[0].contents[0] == "publish":
-            title = item.title.contents[0]
+
+            try:
+                title = item.title.contents[0]
+            except IndexError:
+                continue
+
             content = item.fetch('content:encoded')[0].contents[0]
             filename = item.fetch('wp:post_name')[0].contents[0]
 
@@ -232,8 +238,9 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
 
                 fp.write(content)
 
-            cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
-                out_markup, out_filename, html_filename)
+            cmd = ('pandoc --normalize --reference-links --from=html'
+                   ' --to={0} -o "{1}" "{2}"').format(
+                   out_markup, out_filename, html_filename)
 
             try:
                 rc = subprocess.call(cmd, shell=True)
@@ -279,6 +286,7 @@ def main():
         help='Output markup format (supports rst & markdown)')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
         help='Put files in directories with categories name')
+
     args = parser.parse_args()
 
     input_type = None
