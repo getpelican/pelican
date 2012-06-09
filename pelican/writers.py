@@ -199,7 +199,7 @@ class Writer(object):
             def replacer(m):
                 relative_path = m.group('path')
                 dest_path = os.path.normpath(
-                                os.sep.join((get_relative_path(name), "static",
+                                os.sep.join((get_relative_path(name),
                                 relative_path)))
 
                 return m.group('markup') + m.group('quote') + dest_path \
