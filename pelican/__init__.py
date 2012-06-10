@@ -11,7 +11,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator, LessCSSGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
-from pelican.utils import clean_output_dir, files_changed
+from pelican.utils import clean_output_dir, files_changed, file_changed
 from pelican.writers import Writer
 
 __major__ = 3
@@ -155,7 +155,7 @@ class Pelican(object):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
-        if self.settings['LESS_GENERATOR']: # can be True or PATH to lessc
+        if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
             generators.append(LessCSSGenerator)
         return generators
 
@@ -213,11 +213,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def main():
-    args = parse_arguments()
-    init(args.verbosity)
-    # Split the markup languages only if some have been given. Otherwise,
-    # populate the variable with None.
+def get_instance(args):
     markup = [a.strip().lower() for a in args.markup.split(',')]\
               if args.markup else None
 
@@ -229,9 +225,18 @@ def main():
         module = __import__(module)
         cls = getattr(module, cls_name)
 
+    return cls(settings, args.path, args.theme, args.output, markup,
+               args.delete_outputdir)
+
+
+def main():
+    args = parse_arguments()
+    init(args.verbosity)
+    # Split the markup languages only if some have been given. Otherwise,
+    # populate the variable with None.
+    pelican = get_instance(args)
+
     try:
-        pelican = cls(settings, args.path, args.theme, args.output, markup,
-                args.delete_outputdir)
         if args.autoreload:
             while True:
                 try:
@@ -243,6 +248,14 @@ def main():
                     if files_changed(pelican.path, pelican.markup) or \
                             files_changed(pelican.theme, ['']):
                         pelican.run()
+
+                    # reload also if settings.py changed
+                    if file_changed(args.settings):
+                        logger.info('%s changed, re-generating' %
+                                    args.settings)
+                        pelican = get_instance(args)
+                        pelican.run()
+
                     time.sleep(.5)  # sleep to avoid cpu load
                 except KeyboardInterrupt:
                     break
