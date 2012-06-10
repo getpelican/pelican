@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import contextlib
 import os
 import re
 import pytz
@@ -32,10 +33,10 @@ def get_date(string):
             pass
     raise ValueError("'%s' is not a valid date" % string)
 
-
+@contextlib.contextmanager
 def open(filename):
     """Open a file and return it's content"""
-    return _open(filename, encoding='utf-8').read()
+    yield _open(filename, encoding='utf-8').read()
 
 
 def slugify(value):
