@@ -11,10 +11,8 @@ WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
 
 class TestWordpressXmlImporter(unittest.TestCase):
 
-
     def setUp(self):
         self.posts = wp2fields(WORDPRESS_XML_SAMPLE)
-
 
     def test_ignore_empty_posts(self):
 
@@ -23,7 +21,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         for title, content, fname, date, author, categ, tags, format in posts:
             self.assertTrue(title.strip())
 
-
+    @unittest.skipUnless(os.system('pandoc --version') == 0, 'pandoc is not installed')
     def test_can_toggle_raw_html_code_parsing(self):
 
         posts = list(self.posts)
@@ -34,10 +32,12 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
             rst_files = (r(f) for f in silent_f2p(posts, 'markdown', temp))
             self.assertTrue(any('<iframe' in rst for rst in rst_files))
-            rst_files = (r(f) for f in silent_f2p(posts, 'markdown', temp, strip_raw=True))
+            rst_files = (r(f) for f in silent_f2p(posts, 'markdown', temp,
+                         strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
             # no effect in rst
             rst_files = (r(f) for f in silent_f2p(posts, 'rst', temp))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
-            rst_files = (r(f) for f in silent_f2p(posts, 'rst', temp, strip_raw=True))
+            rst_files = (r(f) for f in silent_f2p(posts, 'rst', temp,
+                         strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))

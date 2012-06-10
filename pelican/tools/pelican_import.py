@@ -247,14 +247,15 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
             try:
                 rc = subprocess.call(cmd, shell=True)
                 if rc < 0:
-                    print("Child was terminated by signal %d" % -rc)
-                    exit()
+                    error = "Child was terminated by signal %d" % -rc
+                    exit(error)
+
                 elif rc > 0:
-                    print("Please, check your Pandoc installation.")
-                    exit()
+                    error = "Please, check your Pandoc installation."
+                    exit(error)
             except OSError, e:
-                print("Pandoc execution failed: %s" % e)
-                exit()
+                error = "Pandoc execution failed: %s" % e
+                exit(error)
 
             os.remove(html_filename)
 
@@ -302,15 +303,15 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        print("You must provide either --wpfile, --dotclear or --feed options")
-        exit()
+        error = "You must provide either --wpfile, --dotclear or --feed options"
+        exit(error)
 
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
         except OSError:
-            print("Unable to create the output folder: " + args.output)
-            exit()
+            error = "Unable to create the output folder: " + args.output
+            exit(error)
 
     if input_type == 'wordpress':
         fields = wp2fields(args.input)
