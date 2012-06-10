@@ -8,12 +8,20 @@ from .support import unittest, temporary_folder, mute
 CUR_DIR = os.path.dirname(__file__)
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
 
+PANDOC = os.system('pandoc --version') == 0
+try:
+    import BeautifulSoup
+except ImportError:
+    BeautifulSoup = False  # NOQA
+
 
 class TestWordpressXmlImporter(unittest.TestCase):
 
     def setUp(self):
         self.posts = wp2fields(WORDPRESS_XML_SAMPLE)
 
+    @unittest.skipUnless(PANDOC and BeautifulSoup,
+                         'Needs Pandoc and BeautifulSoup')
     def test_ignore_empty_posts(self):
 
         posts = list(self.posts)
@@ -21,7 +29,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
         for title, content, fname, date, author, categ, tags, format in posts:
             self.assertTrue(title.strip())
 
-    @unittest.skipUnless(os.system('pandoc --version') == 0, 'pandoc is not installed')
+    @unittest.skipUnless(PANDOC and BeautifulSoup,
+                         'Needs Pandoc and BeautifulSoup')
     def test_can_toggle_raw_html_code_parsing(self):
 
         posts = list(self.posts)
