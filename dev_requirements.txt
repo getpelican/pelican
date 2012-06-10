@@ -7,3 +7,4 @@ pytz
 mock
 Markdown
 blinker
+BeautifulSoup
