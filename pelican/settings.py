@@ -152,7 +152,7 @@ def configure_settings(settings, default_settings=None, filename=None):
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")
 
-    if settings['WEBASSETS']:
+    if 'WEBASSETS' in settings:
         try:
             from webassets.ext.jinja2 import AssetsExtension
             settings['JINJA_EXTENSIONS'].append(AssetsExtension)
