@@ -6,3 +6,5 @@ unittest2
 pytz
 mock
 Markdown
+blinker
+BeautifulSoup

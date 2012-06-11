@@ -61,6 +61,7 @@ A French version of the documentation is available at :doc:`fr/index`.
    getting_started
    settings
    themes
+   plugins
    internals
    pelican-themes
    importer
