@@ -4,16 +4,47 @@ Getting started
 Installing
 ==========
 
-You're ready? Let's go! You can install Pelican via several different methods. The simplest is via `pip <http://pip.openplans.org/>`_::
+You're ready? Let's go! You can install Pelican via several different methods.
+The simplest is via `pip <http://www.pip-installer.org/>`_::
 
     $ pip install pelican
 
-If you have the project source, you can install Pelican using the distutils 
-method. I recommend doing so in a virtualenv::
+If you don't have pip installed, an alternative method is easy_install::
 
-    $ virtualenv pelican_venv
-    $ source bin/activate
+    $ easy_install pelican
+
+While the above is the simplest method, the recommended approach is to create
+a virtual environment for Pelican via `virtualenv <http://www.virtualenv.org/>`_
+and `virtualenvwrapper <http://www.doughellmann.com/projects/virtualenvwrapper/>`_
+before installing Pelican::
+
+    $ pip install virtualenvwrapper
+    $ mkvirtualenv pelican
+
+Once the virtual environment has been created and activated, Pelican can be
+be installed via pip or easy_install as noted above. Alternatively, if you
+have the project source, you can install Pelican using the distutils 
+method::
+
+    $ cd path-to-Pelican-source
     $ python setup.py install
+
+If you have Git installed and prefer to install the latest bleeding-edge
+version of Pelican rather than a stable release, use the following command::
+
+    $ pip install -e git://github.com/ametaireau/pelican#egg=pelican
+
+Upgrading
+---------
+
+If you installed a stable Pelican release via pip or easy_install and wish to
+upgrade to the latest stable release, you can do so by adding `--upgrade` to
+the relevant command. For pip, that would be::
+
+    $ pip install --upgrade pelican
+
+If you installed Pelican via distutils or the bleeding-edge method, simply
+perform the same step to install the most recent version.
 
 Dependencies
 ------------
@@ -54,10 +85,9 @@ following syntax (give your file the `.rst` extension)::
 
 
 You can also use Markdown syntax (with a file ending in `.md`).
-Markdown generation will not work until you explicitly install the `markdown`
-distribution. You can do so on a normal system using `pip install markdown`
-
-::
+Markdown generation will not work until you explicitly install the `Markdown`
+package, which can be done via `pip install Markdown`. Metadata syntax for
+Markdown posts should follow this pattern::
 
     Date: 2010-12-03
     Title: My super title
@@ -94,7 +124,7 @@ Kickstart a blog
 ----------------
 
 You also can use the `pelican-quickstart` script to start a new blog in
-seconds, by just answering few questions. Just run `pelican-quickstart` and
+seconds by just answering a few questions. Just run `pelican-quickstart` and
 you're done! (Added in Pelican 3.0)
 
 Pages
@@ -175,12 +205,12 @@ For Markdown, format your code blocks thusly::
 The specified identifier should be one that appears on the 
 `list of available lexers <http://pygments.org/docs/lexers/>`_.
 
-Autoreload
-----------
+Auto-reload
+-----------
 
 It's possible to tell Pelican to watch for your modifications, instead of
-manually launching it every time you want to see your changes. To enable this,
-run the `pelican` command with the `-r` or `--autoreload` options.
+manually re-running it every time you want to see your changes. To enable this,
+run the `pelican` command with the `-r` or `--autoreload` option.
 
 Publishing drafts
 -----------------
@@ -203,3 +233,6 @@ You can either use your browser to open the files on your disk::
 Or run a simple web server using Python::
 
     cd output && python -m SimpleHTTPServer
+
+(Tip: If using the latter method in conjunction with the auto-reload feature,
+ensure that `DELETE_OUTPUT_DIRECTORY` is set to `False` in your settings file.)
