@@ -90,6 +90,12 @@ Setting name (default value)                                            What doe
                                                                         index pages for collections of content e.g. tags and
                                                                         category index pages.
 `PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
+`SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will 
+                                                                        be the default length in words of the text created.
+                                                                        This only applies if your content does not otherwise 
+                                                                        specify a summary. Setting to None will cause the summary 
+                                                                        to be a copy of the original content.
+                                                                        
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.

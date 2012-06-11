@@ -68,7 +68,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
                    'LESS_GENERATOR': False,
-                   'SUMARY_MAX_LENGTH': 50,
+                   'SUMMARY_MAX_LENGTH': 50,
                    }
 
 
