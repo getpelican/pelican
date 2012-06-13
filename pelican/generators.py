@@ -16,7 +16,7 @@ from jinja2.exceptions import TemplateNotFound
 
 from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, open
+from pelican.utils import copy, process_translations, open, slugify
 from pelican import signals
 
 
@@ -218,7 +218,7 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'author/%s' % aut)
+                page_name=u'author/%s' % slugify(aut))
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
