@@ -26,7 +26,7 @@ Pelican currently supports:
 * Atom/RSS feeds
 * Code syntax highlighting
 * Import from WordPress, Dotclear, or RSS feeds
-* Integration with external tools: Twitter, Google Analytics, etc. (optional)
+* Integration with external tools: Twitter, Google Analytics, GoSquared, etc. (optional)
 
 Have a look at `the documentation <http://pelican.notmyidea.org/en/latest/>`_ for
 more information.
