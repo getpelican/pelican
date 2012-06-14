@@ -62,8 +62,10 @@ class RstReaderTest(unittest.TestCase):
         except ImportError:
             return unittest.skip('need the typogrify distribution')
 
+
 class MdReaderTest(unittest.TestCase):
 
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_md_extention(self):
         # test to ensure the md extension is being processed by the correct reader
         reader = readers.MarkdownReader({})
@@ -74,6 +76,7 @@ class MdReaderTest(unittest.TestCase):
         
         self.assertEqual(content, expected)
 
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_mkd_extension(self):
         # test to ensure the mkd extension is being processed by the correct reader
         reader = readers.MarkdownReader({})

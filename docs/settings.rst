@@ -61,6 +61,7 @@ Setting name (default value)                                            What doe
                                                                         `rst2pdf`.
 `RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use relative URLs or
                                                                         not.
+`PLUGINS` (``[]``)                                                      The list of plugins to load. See :ref:`plugins`.
 `SITENAME` (``'A Pelican Blog'``)                                       Your site name
 `SITEURL`                                                               Base URL of your website. Not defined by default,
                                                                         which means the base URL is assumed to be "/" with a
@@ -369,6 +370,7 @@ Setting name (default value)                        What does it do?
                                                     value is `static`, but if your theme has
                                                     other static paths, you can put them here.
 `CSS_FILE` (``'main.css'``)                         Specify the CSS file you want to load.
+`WEBASSETS` (``False``)                             Asset management with `webassets` (see below)
 ================================================    =====================================================
 
 By default, two themes are available. You can specify them using the `-t` option:
@@ -418,7 +420,58 @@ adding the following to your configuration::
 
     CSS_FILE = "wide.css"
 
-.. _pelican-themes: :doc:`pelican-themes`
+Asset management
+----------------
+
+The `WEBASSETS` setting allows to use the `webassets`_ module to manage assets
+(css, js). The module must first be installed::
+
+    pip install webassets
+
+`webassets` allows to concatenate your assets and to use almost all of the
+hype tools of the moment (see the `documentation`_):
+
+* css minifier (`cssmin`, `yuicompressor`, ...)
+* css compiler (`less`, `sass`, ...)
+* js minifier (`uglifyjs`, `yuicompressor`, `closure`, ...)
+
+Others filters include gzip compression, integration of images in css with
+`datauri` and more. Webassets also append a version identifier to your asset
+url to convince browsers to download new versions of your assets when you use
+far future expires headers.
+
+When using it with Pelican, `webassets` is configured to process assets in the
+``OUTPUT_PATH/theme`` directory. You can use it in your templates with a
+template tag, for example:
+
+.. code-block:: jinja
+
+    {% assets filters="cssmin", output="css/style.min.css", "css/inuit.css", "css/pygment-monokai.css", "css/main.css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
+
+will produce a minified css file with the version identifier:
+
+.. code-block:: html
+
+    <link href="http://{SITEURL}/theme/css/style.min.css?b3a7c807" rel="stylesheet">
+
+Another example for javascript:
+
+.. code-block:: jinja
+
+    {% assets filters="uglifyjs,gzip", output="js/packed.js", "js/jquery.js", "js/base.js", "js/widgets.js" %}
+        <script src="{{ ASSETS_URL }}"></script>
+    {% endassets %}
+
+will produce a minified and gzipped js file:
+
+.. code-block:: html
+
+    <script src="http://{SITEURL}/theme/js/packed.js?00703b9d"></script>
+
+.. _webassets: https://github.com/miracle2k/webassets
+.. _documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
 
 Example settings
 ================
