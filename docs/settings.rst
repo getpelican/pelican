@@ -404,6 +404,7 @@ Setting name              What does it do ?
 `GITHUB_URL`              Your GitHub URL (if you have one). It will then
                           use this information to create a GitHub ribbon.
 `GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate Google Analytics.
+`GOSQUARED_SITENAME`      'XXX-YYYYYY-X' to activate GoSquared.
 `MENUITEMS`               A list of tuples (Title, URL) for additional menu
                           items to appear at the beginning of the main menu.
 `PIWIK_URL`               URL to your Piwik server - without 'http://' at the
