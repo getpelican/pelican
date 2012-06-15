@@ -98,6 +98,9 @@ GITHUB_URL :
 
 GOOGLE_ANALYTICS :
 	'UA-XXXX-YYYY' pour activer Google analytics ;
+	
+GOSQUARED_SITENAME :
+	'XXX-YYYYYY-X' pour activer GoSquared ;
 
 JINJA_EXTENSIONS :
 	Liste d'extension Jinja2 que vous souhaitez utiliser ;
