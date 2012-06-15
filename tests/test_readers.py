@@ -262,6 +262,33 @@ class AdReaderTest(unittest.TestCase):
         self.assertEqual(content, expected)
 
 class HTMLReaderTest(unittest.TestCase):
+    def test_article_with_comments(self):
+        reader = readers.HTMLReader({})
+        content, metadata = reader.read(_filename('article_with_comments.html'))
+        expected = {
+            'summary': '''
+        Summary comment is not included.
+        ''',
+        }
+
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
+
+        self.assertEquals('''
+        Summary comment is not included.
+        
+        <!--  But this comment is (including extra whitespace)    -->
+    ''', content)
+
+    def test_article_with_keywords(self):
+        reader = readers.HTMLReader({})
+        content, metadata = reader.read(_filename('article_with_keywords.html'))
+        expected = {
+            'tags': ['foo', 'bar', 'foobar'],
+        }
+
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
 
     def test_article_with_metadata(self):
         reader = readers.HTMLReader({})
@@ -282,15 +309,6 @@ class HTMLReaderTest(unittest.TestCase):
         for key, value in expected.items():
             self.assertEquals(value, metadata[key], key)
 
-    def test_article_with_keywords(self):
-        reader = readers.HTMLReader({})
-        content, metadata = reader.read(_filename('article_with_keywords.html'))
-        expected = {
-            'tags': ['foo', 'bar', 'foobar'],
-        }
-
-        for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
 
     def test_article_metadata_key_lowercase(self):
         """Keys of metadata should be lowercase."""
