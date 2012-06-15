@@ -260,3 +260,41 @@ class AdReaderTest(unittest.TestCase):
                    '<p>version 1.0.42</p>\n'\
                    '<p>The quick brown fox jumped over the lazy dog&#8217;s back.</p>\n'
         self.assertEqual(content, expected)
+
+class HTMLReaderTest(unittest.TestCase):
+
+    def test_article_with_metadata(self):
+        reader = readers.HTMLReader({})
+        content, metadata = reader.read(_filename('article_with_metadata.html'))
+        expected = {
+            'category': 'yeah',
+            'author': u'Alexis Métaireau',
+            'title': 'This is a super article !',
+            'summary': u'''
+        Multi-line metadata should be supported
+        as well as <strong>inline markup</strong>.
+        ''',
+            'date': datetime.datetime(2010, 12, 2, 10, 14),
+            'tags': ['foo', 'bar', 'foobar'],
+            'custom_field': 'http://notmyidea.org',
+        }
+
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
+
+    def test_article_with_keywords(self):
+        reader = readers.HTMLReader({})
+        content, metadata = reader.read(_filename('article_with_keywords.html'))
+        expected = {
+            'tags': ['foo', 'bar', 'foobar'],
+        }
+
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
+
+    def test_article_metadata_key_lowercase(self):
+        """Keys of metadata should be lowercase."""
+        reader = readers.HTMLReader({})
+        content, metadata = reader.read(_filename('article_with_uppercase_metadata.html'))
+        self.assertIn('category', metadata, "Key should be lowercase.")
+        self.assertEquals('Yeah', metadata.get('category'), "Value keeps cases.")
