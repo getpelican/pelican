@@ -129,117 +129,101 @@ class MarkdownReader(Reader):
             metadata[name] = self.process_metadata(name, value[0])
         return content, metadata
 
-"""
-class HtmlReader(Reader):
-    file_extensions = ['html', 'htm']
-    _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
-
-    def read(self, filename):
-        with open(filename) as content:
-            metadata = {'title': 'unnamed'}
-            for i in self._re.findall(content):
-                key = i.split(':')[0][5:].strip()
-                value = i.split(':')[-1][:-3].strip()
-                name = key.lower()
-                metadata[name] = self.process_metadata(name, value)
-
-            return content, metadata
-"""
-
-class PelicanHTMLParser(HTMLParser):
-    def __init__(self, settings):
-        HTMLParser.__init__(self)
-        self.body = ''
-        self.metadata = {}
-        self.settings = settings
-
-        self._data_buffer = ''
-
-        self._in_top_level = True
-        self._in_head = False
-        self._in_title = False
-        self._in_body = False
-        self._in_tags = False
-
-    def handle_starttag(self, tag, attrs):
-        if tag == 'head' and self._in_top_level:
-            self._in_top_level = False
-            self._in_head = True
-        elif tag == 'title' and self._in_head:
-            self._in_title = True
-            self._data_buffer = ''
-        elif tag == 'body' and self._in_top_level:
-            self._in_top_level = False
-            self._in_body = True
-            self._data_buffer = ''
-        elif tag == 'meta' and self._in_head:
-            self._handle_meta_tag(attrs)
-
-        elif self._in_body:
-            self._data_buffer += self.build_tag(tag, attrs, False)
-            
-    def handle_endtag(self, tag):
-        if tag == 'head':
-            if self._in_head:
-                self._in_head = False
-                self._in_top_level = True
-        elif tag == 'title':
-            self._in_title = False
-            self.metadata['title'] = self._data_buffer
-        elif tag == 'body':
-            self.body = self._data_buffer
-            self._in_body = False
-            self._in_top_level = True
-        elif self._in_body:
-            self._data_buffer += '</{}>'.format(cgi.escape(tag))
-
-    def handle_startendtag(self, tag, attrs):
-        if tag == 'meta' and self._in_head:
-            self._handle_meta_tag(attrs)
-        if self._in_body:
-            self._data_buffer += self.build_tag(tag, attrs, True)
-
-    def handle_comment(self, data):
-        if self._in_body and data.strip() == 'PELICAN_END_SUMMARY':
-            self.metadata['summary'] = self._data_buffer
-
-    def handle_data(self, data):
-        self._data_buffer += data
-
-    def build_tag(self, tag, attrs, close_tag):
-        result = '<{}'.format(cgi.escape(tag))
-        result += ''.join((' {}="{}"'.format(cgi.escape(k), cgi.escape(v)) for k,v in attrs))
-        if close_tag:
-            return result + ' />'
-        return result + '>'
-
-    def _handle_meta_tag(self, attrs):
-        name = self._attr_value(attrs, 'name')
-        contents = self._attr_value(attrs, 'contents', '')
-        if name == 'keywords':
-            if contents:
-                self.metadata['tags'] = [Tag(unicode(tag), self.settings) for tag in contents.split(',')]
-        elif name == 'date':
-            self.metadata['date'] = get_date(contents)
-        else:
-            self.metadata[name] = contents
-
-    @classmethod
-    def _attr_value(cls, attrs, name, default=None):
-        return next((x[1] for x in attrs if x[0] == name), default)
-
 class HTMLReader(Reader):
+    """Parses HTML files as input, looking for meta, title, and body tags"""
     file_extensions = ['htm', 'html']
     enabled = True
+
+    class _HTMLParser(HTMLParser):
+        def __init__(self, settings):
+            HTMLParser.__init__(self)
+            self.body = ''
+            self.metadata = {}
+            self.settings = settings
+
+            self._data_buffer = ''
+
+            self._in_top_level = True
+            self._in_head = False
+            self._in_title = False
+            self._in_body = False
+            self._in_tags = False
+
+        def handle_starttag(self, tag, attrs):
+            if tag == 'head' and self._in_top_level:
+                self._in_top_level = False
+                self._in_head = True
+            elif tag == 'title' and self._in_head:
+                self._in_title = True
+                self._data_buffer = ''
+            elif tag == 'body' and self._in_top_level:
+                self._in_top_level = False
+                self._in_body = True
+                self._data_buffer = ''
+            elif tag == 'meta' and self._in_head:
+                self._handle_meta_tag(attrs)
+
+            elif self._in_body:
+                self._data_buffer += self.build_tag(tag, attrs, False)
+
+        def handle_endtag(self, tag):
+            if tag == 'head':
+                if self._in_head:
+                    self._in_head = False
+                    self._in_top_level = True
+            elif tag == 'title':
+                self._in_title = False
+                self.metadata['title'] = self._data_buffer
+            elif tag == 'body':
+                self.body = self._data_buffer
+                self._in_body = False
+                self._in_top_level = True
+            elif self._in_body:
+                self._data_buffer += '</{}>'.format(cgi.escape(tag))
+
+        def handle_startendtag(self, tag, attrs):
+            if tag == 'meta' and self._in_head:
+                self._handle_meta_tag(attrs)
+            if self._in_body:
+                self._data_buffer += self.build_tag(tag, attrs, True)
+
+        def handle_comment(self, data):
+            if self._in_body and data.strip() == 'PELICAN_END_SUMMARY':
+                self.metadata['summary'] = self._data_buffer
+
+        def handle_data(self, data):
+            self._data_buffer += data
+
+        def build_tag(self, tag, attrs, close_tag):
+            result = '<{}'.format(cgi.escape(tag))
+            result += ''.join((' {}="{}"'.format(cgi.escape(k), cgi.escape(v)) for k,v in attrs))
+            if close_tag:
+                return result + ' />'
+            return result + '>'
+
+        def _handle_meta_tag(self, attrs):
+            name = self._attr_value(attrs, 'name').lower()
+            contents = self._attr_value(attrs, 'contents', '')
+
+            if name == 'keywords':
+                name = 'tags'
+            self.metadata[name] = contents
+
+        @classmethod
+        def _attr_value(cls, attrs, name, default=None):
+            return next((x[1] for x in attrs if x[0] == name), default)
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         with open(filename) as content:
-            parser = PelicanHTMLParser(self.settings)
+            parser = self._HTMLParser(self.settings)
             parser.feed(content)
             parser.close()
-        return parser.body, parser.metadata
 
+        metadata = {}
+        for k in parser.metadata:
+            metadata[k] = self.process_metadata(k, parser.metadata[k])
+        return parser.body, metadata
 
 _EXTENSIONS = {}
 
