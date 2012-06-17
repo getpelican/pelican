@@ -173,6 +173,48 @@ class ArticlesGenerator(Generator):
                           article_template, self.context, article=article,
                           category=article.category)
 
+    def generate_period_archives(self, write):
+        """Generate per-year, per-month, and per-day archives."""
+        try:
+            template = self.get_template('period_archives')
+        except Exception:
+            template = self.get_template('archives')
+
+        year_save_as = self.settings.get('YEAR_ARCHIVE_SAVE_AS')
+        month_save_as = self.settings.get('MONTH_ARCHIVE_SAVE_AS')
+        day_save_as = self.settings.get('DAY_ARCHIVE_SAVE_AS')
+
+        # `self.dates` is sorted based on REVERSE_ARCHIVE_ORDER
+        dates = set([a.date for a in self.dates])
+
+        prev_year = None
+        prev_month = None
+        for date in dates:
+            year, month = date.year, date.month
+            if year_save_as and year != prev_year:
+                # Pass the full `datetime.date` object for formatting
+                # `save_as`. The directives specific to the day, minute,
+                # etc aren't appropriate here (or for the month archive),
+                # but this way the user can employ the same syntax as
+                # for article URLs.
+                save_as = year_save_as.format(date=date)
+                articles = [a for a in self.dates if a.date.year == year]
+                write(save_as, template, self.context,
+                      articles=articles, blog=True)
+                prev_year = year
+            if month_save_as and month != prev_month:
+                save_as = month_save_as.format(date=date)
+                articles = [a for a in self.dates if a.date.year == year
+                            and a.date.month == month]
+                write(save_as, template, self.context,
+                      articles=articles, blog=True)
+                prev_month = month
+            if day_save_as:
+                save_as = day_save_as.format(date=date)
+                articles = [a for a in self.dates if a.date == date]
+                write(save_as, template, self.context,
+                      articles=articles, blog=True)
+
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
         PAGINATED_TEMPLATES = self.settings.get('PAGINATED_DIRECT_TEMPLATES')
@@ -235,6 +277,7 @@ class ArticlesGenerator(Generator):
         # to minimize the number of relative path stuff modification
         # in writer, articles pass first
         self.generate_articles(write)
+        self.generate_period_archives(write)
         self.generate_direct_templates(write)
 
 
