@@ -15,6 +15,8 @@ except ImportError:
     Markdown = False  # NOQA
 import re
 
+from htmlparser import HTMLParser
+
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, open
 
