@@ -50,6 +50,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'AUTHOR_URL': u'author/{slug}.html',
                    'AUTHOR_SAVE_AS': u'author/{slug}.html',
                    'RELATIVE_URLS': True,
+                   'SITEURL' : '',
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
@@ -132,6 +133,7 @@ def configure_settings(settings, default_settings=None, filename=None):
         logger.warn("LOCALE option doesn't contain a correct value")
 
     if ('SITEURL' in settings):
+        settings['RELATIVE_URLS'] = False
         # If SITEURL has a trailing slash, remove it and provide a warning
         siteurl = settings['SITEURL']
         if (siteurl.endswith('/')):
