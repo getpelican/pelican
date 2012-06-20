@@ -91,6 +91,12 @@ Setting name (default value)                                            What doe
                                                                         index pages for collections of content e.g. tags and
                                                                         category index pages.
 `PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
+`SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will 
+                                                                        be the default length in words of the text created.
+                                                                        This only applies if your content does not otherwise 
+                                                                        specify a summary. Setting to None will cause the summary 
+                                                                        to be a copy of the original content.
+                                                                        
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
@@ -398,6 +404,7 @@ Setting name              What does it do ?
 `GITHUB_URL`              Your GitHub URL (if you have one). It will then
                           use this information to create a GitHub ribbon.
 `GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate Google Analytics.
+`GOSQUARED_SITENAME`      'XXX-YYYYYY-X' to activate GoSquared.
 `MENUITEMS`               A list of tuples (Title, URL) for additional menu
                           items to appear at the beginning of the main menu.
 `PIWIK_URL`               URL to your Piwik server - without 'http://' at the

@@ -13,10 +13,7 @@ try:
     from markdown import Markdown
 except ImportError:
     Markdown = False  # NOQA
-import cgi
-from HTMLParser import HTMLParser
 import re
-
 
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, open

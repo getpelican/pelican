@@ -2,6 +2,7 @@
 .*.swp
 .*.swo
 *.pyc
+.DS_Store
 docs/_build
 docs/fr/_build
 build
