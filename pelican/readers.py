@@ -25,7 +25,8 @@ except ImportError:
     asciidoc = False
 import re
 
-from htmlparser import HTMLParser
+import cgi
+from HTMLParser import HTMLParser
 
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open

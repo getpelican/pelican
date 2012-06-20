@@ -185,10 +185,14 @@ def get_date(string):
     raise ValueError("'%s' is not a valid date" % string)
 
 
-def pelican_open(path):
+class open(object):
     """Open a file and return it's content"""
-    return open(path, encoding='utf-8').read()
-
+    def __init__(self, filename):
+        self.filename = filename
+    def __enter__(self):
+        return _open(self.filename, encoding='utf-8').read()
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
 
 def slugify(value):
     """
