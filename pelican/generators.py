@@ -187,7 +187,7 @@ class ArticlesGenerator(Generator):
         # Use `self.dates` rather than `self.articles` since it's
         # sorted based on the REVERSE_ARCHIVE_ORDER setting.
         archives = [a for a in self.dates if a in self.articles]
-        article_dates = {a.date for a in archives}
+        article_dates = sorted(set([a.date for a in archives]))
 
         get_month = attrgetter('year', 'month')
 
