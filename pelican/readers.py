@@ -119,9 +119,9 @@ class MarkdownReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
-        text = open(filename)
-        md = Markdown(extensions=set(self.extensions + ['meta']))
-        content = md.convert(text)
+        with open(filename) as text:
+            md = Markdown(extensions=set(self.extensions + ['meta']))
+            content = md.convert(text)
 
         metadata = {}
         for name, value in md.Meta.items():
