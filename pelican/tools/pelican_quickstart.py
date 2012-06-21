@@ -12,8 +12,8 @@ _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), \
 
 
 CONF = {
-    'pelican' : 'pelican',
-    'pelicanopts' : '',
+    'pelican': 'pelican',
+    'pelicanopts': '',
     'basedir': '.',
     'ftp_host': 'localhost',
     'ftp_user': 'anonymous',
@@ -21,9 +21,10 @@ CONF = {
     'ssh_host': 'locahost',
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
-    'dropbox_dir' : '~/Dropbox/Public/',
-    'default_pagination' : 10,
-    'lang': 'en'
+    'dropbox_dir': '~/Dropbox/Public/',
+    'default_pagination': 10,
+    'lang': 'en',
+    'timezone': 'UTC',
 }
 
 
@@ -126,6 +127,8 @@ def main():
             help='Set the author name of the website')
     parser.add_argument('-l', '--lang', metavar="lang",
             help='Set the default lang of the website')
+    parser.add_argument('-z', '--timezone', metavar="timezone",
+                        help='Set the timezone of the website')
 
     args = parser.parse_args()
 
@@ -137,33 +140,53 @@ Please answer the following questions so this script can generate the files need
 
     '''.format(v=__version__))
 
-    CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new Web site ?', answer=str, default=args.path))
-    CONF['sitename'] = ask('What will be the title of this Web site ?', answer=str, default=args.title)
-    CONF['author'] = ask('Who will be the author of this Web site ?', answer=str, default=args.author)
-    CONF['lang'] = ask('What will be the default language of this Web site ?', str, args.lang or CONF['lang'], 2)
+    CONF['basedir'] = os.path.abspath(
+        ask('Where do you want to create your new Web site?',
+            answer=str, default=args.path))
+    CONF['sitename'] = ask('What will be the title of this Web site?',
+                           answer=str, default=args.title)
+    CONF['author'] = ask('Who will be the author of this Web site?',
+                         answer=str, default=args.author)
+    CONF['lang'] = ask('What will be the default language of this Web site?',
+                       str, args.lang or CONF['lang'], 2)
+    CONF['timezone'] = ask('What is the timezone of this Web site?',
+                           str, args.timezone or CONF['timezone'])
 
-    CONF['with_pagination'] = ask('Do you want to enable article pagination ?', bool, bool(CONF['default_pagination']))
+    CONF['with_pagination'] = ask('Do you want to enable article pagination?',
+                                  bool, bool(CONF['default_pagination']))
 
     if CONF['with_pagination']:
-        CONF['default_pagination'] = ask('So how many articles per page do you want ?', int, CONF['default_pagination'])
+        CONF['default_pagination'] = ask('How many articles should be listed per page?',
+                                         int, CONF['default_pagination'])
     else:
         CONF['default_pagination'] = False
 
-    mkfile = ask('Do you want to generate a Makefile to easily manage your website ?', bool, True)
+    mkfile = ask('Do you want to generate a Makefile to easily manage your website ?',
+                 bool, True)
 
     if mkfile:
-        if ask('Do you want to upload your website using FTP ?', answer=bool, default=False):
-            CONF['ftp_host'] = ask('What is the hostname of your FTP server ?', str, CONF['ftp_host'])
-            CONF['ftp_user'] = ask('What is your username on this server ?', str, CONF['ftp_user'])
-            CONF['ftp_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ftp_target_dir'])
+        if ask('Do you want to upload your website using FTP ?',
+               answer=bool, default=False):
+            CONF['ftp_host'] = ask('What is the hostname of your FTP server ?',
+                                   str, CONF['ftp_host'])
+            CONF['ftp_user'] = ask('What is your username on this server ?',
+                                   str, CONF['ftp_user'])
+            CONF['ftp_target_dir'] = ask('Where do you want to put your website on this server ?',
+                                         str, CONF['ftp_target_dir'])
 
-        if ask('Do you want to upload your website using SSH ?', answer=bool, default=False):
-            CONF['ssh_host'] = ask('What is the hostname of your SSH server ?', str, CONF['ssh_host'])
-            CONF['ssh_user'] = ask('What is your username on this server ?', str, CONF['ssh_user'])
-            CONF['ssh_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ssh_target_dir'])
+        if ask('Do you want to upload your website using SSH ?',
+               answer=bool, default=False):
+            CONF['ssh_host'] = ask('What is the hostname of your SSH server ?',
+                                   str, CONF['ssh_host'])
+            CONF['ssh_user'] = ask('What is your username on this server ?',
+                                   str, CONF['ssh_user'])
+            CONF['ssh_target_dir'] = ask('Where do you want to put your website on this server ?',
+                                         str, CONF['ssh_target_dir'])
 
-        if ask('Do you want to upload your website using Dropbox ?', answer=bool, default=False):
-            CONF['dropbox_dir'] = ask('Where is your Dropbox directory ?', str, CONF['dropbox_dir'])
+        if ask('Do you want to upload your website using Dropbox ?',
+               answer=bool, default=False):
+            CONF['dropbox_dir'] = ask('Where is your Dropbox directory ?',
+                                      str, CONF['dropbox_dir'])
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'src'))
@@ -185,7 +208,6 @@ Please answer the following questions so this script can generate the files need
         print('Error: {0}'.format(e))
 
     if mkfile:
-
         try:
             with open(os.path.join(CONF['basedir'], 'Makefile'), 'w') as fd:
                 for line in get_template('Makefile'):

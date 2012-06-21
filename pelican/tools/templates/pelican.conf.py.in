@@ -1,25 +1,346 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 
+##############################
+# Pelican configuration file
+##############################
+#
+# The settings defined in this configuration file
+# will be passed to templates, which allows you to
+# use your settings to add site-wide content.
+#
+# If you used `pelican-quickstart`, then the most
+# common settings should reflect your answers.
+# Other settings can be uncommented (remove the #)
+# and changed as desired.
+# Commented settings contain their default values
+# (i.e., just uncommenting them will have no effect).
+
+
+##################
+# Basic settings
+##################
+
+# Default author (your name)
 AUTHOR = u"$author"
+
+# Your site name
 SITENAME = u"$sitename"
-SITEURL = '/'
 
-TIMEZONE = 'Europe/Paris'
+# Base URL of your website. Not defined by default;
+# setting it to '/' will generate a warning.
+# If specified, there should *not* be a trailing slash
+# at the end.
+# If you want to use relative URLs instead of root-relative
+# or absolute URLs, you should instead use the RELATIVE_URLs
+# setting.
+#SITEURL = '/'
 
+# The timezone used in date information, and to generate
+# Atom and RSS feeds. If not specified, UTC is assumed.
+# See http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+TIMEZONE = u"$timezone"
+
+
+#####################
+# Advanced settings
+#####################
+
+# The default category to fall back on
+#DEFAULT_CATEGORY = 'misc'
+
+# The default date format you want to use
+#DEFAULT_DATE_FORMAT = '%a %d %B %Y'
+
+# Whether to display pages on the menu of the template.
+# Note: templates may not honor this setting.
+#DISPLAY_PAGES_ON_MENU = True
+
+# If True, Pelican will use the file system timestamp
+# information (mtime) if it can't get date information
+# from the metadata
+#FALLBACK_ON_FS_DATE = True
+
+# A list of Jinja2 extensions you want to use
+#JINJA_EXTENSIONS = []
+
+# Delete the output directory as well as the generated files
+#DELETE_OUTPUT_DIRECTORY = False
+
+# Change the locale. This should be a single string.
+# If using multiple languages, see the next section.
+#LOCALE = 
+
+# A list of available markup languages you want to use.
+# For the moment, the only available values are `rst`
+# and `md`.
+#MARKUP = ('rst', 'md')
+
+# A list of the extensions that the Markdown processor will use.
+# Refer to the below website for details.
+# http://www.freewisdom.org/projects/python-markdown/Extensions
+#MD_EXTENSIONS = ['codehilite','extra']
+
+# Where to output the generated files
+#OUTPUT_PATH = 'output/'
+
+# Path to look at for input files
+#PATH = None
+
+# Directory to look at for pages
+#PAGE_DIR = 'pages'
+
+# A list of directories to exclude when looking for pages
+#PAGE_EXCLUDES = ()
+
+# Directory to look at for articles
+#ARTICLE_DIR = ''
+
+# A list of directories to exclude when looking for articles
+#ARTICLE_EXCLUDES = ('pages',)
+
+# Set to True if you want to have PDF versions of your documents.
+# Note: this requires `rst2pdf`
+#PDF_GENERATOR = False
+
+# Defines whether Pelican should use relative URLs or not
+#RELATIVE_URLS = True
+
+# The list of plugins to load. See plugin documentation.
+#PLUGINS = []
+
+# The static paths you want to have accessible on the output
+# path "static"
+#STATIC_PATHS = ['images']
+
+# If set to True, some additional transformations will be done
+# on the generated HTML, using the Typogrify library.
+#TYPOGRIFY = False
+
+# Set to True or the complete path to `lessc` (if not found in
+# system PATH) to enable compiling less CSS files.
+# Requries installation of less CSS.
+#LESS_GENERATOR = False
+
+# List of templates that are used directly to render content.
+# Typically direct templates are used to generate index pages
+# for collections of content; e.g., tags and category indexes.
+#DIRECT_TEMPLATES = ('index', 'tags', 'categories', 'archives')
+
+# Provides the direct templates that should be paginated
+#PAGINATED_DIRECT_TEMPLATES = ('index',)
+
+# When creating an article summary, this is the default length
+# in words. Only applies if a summary is not specified.
+# Setting to None causes the summary to be a copy of the original.
+#SUMMARY_MAX_LENGTH = 50
+
+# Global metadata provided to all pages.
+# A tuple of tuples.
+#DEFAULT_METADATA = (('yeah', 'it is'),)
+
+# A list of files to copy from the source to the destination.
+# A tuple of (Source, Destination) tuples.
+#FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
+
+
+#################
+# Feed settings
+#################
+
+# The domain to prepend to feed URLs.
+# Since feed URLs are always absolute, it is recommended that you
+# define this. If you have already defined SITEURL and want to use
+# the same domain for your feeds, you can do:
+#FEED_DOMAIN = SITEURL
+#FEED_DOMAIN = "http://feeds.example.com/"
+
+# By default, Pelican uses Atom feeds. This sets the relative
+# URL to the sitewide Atom feed. Set to None for no atom feed.
+#FEED = 'feeds/all.atom.xml'
+
+# RSS feeds can also be generated. This sets the relative
+# URL to the sitewide RSS feed. Set to None for no RSS feed.
+#FEED_RSS = None
+
+# Pelican also generates category atom feeds.
+# This sets their location; %s is the name of the category.
+#CATEGORY_FEED = 'feeds/%s.atom.xml'
+
+# This set the location for category RSS feeds.
+# %s is the name of the category.
+#CATEGORY_FEED_RSS = None  # Don't generate RSS feeds
+
+# By default, Pelican does not generate tag feeds.
+# However, if desired, the following setting sets the atom tag
+# feed location; %s is the tag name.
+#TAG_FEED = None
+
+# The location for RSS tag feed; %s is the tag name.
+#TAG_FEED_RSS = None
+
+# The maximum number of items allowed in a feed.
+# If None, the feed quantity is unrestricted.
+#FEED_MAX_ITEMS = None
+
+
+########################
+# Multi-language sites
+########################
+
+# The default language
 DEFAULT_LANG='$lang'
 
-# Blogroll
+# Location for a translated atom feed,
+# where %s is the language
+#TRANSLATION_FEED = 'feeds/all-%s.atom.xml'
+
+# All enabled locales. This should be a tuple of strings.
+# Example:
+#LOCALE = ('usa', 'jpn',  # On Windows
+#          'en_US', 'ja_JP') # On Unix/Linux
+#LOCALE = ()
+
+# Specify a different date format for each language.
+# This is a dict with language as keys and strftime strings as values.
+# See http://docs.python.org/library/datetime.html#strftime-strptime-behavior
+# Example:
+#DATE_FORMATS = {
+#    'en': '%a, %d %b %Y',
+#    'jp': '%Y-%m-%d(%a)',
+#}
+#DATE_FORMATS = {}
+
+
+##############
+# Pagination
+##############
+
+# By default, Pelican will list all article titles along with
+# a short description on the index page. However, for large
+# blogs it is helpful to paginate this list. Setting this
+# to an integer sets the maximum number of articles on a page.
+DEFAULT_PAGINATION = $default_pagination
+
+# The minimum number of articles allowed on the last page.
+# Useful when the last page has very few articles.
+#DEFAULT_ORPHANS = 0
+
+
+#############
+# Tag cloud
+#############
+
+# The default theme does not support tag clouds.
+# To add them, insert the following in a template file.
+'''
+<ul>
+    {% for tag in tag_cloud %}
+        <li class="tag-{{ tag.1 }}"><a href="/tag/{{ tag.0 }}/">{{ tag.0 }}</a></li>
+    {% endfor %}
+</ul>
+'''
+
+# Then, set the maximum number of tags in the cloud
+#TAG_CLOUD_MAX_ITEMS = 100
+
+# And the number of different font sizes in the cloud
+#TAG_CLOUD_STEPS = 4
+
+# Finally, define a CSS style with the appropriate classes
+# (tag-0 to tag-N, where N matches TAG_CLOUD_STEPS -1).
+
+
+#################
+# Content order
+#################
+
+# Reverses the archive list order.
+# If True, orders by date in descending order,
+# with newer articles first.
+#REVERSE_ARCHIVE_ORDER = False
+
+# Reverses the category order.
+# If True, orders by reverse alphabetical order.
+#REVERSE_CATEGORY_ORDER = False
+
+
+###########
+# Theming
+###########
+
+# Theme to use to produce output.
+# Can be the complete static path to a theme folder,
+# or chosen between the list of default themes.
+# See the pelican-themes tool to manage themes,
+# and https://github.com/ametaireau/pelican-themes
+# for more themes.
+#THEME = 'simple'
+
+# Static theme paths you want to copy.
+# Add to this if your theme has other static paths.
+#THEME_STATIC_PATHS = ['static']
+
+# Specify the CSS file to load
+#CSS_FILE = 'main.css'
+
+
+##################
+# Theme-specific
+##################
+
+# The following are used by the `notmyidea` theme.
+# However, other themes are likely to use them.
+
+# The Disqus sitename identifier, allowing comments on your blog.
+#DISQUS_SITENAME = None
+
+# Your Github URL.
+#GITHUB_URL = None
+
+# 'UA-XXXX-YYYY' to activate Google Analytics
+#GOOGLE_ANALYTICS = None
+
+# 'XXX-YYYYYY-X' to activate GoSquared
+#GOSQUARED_SITENAME = None
+
+# A list of tuples (Title, URL) for additional menu items
+# at the beginning of the main menu.
+#MENUITEMS = [()]
+
+# URL to you Piwik server - without 'http://'
+#PIWIK_URL = None
+
+# If the SSL-URL differs from the normal Piwik-URL,
+# include this. (Optional)
+#PIWIK_SSL_URL = None
+
+# ID for the monitored website.
+# Found in Piwik's admin interface > settings > websites.
+#PIWIK_SITE_ID = None
+
+# A list of tuples (Title, URL) for links to appear in the header.
 LINKS =  (
     ('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
     ('Python.org', 'http://python.org'),
     ('Jinja2', 'http://jinja.pocoo.org'),
     ('You can modify those links in your config file', '#')
-         )
+)
 
-# Social widget
+# A list of tuples (Title, URL) to appear in the "social" section.
 SOCIAL = (
-          ('You can add links in your config file', '#'),
-         )
+    ('You can add links in your config file', '#'),
+)
 
-DEFAULT_PAGINATION = $default_pagination
+
+#############
+# Webassets
+#############
+
+# Pelican can be used with the `webassets` module
+# to manage assets like CSS and Javascript.
+# Assets in the `OUTPUT_PATH/theme` directory will be processed.
+# For more details, see
+# http://pelican.notmyidea.org/en/latest/settings.html
+# https://github.com/miracle2k/webassets
+#WEBASSETS = False
