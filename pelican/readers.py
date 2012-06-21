@@ -157,9 +157,9 @@ class MarkdownReader(Reader):
 
     def read(self, source_path):
         """Parse content and metadata of markdown files"""
-        text = pelican_open(source_path)
-        md = Markdown(extensions=set(self.extensions + ['meta']))
-        content = md.convert(text)
+        with open(filename) as text:
+            md = Markdown(extensions=set(self.extensions + ['meta']))
+            content = md.convert(text)
 
         metadata = self._parse_metadata(md.Meta)
         return content, metadata
