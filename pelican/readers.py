@@ -200,7 +200,7 @@ class HTMLReader(Reader):
             self._data_buffer += '&{};'.format(data)
 
         def handle_charref(self, data):
-            self._data_buffer += '&{};'.format(data)
+            self._data_buffer += '&#{};'.format(data)
             
         def build_tag(self, tag, attrs, close_tag):
             result = '<{}'.format(cgi.escape(tag))
