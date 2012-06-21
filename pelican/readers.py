@@ -263,6 +263,12 @@ class HTMLReader(Reader):
         def handle_data(self, data):
             self._data_buffer += data
 
+        def handle_entityref(self, data):
+            self._data_buffer += '&{};'.format(data)
+
+        def handle_charref(self, data):
+            self._data_buffer += '&{};'.format(data)
+            
         def build_tag(self, tag, attrs, close_tag):
             result = '<{}'.format(cgi.escape(tag))
             result += ''.join((' {}="{}"'.format(cgi.escape(k), cgi.escape(v)) for k,v in attrs))
