@@ -222,7 +222,7 @@ class HTMLReader(Reader):
             return next((x[1] for x in attrs if x[0] == name), default)
 
     def read(self, filename):
-        """Parse content and metadata of markdown files"""
+        """Parse content and metadata of HTML files"""
         with open(filename) as content:
             parser = self._HTMLParser(self.settings)
             parser.feed(content)
