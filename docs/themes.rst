@@ -93,8 +93,8 @@ author.html
 This template will be processed for each of the existing authors, with
 output generated at output/author/`author_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/author/`author_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+AUTHOR_SAVE_AS (`Default:` output/author/`author_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -109,8 +109,8 @@ dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
-page_name               'author/`author_name`' -- useful for pagination
-                        links
+page_name               AUTHOR_URL where everything after `{slug}` is 
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 category.html
@@ -119,8 +119,8 @@ category.html
 This template will be processed for each of the existing categories, with
 output generated at output/category/`category_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/category/`category_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+CATEGORY_SAVE_AS (`Default:` output/category/`category_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -135,8 +135,8 @@ dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'category/`category_name`' -- useful for pagination
-                        links
+page_name               CATEGORY_URL where everything after `{slug}` is 
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 article.html
@@ -171,8 +171,8 @@ tag.html
 This template will be processed for each tag, with corresponding .html files
 saved as output/tag/`tag_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/tag/`tag_name``n`.html.
+If pagination is active, subsequent pages will reside as defined in setting
+TAG_SAVE_AS (`Default:` output/tag/`tag_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -187,7 +187,8 @@ dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'tag/`tag_name`' -- useful for pagination links
+page_name               TAG_URL where everything after `{slug}` is removed
+                        -- useful for pagination links
 ===================     ===================================================
 
 Inheritance
