@@ -64,6 +64,9 @@ def main():
 
 
     args = parser.parse_args()
+    
+    to_install = args.to_install or args.to_upgrade
+    to_sym = args.to_symlink or args.clean
 
 
     if args.action:
@@ -71,8 +74,7 @@ def main():
             list_themes(args.verbose)
         elif args.action is 'path':
             print(_THEMES_PATH)
-    elif args.to_install or args.to_remove or args.to_symlink or args.clean:
-
+    elif to_install or args.to_remove or to_sym:
         if args.to_remove:
             if args.verbose:
                 print('Removing themes...')
