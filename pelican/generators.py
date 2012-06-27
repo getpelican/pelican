@@ -357,10 +357,13 @@ class PagesGenerator(Generator):
 
     def __init__(self, *args, **kwargs):
         self.pages = []
+        self.hidden_pages = []
+        self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
 
     def generate_context(self):
         all_pages = []
+        hidden_pages = []
         for f in self.get_files(
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
@@ -373,15 +376,25 @@ class PagesGenerator(Generator):
                         filename=f)
             if not is_valid_content(page, f):
                 continue
-            all_pages.append(page)
+            if page.status == "published":
+                all_pages.append(page)
+            elif page.status == "hidden":
+                hidden_pages.append(page)
+            else:
+                logger.warning(u"Unknown status %s for file %s, skipping it." %
+                               (repr(unicode.encode(article.status, 'utf-8')),
+                                repr(f)))
+
 
         self.pages, self.translations = process_translations(all_pages)
+        self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
 
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
     def generate_output(self, writer):
-        for page in chain(self.translations, self.pages):
+        for page in chain(self.translations, self.pages,
+                            self.hidden_translations, self.hidden_pages):
             writer.write_file(page.save_as, self.get_template('page'),
                     self.context, page=page,
                     relative_urls=self.settings.get('RELATIVE_URLS'))
