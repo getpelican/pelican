@@ -382,7 +382,7 @@ class PagesGenerator(Generator):
                 hidden_pages.append(page)
             else:
                 logger.warning(u"Unknown status %s for file %s, skipping it." %
-                               (repr(unicode.encode(article.status, 'utf-8')),
+                               (repr(unicode.encode(page.status, 'utf-8')),
                                 repr(f)))
 
 
