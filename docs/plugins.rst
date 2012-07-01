@@ -3,14 +3,14 @@
 Plugins
 #######
 
-Since version 3.0, pelican manages plugins. Plugins are a way to add features
-to pelican without having to directly hack pelican code.
+Since version 3.0, Pelican manages plugins. Plugins are a way to add features
+to Pelican without having to directly hack Pelican code.
 
 Pelican is shipped with a set of core plugins, but you can easily implement
 your own (and this page describes how).
 
-How to use plugins?
-====================
+How to use plugins
+==================
 
 To load plugins, you have to specify them in your settings file. You have two
 ways to do so.
@@ -23,21 +23,21 @@ Or by importing them and adding them to the list::
     from pelican.plugins import gravatar
     PLUGINS = [gravatar, ]
 
-If your plugins are not in an importable path, you can specify a `PLUGIN_PATH`
+If your plugins are not in an importable path, you can specify a ``PLUGIN_PATH``
 in the settings::
 
     PLUGIN_PATH = "plugins"
     PLUGINS = ["list", "of", "plugins"]
 
-How to create plugins?
-======================
+How to create plugins
+=====================
 
-Plugins are based on the concept of signals. Pelican sends signals and plugins
+Plugins are based on the concept of signals. Pelican sends signals, and plugins
 subscribe to those signals. The list of signals are defined in a following
 section.
 
-The only rule to follow for plugins is to define a `register` callable, in
-which you map the signals to your plugin logic. Let's take a simple exemple::
+The only rule to follow for plugins is to define a ``register`` callable, in
+which you map the signals to your plugin logic. Let's take a simple example::
 
     from pelican import signals
 
@@ -68,7 +68,7 @@ List of plugins
 ===============
 
 Not all the list are described here, but a few of them have been extracted from
-pelican core and provided in pelican.plugins. They are described here:
+the Pelican core and provided in ``pelican.plugins``. They are described here:
 
 Tag cloud
 ---------
@@ -82,7 +82,7 @@ Github Activity
 This plugin makes use of the ``feedparser`` library that you'll need to
 install.
 
-Set the GITHUB_ACTIVITY_FEED parameter to your github activity feed.
+Set the ``GITHUB_ACTIVITY_FEED`` parameter to your Github activity feed.
 For example, my setting would look like::
 
      GITHUB_ACTIVITY_FEED = 'https://github.com/kpanic.atom'
@@ -105,4 +105,4 @@ variable, as in the example::
 
 
 ``github_activity`` is a list of lists. The first element is the title
-and the second element is the raw html from github.
+and the second element is the raw HTML from Github.

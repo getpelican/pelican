@@ -38,7 +38,7 @@ Upgrading
 ---------
 
 If you installed a stable Pelican release via pip or easy_install and wish to
-upgrade to the latest stable release, you can do so by adding `--upgrade` to
+upgrade to the latest stable release, you can do so by adding ``--upgrade`` to
 the relevant command. For pip, that would be::
 
     $ pip install --upgrade pelican
@@ -55,7 +55,7 @@ At this time, Pelican is dependent on the following Python packages:
 * jinja2, for templating support
 * docutils, for supporting reStructuredText as an input format
 
-If you're not using Python 2.7, you will also need `argparse`.
+If you're not using Python 2.7, you will also need the ``argparse`` package.
 
 Optionally:
 
@@ -73,7 +73,7 @@ file system (for instance, about the category of your articles), but some
 information you need to provide in the form of metadata inside your files.
 
 You can provide this metadata in reStructuredText text files via the
-following syntax (give your file the `.rst` extension)::
+following syntax (give your file the ``.rst`` extension)::
 
     My super title
     ##############
@@ -84,9 +84,9 @@ following syntax (give your file the `.rst` extension)::
     :author: Alexis Metaireau
 
 
-You can also use Markdown syntax (with a file ending in `.md`).
-Markdown generation will not work until you explicitly install the `Markdown`
-package, which can be done via `pip install Markdown`. Metadata syntax for
+You can also use Markdown syntax (with a file ending in ``.md``).
+Markdown generation will not work until you explicitly install the ``Markdown``
+package, which can be done via ``pip install Markdown``. Metadata syntax for
 Markdown posts should follow this pattern::
 
     Date: 2010-12-03
@@ -99,17 +99,17 @@ Markdown posts should follow this pattern::
 Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified, Pelican will rely on the file's "mtime" timestamp, and the
 category can be determined by the directory in which the file resides. For
-example, a file located at `python/foobar/myfoobar.rst` will have a category of
-`foobar`.
+example, a file located at ``python/foobar/myfoobar.rst`` will have a category of
+``foobar``.
 
 Generate your blog
 ------------------
 
-To launch Pelican, just use the `pelican` command::
+To launch Pelican, just use the ``pelican`` command::
 
     $ pelican /path/to/your/content/ [-s path/to/your/settings.py]
 
-And… that's all! Your weblog will be generated and saved in the `content/`
+And… that's all! Your weblog will be generated and saved in the ``content/``
 folder.
 
 The above command will use the default theme to produce a simple site. It's not
@@ -123,17 +123,17 @@ the options you can use::
 Kickstart a blog
 ----------------
 
-You also can use the `pelican-quickstart` script to start a new blog in
-seconds by just answering a few questions. Just run `pelican-quickstart` and
+You also can use the ``pelican-quickstart`` script to start a new blog in
+seconds by just answering a few questions. Just run ``pelican-quickstart`` and
 you're done! (Added in Pelican 3.0)
 
 Pages
 -----
 
-If you create a folder named `pages`, all the files in it will be used to
+If you create a folder named ``pages``, all the files in it will be used to
 generate static pages.
 
-Then, use the `DISPLAY_PAGES_ON_MENU` setting, which will add all the pages to 
+Then, use the ``DISPLAY_PAGES_ON_MENU`` setting, which will add all the pages to 
 the menu.
 
 Importing an existing blog
@@ -145,8 +145,8 @@ a simple script. See :ref:`import`.
 Translations
 ------------
 
-It is possible to translate articles. To do so, you need to add a `lang` meta
-attribute to your articles/pages and set a `DEFAULT_LANG` setting (which is
+It is possible to translate articles. To do so, you need to add a ``lang`` meta
+attribute to your articles/pages and set a ``DEFAULT_LANG`` setting (which is
 English [en] by default). With those settings in place, only articles with the
 default language will be listed, and each article will be accompanied by a list
 of available translations for that article.
@@ -210,7 +210,7 @@ Auto-reload
 
 It's possible to tell Pelican to watch for your modifications, instead of
 manually re-running it every time you want to see your changes. To enable this,
-run the `pelican` command with the `-r` or `--autoreload` option.
+run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
 
 Publishing drafts
 -----------------
@@ -235,4 +235,4 @@ Or run a simple web server using Python::
     cd output && python -m SimpleHTTPServer
 
 (Tip: If using the latter method in conjunction with the auto-reload feature,
-ensure that `DELETE_OUTPUT_DIRECTORY` is set to `False` in your settings file.)
+ensure that ``DELETE_OUTPUT_DIRECTORY`` is set to ``False`` in your settings file.)
