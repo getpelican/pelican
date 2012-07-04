@@ -136,6 +136,10 @@ generate static pages.
 Then, use the ``DISPLAY_PAGES_ON_MENU`` setting, which will add all the pages to 
 the menu.
 
+If you want to exclude any pages from being linked to or listed in the menu
+then add a ``status: hidden`` attribute to its metadata. This is useful for
+things like making error pages that fit the generated theme of your site.
+
 Importing an existing blog
 --------------------------
 
