@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import shutil
 import os
 import datetime
 import time
@@ -86,3 +87,13 @@ class TestUtils(unittest.TestCase):
         changed = utils.files_changed(path, 'rst')
         self.assertEquals(changed, True)
         self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
+
+    def test_clean_output_dir(self):
+        test_directory = os.path.join(os.path.dirname(__file__), 'clean_output')
+        content = os.path.join(os.path.dirname(__file__), 'content')
+        shutil.copytree(content, test_directory)
+        utils.clean_output_dir(test_directory)
+        self.assertTrue(os.path.isdir(test_directory))
+        self.assertListEqual([], os.listdir(test_directory))
+        shutil.rmtree(test_directory)
+

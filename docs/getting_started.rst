@@ -234,5 +234,3 @@ Or run a simple web server using Python::
 
     cd output && python -m SimpleHTTPServer
 
-(Tip: If using the latter method in conjunction with the auto-reload feature,
-ensure that ``DELETE_OUTPUT_DIRECTORY`` is set to ``False`` in your settings file.)

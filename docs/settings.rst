@@ -37,8 +37,8 @@ Setting name (default value)                                            What doe
                                                                         timestamp information (mtime) if it can't get
                                                                         date information from the metadata.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
-`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the output directory as well as
-                                                                        the generated files.
+`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the contents of the output directory before
+                                                                        generating new files.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
