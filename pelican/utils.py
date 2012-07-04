@@ -92,10 +92,22 @@ def clean_output_dir(path):
     """Remove all the files from the output directory"""
 
     # remove all the existing content from the output folder
-    try:
-        shutil.rmtree(path)
-    except Exception:
-        pass
+    for filename in os.listdir(path):
+        file = os.path.join(path, filename)
+        if os.path.isdir(file):
+            try:
+                shutil.rmtree(file)
+                logger.debug("Deleted directory %s" % file)
+            except Exception, e:
+                logger.error("Unable to delete directory %s; %e" % file, e)
+        elif os.path.isfile(file) or os.path.islink(file):
+            try:
+                os.remove(file)
+                logger.debug("Deleted file/link %s" % file)
+            except Exception, e:
+                logger.error("Unable to delete file %s; %e" % file, e)
+        else:
+            logger.error("Unable to delete %s, file type unknown" % file)
 
 
 def get_relative_path(filename):
