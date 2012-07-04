@@ -145,6 +145,7 @@ class Pelican(object):
         """Run the generators and return"""
 
         context = self.settings.copy()
+        filenames = {}  # share the dict between all the generators
         generators = [
             cls(
                 context,
@@ -153,7 +154,8 @@ class Pelican(object):
                 self.theme,
                 self.output_path,
                 self.markup,
-                self.delete_outputdir
+                self.delete_outputdir,
+                filenames=filenames
             ) for cls in self.get_generator_classes()
         ]
 
