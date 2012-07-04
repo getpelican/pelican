@@ -96,4 +96,3 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(os.path.isdir(test_directory))
         self.assertListEqual([], os.listdir(test_directory))
         shutil.rmtree(test_directory)
-
