@@ -95,15 +95,15 @@ def clean_output_dir(path):
     for filename in os.listdir(path):
         file = os.path.join(path, filename)
         if os.path.isdir(file):
-            logger.debug("Deleting directory %s" % file)
             try:
                 shutil.rmtree(file)
+                logger.debug("Deleted directory %s" % file)
             except Exception, e:
                 logger.error("Unable to delete directory %s; %e" % file, e)
         elif os.path.isfile(file) or os.path.islink(file):
-            logger.debug("Deleting file/link %s" % file)
             try:
                 os.remove(file)
+                logger.debug("Deleted file/link %s" % file)
             except Exception, e:
                 logger.error("Unable to delete file %s; %e" % file, e)
         else:
