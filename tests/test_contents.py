@@ -4,6 +4,7 @@ from .support import unittest
 
 from pelican.contents import Page
 from pelican.settings import _DEFAULT_CONFIG
+from pelican.utils import truncate_html_words
 
 from jinja2.utils import generate_lorem_ipsum
 
@@ -48,6 +49,20 @@ class TestPage(unittest.TestCase):
         page = Page(**self.page_kwargs)
         self.assertEqual(page.summary, TEST_SUMMARY)
 
+    def test_summary_max_length(self):
+        """If a :SUMMARY_MAX_LENGTH: is set, and there is no other summary, generated summary
+           should not exceed the given length."""
+        page_kwargs = self._copy_page_kwargs()
+        settings = _DEFAULT_CONFIG.copy()
+        page_kwargs['settings'] = settings
+        del page_kwargs['metadata']['summary']
+        settings['SUMMARY_MAX_LENGTH'] = None
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, TEST_CONTENT)
+        settings['SUMMARY_MAX_LENGTH'] = 10
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10))
+
     def test_slug(self):
         """If a title is given, it should be used to generate the slug."""
         page = Page(**self.page_kwargs)
@@ -83,14 +98,9 @@ class TestPage(unittest.TestCase):
         from datetime import datetime
         from sys import platform
         dt = datetime(2015, 9, 13)
-        # make a deep copy of page_kawgs
-        page_kwargs = dict([(key, self.page_kwargs[key]) for key in
-                            self.page_kwargs])
-        for key in page_kwargs:
-            if not isinstance(page_kwargs[key], dict):
-                break
-            page_kwargs[key] = dict([(subkey, page_kwargs[key][subkey])
-                                     for subkey in page_kwargs[key]])
+
+        page_kwargs = self._copy_page_kwargs()
+
         # set its date to dt
         page_kwargs['metadata']['date'] = dt
         page = Page(**page_kwargs)
@@ -124,3 +134,15 @@ class TestPage(unittest.TestCase):
             # Until we find some other method to test this functionality, we
             # will simply skip this test.
             unittest.skip("There is no locale %s in this system." % locale)
+
+    def _copy_page_kwargs(self):
+        # make a deep copy of page_kwargs
+        page_kwargs = dict([(key, self.page_kwargs[key]) for key in
+                            self.page_kwargs])
+        for key in page_kwargs:
+            if not isinstance(page_kwargs[key], dict):
+                break
+            page_kwargs[key] = dict([(subkey, page_kwargs[key][subkey])
+                                     for subkey in page_kwargs[key]])
+
+        return page_kwargs

@@ -4,16 +4,47 @@ Getting started
 Installing
 ==========
 
-You're ready? Let's go! You can install Pelican via several different methods. The simplest is via `pip <http://pip.openplans.org/>`_::
+You're ready? Let's go! You can install Pelican via several different methods.
+The simplest is via `pip <http://www.pip-installer.org/>`_::
 
     $ pip install pelican
 
-If you have the project source, you can install Pelican using the distutils 
-method. I recommend doing so in a virtualenv::
+If you don't have pip installed, an alternative method is easy_install::
 
-    $ virtualenv pelican_venv
-    $ source bin/activate
+    $ easy_install pelican
+
+While the above is the simplest method, the recommended approach is to create
+a virtual environment for Pelican via `virtualenv <http://www.virtualenv.org/>`_
+and `virtualenvwrapper <http://www.doughellmann.com/projects/virtualenvwrapper/>`_
+before installing Pelican::
+
+    $ pip install virtualenvwrapper
+    $ mkvirtualenv pelican
+
+Once the virtual environment has been created and activated, Pelican can be
+be installed via pip or easy_install as noted above. Alternatively, if you
+have the project source, you can install Pelican using the distutils 
+method::
+
+    $ cd path-to-Pelican-source
     $ python setup.py install
+
+If you have Git installed and prefer to install the latest bleeding-edge
+version of Pelican rather than a stable release, use the following command::
+
+    $ pip install -e git://github.com/ametaireau/pelican#egg=pelican
+
+Upgrading
+---------
+
+If you installed a stable Pelican release via pip or easy_install and wish to
+upgrade to the latest stable release, you can do so by adding ``--upgrade`` to
+the relevant command. For pip, that would be::
+
+    $ pip install --upgrade pelican
+
+If you installed Pelican via distutils or the bleeding-edge method, simply
+perform the same step to install the most recent version.
 
 Dependencies
 ------------
@@ -24,7 +55,7 @@ At this time, Pelican is dependent on the following Python packages:
 * jinja2, for templating support
 * docutils, for supporting reStructuredText as an input format
 
-If you're not using Python 2.7, you will also need `argparse`.
+If you're not using Python 2.7, you will also need the ``argparse`` package.
 
 Optionally:
 
@@ -42,7 +73,7 @@ file system (for instance, about the category of your articles), but some
 information you need to provide in the form of metadata inside your files.
 
 You can provide this metadata in reStructuredText text files via the
-following syntax (give your file the `.rst` extension)::
+following syntax (give your file the ``.rst`` extension)::
 
     My super title
     ##############
@@ -53,11 +84,10 @@ following syntax (give your file the `.rst` extension)::
     :author: Alexis Metaireau
 
 
-You can also use Markdown syntax (with a file ending in `.md`).
-Markdown generation will not work until you explicitly install the `markdown`
-distribution. You can do so on a normal system using `pip install markdown`
-
-::
+You can also use Markdown syntax (with a file ending in ``.md``).
+Markdown generation will not work until you explicitly install the ``Markdown``
+package, which can be done via ``pip install Markdown``. Metadata syntax for
+Markdown posts should follow this pattern::
 
     Date: 2010-12-03
     Title: My super title
@@ -69,17 +99,17 @@ distribution. You can do so on a normal system using `pip install markdown`
 Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified, Pelican will rely on the file's "mtime" timestamp, and the
 category can be determined by the directory in which the file resides. For
-example, a file located at `python/foobar/myfoobar.rst` will have a category of
-`foobar`.
+example, a file located at ``python/foobar/myfoobar.rst`` will have a category of
+``foobar``.
 
 Generate your blog
 ------------------
 
-To launch Pelican, just use the `pelican` command::
+To launch Pelican, just use the ``pelican`` command::
 
     $ pelican /path/to/your/content/ [-s path/to/your/settings.py]
 
-And… that's all! Your weblog will be generated and saved in the `content/`
+And… that's all! Your weblog will be generated and saved in the ``content/``
 folder.
 
 The above command will use the default theme to produce a simple site. It's not
@@ -93,18 +123,22 @@ the options you can use::
 Kickstart a blog
 ----------------
 
-You also can use the `pelican-quickstart` script to start a new blog in
-seconds, by just answering few questions. Just run `pelican-quickstart` and
+You also can use the ``pelican-quickstart`` script to start a new blog in
+seconds by just answering a few questions. Just run ``pelican-quickstart`` and
 you're done! (Added in Pelican 3.0)
 
 Pages
 -----
 
-If you create a folder named `pages`, all the files in it will be used to
+If you create a folder named ``pages``, all the files in it will be used to
 generate static pages.
 
-Then, use the `DISPLAY_PAGES_ON_MENU` setting, which will add all the pages to 
+Then, use the ``DISPLAY_PAGES_ON_MENU`` setting, which will add all the pages to 
 the menu.
+
+If you want to exclude any pages from being linked to or listed in the menu
+then add a ``status: hidden`` attribute to its metadata. This is useful for
+things like making error pages that fit the generated theme of your site.
 
 Importing an existing blog
 --------------------------
@@ -115,8 +149,8 @@ a simple script. See :ref:`import`.
 Translations
 ------------
 
-It is possible to translate articles. To do so, you need to add a `lang` meta
-attribute to your articles/pages and set a `DEFAULT_LANG` setting (which is
+It is possible to translate articles. To do so, you need to add a ``lang`` meta
+attribute to your articles/pages and set a ``DEFAULT_LANG`` setting (which is
 English [en] by default). With those settings in place, only articles with the
 default language will be listed, and each article will be accompanied by a list
 of available translations for that article.
@@ -169,18 +203,18 @@ For RestructuredText::
 
 For Markdown, format your code blocks thusly::
 
-    ::identifier
+    :::identifier
     your code goes here
 
 The specified identifier should be one that appears on the 
 `list of available lexers <http://pygments.org/docs/lexers/>`_.
 
-Autoreload
-----------
+Auto-reload
+-----------
 
 It's possible to tell Pelican to watch for your modifications, instead of
-manually launching it every time you want to see your changes. To enable this,
-run the `pelican` command with the `-r` or `--autoreload` options.
+manually re-running it every time you want to see your changes. To enable this,
+run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
 
 Publishing drafts
 -----------------
@@ -203,3 +237,4 @@ You can either use your browser to open the files on your disk::
 Or run a simple web server using Python::
 
     cd output && python -m SimpleHTTPServer
+

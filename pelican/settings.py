@@ -68,6 +68,9 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
                    'LESS_GENERATOR': False,
+                   'SUMMARY_MAX_LENGTH': 50,
+                   'WEBASSETS': False,
+                   'PLUGINS': [],
                    }
 
 
@@ -149,5 +152,13 @@ def configure_settings(settings, default_settings=None, filename=None):
                  " your timezone is UTC for feed generation. Check "
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")
+
+    if 'WEBASSETS' in settings and settings['WEBASSETS'] is not False:
+        try:
+            from webassets.ext.jinja2 import AssetsExtension
+            settings['JINJA_EXTENSIONS'].append(AssetsExtension)
+        except ImportError:
+            logger.warn("You must install the webassets module to use WEBASSETS.")
+            settings['WEBASSETS'] = False
 
     return settings

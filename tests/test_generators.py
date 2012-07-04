@@ -6,7 +6,7 @@ import re
 from tempfile import mkdtemp
 from shutil import rmtree
 
-from pelican.generators import ArticlesGenerator, LessCSSGenerator
+from pelican.generators import ArticlesGenerator, LessCSSGenerator, PagesGenerator
 from pelican.settings import _DEFAULT_CONFIG
 from .support import unittest, skipIfNoExecutable
 
@@ -94,6 +94,48 @@ class TestArticlesGenerator(unittest.TestCase):
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_count == 0
+
+
+class TestPageGenerator(unittest.TestCase):
+    """
+    Every time you want to test for a new field;
+    Make sure the test pages in "TestPages" have all the fields
+    Add it to distilled in distill_pages_for_test
+    Then update the assertItemsEqual in test_generate_context to match expected
+    """
+
+    def distill_pages_for_test(self, pages):
+        distilled = []
+        for page in pages:
+           distilled.append([
+                    page.title,
+                    page.status
+                ]
+           )
+        return distilled
+
+    def test_generate_context(self):
+        settings = _DEFAULT_CONFIG.copy()
+
+        settings['PAGE_DIR'] = 'TestPages'
+        generator = PagesGenerator(settings.copy(), settings, CUR_DIR,
+                                      _DEFAULT_CONFIG['THEME'], None,
+                                      _DEFAULT_CONFIG['MARKUP'])
+        generator.generate_context()
+        pages = self.distill_pages_for_test(generator.pages)
+        hidden_pages = self.distill_pages_for_test(generator.hidden_pages)
+
+        pages_expected = [
+            [u'This is a test page', 'published'],
+            [u'This is a markdown test page', 'published']
+        ]
+        hidden_pages_expected = [
+            [u'This is a test hidden page', 'hidden'],
+            [u'This is a markdown test hidden page', 'hidden']
+        ]
+
+        self.assertItemsEqual(pages_expected,pages)
+        self.assertItemsEqual(hidden_pages_expected,hidden_pages)
 
 
 class TestLessCSSGenerator(unittest.TestCase):

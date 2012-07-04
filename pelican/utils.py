@@ -4,6 +4,7 @@ import re
 import pytz
 import shutil
 import logging
+from collections import defaultdict
 
 from codecs import open as _open
 from datetime import datetime
@@ -91,10 +92,22 @@ def clean_output_dir(path):
     """Remove all the files from the output directory"""
 
     # remove all the existing content from the output folder
-    try:
-        shutil.rmtree(path)
-    except Exception:
-        pass
+    for filename in os.listdir(path):
+        file = os.path.join(path, filename)
+        if os.path.isdir(file):
+            try:
+                shutil.rmtree(file)
+                logger.debug("Deleted directory %s" % file)
+            except Exception, e:
+                logger.error("Unable to delete directory %s; %e" % file, e)
+        elif os.path.isfile(file) or os.path.islink(file):
+            try:
+                os.remove(file)
+                logger.debug("Deleted file/link %s" % file)
+            except Exception, e:
+                logger.error("Unable to delete file %s; %e" % file, e)
+        else:
+            logger.error("Unable to delete %s, file type unknown" % file)
 
 
 def get_relative_path(filename):
@@ -221,9 +234,9 @@ def files_changed(path, extensions):
         """Return the last time files have been modified"""
         for root, dirs, files in os.walk(path):
             dirs[:] = [x for x in dirs if x[0] != '.']
-            for file in files:
-                if any(file.endswith(ext) for ext in extensions):
-                    yield os.stat(os.path.join(root, file)).st_mtime
+            for f in files:
+                if any(f.endswith(ext) for ext in extensions):
+                    yield os.stat(os.path.join(root, f)).st_mtime
 
     global LAST_MTIME
     mtime = max(file_times(path))
@@ -231,6 +244,21 @@ def files_changed(path, extensions):
         LAST_MTIME = mtime
         return True
     return False
+
+
+FILENAMES_MTIMES = defaultdict(int)
+
+
+def file_changed(filename):
+    mtime = os.stat(filename).st_mtime
+    if FILENAMES_MTIMES[filename] == 0:
+        FILENAMES_MTIMES[filename] = mtime
+        return False
+    else:
+        if mtime > FILENAMES_MTIMES[filename]:
+            FILENAMES_MTIMES[filename] = mtime
+            return True
+        return False
 
 
 def set_date_tzinfo(d, tz_name=None):

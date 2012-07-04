@@ -17,6 +17,7 @@ from jinja2.exceptions import TemplateNotFound
 from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, open
+from pelican import signals
 
 
 logger = logging.getLogger(__name__)
@@ -42,7 +43,7 @@ class Generator(object):
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
-        self._env = Environment(
+        self.env = Environment(
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
@@ -51,11 +52,11 @@ class Generator(object):
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
 
-        logger.debug('template list: {0}'.format(self._env.list_templates()))
+        logger.debug('template list: {0}'.format(self.env.list_templates()))
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
-        self._env.filters.update(custom_filters)
+        self.env.filters.update(custom_filters)
 
     def get_template(self, name):
         """Return the template by name.
@@ -64,7 +65,7 @@ class Generator(object):
         """
         if name not in self._templates:
             try:
-                self._templates[name] = self._env.get_template(name + '.html')
+                self._templates[name] = self.env.get_template(name + '.html')
             except TemplateNotFound:
                 raise Exception('[templates] unable to load %s.html from %s' \
                         % (name, self._templates_path))
@@ -118,6 +119,7 @@ class ArticlesGenerator(Generator):
         self.authors = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
+        signals.article_generator_init.send(self)
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
@@ -245,7 +247,9 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """change the context"""
 
-        article_path = os.path.join(self.path, self.settings['ARTICLE_DIR'])
+        article_path = os.path.normpath(  # we have to remove trailing slashes
+            os.path.join(self.path, self.settings['ARTICLE_DIR'])
+        )
         all_articles = []
         for f in self.get_files(
                 article_path,
@@ -259,8 +263,8 @@ class ArticlesGenerator(Generator):
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata:
 
-                if os.path.dirname(f) == article_path:
-                    category = self.settings['DEFAULT_CATEGORY']
+                if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
+                    category = self.settings['DEFAULT_CATEGORY'] 
                 else:
                     category = os.path.basename(os.path.dirname(f))\
                                 .decode('utf-8')
@@ -276,6 +280,7 @@ class ArticlesGenerator(Generator):
                     metadata['date'] = datetime.datetime(
                             *self.settings['DEFAULT_DATE'])
 
+            signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
                               filename=f)
             if not is_valid_content(article, f):
@@ -288,6 +293,10 @@ class ArticlesGenerator(Generator):
                 all_articles.append(article)
             elif article.status == "draft":
                 self.drafts.append(article)
+            else:
+                logger.warning(u"Unknown status %s for file %s, skipping it." %
+                               (repr(unicode.encode(article.status, 'utf-8')),
+                                repr(f)))
 
         self.articles, self.translations = process_translations(all_articles)
 
@@ -352,10 +361,13 @@ class PagesGenerator(Generator):
 
     def __init__(self, *args, **kwargs):
         self.pages = []
+        self.hidden_pages = []
+        self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
 
     def generate_context(self):
         all_pages = []
+        hidden_pages = []
         for f in self.get_files(
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
@@ -368,15 +380,25 @@ class PagesGenerator(Generator):
                         filename=f)
             if not is_valid_content(page, f):
                 continue
-            all_pages.append(page)
+            if page.status == "published":
+                all_pages.append(page)
+            elif page.status == "hidden":
+                hidden_pages.append(page)
+            else:
+                logger.warning(u"Unknown status %s for file %s, skipping it." %
+                               (repr(unicode.encode(page.status, 'utf-8')),
+                                repr(f)))
+
 
         self.pages, self.translations = process_translations(all_pages)
+        self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
 
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
     def generate_output(self, writer):
-        for page in chain(self.translations, self.pages):
+        for page in chain(self.translations, self.pages,
+                            self.hidden_translations, self.hidden_pages):
             writer.write_file(page.save_as, self.get_template('page'),
                     self.context, page=page,
                     relative_urls=self.settings.get('RELATIVE_URLS'))
@@ -393,7 +415,23 @@ class StaticGenerator(Generator):
             copy(path, source, os.path.join(output_path, destination),
                  final_path, overwrite=True)
 
+    def generate_context(self):
+
+        if self.settings['WEBASSETS']:
+            from webassets import Environment as AssetsEnvironment
+
+            # Define the assets environment that will be passed to the
+            # generators. The StaticGenerator must then be run first to have
+            # the assets in the output_path before generating the templates.
+            assets_url = self.settings['SITEURL'] + '/theme/'
+            assets_src = os.path.join(self.output_path, 'theme')
+            self.assets_env = AssetsEnvironment(assets_src, assets_url)
+
+            if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
+                self.assets_env.debug = True
+
     def generate_output(self, writer):
+
         self._copy_paths(self.settings['STATIC_PATHS'], self.path,
                          'static', self.output_path)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
