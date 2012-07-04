@@ -15,6 +15,7 @@ from tempfile import mkdtemp
 from shutil import rmtree
 
 from pelican.contents import Article
+from pelican.settings import _DEFAULT_CONFIG
 
 try:
     import unittest2 as unittest
@@ -138,3 +139,10 @@ def skipIfNoExecutable(executable, valid_exit_code=1):
         return unittest.skip('{0} compiler not found'.format(executable))
 
     return lambda func: func
+
+
+def get_settings():
+    settings = _DEFAULT_CONFIG.copy()
+    settings['DIRECT_TEMPLATES'] = ['archives']
+    settings['filenames'] = {}
+    return settings

@@ -2,6 +2,8 @@
 import locale
 import logging
 import functools
+import os
+import re
 
 from datetime import datetime
 from os import getenv
@@ -9,10 +11,11 @@ from sys import platform, stdin
 
 
 from pelican.settings import _DEFAULT_CONFIG
-from pelican.utils import slugify, truncate_html_words
+from pelican.utils import slugify, truncate_html_words, memoized
 
 
 logger = logging.getLogger(__name__)
+
 
 class Page(object):
     """Represents a page
@@ -24,7 +27,7 @@ class Page(object):
     default_template = 'page'
 
     def __init__(self, content, metadata=None, settings=None,
-                 filename=None):
+                 filename=None, context=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -33,6 +36,7 @@ class Page(object):
 
         self.settings = settings
         self._content = content
+        self._context = context
         self.translations = []
 
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
@@ -55,8 +59,8 @@ class Page(object):
             else:
                 title = filename.decode('utf-8') if filename else self.title
                 self.author = Author(getenv('USER', 'John Doe'), settings)
-                logger.warning(u"Author of `{0}' unknown, assuming that his name is "
-                         "`{1}'".format(title, self.author))
+                logger.warning(u"Author of `{0}' unknown, assuming that his "\
+                                "name is " "`{1}'".format(title, self.author))
 
         # manage languages
         self.in_default_lang = True
@@ -129,12 +133,54 @@ class Page(object):
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 
+    def _update_content(self, content):
+        """Change all the relatives paths of the content to relatives
+        paths suitable for the ouput content
+
+        :param content: content resource that will be passed to the templates.
+        """
+        hrefs = re.compile(r"""
+            (?P<markup><\s*[^\>]*  # match tag with src and href attr
+                (?:href|src)\s*=)
+
+            (?P<quote>["\'])      # require value to be quoted
+            (?P<path>:(?P<what>.*):(?P<value>.*))  # the url value
+            \2""", re.X)
+
+        def replacer(m):
+            what = m.group('what')
+            value = m.group('value')
+            origin = m.group('path')
+            # we support only filename for now. the plan is to suppose
+            # categories, tags, etc. in the future, but let's keep things
+            # simple for now.
+            if what == 'filename':
+                if value.startswith('/'):
+                    value = value[1:]
+                else:
+                    # relative to the filename of this content
+                    value = self.get_relative_filename(os.path.join(
+                        os.path.dirname(self.get_relative_filename()), value))
+
+                if value in self._context['filenames']:
+                    origin = self._context['filenames'][value].url
+                else:
+                    logger.warning(u"Unable to find {fn}, skipping url"\
+                                    "replacement".format(fn=value))
+
+            return m.group('markup') + m.group('quote') + origin \
+                    + m.group('quote')
+
+        return hrefs.sub(replacer, content)
+
     @property
+    @memoized
     def content(self):
         if hasattr(self, "_get_content"):
             content = self._get_content()
         else:
             content = self._content
+        content = self._update_content(content)
         return content
 
     def _get_summary(self):
@@ -144,7 +190,8 @@ class Page(object):
             return self._summary
         else:
             if self.settings['SUMMARY_MAX_LENGTH']:
-                return truncate_html_words(self.content, self.settings['SUMMARY_MAX_LENGTH'])
+                return truncate_html_words(self.content,
+                        self.settings['SUMMARY_MAX_LENGTH'])
             return self.content
 
     def _set_summary(self, summary):
@@ -162,6 +209,13 @@ class Page(object):
             return self.template
         else:
             return self.default_template
+
+    def get_relative_filename(self, filename=None):
+        if not filename:
+            filename = self.filename
+
+        return os.path.relpath(os.path.abspath(self.filename),
+                               os.path.abspath(self.settings['PATH']))
 
 
 class Article(Page):
@@ -225,6 +279,6 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError, e:
-        logger.error(u"Skipping %s: impossible to find informations about '%s'"\
-                % (f, e))
+        logger.error(u"Skipping %s: impossible to find informations about"\
+                      "'%s'" % (f, e))
         return False

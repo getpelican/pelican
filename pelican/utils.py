@@ -4,7 +4,8 @@ import re
 import pytz
 import shutil
 import logging
-from collections import defaultdict
+from collections import defaultdict, Hashable
+from functools import partial
 
 from codecs import open as _open
 from datetime import datetime
@@ -17,6 +18,32 @@ logger = logging.getLogger(__name__)
 class NoFilesError(Exception):
     pass
 
+
+class memoized(object):
+   '''Decorator. Caches a function's return value each time it is called.
+   If called later with the same arguments, the cached value is returned
+   (not reevaluated).
+   '''
+   def __init__(self, func):
+      self.func = func
+      self.cache = {}
+   def __call__(self, *args):
+      if not isinstance(args, Hashable):
+         # uncacheable. a list, for instance.
+         # better to not cache than blow up.
+         return self.func(*args)
+      if args in self.cache:
+         return self.cache[args]
+      else:
+         value = self.func(*args)
+         self.cache[args] = value
+         return value
+   def __repr__(self):
+      '''Return the function's docstring.'''
+      return self.func.__doc__
+   def __get__(self, obj, objtype):
+      '''Support instance methods.'''
+      return partial(self.__call__, obj)
 
 def get_date(string):
     """Return a datetime object from a string.
