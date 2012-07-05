@@ -98,11 +98,11 @@ class TestPageGenerator(unittest.TestCase):
     """
     Every time you want to test for a new field;
     Make sure the test pages in "TestPages" have all the fields
-    Add it to distilled in distill_pages_for_test
+    Add it to distilled in distill_pages
     Then update the assertItemsEqual in test_generate_context to match expected
     """
 
-    def distill_pages_for_test(self, pages):
+    def distill_pages(self, pages):
         distilled = []
         for page in pages:
            distilled.append([
@@ -120,8 +120,8 @@ class TestPageGenerator(unittest.TestCase):
                                       _DEFAULT_CONFIG['THEME'], None,
                                       _DEFAULT_CONFIG['MARKUP'])
         generator.generate_context()
-        pages = self.distill_pages_for_test(generator.pages)
-        hidden_pages = self.distill_pages_for_test(generator.hidden_pages)
+        pages = self.distill_pages(generator.pages)
+        hidden_pages = self.distill_pages(generator.hidden_pages)
 
         pages_expected = [
             [u'This is a test page', 'published'],
