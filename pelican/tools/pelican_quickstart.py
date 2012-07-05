@@ -19,6 +19,7 @@ CONF = {
     'ftp_user': 'anonymous',
     'ftp_target_dir': '/',
     'ssh_host': 'locahost',
+    'ssh_port': 22,
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
     'dropbox_dir' : '~/Dropbox/Public/',
@@ -159,6 +160,7 @@ Please answer the following questions so this script can generate the files need
 
         if ask('Do you want to upload your website using SSH ?', answer=bool, default=False):
             CONF['ssh_host'] = ask('What is the hostname of your SSH server ?', str, CONF['ssh_host'])
+            CONF['ssh_port'] = ask('What is the port of your SSH server?', int, CONF['ssh_port'])
             CONF['ssh_user'] = ask('What is your username on this server ?', str, CONF['ssh_user'])
             CONF['ssh_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ssh_target_dir'])
 

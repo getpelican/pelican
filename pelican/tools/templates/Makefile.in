@@ -11,6 +11,7 @@ FTP_USER=$ftp_user
 FTP_TARGET_DIR=$ftp_target_dir
 
 SSH_HOST=$ssh_host
+SSH_PORT=$ssh_port
 SSH_USER=$ssh_user
 SSH_TARGET_DIR=$ssh_target_dir
 
@@ -43,10 +44,10 @@ dropbox_upload: $$(OUTPUTDIR)/index.html
 	cp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
 
 ssh_upload: $$(OUTPUTDIR)/index.html
-	scp -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
+	scp -P $$(SSH_PORT) -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
 rsync_upload: $$(OUTPUTDIR)/index.html
-	rsync -e ssh -P -rvz --delete $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+	rsync -e "ssh -p $(SSH_PORT)" -P -rvz --delete $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
 
 ftp_upload: $$(OUTPUTDIR)/index.html
 	lftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUTDIR) $$(FTP_TARGET_DIR) ; quit"
