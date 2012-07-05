@@ -18,7 +18,7 @@ CONF = {
     'ftp_host': 'localhost',
     'ftp_user': 'anonymous',
     'ftp_target_dir': '/',
-    'ssh_host': 'locahost',
+    'ssh_host': 'localhost',
     'ssh_port': 22,
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
@@ -89,7 +89,7 @@ def ask(question, answer=str, default=None, l=None):
                 r = default
                 break
             else:
-                print("You must answer `yes' or `no'")
+                print("You must answer 'yes' or 'no'")
         return r
     elif answer == int:
         r = None
@@ -112,12 +112,12 @@ def ask(question, answer=str, default=None, l=None):
                 print('You must enter an integer')
         return r
     else:
-        raise NotImplemented('Arguent `answer` must be str, bool or integer')
+        raise NotImplemented('Argument `answer` must be str, bool, or integer')
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="A kickstarter for pelican",
+        description="A kickstarter for Pelican",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-p', '--path', default=".",
             help="The path to generate the blog into")
@@ -126,7 +126,7 @@ def main():
     parser.add_argument('-a', '--author', metavar="author",
             help='Set the author name of the website')
     parser.add_argument('-l', '--lang', metavar="lang",
-            help='Set the default lang of the website')
+            help='Set the default web site language')
 
     args = parser.parse_args()
 
@@ -138,15 +138,15 @@ Please answer the following questions so this script can generate the files need
 
     '''.format(v=__version__))
 
-    CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new Web site ?', answer=str, default=args.path))
-    CONF['sitename'] = ask('What will be the title of this Web site ?', answer=str, default=args.title)
-    CONF['author'] = ask('Who will be the author of this Web site ?', answer=str, default=args.author)
-    CONF['lang'] = ask('What will be the default language of this Web site ?', str, args.lang or CONF['lang'], 2)
+    CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new web site?', answer=str, default=args.path))
+    CONF['sitename'] = ask('What will be the title of this web site?', answer=str, default=args.title)
+    CONF['author'] = ask('Who will be the author of this web site?', answer=str, default=args.author)
+    CONF['lang'] = ask('What will be the default language of this web site ?', str, args.lang or CONF['lang'], 2)
 
     CONF['with_pagination'] = ask('Do you want to enable article pagination ?', bool, bool(CONF['default_pagination']))
 
     if CONF['with_pagination']:
-        CONF['default_pagination'] = ask('So how many articles per page do you want ?', int, CONF['default_pagination'])
+        CONF['default_pagination'] = ask('How many articles per page do you want?', int, CONF['default_pagination'])
     else:
         CONF['default_pagination'] = False
 
@@ -155,15 +155,13 @@ Please answer the following questions so this script can generate the files need
     if mkfile:
         if ask('Do you want to upload your website using FTP ?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server ?', str, CONF['ftp_host'])
-            CONF['ftp_user'] = ask('What is your username on this server ?', str, CONF['ftp_user'])
-            CONF['ftp_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ftp_target_dir'])
-
+            CONF['ftp_user'] = ask('What is your username on that server?', str, CONF['ftp_user'])
+            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir']) 
         if ask('Do you want to upload your website using SSH ?', answer=bool, default=False):
             CONF['ssh_host'] = ask('What is the hostname of your SSH server ?', str, CONF['ssh_host'])
             CONF['ssh_port'] = ask('What is the port of your SSH server?', int, CONF['ssh_port'])
-            CONF['ssh_user'] = ask('What is your username on this server ?', str, CONF['ssh_user'])
-            CONF['ssh_target_dir'] = ask('Where do you want to put your website on this server ?', str, CONF['ssh_target_dir'])
-
+            CONF['ssh_user'] = ask('What is your username on that server?', str, CONF['ssh_user'])
+            CONF['ssh_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ssh_target_dir'])
         if ask('Do you want to upload your website using Dropbox ?', answer=bool, default=False):
             CONF['dropbox_dir'] = ask('Where is your Dropbox directory ?', str, CONF['dropbox_dir'])
 

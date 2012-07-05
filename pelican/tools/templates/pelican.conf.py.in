@@ -3,7 +3,7 @@
 
 AUTHOR = u"$author"
 SITENAME = u"$sitename"
-SITEURL = '/'
+SITEURL = ''
 
 TIMEZONE = 'Europe/Paris'
 
