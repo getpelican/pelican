@@ -1,65 +1,10 @@
 Getting started
 ###############
 
-Kickstart a blog
-================
-
-You're ready? Let's go! Following is a brief tutorial for those who want to get
-started right away. Subsequent sections below will cover individual topics in
-greater detail. To get started, here are some recommended install steps for
-Pelican::
-
-    $ sudo pip install --upgrade virtualenv virtualenvwrapper
-    $ mkvirtualenv pelican
-    $ pip install pelican Markdown
-    $ mkdir ~/code/yoursitename # (where you want your new site code to be saved)
-    $ cd ~/code/yoursitename
-    $ setvirtualenvproject
-    $ pelican-quickstart
-
-Once you've run that last ``pelican-quickstart`` command, you'll be asked some
-questions about your site. Once you finish answering all the questions, you can
-begin adding content to the *content* folder that has been created for you.
-(See *Writing articles using Pelican* section below for more information
-about how to format your content.) Once you have some content to generate, you
-can convert it to HTML via the following command::
-
-    $ make html
-
-If you'd prefer to have Pelican automatically regenerate your site every time a
-change is detected (handy when testing locally), use the following command
-instead::
-
-    $ make regenerate
-
-To preview the site in your browser, open a new terminal tab and enter::
-
-    $ workon yoursitename
-    $ make serve
-
-Visit http://localhost:8000 in your browser to see your site.
-
-When you're ready to publish your site, you can upload it via the method(s) you
-chose during the ``pelican-quickstart`` questionnaire. For this example, we'll
-use rsync over ssh::
-
-    $ make rsync_upload
-
-That's it! Your site should now be live.
-
-Closing the current terminal session will also close the virtual environment in
-which we installed Pelican. In the future, when you want to work on your site,
-you can activate its virtual environment via::
-
-    $ workon yoursitename
-
-Not only will that command activate your new site's virtual environment, but it
-will also automatically change your working directory to your site project.
-
 Installing Pelican
 ==================
 
-You can install Pelican via several different methods.
+You're ready? Let's go! You can install Pelican via several different methods.
 The simplest is via `pip <http://www.pip-installer.org/>`_::
 
     $ pip install pelican
@@ -75,6 +20,7 @@ before installing Pelican::
 
     $ sudo pip install --upgrade virtualenv virtualenvwrapper
     $ mkvirtualenv pelican
+    $ pip install pelican
 
 Once the virtual environment has been created and activated, Pelican can be
 be installed via ``pip`` or ``easy_install`` as noted above. Alternatively, if
@@ -121,6 +67,59 @@ Optionally:
 
 * pygments, for syntax highlighting
 * Markdown, for supporting Markdown as an input format
+
+Kickstart a blog
+================
+
+Following is a brief tutorial for those who want to get started right away.
+We're going to assume Pelican was installed in a virtual environment via the
+following steps (if you're not using a virtual environment for Pelican, you can
+skip to the ``pelican-quickstart`` command)::
+
+    $ sudo pip install --upgrade virtualenv virtualenvwrapper
+    $ mkvirtualenv pelican
+    $ pip install pelican Markdown
+
+Next we'll create a directory to house our site content and configuration files,
+which can be located any place you prefer, and associate this new project with
+the currently-active virtual environment::
+
+    $ mkdir ~/code/yoursitename
+    $ cd ~/code/yoursitename
+    $ setvirtualenvproject
+
+Now we can run the ``pelican-quickstart`` command, which will ask some questions
+about your site::
+
+    $ pelican-quickstart
+
+Once you finish answering all the questions, you can begin adding content to the
+*content* folder that has been created for you. (See *Writing articles using
+Pelican* section below for more information about how to format your content.)
+Once you have some content to generate, you can convert it to HTML via the
+following command::
+
+    $ make html
+
+If you'd prefer to have Pelican automatically regenerate your site every time a
+change is detected (handy when testing locally), use the following command
+instead::
+
+    $ make regenerate
+
+To serve the site so it can be previewed in your browser::
+
+    $ make serve
+
+Visit http://localhost:8000 in your browser to see your site.
+
+When you're ready to publish your site, you can upload it via the method(s) you
+chose during the ``pelican-quickstart`` questionnaire. For this example, we'll
+use rsync over ssh::
+
+    $ make rsync_upload
+
+That's it! Your site should now be live.
 
 Writing articles using Pelican
 ==============================
@@ -171,9 +170,9 @@ the content. The ``pelican`` command can also be run directly::
     $ pelican /path/to/your/content/ [-s path/to/your/settings.py]
 
 The above command will generate your weblog and save it in the ``content/``
-folder, using the default theme to produce a simple site. It's not
-very sexy, as it's just simple HTML output (without any style). You can create
-your own style if you want.
+folder, using the default theme to produce a simple site. The default theme is
+simple HTML without styling and is provided so folks may use it as a basis for
+creating their own themes.
 
 Pelican has other command-line switches available. Have a look at the help to
 see all the options you can use::
