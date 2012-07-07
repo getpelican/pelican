@@ -1,15 +1,70 @@
 Getting started
 ###############
 
-Installing
-==========
+Kickstart a blog
+================
 
-You're ready? Let's go! You can install Pelican via several different methods.
+You're ready? Let's go! Following is a brief tutorial for those who want to get
+started right away. Subsequent sections below will cover individual topics in
+greater detail. To get started, here are some recommended install steps for
+Pelican::
+
+    $ sudo pip install --upgrade virtualenv virtualenvwrapper
+    $ mkvirtualenv pelican
+    $ pip install pelican Markdown
+    $ mkdir ~/code/yoursitename # (where you want your new site code to be saved)
+    $ cd ~/code/yoursitename
+    $ setvirtualenvproject
+    $ pelican-quickstart
+
+Once you've run that last ``pelican-quickstart`` command, you'll be asked some
+questions about your site. Once you finish answering all the questions, you can
+begin adding content to the *content* folder that has been created for you.
+(See *Writing articles using Pelican* section below for more information
+about how to format your content.) Once you have some content to generate, you
+can convert it to HTML via the following command::
+
+    $ make html
+
+If you'd prefer to have Pelican automatically regenerate your site every time a
+change is detected (handy when testing locally), use the following command
+instead::
+
+    $ make regenerate
+
+To preview the site in your browser, open a new terminal tab and enter::
+
+    $ workon yoursitename
+    $ make serve
+
+Visit http://localhost:8000 in your browser to see your site.
+
+When you're ready to publish your site, you can upload it via the method(s) you
+chose during the ``pelican-quickstart`` questionnaire. For this example, we'll
+use rsync over ssh::
+
+    $ make rsync_upload
+
+That's it! Your site should now be live.
+
+Closing the current terminal session will also close the virtual environment in
+which we installed Pelican. In the future, when you want to work on your site,
+you can activate its virtual environment via::
+
+    $ workon yoursitename
+
+Not only will that command activate your new site's virtual environment, but it
+will also automatically change your working directory to your site project.
+
+Installing Pelican
+==================
+
+You can install Pelican via several different methods.
 The simplest is via `pip <http://www.pip-installer.org/>`_::
 
     $ pip install pelican
 
-If you don't have pip installed, an alternative method is easy_install::
+If you don't have ``pip`` installed, an alternative method is ``easy_install``::
 
     $ easy_install pelican
 
@@ -18,12 +73,12 @@ a virtual environment for Pelican via `virtualenv <http://www.virtualenv.org/>`_
 and `virtualenvwrapper <http://www.doughellmann.com/projects/virtualenvwrapper/>`_
 before installing Pelican::
 
-    $ pip install virtualenvwrapper
+    $ sudo pip install --upgrade virtualenv virtualenvwrapper
     $ mkvirtualenv pelican
 
 Once the virtual environment has been created and activated, Pelican can be
-be installed via pip or easy_install as noted above. Alternatively, if you
-have the project source, you can install Pelican using the distutils 
+be installed via ``pip`` or ``easy_install`` as noted above. Alternatively, if
+you have the project source, you can install Pelican using the distutils 
 method::
 
     $ cd path-to-Pelican-source
@@ -33,6 +88,11 @@ If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
 
     $ pip install -e git://github.com/ametaireau/pelican#egg=pelican
+
+If you plan on using Markdown as a markup format, you'll need to install the
+Markdown library as well::
+
+    $ pip install Markdown
 
 Upgrading
 ---------
@@ -83,7 +143,6 @@ following syntax (give your file the ``.rst`` extension)::
     :category: yeah
     :author: Alexis Metaireau
 
-
 You can also use Markdown syntax (with a file ending in ``.md``).
 Markdown generation will not work until you explicitly install the ``Markdown``
 package, which can be done via ``pip install Markdown``. Metadata syntax for
@@ -105,27 +164,28 @@ example, a file located at ``python/foobar/myfoobar.rst`` will have a category o
 Generate your blog
 ------------------
 
-To launch Pelican, just use the ``pelican`` command::
+The ``make`` shortcut commands mentioned in the ``Kickstart a blog`` section
+are mostly wrappers around the ``pelican`` command that generates the HTML from
+the content. The ``pelican`` command can also be run directly::
 
     $ pelican /path/to/your/content/ [-s path/to/your/settings.py]
 
-And… that's all! Your weblog will be generated and saved in the ``content/``
-folder.
+The above command will generate your weblog and save it in the ``content/``
+folder, using the default theme to produce a simple site. It's not
+very sexy, as it's just simple HTML output (without any style). You can create
+your own style if you want.
 
-The above command will use the default theme to produce a simple site. It's not
-very sexy, as it's just simple HTML output (without any style).
-
-You can create your own style if you want. Have a look at the help to see all
-the options you can use::
+Pelican has other command-line switches available. Have a look at the help to
+see all the options you can use::
 
     $ pelican --help
 
-Kickstart a blog
-----------------
+Auto-reload
+-----------
 
-You also can use the ``pelican-quickstart`` script to start a new blog in
-seconds by just answering a few questions. Just run ``pelican-quickstart`` and
-you're done! (Added in Pelican 3.0)
+It's possible to tell Pelican to watch for your modifications, instead of
+manually re-running it every time you want to see your changes. To enable this,
+run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
 
 Pages
 -----
@@ -208,13 +268,6 @@ For Markdown, format your code blocks thusly::
 
 The specified identifier should be one that appears on the 
 `list of available lexers <http://pygments.org/docs/lexers/>`_.
-
-Auto-reload
------------
-
-It's possible to tell Pelican to watch for your modifications, instead of
-manually re-running it every time you want to see your changes. To enable this,
-run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
 
 Publishing drafts
 -----------------
