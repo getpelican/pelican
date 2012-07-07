@@ -59,18 +59,16 @@ Setting name (default value)                                            What doe
 `PDF_GENERATOR` (``False``)                                             Set to True if you want to have PDF versions
                                                                         of your documents. You will need to install
                                                                         `rst2pdf`.
-`RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use relative URLs or
-                                                                        not.
+`RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use document-relative URLs or
+                                                                        not. If set to ``False``, Pelican will use the SITEURL
+                                                                        setting to construct absolute URLs.
 `PLUGINS` (``[]``)                                                      The list of plugins to load. See :ref:`plugins`.
 `SITENAME` (``'A Pelican Blog'``)                                       Your site name
 `SITEURL`                                                               Base URL of your website. Not defined by default,
-                                                                        which means the base URL is assumed to be "/" with a
-                                                                        root-relative URL structure. If `SITEURL` is specified
-                                                                        explicitly, there should be no trailing slash at the end,
-                                                                        and URLs will be generated with an absolute URL structure
-                                                                        (including the domain). If you want to use relative URLs
-                                                                        instead of root-relative or absolute URLs, you should
-                                                                        instead use the `RELATIVE_URL` setting.
+                                                                        so it is best to specify your SITEURL; if you do not, feeds
+                                                                        will not be generated with properly-formed URLs. You should 
+                                                                        include ``http://`` and your domain, with no trailing
+                                                                        slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
 `STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
                                                                         on the output path "static". By default,
                                                                         Pelican will copy the 'images' folder to the
@@ -106,6 +104,15 @@ Setting name (default value)                                            What doe
 
 URL settings
 ------------
+
+The first thing to understand is that there are currently two supported methods
+for URL formation: *relative* and *absolute*. Document-relative URLs are useful
+when testing locally, and absolute URLs are reliable and most useful when
+publishing. One method of supporting both is to have one Pelican configuration
+file for local development and another for publishing. To see an example of this
+type of setup, use the ``pelican-quickstart`` script as described at the top of
+the :doc:`Getting Started<getting_started>` page, which will produce two separate
+configuration files for local development and publishing, respectively.
 
 You can customize the URLs and locations where files will be saved. The URLs and
 SAVE_AS variables use Python's format strings. These variables allow you to place

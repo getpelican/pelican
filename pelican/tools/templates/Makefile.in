@@ -2,9 +2,10 @@ PELICAN=$pelican
 PELICANOPTS=$pelicanopts
 
 BASEDIR=$$(PWD)
-INPUTDIR=$$(BASEDIR)/src
+INPUTDIR=$$(BASEDIR)/content
 OUTPUTDIR=$$(BASEDIR)/output
-CONFFILE=$$(BASEDIR)/pelican.conf.py
+CONFFILE=$$(BASEDIR)/pelicanconf.py
+PUBLISHCONF=$$(BASEDIR)/publishconf.py
 
 FTP_HOST=$ftp_host
 FTP_USER=$ftp_user
@@ -23,10 +24,11 @@ help:
 	@echo 'Usage:                                                                 '
 	@echo '   make html                        (re)generate the web site          '
 	@echo '   make clean                       remove the generated files         '
-	@echo '   ftp_upload                       upload the web site using FTP      '
-	@echo '   ssh_upload                       upload the web site using SSH      '
-	@echo '   dropbox_upload                   upload the web site using Dropbox  '
-	@echo '   rsync_upload                     upload the web site using rsync/ssh'
+	@echo '   make publish                     generate using production settings '
+	@echo '   ftp_upload                       upload the web site via FTP        '
+	@echo '   ssh_upload                       upload the web site via SSH        '
+	@echo '   dropbox_upload                   upload the web site via Dropbox    '
+	@echo '   rsync_upload                     upload the web site via rsync/ssh  '
 	@echo '                                                                       '
 
 
@@ -37,23 +39,31 @@ $$(OUTPUTDIR)/%.html:
 	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 
 clean:
-	rm -fr $$(OUTPUTDIR)
-	mkdir $$(OUTPUTDIR)
+	find $$(OUTPUTDIR) -mindepth 1 -delete
 
-dropbox_upload: $$(OUTPUTDIR)/index.html
+regenerate: clean
+	$$(PELICAN) -r $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
+
+serve:
+	cd $$(OUTPUTDIR) && python -m SimpleHTTPServer
+
+publish:
+	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(PUBLISHCONF) $$(PELICANOPTS)
+
+dropbox_upload: publish
 	cp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
 
-ssh_upload: $$(OUTPUTDIR)/index.html
+ssh_upload: publish
 	scp -P $$(SSH_PORT) -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
-rsync_upload: $$(OUTPUTDIR)/index.html
+rsync_upload: publish
 	rsync -e "ssh -p $(SSH_PORT)" -P -rvz --delete $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
 
-ftp_upload: $$(OUTPUTDIR)/index.html
+ftp_upload: publish
 	lftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUTDIR) $$(FTP_TARGET_DIR) ; quit"
 
-github: $$(OUTPUTDIR)/index.html
+github: publish
 	ghp-import $$(OUTPUTDIR)
 	git push origin gh-pages
 
-.PHONY: html help clean ftp_upload ssh_upload rsync_upload dropbox_upload github
+.PHONY: html help clean regenerate serve publish ftp_upload ssh_upload rsync_upload dropbox_upload github
