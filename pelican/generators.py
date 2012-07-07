@@ -167,11 +167,9 @@ class ArticlesGenerator(Generator):
 
     def generate_articles(self, write):
         """Generate the articles."""
-        article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
-            write(article.save_as,
-                          article_template, self.context, article=article,
-                          category=article.category)
+            write(article.save_as, self.get_template(article.template),
+                self.context, article=article, category=article.category)
 
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
@@ -222,10 +220,10 @@ class ArticlesGenerator(Generator):
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
-        article_template = self.get_template('article')
         for article in self.drafts:
-            write('drafts/%s.html' % article.slug, article_template,
-                  self.context, article=article, category=article.category)
+            write('drafts/%s.html' % article.slug,
+                self.get_template(article.template), self.context,
+                article=article, category=article.category)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -385,7 +383,6 @@ class PagesGenerator(Generator):
                                (repr(unicode.encode(page.status, 'utf-8')),
                                 repr(f)))
 
-
         self.pages, self.translations = process_translations(all_pages)
         self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
 
@@ -395,7 +392,7 @@ class PagesGenerator(Generator):
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
                             self.hidden_translations, self.hidden_pages):
-            writer.write_file(page.save_as, self.get_template('page'),
+            writer.write_file(page.save_as, self.get_template(page.template),
                     self.context, page=page,
                     relative_urls=self.settings.get('RELATIVE_URLS'))
 
