@@ -192,9 +192,7 @@ def install(path, v=False, u=False):
             except shutil.Error, e:
                 err("Cannot copy `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
             except OSError, e:
-                import logging
-                logger = logging.getLogger(__name__)
-                logger.warning("Cannot change permissions of files or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)))
+                err("Cannot change permissions of files or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)), die=False)
 
 
 def symlink(path, v=False):
