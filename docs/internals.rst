@@ -12,34 +12,34 @@ original author wrote with some software design information.
 Overall structure
 =================
 
-What `pelican` does is take a list of files and process them into some
+What Pelican does is take a list of files and process them into some
 sort of output. Usually, the input files are reStructuredText and Markdown
 files, and the output is a blog, but both input and output can be anything you
 want.
 
 The logic is separated into different classes and concepts:
 
-* `writers` are responsible for writing files: .html files, RSS feeds, and so
+* **Writers** are responsible for writing files: .html files, RSS feeds, and so
   on. Since those operations are commonly used, the object is created once and
   then passed to the generators.
 
-* `readers` are used to read from various formats (Markdown and
+* **Readers** are used to read from various formats (Markdown and
   reStructuredText for now, but the system is extensible). Given a file, they return
   metadata (author, tags, category, etc.) and content (HTML-formatted).
 
-* `generators` generate the different outputs. For instance, Pelican comes with
-  `ArticlesGenerator` and `PageGenerator`. Given a configuration, they can do
+* **Generators** generate the different outputs. For instance, Pelican comes with
+  ``ArticlesGenerator`` and ``PageGenerator``. Given a configuration, they can do
   whatever they want. Most of the time, it's generating files from inputs.
 
-* `pelican` also uses `templates`, so it's easy to write your own theme. The
-  syntax is `jinja2`, and, trust me, really easy to learn, so don't hesitate
-  to jump in and build your own theme.
+* Pelican also uses templates, so it's easy to write your own theme. The
+  syntax is `Jinja2 <http://jinja.pocoo.org/>`_ and is very easy to learn, so
+  don't hesitate to jump in and build your own theme.
 
 How to implement a new reader?
 ==============================
 
 Is there an awesome markup language you want to add to Pelican?
-Well, the only thing you have to do is to create a class with a `read`
+Well, the only thing you have to do is to create a class with a ``read``
 method that returns HTML content and some metadata.
 
 Take a look at the Markdown reader::
@@ -65,8 +65,8 @@ Take a look at the Markdown reader::
 Simple, isn't it?
 
 If your new reader requires additional Python dependencies, then you should wrap
-their `import` statements in a `try...except` block.  Then inside the reader's
-class, set the `enabled` class attribute to mark import success or failure.
+their ``import`` statements in a ``try...except`` block.  Then inside the reader's
+class, set the ``enabled`` class attribute to mark import success or failure.
 This makes it possible for users to continue using their favourite markup method
 without needing to install modules for formats they don't use.
 
@@ -76,17 +76,17 @@ How to implement a new generator?
 Generators have two important methods. You're not forced to create
 both; only the existing ones will be called.
 
-* `generate_context`, that is called first, for all the generators.
+* ``generate_context``, that is called first, for all the generators.
   Do whatever you have to do, and update the global context if needed. This
   context is shared between all generators, and will be passed to the
-  templates. For instance, the `PageGenerator` `generate_context` method finds
-  all the pages, transforms them into objects, and populates the context with
-  them. Be careful *not* to output anything using this context at this stage,
-  as it is likely to change by the effect of other generators.
+  templates. For instance, the ``PageGenerator`` ``generate_context`` method
+  finds all the pages, transforms them into objects, and populates the context
+  with them. Be careful *not* to output anything using this context at this 
+  stage, as it is likely to change by the effect of other generators.
 
-* `generate_output` is then called. And guess what is it made for? Oh,
+* ``generate_output`` is then called. And guess what is it made for? Oh,
   generating the output.  :) It's here that you may want to look at the context
-  and call the methods of the `writer` object that is passed as the first
-  argument of this function. In the `PageGenerator` example, this method will
+  and call the methods of the ``writer`` object that is passed as the first
+  argument of this function. In the ``PageGenerator`` example, this method will
   look at all the pages recorded in the global context and output a file on
-  the disk (using the writer method `write_file`) for each page encountered.
+  the disk (using the writer method ``write_file``) for each page encountered.
