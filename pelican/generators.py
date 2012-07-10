@@ -349,20 +349,16 @@ class ArticlesGenerator(Generator):
         for article in self.articles:
             article.related_posts = []
             relation_score = {}
-            if article.tags:
+            try:
                 article_tags = article.tags
                 for tag in article_tags:
-                    try:
-                        for related_article in self.tags[tag]:
-                            article.related_posts.append(related_article)
-                        article.related_posts.reverse()
+                    for related_article in self.tags[tag]:
+                        article.related_posts.append(related_article)
+                    article.related_posts.reverse()
 
-                    except:
-                        article.related_posts = potential_related[:5]
-
-            elif len(article.related_posts) == 0:  # article doesn't have tags
-                print "No tags for ", article.title
-                article.related_posts = all_articles[:5].reverse()
+            except:  # can't find any related posts
+                pass
+                #article.related_posts = all_articles[:5].reverse()
 
             relation_score = dict( \
                 zip(set(article.related_posts), \
@@ -370,6 +366,7 @@ class ArticlesGenerator(Generator):
                 set(article.related_posts))))
 
             ranked_related = sorted(relation_score, key=relation_score.get)
+
             article.related_posts = ranked_related
 
             try:  # make sure article doesn't appear in its own related posts
