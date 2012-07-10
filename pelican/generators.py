@@ -346,37 +346,8 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-        
-        # related_posts
-        for article in self.articles:
-            article.related_posts = []
-            relation_score = {}
-            try:
-                article_tags = article.tags
-                for tag in article_tags:
-                    for related_article in self.tags[tag]:
-                        article.related_posts.append(related_article)
-                    article.related_posts.reverse()
-
-            except:  # can't find any related posts
-                pass
-                #article.related_posts = all_articles[:5].reverse()
-
-            relation_score = dict( \
-                zip(set(article.related_posts), \
-                map(article.related_posts.count, \
-                set(article.related_posts))))
-
-            ranked_related = sorted(relation_score, key=relation_score.get)
-
-            article.related_posts = ranked_related
-
-            try:  # make sure article doesn't appear in its own related posts
-                article.related_posts.remove(article)
-            except:
-                pass
             
-            self._update_context(('articles', 'dates', 'tags', 'categories',
+        self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
     def generate_output(self, writer):
