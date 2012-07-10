@@ -23,9 +23,9 @@ The logic is separated into different classes and concepts:
   on. Since those operations are commonly used, the object is created once and
   then passed to the generators.
 
-* **Readers** are used to read from various formats (AsciiDoc, HTML, Markdown and
-  reStructuredText for now, but the system is extensible). Given a file, they 
-  return metadata (author, tags, category, etc.) and content (HTML-formatted).
+* **Readers** are used to read from various formats (HTML, Markdown and
+  reStructuredText for now, but the system is extensible). Given a file, they return
+  metadata (author, tags, category, etc.) and content (HTML-formatted).
 
 * **Generators** generate the different outputs. For instance, Pelican comes with
   ``ArticlesGenerator`` and ``PageGenerator``. Given a configuration, they can do
