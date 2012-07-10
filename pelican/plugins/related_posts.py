@@ -22,7 +22,6 @@ def add_related_posts(generator, metadata):
                 map(related_posts.count, \
                 set(related_posts))))
         ranked_related = sorted(relation_score, key=relation_score.get)
-        ranked_related.reverse()
         
         metadata["related_posts"] = ranked_related[:5]
 
