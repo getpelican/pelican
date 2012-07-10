@@ -190,7 +190,7 @@ syntax for Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
-Lastly, you can use Vanilla HTML (files ending in ``.htm`` and ``.html``). Pelican 
+Lastly, you can use vanilla HTML (files ending in ``.htm`` and ``.html``). Pelican 
 interprets the HTML in a very straightforward manner, reading meta data out
 of ``meta`` tags, the title out of the ``title`` tag, and the body out of the 
 ``body`` tag::
