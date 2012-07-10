@@ -154,6 +154,36 @@ Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
+Lastly, you can use Vanilla HTML (files ending in ``.htm`` and ``.html``). Pelican 
+interprets the HTML in a very straightforward manner, reading meta data out
+of ``meta`` tags, the title out of the ``title`` tag, and the body out of the 
+``body`` tag::
+
+    <html>
+        <head>
+            <title>My super title</title>
+            <meta name="tags" contents="thats, awesome" />
+            <meta name="date" contents="2012-07-09 22:28" />
+            <meta name="category" contents="yeah" />
+            <meta name="author" contents="Alexis Métaireau" />
+        </head>
+        <body>
+            This is the content of my super blog post.
+            <!-- PELICAN_END_SUMMARY -->
+            Content continues down here.
+        </body>
+    </html>
+
+With HTML, there are two simple exceptions to the standard metadata. First, 
+``tags`` can be specified either with the ``tags`` metadata, as is standard in 
+Pelican, or with the ``keywords`` metadata, as is standard in HTML. The two can 
+be used interchangeably. The second note is that summaries are done differently 
+in HTML posts. Either a ``summary`` metadata tag can be supplied, or, as seen 
+above, you can place an HTML comment, ``<!-- PELICAN_END_SUMMARY -->``, that 
+Pelican will recognize. Everything before the comment will be treated as a 
+summary. The content of the post will contain everything in the body tag, with 
+the special comment stripped out.
+
 Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified, Pelican will rely on the file's "mtime" timestamp, and the
 category can be determined by the directory in which the file resides. For
