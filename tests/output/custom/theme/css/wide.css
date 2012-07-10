@@ -4,13 +4,17 @@ body {
     font:1.3em/1.3 "Hoefler Text","Georgia",Georgia,serif,sans-serif;
 }
 
-.body, #banner nav, #banner nav ul, #about, #featured, #content{
-    width: inherit;
+.post-info{
+    display: none;
 }
 
 #banner nav {
+    display: none;
     -moz-border-radius: 0px;
-    margin-bottom: 0px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    font-size: 1em;
+    background: #F5F4EF;
 }
 
 #banner nav ul{
@@ -19,10 +23,11 @@ body {
 
 #banner nav li{
     float: right;
+    color: #000;
 }
 
-#banner nav li:first-child a {
-    -moz-border-radius: 0px;
+#banner nav li a {
+    color: #000;
 }
 
 #banner h1 {

@@ -3,15 +3,48 @@
 from mock import MagicMock
 import os
 import re
+from tempfile import mkdtemp
+from shutil import rmtree
 
 from pelican.generators import ArticlesGenerator, LessCSSGenerator, PagesGenerator
 from pelican.settings import _DEFAULT_CONFIG
-from .support import unittest, temporary_folder, skipIfNoExecutable
+from .support import unittest, skipIfNoExecutable
 
 CUR_DIR = os.path.dirname(__file__)
 
 
 class TestArticlesGenerator(unittest.TestCase):
+
+    def setUp(self):
+        super(TestArticlesGenerator, self).setUp()
+        self.generator = None
+
+    def get_populated_generator(self):
+        """
+        We only need to pull all the test articles once, but read from it
+         for each test.
+        """
+        if self.generator is None:
+            settings = _DEFAULT_CONFIG.copy()
+            settings['ARTICLE_DIR'] = 'content'
+            settings['DEFAULT_CATEGORY'] = 'Default'
+            self.generator = ArticlesGenerator(settings.copy(), settings,
+                                CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
+                                _DEFAULT_CONFIG['MARKUP'])
+            self.generator.generate_context()
+        return self.generator
+
+    def distill_articles(self, articles):
+        distilled = []
+        for page in articles:
+           distilled.append([
+                    page.title,
+                    page.status,
+                    page.category.name,
+                    page.template
+                ]
+           )
+        return distilled
 
     def test_generate_feeds(self):
 
@@ -93,6 +126,16 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_count == 0
 
+    def test_per_article_template(self):
+        """
+        Custom template articles get the field but standard/unset are None
+        """
+        generator = self.get_populated_generator()
+        articles = self.distill_articles(generator.articles)
+        custom_template = ['Article with template', 'published', 'Default', 'custom']
+        standard_template = ['This is a super article !', 'published', 'Yeah', 'article']
+        self.assertIn(custom_template, articles)
+        self.assertIn(standard_template, articles)
 
 class TestPageGenerator(unittest.TestCase):
     """
@@ -107,7 +150,8 @@ class TestPageGenerator(unittest.TestCase):
         for page in pages:
            distilled.append([
                     page.title,
-                    page.status
+                    page.status,
+                    page.template
                 ]
            )
         return distilled
@@ -124,12 +168,14 @@ class TestPageGenerator(unittest.TestCase):
         hidden_pages = self.distill_pages(generator.hidden_pages)
 
         pages_expected = [
-            [u'This is a test page', 'published'],
-            [u'This is a markdown test page', 'published']
+            [u'This is a test page', 'published', 'page'],
+            [u'This is a markdown test page', 'published', 'page'],
+            [u'This is a test page with a preset template', 'published', 'custom']
         ]
         hidden_pages_expected = [
-            [u'This is a test hidden page', 'hidden'],
-            [u'This is a markdown test hidden page', 'hidden']
+            [u'This is a test hidden page', 'hidden', 'page'],
+            [u'This is a markdown test hidden page', 'hidden', 'page'],
+            [u'This is a test hidden page with a custom template', 'hidden', 'custom']
         ]
 
         self.assertItemsEqual(pages_expected,pages)
@@ -149,6 +195,14 @@ class TestLessCSSGenerator(unittest.TestCase):
         }
     """
 
+    def setUp(self):
+        self.temp_content = mkdtemp()
+        self.temp_output = mkdtemp()
+
+    def tearDown(self):
+        rmtree(self.temp_content)
+        rmtree(self.temp_output)
+
     @skipIfNoExecutable('lessc')
     def test_less_compiler(self):
 
@@ -156,28 +210,25 @@ class TestLessCSSGenerator(unittest.TestCase):
         settings['STATIC_PATHS'] = ['static']
         settings['LESS_GENERATOR'] = True
 
-        # we'll nest here for py < 2.7 compat
-        with temporary_folder() as temp_content:
-            with temporary_folder() as temp_output:
-                generator = LessCSSGenerator(None, settings, temp_content,
-                                _DEFAULT_CONFIG['THEME'], temp_output, None)
+        generator = LessCSSGenerator(None, settings, self.temp_content,
+                        _DEFAULT_CONFIG['THEME'], self.temp_output, None)
 
-                # create a dummy less file
-                less_dir = os.path.join(temp_content, 'static', 'css')
-                less_filename = os.path.join(less_dir, 'test.less')
+        # create a dummy less file
+        less_dir = os.path.join(self.temp_content, 'static', 'css')
+        less_filename = os.path.join(less_dir, 'test.less')
 
-                less_output = os.path.join(temp_output, 'static', 'css',
-                                    'test.css')
+        less_output = os.path.join(self.temp_output, 'static', 'css',
+                            'test.css')
 
-                os.makedirs(less_dir)
-                with open(less_filename, 'w') as less_file:
-                    less_file.write(self.LESS_CONTENT)
+        os.makedirs(less_dir)
+        with open(less_filename, 'w') as less_file:
+            less_file.write(self.LESS_CONTENT)
 
-                generator.generate_output()
+        generator.generate_output()
 
-                # we have the file ?
-                self.assertTrue(os.path.exists(less_output))
+        # we have the file ?
+        self.assertTrue(os.path.exists(less_output))
 
-                # was it compiled ?
-                self.assertIsNotNone(re.search(r'^\s+color:\s*#4D926F;$',
-                    open(less_output).read(), re.MULTILINE | re.IGNORECASE))
+        # was it compiled ?
+        self.assertIsNotNone(re.search(r'^\s+color:\s*#4D926F;$',
+            open(less_output).read(), re.MULTILINE | re.IGNORECASE))

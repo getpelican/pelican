@@ -49,3 +49,14 @@ install it. You can do so by typing::
 In case you don't have pip installed, consider installing it via::
 
     $ (sudo) easy_install pip
+
+How do I assign custom templates on a per page basis?
+=====================================================
+
+It's as simple as adding an extra line of metadata to any pages or articles you
+want to have it's own template.
+
+    :template: template_name
+
+Then just make sure to have the template installed in to your theme as
+``template_name.html``.
