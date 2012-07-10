@@ -15,6 +15,37 @@ CUR_DIR = os.path.dirname(__file__)
 
 class TestArticlesGenerator(unittest.TestCase):
 
+    def setUp(self):
+        super(TestArticlesGenerator, self).setUp()
+        self.generator = None
+
+    def get_populated_generator(self):
+        """
+        We only need to pull all the test articles once, but read from it
+         for each test.
+        """
+        if self.generator is None:
+            settings = _DEFAULT_CONFIG.copy()
+            settings['ARTICLE_DIR'] = 'content'
+            settings['DEFAULT_CATEGORY'] = 'Default'
+            self.generator = ArticlesGenerator(settings.copy(), settings,
+                                CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
+                                _DEFAULT_CONFIG['MARKUP'])
+            self.generator.generate_context()
+        return self.generator
+
+    def distill_articles(self, articles):
+        distilled = []
+        for page in articles:
+           distilled.append([
+                    page.title,
+                    page.status,
+                    page.category.name,
+                    page.template
+                ]
+           )
+        return distilled
+
     def test_generate_feeds(self):
 
         generator = ArticlesGenerator(None, {'FEED': _DEFAULT_CONFIG['FEED']},
@@ -95,21 +126,32 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_count == 0
 
+    def test_per_article_template(self):
+        """
+        Custom template articles get the field but standard/unset are None
+        """
+        generator = self.get_populated_generator()
+        articles = self.distill_articles(generator.articles)
+        custom_template = ['Article with template', 'published', 'Default', 'custom']
+        standard_template = ['This is a super article !', 'published', 'Yeah', 'article']
+        self.assertIn(custom_template, articles)
+        self.assertIn(standard_template, articles)
 
 class TestPageGenerator(unittest.TestCase):
     """
     Every time you want to test for a new field;
     Make sure the test pages in "TestPages" have all the fields
-    Add it to distilled in distill_pages_for_test
+    Add it to distilled in distill_pages
     Then update the assertItemsEqual in test_generate_context to match expected
     """
 
-    def distill_pages_for_test(self, pages):
+    def distill_pages(self, pages):
         distilled = []
         for page in pages:
            distilled.append([
                     page.title,
-                    page.status
+                    page.status,
+                    page.template
                 ]
            )
         return distilled
@@ -122,16 +164,18 @@ class TestPageGenerator(unittest.TestCase):
                                       _DEFAULT_CONFIG['THEME'], None,
                                       _DEFAULT_CONFIG['MARKUP'])
         generator.generate_context()
-        pages = self.distill_pages_for_test(generator.pages)
-        hidden_pages = self.distill_pages_for_test(generator.hidden_pages)
+        pages = self.distill_pages(generator.pages)
+        hidden_pages = self.distill_pages(generator.hidden_pages)
 
         pages_expected = [
-            [u'This is a test page', 'published'],
-            [u'This is a markdown test page', 'published']
+            [u'This is a test page', 'published', 'page'],
+            [u'This is a markdown test page', 'published', 'page'],
+            [u'This is a test page with a preset template', 'published', 'custom']
         ]
         hidden_pages_expected = [
-            [u'This is a test hidden page', 'hidden'],
-            [u'This is a markdown test hidden page', 'hidden']
+            [u'This is a test hidden page', 'hidden', 'page'],
+            [u'This is a markdown test hidden page', 'hidden', 'page'],
+            [u'This is a test hidden page with a custom template', 'hidden', 'custom']
         ]
 
         self.assertItemsEqual(pages_expected,pages)
