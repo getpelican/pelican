@@ -116,6 +116,7 @@ class ArticlesGenerator(Generator):
         self.dates = {}
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
+        self.related_posts = []
         self.authors = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
@@ -344,8 +345,14 @@ class ArticlesGenerator(Generator):
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
 
+        for article in self.articles:
+            article.related_posts = []
+            print article
+            potential_related = all_articles.remove(article)
+            article.related_posts = potential_related[:5]
+    
         self._update_context(('articles', 'dates', 'tags', 'categories',
-                              'tag_cloud', 'authors'))
+                              'tag_cloud', 'authors', 'related_posts'))
 
     def generate_output(self, writer):
         self.generate_feeds(writer)
