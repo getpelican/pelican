@@ -344,14 +344,40 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-
+        
+        # related_posts
         for article in self.articles:
             article.related_posts = []
-            print article
-            potential_related = all_articles.remove(article)
-            article.related_posts = potential_related[:5]
-    
-        self._update_context(('articles', 'dates', 'tags', 'categories',
+            relation_score = {}
+            if article.tags:
+                article_tags = article.tags
+                for tag in article_tags:
+                    try:
+                        for related_article in self.tags[tag]:
+                            article.related_posts.append(related_article)
+                        article.related_posts.reverse()
+
+                    except:
+                        article.related_posts = potential_related[:5]
+
+            elif len(article.related_posts) == 0:  # article doesn't have tags
+                print "No tags for ", article.title
+                article.related_posts = all_articles[:5].reverse()
+
+            relation_score = dict( \
+                zip(set(article.related_posts), \
+                map(article.related_posts.count, \
+                set(article.related_posts))))
+
+            ranked_related = sorted(relation_score, key=relation_score.get)
+            article.related_posts = ranked_related
+
+            try:  # make sure article doesn't appear in its own related posts
+                article.related_posts.remove(article)
+            except:
+                pass
+            
+            self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
     def generate_output(self, writer):
