@@ -47,8 +47,5 @@ def add_related_posts(generator, metadata):
         
         metadata["related_posts"] = ranked_related[:5]
 
-    else:
-        return
-
 def register():
     signals.article_generate_context.connect(add_related_posts)
