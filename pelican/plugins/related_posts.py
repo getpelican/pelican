@@ -5,7 +5,29 @@ Related posts plugin for Pelican
 ================================
 
 Adds related_posts variable to article's context
+
+Settings
+--------
+To enable, add 
+    
+    from pelican.plugins import related_posts
+    PLUGINS = [related_posts]
+
+to your settings.py.
+
+Usage
+-----
+    {% if article.related_posts %}
+        <ul>
+        {% for related_post in article.related_posts %}
+            <li>{{ related_post }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+
 """
+
 related_posts = []
 def add_related_posts(generator, metadata):
     if 'tags' in metadata:
