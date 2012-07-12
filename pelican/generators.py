@@ -372,7 +372,7 @@ class PagesGenerator(Generator):
             try:
                 content, metadata = read_file(f)
             except Exception, e:
-                logger.error(u'Could not process %s\n%s' % (f, str(e)))
+                logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
             page = Page(content, metadata, settings=self.settings,
                         filename=f)
