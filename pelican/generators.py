@@ -196,7 +196,7 @@ class ArticlesGenerator(Generator):
             write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'tag/%s' % tag)
+                page_name=self.settings.get('TAG_URL', u'tag/%s') % tag)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -206,7 +206,7 @@ class ArticlesGenerator(Generator):
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'category/%s' % cat)
+                page_name=self.settings.get('CATEGORY_URL', u'category/%s') % cat)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -216,7 +216,7 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'author/%s' % aut)
+                page_name=self.settings.get('AUTHOR_URL', u'author/%s') % aut)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
