@@ -258,7 +258,13 @@ def main():
 
                     time.sleep(.5)  # sleep to avoid cpu load
                 except KeyboardInterrupt:
+                    logger.warning("Keyboard interrupt, quitting.")
                     break
+                except Exception, e:
+                    logger.warning(
+                        "Caught exception \"{}\". Reloading.".format(e)
+                    )
+                    continue
         else:
             pelican.run()
     except Exception, e:
