@@ -160,7 +160,8 @@ Please answer the following questions so this script can generate the files need
     else:
         CONF['default_pagination'] = False
 
-    mkfile = ask('Do you want to generate a Makefile and develop server script to easily manage your website?', bool, True)
+    mkfile = ask('Do you want to generate a Makefile to easily manage your website?', bool, True)
+    develop = ask('Do you want to generate a local develop server init script?', bool, True)
 
     if mkfile:
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
@@ -204,7 +205,6 @@ Please answer the following questions so this script can generate the files need
         print('Error: {0}'.format(e))
 
     if mkfile:
-
         try:
             with open(os.path.join(CONF['basedir'], 'Makefile'), 'w') as fd:
                 for line in get_template('Makefile'):
@@ -214,6 +214,7 @@ Please answer the following questions so this script can generate the files need
         except OSError, e:
             print('Error: {0}'.format(e))
 
+    if develop:
         try:
             with open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w') as fd:
                 for line in get_template('develop_server.sh'):
