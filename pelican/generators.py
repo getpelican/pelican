@@ -270,9 +270,13 @@ class ArticlesGenerator(Generator):
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
 
-            if 'date' not in metadata and self.settings['FALLBACK_ON_FS_DATE']:
+            if 'date' not in metadata and self.settings['DEFAULT_DATE']:
+                if self.settings['DEFAULT_DATE'] == 'fs':
                     metadata['date'] = datetime.datetime.fromtimestamp(
-                                        os.stat(f).st_ctime)
+                            os.stat(f).st_ctime)
+                else:
+                    metadata['date'] = datetime.datetime(
+                            *self.settings['DEFAULT_DATE'])
 
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,

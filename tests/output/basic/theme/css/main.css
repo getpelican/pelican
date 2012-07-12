@@ -111,6 +111,13 @@ cite {}
 
 q {}
 
+div.note {
+   float: right;
+   margin: 5px;
+   font-size: 85%;
+   max-width: 300px;
+}
+
 /* Tables */
 table {margin: .5em auto 1.5em auto; width: 98%;}
 	

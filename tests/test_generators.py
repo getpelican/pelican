@@ -3,10 +3,12 @@
 from mock import MagicMock
 import os
 import re
+from tempfile import mkdtemp
+from shutil import rmtree
 
 from pelican.generators import ArticlesGenerator, LessCSSGenerator, PagesGenerator
 from pelican.settings import _DEFAULT_CONFIG
-from .support import unittest, temporary_folder, skipIfNoExecutable
+from .support import unittest, skipIfNoExecutable
 
 CUR_DIR = os.path.dirname(__file__)
 
@@ -193,6 +195,14 @@ class TestLessCSSGenerator(unittest.TestCase):
         }
     """
 
+    def setUp(self):
+        self.temp_content = mkdtemp()
+        self.temp_output = mkdtemp()
+
+    def tearDown(self):
+        rmtree(self.temp_content)
+        rmtree(self.temp_output)
+
     @skipIfNoExecutable('lessc')
     def test_less_compiler(self):
 
@@ -200,28 +210,25 @@ class TestLessCSSGenerator(unittest.TestCase):
         settings['STATIC_PATHS'] = ['static']
         settings['LESS_GENERATOR'] = True
 
-        # we'll nest here for py < 2.7 compat
-        with temporary_folder() as temp_content:
-            with temporary_folder() as temp_output:
-                generator = LessCSSGenerator(None, settings, temp_content,
-                                _DEFAULT_CONFIG['THEME'], temp_output, None)
+        generator = LessCSSGenerator(None, settings, self.temp_content,
+                        _DEFAULT_CONFIG['THEME'], self.temp_output, None)
 
-                # create a dummy less file
-                less_dir = os.path.join(temp_content, 'static', 'css')
-                less_filename = os.path.join(less_dir, 'test.less')
+        # create a dummy less file
+        less_dir = os.path.join(self.temp_content, 'static', 'css')
+        less_filename = os.path.join(less_dir, 'test.less')
 
-                less_output = os.path.join(temp_output, 'static', 'css',
-                                    'test.css')
+        less_output = os.path.join(self.temp_output, 'static', 'css',
+                            'test.css')
 
-                os.makedirs(less_dir)
-                with open(less_filename, 'w') as less_file:
-                    less_file.write(self.LESS_CONTENT)
+        os.makedirs(less_dir)
+        with open(less_filename, 'w') as less_file:
+            less_file.write(self.LESS_CONTENT)
 
-                generator.generate_output()
+        generator.generate_output()
 
-                # we have the file ?
-                self.assertTrue(os.path.exists(less_output))
+        # we have the file ?
+        self.assertTrue(os.path.exists(less_output))
 
-                # was it compiled ?
-                self.assertIsNotNone(re.search(r'^\s+color:\s*#4D926F;$',
-                    open(less_output).read(), re.MULTILINE | re.IGNORECASE))
+        # was it compiled ?
+        self.assertIsNotNone(re.search(r'^\s+color:\s*#4D926F;$',
+            open(less_output).read(), re.MULTILINE | re.IGNORECASE))

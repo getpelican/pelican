@@ -39,6 +39,14 @@ The tests live in "pelican/tests" and you can run them using the
 
     $ unit2 discover
 
+If you have made changes that affect the output of a pelican generated weblog,
+then you should update the output used by functional tests.
+To do so, you can use the 2 following commands::
+
+    $ LC_ALL="C" pelican -o tests/output/custom/ -s samples/pelican.conf.py \
+        samples/content/
+    $ LC_ALL="C" USER="Dummy Author" pelican -o tests/output/basic/ samples/content/
+
 Coding standards
 ================
 

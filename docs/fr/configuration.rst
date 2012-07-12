@@ -133,8 +133,12 @@ Pelican est fournit avec :doc:`pelican-themes`, un script permettant de gérer l
 Paramètres divers
 =================
 
-FALLBACK_ON_FS_DATE :
-	Si *True*, Pelican se basera sur le *mtime* du fichier s'il n'y a pas de date spécifiée dans le fichier de l'article ;
+DEFAULT_DATE:
+    Date par défaut à utiliser si l'information de date n'est pas spécifiée
+    dans les metadonnées de l'article.
+    Si 'fs', Pelican se basera sur le *mtime* du fichier.
+    Si c'est un tuple, il sera passé au constructeur datetime.datetime pour
+    générer l'objet datetime utilisé par défaut.
 
 KEEP_OUTPUT DIRECTORY :
 	Ne génère que les fichiers modifiés et n'efface pas le repertoire de sortie ;

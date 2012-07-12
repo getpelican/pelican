@@ -33,9 +33,13 @@ Setting name (default value)                                            What doe
 `DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
                                                                         template. Templates may or not honor this
                                                                         setting.
-`FALLBACK_ON_FS_DATE` (``True``)                                        If True, Pelican will use the file system
+`DEFAULT_DATE` (``fs``)                                                 The default date you want to use.
+                                                                        If 'fs', Pelican will use the file system
                                                                         timestamp information (mtime) if it can't get
                                                                         date information from the metadata.
+                                                                        If tuple object, it will instead generate the
+                                                                        default datetime object by passing the tuple to
+                                                                        the datetime.datetime constructor.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
                                                                         generating new files.
