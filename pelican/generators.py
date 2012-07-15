@@ -128,7 +128,7 @@ class ArticlesGenerator(Generator):
             return
         elif self.settings.get('SITEURL') is '':
             logger.warning(
-                'Feeds generated without SITEURL set properly may not be vaild'
+                'Feeds generated without SITEURL set properly may not be valid'
             )
 
         if self.settings.get('FEED'):

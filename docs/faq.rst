@@ -71,8 +71,8 @@ word None should not be surrounded by quotes.
 I'm getting a warning about Feeds generated without SITEURL being set properly
 ==============================================================================
 
-RSS and arom3 feeds require all URLs and links in them to be absolute. In order
-to properly generate all URLs properly in perlican you will need to set
+RSS and atom3 feeds require all URLs and links in them to be absolute. In order
+to properly generate all URLs properly in pelican you will need to set
 ``SITEURL`` to the full path of your blog. By default, when using the ``make html``
 to test build your site ``SITEURL`` is disabled so you should receive this
 warning.
