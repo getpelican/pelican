@@ -364,7 +364,7 @@ Ordering content
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`REVERSE_ARCHIVE_ORDER` (``False``)                 Reverse the archives list order. (True: orders by date
+`REVERSE_ARCHIVE_ORDER` (``True``)                 Reverse the archives list order. (True: orders by date
                                                     in descending order, with newer articles first.)
 `REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse
                                                     alphabetical order; default lists alphabetically.)
