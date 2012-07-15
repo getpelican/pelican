@@ -124,6 +124,12 @@ class ArticlesGenerator(Generator):
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
+        if self.settings.get('FEED') is None and self.settings.get('FEED_RSS') is None:
+            return
+        elif self.settings.get('SITEURL') is '':
+            logger.warning(
+                'Feeds generated without SITEURL set properly may not be vaild'
+            )
 
         if self.settings.get('FEED'):
             writer.write_feed(self.articles, self.context,

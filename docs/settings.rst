@@ -274,7 +274,8 @@ Setting name (default value)                        What does it do?
 ================================================    =====================================================
 
 If you don't want to generate some of these feeds, set ``None`` to the
-variables above.
+variables above. If you don't want to generate any feeds set both ``FEED``
+and ``FEED_RSS`` to none.
 
 .. [2] %s is the name of the category.
 
