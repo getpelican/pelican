@@ -161,6 +161,7 @@ Please answer the following questions so this script can generate the files need
         CONF['default_pagination'] = False
 
     mkfile = ask('Do you want to generate a Makefile to easily manage your website?', bool, True)
+    develop = ask('Do you want an auto-reload & simpleHTTP script to assist with theme and site development?', bool, True)
 
     if mkfile:
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
@@ -204,10 +205,19 @@ Please answer the following questions so this script can generate the files need
         print('Error: {0}'.format(e))
 
     if mkfile:
-
         try:
             with open(os.path.join(CONF['basedir'], 'Makefile'), 'w') as fd:
                 for line in get_template('Makefile'):
+                    template = string.Template(line)
+                    fd.write(template.safe_substitute(CONF))
+                fd.close()
+        except OSError, e:
+            print('Error: {0}'.format(e))
+
+    if develop:
+        try:
+            with open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w') as fd:
+                for line in get_template('develop_server.sh'):
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
