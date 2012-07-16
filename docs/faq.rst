@@ -79,3 +79,36 @@ warning.
 If configured properly no other make commands should have this message.
 
 Feeds still are generated when this error comes up, but may not validate.
+
+My feeds are broken since I upgraded to 3.0
+===========================================
+
+Starting in 3.0 we changed the more confusing FEED options to say FEED_ATOM
+like the RRS feed options. Here is an exact list of the changes::
+
+    FEED -> FEED_ATOM
+    TAG_FEED -> TAG_FEED_ATOM
+    CATEGORY_FEED -> CATEGORY_FEED_ATOM
+
+Older 2.x themes that referenced these may not link properly. Please update
+your themes for 3 on. Here is some example code you can use for the header
+
+.. code-block:: html+jinja
+    {% if FEED_ATOM %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+    {% endif %}
+    {% if FEED_RSS %}
+    <link href="{{ FEED_DOMAIN }}/{{ FEED_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+    {% endif %}
+    {% if CATEGORY_FEED_ATOM %}
+    <link href="{{ FEED_DOMAIN }}/{{ CATEGORY_FEED_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Categories Atom Feed" />
+    {% endif %}
+    {% if CATEGORY_FEED_RSS %}
+    <link href="{{ FEED_DOMAIN }}/{{ CATEGORY_FEED_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} Categories RSS Feed" />
+    {% endif %}
+    {% if TAG_FEED_ATOM %}
+    <link href="{{ FEED_DOMAIN }}/{{ TAG_FEED_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Tags Atom Feed" />
+    {% endif %}
+    {% if TAG_FEED_RSS %}
+    <link href="{{ FEED_DOMAIN }}/{{ TAG_FEED_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} Tags RSS Feed" />
+    {% endif %}
