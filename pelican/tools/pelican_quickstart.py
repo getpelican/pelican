@@ -161,7 +161,7 @@ Please answer the following questions so this script can generate the files need
         CONF['default_pagination'] = False
 
     mkfile = ask('Do you want to generate a Makefile to easily manage your website?', bool, True)
-    develop = ask('Do you want to generate a local develop server init script?', bool, True)
+    develop = ask('Do you want an auto-reload & simpleHTTP script to assist with theme and site development?', bool, True)
 
     if mkfile:
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
