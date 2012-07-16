@@ -124,16 +124,16 @@ class ArticlesGenerator(Generator):
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
-        if self.settings.get('FEED') is None and self.settings.get('FEED_RSS') is None:
+        if self.settings.get('FEED_ATOM') is None and self.settings.get('FEED_RSS') is None:
             return
         elif self.settings.get('SITEURL') is '':
             logger.warning(
                 'Feeds generated without SITEURL set properly may not be valid'
             )
 
-        if self.settings.get('FEED'):
+        if self.settings.get('FEED_ATOM'):
             writer.write_feed(self.articles, self.context,
-                              self.settings['FEED'])
+                              self.settings['FEED_ATOM'])
 
         if self.settings.get('FEED_RSS'):
             writer.write_feed(self.articles, self.context,
@@ -141,21 +141,21 @@ class ArticlesGenerator(Generator):
 
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
-            if self.settings.get('CATEGORY_FEED'):
+            if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED'] % cat)
+                                  self.settings['CATEGORY_FEED_ATOM'] % cat)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_RSS'] % cat,
                                   feed_type='rss')
 
-        if self.settings.get('TAG_FEED') or self.settings.get('TAG_FEED_RSS'):
+        if self.settings.get('TAG_FEED_ATOM') or self.settings.get('TAG_FEED_RSS'):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
-                if self.settings.get('TAG_FEED'):
+                if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED'] % tag)
+                                      self.settings['TAG_FEED_ATOM'] % tag)
 
                 if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,

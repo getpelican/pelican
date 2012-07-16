@@ -52,19 +52,19 @@ détails au prochain chapitre.
 Flux de syndication
 ===================
 
-CATEGORY_FEED : 
+CATEGORY_FEED_ATOM :
 	Chemin d’écriture des flux Atom liés aux catégories ;
 
 CATEGORY_FEED_RSS : 
 	Idem pour les flux rss (Optionnel);
 
-FEED :
+FEED_ATOM :
 	Chemin du flux Atom global ;
 
 FEED_RSS :
 	Chemin du flux Rss global (Optionnel);
 
-TAG_FEED :
+TAG_FEED_ATOM :
 	Chemin des flux Atom pour les tags (Optionnel);
 
 TAG_FEED_RSS :

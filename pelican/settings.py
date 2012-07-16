@@ -21,8 +21,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'MARKUP': ('rst', 'md'),
                    'STATIC_PATHS': ['images', ],
                    'THEME_STATIC_PATHS': ['static', ],
-                   'FEED': 'feeds/all.atom.xml',
-                   'CATEGORY_FEED': 'feeds/%s.atom.xml',
+                   'FEED_ATOM': 'feeds/all.atom.xml',
+                   'CATEGORY_FEED_ATOM': 'feeds/%s.atom.xml',
                    'TRANSLATION_FEED': 'feeds/all-%s.atom.xml',
                    'FEED_MAX_ITEMS': '',
                    'SITEURL': '',
@@ -143,7 +143,7 @@ def configure_settings(settings, default_settings=None, filename=None):
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    if (('FEED' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
+    if (('FEED_ATOM' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
         logger.warn("Since feed URLs should always be absolute, you should specify "
                  "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
                  "http://www.example.com')")

@@ -64,7 +64,7 @@ Then just make sure to have the template installed in to your theme as
 What if I want to disable feed generation?
 ==========================================
 
-To disable all feed generation set ``FEED`` and ``FEED_RSS`` to ``None`` in
+To disable all feed generation set ``FEED_ATOM`` and ``FEED_RSS`` to ``None`` in
 your settings. Please note ``None`` and ``''`` are not the same thing. The
 word None should not be surrounded by quotes.
 
