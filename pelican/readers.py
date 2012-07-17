@@ -63,6 +63,18 @@ def render_node_to_html(document, node):
     return visitor.astext()
 
 
+class PelicanHTMLTranslator(HTMLTranslator):
+
+    def visit_abbreviation(self, node):
+        attrs = {}
+        if node.hasattr('explanation'):
+            attrs['title'] = node['explanation']
+        self.body.append(self.starttag(node, 'abbr', '', **attrs))
+
+    def depart_abbreviation(self, node):
+        self.body.append('</abbr>')
+
+
 class RstReader(Reader):
     enabled = bool(docutils)
     file_extensions = ['rst']
@@ -92,6 +104,7 @@ class RstReader(Reader):
         pub = docutils.core.Publisher(
                 destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
+        pub.writer.translator_class = PelicanHTMLTranslator
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=filename)
         pub.publish()
