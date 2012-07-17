@@ -47,7 +47,9 @@ class RstReaderTest(unittest.TestCase):
         # unmodified
         content, _ = readers.read_file(_filename('article.rst'))
         expected = "<p>This is some content. With some stuff to "\
-                   "&quot;typogrify&quot;.</p>\n"
+                   "&quot;typogrify&quot;.</p>\n<p>Now with added "\
+                   'support for <abbr title="three letter acronym">'\
+                   'TLA</abbr>.</p>\n'
 
         self.assertEqual(content, expected)
 
@@ -56,7 +58,9 @@ class RstReaderTest(unittest.TestCase):
             content, _ = readers.read_file(_filename('article.rst'),
                                            settings={'TYPOGRIFY': True})
             expected = "<p>This is some content. With some stuff to&nbsp;"\
-                       "&#8220;typogrify&#8221;.</p>\n"
+                       "&#8220;typogrify&#8221;.</p>\n<p>Now with added "\
+                       'support for <abbr title="three letter acronym">'\
+                       'TLA</abbr>.</p>\n'
 
             self.assertEqual(content, expected)
         except ImportError:
