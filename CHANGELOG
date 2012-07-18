@@ -13,6 +13,7 @@
 * Added functional tests
 * Rsync support in the generated Makefile
 * Improved feed support (easily pluggable with feedburner for instance)
+* Added support for abbr in reST
 
 2.8
 
