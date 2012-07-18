@@ -1,4 +1,8 @@
+Release history
+###############
+
 3.0 - XX/XX/XXXX
+================
 
 * Refactored the way URL are handled.
 * Improved the english documentation
@@ -16,6 +20,7 @@
 * Added support for abbr in reST
 
 2.8
+===
 
 * dotclear importer
 * Allow the usage of markdown extensions
@@ -35,6 +40,7 @@
 * Enhanced the documentation
 
 2.7
+===
 
 * Uses logging rather than echoing to stdout
 * Support custom jinja filters
@@ -44,6 +50,7 @@
 * Add draft support
 
 2.6
+===
 
 * changes in the output directory structure
 * makes templates easier to work with / create
@@ -61,6 +68,7 @@
 * Add skribit support
 
 2.5
+===
 
 * import from wordpress
 * add some new themes (martyalchin / wide-notmyidea)
@@ -72,6 +80,7 @@
 * use relative urls not static ones
 
 2.4
+===
 
 * minor themes changes
 * add disqus support (so we have comments)
@@ -80,30 +89,36 @@
 * blog entries can also be generated in pdf
 
 2.3
+===
 
 * markdown support
 
 2.2
+===
 
 * Prettify output
 * Manages static pages as well
 
 2.1
+===
 
 * Put the notmyidea theme by default
 
 2.0
+===
 
 * Refactoring to be more extensible
 * Change into the setting variables
 
 1.2
+===
 
 * Add a debug option
 * Add feeds per category
 * Use filsystem to get dates if no metadata provided
 * Add pygment support
 
-1.1:
+1.1
+===
 
 * first working version
