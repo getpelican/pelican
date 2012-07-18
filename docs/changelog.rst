@@ -4,94 +4,94 @@ Release history
 3.0 - XX/XX/XXXX
 ================
 
-* Refactored the way URL are handled.
-* Improved the english documentation
-* Fixed packaging using setuptools entrypoints
-* Added typogrify support
+* Refactored the way URLs are handled
+* Improved the English documentation
+* Fixed packaging using ``setuptools`` entrypoints
+* Added ``typogrify`` support
 * Added a way to disable feed generation
-* Added support for DIRECT_TEMPLATES
+* Added support for ``DIRECT_TEMPLATES``
 * Allow multiple extensions for content files
 * Added less support
 * Improved the import script
 * Fixed a bunch of bugs :-)
 * Added functional tests
 * Rsync support in the generated Makefile
-* Improved feed support (easily pluggable with feedburner for instance)
-* Added support for abbr in reST
+* Improved feed support (easily pluggable with Feedburner for instance)
+* Added support for ``abbr`` in reST
 
 2.8
 ===
 
-* dotclear importer
-* Allow the usage of markdown extensions
+* Dotclear importer
+* Allow the usage of Markdown extensions
 * Themes are now easily extensible
-* Don't output pagination information if there is only one page.
+* Don't output pagination information if there is only one page
 * Add a page per author, with all their articles
 * Improved the test suite
-* Made the themes more easy to extend
+* Made the themes easier to extend
 * Removed Skribit support
-* Added a "pelican-quickstart" script
+* Added a ``pelican-quickstart`` script
 * Fixed timezone-related issues
-* Add some scripts for windows support
+* Added some scripts for Windows support
 * Date can be specified in seconds
 * Never fail when generating posts (skip and continue)
 * Allow the use of future dates
-* Support having different timezones per languages.
+* Support having different timezones per language
 * Enhanced the documentation
 
 2.7
 ===
 
-* Uses logging rather than echoing to stdout
-* Support custom jinja filters
-* Compatibility with python 2.5
-* Add a theme manager
-* Packaged for debian
-* Add draft support
+* Use ``logging`` rather than echoing to stdout
+* Support custom Jinja filters
+* Compatibility with Python 2.5
+* Added a theme manager
+* Packaged for Debian
+* Added draft support
 
 2.6
 ===
 
-* changes in the output directory structure
-* makes templates easier to work with / create
-* Add RSS support (was only atom previously)
-* Add tag support for the feeds
+* Changes in the output directory structure
+* Makes templates easier to work with / create
+* Added RSS support (was Atom-only)
+* Added tag support for the feeds
 * Enhance the documentation
-* Add another theme (brownstone)
-* Add translations
-* Add a way to use "cleaner urls" with a rewrite url module (or equivalent)
-* Add a tag cloud
-* Add an autoreloading feature: the blog is automatically regenerated each time a modification is detected
-* Translate the documentation in french
-* import a blog from an rss feed
+* Added another theme (brownstone)
+* Added translations
+* Added a way to use cleaner URLs with a rewrite url module (or equivalent)
+* Added a tag cloud
+* Added an autoreloading feature: the blog is automatically regenerated each time a modification is detected
+* Translate the documentation into French
+* Import a blog from an RSS feed
 * Pagination support
-* Add skribit support
+* Added Skribit support
 
 2.5
 ===
 
-* import from wordpress
-* add some new themes (martyalchin / wide-notmyidea)
-* first bug report !
-* linkedin support
-* added a FAQ
-* google analytics support
-* twitter support
-* use relative urls not static ones
+* Import from Wordpress
+* Added some new themes (martyalchin / wide-notmyidea)
+* First bug report!
+* Linkedin support
+* Added a FAQ
+* Google Analytics support
+* Twitter support
+* Use relative URLs, not static ones
 
 2.4
 ===
 
-* minor themes changes
-* add disqus support (so we have comments)
-* another code refactoring
-* add config settings about pages
-* blog entries can also be generated in pdf
+* Minor themes changes
+* Add Disqus support (so we have comments)
+* Another code refactoring
+* Added config settings about pages
+* Blog entries can also be generated in PDF
 
 2.3
 ===
 
-* markdown support
+* Markdown support
 
 2.2
 ===
@@ -102,7 +102,7 @@ Release history
 2.1
 ===
 
-* Put the notmyidea theme by default
+* Make notmyidea the default theme
 
 2.0
 ===
@@ -113,12 +113,12 @@ Release history
 1.2
 ===
 
-* Add a debug option
-* Add feeds per category
-* Use filsystem to get dates if no metadata provided
-* Add pygment support
+* Added a debug option
+* Added per-category feeds
+* Use filesystem to get dates if no metadata is provided
+* Add Pygments support
 
 1.1
 ===
 
-* first working version
+* First working version
