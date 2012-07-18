@@ -69,3 +69,4 @@ A French version of the documentation is available at :doc:`fr/index`.
    tips
    contribute
    report
+   changelog

@@ -142,6 +142,11 @@ following syntax (give your file the ``.rst`` extension)::
     :category: yeah
     :author: Alexis Metaireau
 
+Pelican implements an extension of reStructuredText to enable support for the
+``abbr`` HTML tag. To use it, write something like this in your post::
+
+    This will be turned into :abbr:`HTML (HyperText Markup Language)`.
+
 You can also use Markdown syntax (with a file ending in ``.md``).
 Markdown generation will not work until you explicitly install the ``Markdown``
 package, which can be done via ``pip install Markdown``. Metadata syntax for
