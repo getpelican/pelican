@@ -1,7 +1,7 @@
 Release history
 ###############
 
-3.0 - XX/XX/XXXX
+3.0 (XXXX-XX-XX)
 ================
 
 * Refactored the way URLs are handled
@@ -19,8 +19,8 @@ Release history
 * Improved feed support (easily pluggable with Feedburner for instance)
 * Added support for ``abbr`` in reST
 
-2.8
-===
+2.8 (2012-02-28)
+================
 
 * Dotclear importer
 * Allow the usage of Markdown extensions
@@ -39,8 +39,8 @@ Release history
 * Support having different timezones per language
 * Enhanced the documentation
 
-2.7
-===
+2.7.0 (2011-06-11)
+==================
 
 * Use ``logging`` rather than echoing to stdout
 * Support custom Jinja filters
@@ -49,8 +49,8 @@ Release history
 * Packaged for Debian
 * Added draft support
 
-2.6
-===
+2.6.0 (2011-03-08)
+==================
 
 * Changes in the output directory structure
 * Makes templates easier to work with / create
@@ -67,8 +67,8 @@ Release history
 * Pagination support
 * Added Skribit support
 
-2.5
-===
+2.5.0 (2010-11-20)
+==================
 
 * Import from Wordpress
 * Added some new themes (martyalchin / wide-notmyidea)
@@ -79,8 +79,8 @@ Release history
 * Twitter support
 * Use relative URLs, not static ones
 
-2.4
-===
+2.4 (2010-11-06)
+================
 
 * Minor themes changes
 * Add Disqus support (so we have comments)
@@ -88,37 +88,37 @@ Release history
 * Added config settings about pages
 * Blog entries can also be generated in PDF
 
-2.3
-===
+2.3 (2010-10-31)
+================
 
 * Markdown support
 
-2.2
-===
+2.2 (2010-10-30)
+================
 
 * Prettify output
 * Manages static pages as well
 
-2.1
-===
+2.1 (2010-10-30)
+================
 
 * Make notmyidea the default theme
 
-2.0
-===
+2.0 (2010-10-30)
+================
 
 * Refactoring to be more extensible
 * Change into the setting variables
 
-1.2
-===
+1.2 (2010-09-28)
+================
 
 * Added a debug option
 * Added per-category feeds
 * Use filesystem to get dates if no metadata is provided
 * Add Pygments support
 
-1.1
-===
+1.1 (2010-08-19)
+================
 
 * First working version
