@@ -308,7 +308,7 @@ class ArticlesGenerator(Generator):
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
         self.dates.sort(key=attrgetter('date'),
-                reverse=self.context['REVERSE_ARCHIVE_ORDER'])
+                reverse=self.context['NEWEST_FIRST_ARCHIVES'])
 
         # create tag cloud
         tag_cloud = defaultdict(int)
