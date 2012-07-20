@@ -180,6 +180,18 @@ def install(path, v=False, u=False):
                 print("Copying `{p}' to `{t}' ...".format(p=path, t=theme_path))
             try:
                 shutil.copytree(path, theme_path)
+
+                try:
+                    if os.name == 'posix':
+                        for root, dirs, files in os.walk(theme_path):
+                            for d in dirs:
+                                dname = os.path.join(root, d)
+                                os.chmod(dname, 0755)
+                            for f in files:
+                                fname = os.path.join(root, f)
+                                os.chmod(fname, 0644)
+                except OSError, e:
+                    err("Cannot change permissions of files or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)), die=False)
             except Exception, e:
                 err("Cannot copy `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
