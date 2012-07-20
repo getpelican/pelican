@@ -60,8 +60,14 @@ class Pelican(object):
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
 
+        self.init_path()
         self.init_plugins()
         signals.initialized.send(self)
+
+    def init_path(self):
+        if not any(p in sys.path for p in ['', '.']):
+            logger.debug("Adding current directory to system path")
+            sys.path.insert(0, '')
 
     def init_plugins(self):
         self.plugins = self.settings['PLUGINS']
