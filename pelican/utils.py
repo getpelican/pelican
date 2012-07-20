@@ -49,6 +49,8 @@ def slugify(value):
     value = Markup(value).striptags()
     if type(value) == unicode:
         import unicodedata
+        from unidecode import unidecode
+        value = unicode(unidecode(value))
         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
