@@ -59,6 +59,8 @@ Signal                      Arguments                      Description
 initialized                 pelican object
 article_generate_context    article_generator, metadata
 article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
+pages_generate_context      pages_generator, metadata
+pages_generator_init        pages_generator                invoked in the PagesGenerator.__init__
 =========================   ============================   =========================================
 
 The list is currently small, don't hesitate to add signals and make a pull

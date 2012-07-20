@@ -363,7 +363,8 @@ class PagesGenerator(Generator):
         self.hidden_pages = []
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
-
+        signals.pages_generator_init.send(self)
+ 
     def generate_context(self):
         all_pages = []
         hidden_pages = []
@@ -388,6 +389,7 @@ class PagesGenerator(Generator):
                                (repr(unicode.encode(page.status, 'utf-8')),
                                 repr(f)))
 
+        signals.pages_generate_context.send(self,metadata=metadata) 
         self.pages, self.translations = process_translations(all_pages)
         self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
 
