@@ -111,7 +111,7 @@ LINKS :
 PDF_PROCESSOR :
 	Génère ou non les articles et pages au format pdf ;
 
-REVERSE_ARCHIVE_ORDER :
+NEWEST_FIRST_ARCHIVES :
 	Met les articles plus récent en tête de l'archive ;
 
 SOCIAL :
