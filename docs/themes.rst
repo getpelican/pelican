@@ -189,6 +189,22 @@ dates_page              The current page of articles, ordered by date,
 page_name               'tag/`tag_name`' -- useful for pagination links
 ===================     ===================================================
 
+Feeds
+=====
+
+The feed variables changed in 3.0. Each variable now explicitly lists ATOM or
+RSS in the name. ATOM is still the default. Old themes will need to be updated.
+Here is a complete list of the feed variables::
+
+    FEED_ATOM
+    FEED_RSS
+    CATEGORY_FEED_ATOM
+    CATEGORY_FEED_RSS
+    TAG_FEED_ATOM
+    TAG_FEED_RSS
+    TRANSLATION_FEED
+
+
 Inheritance
 ===========
 
