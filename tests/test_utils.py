@@ -41,7 +41,9 @@ class TestUtils(unittest.TestCase):
         samples = (('this is a test', 'this-is-a-test'),
                    ('this        is a test', 'this-is-a-test'),
                    (u'this → is ← a ↑ test', 'this-is-a-test'),
-                   ('this--is---a test', 'this-is-a-test'))
+                   ('this--is---a test', 'this-is-a-test'),
+                   (u'unicode測試許功蓋，你看到了嗎？', 'unicodece-shi-xu-gong-gai-ni-kan-dao-liao-ma'),
+                   (u'大飯原発４号機、１８日夜起動へ', 'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),)
 
         for value, expected in samples:
             self.assertEquals(utils.slugify(value), expected)
