@@ -60,3 +60,36 @@ want to have it's own template.
 
 Then just make sure to have the template installed in to your theme as
 ``template_name.html``.
+
+What if I want to disable feed generation?
+==========================================
+
+To disable all feed generation set ``FEED_ATOM`` and ``FEED_RSS`` to ``None`` in
+your settings. Please note ``None`` and ``''`` are not the same thing. The
+word None should not be surrounded by quotes.
+
+I'm getting a warning about Feeds generated without SITEURL being set properly
+==============================================================================
+
+`RSS and atom feeds require all URLs and links in them to be absolute <http://validator.w3.org/feed/docs/rss2.html#comments>`_.
+In order to properly generate all URLs properly in pelican you will need to set
+``SITEURL`` to the full path of your blog. By default, when using the ``make html``
+to test build your site ``SITEURL`` is disabled so you should receive this
+warning.
+If configured properly no other make commands should have this message.
+
+Feeds still are generated when this error comes up, but may not validate.
+
+My feeds are broken since I upgraded to 3.0
+===========================================
+
+Starting in 3.0 we changed the more confusing FEED options to say FEED_ATOM
+like the RRS feed options. Here is an exact list of the changes::
+
+    FEED -> FEED_ATOM
+    TAG_FEED -> TAG_FEED_ATOM
+    CATEGORY_FEED -> CATEGORY_FEED_ATOM
+
+Older 2.x themes that referenced these may not link properly. Please update
+your themes for 3 on. For an example of complete RSS headers and usage please
+check out the simple theme.

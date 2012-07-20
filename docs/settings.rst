@@ -251,7 +251,7 @@ feeds if you prefer.
 
 Pelican generates category feeds as well as feeds for all your articles. It does
 not generate feeds for tags by default, but it is possible to do so using
-the ``TAG_FEED`` and ``TAG_FEED_RSS`` settings:
+the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
@@ -262,11 +262,11 @@ Setting name (default value)                        What does it do?
                                                     you have already explicitly defined SITEURL (see
                                                     above) and want to use the same domain for your
                                                     feeds, you can just set:  `FEED_DOMAIN = SITEURL`
-`FEED` (``'feeds/all.atom.xml'``)                   Relative URL to output the Atom feed.
+`FEED_ATOM` (``'feeds/all.atom.xml'``)              Relative URL to output the Atom feed.
 `FEED_RSS` (``None``, i.e. no RSS)                  Relative URL to output the RSS feed.
-`CATEGORY_FEED` ('feeds/%s.atom.xml'[2]_)           Where to put the category Atom feeds.
+`CATEGORY_FEED_ATOM` ('feeds/%s.atom.xml'[2]_)      Where to put the category Atom feeds.
 `CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
-`TAG_FEED` (``None``, i.e. no tag feed)             Relative URL to output the tag Atom feed. It should
+`TAG_FEED_ATOM` (``None``, i.e. no tag feed)        Relative URL to output the tag Atom feed. It should
                                                     be defined using a "%s" match in the tag name.
 `TAG_FEED_RSS` (``None``, ie no RSS tag feed)       Relative URL to output the tag RSS feed
 `FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feed item
@@ -274,7 +274,8 @@ Setting name (default value)                        What does it do?
 ================================================    =====================================================
 
 If you don't want to generate some of these feeds, set ``None`` to the
-variables above.
+variables above. If you don't want to generate any feeds set both ``FEED_ATOM``
+and ``FEED_RSS`` to none.
 
 .. [2] %s is the name of the category.
 
@@ -285,7 +286,7 @@ If you want to use FeedBurner for your feed, you will likely need to decide
 upon a unique identifier. For example, if your site were called "Thyme" and
 hosted on the www.example.com domain, you might use "thymefeeds" as your
 unique identifier, which we'll use throughout this section for illustrative
-purposes. In your Pelican settings, set the `FEED` attribute to
+purposes. In your Pelican settings, set the `FEED_ATOM` attribute to
 "thymefeeds/main.xml" to create an Atom feed with an original address of
 `http://www.example.com/thymefeeds/main.xml`. Set the `FEED_DOMAIN` attribute
 to `http://feeds.feedburner.com`, or `http://feeds.example.com` if you are

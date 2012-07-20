@@ -114,6 +114,27 @@ class Pelican(object):
                                                       self.settings[setting])
                 logger.warning("%s = '%s'" % (setting, self.settings[setting]))
 
+        if self.settings.get('FEED', False):
+            logger.warning('Found deprecated `FEED` in settings. Modify FEED'
+            ' to FEED_ATOM in your settings and theme for the same behavior.'
+            ' Temporarily setting FEED_ATOM for backwards compatibility.')
+            self.settings['FEED_ATOM'] = self.settings['FEED']
+
+        if self.settings.get('TAG_FEED', False):
+            logger.warning('Found deprecated `TAG_FEED` in settings. Modify '
+            ' TAG_FEED to TAG_FEED_ATOM in your settings and theme for the '
+            'same behavior. Temporarily setting TAG_FEED_ATOM for backwards '
+            'compatibility.')
+            self.settings['TAG_FEED_ATOM'] = self.settings['TAG_FEED']
+
+        if self.settings.get('CATEGORY_FEED', False):
+            logger.warning('Found deprecated `CATEGORY_FEED` in settings. '
+            'Modify CATEGORY_FEED to CATEGORY_FEED_ATOM in your settings and '
+            'theme for the same behavior. Temporarily setting '
+            'CATEGORY_FEED_ATOM for backwards compatibility.')
+            self.settings['CATEGORY_FEED_ATOM'] = self.settings['CATEGORY_FEED']
+
+
     def run(self):
         """Run the generators and return"""
 
