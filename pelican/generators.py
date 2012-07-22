@@ -382,6 +382,7 @@ class PagesGenerator(Generator):
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
+            signals.pages_generate_context.send(self, metadata=metadata )
             page = Page(content, metadata, settings=self.settings,
                         filename=f)
             if not is_valid_content(page, f):
@@ -395,7 +396,6 @@ class PagesGenerator(Generator):
                                (repr(unicode.encode(page.status, 'utf-8')),
                                 repr(f)))
 
-        signals.pages_generate_context.send(self,metadata=metadata) 
         self.pages, self.translations = process_translations(all_pages)
         self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
 
