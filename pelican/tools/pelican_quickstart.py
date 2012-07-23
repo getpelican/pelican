@@ -139,7 +139,7 @@ Please answer the following questions so this script can generate the files need
 
     '''.format(v=__version__))
 
-    project = os.path.join(os.environ['VIRTUAL_ENV'], '.project')
+    project = os.path.join(os.environ.get('VIRTUAL_ENV', '.'), '.project')
     if os.path.isfile(project):
         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
         print('Using project associated with current virtual environment. Will save to:\n%s\n' % CONF['basedir'])
