@@ -70,9 +70,6 @@ p {margin-bottom: 1.143em;}
 strong, b {font-weight: bold;}
 em, i {font-style: italic;}
 
-::-moz-selection {background: #F6CF74; color: #fff;}
-::selection {background: #F6CF74; color: #fff;}
-
 /* Lists */
 ul {
 	list-style: outside disc;
