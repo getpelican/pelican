@@ -22,9 +22,15 @@ __version__ = "{0}.{1}".format(__major__, __minor__)
 logger = logging.getLogger(__name__)
 
 
+def init_path():
+    if not any(p in sys.path for p in ['', '.']):
+        logger.debug("Adding current directory to system path")
+        sys.path.insert(0, '')
+
+
 class Pelican(object):
     def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, delete_outputdir=False, plugin_path=None):
+            markup=None, delete_outputdir=False):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
@@ -60,14 +66,9 @@ class Pelican(object):
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
 
-        self.init_path()
+        init_path()
         self.init_plugins()
         signals.initialized.send(self)
-
-    def init_path(self):
-        if not any(p in sys.path for p in ['', '.']):
-            logger.debug("Adding current directory to system path")
-            sys.path.insert(0, '')
 
     def init_plugins(self):
         self.plugins = self.settings['PLUGINS']
