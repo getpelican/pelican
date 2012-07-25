@@ -85,9 +85,9 @@ Setting name (default value)                                            What doe
                                                                         generated HTML, using the `Typogrify
                                                                         <http://static.mintchaos.com/projects/typogrify/>`_
                                                                         library
-`LESS_GENERATOR` (``FALSE``)                                            Set to True or complete path to `lessc` (if not
-                                                                        found in system PATH) to enable compiling less
-                                                                        css files. Requires installation of `less css`_.
+`ASSETS_GENERATOR` (``FALSE``)                                          Set to the complete path of the assets compiler
+                                                                        found in system PATH) to enable compiling less or sass
+                                                                        css files. Requires installation of `less css`_ or sass.
 `DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'archives')``)    List of templates that are used directly to render
                                                                         content. Typically direct templates are used to generate
                                                                         index pages for collections of content e.g. tags and

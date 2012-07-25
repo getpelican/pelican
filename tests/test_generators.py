@@ -6,7 +6,7 @@ import re
 from tempfile import mkdtemp
 from shutil import rmtree
 
-from pelican.generators import ArticlesGenerator, LessCSSGenerator, PagesGenerator
+from pelican.generators import ArticlesGenerator, CSSGenerator, PagesGenerator
 from pelican.settings import _DEFAULT_CONFIG
 from .support import unittest, skipIfNoExecutable
 
@@ -37,7 +37,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def distill_articles(self, articles):
         distilled = []
         for page in articles:
-           distilled.append([
+            distilled.append([
                     page.title,
                     page.status,
                     page.category.name,
@@ -48,9 +48,9 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_feeds(self):
 
-        generator = ArticlesGenerator(None, {'FEED_ATOM': _DEFAULT_CONFIG['FEED_ATOM']},
-                                      None, _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+        generator = ArticlesGenerator(None, {'FEED_ATOM':
+            _DEFAULT_CONFIG['FEED_ATOM']}, None, _DEFAULT_CONFIG['THEME'],
+            None, _DEFAULT_CONFIG['MARKUP'])
         writer = MagicMock()
         generator.generate_feeds(writer)
         writer.write_feed.assert_called_with([], None, 'feeds/all.atom.xml')
@@ -132,10 +132,13 @@ class TestArticlesGenerator(unittest.TestCase):
         """
         generator = self.get_populated_generator()
         articles = self.distill_articles(generator.articles)
-        custom_template = ['Article with template', 'published', 'Default', 'custom']
-        standard_template = ['This is a super article !', 'published', 'Yeah', 'article']
+        custom_template = ['Article with template', 'published', 'Default',
+                           'custom']
+        standard_template = ['This is a super article !', 'published', 'Yeah',
+                             'article']
         self.assertIn(custom_template, articles)
         self.assertIn(standard_template, articles)
+
 
 class TestPageGenerator(unittest.TestCase):
     """
@@ -148,7 +151,7 @@ class TestPageGenerator(unittest.TestCase):
     def distill_pages(self, pages):
         distilled = []
         for page in pages:
-           distilled.append([
+            distilled.append([
                     page.title,
                     page.status,
                     page.template
@@ -170,19 +173,21 @@ class TestPageGenerator(unittest.TestCase):
         pages_expected = [
             [u'This is a test page', 'published', 'page'],
             [u'This is a markdown test page', 'published', 'page'],
-            [u'This is a test page with a preset template', 'published', 'custom']
+            [u'This is a test page with a preset template', 'published',
+              'custom']
         ]
         hidden_pages_expected = [
             [u'This is a test hidden page', 'hidden', 'page'],
             [u'This is a markdown test hidden page', 'hidden', 'page'],
-            [u'This is a test hidden page with a custom template', 'hidden', 'custom']
+            [u'This is a test hidden page with a custom template', 'hidden',
+               'custom']
         ]
 
-        self.assertItemsEqual(pages_expected,pages)
-        self.assertItemsEqual(hidden_pages_expected,hidden_pages)
+        self.assertItemsEqual(pages_expected, pages)
+        self.assertItemsEqual(hidden_pages_expected, hidden_pages)
 
 
-class TestLessCSSGenerator(unittest.TestCase):
+class TestCSSGenerator(unittest.TestCase):
 
     LESS_CONTENT = """
         @color: #4D926F;
@@ -208,9 +213,9 @@ class TestLessCSSGenerator(unittest.TestCase):
 
         settings = _DEFAULT_CONFIG.copy()
         settings['STATIC_PATHS'] = ['static']
-        settings['LESS_GENERATOR'] = True
+        settings['CSS_GENERATOR'] = 'lessc'
 
-        generator = LessCSSGenerator(None, settings, self.temp_content,
+        generator = CSSGenerator(None, settings, self.temp_content,
                         _DEFAULT_CONFIG['THEME'], self.temp_output, None)
 
         # create a dummy less file
