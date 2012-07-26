@@ -6,7 +6,7 @@ How to create themes for Pelican
 Pelican uses the great `Jinja2 <http://jinja.pocoo.org/>`_ templating engine to
 generate its HTML output. Jinja2 syntax is really simple. If you want to
 create your own theme, feel free to take inspiration from the `"simple" theme
-<https://github.com/ametaireau/pelican/tree/master/pelican/themes/simple/templates>`_.
+<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_.
 
 Structure
 =========

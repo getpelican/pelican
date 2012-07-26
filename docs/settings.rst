@@ -8,7 +8,7 @@ the command line::
 
 Settings are configured in the form of a Python module (a file). You can see an
 example by looking at `/samples/pelican.conf.py
-<https://github.com/ametaireau/pelican/raw/master/samples/pelican.conf.py>`_
+<https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_
 
 All the setting identifiers must be set in all-caps, otherwise they will not be
 processed.
@@ -401,7 +401,7 @@ manner. (Be sure to specify the full absolute path to it.)
 
 Here is :doc:`a guide on how to create your theme <themes>`
 
-You can find a list of themes at http://github.com/ametaireau/pelican-themes.
+You can find a list of themes at http://github.com/getpelican/pelican-themes.
 
 Pelican comes with :doc:`pelican-themes`, a small script for managing themes.
 

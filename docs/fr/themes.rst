@@ -10,7 +10,7 @@ Pelican utlise le très bon moteur de template `jinja2 <http://jinja.pocoo.org>`
 pour produire de l'HTML. La syntaxe de jinja2 est vraiment très simple. Si vous
 voulez créer votre propre thème, soyez libre de prendre inspiration sur le theme
 "simple" qui est disponible `ici
-<https://github.com/ametaireau/pelican/tree/master/pelican/themes/simple/templates>`_
+<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_
 
 Structure
 =========

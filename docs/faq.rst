@@ -30,10 +30,10 @@ How can I help?
 
 There are several ways to help out. First, you can use Pelican and report any
 suggestions or problems you might have on `the bugtracker
-<https://github.com/ametaireau/pelican/issues>`_.
+<https://github.com/getpelican/pelican/issues>`_.
 
 If you want to contribute, please fork `the git repository
-<https://github.com/ametaireau/pelican/>`_, make your changes, and issue
+<https://github.com/getpelican/pelican/>`_, make your changes, and issue
 a pull request. I'll review your changes as soon as possible.
 
 You can also contribute by creating themes and improving the documentation.

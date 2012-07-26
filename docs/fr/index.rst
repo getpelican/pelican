@@ -30,7 +30,7 @@ Code source
 ===========
 
 Vous pouvez accéder au code source via git à l'adresse 
-http://github.com/ametaireau/pelican/
+http://github.com/getpelican/pelican/
 
 Feedback !
 ==========

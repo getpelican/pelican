@@ -35,7 +35,7 @@ Heh, you didn't notice? "Pelican" is an anagram for « Calepin » ;)
 Source code
 ===========
 
-You can access the source code via git at http://github.com/ametaireau/pelican/
+You can access the source code via git at http://github.com/getpelican/pelican/
 
 Feedback / Contact us
 =====================
