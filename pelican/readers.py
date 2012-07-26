@@ -185,8 +185,8 @@ def read_file(filename, fmt=None, settings=None):
 
     # eventually filter the content with typogrify if asked so
     if settings and settings['TYPOGRIFY']:
-        from typogrify import Typogrify
-        content = Typogrify.typogrify(content)
-        metadata['title'] = Typogrify.typogrify(metadata['title'])
+        from typogrify.filters import typogrify
+        content = typogrify(content)
+        metadata['title'] = typogrify(metadata['title'])
 
     return content, metadata
