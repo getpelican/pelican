@@ -11,7 +11,10 @@ example by looking at `/samples/pelican.conf.py
 <https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_
 
 All the setting identifiers must be set in all-caps, otherwise they will not be
-processed.
+processed. Setting values that are numbers (5, 20, etc.), booleans (True,
+False, None, etc.), dictionaries, or tuples should *not* be enclosed in
+quotation marks. All other values (i.e., strings) *must* be enclosed in
+quotation marks.
 
 The settings you define in the configuration file will be passed to the
 templates, which allows you to use your settings to add site-wide content.
