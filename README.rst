@@ -28,7 +28,7 @@ Pelican currently supports:
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
 
-Have a look at `the documentation <http://pelican.notmyidea.org/en/latest/>`_ for
+Have a look at `the documentation <http://docs.getpelican.com/latest/>`_ for
 more information.
 
 Why the name "Pelican"?

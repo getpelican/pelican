@@ -20,7 +20,7 @@ entry_points = {
 setup(
     name = "pelican",
     version = "3.0",
-    url = 'http://pelican.notmyidea.org/',
+    url = 'http://getpelican.com/',
     author = 'Alexis Metaireau',
     author_email = 'alexis@notmyidea.org',
     description = "A tool to generate a static blog from reStructuredText or Markdown input files.",
