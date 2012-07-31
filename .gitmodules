@@ -1,0 +1,3 @@
+[submodule "pelican/typogrify"]
+	path = pelican/typogrify
+	url = https://github.com/getpelican/pelican-typogrify.git

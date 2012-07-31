@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-requires = ['feedgenerator', 'jinja2 >= 2.4', 'pygments', 'docutils', 'pytz', 'blinker', 'unidecode']
+requires = ['feedgenerator', 'jinja2 >= 2.4', 'pygments', 'docutils', 'pytz', 'blinker', 'unidecode', 'smartypants >= 1.6']
 
 try:
     import argparse
@@ -25,7 +25,7 @@ setup(
     author_email = 'alexis@notmyidea.org',
     description = "A tool to generate a static blog from reStructuredText or Markdown input files.",
     long_description=open('README.rst').read(),
-    packages = ['pelican', 'pelican.tools', 'pelican.plugins'],
+    packages = ['pelican', 'pelican.tools', 'pelican.plugins', 'pelican.typogrify'],
     include_package_data = True,
     install_requires = requires,
     entry_points = entry_points,
