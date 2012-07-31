@@ -8,7 +8,7 @@ import argparse
 from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-        StaticGenerator, PdfGenerator, LessCSSGenerator)
+        StaticGenerator, PdfGenerator, CSSGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 from pelican.utils import clean_output_dir, files_changed, file_changed
@@ -182,8 +182,8 @@ class Pelican(object):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
-        if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
-            generators.append(LessCSSGenerator)
+        if self.settings['CSS_GENERATOR']:  # path the the compiler
+            generators.append(CSSGenerator)
         return generators
 
     def get_writer(self):

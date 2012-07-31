@@ -220,6 +220,10 @@ class Author(URLWrapper):
     pass
 
 
+class Language(URLWrapper):
+    pass
+
+
 def is_valid_content(content, f):
     try:
         content.check_properties()

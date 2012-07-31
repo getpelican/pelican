@@ -242,7 +242,6 @@ class ArticlesGenerator(Generator):
         self.generate_articles(write)
         self.generate_direct_templates(write)
 
-
         # and subfolders after that
         self.generate_tags(write)
         self.generate_categories(write)
@@ -492,11 +491,11 @@ class PdfGenerator(Generator):
             self._create_pdf(page, pdf_path)
 
 
-class LessCSSGenerator(Generator):
-    """Compile less css files."""
+class CSSGenerator(Generator):
+    """Compile css files."""
 
-    def _compile(self, less_file, source_dir, dest_dir):
-        base = os.path.relpath(less_file, source_dir)
+    def _compile(self, asset_file, source_dir, dest_dir):
+        base = os.path.relpath(asset_file, source_dir)
         target = os.path.splitext(
                 os.path.join(dest_dir, base))[0] + '.css'
         target_dir = os.path.dirname(target)
@@ -505,25 +504,26 @@ class LessCSSGenerator(Generator):
             try:
                 os.makedirs(target_dir)
             except OSError:
-                logger.error("Couldn't create the less css output folder in " +
-                        target_dir)
+                logger.error("Couldn't create the css output folder " +
+                             "in %s " % target_dir)
 
-        subprocess.call([self._lessc, less_file, target])
+        subprocess.call([self._runner, asset_file, target])
         logger.info(u' [ok] compiled %s' % base)
 
     def generate_output(self, writer=None):
-        logger.info(u' Compiling less css')
+        logger.info(u' Compiling css files')
 
         # store out compiler here, so it won't be evaulted on each run of
         # _compile
-        lg = self.settings['LESS_GENERATOR']
-        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
+        lg = self.settings['CSS_GENERATOR']
+        self._runner = lg if isinstance(lg, basestring) else 'lessc'
 
         # walk static paths
+        css_extensions = self.settings['CSS_EXTENSIONS']
         for static_path in self.settings['STATIC_PATHS']:
             for f in self.get_files(
                     os.path.join(self.path, static_path),
-                    extensions=['less']):
+                    extensions=css_extensions):
 
                 self._compile(f, self.path, self.output_path)
 
@@ -534,6 +534,6 @@ class LessCSSGenerator(Generator):
             theme_static_path = os.path.join(self.theme, static_path)
             for f in self.get_files(
                     theme_static_path,
-                    extensions=['less']):
+                    extensions=css_extensions):
 
                 self._compile(f, theme_static_path, theme_output_path)
