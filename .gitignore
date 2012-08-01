@@ -9,3 +9,5 @@ build
 dist
 tags
 .tox
+.coverage
+htmlcov
