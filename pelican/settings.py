@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import imp
+import inspect
 import os
 import locale
 import logging
@@ -84,19 +86,29 @@ def read_settings(filename=None):
     return configured_settings
 
 
-def get_settings_from_file(filename, default_settings=None):
-    """Load a Python file into a dictionary.
+def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
     """
-    if default_settings == None:
-        default_settings = _DEFAULT_CONFIG
+    Load settings from a module, returning a dict.
+
+    """
+
     context = default_settings.copy()
-    if filename:
-        tempdict = {}
-        execfile(filename, tempdict)
-        for key in tempdict:
-            if key.isupper():
-                context[key] = tempdict[key]
+    if module is not None:
+         context.update(
+             (k, v) for k, v in inspect.getmembers(module) if k.isupper()
+         )
     return context
+
+
+def get_settings_from_file(filename, default_settings=_DEFAULT_CONFIG):
+    """
+    Load settings from a file path, returning a dict.
+
+    """
+
+    name = os.path.basename(filename).rpartition(".")[0]
+    module = imp.load_source(name, filename)
+    return get_settings_from_module(module, default_settings=default_settings)
 
 
 def configure_settings(settings, default_settings=None, filename=None):
