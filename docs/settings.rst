@@ -83,11 +83,10 @@ Setting name (default value)                                            What doe
 `TIMEZONE`                                                              The timezone used in the date information, to
                                                                         generate Atom and RSS feeds. See the "timezone"
                                                                         section below for more info.
-`TYPOGRIFY` (``False``)                                                 If set to true, some
-                                                                        additional transformations will be done on the
-                                                                        generated HTML, using the `Typogrify
+`TYPOGRIFY` (``False``)                                                 If set to True, several typographical improvements will be
+                                                                        incorporated into the generated HTML via the `Typogrify
                                                                         <http://static.mintchaos.com/projects/typogrify/>`_
-                                                                        library
+                                                                        library, which can be installed via: ``pip install typogrify``
 `LESS_GENERATOR` (``FALSE``)                                            Set to True or complete path to `lessc` (if not
                                                                         found in system PATH) to enable compiling less
                                                                         css files. Requires installation of `less css`_.

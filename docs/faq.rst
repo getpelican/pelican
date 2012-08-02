@@ -3,6 +3,33 @@ Frequently Asked Questions (FAQ)
 
 Here is a summary of the frequently asked questions for Pelican.
 
+What's the best way to communicate a problem, question, or suggestion?
+======================================================================
+
+If you have a problem, question, or suggestion, please start by striking up a
+conversation on `#pelican on Freenode <irc://irc.freenode.net/pelican>`_.
+Those who don't have an IRC client handy can jump in immediately via
+`IRC webchat <http://webchat.freenode.net/?channels=pelican&uio=d4>`_. Because
+of differing time zones, you may not get an immediate response to your question,
+but please be patient and stay logged into IRC — someone will almost always
+respond.
+
+If you are unable to resolve your issue or if you have a feature request, please
+refer to the `issue tracker <https://github.com/getpelican/pelican/issues>`_.
+
+How can I help?
+================
+
+There are several ways to help out. First, you can use Pelican and report any
+suggestions or problems you might have via IRC or the issue tracker.
+
+If you want to contribute, please fork `the git repository
+<https://github.com/getpelican/pelican/>`_, create a new feature branch, make
+your changes, and issue a pull request. Someone will review your changes as soon
+as possible. Please refer to the :ref:`contribute` section for more details.
+
+You can also contribute by creating themes and improving the documentation.
+
 Is it mandatory to have a configuration file?
 =============================================
 
@@ -25,19 +52,6 @@ How do I create my own theme?
 
 Please refer to :ref:`theming-pelican`.
 
-How can I help?
-================
-
-There are several ways to help out. First, you can use Pelican and report any
-suggestions or problems you might have on `the bugtracker
-<https://github.com/getpelican/pelican/issues>`_.
-
-If you want to contribute, please fork `the git repository
-<https://github.com/getpelican/pelican/>`_, make your changes, and issue
-a pull request. I'll review your changes as soon as possible.
-
-You can also contribute by creating themes and improving the documentation.
-
 I want to use Markdown, but I got an error.
 ===========================================
 
@@ -50,11 +64,11 @@ In case you don't have pip installed, consider installing it via::
 
     $ (sudo) easy_install pip
 
-How do I assign custom templates on a per page basis?
+How do I assign custom templates on a per-page basis?
 =====================================================
 
 It's as simple as adding an extra line of metadata to any pages or articles you
-want to have it's own template.
+want to have its own template.
 
     :template: template_name
 
@@ -66,30 +80,34 @@ What if I want to disable feed generation?
 
 To disable all feed generation set ``FEED_ATOM`` and ``FEED_RSS`` to ``None`` in
 your settings. Please note ``None`` and ``''`` are not the same thing. The
-word None should not be surrounded by quotes.
+word ``None`` should not be surrounded by quotes.
 
-I'm getting a warning about Feeds generated without SITEURL being set properly
+I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================
 
-`RSS and atom feeds require all URLs and links in them to be absolute <http://validator.w3.org/feed/docs/rss2.html#comments>`_.
-In order to properly generate all URLs properly in pelican you will need to set
-``SITEURL`` to the full path of your blog. By default, when using the ``make html``
-to test build your site ``SITEURL`` is disabled so you should receive this
-warning.
-If configured properly no other make commands should have this message.
+`RSS and Atom feeds require all URLs and links in them to be absolute
+<http://validator.w3.org/feed/docs/rss2.html#comments>`_.
+In order to properly generate all URLs properly in Pelican you will need to set
+``SITEURL`` to the full path of your blog. When using ``make html`` and the
+default Makefile provided by the `pelican-quickstart` bootstrap script to test
+build your site, it's normal to see this warning since ``SITEURL`` is 
+deliberately left undefined. If configured properly no other ``make`` commands
+should result in this warning.
 
-Feeds still are generated when this error comes up, but may not validate.
+Feeds are still generated when this warning is displayed but may not validate.
 
-My feeds are broken since I upgraded to 3.0
-===========================================
+My feeds are broken since I upgraded to Pelican 3.0
+===================================================
 
-Starting in 3.0 we changed the more confusing FEED options to say FEED_ATOM
-like the RRS feed options. Here is an exact list of the changes::
+Starting in 3.0, some of the FEED setting names were changed to more explicitly
+refer to the Atom feeds they inherently represent (much like the FEED_RSS
+setting names). Here is an exact list of the renamed setting names::
 
     FEED -> FEED_ATOM
     TAG_FEED -> TAG_FEED_ATOM
     CATEGORY_FEED -> CATEGORY_FEED_ATOM
 
-Older 2.x themes that referenced these may not link properly. Please update
-your themes for 3 on. For an example of complete RSS headers and usage please
-check out the simple theme.
+Older 2.x themes that referenced the old setting names may not link properly.
+In order to rectify this, please update your theme for compatibility with 3.0+
+by changing the relevant values in your template files. For an example of 
+complete feed headers and usage please check out the ``simple`` theme.

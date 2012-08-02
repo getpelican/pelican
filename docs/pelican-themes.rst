@@ -162,5 +162,3 @@ See also
 
 -   http://docs.notmyidea.org/alexis/pelican/
 -   ``/usr/share/doc/pelican/`` if you have installed Pelican using the `APT repository <http://skami18.github.com/pelican-packages/>`_
-
-

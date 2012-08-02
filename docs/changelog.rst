@@ -1,7 +1,7 @@
 Release history
 ###############
 
-3.0 (XXXX-XX-XX)
+3.0.0 (XXXX-XX-XX)
 ================
 
 * Refactored the way URLs are handled
@@ -11,15 +11,15 @@ Release history
 * Added a way to disable feed generation
 * Added support for ``DIRECT_TEMPLATES``
 * Allow multiple extensions for content files
-* Added less support
+* Added LESS support
 * Improved the import script
-* Fixed a bunch of bugs :-)
 * Added functional tests
 * Rsync support in the generated Makefile
 * Improved feed support (easily pluggable with Feedburner for instance)
 * Added support for ``abbr`` in reST
+* Fixed a bunch of bugs :-)
 
-2.8 (2012-02-28)
+2.8.0 (2012-02-28)
 ================
 
 * Dotclear importer

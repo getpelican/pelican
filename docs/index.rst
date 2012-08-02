@@ -1,7 +1,7 @@
 Pelican
 #######
 
-Pelican is a simple weblog generator, written in Python.
+Pelican is a static site generator, written in Python.
 
 * Write your weblog entries directly with your editor of choice (vim!) in
   reStructuredText or Markdown
@@ -18,16 +18,16 @@ Pelican currently supports:
 * Comments, via an external service (Disqus). (Please note that while
   useful, Disqus is an external service, and thus the comment data will be
   somewhat outside of your control and potentially subject to data loss.)
-* Theming support (themes are created using `jinja2 <http://jinja.pocoo.org/>`_)
+* Theming support (themes are created using `Jinja2 <http://jinja.pocoo.org/>`_)
 * PDF generation of the articles/pages (optional)
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
-* Compilation of less css (optional)
+* Compilation of `LESS CSS <http://lesscss.org/>`_ (optional)
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
 
-Why the name "Pelican" ?
+Why the name "Pelican"?
 ========================
 
 Heh, you didn't notice? "Pelican" is an anagram for « Calepin » ;)
@@ -35,18 +35,18 @@ Heh, you didn't notice? "Pelican" is an anagram for « Calepin » ;)
 Source code
 ===========
 
-You can access the source code via git at http://github.com/getpelican/pelican/
+You can access the source code at: http://github.com/getpelican/pelican/
 
 Feedback / Contact us
 =====================
 
-If you want to see new features in Pelican, don't hesitate to tell me, to clone
+If you want to see new features in Pelican, don't hesitate to chime in, clone
 the repository, etc. That's open source, dude!
 
-Contact me at "alexis at notmyidea dot org" for any request/feedback! You can
-also join the team at `#pelican on irc.freenode.org
-<irc://irc.freenode.net/pelican>`_
-(or if you don't have any IRC client, use `the webchat
+Send a message to "alexis at notmyidea dot org" with any requests/feedback! You
+can also join the team at
+`#pelican on Freenode <irc://irc.freenode.net/pelican>`_ (or if you don't have 
+a IRC client handy, use `the webchat
 <http://webchat.freenode.net/?channels=pelican&uio=d4>`_)
 for quick feedback.
 

@@ -78,13 +78,13 @@ Tag cloud
 Translation
 -----------
 
-Github Activity
+GitHub activity
 ---------------
 
 This plugin makes use of the ``feedparser`` library that you'll need to
 install.
 
-Set the ``GITHUB_ACTIVITY_FEED`` parameter to your Github activity feed.
+Set the ``GITHUB_ACTIVITY_FEED`` parameter to your GitHub activity feed.
 For example, my setting would look like::
 
      GITHUB_ACTIVITY_FEED = 'https://github.com/kpanic.atom'
@@ -107,4 +107,4 @@ variable, as in the example::
 
 
 ``github_activity`` is a list of lists. The first element is the title
-and the second element is the raw HTML from Github.
+and the second element is the raw HTML from GitHub.
