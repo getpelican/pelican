@@ -221,6 +221,7 @@ Please answer the following questions so this script can generate the files need
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
+                os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')), 0755)
         except OSError, e:
             print('Error: {0}'.format(e))
 
