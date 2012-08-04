@@ -26,7 +26,8 @@ suggestions or problems you might have via IRC or the issue tracker.
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
 your changes, and issue a pull request. Someone will review your changes as soon
-as possible. Please refer to the :ref:`contribute` section for more details.
+as possible. Please refer to the :doc:`How to Contribute <contribute>` section 
+for more details.
 
 You can also contribute by creating themes and improving the documentation.
 

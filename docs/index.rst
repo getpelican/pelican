@@ -1,11 +1,11 @@
 Pelican
 #######
 
-Pelican is a static site generator, written in Python.
+Pelican is a static site generator, written in `Python <http://www.python.org/>`_.
 
-* Write your weblog entries directly with your editor of choice (vim!) in
-  reStructuredText or Markdown
-* A simple CLI tool to (re)generate the weblog
+* Write your weblog entries directly with your editor of choice (vim!) 
+  in `reStructuredText <http://docutils.sourceforge.net/rst.html>`_ or `Markdown <http://daringfireball.net/projects/markdown/>`_
+* Includes a simple CLI tool to (re)generate the weblog
 * Easy to interface with DVCSes and web hooks
 * Completely static output is easy to host anywhere
 
@@ -30,18 +30,19 @@ Pelican currently supports:
 Why the name "Pelican"?
 ========================
 
-Heh, you didn't notice? "Pelican" is an anagram for « Calepin » ;)
+"Pelican" is an anagram for *calepin*, which means "notebook" in French. ;)
 
 Source code
 ===========
 
-You can access the source code at: http://github.com/getpelican/pelican/
+You can access the source code at: https://github.com/getpelican/pelican
 
 Feedback / Contact us
 =====================
 
-If you want to see new features in Pelican, don't hesitate to chime in, clone
-the repository, etc. That's open source, dude!
+If you want to see new features in Pelican, don't hesitate to offer suggestions,
+clone the repository, etc. There are many ways to :doc:`contribute<contribute>`.
+That's open source, dude!
 
 Send a message to "alexis at notmyidea dot org" with any requests/feedback! You
 can also join the team at
