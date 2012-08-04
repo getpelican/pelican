@@ -1,7 +1,7 @@
 Pelican
 #######
 
-.. image:: https://secure.travis-ci.org/ametaireau/pelican.png?branch=master
+.. image:: https://secure.travis-ci.org/getpelican/pelican.png?branch=master
 
 Pelican is a simple weblog generator, written in `Python <http://www.python.org/>`_.
 
