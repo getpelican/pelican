@@ -14,17 +14,15 @@ If you don't have ``pip`` installed, an alternative method is ``easy_install``::
     $ easy_install pelican
 
 While the above is the simplest method, the recommended approach is to create
-a virtual environment for Pelican via `virtualenv <http://www.virtualenv.org/>`_
-and `virtualenvwrapper <http://www.doughellmann.com/projects/virtualenvwrapper/>`_
-before installing Pelican::
-
-    $ sudo pip install --upgrade virtualenv virtualenvwrapper
-
-Note that virtualenvwrapper, being a shell hack, usually requires that a new shell
-be started in order to be sourced. Continue -perhaps in a new shell::
+a virtual environment for Pelican via virtualenv_ and virtualenvwrapper_ before
+installing Pelican. Assuming you've followed the virtualenvwrapper
+`installation <http://virtualenvwrapper.readthedocs.org/en/latest/install.html>`_
+and `shell configuration 
+<http://virtualenvwrapper.readthedocs.org/en/latest/install.html#shell-startup-file>`_
+steps, you can then open a new terminal session and create a new virtual
+environment for Pelican::
 
     $ mkvirtualenv pelican
-    $ pip install pelican
 
 Once the virtual environment has been created and activated, Pelican can be
 be installed via ``pip`` or ``easy_install`` as noted above. Alternatively, if
@@ -47,9 +45,9 @@ Markdown library as well::
 Upgrading
 ---------
 
-If you installed a stable Pelican release via pip or easy_install and wish to
-upgrade to the latest stable release, you can do so by adding ``--upgrade`` to
-the relevant command. For pip, that would be::
+If you installed a stable Pelican release via ``pip`` or ``easy_install`` and
+wish to upgrade to the latest stable release, you can do so by adding
+``--upgrade`` to the relevant command. For pip, that would be::
 
     $ pip install --upgrade pelican
 
@@ -76,11 +74,11 @@ Kickstart a blog
 ================
 
 Following is a brief tutorial for those who want to get started right away.
-We're going to assume Pelican was installed in a virtual environment via the
-following steps (if you're not using a virtual environment for Pelican, you can
-skip to the ``pelican-quickstart`` command)::
+We're going to assume that virtualenv_ and virtualenvwrapper_ are installed and
+configured; if you've installed Pelican outside of a virtual environment,
+you can skip to the ``pelican-quickstart`` command. Let's first create a new
+virtual environment and install Pelican into it::
 
-    $ sudo pip install --upgrade virtualenv virtualenvwrapper
     $ mkvirtualenv pelican
     $ pip install pelican Markdown
 
@@ -309,3 +307,5 @@ Or run a simple web server using Python::
 
     cd output && python -m SimpleHTTPServer
 
+.. _virtualenv: http://www.virtualenv.org/
+.. _virtualenvwrapper: http://www.doughellmann.com/projects/virtualenvwrapper/
