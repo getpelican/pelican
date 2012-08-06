@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*- #
 
 import os
+import sys
 import string
 import argparse
+import codecs
 
 from pelican import __version__
 
@@ -43,6 +45,12 @@ def get_template(name):
         fd.close()
 
 
+def maybe_decoding(s):
+    if os.name == 'nt':
+        return s.decode(sys.stdin.encoding)
+    return s
+
+
 def ask(question, answer=str, default=None, l=None):
     if answer == str:
         r = ''
@@ -66,7 +74,7 @@ def ask(question, answer=str, default=None, l=None):
                 else:
                    break
 
-        return r
+        return maybe_decoding(r)
 
     elif answer == bool:
         r = None
@@ -167,7 +175,7 @@ Please answer the following questions so this script can generate the files need
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server?', str, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on that server?', str, CONF['ftp_user'])
-            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir']) 
+            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir'])
         if ask('Do you want to upload your website using SSH?', answer=bool, default=False):
             CONF['ssh_host'] = ask('What is the hostname of your SSH server?', str, CONF['ssh_host'])
             CONF['ssh_port'] = ask('What is the port of your SSH server?', int, CONF['ssh_port'])
@@ -187,7 +195,7 @@ Please answer the following questions so this script can generate the files need
         print('Error: {0}'.format(e))
 
     try:
-        with open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w') as fd:
+        with codecs.open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w', 'utf-8') as fd:
             for line in get_template('pelicanconf.py'):
                 template = string.Template(line)
                 fd.write(template.safe_substitute(CONF))
