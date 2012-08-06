@@ -107,11 +107,21 @@ instead::
 
     $ make regenerate
 
-To serve the site so it can be previewed in your browser::
+To serve the site so it can be previewed in your browser at
+http://localhost:8000::
 
     $ make serve
 
-Visit http://localhost:8000 in your browser to see your site.
+Normally you would need to run ``make regenerate`` and ``make serve`` in two
+separate terminal sessions, but you can run both at once via::
+
+    $ make devserver
+
+The above command will simultaneously run Pelican in regeneration mode as well
+as serve the output at http://localhost:8000. Once you are done testing your
+changes, you should stop the development server via::
+
+    $ ./develop_server stop
 
 When you're ready to publish your site, you can upload it via the method(s) you
 chose during the ``pelican-quickstart`` questionnaire. For this example, we'll
