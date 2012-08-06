@@ -1,9 +1,9 @@
 Pelican
 #######
 
-.. image:: https://secure.travis-ci.org/ametaireau/pelican.png?branch=master
-
-See why: http://travis-ci.org/#!/getpelican/pelican
+.. image:: https://secure.travis-ci.org/getpelican/pelican.png?branch=master
+   :target: http://travis-ci.org/#!/getpelican/pelican
+   :alt: Travis-ci: continuous integration status.
 
 Pelican is a simple weblog generator, written in `Python <http://www.python.org/>`_.
 
