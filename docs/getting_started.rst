@@ -19,6 +19,10 @@ and `virtualenvwrapper <http://www.doughellmann.com/projects/virtualenvwrapper/>
 before installing Pelican::
 
     $ sudo pip install --upgrade virtualenv virtualenvwrapper
+
+Note that virtualenvwrapper, being a shell hack, usually requires that a new shell
+be started in order to be sourced. Continue -perhaps in a new shell::
+
     $ mkvirtualenv pelican
     $ pip install pelican
 
