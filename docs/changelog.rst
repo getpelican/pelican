@@ -1,8 +1,8 @@
 Release history
 ###############
 
-3.0.0 (XXXX-XX-XX)
-================
+3.0.0 (2012-08-06)
+==================
 
 * Refactored the way URLs are handled
 * Improved the English documentation
@@ -20,7 +20,7 @@ Release history
 * Fixed a bunch of bugs :-)
 
 2.8.0 (2012-02-28)
-================
+==================
 
 * Dotclear importer
 * Allow the usage of Markdown extensions
