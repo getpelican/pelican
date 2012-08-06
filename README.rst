@@ -3,9 +3,11 @@ Pelican
 
 .. image:: https://secure.travis-ci.org/ametaireau/pelican.png?branch=master
 
+See why: http://travis-ci.org/#!/getpelican/pelican
+
 Pelican is a simple weblog generator, written in `Python <http://www.python.org/>`_.
 
-* Write your weblog entries directly with your editor of choice (vim!) 
+* Write your weblog entries directly with your editor of choice (vim!)
   in `reStructuredText <http://docutils.sourceforge.net/rst.html>`_ or `Markdown <http://daringfireball.net/projects/markdown/>`_
 * Includes a simple CLI tool to (re)generate the weblog
 * Easy to interface with DVCSes and web hooks
@@ -48,12 +50,12 @@ Feedback / Contact us
 ---------------------
 
 If you want to see new features in Pelican, don't hesitate to offer suggestions,
-clone the repository, etc. There are many ways to `contribute 
+clone the repository, etc. There are many ways to `contribute
 <http://pelican.notmyidea.org/en/latest/contribute.html>`_. That's open source, dude!
 
 Contact me at "alexis at notmyidea dot org" for any request/feedback! You can
-also join the team at `#pelican on irc.freenode.org 
-<irc://irc.freenode.net/pelican>`_ 
+also join the team at `#pelican on irc.freenode.org
+<irc://irc.freenode.net/pelican>`_
 (or if you don't have any IRC client, use `the webchat
 <http://webchat.freenode.net/?channels=pelican&uio=d4>`_)
 for quick feedback.
