@@ -4,6 +4,7 @@ import logging
 import functools
 import os
 import re
+import urlparse
 
 from datetime import datetime
 from os import getenv
@@ -134,8 +135,8 @@ class Page(object):
         return self._expand_settings(key)
 
     def _update_content(self, content):
-        """Change all the relatives paths of the content to relatives
-        paths suitable for the ouput content
+        """Change all the relative paths of the content to relative paths
+        suitable for the ouput content.
 
         :param content: content resource that will be passed to the templates.
         """
@@ -151,7 +152,7 @@ class Page(object):
             what = m.group('what')
             value = m.group('value')
             origin = m.group('path')
-            # we support only filename for now. the plan is to suppose
+            # we support only filename for now. the plan is to support
             # categories, tags, etc. in the future, but let's keep things
             # simple for now.
             if what == 'filename':
@@ -159,11 +160,13 @@ class Page(object):
                     value = value[1:]
                 else:
                     # relative to the filename of this content
-                    value = self.get_relative_filename(os.path.join(
-                        os.path.dirname(self.get_relative_filename()), value))
+                    value = self.get_relative_filename(
+                        os.path.join(self.relative_dir, value)
+                    )
 
                 if value in self._context['filenames']:
-                    origin = self._context['filenames'][value].url
+                    origin = urlparse.urljoin(self._context['SITEURL'],
+                             self._context['filenames'][value].url)
                 else:
                     logger.warning(u"Unable to find {fn}, skipping url"\
                                     "replacement".format(fn=value))
@@ -211,11 +214,25 @@ class Page(object):
             return self.default_template
 
     def get_relative_filename(self, filename=None):
+        """Return the relative path (from the content path) to the given
+        filename.
+
+        If no filename is specified, use the filename of this content object.
+        """
         if not filename:
             filename = self.filename
 
-        return os.path.relpath(os.path.abspath(self.filename),
-                               os.path.abspath(self.settings['PATH']))
+        return os.path.relpath(
+            os.path.abspath(os.path.join(self.settings['PATH'], filename)),
+            os.path.abspath(self.settings['PATH'])
+        )
+
+    @property
+    def relative_dir(self):
+        return os.path.dirname(os.path.relpath(
+            os.path.abspath(self.filename),
+            os.path.abspath(self.settings['PATH']))
+        )
 
 
 class Article(Page):
