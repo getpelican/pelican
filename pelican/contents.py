@@ -4,6 +4,7 @@ import logging
 import functools
 import os
 import re
+import urlparse
 
 from datetime import datetime
 from os import getenv
@@ -163,7 +164,8 @@ class Page(object):
                         os.path.dirname(self.get_relative_filename()), value))
 
                 if value in self._context['filenames']:
-                    origin = self._context['filenames'][value].url
+                    origin = urlparse.urljoin(self._context['SITEURL'],
+                             self._context['filenames'][value].url)
                 else:
                     logger.warning(u"Unable to find {fn}, skipping url"\
                                     "replacement".format(fn=value))
