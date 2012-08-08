@@ -1,7 +1,7 @@
 Release history
 ###############
 
-3.0.0 (2012-08-06)
+3.0.0 (2012-08-08)
 ==================
 
 * Refactored the way URLs are handled
