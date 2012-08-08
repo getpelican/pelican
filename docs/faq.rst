@@ -69,14 +69,14 @@ Can I use arbitrary meta-data in my templates?
 ==============================================
 
 Yes. For example, to include a modified date in a Markdown post, one could
-include the following at the top of the article:
+include the following at the top of the article::
 
     Modified: 2012-08-08
 
-That meta-data can then be accessed in the template:
+That meta-data can then be accessed in the template::
 
     {% if article.modified %}
-    Last modified: {{ article.full }}
+    Last modified: {{ article.modified}}
     {% endif %}
 
 How do I assign custom templates on a per-page basis?
