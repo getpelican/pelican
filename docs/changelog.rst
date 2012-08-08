@@ -1,6 +1,11 @@
 Release history
 ###############
 
+3.1 (XXXX-XX-XX)
+================
+
+* Improve handling of links to intra-site resources
+
 3.0 (2012-08-08)
 ==================
 
