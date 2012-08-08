@@ -1,7 +1,7 @@
 Release history
 ###############
 
-3.0.0 (2012-08-08)
+3.0 (2012-08-08)
 ==================
 
 * Refactored the way URLs are handled
@@ -19,7 +19,7 @@ Release history
 * Added support for ``abbr`` in reST
 * Fixed a bunch of bugs :-)
 
-2.8.0 (2012-02-28)
+2.8 (2012-02-28)
 ==================
 
 * Dotclear importer
@@ -39,7 +39,7 @@ Release history
 * Support having different timezones per language
 * Enhanced the documentation
 
-2.7.0 (2011-06-11)
+2.7 (2011-06-11)
 ==================
 
 * Use ``logging`` rather than echoing to stdout
@@ -49,7 +49,7 @@ Release history
 * Packaged for Debian
 * Added draft support
 
-2.6.0 (2011-03-08)
+2.6 (2011-03-08)
 ==================
 
 * Changes in the output directory structure
@@ -67,7 +67,7 @@ Release history
 * Pagination support
 * Added Skribit support
 
-2.5.0 (2010-11-20)
+2.5 (2010-11-20)
 ==================
 
 * Import from Wordpress
