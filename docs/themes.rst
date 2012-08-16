@@ -29,7 +29,7 @@ To make your own theme, you must follow the following structure::
         └── tags.html        // must list all the tags. Can be a tag cloud.
 
 * `static` contains all the static assets, which will be copied to the output
-  `theme/static` folder. I've put the CSS and image folders here, but they are
+  `theme` folder. I've put the CSS and image folders here, but they are
   just examples. Put what you need here.
 
 * `templates` contains all the templates that will be used to generate the content.
