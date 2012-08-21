@@ -76,7 +76,7 @@ include the following at the top of the article::
 That meta-data can then be accessed in the template::
 
     {% if article.modified %}
-    Last modified: {{ article.modified}}
+    Last modified: {{ article.modified }}
     {% endif %}
 
 How do I assign custom templates on a per-page basis?
