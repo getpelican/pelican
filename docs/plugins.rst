@@ -57,6 +57,7 @@ Here is the list of currently implemented signals:
 Signal                      Arguments                      Description
 =========================   ============================   =========================================
 initialized                 pelican object
+finalized                   pelican object
 article_generate_context    article_generator, metadata
 article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
 pages_generate_context      pages_generator, metadata
