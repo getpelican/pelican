@@ -14,6 +14,9 @@ from operator import attrgetter
 
 logger = logging.getLogger(__name__)
 
+class NoFilesError(Exception):
+    pass
+
 
 def get_date(string):
     """Return a datetime object from a string.
@@ -247,8 +250,7 @@ def files_changed(path, extensions):
             LAST_MTIME = mtime
             return True
     except ValueError:
-        logger.info("No files found in path")
-        return False
+        raise NoFilesError("No files with the given extension(s) found.")
     return False
 
 

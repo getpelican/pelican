@@ -96,8 +96,8 @@ class TestUtils(unittest.TestCase):
             os.mkdir(empty_path)
             os.mkdir(os.path.join(empty_path, "empty_folder"))
             shutil.copy(__file__, empty_path)
-            changed = utils.files_changed(empty_path, 'rst')
-            self.assertFalse(changed)
+            with self.assertRaises(NoFilesError):
+                utils.files_changed(empty_path, 'rst')
         except OSError:
             self.fail("OSError Exception in test_files_changed test")
         finally:
