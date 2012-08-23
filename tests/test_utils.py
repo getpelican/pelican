@@ -6,6 +6,7 @@ import time
 
 from pelican import utils
 from .support import get_article, unittest
+from pelican.utils import NoFilesError
 
 
 class TestUtils(unittest.TestCase):
