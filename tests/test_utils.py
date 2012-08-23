@@ -90,6 +90,17 @@ class TestUtils(unittest.TestCase):
         self.assertEquals(changed, True)
         self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
 
+    def test_no_files_found(self):
+        """
+        files_changed shouldn't raise any warnings if no files are found.
+
+        This can happen if the content directory has no content in it yet.
+
+        """
+
+        path = os.path.join(os.path.dirname(__file__), 'content')
+        changed = utils.files_changed(path, ['ohthisisaweirdextension'])
+
     def test_clean_output_dir(self):
         test_directory = os.path.join(os.path.dirname(__file__), 'clean_output')
         content = os.path.join(os.path.dirname(__file__), 'content')

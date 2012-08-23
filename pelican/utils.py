@@ -234,6 +234,7 @@ def files_changed(path, extensions):
 
     def file_times(path):
         """Return the last time files have been modified"""
+        yield LAST_MTIME  # Make sure to at least yield once so we aren't empty
         for root, dirs, files in os.walk(path):
             dirs[:] = [x for x in dirs if x[0] != '.']
             for f in files:
