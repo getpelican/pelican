@@ -186,7 +186,7 @@ the content. The ``pelican`` command can also be run directly::
 
     $ pelican /path/to/your/content/ [-s path/to/your/settings.py]
 
-The above command will generate your weblog and save it in the ``content/``
+The above command will generate your weblog and save it in the ``output/``
 folder, using the default theme to produce a simple site. The default theme is
 simple HTML without styling and is provided so folks may use it as a basis for
 creating their own themes.
@@ -271,19 +271,21 @@ Pelican is able to provide colorized syntax highlighting for your code blocks.
 To do so, you have to use the following conventions (you need to put this in
 your content files).
 
-For RestructuredText::
+For RestructuredText, use the code-block directive::
 
     .. code-block:: identifier
 
-       your code goes here
+       <indented code block goes here>
 
-For Markdown, format your code blocks thusly::
+For Markdown, include the language identifier just above code blocks::
 
-    :::identifier
-    your code goes here
+        :::identifier
+        <code goes here>
+    
+    (indent both the identifier and code)
 
-The specified identifier should be one that appears on the 
-`list of available lexers <http://pygments.org/docs/lexers/>`_.
+The specified identifier (e.g. ``python``, ``ruby``) should be one that 
+appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
 
 Publishing drafts
 -----------------
