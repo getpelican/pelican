@@ -468,7 +468,7 @@ template tag, for example:
 .. code-block:: jinja
 
     {% assets filters="cssmin", output="css/style.min.css", "css/inuit.css", "css/pygment-monokai.css", "css/main.css" %}
-        <link rel="stylesheet" href="{{ ASSETS_URL }}">
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
     {% endassets %}
 
 will produce a minified css file with the version identifier:
