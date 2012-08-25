@@ -73,7 +73,7 @@ Setting name (default value)                                            What doe
 `SITENAME` (``'A Pelican Blog'``)                                       Your site name
 `SITEURL`                                                               Base URL of your website. Not defined by default,
                                                                         so it is best to specify your SITEURL; if you do not, feeds
-                                                                        will not be generated with properly-formed URLs. You should 
+                                                                        will not be generated with properly-formed URLs. You should
                                                                         include ``http://`` and your domain, with no trailing
                                                                         slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
 `STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
@@ -95,12 +95,12 @@ Setting name (default value)                                            What doe
                                                                         index pages for collections of content e.g. tags and
                                                                         category index pages.
 `PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
-`SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will 
+`SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will
                                                                         be the default length in words of the text created.
-                                                                        This only applies if your content does not otherwise 
-                                                                        specify a summary. Setting to None will cause the summary 
+                                                                        This only applies if your content does not otherwise
+                                                                        specify a summary. Setting to None will cause the summary
                                                                         to be a copy of the original content.
-                                                                        
+
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
@@ -367,7 +367,7 @@ Ordering content
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`NEWEST_FIRST_ARCHIVES` (``True``)                  Order archives by newest first by date. (False: 
+`NEWEST_FIRST_ARCHIVES` (``True``)                  Order archives by newest first by date. (False:
                                                     orders by date with older articles first.)
 `REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse
                                                     alphabetical order; default lists alphabetically.)
@@ -477,6 +477,15 @@ will produce a minified css file with the version identifier:
 
     <link href="http://{SITEURL}/theme/css/style.min.css?b3a7c807" rel="stylesheet">
 
+The filters can be combined, for example to use the `sass` compiler and minify
+the output::
+
+.. code-block:: jinja
+
+{% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}">
+{% endassets %}
+
 Another example for javascript:
 
 .. code-block:: jinja
@@ -490,6 +499,12 @@ will produce a minified and gzipped js file:
 .. code-block:: html
 
     <script src="http://{SITEURL}/theme/js/packed.js?00703b9d"></script>
+
+Pelican's debug mode is propagated to webassets to disable asset packaging,
+and instead work with the uncompressed assets. However, this also means that
+the `less` and `sass` files are not compiled, this should be fixed in a future
+version of webassets (cf. the related `bug report
+<https://github.com/getpelican/pelican/issues/481>`_).
 
 .. _webassets: https://github.com/miracle2k/webassets
 .. _documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
