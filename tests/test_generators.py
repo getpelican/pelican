@@ -63,29 +63,26 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_context(self):
 
-        settings = _DEFAULT_CONFIG.copy()
-        settings['ARTICLE_DIR'] = 'content'
-        settings['DEFAULT_CATEGORY'] = 'Default'
-        generator = ArticlesGenerator(settings.copy(), settings, CUR_DIR,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
-        generator.generate_context()
-        for article in generator.articles:
-            relfilepath = os.path.relpath(article.filename, CUR_DIR)
-            if relfilepath == os.path.join("TestCategory",
-                                           "article_with_category.rst"):
-                self.assertEquals(article.category.name, 'yeah')
-            elif relfilepath == os.path.join("TestCategory",
-                                             "article_without_category.rst"):
-                self.assertEquals(article.category.name, 'TestCategory')
-            elif relfilepath == "article_without_category.rst":
-                self.assertEquals(article.category.name, 'Default')
+        generator = self.get_populated_generator()
+        articles = self.distill_articles(generator.articles)
+        articles_expected = [
+            [u'Article title', 'published', 'Default', 'article'],
+            [u'Article with template', 'published', 'Default', 'custom'],
+            [u'Test md File', 'published', 'test', 'article'],
+            [u'This is a super article !', 'published', 'Yeah', 'article'],
+            [u'This is an article with category !', 'published', 'yeah', 'article'],
+            [u'This is an article without category !', 'published', 'Default', 'article'],
+            [u'This is an article without category !', 'published', 'TestCategory', 'article'],
+            [u'This is a super article !', 'published', 'yeah', 'article']
+        ]
+        self.assertItemsEqual(articles_expected, articles)
 
+    def test_generate_categories(self):
+
+        generator = self.get_populated_generator()
         categories = [cat.name for cat, _ in generator.categories]
-        # assert that the categories are ordered as expected
-        self.assertEquals(
-                categories, ['Default', 'TestCategory', 'Yeah', 'test',
-                             'yeah'])
+        categories_expected = ['Default', 'TestCategory', 'Yeah', 'test', 'yeah']
+        self.assertEquals(categories, categories_expected)
 
     def test_direct_templates_save_as_default(self):
 
