@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import imp
 import inspect
 import os
@@ -50,8 +53,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'CATEGORY_SAVE_AS': 'category/{slug}.html',
                    'TAG_URL': 'tag/{slug}.html',
                    'TAG_SAVE_AS': 'tag/{slug}.html',
-                   'AUTHOR_URL': u'author/{slug}.html',
-                   'AUTHOR_SAVE_AS': u'author/{slug}.html',
+                   'AUTHOR_URL': 'author/{slug}.html',
+                   'AUTHOR_SAVE_AS': 'author/{slug}.html',
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
@@ -128,7 +131,7 @@ def configure_settings(settings, default_settings=None, filename=None):
     # if locales is not a list, make it one
     locales = settings['LOCALE']
 
-    if isinstance(locales, basestring):
+    if isinstance(locales, six.string_types):
         locales = [locales]
 
     # try to set the different locales, fallback on the default.
