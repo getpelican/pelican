@@ -11,7 +11,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator, LessCSSGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
-from pelican.utils import clean_output_dir, files_changed, file_changed
+from pelican.utils import clean_output_dir, files_changed, file_changed, NoFilesError
 from pelican.writers import Writer
 
 __major__ = 3
@@ -265,6 +265,7 @@ def main():
 
     try:
         if args.autoreload:
+            files_found_error = True
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -274,6 +275,8 @@ def main():
                     # have.
                     if files_changed(pelican.path, pelican.markup) or \
                             files_changed(pelican.theme, ['']):
+                        if files_found_error == False:
+                            files_found_error = True
                         pelican.run()
 
                     # reload also if settings.py changed
@@ -287,6 +290,10 @@ def main():
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
                     break
+                except NoFilesError:
+                    if files_found_error == True:
+                        logger.warning("No valid files found in content. Nothing to generate.")
+                        files_found_error = False
                 except Exception, e:
                     logger.warning(
                         "Caught exception \"{}\". Reloading.".format(e)
