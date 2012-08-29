@@ -199,7 +199,7 @@ class URLWrapper(object):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
         if not isinstance(value, six.string_types):
-            logger.warning(u'%s is set to %s' % (setting, value))
+            logger.warning('%s is set to %s' % (setting, value))
             return value
         else:
             return value.format(**self.as_dict())
@@ -226,6 +226,6 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError, e:
-        logger.error(u"Skipping %s: impossible to find informations about '%s'"\
+        logger.error("Skipping %s: impossible to find informations about '%s'"\
                 % (f, e))
         return False
