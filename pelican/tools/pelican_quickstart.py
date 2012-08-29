@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 
+import six
+
 import os
 import string
 import argparse
@@ -28,6 +30,17 @@ CONF = {
     'lang': 'en'
 }
 
+def _input_compat(prompt):
+    if six.PY3:
+        r = input(prompt)
+    else:
+        r = raw_input(prompt).decode('utf-8')
+    return r
+
+if six.PY3:
+    str_compat = str
+else:
+    str_compat = unicode
 
 def get_template(name):
     template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
@@ -43,14 +56,14 @@ def get_template(name):
         fd.close()
 
 
-def ask(question, answer=str, default=None, l=None):
-    if answer == str:
+def ask(question, answer=str_compat, default=None, l=None):
+    if answer == str_compat:
         r = ''
         while True:
             if default:
-                r = raw_input('> {0} [{1}] '.format(question, default))
+                r = _input_compat('> {0} [{1}] '.format(question, default))
             else:
-                r = raw_input('> {0} '.format(question, default))
+                r = _input_compat('> {0} '.format(question, default))
 
             r = r.strip()
 
@@ -72,11 +85,11 @@ def ask(question, answer=str, default=None, l=None):
         r = None
         while True:
             if default is True:
-                r = raw_input('> {0} (Y/n) '.format(question))
+                r = _input_compat('> {0} (Y/n) '.format(question))
             elif default is False:
-                r = raw_input('> {0} (y/N) '.format(question))
+                r = _input_compat('> {0} (y/N) '.format(question))
             else:
-                r = raw_input('> {0} (y/n) '.format(question))
+                r = _input_compat('> {0} (y/n) '.format(question))
 
             r = r.strip().lower()
 
@@ -96,9 +109,9 @@ def ask(question, answer=str, default=None, l=None):
         r = None
         while True:
             if default:
-                r = raw_input('> {0} [{1}] '.format(question, default))
+                r = _input_compat('> {0} [{1}] '.format(question, default))
             else:
-                r = raw_input('> {0} '.format(question))
+                r = _input_compat('> {0} '.format(question))
 
             r = r.strip()
 
@@ -113,7 +126,7 @@ def ask(question, answer=str, default=None, l=None):
                 print('You must enter an integer')
         return r
     else:
-        raise NotImplemented('Argument `answer` must be str, bool, or integer')
+        raise NotImplemented('Argument `answer` must be str_compat, bool, or integer')
 
 
 def main():
@@ -144,14 +157,14 @@ Please answer the following questions so this script can generate the files need
         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
         print('Using project associated with current virtual environment. Will save to:\n%s\n' % CONF['basedir'])
     else:
-        CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new web site?', answer=str, default=args.path))
+        CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new web site?', answer=str_compat, default=args.path))
 
-    CONF['sitename'] = ask('What will be the title of this web site?', answer=str, default=args.title)
-    CONF['author'] = ask('Who will be the author of this web site?', answer=str, default=args.author)
-    CONF['lang'] = ask('What will be the default language of this web site?', str, args.lang or CONF['lang'], 2)
+    CONF['sitename'] = ask('What will be the title of this web site?', answer=str_compat, default=args.title)
+    CONF['author'] = ask('Who will be the author of this web site?', answer=str_compat, default=args.author)
+    CONF['lang'] = ask('What will be the default language of this web site?', str_compat, args.lang or CONF['lang'], 2)
 
     if ask('Do you want to specify a URL prefix? e.g., http://example.com  ', answer=bool, default=True):
-        CONF['siteurl'] = ask('What is your URL prefix? (see above example; no trailing slash)', str, CONF['siteurl'])
+        CONF['siteurl'] = ask('What is your URL prefix? (see above example; no trailing slash)', str_compat, CONF['siteurl'])
 
     CONF['with_pagination'] = ask('Do you want to enable article pagination?', bool, bool(CONF['default_pagination']))
 
@@ -165,20 +178,20 @@ Please answer the following questions so this script can generate the files need
 
     if mkfile:
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
-            CONF['ftp_host'] = ask('What is the hostname of your FTP server?', str, CONF['ftp_host'])
-            CONF['ftp_user'] = ask('What is your username on that server?', str, CONF['ftp_user'])
-            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir']) 
+            CONF['ftp_host'] = ask('What is the hostname of your FTP server?', str_compat, CONF['ftp_host'])
+            CONF['ftp_user'] = ask('What is your username on that server?', str_compat, CONF['ftp_user'])
+            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str_compat, CONF['ftp_target_dir']) 
         if ask('Do you want to upload your website using SSH?', answer=bool, default=False):
-            CONF['ssh_host'] = ask('What is the hostname of your SSH server?', str, CONF['ssh_host'])
+            CONF['ssh_host'] = ask('What is the hostname of your SSH server?', str_compat, CONF['ssh_host'])
             CONF['ssh_port'] = ask('What is the port of your SSH server?', int, CONF['ssh_port'])
-            CONF['ssh_user'] = ask('What is your username on that server?', str, CONF['ssh_user'])
-            CONF['ssh_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ssh_target_dir'])
+            CONF['ssh_user'] = ask('What is your username on that server?', str_compat, CONF['ssh_user'])
+            CONF['ssh_target_dir'] = ask('Where do you want to put your web site on that server?', str_compat, CONF['ssh_target_dir'])
         if ask('Do you want to upload your website using Dropbox?', answer=bool, default=False):
-            CONF['dropbox_dir'] = ask('Where is your Dropbox directory?', str, CONF['dropbox_dir'])
+            CONF['dropbox_dir'] = ask('Where is your Dropbox directory?', str_compat, CONF['dropbox_dir'])
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
-    except OSError, e:
+    except OSError as e:
         print('Error: {0}'.format(e))
 
     try:
@@ -192,7 +205,7 @@ Please answer the following questions so this script can generate the files need
                 template = string.Template(line)
                 fd.write(template.safe_substitute(CONF))
             fd.close()
-    except OSError, e:
+    except OSError as e:
         print('Error: {0}'.format(e))
 
     try:
@@ -201,7 +214,7 @@ Please answer the following questions so this script can generate the files need
                 template = string.Template(line)
                 fd.write(template.safe_substitute(CONF))
             fd.close()
-    except OSError, e:
+    except OSError as e:
         print('Error: {0}'.format(e))
 
     if mkfile:
@@ -211,7 +224,7 @@ Please answer the following questions so this script can generate the files need
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
-        except OSError, e:
+        except OSError as e:
             print('Error: {0}'.format(e))
 
     if develop:
@@ -221,8 +234,9 @@ Please answer the following questions so this script can generate the files need
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
-                os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')), 0755)
-        except OSError, e:
+                os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')),
+                    0o755 if six.PY3 else 0755)
+        except OSError as e:
             print('Error: {0}'.format(e))
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
