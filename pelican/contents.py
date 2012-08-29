@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import locale
 import logging
 import functools
@@ -9,7 +12,8 @@ from sys import platform, stdin
 
 
 from pelican.settings import _DEFAULT_CONFIG
-from pelican.utils import slugify, truncate_html_words
+from pelican.utils import (slugify, truncate_html_words,
+    python_2_unicode_compatible)
 
 
 logger = logging.getLogger(__name__)
@@ -53,9 +57,9 @@ class Page(object):
             if 'AUTHOR' in settings:
                 self.author = Author(settings['AUTHOR'], settings)
             else:
-                title = filename.decode('utf-8') if filename else self.title
+                title = filename if filename else self.title
                 self.author = Author(getenv('USER', 'John Doe'), settings)
-                logger.warning(u"Author of `{0}' unknown, assuming that his name is "
+                logger.warning("Author of `{0}' unknown, assuming that his name is "
                          "`{1}'".format(title, self.author))
 
         # manage languages
@@ -172,10 +176,10 @@ class Article(Page):
 class Quote(Page):
     base_properties = ('author', 'date')
 
-
+@python_2_unicode_compatible
 class URLWrapper(object):
     def __init__(self, name, settings):
-        self.name = unicode(name)
+        self.name = name
         self.slug = slugify(self.name)
         self.settings = settings
 
@@ -186,22 +190,19 @@ class URLWrapper(object):
         return hash(self.name)
 
     def __eq__(self, other):
-        return self.name == unicode(other)
+        return self.name == other
 
     def __str__(self):
-        return str(self.name.encode('utf-8', 'replace'))
-
-    def __unicode__(self):
         return self.name
 
     def _from_settings(self, key):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.string_types):
             logger.warning(u'%s is set to %s' % (setting, value))
             return value
         else:
-            return unicode(value).format(**self.as_dict())
+            return value.format(**self.as_dict())
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
@@ -213,7 +214,7 @@ class Category(URLWrapper):
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
-        super(Tag, self).__init__(unicode.strip(name), *args, **kwargs)
+        super(Tag, self).__init__(name.strip(), *args, **kwargs)
 
 
 class Author(URLWrapper):
