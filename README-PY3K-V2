@@ -10,3 +10,33 @@ Also the code was suitable for Python 3 only.
 In this second attempt, I'll try to apply changes 2to3 would have made
 carefully manually, and also try to stay compatible with Python 2
 syntax.
+
+
+
+manual 2to3:
+============
+
+isinstance(.., basestring) -> isinstance(.., six.string_types)
+
+isinstance(.., unicode) -> isinstance(.., six.text_types)
+
+Treating *all* string variables as unicode:
+--> remove decode(), encode(), str(), unicode()
+--> input values must be decoded to unicode as soon as possible:
+    --> where it's read from file
+	--> where user input is accepted
+	--> etc
+	--> no more conversion inside the code
+
+Use Django's decorator to provide __str__() and __unicode__() for
+both Python versions simultaneously.
+
+Upgraded BeautifulSoup to bs4 (only bs4 supports Py3k). For parsing XML
+like in the WordPress importer, also lxml is required now!
+Also, convertEntities is no longer supported!
+
+Kept range() almost everywhere as-is (2to3 suggests list(range())), just changed
+it where I felt necessary.
+
+Changed xrange() back to range(), so its valid in both Python versions.
+
