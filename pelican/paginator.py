@@ -1,3 +1,6 @@
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 # From django.core.paginator
 from math import ceil
 
@@ -37,7 +40,7 @@ class Paginator(object):
         Returns a 1-based range of pages for iterating through within
         a template for loop.
         """
-        return range(1, self.num_pages + 1)
+        return list(range(1, self.num_pages + 1))
     page_range = property(_get_page_range)
 
 
