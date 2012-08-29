@@ -90,13 +90,20 @@ class Page(object):
             self.date_format = self.date_format[1]
 
         if hasattr(self, 'date'):
-            encoded_date = self.date.strftime(
-                    self.date_format.encode('ascii', 'xmlcharrefreplace'))
+            self.locale_date = self.date.strftime(
+                self.date_format)
+            
+            ### XXX Cannot really make sense out of this, sorry (dmdm)
+            ###     Was intended to format the date according to locale?
+            ###     That would be different from the encoding...
 
-            if platform == 'win32':
-                self.locale_date = encoded_date.decode(stdin.encoding)
-            else:
-                self.locale_date = encoded_date.decode('utf')
+            ### encoded_date = self.date.strftime(
+            ###         self.date_format.encode('ascii', 'xmlcharrefreplace'))
+
+            ### if platform == 'win32':
+            ###     self.locale_date = encoded_date.decode(stdin.encoding)
+            ### else:
+            ###     self.locale_date = encoded_date.decode('utf') # XXX <-- UTF-8?
 
         # manage status
         if not hasattr(self, 'status'):
