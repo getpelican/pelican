@@ -274,8 +274,7 @@ class ArticlesGenerator(Generator):
                 if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
                     category = self.settings['DEFAULT_CATEGORY'] 
                 else:
-                    category = os.path.basename(os.path.dirname(f))\
-                                .decode('utf-8')
+                    category = os.path.basename(os.path.dirname(f))
 
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
