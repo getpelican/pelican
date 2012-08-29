@@ -1,3 +1,6 @@
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 __all__ = [
     'init'
 ]
@@ -9,7 +12,7 @@ import logging
 from logging import Formatter, getLogger, StreamHandler, DEBUG
 
 
-RESET_TERM = u'\033[0;m'
+RESET_TERM = '\033[0;m'
 
 COLOR_CODES = {
     'red': 31,
@@ -24,7 +27,7 @@ COLOR_CODES = {
 def ansi(color, text):
     """Wrap text in an ansi escape sequence"""
     code = COLOR_CODES[color]
-    return u'\033[1;{0}m{1}{2}'.format(code, text, RESET_TERM)
+    return '\033[1;{0}m{1}{2}'.format(code, text, RESET_TERM)
 
 
 class ANSIFormatter(Formatter):
@@ -35,17 +38,17 @@ class ANSIFormatter(Formatter):
 
     def format(self, record):
         if record.levelname is 'INFO':
-            return ansi('cyan', '-> ') + unicode(record.msg)
+            return ansi('cyan', '-> ') + record.msg
         elif record.levelname is 'WARNING':
-            return ansi('yellow', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('yellow', record.levelname) + ': ' + record.msg
         elif record.levelname is 'ERROR':
-            return ansi('red', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('red', record.levelname) + ': ' + record.msg
         elif record.levelname is 'CRITICAL':
-            return ansi('bgred', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('bgred', record.levelname) + ': ' + record.msg
         elif record.levelname is 'DEBUG':
-            return ansi('bggrey', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('bggrey', record.levelname) + ': ' + record.msg
         else:
-            return ansi('white', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('white', record.levelname) + ': ' + record.msg
 
 
 class TextFormatter(Formatter):
