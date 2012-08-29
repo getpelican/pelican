@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 from docutils import nodes, utils
 from docutils.parsers.rst import directives, roles, Directive
 from pygments.formatters import HtmlFormatter
@@ -32,7 +34,7 @@ class Pygments(Directive):
         # take an arbitrary option if more than one is given
         formatter = self.options and VARIANTS[self.options.keys()[0]] \
                     or DEFAULT
-        parsed = highlight(u'\n'.join(self.content), lexer, formatter)
+        parsed = highlight('\n'.join(self.content), lexer, formatter)
         return [nodes.raw('', parsed, format='html')]
 
 directives.register_directive('code-block', Pygments)
