@@ -1,3 +1,7 @@
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import os
 import re
 import sys
@@ -73,7 +77,7 @@ class Pelican(object):
         self.plugins = self.settings['PLUGINS']
         for plugin in self.plugins:
             # if it's a string, then import it
-            if isinstance(plugin, basestring):
+            if isinstance(plugin, six.string_types):
                 logger.debug("Loading plugin `{0}' ...".format(plugin))
                 plugin = __import__(plugin, globals(), locals(), 'module')
 
@@ -247,7 +251,7 @@ def get_instance(args):
     settings = read_settings(args.settings)
 
     cls = settings.get('PELICAN_CLASS')
-    if isinstance(cls, basestring):
+    if isinstance(cls, six.string_types):
         module, cls_name = cls.rsplit('.', 1)
         module = __import__(module)
         cls = getattr(module, cls_name)
@@ -287,15 +291,15 @@ def main():
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
                     break
-                except Exception, e:
+                except Exception as e:
                     logger.warning(
                         "Caught exception \"{}\". Reloading.".format(e)
                     )
                     continue
         else:
             pelican.run()
-    except Exception, e:
-        logger.critical(unicode(e))
+    except Exception as e:
+        logger.critical(e)
 
         if (args.verbosity == logging.DEBUG):
             raise
