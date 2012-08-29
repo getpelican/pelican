@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 try:
     import docutils
     import docutils.core
@@ -20,9 +22,9 @@ from pelican.utils import get_date, open
 
 
 _METADATA_PROCESSORS = {
-    'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
+    'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
     'date': lambda x, y: get_date(x),
-    'status': lambda x, y: unicode.strip(x),
+    'status': lambda x, y: x.strip(),
     'category': Category,
     'author': Author,
 }
