@@ -59,7 +59,7 @@ class Writer(object):
         :param feed_type: the feed type to use (atom or rss)
         """
         old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
+        locale.setlocale(locale.LC_ALL, str('C'))
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
             self.feed_domain = context.get('FEED_DOMAIN')
@@ -110,7 +110,7 @@ class Writer(object):
         def _write_file(template, localcontext, output_path, name):
             """Render the template write the file."""
             old_locale = locale.setlocale(locale.LC_ALL)
-            locale.setlocale(locale.LC_ALL, 'C')
+            locale.setlocale(locale.LC_ALL, str('C'))
             try:
                 output = template.render(localcontext)
             finally:

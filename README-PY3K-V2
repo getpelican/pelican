@@ -40,3 +40,8 @@ it where I felt necessary.
 
 Changed xrange() back to range(), so its valid in both Python versions.
 
+OUCH!! setlocale() in Python 2 bails when we give the locale name as unicode,
+and since we're using from __future__ import unicode_literals, we do it everywhere!
+As a workaround, I enclosed the localename with str(); in Python 2 this casts the
+name to a byte string, in Python 3 this should do nothing, because the locale name
+already had been unicode.

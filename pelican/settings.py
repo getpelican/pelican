@@ -140,7 +140,7 @@ def configure_settings(settings, default_settings=None, filename=None):
 
     for locale_ in locales:
         try:
-            locale.setlocale(locale.LC_ALL, locale_)
+            locale.setlocale(locale.LC_ALL, str(locale_))
             break  # break if it is successful
         except locale.Error:
             pass
