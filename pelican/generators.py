@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import os
 import math
 import random
@@ -102,7 +105,7 @@ class Generator(object):
         for item in items:
             value = getattr(self, item)
             if hasattr(value, 'items'):
-                value = value.items()
+                value = list(value.items())
             self.context[item] = value
 
 
@@ -203,7 +206,7 @@ class ArticlesGenerator(Generator):
             write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'tag/%s' % tag)
+                page_name='tag/%s' % tag)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -213,7 +216,7 @@ class ArticlesGenerator(Generator):
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'category/%s' % cat)
+                page_name='category/%s' % cat)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -223,7 +226,7 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'author/%s' % aut)
+                page_name='author/%s' % aut)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
@@ -261,8 +264,8 @@ class ArticlesGenerator(Generator):
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
                 content, metadata = read_file(f, settings=self.settings)
-            except Exception, e:
-                logger.warning(u'Could not process %s\n%s' % (f, str(e)))
+            except Exception as e:
+                logger.warning('Could not process %s\n%s' % (f, str(e)))
                 continue
 
             # if no category is set, use the name of the path as a category
@@ -299,9 +302,9 @@ class ArticlesGenerator(Generator):
             elif article.status == "draft":
                 self.drafts.append(article)
             else:
-                logger.warning(u"Unknown status %s for file %s, skipping it." %
-                               (repr(unicode.encode(article.status, 'utf-8')),
-                                repr(f)))
+                logger.warning("Unknown status %s for file %s, skipping it." %
+                               (article.status,
+                                f))
 
         self.articles, self.translations = process_translations(all_articles)
 
@@ -325,7 +328,7 @@ class ArticlesGenerator(Generator):
         tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
         tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
 
-        tags = map(itemgetter(1), tag_cloud)
+        tags = list(map(itemgetter(1), tag_cloud))
         if tags:
             max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
@@ -379,8 +382,8 @@ class PagesGenerator(Generator):
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
                 content, metadata = read_file(f)
-            except Exception, e:
-                logger.warning(u'Could not process %s\n%s' % (f, str(e)))
+            except Exception as e:
+                logger.warning('Could not process %s\n%s' % (f, str(e)))
                 continue
             signals.pages_generate_context.send(self, metadata=metadata )
             page = Page(content, metadata, settings=self.settings,
@@ -392,7 +395,7 @@ class PagesGenerator(Generator):
             elif page.status == "hidden":
                 hidden_pages.append(page)
             else:
-                logger.warning(u"Unknown status %s for file %s, skipping it." %
+                logger.warning("Unknown status %s for file %s, skipping it." %
                                (repr(unicode.encode(page.status, 'utf-8')),
                                 repr(f)))
 
@@ -468,7 +471,7 @@ class PdfGenerator(Generator):
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             with open(obj.filename) as f:
                 self.pdfcreator.createPdf(text=f, output=output_pdf)
-            logger.info(u' [ok] writing %s' % output_pdf)
+            logger.info(' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
         pass
@@ -476,7 +479,7 @@ class PdfGenerator(Generator):
     def generate_output(self, writer=None):
         # we don't use the writer passed as argument here
         # since we write our own files
-        logger.info(u' Generating PDF files...')
+        logger.info(' Generating PDF files...')
         pdf_path = os.path.join(self.output_path, 'pdf')
         if not os.path.exists(pdf_path):
             try:
@@ -509,15 +512,15 @@ class LessCSSGenerator(Generator):
                         target_dir)
 
         subprocess.call([self._lessc, less_file, target])
-        logger.info(u' [ok] compiled %s' % base)
+        logger.info(' [ok] compiled %s' % base)
 
     def generate_output(self, writer=None):
-        logger.info(u' Compiling less css')
+        logger.info(' Compiling less css')
 
         # store out compiler here, so it won't be evaulted on each run of
         # _compile
         lg = self.settings['LESS_GENERATOR']
-        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
+        self._lessc = lg if isinstance(lg, six.string_types) else 'lessc'
 
         # walk static paths
         for static_path in self.settings['STATIC_PATHS']:
