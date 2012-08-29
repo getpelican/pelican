@@ -52,7 +52,7 @@ class RawHtml(Directive):
     has_content = True
 
     def run(self):
-        html = u' '.join(self.content)
+        html = ' '.join(self.content)
         node = nodes.raw('', html, format='html')
         return [node]
 
