@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import with_statement
+from __future__ import with_statement, unicode_literals, print_function
 
 import os
 import re
@@ -70,7 +70,7 @@ class Writer(object):
             max_items = len(elements)
             if self.settings['FEED_MAX_ITEMS']:
                 max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
-            for i in xrange(max_items):
+            for i in range(max_items):
                 self._add_item_to_the_feed(feed, elements[i])
 
             if filename:
@@ -122,7 +122,7 @@ class Writer(object):
                 pass
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write(output)
-            logger.info(u'writing %s' % filename)
+            logger.info('writing %s' % filename)
 
         localcontext = context.copy()
         if relative_urls:
@@ -137,7 +137,7 @@ class Writer(object):
         if paginated:
             # pagination needed, init paginators
             paginators = {}
-            for key in paginated.iterkeys():
+            for key in paginated.keys():
                 object_list = paginated[key]
 
                 if self.settings.get('DEFAULT_PAGINATION'):
@@ -148,10 +148,10 @@ class Writer(object):
                     paginators[key] = Paginator(object_list, len(object_list))
 
             # generated pages, and write
-            for page_num in range(paginators.values()[0].num_pages):
+            for page_num in range(list(paginators.values())[0].num_pages):
                 paginated_localcontext = localcontext.copy()
                 paginated_name = name
-                for key in paginators.iterkeys():
+                for key in paginators.keys():
                     paginator = paginators[key]
                     page = paginator.page(page_num + 1)
                     paginated_localcontext.update(
@@ -210,7 +210,7 @@ class Writer(object):
         if context is None:
             return
         if hasattr(context, 'values'):
-            context = context.values()
+            context = list(context.values())
 
         for item in context:
             # run recursively on iterables
