@@ -41,8 +41,8 @@ def add_related_posts(generator, metadata):
         if len(related_posts) < 1:
             return
 
-        relation_score = dict(zip(set(related_posts), map(related_posts.count,
-                              set(related_posts))))
+        relation_score = dict(list(zip(set(related_posts), list(map(related_posts.count,
+                              set(related_posts))))))
         ranked_related = sorted(relation_score, key=relation_score.get)
 
         metadata["related_posts"] = ranked_related[:5]
