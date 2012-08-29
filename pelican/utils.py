@@ -248,12 +248,9 @@ def process_translations(content_list):
                 + 'content'
             logger.warning(msg)
         index.extend(default_lang_items)
-        translations.extend(filter(
-            lambda x: x not in default_lang_items,
-            items
-        ))
+        translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
-            a.translations = filter(lambda x: x != a, items)
+            a.translations = [x for x in items if x != a]
     return index, translations
 
 
