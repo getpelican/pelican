@@ -396,8 +396,8 @@ class PagesGenerator(Generator):
                 hidden_pages.append(page)
             else:
                 logger.warning("Unknown status %s for file %s, skipping it." %
-                               (repr(unicode.encode(page.status, 'utf-8')),
-                                repr(f)))
+                               (page.status,
+                                f))
 
         self.pages, self.translations = process_translations(all_pages)
         self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
