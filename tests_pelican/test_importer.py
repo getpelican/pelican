@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 
 import os
 
@@ -10,7 +11,7 @@ WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
 
 PANDOC = os.system('pandoc --version') == 0
 try:
-    import BeautifulSoup
+    from bs4 import BeautifulSoup
 except ImportError:
     BeautifulSoup = False  # NOQA
 

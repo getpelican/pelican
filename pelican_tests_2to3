@@ -1,0 +1,20 @@
+#!/bin/sh
+
+IN_DIR="tests_pelican"
+OUT_DIR="tests_pelican-fixed"
+
+if [ ! -e $OUT_DIR ]
+then
+	mkdir $OUT_DIR
+fi
+
+2to3 -o $OUT_DIR/ \
+	-f all \
+	-f buffer \
+	-f idioms \
+	-f set_literal \
+	-f ws_comma \
+	-nw \
+	$IN_DIR \
+	> $OUT_DIR/patches.txt
+

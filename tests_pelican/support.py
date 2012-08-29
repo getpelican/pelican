@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 __all__ = [
     'get_article',
     'unittest',
@@ -7,7 +9,7 @@ import os
 import subprocess
 import re
 import sys
-import cStringIO
+from six import StringIO
 
 from functools import wraps
 from contextlib import contextmanager
@@ -98,7 +100,7 @@ def mute(returns_output=False):
         def wrapper(*args, **kwargs):
 
             saved_stdout = sys.stdout
-            sys.stdout = cStringIO.StringIO()
+            sys.stdout = StringIO()
 
             try:
                 out = func(*args, **kwargs)

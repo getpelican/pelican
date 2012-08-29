@@ -214,7 +214,7 @@ class Writer(object):
 
         for item in context:
             # run recursively on iterables
-            if hasattr(item, '__iter__'):
+            if hasattr(item, '__iter__') and not isinstance(item, str):
                 self.update_context_contents(name, item)
 
             # if it is a content, patch it

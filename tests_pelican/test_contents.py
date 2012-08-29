@@ -106,8 +106,7 @@ class TestPage(unittest.TestCase):
         page = Page(**page_kwargs)
 
         self.assertEqual(page.locale_date,
-            unicode(dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']),
-                                'utf-8'))
+            dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
 
         page_kwargs['settings'] = dict([(x, _DEFAULT_CONFIG[x]) for x in
                                         _DEFAULT_CONFIG])
@@ -124,7 +123,7 @@ class TestPage(unittest.TestCase):
         import locale as locale_module
         try:
             page = Page(**page_kwargs)
-            self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
+            self.assertEqual(page.locale_date, '2015-09-13(\u65e5)')
         except locale_module.Error:
             # The constructor of ``Page`` will try to set the locale to
             # ``ja_JP.utf8``. But this attempt will failed when there is no
