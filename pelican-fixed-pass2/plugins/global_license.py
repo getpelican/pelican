@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
 from pelican import signals
 
 """
@@ -17,8 +15,8 @@ Add LICENSE to your settings file to define default license.
 """
 
 def add_license(generator, metadata):
-    if 'license' not in metadata.keys()\
-        and 'LICENSE' in generator.settings.keys():
+    if 'license' not in list(metadata.keys())\
+        and 'LICENSE' in list(generator.settings.keys()):
             metadata['license'] = generator.settings['LICENSE']
 
 def register():

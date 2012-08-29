@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
 import argparse
 import os
 import subprocess
@@ -92,7 +90,7 @@ def dc2fields(file):
                 else:
                     posts.append(line)
 
-    print("%i posts read." % len(posts))
+    print(("%i posts read." % len(posts)))
 
     for post in posts:
         fields = post.split('","')

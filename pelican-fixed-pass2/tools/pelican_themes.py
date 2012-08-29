@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
 
 import six
 
@@ -134,9 +133,9 @@ def list_themes(v=False):
             t = os.path.basename(t)
         if l:
             if v:
-                print(t + (" (symbolic link to `" + l + "')"))
+                print((t + (" (symbolic link to `" + l + "')")))
             else:
-                print(t + '@')
+                print((t + '@'))
         else:
             print(t)
 
@@ -151,11 +150,11 @@ def remove(theme_name, v=False):
         err(theme_name + ' is a builtin theme.\nYou cannot remove a builtin theme with this script, remove it by hand if you want.')
     elif os.path.islink(target):
         if v:
-            print('Removing link `' + target + "'")
+            print(('Removing link `' + target + "'"))
         os.remove(target)
     elif os.path.isdir(target):
         if v:
-            print('Removing directory `' + target + "'")
+            print(('Removing directory `' + target + "'"))
         shutil.rmtree(target)
     elif os.path.exists(target):
         err(target + ' : not a valid theme')
@@ -180,7 +179,7 @@ def install(path, v=False, u=False):
             install(path, v)
         else:
             if v:
-                print("Copying `{p}' to `{t}' ...".format(p=path, t=theme_path))
+                print(("Copying `{p}' to `{t}' ...".format(p=path, t=theme_path)))
             try:
                 shutil.copytree(path, theme_path)
 
@@ -189,10 +188,10 @@ def install(path, v=False, u=False):
                         for root, dirs, files in os.walk(theme_path):
                             for d in dirs:
                                 dname = os.path.join(root, d)
-                                os.chmod(dname, 0o755 if six.PY3 else 0755)
+                                os.chmod(dname, 0o755 if six.PY3 else 0o755)
                             for f in files:
                                 fname = os.path.join(root, f)
-                                os.chmod(fname, 0o644 if six.PY3 else 0644)
+                                os.chmod(fname, 0o644 if six.PY3 else 0o644)
                 except OSError as e:
                     err("Cannot change permissions of files or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)), die=False)
             except Exception as e:
@@ -212,7 +211,7 @@ def symlink(path, v=False):
             err(path + ' : already exists')
         else:
             if v:
-                print("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path))
+                print(("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path)))
             try:
                 os.symlink(path, theme_path)
             except Exception as e:
@@ -233,12 +232,12 @@ def clean(v=False):
         if os.path.islink(path):
             if is_broken_link(path):
                 if v:
-                    print('Removing {0}'.format(path))
+                    print(('Removing {0}'.format(path)))
                 try:
                     os.remove(path)
                 except OSError as e:
-                    print('Error: cannot remove {0}'.format(path))
+                    print(('Error: cannot remove {0}'.format(path)))
                 else:
                     c+=1
 
-    print("\nRemoved {0} broken links".format(c))
+    print(("\nRemoved {0} broken links".format(c)))

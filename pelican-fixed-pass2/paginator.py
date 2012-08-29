@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+# -*- encoding=utf-8 -*-
+
 
 # From django.core.paginator
 from math import ceil

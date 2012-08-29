@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+# -*- encoding=utf-8 -*-
+
 
 try:
     import docutils
@@ -136,7 +136,7 @@ class MarkdownReader(Reader):
         content = md.convert(text)
 
         metadata = {}
-        for name, value in md.Meta.items():
+        for name, value in list(md.Meta.items()):
             name = name.lower()
             metadata[name] = self.process_metadata(name, value[0])
         return content, metadata

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*- #
 
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
 import six
 
 import os
@@ -33,15 +32,15 @@ CONF = {
 
 def _input_compat(prompt):
     if six.PY3:
-        r = input(prompt)
+        r = eval(input(prompt))
     else:
-        r = raw_input(prompt).decode('utf-8')
+        r = input(prompt).decode('utf-8')
     return r
 
 if six.PY3:
     str_compat = str
 else:
-    str_compat = unicode
+    str_compat = str
 
 def get_template(name):
     template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
@@ -76,7 +75,7 @@ def ask(question, answer=str_compat, default=None, l=None):
                     print('You must enter something')
             else:
                 if l and len(r) != l:
-                    print('You must enter a {0} letters long string'.format(l))
+                    print(('You must enter a {0} letters long string'.format(l)))
                 else:
                    break
 
@@ -145,18 +144,18 @@ def main():
 
     args = parser.parse_args()
 
-    print('''Welcome to pelican-quickstart v{v}.
+    print(('''Welcome to pelican-quickstart v{v}.
 
 This script will help you create a new Pelican-based website.
 
 Please answer the following questions so this script can generate the files needed by Pelican.
 
-    '''.format(v=__version__))
+    '''.format(v=__version__)))
 
     project = os.path.join(os.environ.get('VIRTUAL_ENV', '.'), '.project')
     if os.path.isfile(project):
         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
-        print('Using project associated with current virtual environment. Will save to:\n%s\n' % CONF['basedir'])
+        print(('Using project associated with current virtual environment. Will save to:\n%s\n' % CONF['basedir']))
     else:
         CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new web site?', answer=str_compat, default=args.path))
 
@@ -193,12 +192,12 @@ Please answer the following questions so this script can generate the files need
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print(('Error: {0}'.format(e)))
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'output'))
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print(('Error: {0}'.format(e)))
 
     try:
         with open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w') as fd:
@@ -207,7 +206,7 @@ Please answer the following questions so this script can generate the files need
                 fd.write(template.safe_substitute(CONF))
             fd.close()
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print(('Error: {0}'.format(e)))
 
     try:
         with open(os.path.join(CONF['basedir'], 'publishconf.py'), 'w') as fd:
@@ -216,7 +215,7 @@ Please answer the following questions so this script can generate the files need
                 fd.write(template.safe_substitute(CONF))
             fd.close()
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print(('Error: {0}'.format(e)))
 
     if mkfile:
         try:
@@ -226,7 +225,7 @@ Please answer the following questions so this script can generate the files need
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
         except OSError as e:
-            print('Error: {0}'.format(e))
+            print(('Error: {0}'.format(e)))
 
     if develop:
         try:
@@ -236,8 +235,8 @@ Please answer the following questions so this script can generate the files need
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
                 os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')),
-                    0o755 if six.PY3 else 0755)
+                    0o755 if six.PY3 else 0o755)
         except OSError as e:
-            print('Error: {0}'.format(e))
+            print(('Error: {0}'.format(e)))
 
-    print('Done. Your new project is available at %s' % CONF['basedir'])
+    print(('Done. Your new project is available at %s' % CONF['basedir']))

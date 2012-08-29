@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+# -*- encoding=utf-8 -*-
+
 import six
 
 import locale
@@ -43,7 +43,7 @@ class Page(object):
         local_metadata.update(metadata)
 
         # set metadata as attributes
-        for key, value in local_metadata.items():
+        for key, value in list(local_metadata.items()):
             setattr(self, key.lower(), value)
 
         # also keep track of the metadata attributes available

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+# -*- encoding=utf-8 -*-
+
 import six
 
 import os
@@ -34,7 +34,7 @@ class Generator(object):
                 'output_path', 'markup')):
             setattr(self, item, args[idx])
 
-        for arg, value in kwargs.items():
+        for arg, value in list(kwargs.items()):
             setattr(self, arg, value)
 
         # templates cache
@@ -154,7 +154,7 @@ class ArticlesGenerator(Generator):
                                   feed_type='rss')
 
         if self.settings.get('TAG_FEED_ATOM') or self.settings.get('TAG_FEED_RSS'):
-            for tag, arts in self.tags.items():
+            for tag, arts in list(self.tags.items()):
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
@@ -170,7 +170,7 @@ class ArticlesGenerator(Generator):
             for article in chain(self.articles, self.translations):
                 translations_feeds[article.lang].append(article)
 
-            for lang, items in translations_feeds.items():
+            for lang, items in list(translations_feeds.items()):
                 items.sort(key=attrgetter('date'), reverse=True)
                 writer.write_feed(items, self.context,
                                   self.settings['TRANSLATION_FEED'] % lang)
@@ -200,7 +200,7 @@ class ArticlesGenerator(Generator):
     def generate_tags(self, write):
         """Generate Tags pages."""
         tag_template = self.get_template('tag')
-        for tag, articles in self.tags.items():
+        for tag, articles in list(self.tags.items()):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
@@ -324,7 +324,7 @@ class ArticlesGenerator(Generator):
             for tag in getattr(article, 'tags', []):
                 tag_cloud[tag] += 1
 
-        tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
+        tag_cloud = sorted(list(tag_cloud.items()), key=itemgetter(1), reverse=True)
         tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
 
         tags = list(map(itemgetter(1), tag_cloud))

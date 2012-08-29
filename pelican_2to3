@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OUT_DIR="pelican-fixed"
+OUT_DIR="pelican-fixed-pass2"
 
 if [ ! -e $OUT_DIR ]
 then

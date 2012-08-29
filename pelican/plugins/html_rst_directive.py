@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 from docutils import nodes
 from docutils.parsers.rst import directives, Directive
 from pelican import log

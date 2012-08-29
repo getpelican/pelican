@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
 import hashlib
 
 from pelican import signals
@@ -27,12 +25,12 @@ article's context.
 def add_gravatar(generator, metadata):
 
     #first check email
-    if 'email' not in metadata.keys()\
-        and 'AUTHOR_EMAIL' in generator.settings.keys():
+    if 'email' not in list(metadata.keys())\
+        and 'AUTHOR_EMAIL' in list(generator.settings.keys()):
             metadata['email'] = generator.settings['AUTHOR_EMAIL']
 
     #then add gravatar url
-    if 'email' in metadata.keys():
+    if 'email' in list(metadata.keys()):
         gravatar_url = "http://www.gravatar.com/avatar/" + \
                         hashlib.md5(metadata['email'].lower()).hexdigest()
         metadata["author_gravatar"] = gravatar_url

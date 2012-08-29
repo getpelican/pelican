@@ -1,0 +1,460 @@
+--- pelican/__init__.py	(original)
++++ pelican/__init__.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ import six
+ 
+ import os
+--- pelican/contents.py	(original)
++++ pelican/contents.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ import six
+ 
+ import locale
+@@ -43,7 +43,7 @@
+         local_metadata.update(metadata)
+ 
+         # set metadata as attributes
+-        for key, value in local_metadata.items():
++        for key, value in list(local_metadata.items()):
+             setattr(self, key.lower(), value)
+ 
+         # also keep track of the metadata attributes available
+@@ -225,7 +225,7 @@
+     try:
+         content.check_properties()
+         return True
+-    except NameError, e:
++    except NameError as e:
+         logger.error("Skipping %s: impossible to find informations about '%s'"\
+                 % (f, e))
+         return False
+--- pelican/generators.py	(original)
++++ pelican/generators.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ import six
+ 
+ import os
+@@ -34,7 +34,7 @@
+                 'output_path', 'markup')):
+             setattr(self, item, args[idx])
+ 
+-        for arg, value in kwargs.items():
++        for arg, value in list(kwargs.items()):
+             setattr(self, arg, value)
+ 
+         # templates cache
+@@ -154,7 +154,7 @@
+                                   feed_type='rss')
+ 
+         if self.settings.get('TAG_FEED_ATOM') or self.settings.get('TAG_FEED_RSS'):
+-            for tag, arts in self.tags.items():
++            for tag, arts in list(self.tags.items()):
+                 arts.sort(key=attrgetter('date'), reverse=True)
+                 if self.settings.get('TAG_FEED_ATOM'):
+                     writer.write_feed(arts, self.context,
+@@ -170,7 +170,7 @@
+             for article in chain(self.articles, self.translations):
+                 translations_feeds[article.lang].append(article)
+ 
+-            for lang, items in translations_feeds.items():
++            for lang, items in list(translations_feeds.items()):
+                 items.sort(key=attrgetter('date'), reverse=True)
+                 writer.write_feed(items, self.context,
+                                   self.settings['TRANSLATION_FEED'] % lang)
+@@ -200,7 +200,7 @@
+     def generate_tags(self, write):
+         """Generate Tags pages."""
+         tag_template = self.get_template('tag')
+-        for tag, articles in self.tags.items():
++        for tag, articles in list(self.tags.items()):
+             articles.sort(key=attrgetter('date'), reverse=True)
+             dates = [article for article in self.dates if article in articles]
+             write(tag.save_as, tag_template, self.context, tag=tag,
+@@ -324,7 +324,7 @@
+             for tag in getattr(article, 'tags', []):
+                 tag_cloud[tag] += 1
+ 
+-        tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
++        tag_cloud = sorted(list(tag_cloud.items()), key=itemgetter(1), reverse=True)
+         tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
+ 
+         tags = list(map(itemgetter(1), tag_cloud))
+--- pelican/log.py	(original)
++++ pelican/log.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ 
+ __all__ = [
+     'init'
+--- pelican/paginator.py	(original)
++++ pelican/paginator.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ 
+ # From django.core.paginator
+ from math import ceil
+--- pelican/readers.py	(original)
++++ pelican/readers.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ 
+ try:
+     import docutils
+@@ -136,7 +136,7 @@
+         content = md.convert(text)
+ 
+         metadata = {}
+-        for name, value in md.Meta.items():
++        for name, value in list(md.Meta.items()):
+             name = name.lower()
+             metadata[name] = self.process_metadata(name, value[0])
+         return content, metadata
+--- pelican/rstdirectives.py	(original)
++++ pelican/rstdirectives.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ 
+ from docutils import nodes, utils
+ from docutils.parsers.rst import directives, roles, Directive
+@@ -32,7 +32,7 @@
+             # no lexer found - use the text one instead of an exception
+             lexer = TextLexer()
+         # take an arbitrary option if more than one is given
+-        formatter = self.options and VARIANTS[self.options.keys()[0]] \
++        formatter = self.options and VARIANTS[list(self.options.keys())[0]] \
+                     or DEFAULT
+         parsed = highlight('\n'.join(self.content), lexer, formatter)
+         return [nodes.raw('', parsed, format='html')]
+--- pelican/settings.py	(original)
++++ pelican/settings.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ import six
+ 
+ import imp
+--- pelican/utils.py	(original)
++++ pelican/utils.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- encoding=utf-8 -*-
+-from __future__ import unicode_literals, print_function
++
+ import six
+ 
+ import os
+@@ -233,7 +233,7 @@
+     for slug, items in grouped_by_slugs:
+         items = list(items)
+         # find items with default language
+-        default_lang_items = filter(attrgetter('in_default_lang'), items)
++        default_lang_items = list(filter(attrgetter('in_default_lang'), items))
+         len_ = len(default_lang_items)
+         if len_ > 1:
+             logger.warning('there are %s variants of "%s"' % (len_, slug))
+--- pelican/writers.py	(original)
++++ pelican/writers.py	(refactored)
+@@ -1,5 +1,5 @@
+ # -*- coding: utf-8 -*-
+-from __future__ import with_statement, unicode_literals, print_function
++
+ 
+ import os
+ import re
+@@ -137,7 +137,7 @@
+         if paginated:
+             # pagination needed, init paginators
+             paginators = {}
+-            for key in paginated.keys():
++            for key in list(paginated.keys()):
+                 object_list = paginated[key]
+ 
+                 if self.settings.get('DEFAULT_PAGINATION'):
+@@ -151,7 +151,7 @@
+             for page_num in range(list(paginators.values())[0].num_pages):
+                 paginated_localcontext = localcontext.copy()
+                 paginated_name = name
+-                for key in paginators.keys():
++                for key in list(paginators.keys()):
+                     paginator = paginators[key]
+                     page = paginator.page(page_num + 1)
+                     paginated_localcontext.update(
+--- pelican/plugins/github_activity.py	(original)
++++ pelican/plugins/github_activity.py	(refactored)
+@@ -65,7 +65,7 @@
+         template
+     """
+ 
+-    if 'GITHUB_ACTIVITY_FEED' in gen.settings.keys():
++    if 'GITHUB_ACTIVITY_FEED' in list(gen.settings.keys()):
+         gen.context['github_activity'] = gen.plugin_instance.fetch()
+ 
+ 
+--- pelican/plugins/global_license.py	(original)
++++ pelican/plugins/global_license.py	(refactored)
+@@ -15,8 +15,8 @@
+ """
+ 
+ def add_license(generator, metadata):
+-    if 'license' not in metadata.keys()\
+-        and 'LICENSE' in generator.settings.keys():
++    if 'license' not in list(metadata.keys())\
++        and 'LICENSE' in list(generator.settings.keys()):
+             metadata['license'] = generator.settings['LICENSE']
+ 
+ def register():
+--- pelican/plugins/gravatar.py	(original)
++++ pelican/plugins/gravatar.py	(refactored)
+@@ -25,12 +25,12 @@
+ def add_gravatar(generator, metadata):
+ 
+     #first check email
+-    if 'email' not in metadata.keys()\
+-        and 'AUTHOR_EMAIL' in generator.settings.keys():
++    if 'email' not in list(metadata.keys())\
++        and 'AUTHOR_EMAIL' in list(generator.settings.keys()):
+             metadata['email'] = generator.settings['AUTHOR_EMAIL']
+ 
+     #then add gravatar url
+-    if 'email' in metadata.keys():
++    if 'email' in list(metadata.keys()):
+         gravatar_url = "http://www.gravatar.com/avatar/" + \
+                         hashlib.md5(metadata['email'].lower()).hexdigest()
+         metadata["author_gravatar"] = gravatar_url
+--- pelican/plugins/initialized.py	(original)
++++ pelican/plugins/initialized.py	(refactored)
+@@ -1,7 +1,7 @@
+ from pelican import signals
+ 
+ def test(sender):
+-    print("%s initialized !!" % sender)
++    print(("%s initialized !!" % sender))
+ 
+ def register():
+     signals.initialized.connect(test)
+--- pelican/tools/pelican_import.py	(original)
++++ pelican/tools/pelican_import.py	(refactored)
+@@ -90,7 +90,7 @@
+                 else:
+                     posts.append(line)
+ 
+-    print("%i posts read." % len(posts))
++    print(("%i posts read." % len(posts)))
+ 
+     for post in posts:
+         fields = post.split('","')
+@@ -152,11 +152,11 @@
+                 i=1
+                 j=1
+                 while(i <= int(tag[:1])):
+-                    newtag = tag.split('"')[j].replace('\\','')
++                    newtag = tag.split('"')[j].replace('\\', '')
+                     tags.append(
+                         BeautifulSoup(
+                             newtag
+-                            ,"xml"
++                            , "xml"
+                         )
+                         # bs4 always outputs UTF-8
+                         .decode('utf-8')
+--- pelican/tools/pelican_quickstart.py	(original)
++++ pelican/tools/pelican_quickstart.py	(refactored)
+@@ -32,15 +32,15 @@
+ 
+ def _input_compat(prompt):
+     if six.PY3:
+-        r = input(prompt)
+-    else:
+-        r = raw_input(prompt).decode('utf-8')
++        r = eval(input(prompt))
++    else:
++        r = input(prompt).decode('utf-8')
+     return r
+ 
+ if six.PY3:
+     str_compat = str
+ else:
+-    str_compat = unicode
++    str_compat = str
+ 
+ def get_template(name):
+     template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
+@@ -75,7 +75,7 @@
+                     print('You must enter something')
+             else:
+                 if l and len(r) != l:
+-                    print('You must enter a {0} letters long string'.format(l))
++                    print(('You must enter a {0} letters long string'.format(l)))
+                 else:
+                    break
+ 
+@@ -144,18 +144,18 @@
+ 
+     args = parser.parse_args()
+ 
+-    print('''Welcome to pelican-quickstart v{v}.
++    print(('''Welcome to pelican-quickstart v{v}.
+ 
+ This script will help you create a new Pelican-based website.
+ 
+ Please answer the following questions so this script can generate the files needed by Pelican.
+ 
+-    '''.format(v=__version__))
++    '''.format(v=__version__)))
+ 
+     project = os.path.join(os.environ.get('VIRTUAL_ENV', '.'), '.project')
+     if os.path.isfile(project):
+         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
+-        print('Using project associated with current virtual environment. Will save to:\n%s\n' % CONF['basedir'])
++        print(('Using project associated with current virtual environment. Will save to:\n%s\n' % CONF['basedir']))
+     else:
+         CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new web site?', answer=str_compat, default=args.path))
+ 
+@@ -192,12 +192,12 @@
+     try:
+         os.makedirs(os.path.join(CONF['basedir'], 'content'))
+     except OSError as e:
+-        print('Error: {0}'.format(e))
++        print(('Error: {0}'.format(e)))
+ 
+     try:
+         os.makedirs(os.path.join(CONF['basedir'], 'output'))
+-    except OSError, e:
+-        print('Error: {0}'.format(e))
++    except OSError as e:
++        print(('Error: {0}'.format(e)))
+ 
+     try:
+         with open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w') as fd:
+@@ -206,7 +206,7 @@
+                 fd.write(template.safe_substitute(CONF))
+             fd.close()
+     except OSError as e:
+-        print('Error: {0}'.format(e))
++        print(('Error: {0}'.format(e)))
+ 
+     try:
+         with open(os.path.join(CONF['basedir'], 'publishconf.py'), 'w') as fd:
+@@ -215,7 +215,7 @@
+                 fd.write(template.safe_substitute(CONF))
+             fd.close()
+     except OSError as e:
+-        print('Error: {0}'.format(e))
++        print(('Error: {0}'.format(e)))
+ 
+     if mkfile:
+         try:
+@@ -225,7 +225,7 @@
+                     fd.write(template.safe_substitute(CONF))
+                 fd.close()
+         except OSError as e:
+-            print('Error: {0}'.format(e))
++            print(('Error: {0}'.format(e)))
+ 
+     if develop:
+         try:
+@@ -235,8 +235,8 @@
+                     fd.write(template.safe_substitute(CONF))
+                 fd.close()
+                 os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')),
+-                    0o755 if six.PY3 else 0755)
++                    0o755 if six.PY3 else 0o755)
+         except OSError as e:
+-            print('Error: {0}'.format(e))
+-
+-    print('Done. Your new project is available at %s' % CONF['basedir'])
++            print(('Error: {0}'.format(e)))
++
++    print(('Done. Your new project is available at %s' % CONF['basedir']))
+--- pelican/tools/pelican_themes.py	(original)
++++ pelican/tools/pelican_themes.py	(refactored)
+@@ -133,9 +133,9 @@
+             t = os.path.basename(t)
+         if l:
+             if v:
+-                print(t + (" (symbolic link to `" + l + "')"))
++                print((t + (" (symbolic link to `" + l + "')")))
+             else:
+-                print(t + '@')
++                print((t + '@'))
+         else:
+             print(t)
+ 
+@@ -150,11 +150,11 @@
+         err(theme_name + ' is a builtin theme.\nYou cannot remove a builtin theme with this script, remove it by hand if you want.')
+     elif os.path.islink(target):
+         if v:
+-            print('Removing link `' + target + "'")
++            print(('Removing link `' + target + "'"))
+         os.remove(target)
+     elif os.path.isdir(target):
+         if v:
+-            print('Removing directory `' + target + "'")
++            print(('Removing directory `' + target + "'"))
+         shutil.rmtree(target)
+     elif os.path.exists(target):
+         err(target + ' : not a valid theme')
+@@ -179,7 +179,7 @@
+             install(path, v)
+         else:
+             if v:
+-                print("Copying `{p}' to `{t}' ...".format(p=path, t=theme_path))
++                print(("Copying `{p}' to `{t}' ...".format(p=path, t=theme_path)))
+             try:
+                 shutil.copytree(path, theme_path)
+ 
+@@ -188,10 +188,10 @@
+                         for root, dirs, files in os.walk(theme_path):
+                             for d in dirs:
+                                 dname = os.path.join(root, d)
+-                                os.chmod(dname, 0o755 if six.PY3 else 0755)
++                                os.chmod(dname, 0o755 if six.PY3 else 0o755)
+                             for f in files:
+                                 fname = os.path.join(root, f)
+-                                os.chmod(fname, 0o644 if six.PY3 else 0644)
++                                os.chmod(fname, 0o644 if six.PY3 else 0o644)
+                 except OSError as e:
+                     err("Cannot change permissions of files or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)), die=False)
+             except Exception as e:
+@@ -211,7 +211,7 @@
+             err(path + ' : already exists')
+         else:
+             if v:
+-                print("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path))
++                print(("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path)))
+             try:
+                 os.symlink(path, theme_path)
+             except Exception as e:
+@@ -232,12 +232,12 @@
+         if os.path.islink(path):
+             if is_broken_link(path):
+                 if v:
+-                    print('Removing {0}'.format(path))
++                    print(('Removing {0}'.format(path)))
+                 try:
+                     os.remove(path)
+                 except OSError as e:
+-                    print('Error: cannot remove {0}'.format(path))
++                    print(('Error: cannot remove {0}'.format(path)))
+                 else:
+                     c+=1
+ 
+-    print("\nRemoved {0} broken links".format(c))
++    print(("\nRemoved {0} broken links".format(c)))

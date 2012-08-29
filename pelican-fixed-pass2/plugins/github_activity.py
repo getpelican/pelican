@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
 """
     Copyright (c) Marco Milanesi <kpanic@gnufunk.org>
 
@@ -66,7 +65,7 @@ def fetch_github_activity(gen, metadata):
         template
     """
 
-    if 'GITHUB_ACTIVITY_FEED' in gen.settings.keys():
+    if 'GITHUB_ACTIVITY_FEED' in list(gen.settings.keys()):
         gen.context['github_activity'] = gen.plugin_instance.fetch()
 
 

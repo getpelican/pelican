@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+# -*- encoding=utf-8 -*-
+
 import six
 
 import os
@@ -233,7 +233,7 @@ def process_translations(content_list):
     for slug, items in grouped_by_slugs:
         items = list(items)
         # find items with default language
-        default_lang_items = filter(attrgetter('in_default_lang'), items)
+        default_lang_items = list(filter(attrgetter('in_default_lang'), items))
         len_ = len(default_lang_items)
         if len_ > 1:
             logger.warning('there are %s variants of "%s"' % (len_, slug))

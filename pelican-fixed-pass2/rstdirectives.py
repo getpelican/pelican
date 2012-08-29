@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+# -*- encoding=utf-8 -*-
+
 
 from docutils import nodes, utils
 from docutils.parsers.rst import directives, roles, Directive
@@ -32,7 +32,7 @@ class Pygments(Directive):
             # no lexer found - use the text one instead of an exception
             lexer = TextLexer()
         # take an arbitrary option if more than one is given
-        formatter = self.options and VARIANTS[self.options.keys()[0]] \
+        formatter = self.options and VARIANTS[list(self.options.keys())[0]] \
                     or DEFAULT
         parsed = highlight('\n'.join(self.content), lexer, formatter)
         return [nodes.raw('', parsed, format='html')]
