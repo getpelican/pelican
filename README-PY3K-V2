@@ -1,0 +1,12 @@
+This is the second attempt to port Pelican to Python 3.
+
+The first used 2to3 and manually corrections to achieve
+syntactical correctness. But as the tests show, more subtle
+bugs in the string handling (e.g. outputting b'...' instead of
+'...') remain.
+
+Also the code was suitable for Python 3 only.
+
+In this second attempt, I'll try to apply changes 2to3 would have made
+carefully manually, and also try to stay compatible with Python 2
+syntax.
