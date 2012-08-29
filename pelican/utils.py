@@ -1,4 +1,7 @@
-# -*- coding: utf-8 -*-
+# -*- encoding=utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import os
 import re
 import pytz
@@ -64,14 +67,24 @@ def slugify(value):
 
     Took from django sources.
     """
+    # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
-    if type(value) == unicode:
-        import unicodedata
-        from unidecode import unidecode
-        value = unicode(unidecode(value))
-        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
-    return re.sub('[-\s]+', '-', value)
+    # value must be unicode per se
+    import unicodedata
+    from unidecode import unidecode
+    # unidecode returns str in Py2 and 3, so in Py2 we have to make
+    # it unicode again
+    value = unidecode(value)
+    if isinstance(value, six.binary_type):
+        value = value.decode('ascii')
+    # still unicode
+    value = unicodedata.normalize('NFKD', value)
+    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    value = re.sub('[-\s]+', '-', value)
+    # we want only ASCII chars
+    value = value.encode('ascii', 'ignore')
+    # but Pelican should generally use only unicode
+    return value.decode('ascii')
 
 
 def copy(path, source, destination, destination_path=None, overwrite=False):
@@ -118,13 +131,13 @@ def clean_output_dir(path):
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s" % file)
-            except Exception, e:
+            except Exception as e:
                 logger.error("Unable to delete directory %s; %e" % file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s" % file)
-            except Exception, e:
+            except Exception as e:
                 logger.error("Unable to delete file %s; %e" % file, e)
         else:
             logger.error("Unable to delete %s, file type unknown" % file)
@@ -146,7 +159,7 @@ def truncate_html_words(s, num, end_text='...'):
     """
     length = int(num)
     if length <= 0:
-        return u''
+        return ''
     html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
                       'hr', 'input')
 
@@ -223,7 +236,7 @@ def process_translations(content_list):
         default_lang_items = filter(attrgetter('in_default_lang'), items)
         len_ = len(default_lang_items)
         if len_ > 1:
-            logger.warning(u'there are %s variants of "%s"' % (len_, slug))
+            logger.warning('there are %s variants of "%s"' % (len_, slug))
             for x in default_lang_items:
                 logger.warning('    %s' % x.filename)
         elif len_ == 0:
