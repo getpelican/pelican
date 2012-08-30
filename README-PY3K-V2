@@ -2,14 +2,17 @@ This is the second attempt to port Pelican to Python 3.
 It runs on Python 2 and 3 without changes, and 2to3 does not need
 to be run.
 
+At the time of this writing, all tests pass on Python 2 as well as
+on Python 3.
+
 In the first attempt I had used 2to3 and applied manually corrections to
 achieve syntactical correctness. But as the tests show, more subtle bugs in the
 string handling (e.g. outputting b'...' instead of '...') remain.
 
 Also the code was suitable for Python 3 only.
 
-In this second attempt, I apply changes 2to3 would have made carefully
-manually, and also stay compatible with Python 2 syntax.
+In this second attempt, I applied changes 2to3 would have made carefully
+manually, and also stayed compatible with Python 2 syntax.
 
 
 manual 2to3:
