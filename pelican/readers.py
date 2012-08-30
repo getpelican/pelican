@@ -142,19 +142,21 @@ class MarkdownReader(Reader):
 
 class HtmlReader(Reader):
     file_extensions = ['html', 'htm']
-    _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
+    _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s\_\-\.]*\s?\-\-\>')
 
     def read(self, filename):
-        """Parse content and metadata of (x)HTML files"""
-        with open(filename) as content:
-            metadata = {'title': 'unnamed'}
-            for i in self._re.findall(content):
-                key = i.split(':')[0][5:].strip()
-                value = i.split(':')[-1][:-3].strip()
-                name = key.lower()
-                metadata[name] = self.process_metadata(name, value)
+        """Parse content and metadata of (x)HTML files.
+        Matches for metadata tags in the form <!--# name: value -->
+        Activated when you add 'html' to your MARKUP settings variable"""
+        content = open(filename)
+        metadata = {'title': 'unnamed'}
+        for i in self._re.findall(content):
+            key = i.split(':')[0][5:].strip()
+            value = i.split(':')[-1][:-3].strip()
+            name = key.lower()
+            metadata[name] = self.process_metadata(name, value)
 
-            return content, metadata
+        return content, metadata
 
 
 _EXTENSIONS = {}
