@@ -1,16 +1,15 @@
 This is the second attempt to port Pelican to Python 3.
+It runs on Python 2 and 3 without changes, and 2to3 does not need
+to be run.
 
-The first used 2to3 and manually corrections to achieve
-syntactical correctness. But as the tests show, more subtle
-bugs in the string handling (e.g. outputting b'...' instead of
-'...') remain.
+In the first attempt I had used 2to3 and applied manually corrections to
+achieve syntactical correctness. But as the tests show, more subtle bugs in the
+string handling (e.g. outputting b'...' instead of '...') remain.
 
 Also the code was suitable for Python 3 only.
 
-In this second attempt, I'll try to apply changes 2to3 would have made
-carefully manually, and also try to stay compatible with Python 2
-syntax.
-
+In this second attempt, I apply changes 2to3 would have made carefully
+manually, and also stay compatible with Python 2 syntax.
 
 
 manual 2to3:
@@ -41,7 +40,34 @@ it where I felt necessary.
 Changed xrange() back to range(), so its valid in both Python versions.
 
 OUCH!! setlocale() in Python 2 bails when we give the locale name as unicode,
-and since we're using from __future__ import unicode_literals, we do it everywhere!
+and since we're using from __future__ import unicode_literals, we do that everywhere!
 As a workaround, I enclosed the localename with str(); in Python 2 this casts the
 name to a byte string, in Python 3 this should do nothing, because the locale name
 already had been unicode.
+
+
+Potential issues:
+=================
+
+1
+-
+
+In contents.py, ll 97pp, a block of code used encode() and decode() which would have
+had to be changed (grammar ok? ;)) for Py3k. Unfortunately, I was not able to decipher
+the purpose of those lines, so I just commented them out. Hah, if we believe the test
+suite, no bugs were introduced by this.
+==> Behaviour on Win32 needs testing, since the commented out block contains a line
+    esp. for that platform.
+
+2
+-
+
+The script pelican_quickstart gets several times user input from the console. In
+Python 2 this ist accomplished by function raw_input(), that returns str (bytes),
+and which does not longer exist on Python 3. The method there is input() which
+returns str (unicode). I have written a compatibility method to flatten out these
+differences and which always returns unicode. To do this on Python 2, it decodes
+the input from UTF-8.
+==> It should be tested if input from consoles with a non-UTF-8 locale gets
+    mangled up.
+
