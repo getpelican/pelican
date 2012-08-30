@@ -34,8 +34,7 @@ class TestPelican(unittest.TestCase):
         locale.setlocale(locale.LC_ALL, str('C'))
 
     def tearDown(self):
-        #rmtree(self.temp_path)
-        print('###', self.temp_path)
+        rmtree(self.temp_path)
         locale.setlocale(locale.LC_ALL, self.old_locale)
 
     @unittest.skip("Test failing")
