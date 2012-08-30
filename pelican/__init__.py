@@ -1,3 +1,4 @@
+import copy
 import os
 import re
 import sys
@@ -29,7 +30,7 @@ class Pelican(object):
         before doing anything else.
         """
         if settings is None:
-            settings = _DEFAULT_CONFIG
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
 
         self.path = path or settings['PATH']
         if not self.path:
