@@ -160,7 +160,7 @@ class HtmlReader(Reader):
             key = comment[0].strip().lower()
             value = comment[1].strip()
 
-            # remove idnetation from multi-line metadata
+            # remove identation from multi-line metadata
             value = re.sub('[ \t]+', ' ', value)
             value = re.sub(' ?\n ?', '\n', value)
 
