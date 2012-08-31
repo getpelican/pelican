@@ -1,7 +1,7 @@
 PELICAN=$pelican
 PELICANOPTS=$pelicanopts
 
-BASEDIR=$$(PWD)
+BASEDIR=$$(CURDIR)
 INPUTDIR=$$(BASEDIR)/content
 OUTPUTDIR=$$(BASEDIR)/output
 CONFFILE=$$(BASEDIR)/pelicanconf.py

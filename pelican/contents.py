@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import locale
 import logging
 import functools
@@ -29,7 +30,7 @@ class Page(object):
         if not metadata:
             metadata = {}
         if not settings:
-            settings = _DEFAULT_CONFIG
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
 
         self.settings = settings
         self._content = content

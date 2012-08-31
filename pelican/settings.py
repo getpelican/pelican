@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import imp
 import inspect
 import os
@@ -81,7 +82,7 @@ def read_settings(filename=None):
     if filename:
         local_settings = get_settings_from_file(filename)
     else:
-        local_settings = _DEFAULT_CONFIG
+        local_settings = copy.deepcopy(_DEFAULT_CONFIG)
     configured_settings = configure_settings(local_settings, None, filename)
     return configured_settings
 
@@ -89,10 +90,9 @@ def read_settings(filename=None):
 def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
     """
     Load settings from a module, returning a dict.
-
     """
 
-    context = default_settings.copy()
+    context = copy.deepcopy(default_settings)
     if module is not None:
          context.update(
              (k, v) for k, v in inspect.getmembers(module) if k.isupper()
@@ -114,7 +114,7 @@ def get_settings_from_file(filename, default_settings=_DEFAULT_CONFIG):
 def configure_settings(settings, default_settings=None, filename=None):
     """Provide optimizations, error checking, and warnings for loaded settings"""
     if default_settings is None:
-        default_settings = _DEFAULT_CONFIG
+        default_settings = copy.deepcopy(_DEFAULT_CONFIG)
 
     # Make the paths relative to the settings file
     if filename:
@@ -138,7 +138,7 @@ def configure_settings(settings, default_settings=None, filename=None):
     for locale_ in locales:
         try:
             locale.setlocale(locale.LC_ALL, locale_)
-            break  # break if it is successfull
+            break  # break if it is successful
         except locale.Error:
             pass
     else:
