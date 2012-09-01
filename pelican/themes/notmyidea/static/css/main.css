@@ -308,7 +308,8 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 		.social a[type$='atom+xml'], .social a[type$='rss+xml'] {background-image: url('../images/icons/rss.png');}
 		.social a[href*='twitter.com'] {background-image: url('../images/icons/twitter.png');}
 		.social a[href*='linkedin.com'] {background-image: url('../images/icons/linkedin.png');}
-		.social a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.org');}
+		.social a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.png');}
+        .social a[href*='gittip.com'] {background-image: url('../images/icons/gittip.png');}
 
 /*
 	About
