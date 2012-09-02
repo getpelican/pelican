@@ -100,6 +100,10 @@ Setting name (default value)                                            What doe
                                                                         This only applies if your content does not otherwise
                                                                         specify a summary. Setting to None will cause the summary
                                                                         to be a copy of the original content.
+`EXTRA_TEMPLATES_PATHS` (``[]``)                                        A list of paths you want Jinja2 to look for the templates.
+                                                                        Can be used to separate templates from the theme.
+                                                                        Example: projects, resume, profile ...
+                                                                        This templates need to use ``DIRECT_TEMPLATES`` setting
 
 =====================================================================   =====================================================================
 
