@@ -31,23 +31,23 @@ CONF = {
 }
 
 
-def decoding_maybe(f):
-    running_windows = (os.name == 'nt')
+def decoding_strings(f):
     def wrapper(*args, **kwargs):
         out = f(*args, **kwargs)
-        if isinstance(out, basestring) and running_windows:
+        if isinstance(out, basestring):
+            # todo: make encoding configurable?
             return out.decode(sys.stdin.encoding)
         return out
     return wrapper
 
 
-def get_template(name):
+def get_template(name, as_encoding='utf-8'):
     template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
 
     if not os.path.isfile(template):
         raise RuntimeError("Cannot open {0}".format(template))
 
-    with open(template, 'r') as fd:
+    with codecs.open(template, 'r', as_encoding) as fd:
         line = fd.readline()
         while line:
             yield line
@@ -55,7 +55,7 @@ def get_template(name):
         fd.close()
 
 
-@decoding_maybe
+@decoding_strings
 def ask(question, answer=str, default=None, l=None):
     if answer == str:
         r = ''
@@ -209,7 +209,7 @@ Please answer the following questions so this script can generate the files need
         print('Error: {0}'.format(e))
 
     try:
-        with open(os.path.join(CONF['basedir'], 'publishconf.py'), 'w') as fd:
+        with codecs.open(os.path.join(CONF['basedir'], 'publishconf.py'), 'w', 'utf-8') as fd:
             for line in get_template('publishconf.py'):
                 template = string.Template(line)
                 fd.write(template.safe_substitute(CONF))
@@ -219,7 +219,7 @@ Please answer the following questions so this script can generate the files need
 
     if mkfile:
         try:
-            with open(os.path.join(CONF['basedir'], 'Makefile'), 'w') as fd:
+            with codecs.open(os.path.join(CONF['basedir'], 'Makefile'), 'w', 'utf-8') as fd:
                 for line in get_template('Makefile'):
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
@@ -229,7 +229,7 @@ Please answer the following questions so this script can generate the files need
 
     if develop:
         try:
-            with open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w') as fd:
+            with codecs.open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w', 'utf-8') as fd:
                 for line in get_template('develop_server.sh'):
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
