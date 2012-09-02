@@ -53,8 +53,8 @@
 {% else %}
 <section id="content" class="body">    
 <h2>Pages</h2>
-    {% for page in PAGES %}
-        <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
+    {% for pg in pages %}
+        <li><a href="{{ SITEURL }}/{{ pg.url }}">{{ pg.title }}</a></li>
     {% endfor %}
 </section>
 {% endif %}
