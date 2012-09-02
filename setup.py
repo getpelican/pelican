@@ -41,5 +41,5 @@ setup(
          'Topic :: Internet :: WWW/HTTP',
          'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    test_suite='tests',
+    test_suite='pelican.tests',
 )

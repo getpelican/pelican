@@ -15,7 +15,8 @@ from pelican import Pelican
 from pelican.settings import read_settings
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SAMPLES_PATH = os.path.abspath(os.sep.join((CURRENT_DIR, "..", "samples")))
+SAMPLES_PATH = os.path.abspath(os.sep.join((CURRENT_DIR, "..", "..",
+                                            "samples")))
 OUTPUT_PATH = os.path.abspath(os.sep.join((CURRENT_DIR, "output")))
 
 INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
