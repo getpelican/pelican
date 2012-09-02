@@ -171,6 +171,18 @@ Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
+As a third option, you can write your articles in raw html (by giving your file the ``.html`` extension)::
+
+    <!-- title: My super title -->
+    <!-- date: 2010-10-03 10:20 -->
+    <!-- tags: thats, awesome -->
+    <!-- category: yeah -->
+    <!-- author: Alexis Metaireau -->
+
+    <p> 
+        This is the content of my super blog post.
+    </p>
+
 Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified, Pelican will rely on the file's "mtime" timestamp, and the
 category can be determined by the directory in which the file resides. For
