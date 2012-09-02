@@ -269,7 +269,7 @@ class ArticlesGenerator(Generator):
             if 'category' not in metadata:
 
                 if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY'] 
+                    category = self.settings['DEFAULT_CATEGORY']
                 else:
                     category = os.path.basename(os.path.dirname(f))\
                                 .decode('utf-8')
@@ -284,6 +284,10 @@ class ArticlesGenerator(Generator):
                 else:
                     metadata['date'] = datetime.datetime(
                             *self.settings['DEFAULT_DATE'])
+
+            if 'updated' not in metadata:
+                metadata['updated'] = datetime.datetime.fromtimestamp(
+                        os.stat(f).st_mtime)
 
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
@@ -352,7 +356,7 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-            
+
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
@@ -370,7 +374,7 @@ class PagesGenerator(Generator):
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
         signals.pages_generator_init.send(self)
- 
+
     def generate_context(self):
         all_pages = []
         hidden_pages = []

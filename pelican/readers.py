@@ -22,6 +22,7 @@ from pelican.utils import get_date, open
 _METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
     'date': lambda x, y: get_date(x),
+    'updated': lambda x, y: get_date(x),
     'status': lambda x, y: unicode.strip(x),
     'category': Category,
     'author': Author,
