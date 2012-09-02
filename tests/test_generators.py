@@ -73,7 +73,8 @@ class TestArticlesGenerator(unittest.TestCase):
             [u'This is an article with category !', 'published', 'yeah', 'article'],
             [u'This is an article without category !', 'published', 'Default', 'article'],
             [u'This is an article without category !', 'published', 'TestCategory', 'article'],
-            [u'This is a super article !', 'published', 'yeah', 'article']
+            [u'This is a super article !', 'published', 'yeah', 'article'],
+            [u'A great html article with metadata', 'published', u'yeah', 'article']
         ]
         self.assertItemsEqual(articles_expected, articles)
 
