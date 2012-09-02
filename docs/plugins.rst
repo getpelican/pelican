@@ -48,23 +48,44 @@ which you map the signals to your plugin logic. Let's take a simple example::
         signals.initialized.connect(test)
 
 
+
 List of signals
 ===============
 
 Here is the list of currently implemented signals:
 
-=========================   ============================   =========================================
-Signal                      Arguments                      Description
-=========================   ============================   =========================================
+=========================   =======================================   =========================================
+Signal                      Arguments                                 Description
+=========================   =======================================   =========================================
 initialized                 pelican object
 article_generate_context    article_generator, metadata
-article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
+article_generator_init      article_generator                         invoked in the ArticlesGenerator.__init__
 pages_generate_context      pages_generator, metadata
-pages_generator_init        pages_generator                invoked in the PagesGenerator.__init__
-=========================   ============================   =========================================
+pages_generator_init        pages_generator                           invoked in the PagesGenerator.__init__
+content_object_init         Content class (Page, Article), instance 
+=========================   =======================================   =========================================
 
 The list is currently small, don't hesitate to add signals and make a pull
 request if you need them!
+
+.. note:: 
+          
+   The signal ``content_object_init`` can send different type of object as 
+   argument. If you want to register only one type of object then you will
+   need to specify the sender when you are connecting to the signal.
+   
+   ::
+   
+       from pelican import signals
+       from pelican import contents
+       
+       def test(sender, instance):
+               print "%s : %s content initialized !!" % (sender, instance)
+       
+       def register():
+               signals.content_object_init.connect(test, sender=contents.Article)
+       
+
 
 List of plugins
 ===============

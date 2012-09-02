@@ -11,7 +11,7 @@ from sys import platform, stdin
 
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import slugify, truncate_html_words
-
+from pelican import signals
 
 logger = logging.getLogger(__name__)
 
@@ -105,6 +105,8 @@ class Page(object):
         # store the summary metadata if it is set
         if 'summary' in metadata:
             self._summary = metadata['summary']
+
+        signals.content_object_init.send(self.__class__, instance=self)
 
     def check_properties(self):
         """test that each mandatory property is set."""
