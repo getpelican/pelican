@@ -125,8 +125,11 @@ Configuration
 You can use the setting ``SITEMAP`` variable to configure the behavior of the
 plugin.
 
-The ``SITEMAP`` variable must be a Python dictionary, it can contain tree keys:
+The ``SITEMAP`` variable must be a Python dictionary, it can contain four keys:
 
+- ``generate``, which is a list with sections to include into sitemap
+
+  An valid values is ``articles``, ``pages`` and ``indexes``.
 
 - ``format``, which set the output format of the plugin (``xml`` or ``txt``)
 
@@ -141,6 +144,7 @@ The ``SITEMAP`` variable must be a Python dictionary, it can contain tree keys:
      author pages, categories indexes, archives, etc...
 
   All the values of this dictionary must be decimal numbers between ``0`` and ``1``.
+  Use ``None`` to not generate ``priority`` tag in ``sitemap.xml``.
 
 - ``changefreqs``, which is a dictionary with three items:
 
@@ -152,6 +156,7 @@ The ``SITEMAP`` variable must be a Python dictionary, it can contain tree keys:
 
   An valid value is  ``always``, ``hourly``, ``daily``, ``weekly``, ``monthly``,
   ``yearly`` or ``never``.
+  Use ``None`` to not generate ``changefreq`` tag in ``sitemap.xml``.
 
 
 If a key is missing or a value is incorrect, it will be replaced with the
@@ -175,10 +180,11 @@ Here is an example of configuration (it's also the default settings):
     PLUGINS=['pelican.plugins.sitemap',]
 
     SITEMAP = {
+        'generate': ['articles', 'pages'],
         'format': 'xml',
         'priorities': {
             'articles': 0.5,
-            'indexes': 0.5,
+            'indexes': None,
             'pages': 0.5
         },
         'changefreqs': {
