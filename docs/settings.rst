@@ -137,6 +137,27 @@ Example usage:
 This would save your articles in something like '/posts/2011/Aug/07/sample-post/index.html',
 and the URL to this would be '/posts/2011/Aug/07/sample-post/'.
 
+Pelican can optionally create per-year, per-month, and per-day archives of your posts. These
+secondary archives are disabled by default but are automatically enabled if you supply format
+strings for their respective SAVE_AS settings. Period archives fit intuitively with the
+hierarchical model of web URLs and can make it easier for readers to navigate through the
+posts you've written over time.
+
+Example usage:
+
+* YEAR_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/index.html'
+* MONTH_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/index.html'
+
+With these settings, Pelican will create an archive of all your posts for the year at (for
+instance) '/posts/2011/index.html', and an archive of all your posts for the month at
+'/posts/2011/Aug/index.html'.
+
+.. note::
+    Period archives work best when the final path segment is 'index.html'.
+    This way a reader can remove a portion of your URL and be automatically
+    directed to an appropriate archive of posts, without having to specify
+    a page name.
+
 ================================================    =====================================================
 Setting name (default value)                        what does it do?
 ================================================    =====================================================
@@ -161,6 +182,11 @@ Setting name (default value)                        what does it do?
 `<DIRECT_TEMPLATE_NAME>_SAVE_AS`                    The location to save content generated from direct
                                                     templates. Where <DIRECT_TEMPLATE_NAME> is the
                                                     upper case template name.
+`YEAR_ARCHIVE_SAVE_AS` (False)                      The location to save per-year archives of your
+                                                    posts.
+`MONTH_ARCHIVE_SAVE_AS` (False)                     The location to save per-month archives of your
+                                                    posts.
+`DAY_ARCHIVE_SAVE_AS` (False)                       The location to save per-day archives of your posts.
 ================================================    =====================================================
 
 .. note::
