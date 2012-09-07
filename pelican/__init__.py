@@ -9,7 +9,7 @@ import argparse
 from pelican import signals
 
 from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
-        StaticGenerator, PdfGenerator, LessCSSGenerator)
+        StaticGenerator, PdfGenerator, LessCSSGenerator, SourceFileGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
 from pelican.utils import clean_output_dir, files_changed, file_changed, NoFilesError
@@ -179,14 +179,14 @@ class Pelican(object):
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
 
-        signals.finalized.send(self)
-
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
         if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
             generators.append(LessCSSGenerator)
+        if self.settings['OUTPUT_SOURCES']:
+            generators.append(SourceFileGenerator)
 
         for pair in signals.get_generators.send(self):
             (funct, value) = pair
