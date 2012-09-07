@@ -52,7 +52,7 @@ If you want to see new features in Pelican, don't hesitate to offer
 suggestions, clone the repository, etc. There are many ways to contribute_.
 That's open source, dude!
 
-Send a message to "alexis at notmyidea dot org" with any requests/feedback! You
+Send a message to "authors at getpelican dot com" with any requests/feedback! You
 can also join the team at `#pelican on Freenode`_ (or if you don't have an IRC
 client handy, use the webchat_ for quick feedback.
 
