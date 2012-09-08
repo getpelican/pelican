@@ -192,7 +192,7 @@ class ArticlesGenerator(Generator):
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
                                                         '%s.html' % template)
             if not save_as:
-                 continue
+                continue
 
             write(save_as, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
@@ -473,13 +473,20 @@ class PdfGenerator(Generator):
     """Generate PDFs on the output dir, for all articles and pages coming from
     rst"""
     def __init__(self, *args, **kwargs):
+        super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
+            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH']) \
+                                if 'PDF_STYLE_PATH' in self.settings.keys() \
+                                else ''
+            pdf_style = self.settings['PDF_STYLE'] if 'PDF_STYLE' \
+                                                    in self.settings.keys() \
+                                                    else 'twelvepoint'
             self.pdfcreator = RstToPdf(breakside=0,
-                                       stylesheets=['twelvepoint'])
+                                       stylesheets=[pdf_style],
+                                       style_path=[pdf_style_path])
         except ImportError:
             raise Exception("unable to find rst2pdf")
-        super(PdfGenerator, self).__init__(*args, **kwargs)
 
     def _create_pdf(self, obj, output_path):
         if obj.filename.endswith(".rst"):
