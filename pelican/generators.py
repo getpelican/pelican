@@ -382,7 +382,7 @@ class PagesGenerator(Generator):
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                content, metadata = read_file(f)
+                content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
