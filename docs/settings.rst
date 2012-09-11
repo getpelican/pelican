@@ -16,6 +16,9 @@ False, None, etc.), dictionaries, or tuples should *not* be enclosed in
 quotation marks. All other values (i.e., strings) *must* be enclosed in
 quotation marks.
 
+Unless otherwise specified, settings that refer to paths can be either absolute or relative to the
+configuration file.
+
 The settings you define in the configuration file will be passed to the
 templates, which allows you to use your settings to add site-wide content.
 
@@ -58,10 +61,10 @@ Setting name (default value)                                            What doe
                                                                         Python-Markdown documentation for a complete list of
                                                                         supported extensions.
 `OUTPUT_PATH` (``'output/'``)                                           Where to output the generated files.
-`PATH` (``None``)                                                       Path to look at for input files.
-`PAGE_DIR` (``'pages'``)                                                Directory to look at for pages.
+`PATH` (``None``)                                                       Path to content directory to be processed by Pelican.
+`PAGE_DIR` (``'pages'``)                                                Directory to look at for pages, relative to `PATH`.
 `PAGE_EXCLUDES` (``()``)                                                A list of directories to exclude when looking for pages.
-`ARTICLE_DIR` (``''``)                                                  Directory to look at for articles.
+`ARTICLE_DIR` (``''``)                                                  Directory to look at for articles, relative to `PATH`.
 `ARTICLE_EXCLUDES`: (``('pages',)``)                                    A list of directories to exclude when looking for articles.
 `PDF_GENERATOR` (``False``)                                             Set to True if you want to have PDF versions
                                                                         of your documents. You will need to install
@@ -373,19 +376,19 @@ Setting name (default value)                        What does it do?
                                                     alphabetical order; default lists alphabetically.)
 ================================================    =====================================================
 
-Theming
-=======
+Themes
+======
 
-Theming is addressed in a dedicated section (see :ref:`theming-pelican`).
-However, here are the settings that are related to theming.
+Creating Pelican themes is addressed in a dedicated section (see :ref:`theming-pelican`).
+However, here are the settings that are related to themes.
 
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`THEME`                                             Theme to use to produce the output. Can be the
-                                                    complete static path to a theme folder, or
-                                                    chosen between the list of default themes (see
-                                                    below)
+`THEME`                                             Theme to use to produce the output. Can be a relative
+                                                    or absolute path to a theme folder, or the name of a
+                                                    default theme or a theme installed via
+                                                    ``pelican-themes`` (see below).
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
                                                     value is `static`, but if your theme has
                                                     other static paths, you can put them here.
@@ -393,22 +396,32 @@ Setting name (default value)                        What does it do?
 `WEBASSETS` (``False``)                             Asset management with `webassets` (see below)
 ================================================    =====================================================
 
-By default, two themes are available. You can specify them using the `-t` option:
+
+By default, two themes are available. You can specify them using the `THEME` setting or by passing the
+``-t`` option to the ``pelican`` command:
 
 * notmyidea
-* simple (a synonym for "full text" :)
+* simple (a synonym for "plain text" :)
 
-You can define your own theme too, and specify its placement in the same
-manner. (Be sure to specify the full absolute path to it.)
-
-Here is :doc:`a guide on how to create your theme <themes>`
-
-You can find a list of themes at http://github.com/getpelican/pelican-themes.
-
+There are a number of other themes available at http://github.com/getpelican/pelican-themes.
 Pelican comes with :doc:`pelican-themes`, a small script for managing themes.
 
-The `notmyidea` theme can make good use of the following settings. I recommend
-using them in your themes as well.
+You can define your own theme, either by starting from scratch or by duplicating
+and modifying a pre-existing theme. Here is :doc:`a guide on how to create your theme <themes>`.
+
+Following are example ways to specify your preferred theme::
+
+    # Specify name of a built-in theme
+    THEME = "notmyidea"
+    # Specify name of a theme installed via the pelican-themes tool
+    THEME = "chunk"
+    # Specify a customized theme, via path relative to the settings file
+    THEME = "themes/mycustomtheme"
+    # Specify a customized theme, via absolute path
+    THEME = "~/projects/mysite/themes/mycustomtheme"
+
+The built-in `notmyidea` theme can make good use of the following settings. Feel
+free to use them in your themes as well.
 
 =======================   =======================================================
 Setting name              What does it do ?
@@ -444,26 +457,27 @@ adding the following to your configuration::
 Asset management
 ----------------
 
-The `WEBASSETS` setting allows to use the `webassets`_ module to manage assets
-(css, js). The module must first be installed::
+The `WEBASSETS` setting allows you to use the `webassets`_ module to manage
+assets such as CSS and JS files. The module must first be installed::
 
     pip install webassets
 
-`webassets` allows to concatenate your assets and to use almost all of the
-hype tools of the moment (see the `documentation`_):
+The `webassets` module allows you to perform a number of useful asset management
+functions, including:
 
-* css minifier (`cssmin`, `yuicompressor`, ...)
-* css compiler (`less`, `sass`, ...)
-* js minifier (`uglifyjs`, `yuicompressor`, `closure`, ...)
+* CSS minifier (`cssmin`, `yuicompressor`, ...)
+* CSS compiler (`less`, `sass`, ...)
+* JS minifier (`uglifyjs`, `yuicompressor`, `closure`, ...)
 
-Others filters include gzip compression, integration of images in css with
-`datauri` and more. Webassets also append a version identifier to your asset
-url to convince browsers to download new versions of your assets when you use
-far future expires headers.
+Others filters include gzip compression, integration of images in CSS via data
+URIs, and more. `webassets` can also append a version identifier to your asset
+URL to convince browsers to download new versions of your assets when you use
+far-future expires headers. Please refer to the `webassets documentation`_ for
+more information.
 
-When using it with Pelican, `webassets` is configured to process assets in the
-``OUTPUT_PATH/theme`` directory. You can use it in your templates with a
-template tag, for example:
+When using with Pelican, `webassets` is configured to process assets in the
+``OUTPUT_PATH/theme`` directory. You can use `webassets` in your templates by
+including one or more template tags. For example...
 
 .. code-block:: jinja
 
@@ -471,22 +485,22 @@ template tag, for example:
         <link rel="stylesheet" href="{{ ASSET_URL }}">
     {% endassets %}
 
-will produce a minified css file with the version identifier:
+... will produce a minified css file with a version identifier:
 
 .. code-block:: html
 
     <link href="http://{SITEURL}/theme/css/style.min.css?b3a7c807" rel="stylesheet">
 
-The filters can be combined, for example to use the `sass` compiler and minify
-the output::
+These filters can be combined. Here is an example that uses the SASS compiler
+and minifies the output:
 
 .. code-block:: jinja
 
-{% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
-    <link rel="stylesheet" href="{{ ASSET_URL }}">
-{% endassets %}
+    {% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
+    {% endassets %}
 
-Another example for javascript:
+Another example for Javascript:
 
 .. code-block:: jinja
 
@@ -494,20 +508,20 @@ Another example for javascript:
         <script src="{{ ASSETS_URL }}"></script>
     {% endassets %}
 
-will produce a minified and gzipped js file:
+The above will produce a minified and gzipped JS file:
 
 .. code-block:: html
 
     <script src="http://{SITEURL}/theme/js/packed.js?00703b9d"></script>
 
-Pelican's debug mode is propagated to webassets to disable asset packaging,
+Pelican's debug mode is propagated to `webassets` to disable asset packaging
 and instead work with the uncompressed assets. However, this also means that
-the `less` and `sass` files are not compiled, this should be fixed in a future
-version of webassets (cf. the related `bug report
+the LESS and SASS files are not compiled. This should be fixed in a future
+version of `webassets` (cf. the related `bug report
 <https://github.com/getpelican/pelican/issues/481>`_).
 
 .. _webassets: https://github.com/miracle2k/webassets
-.. _documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
+.. _webassets documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
 
 Example settings
 ================
