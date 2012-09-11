@@ -16,6 +16,9 @@ False, None, etc.), dictionaries, or tuples should *not* be enclosed in
 quotation marks. All other values (i.e., strings) *must* be enclosed in
 quotation marks.
 
+Unless otherwise specified, settings that refer to paths can be either absolute or relative to the
+configuration file.
+
 The settings you define in the configuration file will be passed to the
 templates, which allows you to use your settings to add site-wide content.
 
@@ -58,10 +61,10 @@ Setting name (default value)                                            What doe
                                                                         Python-Markdown documentation for a complete list of
                                                                         supported extensions.
 `OUTPUT_PATH` (``'output/'``)                                           Where to output the generated files.
-`PATH` (``None``)                                                       Path to look at for input files.
-`PAGE_DIR` (``'pages'``)                                                Directory to look at for pages.
+`PATH` (``None``)                                                       Path to content directory to be processed by Pelican.
+`PAGE_DIR` (``'pages'``)                                                Directory to look at for pages, relative to `PATH`.
 `PAGE_EXCLUDES` (``()``)                                                A list of directories to exclude when looking for pages.
-`ARTICLE_DIR` (``''``)                                                  Directory to look at for articles.
+`ARTICLE_DIR` (``''``)                                                  Directory to look at for articles, relative to `PATH`.
 `ARTICLE_EXCLUDES`: (``('pages',)``)                                    A list of directories to exclude when looking for articles.
 `PDF_GENERATOR` (``False``)                                             Set to True if you want to have PDF versions
                                                                         of your documents. You will need to install
