@@ -373,19 +373,19 @@ Setting name (default value)                        What does it do?
                                                     alphabetical order; default lists alphabetically.)
 ================================================    =====================================================
 
-Theming
-=======
+Themes
+======
 
-Theming is addressed in a dedicated section (see :ref:`theming-pelican`).
-However, here are the settings that are related to theming.
+Creating Pelican themes is addressed in a dedicated section (see :ref:`theming-pelican`).
+However, here are the settings that are related to themes.
 
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`THEME`                                             Theme to use to produce the output. Can be the
-                                                    complete static path to a theme folder, or
-                                                    chosen between the list of default themes (see
-                                                    below)
+`THEME`                                             Theme to use to produce the output. Can be a relative
+                                                    or absolute path to a theme folder, or the name of a
+                                                    default theme or a theme installed via
+                                                    ``pelican-themes`` (see below).
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
                                                     value is `static`, but if your theme has
                                                     other static paths, you can put them here.
@@ -393,22 +393,32 @@ Setting name (default value)                        What does it do?
 `WEBASSETS` (``False``)                             Asset management with `webassets` (see below)
 ================================================    =====================================================
 
-By default, two themes are available. You can specify them using the `-t` option:
+
+By default, two themes are available. You can specify them using the `THEME` setting or by passing the
+``-t`` option to the ``pelican`` command:
 
 * notmyidea
-* simple (a synonym for "full text" :)
+* simple (a synonym for "plain text" :)
 
-You can define your own theme too, and specify its placement in the same
-manner. (Be sure to specify the full absolute path to it.)
-
-Here is :doc:`a guide on how to create your theme <themes>`
-
-You can find a list of themes at http://github.com/getpelican/pelican-themes.
-
+There are a number of other themes available at http://github.com/getpelican/pelican-themes.
 Pelican comes with :doc:`pelican-themes`, a small script for managing themes.
 
-The `notmyidea` theme can make good use of the following settings. I recommend
-using them in your themes as well.
+You can define your own theme, either by starting from scratch or by duplicating
+and modifying a pre-existing theme. Here is :doc:`a guide on how to create your theme <themes>`.
+
+Following are example ways to specify your preferred theme::
+
+    # Specify name of a built-in theme
+    THEME = "notmyidea"
+    # Specify name of a theme installed via the pelican-themes tool
+    THEME = "chunk"
+    # Specify a customized theme, via path relative to the settings file
+    THEME = "themes/mycustomtheme"
+    # Specify a customized theme, via absolute path
+    THEME = "~/projects/mysite/themes/mycustomtheme"
+
+The built-in `notmyidea` theme can make good use of the following settings. Feel
+free to use them in your themes as well.
 
 =======================   =======================================================
 Setting name              What does it do ?
