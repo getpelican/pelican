@@ -6,7 +6,7 @@ install:
     - pip install nose unittest2 mock --use-mirrors
     - pip install . --use-mirrors
     - pip install Markdown
-script: nosetests -s tests
+script: nosetests -s pelican
 notifications:
     irc:
         channels: 
