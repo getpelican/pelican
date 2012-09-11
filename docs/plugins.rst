@@ -16,7 +16,7 @@ To load plugins, you have to specify them in your settings file. You have two
 ways to do so.
 Either by specifying strings with the path to the callables::
 
-    PLUGINS = ['pelican.plugins.gravatar',] 
+    PLUGINS = ['pelican.plugins.gravatar',]
 
 Or by importing them and adding them to the list::
 

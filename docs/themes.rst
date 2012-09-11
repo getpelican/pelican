@@ -35,7 +35,7 @@ To make your own theme, you must follow the following structure::
 * `templates` contains all the templates that will be used to generate the content.
   I've just put the mandatory templates here; you can define your own if it helps
   you keep things organized while creating your theme.
- 
+
 Templates and variables
 =======================
 
@@ -44,7 +44,7 @@ This document describes which templates should exist in a theme, and which
 variables will be passed to each template at generation time.
 
 All templates will receive the variables defined in your settings file, if they
-are in all-caps. You can access them directly. 
+are in all-caps. You can access them directly.
 
 Common variables
 ----------------
@@ -55,14 +55,14 @@ All of these settings will be available to all templates.
 Variable        Description
 =============   ===================================================
 articles        The list of articles, ordered descending by date
-                All the elements are `Article` objects, so you can 
+                All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
                 etc.)
 dates           The same list of articles, but ordered by date,
                 ascending
 tags            A key-value dict containing the tags (the keys) and
                 the list of respective articles (the values)
-categories      A key-value dict containing the categories (keys) 
+categories      A key-value dict containing the categories (keys)
                 and the list of respective articles (values)
 pages           The list of pages
 =============   ===================================================
@@ -182,7 +182,7 @@ dates                   Articles related to this tag, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-dates_paginator         A paginator object for the list of articles, 
+dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
