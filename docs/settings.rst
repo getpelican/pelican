@@ -509,7 +509,7 @@ Another example for Javascript:
 .. code-block:: jinja
 
     {% assets filters="uglifyjs,gzip", output="js/packed.js", "js/jquery.js", "js/base.js", "js/widgets.js" %}
-        <script src="{{ ASSETS_URL }}"></script>
+        <script src="{{ ASSET_URL }}"></script>
     {% endassets %}
 
 The above will produce a minified and gzipped JS file:
