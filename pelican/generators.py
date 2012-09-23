@@ -266,7 +266,6 @@ class ArticlesGenerator(Generator):
                 continue
 
             # if no category is set, use the name of the path as a category
-            import ipdb; ipdb.set_trace() # BREAKPOINT
             if 'category' not in metadata:
 
                 if (self.settings['USE_FOLDER_AS_CATEGORY']
