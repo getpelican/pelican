@@ -266,13 +266,17 @@ class ArticlesGenerator(Generator):
                 continue
 
             # if no category is set, use the name of the path as a category
+            import ipdb; ipdb.set_trace() # BREAKPOINT
             if 'category' not in metadata:
 
-                if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY'] 
-                else:
+                if (self.settings['USE_FOLDER_AS_CATEGORY']
+                    and os.path.dirname(f) != article_path):
+                    # if the article is in a subdirectory
                     category = os.path.basename(os.path.dirname(f))\
-                                .decode('utf-8')
+                        .decode('utf-8')
+                else:
+                    # if the article is not in a subdirectory
+                    category = self.settings['DEFAULT_CATEGORY']
 
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
@@ -352,7 +356,7 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-            
+
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
@@ -370,7 +374,7 @@ class PagesGenerator(Generator):
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
         signals.pages_generator_init.send(self)
- 
+
     def generate_context(self):
         all_pages = []
         hidden_pages = []
