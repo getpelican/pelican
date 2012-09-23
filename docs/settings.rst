@@ -34,6 +34,10 @@ Setting name (default value)                                            What doe
 `DATE_FORMATS` (``{}``)                                                 If you do manage multiple languages, you can
                                                                         set the date formatting here. See "Date format and locales"
                                                                         section below for details.
+`USE_FOLDER_AS_CATEGORY` (``True``)                                     When you don't specify a category in your post metadata and set this
+                                                                        setting to ``True`` and organize your articles in subfolders, the
+                                                                        subfolder will become the category of your post. If set to ``False``
+                                                                        ``DEFAULT_CATEGORY`` will be used as a fallback.
 `DEFAULT_CATEGORY` (``'misc'``)                                         The default category to fall back on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                               The default date format you want to use.
 `DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
