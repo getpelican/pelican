@@ -4,6 +4,8 @@
 import os
 import string
 import argparse
+import sys
+import codecs
 
 from pelican import __version__
 
@@ -29,13 +31,23 @@ CONF = {
 }
 
 
-def get_template(name):
+def decoding_strings(f):
+    def wrapper(*args, **kwargs):
+        out = f(*args, **kwargs)
+        if isinstance(out, basestring):
+            # todo: make encoding configurable?
+            return out.decode(sys.stdin.encoding)
+        return out
+    return wrapper
+
+
+def get_template(name, as_encoding='utf-8'):
     template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
 
     if not os.path.isfile(template):
         raise RuntimeError("Cannot open {0}".format(template))
 
-    with open(template, 'r') as fd:
+    with codecs.open(template, 'r', as_encoding) as fd:
         line = fd.readline()
         while line:
             yield line
@@ -43,6 +55,7 @@ def get_template(name):
         fd.close()
 
 
+@decoding_strings
 def ask(question, answer=str, default=None, l=None):
     if answer == str:
         r = ''
@@ -167,7 +180,7 @@ Please answer the following questions so this script can generate the files need
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server?', str, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on that server?', str, CONF['ftp_user'])
-            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir']) 
+            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir'])
         if ask('Do you want to upload your website using SSH?', answer=bool, default=False):
             CONF['ssh_host'] = ask('What is the hostname of your SSH server?', str, CONF['ssh_host'])
             CONF['ssh_port'] = ask('What is the port of your SSH server?', int, CONF['ssh_port'])
@@ -187,7 +200,7 @@ Please answer the following questions so this script can generate the files need
         print('Error: {0}'.format(e))
 
     try:
-        with open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w') as fd:
+        with codecs.open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w', 'utf-8') as fd:
             for line in get_template('pelicanconf.py'):
                 template = string.Template(line)
                 fd.write(template.safe_substitute(CONF))
@@ -196,7 +209,7 @@ Please answer the following questions so this script can generate the files need
         print('Error: {0}'.format(e))
 
     try:
-        with open(os.path.join(CONF['basedir'], 'publishconf.py'), 'w') as fd:
+        with codecs.open(os.path.join(CONF['basedir'], 'publishconf.py'), 'w', 'utf-8') as fd:
             for line in get_template('publishconf.py'):
                 template = string.Template(line)
                 fd.write(template.safe_substitute(CONF))
@@ -206,7 +219,7 @@ Please answer the following questions so this script can generate the files need
 
     if mkfile:
         try:
-            with open(os.path.join(CONF['basedir'], 'Makefile'), 'w') as fd:
+            with codecs.open(os.path.join(CONF['basedir'], 'Makefile'), 'w', 'utf-8') as fd:
                 for line in get_template('Makefile'):
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
@@ -216,7 +229,7 @@ Please answer the following questions so this script can generate the files need
 
     if develop:
         try:
-            with open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w') as fd:
+            with codecs.open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w', 'utf-8') as fd:
                 for line in get_template('develop_server.sh'):
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
