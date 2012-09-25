@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 
-AUTHOR = u"$author"
-SITENAME = u"$sitename"
+AUTHOR = $author
+SITENAME = $sitename
 SITEURL = ''
 
 TIMEZONE = 'Europe/Paris'
 
-DEFAULT_LANG = '$lang'
+DEFAULT_LANG = $lang
 
 # Blogroll
 LINKS =  (('Pelican', 'http://docs.notmyidea.org/alexis/pelican/'),
