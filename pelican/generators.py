@@ -6,6 +6,7 @@ import logging
 import datetime
 import subprocess
 
+from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain
@@ -16,7 +17,7 @@ from jinja2.exceptions import TemplateNotFound
 
 from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, open
+from pelican.utils import copy, process_translations
 from pelican import signals
 
 
@@ -188,7 +189,7 @@ class ArticlesGenerator(Generator):
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
                                                         '%s.html' % template)
             if not save_as:
-                 continue
+                continue
 
             write(save_as, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
@@ -269,7 +270,7 @@ class ArticlesGenerator(Generator):
             if 'category' not in metadata:
 
                 if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY'] 
+                    category = self.settings['DEFAULT_CATEGORY']
                 else:
                     category = os.path.basename(os.path.dirname(f))\
                                 .decode('utf-8')
@@ -352,7 +353,7 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-            
+
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
@@ -370,7 +371,7 @@ class PagesGenerator(Generator):
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
         signals.pages_generator_init.send(self)
- 
+
     def generate_context(self):
         all_pages = []
         hidden_pages = []
@@ -453,13 +454,20 @@ class PdfGenerator(Generator):
     """Generate PDFs on the output dir, for all articles and pages coming from
     rst"""
     def __init__(self, *args, **kwargs):
+        super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
+            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH']) \
+                                if 'PDF_STYLE_PATH' in self.settings.keys() \
+                                else ''
+            pdf_style = self.settings['PDF_STYLE'] if 'PDF_STYLE' \
+                                                    in self.settings.keys() \
+                                                    else 'twelvepoint'
             self.pdfcreator = RstToPdf(breakside=0,
-                                       stylesheets=['twelvepoint'])
+                                       stylesheets=[pdf_style],
+                                       style_path=[pdf_style_path])
         except ImportError:
             raise Exception("unable to find rst2pdf")
-        super(PdfGenerator, self).__init__(*args, **kwargs)
 
     def _create_pdf(self, obj, output_path):
         if obj.filename.endswith(".rst"):
@@ -467,7 +475,7 @@ class PdfGenerator(Generator):
             output_pdf = os.path.join(output_path, filename)
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             with open(obj.filename) as f:
-                self.pdfcreator.createPdf(text=f, output=output_pdf)
+                self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
             logger.info(u' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
