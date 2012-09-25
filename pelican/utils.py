@@ -57,6 +57,8 @@ def slugify(value):
         value = unicode(unidecode(value))
         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
+    # XXX: this assertion should probably be a setting
+    assert value != 'index', "encountered forbidden slug '%s'" % value
     return re.sub('[-\s]+', '-', value)
 
 
