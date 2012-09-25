@@ -179,6 +179,8 @@ class Pelican(object):
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
 
+        signals.finalized.send(self)
+
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
