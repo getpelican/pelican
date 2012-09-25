@@ -430,7 +430,23 @@ class StaticGenerator(Generator):
             # Define the assets environment that will be passed to the
             # generators. The StaticGenerator must then be run first to have
             # the assets in the output_path before generating the templates.
-            assets_url = self.settings['SITEURL'] + '/theme/'
+
+            # Let ASSET_URL honor Pelican's RELATIVE_URLS setting.
+            # Hint for templates:
+            # Current version of webassets seem to remove any relative
+            # paths at the beginning of the URL. So, if RELATIVE_URLS
+            # is on, ASSET_URL will start with 'theme/', regardless if we
+            # set assets_url here to './theme/' or to 'theme/'.
+            # XXX However, this breaks the ASSET_URL if user navigates to
+            # a sub-URL, e.g. if he clicks on a category. To workaround this
+            # issue, I use
+            #     <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+            # instead of
+            #     <link rel="stylesheet" href="{{ ASSET_URL }}">
+            if self.settings.get('RELATIVE_URLS'):
+                assets_url = './theme/'
+            else:
+                assets_url = self.settings['SITEURL'] + '/theme/'
             assets_src = os.path.join(self.output_path, 'theme')
             self.assets_env = AssetsEnvironment(assets_src, assets_url)
 
