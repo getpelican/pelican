@@ -185,7 +185,7 @@ def build_header(title, date, author, categories, tags):
     if date:
         header += ':date: %s\n' % date
     if author:
-        header += ':author %s\n' % author
+        header += ':author: %s\n' % author
     if categories:
         header += ':category: %s\n' % ', '.join(categories)
     if tags:
