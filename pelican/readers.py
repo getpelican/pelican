@@ -18,7 +18,6 @@ import re
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
-
 _METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
     'date': lambda x, y: get_date(x),
@@ -125,12 +124,13 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd']
-    extensions = ['codehilite', 'extra']
+    extensions = ['codehilite', 'extra' ]
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
+        markdown_extentions = self.settings.get('MARKDOWN_EXTENTIONS', [])
         text = pelican_open(filename)
-        md = Markdown(extensions=set(self.extensions + ['meta']))
+        md = Markdown(extensions=set(self.extensions + markdown_extentions + ['meta']))
         content = md.convert(text)
 
         metadata = {}
