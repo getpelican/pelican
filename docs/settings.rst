@@ -72,6 +72,9 @@ Setting name (default value)                                            What doe
 `OUTPUT_SOURCES` (``False``)                                            Set to True if you want to copy the articles and pages in their
                                                                         original format (e.g. Markdown or ReStructeredText) to the
                                                                         specified OUTPUT_PATH.
+`OUTPUT_SOURCES_EXTENSION` (``.text``)                                  Controls the extension that will be used by the SourcesGenerator.
+                                                                        Defaults to .text. If the first character is not a `.` the
+                                                                        dot character will be prepended to the extension.
 `RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use document-relative URLs or
                                                                         not. If set to ``False``, Pelican will use the SITEURL
                                                                         setting to construct absolute URLs.
