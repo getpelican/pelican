@@ -309,6 +309,7 @@ def main():
                     if files_found_error == True:
                         logger.warning("No valid files found in content. Nothing to generate.")
                         files_found_error = False
+                    time.sleep(1)  # sleep to avoid cpu load
                 except Exception, e:
                     logger.warning(
                         "Caught exception \"{}\". Reloading.".format(e)
