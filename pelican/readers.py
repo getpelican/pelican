@@ -101,7 +101,7 @@ class RstReader(Reader):
     def _get_publisher(self, filename):
         extra_params = {'initial_header_level': '2'}
         pub = docutils.core.Publisher(
-                destination_class=docutils.io.StringOutput)
+            destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.writer.translator_class = PelicanHTMLTranslator
         pub.process_programmatic_settings(None, extra_params, None)
@@ -124,13 +124,17 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd']
-    extensions = ['codehilite', 'extra' ]
+    extensions = ['codehilite', 'extra']
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         markdown_extentions = self.settings.get('MARKDOWN_EXTENTIONS', [])
+        if isinstance(markdown_extentions, (str, unicode)):
+            markdown_extentions = [m.strip() for m in
+                                   markdown_extentions.split(',')]
         text = pelican_open(filename)
-        md = Markdown(extensions=set(self.extensions + markdown_extentions + ['meta']))
+        md = Markdown(extensions=set(
+            self.extensions + markdown_extentions + ['meta']))
         content = md.convert(text)
 
         metadata = {}

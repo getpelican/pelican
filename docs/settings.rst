@@ -103,7 +103,7 @@ Setting name (default value)                                            What doe
                                                                         This only applies if your content does not otherwise
                                                                         specify a summary. Setting to None will cause the summary
                                                                         to be a copy of the original content.
-
+`MARKDOWN_EXTENSIONS` (``['toc',]``)                                    A list of any Markdown extensions you want to use.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
