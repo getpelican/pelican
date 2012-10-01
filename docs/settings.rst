@@ -147,37 +147,37 @@ Also, you can use other file metadata attributes as well:
 
 Example usage:
 
-* ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'
-* ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
+* ARTICLE_URL = ``'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'``
+* ARTICLE_SAVE_AS = ``'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'``
 
 This would save your articles in something like '/posts/2011/Aug/07/sample-post/index.html',
 and the URL to this would be '/posts/2011/Aug/07/sample-post/'.
 
-================================================    =====================================================
-Setting name (default value)                        what does it do?
-================================================    =====================================================
-`ARTICLE_URL` ('{slug}.html')                       The URL to refer to an ARTICLE.
-`ARTICLE_SAVE_AS` ('{slug}.html')                   The place where we will save an article.
-`ARTICLE_LANG_URL` ('{slug}-{lang}.html')           The URL to refer to an ARTICLE which doesn't use the
-                                                    default language.
-`ARTICLE_LANG_SAVE_AS` ('{slug}-{lang}.html'        The place where we will save an article which
-                                                    doesn't use the default language.
-`PAGE_URL` ('pages/{slug}.html')                    The URL we will use to link to a page.
-`PAGE_SAVE_AS` ('pages/{slug}.html')                The location we will save the page.
-`PAGE_LANG_URL` ('pages/{slug}-{lang}.html')        The URL we will use to link to a page which doesn't
-                                                    use the default language.
-`PAGE_LANG_SAVE_AS` ('pages/{slug}-{lang}.html')    The location we will save the page which doesn't
-                                                    use the default language.
-`AUTHOR_URL` ('author/{name}.html')                 The URL to use for an author.
-`AUTHOR_SAVE_AS` ('author/{name}.html')             The location to save an author.
-`CATEGORY_URL` ('category/{name}.html')             The URL to use for a category.
-`CATEGORY_SAVE_AS` ('category/{name}.html')         The location to save a category.
-`TAG_URL` ('tag/{name}.html')                       The URL to use for a tag.
-`TAG_SAVE_AS` ('tag/{name}.html')                   The location to save the tag page.
-`<DIRECT_TEMPLATE_NAME>_SAVE_AS`                    The location to save content generated from direct
-                                                    templates. Where <DIRECT_TEMPLATE_NAME> is the
-                                                    upper case template name.
-================================================    =====================================================
+====================================================    =====================================================
+Setting name (default value)                            What does it do?
+====================================================    =====================================================
+`ARTICLE_URL` (``'{slug}.html'``)                       The URL to refer to an ARTICLE.
+`ARTICLE_SAVE_AS` (``'{slug}.html'``)                   The place where we will save an article.
+`ARTICLE_LANG_URL` (``'{slug}-{lang}.html'``)           The URL to refer to an ARTICLE which doesn't use the
+                                                        default language.
+`ARTICLE_LANG_SAVE_AS` (``'{slug}-{lang}.html'``)       The place where we will save an article which
+                                                        doesn't use the default language.
+`PAGE_URL` (``'pages/{slug}.html'``)                    The URL we will use to link to a page.
+`PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page.
+`PAGE_LANG_URL` (``'pages/{slug}-{lang}.html'``)        The URL we will use to link to a page which doesn't
+                                                        use the default language.
+`PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
+                                                        use the default language.
+`AUTHOR_URL` (``'author/{name}.html'``)                 The URL to use for an author.
+`AUTHOR_SAVE_AS` (``'author/{name}.html'``)             The location to save an author.
+`CATEGORY_URL` (``'category/{name}.html'``)             The URL to use for a category.
+`CATEGORY_SAVE_AS` (``'category/{name}.html'``)         The location to save a category.
+`TAG_URL` (``'tag/{name}.html'``)                       The URL to use for a tag.
+`TAG_SAVE_AS` (``'tag/{name}.html'``)                   The location to save the tag page.
+`<DIRECT_TEMPLATE_NAME>_SAVE_AS`                        The location to save content generated from direct
+                                                        templates. Where <DIRECT_TEMPLATE_NAME> is the
+                                                        upper case template name.
+====================================================    =====================================================
 
 .. note::
 
@@ -316,10 +316,10 @@ You can use the following settings to configure the pagination.
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`DEFAULT_ORPHANS` (0)                               The minimum number of articles allowed on the
+`DEFAULT_ORPHANS` (``0``)                           The minimum number of articles allowed on the
                                                     last page. Use this when you don't want to
                                                     have a last page with very few articles.
-`DEFAULT_PAGINATION` (False)                        The maximum number of articles to include on a
+`DEFAULT_PAGINATION` (``False``)                    The maximum number of articles to include on a
                                                     page, not including orphans. False to disable
                                                     pagination.
 ================================================    =====================================================
@@ -333,9 +333,9 @@ following settings.
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
-`TAG_CLOUD_STEPS` (4)                               Count of different font sizes in the tag
+`TAG_CLOUD_STEPS` (``4``)                           Count of different font sizes in the tag
                                                     cloud.
-`TAG_CLOUD_MAX_ITEMS` (100)                         Maximum number of tags in the cloud.
+`TAG_CLOUD_MAX_ITEMS` (``100``)                     Maximum number of tags in the cloud.
 ================================================    =====================================================
 
 The default theme does not support tag clouds, but it is pretty easy to add::
