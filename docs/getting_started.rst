@@ -69,6 +69,7 @@ Optionally:
 
 * pygments, for syntax highlighting
 * Markdown, for supporting Markdown as an input format
+* Typogrify, for typographical enhancements
 
 Kickstart a blog
 ================
