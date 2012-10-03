@@ -177,15 +177,10 @@ def configure_settings(settings, default_settings=None, filename=None):
             settings['WEBASSETS'] = False
 
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
-        try:
-            if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):
-                raise ValueError
-            elif '.' is not settings['OUTPUT_SOURCES_EXTENSION'][0]:
-                settings['OUTPUT_SOURCES_EXTENSION'] = '.' + settings['OUTPUT_SOURCES_EXTENSION']
-        except(ValueError, IndexError):
+        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):
+            settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
             logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
                        " falling back to the default extension " +
                        _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
-            settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
 
     return settings
