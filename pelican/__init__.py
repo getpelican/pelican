@@ -1,3 +1,4 @@
+import copy
 import os
 import re
 import sys
@@ -7,7 +8,7 @@ import argparse
 
 from pelican import signals
 
-from pelican.generators import (ArticlesGenerator, PagesGenerator,
+from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator, LessCSSGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
@@ -29,7 +30,7 @@ class Pelican(object):
         before doing anything else.
         """
         if settings is None:
-            settings = _DEFAULT_CONFIG
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
 
         self.path = path or settings['PATH']
         if not self.path:
@@ -180,12 +181,26 @@ class Pelican(object):
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
 
+        signals.finalized.send(self)
+
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
         if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
             generators.append(LessCSSGenerator)
+
+        for pair in signals.get_generators.send(self):
+            (funct, value) = pair
+
+            if not isinstance(value, (tuple, list)):
+                value = (value, )
+
+            for v in value:
+                if isinstance(v, type):
+                    logger.debug('Found generator: {0}'.format(v))
+                    generators.append(v)
+
         return generators
 
     def get_writer(self):
@@ -296,6 +311,7 @@ def main():
                     if files_found_error == True:
                         logger.warning("No valid files found in content. Nothing to generate.")
                         files_found_error = False
+                    time.sleep(1)  # sleep to avoid cpu load
                 except Exception, e:
                     logger.warning(
                         "Caught exception \"{}\". Reloading.".format(e)

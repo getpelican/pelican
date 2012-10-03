@@ -26,7 +26,7 @@ suggestions or problems you might have via IRC or the issue tracker.
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
 your changes, and issue a pull request. Someone will review your changes as soon
-as possible. Please refer to the :doc:`How to Contribute <contribute>` section 
+as possible. Please refer to the :doc:`How to Contribute <contribute>` section
 for more details.
 
 You can also contribute by creating themes and improving the documentation.
@@ -43,7 +43,7 @@ I'm creating my own theme. How do I use Pygments for syntax highlighting?
 
 Pygments adds some classes to the generated content. These classes are used by
 themes to style code syntax highlighting via CSS. Specifically, you can
-customize the appearance of your syntax highlighting via the ``.codehilite pre`` 
+customize the appearance of your syntax highlighting via the ``.codehilite pre``
 class in your theme's CSS file. To see how various styles can be used to render
 Django code, for example, you can use the demo `on the project website
 <http://pygments.org/demo/15101/>`_.
@@ -105,7 +105,7 @@ I'm getting a warning about feeds generated without SITEURL being set properly
 In order to properly generate all URLs properly in Pelican you will need to set
 ``SITEURL`` to the full path of your blog. When using ``make html`` and the
 default Makefile provided by the `pelican-quickstart` bootstrap script to test
-build your site, it's normal to see this warning since ``SITEURL`` is 
+build your site, it's normal to see this warning since ``SITEURL`` is
 deliberately left undefined. If configured properly no other ``make`` commands
 should result in this warning.
 
@@ -124,5 +124,5 @@ setting names). Here is an exact list of the renamed setting names::
 
 Older 2.x themes that referenced the old setting names may not link properly.
 In order to rectify this, please update your theme for compatibility with 3.0+
-by changing the relevant values in your template files. For an example of 
+by changing the relevant values in your template files. For an example of
 complete feed headers and usage please check out the ``simple`` theme.

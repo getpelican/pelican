@@ -6,6 +6,7 @@ import logging
 import datetime
 import subprocess
 
+from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain
@@ -16,7 +17,7 @@ from jinja2.exceptions import TemplateNotFound
 
 from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, open
+from pelican.utils import copy, process_translations
 from pelican import signals
 
 
@@ -361,7 +362,7 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-            
+
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
@@ -387,7 +388,7 @@ class PagesGenerator(Generator):
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                content, metadata = read_file(f)
+                content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
@@ -441,7 +442,23 @@ class StaticGenerator(Generator):
             # Define the assets environment that will be passed to the
             # generators. The StaticGenerator must then be run first to have
             # the assets in the output_path before generating the templates.
-            assets_url = self.settings['SITEURL'] + '/theme/'
+
+            # Let ASSET_URL honor Pelican's RELATIVE_URLS setting.
+            # Hint for templates:
+            # Current version of webassets seem to remove any relative
+            # paths at the beginning of the URL. So, if RELATIVE_URLS
+            # is on, ASSET_URL will start with 'theme/', regardless if we
+            # set assets_url here to './theme/' or to 'theme/'.
+            # XXX However, this breaks the ASSET_URL if user navigates to
+            # a sub-URL, e.g. if he clicks on a category. To workaround this
+            # issue, I use
+            #     <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+            # instead of
+            #     <link rel="stylesheet" href="{{ ASSET_URL }}">
+            if self.settings.get('RELATIVE_URLS'):
+                assets_url = './theme/'
+            else:
+                assets_url = self.settings['SITEURL'] + '/theme/'
             assets_src = os.path.join(self.output_path, 'theme')
             self.assets_env = AssetsEnvironment(assets_src, assets_url)
 
@@ -465,13 +482,20 @@ class PdfGenerator(Generator):
     """Generate PDFs on the output dir, for all articles and pages coming from
     rst"""
     def __init__(self, *args, **kwargs):
+        super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
+            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH']) \
+                                if 'PDF_STYLE_PATH' in self.settings.keys() \
+                                else ''
+            pdf_style = self.settings['PDF_STYLE'] if 'PDF_STYLE' \
+                                                    in self.settings.keys() \
+                                                    else 'twelvepoint'
             self.pdfcreator = RstToPdf(breakside=0,
-                                       stylesheets=['twelvepoint'])
+                                       stylesheets=[pdf_style],
+                                       style_path=[pdf_style_path])
         except ImportError:
             raise Exception("unable to find rst2pdf")
-        super(PdfGenerator, self).__init__(*args, **kwargs)
 
     def _create_pdf(self, obj, output_path):
         if obj.filename.endswith(".rst"):
@@ -479,7 +503,7 @@ class PdfGenerator(Generator):
             output_pdf = os.path.join(output_path, filename)
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             with open(obj.filename) as f:
-                self.pdfcreator.createPdf(text=f, output=output_pdf)
+                self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
             logger.info(u' [ok] writing %s' % output_pdf)
 
     def generate_context(self):

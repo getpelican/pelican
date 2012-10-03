@@ -7,13 +7,14 @@ import logging
 from collections import defaultdict, Hashable
 from functools import partial
 
-from codecs import open as _open
+from codecs import open
 from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
 
 logger = logging.getLogger(__name__)
+
 
 class NoFilesError(Exception):
     pass
@@ -64,9 +65,9 @@ def get_date(string):
     raise ValueError("'%s' is not a valid date" % string)
 
 
-def open(filename):
+def pelican_open(filename):
     """Open a file and return it's content"""
-    return _open(filename, encoding='utf-8').read()
+    return open(filename, encoding='utf-8').read()
 
 
 def slugify(value):
