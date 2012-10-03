@@ -70,7 +70,7 @@ class RstReaderTest(unittest.TestCase):
 class MdReaderTest(unittest.TestCase):
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
-    def test_article_with_md_extention(self):
+    def test_article_with_md_extension(self):
         # test to ensure the md extension is being processed by the correct reader
         reader = readers.MarkdownReader({})
         content, metadata = reader.read(_filename('article_with_md_extension.md'))

@@ -1,4 +1,4 @@
-Title: Test Markdown extentions
+Title: Test Markdown extensions
 
 [TOC]
 
