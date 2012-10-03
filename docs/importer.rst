@@ -31,7 +31,7 @@ BeatifulSoup can be installed like any other Python package::
 
     $ pip install BeautifulSoup
 
-For pandoc, install a package for your operating system from the 
+For pandoc, install a package for your operating system from the
 `pandoc site <http://johnmacfarlane.net/pandoc/installing.html>`_.
 
 

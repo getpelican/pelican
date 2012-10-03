@@ -179,6 +179,8 @@ class Pelican(object):
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
 
+        signals.finalized.send(self)
+
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
@@ -307,6 +309,7 @@ def main():
                     if files_found_error == True:
                         logger.warning("No valid files found in content. Nothing to generate.")
                         files_found_error = False
+                    time.sleep(1)  # sleep to avoid cpu load
                 except Exception, e:
                     logger.warning(
                         "Caught exception \"{}\". Reloading.".format(e)

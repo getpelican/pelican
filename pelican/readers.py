@@ -16,7 +16,7 @@ except ImportError:
 import re
 
 from pelican.contents import Category, Tag, Author
-from pelican.utils import get_date, open
+from pelican.utils import get_date, pelican_open
 
 
 _METADATA_PROCESSORS = {
@@ -130,7 +130,7 @@ class MarkdownReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
-        text = open(filename)
+        text = pelican_open(filename)
         md = Markdown(extensions=set(self.extensions + ['meta']))
         content = md.convert(text)
 
@@ -147,7 +147,7 @@ class HtmlReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of (x)HTML files"""
-        with open(filename) as content:
+        with pelican_open(filename) as content:
             metadata = {'title': 'unnamed'}
             for i in self._re.findall(content):
                 key = i.split(':')[0][5:].strip()
