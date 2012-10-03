@@ -75,7 +75,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SUMMARY_MAX_LENGTH': 50,
                    'WEBASSETS': False,
                    'PLUGINS': [],
-                   'MARKDOWN_EXTENTIONS': [ 'toc', ],
+                   'MARKDOWN_EXTENSIONS': ['toc', ],
                    }
 
 
