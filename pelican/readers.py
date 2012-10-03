@@ -128,7 +128,7 @@ class MarkdownReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of markdown files"""
-        markdown_extensions = self.settings.get('MARKDOWN_EXTENsIONS', [])
+        markdown_extensions = self.settings.get('MARKDOWN_EXTENSIONS', [])
         if isinstance(markdown_extensions, (str, unicode)):
             markdown_extensions = [m.strip() for m in
                                    markdown_extensions.split(',')]

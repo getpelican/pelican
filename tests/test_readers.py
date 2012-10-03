@@ -95,7 +95,7 @@ class MdReaderTest(unittest.TestCase):
     def test_article_with_markdown_markup_extension(self):
         # test to ensure the markdown markup extension is being processed as expected
         reader = readers.MarkdownReader({})
-        reader.settings.update(dict(MARKDOWN_EXTENSIONS=['toc']))
+        reader.settings.update(dict(MARKDOWN_EXTENSIONS=['toc', ]))
         content, metadata = reader.read(_filename('article_with_markdown_markup_extensions.md'))
         expected = '<div class="toc">\n'\
             '<ul>\n'\
