@@ -22,6 +22,21 @@ INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
 SAMPLE_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf.py")
 
 
+def recursiveDiff(dcmp):
+    diff = {
+            'diff_files': [os.sep.join((dcmp.right, f))
+                for f in dcmp.diff_files],
+            'left_only': [os.sep.join((dcmp.right, f))
+                for f in dcmp.left_only],
+            'right_only': [os.sep.join((dcmp.right, f))
+                for f in dcmp.right_only],
+            }
+    for sub_dcmp in dcmp.subdirs.values():
+        for k, v in recursiveDiff(sub_dcmp).iteritems():
+            diff[k] += v
+    return diff
+
+
 class TestPelican(unittest.TestCase):
     # general functional testing for pelican. Basically, this test case tries
     # to run pelican in different situations and see how it behaves
@@ -43,9 +58,9 @@ class TestPelican(unittest.TestCase):
               "to docs/contribute.rst to update the expected " \
               "output of the functional tests."
 
-        self.assertEqual(diff.left_only, [], msg=msg)
-        self.assertEqual(diff.right_only, [], msg=msg)
-        self.assertEqual(diff.diff_files, [], msg=msg)
+        self.assertEqual(diff['left_only'], [], msg=msg)
+        self.assertEqual(diff['right_only'], [], msg=msg)
+        self.assertEqual(diff['diff_files'], [], msg=msg)
 
     @unittest.skip("Test failing")
     def test_basic_generation_works(self):
@@ -61,9 +76,8 @@ class TestPelican(unittest.TestCase):
                 })
             pelican = Pelican(settings=settings)
             pelican.run()
-            diff = dircmp(
-                    self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
-            self.assertFilesEqual(diff)
+            dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
+            self.assertFilesEqual(recursiveDiff(dcmp))
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
@@ -73,5 +87,5 @@ class TestPelican(unittest.TestCase):
             })
         pelican = Pelican(settings=settings)
         pelican.run()
-        diff = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "custom")))
-        self.assertFilesEqual(diff)
+        dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "custom")))
+        self.assertFilesEqual(recursiveDiff(dcmp))
