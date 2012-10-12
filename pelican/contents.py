@@ -61,7 +61,7 @@ class Page(object):
             else:
                 title = filename.decode('utf-8') if filename else self.title
                 self.author = Author(getenv('USER', 'John Doe'), settings)
-                logger.warning(u"Author of `{0}' unknown, assuming that his "\
+                logger.warning(u"Author of `{0}' unknown, assuming that his "
                                 "name is " "`{1}'".format(title, self.author))
 
         # manage languages
@@ -146,7 +146,7 @@ class Page(object):
                 (?:href|src)\s*=)
 
             (?P<quote>["\'])      # require value to be quoted
-            (?P<path>:(?P<what>.*):(?P<value>.*))  # the url value
+            (?P<path>\|(?P<what>.*?)\|(?P<value>.*?))  # the url value
             \2""", re.X)
 
         def replacer(m):
@@ -169,7 +169,7 @@ class Page(object):
                     origin = urlparse.urljoin(self._context['SITEURL'],
                              self._context['filenames'][value].url)
                 else:
-                    logger.warning(u"Unable to find {fn}, skipping url"\
+                    logger.warning(u"Unable to find {fn}, skipping url"
                                     "replacement".format(fn=value))
 
             return m.group('markup') + m.group('quote') + origin \
