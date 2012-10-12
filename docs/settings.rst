@@ -204,14 +204,14 @@ Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 Date format and locale
 ----------------------
 
-If no DATE_FORMAT is set, fall back to DEFAULT_DATE_FORMAT. If you need to
+If no DATE_FORMATS is set, fall back to DEFAULT_DATE_FORMAT. If you need to
 maintain multiple languages with different date formats, you can set this dict
 using language name (``lang`` in your posts) as key. Regarding available format
 codes, see `strftime document of python`_ :
 
 .. parsed-literal::
 
-    DATE_FORMAT = {
+    DATE_FORMATS = {
         'en': '%a, %d %b %Y',
         'jp': '%Y-%m-%d(%a)',
     }
@@ -230,13 +230,13 @@ above:
 
 .. parsed-literal::
     # On Unix/Linux
-    DATE_FORMAT = {
+    DATE_FORMATS = {
         'en': ('en_US','%a, %d %b %Y'),
         'jp': ('ja_JP','%Y-%m-%d(%a)'),
     }
 
     # On Windows
-    DATE_FORMAT = {
+    DATE_FORMATS = {
         'en': ('usa','%a, %d %b %Y'),
         'jp': ('jpn','%Y-%m-%d(%a)'),
     }
