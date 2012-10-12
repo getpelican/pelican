@@ -5,6 +5,7 @@ import random
 import logging
 import datetime
 import subprocess
+import shutil
 
 from codecs import open
 from collections import defaultdict
@@ -15,9 +16,10 @@ from operator import attrgetter, itemgetter
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.contents import Article, Page, Category, is_valid_content
+from pelican.contents import Article, Page, Category, StaticContent, \
+        is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations
+from pelican.utils import copy, process_translations, mkdir_p
 from pelican import signals
 
 
@@ -79,8 +81,10 @@ class Generator(object):
 
         :param path: the path to search the file on
         :param exclude: the list of path to exclude
+        :param extensions: the list of allowed extensions (if False, all
+            extensions are allowed)
         """
-        if not extensions:
+        if extensions is None:
             extensions = self.markup
 
         files = []
@@ -94,8 +98,10 @@ class Generator(object):
             for e in exclude:
                 if e in dirs:
                     dirs.remove(e)
-            files.extend([os.sep.join((root, f)) for f in temp_files
-                if True in [f.endswith(ext) for ext in extensions]])
+            for f in temp_files:
+                if extensions is False or \
+                        (True in [f.endswith(ext) for ext in extensions]):
+                    files.append(os.sep.join((root, f)))
         return files
 
     def add_filename(self, content):
@@ -435,6 +441,7 @@ class StaticGenerator(Generator):
                  final_path, overwrite=True)
 
     def generate_context(self):
+        self.staticfiles = []
 
         if self.settings['WEBASSETS']:
             from webassets import Environment as AssetsEnvironment
@@ -465,17 +472,29 @@ class StaticGenerator(Generator):
             if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
                 self.assets_env.debug = True
 
-    def generate_output(self, writer):
+        # walk static paths
+        for static_path in self.settings['STATIC_PATHS']:
+            for f in self.get_files(
+                    os.path.join(self.path, static_path), extensions=False):
+                f_rel = os.path.relpath(f, self.path)
+                sc = StaticContent(f_rel, os.path.join('static', f_rel),
+                        settings=self.settings)
+                self.staticfiles.append(sc)
+                self.context['filenames'][f_rel] = sc
+        # same thing for FILES_TO_COPY
+        for src, dest in self.settings['FILES_TO_COPY']:
+            sc = StaticContent(src, dest, settings=self.settings)
+            self.staticfiles.append(sc)
+            self.context['filenames'][src] = sc
 
-        self._copy_paths(self.settings['STATIC_PATHS'], self.path,
-                         'static', self.output_path)
+    def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
-
-        # copy all the files needed
-        for source, destination in self.settings['FILES_TO_COPY']:
-            copy(source, self.path, self.output_path, destination,
-                 overwrite=True)
+        # copy all StaticContent files
+        for sc in self.staticfiles:
+            mkdir_p(os.path.dirname(sc.save_as))
+            shutil.copy(sc.filepath, sc.save_as)
+            logger.info('copying %s to %s' % (sc.filepath, sc.save_as))
 
 
 class PdfGenerator(Generator):

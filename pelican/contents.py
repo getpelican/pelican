@@ -292,11 +292,27 @@ class Author(URLWrapper):
     pass
 
 
+class StaticContent(object):
+    def __init__(self, src, dst=None, settings=None):
+        if not settings:
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
+        self.src = src
+        self.url = dst or src
+        self.filepath = os.path.join(settings['PATH'], src)
+        self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
+
+    def __str__(self):
+        return str(self.filepath.encode('utf-8', 'replace'))
+
+    def __unicode__(self):
+        return self.filepath
+
+
 def is_valid_content(content, f):
     try:
         content.check_properties()
         return True
     except NameError, e:
-        logger.error(u"Skipping %s: impossible to find informations about"\
+        logger.error(u"Skipping %s: impossible to find informations about"
                       "'%s'" % (f, e))
         return False

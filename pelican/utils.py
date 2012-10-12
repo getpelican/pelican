@@ -4,6 +4,7 @@ import re
 import pytz
 import shutil
 import logging
+import errno
 from collections import defaultdict, Hashable
 from functools import partial
 
@@ -307,3 +308,11 @@ def set_date_tzinfo(d, tz_name=None):
         return tz.localize(d)
     else:
         return d
+
+
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            raise

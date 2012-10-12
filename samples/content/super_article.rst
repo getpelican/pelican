@@ -16,12 +16,12 @@ This is a simple title
 
 And here comes the cool stuff_.
 
-.. image:: pictures/Sushi.jpg
+.. image:: |filename|/pictures/Sushi.jpg
    :height: 450 px
    :width: 600 px
    :alt: alternate text
 
-.. image:: pictures/Sushi_Macro.jpg
+.. image:: |filename|/pictures/Sushi_Macro.jpg
    :height: 450 px
    :width: 600 px
    :alt: alternate text
