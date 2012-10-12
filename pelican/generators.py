@@ -515,6 +515,19 @@ class PdfGenerator(Generator):
         for page in self.context['pages']:
             self._create_pdf(page, pdf_path)
 
+class SourceFileGenerator(Generator):
+    def generate_context(self):
+        self.output_extension = self.settings['OUTPUT_SOURCES_EXTENSION']
+
+    def _create_source(self, obj, output_path):
+        filename = os.path.splitext(obj.save_as)[0]
+        dest = os.path.join(output_path, filename + self.output_extension)
+        copy('', obj.filename, dest)
+
+    def generate_output(self, writer=None):
+        logger.info(u' Generating source files...')
+        for object in chain(self.context['articles'], self.context['pages']):
+            self._create_source(object, self.output_path)
 
 class LessCSSGenerator(Generator):
     """Compile less css files."""
