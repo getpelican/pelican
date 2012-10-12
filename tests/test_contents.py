@@ -5,7 +5,7 @@ from .support import unittest
 from pelican.contents import Page, Article
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import truncate_html_words
-
+from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
 
 # generate one paragraph, enclosed with <p>
@@ -157,6 +157,17 @@ class TestPage(unittest.TestCase):
                                      for subkey in page_kwargs[key]])
 
         return page_kwargs
+
+    def test_signal(self):
+        """If a title is given, it should be used to generate the slug."""
+
+        def receiver_test_function(sender,instance):
+            pass
+
+        content_object_init.connect(receiver_test_function ,sender=Page)
+        page = Page(**self.page_kwargs)
+        self.assertTrue(content_object_init.has_receivers_for(Page))
+
 
 class TestArticle(TestPage):
     def test_template(self):

@@ -48,20 +48,23 @@ which you map the signals to your plugin logic. Let's take a simple example::
         signals.initialized.connect(test)
 
 
+
 List of signals
 ===============
 
 Here is the list of currently implemented signals:
 
-=========================   ============================   ===========================================================================
-Signal                      Arguments                      Description
-=========================   ============================   ===========================================================================
+=========================   =======================================   =========================================
+Signal                      Arguments                                 Description
+=========================   =======================================   =========================================
+>>>>>>> rach/master
 initialized                 pelican object
 finalized                   pelican object                 invoked after all the generators are executed and just before pelican exits
                                                            usefull for custom post processing actions, such as: 
                                                            - minifying js/css assets.
                                                            - notify/ping search engines with an updated sitemap.
 article_generate_context    article_generator, metadata
+<<<<<<< HEAD
 article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
 get_generators              generators                     invoked in Pelican.get_generator_classes,
                                                            can return a Generator, or several
@@ -72,6 +75,25 @@ pages_generator_init        pages_generator                invoked in the PagesG
 
 The list is currently small, don't hesitate to add signals and make a pull
 request if you need them!
+
+.. note:: 
+          
+   The signal ``content_object_init`` can send different type of object as 
+   argument. If you want to register only one type of object then you will
+   need to specify the sender when you are connecting to the signal.
+   
+   ::
+   
+       from pelican import signals
+       from pelican import contents
+       
+       def test(sender, instance):
+               print "%s : %s content initialized !!" % (sender, instance)
+       
+       def register():
+               signals.content_object_init.connect(test, sender=contents.Article)
+       
+
 
 List of plugins
 ===============
