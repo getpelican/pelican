@@ -54,17 +54,15 @@ List of signals
 
 Here is the list of currently implemented signals:
 
-=========================   =======================================   =========================================
-Signal                      Arguments                                 Description
-=========================   =======================================   =========================================
->>>>>>> rach/master
+=========================   ============================   ===========================================================================
+Signal                      Arguments                      Description
+=========================   ============================   ===========================================================================
 initialized                 pelican object
 finalized                   pelican object                 invoked after all the generators are executed and just before pelican exits
                                                            usefull for custom post processing actions, such as: 
                                                            - minifying js/css assets.
                                                            - notify/ping search engines with an updated sitemap.
 article_generate_context    article_generator, metadata
-<<<<<<< HEAD
 article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
 get_generators              generators                     invoked in Pelican.get_generator_classes,
                                                            can return a Generator, or several
