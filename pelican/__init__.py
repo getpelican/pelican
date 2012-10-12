@@ -8,11 +8,13 @@ import argparse
 
 from pelican import signals
 
-from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
-        StaticGenerator, PdfGenerator, LessCSSGenerator)
+from pelican.generators import (ArticlesGenerator, PagesGenerator,
+                                StaticGenerator, PdfGenerator,
+                                LessCSSGenerator, SourceFileGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
-from pelican.utils import clean_output_dir, files_changed, file_changed, NoFilesError
+from pelican.utils import (clean_output_dir, files_changed, file_changed,
+                           NoFilesError)
 from pelican.writers import Writer
 
 __major__ = 3
@@ -78,7 +80,7 @@ class Pelican(object):
                 logger.debug("Loading plugin `{0}' ...".format(plugin))
                 plugin = __import__(plugin, globals(), locals(), 'module')
 
-            logger.debug("Registering plugin `{0}' ...".format(plugin.__name__))
+            logger.debug("Registering plugin `{0}'".format(plugin.__name__))
             plugin.register()
 
     def _handle_deprecation(self):
@@ -139,8 +141,8 @@ class Pelican(object):
             'Modify CATEGORY_FEED to CATEGORY_FEED_ATOM in your settings and '
             'theme for the same behavior. Temporarily setting '
             'CATEGORY_FEED_ATOM for backwards compatibility.')
-            self.settings['CATEGORY_FEED_ATOM'] = self.settings['CATEGORY_FEED']
-
+            self.settings['CATEGORY_FEED_ATOM'] =\
+                    self.settings['CATEGORY_FEED']
 
     def run(self):
         """Run the generators and return"""
@@ -187,6 +189,8 @@ class Pelican(object):
             generators.append(PdfGenerator)
         if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
             generators.append(LessCSSGenerator)
+        if self.settings['OUTPUT_SOURCES']:
+            generators.append(SourceFileGenerator)
 
         for pair in signals.get_generators.send(self):
             (funct, value) = pair
@@ -290,7 +294,7 @@ def main():
                     # have.
                     if files_changed(pelican.path, pelican.markup) or \
                             files_changed(pelican.theme, ['']):
-                        if files_found_error == False:
+                        if not files_found_error:
                             files_found_error = True
                         pelican.run()
 
@@ -306,8 +310,9 @@ def main():
                     logger.warning("Keyboard interrupt, quitting.")
                     break
                 except NoFilesError:
-                    if files_found_error == True:
-                        logger.warning("No valid files found in content. Nothing to generate.")
+                    if files_found_error:
+                        logger.warning("No valid files found in content. "
+                                       "Nothing to generate.")
                         files_found_error = False
                     time.sleep(1)  # sleep to avoid cpu load
                 except Exception, e:

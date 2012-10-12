@@ -184,6 +184,8 @@ def build_header(title, date, author, categories, tags):
     header = '%s\n%s\n' % (title, '#' * len(title))
     if date:
         header += ':date: %s\n' % date
+    if author:
+        header += ':author: %s\n' % author
     if categories:
         header += ':category: %s\n' % ', '.join(categories)
     if tags:
@@ -196,6 +198,8 @@ def build_markdown_header(title, date, author, categories, tags):
     header = 'Title: %s\n' % title
     if date:
         header += 'Date: %s\n' % date
+    if author:
+        header += 'Author: %s\n' % author
     if categories:
         header += 'Category: %s\n' % ', '.join(categories)
     if tags:

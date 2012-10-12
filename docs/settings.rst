@@ -69,6 +69,12 @@ Setting name (default value)                                            What doe
 `PDF_GENERATOR` (``False``)                                             Set to True if you want to have PDF versions
                                                                         of your documents. You will need to install
                                                                         `rst2pdf`.
+`OUTPUT_SOURCES` (``False``)                                            Set to True if you want to copy the articles and pages in their
+                                                                        original format (e.g. Markdown or ReStructeredText) to the
+                                                                        specified OUTPUT_PATH.
+`OUTPUT_SOURCES_EXTENSION` (``.text``)                                  Controls the extension that will be used by the SourcesGenerator.
+                                                                        Defaults to ``.text``. If not a valid string the default value
+                                                                        will be used.
 `RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use document-relative URLs or
                                                                         not. If set to ``False``, Pelican will use the SITEURL
                                                                         setting to construct absolute URLs.
@@ -108,6 +114,7 @@ Setting name (default value)                                            What doe
                                                                         Example: projects, resume, profile ...
                                                                         This templates need to use ``DIRECT_TEMPLATES`` setting
 
+`MARKDOWN_EXTENSIONS` (``['toc',]``)                                    A list of any Markdown extensions you want to use.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.

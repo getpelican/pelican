@@ -32,6 +32,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SITENAME': 'A Pelican Blog',
                    'DISPLAY_PAGES_ON_MENU': True,
                    'PDF_GENERATOR': False,
+                   'OUTPUT_SOURCES': False,
+                   'OUTPUT_SOURCES_EXTENSION': '.text',
                    'DEFAULT_CATEGORY': 'misc',
                    'DEFAULT_DATE': 'fs',
                    'WITH_FUTURE_DATES': True,
@@ -76,6 +78,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SUMMARY_MAX_LENGTH': 50,
                    'WEBASSETS': False,
                    'PLUGINS': [],
+                   'MARKDOWN_EXTENSIONS': ['toc', ],
                    }
 
 
@@ -174,5 +177,12 @@ def configure_settings(settings, default_settings=None, filename=None):
         except ImportError:
             logger.warn("You must install the webassets module to use WEBASSETS.")
             settings['WEBASSETS'] = False
+
+    if 'OUTPUT_SOURCES_EXTENSION' in settings:
+        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):
+            settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
+            logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
+                       " falling back to the default extension " +
+                       _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
 
     return settings
