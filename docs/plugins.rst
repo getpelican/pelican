@@ -54,22 +54,23 @@ List of signals
 
 Here is the list of currently implemented signals:
 
-=========================   ============================   ===========================================================================
-Signal                      Arguments                      Description
-=========================   ============================   ===========================================================================
-initialized                 pelican object
-finalized                   pelican object                 invoked after all the generators are executed and just before pelican exits
-                                                           usefull for custom post processing actions, such as: 
-                                                           - minifying js/css assets.
-                                                           - notify/ping search engines with an updated sitemap.
-article_generate_context    article_generator, metadata
-article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
-get_generators              generators                     invoked in Pelican.get_generator_classes,
-                                                           can return a Generator, or several
-                                                           generator in a tuple or in a list.
-pages_generate_context      pages_generator, metadata
-pages_generator_init        pages_generator                invoked in the PagesGenerator.__init__
-=========================   ============================   ===========================================================================
+=============================   ============================   ===========================================================================
+Signal                          Arguments                       Description
+=============================   ============================   ===========================================================================
+initialized                     pelican object
+finalized                       pelican object                  invoked after all the generators are executed and just before pelican exits
+                                                                usefull for custom post processing actions, such as: 
+                                                                - minifying js/css assets.
+                                                                - notify/ping search engines with an updated sitemap.
+article_generate_context        article_generator, metadata
+article_generator_init          article_generator               invoked in the ArticlesGenerator.__init__
+article_generator_finalized     article_generator               invoked at the end of ArticlesGenerator.generate_context
+get_generators                  generators                      invoked in Pelican.get_generator_classes,
+                                                                can return a Generator, or several
+                                                                generator in a tuple or in a list.
+pages_generate_context          pages_generator, metadata
+pages_generator_init            pages_generator                 invoked in the PagesGenerator.__init__
+=============================   ============================   ===========================================================================
 
 The list is currently small, don't hesitate to add signals and make a pull
 request if you need them!

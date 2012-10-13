@@ -360,6 +360,8 @@ class ArticlesGenerator(Generator):
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
+        signals.article_generator_finalized.send(self)
+
     def generate_output(self, writer):
         self.generate_feeds(writer)
         self.generate_pages(writer)
