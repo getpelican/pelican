@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os, os.path
 from docutils import nodes, utils
 from docutils.parsers.rst import directives, roles, Directive
 from pygments.formatters import HtmlFormatter
@@ -17,18 +18,24 @@ class Pygments(Directive):
     """ Source code syntax hightlighting.
     """
     required_arguments = 1
-    optional_arguments = 0
+    optional_arguments = 1
     final_argument_whitespace = True
     option_spec = dict([(key, directives.flag) for key in VARIANTS])
     has_content = True
 
     def run(self):
-        self.assert_has_content()
         try:
             lexer = get_lexer_by_name(self.arguments[0])
         except ValueError:
             # no lexer found - use the text one instead of an exception
             lexer = TextLexer()
+        # if we have an additional argument, replace self.contents
+        # with that of the passed filename
+        if len(self.arguments) == 2:
+            filename = self.arguments[1]
+            with open(os.path.abspath(filename)) as f:
+                self.content = f.read().split(os.linesep)
+        self.assert_has_content()
         # take an arbitrary option if more than one is given
         formatter = self.options and VARIANTS[self.options.keys()[0]] \
                     or DEFAULT
@@ -101,12 +108,12 @@ _abbr_re = re.compile('\((.*)\)$')
 class abbreviation(nodes.Inline, nodes.TextElement): pass
 
 def abbr_role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
-	text = utils.unescape(text)
-	m = _abbr_re.search(text)
-	if m is None:
-		return [abbreviation(text, text)], []
-	abbr = text[:m.start()].strip()
-	expl = m.group(1)
-	return [abbreviation(abbr, abbr, explanation=expl)], []
+    text = utils.unescape(text)
+    m = _abbr_re.search(text)
+    if m is None:
+        return [abbreviation(text, text)], []
+    abbr = text[:m.start()].strip()
+    expl = m.group(1)
+    return [abbreviation(abbr, abbr, explanation=expl)], []
 
 roles.register_local_role('abbr', abbr_role)
