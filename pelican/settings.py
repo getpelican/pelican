@@ -82,13 +82,24 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    }
 
 
-def read_settings(filename=None):
+def read_settings(filename=None, override=None):
     if filename:
         local_settings = get_settings_from_file(filename)
+        # Make the paths relative to the settings file
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
+            if p in local_settings and local_settings[p] is not None \
+                    and not isabs(local_settings[p]):
+                absp = os.path.abspath(os.path.normpath(os.path.join(
+                            os.path.dirname(filename), local_settings[p])))
+                if p != 'THEME' or os.path.exists(p):
+                    local_settings[p] = absp
     else:
         local_settings = copy.deepcopy(_DEFAULT_CONFIG)
-    configured_settings = configure_settings(local_settings, filename)
-    return configured_settings
+
+    if override:
+        local_settings.update(override)
+
+    return configure_settings(local_settings)
 
 
 def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
@@ -98,9 +109,8 @@ def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
 
     context = copy.deepcopy(default_settings)
     if module is not None:
-         context.update(
-             (k, v) for k, v in inspect.getmembers(module) if k.isupper()
-         )
+        context.update(
+                (k, v) for k, v in inspect.getmembers(module) if k.isupper())
     return context
 
 
@@ -115,16 +125,23 @@ def get_settings_from_file(filename, default_settings=_DEFAULT_CONFIG):
     return get_settings_from_module(module, default_settings=default_settings)
 
 
-def configure_settings(settings, filename=None):
-    """Provide optimizations, error checking, and warnings for loaded settings"""
-    # Make the paths relative to the settings file
-    if filename:
-        for path in ['PATH', 'OUTPUT_PATH']:
-            if path in settings:
-                if settings[path] is not None and not isabs(settings[path]):
-                    settings[path] = os.path.abspath(os.path.normpath(
-                        os.path.join(os.path.dirname(filename), settings[path]))
-                    )
+def configure_settings(settings):
+    """
+    Provide optimizations, error checking, and warnings for loaded settings
+    """
+    if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
+        raise Exception('You need to specify a path containing the content'
+                ' (see pelican --help for more information)')
+
+    # find the theme in pelican.theme if the given one does not exists
+    if not os.path.isdir(settings['THEME']):
+        theme_path = os.sep.join([os.path.dirname(
+            os.path.abspath(__file__)), "themes/%s" % settings['THEME']])
+        if os.path.exists(theme_path):
+            settings['THEME'] = theme_path
+        else:
+            raise Exception("Impossible to find the theme %s"
+                    % settings['THEME'])
 
     # if locales is not a list, make it one
     locales = settings['LOCALE']
