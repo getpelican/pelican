@@ -87,7 +87,7 @@ def read_settings(filename=None):
         local_settings = get_settings_from_file(filename)
     else:
         local_settings = copy.deepcopy(_DEFAULT_CONFIG)
-    configured_settings = configure_settings(local_settings, None, filename)
+    configured_settings = configure_settings(local_settings, filename)
     return configured_settings
 
 
@@ -115,11 +115,8 @@ def get_settings_from_file(filename, default_settings=_DEFAULT_CONFIG):
     return get_settings_from_module(module, default_settings=default_settings)
 
 
-def configure_settings(settings, default_settings=None, filename=None):
+def configure_settings(settings, filename=None):
     """Provide optimizations, error checking, and warnings for loaded settings"""
-    if default_settings is None:
-        default_settings = copy.deepcopy(_DEFAULT_CONFIG)
-
     # Make the paths relative to the settings file
     if filename:
         for path in ['PATH', 'OUTPUT_PATH']:
