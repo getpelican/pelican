@@ -63,7 +63,6 @@ class Generator(object):
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
-        self.settings['PATH'] = self.path  # overwrite with the actual path
         self.context['filenames'] = kwargs.get('filenames', {})
 
     def get_template(self, name):
