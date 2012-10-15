@@ -32,6 +32,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SITENAME': 'A Pelican Blog',
                    'DISPLAY_PAGES_ON_MENU': True,
                    'PDF_GENERATOR': False,
+                   'OUTPUT_SOURCES': False,
+                   'OUTPUT_SOURCES_EXTENSION': '.text',
                    'DEFAULT_CATEGORY': 'misc',
                    'DEFAULT_DATE': 'fs',
                    'WITH_FUTURE_DATES': True,
@@ -58,6 +60,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
                    'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
+                   'EXTRA_TEMPLATES_PATHS' : [],
                    'PAGINATED_DIRECT_TEMPLATES': ('index', ),
                    'PELICAN_CLASS': 'pelican.Pelican',
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
@@ -75,16 +78,28 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SUMMARY_MAX_LENGTH': 50,
                    'WEBASSETS': False,
                    'PLUGINS': [],
+                   'MARKDOWN_EXTENSIONS': ['toc', ],
                    }
 
 
-def read_settings(filename=None):
+def read_settings(filename=None, override=None):
     if filename:
         local_settings = get_settings_from_file(filename)
+        # Make the paths relative to the settings file
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
+            if p in local_settings and local_settings[p] is not None \
+                    and not isabs(local_settings[p]):
+                absp = os.path.abspath(os.path.normpath(os.path.join(
+                            os.path.dirname(filename), local_settings[p])))
+                if p != 'THEME' or os.path.exists(p):
+                    local_settings[p] = absp
     else:
         local_settings = copy.deepcopy(_DEFAULT_CONFIG)
-    configured_settings = configure_settings(local_settings, None, filename)
-    return configured_settings
+
+    if override:
+        local_settings.update(override)
+
+    return configure_settings(local_settings)
 
 
 def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
@@ -94,9 +109,8 @@ def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
 
     context = copy.deepcopy(default_settings)
     if module is not None:
-         context.update(
-             (k, v) for k, v in inspect.getmembers(module) if k.isupper()
-         )
+        context.update(
+                (k, v) for k, v in inspect.getmembers(module) if k.isupper())
     return context
 
 
@@ -111,19 +125,23 @@ def get_settings_from_file(filename, default_settings=_DEFAULT_CONFIG):
     return get_settings_from_module(module, default_settings=default_settings)
 
 
-def configure_settings(settings, default_settings=None, filename=None):
-    """Provide optimizations, error checking, and warnings for loaded settings"""
-    if default_settings is None:
-        default_settings = copy.deepcopy(_DEFAULT_CONFIG)
+def configure_settings(settings):
+    """
+    Provide optimizations, error checking, and warnings for loaded settings
+    """
+    if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
+        raise Exception('You need to specify a path containing the content'
+                ' (see pelican --help for more information)')
 
-    # Make the paths relative to the settings file
-    if filename:
-        for path in ['PATH', 'OUTPUT_PATH']:
-            if path in settings:
-                if settings[path] is not None and not isabs(settings[path]):
-                    settings[path] = os.path.abspath(os.path.normpath(
-                        os.path.join(os.path.dirname(filename), settings[path]))
-                    )
+    # find the theme in pelican.theme if the given one does not exists
+    if not os.path.isdir(settings['THEME']):
+        theme_path = os.sep.join([os.path.dirname(
+            os.path.abspath(__file__)), "themes/%s" % settings['THEME']])
+        if os.path.exists(theme_path):
+            settings['THEME'] = theme_path
+        else:
+            raise Exception("Impossible to find the theme %s"
+                    % settings['THEME'])
 
     # if locales is not a list, make it one
     locales = settings['LOCALE']
@@ -173,5 +191,12 @@ def configure_settings(settings, default_settings=None, filename=None):
         except ImportError:
             logger.warn("You must install the webassets module to use WEBASSETS.")
             settings['WEBASSETS'] = False
+
+    if 'OUTPUT_SOURCES_EXTENSION' in settings:
+        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):
+            settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
+            logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
+                       " falling back to the default extension " +
+                       _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
 
     return settings

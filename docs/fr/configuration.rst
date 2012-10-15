@@ -155,7 +155,5 @@ SITEURL :
 STATIC_PATHS :
 	Les chemins statiques que vous voulez avoir accès sur le chemin de sortie "statique" ;
 
-
-
-
-
+MARKDOWN_EXTENSIONS :
+	Liste des extentions Markdown que vous souhaitez utiliser ;

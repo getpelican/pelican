@@ -48,6 +48,7 @@ which you map the signals to your plugin logic. Let's take a simple example::
         signals.initialized.connect(test)
 
 
+
 List of signals
 ===============
 
@@ -72,6 +73,25 @@ pages_generator_init        pages_generator                invoked in the PagesG
 
 The list is currently small, don't hesitate to add signals and make a pull
 request if you need them!
+
+.. note:: 
+          
+   The signal ``content_object_init`` can send different type of object as 
+   argument. If you want to register only one type of object then you will
+   need to specify the sender when you are connecting to the signal.
+   
+   ::
+   
+       from pelican import signals
+       from pelican import contents
+       
+       def test(sender, instance):
+               print "%s : %s content initialized !!" % (sender, instance)
+       
+       def register():
+               signals.content_object_init.connect(test, sender=contents.Article)
+       
+
 
 List of plugins
 ===============

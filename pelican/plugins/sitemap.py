@@ -1,7 +1,8 @@
+import collections
 import os.path
 
 from datetime import datetime
-from logging import debug, warning, error, info
+from logging import warning, info
 from codecs import open
 
 from pelican import signals, contents
@@ -14,45 +15,17 @@ TXT_HEADER = u"""{0}/index.html
 
 XML_HEADER = u"""<?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
-         xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>{0}/index.html</loc>
-    <lastmod>{1}</lastmod>
-    <changefreq>{2}</changefreq>
-    <priority>{3}</priority>
-  </url>
-
-  <url>
-    <loc>{0}/archives.html</loc>
-    <lastmod>{1}</lastmod>
-    <changefreq>{2}</changefreq>
-    <priority>{3}</priority>
-  </url>
-
-  <url>
-    <loc>{0}/tags.html</loc>
-    <lastmod>{1}</lastmod>
-    <changefreq>{2}</changefreq>
-    <priority>{3}</priority>
-  </url>
-
-  <url>
-    <loc>{0}/categories.html</loc>
-    <lastmod>{1}</lastmod>
-    <changefreq>{2}</changefreq>
-    <priority>{3}</priority>
-  </url>
+xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 """
 
 XML_URL = u"""
-  <url>
-    <loc>{0}/{1}</loc>
-    <lastmod>{2}</lastmod>
-    <changefreq>{3}</changefreq>
-    <priority>{4}</priority>
-  </url>
+<url>
+<loc>{0}/{1}</loc>
+<lastmod>{2}</lastmod>
+<changefreq>{3}</changefreq>
+<priority>{4}</priority>
+</url>
 """
 
 XML_FOOTER = u"""
@@ -67,7 +40,6 @@ def format_date(date):
     else:
         tz = "-00:00"
     return date.strftime("%Y-%m-%dT%H:%M:%S") + tz
-
 
 
 class SitemapGenerator(object):
@@ -146,6 +118,10 @@ class SitemapGenerator(object):
         if getattr(page, 'status', 'published') != 'published':
             return
 
+        page_path = os.path.join(self.output_path, page.url)
+        if not os.path.exists(page_path):
+            return
+
         lastmod = format_date(getattr(page, 'date', self.now))
 
         if isinstance(page, contents.Article):
@@ -176,28 +152,34 @@ class SitemapGenerator(object):
         for article in self.context['articles']:
             pages += article.translations
 
-
         info('writing {0}'.format(path))
 
         with open(path, 'w', encoding='utf-8') as fd:
 
             if self.format == 'xml':
-                fd.write(XML_HEADER.format(
-                        self.siteurl,
-                        format_date(self.now),
-                        self.changefreqs['indexes'],
-                        self.priorities['indexes']
-                    )
-                )
+                fd.write(XML_HEADER)
             else:
                 fd.write(TXT_HEADER.format(self.siteurl))
+
+            FakePage = collections.namedtuple('FakePage',
+                                              ['status',
+                                               'date',
+                                               'url'])
+
+            for standard_page_url in ['index.html',
+                                      'archives.html',
+                                      'tags.html',
+                                      'categories.html']:
+                fake = FakePage(status='published',
+                                date=self.now,
+                                url=standard_page_url)
+                self.write_url(fake, fd)
 
             for page in pages:
                 self.write_url(page, fd)
 
             if self.format == 'xml':
                 fd.write(XML_FOOTER)
-
 
 
 def get_generators(generators):

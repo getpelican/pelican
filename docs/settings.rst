@@ -69,6 +69,12 @@ Setting name (default value)                                            What doe
 `PDF_GENERATOR` (``False``)                                             Set to True if you want to have PDF versions
                                                                         of your documents. You will need to install
                                                                         `rst2pdf`.
+`OUTPUT_SOURCES` (``False``)                                            Set to True if you want to copy the articles and pages in their
+                                                                        original format (e.g. Markdown or ReStructeredText) to the
+                                                                        specified OUTPUT_PATH.
+`OUTPUT_SOURCES_EXTENSION` (``.text``)                                  Controls the extension that will be used by the SourcesGenerator.
+                                                                        Defaults to ``.text``. If not a valid string the default value
+                                                                        will be used.
 `RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use document-relative URLs or
                                                                         not. If set to ``False``, Pelican will use the SITEURL
                                                                         setting to construct absolute URLs.
@@ -103,7 +109,12 @@ Setting name (default value)                                            What doe
                                                                         This only applies if your content does not otherwise
                                                                         specify a summary. Setting to None will cause the summary
                                                                         to be a copy of the original content.
+`EXTRA_TEMPLATES_PATHS` (``[]``)                                        A list of paths you want Jinja2 to look for the templates.
+                                                                        Can be used to separate templates from the theme.
+                                                                        Example: projects, resume, profile ...
+                                                                        This templates need to use ``DIRECT_TEMPLATES`` setting
 
+`MARKDOWN_EXTENSIONS` (``['toc',]``)                                    A list of any Markdown extensions you want to use.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
@@ -200,14 +211,14 @@ Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 Date format and locale
 ----------------------
 
-If no DATE_FORMAT is set, fall back to DEFAULT_DATE_FORMAT. If you need to
+If no DATE_FORMATS is set, fall back to DEFAULT_DATE_FORMAT. If you need to
 maintain multiple languages with different date formats, you can set this dict
 using language name (``lang`` in your posts) as key. Regarding available format
 codes, see `strftime document of python`_ :
 
 .. parsed-literal::
 
-    DATE_FORMAT = {
+    DATE_FORMATS = {
         'en': '%a, %d %b %Y',
         'jp': '%Y-%m-%d(%a)',
     }
@@ -226,13 +237,13 @@ above:
 
 .. parsed-literal::
     # On Unix/Linux
-    DATE_FORMAT = {
+    DATE_FORMATS = {
         'en': ('en_US','%a, %d %b %Y'),
         'jp': ('ja_JP','%Y-%m-%d(%a)'),
     }
 
     # On Windows
-    DATE_FORMAT = {
+    DATE_FORMATS = {
         'en': ('usa','%a, %d %b %Y'),
         'jp': ('jpn','%Y-%m-%d(%a)'),
     }

@@ -144,9 +144,9 @@ class Writer(object):
                     paginators[key] = Paginator(object_list, len(object_list))
 
             # generated pages, and write
+            name_root, ext = os.path.splitext(name)
             for page_num in range(paginators.values()[0].num_pages):
                 paginated_localcontext = localcontext.copy()
-                paginated_name = name
                 for key in paginators.iterkeys():
                     paginator = paginators[key]
                     page = paginator.page(page_num + 1)
@@ -154,9 +154,10 @@ class Writer(object):
                             {'%s_paginator' % key: paginator,
                              '%s_page' % key: page})
                 if page_num > 0:
-                    ext = '.' + paginated_name.rsplit('.')[-1]
-                    paginated_name = paginated_name.replace(ext,
-                        '%s%s' % (page_num + 1, ext))
+                    paginated_name = '%s%s%s' % (
+                        name_root, page_num + 1, ext)
+                else:
+                    paginated_name = name
 
                 _write_file(template, paginated_localcontext, self.output_path,
                     paginated_name)

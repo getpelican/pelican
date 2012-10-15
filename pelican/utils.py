@@ -125,6 +125,17 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
 
+    if not os.path.exists(path):
+        logger.debug("Directory already removed: %s" % path)
+        return
+
+    if not os.path.isdir(path):
+        try:
+            os.remove(path)
+        except Exception, e:
+            logger.error("Unable to delete file %s; %e" % path, e)
+        return
+
     # remove all the existing content from the output folder
     for filename in os.listdir(path):
         file = os.path.join(path, filename)
