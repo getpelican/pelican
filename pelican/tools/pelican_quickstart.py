@@ -167,7 +167,7 @@ Please answer the following questions so this script can generate the files need
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server?', str, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on that server?', str, CONF['ftp_user'])
-            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir']) 
+            CONF['ftp_target_dir'] = ask('Where do you want to put your web site on that server?', str, CONF['ftp_target_dir'])
         if ask('Do you want to upload your website using SSH?', answer=bool, default=False):
             CONF['ssh_host'] = ask('What is the hostname of your SSH server?', str, CONF['ssh_host'])
             CONF['ssh_port'] = ask('What is the port of your SSH server?', int, CONF['ssh_port'])
@@ -188,9 +188,12 @@ Please answer the following questions so this script can generate the files need
 
     try:
         with open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w') as fd:
+            conf_python = dict()
+            for key, value in CONF.iteritems():
+                conf_python[key] = repr(value)
             for line in get_template('pelicanconf.py'):
                 template = string.Template(line)
-                fd.write(template.safe_substitute(CONF))
+                fd.write(template.safe_substitute(conf_python))
             fd.close()
     except OSError, e:
         print('Error: {0}'.format(e))
@@ -215,11 +218,16 @@ Please answer the following questions so this script can generate the files need
             print('Error: {0}'.format(e))
 
     if develop:
+        conf_shell = dict()
+        for key, value in CONF.iteritems():
+            if isinstance(value, basestring) and ' ' in value:
+                value = '"' + value.replace('"', '\\"') + '"'
+            conf_shell[key] = value
         try:
             with open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w') as fd:
                 for line in get_template('develop_server.sh'):
                     template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
+                    fd.write(template.safe_substitute(conf_shell))
                 fd.close()
                 os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')), 0755)
         except OSError, e:

@@ -1,6 +1,7 @@
+import copy
 from os.path import dirname, abspath, join
 
-from pelican.settings import read_settings, configure_settings, _DEFAULT_CONFIG
+from pelican.settings import read_settings, configure_settings, _DEFAULT_CONFIG, DEFAULT_THEME
 from .support import unittest
 
 
@@ -31,21 +32,43 @@ class TestSettingsConfiguration(unittest.TestCase):
     def test_read_empty_settings(self):
         """providing no file should return the default values."""
         settings = read_settings(None)
-        self.assertDictEqual(settings, _DEFAULT_CONFIG)
+        expected = copy.deepcopy(_DEFAULT_CONFIG)
+        expected["FEED_DOMAIN"] = '' #This is added by configure settings
+        self.maxDiff = None
+        self.assertDictEqual(settings, expected)
+
+    def test_settings_return_independent(self):
+        """Make sure that the results from one settings call doesn't
+        effect past or future instances."""
+        self.PATH = abspath(dirname(__file__))
+        default_conf = join(self.PATH, 'default_conf.py')
+        settings = read_settings(default_conf)
+        settings['SITEURL'] = 'new-value'
+        new_settings = read_settings(default_conf)
+        self.assertNotEqual(new_settings['SITEURL'], settings['SITEURL'])
+
+    def test_defaults_not_overwritten(self):
+        """This assumes 'SITENAME': 'A Pelican Blog'"""
+        settings = read_settings(None)
+        settings['SITENAME'] = 'Not a Pelican Blog'
+        self.assertNotEqual(settings['SITENAME'], _DEFAULT_CONFIG['SITENAME'])
 
     def test_configure_settings(self):
         """Manipulations to settings should be applied correctly."""
 
-        # SITEURL should not have a trailing slash
-        settings = {'SITEURL': 'http://blog.notmyidea.org/', 'LOCALE': ''}
+        settings = {
+                'SITEURL': 'http://blog.notmyidea.org/',
+                'LOCALE': '',
+                'PATH': '.',
+                'THEME': DEFAULT_THEME,
+                }
         configure_settings(settings)
+        # SITEURL should not have a trailing slash
         self.assertEqual(settings['SITEURL'], 'http://blog.notmyidea.org')
 
         # FEED_DOMAIN, if undefined, should default to SITEURL
-        settings = {'SITEURL': 'http://blog.notmyidea.org', 'LOCALE': ''}
-        configure_settings(settings)
         self.assertEqual(settings['FEED_DOMAIN'], 'http://blog.notmyidea.org')
 
-        settings = {'FEED_DOMAIN': 'http://feeds.example.com', 'LOCALE': ''}
+        settings['FEED_DOMAIN'] = 'http://feeds.example.com'
         configure_settings(settings)
         self.assertEqual(settings['FEED_DOMAIN'], 'http://feeds.example.com')

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import locale
 import logging
 import functools
@@ -13,7 +14,7 @@ from sys import platform, stdin
 
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import slugify, truncate_html_words, memoized
-
+from pelican import signals
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ class Page(object):
         if not metadata:
             metadata = {}
         if not settings:
-            settings = _DEFAULT_CONFIG
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
 
         self.settings = settings
         self._content = content
@@ -60,7 +61,7 @@ class Page(object):
             else:
                 title = filename.decode('utf-8') if filename else self.title
                 self.author = Author(getenv('USER', 'John Doe'), settings)
-                logger.warning(u"Author of `{0}' unknown, assuming that his "\
+                logger.warning(u"Author of `{0}' unknown, assuming that his "
                                 "name is " "`{1}'".format(title, self.author))
 
         # manage languages
@@ -110,6 +111,8 @@ class Page(object):
         if 'summary' in metadata:
             self._summary = metadata['summary']
 
+        signals.content_object_init.send(self.__class__, instance=self)
+
     def check_properties(self):
         """test that each mandatory property is set."""
         for prop in self.mandatory_properties:
@@ -145,7 +148,7 @@ class Page(object):
                 (?:href|src)\s*=)
 
             (?P<quote>["\'])      # require value to be quoted
-            (?P<path>:(?P<what>.*):(?P<value>.*))  # the url value
+            (?P<path>\|(?P<what>.*?)\|(?P<value>.*?))  # the url value
             \2""", re.X)
 
         def replacer(m):
@@ -168,7 +171,7 @@ class Page(object):
                     origin = urlparse.urljoin(self._context['SITEURL'],
                              self._context['filenames'][value].url)
                 else:
-                    logger.warning(u"Unable to find {fn}, skipping url"\
+                    logger.warning(u"Unable to find {fn}, skipping url"
                                     "replacement".format(fn=value))
 
             return m.group('markup') + m.group('quote') + origin \
@@ -291,11 +294,27 @@ class Author(URLWrapper):
     pass
 
 
+class StaticContent(object):
+    def __init__(self, src, dst=None, settings=None):
+        if not settings:
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
+        self.src = src
+        self.url = dst or src
+        self.filepath = os.path.join(settings['PATH'], src)
+        self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
+
+    def __str__(self):
+        return str(self.filepath.encode('utf-8', 'replace'))
+
+    def __unicode__(self):
+        return self.filepath
+
+
 def is_valid_content(content, f):
     try:
         content.check_properties()
         return True
     except NameError, e:
-        logger.error(u"Skipping %s: impossible to find informations about"\
+        logger.error(u"Skipping %s: impossible to find informations about"
                       "'%s'" % (f, e))
         return False

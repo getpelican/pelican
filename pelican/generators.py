@@ -5,7 +5,9 @@ import random
 import logging
 import datetime
 import subprocess
+import shutil
 
+from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain
@@ -14,9 +16,10 @@ from operator import attrgetter, itemgetter
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
 from jinja2.exceptions import TemplateNotFound
 
-from pelican.contents import Article, Page, Category, is_valid_content
+from pelican.contents import Article, Page, Category, StaticContent, \
+        is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, open
+from pelican.utils import copy, process_translations, mkdir_p
 from pelican import signals
 
 
@@ -36,8 +39,11 @@ class Generator(object):
 
         # templates cache
         self._templates = {}
-        self._templates_path = os.path.expanduser(
-                os.path.join(self.theme, 'templates'))
+        self._templates_path = []
+        self._templates_path.append(os.path.expanduser(
+                os.path.join(self.theme, 'templates')))
+        self._templates_path += self.settings.get('EXTRA_TEMPLATES_PATHS', [])
+
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -57,7 +63,6 @@ class Generator(object):
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
-        self.settings['PATH'] = self.path  # overwrite with the actual path
         self.context['filenames'] = kwargs.get('filenames', {})
 
     def get_template(self, name):
@@ -78,8 +83,10 @@ class Generator(object):
 
         :param path: the path to search the file on
         :param exclude: the list of path to exclude
+        :param extensions: the list of allowed extensions (if False, all
+            extensions are allowed)
         """
-        if not extensions:
+        if extensions is None:
             extensions = self.markup
 
         files = []
@@ -93,8 +100,10 @@ class Generator(object):
             for e in exclude:
                 if e in dirs:
                     dirs.remove(e)
-            files.extend([os.sep.join((root, f)) for f in temp_files
-                if True in [f.endswith(ext) for ext in extensions]])
+            for f in temp_files:
+                if extensions is False or \
+                        (True in [f.endswith(ext) for ext in extensions]):
+                    files.append(os.sep.join((root, f)))
         return files
 
     def add_filename(self, content):
@@ -361,7 +370,7 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-            
+
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
@@ -387,7 +396,7 @@ class PagesGenerator(Generator):
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                content, metadata = read_file(f)
+                content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
@@ -434,6 +443,7 @@ class StaticGenerator(Generator):
                  final_path, overwrite=True)
 
     def generate_context(self):
+        self.staticfiles = []
 
         if self.settings['WEBASSETS']:
             from webassets import Environment as AssetsEnvironment
@@ -441,37 +451,72 @@ class StaticGenerator(Generator):
             # Define the assets environment that will be passed to the
             # generators. The StaticGenerator must then be run first to have
             # the assets in the output_path before generating the templates.
-            assets_url = self.settings['SITEURL'] + '/theme/'
+
+            # Let ASSET_URL honor Pelican's RELATIVE_URLS setting.
+            # Hint for templates:
+            # Current version of webassets seem to remove any relative
+            # paths at the beginning of the URL. So, if RELATIVE_URLS
+            # is on, ASSET_URL will start with 'theme/', regardless if we
+            # set assets_url here to './theme/' or to 'theme/'.
+            # XXX However, this breaks the ASSET_URL if user navigates to
+            # a sub-URL, e.g. if he clicks on a category. To workaround this
+            # issue, I use
+            #     <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+            # instead of
+            #     <link rel="stylesheet" href="{{ ASSET_URL }}">
+            if self.settings.get('RELATIVE_URLS'):
+                assets_url = './theme/'
+            else:
+                assets_url = self.settings['SITEURL'] + '/theme/'
             assets_src = os.path.join(self.output_path, 'theme')
             self.assets_env = AssetsEnvironment(assets_src, assets_url)
 
             if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
                 self.assets_env.debug = True
 
-    def generate_output(self, writer):
+        # walk static paths
+        for static_path in self.settings['STATIC_PATHS']:
+            for f in self.get_files(
+                    os.path.join(self.path, static_path), extensions=False):
+                f_rel = os.path.relpath(f, self.path)
+                sc = StaticContent(f_rel, os.path.join('static', f_rel),
+                        settings=self.settings)
+                self.staticfiles.append(sc)
+                self.context['filenames'][f_rel] = sc
+        # same thing for FILES_TO_COPY
+        for src, dest in self.settings['FILES_TO_COPY']:
+            sc = StaticContent(src, dest, settings=self.settings)
+            self.staticfiles.append(sc)
+            self.context['filenames'][src] = sc
 
-        self._copy_paths(self.settings['STATIC_PATHS'], self.path,
-                         'static', self.output_path)
+    def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
-
-        # copy all the files needed
-        for source, destination in self.settings['FILES_TO_COPY']:
-            copy(source, self.path, self.output_path, destination,
-                 overwrite=True)
+        # copy all StaticContent files
+        for sc in self.staticfiles:
+            mkdir_p(os.path.dirname(sc.save_as))
+            shutil.copy(sc.filepath, sc.save_as)
+            logger.info('copying %s to %s' % (sc.filepath, sc.save_as))
 
 
 class PdfGenerator(Generator):
     """Generate PDFs on the output dir, for all articles and pages coming from
     rst"""
     def __init__(self, *args, **kwargs):
+        super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
+            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH']) \
+                                if 'PDF_STYLE_PATH' in self.settings.keys() \
+                                else ''
+            pdf_style = self.settings['PDF_STYLE'] if 'PDF_STYLE' \
+                                                    in self.settings.keys() \
+                                                    else 'twelvepoint'
             self.pdfcreator = RstToPdf(breakside=0,
-                                       stylesheets=['twelvepoint'])
+                                       stylesheets=[pdf_style],
+                                       style_path=[pdf_style_path])
         except ImportError:
             raise Exception("unable to find rst2pdf")
-        super(PdfGenerator, self).__init__(*args, **kwargs)
 
     def _create_pdf(self, obj, output_path):
         if obj.filename.endswith(".rst"):
@@ -479,7 +524,7 @@ class PdfGenerator(Generator):
             output_pdf = os.path.join(output_path, filename)
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             with open(obj.filename) as f:
-                self.pdfcreator.createPdf(text=f, output=output_pdf)
+                self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
             logger.info(u' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
@@ -503,6 +548,19 @@ class PdfGenerator(Generator):
         for page in self.context['pages']:
             self._create_pdf(page, pdf_path)
 
+class SourceFileGenerator(Generator):
+    def generate_context(self):
+        self.output_extension = self.settings['OUTPUT_SOURCES_EXTENSION']
+
+    def _create_source(self, obj, output_path):
+        filename = os.path.splitext(obj.save_as)[0]
+        dest = os.path.join(output_path, filename + self.output_extension)
+        copy('', obj.filename, dest)
+
+    def generate_output(self, writer=None):
+        logger.info(u' Generating source files...')
+        for object in chain(self.context['articles'], self.context['pages']):
+            self._create_source(object, self.output_path)
 
 class LessCSSGenerator(Generator):
     """Compile less css files."""
