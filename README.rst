@@ -57,3 +57,5 @@ also join the team at `#pelican on irc.freenode.org
 (or if you don't have any IRC client, use `the webchat
 <http://webchat.freenode.net/?channels=pelican&uio=d4>`_)
 for quick feedback.
+=======
+The pelican repository moved to http://github.com/getpelican/pelican/
