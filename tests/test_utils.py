@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import shutil
 import os
 import datetime
 import time
 
 from pelican import utils
 from .support import get_article, unittest
+from pelican.utils import NoFilesError
 
 
 class TestUtils(unittest.TestCase):
@@ -40,7 +42,9 @@ class TestUtils(unittest.TestCase):
         samples = (('this is a test', 'this-is-a-test'),
                    ('this        is a test', 'this-is-a-test'),
                    (u'this → is ← a ↑ test', 'this-is-a-test'),
-                   ('this--is---a test', 'this-is-a-test'))
+                   ('this--is---a test', 'this-is-a-test'),
+                   (u'unicode測試許功蓋，你看到了嗎？', 'unicodece-shi-xu-gong-gai-ni-kan-dao-liao-ma'),
+                   (u'大飯原発４号機、１８日夜起動へ', 'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),)
 
         for value, expected in samples:
             self.assertEquals(utils.slugify(value), expected)
@@ -71,7 +75,8 @@ class TestUtils(unittest.TestCase):
         self.assertNotIn(fr_article1, index)
 
     def test_files_changed(self):
-        "Test if file changes are correctly detected"
+        """Test if file changes are correctly detected
+        Make sure to handle not getting any files correctly"""
 
         path = os.path.join(os.path.dirname(__file__), 'content')
         filename = os.path.join(path, 'article_with_metadata.rst')
@@ -86,3 +91,37 @@ class TestUtils(unittest.TestCase):
         changed = utils.files_changed(path, 'rst')
         self.assertEquals(changed, True)
         self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
+
+        empty_path = os.path.join(os.path.dirname(__file__), 'empty')
+        try:
+            os.mkdir(empty_path)
+            os.mkdir(os.path.join(empty_path, "empty_folder"))
+            shutil.copy(__file__, empty_path)
+            with self.assertRaises(NoFilesError):
+                utils.files_changed(empty_path, 'rst')
+        except OSError:
+            self.fail("OSError Exception in test_files_changed test")
+        finally:
+            shutil.rmtree(empty_path, True)
+
+    def test_clean_output_dir(self):
+        test_directory = os.path.join(os.path.dirname(__file__), 'clean_output')
+        content = os.path.join(os.path.dirname(__file__), 'content')
+        shutil.copytree(content, test_directory)
+        utils.clean_output_dir(test_directory)
+        self.assertTrue(os.path.isdir(test_directory))
+        self.assertListEqual([], os.listdir(test_directory))
+        shutil.rmtree(test_directory)
+
+    def test_clean_output_dir_not_there(self):
+        test_directory = os.path.join(os.path.dirname(__file__), 'does_not_exist')
+        utils.clean_output_dir(test_directory)
+        self.assertTrue(not os.path.exists(test_directory))
+
+    def test_clean_output_dir_is_file(self):
+        test_directory = os.path.join(os.path.dirname(__file__), 'this_is_a_file')
+        f = open(test_directory, 'w')
+        f.write('')
+        f.close()
+        utils.clean_output_dir(test_directory)
+        self.assertTrue(not os.path.exists(test_directory))

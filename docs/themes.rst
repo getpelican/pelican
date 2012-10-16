@@ -3,11 +3,10 @@
 How to create themes for Pelican
 ################################
 
-Pelican uses the great `jinja2 <http://jinja.pocoo.org>`_ templating engine to
-generate its HTML output. The jinja2 syntax is really simple. If you want to
-create your own theme, feel free to take inspiration from the "simple" theme,
-which is available `here
-<https://github.com/ametaireau/pelican/tree/master/pelican/themes/simple/templates>`_
+Pelican uses the great `Jinja2 <http://jinja.pocoo.org/>`_ templating engine to
+generate its HTML output. Jinja2 syntax is really simple. If you want to
+create your own theme, feel free to take inspiration from the `"simple" theme
+<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_.
 
 Structure
 =========
@@ -30,13 +29,13 @@ To make your own theme, you must follow the following structure::
         └── tags.html        // must list all the tags. Can be a tag cloud.
 
 * `static` contains all the static assets, which will be copied to the output
-  `theme/static` folder. I've put the CSS and image folders here, but they are
+  `theme` folder. I've put the CSS and image folders here, but they are
   just examples. Put what you need here.
 
 * `templates` contains all the templates that will be used to generate the content.
   I've just put the mandatory templates here; you can define your own if it helps
   you keep things organized while creating your theme.
- 
+
 Templates and variables
 =======================
 
@@ -45,7 +44,7 @@ This document describes which templates should exist in a theme, and which
 variables will be passed to each template at generation time.
 
 All templates will receive the variables defined in your settings file, if they
-are in all-caps. You can access them directly. 
+are in all-caps. You can access them directly.
 
 Common variables
 ----------------
@@ -56,14 +55,14 @@ All of these settings will be available to all templates.
 Variable        Description
 =============   ===================================================
 articles        The list of articles, ordered descending by date
-                All the elements are `Article` objects, so you can 
+                All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
                 etc.)
 dates           The same list of articles, but ordered by date,
                 ascending
 tags            A key-value dict containing the tags (the keys) and
                 the list of respective articles (the values)
-categories      A key-value dict containing the categories (keys) 
+categories      A key-value dict containing the categories (keys)
                 and the list of respective articles (values)
 pages           The list of pages
 =============   ===================================================
@@ -183,12 +182,28 @@ dates                   Articles related to this tag, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-dates_paginator         A paginator object for the list of articles, 
+dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
 page_name               'tag/`tag_name`' -- useful for pagination links
 ===================     ===================================================
+
+Feeds
+=====
+
+The feed variables changed in 3.0. Each variable now explicitly lists ATOM or
+RSS in the name. ATOM is still the default. Old themes will need to be updated.
+Here is a complete list of the feed variables::
+
+    FEED_ATOM
+    FEED_RSS
+    CATEGORY_FEED_ATOM
+    CATEGORY_FEED_RSS
+    TAG_FEED_ATOM
+    TAG_FEED_RSS
+    TRANSLATION_FEED
+
 
 Inheritance
 ===========

@@ -1,3 +1,4 @@
+import copy
 import os
 import re
 import sys
@@ -5,11 +6,15 @@ import time
 import logging
 import argparse
 
+from pelican import signals
+
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-        StaticGenerator, PdfGenerator, LessCSSGenerator)
+                                StaticGenerator, PdfGenerator,
+                                LessCSSGenerator, SourceFileGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
-from pelican.utils import clean_output_dir, files_changed
+from pelican.utils import (clean_output_dir, files_changed, file_changed,
+                           NoFilesError)
 from pelican.writers import Writer
 
 __major__ = 3
@@ -22,12 +27,12 @@ logger = logging.getLogger(__name__)
 
 class Pelican(object):
     def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, delete_outputdir=False):
+            markup=None, delete_outputdir=False, plugin_path=None):
         """Read the settings, and performs some checks on the environment
         before doing anything else.
         """
         if settings is None:
-            settings = _DEFAULT_CONFIG
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
 
         self.path = path or settings['PATH']
         if not self.path:
@@ -57,6 +62,26 @@ class Pelican(object):
                 self.theme = theme_path
             else:
                 raise Exception("Impossible to find the theme %s" % theme)
+
+        self.init_path()
+        self.init_plugins()
+        signals.initialized.send(self)
+
+    def init_path(self):
+        if not any(p in sys.path for p in ['', '.']):
+            logger.debug("Adding current directory to system path")
+            sys.path.insert(0, '')
+
+    def init_plugins(self):
+        self.plugins = self.settings['PLUGINS']
+        for plugin in self.plugins:
+            # if it's a string, then import it
+            if isinstance(plugin, basestring):
+                logger.debug("Loading plugin `{0}' ...".format(plugin))
+                plugin = __import__(plugin, globals(), locals(), 'module')
+
+            logger.debug("Registering plugin `{0}'".format(plugin.__name__))
+            plugin.register()
 
     def _handle_deprecation(self):
 
@@ -98,6 +123,27 @@ class Pelican(object):
                                                       self.settings[setting])
                 logger.warning("%s = '%s'" % (setting, self.settings[setting]))
 
+        if self.settings.get('FEED', False):
+            logger.warning('Found deprecated `FEED` in settings. Modify FEED'
+            ' to FEED_ATOM in your settings and theme for the same behavior.'
+            ' Temporarily setting FEED_ATOM for backwards compatibility.')
+            self.settings['FEED_ATOM'] = self.settings['FEED']
+
+        if self.settings.get('TAG_FEED', False):
+            logger.warning('Found deprecated `TAG_FEED` in settings. Modify '
+            ' TAG_FEED to TAG_FEED_ATOM in your settings and theme for the '
+            'same behavior. Temporarily setting TAG_FEED_ATOM for backwards '
+            'compatibility.')
+            self.settings['TAG_FEED_ATOM'] = self.settings['TAG_FEED']
+
+        if self.settings.get('CATEGORY_FEED', False):
+            logger.warning('Found deprecated `CATEGORY_FEED` in settings. '
+            'Modify CATEGORY_FEED to CATEGORY_FEED_ATOM in your settings and '
+            'theme for the same behavior. Temporarily setting '
+            'CATEGORY_FEED_ATOM for backwards compatibility.')
+            self.settings['CATEGORY_FEED_ATOM'] =\
+                    self.settings['CATEGORY_FEED']
+
     def run(self):
         """Run the generators and return"""
 
@@ -126,16 +172,37 @@ class Pelican(object):
 
         writer = self.get_writer()
 
+        # pass the assets environment to the generators
+        if self.settings['WEBASSETS']:
+            generators[1].env.assets_environment = generators[0].assets_env
+            generators[2].env.assets_environment = generators[0].assets_env
+
         for p in generators:
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
 
+        signals.finalized.send(self)
+
     def get_generator_classes(self):
-        generators = [ArticlesGenerator, PagesGenerator, StaticGenerator]
+        generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
-        if self.settings['LESS_GENERATOR']: # can be True or PATH to lessc
+        if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
             generators.append(LessCSSGenerator)
+        if self.settings['OUTPUT_SOURCES']:
+            generators.append(SourceFileGenerator)
+
+        for pair in signals.get_generators.send(self):
+            (funct, value) = pair
+
+            if not isinstance(value, (tuple, list)):
+                value = (value, )
+
+            for v in value:
+                if isinstance(v, type):
+                    logger.debug('Found generator: {0}'.format(v))
+                    generators.append(v)
+
         return generators
 
     def get_writer(self):
@@ -192,11 +259,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def main():
-    args = parse_arguments()
-    init(args.verbosity)
-    # Split the markup languages only if some have been given. Otherwise,
-    # populate the variable with None.
+def get_instance(args):
     markup = [a.strip().lower() for a in args.markup.split(',')]\
               if args.markup else None
 
@@ -208,10 +271,20 @@ def main():
         module = __import__(module)
         cls = getattr(module, cls_name)
 
+    return cls(settings, args.path, args.theme, args.output, markup,
+               args.delete_outputdir)
+
+
+def main():
+    args = parse_arguments()
+    init(args.verbosity)
+    # Split the markup languages only if some have been given. Otherwise,
+    # populate the variable with None.
+    pelican = get_instance(args)
+
     try:
-        pelican = cls(settings, args.path, args.theme, args.output, markup,
-                args.delete_outputdir)
         if args.autoreload:
+            files_found_error = True
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -221,10 +294,32 @@ def main():
                     # have.
                     if files_changed(pelican.path, pelican.markup) or \
                             files_changed(pelican.theme, ['']):
+                        if not files_found_error:
+                            files_found_error = True
                         pelican.run()
+
+                    # reload also if settings.py changed
+                    if file_changed(args.settings):
+                        logger.info('%s changed, re-generating' %
+                                    args.settings)
+                        pelican = get_instance(args)
+                        pelican.run()
+
                     time.sleep(.5)  # sleep to avoid cpu load
                 except KeyboardInterrupt:
+                    logger.warning("Keyboard interrupt, quitting.")
                     break
+                except NoFilesError:
+                    if files_found_error:
+                        logger.warning("No valid files found in content. "
+                                       "Nothing to generate.")
+                        files_found_error = False
+                    time.sleep(1)  # sleep to avoid cpu load
+                except Exception, e:
+                    logger.warning(
+                        "Caught exception \"{}\". Reloading.".format(e)
+                    )
+                    continue
         else:
             pelican.run()
     except Exception, e:

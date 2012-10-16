@@ -52,19 +52,19 @@ détails au prochain chapitre.
 Flux de syndication
 ===================
 
-CATEGORY_FEED : 
+CATEGORY_FEED_ATOM :
 	Chemin d’écriture des flux Atom liés aux catégories ;
 
 CATEGORY_FEED_RSS : 
 	Idem pour les flux rss (Optionnel);
 
-FEED :
+FEED_ATOM :
 	Chemin du flux Atom global ;
 
 FEED_RSS :
 	Chemin du flux Rss global (Optionnel);
 
-TAG_FEED :
+TAG_FEED_ATOM :
 	Chemin des flux Atom pour les tags (Optionnel);
 
 TAG_FEED_RSS :
@@ -98,6 +98,9 @@ GITHUB_URL :
 
 GOOGLE_ANALYTICS :
 	'UA-XXXX-YYYY' pour activer Google analytics ;
+	
+GOSQUARED_SITENAME :
+	'XXX-YYYYYY-X' pour activer GoSquared ;
 
 JINJA_EXTENSIONS :
 	Liste d'extension Jinja2 que vous souhaitez utiliser ;
@@ -108,7 +111,7 @@ LINKS :
 PDF_PROCESSOR :
 	Génère ou non les articles et pages au format pdf ;
 
-REVERSE_ARCHIVE_ORDER :
+NEWEST_FIRST_ARCHIVES :
 	Met les articles plus récent en tête de l'archive ;
 
 SOCIAL :
@@ -130,8 +133,12 @@ Pelican est fournit avec :doc:`pelican-themes`, un script permettant de gérer l
 Paramètres divers
 =================
 
-FALLBACK_ON_FS_DATE :
-	Si *True*, Pelican se basera sur le *mtime* du fichier s'il n'y a pas de date spécifiée dans le fichier de l'article ;
+DEFAULT_DATE:
+    Date par défaut à utiliser si l'information de date n'est pas spécifiée
+    dans les metadonnées de l'article.
+    Si 'fs', Pelican se basera sur le *mtime* du fichier.
+    Si c'est un tuple, il sera passé au constructeur datetime.datetime pour
+    générer l'objet datetime utilisé par défaut.
 
 KEEP_OUTPUT DIRECTORY :
 	Ne génère que les fichiers modifiés et n'efface pas le repertoire de sortie ;
@@ -148,7 +155,5 @@ SITEURL :
 STATIC_PATHS :
 	Les chemins statiques que vous voulez avoir accès sur le chemin de sortie "statique" ;
 
-
-
-
-
+MARKDOWN_EXTENSIONS :
+	Liste des extentions Markdown que vous souhaitez utiliser ;

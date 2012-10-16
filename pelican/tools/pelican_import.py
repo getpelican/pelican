@@ -25,8 +25,14 @@ def wp2fields(xml):
     items = soup.rss.channel.findAll('item')
 
     for item in items:
+
         if item.fetch('wp:status')[0].contents[0] == "publish":
-            title = item.title.contents[0]
+
+            try:
+                title = item.title.contents[0]
+            except IndexError:
+                continue
+
             content = item.fetch('content:encoded')[0].contents[0]
             filename = item.fetch('wp:post_name')[0].contents[0]
 
@@ -178,6 +184,8 @@ def build_header(title, date, author, categories, tags):
     header = '%s\n%s\n' % (title, '#' * len(title))
     if date:
         header += ':date: %s\n' % date
+    if author:
+        header += ':author: %s\n' % author
     if categories:
         header += ':category: %s\n' % ', '.join(categories)
     if tags:
@@ -190,6 +198,8 @@ def build_markdown_header(title, date, author, categories, tags):
     header = 'Title: %s\n' % title
     if date:
         header += 'Date: %s\n' % date
+    if author:
+        header += 'Author: %s\n' % author
     if categories:
         header += 'Category: %s\n' % ', '.join(categories)
     if tags:
@@ -197,7 +207,7 @@ def build_markdown_header(title, date, author, categories, tags):
     header += '\n'
     return header
 
-def fields2pelican(fields, out_markup, output_path, dircat=False):
+def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=False):
     for title, content, filename, date, author, categories, tags, in_markup in fields:
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
@@ -210,7 +220,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
         filename = os.path.basename(filename)
 
         # option to put files in directories with categories names
-        if dircat and (len(categories) == 1):
+        if dircat and (len(categories) > 0):
             catname = slugify(categories[0])
             out_filename = os.path.join(output_path, catname, filename+ext)
             if not os.path.isdir(os.path.join(output_path, catname)):
@@ -227,25 +237,29 @@ def fields2pelican(fields, out_markup, output_path, dircat=False):
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
                 paragraphs = content.split('\n\n')
-                paragraphs = [u'<p>{}</p>'.format(p) for p in paragraphs]
+                paragraphs = [u'<p>{0}</p>'.format(p) for p in paragraphs]
                 new_content = ''.join(paragraphs)
 
-                fp.write(content)
+                fp.write(new_content)
 
-            cmd = 'pandoc --normalize --reference-links --from=html --to={0} -o "{1}" "{2}"'.format(
-                out_markup, out_filename, html_filename)
+
+            parse_raw = '--parse-raw' if not strip_raw else ''
+            cmd = ('pandoc --normalize --reference-links {0} --from=html'
+                   ' --to={1} -o "{2}" "{3}"').format(
+                    parse_raw, out_markup, out_filename, html_filename)
 
             try:
                 rc = subprocess.call(cmd, shell=True)
                 if rc < 0:
-                    print("Child was terminated by signal %d" % -rc)
-                    exit()
+                    error = "Child was terminated by signal %d" % -rc
+                    exit(error)
+
                 elif rc > 0:
-                    print("Please, check your Pandoc installation.")
-                    exit()
+                    error = "Please, check your Pandoc installation."
+                    exit(error)
             except OSError, e:
-                print("Pandoc execution failed: %s" % e)
-                exit()
+                error = "Pandoc execution failed: %s" % e
+                exit(error)
 
             os.remove(html_filename)
 
@@ -279,6 +293,10 @@ def main():
         help='Output markup format (supports rst & markdown)')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
         help='Put files in directories with categories name')
+    parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
+        help="Strip raw HTML code that can't be converted to "
+             "markup such as flash embeds or iframes (wordpress import only)")
+
     args = parser.parse_args()
 
     input_type = None
@@ -289,15 +307,15 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        print("You must provide either --wpfile, --dotclear or --feed options")
-        exit()
+        error = "You must provide either --wpfile, --dotclear or --feed options"
+        exit(error)
 
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
         except OSError:
-            print("Unable to create the output folder: " + args.output)
-            exit()
+            error = "Unable to create the output folder: " + args.output
+            exit(error)
 
     if input_type == 'wordpress':
         fields = wp2fields(args.input)
@@ -306,4 +324,6 @@ def main():
     elif input_type == 'feed':
         fields = feed2fields(args.input)
 
-    fields2pelican(fields, args.markup, args.output, dircat=args.dircat or False)
+    fields2pelican(fields, args.markup, args.output,
+                   dircat=args.dircat or False,
+                   strip_raw=args.strip_raw or False)

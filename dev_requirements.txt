@@ -1,8 +1,8 @@
-Jinja2
-Pygments
-docutils
-feedgenerator
+# Tests
 unittest2
-pytz
 mock
+# Optional Packages
 Markdown
+BeautifulSoup
+typogrify
+webassets

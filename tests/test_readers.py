@@ -47,7 +47,9 @@ class RstReaderTest(unittest.TestCase):
         # unmodified
         content, _ = readers.read_file(_filename('article.rst'))
         expected = "<p>This is some content. With some stuff to "\
-                   "&quot;typogrify&quot;.</p>\n"
+                   "&quot;typogrify&quot;.</p>\n<p>Now with added "\
+                   'support for <abbr title="three letter acronym">'\
+                   'TLA</abbr>.</p>\n'
 
         self.assertEqual(content, expected)
 
@@ -55,16 +57,20 @@ class RstReaderTest(unittest.TestCase):
             # otherwise, typogrify should be applied
             content, _ = readers.read_file(_filename('article.rst'),
                                            settings={'TYPOGRIFY': True})
-            expected = "<p>This is some content. With some stuff to&nbsp;"\
-                       "&#8220;typogrify&#8221;.</p>\n"
+            expected = u"<p>This is some content. With some stuff to&nbsp;"\
+                       "&#8220;typogrify&#8221;.</p>\n<p>Now with added "\
+                       'support for <abbr title="three letter acronym">'\
+                       '<span class="caps">TLA</span></abbr>.</p>\n'
 
             self.assertEqual(content, expected)
         except ImportError:
             return unittest.skip('need the typogrify distribution')
 
+
 class MdReaderTest(unittest.TestCase):
 
-    def test_article_with_md_extention(self):
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
+    def test_article_with_md_extension(self):
         # test to ensure the md extension is being processed by the correct reader
         reader = readers.MarkdownReader({})
         content, metadata = reader.read(_filename('article_with_md_extension.md'))
@@ -74,6 +80,7 @@ class MdReaderTest(unittest.TestCase):
         
         self.assertEqual(content, expected)
 
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_mkd_extension(self):
         # test to ensure the mkd extension is being processed by the correct reader
         reader = readers.MarkdownReader({})
@@ -82,4 +89,23 @@ class MdReaderTest(unittest.TestCase):
                 "<h2>Used for pelican test</h2>\n"\
                 "<p>This is another markdown test file.  Uses the mkd extension.</p>"
         
+        self.assertEqual(content, expected)
+
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
+    def test_article_with_markdown_markup_extension(self):
+        # test to ensure the markdown markup extension is being processed as expected
+        reader = readers.MarkdownReader({})
+        reader.settings.update(dict(MARKDOWN_EXTENSIONS=['toc', ]))
+        content, metadata = reader.read(_filename('article_with_markdown_markup_extensions.md'))
+        expected = '<div class="toc">\n'\
+            '<ul>\n'\
+            '<li><a href="#level1">Level1</a><ul>\n'\
+            '<li><a href="#level2">Level2</a></li>\n'\
+            '</ul>\n'\
+            '</li>\n'\
+            '</ul>\n'\
+            '</div>\n'\
+            '<h2 id="level1">Level1</h2>\n'\
+            '<h3 id="level2">Level2</h3>'
+
         self.assertEqual(content, expected)

@@ -4,14 +4,19 @@ import re
 import pytz
 import shutil
 import logging
+from collections import defaultdict
 
-from codecs import open as _open
+from codecs import open
 from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
 
 logger = logging.getLogger(__name__)
+
+
+class NoFilesError(Exception):
+    pass
 
 
 def get_date(string):
@@ -33,9 +38,9 @@ def get_date(string):
     raise ValueError("'%s' is not a valid date" % string)
 
 
-def open(filename):
+def pelican_open(filename):
     """Open a file and return it's content"""
-    return _open(filename, encoding='utf-8').read()
+    return open(filename, encoding='utf-8').read()
 
 
 def slugify(value):
@@ -48,6 +53,8 @@ def slugify(value):
     value = Markup(value).striptags()
     if type(value) == unicode:
         import unicodedata
+        from unidecode import unidecode
+        value = unicode(unidecode(value))
         value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
@@ -90,11 +97,34 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
 
+    if not os.path.exists(path):
+        logger.debug("Directory already removed: %s" % path)
+        return
+
+    if not os.path.isdir(path):
+        try:
+            os.remove(path)
+        except Exception, e:
+            logger.error("Unable to delete file %s; %e" % path, e)
+        return
+
     # remove all the existing content from the output folder
-    try:
-        shutil.rmtree(path)
-    except Exception:
-        pass
+    for filename in os.listdir(path):
+        file = os.path.join(path, filename)
+        if os.path.isdir(file):
+            try:
+                shutil.rmtree(file)
+                logger.debug("Deleted directory %s" % file)
+            except Exception, e:
+                logger.error("Unable to delete directory %s; %e" % file, e)
+        elif os.path.isfile(file) or os.path.islink(file):
+            try:
+                os.remove(file)
+                logger.debug("Deleted file/link %s" % file)
+            except Exception, e:
+                logger.error("Unable to delete file %s; %e" % file, e)
+        else:
+            logger.error("Unable to delete %s, file type unknown" % file)
 
 
 def get_relative_path(filename):
@@ -221,16 +251,34 @@ def files_changed(path, extensions):
         """Return the last time files have been modified"""
         for root, dirs, files in os.walk(path):
             dirs[:] = [x for x in dirs if x[0] != '.']
-            for file in files:
-                if any(file.endswith(ext) for ext in extensions):
-                    yield os.stat(os.path.join(root, file)).st_mtime
+            for f in files:
+                if any(f.endswith(ext) for ext in extensions):
+                    yield os.stat(os.path.join(root, f)).st_mtime
 
     global LAST_MTIME
-    mtime = max(file_times(path))
-    if mtime > LAST_MTIME:
-        LAST_MTIME = mtime
-        return True
+    try:
+        mtime = max(file_times(path))
+        if mtime > LAST_MTIME:
+            LAST_MTIME = mtime
+            return True
+    except ValueError:
+        raise NoFilesError("No files with the given extension(s) found.")
     return False
+
+
+FILENAMES_MTIMES = defaultdict(int)
+
+
+def file_changed(filename):
+    mtime = os.stat(filename).st_mtime
+    if FILENAMES_MTIMES[filename] == 0:
+        FILENAMES_MTIMES[filename] = mtime
+        return False
+    else:
+        if mtime > FILENAMES_MTIMES[filename]:
+            FILENAMES_MTIMES[filename] = mtime
+            return True
+        return False
 
 
 def set_date_tzinfo(d, tz_name=None):
