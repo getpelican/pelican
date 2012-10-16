@@ -9,8 +9,8 @@
 &lt;div class="section" id="this-is-a-simple-title"&gt;
 &lt;h2&gt;This is a simple title&lt;/h2&gt;
 &lt;p&gt;And here comes the cool &lt;a class="reference external" href="http://books.couchdb.org/relax/design-documents/views"&gt;stuff&lt;/a&gt;.&lt;/p&gt;
-&lt;img alt="alternate text" src="pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
-&lt;img alt="alternate text" src="pictures/Sushi_Macro.jpg" style="width: 600px; height: 450px;" /&gt;
+&lt;img alt="alternate text" src="http://blog.notmyidea.org/static/pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
+&lt;img alt="alternate text" src="http://blog.notmyidea.org/static/pictures/Sushi_Macro.jpg" style="width: 600px; height: 450px;" /&gt;
 &lt;pre class="literal-block"&gt;
 &amp;gt;&amp;gt;&amp;gt; from ipdb import set_trace
 &amp;gt;&amp;gt;&amp;gt; set_trace()
@@ -21,7 +21,7 @@
 &lt;h2&gt;Why not ?&lt;/h2&gt;
 &lt;p&gt;After all, why not ? It's pretty simple to do it, and it will allow me to write my blogposts in rst !
 YEAH !&lt;/p&gt;
-&lt;img alt="alternate text" src="pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
+&lt;img alt="alternate text" src="http://blog.notmyidea.org/static/pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
 &lt;/div&gt;
 </summary><category term="oh"></category><category term="bar"></category><category term="yeah"></category></entry><entry><title>Unbelievable !</title><link href="http://blog.notmyidea.org/unbelievable.html" rel="alternate"></link><updated>2010-10-15T20:30:00+02:00</updated><author><name>Alexis Métaireau</name></author><id>tag:blog.notmyidea.org,2010-10-15:unbelievable.html</id><summary type="html">&lt;p&gt;Or completely awesome. Depends the needs.&lt;/p&gt;
 </summary></entry></feed>
