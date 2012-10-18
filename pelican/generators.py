@@ -223,11 +223,12 @@ class ArticlesGenerator(Generator):
         """Generate Author pages."""
         author_template = self.get_template('author')
         for aut, articles in self.authors:
-            dates = [article for article in self.dates if article in articles]
-            write(aut.save_as, author_template, self.context,
-                author=aut, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=u'author/%s' % aut)
+            if aut.name:   # ignore authors with blank names
+                dates = [article for article in self.dates if article in articles]
+                write(aut.save_as, author_template, self.context,
+                    author=aut, articles=articles, dates=dates,
+                    paginated={'articles': articles, 'dates': dates},
+                    page_name=u'author/%s' % aut)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
