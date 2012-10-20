@@ -164,12 +164,20 @@ class ArticlesGenerator(Generator):
                 'Feeds generated without SITEURL set properly may not be valid'
             )
 
+        # Isuue #550: FEED_ATOM and FEED_RSS should include all articles, regardless of the language
+        all_articles = list(self.articles)
+
+        for article in self.articles:
+            all_articles.extend(article.translations)
+
+        all_articles.sort(key=attrgetter('date'), reverse=True)
+
         if self.settings.get('FEED_ATOM'):
-            writer.write_feed(self.articles, self.context,
+            writer.write_feed(all_articles, self.context,
                               self.settings['FEED_ATOM'])
 
         if self.settings.get('FEED_RSS'):
-            writer.write_feed(self.articles, self.context,
+            writer.write_feed(all_articles, self.context,
                               self.settings['FEED_RSS'], feed_type='rss')
 
         for cat, arts in self.categories:
