@@ -164,7 +164,6 @@ class ArticlesGenerator(Generator):
                 'Feeds generated without SITEURL set properly may not be valid'
             )
 
-        # Isuue #550: FEED_ATOM and FEED_RSS should include all articles, regardless of the language
         all_articles = list(self.articles)
 
         for article in self.articles:
