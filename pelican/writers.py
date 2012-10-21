@@ -198,13 +198,28 @@ class Writer(object):
                 \2""", re.X)
 
             def replacer(m):
+                static = self.settings['STATIC_PATH_PREFIX']
                 relative_path = m.group('path')
-                dest_path = os.path.normpath(
-                                os.sep.join((get_relative_path(name), "static",
+                # if a protcol:// or starts with "//" browser converts to absolute protocol://
+                if relative_path.count('//') > 0:
+                    dest_path = relative_path                    
+                elif relative_path[0] == '/':
+                    # absolute path from from site root. Add static path if defined
+                    if static:
+                        dest_path = os.path.normpath(
+                                os.sep.join(('/', self.settings['STATIC_PATH_PREFIX'],
                                 relative_path)))
-
-                return m.group('markup') + m.group('quote') + dest_path \
-                        + m.group('quote')
+                    else:
+                        dest_path = relative_path
+                else:
+                    # standard relative path
+                    if static:
+                        # original Pelican method. Same can be achieved with "/"
+                        dest_path = os.path.normpath(os.sep.join((get_relative_path(name), self.settings['STATIC_PATH_PREFIX']
+                            ,relative_path)))
+                    else:
+                        dest_path = relative_path # ignore rewriting relative paths, let user define path, eg using doc's slug
+                return m.group('markup') + m.group('quote') + dest_path + m.group('quote')
 
             return hrefs.sub(replacer, content)
 
