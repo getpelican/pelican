@@ -459,7 +459,7 @@ class StaticGenerator(Generator):
     def generate_output(self, writer):
 
         self._copy_paths(self.settings['STATIC_PATHS'], self.path,
-                         'static', self.output_path)
+                         self.settings['STATIC_PATH_PREFIX'], self.output_path)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
 
