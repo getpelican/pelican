@@ -55,7 +55,11 @@ class TestPelican(unittest.TestCase):
         with patch("pelican.contents.getenv") as mock_getenv:
             # force getenv('USER') to always return the same value
             mock_getenv.return_value = "Dummy Author"
-            pelican = Pelican(path=INPUT_PATH, output_path=self.temp_path)
+            settings = read_settings(filename=None, override={
+                'PATH': INPUT_PATH,
+                'OUTPUT_PATH': self.temp_path,
+                })
+            pelican = Pelican(settings=settings)
             pelican.run()
             diff = dircmp(
                     self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
@@ -63,8 +67,11 @@ class TestPelican(unittest.TestCase):
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
-        pelican = Pelican(path=INPUT_PATH, output_path=self.temp_path,
-                            settings=read_settings(SAMPLE_CONFIG))
+        settings = read_settings(filename=SAMPLE_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            })
+        pelican = Pelican(settings=settings)
         pelican.run()
         diff = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "custom")))
         self.assertFilesEqual(diff)
