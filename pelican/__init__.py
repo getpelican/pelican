@@ -9,8 +9,7 @@ from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, PdfGenerator,
-                                LessCSSGenerator, SourceFileGenerator,
-                                TemplatePagesGenerator)
+                                SourceFileGenerator, TemplatePagesGenerator)
 from pelican.log import init
 from pelican.settings import read_settings
 from pelican.utils import (clean_output_dir, files_changed, file_changed,
@@ -177,8 +176,6 @@ class Pelican(object):
             generators.append(TemplatePagesGenerator)
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
-        if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
-            generators.append(LessCSSGenerator)
         if self.settings['OUTPUT_SOURCES']:
             generators.append(SourceFileGenerator)
 
