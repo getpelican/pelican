@@ -105,9 +105,6 @@ Setting name (default value)                                            What doe
                                                                         incorporated into the generated HTML via the `Typogrify
                                                                         <http://static.mintchaos.com/projects/typogrify/>`_
                                                                         library, which can be installed via: ``pip install typogrify``
-`LESS_GENERATOR` (``FALSE``)                                            Set to True or complete path to `lessc` (if not
-                                                                        found in system PATH) to enable compiling less
-                                                                        css files. Requires installation of `less css`_.
 `DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'archives')``)    List of templates that are used directly to render
                                                                         content. Typically direct templates are used to generate
                                                                         index pages for collections of content e.g. tags and
@@ -127,8 +124,6 @@ Setting name (default value)                                            What doe
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
-
-.. _less css: http://lesscss.org/
 
 
 URL settings
