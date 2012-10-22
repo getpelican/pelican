@@ -124,8 +124,8 @@ class Pelican(object):
 
         if self.settings.get('TRANSLATION_FEED', False):
             logger.warning('Found deprecated `TRANSLATION_FEED` in settings. '
-            'Modify TRANSLATION_FEED to TRANSLATION_FEED_ATOM in your settings and '
-            'theme for the same behavior. Temporarily setting '
+            'Modify TRANSLATION_FEED to TRANSLATION_FEED_ATOM in your '
+            'settings and theme for the same behavior. Temporarily setting '
             'TRANSLATION_FEED_ATOM for backwards compatibility.')
             self.settings['TRANSLATION_FEED_ATOM'] =\
                     self.settings['TRANSLATION_FEED']
