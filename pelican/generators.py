@@ -128,7 +128,8 @@ class ArticlesGenerator(Generator):
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
-        if self.settings.get('FEED_ATOM') is None and self.settings.get('FEED_RSS') is None:
+        if self.settings.get('FEED_ATOM') is None \
+                and self.settings.get('FEED_RSS') is None:
             return
         elif self.settings.get('SITEURL') is '':
             logger.warning(
@@ -161,7 +162,8 @@ class ArticlesGenerator(Generator):
                                   self.settings['CATEGORY_FEED_RSS'] % cat,
                                   feed_type='rss')
 
-        if self.settings.get('TAG_FEED_ATOM') or self.settings.get('TAG_FEED_RSS'):
+        if self.settings.get('TAG_FEED_ATOM') \
+                or self.settings.get('TAG_FEED_RSS'):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
@@ -173,15 +175,21 @@ class ArticlesGenerator(Generator):
                                       self.settings['TAG_FEED_RSS'] % tag,
                                       feed_type='rss')
 
-        if self.settings.get('TRANSLATION_FEED'):
+        if self.settings.get('TRANSLATION_FEED_ATOM') or \
+                self.settings.get('TRANSLATION_FEED_RSS'):
             translations_feeds = defaultdict(list)
             for article in chain(self.articles, self.translations):
                 translations_feeds[article.lang].append(article)
 
             for lang, items in translations_feeds.items():
                 items.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(items, self.context,
-                                  self.settings['TRANSLATION_FEED'] % lang)
+                if self.settings.get('TRANSLATION_FEED_ATOM'):
+                    writer.write_feed(items, self.context,
+                            self.settings['TRANSLATION_FEED_ATOM'] % lang)
+                if self.settings.get('TRANSLATION_FEED_RSS'):
+                    writer.write_feed(items, self.context,
+                            self.settings['TRANSLATION_FEED_RSS'] % lang,
+                            feed_type='rss')
 
     def generate_articles(self, write):
         """Generate the articles."""

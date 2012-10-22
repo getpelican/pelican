@@ -366,12 +366,13 @@ Translations
 Pelican offers a way to translate articles. See the Getting Started section for
 more information.
 
-================================================    =====================================================
-Setting name (default value)                        What does it do?
-================================================    =====================================================
-`DEFAULT_LANG` (``'en'``)                           The default language to use.
-`TRANSLATION_FEED` ('feeds/all-%s.atom.xml'[3]_)    Where to put the feed for translations.
-================================================    =====================================================
+=====================================================    =====================================================
+Setting name (default value)                             What does it do?
+=====================================================    =====================================================
+`DEFAULT_LANG` (``'en'``)                                The default language to use.
+`TRANSLATION_FEED_ATOM` ('feeds/all-%s.atom.xml'[3]_)    Where to put the Atom feed for translations.
+`TRANSLATION_FEED_RSS` (``None``, i.e. no RSS)           Where to put the RSS feed for translations.
+=====================================================    =====================================================
 
 .. [3] %s is the language
 
