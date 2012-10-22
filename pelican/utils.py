@@ -92,7 +92,8 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     elif os.path.isfile(source_):
         shutil.copy(source_, destination_)
         logger.info('copying %s to %s' % (source_, destination_))
-
+    else:
+        logger.warning('skipped copy %s to %s' % (source_, destination_))
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""

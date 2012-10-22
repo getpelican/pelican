@@ -1,4 +1,3 @@
-import copy
 import os
 import re
 import sys
@@ -12,7 +11,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, PdfGenerator,
                                 LessCSSGenerator, SourceFileGenerator)
 from pelican.log import init
-from pelican.settings import read_settings, _DEFAULT_CONFIG
+from pelican.settings import read_settings
 from pelican.utils import (clean_output_dir, files_changed, file_changed,
                            NoFilesError)
 from pelican.writers import Writer
@@ -26,42 +25,21 @@ logger = logging.getLogger(__name__)
 
 
 class Pelican(object):
-    def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, delete_outputdir=False, plugin_path=None):
-        """Read the settings, and performs some checks on the environment
-        before doing anything else.
+    def __init__(self, settings):
         """
-        if settings is None:
-            settings = copy.deepcopy(_DEFAULT_CONFIG)
-
-        self.path = path or settings['PATH']
-        if not self.path:
-            raise Exception('You need to specify a path containing the content'
-                    ' (see pelican --help for more information)')
-
-        if self.path.endswith('/'):
-            self.path = self.path[:-1]
+        Pelican initialisation, performs some checks on the environment before
+        doing anything else.
+        """
 
         # define the default settings
         self.settings = settings
-
         self._handle_deprecation()
 
-        self.theme = theme or settings['THEME']
-        output_path = output_path or settings['OUTPUT_PATH']
-        self.output_path = os.path.realpath(output_path)
-        self.markup = markup or settings['MARKUP']
-        self.delete_outputdir = delete_outputdir \
-                                    or settings['DELETE_OUTPUT_DIRECTORY']
-
-        # find the theme in pelican.theme if the given one does not exists
-        if not os.path.exists(self.theme):
-            theme_path = os.sep.join([os.path.dirname(
-                os.path.abspath(__file__)), "themes/%s" % self.theme])
-            if os.path.exists(theme_path):
-                self.theme = theme_path
-            else:
-                raise Exception("Impossible to find the theme %s" % theme)
+        self.path = settings['PATH']
+        self.theme = settings['THEME']
+        self.output_path = settings['OUTPUT_PATH']
+        self.markup = settings['MARKUP']
+        self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
 
         self.init_path()
         self.init_plugins()
@@ -259,11 +237,26 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def get_instance(args):
-    markup = [a.strip().lower() for a in args.markup.split(',')]\
-              if args.markup else None
+def get_config(args):
+    config = {}
+    if args.path:
+        config['PATH'] = os.path.abspath(os.path.expanduser(args.path))
+    if args.output:
+        config['OUTPUT_PATH'] = \
+                os.path.abspath(os.path.expanduser(args.output))
+    if args.markup:
+        config['MARKUP'] = [a.strip().lower() for a in args.markup.split(',')]
+    if args.theme:
+        abstheme = os.path.abspath(os.path.expanduser(args.theme))
+        config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
+    if args.delete_outputdir is not None:
+        config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
+    return config
 
-    settings = read_settings(args.settings)
+
+def get_instance(args):
+
+    settings = read_settings(args.settings, override=get_config(args))
 
     cls = settings.get('PELICAN_CLASS')
     if isinstance(cls, basestring):
@@ -271,15 +264,12 @@ def get_instance(args):
         module = __import__(module)
         cls = getattr(module, cls_name)
 
-    return cls(settings, args.path, args.theme, args.output, markup,
-               args.delete_outputdir)
+    return cls(settings)
 
 
 def main():
     args = parse_arguments()
     init(args.verbosity)
-    # Split the markup languages only if some have been given. Otherwise,
-    # populate the variable with None.
     pelican = get_instance(args)
 
     try:
