@@ -166,15 +166,20 @@ class ArticlesGenerator(Generator):
                                       self.settings['TAG_FEED_RSS'] % tag,
                                       feed_type='rss')
 
-        if self.settings.get('TRANSLATION_FEED'):
+        if self.settings.get('TRANSLATION_FEED_ATOM') or self.settings.get('TRANSLATION_FEED_RSS'):
             translations_feeds = defaultdict(list)
             for article in chain(self.articles, self.translations):
                 translations_feeds[article.lang].append(article)
 
             for lang, items in translations_feeds.items():
                 items.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(items, self.context,
-                                  self.settings['TRANSLATION_FEED'] % lang)
+                if self.settings.get('TRANSLATION_FEED_ATOM'):
+                    writer.write_feed(items, self.context,
+                                    self.settings['TRANSLATION_FEED_ATOM'] % lang)
+                if self.settings.get('TRANSLATION_FEED_RSS'):
+                    writer.write_feed(items, self.context,
+                                    self.settings['TRANSLATION_FEED_RSS'] % lang,
+                                      feed_type='rss')
 
     def generate_articles(self, write):
         """Generate the articles."""

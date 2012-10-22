@@ -202,7 +202,8 @@ Here is a complete list of the feed variables::
     CATEGORY_FEED_RSS
     TAG_FEED_ATOM
     TAG_FEED_RSS
-    TRANSLATION_FEED
+    TRANSLATION_FEED_ATOM
+    TRANSLATION_FEED_RSS
 
 
 Inheritance
