@@ -156,28 +156,32 @@ class ArticlesGenerator(Generator):
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
-        if self.settings.get('FEED_ATOM') is None \
-                and self.settings.get('FEED_RSS') is None:
-            return
-        elif self.settings.get('SITEURL') is '':
+        if self.settings.get('SITEURL') is '':
             logger.warning(
                 'Feeds generated without SITEURL set properly may not be valid'
             )
 
-        all_articles = list(self.articles)
-
-        for article in self.articles:
-            all_articles.extend(article.translations)
-
-        all_articles.sort(key=attrgetter('date'), reverse=True)
-
         if self.settings.get('FEED_ATOM'):
-            writer.write_feed(all_articles, self.context,
+            writer.write_feed(self.articles, self.context,
                               self.settings['FEED_ATOM'])
 
         if self.settings.get('FEED_RSS'):
-            writer.write_feed(all_articles, self.context,
+            writer.write_feed(self.articles, self.context,
                               self.settings['FEED_RSS'], feed_type='rss')
+
+        if self.settings.get('FEED_ALL_ATOM') or self.settings.get('FEED_ALL_RSS'):
+            all_articles = list(self.articles)
+            for article in self.articles:
+                all_articles.extend(article.translations)
+            all_articles.sort(key=attrgetter('date'), reverse=True)
+
+            if self.settings.get('FEED_ALL_ATOM'):
+                writer.write_feed(all_articles, self.context,
+                                  self.settings['FEED_ALL_ATOM'])
+
+            if self.settings.get('FEED_ALL_RSS'):
+                writer.write_feed(all_articles, self.context,
+                                  self.settings['FEED_ALL_RSS'], feed_type='rss')
 
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
