@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from mock import MagicMock
+import hashlib
 import os
-import re
+
+from codecs import open
 from tempfile import mkdtemp
 from shutil import rmtree
 
-from pelican.generators import ArticlesGenerator, LessCSSGenerator, \
-        PagesGenerator, TemplatePagesGenerator
+from pelican import Pelican
+from pelican.generators import ArticlesGenerator, PagesGenerator, \
+    TemplatePagesGenerator
 from pelican.writers import Writer
-from pelican.settings import _DEFAULT_CONFIG
+from pelican.settings import _DEFAULT_CONFIG, read_settings
 from .support import unittest, skipIfNoExecutable
 
 CUR_DIR = os.path.dirname(__file__)
@@ -240,53 +243,47 @@ class TestTemplatePagesGenerator(unittest.TestCase):
             self.assertEquals(output_file.read(), 'foo: bar')
 
 
-class TestLessCSSGenerator(unittest.TestCase):
-
-    LESS_CONTENT = """
-        @color: #4D926F;
-
-        #header {
-          color: @color;
-        }
-        h2 {
-          color: @color;
-        }
+@skipIfNoExecutable(['scss', '-v'])
+@skipIfNoExecutable(['cssmin', '--version'])
+class TestWebAssets(unittest.TestCase):
+    """
+    scss style.scss style.ref.css
     """
 
     def setUp(self):
-        self.temp_content = mkdtemp()
-        self.temp_output = mkdtemp()
+        self.temp_path = mkdtemp()
+        self.theme_dir = os.path.join(CUR_DIR, 'themes', 'assets')
+
+        self.settings = read_settings(override={
+            'PATH': os.path.join(CUR_DIR, 'content', 'TestCategory'),
+            'OUTPUT_PATH': self.temp_path,
+            'WEBASSETS': True,
+            'THEME': self.theme_dir,
+        })
+        pelican = Pelican(settings=self.settings)
+        pelican.run()
+
+        self.css_ref = open(os.path.join(self.theme_dir, 'static', 'css',
+                                         'style.min.css')).read()
+        self.version = hashlib.md5(self.css_ref).hexdigest()[0:8]
 
     def tearDown(self):
-        rmtree(self.temp_content)
-        rmtree(self.temp_output)
+        rmtree(self.temp_path)
 
-    @skipIfNoExecutable('lessc')
-    def test_less_compiler(self):
+    def test_compilation(self):
+        "Compare the compiled css with the reference"
 
-        settings = _DEFAULT_CONFIG.copy()
-        settings['STATIC_PATHS'] = ['static']
-        settings['LESS_GENERATOR'] = True
+        gen_file = os.path.join(self.temp_path, 'theme', 'gen',
+                                'style.{0}.min.css'.format(self.version))
 
-        generator = LessCSSGenerator(None, settings, self.temp_content,
-                        _DEFAULT_CONFIG['THEME'], self.temp_output, None)
+        self.assertTrue(os.path.isfile(gen_file))
+        css_new = open(gen_file).read()
+        self.assertEqual(css_new, self.css_ref)
 
-        # create a dummy less file
-        less_dir = os.path.join(self.temp_content, 'static', 'css')
-        less_filename = os.path.join(less_dir, 'test.less')
+    def test_template(self):
+        "Look in the output index.html file for the link tag"
 
-        less_output = os.path.join(self.temp_output, 'static', 'css',
-                            'test.css')
-
-        os.makedirs(less_dir)
-        with open(less_filename, 'w') as less_file:
-            less_file.write(self.LESS_CONTENT)
-
-        generator.generate_output()
-
-        # we have the file ?
-        self.assertTrue(os.path.exists(less_output))
-
-        # was it compiled ?
-        self.assertIsNotNone(re.search(r'^\s+color:\s*#4D926F;$',
-            open(less_output).read(), re.MULTILINE | re.IGNORECASE))
+        link_tag = '<link rel="stylesheet" ' + \
+                   'href="theme/gen/style.{0}.min.css">'.format(self.version)
+        html = open(os.path.join(self.temp_path, 'index.html')).read()
+        self.assertRegexpMatches(html, link_tag)
