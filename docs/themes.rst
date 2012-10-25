@@ -35,7 +35,7 @@ To make your own theme, you must follow the following structure::
 * `templates` contains all the templates that will be used to generate the content.
   I've just put the mandatory templates here; you can define your own if it helps
   you keep things organized while creating your theme.
- 
+
 Templates and variables
 =======================
 
@@ -44,7 +44,7 @@ This document describes which templates should exist in a theme, and which
 variables will be passed to each template at generation time.
 
 All templates will receive the variables defined in your settings file, if they
-are in all-caps. You can access them directly. 
+are in all-caps. You can access them directly.
 
 Common variables
 ----------------
@@ -55,14 +55,14 @@ All of these settings will be available to all templates.
 Variable        Description
 =============   ===================================================
 articles        The list of articles, ordered descending by date
-                All the elements are `Article` objects, so you can 
+                All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
                 etc.)
 dates           The same list of articles, but ordered by date,
                 ascending
 tags            A key-value dict containing the tags (the keys) and
                 the list of respective articles (the values)
-categories      A key-value dict containing the categories (keys) 
+categories      A key-value dict containing the categories (keys)
                 and the list of respective articles (values)
 pages           The list of pages
 =============   ===================================================
@@ -92,8 +92,8 @@ author.html
 This template will be processed for each of the existing authors, with
 output generated at output/author/`author_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/author/`author_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+AUTHOR_SAVE_AS (`Default:` output/author/`author_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -108,8 +108,8 @@ dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
-page_name               'author/`author_name`' -- useful for pagination
-                        links
+page_name               AUTHOR_URL where everything after `{slug}` is 
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 category.html
@@ -118,8 +118,8 @@ category.html
 This template will be processed for each of the existing categories, with
 output generated at output/category/`category_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/category/`category_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+CATEGORY_SAVE_AS (`Default:` output/category/`category_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -134,8 +134,8 @@ dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'category/`category_name`' -- useful for pagination
-                        links
+page_name               CATEGORY_URL where everything after `{slug}` is 
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 article.html
@@ -170,8 +170,8 @@ tag.html
 This template will be processed for each tag, with corresponding .html files
 saved as output/tag/`tag_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/tag/`tag_name``n`.html.
+If pagination is active, subsequent pages will reside as defined in setting
+TAG_SAVE_AS (`Default:` output/tag/`tag_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -182,11 +182,12 @@ dates                   Articles related to this tag, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-dates_paginator         A paginator object for the list of articles, 
+dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'tag/`tag_name`' -- useful for pagination links
+page_name               TAG_URL where everything after `{slug}` is removed
+                        -- useful for pagination links
 ===================     ===================================================
 
 Feeds
@@ -202,7 +203,8 @@ Here is a complete list of the feed variables::
     CATEGORY_FEED_RSS
     TAG_FEED_ATOM
     TAG_FEED_RSS
-    TRANSLATION_FEED
+    TRANSLATION_FEED_ATOM
+    TRANSLATION_FEED_RSS
 
 
 Inheritance

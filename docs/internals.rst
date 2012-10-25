@@ -52,7 +52,7 @@ Take a look at the Markdown reader::
             text = open(filename)
             md = Markdown(extensions = ['meta', 'codehilite'])
             content = md.convert(text)
-            
+
             metadata = {}
             for name, value in md.Meta.items():
                 if name in _METADATA_FIELDS:
@@ -81,7 +81,7 @@ both; only the existing ones will be called.
   context is shared between all generators, and will be passed to the
   templates. For instance, the ``PageGenerator`` ``generate_context`` method
   finds all the pages, transforms them into objects, and populates the context
-  with them. Be careful *not* to output anything using this context at this 
+  with them. Be careful *not* to output anything using this context at this
   stage, as it is likely to change by the effect of other generators.
 
 * ``generate_output`` is then called. And guess what is it made for? Oh,

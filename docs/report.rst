@@ -4,7 +4,7 @@ Some history about Pelican
 .. warning::
 
     This page comes from a report the original author (Alexis Métaireau) wrote
-    right after writing Pelican, in December 2010. The information may not be 
+    right after writing Pelican, in December 2010. The information may not be
     up-to-date.
 
 Pelican is a simple static blog generator. It parses markup files
@@ -113,7 +113,7 @@ concepts. Here is what happens when calling the ``generate_context``
 method:
 
 * Read the folder “path”, looking for restructured text files, load
-  each of them, and construct a content object (``Article``) with it. To do so, 
+  each of them, and construct a content object (``Article``) with it. To do so,
   use ``Reader`` objects.
 * Update the ``context`` with all those articles.
 

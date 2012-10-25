@@ -6,13 +6,14 @@ import shutil
 import logging
 from collections import defaultdict
 
-from codecs import open as _open
+from codecs import open
 from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
 
 logger = logging.getLogger(__name__)
+
 
 class NoFilesError(Exception):
     pass
@@ -37,9 +38,9 @@ def get_date(string):
     raise ValueError("'%s' is not a valid date" % string)
 
 
-def open(filename):
+def pelican_open(filename):
     """Open a file and return it's content"""
-    return _open(filename, encoding='utf-8').read()
+    return open(filename, encoding='utf-8').read()
 
 
 def slugify(value):
@@ -86,15 +87,31 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
             if overwrite:
                 shutil.rmtree(destination_)
                 shutil.copytree(source_, destination_)
-                logger.info('replacement of %s with %s' % (source_, destination_))
+                logger.info('replacement of %s with %s' % (source_,
+                    destination_))
 
     elif os.path.isfile(source_):
+        dest_dir = os.path.dirname(destination_)
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
         shutil.copy(source_, destination_)
         logger.info('copying %s to %s' % (source_, destination_))
-
+    else:
+        logger.warning('skipped copy %s to %s' % (source_, destination_))
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
+
+    if not os.path.exists(path):
+        logger.debug("Directory already removed: %s" % path)
+        return
+
+    if not os.path.isdir(path):
+        try:
+            os.remove(path)
+        except Exception, e:
+            logger.error("Unable to delete file %s; %e" % path, e)
+        return
 
     # remove all the existing content from the output folder
     for filename in os.listdir(path):

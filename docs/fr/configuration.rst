@@ -77,8 +77,11 @@ Traductions
 DEFAULT_LANG :
 	Le langage par défaut à utiliser. «*en*» par défaut ;
 
-TRANSLATION_FEED :
-	Chemin du flux pour les traductions.
+TRANSLATION_FEED_ATOM :
+	Chemin du flux Atom pour les traductions.
+
+TRANSLATION_FEED_RSS :
+	Chemin du flux RSS pour les traductions.
 
 
 Thèmes
@@ -155,7 +158,5 @@ SITEURL :
 STATIC_PATHS :
 	Les chemins statiques que vous voulez avoir accès sur le chemin de sortie "statique" ;
 
-
-
-
-
+MARKDOWN_EXTENSIONS :
+	Liste des extentions Markdown que vous souhaitez utiliser ;

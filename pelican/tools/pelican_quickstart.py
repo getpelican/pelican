@@ -9,13 +9,12 @@ import codecs
 
 from pelican import __version__
 
-_TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), \
+_TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               "templates")
 
-
 CONF = {
-    'pelican' : 'pelican',
-    'pelicanopts' : '',
+    'pelican': 'pelican',
+    'pelicanopts': '',
     'basedir': '.',
     'ftp_host': 'localhost',
     'ftp_user': 'anonymous',
@@ -24,8 +23,8 @@ CONF = {
     'ssh_port': 22,
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
-    'dropbox_dir' : '~/Dropbox/Public/',
-    'default_pagination' : 10,
+    'dropbox_dir': '~/Dropbox/Public/',
+    'default_pagination': 10,
     'siteurl': '',
     'lang': 'en'
 }
@@ -77,7 +76,7 @@ def ask(question, answer=str, default=None, l=None):
                 if l and len(r) != l:
                     print('You must enter a {0} letters long string'.format(l))
                 else:
-                   break
+                    break
 
         return r
 
@@ -148,14 +147,16 @@ def main():
 
 This script will help you create a new Pelican-based website.
 
-Please answer the following questions so this script can generate the files needed by Pelican.
+Please answer the following questions so this script can generate the files
+needed by Pelican.
 
     '''.format(v=__version__))
 
     project = os.path.join(os.environ.get('VIRTUAL_ENV', '.'), '.project')
     if os.path.isfile(project):
         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
-        print('Using project associated with current virtual environment. Will save to:\n%s\n' % CONF['basedir'])
+        print('Using project associated with current virtual environment.'
+              'Will save to:\n%s\n' % CONF['basedir'])
     else:
         CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new web site?', answer=str, default=args.path))
 
@@ -201,9 +202,13 @@ Please answer the following questions so this script can generate the files need
 
     try:
         with codecs.open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w', 'utf-8') as fd:
+            conf_python = dict()
+            for key, value in CONF.iteritems():
+                conf_python[key] = repr(value)
+
             for line in get_template('pelicanconf.py'):
                 template = string.Template(line)
-                fd.write(template.safe_substitute(CONF))
+                fd.write(template.safe_substitute(conf_python))
             fd.close()
     except OSError, e:
         print('Error: {0}'.format(e))
@@ -228,11 +233,16 @@ Please answer the following questions so this script can generate the files need
             print('Error: {0}'.format(e))
 
     if develop:
+        conf_shell = dict()
+        for key, value in CONF.iteritems():
+            if isinstance(value, basestring) and ' ' in value:
+                value = '"' + value.replace('"', '\\"') + '"'
+            conf_shell[key] = value
         try:
             with codecs.open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w', 'utf-8') as fd:
                 for line in get_template('develop_server.sh'):
                     template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
+                    fd.write(template.safe_substitute(conf_shell))
                 fd.close()
                 os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')), 0755)
         except OSError, e:

@@ -23,7 +23,7 @@ different projects.
 
 To create a virtual environment, use the following syntax::
 
-    $ mkvirtualenv pelican 
+    $ mkvirtualenv pelican
 
 To clone the Pelican source::
 
@@ -65,5 +65,5 @@ Try to respect what is described in the `PEP8 specification
 <http://www.python.org/dev/peps/pep-0008/>`_ when providing patches. This can be
 eased via the `pep8 <http://pypi.python.org/pypi/pep8>`_ or `flake8
 <http://pypi.python.org/pypi/flake8/>`_ tools, the latter of which in
-particular will give you some useful hints about ways in which the 
+particular will give you some useful hints about ways in which the
 code/formatting can be improved.
