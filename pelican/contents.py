@@ -73,11 +73,14 @@ class Page(object):
         if not hasattr(self, 'slug'):
             if settings['DEFAULT_SLUG'] == 'filename':
                 basename = os.path.basename(filename).rsplit('.')[0]
-                # delete date in filename
-                try:
-                    datetime(*[int(i) for i in basename.split('-')[:3]])
-                    self.slug = slugify('-'.join(basename.split('-')[3:]))
-                except Exception:
+                if settings['DEFAULT_DATE'] == 'filename':
+                    # delete date in filename
+                    try:
+                        datetime(*[int(i) for i in basename.split('-')[:3]])
+                        self.slug = slugify('-'.join(basename.split('-')[3:]))
+                    except Exception:
+                        self.slug = slugify(basename)
+                else:
                     self.slug = slugify(basename)
             elif hasattr(self, 'title'):
                 self.slug = slugify(self.title)
