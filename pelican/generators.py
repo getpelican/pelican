@@ -141,7 +141,8 @@ class ArticlesGenerator(Generator):
             writer.write_feed(self.articles, self.context,
                               self.settings['FEED_RSS'], feed_type='rss')
 
-        if self.settings.get('FEED_ALL_ATOM') or self.settings.get('FEED_ALL_RSS'):
+        if self.settings.get('FEED_ALL_ATOM') or \
+                self.settings.get('FEED_ALL_RSS'):
             all_articles = list(self.articles)
             for article in self.articles:
                 all_articles.extend(article.translations)
