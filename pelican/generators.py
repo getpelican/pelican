@@ -6,6 +6,7 @@ import logging
 import datetime
 import subprocess
 
+from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain
@@ -16,7 +17,7 @@ from jinja2.exceptions import TemplateNotFound
 
 from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, open
+from pelican.utils import copy, process_translations
 from pelican import signals
 
 
@@ -36,8 +37,11 @@ class Generator(object):
 
         # templates cache
         self._templates = {}
-        self._templates_path = os.path.expanduser(
-                os.path.join(self.theme, 'templates'))
+        self._templates_path = []
+        self._templates_path.append(os.path.expanduser(
+                os.path.join(self.theme, 'templates')))
+        self._templates_path += self.settings.get('EXTRA_TEMPLATES_PATHS', [])
+
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -124,7 +128,8 @@ class ArticlesGenerator(Generator):
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
-        if self.settings.get('FEED_ATOM') is None and self.settings.get('FEED_RSS') is None:
+        if self.settings.get('FEED_ATOM') is None \
+                and self.settings.get('FEED_RSS') is None:
             return
         elif self.settings.get('SITEURL') is '':
             logger.warning(
@@ -150,7 +155,8 @@ class ArticlesGenerator(Generator):
                                   self.settings['CATEGORY_FEED_RSS'] % cat,
                                   feed_type='rss')
 
-        if self.settings.get('TAG_FEED_ATOM') or self.settings.get('TAG_FEED_RSS'):
+        if self.settings.get('TAG_FEED_ATOM') \
+                or self.settings.get('TAG_FEED_RSS'):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
@@ -162,15 +168,21 @@ class ArticlesGenerator(Generator):
                                       self.settings['TAG_FEED_RSS'] % tag,
                                       feed_type='rss')
 
-        if self.settings.get('TRANSLATION_FEED'):
+        if self.settings.get('TRANSLATION_FEED_ATOM') or \
+                self.settings.get('TRANSLATION_FEED_RSS'):
             translations_feeds = defaultdict(list)
             for article in chain(self.articles, self.translations):
                 translations_feeds[article.lang].append(article)
 
             for lang, items in translations_feeds.items():
                 items.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(items, self.context,
-                                  self.settings['TRANSLATION_FEED'] % lang)
+                if self.settings.get('TRANSLATION_FEED_ATOM'):
+                    writer.write_feed(items, self.context,
+                            self.settings['TRANSLATION_FEED_ATOM'] % lang)
+                if self.settings.get('TRANSLATION_FEED_RSS'):
+                    writer.write_feed(items, self.context,
+                            self.settings['TRANSLATION_FEED_RSS'] % lang,
+                            feed_type='rss')
 
     def generate_articles(self, write):
         """Generate the articles."""
@@ -188,7 +200,7 @@ class ArticlesGenerator(Generator):
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
                                                         '%s.html' % template)
             if not save_as:
-                 continue
+                continue
 
             write(save_as, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
@@ -203,7 +215,7 @@ class ArticlesGenerator(Generator):
             write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'tag/%s' % tag)
+                page_name=tag.page_name)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -213,7 +225,7 @@ class ArticlesGenerator(Generator):
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'category/%s' % cat)
+                page_name=cat.page_name)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -223,7 +235,7 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'author/%s' % aut)
+                page_name=aut.page_name)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
@@ -269,7 +281,7 @@ class ArticlesGenerator(Generator):
             if 'category' not in metadata:
 
                 if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY'] 
+                    category = self.settings['DEFAULT_CATEGORY']
                 else:
                     category = os.path.basename(os.path.dirname(f))\
                                 .decode('utf-8')
@@ -352,9 +364,11 @@ class ArticlesGenerator(Generator):
 
         self.authors = list(self.authors.items())
         self.authors.sort(key=lambda item: item[0].name)
-            
+
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
+
+        signals.article_generator_finalized.send(self)
 
     def generate_output(self, writer):
         self.generate_feeds(writer)
@@ -370,7 +384,7 @@ class PagesGenerator(Generator):
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
         signals.pages_generator_init.send(self)
- 
+
     def generate_context(self):
         all_pages = []
         hidden_pages = []
@@ -378,7 +392,7 @@ class PagesGenerator(Generator):
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                content, metadata = read_file(f)
+                content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
@@ -429,7 +443,23 @@ class StaticGenerator(Generator):
             # Define the assets environment that will be passed to the
             # generators. The StaticGenerator must then be run first to have
             # the assets in the output_path before generating the templates.
-            assets_url = self.settings['SITEURL'] + '/theme/'
+
+            # Let ASSET_URL honor Pelican's RELATIVE_URLS setting.
+            # Hint for templates:
+            # Current version of webassets seem to remove any relative
+            # paths at the beginning of the URL. So, if RELATIVE_URLS
+            # is on, ASSET_URL will start with 'theme/', regardless if we
+            # set assets_url here to './theme/' or to 'theme/'.
+            # XXX However, this breaks the ASSET_URL if user navigates to
+            # a sub-URL, e.g. if he clicks on a category. To workaround this
+            # issue, I use
+            #     <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+            # instead of
+            #     <link rel="stylesheet" href="{{ ASSET_URL }}">
+            if self.settings.get('RELATIVE_URLS'):
+                assets_url = './theme/'
+            else:
+                assets_url = self.settings['SITEURL'] + '/theme/'
             assets_src = os.path.join(self.output_path, 'theme')
             self.assets_env = AssetsEnvironment(assets_src, assets_url)
 
@@ -453,13 +483,20 @@ class PdfGenerator(Generator):
     """Generate PDFs on the output dir, for all articles and pages coming from
     rst"""
     def __init__(self, *args, **kwargs):
+        super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
+            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH']) \
+                                if 'PDF_STYLE_PATH' in self.settings.keys() \
+                                else ''
+            pdf_style = self.settings['PDF_STYLE'] if 'PDF_STYLE' \
+                                                    in self.settings.keys() \
+                                                    else 'twelvepoint'
             self.pdfcreator = RstToPdf(breakside=0,
-                                       stylesheets=['twelvepoint'])
+                                       stylesheets=[pdf_style],
+                                       style_path=[pdf_style_path])
         except ImportError:
             raise Exception("unable to find rst2pdf")
-        super(PdfGenerator, self).__init__(*args, **kwargs)
 
     def _create_pdf(self, obj, output_path):
         if obj.filename.endswith(".rst"):
@@ -467,7 +504,7 @@ class PdfGenerator(Generator):
             output_pdf = os.path.join(output_path, filename)
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             with open(obj.filename) as f:
-                self.pdfcreator.createPdf(text=f, output=output_pdf)
+                self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
             logger.info(u' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
@@ -491,6 +528,19 @@ class PdfGenerator(Generator):
         for page in self.context['pages']:
             self._create_pdf(page, pdf_path)
 
+class SourceFileGenerator(Generator):
+    def generate_context(self):
+        self.output_extension = self.settings['OUTPUT_SOURCES_EXTENSION']
+
+    def _create_source(self, obj, output_path):
+        filename = os.path.splitext(obj.save_as)[0]
+        dest = os.path.join(output_path, filename + self.output_extension)
+        copy('', obj.filename, dest)
+
+    def generate_output(self, writer=None):
+        logger.info(u' Generating source files...')
+        for object in chain(self.context['articles'], self.context['pages']):
+            self._create_source(object, self.output_path)
 
 class LessCSSGenerator(Generator):
     """Compile less css files."""
