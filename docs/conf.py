@@ -24,7 +24,7 @@ html_theme = 'pelican'
 html_theme_options = {
     'nosidebar': True,
     'index_logo': 'pelican.png',
-    'github_fork': 'ametaireau/pelican',
+    'github_fork': 'getpelican/pelican',
 }
 
 html_static_path = ['_static']

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from docutils import nodes
-from docutils.parsers.rst import directives, Directive
+from docutils import nodes, utils
+from docutils.parsers.rst import directives, roles, Directive
 from pygments.formatters import HtmlFormatter
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, TextLexer
+import re
 
 INLINESTYLES = False
 DEFAULT = HtmlFormatter(noclasses=INLINESTYLES)
@@ -94,3 +95,18 @@ class YouTube(Directive):
             nodes.raw('', '</div>', format='html')]
 
 directives.register_directive('youtube', YouTube)
+
+_abbr_re = re.compile('\((.*)\)$')
+
+class abbreviation(nodes.Inline, nodes.TextElement): pass
+
+def abbr_role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
+	text = utils.unescape(text)
+	m = _abbr_re.search(text)
+	if m is None:
+		return [abbreviation(text, text)], []
+	abbr = text[:m.start()].strip()
+	expl = m.group(1)
+	return [abbreviation(abbr, abbr, explanation=expl)], []
+
+roles.register_local_role('abbr', abbr_role)

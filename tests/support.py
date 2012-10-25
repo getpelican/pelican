@@ -1,5 +1,4 @@
 __all__ = [
-    'temporary_folder',
     'get_article',
     'unittest',
 ]

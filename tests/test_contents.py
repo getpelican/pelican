@@ -2,10 +2,10 @@
 
 from .support import unittest
 
-from pelican.contents import Page
+from pelican.contents import Page, Article
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import truncate_html_words
-
+from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
 
 # generate one paragraph, enclosed with <p>
@@ -135,6 +135,17 @@ class TestPage(unittest.TestCase):
             # will simply skip this test.
             unittest.skip("There is no locale %s in this system." % locale)
 
+    def test_template(self):
+        """
+        Pages default to page, metadata overwrites
+        """
+        default_page = Page(**self.page_kwargs)
+        self.assertEqual('page', default_page.template)
+        page_kwargs = self._copy_page_kwargs()
+        page_kwargs['metadata']['template'] = 'custom'
+        custom_page = Page(**page_kwargs)
+        self.assertEqual('custom', custom_page.template)
+
     def _copy_page_kwargs(self):
         # make a deep copy of page_kwargs
         page_kwargs = dict([(key, self.page_kwargs[key]) for key in
@@ -146,3 +157,26 @@ class TestPage(unittest.TestCase):
                                      for subkey in page_kwargs[key]])
 
         return page_kwargs
+
+    def test_signal(self):
+        """If a title is given, it should be used to generate the slug."""
+
+        def receiver_test_function(sender,instance):
+            pass
+
+        content_object_init.connect(receiver_test_function ,sender=Page)
+        page = Page(**self.page_kwargs)
+        self.assertTrue(content_object_init.has_receivers_for(Page))
+
+
+class TestArticle(TestPage):
+    def test_template(self):
+        """
+        Articles default to article, metadata overwrites
+        """
+        default_article = Article(**self.page_kwargs)
+        self.assertEqual('article', default_article.template)
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['template'] = 'custom'
+        custom_article = Article(**article_kwargs)
+        self.assertEqual('custom', custom_article.template)

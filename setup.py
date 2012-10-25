@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-requires = ['feedgenerator', 'jinja2', 'pygments', 'docutils', 'pytz', 'blinker']
+requires = ['feedgenerator', 'jinja2 >= 2.4', 'pygments', 'docutils', 'pytz',
+            'blinker', 'unidecode']
 
 try:
-    import argparse
+    import argparse  # NOQA
 except ImportError:
     requires.append('argparse')
 
@@ -18,24 +19,27 @@ entry_points = {
 }
 
 setup(
-    name = "pelican",
-    version = "3.0",
-    url = 'http://pelican.notmyidea.org/',
-    author = 'Alexis Metaireau',
-    author_email = 'alexis@notmyidea.org',
-    description = "A tool to generate a static blog from reStructuredText or Markdown input files.",
+    name="pelican",
+    version="3.1",
+    url='http://getpelican.com/',
+    author='Alexis Metaireau',
+    author_email='alexis@notmyidea.org',
+    description="A tool to generate a static blog from reStructuredText or "\
+                "Markdown input files.",
     long_description=open('README.rst').read(),
-    packages = ['pelican', 'pelican.tools', 'pelican.plugins'],
-    include_package_data = True,
-    install_requires = requires,
-    entry_points = entry_points,
-    classifiers = ['Development Status :: 5 - Production/Stable',
-                   'Environment :: Console',
-                   'License :: OSI Approved :: GNU Affero General Public License v3',
-                   'Operating System :: OS Independent',
-                   'Programming Language :: Python :: 2.6',
-                   'Programming Language :: Python :: 2.7',
-                   'Topic :: Internet :: WWW/HTTP',
-                   'Topic :: Software Development :: Libraries :: Python Modules',
-                   ],
+    packages=['pelican', 'pelican.tools', 'pelican.plugins'],
+    include_package_data=True,
+    install_requires=requires,
+    entry_points=entry_points,
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+         'Environment :: Console',
+         'License :: OSI Approved :: GNU Affero General Public License v3',
+         'Operating System :: OS Independent',
+         'Programming Language :: Python :: 2.6',
+         'Programming Language :: Python :: 2.7',
+         'Topic :: Internet :: WWW/HTTP',
+         'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
+    test_suite='tests',
 )

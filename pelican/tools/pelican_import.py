@@ -184,6 +184,8 @@ def build_header(title, date, author, categories, tags):
     header = '%s\n%s\n' % (title, '#' * len(title))
     if date:
         header += ':date: %s\n' % date
+    if author:
+        header += ':author: %s\n' % author
     if categories:
         header += ':category: %s\n' % ', '.join(categories)
     if tags:
@@ -196,6 +198,8 @@ def build_markdown_header(title, date, author, categories, tags):
     header = 'Title: %s\n' % title
     if date:
         header += 'Date: %s\n' % date
+    if author:
+        header += 'Author: %s\n' % author
     if categories:
         header += 'Category: %s\n' % ', '.join(categories)
     if tags:
@@ -216,7 +220,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
         filename = os.path.basename(filename)
 
         # option to put files in directories with categories names
-        if dircat and (len(categories) == 1):
+        if dircat and (len(categories) > 0):
             catname = slugify(categories[0])
             out_filename = os.path.join(output_path, catname, filename+ext)
             if not os.path.isdir(os.path.join(output_path, catname)):
@@ -233,7 +237,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
                 paragraphs = content.split('\n\n')
-                paragraphs = [u'<p>{}</p>'.format(p) for p in paragraphs]
+                paragraphs = [u'<p>{0}</p>'.format(p) for p in paragraphs]
                 new_content = ''.join(paragraphs)
 
                 fp.write(new_content)

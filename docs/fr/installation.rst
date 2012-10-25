@@ -24,7 +24,7 @@ Pour installer Pelican en reprenant le code via Github, nous aurons besoin du pa
 git-core pour récupérez les sources de Pelican. Puis nous procédons à l’installation ::
 
 	# apt-get install git-core
-	$ git clone https://github.com/ametaireau/pelican.git
+	$ git clone https://github.com/getpelican/pelican.git
 	$ cd pelican
 	# python setup.py install
 
