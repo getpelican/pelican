@@ -173,7 +173,15 @@ def configure_settings(settings):
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    if (('FEED_ATOM' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
+    feed_keys = ['FEED_ATOM', 'FEED_RSS',\
+                 'FEED_ALL_ATOM', 'FEED_ALL_RSS',\
+                 'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',\
+                 'TAG_FEED_ATOM', 'TAG_FEED_RSS',\
+                 'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',\
+                ]
+
+    generate_feed = bool([k for k, v in settings.iteritems() if k in feed_keys and v])
+    if generate_feed and not('FEED_DOMAIN' in settings):
         logger.warn("Since feed URLs should always be absolute, you should specify "
                  "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
                  "http://www.example.com')")
