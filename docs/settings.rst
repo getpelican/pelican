@@ -46,9 +46,12 @@ Setting name (default value)                                            What doe
                                                                         If tuple object, it will instead generate the
                                                                         default datetime object by passing the tuple to
                                                                         the datetime.datetime constructor.
-`JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
                                                                         generating new files.
+`FILES_TO_COPY` (``()``)                                                A list of files to copy from the source (inside the content 
+                                                                        directory) to the destination (inside the output directory).
+                                                                        For example: ``(('extra/robots.txt', 'robots.txt'),)``.
+`JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried

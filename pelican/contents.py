@@ -197,15 +197,23 @@ class URLWrapper(object):
     def __unicode__(self):
         return self.name
 
-    def _from_settings(self, key):
+    def _from_settings(self, key, get_page_name=False):
+        """Returns URL information as defined in settings. 
+        When get_page_name=True returns URL without anything after {slug}
+        e.g. if in settings: CATEGORY_URL="cat/{slug}.html" this returns "cat/{slug}"
+        Useful for pagination."""
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
         if not isinstance(value, basestring):
             logger.warning(u'%s is set to %s' % (setting, value))
             return value
         else:
-            return unicode(value).format(**self.as_dict())
+            if get_page_name:
+                return unicode(value[:value.find('{slug}') + len('{slug}')]).format(**self.as_dict())
+            else:
+                return unicode(value).format(**self.as_dict())
 
+    page_name = property(functools.partial(_from_settings, key='URL', get_page_name=True))
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
 

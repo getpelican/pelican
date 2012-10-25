@@ -203,6 +203,10 @@ class Writer(object):
                                 os.sep.join((get_relative_path(name), "static",
                                 relative_path)))
 
+                # On Windows, make sure we end up with Unix-like paths.
+                if os.name == 'nt':
+                    dest_path = dest_path.replace('\\', '/')
+
                 return m.group('markup') + m.group('quote') + dest_path \
                         + m.group('quote')
 

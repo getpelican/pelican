@@ -281,6 +281,8 @@ For RestructuredText, use the code-block directive::
 For Markdown, include the language identifier just above the code block,
 indenting both the identifier and code::
 
+    A block of text.
+
         :::identifier
         <code goes here>
 
