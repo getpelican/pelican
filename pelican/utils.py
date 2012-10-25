@@ -90,6 +90,12 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
                 logger.info('replacement of %s with %s' % (source_, destination_))
 
     elif os.path.isfile(source_):
+        try:
+            dest_dir = os.path.dirname(destination_)
+            if not os.path.exists(dest_dir):
+                os.makedirs(dest_dir)
+        except OSError, e:
+            logger.error("copying: %s -> %s: %r" % (source_, dest_dir, e))
         shutil.copy(source_, destination_)
         logger.info('copying %s to %s' % (source_, destination_))
     else:
