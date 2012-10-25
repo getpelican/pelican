@@ -87,9 +87,13 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
             if overwrite:
                 shutil.rmtree(destination_)
                 shutil.copytree(source_, destination_)
-                logger.info('replacement of %s with %s' % (source_, destination_))
+                logger.info('replacement of %s with %s' % (source_,
+                    destination_))
 
     elif os.path.isfile(source_):
+        dest_dir = os.path.dirname(destination_)
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
         shutil.copy(source_, destination_)
         logger.info('copying %s to %s' % (source_, destination_))
     else:
