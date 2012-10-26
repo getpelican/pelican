@@ -40,8 +40,11 @@ class TestPage(unittest.TestCase):
 
     def test_mandatory_properties(self):
         """If the title is not set, must throw an exception."""
-        self.assertRaises(AttributeError, Page, 'content')
-        page = Page(**self.page_kwargs)
+        page = Page('content')
+        with self.assertRaises(NameError) as cm:
+            page.check_properties()
+
+        page = Page('content', metadata={'title': 'foobar'})
         page.check_properties()
 
     def test_summary_from_metadata(self):
