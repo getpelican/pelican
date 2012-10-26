@@ -223,12 +223,11 @@ class ArticlesGenerator(Generator):
         """Generate Author pages."""
         author_template = self.get_template('author')
         for aut, articles in self.authors:
-            if aut.name:   # ignore authors with blank names
-                dates = [article for article in self.dates if article in articles]
-                write(aut.save_as, author_template, self.context,
-                    author=aut, articles=articles, dates=dates,
-                    paginated={'articles': articles, 'dates': dates},
-                    page_name=u'author/%s' % aut)
+            dates = [article for article in self.dates if article in articles]
+            write(aut.save_as, author_template, self.context,
+                author=aut, articles=articles, dates=dates,
+                paginated={'articles': articles, 'dates': dates},
+                page_name=u'author/%s' % aut)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
@@ -313,7 +312,9 @@ class ArticlesGenerator(Generator):
         for article in self.articles:
             # only main articles are listed in categories, not translations
             self.categories[article.category].append(article)
-            self.authors[article.author].append(article)
+            # ignore blank authors as well as undefined
+            if hasattr(article,'author') and article.author.name != '':
+                self.authors[article.author].append(article)
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)

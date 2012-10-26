@@ -43,7 +43,7 @@ class Writer(object):
                                         item.date.date(), item.url),
             description=item.content,
             categories=item.tags if hasattr(item, 'tags') else None,
-            author_name=getattr(item, 'author', 'John Doe'),
+            author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(item.date,
                 self.settings.get('TIMEZONE', None)))
 
