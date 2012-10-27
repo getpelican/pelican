@@ -17,7 +17,7 @@ While the above is the simplest method, the recommended approach is to create
 a virtual environment for Pelican via virtualenv_ and virtualenvwrapper_ before
 installing Pelican. Assuming you've followed the virtualenvwrapper
 `installation <http://virtualenvwrapper.readthedocs.org/en/latest/install.html>`_
-and `shell configuration 
+and `shell configuration
 <http://virtualenvwrapper.readthedocs.org/en/latest/install.html#shell-startup-file>`_
 steps, you can then open a new terminal session and create a new virtual
 environment for Pelican::
@@ -26,7 +26,7 @@ environment for Pelican::
 
 Once the virtual environment has been created and activated, Pelican can be
 be installed via ``pip`` or ``easy_install`` as noted above. Alternatively, if
-you have the project source, you can install Pelican using the distutils 
+you have the project source, you can install Pelican using the distutils
 method::
 
     $ cd path-to-Pelican-source
@@ -69,6 +69,7 @@ Optionally:
 
 * pygments, for syntax highlighting
 * Markdown, for supporting Markdown as an input format
+* Typogrify, for typographical enhancements
 
 Kickstart a blog
 ================
@@ -209,7 +210,7 @@ Pages
 If you create a folder named ``pages``, all the files in it will be used to
 generate static pages.
 
-Then, use the ``DISPLAY_PAGES_ON_MENU`` setting, which will add all the pages to 
+Then, use the ``DISPLAY_PAGES_ON_MENU`` setting, which will add all the pages to
 the menu.
 
 If you want to exclude any pages from being linked to or listed in the menu
@@ -219,7 +220,7 @@ things like making error pages that fit the generated theme of your site.
 Importing an existing blog
 --------------------------
 
-It is possible to import your blog from Dotclear, WordPress, and RSS feeds using 
+It is possible to import your blog from Dotclear, WordPress, and RSS feeds using
 a simple script. See :ref:`import`.
 
 Translations
@@ -277,14 +278,15 @@ For RestructuredText, use the code-block directive::
 
        <indented code block goes here>
 
-For Markdown, include the language identifier just above code blocks::
+For Markdown, include the language identifier just above the code block,
+indenting both the identifier and code::
+
+    A block of text.
 
         :::identifier
         <code goes here>
-    
-    (indent both the identifier and code)
 
-The specified identifier (e.g. ``python``, ``ruby``) should be one that 
+The specified identifier (e.g. ``python``, ``ruby``) should be one that
 appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
 
 Publishing drafts

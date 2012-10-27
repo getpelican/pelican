@@ -5,20 +5,22 @@ from pelican import signals
 Gravatar plugin for Pelican
 ===========================
 
-Simply add author_gravatar variable in article's context, which contains
-the gravatar url.
+This plugin assigns the ``author_gravatar`` variable to the Gravatar URL and
+makes the variable available within the article's context.
 
 Settings:
 ---------
 
-Add AUTHOR_EMAIL to your settings file to define default author email.
+Add AUTHOR_EMAIL to your settings file to define the default author's email
+address. Obviously, that email address must be associated with a Gravatar
+account.
 
 Article metadata:
 ------------------
 
 :email:  article's author email
 
-If one of them are defined, the author_gravatar variable is added to
+If one of them are defined, the author_gravatar variable is added to the
 article's context.
 """
 

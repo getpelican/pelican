@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import copy
 import locale
 import logging
 import functools
@@ -10,7 +11,7 @@ from sys import platform, stdin
 
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import slugify, truncate_html_words
-
+from pelican import signals
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ class Page(object):
         if not metadata:
             metadata = {}
         if not settings:
-            settings = _DEFAULT_CONFIG
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
 
         self.settings = settings
         self._content = content
@@ -104,6 +105,8 @@ class Page(object):
         # store the summary metadata if it is set
         if 'summary' in metadata:
             self._summary = metadata['summary']
+
+        signals.content_object_init.send(self.__class__, instance=self)
 
     def check_properties(self):
         """test that each mandatory property is set."""
@@ -194,15 +197,23 @@ class URLWrapper(object):
     def __unicode__(self):
         return self.name
 
-    def _from_settings(self, key):
+    def _from_settings(self, key, get_page_name=False):
+        """Returns URL information as defined in settings. 
+        When get_page_name=True returns URL without anything after {slug}
+        e.g. if in settings: CATEGORY_URL="cat/{slug}.html" this returns "cat/{slug}"
+        Useful for pagination."""
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
         if not isinstance(value, basestring):
             logger.warning(u'%s is set to %s' % (setting, value))
             return value
         else:
-            return unicode(value).format(**self.as_dict())
+            if get_page_name:
+                return unicode(value[:value.find('{slug}') + len('{slug}')]).format(**self.as_dict())
+            else:
+                return unicode(value).format(**self.as_dict())
 
+    page_name = property(functools.partial(_from_settings, key='URL', get_page_name=True))
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
 
