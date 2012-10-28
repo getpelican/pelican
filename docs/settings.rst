@@ -190,8 +190,8 @@ Setting name (default value)                            What does it do?
 `AUTHOR_SAVE_AS` (``'author/{name}.html'``)             The location to save an author.
 `CATEGORY_URL` (``'category/{name}.html'``)             The URL to use for a category.
 `CATEGORY_SAVE_AS` (``'category/{name}.html'``)         The location to save a category.
-`TAG_URL` (``'tag/{name}.html'``)                       The URL to use for a tag.
-`TAG_SAVE_AS` (``'tag/{name}.html'``)                   The location to save the tag page.
+`TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
+`TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
 `<DIRECT_TEMPLATE_NAME>_SAVE_AS`                        The location to save content generated from direct
                                                         templates. Where <DIRECT_TEMPLATE_NAME> is the
                                                         upper case template name.
