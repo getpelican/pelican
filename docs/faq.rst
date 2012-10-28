@@ -21,7 +21,7 @@ How can I help?
 ================
 
 There are several ways to help out. First, you can use Pelican and report any
-suggestions or problems you might have via IRC or the issue tracker.
+suggestions or problems you might have via IRC or the `issue tracker <https://github.com/getpelican/pelican/issues>`_.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
