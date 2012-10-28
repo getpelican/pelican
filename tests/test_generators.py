@@ -86,6 +86,20 @@ class TestArticlesGenerator(unittest.TestCase):
         categories_expected = ['Default', 'TestCategory', 'Yeah', 'test', 'yeah']
         self.assertEquals(categories, categories_expected)
 
+    def test_do_not_use_folder_as_category(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['ARTICLE_DIR'] = 'content'
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['USE_FOLDER_AS_CATEGORY'] = False
+        generator = ArticlesGenerator(settings.copy(), settings,
+                            CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
+                            _DEFAULT_CONFIG['MARKUP'])
+        generator.generate_context()
+
+        categories = [cat.name for cat, _ in generator.categories]
+        self.assertEquals(categories, ['Default', 'Yeah', 'test', 'yeah'])
+
     def test_direct_templates_save_as_default(self):
 
         settings = _DEFAULT_CONFIG.copy()

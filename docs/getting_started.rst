@@ -187,7 +187,9 @@ Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified, Pelican will rely on the file's "mtime" timestamp, and the
 category can be determined by the directory in which the file resides. For
 example, a file located at ``python/foobar/myfoobar.rst`` will have a category of
-``foobar``.
+``foobar``. If you would like to organize your files in other ways where the
+name of the subfolder would not be a good category name, you can set the
+setting ``USE_FOLDER_AS_CATEGORY`` to ``False``.
 
 Generate your blog
 ------------------

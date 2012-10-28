@@ -280,11 +280,14 @@ class ArticlesGenerator(Generator):
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata:
 
-                if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY']
-                else:
+                if (self.settings['USE_FOLDER_AS_CATEGORY']
+                    and os.path.dirname(f) != article_path):
+                    # if the article is in a subdirectory
                     category = os.path.basename(os.path.dirname(f))\
-                                .decode('utf-8')
+                        .decode('utf-8')
+                else:
+                    # if the article is not in a subdirectory
+                    category = self.settings['DEFAULT_CATEGORY']
 
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
