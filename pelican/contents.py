@@ -3,6 +3,7 @@ import copy
 import locale
 import logging
 import functools
+import os
 
 from datetime import datetime
 from os import getenv
@@ -69,8 +70,20 @@ class Page(object):
             self.in_default_lang = (self.lang == default_lang)
 
         # create the slug if not existing, from the title
-        if not hasattr(self, 'slug') and hasattr(self, 'title'):
-            self.slug = slugify(self.title)
+        if not hasattr(self, 'slug'):
+            if settings['DEFAULT_SLUG'] == 'filename':
+                basename = os.path.basename(filename).rsplit('.')[0]
+                if settings['DEFAULT_DATE'] == 'filename':
+                    # delete date in filename
+                    try:
+                        datetime(*[int(i) for i in basename.split('-')[:3]])
+                        self.slug = slugify('-'.join(basename.split('-')[3:]))
+                    except Exception:
+                        self.slug = slugify(basename)
+                else:
+                    self.slug = slugify(basename)
+            elif hasattr(self, 'title'):
+                self.slug = slugify(self.title)
 
         if filename:
             self.filename = filename

@@ -296,6 +296,15 @@ class ArticlesGenerator(Generator):
                 if self.settings['DEFAULT_DATE'] == 'fs':
                     metadata['date'] = datetime.datetime.fromtimestamp(
                             os.stat(f).st_ctime)
+                elif self.settings['DEFAULT_DATE'] == 'filename':
+                    filename = os.path.basename(f)
+                    try:
+                        metadata['date'] = datetime.datetime(*[int(i) for i in filename.split('-')[:3]])
+                    except Exception as e:
+                        logger.warning(u"Failed to extract date from filename `%s'. Using file ctime instead" % (filename,))
+                        logger.warning(u"Reason: %s:%s" % (type(e), e))
+                        metadata['date'] = datetime.datetime.fromtimestamp(
+                                os.stat(f).st_ctime)
                 else:
                     metadata['date'] = datetime.datetime(
                             *self.settings['DEFAULT_DATE'])

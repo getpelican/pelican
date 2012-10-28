@@ -80,6 +80,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'WEBASSETS': False,
                    'PLUGINS': [],
                    'MARKDOWN_EXTENSIONS': ['toc', ],
+                   'DEFAULT_SLUG': 'metadata',
                    }
 
 
