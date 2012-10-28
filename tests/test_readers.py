@@ -109,3 +109,46 @@ class MdReaderTest(unittest.TestCase):
             '<h3 id="level2">Level2</h3>'
 
         self.assertEqual(content, expected)
+
+class AdReaderTest(unittest.TestCase):
+
+    @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
+    def test_article_with_asc_extension(self):
+        # test to ensure the asc extension is being processed by the correct reader
+        reader = readers.AsciiDocReader({})
+        content, metadata = reader.read(_filename('article_with_asc_extension.asc'))
+        expected = '<hr>\n<h2><a name="_used_for_pelican_test"></a>Used for pelican test</h2>\n'\
+                   '<p>The quick brown fox jumped over the lazy dog&#8217;s back.</p>\n'
+        self.assertEqual(content, expected)
+        expected = {
+            'category': 'Blog',
+            'author': 'Author O. Article',
+            'title': 'Test AsciiDoc File Header',
+            'date': datetime.datetime(2011, 9, 15, 9, 5),
+            'tags': ['Linux', 'Python', 'Pelican'],
+        }
+
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
+
+
+        expected = {
+            'category': 'Blog',
+            'author': 'Author O. Article',
+            'title': 'Test AsciiDoc File Header',
+            'date': datetime.datetime(2011, 9, 15, 9, 5),
+            'tags': ['Linux', 'Python', 'Pelican'],
+        }
+
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
+
+    @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
+    def test_article_with_asc_options(self):
+        # test to ensure the ASCIIDOC_OPTIONS is being used
+        reader = readers.AsciiDocReader(dict(ASCIIDOC_OPTIONS=["-a revision=1.0.42"]))
+        content, metadata = reader.read(_filename('article_with_asc_options.asc'))
+        expected = '<hr>\n<h2><a name="_used_for_pelican_test"></a>Used for pelican test</h2>\n'\
+                   '<p>version 1.0.42</p>\n'\
+                   '<p>The quick brown fox jumped over the lazy dog&#8217;s back.</p>\n'
+        self.assertEqual(content, expected)
