@@ -299,6 +299,10 @@ publishing, for example), you can add a ``status: draft`` attribute to its
 metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category page.
 
+A minimal publishing workflow is supported thanks to the ``review`` status
+that is synonymous for ``draft``, to indicate you co-editors that a draft
+is now ready for their eyes before publication.
+
 Viewing the generated files
 ---------------------------
 

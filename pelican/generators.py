@@ -311,7 +311,7 @@ class ArticlesGenerator(Generator):
                     for tag in article.tags:
                         self.tags[tag].append(article)
                 all_articles.append(article)
-            elif article.status == "draft":
+            elif article.status in ("draft", "review"):
                 self.drafts.append(article)
             else:
                 logger.warning(u"Unknown status %s for file %s, skipping it." %
