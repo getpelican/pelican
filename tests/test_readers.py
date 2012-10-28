@@ -109,24 +109,3 @@ class MdReaderTest(unittest.TestCase):
             '<h3 id="level2">Level2</h3>'
 
         self.assertEqual(content, expected)
-
-
-class HtmlReaderTest(unittest.TestCase):
-
-    def test_article_with_metadata(self):
-        reader = readers.HtmlReader({})
-        content, metadata = reader.read(_filename('article_with_html_metadata.html'))
-        expected = {
-            'category': 'yeah',
-            'author': u'Alexis Métaireau',
-            'title': 'A great html article with metadata',
-            'summary': u'Multi-line metadata should be'\
-                       u' supported\nas well as <strong>inline'\
-                       u' markup</strong>.',
-            'date': datetime.datetime(2010, 12, 2, 10, 14),
-            'tags': ['foo', 'bar', 'foobar'],
-            'custom_field': 'http://notmyidea.org',
-        }
-
-        for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)

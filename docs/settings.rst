@@ -60,9 +60,9 @@ Setting name (default value)                                            What doe
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
                                                                         until one works.
-`MARKUP` (``('rst', 'md', 'html')``)                                    A list of available markup languages you want
+`MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
                                                                         to use. For the moment, the only available values
-                                                                        are `rst`, `md` and `html`.
+                                                                        are `rst` and `md`.
 `MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
                                                                         will use. Refer to the extensions chapter in the
                                                                         Python-Markdown documentation for a complete list of
