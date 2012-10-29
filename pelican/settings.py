@@ -80,7 +80,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'WEBASSETS': False,
                    'PLUGINS': [],
                    'MARKDOWN_EXTENSIONS': ['toc', ],
-                   'STATIC_PAGES': {}
+                   'TEMPLATE_PAGES': {}
                    }
 
 

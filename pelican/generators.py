@@ -126,15 +126,16 @@ class _FileLoader(BaseLoader):
         return source, path, lambda: mtime == getmtime(path)
 
 
-class StaticPageGenerator(Generator):
+class TemplatePagesGenerator(Generator):
 
     def generate_output(self, writer):
-        for urlpath, source in self.settings['STATIC_PAGES'].items():
+        for urlpath, source in self.settings['TEMPLATE_PAGES'].items():
             self.env.loader.loaders.insert(0, _FileLoader(source))
             try:
                 template = self.env.get_template(source)
                 rurls = self.settings.get('RELATIVE_URLS')
-                writer.write_file(urlpath.strip('/'), template, self.context, rurls)
+                writer.write_file(
+                        urlpath.strip('/'), template, self.context, rurls)
             finally:
                 del self.env.loader.loaders[0]
 
