@@ -121,7 +121,8 @@ class Page(object):
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
             'author': self.author,
-            'category': getattr(self, 'category', 'misc'),
+            'category': getattr(self, 'category',
+                self.settings['DEFAULT_CATEGORY']),
         }
 
     def _expand_settings(self, key):

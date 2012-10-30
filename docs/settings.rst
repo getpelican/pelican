@@ -34,6 +34,10 @@ Setting name (default value)                                            What doe
 `DATE_FORMATS` (``{}``)                                                 If you do manage multiple languages, you can
                                                                         set the date formatting here. See "Date format and locales"
                                                                         section below for details.
+`USE_FOLDER_AS_CATEGORY` (``True``)                                     When you don't specify a category in your post metadata and set this
+                                                                        setting to ``True`` and organize your articles in subfolders, the
+                                                                        subfolder will become the category of your post. If set to ``False``
+                                                                        ``DEFAULT_CATEGORY`` will be used as a fallback.
 `DEFAULT_CATEGORY` (``'misc'``)                                         The default category to fall back on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                               The default date format you want to use.
 `DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
@@ -186,8 +190,8 @@ Setting name (default value)                            What does it do?
 `AUTHOR_SAVE_AS` (``'author/{name}.html'``)             The location to save an author.
 `CATEGORY_URL` (``'category/{name}.html'``)             The URL to use for a category.
 `CATEGORY_SAVE_AS` (``'category/{name}.html'``)         The location to save a category.
-`TAG_URL` (``'tag/{name}.html'``)                       The URL to use for a tag.
-`TAG_SAVE_AS` (``'tag/{name}.html'``)                   The location to save the tag page.
+`TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
+`TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
 `<DIRECT_TEMPLATE_NAME>_SAVE_AS`                        The location to save content generated from direct
                                                         templates. Where <DIRECT_TEMPLATE_NAME> is the
                                                         upper case template name.
