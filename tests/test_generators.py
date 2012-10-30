@@ -6,7 +6,9 @@ import re
 from tempfile import mkdtemp
 from shutil import rmtree
 
-from pelican.generators import ArticlesGenerator, LessCSSGenerator, PagesGenerator
+from pelican.generators import ArticlesGenerator, LessCSSGenerator, \
+        PagesGenerator, TemplatePagesGenerator
+from pelican.writers import Writer
 from pelican.settings import _DEFAULT_CONFIG
 from .support import unittest, skipIfNoExecutable
 
@@ -192,6 +194,50 @@ class TestPageGenerator(unittest.TestCase):
 
         self.assertItemsEqual(pages_expected,pages)
         self.assertItemsEqual(hidden_pages_expected,hidden_pages)
+
+
+class TestTemplatePagesGenerator(unittest.TestCase):
+
+    TEMPLATE_CONTENT = "foo: {{ foo }}"
+
+    def setUp(self):
+        self.temp_content = mkdtemp()
+        self.temp_output = mkdtemp()
+
+    def tearDown(self):
+        rmtree(self.temp_content)
+        rmtree(self.temp_output)
+
+    def test_generate_output(self):
+
+        settings = _DEFAULT_CONFIG.copy()
+        settings['STATIC_PATHS'] = ['static']
+        settings['TEMPLATE_PAGES'] = {
+                'template/source.html': 'generated/file.html'
+                }
+
+        generator = TemplatePagesGenerator({'foo': 'bar'}, settings,
+                self.temp_content, '', self.temp_output, None)
+
+        # create a dummy template file
+        template_dir = os.path.join(self.temp_content, 'template')
+        template_filename = os.path.join(template_dir, 'source.html')
+        os.makedirs(template_dir)
+        with open(template_filename, 'w') as template_file:
+            template_file.write(self.TEMPLATE_CONTENT)
+
+        writer = Writer(self.temp_output, settings=settings)
+        generator.generate_output(writer)
+
+        output_filename = os.path.join(
+                self.temp_output, 'generated', 'file.html')
+
+        # output file has been generated
+        self.assertTrue(os.path.exists(output_filename))
+
+        # output content is correct
+        with open(output_filename, 'r') as output_file:
+            self.assertEquals(output_file.read(), 'foo: bar')
 
 
 class TestLessCSSGenerator(unittest.TestCase):

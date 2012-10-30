@@ -92,6 +92,8 @@ Setting name (default value)                                            What doe
                                                                         will not be generated with properly-formed URLs. You should
                                                                         include ``http://`` and your domain, with no trailing
                                                                         slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
+`TEMPLATE_PAGES` (``None``)                                             A mapping containing template pages that will be rendered with
+                                                                        the blog entries. See :ref:`template_pages`.
 `STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
                                                                         on the output path "static". By default,
                                                                         Pelican will copy the 'images' folder to the
@@ -265,6 +267,23 @@ can get a list of available locales via the ``locale -a`` command; see manpage
 .. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
 
 .. _locale(1): http://linux.die.net/man/1/locale
+
+
+.. _template_pages:
+
+Template pages
+==============
+
+If you want to generate custom pages besides your blog entries, you can point
+any Jinja2 template file with a path pointing to the file and the destination
+path for the generated file.
+
+For instance, if you have a blog with three static pages, for a list of books,
+your resume and a contact page, you could have::
+
+    TEMPLATE_PAGES = {'src/books.html': 'dest/books.html',
+                    'src/resume.html': 'dest/resume.html',
+                    'src/contact.html': 'dest/contact.html'}
 
 Feed settings
 =============
