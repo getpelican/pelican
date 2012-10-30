@@ -5,7 +5,6 @@ import random
 import logging
 import datetime
 import subprocess
-from os.path import exists, getmtime
 
 from codecs import open
 from collections import defaultdict
@@ -113,29 +112,29 @@ class Generator(object):
 
 class _FileLoader(BaseLoader):
 
-    def __init__(self, path):
+    def __init__(self, path, basedir):
         self.path = path
+        self.fullpath = os.path.join(basedir, path)
 
     def get_source(self, environment, template):
-        path = template
-        if not exists(path):
+        if template != self.path or not os.path.exists(self.fullpath):
             raise TemplateNotFound(template)
-        mtime = getmtime(path)
-        with file(path) as f:
+        mtime = os.path.getmtime(self.fullpath)
+        with file(self.fullpath) as f:
             source = f.read().decode('utf-8')
-        return source, path, lambda: mtime == getmtime(path)
+        return source, self.fullpath, \
+                lambda: mtime == os.path.getmtime(self.fullpath)
 
 
 class TemplatePagesGenerator(Generator):
 
     def generate_output(self, writer):
-        for urlpath, source in self.settings['TEMPLATE_PAGES'].items():
-            self.env.loader.loaders.insert(0, _FileLoader(source))
+        for source, dest in self.settings['TEMPLATE_PAGES'].items():
+            self.env.loader.loaders.insert(0, _FileLoader(source, self.path))
             try:
                 template = self.env.get_template(source)
                 rurls = self.settings.get('RELATIVE_URLS')
-                writer.write_file(
-                        urlpath.strip('/'), template, self.context, rurls)
+                writer.write_file(dest, template, self.context, rurls)
             finally:
                 del self.env.loader.loaders[0]
 

@@ -275,15 +275,15 @@ Template pages
 ==============
 
 If you want to generate custom pages besides your blog entries, you can point
-any Jinja2 template file with a path pointing to the file and the URL it will
-match.
+any Jinja2 template file with a path pointing to the file and the destination
+path for the generated file.
 
-For instance, if you have a blog with four static pages, for a list of books,
+For instance, if you have a blog with three static pages, for a list of books,
 your resume and a contact page, you could have::
 
-    TEMPLATE_PAGES = {'/books.html': 'static/books.html',
-                    '/resume.html': 'static/resume.html',
-                    '/contact.html': 'static/contact.html'}
+    TEMPLATE_PAGES = {'src/books.html': 'dest/books.html',
+                    'src/resume.html': 'dest/resume.html',
+                    'src/contact.html': 'dest/contact.html'}
 
 Feed settings
 =============
