@@ -60,9 +60,10 @@ articles        The list of articles, ordered descending by date
                 etc.)
 dates           The same list of articles, but ordered by date,
                 ascending
-tags            A key-value dict containing the tags (the keys) and
-                the list of respective articles (the values)
-categories      A key-value dict containing the categories (keys)
+tags            A list of (tag, articles) tuples, containing all
+                the tags.
+categories      A list of (category, articles) tuples, containing
+                all the categories.
                 and the list of respective articles (values)
 pages           The list of pages
 =============   ===================================================
@@ -108,7 +109,7 @@ dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
-page_name               AUTHOR_URL where everything after `{slug}` is 
+page_name               AUTHOR_URL where everything after `{slug}` is
                         removed -- useful for pagination links
 ===================     ===================================================
 
@@ -134,7 +135,7 @@ dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               CATEGORY_URL where everything after `{slug}` is 
+page_name               CATEGORY_URL where everything after `{slug}` is
                         removed -- useful for pagination links
 ===================     ===================================================
 

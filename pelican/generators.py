@@ -42,7 +42,6 @@ class Generator(object):
                 os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings.get('EXTRA_TEMPLATES_PATHS', [])
 
-
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
@@ -282,7 +281,6 @@ class ArticlesGenerator(Generator):
         # in writer, articles pass first
         self.generate_articles(write)
         self.generate_direct_templates(write)
-
 
         # and subfolders after that
         self.generate_tags(write)
