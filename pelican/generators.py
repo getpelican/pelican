@@ -12,8 +12,8 @@ from functools import partial
 from itertools import chain
 from operator import attrgetter, itemgetter
 
-from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
-from jinja2.exceptions import TemplateNotFound
+from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
+                    BaseLoader, TemplateNotFound)
 
 from pelican.contents import Article, Page, Category, is_valid_content
 from pelican.readers import read_file
@@ -41,7 +41,6 @@ class Generator(object):
         self._templates_path.append(os.path.expanduser(
                 os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings.get('EXTRA_TEMPLATES_PATHS', [])
-
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -108,6 +107,35 @@ class Generator(object):
             if hasattr(value, 'items'):
                 value = value.items()
             self.context[item] = value
+
+
+class _FileLoader(BaseLoader):
+
+    def __init__(self, path, basedir):
+        self.path = path
+        self.fullpath = os.path.join(basedir, path)
+
+    def get_source(self, environment, template):
+        if template != self.path or not os.path.exists(self.fullpath):
+            raise TemplateNotFound(template)
+        mtime = os.path.getmtime(self.fullpath)
+        with file(self.fullpath) as f:
+            source = f.read().decode('utf-8')
+        return source, self.fullpath, \
+                lambda: mtime == os.path.getmtime(self.fullpath)
+
+
+class TemplatePagesGenerator(Generator):
+
+    def generate_output(self, writer):
+        for source, dest in self.settings['TEMPLATE_PAGES'].items():
+            self.env.loader.loaders.insert(0, _FileLoader(source, self.path))
+            try:
+                template = self.env.get_template(source)
+                rurls = self.settings.get('RELATIVE_URLS')
+                writer.write_file(dest, template, self.context, rurls)
+            finally:
+                del self.env.loader.loaders[0]
 
 
 class ArticlesGenerator(Generator):
@@ -265,7 +293,6 @@ class ArticlesGenerator(Generator):
         # in writer, articles pass first
         self.generate_articles(write)
         self.generate_direct_templates(write)
-
 
         # and subfolders after that
         self.generate_tags(write)
