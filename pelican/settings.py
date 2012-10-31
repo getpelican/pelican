@@ -175,11 +175,11 @@ def configure_settings(settings):
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    feed_keys = ['FEED_ATOM', 'FEED_RSS',\
-                 'FEED_ALL_ATOM', 'FEED_ALL_RSS',\
-                 'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',\
-                 'TAG_FEED_ATOM', 'TAG_FEED_RSS',\
-                 'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',\
+    feed_keys = ['FEED_ATOM', 'FEED_RSS',
+                 'FEED_ALL_ATOM', 'FEED_ALL_RSS',
+                 'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+                 'TAG_FEED_ATOM', 'TAG_FEED_RSS',
+                 'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
                 ]
 
     generate_feed = bool([k for k, v in settings.iteritems() if k in feed_keys and v])
