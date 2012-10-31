@@ -182,8 +182,7 @@ def configure_settings(settings):
                  'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
                 ]
 
-    generate_feed = bool([k for k, v in settings.iteritems() if k in feed_keys and v])
-    if generate_feed and not('FEED_DOMAIN' in settings):
+    if not settings.get('FEED_DOMAIN') and any(settings.get(k) for k in feed_keys):
         logger.warn("Since feed URLs should always be absolute, you should specify "
                  "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
                  "http://www.example.com')")
