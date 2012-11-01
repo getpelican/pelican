@@ -5,8 +5,9 @@
 Photo blog plugin for Pelican
 ==========================
 
-This plugin allows you to define an Album variable to the article's context, making the photos in that folder
-and their exif info available to use from within your theme's templates.
+This plugin allows you to define an Album variable to the article's context,
+making the photos in that folder and their exif info available to use from
+within your theme's templates.
 
 Settings:
 ---------
@@ -54,6 +55,7 @@ from pelican import signals
 
 logger = logging.getLogger(__name__)
 
+
 def add_pic_info(generator, metadata):
     """
     Add a dict of file_path : file_exif_info to metadata['pic_exif']
@@ -64,34 +66,52 @@ def add_pic_info(generator, metadata):
         metadata['pic_paths'] = get_files(abspath)
         metadata['pic_exif'] = {}
         for filename in metadata['pic_paths']:
-            file_path = os.path.join('static',metadata['album'],os.path.basename(filename))
+            file_path = os.path.join('static',
+                                     metadata['album'],
+                                     os.path.basename(filename))
             metadata['pic_exif'][file_path] = ""
             try:
-                file=open(filename, 'rb')
+                file = open(filename, 'rb')
             except:
-                logger.debug("'%s' is unreadable\n"%filename)
+                logger.debug("'%s' is unreadable\n" % filename)
                 continue
             # get the tags
             data = exif.process_file(file)
             if not data:
                 logger.debug('No EXIF information found')
                 continue
-            x=data.keys()
+            x = data.keys()
             x.sort()
             tmp_str = []
             for i in x:
                 if i in ('JPEGThumbnail', 'TIFFThumbnail'):
                     continue
                 try:
-                    if i in ('Image Make','Image Model','Image Software','EXIF ApertureValue','EXIF DateTimeOriginal','EXIF DateTimeDigitized','EXIF ExposureTime','EXIF FNumber','EXIF ISOSpeedRatings','EXIF ExposureMode','EXIF ExposureBiasValue','EXIF Flash') :
-                        logger.debug('%s: %s' %\
-                              (i.replace("EXIF ","").replace("Image ",""), data[i].printable))
-                        tmp_str.append(('%s: %s' %(i.replace("EXIF ","").replace("Image ",""), data[i].printable)))
+                    if i in ('Image Make',
+                             'Image Model',
+                             'Image Software',
+                             'EXIF ApertureValue',
+                             'EXIF DateTimeOriginal',
+                             'EXIF DateTimeDigitized',
+                             'EXIF ExposureTime',
+                             'EXIF FNumber',
+                             'EXIF ISOSpeedRatings',
+                             'EXIF ExposureMode',
+                             'EXIF ExposureBiasValue',
+                             'EXIF Flash'):
+                        i_strip = i.replace("EXIF ", "").replace("Image ", "")
+                        logger.debug('%s: %s' %
+                                     (i_strip, data[i].printable))
+                        tmp_str.append(('%s: %s' %
+                                        (i_strip, data[i].printable)))
                 except:
                     logger.debug('error', i, '"', data[i], '"')
-            file_path = os.path.join('static',metadata['album'],os.path.basename(filename))
+            file_path = os.path.join('static',
+                                     metadata['album'],
+                                     os.path.basename(filename))
             metadata['pic_exif'][file_path] = tmp_str
-        logger.debug('get exif info:' + metadata['pic_exif'])
+        logger.debug(metadata['pic_exif'])
+
 
 def get_files(path):
     """Return a list of files to use, based on rules
@@ -109,6 +129,7 @@ def get_files(path):
     for root, dirs, temp_files in iter:
         files.extend([os.sep.join((root, f)) for f in temp_files])
     return files
+
 
 def register():
     signals.article_generate_context.connect(add_pic_info)
