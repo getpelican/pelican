@@ -5,6 +5,7 @@ Release history
 ================
 
 * Improve handling of links to intra-site resources
+* Decode HTML entities within WordPress post titles on import
 
 3.0 (2012-08-08)
 ==================
