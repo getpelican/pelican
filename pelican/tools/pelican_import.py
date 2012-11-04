@@ -236,7 +236,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
-                paragraphs = content.split('\n\n')
+                paragraphs = content.splitlines()
                 paragraphs = [u'<p>{0}</p>'.format(p) for p in paragraphs]
                 new_content = ''.join(paragraphs)
 

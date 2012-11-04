@@ -5,6 +5,8 @@ Release history
 ================
 
 * Improve handling of links to intra-site resources
+* Ensure WordPress import adds paragraphs in for all types of line endings
+  in post content.
 
 3.0 (2012-08-08)
 ==================
