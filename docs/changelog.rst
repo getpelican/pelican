@@ -6,6 +6,7 @@ Release history
 
 * Improve handling of links to intra-site resources
 * Improved appearance of LinkedIn icon in default theme
+* Add GitHub social icon support in default theme
 
 3.0 (2012-08-08)
 ==================
