@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+from HTMLParser import HTMLParser
 import os
 import subprocess
 import sys
@@ -29,7 +30,8 @@ def wp2fields(xml):
         if item.fetch('wp:status')[0].contents[0] == "publish":
 
             try:
-                title = item.title.contents[0]
+                # Use HTMLParser due to issues with BeautifulSoup 3
+                title = HTMLParser().unescape(item.title.contents[0])
             except IndexError:
                 continue
 
