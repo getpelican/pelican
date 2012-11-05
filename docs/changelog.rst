@@ -1,10 +1,15 @@
 Release history
 ###############
 
-3.1 (XXXX-XX-XX)
-================
+3.0.1 (2012-11-06)
+==================
 
-* Improve handling of links to intra-site resources
+* Use async google analytics
+* Reimplement settings loading to preserve __file__
+* add a way to run setup.py test
+* Fixed some documentation
+* Fix some problems with the dev server
+* Fix Typogriphy support
 
 3.0 (2012-08-08)
 ==================
