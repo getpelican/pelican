@@ -76,7 +76,6 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
                    'SUMMARY_MAX_LENGTH': 50,
-                   'WEBASSETS': False,
                    'PLUGINS': [],
                    'MARKDOWN_EXTENSIONS': ['toc', ],
                    'TEMPLATE_PAGES': {}
@@ -187,16 +186,7 @@ def configure_settings(settings):
 
     if 'LESS_GENERATOR' in settings:
         logger.warn("The LESS_GENERATOR setting has been removed in favor "
-                    "of WEBASSETS")
-
-    if 'WEBASSETS' in settings and settings['WEBASSETS'] is not False:
-        try:
-            from webassets.ext.jinja2 import AssetsExtension
-            settings['JINJA_EXTENSIONS'].append(AssetsExtension)
-        except ImportError:
-            logger.warn("You must install the webassets module to use "
-                        "WEBASSETS")
-            settings['WEBASSETS'] = False
+                    "of the Webassets plugin")
 
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
         if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):

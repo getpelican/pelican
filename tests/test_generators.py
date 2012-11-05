@@ -257,7 +257,7 @@ class TestWebAssets(unittest.TestCase):
         self.settings = read_settings(override={
             'PATH': os.path.join(CUR_DIR, 'content', 'TestCategory'),
             'OUTPUT_PATH': self.temp_path,
-            'WEBASSETS': True,
+            'PLUGINS': ['pelican.plugins.assets', ],
             'THEME': self.theme_dir,
         })
         pelican = Pelican(settings=self.settings)
