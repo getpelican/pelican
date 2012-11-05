@@ -59,9 +59,6 @@ Signal                      Arguments                      Description
 initialized                 pelican object
 article_generate_context    article_generator, metadata
 article_generator_init      article_generator              invoked in the ArticlesGenerator.__init__
-get_generators              generators                     invoked in Pelican.get_generator_classes,
-                                                           can return a Generator, or several
-                                                           generator in a tuple or in a list.
 pages_generate_context      pages_generator, metadata
 pages_generator_init        pages_generator                invoked in the PagesGenerator.__init__
 =========================   ============================   =========================================
@@ -79,7 +76,6 @@ The following plugins are currently included with Pelican under ``pelican.plugin
 * `Gravatar`_
 * `HTML tags for reStructuredText`_
 * `Related posts`_
-* `Sitemap`_
 
 Ideas for plugins that haven't been written yet:
 
@@ -119,6 +115,7 @@ variable, as in the example::
 
 ``github_activity`` is a list of lists. The first element is the title
 and the second element is the raw HTML from GitHub.
+<<<<<<< HEAD
 
 Global license
 --------------
@@ -181,69 +178,3 @@ For example::
         {% endfor %}
         </ul>
     {% endif %}
-
-Sitemap
--------
-
-The sitemap plugin generates plain-text or XML sitemaps. You can use the
-``SITEMAP`` variable in your settings file to configure the behavior of the
-plugin.
-
-The ``SITEMAP`` variable must be a Python dictionary, it can contain three keys:
-
-- ``format``, which sets the output format of the plugin (``xml`` or ``txt``)
-
-- ``priorities``, which is a dictionary with three keys:
-
-  - ``articles``, the priority for the URLs of the articles and their
-    translations
-
-  - ``pages``, the priority for the URLs of the static pages
-
-  - ``indexes``, the priority for the URLs of the index pages, such as tags,
-     author pages, categories indexes, archives, etc...
-
-  All the values of this dictionary must be decimal numbers between ``0`` and ``1``.
-
-- ``changefreqs``, which is a dictionary with three items:
-
-  - ``articles``, the update frequency of the articles
-
-  - ``pages``, the update frequency of the pages
-
-  - ``indexes``, the update frequency of the index pages
-
-  Valid frequency values are ``always``, ``hourly``, ``daily``, ``weekly``, ``monthly``,
-  ``yearly`` and ``never``.
-
-If a key is missing or a value is incorrect, it will be replaced with the
-default value.
-
-The sitemap is saved in ``<output_path>/sitemap.<format>``.
-
-.. note::
-   ``priorities`` and ``changefreqs`` are informations for search engines.
-   They are only used in the XML sitemaps.
-   For more information: <http://www.sitemaps.org/protocol.html#xmlTagDefinitions>
-
-**Example**
-
-Here is an example configuration (it's also the default settings):
-
-.. code-block:: python
-
-    PLUGINS=['pelican.plugins.sitemap',]
-
-    SITEMAP = {
-        'format': 'xml',
-        'priorities': {
-            'articles': 0.5,
-            'indexes': 0.5,
-            'pages': 0.5
-        },
-        'changefreqs': {
-            'articles': 'monthly',
-            'indexes': 'daily',
-            'pages': 'monthly'
-        }
-    }

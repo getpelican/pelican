@@ -8,7 +8,7 @@ import argparse
 
 from pelican import signals
 
-from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
+from pelican.generators import (ArticlesGenerator, PagesGenerator,
         StaticGenerator, PdfGenerator, LessCSSGenerator)
 from pelican.log import init
 from pelican.settings import read_settings, _DEFAULT_CONFIG
@@ -185,18 +185,6 @@ class Pelican(object):
             generators.append(PdfGenerator)
         if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
             generators.append(LessCSSGenerator)
-
-        for pair in signals.get_generators.send(self):
-            (funct, value) = pair
-
-            if not isinstance(value, (tuple, list)):
-                value = (value, )
-
-            for v in value:
-                if isinstance(v, type):
-                    logger.debug('Found generator: {0}'.format(v))
-                    generators.append(v)
-
         return generators
 
     def get_writer(self):
