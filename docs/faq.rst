@@ -118,7 +118,8 @@ Starting in 3.0, some of the FEED setting names were changed to more explicitly
 refer to the Atom feeds they inherently represent (much like the FEED_RSS
 setting names). Here is an exact list of the renamed setting names::
 
-    FEED -> FEED_ATOM
+    FEED -> FEED_ALL_ATOM
+    TRANSLATION_FEED -> TRANSLATION_FEED_ATOM
     TAG_FEED -> TAG_FEED_ATOM
     CATEGORY_FEED -> CATEGORY_FEED_ATOM
 
