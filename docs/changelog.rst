@@ -8,6 +8,9 @@ Release history
 * Ensure WordPress import adds paragraphs in for all types of line endings
   in post content.
 * Decode HTML entities within WordPress post titles on import
+* Improved appearance of LinkedIn icon in default theme
+* Add GitHub and Google+ social icons support in default theme
+* Optimize social icons
 
 3.0 (2012-08-08)
 ==================
