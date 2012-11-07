@@ -182,10 +182,14 @@ def configure_settings(settings):
                  'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
                 ]
 
-    if not settings.get('FEED_DOMAIN') and any(settings.get(k) for k in feed_keys):
-        logger.warn("Since feed URLs should always be absolute, you should specify "
-                 "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
-                 "http://www.example.com')")
+    if any(settings.get(k) for k in feed_keys):
+        if not settings.get('FEED_DOMAIN'):
+            logger.warn("Since feed URLs should always be absolute, you should specify "
+                     "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
+                     "http://www.example.com')")
+
+        if not settings.get('SITEURL'):
+            logger.warn("Feeds generated without SITEURL set properly may not be valid")
 
     if not 'TIMEZONE' in settings:
         logger.warn("No timezone information specified in the settings. Assuming"

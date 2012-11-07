@@ -156,10 +156,6 @@ class ArticlesGenerator(Generator):
 
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
-        if self.settings.get('SITEURL') is '':
-            logger.warning(
-                'Feeds generated without SITEURL set properly may not be valid'
-            )
 
         if self.settings.get('FEED_ATOM'):
             writer.write_feed(self.articles, self.context,
