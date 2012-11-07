@@ -4,6 +4,8 @@ Release history
 3.1 (XXXX-XX-XX)
 ================
 
+* Importer now stores slugs within files by default. This can be disabled with
+  the ``--disable-slugs`` option.
 * Improve handling of links to intra-site resources
 * Ensure WordPress import adds paragraphs in for all types of line endings
   in post content.

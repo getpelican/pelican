@@ -48,6 +48,26 @@ class TestWordpressXmlImporter(unittest.TestCase):
                          strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
 
+    def test_can_toggle_slug_storage(self):
+
+        posts = list(self.posts)
+        r = lambda f: open(f).read()
+        silent_f2p = mute(True)(fields2pelican)
+
+        with temporary_folder() as temp:
+
+            rst_files = (r(f) for f in silent_f2p(posts, 'markdown', temp))
+            self.assertTrue(all('Slug:' in rst for rst in rst_files))
+            rst_files = (r(f) for f in silent_f2p(posts, 'markdown', temp,
+                         disable_slugs=True))
+            self.assertFalse(any('Slug:' in rst for rst in rst_files))
+
+            rst_files = (r(f) for f in silent_f2p(posts, 'rst', temp))
+            self.assertTrue(all(':slug:' in rst for rst in rst_files))
+            rst_files = (r(f) for f in silent_f2p(posts, 'rst', temp,
+                         disable_slugs=True))
+            self.assertFalse(any(':slug:' in rst for rst in rst_files))
+
     def test_decode_html_entities_in_titles(self):
         posts = list(self.posts)
         test_posts = [post for post in posts if post[2] == 'html-entity-test']
