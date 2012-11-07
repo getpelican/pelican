@@ -24,7 +24,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'MARKUP': ('rst', 'md'),
                    'STATIC_PATHS': ['images', ],
                    'THEME_STATIC_PATHS': ['static', ],
-                   'FEED_ATOM': 'feeds/all.atom.xml',
+                   'FEED_ALL_ATOM': 'feeds/all.atom.xml',
                    'CATEGORY_FEED_ATOM': 'feeds/%s.atom.xml',
                    'TRANSLATION_FEED_ATOM': 'feeds/all-%s.atom.xml',
                    'FEED_MAX_ITEMS': '',
@@ -175,10 +175,21 @@ def configure_settings(settings):
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    if (('FEED_ATOM' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
-        logger.warn("Since feed URLs should always be absolute, you should specify "
-                 "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
-                 "http://www.example.com')")
+    feed_keys = ['FEED_ATOM', 'FEED_RSS',
+                 'FEED_ALL_ATOM', 'FEED_ALL_RSS',
+                 'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+                 'TAG_FEED_ATOM', 'TAG_FEED_RSS',
+                 'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
+                ]
+
+    if any(settings.get(k) for k in feed_keys):
+        if not settings.get('FEED_DOMAIN'):
+            logger.warn("Since feed URLs should always be absolute, you should specify "
+                     "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
+                     "http://www.example.com')")
+
+        if not settings.get('SITEURL'):
+            logger.warn("Feeds generated without SITEURL set properly may not be valid")
 
     if not 'TIMEZONE' in settings:
         logger.warn("No timezone information specified in the settings. Assuming"

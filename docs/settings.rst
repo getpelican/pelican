@@ -306,6 +306,8 @@ Setting name (default value)                        What does it do?
                                                     feeds, you can just set:  `FEED_DOMAIN = SITEURL`
 `FEED_ATOM` (``'feeds/all.atom.xml'``)              Relative URL to output the Atom feed.
 `FEED_RSS` (``None``, i.e. no RSS)                  Relative URL to output the RSS feed.
+`FEED_ALL_ATOM` (``None``, i.e. no all feed)        Relative URL to output the all posts Atom feed.
+`FEED_ALL_RSS` (``None``, i.e. no all RSS)          Relative URL to output the all posts RSS feed.
 `CATEGORY_FEED_ATOM` ('feeds/%s.atom.xml'[2]_)      Where to put the category Atom feeds.
 `CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
 `TAG_FEED_ATOM` (``None``, i.e. no tag feed)        Relative URL to output the tag Atom feed. It should
@@ -315,9 +317,8 @@ Setting name (default value)                        What does it do?
                                                     quantity is unrestricted by default.
 ================================================    =====================================================
 
-If you don't want to generate some of these feeds, set ``None`` to the
-variables above. If you don't want to generate any feeds set both ``FEED_ATOM``
-and ``FEED_RSS`` to none.
+If you don't want to generate some or any of these feeds, set ``None`` to the
+variables above.
 
 .. [2] %s is the name of the category.
 

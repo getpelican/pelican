@@ -11,6 +11,9 @@ Release history
 * Improved appearance of LinkedIn icon in default theme
 * Add GitHub and Google+ social icons support in default theme
 * Optimize social icons
+* Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing all posts regardless of their language
+* Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and ``TRANSLATION_FEED_RSS``
+* The different feeds can now be enabled/disabled individually
 
 3.0 (2012-08-08)
 ==================
