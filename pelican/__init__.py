@@ -22,7 +22,7 @@ __minor__ = 0
 __version__ = "{0}.{1}".format(__major__, __minor__)
 
 
-documentation_url = "http://pelican.readthedocs.org/en/{version}".format(
+documentation_url = "http://docs.getpelican.com/en/{version}".format(
                     version=__version__)
 
 
