@@ -8,12 +8,13 @@ import logging
 
 from os.path import isabs
 
+import pelican
 
 logger = logging.getLogger(__name__)
 
 
 DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
-                              "themes/notmyidea"])
+                            "themes/notmyidea"])
 _DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_DIR': '',
                    'ARTICLE_EXCLUDES': ('pages',),
@@ -60,8 +61,9 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
-                   'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
-                   'EXTRA_TEMPLATES_PATHS' : [],
+                   'DIRECT_TEMPLATES': ('index', 'tags', 'categories',
+                                        'archives'),
+                   'EXTRA_TEMPLATES_PATHS': [],
                    'PAGINATED_DIRECT_TEMPLATES': ('index', ),
                    'PELICAN_CLASS': 'pelican.Pelican',
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
@@ -92,7 +94,7 @@ def read_settings(filename=None, override=None):
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
-                            os.path.dirname(filename), local_settings[p])))
+                    os.path.dirname(filename), local_settings[p])))
                 if p != 'THEME' or os.path.exists(p):
                     local_settings[p] = absp
     else:
@@ -112,7 +114,7 @@ def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
     context = copy.deepcopy(default_settings)
     if module is not None:
         context.update(
-                (k, v) for k, v in inspect.getmembers(module) if k.isupper())
+            (k, v) for k, v in inspect.getmembers(module) if k.isupper())
     return context
 
 
@@ -133,7 +135,7 @@ def configure_settings(settings):
     """
     if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
-                ' (see pelican --help for more information)')
+                        ' (see pelican --help for more information)')
 
     # find the theme in pelican.theme if the given one does not exists
     if not os.path.isdir(settings['THEME']):
@@ -143,7 +145,7 @@ def configure_settings(settings):
             settings['THEME'] = theme_path
         else:
             raise Exception("Impossible to find the theme %s"
-                    % settings['THEME'])
+                            % settings['THEME'])
 
     # if locales is not a list, make it one
     locales = settings['LOCALE']
@@ -170,35 +172,40 @@ def configure_settings(settings):
         if (siteurl.endswith('/')):
             settings['SITEURL'] = siteurl[:-1]
             logger.warn("Removed extraneous trailing slash from SITEURL.")
-        # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL
+        # If SITEURL is defined but FEED_DOMAIN isn't,
+        # set FEED_DOMAIN = SITEURL
         if not 'FEED_DOMAIN' in settings:
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    if (('FEED_ATOM' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
-        logger.warn("Since feed URLs should always be absolute, you should specify "
-                 "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
-                 "http://www.example.com')")
+    if (('FEED_ATOM' in settings) or ('FEED_RSS' in settings)):
+        if not 'FEED_DOMAIN' in settings:
+            logger.warn("Since feed URLs should always be absolute, you "
+                        "should specify FEED_DOMAIN in your settings. "
+                        "(e.g., 'FEED_DOMAIN = http://www.example.com')")
 
     if not 'TIMEZONE' in settings:
-        logger.warn("No timezone information specified in the settings. Assuming"
-                 " your timezone is UTC for feed generation. Check "
-                 "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
-                 "for more information")
+        logger.warn("No timezone information specified in the settings. "
+                    "Assuming your timezone is UTC for feed generation. Check "
+                    "{doc_url}/settings.html for more information".format(
+                        doc_url=pelican.documentation_url))
 
     if 'WEBASSETS' in settings and settings['WEBASSETS'] is not False:
         try:
             from webassets.ext.jinja2 import AssetsExtension
             settings['JINJA_EXTENSIONS'].append(AssetsExtension)
         except ImportError:
-            logger.warn("You must install the webassets module to use WEBASSETS.")
+            logger.warn("You must install the webassets module to use "
+                        "WEBASSETS. Working around (with WEBASSETS disabled).")
             settings['WEBASSETS'] = False
 
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
         if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):
-            settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
-            logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
-                       " falling back to the default extension " +
-                       _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
+            fallback = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
+            settings['OUTPUT_SOURCES_EXTENSION'] = fallback
+            logger.warn("Detected misconfiguration with "
+                        "OUTPUT_SOURCES_EXTENSION. falling back to the "
+                        "default extension "
+                        "{extension}".format(extension=fallback))
 
     return settings
