@@ -200,6 +200,8 @@ Here is a complete list of the feed variables::
 
     FEED_ATOM
     FEED_RSS
+    FEED_ALL_ATOM
+    FEED_ALL_RSS
     CATEGORY_FEED_ATOM
     CATEGORY_FEED_RSS
     TAG_FEED_ATOM

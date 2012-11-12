@@ -93,9 +93,15 @@ Then just make sure to have the template installed in to your theme as
 What if I want to disable feed generation?
 ==========================================
 
-To disable all feed generation set ``FEED_ATOM`` and ``FEED_RSS`` to ``None`` in
-your settings. Please note ``None`` and ``''`` are not the same thing. The
-word ``None`` should not be surrounded by quotes.
+To disable all feed generation, all feed settings should be set to ``None``.
+Since other feed settings already defaults to ``None``, you only need to set
+the following settings::
+
+    FEED_ALL_ATOM = None
+    CATEGORY_FEED_ATOM = None
+
+Please note that ``None`` and ``''`` are not the same thing. The word ``None``
+should not be surrounded by quotes.
 
 I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================
@@ -111,7 +117,7 @@ should result in this warning.
 
 Feeds are still generated when this warning is displayed but may not validate.
 
-My feeds are broken since I upgraded to Pelican 3.0
+My feeds are broken since I upgraded to Pelican 3.x
 ===================================================
 
 Starting in 3.0, some of the FEED setting names were changed to more explicitly
@@ -121,6 +127,13 @@ setting names). Here is an exact list of the renamed setting names::
     FEED -> FEED_ATOM
     TAG_FEED -> TAG_FEED_ATOM
     CATEGORY_FEED -> CATEGORY_FEED_ATOM
+
+Starting in 3.1, the new feed ``FEED_ALL_ATOM`` has been introduced: this
+feed will aggregate all posts regardless of their language. It is generated to
+``'feeds/all.atom.xml'`` by default and ``FEED_ATOM`` now defaults to ``None``.
+The following FEED setting has also been renamed::
+
+    TRANSLATION_FEED -> TRANSLATION_FEED_ATOM
 
 Older 2.x themes that referenced the old setting names may not link properly.
 In order to rectify this, please update your theme for compatibility with 3.0+
