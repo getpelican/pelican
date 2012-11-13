@@ -475,37 +475,6 @@ class StaticGenerator(Generator):
             copy(path, source, os.path.join(output_path, destination),
                  final_path, overwrite=True)
 
-    def generate_context(self):
-
-        if self.settings['WEBASSETS']:
-            from webassets import Environment as AssetsEnvironment
-
-            # Define the assets environment that will be passed to the
-            # generators. The StaticGenerator must then be run first to have
-            # the assets in the output_path before generating the templates.
-
-            # Let ASSET_URL honor Pelican's RELATIVE_URLS setting.
-            # Hint for templates:
-            # Current version of webassets seem to remove any relative
-            # paths at the beginning of the URL. So, if RELATIVE_URLS
-            # is on, ASSET_URL will start with 'theme/', regardless if we
-            # set assets_url here to './theme/' or to 'theme/'.
-            # XXX However, this breaks the ASSET_URL if user navigates to
-            # a sub-URL, e.g. if he clicks on a category. To workaround this
-            # issue, I use
-            #     <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
-            # instead of
-            #     <link rel="stylesheet" href="{{ ASSET_URL }}">
-            if self.settings.get('RELATIVE_URLS'):
-                assets_url = './theme/'
-            else:
-                assets_url = self.settings['SITEURL'] + '/theme/'
-            assets_src = os.path.join(self.output_path, 'theme')
-            self.assets_env = AssetsEnvironment(assets_src, assets_url)
-
-            if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
-                self.assets_env.debug = True
-
     def generate_output(self, writer):
 
         self._copy_paths(self.settings['STATIC_PATHS'], self.path,
@@ -581,49 +550,3 @@ class SourceFileGenerator(Generator):
         logger.info(u' Generating source files...')
         for object in chain(self.context['articles'], self.context['pages']):
             self._create_source(object, self.output_path)
-
-class LessCSSGenerator(Generator):
-    """Compile less css files."""
-
-    def _compile(self, less_file, source_dir, dest_dir):
-        base = os.path.relpath(less_file, source_dir)
-        target = os.path.splitext(
-                os.path.join(dest_dir, base))[0] + '.css'
-        target_dir = os.path.dirname(target)
-
-        if not os.path.exists(target_dir):
-            try:
-                os.makedirs(target_dir)
-            except OSError:
-                logger.error("Couldn't create the less css output folder in " +
-                        target_dir)
-
-        subprocess.call([self._lessc, less_file, target])
-        logger.info(u' [ok] compiled %s' % base)
-
-    def generate_output(self, writer=None):
-        logger.info(u' Compiling less css')
-
-        # store out compiler here, so it won't be evaulted on each run of
-        # _compile
-        lg = self.settings['LESS_GENERATOR']
-        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
-
-        # walk static paths
-        for static_path in self.settings['STATIC_PATHS']:
-            for f in self.get_files(
-                    os.path.join(self.path, static_path),
-                    extensions=['less']):
-
-                self._compile(f, self.path, self.output_path)
-
-        # walk theme static paths
-        theme_output_path = os.path.join(self.output_path, 'theme')
-
-        for static_path in self.settings['THEME_STATIC_PATHS']:
-            theme_static_path = os.path.join(self.theme, static_path)
-            for f in self.get_files(
-                    theme_static_path,
-                    extensions=['less']):
-
-                self._compile(f, theme_static_path, theme_output_path)
