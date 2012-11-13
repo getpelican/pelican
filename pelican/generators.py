@@ -358,7 +358,9 @@ class ArticlesGenerator(Generator):
         for article in self.articles:
             # only main articles are listed in categories, not translations
             self.categories[article.category].append(article)
-            self.authors[article.author].append(article)
+            # ignore blank authors as well as undefined
+            if hasattr(article,'author') and article.author.name != '':
+                self.authors[article.author].append(article)
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)

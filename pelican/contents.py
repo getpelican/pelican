@@ -53,11 +53,6 @@ class Page(object):
         if not hasattr(self, 'author'):
             if 'AUTHOR' in settings:
                 self.author = Author(settings['AUTHOR'], settings)
-            else:
-                title = filename.decode('utf-8') if filename else self.title
-                self.author = Author(getenv('USER', 'John Doe'), settings)
-                logger.warning(u"Author of `{0}' unknown, assuming that his name is "
-                         "`{1}'".format(title, self.author))
 
         # manage languages
         self.in_default_lang = True
@@ -120,7 +115,7 @@ class Page(object):
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
-            'author': self.author,
+            'author': getattr(self, 'author', ''),
             'category': getattr(self, 'category',
                 self.settings['DEFAULT_CATEGORY']),
         }
