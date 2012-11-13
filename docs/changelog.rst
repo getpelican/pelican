@@ -14,6 +14,9 @@ Release history
 * Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing all posts regardless of their language
 * Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and ``TRANSLATION_FEED_RSS``
 * The different feeds can now be enabled/disabled individually
+* Allow for blank author: if ``AUTHOR`` setting is not set, author won't
+  default to ``${USER}`` anymore and a post won't contain any author
+  information if the post author is empty.
 
 3.0 (2012-08-08)
 ==================
