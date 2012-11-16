@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement
 
+import gzip
 import os
 import re
 import locale
@@ -231,3 +232,35 @@ class Writer(object):
                     paths.append(relative_path)
                     setattr(item, "_get_content",
                         partial(_update_content, name, item))
+
+class GzipWriter(Writer):
+    """Write out a file and create a companion .gz file for gzip caching."""
+
+    def write_feed(self, elements, context, filename=None, feed_type='atom'):
+        super(GzipWriter, self).write_feed(elements, context, filename,
+            feed_type)
+        self._write_gzip_file(filename)
+
+    def write_file(self, name, template, context, relative_urls=True,
+        paginated=None, **kwargs):
+        super(GzipWriter, self).write_file(name, template, context,
+            relative_urls, paginated, **kwargs)
+        self._write_gzip_file(name)
+
+    def _write_gzip_file(self, name):
+        """Write a gzipped version of the file.
+
+        :param name: the relative filename path to compress.
+        """
+        uncompressed_path = os.path.join(self.output_path, name)
+        compressed_path = uncompressed_path + '.gz'
+
+        with open(uncompressed_path, 'rb') as uncompressed:
+            try:
+                compressed = gzip.open(compressed_path, 'wb')
+                compressed.writelines(uncompressed)
+            except Exception, ex:
+                logger.critical('Gzip compression failed: %s' % ex)
+            finally:
+                compressed.close()
+
