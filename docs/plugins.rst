@@ -63,6 +63,8 @@ finalized                       pelican object                  invoked after al
                                                                 - minifying js/css assets.
                                                                 - notify/ping search engines with an updated sitemap.
 article_generate_context        article_generator, metadata
+article_generate_preread        article_generator               invoked before a article is read in ArticlesGenerator.generate_context;
+                                                                use if code needs to do something before every article is parsed
 article_generator_init          article_generator               invoked in the ArticlesGenerator.__init__
 article_generator_finalized     article_generator               invoked at the end of ArticlesGenerator.generate_context
 get_generators                  generators                      invoked in Pelican.get_generator_classes,
