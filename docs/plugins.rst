@@ -102,6 +102,7 @@ The following plugins are currently included with Pelican under ``pelican.plugin
 * `GitHub activity`_
 * `Global license`_
 * `Gravatar`_
+* `Gzip cache`_
 * `HTML tags for reStructuredText`_
 * `Related posts`_
 * `Sitemap`_
@@ -167,6 +168,17 @@ Alternatively, you can provide an email address from within article metadata::
 
 If the email address is defined via at least one of the two methods above,
 the ``author_gravatar`` variable is added to the article's context.
+
+Gzip cache
+----------
+
+Certain web servers (e.g., Nginx) can use a static cache of gzip compressed
+files to prevent the server from compressing files during an HTTP call. Since
+compression occurs at another time, these compressed files can be compressed
+at a higher compression level for increased optimization.
+
+The ``gzip_cache`` plugin compresses all common text type files into a ``.gz``
+file within the same directory as the original file.
 
 HTML tags for reStructuredText
 ------------------------------
