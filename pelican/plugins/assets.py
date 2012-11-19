@@ -60,5 +60,4 @@ def register():
     """Plugin registration."""
 
     signals.initialized.connect(add_jinja2_ext)
-    signals.article_generator_init.connect(create_assets_env)
-    signals.pages_generator_init.connect(create_assets_env)
+    signals.generator_init.connect(create_assets_env)
