@@ -61,6 +61,8 @@ class Generator(object):
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
 
+        signals.generator_init.send(self)
+
     def get_template(self, name):
         """Return the template by name.
         Use self.theme to get the templates to use, and return a list of

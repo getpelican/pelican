@@ -62,6 +62,7 @@ finalized                       pelican object                  invoked after al
                                                                 usefull for custom post processing actions, such as:
                                                                 - minifying js/css assets.
                                                                 - notify/ping search engines with an updated sitemap.
+generator_init                  generator                       invoked in the Generator.__init__
 article_generate_context        article_generator, metadata
 article_generator_init          article_generator               invoked in the ArticlesGenerator.__init__
 article_generator_finalized     article_generator               invoked at the end of ArticlesGenerator.generate_context
