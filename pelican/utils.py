@@ -296,3 +296,18 @@ def set_date_tzinfo(d, tz_name=None):
         return tz.localize(d)
     else:
         return d
+
+def smart_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
+    """
+    Returns a unicode object representing 's'. Treats bytestrings using the
+    'encoding' codec.
+    """
+    if isinstance(s, basestring):
+        if isinstance(s, unicode):
+            return s
+        try:
+            s = unicode(str(s), encoding, errors)
+            return s
+        except UnicodeEncodeError:
+            raise
+    raise TypeError('Only support basestring type')
