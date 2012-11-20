@@ -81,11 +81,15 @@ class TestWebAssets(unittest.TestCase):
     def test_template(self):
         """Look in the output index.html file for the link tag."""
 
-        css_file = 'theme/gen/style.{0}.min.css'.format(self.version)
+        css_file = './theme/gen/style.{0}.min.css'.format(self.version)
         html_files = ['index.html', 'archives.html',
                       'this-is-an-article-with-category.html']
         for f in html_files:
             self.check_link_tag(css_file, os.path.join(self.temp_path, f))
+
+        self.check_link_tag(
+            '.././theme/gen/style.{0}.min.css'.format(self.version),
+            os.path.join(self.temp_path, 'category/misc.html'))
 
     def test_absolute_url(self):
         """Look in the output index.html file for the link tag with abs url."""

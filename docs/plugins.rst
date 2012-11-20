@@ -139,12 +139,15 @@ more information.
 
 When using with Pelican, `webassets` is configured to process assets in the
 ``OUTPUT_PATH/theme`` directory. You can use `webassets` in your templates by
-including one or more template tags. For example...
+including one or more template tags. The jinja variable ``{{ ASSET_URL }}`` to
+use in the templates is configured to be relative to the ``theme/`` url.
+Hence, it must be used with the ``{{ SITEURL }}`` variable which allows to
+have relative urls. For example...
 
 .. code-block:: jinja
 
     {% assets filters="cssmin", output="css/style.min.css", "css/inuit.css", "css/pygment-monokai.css", "css/main.css" %}
-        <link rel="stylesheet" href="{{ ASSET_URL }}">
+        <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
     {% endassets %}
 
 ... will produce a minified css file with a version identifier:
@@ -159,7 +162,7 @@ and minifies the output:
 .. code-block:: jinja
 
     {% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
-        <link rel="stylesheet" href="{{ ASSET_URL }}">
+        <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
     {% endassets %}
 
 Another example for Javascript:
@@ -167,7 +170,7 @@ Another example for Javascript:
 .. code-block:: jinja
 
     {% assets filters="uglifyjs,gzip", output="js/packed.js", "js/jquery.js", "js/base.js", "js/widgets.js" %}
-        <script src="{{ ASSET_URL }}"></script>
+        <script src="{{ SITEURL }}/{{ ASSET_URL }}"></script>
     {% endassets %}
 
 The above will produce a minified and gzipped JS file:
