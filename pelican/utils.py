@@ -297,7 +297,7 @@ def set_date_tzinfo(d, tz_name=None):
     else:
         return d
 
-def smart_unicode(s, encoding='utf-8', strings_only=False, errors='strict'):
+def smart_unicode(s, encoding='utf-8', errors='strict'):
     """
     Returns a unicode object representing 's'. Treats bytestrings using the
     'encoding' codec.
