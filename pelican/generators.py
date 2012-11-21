@@ -307,6 +307,7 @@ class ArticlesGenerator(Generator):
                 article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
+                signals.article_generate_preread.send(self)
                 content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
