@@ -5,6 +5,8 @@
     <h2 class="entry-title">
       <a href="{{ article.url }}" rel="bookmark"
          title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
+ {% import 'translations.html' as translations with context %}
+ {{ translations.translations_for(article) }}
   </header>
   <footer class="post-info">
     <abbr class="published" title="{{ article.date.isoformat() }}">
