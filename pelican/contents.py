@@ -5,7 +5,6 @@ import logging
 import functools
 
 from datetime import datetime
-from os import getenv
 from sys import platform, stdin
 
 
@@ -14,6 +13,7 @@ from pelican.utils import slugify, truncate_html_words
 from pelican import signals
 
 logger = logging.getLogger(__name__)
+
 
 class Page(object):
     """Represents a page
