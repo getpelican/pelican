@@ -20,6 +20,8 @@ from pelican.readers import read_file
 from pelican.utils import copy, process_translations
 from pelican import signals
 
+from flask import Flask
+from flaskext import babel
 
 logger = logging.getLogger(__name__)
 
@@ -56,11 +58,44 @@ class Generator(object):
             extensions=self.settings.get('JINJA_EXTENSIONS', []),
         )
 
+        self.env.install_gettext_translations(self)
+        self.env.extract_translations(os.path.join(self.theme, 'locale'))
+
         logger.debug('template list: {0}'.format(self.env.list_templates()))
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
+
+    def gettext(self, string, *variables):
+        dirname = os.path.join(self.theme, 'locale')
+        t = babel.support.Translations.load(dirname, ['pt_BR'])
+        print t
+        print dirname
+        if t is None:
+            return string % variables
+        return t.ugettext(string) % variables
+
+
+    def ngettext(self, singular, plural, num, **variables):
+        """Translates a string with the current locale and passes in the
+        given keyword arguments as mapping to a string formatting string.
+        The `num` parameter is used to dispatch between singular and various
+        plural forms of the message.  It is available in the format string
+        as ``%(num)d`` or ``%(num)s``.  The source language should be
+        English or a similar language which only has one plural form.
+
+        ::
+
+            ngettext(u'%(num)d Apple', u'%(num)d Apples', num=len(apples))
+        """
+        variables.setdefault('num', num)
+        print 'oi2'
+        dirname = os.path.join(self.theme, 'translations')
+        t = babel.support.Translations.load(dirname, [babel.get_locale()])
+        if t is None:
+            return (singular if num == 1 else plural) % variables
+        return t.ungettext(singular, plural, num) % variables
 
     def get_template(self, name):
         """Return the template by name.
