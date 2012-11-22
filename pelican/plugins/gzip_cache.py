@@ -65,7 +65,7 @@ def create_gzip_file(filepath):
 
     with open(filepath, 'rb') as uncompressed:
         try:
-            logger.warning('Compressing: %s' % filepath)
+            logger.debug('Compressing: %s' % filepath)
             compressed = gzip.open(compressed_path, 'wb')
             compressed.writelines(uncompressed)
         except Exception, ex:
