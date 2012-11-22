@@ -11,48 +11,47 @@ from pelican.settings import read_settings
 from .support import unittest, skipIfNoExecutable, module_exists
 
 CUR_DIR = os.path.dirname(__file__)
+THEME_DIR = os.path.join(CUR_DIR, 'themes', 'assets')
+CSS_REF = open(os.path.join(THEME_DIR, 'static', 'css',
+                            'style.min.css')).read()
+CSS_HASH = hashlib.md5(CSS_REF).hexdigest()[0:8]
 
 
 @unittest.skipUnless(module_exists('webassets'), "webassets isn't installed")
 @skipIfNoExecutable(['scss', '-v'])
 @skipIfNoExecutable(['cssmin', '--version'])
 class TestWebAssets(unittest.TestCase):
+    """Base class for testing webassets."""
 
-    def setUp(self):
-        """Run pelican with two settings (absolute and relative urls)."""
-
-        self.theme_dir = os.path.join(CUR_DIR, 'themes', 'assets')
-
+    def setUp(self, override=None):
         self.temp_path = mkdtemp()
-        self.settings = read_settings(override={
+        settings = {
             'PATH': os.path.join(CUR_DIR, 'content', 'TestCategory'),
             'OUTPUT_PATH': self.temp_path,
             'PLUGINS': ['pelican.plugins.assets', ],
-            'THEME': self.theme_dir,
-        })
+            'THEME': THEME_DIR,
+        }
+        if override:
+            settings.update(override)
+
+        self.settings = read_settings(override=settings)
         pelican = Pelican(settings=self.settings)
         pelican.run()
 
-        # run Pelican a second time with absolute urls
-        self.temp_path2 = mkdtemp()
-        self.settings2 = read_settings(override={
-            'PATH': os.path.join(CUR_DIR, 'content', 'TestCategory'),
-            'OUTPUT_PATH': self.temp_path2,
-            'PLUGINS': ['pelican.plugins.assets', ],
-            'THEME': self.theme_dir,
-            'RELATIVE_URLS': False,
-            'SITEURL': 'http://localhost'
-        })
-        pelican2 = Pelican(settings=self.settings2)
-        pelican2.run()
-
-        self.css_ref = open(os.path.join(self.theme_dir, 'static', 'css',
-                                         'style.min.css')).read()
-        self.version = hashlib.md5(self.css_ref).hexdigest()[0:8]
-
     def tearDown(self):
         rmtree(self.temp_path)
-        rmtree(self.temp_path2)
+
+    def check_link_tag(self, css_file, html_file):
+        """Check the presence of `css_file` in `html_file`."""
+
+        link_tag = '<link rel="stylesheet" href="{css_file}">'.\
+                   format(css_file=css_file)
+        html = open(html_file).read()
+        self.assertRegexpMatches(html, link_tag)
+
+
+class TestWebAssetsRelativeURLS(TestWebAssets):
+    """Test pelican with relative urls."""
 
     def test_jinja2_ext(self):
         """Test that the Jinja2 extension was correctly added."""
@@ -64,39 +63,39 @@ class TestWebAssets(unittest.TestCase):
         """Compare the compiled css with the reference."""
 
         gen_file = os.path.join(self.temp_path, 'theme', 'gen',
-                                'style.{0}.min.css'.format(self.version))
-
+                                'style.{0}.min.css'.format(CSS_HASH))
         self.assertTrue(os.path.isfile(gen_file))
+
         css_new = open(gen_file).read()
-        self.assertEqual(css_new, self.css_ref)
-
-    def check_link_tag(self, css_file, html_file):
-        """Check the presence of `css_file` in `html_file`."""
-
-        link_tag = '<link rel="stylesheet" href="{css_file}">'.\
-                   format(css_file=css_file)
-        html = open(html_file).read()
-        self.assertRegexpMatches(html, link_tag)
+        self.assertEqual(css_new, CSS_REF)
 
     def test_template(self):
-        """Look in the output index.html file for the link tag."""
+        """Look in the output files for the link tag."""
 
-        css_file = './theme/gen/style.{0}.min.css'.format(self.version)
+        css_file = './theme/gen/style.{0}.min.css'.format(CSS_HASH)
         html_files = ['index.html', 'archives.html',
                       'this-is-an-article-with-category.html']
         for f in html_files:
             self.check_link_tag(css_file, os.path.join(self.temp_path, f))
 
         self.check_link_tag(
-            '.././theme/gen/style.{0}.min.css'.format(self.version),
+            '.././theme/gen/style.{0}.min.css'.format(CSS_HASH),
             os.path.join(self.temp_path, 'category/misc.html'))
 
+
+class TestWebAssetsAbsoluteURLS(TestWebAssets):
+    """Test pelican with absolute urls."""
+
+    def setUp(self):
+        TestWebAssets.setUp(self, override={'RELATIVE_URLS': False,
+                                            'SITEURL': 'http://localhost'})
+
     def test_absolute_url(self):
-        """Look in the output index.html file for the link tag with abs url."""
+        """Look in the output files for the link tag with absolute url."""
 
         css_file = 'http://localhost/theme/gen/style.{0}.min.css'.\
-                   format(self.version)
+                   format(CSS_HASH)
         html_files = ['index.html', 'archives.html',
                       'this-is-an-article-with-category.html']
         for f in html_files:
-            self.check_link_tag(css_file, os.path.join(self.temp_path2, f))
+            self.check_link_tag(css_file, os.path.join(self.temp_path, f))
