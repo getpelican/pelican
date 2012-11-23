@@ -17,6 +17,8 @@ Release history
 * Allow for blank author: if ``AUTHOR`` setting is not set, author won't
   default to ``${USER}`` anymore and a post won't contain any author
   information if the post author is empty.
+* LESS and Webassets support removed from Pelican core in favor of a Webassets
+  plugin.
 
 3.0 (2012-08-08)
 ==================
