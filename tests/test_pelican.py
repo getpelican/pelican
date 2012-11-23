@@ -62,22 +62,17 @@ class TestPelican(unittest.TestCase):
         self.assertEqual(diff['right_only'], [], msg=msg)
         self.assertEqual(diff['diff_files'], [], msg=msg)
 
-    @unittest.skip("Test failing")
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
-        # ones and generate the output without raising any exception / issuing
-        # any warning.
-        with patch("pelican.contents.getenv") as mock_getenv:
-            # force getenv('USER') to always return the same value
-            mock_getenv.return_value = "Dummy Author"
-            settings = read_settings(filename=None, override={
-                'PATH': INPUT_PATH,
-                'OUTPUT_PATH': self.temp_path,
-                })
-            pelican = Pelican(settings=settings)
-            pelican.run()
-            dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
-            self.assertFilesEqual(recursiveDiff(dcmp))
+        # ones and generate correct output without raising any exception
+        settings = read_settings(filename=None, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            })
+        pelican = Pelican(settings=settings)
+        pelican.run()
+        dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
+        self.assertFilesEqual(recursiveDiff(dcmp))
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
