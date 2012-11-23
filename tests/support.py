@@ -4,7 +4,6 @@ __all__ = [
 ]
 
 import cStringIO
-import importlib
 import os
 import re
 import subprocess
@@ -145,7 +144,7 @@ def module_exists(module_name):
     """Test if a module is importable."""
 
     try:
-        importlib.import_module(module_name)
+        __import__(module_name)
     except ImportError:
         return False
     else:
