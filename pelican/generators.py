@@ -67,10 +67,19 @@ class Generator(object):
         self.env.filters.update(custom_filters)
 
     def gettext(self, string, **variables):
-        print self.translations[0].title
+        """Method took from Flask-Babel and adapted.
+
+        Translates a string with the current locale and passes in the
+        given keyword arguments as mapping to a string formatting string.
+
+        ::
+
+            gettext(u'Hello World!')
+            gettext(u'Hello %(name)s!', name='World')
+        """
 
         dirname = os.path.join(self.theme, 'locale')
-        t = babel.support.Translations.load(dirname, [self.translations[0].lang])
+        t = babel.support.Translations.load(dirname, [self.settings.get('DEFAULT_LANG', 'en_US')])
         if t is None:
             return string % variables
 
@@ -78,7 +87,9 @@ class Generator(object):
 
 
     def ngettext(self, singular, plural, num, **variables):
-        """Translates a string with the current locale and passes in the
+        """Method took from Flask-Babel and adapted.
+
+        Translates a string with the current locale and passes in the
         given keyword arguments as mapping to a string formatting string.
         The `num` parameter is used to dispatch between singular and various
         plural forms of the message.  It is available in the format string
@@ -91,7 +102,7 @@ class Generator(object):
         """
         variables.setdefault('num', num)
         dirname = os.path.join(self.theme, 'translations')
-        t = babel.support.Translations.load(dirname, [babel.get_locale()])
+        t = babel.support.Translations.load(dirname, [self.settings.get('DEFAULT_LANG', 'en_US')])
         if t is None:
             return (singular if num == 1 else plural) % variables
         return t.ungettext(singular, plural, num) % variables
