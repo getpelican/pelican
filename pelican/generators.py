@@ -20,7 +20,6 @@ from pelican.readers import read_file
 from pelican.utils import copy, process_translations
 from pelican import signals
 
-from flask import Flask
 from flaskext import babel
 
 logger = logging.getLogger(__name__)
