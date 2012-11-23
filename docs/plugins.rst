@@ -59,9 +59,10 @@ Signal                          Arguments                       Description
 =============================   ============================   ===========================================================================
 initialized                     pelican object
 finalized                       pelican object                  invoked after all the generators are executed and just before pelican exits
-                                                                usefull for custom post processing actions, such as: 
+                                                                usefull for custom post processing actions, such as:
                                                                 - minifying js/css assets.
                                                                 - notify/ping search engines with an updated sitemap.
+generator_init                  generator                       invoked in the Generator.__init__
 article_generate_context        article_generator, metadata
 article_generate_preread        article_generator               invoked before a article is read in ArticlesGenerator.generate_context;
                                                                 use if code needs to do something before every article is parsed
@@ -77,23 +78,23 @@ pages_generator_init            pages_generator                 invoked in the P
 The list is currently small, don't hesitate to add signals and make a pull
 request if you need them!
 
-.. note:: 
-          
-   The signal ``content_object_init`` can send different type of object as 
+.. note::
+
+   The signal ``content_object_init`` can send different type of object as
    argument. If you want to register only one type of object then you will
    need to specify the sender when you are connecting to the signal.
-   
+
    ::
-   
+
        from pelican import signals
        from pelican import contents
-       
+
        def test(sender, instance):
                print "%s : %s content initialized !!" % (sender, instance)
-       
+
        def register():
                signals.content_object_init.connect(test, sender=contents.Article)
-       
+
 
 
 List of plugins
@@ -101,6 +102,7 @@ List of plugins
 
 The following plugins are currently included with Pelican under ``pelican.plugins``:
 
+* `Asset management`_
 * `GitHub activity`_
 * `Global license`_
 * `Gravatar`_
@@ -115,6 +117,79 @@ Ideas for plugins that haven't been written yet:
 
 Plugin descriptions
 ===================
+
+Asset management
+----------------
+
+This plugin allows you to use the `webassets`_ module to manage assets such as
+CSS and JS files. The module must first be installed::
+
+    pip install webassets
+
+The `webassets` module allows you to perform a number of useful asset management
+functions, including:
+
+* CSS minifier (`cssmin`, `yuicompressor`, ...)
+* CSS compiler (`less`, `sass`, ...)
+* JS minifier (`uglifyjs`, `yuicompressor`, `closure`, ...)
+
+Others filters include gzip compression, integration of images in CSS via data
+URIs, and more. `webassets` can also append a version identifier to your asset
+URL to convince browsers to download new versions of your assets when you use
+far-future expires headers. Please refer to the `webassets documentation`_ for
+more information.
+
+When using with Pelican, `webassets` is configured to process assets in the
+``OUTPUT_PATH/theme`` directory. You can use `webassets` in your templates by
+including one or more template tags. The jinja variable ``{{ ASSET_URL }}`` to
+use in the templates is configured to be relative to the ``theme/`` url.
+Hence, it must be used with the ``{{ SITEURL }}`` variable which allows to
+have relative urls. For example...
+
+.. code-block:: jinja
+
+    {% assets filters="cssmin", output="css/style.min.css", "css/inuit.css", "css/pygment-monokai.css", "css/main.css" %}
+        <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+    {% endassets %}
+
+... will produce a minified css file with a version identifier:
+
+.. code-block:: html
+
+    <link href="http://{SITEURL}/theme/css/style.min.css?b3a7c807" rel="stylesheet">
+
+These filters can be combined. Here is an example that uses the SASS compiler
+and minifies the output:
+
+.. code-block:: jinja
+
+    {% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
+        <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
+    {% endassets %}
+
+Another example for Javascript:
+
+.. code-block:: jinja
+
+    {% assets filters="uglifyjs,gzip", output="js/packed.js", "js/jquery.js", "js/base.js", "js/widgets.js" %}
+        <script src="{{ SITEURL }}/{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+The above will produce a minified and gzipped JS file:
+
+.. code-block:: html
+
+    <script src="http://{SITEURL}/theme/js/packed.js?00703b9d"></script>
+
+Pelican's debug mode is propagated to `webassets` to disable asset packaging
+and instead work with the uncompressed assets. However, this also means that
+the LESS and SASS files are not compiled. This should be fixed in a future
+version of `webassets` (cf. the related `bug report
+<https://github.com/getpelican/pelican/issues/481>`_).
+
+.. _webassets: https://github.com/miracle2k/webassets
+.. _webassets documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
+
 
 GitHub activity
 ---------------

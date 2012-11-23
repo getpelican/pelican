@@ -75,9 +75,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
-                   'LESS_GENERATOR': False,
                    'SUMMARY_MAX_LENGTH': 50,
-                   'WEBASSETS': False,
                    'PLUGINS': [],
                    'MARKDOWN_EXTENSIONS': ['toc', ],
                    'TEMPLATE_PAGES': {}
@@ -133,7 +131,7 @@ def configure_settings(settings):
     """
     if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
-                ' (see pelican --help for more information)')
+                        ' (see pelican --help for more information)')
 
     # find the theme in pelican.theme if the given one does not exists
     if not os.path.isdir(settings['THEME']):
@@ -143,7 +141,7 @@ def configure_settings(settings):
             settings['THEME'] = theme_path
         else:
             raise Exception("Impossible to find the theme %s"
-                    % settings['THEME'])
+                            % settings['THEME'])
 
     # if locales is not a list, make it one
     locales = settings['LOCALE']
@@ -197,13 +195,9 @@ def configure_settings(settings):
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")
 
-    if 'WEBASSETS' in settings and settings['WEBASSETS'] is not False:
-        try:
-            from webassets.ext.jinja2 import AssetsExtension
-            settings['JINJA_EXTENSIONS'].append(AssetsExtension)
-        except ImportError:
-            logger.warn("You must install the webassets module to use WEBASSETS.")
-            settings['WEBASSETS'] = False
+    if 'LESS_GENERATOR' in settings:
+        logger.warn("The LESS_GENERATOR setting has been removed in favor "
+                    "of the Webassets plugin")
 
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
         if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):

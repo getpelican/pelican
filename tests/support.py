@@ -3,11 +3,12 @@ __all__ = [
     'unittest',
 ]
 
-import os
-import subprocess
-import re
-import sys
 import cStringIO
+import importlib
+import os
+import re
+import subprocess
+import sys
 
 from functools import wraps
 from contextlib import contextmanager
@@ -138,3 +139,14 @@ def skipIfNoExecutable(executable):
         return unittest.skip('{0} executable not found'.format(executable))
 
     return lambda func: func
+
+
+def module_exists(module_name):
+    """Test if a module is importable."""
+
+    try:
+        importlib.import_module(module_name)
+    except ImportError:
+        return False
+    else:
+        return True
