@@ -59,7 +59,6 @@ class Generator(object):
         )
 
         self.env.install_gettext_translations(self)
-        self.env.extract_translations(os.path.join(self.theme, 'locale'))
 
         logger.debug('template list: {0}'.format(self.env.list_templates()))
 
@@ -67,13 +66,14 @@ class Generator(object):
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
 
-    def gettext(self, string, *variables):
+    def gettext(self, string, **variables):
+        print self.translations[0].title
+
         dirname = os.path.join(self.theme, 'locale')
-        t = babel.support.Translations.load(dirname, ['pt_BR'])
-        print t
-        print dirname
+        t = babel.support.Translations.load(dirname, [self.translations[0].lang])
         if t is None:
             return string % variables
+
         return t.ugettext(string) % variables
 
 
@@ -90,7 +90,6 @@ class Generator(object):
             ngettext(u'%(num)d Apple', u'%(num)d Apples', num=len(apples))
         """
         variables.setdefault('num', num)
-        print 'oi2'
         dirname = os.path.join(self.theme, 'translations')
         t = babel.support.Translations.load(dirname, [babel.get_locale()])
         if t is None:
