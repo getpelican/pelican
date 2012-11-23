@@ -43,7 +43,7 @@ Setting name (default value)                                            What doe
 `DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
                                                                         template. Templates may or not honor this
                                                                         setting.
-`DEFAULT_DATE` (``fs``)                                                 The default date you want to use.
+`DEFAULT_DATE` (``None``)                                               The default date you want to use.
                                                                         If 'fs', Pelican will use the file system
                                                                         timestamp information (mtime) if it can't get
                                                                         date information from the metadata.
