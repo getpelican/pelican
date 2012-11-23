@@ -56,7 +56,7 @@ To do so, you can use the following two commands::
 
     $ LC_ALL="C" pelican -o tests/output/custom/ -s samples/pelican.conf.py \
         samples/content/
-    $ LC_ALL="C" USER="Dummy Author" pelican -o tests/output/basic/ samples/content/
+    $ LC_ALL="C" pelican -o tests/output/basic/ samples/content/
 
 Coding standards
 ================
