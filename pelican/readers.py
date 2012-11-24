@@ -213,10 +213,10 @@ def metadata_from_filename(fullpath):
     date = '-'.join(filename_wo_ext.split('-')[:3])
     slug = '-'.join(filename_wo_ext.split('-')[3:])
     if is_valid_date(date):
-        metadata['date'] = date
+        metadata['date'] = get_date(date)
         metadata['slug'] = slug
     else:
-        metadata['date'] = str(datetime.date.fromtimestamp(mtime))
+        metadata['date'] = get_date(str(datetime.date.fromtimestamp(mtime)))
         metadata['slug'] = filename_wo_ext
 
     return metadata
