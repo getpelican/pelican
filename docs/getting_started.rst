@@ -153,7 +153,9 @@ following syntax (give your file the ``.rst`` extension)::
     :date: 2010-10-03 10:20
     :tags: thats, awesome
     :category: yeah
+    :slug: my-super-post
     :author: Alexis Metaireau
+    :summary: Short version for index and feeds
 
 Pelican implements an extension of reStructuredText to enable support for the
 ``abbr`` HTML tag. To use it, write something like this in your post::
@@ -165,10 +167,13 @@ Markdown generation will not work until you explicitly install the ``Markdown``
 package, which can be done via ``pip install Markdown``. Metadata syntax for
 Markdown posts should follow this pattern::
 
-    Date: 2010-12-03
     Title: My super title
+    Date: 2010-12-03 10:20
     Tags: thats, awesome
+    Category: yeah
     Slug: my-super-post
+    Author: Alexis Metaireau
+    Summary: Short version for index and feeds
 
     This is the content of my super blog post.
 
@@ -178,7 +183,9 @@ category can be determined by the directory in which the file resides. For
 example, a file located at ``python/foobar/myfoobar.rst`` will have a category of
 ``foobar``. If you would like to organize your files in other ways where the
 name of the subfolder would not be a good category name, you can set the
-setting ``USE_FOLDER_AS_CATEGORY`` to ``False``.
+setting ``USE_FOLDER_AS_CATEGORY`` to ``False``. If summary isn't given, setting
+``SUMMARY_MAX_LENGTH`` determines how many words from the beginning of an article
+are used as the summary.
 
 Generate your blog
 ------------------
