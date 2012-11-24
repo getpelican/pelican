@@ -18,7 +18,7 @@ import re
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 import os
-from datetime import date
+import datetime
 import time
 
 
@@ -216,7 +216,7 @@ def metadata_from_filename(fullpath):
         metadata['date'] = date
         metadata['slug'] = slug
     else:
-        metadata['date'] = str(date.fromtimestamp(mtime))
+        metadata['date'] = str(datetime.date.fromtimestamp(mtime))
         metadata['slug'] = filename_wo_ext
 
     return metadata
