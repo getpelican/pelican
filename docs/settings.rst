@@ -62,7 +62,7 @@ Setting name (default value)                                            What doe
                                                                         until one works.
 `MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
                                                                         to use. For the moment, the only available values
-                                                                        are `rst` and `md`.
+                                                                        are `rst`, `md`, `markdown`, `mkd`, `html`, and `htm`.
 `MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
                                                                         will use. Refer to the extensions chapter in the
                                                                         Python-Markdown documentation for a complete list of
