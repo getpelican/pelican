@@ -85,10 +85,10 @@ class Page(object):
             encoded_date = self.date.strftime(
                     self.date_format.encode('ascii', 'xmlcharrefreplace'))
 
-            if platform == 'win32':
+            if platform == 'win32' and locale.getlocale()[1] != None:
                 self.locale_date = encoded_date.decode(locale.getlocale()[1])
             else:
-                self.locale_date = encoded_date.decode('utf')
+                self.locale_date = encoded_date.decode('utf-8')
 
         # manage status
         if not hasattr(self, 'status'):
