@@ -86,7 +86,7 @@ class Page(object):
                     self.date_format.encode('ascii', 'xmlcharrefreplace'))
 
             if platform == 'win32':
-                self.locale_date = encoded_date.decode(stdin.encoding)
+                self.locale_date = encoded_date.decode(locale.getlocale()[1])
             else:
                 self.locale_date = encoded_date.decode('utf')
 
