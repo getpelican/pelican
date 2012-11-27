@@ -80,7 +80,7 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
 
         self.check_link_tag(
             '.././theme/gen/style.{0}.min.css'.format(CSS_HASH),
-            os.path.join(self.temp_path, 'category/misc.html'))
+            os.path.join(self.temp_path, 'category/yeah.html'))
 
 
 class TestWebAssetsAbsoluteURLS(TestWebAssets):
