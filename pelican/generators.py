@@ -331,7 +331,7 @@ class ArticlesGenerator(Generator):
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
 
-            if 'date' not in metadata and self.settings['DEFAULT_DATE']:
+            if 'date' not in metadata and self.settings.get('DEFAULT_DATE'):
                 if self.settings['DEFAULT_DATE'] == 'fs':
                     metadata['date'] = datetime.datetime.fromtimestamp(
                             os.stat(f).st_ctime)

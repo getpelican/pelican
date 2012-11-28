@@ -19,6 +19,8 @@ Release history
   information if the post author is empty.
 * LESS and Webassets support removed from Pelican core in favor of a Webassets
   plugin.
+* The ``DEFAULT_DATE`` setting now defaults to None, which means that articles
+  won't be generated anymore unless a date metadata is specified.
 
 3.0 (2012-08-08)
 ==================
