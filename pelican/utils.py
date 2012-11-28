@@ -133,8 +133,12 @@ def clean_output_dir(path):
 
 
 def get_relative_path(filename):
-    """Return the relative path to the given filename"""
-    return '../' * filename.count('/') + '.'
+    """Return the relative path from the given filename to the root path."""
+    nslashes = filename.count('/')
+    if nslashes == 0:
+        return '.'
+    else:
+        return '/'.join(['..'] * nslashes)
 
 
 def truncate_html_words(s, num, end_text='...'):
