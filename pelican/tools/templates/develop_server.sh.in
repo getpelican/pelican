@@ -30,7 +30,7 @@ function shut_down(){
   if [[ -f $$SRV_PID ]]; then
     PID=$$(cat $$SRV_PID)
     PROCESS=$$(ps -p $$PID | tail -n 1 | awk '{print $$4}')
-    if [[ $$PROCESS == python ]]; then
+    if [[ $$PROCESS != "" ]]; then
       echo "Killing SimpleHTTPServer"
       kill $$PID
     else
