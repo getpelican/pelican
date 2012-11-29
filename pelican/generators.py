@@ -306,6 +306,16 @@ class ArticlesGenerator(Generator):
             os.path.join(self.path, self.settings['ARTICLE_DIR'])
         )
         all_articles = []
+        
+        def add_article(article, location, key_location):
+            #merge categories and other URLWrapper objects by slug
+            for key in location:
+                if key.slug == key_location.slug:
+                    key_location = key
+                    break
+            #add article to category (tag, author) list
+            location[key_location].append(article)
+        
         for f in self.get_files(
                 article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
@@ -348,7 +358,7 @@ class ArticlesGenerator(Generator):
             if article.status == "published":
                 if hasattr(article, 'tags'):
                     for tag in article.tags:
-                        self.tags[tag].append(article)
+                        add_article( article, self.tags, tag )
                 all_articles.append(article)
             elif article.status == "draft":
                 self.drafts.append(article)
@@ -361,10 +371,10 @@ class ArticlesGenerator(Generator):
 
         for article in self.articles:
             # only main articles are listed in categories, not translations
-            self.categories[article.category].append(article)
+            add_article( article, self.categories, article.category )
             # ignore blank authors as well as undefined
             if hasattr(article,'author') and article.author.name != '':
-                self.authors[article.author].append(article)
+                add_article( article, self.authors, article.author )
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
