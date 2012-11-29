@@ -7,6 +7,7 @@ import sys
 import logging
 
 from logging import Formatter, getLogger, StreamHandler, DEBUG
+from utils import smart_unicode
 
 
 RESET_TERM = u'\033[0;m'
@@ -35,17 +36,17 @@ class ANSIFormatter(Formatter):
 
     def format(self, record):
         if record.levelname is 'INFO':
-            return ansi('cyan', '-> ') + unicode(record.msg)
+            return ansi('cyan', '-> ') + smart_unicode(record.msg)
         elif record.levelname is 'WARNING':
-            return ansi('yellow', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('yellow', record.levelname) + ': ' + smart_unicode(record.msg)
         elif record.levelname is 'ERROR':
-            return ansi('red', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('red', record.levelname) + ': ' + smart_unicode(record.msg)
         elif record.levelname is 'CRITICAL':
-            return ansi('bgred', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('bgred', record.levelname) + ': ' + smart_unicode(record.msg)
         elif record.levelname is 'DEBUG':
-            return ansi('bggrey', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('bggrey', record.levelname) + ': ' + smart_unicode(record.msg)
         else:
-            return ansi('white', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('white', record.levelname) + ': ' + smart_unicode(record.msg)
 
 
 class TextFormatter(Formatter):
