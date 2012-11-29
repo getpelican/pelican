@@ -216,8 +216,8 @@ run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
 Pages
 -----
 
-If you create a folder named ``pages``, all the files in it will be used to
-generate static pages.
+If you create a folder named ``pages``, itself in the content folder, all the
+files in it will be used to generate static pages.
 
 Then, use the ``DISPLAY_PAGES_ON_MENU`` setting, which will add all the pages to
 the menu.
