@@ -3,13 +3,16 @@ import copy
 import locale
 import logging
 import functools
+import os
+import re
+import urlparse
 
 from datetime import datetime
 from sys import platform, stdin
 
 
 from pelican.settings import _DEFAULT_CONFIG
-from pelican.utils import slugify, truncate_html_words
+from pelican.utils import slugify, truncate_html_words, memoized
 from pelican import signals
 
 logger = logging.getLogger(__name__)
@@ -25,7 +28,7 @@ class Page(object):
     default_template = 'page'
 
     def __init__(self, content, metadata=None, settings=None,
-                 filename=None):
+                 filename=None, context=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -34,6 +37,7 @@ class Page(object):
 
         self.settings = settings
         self._content = content
+        self._context = context
         self.translations = []
 
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
@@ -128,12 +132,56 @@ class Page(object):
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 
+    def _update_content(self, content):
+        """Change all the relative paths of the content to relative paths
+        suitable for the ouput content.
+
+        :param content: content resource that will be passed to the templates.
+        """
+        hrefs = re.compile(r"""
+            (?P<markup><\s*[^\>]*  # match tag with src and href attr
+                (?:href|src)\s*=)
+
+            (?P<quote>["\'])      # require value to be quoted
+            (?P<path>\|(?P<what>.*?)\|(?P<value>.*?))  # the url value
+            \2""", re.X)
+
+        def replacer(m):
+            what = m.group('what')
+            value = m.group('value')
+            origin = m.group('path')
+            # we support only filename for now. the plan is to support
+            # categories, tags, etc. in the future, but let's keep things
+            # simple for now.
+            if what == 'filename':
+                if value.startswith('/'):
+                    value = value[1:]
+                else:
+                    # relative to the filename of this content
+                    value = self.get_relative_filename(
+                        os.path.join(self.relative_dir, value)
+                    )
+
+                if value in self._context['filenames']:
+                    origin = urlparse.urljoin(self._context['SITEURL'],
+                             self._context['filenames'][value].url)
+                else:
+                    logger.warning(u"Unable to find {fn}, skipping url"
+                                    " replacement".format(fn=value))
+
+            return m.group('markup') + m.group('quote') + origin \
+                    + m.group('quote')
+
+        return hrefs.sub(replacer, content)
+
     @property
+    @memoized
     def content(self):
         if hasattr(self, "_get_content"):
             content = self._get_content()
         else:
             content = self._content
+        content = self._update_content(content)
         return content
 
     def _get_summary(self):
@@ -143,7 +191,8 @@ class Page(object):
             return self._summary
         else:
             if self.settings['SUMMARY_MAX_LENGTH']:
-                return truncate_html_words(self.content, self.settings['SUMMARY_MAX_LENGTH'])
+                return truncate_html_words(self.content,
+                        self.settings['SUMMARY_MAX_LENGTH'])
             return self.content
 
     def _set_summary(self, summary):
@@ -161,6 +210,27 @@ class Page(object):
             return self.template
         else:
             return self.default_template
+
+    def get_relative_filename(self, filename=None):
+        """Return the relative path (from the content path) to the given
+        filename.
+
+        If no filename is specified, use the filename of this content object.
+        """
+        if not filename:
+            filename = self.filename
+
+        return os.path.relpath(
+            os.path.abspath(os.path.join(self.settings['PATH'], filename)),
+            os.path.abspath(self.settings['PATH'])
+        )
+
+    @property
+    def relative_dir(self):
+        return os.path.dirname(os.path.relpath(
+            os.path.abspath(self.filename),
+            os.path.abspath(self.settings['PATH']))
+        )
 
 
 class Article(Page):
@@ -227,11 +297,27 @@ class Author(URLWrapper):
     pass
 
 
+class StaticContent(object):
+    def __init__(self, src, dst=None, settings=None):
+        if not settings:
+            settings = copy.deepcopy(_DEFAULT_CONFIG)
+        self.src = src
+        self.url = dst or src
+        self.filepath = os.path.join(settings['PATH'], src)
+        self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
+
+    def __str__(self):
+        return str(self.filepath.encode('utf-8', 'replace'))
+
+    def __unicode__(self):
+        return self.filepath
+
+
 def is_valid_content(content, f):
     try:
         content.check_properties()
         return True
     except NameError, e:
-        logger.error(u"Skipping %s: impossible to find informations about '%s'"\
-                % (f, e))
+        logger.error(u"Skipping %s: impossible to find informations about"
+                      "'%s'" % (f, e))
         return False

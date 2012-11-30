@@ -15,6 +15,7 @@ from tempfile import mkdtemp
 from shutil import rmtree
 
 from pelican.contents import Article
+from pelican.settings import _DEFAULT_CONFIG
 
 try:
     import unittest2 as unittest
@@ -149,3 +150,10 @@ def module_exists(module_name):
         return False
     else:
         return True
+
+
+def get_settings():
+    settings = _DEFAULT_CONFIG.copy()
+    settings['DIRECT_TEMPLATES'] = ['archives']
+    settings['filenames'] = {}
+    return settings

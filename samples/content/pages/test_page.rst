@@ -5,7 +5,7 @@ This is a test page
 
 Just an image.
 
-.. image:: pictures/Fat_Cat.jpg
+.. image:: |filename|/pictures/Fat_Cat.jpg
    :height: 450 px
    :width: 600 px
    :alt: alternate text
