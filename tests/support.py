@@ -8,6 +8,8 @@ import os
 import re
 import subprocess
 import sys
+import logging
+from logging.handlers import BufferingHandler
 
 from functools import wraps
 from contextlib import contextmanager
@@ -157,3 +159,18 @@ def get_settings():
     settings['DIRECT_TEMPLATES'] = ['archives']
     settings['filenames'] = {}
     return settings
+
+
+class LogCountHandler(BufferingHandler):
+    """
+    Capturing and counting logged messages.
+    """
+
+    def __init__(self, capacity=1000):
+        logging.handlers.BufferingHandler.__init__(self, capacity)
+
+    def count_logs(self, msg=None, level=None):
+        return len([l for l in self.buffer
+            if (msg is None or re.match(msg, l.getMessage()))
+            and (level is None or l.levelno == level)
+            ])
