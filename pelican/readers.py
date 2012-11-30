@@ -17,6 +17,9 @@ import re
 
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
+import os
+import datetime
+import time
 
 
 _METADATA_PROCESSORS = {
@@ -186,7 +189,11 @@ def read_file(filename, fmt=None, settings=None):
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
 
-    content, metadata = reader.read(filename)
+    metadata = metadata_from_filename(filename)
+
+    content, _metadata = reader.read(filename)
+
+    metadata.update(_metadata)
 
     # eventually filter the content with typogrify if asked so
     if settings and settings['TYPOGRIFY']:
@@ -195,3 +202,28 @@ def read_file(filename, fmt=None, settings=None):
         metadata['title'] = typogrify(metadata['title'])
 
     return content, metadata
+
+def metadata_from_filename(fullpath):
+    metadata = dict()
+    mtime = os.path.getmtime(fullpath)
+    filename = os.path.basename(fullpath)
+
+    filename_wo_ext = '.'.join(filename.split('.')[:-1])
+
+    date = '-'.join(filename_wo_ext.split('-')[:3])
+    slug = '-'.join(filename_wo_ext.split('-')[3:])
+    if is_valid_date(date):
+        metadata['date'] = get_date(date)
+        metadata['slug'] = slug
+    else:
+        metadata['date'] = get_date(str(datetime.date.fromtimestamp(mtime)))
+        metadata['slug'] = filename_wo_ext
+
+    return metadata
+
+def is_valid_date(date_string):
+    try:
+        time.strptime(date_string, '%Y-%m-%d')
+        return True
+    except ValueError:
+        return False
