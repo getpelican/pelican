@@ -228,7 +228,7 @@ def read_file(filename, fmt=None, settings=None):
     content, metadata = reader.read(filename)
 
     # eventually filter the content with typogrify if asked so
-    if settings and settings['TYPOGRIFY']:
+    if settings and settings.get('TYPOGRIFY'):
         from typogrify.filters import typogrify
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])

@@ -34,6 +34,50 @@ class RstReaderTest(unittest.TestCase):
         for key, value in expected.items():
             self.assertEquals(value, metadata[key], key)
 
+    def test_article_with_filename_metadata(self):
+        content, metadata = readers.read_file(
+                _filename('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
+                settings={})
+        expected = {
+            'category': 'yeah',
+            'author': u'Alexis Métaireau',
+            'title': 'Rst with filename metadata',
+        }
+        for key, value in metadata.items():
+            self.assertEquals(value, expected[key], key)
+
+        content, metadata = readers.read_file(
+                _filename('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
+                settings={
+                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*'
+                    })
+        expected = {
+            'category': 'yeah',
+            'author': u'Alexis Métaireau',
+            'title': 'Rst with filename metadata',
+            'date': datetime.datetime(2012, 11, 29),
+        }
+        for key, value in metadata.items():
+            self.assertEquals(value, expected[key], key)
+
+        content, metadata = readers.read_file(
+                _filename('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
+                settings={
+                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2})_' \
+                                         '_(?P<Slug>.*)' \
+                                         '#(?P<MyMeta>.*)-(?P<author>.*)'
+                    })
+        expected = {
+            'category': 'yeah',
+            'author': u'Alexis Métaireau',
+            'title': 'Rst with filename metadata',
+            'date': datetime.datetime(2012, 11, 29),
+            'slug': 'article_with_filename_metadata',
+            'mymeta': 'foo',
+        }
+        for key, value in metadata.items():
+            self.assertEquals(value, expected[key], key)
+
     def test_article_metadata_key_lowercase(self):
         """Keys of metadata should be lowercase."""
         reader = readers.RstReader({})
@@ -80,6 +124,13 @@ class MdReaderTest(unittest.TestCase):
         
         self.assertEqual(content, expected)
 
+        expected = {
+            'category': 'test',
+            'title': 'Test md File',
+        }
+        for key, value in metadata.items():
+            self.assertEquals(value, expected[key], key)
+
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_mkd_extension(self):
         # test to ensure the mkd extension is being processed by the correct reader
@@ -109,6 +160,48 @@ class MdReaderTest(unittest.TestCase):
             '<h3 id="level2">Level2</h3>'
 
         self.assertEqual(content, expected)
+
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
+    def test_article_with_filename_metadata(self):
+        content, metadata = readers.read_file(
+                _filename('2012-11-30_md_w_filename_meta#foo-bar.md'),
+                settings={})
+        expected = {
+            'category': 'yeah',
+            'author': u'Alexis Métaireau',
+        }
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
+
+        content, metadata = readers.read_file(
+                _filename('2012-11-30_md_w_filename_meta#foo-bar.md'),
+                settings={
+                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*'
+                    })
+        expected = {
+            'category': 'yeah',
+            'author': u'Alexis Métaireau',
+            'date': datetime.datetime(2012, 11, 30),
+        }
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
+
+        content, metadata = readers.read_file(
+                _filename('2012-11-30_md_w_filename_meta#foo-bar.md'),
+                settings={
+                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2})'
+                                         '_(?P<Slug>.*)'
+                                         '#(?P<MyMeta>.*)-(?P<author>.*)'
+                    })
+        expected = {
+            'category': 'yeah',
+            'author': u'Alexis Métaireau',
+            'date': datetime.datetime(2012, 11, 30),
+            'slug': 'md_w_filename_meta',
+            'mymeta': 'foo',
+        }
+        for key, value in expected.items():
+            self.assertEquals(value, metadata[key], key)
 
 class AdReaderTest(unittest.TestCase):
 
