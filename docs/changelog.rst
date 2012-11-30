@@ -25,6 +25,8 @@ Release history
   file within the same directory as the original file to prevent the server
   (e.g. Nginx) from compressing files during an HTTP call.
 * Add AsciiDoc support
+* Add ``FILENAME_METADATA`` new setting which adds support for metadata
+  extraction from the filename.
 
 3.0 (2012-08-08)
 ==================
