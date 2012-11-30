@@ -197,7 +197,7 @@ All named groups that are matched will be set in the metadata object. The
 default value for the ``FILENAME_METADATA`` setting will only extract the date
 from the filename. For example, if you would like to extract both the date and
 the slug, you could set something like:
-``'(?P<date>\d{4}-\d{2}-\d{2})_(?<slug>.*)'``.
+``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
 
 Please note that the metadata available inside your files takes precedence over
 the metadata extracted from the filename.

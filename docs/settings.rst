@@ -59,7 +59,7 @@ Setting name (default value)                                            What doe
                                                                         the filename.
                                                                         For example, if you would like to extract both the
                                                                         date and the slug, you could set something like:
-                                                                        ``'(?P<date>\d{4}-\d{2}-\d{2})_(?<slug>.*)'``.
+                                                                        ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
                                                                         generating new files.
 `FILES_TO_COPY` (``()``)                                                A list of files (or directories) to copy from the source (inside the
