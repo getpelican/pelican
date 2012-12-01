@@ -6,10 +6,13 @@ import os
 from codecs import open
 from tempfile import mkdtemp
 from shutil import rmtree
+from collections import defaultdict
+from datetime import datetime
 
 from pelican.generators import ArticlesGenerator, PagesGenerator, \
     TemplatePagesGenerator
 from pelican.writers import Writer
+from pelican.contents import Article, Category
 from pelican.settings import _DEFAULT_CONFIG
 from .support import unittest
 
@@ -64,6 +67,20 @@ class TestArticlesGenerator(unittest.TestCase):
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
+        
+    def test_generate_feeds_categories(self):
+        
+        generator = ArticlesGenerator(None, {'CATEGORY_FEED_ATOM': _DEFAULT_CONFIG['CATEGORY_FEED_ATOM']},
+                                      None, _DEFAULT_CONFIG['THEME'], None, 
+                                      _DEFAULT_CONFIG['MARKUP'])
+        
+        generator.categories = defaultdict(list)
+        generator.categories[ Category(u'My bloг', _DEFAULT_CONFIG) ] = [  ]
+        generator.categories = list(generator.categories.items())
+        
+        writer = MagicMock()
+        generator.generate_feeds(writer)
+        writer.write_feed.assert_called_with([], None, 'feeds/my-blog.atom.xml')
 
     def test_generate_context(self):
 

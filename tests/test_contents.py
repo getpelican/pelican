@@ -100,6 +100,8 @@ class TestPage(unittest.TestCase):
         """
         from datetime import datetime
         from sys import platform
+        import locale as locale_module
+
         dt = datetime(2015, 9, 13)
 
         page_kwargs = self._copy_page_kwargs()
@@ -107,10 +109,15 @@ class TestPage(unittest.TestCase):
         # set its date to dt
         page_kwargs['metadata']['date'] = dt
         page = Page(**page_kwargs)
-
+        
+        if locale_module.getlocale()[1] != None:
+            encoding = locale_module.getlocale()[1]
+        else:
+            encoding = 'utf-8'
+        
         self.assertEqual(page.locale_date,
             unicode(dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']),
-                                'utf-8'))
+                                encoding))
 
         page_kwargs['settings'] = dict([(x, _DEFAULT_CONFIG[x]) for x in
                                         _DEFAULT_CONFIG])
@@ -124,7 +131,6 @@ class TestPage(unittest.TestCase):
                                                           '%Y-%m-%d(%a)')}
         page_kwargs['metadata']['lang'] = 'jp'
 
-        import locale as locale_module
         try:
             page = Page(**page_kwargs)
             self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
