@@ -19,6 +19,9 @@ class TestPage(unittest.TestCase):
         super(TestPage, self).setUp()
         self.page_kwargs = {
             'content': TEST_CONTENT,
+            'context': {
+                'localsiteurl': '',
+            },
             'metadata': {
                 'summary': TEST_SUMMARY,
                 'title': 'foo bar',
@@ -32,7 +35,8 @@ class TestPage(unittest.TestCase):
 
         """
         metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
-        page = Page(TEST_CONTENT, metadata=metadata)
+        page = Page(TEST_CONTENT, metadata=metadata,
+                context={'localsiteurl': ''})
         for key, value in metadata.items():
             self.assertTrue(hasattr(page, key))
             self.assertEqual(value, getattr(page, key))

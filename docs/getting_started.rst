@@ -226,6 +226,50 @@ If you want to exclude any pages from being linked to or listed in the menu
 then add a ``status: hidden`` attribute to its metadata. This is useful for
 things like making error pages that fit the generated theme of your site.
 
+Linking to internal content
+---------------------------
+
+Since Pelican 3.1, you now have the ability to do cross-site linking.
+
+To link to an internal content, you will have to use the following syntax:
+``|filename|path/to/file``.
+
+For example, you may want to add links between "article1" and "article2" given
+the structure::
+
+    website/
+    ├── content
+    │   ├── article1.rst
+    │   └── cat/
+    │       └── article2.md
+    └── pelican.conf.py
+
+In this example, ``article1.rst`` could look like::
+
+    Title: The first article
+    Date: 2012-12-01
+
+    See below cross-site links examples in restructured text.
+
+    `a root-relative link <|filename|/cat/article2.md>`_
+    `a file-relative link <|filename|cat/article2.md>`_
+
+and ``article2.md``::
+
+    Title: The second article
+    Date: 2012-12-01
+
+    See below cross-site links examples in markdown.
+
+    [a root-relative link](|filename|/article1.rst)
+    [a file-relative link](|filename|../article1.rst)
+
+.. note::
+
+    You can use the same syntax to link to internal pages or even static
+    content (like images) which would be available in a directory listed in
+    ``settings["STATIC_PATHS"]``.
+
 Importing an existing blog
 --------------------------
 

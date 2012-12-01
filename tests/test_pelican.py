@@ -8,11 +8,13 @@ from filecmp import dircmp
 from tempfile import mkdtemp
 from shutil import rmtree
 import locale
+import logging
 
 from mock import patch
 
 from pelican import Pelican
 from pelican.settings import read_settings
+from .support import LogCountHandler
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.sep.join((CURRENT_DIR, "..", "samples")))
@@ -42,6 +44,8 @@ class TestPelican(unittest.TestCase):
     # to run pelican in different situations and see how it behaves
 
     def setUp(self):
+        self.logcount_handler = LogCountHandler()
+        logging.getLogger().addHandler(self.logcount_handler)
         self.temp_path = mkdtemp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
@@ -49,6 +53,7 @@ class TestPelican(unittest.TestCase):
     def tearDown(self):
         rmtree(self.temp_path)
         locale.setlocale(locale.LC_ALL, self.old_locale)
+        logging.getLogger().removeHandler(self.logcount_handler)
 
     def assertFilesEqual(self, diff):
         msg = "some generated files differ from the expected functional " \
@@ -73,6 +78,10 @@ class TestPelican(unittest.TestCase):
         pelican.run()
         dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
         self.assertFilesEqual(recursiveDiff(dcmp))
+        self.assertEqual(self.logcount_handler.count_logs(
+            msg="Unable to find.*skipping url replacement",
+            level=logging.WARNING,
+            ), 10, msg="bad number of occurences found for this log")
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
