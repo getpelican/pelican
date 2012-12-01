@@ -39,7 +39,7 @@ class Writer(object):
             link='%s/%s' % (self.site_url, item.url),
             unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
                                         item.date.date(), item.url),
-            description=item.content,
+            description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(item.date,
@@ -124,7 +124,9 @@ class Writer(object):
 
         localcontext = context.copy()
         if relative_urls:
-            localcontext['SITEURL'] = get_relative_path(name)
+            relative_path = get_relative_path(name)
+            context['localsiteurl'] = relative_path
+            localcontext['SITEURL'] = relative_path
 
         localcontext.update(kwargs)
 

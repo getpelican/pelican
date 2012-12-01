@@ -81,7 +81,7 @@ class TestPelican(unittest.TestCase):
         self.assertEqual(self.logcount_handler.count_logs(
             msg="Unable to find.*skipping url replacement",
             level=logging.WARNING,
-            ), 4, msg="bad number of occurences found for this log")
+            ), 10, msg="bad number of occurences found for this log")
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work

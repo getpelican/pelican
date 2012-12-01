@@ -63,7 +63,6 @@ class Generator(object):
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
-        self.context['filenames'] = kwargs.get('filenames', {})
 
         signals.generator_init.send(self)
 

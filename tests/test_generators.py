@@ -96,6 +96,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 01, 01)
         settings['USE_FOLDER_AS_CATEGORY'] = False
+        settings['filenames'] = {}
         generator = ArticlesGenerator(settings.copy(), settings,
                             CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
                             _DEFAULT_CONFIG['MARKUP'])
