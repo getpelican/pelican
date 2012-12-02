@@ -289,7 +289,8 @@ def files_changed(path, extensions):
         for root, dirs, files in os.walk(path):
             dirs[:] = [x for x in dirs if x[0] != '.']
             for f in files:
-                if any(f.endswith(ext) for ext in extensions):
+                if any(f.endswith(ext) for ext in extensions) \
+                        and not f.startswith(".#"):
                     yield os.stat(os.path.join(root, f)).st_mtime
 
     global LAST_MTIME
