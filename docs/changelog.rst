@@ -5,6 +5,7 @@ Release history
 ================
 
 * Support for Python 3!
+* Posterous Import
 
 3.1 (2012-12-04)
 ================
@@ -31,6 +32,18 @@ Release history
 * Add ``gzip_cache`` plugin to compress common text files into a ``.gz``
   file within the same directory as the original file, preventing the server
   (e.g. Nginx) from having to compress files during an HTTP call
+* Add support for AsciiDoc-formatted content
+* Add ``USE_FOLDER_AS_CATEGORY`` setting so that feature can be toggled on/off
+* Support arbitrary Jinja template files
+* Restore basic functional tests
+* New signals: ``generator_init``, ``get_generators``, and
+  ``article_generate_preread``
+* Add support for AsciiDoc-formatted content
+* Add ``USE_FOLDER_AS_CATEGORY`` setting so that feature can be toggled on/off
+* Support arbitrary Jinja template files
+* Restore basic functional tests
+* New signals: ``generator_init``, ``get_generators``, and
+  ``article_generate_preread``
 * Add support for AsciiDoc-formatted content
 * Add ``USE_FOLDER_AS_CATEGORY`` setting so that feature can be toggled on/off
 * Support arbitrary Jinja template files
