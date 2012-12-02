@@ -24,6 +24,7 @@ Release history
 * Add the gzip_cache plugin which compresses common text files into a ``.gz``
   file within the same directory as the original file to prevent the server
   (e.g. Nginx) from compressing files during an HTTP call.
+* Posterous Import
 
 3.0 (2012-08-08)
 ==================
