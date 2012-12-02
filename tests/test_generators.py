@@ -11,7 +11,7 @@ from pelican.generators import ArticlesGenerator, PagesGenerator, \
     TemplatePagesGenerator
 from pelican.writers import Writer
 from pelican.settings import _DEFAULT_CONFIG
-from .support import unittest
+from .support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
 
@@ -28,20 +28,20 @@ class TestArticlesGenerator(unittest.TestCase):
          for each test.
         """
         if self.generator is None:
-            settings = _DEFAULT_CONFIG.copy()
+            settings = get_settings()
             settings['ARTICLE_DIR'] = 'content'
             settings['DEFAULT_CATEGORY'] = 'Default'
             settings['DEFAULT_DATE'] = (1970, 01, 01)
             self.generator = ArticlesGenerator(settings.copy(), settings,
-                                CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
-                                _DEFAULT_CONFIG['MARKUP'])
+                                CUR_DIR, settings['THEME'], None,
+                                settings['MARKUP'])
             self.generator.generate_context()
         return self.generator
 
     def distill_articles(self, articles):
         distilled = []
         for page in articles:
-           distilled.append([
+            distilled.append([
                     page.title,
                     page.status,
                     page.category.name,
@@ -51,16 +51,16 @@ class TestArticlesGenerator(unittest.TestCase):
         return distilled
 
     def test_generate_feeds(self):
-
-        generator = ArticlesGenerator(None, {'FEED_ALL_ATOM': _DEFAULT_CONFIG['FEED_ALL_ATOM']},
-                                      None, _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+        settings = get_settings()
+        generator = ArticlesGenerator(settings,
+                {'FEED_ALL_ATOM': settings['FEED_ALL_ATOM']}, None,
+                settings['THEME'], None, settings['MARKUP'])
         writer = MagicMock()
         generator.generate_feeds(writer)
-        writer.write_feed.assert_called_with([], None, 'feeds/all.atom.xml')
+        writer.write_feed.assert_called_with([], settings, 'feeds/all.atom.xml')
 
-        generator = ArticlesGenerator(None, {'FEED_ALL_ATOM': None}, None,
-                                      _DEFAULT_CONFIG['THEME'], None, None)
+        generator = ArticlesGenerator(settings, {'FEED_ALL_ATOM': None}, None,
+                                      settings['THEME'], None, None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
@@ -96,6 +96,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 01, 01)
         settings['USE_FOLDER_AS_CATEGORY'] = False
+        settings['filenames'] = {}
         generator = ArticlesGenerator(settings.copy(), settings,
                             CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
                             _DEFAULT_CONFIG['MARKUP'])
@@ -106,11 +107,10 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_direct_templates_save_as_default(self):
 
-        settings = _DEFAULT_CONFIG.copy()
-        settings['DIRECT_TEMPLATES'] = ['archives']
-        generator = ArticlesGenerator(settings.copy(), settings, None,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+        settings = get_settings()
+        generator = ArticlesGenerator(settings, settings, None,
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
@@ -119,12 +119,12 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_direct_templates_save_as_modified(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(settings, settings, None,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives/index.html",
@@ -133,12 +133,12 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_direct_templates_save_as_false(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(settings, settings, None,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_count == 0
@@ -174,13 +174,13 @@ class TestPageGenerator(unittest.TestCase):
         return distilled
 
     def test_generate_context(self):
-        settings = _DEFAULT_CONFIG.copy()
-
+        settings = get_settings()
         settings['PAGE_DIR'] = 'TestPages'
         settings['DEFAULT_DATE'] = (1970, 01, 01)
+
         generator = PagesGenerator(settings.copy(), settings, CUR_DIR,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
@@ -214,7 +214,7 @@ class TestTemplatePagesGenerator(unittest.TestCase):
 
     def test_generate_output(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = get_settings()
         settings['STATIC_PATHS'] = ['static']
         settings['TEMPLATE_PAGES'] = {
                 'template/source.html': 'generated/file.html'
