@@ -13,6 +13,7 @@ software to ReStructuredText or Markdown. The supported import formats are:
 
 - WordPress XML export
 - Dotclear export
+- Posterous API
 - RSS/Atom feed
 
 The conversion from HTML to reStructuredText or Markdown relies on `Pandoc`_.
@@ -40,14 +41,16 @@ Usage
 
 ::
 
-    pelican-import [-h] [--wpfile] [--dotclear] [--feed] [-o OUTPUT]
+    pelican-import [-h] [--wpfile] [--dotclear] [--posterous] [--feed] [-o OUTPUT]
                    [-m MARKUP] [--dir-cat] [--strip-raw] [--disable-slugs]
-                   input
+                   [-e EMAIL] [-p PASSWORD]
+                   input|api_token
 
 Positional arguments
 --------------------
 
   input                 The input file to read
+  api_token             [Posterous only] api_token can be obtained from http://posterous.com/api/
 
 Optional arguments
 ------------------
@@ -55,12 +58,15 @@ Optional arguments
   -h, --help            Show this help message and exit
   --wpfile              WordPress XML export (default: False)
   --dotclear            Dotclear export (default: False)
+  --posterous           Posterous API (default: False)
   --feed                Feed to parse (default: False)
   -o OUTPUT, --output OUTPUT
                         Output path (default: output)
   -m MARKUP, --markup MARKUP
                         Output markup format (supports rst & markdown)
                         (default: rst)
+  -e EMAIL              Email used to authenticate Posterous API
+  -p PASSWORD           Password used to authenticate Posterous API
   --dir-cat             Put files in directories with categories name
                         (default: False)
   --strip-raw           Strip raw HTML code that can't be converted to markup
@@ -70,6 +76,10 @@ Optional arguments
                         output. With this disabled, your Pelican URLs may not
                         be consistent with your original posts. (default:
                         False)
+  -e EMAIL, --email=EMAIL
+                        Email used to authenticate Posterous API
+  -p PASSWORD, --password=PASSWORD
+                        Password used to authenticate Posterous API
 
 
 Examples
@@ -83,6 +93,9 @@ For Dotclear::
 
     $ pelican-import --dotclear -o ~/output ~/backup.txt
 
+for Posterous::
+
+    $ pelican-import --posterous -o ~/output --email=<email_address> --password=<password> <api_token>
 
 Tests
 =====
