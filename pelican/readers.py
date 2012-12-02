@@ -13,6 +13,11 @@ try:
     from markdown import Markdown
 except ImportError:
     Markdown = False  # NOQA
+try:
+    from asciidocapi import AsciiDocAPI
+    asciidoc = True
+except ImportError:
+    asciidoc = False
 import re
 
 from pelican.contents import Category, Tag, Author
@@ -160,6 +165,37 @@ class HtmlReader(Reader):
                 metadata[name] = self.process_metadata(name, value)
 
             return content, metadata
+
+
+class AsciiDocReader(Reader):
+    enabled = bool(asciidoc)
+    file_extensions = ['asc']
+    default_options = ["--no-header-footer", "-a newline=\\n"]
+
+    def read(self, filename):
+        """Parse content and metadata of asciidoc files"""
+        from cStringIO import StringIO
+        text = StringIO(pelican_open(filename))
+        content = StringIO()
+        ad = AsciiDocAPI()
+
+        options = self.settings.get('ASCIIDOC_OPTIONS', [])
+        if isinstance(options, (str, unicode)):
+            options = [m.strip() for m in options.split(',')]
+        options = self.default_options + options
+        for o in options:
+            ad.options(*o.split())
+
+        ad.execute(text, content, backend="html4")
+        content = content.getvalue()
+
+        metadata = {}
+        for name, value in ad.asciidoc.document.attributes.items():
+            name = name.lower()
+            metadata[name] = self.process_metadata(name, value)
+        if 'doctitle' in metadata:
+            metadata['title'] = metadata['doctitle']
+        return content, metadata
 
 
 _EXTENSIONS = {}
