@@ -170,6 +170,7 @@ def dc2fields(file):
 def posterous2fields(api_token, email, password):
     """Imports posterous posts"""
     import base64
+    from datetime import datetime, timedelta
     import simplejson as json
     import urllib2
 
@@ -193,7 +194,14 @@ def posterous2fields(api_token, email, password):
             if not slug:
                 slug = slugify(post.get('title'))
             tags = [tag.get('name') for tag in post.get('tags')]
-            yield (post.get('title'), post.get('body_cleaned'), slug, post.get('display_date'), 
+            raw_date = post.get('display_date')
+            date_object = datetime.strptime(raw_date[:-6], "%Y/%m/%d %H:%M:%S")
+            offset = int(raw_date[-5:])
+            delta = timedelta(hours = offset / 100)
+            date_object -= delta
+            date = date_object.strftime("%Y-%m-%d %H:%M")
+
+            yield (post.get('title'), post.get('body_cleaned'), slug, date,
                 post.get('user').get('display_name'), [], tags, "html")
 
 def feed2fields(file):
