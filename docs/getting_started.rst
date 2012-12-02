@@ -42,6 +42,10 @@ Markdown library as well::
 
     $ pip install Markdown
 
+If you want to use AsciiDoc you need to install it from `source
+<http://www.methods.co.nz/asciidoc/INSTALL.html>`_ or use your operating
+system's package manager.
+
 Upgrading
 ---------
 
