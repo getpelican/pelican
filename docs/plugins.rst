@@ -108,6 +108,7 @@ The following plugins are currently included with Pelican under ``pelican.plugin
 * `Gravatar`_
 * `Gzip cache`_
 * `HTML tags for reStructuredText`_
+* `Optimize images`_
 * `Related posts`_
 * `Sitemap`_
 
@@ -275,6 +276,16 @@ is a usage example, which is in this case a contact form::
             <input type="reset"><input type="submit">
           </p>
         </form>
+
+Optimize images
+---------------
+
+This plugin applies lossless compression on JPEG and PNG images, with no
+effect on image quality. It uses `jpegtran`_ and `OptiPNG`_. It assumes
+that both of these tools are installed on system path.
+
+.. _jpegtran: http://jpegclub.org/jpegtran/
+.. _OptiPNG: http://optipng.sourceforge.net/
 
 Related posts
 -------------
