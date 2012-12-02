@@ -37,6 +37,7 @@ Release history
 * Restore basic functional tests
 * New signals: ``generator_init``, ``get_generators``, and
   ``article_generate_preread``
+* Posterous Import
 
 3.0 (2012-08-08)
 ================

@@ -12,6 +12,7 @@ software to ReStructuredText. The supported formats are:
 
 - WordPress XML export
 - Dotclear export
+- Posterous API
 - RSS/Atom feed
 
 The conversion from HTML to reStructuredText relies on `pandoc
@@ -38,8 +39,9 @@ For pandoc, install a package for your operating system from the
 Usage
 """""
 
-| pelican-import [-h] [--wpfile] [--dotclear] [--feed] [-o OUTPUT]
+| pelican-import [-h] [--wpfile] [--dotclear] [--posterous] [--feed] [-o OUTPUT]
 |                [-m MARKUP] [--dir-cat] [--strip-raw] [--disable-slugs]
+|                [-e EMAIL] [-p PASSWORD]
 |                input
 
 Positional arguments
@@ -53,6 +55,7 @@ Optional arguments
   -h, --help            show this help message and exit
   --wpfile              Wordpress XML export (default: False)
   --dotclear            Dotclear export (default: False)
+  --posterous           Posterous API
   --feed                Feed to parse (default: False)
   -o OUTPUT, --output OUTPUT
                         Output path (default: output)
@@ -68,6 +71,8 @@ Optional arguments
                         output. With this disabled, your Pelican URLs may not
                         be consistent with your original posts. (default:
                         False)
+  -e EMAIL              Email used to authenticate Posterous API
+  -p PASSWORD           Password used to authenticate Posterous API
 
 Examples
 ========
@@ -79,6 +84,12 @@ For WordPress::
 For Dotclear::
 
     $ pelican-import --dotclear -o ~/output ~/backup.txt
+
+for Posterous::
+
+    $ pelican-import --posterous -o ~/output <api_token> --email=<email_address> --password=<password>
+
+api_token can be obtained from http://posterous.com/api/
 
 Tests
 =====
