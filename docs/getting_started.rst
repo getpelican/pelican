@@ -181,15 +181,26 @@ syntax for Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
-Note that, aside from the title, none of this metadata is mandatory: if the date
-is not specified, Pelican will rely on the file's "mtime" timestamp, and the
-category can be determined by the directory in which the file resides. For
-example, a file located at ``python/foobar/myfoobar.rst`` will have a category of
-``foobar``. If you would like to organize your files in other ways where the
-name of the subfolder would not be a good category name, you can set the
-setting ``USE_FOLDER_AS_CATEGORY`` to ``False``. If summary isn't given, setting
-``SUMMARY_MAX_LENGTH`` determines how many words from the beginning of an article
-are used as the summary.
+Note that, aside from the title, none of this metadata is mandatory: if the
+date is not specified, Pelican can rely on the file's "mtime" timestamp through
+the ``DEFAULT_DATE`` setting, and the category can be determined by the
+directory in which the file resides. For example, a file located at
+``python/foobar/myfoobar.rst`` will have a category of ``foobar``. If you would
+like to organize your files in other ways where the name of the subfolder would
+not be a good category name, you can set the setting ``USE_FOLDER_AS_CATEGORY``
+to ``False``. If summary isn't given, setting ``SUMMARY_MAX_LENGTH`` determines
+how many words from the beginning of an article are used as the summary.
+
+You can also extract any metadata from the filename through a regexp to be set
+in the ``FILENAME_METADATA`` setting.
+All named groups that are matched will be set in the metadata object. The
+default value for the ``FILENAME_METADATA`` setting will only extract the date
+from the filename. For example, if you would like to extract both the date and
+the slug, you could set something like:
+``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
+
+Please note that the metadata available inside your files takes precedence over
+the metadata extracted from the filename.
 
 Generate your blog
 ------------------

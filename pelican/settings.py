@@ -5,6 +5,7 @@ import inspect
 import os
 import locale
 import logging
+import re
 
 from os.path import isabs
 
@@ -60,7 +61,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
                    'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
-                   'EXTRA_TEMPLATES_PATHS' : [],
+                   'EXTRA_TEMPLATES_PATHS': [],
                    'PAGINATED_DIRECT_TEMPLATES': ('index', ),
                    'PELICAN_CLASS': 'pelican.Pelican',
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
@@ -70,6 +71,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_PAGINATION': False,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
+                   'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
@@ -204,5 +206,13 @@ def configure_settings(settings):
             logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
                        " falling back to the default extension " +
                        _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
+
+    filename_metadata = settings.get('FILENAME_METADATA')
+    if filename_metadata and not isinstance(filename_metadata, basestring):
+        logger.error("Detected misconfiguration with FILENAME_METADATA"
+                " setting (must be string or compiled pattern), falling"
+                "back to the default")
+        settings['FILENAME_METADATA'] = \
+                _DEFAULT_CONFIG['FILENAME_METADATA']
 
     return settings
