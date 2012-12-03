@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+import re
 try:
     import docutils
     import docutils.core
@@ -207,8 +209,9 @@ for cls in Reader.__subclasses__():
 
 def read_file(filename, fmt=None, settings=None):
     """Return a reader object using the given format."""
+    base, ext = os.path.splitext(os.path.basename(filename))
     if not fmt:
-        fmt = filename.split('.')[-1]
+        fmt = ext[1:]
 
     if fmt not in _EXTENSIONS:
         raise TypeError('Pelican does not know how to parse %s' % filename)
@@ -225,9 +228,18 @@ def read_file(filename, fmt=None, settings=None):
     content, metadata = reader.read(filename)
 
     # eventually filter the content with typogrify if asked so
-    if settings and settings['TYPOGRIFY']:
+    if settings and settings.get('TYPOGRIFY'):
         from typogrify.filters import typogrify
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
+
+    filename_metadata = settings and settings.get('FILENAME_METADATA')
+    if filename_metadata:
+        match = re.match(filename_metadata, base)
+        if match:
+            for k, v in match.groupdict().iteritems():
+                if k not in metadata:
+                    k = k.lower()  # metadata must be lowercase
+                    metadata[k] = reader.process_metadata(k, v)
 
     return content, metadata

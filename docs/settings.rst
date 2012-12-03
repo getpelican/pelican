@@ -50,6 +50,16 @@ Setting name (default value)                                            What doe
                                                                         If tuple object, it will instead generate the
                                                                         default datetime object by passing the tuple to
                                                                         the datetime.datetime constructor.
+`DEFAULT_METADATA` (``()``)                                             The default metadata you want to use for all articles
+                                                                        and pages.
+`FILENAME_METADATA` (``'(?P<date>\d{4}-\d{2}-\d{2}).*'``)               The regexp that will be used to extract any metadata
+                                                                        from the filename. All named groups that are matched
+                                                                        will be set in the metadata object.
+                                                                        The default value will only extract the date from
+                                                                        the filename.
+                                                                        For example, if you would like to extract both the
+                                                                        date and the slug, you could set something like:
+                                                                        ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
                                                                         generating new files.
 `FILES_TO_COPY` (``()``)                                                A list of files (or directories) to copy from the source (inside the
