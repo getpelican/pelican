@@ -145,9 +145,9 @@ class MdReaderTest(unittest.TestCase):
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_markdown_markup_extension(self):
         # test to ensure the markdown markup extension is being processed as expected
-        reader = readers.MarkdownReader({})
-        reader.settings.update(dict(MARKDOWN_EXTENSIONS=['toc', ]))
-        content, metadata = reader.read(_filename('article_with_markdown_markup_extensions.md'))
+        content, metadata = readers.read_file(
+                _filename('article_with_markdown_markup_extensions.md'),
+                settings={'MD_EXTENSIONS': ['toc', 'codehilite', 'extra']})
         expected = '<div class="toc">\n'\
             '<ul>\n'\
             '<li><a href="#level1">Level1</a><ul>\n'\
