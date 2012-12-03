@@ -264,6 +264,9 @@ HTML minification
 The `minify` plugin compresses all of Pelican's HTML output. This can be used to
 obfuscate HTML and reduce filesize.
 
+In order to use this plugin, you must first install the ``django-htmlmin``
+package.
+
 HTML tags for reStructuredText
 ------------------------------
 
