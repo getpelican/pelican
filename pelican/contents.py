@@ -277,7 +277,7 @@ class URLWrapper(object):
             return value
         else:
             if get_page_name:
-                return unicode(value[:value.find('{slug}') + len('{slug}')]).format(**self.as_dict())
+                return unicode(os.path.splitext(value)[0]).format(**self.as_dict())
             else:
                 return unicode(value).format(**self.as_dict())
 
