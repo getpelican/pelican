@@ -129,8 +129,6 @@ Setting name (default value)                                            What doe
                                                                         Can be used to separate templates from the theme.
                                                                         Example: projects, resume, profile ...
                                                                         This templates need to use ``DIRECT_TEMPLATES`` setting
-
-`MARKDOWN_EXTENSIONS` (``['toc',]``)                                    A list of any Markdown extensions you want to use.
 `ASCIIDOC_OPTIONS` (``[]``)                                             A list of options to pass to asciidoc, see the `manpage
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
 =====================================================================   =====================================================================
