@@ -4,7 +4,7 @@
 import os
 import tempfile
 
-from pelican.plugins import gzip_cache
+from pelican.plugins import gzip_cache, minify
 
 from support import unittest, temporary_folder
 
@@ -34,3 +34,19 @@ class TestGzipCache(unittest.TestCase):
             gzip_cache.create_gzip_file(a_html_filename)
             self.assertTrue(os.path.exists(a_html_filename + '.gz'))
 
+
+class TestMinify(unittest.TestCase):
+    """Unit tests for the minify plugin."""
+
+    def test_create_minified_file(self):
+        """Test that a file matching the input filename is compressed."""
+        # The plugin walks over the output content after the finalized signal
+        # so it is safe to assume that the file exists (otherwise walk would
+        # not report it). Therefore, create a dummy file to use.
+        with temporary_folder() as tempdir:
+            (_, a_html_filename) = tempfile.mkstemp(suffix='.html', dir=tempdir)
+            f = open(a_html_filename, 'w')
+            f.write('<html>    <head>hi</head>  </html>      ')
+            f.close()
+            minify.create_minified_file(a_html_filename)
+            self.assertEqual(open(a_html_filename).read(), '<html> <head>hi</head> </html>')
