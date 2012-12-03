@@ -108,6 +108,7 @@ The following plugins are currently included with Pelican under ``pelican.plugin
 * `Gravatar`_
 * `Gzip cache`_
 * `HTML tags for reStructuredText`_
+* `HTML minification`_
 * `Related posts`_
 * `Sitemap`_
 
@@ -256,6 +257,12 @@ at a higher compression level for increased optimization.
 
 The ``gzip_cache`` plugin compresses all common text type files into a ``.gz``
 file within the same directory as the original file.
+
+HTML minification
+-----------------
+
+The `minify` plugin compresses all of Pelican's HTML output. This can be used to
+obfuscate HTML and reduce filesize.
 
 HTML tags for reStructuredText
 ------------------------------
