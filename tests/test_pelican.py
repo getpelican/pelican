@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 try:
     import unittest2 as unittest
 except ImportError:
@@ -48,7 +50,7 @@ class TestPelican(unittest.TestCase):
         logging.getLogger().addHandler(self.logcount_handler)
         self.temp_path = mkdtemp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
+        locale.setlocale(locale.LC_ALL, str('C'))
 
     def tearDown(self):
         rmtree(self.temp_path)

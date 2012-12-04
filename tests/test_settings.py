@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 import copy
 from os.path import dirname, abspath, join
 
@@ -16,7 +18,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.settings = read_settings(default_conf)
 
     def test_overwrite_existing_settings(self):
-        self.assertEqual(self.settings.get('SITENAME'), u"Alexis' log")
+        self.assertEqual(self.settings.get('SITENAME'), "Alexis' log")
         self.assertEqual(self.settings.get('SITEURL'),
                 'http://blog.notmyidea.org')
 

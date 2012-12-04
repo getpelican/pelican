@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import sys
+from six import StringIO
 import logging
 from logging.handlers import BufferingHandler
 
@@ -101,7 +102,7 @@ def mute(returns_output=False):
         def wrapper(*args, **kwargs):
 
             saved_stdout = sys.stdout
-            sys.stdout = cStringIO.StringIO()
+            sys.stdout = StringIO()
 
             try:
                 out = func(*args, **kwargs)
