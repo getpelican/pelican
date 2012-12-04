@@ -18,15 +18,20 @@ entry_points = {
    ]
 }
 
+
+README = open('README.rst').read()
+CHANGELOG = open('docs/changelog.rst').read()
+
+
 setup(
     name="pelican",
     version="3.2",
     url='http://getpelican.com/',
     author='Alexis Metaireau',
     author_email='authors@getpelican.com',
-    description="A tool to generate a static blog from reStructuredText or "\
+    description="A tool to generate a static blog from reStructuredText or "
                 "Markdown input files.",
-    long_description=open('README.rst').read(),
+    long_description=README + '\n' + CHANGELOG,
     packages=['pelican', 'pelican.tools', 'pelican.plugins'],
     include_package_data=True,
     install_requires=requires,
