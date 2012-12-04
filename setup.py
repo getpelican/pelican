@@ -2,7 +2,7 @@
 from setuptools import setup
 
 requires = ['feedgenerator', 'jinja2 >= 2.4', 'pygments', 'docutils', 'pytz',
-            'blinker', 'unidecode']
+            'blinker', 'unidecode', 'six']
 
 try:
     import argparse  # NOQA
