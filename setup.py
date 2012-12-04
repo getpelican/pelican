@@ -23,7 +23,7 @@ setup(
     version="3.1",
     url='http://getpelican.com/',
     author='Alexis Metaireau',
-    author_email='alexis@notmyidea.org',
+    author_email='authors@getpelican.com',
     description="A tool to generate a static blog from reStructuredText or "\
                 "Markdown input files.",
     long_description=open('README.rst').read(),

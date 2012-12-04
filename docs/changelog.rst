@@ -1,7 +1,7 @@
 Release history
 ###############
 
-3.1 (XXXX-XX-XX)
+3.1 (2012-12-04)
 ================
 
 * Improve handling of links to intra-site resources
@@ -32,7 +32,7 @@ Release history
   ``article_generate_preread``
 
 3.0 (2012-08-08)
-==================
+================
 
 * Refactored the way URLs are handled
 * Improved the English documentation
