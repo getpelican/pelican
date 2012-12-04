@@ -4,7 +4,7 @@ Pelican
 Pelican is a static site generator, written in Python_.
 
 * Write your weblog entries directly with your editor of choice (vim!)
-  in reStructuredText_, Markdown_ or AsciiDoc_
+  in reStructuredText_, Markdown_, or AsciiDoc_
 * Includes a simple CLI tool to (re)generate the weblog
 * Easy to interface with DVCSes and web hooks
 * Completely static output is easy to host anywhere
