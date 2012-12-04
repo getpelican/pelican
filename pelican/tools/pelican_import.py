@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 
 import argparse
-from HTMLParser import HTMLParser
 import os
 import subprocess
 import sys
 import time
-
 from codecs import open
+from HTMLParser import HTMLParser
 
 from pelican.utils import slugify
 
 
 def wp2fields(xml):
-    """Opens a wordpress XML file, and yield pelican fields"""
+    """Opens a WordPress XML file, and yield pelican fields."""
+
     try:
         from BeautifulSoup import BeautifulStoneSoup
     except ImportError:
         error = ('Missing dependency '
-                 '"BeautifulSoup" required to import Wordpress XML files.')
+                 '"BeautifulSoup" required to import WordPress XML files.')
         sys.exit(error)
 
     xmlfile = open(xml, encoding='utf-8').read()
@@ -44,22 +44,26 @@ def wp2fields(xml):
 
             author = item.fetch('dc:creator')[0].contents[0].title()
 
-            categories = [cat.contents[0] for cat in item.fetch(domain='category')]
-            # caturl = [cat['nicename'] for cat in item.fetch(domain='category')]
+            categories = [cat.contents[0]
+                          for cat in item.fetch(domain='category')]
+            # caturl = [cat['nicename']
+            #           for cat in item.fetch(domain='category')]
 
             tags = [tag.contents[0] for tag in item.fetch(domain='post_tag')]
 
-            yield (title, content, filename, date, author, categories, tags, "html")
+            yield (title, content, filename, date, author, categories,
+                   tags, "html")
+
 
 def dc2fields(file):
-    """Opens a Dotclear export file, and yield pelican fields"""
+    """Opens a Dotclear export file, and yield pelican fields."""
+
     try:
         from BeautifulSoup import BeautifulStoneSoup
     except ImportError:
         error = ('Missing dependency '
                  '"BeautifulSoup" required to import Dotclear files.')
         sys.exit(error)
-
 
     in_cat = False
     in_post = False
@@ -84,7 +88,7 @@ def dc2fields(file):
                     # remove 1st and last ""
                     fields[0] = fields[0][1:]
                     # fields[-1] = fields[-1][:-1]
-                    category_list[fields[0]]=fields[2]
+                    category_list[fields[0]] = fields[2]
             elif in_post:
                 if not line:
                     in_post = False
@@ -135,28 +139,34 @@ def dc2fields(file):
         tags = []
 
         if cat_id:
-            categories = [category_list[id].strip() for id in cat_id.split(',')]
+            categories = [category_list[id].strip()
+                          for id in cat_id.split(',')]
 
         # Get tags related to a post
-        tag = post_meta.replace('{', '').replace('}', '').replace('a:1:s:3:\\"tag\\";a:', '').replace('a:0:', '')
+        tag = post_meta.replace('{', '').replace('}', '').\
+            replace('a:1:s:3:\\"tag\\";a:', '').replace('a:0:', '')
+
         if len(tag) > 1:
             if int(tag[:1]) == 1:
                 newtag = tag.split('"')[1]
-                tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
+                tags.append(unicode(BeautifulStoneSoup(
+                    newtag,
+                    convertEntities=BeautifulStoneSoup.HTML_ENTITIES)))
             else:
-                i=1
-                j=1
+                i = 1
+                j = 1
                 while(i <= int(tag[:1])):
-                    newtag = tag.split('"')[j].replace('\\','')
-                    tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
-                    i=i+1
-                    if j < int(tag[:1])*2:
-                        j=j+2
+                    newtag = tag.split('"')[j].replace('\\', '')
+                    tags.append(unicode(BeautifulStoneSoup(
+                        newtag,
+                        convertEntities=BeautifulStoneSoup.HTML_ENTITIES)))
+                    i = i + 1
+                    if j < int(tag[:1]) * 2:
+                        j = j + 2
 
-        """
-        dotclear2 does not use markdown by default unless you use the markdown plugin
-        Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
-        """
+        # dotclear2 does not use markdown by default unless you use the
+        # markdown plugin
+        # Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
         if post_format == "markdown":
             content = post_excerpt + post_content
         else:
@@ -164,21 +174,25 @@ def dc2fields(file):
             content = content.replace('\\n', '')
             post_format = "html"
 
-        yield (post_title, content, slugify(post_title), post_creadt, author, categories, tags, post_format)
+        yield (post_title, content, slugify(post_title), post_creadt, author,
+               categories, tags, post_format)
 
 
 def feed2fields(file):
-    """Read a feed and yield pelican fields"""
+    """Read a feed and yield pelican fields."""
+
     import feedparser
     d = feedparser.parse(file)
     for entry in d.entries:
         date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
-            if hasattr(entry, "updated_parsed") else None)
+                if hasattr(entry, "updated_parsed") else None)
         author = entry.author if hasattr(entry, "author") else None
-        tags = [e['term'] for e in entry.tags] if hasattr(entry, "tags") else None
+        tags = [e['term'] for e in entry.tags] \
+            if hasattr(entry, "tags") else None
 
         slug = slugify(entry.title)
-        yield (entry.title, entry.description, slug, date, author, [], tags, "html")
+        yield (entry.title, entry.description, slug, date, author, [],
+               tags, "html")
 
 
 def build_header(title, date, author, categories, tags):
@@ -195,6 +209,7 @@ def build_header(title, date, author, categories, tags):
     header += '\n'
     return header
 
+
 def build_markdown_header(title, date, author, categories, tags):
     """Build a header from a list of fields"""
     header = 'Title: %s\n' % title
@@ -209,11 +224,17 @@ def build_markdown_header(title, date, author, categories, tags):
     header += '\n'
     return header
 
-def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=False):
-    for title, content, filename, date, author, categories, tags, in_markup in fields:
-        if (in_markup == "markdown") or (out_markup == "markdown") :
+
+def fields2pelican(fields, out_markup, output_path,
+                   dircat=False, strip_raw=False):
+
+    for (title, content, filename, date, author, categories, tags,
+         in_markup) in fields:
+
+        if (in_markup == "markdown") or (out_markup == "markdown"):
             ext = '.md'
-            header = build_markdown_header(title, date, author, categories, tags)
+            header = build_markdown_header(title, date, author, categories,
+                                           tags)
         else:
             out_markup = "rst"
             ext = '.rst'
@@ -224,16 +245,16 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
         # option to put files in directories with categories names
         if dircat and (len(categories) > 0):
             catname = slugify(categories[0])
-            out_filename = os.path.join(output_path, catname, filename+ext)
+            out_filename = os.path.join(output_path, catname, filename + ext)
             if not os.path.isdir(os.path.join(output_path, catname)):
                 os.mkdir(os.path.join(output_path, catname))
         else:
-            out_filename = os.path.join(output_path, filename+ext)
+            out_filename = os.path.join(output_path, filename + ext)
 
         print(out_filename)
 
         if in_markup == "html":
-            html_filename = os.path.join(output_path, filename+'.html')
+            html_filename = os.path.join(output_path, filename + '.html')
 
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 # Replace newlines with paragraphs wrapped with <p> so
@@ -244,11 +265,10 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
 
                 fp.write(new_content)
 
-
             parse_raw = '--parse-raw' if not strip_raw else ''
             cmd = ('pandoc --normalize --reference-links {0} --from=html'
                    ' --to={1} -o "{2}" "{3}"').format(
-                    parse_raw, out_markup, out_filename, html_filename)
+                       parse_raw, out_markup, out_filename, html_filename)
 
             try:
                 rc = subprocess.call(cmd, shell=True)
@@ -268,7 +288,8 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
             with open(out_filename, 'r', encoding='utf-8') as fs:
                 content = fs.read()
                 if out_markup == "markdown":
-                    # In markdown, to insert a <br />, end a line with two or more spaces & then a end-of-line
+                    # In markdown, to insert a <br />, end a line with two or
+                    # more spaces & then a end-of-line
                     content = content.replace("\\\n ", "  \n")
                     content = content.replace("\\\n", "  \n")
 
@@ -278,26 +299,27 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, Wordpress or Dotclear files to rst files."
-            "Be sure to have pandoc installed",
+        description="Transform feed, WordPress or Dotclear files to rst files."
+                    "Be sure to have pandoc installed",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='input', help='The input file to read')
     parser.add_argument('--wpfile', action='store_true', dest='wpfile',
-        help='Wordpress XML export')
+                        help='WordPress XML export')
     parser.add_argument('--dotclear', action='store_true', dest='dotclear',
-        help='Dotclear export')
+                        help='Dotclear export')
     parser.add_argument('--feed', action='store_true', dest='feed',
-        help='Feed to parse')
+                        help='Feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
-        help='Output path')
+                        help='Output path')
     parser.add_argument('-m', '--markup', dest='markup', default='rst',
-        help='Output markup format (supports rst & markdown)')
+                        help='Output markup format (supports rst & markdown)')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
-        help='Put files in directories with categories name')
+                        help='Put files in directories with categories name')
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
-        help="Strip raw HTML code that can't be converted to "
-             "markup such as flash embeds or iframes (wordpress import only)")
+                        help="Strip raw HTML code that can't be converted to "
+                        "markup such as flash embeds or iframes (wordpress "
+                        "import only)")
 
     args = parser.parse_args()
 
@@ -309,7 +331,8 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear or --feed options"
+        error = "You must provide either --wpfile, --dotclear, or --feed " + \
+                "options"
         exit(error)
 
     if not os.path.exists(args.output):
