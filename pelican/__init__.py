@@ -18,7 +18,8 @@ from pelican.writers import Writer
 
 __major__ = 3
 __minor__ = 2
-__version__ = "{0}.{1}".format(__major__, __minor__)
+__micro__ = 0
+__version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
 
 
 logger = logging.getLogger(__name__)
