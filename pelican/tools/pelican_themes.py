@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+
+import six
 
 import argparse
 import os
@@ -28,7 +31,7 @@ _BUILTIN_THEMES = ['simple', 'notmyidea']
 
 def err(msg, die=None):
     """Print an error message and exits if an exit code is given"""
-    sys.stderr.write(str(msg) + '\n')
+    sys.stderr.write(msg + '\n')
     if die:
         sys.exit((die if type(die) is int else 1))
 
@@ -186,13 +189,13 @@ def install(path, v=False, u=False):
                         for root, dirs, files in os.walk(theme_path):
                             for d in dirs:
                                 dname = os.path.join(root, d)
-                                os.chmod(dname, 0755)
+                                os.chmod(dname, 493) # 0o755
                             for f in files:
                                 fname = os.path.join(root, f)
-                                os.chmod(fname, 0644)
-                except OSError, e:
+                                os.chmod(fname, 420) # 0o644
+                except OSError as e:
                     err("Cannot change permissions of files or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)), die=False)
-            except Exception, e:
+            except Exception as e:
                 err("Cannot copy `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
 
@@ -212,7 +215,7 @@ def symlink(path, v=False):
                 print("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path))
             try:
                 os.symlink(path, theme_path)
-            except Exception, e:
+            except Exception as e:
                 err("Cannot link `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
 
@@ -233,7 +236,7 @@ def clean(v=False):
                     print('Removing {0}'.format(path))
                 try:
                     os.remove(path)
-                except OSError, e:
+                except OSError as e:
                     print('Error: cannot remove {0}'.format(path))
                 else:
                     c+=1

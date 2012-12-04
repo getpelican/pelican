@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 __all__ = [
     'get_article',
     'unittest',
 ]
 
-import cStringIO
 import os
 import re
 import subprocess

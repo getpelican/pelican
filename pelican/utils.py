@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import os
 import re
 import pytz
@@ -16,6 +19,24 @@ from operator import attrgetter
 
 logger = logging.getLogger(__name__)
 
+#----------------------------------------------------------------------------
+# Stolen from Django: django.utils.encoding
+#
+
+def python_2_unicode_compatible(klass):
+    """
+    A decorator that defines __unicode__ and __str__ methods under Python 2.
+    Under Python 3 it does nothing.
+
+    To support Python 2 and 3 with a single code base, define a __str__ method
+    returning text and apply this decorator to the class.
+    """
+    if not six.PY3:
+        klass.__unicode__ = klass.__str__
+        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
+    return klass
+
+#----------------------------------------------------------------------------
 
 class NoFilesError(Exception):
     pass
@@ -78,14 +99,24 @@ def slugify(value):
 
     Took from django sources.
     """
+    # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
-    if type(value) == unicode:
-        import unicodedata
-        from unidecode import unidecode
-        value = unicode(unidecode(value))
-        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
-    return re.sub('[-\s]+', '-', value)
+    # value must be unicode per se
+    import unicodedata
+    from unidecode import unidecode
+    # unidecode returns str in Py2 and 3, so in Py2 we have to make
+    # it unicode again
+    value = unidecode(value)
+    if isinstance(value, six.binary_type):
+        value = value.decode('ascii')
+    # still unicode
+    value = unicodedata.normalize('NFKD', value)
+    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    value = re.sub('[-\s]+', '-', value)
+    # we want only ASCII chars
+    value = value.encode('ascii', 'ignore')
+    # but Pelican should generally use only unicode
+    return value.decode('ascii')
 
 
 def copy(path, source, destination, destination_path=None, overwrite=False):
@@ -137,7 +168,7 @@ def clean_output_dir(path):
     if not os.path.isdir(path):
         try:
             os.remove(path)
-        except Exception, e:
+        except Exception as e:
             logger.error("Unable to delete file %s; %e" % path, e)
         return
 
@@ -148,13 +179,13 @@ def clean_output_dir(path):
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s" % file)
-            except Exception, e:
+            except Exception as e:
                 logger.error("Unable to delete directory %s; %e" % file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s" % file)
-            except Exception, e:
+            except Exception as e:
                 logger.error("Unable to delete file %s; %e" % file, e)
         else:
             logger.error("Unable to delete %s, file type unknown" % file)
@@ -180,7 +211,7 @@ def truncate_html_words(s, num, end_text='...'):
     """
     length = int(num)
     if length <= 0:
-        return u''
+        return ''
     html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
                       'hr', 'input')
 
@@ -254,10 +285,10 @@ def process_translations(content_list):
     for slug, items in grouped_by_slugs:
         items = list(items)
         # find items with default language
-        default_lang_items = filter(attrgetter('in_default_lang'), items)
+        default_lang_items = list(filter(attrgetter('in_default_lang'), items))
         len_ = len(default_lang_items)
         if len_ > 1:
-            logger.warning(u'there are %s variants of "%s"' % (len_, slug))
+            logger.warning('there are %s variants of "%s"' % (len_, slug))
             for x in default_lang_items:
                 logger.warning('    %s' % x.filename)
         elif len_ == 0:
@@ -269,12 +300,9 @@ def process_translations(content_list):
                 + 'content'
             logger.warning(msg)
         index.extend(default_lang_items)
-        translations.extend(filter(
-            lambda x: x not in default_lang_items,
-            items
-        ))
+        translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
-            a.translations = filter(lambda x: x != a, items)
+            a.translations = [x for x in items if x != a]
     return index, translations
 
 
@@ -333,6 +361,6 @@ def set_date_tzinfo(d, tz_name=None):
 def mkdir_p(path):
     try:
         os.makedirs(path)
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.EEXIST:
             raise

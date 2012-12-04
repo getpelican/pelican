@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import copy
 import locale
 import logging
@@ -11,7 +14,8 @@ from sys import platform, stdin
 
 
 from pelican.settings import _DEFAULT_CONFIG
-from pelican.utils import slugify, truncate_html_words, memoized
+from pelican.utils import (slugify, truncate_html_words, memoized,
+    python_2_unicode_compatible)
 from pelican import signals
 
 logger = logging.getLogger(__name__)
@@ -85,13 +89,20 @@ class Page(object):
             self.date_format = self.date_format[1]
 
         if hasattr(self, 'date'):
-            encoded_date = self.date.strftime(
-                    self.date_format.encode('ascii', 'xmlcharrefreplace'))
+            self.locale_date = self.date.strftime(
+                self.date_format)
+            
+            ### XXX Cannot really make sense out of this, sorry (dmdm)
+            ###     Was intended to format the date according to locale?
+            ###     That would be different from the encoding...
 
-            if platform == 'win32':
-                self.locale_date = encoded_date.decode(stdin.encoding)
-            else:
-                self.locale_date = encoded_date.decode('utf')
+            ### encoded_date = self.date.strftime(
+            ###         self.date_format.encode('ascii', 'xmlcharrefreplace'))
+
+            ### if platform == 'win32':
+            ###     self.locale_date = encoded_date.decode(stdin.encoding)
+            ### else:
+            ###     self.locale_date = encoded_date.decode('utf') # XXX <-- UTF-8?
 
         # manage status
         if not hasattr(self, 'status'):
@@ -167,7 +178,7 @@ class Page(object):
                     origin = '/'.join((siteurl,
                              self._context['filenames'][value].url))
                 else:
-                    logger.warning(u"Unable to find {fn}, skipping url"
+                    logger.warning("Unable to find {fn}, skipping url"
                                     " replacement".format(fn=value))
 
             return m.group('markup') + m.group('quote') + origin \
@@ -243,10 +254,10 @@ class Article(Page):
 class Quote(Page):
     base_properties = ('author', 'date')
 
-
+@python_2_unicode_compatible
 class URLWrapper(object):
     def __init__(self, name, settings):
-        self.name = unicode(name)
+        self.name = name
         self.slug = slugify(self.name)
         self.settings = settings
 
@@ -257,12 +268,9 @@ class URLWrapper(object):
         return hash(self.name)
 
     def __eq__(self, other):
-        return self.name == unicode(other)
+        return self.name == other
 
     def __str__(self):
-        return str(self.name.encode('utf-8', 'replace'))
-
-    def __unicode__(self):
         return self.name
 
     def _from_settings(self, key, get_page_name=False):
@@ -272,14 +280,14 @@ class URLWrapper(object):
         Useful for pagination."""
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
-        if not isinstance(value, basestring):
-            logger.warning(u'%s is set to %s' % (setting, value))
+        if not isinstance(value, six.string_types):
+            logger.warning('%s is set to %s' % (setting, value))
             return value
         else:
             if get_page_name:
-                return unicode(os.path.splitext(value)[0]).format(**self.as_dict())
+                return os.path.splitext(value)[0].format(**self.as_dict())
             else:
-                return unicode(value).format(**self.as_dict())
+                return value.format(**self.as_dict())
 
     page_name = property(functools.partial(_from_settings, key='URL', get_page_name=True))
     url = property(functools.partial(_from_settings, key='URL'))
@@ -292,13 +300,14 @@ class Category(URLWrapper):
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
-        super(Tag, self).__init__(unicode.strip(name), *args, **kwargs)
+        super(Tag, self).__init__(name.strip(), *args, **kwargs)
 
 
 class Author(URLWrapper):
     pass
 
 
+@python_2_unicode_compatible
 class StaticContent(object):
     def __init__(self, src, dst=None, settings=None):
         if not settings:
@@ -309,9 +318,6 @@ class StaticContent(object):
         self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
 
     def __str__(self):
-        return str(self.filepath.encode('utf-8', 'replace'))
-
-    def __unicode__(self):
         return self.filepath
 
 
@@ -319,7 +325,7 @@ def is_valid_content(content, f):
     try:
         content.check_properties()
         return True
-    except NameError, e:
-        logger.error(u"Skipping %s: impossible to find informations about"
+    except NameError as e:
+        logger.error("Skipping %s: impossible to find informations about"
                       "'%s'" % (f, e))
         return False

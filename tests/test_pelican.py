@@ -36,7 +36,7 @@ def recursiveDiff(dcmp):
                 for f in dcmp.right_only],
             }
     for sub_dcmp in dcmp.subdirs.values():
-        for k, v in recursiveDiff(sub_dcmp).iteritems():
+        for k, v in recursiveDiff(sub_dcmp).items():
             diff[k] += v
     return diff
 

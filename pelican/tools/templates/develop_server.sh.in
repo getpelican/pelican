@@ -20,7 +20,7 @@ PELICAN_PID=$$BASEDIR/pelican.pid
 function usage(){
   echo "usage: $$0 (stop) (start) (restart)"
   echo "This starts pelican in debug and reload mode and then launches"
-  echo "A SimpleHTTP server to help site development. It doesn't read"
+  echo "A pelican.server to help site development. It doesn't read"
   echo "your pelican options so you edit any paths in your Makefile"
   echo "you will need to edit it as well"
   exit 3
@@ -31,14 +31,14 @@ function shut_down(){
     PID=$$(cat $$SRV_PID)
     PROCESS=$$(ps -p $$PID | tail -n 1 | awk '{print $$4}')
     if [[ $$PROCESS != "" ]]; then
-      echo "Killing SimpleHTTPServer"
+      echo "Killing pelican.server"
       kill $$PID
     else
       echo "Stale PID, deleting"
     fi
     rm $$SRV_PID
   else
-    echo "SimpleHTTPServer PIDFile not found"
+    echo "pelican.server PIDFile not found"
   fi
 
   if [[ -f $$PELICAN_PID ]]; then
@@ -57,15 +57,15 @@ function shut_down(){
 }
 
 function start_up(){
-  echo "Starting up Pelican and SimpleHTTPServer"
+  echo "Starting up Pelican and pelican.server"
   shift
   $$PELICAN --debug --autoreload -r $$INPUTDIR -o $$OUTPUTDIR -s $$CONFFILE $$PELICANOPTS &
   echo $$! > $$PELICAN_PID
   cd $$OUTPUTDIR
-  python -m SimpleHTTPServer &
+  python -m pelican.server &
   echo $$! > $$SRV_PID
   cd $$BASEDIR
-  sleep 1 && echo 'Pelican and SimpleHTTPServer processes now running in background.'
+  sleep 1 && echo 'Pelican and pelican.server processes now running in background.'
 }
 
 ###

@@ -1,4 +1,5 @@
-This is an attempt to port Pelican to Python 3.
+This is a port of Pelican to Python 3.
+
 It runs on Python 2 and 3 without changes, and 2to3 does not need
 to be run.
 

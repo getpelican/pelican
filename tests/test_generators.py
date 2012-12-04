@@ -32,7 +32,7 @@ class TestArticlesGenerator(unittest.TestCase):
             settings = get_settings()
             settings['ARTICLE_DIR'] = 'content'
             settings['DEFAULT_CATEGORY'] = 'Default'
-            settings['DEFAULT_DATE'] = (1970, 01, 01)
+            settings['DEFAULT_DATE'] = (1970, 1, 1)
             self.generator = ArticlesGenerator(settings.copy(), settings,
                                 CUR_DIR, settings['THEME'], None,
                                 settings['MARKUP'])
@@ -96,7 +96,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = _DEFAULT_CONFIG.copy()
         settings['ARTICLE_DIR'] = 'content'
         settings['DEFAULT_CATEGORY'] = 'Default'
-        settings['DEFAULT_DATE'] = (1970, 01, 01)
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['filenames'] = {}
         generator = ArticlesGenerator(settings.copy(), settings,
@@ -178,7 +178,7 @@ class TestPageGenerator(unittest.TestCase):
     def test_generate_context(self):
         settings = get_settings()
         settings['PAGE_DIR'] = 'TestPages'
-        settings['DEFAULT_DATE'] = (1970, 01, 01)
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
 
         generator = PagesGenerator(settings.copy(), settings, CUR_DIR,
                                       settings['THEME'], None,

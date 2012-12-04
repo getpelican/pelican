@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import copy
 import imp
 import inspect
@@ -54,8 +57,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'CATEGORY_SAVE_AS': 'category/{slug}.html',
                    'TAG_URL': 'tag/{slug}.html',
                    'TAG_SAVE_AS': 'tag/{slug}.html',
-                   'AUTHOR_URL': u'author/{slug}.html',
-                   'AUTHOR_SAVE_AS': u'author/{slug}.html',
+                   'AUTHOR_URL': 'author/{slug}.html',
+                   'AUTHOR_SAVE_AS': 'author/{slug}.html',
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
@@ -146,7 +149,7 @@ def configure_settings(settings):
     # if locales is not a list, make it one
     locales = settings['LOCALE']
 
-    if isinstance(locales, basestring):
+    if isinstance(locales, six.string_types):
         locales = [locales]
 
     # try to set the different locales, fallback on the default.
@@ -155,7 +158,7 @@ def configure_settings(settings):
 
     for locale_ in locales:
         try:
-            locale.setlocale(locale.LC_ALL, locale_)
+            locale.setlocale(locale.LC_ALL, str(locale_))
             break  # break if it is successful
         except locale.Error:
             pass
@@ -207,7 +210,7 @@ def configure_settings(settings):
                        _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
 
     filename_metadata = settings.get('FILENAME_METADATA')
-    if filename_metadata and not isinstance(filename_metadata, basestring):
+    if filename_metadata and not isinstance(filename_metadata, six.string_types):
         logger.error("Detected misconfiguration with FILENAME_METADATA"
                 " setting (must be string or compiled pattern), falling"
                 "back to the default")

@@ -6,7 +6,7 @@ import tempfile
 
 from pelican.plugins import gzip_cache
 
-from support import unittest, temporary_folder
+from .support import unittest, temporary_folder
 
 class TestGzipCache(unittest.TestCase):
     '''Unit tests for the gzip cache plugin'''

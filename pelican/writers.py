@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import with_statement
+from __future__ import with_statement, unicode_literals, print_function
 
 import os
 import locale
@@ -57,7 +57,7 @@ class Writer(object):
         :param feed_type: the feed type to use (atom or rss)
         """
         old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
+        locale.setlocale(locale.LC_ALL, str('C'))
         try:
             self.site_url = context.get('SITEURL', get_relative_path(filename))
             self.feed_domain = context.get('FEED_DOMAIN')
@@ -68,7 +68,7 @@ class Writer(object):
             max_items = len(elements)
             if self.settings['FEED_MAX_ITEMS']:
                 max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
-            for i in xrange(max_items):
+            for i in range(max_items):
                 self._add_item_to_the_feed(feed, elements[i])
 
             if filename:
@@ -77,7 +77,7 @@ class Writer(object):
                     os.makedirs(os.path.dirname(complete_path))
                 except Exception:
                     pass
-                fp = open(complete_path, 'w')
+                fp = open(complete_path, 'w', encoding='utf-8')
                 feed.write(fp, 'utf-8')
                 logger.info('writing %s' % complete_path)
 
@@ -108,7 +108,7 @@ class Writer(object):
         def _write_file(template, localcontext, output_path, name):
             """Render the template write the file."""
             old_locale = locale.setlocale(locale.LC_ALL)
-            locale.setlocale(locale.LC_ALL, 'C')
+            locale.setlocale(locale.LC_ALL, str('C'))
             try:
                 output = template.render(localcontext)
             finally:
@@ -120,7 +120,7 @@ class Writer(object):
                 pass
             with open(filename, 'w', encoding='utf-8') as f:
                 f.write(output)
-            logger.info(u'writing %s' % filename)
+            logger.info('writing %s' % filename)
 
         localcontext = context.copy()
         if relative_urls:
@@ -135,7 +135,7 @@ class Writer(object):
         if paginated:
             # pagination needed, init paginators
             paginators = {}
-            for key in paginated.iterkeys():
+            for key in paginated.keys():
                 object_list = paginated[key]
 
                 if self.settings.get('DEFAULT_PAGINATION'):
@@ -147,9 +147,9 @@ class Writer(object):
 
             # generated pages, and write
             name_root, ext = os.path.splitext(name)
-            for page_num in range(paginators.values()[0].num_pages):
+            for page_num in range(list(paginators.values())[0].num_pages):
                 paginated_localcontext = localcontext.copy()
-                for key in paginators.iterkeys():
+                for key in paginators.keys():
                     paginator = paginators[key]
                     page = paginator.page(page_num + 1)
                     paginated_localcontext.update(
