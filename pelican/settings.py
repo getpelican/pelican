@@ -79,7 +79,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
                    'TEMPLATE_PAGES': {},
-                   'STATIC_FOLDER': 'static'
+                   'OUTPUT_STATIC_DIR': 'static'
                    }
 
 
