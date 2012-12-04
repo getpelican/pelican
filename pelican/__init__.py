@@ -17,8 +17,9 @@ from pelican.utils import (clean_output_dir, files_changed, file_changed,
 from pelican.writers import Writer
 
 __major__ = 3
-__minor__ = 2
-__version__ = "{0}.{1}".format(__major__, __minor__)
+__minor__ = 1
+__micro__ = 1
+__version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
 
 
 logger = logging.getLogger(__name__)
