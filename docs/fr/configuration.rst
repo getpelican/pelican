@@ -59,10 +59,16 @@ CATEGORY_FEED_RSS :
 	Idem pour les flux rss (Optionnel);
 
 FEED_ATOM :
-	Chemin du flux Atom global ;
+	Chemin du flux Atom global;
 
 FEED_RSS :
 	Chemin du flux Rss global (Optionnel);
+
+FEED_ALL_ATOM :
+	Chemin du flux Atom global qui inclut la totalité des posts, indépendamment de la langue;
+
+FEED_ALL_RSS :
+	Chemin du flux Rss global  qui inclut la totalité des posts, indépendamment de la langue (Optionnel);
 
 TAG_FEED_ATOM :
 	Chemin des flux Atom pour les tags (Optionnel);
@@ -157,6 +163,3 @@ SITEURL :
 
 STATIC_PATHS :
 	Les chemins statiques que vous voulez avoir accès sur le chemin de sortie "statique" ;
-
-MARKDOWN_EXTENSIONS :
-	Liste des extentions Markdown que vous souhaitez utiliser ;

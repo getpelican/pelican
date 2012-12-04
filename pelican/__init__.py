@@ -9,7 +9,7 @@ from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, PdfGenerator,
-                                LessCSSGenerator, SourceFileGenerator)
+                                SourceFileGenerator, TemplatePagesGenerator)
 from pelican.log import init
 from pelican.settings import read_settings
 from pelican.utils import (clean_output_dir, files_changed, file_changed,
@@ -17,8 +17,9 @@ from pelican.utils import (clean_output_dir, files_changed, file_changed,
 from pelican.writers import Writer
 
 __major__ = 3
-__minor__ = 0
-__version__ = "{0}.{1}".format(__major__, __minor__)
+__minor__ = 2
+__micro__ = 0
+__version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
 
 
 logger = logging.getLogger(__name__)
@@ -134,6 +135,8 @@ class Pelican(object):
         """Run the generators and return"""
 
         context = self.settings.copy()
+        context['filenames'] = {}  # share the dict between all the generators
+        context['localsiteurl'] = self.settings.get('SITEURL')  # share
         generators = [
             cls(
                 context,
@@ -142,7 +145,6 @@ class Pelican(object):
                 self.theme,
                 self.output_path,
                 self.markup,
-                self.delete_outputdir
             ) for cls in self.get_generator_classes()
         ]
 
@@ -158,11 +160,6 @@ class Pelican(object):
 
         writer = self.get_writer()
 
-        # pass the assets environment to the generators
-        if self.settings['WEBASSETS']:
-            generators[1].env.assets_environment = generators[0].assets_env
-            generators[2].env.assets_environment = generators[0].assets_env
-
         for p in generators:
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
@@ -171,10 +168,11 @@ class Pelican(object):
 
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
+
+        if self.settings['TEMPLATE_PAGES']:
+            generators.append(TemplatePagesGenerator)
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
-        if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
-            generators.append(LessCSSGenerator)
         if self.settings['OUTPUT_SOURCES']:
             generators.append(SourceFileGenerator)
 

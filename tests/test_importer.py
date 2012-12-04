@@ -47,3 +47,13 @@ class TestWordpressXmlImporter(unittest.TestCase):
             rst_files = (r(f) for f in silent_f2p(posts, 'rst', temp,
                          strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
+
+    def test_decode_html_entities_in_titles(self):
+        posts = list(self.posts)
+        test_posts = [post for post in posts if post[2] == 'html-entity-test']
+        self.assertTrue(len(test_posts) == 1)
+        
+        post = test_posts[0]
+        title = post[0]
+        self.assertTrue(title, "A normal post with some <html> entities in the title. You can't miss them.")
+        self.assertTrue('&' not in title)

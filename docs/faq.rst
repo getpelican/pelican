@@ -1,7 +1,7 @@
 Frequently Asked Questions (FAQ)
 ################################
 
-Here is a summary of the frequently asked questions for Pelican.
+Here are some frequently asked questions about Pelican.
 
 What's the best way to communicate a problem, question, or suggestion?
 ======================================================================
@@ -21,7 +21,8 @@ How can I help?
 ================
 
 There are several ways to help out. First, you can use Pelican and report any
-suggestions or problems you might have via IRC or the issue tracker.
+suggestions or problems you might have via IRC or the `issue tracker
+<https://github.com/getpelican/pelican/issues>`_.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
@@ -57,13 +58,14 @@ I want to use Markdown, but I got an error.
 ===========================================
 
 Markdown is not a hard dependency for Pelican, so you will need to explicitly
-install it. You can do so by typing::
+install it. You can do so by typing the following, including ``sudo`` if
+required::
 
-    $ (sudo) pip install markdown
+    (sudo) pip install markdown
 
-In case you don't have pip installed, consider installing it via::
+If you don't have pip installed, consider installing the pip installer via::
 
-    $ (sudo) easy_install pip
+    (sudo) easy_install pip
 
 Can I use arbitrary meta-data in my templates?
 ==============================================
@@ -87,15 +89,21 @@ want to have its own template.
 
     :template: template_name
 
-Then just make sure to have the template installed in to your theme as
-``template_name.html``.
+Then just make sure your theme contains the relevant template file (e.g.
+``template_name.html``).
 
 What if I want to disable feed generation?
 ==========================================
 
-To disable all feed generation set ``FEED_ATOM`` and ``FEED_RSS`` to ``None`` in
-your settings. Please note ``None`` and ``''`` are not the same thing. The
-word ``None`` should not be surrounded by quotes.
+To disable all feed generation, all feed settings should be set to ``None``.
+All but two feed settings already default to ``None``, so if you want to disable
+all feed generation, you only need to specify the following settings::
+
+    FEED_ALL_ATOM = None
+    CATEGORY_FEED_ATOM = None
+
+Please note that ``None`` and ``''`` are not the same thing. The word ``None``
+should not be surrounded by quotes.
 
 I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================
@@ -111,7 +119,7 @@ should result in this warning.
 
 Feeds are still generated when this warning is displayed but may not validate.
 
-My feeds are broken since I upgraded to Pelican 3.0
+My feeds are broken since I upgraded to Pelican 3.x
 ===================================================
 
 Starting in 3.0, some of the FEED setting names were changed to more explicitly
@@ -122,7 +130,14 @@ setting names). Here is an exact list of the renamed setting names::
     TAG_FEED -> TAG_FEED_ATOM
     CATEGORY_FEED -> CATEGORY_FEED_ATOM
 
-Older 2.x themes that referenced the old setting names may not link properly.
-In order to rectify this, please update your theme for compatibility with 3.0+
-by changing the relevant values in your template files. For an example of
-complete feed headers and usage please check out the ``simple`` theme.
+Starting in 3.1, the new feed ``FEED_ALL_ATOM`` has been introduced: this
+feed will aggregate all posts regardless of their language. This setting
+generates ``'feeds/all.atom.xml'`` by default and ``FEED_ATOM`` now defaults to
+``None``. The following feed setting has also been renamed::
+
+    TRANSLATION_FEED -> TRANSLATION_FEED_ATOM
+
+Older themes that referenced the old setting names may not link properly.
+In order to rectify this, please update your theme for compatibility by changing
+the relevant values in your template files. For an example of complete feed
+headers and usage please check out the ``simple`` theme.

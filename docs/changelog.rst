@@ -1,13 +1,43 @@
 Release history
 ###############
 
-3.1 (XXXX-XX-XX)
+3.2 (XXXX-XX-XX)
+================
+
+* [...]
+
+3.1 (2012-12-04)
 ================
 
 * Improve handling of links to intra-site resources
+* Ensure WordPress import adds paragraphs for all types of line endings
+  in post content
+* Decode HTML entities within WordPress post titles on import
+* Improve appearance of LinkedIn icon in default theme
+* Add GitHub and Google+ social icons support in default theme
+* Optimize social icons
+* Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing all posts regardless of their language
+* Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and ``TRANSLATION_FEED_RSS``
+* Different feeds can now be enabled/disabled individually
+* Allow for blank author: if ``AUTHOR`` setting is not set, author won't
+  default to ``${USER}`` anymore, and a post won't contain any author
+  information if the post author is empty
+* Move LESS and Webassets support from Pelican core to plugin
+* The ``DEFAULT_DATE`` setting now defaults to ``None``, which means that
+  articles won't be generated unless date metadata is specified
+* Add ``FILENAME_METADATA`` setting to support metadata extraction from filename
+* Add ``gzip_cache`` plugin to compress common text files into a ``.gz``
+  file within the same directory as the original file, preventing the server
+  (e.g. Nginx) from having to compress files during an HTTP call
+* Add support for AsciiDoc-formatted content
+* Add ``USE_FOLDER_AS_CATEGORY`` setting so that feature can be toggled on/off
+* Support arbitrary Jinja template files
+* Restore basic functional tests
+* New signals: ``generator_init``, ``get_generators``, and
+  ``article_generate_preread``
 
 3.0 (2012-08-08)
-==================
+================
 
 * Refactored the way URLs are handled
 * Improved the English documentation
