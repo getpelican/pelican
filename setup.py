@@ -20,7 +20,7 @@ entry_points = {
 
 setup(
     name="pelican",
-    version="3.1",
+    version="3.2",
     url='http://getpelican.com/',
     author='Alexis Metaireau',
     author_email='authors@getpelican.com',
