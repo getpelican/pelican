@@ -41,7 +41,6 @@ class Pelican(object):
         self.output_path = settings['OUTPUT_PATH']
         self.markup = settings['MARKUP']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
-        self.static_folder = settings['STATIC_FOLDER']
 
         self.init_path()
         self.init_plugins()
