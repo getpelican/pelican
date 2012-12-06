@@ -78,7 +78,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'TYPOGRIFY': False,
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
-                   'TEMPLATE_PAGES': {}
+                   'TEMPLATE_PAGES': {},
+                   'MD_REFERENCES': None
                    }
 
 

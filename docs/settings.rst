@@ -75,6 +75,9 @@ Setting name (default value)                                            What doe
 `MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
                                                                         will use. Refer to the extensions chapter in the
                                                                         Python-Markdown documentation for a complete list of
+
+`MD_REFERENCES` (````)                                                  A file containing Markdown links which is added to
+                                                                        the end of each posting before being processed by Markdown.
                                                                         supported extensions.
 `OUTPUT_PATH` (``'output/'``)                                           Where to output the generated files.
 `PATH` (``None``)                                                       Path to content directory to be processed by Pelican.
