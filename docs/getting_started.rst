@@ -364,10 +364,11 @@ appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
 Publishing drafts
 -----------------
 
-If you want to publish an article as a draft (for friends to review before
-publishing, for example), you can add a ``status: draft`` attribute to its
-metadata. That article will then be output to the ``drafts`` folder and not
-listed on the index page nor on any category page.
+If you want to publish an article or page as a draft (for friends to review
+before publishing, for example), you can add a ``status: draft`` attribute to
+its metadata. Articles and pages will be output to the ``drafts/articles`` and 
+``drafts/pages`` folders respectively and will not be listed on the index page
+nor on any category page.
 
 Viewing the generated files
 ---------------------------
