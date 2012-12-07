@@ -8,7 +8,7 @@ before_install:
  - sudo apt-get install -qq ruby-sass
 install:
     - pip install nose mock --use-mirrors
-    - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then pip install --use-mirrors unittest2py3k; else pip install --use-mirrors unittest; fi
+    - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then pip install --use-mirrors unittest2py3k; else pip install --use-mirrors unittest2; fi
     - pip install . --use-mirrors
     - pip install Markdown
     - pip install webassets
