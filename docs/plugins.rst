@@ -100,16 +100,16 @@ request if you need them!
 List of plugins
 ===============
 
-The following plugins are currently included with Pelican under ``pelican.plugins``:
+The following plugins are currently included with Pelican:
 
-* `Asset management`_
-* `GitHub activity`_
-* `Global license`_
-* `Gravatar`_
-* `Gzip cache`_
-* `HTML tags for reStructuredText`_
-* `Related posts`_
-* `Sitemap`_
+* `Asset management`_ ``pelican.plugins.assets``
+* `GitHub activity`_ ``pelican.plugins.github_activity``
+* `Global license`_ ``pelican.plugins.global_license``
+* `Gravatar`_ ``pelican.plugins.gravatar``
+* `Gzip cache`_ ``pelican.plugins.gzip_cache``
+* `HTML tags for reStructuredText`_ ``pelican.plugins.html_rst_directive``
+* `Related posts`_ ``pelican.plugins.related_posts``
+* `Sitemap`_ ``pelican.plugins.sitemap``
 
 Ideas for plugins that haven't been written yet:
 
