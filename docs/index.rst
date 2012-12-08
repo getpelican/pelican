@@ -4,7 +4,7 @@ Pelican
 Pelican is a static site generator, written in Python_.
 
 * Write your weblog entries directly with your editor of choice (vim!)
-  in reStructuredText_ or Markdown_
+  in reStructuredText_, Markdown_, or AsciiDoc_
 * Includes a simple CLI tool to (re)generate the weblog
 * Easy to interface with DVCSes and web hooks
 * Completely static output is easy to host anywhere
@@ -23,7 +23,7 @@ Pelican currently supports:
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
-* Compilation of `LESS CSS`_ (optional)
+* Asset management with `webassets`_ (optional)
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
 
@@ -74,9 +74,10 @@ A French version of the documentation is available at :doc:`fr/index`.
 .. _Python: http://www.python.org/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Markdown: http://daringfireball.net/projects/markdown/
+.. _AsciiDoc: http://www.methods.co.nz/asciidoc/index.html
 .. _Jinja2: http://jinja.pocoo.org/
-.. _`LESS CSS`: http://lesscss.org/
 .. _`Pelican documentation`: http://docs.getpelican.com/latest/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
 .. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
 .. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
+.. _webassets: https://github.com/miracle2k/webassets

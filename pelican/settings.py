@@ -5,6 +5,7 @@ import inspect
 import os
 import locale
 import logging
+import re
 
 from os.path import isabs
 
@@ -36,7 +37,6 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'OUTPUT_SOURCES_EXTENSION': '.text',
                    'USE_FOLDER_AS_CATEGORY': True,
                    'DEFAULT_CATEGORY': 'misc',
-                   'DEFAULT_DATE': 'fs',
                    'WITH_FUTURE_DATES': True,
                    'CSS_FILE': 'main.css',
                    'NEWEST_FIRST_ARCHIVES': True,
@@ -61,7 +61,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
                    'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
-                   'EXTRA_TEMPLATES_PATHS' : [],
+                   'EXTRA_TEMPLATES_PATHS': [],
                    'PAGINATED_DIRECT_TEMPLATES': ('index', ),
                    'PELICAN_CLASS': 'pelican.Pelican',
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
@@ -71,15 +71,13 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_PAGINATION': False,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
+                   'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
-                   'LESS_GENERATOR': False,
                    'SUMMARY_MAX_LENGTH': 50,
-                   'WEBASSETS': False,
                    'PLUGINS': [],
-                   'MARKDOWN_EXTENSIONS': ['toc', ],
                    'TEMPLATE_PAGES': {}
                    }
 
@@ -133,7 +131,7 @@ def configure_settings(settings):
     """
     if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
-                ' (see pelican --help for more information)')
+                        ' (see pelican --help for more information)')
 
     # find the theme in pelican.theme if the given one does not exists
     if not os.path.isdir(settings['THEME']):
@@ -143,7 +141,7 @@ def configure_settings(settings):
             settings['THEME'] = theme_path
         else:
             raise Exception("Impossible to find the theme %s"
-                    % settings['THEME'])
+                            % settings['THEME'])
 
     # if locales is not a list, make it one
     locales = settings['LOCALE']
@@ -197,13 +195,9 @@ def configure_settings(settings):
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")
 
-    if 'WEBASSETS' in settings and settings['WEBASSETS'] is not False:
-        try:
-            from webassets.ext.jinja2 import AssetsExtension
-            settings['JINJA_EXTENSIONS'].append(AssetsExtension)
-        except ImportError:
-            logger.warn("You must install the webassets module to use WEBASSETS.")
-            settings['WEBASSETS'] = False
+    if 'LESS_GENERATOR' in settings:
+        logger.warn("The LESS_GENERATOR setting has been removed in favor "
+                    "of the Webassets plugin")
 
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
         if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):
@@ -211,5 +205,13 @@ def configure_settings(settings):
             logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
                        " falling back to the default extension " +
                        _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
+
+    filename_metadata = settings.get('FILENAME_METADATA')
+    if filename_metadata and not isinstance(filename_metadata, basestring):
+        logger.error("Detected misconfiguration with FILENAME_METADATA"
+                " setting (must be string or compiled pattern), falling"
+                "back to the default")
+        settings['FILENAME_METADATA'] = \
+                _DEFAULT_CONFIG['FILENAME_METADATA']
 
     return settings
