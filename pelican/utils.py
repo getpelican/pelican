@@ -8,6 +8,7 @@ import pytz
 import shutil
 import logging
 import errno
+import locale
 from collections import defaultdict, Hashable
 from functools import partial
 
@@ -18,6 +19,59 @@ from jinja2 import Markup
 from operator import attrgetter
 
 logger = logging.getLogger(__name__)
+
+
+def strftime(date, date_format):
+    """
+    Replacement for the builtin strftime().
+
+    This :func:`strftime()` is compatible to Python 2 and 3. In both cases,
+    input and output is always unicode.
+        
+    Still, Python 3's :func:`strftime()` seems to somehow "normalize" unicode
+    chars in the format string. So if e.g. your format string contains 'ø' or
+    'ä', the result will be 'o' and 'a'.
+
+    See here for an `extensive testcase <https://github.com/dmdm/test_strftime>`_.
+
+    :param date: Any object that sports a :meth:`strftime()` method.
+    :param date_format: Format string, can always be unicode.
+    :returns: Unicode string with formatted date.
+    """
+    # As tehkonst confirmed, above mentioned testcase runs correctly on
+    # Python 2 and 3 on Windows as well. Thanks.
+    if six.PY3:
+        # It could be so easy... *sigh*
+        return date.strftime(date_format)
+        # TODO Perhaps we should refactor again, so that the
+        # xmlcharrefreplace-regex-dance is always done, regardless
+        # of the Python version.
+    else:
+        # We must ensure that the format string is an encoded byte
+        # string, ASCII only WTF!!!
+        # But with "xmlcharrefreplace" our formatted date will produce
+        # *yuck* like this:
+        #        "Øl trinken beim Besäufnis"
+        #    --> "&#216;l trinken beim Bes&#228;ufnis"
+        date_format = date_format.encode('ascii',
+            errors="xmlcharrefreplace")
+        result = date.strftime(date_format)
+        # strftime() returns an encoded byte string
+        # which we must decode into unicode.
+        lang_code, enc = locale.getlocale(locale.LC_ALL)
+        if enc:
+            result = result.decode(enc)
+        else:
+            result = unicode(result)
+        # Convert XML character references back to unicode characters.
+        if "&#" in result:
+            result = re.sub(r'&#(?P<num>\d+);'
+                , lambda m: unichr(int(m.group('num')))
+                , result
+            )
+        return result
+
+
 
 #----------------------------------------------------------------------------
 # Stolen from Django: django.utils.encoding

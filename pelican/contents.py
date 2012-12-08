@@ -17,6 +17,7 @@ from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import (slugify, truncate_html_words, memoized,
     python_2_unicode_compatible)
 from pelican import signals
+import pelican.utils
 
 logger = logging.getLogger(__name__)
 
@@ -89,20 +90,8 @@ class Page(object):
             self.date_format = self.date_format[1]
 
         if hasattr(self, 'date'):
-            self.locale_date = self.date.strftime(
+            self.locale_date = pelican.utils.strftime(self.date,
                 self.date_format)
-            
-            ### XXX Cannot really make sense out of this, sorry (dmdm)
-            ###     Was intended to format the date according to locale?
-            ###     That would be different from the encoding...
-
-            ### encoded_date = self.date.strftime(
-            ###         self.date_format.encode('ascii', 'xmlcharrefreplace'))
-
-            ### if platform == 'win32':
-            ###     self.locale_date = encoded_date.decode(stdin.encoding)
-            ### else:
-            ###     self.locale_date = encoded_date.decode('utf') # XXX <-- UTF-8?
 
         # manage status
         if not hasattr(self, 'status'):
