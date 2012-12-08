@@ -1,6 +1,8 @@
 
-This is a super article !
-#########################
+This is a super article 2 !
+###########################
 
-:Category: Yeah
+:tags: FoobaR
+:category: Yeah
+:author: AlexiS Metaireau
 

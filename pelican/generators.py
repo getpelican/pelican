@@ -198,11 +198,11 @@ class ArticlesGenerator(Generator):
             arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_ATOM'] % cat)
+                                  self.settings['CATEGORY_FEED_ATOM'] % cat.slug)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_RSS'] % cat,
+                                  self.settings['CATEGORY_FEED_RSS'] % cat.slug,
                                   feed_type='rss')
 
         if self.settings.get('TAG_FEED_ATOM') \
@@ -211,11 +211,11 @@ class ArticlesGenerator(Generator):
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_ATOM'] % tag)
+                                      self.settings['TAG_FEED_ATOM'] % tag.slug)
 
                 if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_RSS'] % tag,
+                                      self.settings['TAG_FEED_RSS'] % tag.slug,
                                       feed_type='rss')
 
         if self.settings.get('TRANSLATION_FEED_ATOM') or \
@@ -317,6 +317,16 @@ class ArticlesGenerator(Generator):
             os.path.join(self.path, self.settings['ARTICLE_DIR'])
         )
         all_articles = []
+        
+        def add_article(article, location, key_location):
+            #merge categories and other URLWrapper objects by slug
+            for key in location:
+                if key.slug == key_location.slug:
+                    key_location = key
+                    break
+            #add article to category (tag, author) list
+            location[key_location].append(article)
+        
         for f in self.get_files(
                 article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
@@ -361,7 +371,7 @@ class ArticlesGenerator(Generator):
             if article.status == "published":
                 if hasattr(article, 'tags'):
                     for tag in article.tags:
-                        self.tags[tag].append(article)
+                        add_article( article, self.tags, tag )
                 all_articles.append(article)
             elif article.status == "draft":
                 self.drafts.append(article)
@@ -374,10 +384,10 @@ class ArticlesGenerator(Generator):
 
         for article in self.articles:
             # only main articles are listed in categories, not translations
-            self.categories[article.category].append(article)
+            add_article( article, self.categories, article.category )
             # ignore blank authors as well as undefined
             if hasattr(article,'author') and article.author.name != '':
-                self.authors[article.author].append(article)
+                add_article( article, self.authors, article.author )
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)

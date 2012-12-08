@@ -6,10 +6,13 @@ import os
 from codecs import open
 from tempfile import mkdtemp
 from shutil import rmtree
+from collections import defaultdict
+from datetime import datetime
 
 from pelican.generators import ArticlesGenerator, PagesGenerator, \
     TemplatePagesGenerator
 from pelican.writers import Writer
+from pelican.contents import Article, Category
 from pelican.settings import _DEFAULT_CONFIG
 from .support import unittest, get_settings
 
@@ -64,6 +67,20 @@ class TestArticlesGenerator(unittest.TestCase):
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
+        
+    def test_generate_feeds_categories(self):
+        
+        generator = ArticlesGenerator(None, {'CATEGORY_FEED_ATOM': _DEFAULT_CONFIG['CATEGORY_FEED_ATOM']},
+                                      None, _DEFAULT_CONFIG['THEME'], None, 
+                                      _DEFAULT_CONFIG['MARKUP'])
+        
+        generator.categories = defaultdict(list)
+        generator.categories[ Category(u'My bloг', _DEFAULT_CONFIG) ] = [  ]
+        generator.categories = list(generator.categories.items())
+        
+        writer = MagicMock()
+        generator.generate_feeds(writer)
+        writer.write_feed.assert_called_with([], None, 'feeds/my-blog.atom.xml')
 
     def test_generate_context(self):
 
@@ -75,7 +92,7 @@ class TestArticlesGenerator(unittest.TestCase):
             [u'Test md File', 'published', 'test', 'article'],
             [u'Rst with filename metadata', 'published', u'yeah', 'article'],
             [u'Test Markdown extensions', 'published', u'Default', 'article'],
-            [u'This is a super article !', 'published', 'Yeah', 'article'],
+            [u'This is a super article 2 !', 'published', 'Yeah', 'article'],
             [u'This is an article with category !', 'published', 'yeah', 'article'],
             [u'This is an article without category !', 'published', 'Default', 'article'],
             [u'This is an article without category !', 'published', 'TestCategory', 'article'],
@@ -86,10 +103,49 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_generate_categories(self):
 
         generator = self.get_populated_generator()
-        categories = [cat.name for cat, _ in generator.categories]
-        categories_expected = ['Default', 'TestCategory', 'Yeah', 'test', 'yeah']
+        categories_expected = ['Default', 'TestCategory', 'test', 'yeah']
+        articles_expected = [['article-title', 'article-with-template', 'test-markdown-extensions', 'this-is-an-article-without-category'], 
+                             ['this-is-an-article-without-category'], 
+                             ['test-md-file'], 
+                             ['this-is-a-super-article', 'this-is-a-super-article-2', 'this-is-an-article-with-category']]
+        categories = []
+        articles = []
+        for cat, items in generator.categories:
+            categories.append(cat.name)
+            articles.append( [a.slug for a in items ] )
         self.assertEquals(categories, categories_expected)
+        self.assertItemsEqual(articles, articles_expected)
+        
+    def test_generate_authors(self):
 
+        generator = self.get_populated_generator()
+        authors_expected = [u'Alexis Métaireau']
+        articles_expected = [['this-is-a-super-article', 'this-is-a-super-article-2']]
+        authors = []
+        articles = []
+        for author, items in generator.authors:
+            authors.append(author.name)
+            articles.append( [a.slug for a in items ] )
+
+        self.assertEquals(authors, authors_expected)
+        self.assertItemsEqual(articles, articles_expected)
+
+    def test_generate_tags(self):
+
+        generator = self.get_populated_generator()
+        tags_expected = ['foobar', 'foo', 'bar']
+        articles_expected = [['this-is-a-super-article', 'this-is-a-super-article-2'], 
+                             ['this-is-a-super-article'], 
+                             ['this-is-a-super-article']]
+        tags = []
+        articles = []
+        for tag in generator.tags:
+            tags.append(tag.name)
+            articles.append( [a.slug for a in generator.tags[tag] ] )
+        
+        self.assertEquals(tags, tags_expected)
+        self.assertItemsEqual(articles, articles_expected)
+        
     def test_do_not_use_folder_as_category(self):
 
         settings = _DEFAULT_CONFIG.copy()
@@ -104,7 +160,7 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_context()
 
         categories = [cat.name for cat, _ in generator.categories]
-        self.assertEquals(categories, ['Default', 'Yeah', 'test', 'yeah'])
+        self.assertEquals(categories, ['Default', 'test', 'yeah'])
 
     def test_direct_templates_save_as_default(self):
 
@@ -151,10 +207,10 @@ class TestArticlesGenerator(unittest.TestCase):
         generator = self.get_populated_generator()
         articles = self.distill_articles(generator.articles)
         custom_template = ['Article with template', 'published', 'Default', 'custom']
-        standard_template = ['This is a super article !', 'published', 'Yeah', 'article']
+        standard_template = ['This is a super article 2 !', 'published', 'Yeah', 'article']
         self.assertIn(custom_template, articles)
         self.assertIn(standard_template, articles)
-
+    
 class TestPageGenerator(unittest.TestCase):
     """
     Every time you want to test for a new field;
@@ -166,7 +222,7 @@ class TestPageGenerator(unittest.TestCase):
     def distill_pages(self, pages):
         distilled = []
         for page in pages:
-           distilled.append([
+            distilled.append([
                     page.title,
                     page.status,
                     page.template

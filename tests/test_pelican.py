@@ -73,6 +73,7 @@ class TestPelican(unittest.TestCase):
         settings = read_settings(filename=None, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
+            'LOCALE': 'C',
             })
         pelican = Pelican(settings=settings)
         pelican.run()
