@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import with_statement, unicode_literals, print_function
+import six
 
 import os
 import locale
@@ -77,7 +78,7 @@ class Writer(object):
                     os.makedirs(os.path.dirname(complete_path))
                 except Exception:
                     pass
-                fp = open(complete_path, 'w')
+                fp = open(complete_path, 'w', encoding='utf-8' if six.PY3 else None)
                 feed.write(fp, 'utf-8')
                 logger.info('writing %s' % complete_path)
 
