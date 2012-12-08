@@ -2,13 +2,16 @@
 
 from mock import MagicMock
 import os
-import re
+
+from codecs import open
 from tempfile import mkdtemp
 from shutil import rmtree
 
-from pelican.generators import ArticlesGenerator, LessCSSGenerator, PagesGenerator
+from pelican.generators import ArticlesGenerator, PagesGenerator, \
+    TemplatePagesGenerator
+from pelican.writers import Writer
 from pelican.settings import _DEFAULT_CONFIG
-from .support import unittest, skipIfNoExecutable
+from .support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
 
@@ -25,19 +28,20 @@ class TestArticlesGenerator(unittest.TestCase):
          for each test.
         """
         if self.generator is None:
-            settings = _DEFAULT_CONFIG.copy()
+            settings = get_settings()
             settings['ARTICLE_DIR'] = 'content'
             settings['DEFAULT_CATEGORY'] = 'Default'
+            settings['DEFAULT_DATE'] = (1970, 01, 01)
             self.generator = ArticlesGenerator(settings.copy(), settings,
-                                CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
-                                _DEFAULT_CONFIG['MARKUP'])
+                                CUR_DIR, settings['THEME'], None,
+                                settings['MARKUP'])
             self.generator.generate_context()
         return self.generator
 
     def distill_articles(self, articles):
         distilled = []
         for page in articles:
-           distilled.append([
+            distilled.append([
                     page.title,
                     page.status,
                     page.category.name,
@@ -47,16 +51,16 @@ class TestArticlesGenerator(unittest.TestCase):
         return distilled
 
     def test_generate_feeds(self):
-
-        generator = ArticlesGenerator(None, {'FEED_ATOM': _DEFAULT_CONFIG['FEED_ATOM']},
-                                      None, _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+        settings = get_settings()
+        generator = ArticlesGenerator(settings,
+                {'FEED_ALL_ATOM': settings['FEED_ALL_ATOM']}, None,
+                settings['THEME'], None, settings['MARKUP'])
         writer = MagicMock()
         generator.generate_feeds(writer)
-        writer.write_feed.assert_called_with([], None, 'feeds/all.atom.xml')
+        writer.write_feed.assert_called_with([], settings, 'feeds/all.atom.xml')
 
-        generator = ArticlesGenerator(None, {'FEED_ATOM': None}, None,
-                                      _DEFAULT_CONFIG['THEME'], None, None)
+        generator = ArticlesGenerator(settings, {'FEED_ALL_ATOM': None}, None,
+                                      settings['THEME'], None, None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
@@ -69,6 +73,8 @@ class TestArticlesGenerator(unittest.TestCase):
             [u'Article title', 'published', 'Default', 'article'],
             [u'Article with template', 'published', 'Default', 'custom'],
             [u'Test md File', 'published', 'test', 'article'],
+            [u'Rst with filename metadata', 'published', u'yeah', 'article'],
+            [u'Test Markdown extensions', 'published', u'Default', 'article'],
             [u'This is a super article !', 'published', 'Yeah', 'article'],
             [u'This is an article with category !', 'published', 'yeah', 'article'],
             [u'This is an article without category !', 'published', 'Default', 'article'],
@@ -84,13 +90,28 @@ class TestArticlesGenerator(unittest.TestCase):
         categories_expected = ['Default', 'TestCategory', 'Yeah', 'test', 'yeah']
         self.assertEquals(categories, categories_expected)
 
-    def test_direct_templates_save_as_default(self):
+    def test_do_not_use_folder_as_category(self):
 
         settings = _DEFAULT_CONFIG.copy()
-        settings['DIRECT_TEMPLATES'] = ['archives']
-        generator = ArticlesGenerator(settings.copy(), settings, None,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+        settings['ARTICLE_DIR'] = 'content'
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 01, 01)
+        settings['USE_FOLDER_AS_CATEGORY'] = False
+        settings['filenames'] = {}
+        generator = ArticlesGenerator(settings.copy(), settings,
+                            CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
+                            _DEFAULT_CONFIG['MARKUP'])
+        generator.generate_context()
+
+        categories = [cat.name for cat, _ in generator.categories]
+        self.assertEquals(categories, ['Default', 'Yeah', 'test', 'yeah'])
+
+    def test_direct_templates_save_as_default(self):
+
+        settings = get_settings()
+        generator = ArticlesGenerator(settings, settings, None,
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
@@ -99,12 +120,12 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_direct_templates_save_as_modified(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(settings, settings, None,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives/index.html",
@@ -113,12 +134,12 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_direct_templates_save_as_false(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(settings, settings, None,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_count == 0
@@ -154,12 +175,13 @@ class TestPageGenerator(unittest.TestCase):
         return distilled
 
     def test_generate_context(self):
-        settings = _DEFAULT_CONFIG.copy()
-
+        settings = get_settings()
         settings['PAGE_DIR'] = 'TestPages'
+        settings['DEFAULT_DATE'] = (1970, 01, 01)
+
         generator = PagesGenerator(settings.copy(), settings, CUR_DIR,
-                                      _DEFAULT_CONFIG['THEME'], None,
-                                      _DEFAULT_CONFIG['MARKUP'])
+                                      settings['THEME'], None,
+                                      settings['MARKUP'])
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
@@ -179,18 +201,9 @@ class TestPageGenerator(unittest.TestCase):
         self.assertItemsEqual(hidden_pages_expected,hidden_pages)
 
 
-class TestLessCSSGenerator(unittest.TestCase):
+class TestTemplatePagesGenerator(unittest.TestCase):
 
-    LESS_CONTENT = """
-        @color: #4D926F;
-
-        #header {
-          color: @color;
-        }
-        h2 {
-          color: @color;
-        }
-    """
+    TEMPLATE_CONTENT = "foo: {{ foo }}"
 
     def setUp(self):
         self.temp_content = mkdtemp()
@@ -200,32 +213,33 @@ class TestLessCSSGenerator(unittest.TestCase):
         rmtree(self.temp_content)
         rmtree(self.temp_output)
 
-    @skipIfNoExecutable('lessc')
-    def test_less_compiler(self):
+    def test_generate_output(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = get_settings()
         settings['STATIC_PATHS'] = ['static']
-        settings['LESS_GENERATOR'] = True
+        settings['TEMPLATE_PAGES'] = {
+                'template/source.html': 'generated/file.html'
+                }
 
-        generator = LessCSSGenerator(None, settings, self.temp_content,
-                        _DEFAULT_CONFIG['THEME'], self.temp_output, None)
+        generator = TemplatePagesGenerator({'foo': 'bar'}, settings,
+                self.temp_content, '', self.temp_output, None)
 
-        # create a dummy less file
-        less_dir = os.path.join(self.temp_content, 'static', 'css')
-        less_filename = os.path.join(less_dir, 'test.less')
+        # create a dummy template file
+        template_dir = os.path.join(self.temp_content, 'template')
+        template_filename = os.path.join(template_dir, 'source.html')
+        os.makedirs(template_dir)
+        with open(template_filename, 'w') as template_file:
+            template_file.write(self.TEMPLATE_CONTENT)
 
-        less_output = os.path.join(self.temp_output, 'static', 'css',
-                            'test.css')
+        writer = Writer(self.temp_output, settings=settings)
+        generator.generate_output(writer)
 
-        os.makedirs(less_dir)
-        with open(less_filename, 'w') as less_file:
-            less_file.write(self.LESS_CONTENT)
+        output_filename = os.path.join(
+                self.temp_output, 'generated', 'file.html')
 
-        generator.generate_output()
+        # output file has been generated
+        self.assertTrue(os.path.exists(output_filename))
 
-        # we have the file ?
-        self.assertTrue(os.path.exists(less_output))
-
-        # was it compiled ?
-        self.assertIsNotNone(re.search(r'^\s+color:\s*#4D926F;$',
-            open(less_output).read(), re.MULTILINE | re.IGNORECASE))
+        # output content is correct
+        with open(output_filename, 'r') as output_file:
+            self.assertEquals(output_file.read(), 'foo: bar')

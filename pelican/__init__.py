@@ -1,4 +1,3 @@
-import copy
 import os
 import re
 import sys
@@ -8,58 +7,40 @@ import argparse
 
 from pelican import signals
 
-from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
-        StaticGenerator, PdfGenerator, LessCSSGenerator)
+from pelican.generators import (ArticlesGenerator, PagesGenerator,
+                                StaticGenerator, PdfGenerator,
+                                SourceFileGenerator, TemplatePagesGenerator)
 from pelican.log import init
-from pelican.settings import read_settings, _DEFAULT_CONFIG
-from pelican.utils import clean_output_dir, files_changed, file_changed, NoFilesError
+from pelican.settings import read_settings
+from pelican.utils import (clean_output_dir, files_changed, file_changed,
+                           NoFilesError)
 from pelican.writers import Writer
 
 __major__ = 3
-__minor__ = 0
-__version__ = "{0}.{1}".format(__major__, __minor__)
+__minor__ = 2
+__micro__ = 0
+__version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
 
 
 logger = logging.getLogger(__name__)
 
 
 class Pelican(object):
-    def __init__(self, settings=None, path=None, theme=None, output_path=None,
-            markup=None, delete_outputdir=False, plugin_path=None):
-        """Read the settings, and performs some checks on the environment
-        before doing anything else.
+    def __init__(self, settings):
         """
-        if settings is None:
-            settings = copy.deepcopy(_DEFAULT_CONFIG)
-
-        self.path = path or settings['PATH']
-        if not self.path:
-            raise Exception('You need to specify a path containing the content'
-                    ' (see pelican --help for more information)')
-
-        if self.path.endswith('/'):
-            self.path = self.path[:-1]
+        Pelican initialisation, performs some checks on the environment before
+        doing anything else.
+        """
 
         # define the default settings
         self.settings = settings
-
         self._handle_deprecation()
 
-        self.theme = theme or settings['THEME']
-        output_path = output_path or settings['OUTPUT_PATH']
-        self.output_path = os.path.realpath(output_path)
-        self.markup = markup or settings['MARKUP']
-        self.delete_outputdir = delete_outputdir \
-                                    or settings['DELETE_OUTPUT_DIRECTORY']
-
-        # find the theme in pelican.theme if the given one does not exists
-        if not os.path.exists(self.theme):
-            theme_path = os.sep.join([os.path.dirname(
-                os.path.abspath(__file__)), "themes/%s" % self.theme])
-            if os.path.exists(theme_path):
-                self.theme = theme_path
-            else:
-                raise Exception("Impossible to find the theme %s" % theme)
+        self.path = settings['PATH']
+        self.theme = settings['THEME']
+        self.output_path = settings['OUTPUT_PATH']
+        self.markup = settings['MARKUP']
+        self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
 
         self.init_path()
         self.init_plugins()
@@ -78,7 +59,7 @@ class Pelican(object):
                 logger.debug("Loading plugin `{0}' ...".format(plugin))
                 plugin = __import__(plugin, globals(), locals(), 'module')
 
-            logger.debug("Registering plugin `{0}' ...".format(plugin.__name__))
+            logger.debug("Registering plugin `{0}'".format(plugin.__name__))
             plugin.register()
 
     def _handle_deprecation(self):
@@ -139,13 +120,23 @@ class Pelican(object):
             'Modify CATEGORY_FEED to CATEGORY_FEED_ATOM in your settings and '
             'theme for the same behavior. Temporarily setting '
             'CATEGORY_FEED_ATOM for backwards compatibility.')
-            self.settings['CATEGORY_FEED_ATOM'] = self.settings['CATEGORY_FEED']
+            self.settings['CATEGORY_FEED_ATOM'] =\
+                    self.settings['CATEGORY_FEED']
 
+        if self.settings.get('TRANSLATION_FEED', False):
+            logger.warning('Found deprecated `TRANSLATION_FEED` in settings. '
+            'Modify TRANSLATION_FEED to TRANSLATION_FEED_ATOM in your '
+            'settings and theme for the same behavior. Temporarily setting '
+            'TRANSLATION_FEED_ATOM for backwards compatibility.')
+            self.settings['TRANSLATION_FEED_ATOM'] =\
+                    self.settings['TRANSLATION_FEED']
 
     def run(self):
         """Run the generators and return"""
 
         context = self.settings.copy()
+        context['filenames'] = {}  # share the dict between all the generators
+        context['localsiteurl'] = self.settings.get('SITEURL')  # share
         generators = [
             cls(
                 context,
@@ -154,7 +145,6 @@ class Pelican(object):
                 self.theme,
                 self.output_path,
                 self.markup,
-                self.delete_outputdir
             ) for cls in self.get_generator_classes()
         ]
 
@@ -170,11 +160,6 @@ class Pelican(object):
 
         writer = self.get_writer()
 
-        # pass the assets environment to the generators
-        if self.settings['WEBASSETS']:
-            generators[1].env.assets_environment = generators[0].assets_env
-            generators[2].env.assets_environment = generators[0].assets_env
-
         for p in generators:
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
@@ -183,10 +168,13 @@ class Pelican(object):
 
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
+
+        if self.settings['TEMPLATE_PAGES']:
+            generators.append(TemplatePagesGenerator)
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)
-        if self.settings['LESS_GENERATOR']:  # can be True or PATH to lessc
-            generators.append(LessCSSGenerator)
+        if self.settings['OUTPUT_SOURCES']:
+            generators.append(SourceFileGenerator)
 
         for pair in signals.get_generators.send(self):
             (funct, value) = pair
@@ -255,11 +243,26 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def get_instance(args):
-    markup = [a.strip().lower() for a in args.markup.split(',')]\
-              if args.markup else None
+def get_config(args):
+    config = {}
+    if args.path:
+        config['PATH'] = os.path.abspath(os.path.expanduser(args.path))
+    if args.output:
+        config['OUTPUT_PATH'] = \
+                os.path.abspath(os.path.expanduser(args.output))
+    if args.markup:
+        config['MARKUP'] = [a.strip().lower() for a in args.markup.split(',')]
+    if args.theme:
+        abstheme = os.path.abspath(os.path.expanduser(args.theme))
+        config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
+    if args.delete_outputdir is not None:
+        config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
+    return config
 
-    settings = read_settings(args.settings)
+
+def get_instance(args):
+
+    settings = read_settings(args.settings, override=get_config(args))
 
     cls = settings.get('PELICAN_CLASS')
     if isinstance(cls, basestring):
@@ -267,15 +270,12 @@ def get_instance(args):
         module = __import__(module)
         cls = getattr(module, cls_name)
 
-    return cls(settings, args.path, args.theme, args.output, markup,
-               args.delete_outputdir)
+    return cls(settings)
 
 
 def main():
     args = parse_arguments()
     init(args.verbosity)
-    # Split the markup languages only if some have been given. Otherwise,
-    # populate the variable with None.
     pelican = get_instance(args)
 
     try:
@@ -290,7 +290,7 @@ def main():
                     # have.
                     if files_changed(pelican.path, pelican.markup) or \
                             files_changed(pelican.theme, ['']):
-                        if files_found_error == False:
+                        if not files_found_error:
                             files_found_error = True
                         pelican.run()
 
@@ -306,8 +306,9 @@ def main():
                     logger.warning("Keyboard interrupt, quitting.")
                     break
                 except NoFilesError:
-                    if files_found_error == True:
-                        logger.warning("No valid files found in content. Nothing to generate.")
+                    if files_found_error:
+                        logger.warning("No valid files found in content. "
+                                       "Nothing to generate.")
                         files_found_error = False
                     time.sleep(1)  # sleep to avoid cpu load
                 except Exception, e:

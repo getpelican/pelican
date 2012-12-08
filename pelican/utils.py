@@ -4,7 +4,9 @@ import re
 import pytz
 import shutil
 import logging
-from collections import defaultdict
+import errno
+from collections import defaultdict, Hashable
+from functools import partial
 
 from codecs import open
 from datetime import datetime
@@ -18,6 +20,32 @@ logger = logging.getLogger(__name__)
 class NoFilesError(Exception):
     pass
 
+
+class memoized(object):
+   '''Decorator. Caches a function's return value each time it is called.
+   If called later with the same arguments, the cached value is returned
+   (not reevaluated).
+   '''
+   def __init__(self, func):
+      self.func = func
+      self.cache = {}
+   def __call__(self, *args):
+      if not isinstance(args, Hashable):
+         # uncacheable. a list, for instance.
+         # better to not cache than blow up.
+         return self.func(*args)
+      if args in self.cache:
+         return self.cache[args]
+      else:
+         value = self.func(*args)
+         self.cache[args] = value
+         return value
+   def __repr__(self):
+      '''Return the function's docstring.'''
+      return self.func.__doc__
+   def __get__(self, obj, objtype):
+      '''Support instance methods.'''
+      return partial(self.__call__, obj)
 
 def get_date(string):
     """Return a datetime object from a string.
@@ -87,15 +115,31 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
             if overwrite:
                 shutil.rmtree(destination_)
                 shutil.copytree(source_, destination_)
-                logger.info('replacement of %s with %s' % (source_, destination_))
+                logger.info('replacement of %s with %s' % (source_,
+                    destination_))
 
     elif os.path.isfile(source_):
+        dest_dir = os.path.dirname(destination_)
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
         shutil.copy(source_, destination_)
         logger.info('copying %s to %s' % (source_, destination_))
-
+    else:
+        logger.warning('skipped copy %s to %s' % (source_, destination_))
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
+
+    if not os.path.exists(path):
+        logger.debug("Directory already removed: %s" % path)
+        return
+
+    if not os.path.isdir(path):
+        try:
+            os.remove(path)
+        except Exception, e:
+            logger.error("Unable to delete file %s; %e" % path, e)
+        return
 
     # remove all the existing content from the output folder
     for filename in os.listdir(path):
@@ -117,8 +161,12 @@ def clean_output_dir(path):
 
 
 def get_relative_path(filename):
-    """Return the relative path to the given filename"""
-    return '../' * filename.count('/') + '.'
+    """Return the relative path from the given filename to the root path."""
+    nslashes = filename.count('/')
+    if nslashes == 0:
+        return '.'
+    else:
+        return '/'.join(['..'] * nslashes)
 
 
 def truncate_html_words(s, num, end_text='...'):
@@ -280,3 +328,11 @@ def set_date_tzinfo(d, tz_name=None):
         return tz.localize(d)
     else:
         return d
+
+
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            raise

@@ -51,9 +51,9 @@ class TestUtils(unittest.TestCase):
 
     def test_get_relative_path(self):
 
-        samples = (('/test/test', '../../.'),
-                   ('/test/test/', '../../../.'),
-                   ('/', '../.'))
+        samples = (('test/test.html', '..'),
+                   ('test/test/test.html', '../..'),
+                   ('test.html', '.'))
 
         for value, expected in samples:
             self.assertEquals(utils.get_relative_path(value), expected)
@@ -112,3 +112,16 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(os.path.isdir(test_directory))
         self.assertListEqual([], os.listdir(test_directory))
         shutil.rmtree(test_directory)
+
+    def test_clean_output_dir_not_there(self):
+        test_directory = os.path.join(os.path.dirname(__file__), 'does_not_exist')
+        utils.clean_output_dir(test_directory)
+        self.assertTrue(not os.path.exists(test_directory))
+
+    def test_clean_output_dir_is_file(self):
+        test_directory = os.path.join(os.path.dirname(__file__), 'this_is_a_file')
+        f = open(test_directory, 'w')
+        f.write('')
+        f.close()
+        utils.clean_output_dir(test_directory)
+        self.assertTrue(not os.path.exists(test_directory))

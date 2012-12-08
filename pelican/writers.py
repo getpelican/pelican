@@ -2,12 +2,10 @@
 from __future__ import with_statement
 
 import os
-import re
 import locale
 import logging
 
 from codecs import open
-from functools import partial
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from jinja2 import Markup
 from pelican.paginator import Paginator
@@ -41,9 +39,9 @@ class Writer(object):
             link='%s/%s' % (self.site_url, item.url),
             unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
                                         item.date.date(), item.url),
-            description=item.content,
+            description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
-            author_name=getattr(item, 'author', 'John Doe'),
+            author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(item.date,
                 self.settings.get('TIMEZONE', None)))
 
@@ -126,11 +124,11 @@ class Writer(object):
 
         localcontext = context.copy()
         if relative_urls:
-            localcontext['SITEURL'] = get_relative_path(name)
+            relative_path = get_relative_path(name)
+            context['localsiteurl'] = relative_path
+            localcontext['SITEURL'] = relative_path
 
         localcontext.update(kwargs)
-        if relative_urls:
-            self.update_context_contents(name, localcontext)
 
         # check paginated
         paginated = paginated or {}
@@ -148,9 +146,9 @@ class Writer(object):
                     paginators[key] = Paginator(object_list, len(object_list))
 
             # generated pages, and write
+            name_root, ext = os.path.splitext(name)
             for page_num in range(paginators.values()[0].num_pages):
                 paginated_localcontext = localcontext.copy()
-                paginated_name = name
                 for key in paginators.iterkeys():
                     paginator = paginators[key]
                     page = paginator.page(page_num + 1)
@@ -158,71 +156,13 @@ class Writer(object):
                             {'%s_paginator' % key: paginator,
                              '%s_page' % key: page})
                 if page_num > 0:
-                    ext = '.' + paginated_name.rsplit('.')[-1]
-                    paginated_name = paginated_name.replace(ext,
-                        '%s%s' % (page_num + 1, ext))
+                    paginated_name = '%s%s%s' % (
+                        name_root, page_num + 1, ext)
+                else:
+                    paginated_name = name
 
                 _write_file(template, paginated_localcontext, self.output_path,
                     paginated_name)
         else:
             # no pagination
             _write_file(template, localcontext, self.output_path, name)
-
-    def update_context_contents(self, name, context):
-        """Recursively run the context to find elements (articles, pages, etc)
-        whose content getter needs to be modified in order to deal with
-        relative paths.
-
-        :param name: name of the file to output.
-        :param context: dict that will be passed to the templates, which need
-                        to be updated.
-        """
-        def _update_content(name, input):
-            """Change all the relatives paths of the input content to relatives
-            paths suitable fot the ouput content
-
-            :param name: path of the output.
-            :param input: input resource that will be passed to the templates.
-            """
-            content = input._content
-
-            hrefs = re.compile(r"""
-                (?P<markup><\s*[^\>]*  # match tag with src and href attr
-                    (?:href|src)\s*=\s*
-                )
-                (?P<quote>["\'])       # require value to be quoted
-                (?![#?])               # don't match fragment or query URLs
-                (?![a-z]+:)            # don't match protocol URLS
-                (?P<path>.*?)          # the url value
-                \2""", re.X)
-
-            def replacer(m):
-                relative_path = m.group('path')
-                dest_path = os.path.normpath(
-                                os.sep.join((get_relative_path(name), "static",
-                                relative_path)))
-
-                return m.group('markup') + m.group('quote') + dest_path \
-                        + m.group('quote')
-
-            return hrefs.sub(replacer, content)
-
-        if context is None:
-            return
-        if hasattr(context, 'values'):
-            context = context.values()
-
-        for item in context:
-            # run recursively on iterables
-            if hasattr(item, '__iter__'):
-                self.update_context_contents(name, item)
-
-            # if it is a content, patch it
-            elif hasattr(item, '_content'):
-                relative_path = get_relative_path(name)
-
-                paths = self.reminder.setdefault(item, [])
-                if relative_path not in paths:
-                    paths.append(relative_path)
-                    setattr(item, "_get_content",
-                        partial(_update_content, name, item))

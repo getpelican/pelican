@@ -3,11 +3,13 @@ __all__ = [
     'unittest',
 ]
 
-import os
-import subprocess
-import re
-import sys
 import cStringIO
+import os
+import re
+import subprocess
+import sys
+import logging
+from logging.handlers import BufferingHandler
 
 from functools import wraps
 from contextlib import contextmanager
@@ -15,6 +17,7 @@ from tempfile import mkdtemp
 from shutil import rmtree
 
 from pelican.contents import Article
+from pelican.settings import _DEFAULT_CONFIG
 
 try:
     import unittest2 as unittest
@@ -114,7 +117,6 @@ def mute(returns_output=False):
     return decorator
 
 
-
 def get_article(title, slug, content, lang, extra_metadata=None):
     metadata = {'slug': slug, 'title': title, 'lang': lang}
     if extra_metadata is not None:
@@ -122,19 +124,53 @@ def get_article(title, slug, content, lang, extra_metadata=None):
     return Article(content, metadata=metadata)
 
 
-def skipIfNoExecutable(executable, valid_exit_code=1):
-    """Tries to run an executable to make sure it's in the path, Skips the tests
-    if not found.
+def skipIfNoExecutable(executable):
+    """Skip test if `executable` is not found
+
+    Tries to run `executable` with subprocess to make sure it's in the path,
+    and skips the tests if not found (if subprocess raises a `OSError`).
     """
 
-    # calling with no params the command should exit with 1
     with open(os.devnull, 'w') as fnull:
         try:
             res = subprocess.call(executable, stdout=fnull, stderr=fnull)
         except OSError:
             res = None
 
-    if res != valid_exit_code:
-        return unittest.skip('{0} compiler not found'.format(executable))
+    if res is None:
+        return unittest.skip('{0} executable not found'.format(executable))
 
     return lambda func: func
+
+
+def module_exists(module_name):
+    """Test if a module is importable."""
+
+    try:
+        __import__(module_name)
+    except ImportError:
+        return False
+    else:
+        return True
+
+
+def get_settings():
+    settings = _DEFAULT_CONFIG.copy()
+    settings['DIRECT_TEMPLATES'] = ['archives']
+    settings['filenames'] = {}
+    return settings
+
+
+class LogCountHandler(BufferingHandler):
+    """
+    Capturing and counting logged messages.
+    """
+
+    def __init__(self, capacity=1000):
+        logging.handlers.BufferingHandler.__init__(self, capacity)
+
+    def count_logs(self, msg=None, level=None):
+        return len([l for l in self.buffer
+            if (msg is None or re.match(msg, l.getMessage()))
+            and (level is None or l.levelno == level)
+            ])

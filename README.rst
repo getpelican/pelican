@@ -27,7 +27,7 @@ Pelican currently supports:
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
-* Compilation of `LESS CSS`_ (optional)
+* Asset management with `webassets`_ (optional)
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
 
@@ -62,9 +62,9 @@ client handy, use the webchat_ for quick feedback.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Markdown: http://daringfireball.net/projects/markdown/
 .. _Jinja2: http://jinja.pocoo.org/
-.. _`LESS CSS`: http://lesscss.org/
 .. _`Pelican documentation`: http://docs.getpelican.com/latest/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
 .. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
 .. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
 .. _contribute: http://docs.getpelican.com/en/latest/contribute.html
+.. _webassets: https://github.com/miracle2k/webassets

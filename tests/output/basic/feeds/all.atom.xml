@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>A Pelican Blog</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2012-02-29T00:00:00Z</updated><entry><title>Second article</title><link href="/second-article.html" rel="alternate"></link><updated>2012-02-29T00:00:00Z</updated><author><name>Dummy Author</name></author><id>tag:,2012-02-29:second-article.html</id><summary type="html">&lt;p&gt;This is some article, in english&lt;/p&gt;
-</summary><category term="foo"></category><category term="bar"></category><category term="baz"></category></entry><entry><title>A markdown powered article</title><link href="/a-markdown-powered-article.html" rel="alternate"></link><updated>2011-04-20T00:00:00Z</updated><author><name>Dummy Author</name></author><id>tag:,2011-04-20:a-markdown-powered-article.html</id><summary type="html">&lt;p&gt;You're mutually oblivious.&lt;/p&gt;</summary></entry><entry><title>Article 1</title><link href="/article-1.html" rel="alternate"></link><updated>2011-02-17T00:00:00Z</updated><author><name>Dummy Author</name></author><id>tag:,2011-02-17:article-1.html</id><summary type="html">&lt;p&gt;Article 1&lt;/p&gt;
-</summary></entry><entry><title>Article 2</title><link href="/article-2.html" rel="alternate"></link><updated>2011-02-17T00:00:00Z</updated><author><name>Dummy Author</name></author><id>tag:,2011-02-17:article-2.html</id><summary type="html">&lt;p&gt;Article 2&lt;/p&gt;
-</summary></entry><entry><title>Article 3</title><link href="/article-3.html" rel="alternate"></link><updated>2011-02-17T00:00:00Z</updated><author><name>Dummy Author</name></author><id>tag:,2011-02-17:article-3.html</id><summary type="html">&lt;p&gt;Article 3&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>A Pelican Blog</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2012-11-30T00:00:00Z</updated><entry><title>FILENAME_METADATA example</title><link href="/filename_metadata-example.html" rel="alternate"></link><updated>2012-11-30T00:00:00Z</updated><author><name></name></author><id>tag:,2012-11-30:filename_metadata-example.html</id><summary type="html">&lt;p&gt;Some cool stuff!&lt;/p&gt;
+</summary></entry><entry><title>Second article</title><link href="/second-article.html" rel="alternate"></link><updated>2012-02-29T00:00:00Z</updated><author><name></name></author><id>tag:,2012-02-29:second-article.html</id><summary type="html">&lt;p&gt;This is some article, in english&lt;/p&gt;
+</summary><category term="foo"></category><category term="bar"></category><category term="baz"></category></entry><entry><title>Deuxième article</title><link href="/second-article-fr.html" rel="alternate"></link><updated>2012-02-29T00:00:00Z</updated><author><name></name></author><id>tag:,2012-02-29:second-article-fr.html</id><summary type="html">&lt;p&gt;Ceci est un article, en français.&lt;/p&gt;
+</summary><category term="foo"></category><category term="bar"></category><category term="baz"></category></entry><entry><title>A markdown powered article</title><link href="/a-markdown-powered-article.html" rel="alternate"></link><updated>2011-04-20T00:00:00Z</updated><author><name></name></author><id>tag:,2011-04-20:a-markdown-powered-article.html</id><summary type="html">&lt;p&gt;You're mutually oblivious.&lt;/p&gt;
+&lt;p&gt;&lt;a href="/unbelievable.html"&gt;a root-relative link to unbelievable&lt;/a&gt;
+&lt;a href="/unbelievable.html"&gt;a file-relative link to unbelievable&lt;/a&gt;&lt;/p&gt;</summary></entry><entry><title>Article 1</title><link href="/article-1.html" rel="alternate"></link><updated>2011-02-17T00:00:00Z</updated><author><name></name></author><id>tag:,2011-02-17:article-1.html</id><summary type="html">&lt;p&gt;Article 1&lt;/p&gt;
+</summary></entry><entry><title>Article 2</title><link href="/article-2.html" rel="alternate"></link><updated>2011-02-17T00:00:00Z</updated><author><name></name></author><id>tag:,2011-02-17:article-2.html</id><summary type="html">&lt;p&gt;Article 2&lt;/p&gt;
+</summary></entry><entry><title>Article 3</title><link href="/article-3.html" rel="alternate"></link><updated>2011-02-17T00:00:00Z</updated><author><name></name></author><id>tag:,2011-02-17:article-3.html</id><summary type="html">&lt;p&gt;Article 3&lt;/p&gt;
 </summary></entry><entry><title>This is a super article !</title><link href="/this-is-a-super-article.html" rel="alternate"></link><updated>2010-12-02T10:14:00Z</updated><author><name>Alexis Métaireau</name></author><id>tag:,2010-12-02:this-is-a-super-article.html</id><summary type="html">&lt;p&gt;Some content here !&lt;/p&gt;
 &lt;div class="section" id="this-is-a-simple-title"&gt;
 &lt;h2&gt;This is a simple title&lt;/h2&gt;
 &lt;p&gt;And here comes the cool &lt;a class="reference external" href="http://books.couchdb.org/relax/design-documents/views"&gt;stuff&lt;/a&gt;.&lt;/p&gt;
-&lt;img alt="alternate text" src="pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
-&lt;img alt="alternate text" src="pictures/Sushi_Macro.jpg" style="width: 600px; height: 450px;" /&gt;
+&lt;img alt="alternate text" src="|filename|/pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
+&lt;img alt="alternate text" src="|filename|/pictures/Sushi_Macro.jpg" style="width: 600px; height: 450px;" /&gt;
 &lt;pre class="literal-block"&gt;
 &amp;gt;&amp;gt;&amp;gt; from ipdb import set_trace
 &amp;gt;&amp;gt;&amp;gt; set_trace()
@@ -19,7 +23,9 @@
 &lt;h2&gt;Why not ?&lt;/h2&gt;
 &lt;p&gt;After all, why not ? It's pretty simple to do it, and it will allow me to write my blogposts in rst !
 YEAH !&lt;/p&gt;
-&lt;img alt="alternate text" src="pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
+&lt;img alt="alternate text" src="|filename|/pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
 &lt;/div&gt;
-</summary><category term="oh"></category><category term="bar"></category><category term="yeah"></category></entry><entry><title>Unbelievable !</title><link href="/unbelievable.html" rel="alternate"></link><updated>2010-10-15T20:30:00Z</updated><author><name>Dummy Author</name></author><id>tag:,2010-10-15:unbelievable.html</id><summary type="html">&lt;p&gt;Or completely awesome. Depends the needs.&lt;/p&gt;
+</summary><category term="oh"></category><category term="bar"></category><category term="yeah"></category></entry><entry><title>Unbelievable !</title><link href="/unbelievable.html" rel="alternate"></link><updated>2010-10-15T20:30:00Z</updated><author><name></name></author><id>tag:,2010-10-15:unbelievable.html</id><summary type="html">&lt;p&gt;Or completely awesome. Depends the needs.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="/a-markdown-powered-article.html"&gt;a root-relative link to markdown-article&lt;/a&gt;
+&lt;a class="reference external" href="/a-markdown-powered-article.html"&gt;a file-relative link to markdown-article&lt;/a&gt;&lt;/p&gt;
 </summary></entry></feed>

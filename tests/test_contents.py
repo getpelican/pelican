@@ -5,7 +5,7 @@ from .support import unittest
 from pelican.contents import Page, Article
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import truncate_html_words
-
+from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
 
 # generate one paragraph, enclosed with <p>
@@ -19,6 +19,9 @@ class TestPage(unittest.TestCase):
         super(TestPage, self).setUp()
         self.page_kwargs = {
             'content': TEST_CONTENT,
+            'context': {
+                'localsiteurl': '',
+            },
             'metadata': {
                 'summary': TEST_SUMMARY,
                 'title': 'foo bar',
@@ -32,7 +35,8 @@ class TestPage(unittest.TestCase):
 
         """
         metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
-        page = Page(TEST_CONTENT, metadata=metadata)
+        page = Page(TEST_CONTENT, metadata=metadata,
+                context={'localsiteurl': ''})
         for key, value in metadata.items():
             self.assertTrue(hasattr(page, key))
             self.assertEqual(value, getattr(page, key))
@@ -40,8 +44,11 @@ class TestPage(unittest.TestCase):
 
     def test_mandatory_properties(self):
         """If the title is not set, must throw an exception."""
-        self.assertRaises(AttributeError, Page, 'content')
-        page = Page(**self.page_kwargs)
+        page = Page('content')
+        with self.assertRaises(NameError) as cm:
+            page.check_properties()
+
+        page = Page('content', metadata={'title': 'foobar'})
         page.check_properties()
 
     def test_summary_from_metadata(self):
@@ -157,6 +164,17 @@ class TestPage(unittest.TestCase):
                                      for subkey in page_kwargs[key]])
 
         return page_kwargs
+
+    def test_signal(self):
+        """If a title is given, it should be used to generate the slug."""
+
+        def receiver_test_function(sender,instance):
+            pass
+
+        content_object_init.connect(receiver_test_function ,sender=Page)
+        page = Page(**self.page_kwargs)
+        self.assertTrue(content_object_init.has_receivers_for(Page))
+
 
 class TestArticle(TestPage):
     def test_template(self):

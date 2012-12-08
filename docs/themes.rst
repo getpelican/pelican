@@ -60,9 +60,10 @@ articles        The list of articles, ordered descending by date
                 etc.)
 dates           The same list of articles, but ordered by date,
                 ascending
-tags            A key-value dict containing the tags (the keys) and
-                the list of respective articles (the values)
-categories      A key-value dict containing the categories (keys)
+tags            A list of (tag, articles) tuples, containing all
+                the tags.
+categories      A list of (category, articles) tuples, containing
+                all the categories.
                 and the list of respective articles (values)
 pages           The list of pages
 =============   ===================================================
@@ -92,8 +93,8 @@ author.html
 This template will be processed for each of the existing authors, with
 output generated at output/author/`author_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/author/`author_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+AUTHOR_SAVE_AS (`Default:` output/author/`author_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -108,8 +109,8 @@ dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
-page_name               'author/`author_name`' -- useful for pagination
-                        links
+page_name               AUTHOR_URL where everything after `{slug}` is
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 category.html
@@ -118,8 +119,8 @@ category.html
 This template will be processed for each of the existing categories, with
 output generated at output/category/`category_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/category/`category_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+CATEGORY_SAVE_AS (`Default:` output/category/`category_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -134,8 +135,8 @@ dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'category/`category_name`' -- useful for pagination
-                        links
+page_name               CATEGORY_URL where everything after `{slug}` is
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 article.html
@@ -170,8 +171,8 @@ tag.html
 This template will be processed for each tag, with corresponding .html files
 saved as output/tag/`tag_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/tag/`tag_name``n`.html.
+If pagination is active, subsequent pages will reside as defined in setting
+TAG_SAVE_AS (`Default:` output/tag/`tag_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -186,7 +187,8 @@ dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'tag/`tag_name`' -- useful for pagination links
+page_name               TAG_URL where everything after `{slug}` is removed
+                        -- useful for pagination links
 ===================     ===================================================
 
 Feeds
@@ -198,11 +200,14 @@ Here is a complete list of the feed variables::
 
     FEED_ATOM
     FEED_RSS
+    FEED_ALL_ATOM
+    FEED_ALL_RSS
     CATEGORY_FEED_ATOM
     CATEGORY_FEED_RSS
     TAG_FEED_ATOM
     TAG_FEED_RSS
-    TRANSLATION_FEED
+    TRANSLATION_FEED_ATOM
+    TRANSLATION_FEED_RSS
 
 
 Inheritance
