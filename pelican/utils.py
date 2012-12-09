@@ -501,8 +501,9 @@ def split_all(path):
     ['a', 'b', 'c']
     """
     components = []
+    path = path.lstrip('/')
     while path:
-        head,tail = os.path.split(path)
+        head, tail = os.path.split(path)
         if tail:
             components.insert(0, tail)
         elif head == path:
