@@ -255,6 +255,9 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 }
+a.permalinkpost {
+	color: #C86E50;
+}
 
 /*
 	Extras

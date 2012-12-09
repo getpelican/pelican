@@ -6,7 +6,7 @@
 <dl>
 {% for article in dates %}
     <dt>{{ article.locale_date }}</dt>
-    <dd><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></dd>
+    <dd{% if article.link %} class="linkpost"{% endif %}><a href="{% if article.link %}{{ article.link }}{% else %}{{ SITEURL }}/{{ article.url }}{% endif %}">{{ article.title }}</a>{% if article.link %} <a href="{{ SITEURL }}/{{ article.url }}" class="permalinkpost">&#9733;</a>{% endif %}</dd>
 {% endfor %}
 </dl>
 </section>
