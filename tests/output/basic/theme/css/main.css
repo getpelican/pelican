@@ -350,6 +350,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	display: block;
 	clear: both;
 	border-bottom: 1px solid #eee;
+    overflow: auto;
 	padding: 1.5em 0;
 }
 li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
@@ -362,7 +363,6 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 .hentry .post-info * {font-style: normal;}
 
 	/* Content */
-	.hentry footer {margin-bottom: 2em;}
 	.hentry footer address {display: inline;}
 	#posts-list footer address {display: block;}
 
