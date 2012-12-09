@@ -5,6 +5,7 @@ import random
 import logging
 import datetime
 import subprocess
+import shutil
 
 from codecs import open
 from collections import defaultdict
@@ -15,9 +16,10 @@ from operator import attrgetter, itemgetter
 from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
                     BaseLoader, TemplateNotFound)
 
-from pelican.contents import Article, Page, Category, is_valid_content
+from pelican.contents import Article, Page, Category, StaticContent, \
+        is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations
+from pelican.utils import copy, process_translations, mkdir_p
 from pelican import signals
 
 
@@ -47,6 +49,7 @@ class Generator(object):
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
         self.env = Environment(
+            trim_blocks=True,
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
@@ -60,6 +63,8 @@ class Generator(object):
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
+
+        signals.generator_init.send(self)
 
     def get_template(self, name):
         """Return the template by name.
@@ -79,8 +84,10 @@ class Generator(object):
 
         :param path: the path to search the file on
         :param exclude: the list of path to exclude
+        :param extensions: the list of allowed extensions (if False, all
+            extensions are allowed)
         """
-        if not extensions:
+        if extensions is None:
             extensions = self.markup
 
         files = []
@@ -94,9 +101,16 @@ class Generator(object):
             for e in exclude:
                 if e in dirs:
                     dirs.remove(e)
-            files.extend([os.sep.join((root, f)) for f in temp_files
-                if True in [f.endswith(ext) for ext in extensions]])
+            for f in temp_files:
+                if extensions is False or \
+                        (True in [f.endswith(ext) for ext in extensions]):
+                    files.append(os.sep.join((root, f)))
         return files
+
+    def add_filename(self, content):
+        location = os.path.relpath(os.path.abspath(content.filename),
+                                   os.path.abspath(self.path))
+        self.context['filenames'][location] = content
 
     def _update_context(self, items):
         """Update the context with the given items from the currrent
@@ -297,7 +311,7 @@ class ArticlesGenerator(Generator):
         self.generate_drafts(write)
 
     def generate_context(self):
-        """change the context"""
+        """Add the articles into the shared context"""
 
         article_path = os.path.normpath(  # we have to remove trailing slashes
             os.path.join(self.path, self.settings['ARTICLE_DIR'])
@@ -307,6 +321,7 @@ class ArticlesGenerator(Generator):
                 article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
+                signals.article_generate_preread.send(self)
                 content, metadata = read_file(f, settings=self.settings)
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
@@ -327,7 +342,7 @@ class ArticlesGenerator(Generator):
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
 
-            if 'date' not in metadata and self.settings['DEFAULT_DATE']:
+            if 'date' not in metadata and self.settings.get('DEFAULT_DATE'):
                 if self.settings['DEFAULT_DATE'] == 'fs':
                     metadata['date'] = datetime.datetime.fromtimestamp(
                             os.stat(f).st_ctime)
@@ -337,9 +352,11 @@ class ArticlesGenerator(Generator):
 
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
-                              filename=f)
+                              filename=f, context=self.context)
             if not is_valid_content(article, f):
                 continue
+
+            self.add_filename(article)
 
             if article.status == "published":
                 if hasattr(article, 'tags'):
@@ -436,11 +453,14 @@ class PagesGenerator(Generator):
             except Exception, e:
                 logger.warning(u'Could not process %s\n%s' % (f, str(e)))
                 continue
-            signals.pages_generate_context.send(self, metadata=metadata )
+            signals.pages_generate_context.send(self, metadata=metadata)
             page = Page(content, metadata, settings=self.settings,
-                        filename=f)
+                        filename=f, context=self.context)
             if not is_valid_content(page, f):
                 continue
+
+            self.add_filename(page)
+
             if page.status == "published":
                 all_pages.append(page)
             elif page.status == "hidden":
@@ -476,47 +496,32 @@ class StaticGenerator(Generator):
                  final_path, overwrite=True)
 
     def generate_context(self):
+        self.staticfiles = []
 
-        if self.settings['WEBASSETS']:
-            from webassets import Environment as AssetsEnvironment
-
-            # Define the assets environment that will be passed to the
-            # generators. The StaticGenerator must then be run first to have
-            # the assets in the output_path before generating the templates.
-
-            # Let ASSET_URL honor Pelican's RELATIVE_URLS setting.
-            # Hint for templates:
-            # Current version of webassets seem to remove any relative
-            # paths at the beginning of the URL. So, if RELATIVE_URLS
-            # is on, ASSET_URL will start with 'theme/', regardless if we
-            # set assets_url here to './theme/' or to 'theme/'.
-            # XXX However, this breaks the ASSET_URL if user navigates to
-            # a sub-URL, e.g. if he clicks on a category. To workaround this
-            # issue, I use
-            #     <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
-            # instead of
-            #     <link rel="stylesheet" href="{{ ASSET_URL }}">
-            if self.settings.get('RELATIVE_URLS'):
-                assets_url = './theme/'
-            else:
-                assets_url = self.settings['SITEURL'] + '/theme/'
-            assets_src = os.path.join(self.output_path, 'theme')
-            self.assets_env = AssetsEnvironment(assets_src, assets_url)
-
-            if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
-                self.assets_env.debug = True
+        # walk static paths
+        for static_path in self.settings['STATIC_PATHS']:
+            for f in self.get_files(
+                    os.path.join(self.path, static_path), extensions=False):
+                f_rel = os.path.relpath(f, self.path)
+                # TODO remove this hardcoded 'static' subdirectory
+                sc = StaticContent(f_rel, os.path.join('static', f_rel),
+                        settings=self.settings)
+                self.staticfiles.append(sc)
+                self.context['filenames'][f_rel] = sc
+        # same thing for FILES_TO_COPY
+        for src, dest in self.settings['FILES_TO_COPY']:
+            sc = StaticContent(src, dest, settings=self.settings)
+            self.staticfiles.append(sc)
+            self.context['filenames'][src] = sc
 
     def generate_output(self, writer):
-
-        self._copy_paths(self.settings['STATIC_PATHS'], self.path,
-                         'static', self.output_path)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
-
-        # copy all the files needed
-        for source, destination in self.settings['FILES_TO_COPY']:
-            copy(source, self.path, self.output_path, destination,
-                 overwrite=True)
+        # copy all StaticContent files
+        for sc in self.staticfiles:
+            mkdir_p(os.path.dirname(sc.save_as))
+            shutil.copy(sc.filepath, sc.save_as)
+            logger.info('copying %s to %s' % (sc.filepath, sc.save_as))
 
 
 class PdfGenerator(Generator):
@@ -559,8 +564,8 @@ class PdfGenerator(Generator):
             try:
                 os.mkdir(pdf_path)
             except OSError:
-                logger.error("Couldn't create the pdf output folder in " + pdf_path)
-                pass
+                logger.error("Couldn't create the pdf output folder in " +
+                             pdf_path)
 
         for article in self.context['articles']:
             self._create_pdf(article, pdf_path)
@@ -581,49 +586,3 @@ class SourceFileGenerator(Generator):
         logger.info(u' Generating source files...')
         for object in chain(self.context['articles'], self.context['pages']):
             self._create_source(object, self.output_path)
-
-class LessCSSGenerator(Generator):
-    """Compile less css files."""
-
-    def _compile(self, less_file, source_dir, dest_dir):
-        base = os.path.relpath(less_file, source_dir)
-        target = os.path.splitext(
-                os.path.join(dest_dir, base))[0] + '.css'
-        target_dir = os.path.dirname(target)
-
-        if not os.path.exists(target_dir):
-            try:
-                os.makedirs(target_dir)
-            except OSError:
-                logger.error("Couldn't create the less css output folder in " +
-                        target_dir)
-
-        subprocess.call([self._lessc, less_file, target])
-        logger.info(u' [ok] compiled %s' % base)
-
-    def generate_output(self, writer=None):
-        logger.info(u' Compiling less css')
-
-        # store out compiler here, so it won't be evaulted on each run of
-        # _compile
-        lg = self.settings['LESS_GENERATOR']
-        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
-
-        # walk static paths
-        for static_path in self.settings['STATIC_PATHS']:
-            for f in self.get_files(
-                    os.path.join(self.path, static_path),
-                    extensions=['less']):
-
-                self._compile(f, self.path, self.output_path)
-
-        # walk theme static paths
-        theme_output_path = os.path.join(self.output_path, 'theme')
-
-        for static_path in self.settings['THEME_STATIC_PATHS']:
-            theme_static_path = os.path.join(self.theme, static_path)
-            for f in self.get_files(
-                    theme_static_path,
-                    extensions=['less']):
-
-                self._compile(f, theme_static_path, theme_output_path)

@@ -2,6 +2,8 @@ from blinker import signal
 
 initialized = signal('pelican_initialized')
 finalized = signal('pelican_finalized')
+article_generate_preread = signal('article_generate_preread')
+generator_init = signal('generator_init')
 article_generate_context = signal('article_generate_context')
 article_generator_init = signal('article_generator_init')
 article_generator_finalized = signal('article_generate_finalized')

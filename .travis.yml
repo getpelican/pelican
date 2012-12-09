@@ -2,13 +2,18 @@ language: python
 python:
     - "2.6"
     - "2.7"
+before_install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq ruby-sass
 install:
     - pip install nose unittest2 mock --use-mirrors
     - pip install . --use-mirrors
     - pip install Markdown
+    - pip install webassets
+    - pip install cssmin
 script: nosetests -s tests
 notifications:
     irc:
-        channels: 
+        channels:
             - "irc.freenode.org#pelican"
         on_success: change
