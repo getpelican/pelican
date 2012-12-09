@@ -162,7 +162,7 @@ def clean_output_dir(path):
 
 def get_relative_path(filename):
     """Return the relative path from the given filename to the root path."""
-    nslashes = filename.count('/')
+    nslashes = filename.lstrip('/').count('/')
     if nslashes == 0:
         return '.'
     else:
