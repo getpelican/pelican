@@ -20,7 +20,6 @@ try:
     asciidoc = True
 except ImportError:
     asciidoc = False
-import re
 
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
