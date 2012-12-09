@@ -7,14 +7,13 @@
       <h1 class="entry-title">
         <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
            title="Permalink to {{ article.title|striptags }}">{{ article.title}}</a></h1>
-      {% include 'twitter.html' %}
+      {%- include 'twitter.html' %}
     </header>
-
     <div class="entry-content">
-      {% include 'article_infos.html' %}
+      {%- include 'article_infos.html' %}
       {{ article.content }}
     </div><!-- /.entry-content -->
-    {% if DISQUS_SITENAME %}
+    {%- if DISQUS_SITENAME %}
     <div class="comments">
       <h2>Comments !</h2>
       <div id="disqus_thread"></div>
@@ -27,8 +26,7 @@
         })();
       </script>
     </div>
-    {% endif %}
-
+    {%- endif %}
   </article>
 </section>
 {% endblock %}
