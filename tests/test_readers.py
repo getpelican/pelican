@@ -1,4 +1,5 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 
 import datetime
 import os
@@ -21,11 +22,11 @@ class RstReaderTest(unittest.TestCase):
         content, metadata = reader.read(_filename('article_with_metadata.rst'))
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'title': 'This is a super article !',
-            'summary': u'<p class="first last">Multi-line metadata should be'\
-                       u' supported\nas well as <strong>inline'\
-                       u' markup</strong>.</p>\n',
+            'summary': '<p class="first last">Multi-line metadata should be'\
+                       ' supported\nas well as <strong>inline'\
+                       ' markup</strong>.</p>\n',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
@@ -40,7 +41,7 @@ class RstReaderTest(unittest.TestCase):
                 settings={})
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
         }
         for key, value in metadata.items():
@@ -53,7 +54,7 @@ class RstReaderTest(unittest.TestCase):
                     })
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
             'date': datetime.datetime(2012, 11, 29),
         }
@@ -69,7 +70,7 @@ class RstReaderTest(unittest.TestCase):
                     })
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
             'date': datetime.datetime(2012, 11, 29),
             'slug': 'article_with_filename_metadata',
@@ -101,7 +102,7 @@ class RstReaderTest(unittest.TestCase):
             # otherwise, typogrify should be applied
             content, _ = readers.read_file(_filename('article.rst'),
                                            settings={'TYPOGRIFY': True})
-            expected = u"<p>This is some content. With some stuff to&nbsp;"\
+            expected = "<p>This is some content. With some stuff to&nbsp;"\
                        "&#8220;typogrify&#8221;.</p>\n<p>Now with added "\
                        'support for <abbr title="three letter acronym">'\
                        '<span class="caps">TLA</span></abbr>.</p>\n'
@@ -168,7 +169,7 @@ class MdReaderTest(unittest.TestCase):
                 settings={})
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
         }
         for key, value in expected.items():
             self.assertEquals(value, metadata[key], key)
@@ -180,7 +181,7 @@ class MdReaderTest(unittest.TestCase):
                     })
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'date': datetime.datetime(2012, 11, 30),
         }
         for key, value in expected.items():
@@ -195,7 +196,7 @@ class MdReaderTest(unittest.TestCase):
                     })
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'date': datetime.datetime(2012, 11, 30),
             'slug': 'md_w_filename_meta',
             'mymeta': 'foo',

@@ -11,3 +11,5 @@ tags
 .tox
 .coverage
 htmlcov
+six-*.egg/
+*.orig

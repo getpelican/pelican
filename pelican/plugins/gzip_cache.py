@@ -68,7 +68,7 @@ def create_gzip_file(filepath):
             logger.debug('Compressing: %s' % filepath)
             compressed = gzip.open(compressed_path, 'wb')
             compressed.writelines(uncompressed)
-        except Exception, ex:
+        except Exception as ex:
             logger.critical('Gzip compression failed: %s' % ex)
         finally:
             compressed.close()

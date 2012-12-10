@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import collections
 import os.path
 
@@ -7,19 +10,19 @@ from codecs import open
 
 from pelican import signals, contents
 
-TXT_HEADER = u"""{0}/index.html
+TXT_HEADER = """{0}/index.html
 {0}/archives.html
 {0}/tags.html
 {0}/categories.html
 """
 
-XML_HEADER = u"""<?xml version="1.0" encoding="utf-8"?>
+XML_HEADER = """<?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 """
 
-XML_URL = u"""
+XML_URL = """
 <url>
 <loc>{0}/{1}</loc>
 <lastmod>{2}</lastmod>
@@ -28,7 +31,7 @@ XML_URL = u"""
 </url>
 """
 
-XML_FOOTER = u"""
+XML_FOOTER = """
 </urlset>
 """
 
@@ -86,7 +89,7 @@ class SitemapGenerator(object):
                     'yearly', 'never')
 
             if isinstance(pris, dict):
-                for k, v in pris.iteritems():
+                for k, v in pris.items():
                     if k in valid_keys and not isinstance(v, (int, float)):
                         default = self.priorities[k]
                         warning("sitemap plugin: priorities must be numbers")
@@ -99,7 +102,7 @@ class SitemapGenerator(object):
                 warning("sitemap plugin: using the default values")
 
             if isinstance(chfreqs, dict):
-                for k, v in chfreqs.iteritems():
+                for k, v in chfreqs.items():
                     if k in valid_keys and v not in valid_chfreqs:
                         default = self.changefreqs[k]
                         warning("sitemap plugin: invalid changefreq `{0}'".format(v))

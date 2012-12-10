@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 
 from mock import MagicMock
 import os
@@ -31,7 +32,7 @@ class TestArticlesGenerator(unittest.TestCase):
             settings = get_settings()
             settings['ARTICLE_DIR'] = 'content'
             settings['DEFAULT_CATEGORY'] = 'Default'
-            settings['DEFAULT_DATE'] = (1970, 01, 01)
+            settings['DEFAULT_DATE'] = (1970, 1, 1)
             self.generator = ArticlesGenerator(settings.copy(), settings,
                                 CUR_DIR, settings['THEME'], None,
                                 settings['MARKUP'])
@@ -70,16 +71,16 @@ class TestArticlesGenerator(unittest.TestCase):
         generator = self.get_populated_generator()
         articles = self.distill_articles(generator.articles)
         articles_expected = [
-            [u'Article title', 'published', 'Default', 'article'],
-            [u'Article with template', 'published', 'Default', 'custom'],
-            [u'Test md File', 'published', 'test', 'article'],
-            [u'Rst with filename metadata', 'published', u'yeah', 'article'],
-            [u'Test Markdown extensions', 'published', u'Default', 'article'],
-            [u'This is a super article !', 'published', 'Yeah', 'article'],
-            [u'This is an article with category !', 'published', 'yeah', 'article'],
-            [u'This is an article without category !', 'published', 'Default', 'article'],
-            [u'This is an article without category !', 'published', 'TestCategory', 'article'],
-            [u'This is a super article !', 'published', 'yeah', 'article']
+            ['Article title', 'published', 'Default', 'article'],
+            ['Article with template', 'published', 'Default', 'custom'],
+            ['Test md File', 'published', 'test', 'article'],
+            ['Rst with filename metadata', 'published', 'yeah', 'article'],
+            ['Test Markdown extensions', 'published', 'Default', 'article'],
+            ['This is a super article !', 'published', 'Yeah', 'article'],
+            ['This is an article with category !', 'published', 'yeah', 'article'],
+            ['This is an article without category !', 'published', 'Default', 'article'],
+            ['This is an article without category !', 'published', 'TestCategory', 'article'],
+            ['This is a super article !', 'published', 'yeah', 'article']
         ]
         self.assertItemsEqual(articles_expected, articles)
 
@@ -95,7 +96,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = _DEFAULT_CONFIG.copy()
         settings['ARTICLE_DIR'] = 'content'
         settings['DEFAULT_CATEGORY'] = 'Default'
-        settings['DEFAULT_DATE'] = (1970, 01, 01)
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['filenames'] = {}
         generator = ArticlesGenerator(settings.copy(), settings,
@@ -177,7 +178,7 @@ class TestPageGenerator(unittest.TestCase):
     def test_generate_context(self):
         settings = get_settings()
         settings['PAGE_DIR'] = 'TestPages'
-        settings['DEFAULT_DATE'] = (1970, 01, 01)
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
 
         generator = PagesGenerator(settings.copy(), settings, CUR_DIR,
                                       settings['THEME'], None,
@@ -187,14 +188,14 @@ class TestPageGenerator(unittest.TestCase):
         hidden_pages = self.distill_pages(generator.hidden_pages)
 
         pages_expected = [
-            [u'This is a test page', 'published', 'page'],
-            [u'This is a markdown test page', 'published', 'page'],
-            [u'This is a test page with a preset template', 'published', 'custom']
+            ['This is a test page', 'published', 'page'],
+            ['This is a markdown test page', 'published', 'page'],
+            ['This is a test page with a preset template', 'published', 'custom']
         ]
         hidden_pages_expected = [
-            [u'This is a test hidden page', 'hidden', 'page'],
-            [u'This is a markdown test hidden page', 'hidden', 'page'],
-            [u'This is a test hidden page with a custom template', 'hidden', 'custom']
+            ['This is a test hidden page', 'hidden', 'page'],
+            ['This is a markdown test hidden page', 'hidden', 'page'],
+            ['This is a test hidden page with a custom template', 'hidden', 'custom']
         ]
 
         self.assertItemsEqual(pages_expected,pages)

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 try:
     import unittest2 as unittest
 except ImportError:
@@ -34,7 +36,7 @@ def recursiveDiff(dcmp):
                 for f in dcmp.right_only],
             }
     for sub_dcmp in dcmp.subdirs.values():
-        for k, v in recursiveDiff(sub_dcmp).iteritems():
+        for k, v in recursiveDiff(sub_dcmp).items():
             diff[k] += v
     return diff
 
@@ -48,7 +50,7 @@ class TestPelican(unittest.TestCase):
         logging.getLogger().addHandler(self.logcount_handler)
         self.temp_path = mkdtemp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
+        locale.setlocale(locale.LC_ALL, str('C'))
 
     def tearDown(self):
         rmtree(self.temp_path)
