@@ -137,8 +137,12 @@ class MarkdownReader(Reader):
         """Parse content and metadata of markdown files"""
         text = pelican_open(filename)
         md = Markdown(extensions=set(self.extensions + ['meta']))
-        content = md.convert(text)
 
+        if self.settings.get('MD_REFERENCES', None):
+            refs = pelican_open(self.settings['MD_REFERENCES'])
+            text = text + "\n" + refs
+
+        content = md.convert(text)
         metadata = {}
         for name, value in md.Meta.items():
             name = name.lower()
