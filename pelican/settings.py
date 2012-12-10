@@ -8,7 +8,6 @@ import inspect
 import os
 import locale
 import logging
-import re
 
 from os.path import isabs
 
@@ -203,7 +202,7 @@ def configure_settings(settings):
                     "of the Webassets plugin")
 
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
-        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], str):
+        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], six.string_types):
             settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
             logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
                        " falling back to the default extension " +
