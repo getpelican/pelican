@@ -5,9 +5,8 @@
   <article>
     <header>
       <h1 class="entry-title">
-        <a href="{% if article.link %}{{ article.link }}{% else %}{{ SITEURL }}/{{ article.url }}{% endif %}" rel="bookmark"{% if not article.link %}
-           title="Permalink to {{ article.title|striptags }}"{% endif %}>{{ article.title}}</a>
-           {% if article.link %}<a href="{{ SITEURL }}/{{ article.url }}" class="permalinkpost" title="Permalink to {{ article.title|striptags }}">&#9733;</a>{% endif %}</h1>
+        <a href="{% if article.link %}{{ article.link }}{% else %}{{ SITEURL }}/{{ article.url }}{% endif %}" rel="bookmark"
+           {% if not article.link %}title="Permalink to {{ article.title|striptags }}"{% endif %}>{{ article.title}}</a>{% if article.link %}<a href="{{ SITEURL }}/{{ article.url }}" class="permalinkpost" title="Permalink to {{ article.title|striptags }}">&#9733;</a>{% endif %}</h1>
       {% include 'twitter.html' %}
     </header>
 

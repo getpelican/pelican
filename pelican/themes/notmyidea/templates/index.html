@@ -8,7 +8,7 @@
         {% if loop.first and not articles_page.has_previous() %}
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="{% if article.link %}{{ article.link }}{% else %}{{ SITEURL }}/{{ article.url }}{% endif %}">{{ article.title }}</a>{% if article.link %} <a href="{{ SITEURL }}/{{ article.url }}" class="permalinkpost">&#9733;</a>{% endif %}</h1>
+                    <h1 class="entry-title"><a href="{% if article.link %}{{ article.link }}{% else %}{{ SITEURL }}/{{ article.url }}{% endif %}">{{ article.title }}</a>{% if article.link %} <a href="{{ SITEURL }}/{{ article.url }}" class="permalinkpost">&#9733;</a>{% endif %}</h1> 
                     {% include 'article_infos.html' %}{{ article.content }}{% include 'comments.html' %}
                 </article>
                 {% if loop.length == 1 %}
@@ -27,9 +27,10 @@
                 <section id="content" class="body">
                     <ol id="posts-list" class="hfeed" start="{{ articles_paginator.per_page -1 }}">
             {% endif %}
-            <li><article class="hentry{% if article.link %} linkpost{% endif %}">
+            <li><article class="hentry{% if article.link %} linkpost{% endif %}">    
                 <header>
-                    <h1><a href="{% if article.link %}{{ article.link }}{% else %}{{ SITEURL }}/{{ article.url }}{% endif %}" rel="bookmark">{{ article.title }}</a>{% if article.link %} <a href="{{ SITEURL }}/{{ article.url }}" class="permalinkpost">&#9733;</a>{% endif %}</h1>
+                    <h1><a href="{% if article.link %}{{ article.link }}{% else %}{{ SITEURL }}/{{ article.url }}{% endif %}" rel="bookmark"
+                           {% if not article.link %}title="Permalink to {{ article.title|striptags }}"{% endif %}>{{ article.title }}</a>{% if article.link %} <a href="{{ SITEURL }}/{{ article.url }}" class="permalinkpost">&#9733;</a>{% endif %}</h1>
                 </header>
                 
                 <div class="entry-content">
