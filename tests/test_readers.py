@@ -115,43 +115,46 @@ class RstReaderTest(unittest.TestCase):
 class MdReaderTest(unittest.TestCase):
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
-    def test_article_with_md_extension(self):
-        # test to ensure the md extension is being processed by the correct reader
+    def test_article_with_metadata(self):
         reader = readers.MarkdownReader({})
-        content, metadata = reader.read(_path('article_with_md_extension.md'))
-        expected = "<h1>Test Markdown File Header</h1>\n"\
-                "<h2>Used for pelican test</h2>\n"\
-                "<p>The quick brown fox jumped over the lazy dog's back.</p>"
-        
-        self.assertEqual(content, expected)
-
+        content, metadata = reader.read(
+            _path('article_with_md_extension.md'))
         expected = {
             'category': 'test',
             'title': 'Test md File',
+            'summary': '<p>I have a lot to test</p>',
+            'date': datetime.datetime(2010, 12, 2, 10, 14),
+            'tags': ['foo', 'bar', 'foobar'],
         }
         for key, value in metadata.items():
             self.assertEquals(value, expected[key], key)
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
-    def test_article_with_mkd_extension(self):
-        # test to ensure the mkd extension is being processed by the correct reader
+    def test_article_with_file_extensions(self):
         reader = readers.MarkdownReader({})
-        content, metadata = reader.read(_path('article_with_mkd_extension.mkd'))
+        # test to ensure the md file extension is being processed by the
+        # correct reader
+        content, metadata = reader.read(
+            _path('article_with_md_extension.md'))
         expected = "<h1>Test Markdown File Header</h1>\n"\
                 "<h2>Used for pelican test</h2>\n"\
-                "<p>This is another markdown test file.  Uses the mkd extension.</p>"
-        
+                "<p>The quick brown fox jumped over the lazy dog's back.</p>"
         self.assertEqual(content, expected)
-
-    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
-    def test_article_with_mkd_extension(self):
-        # test to ensure the markdown extension is being processed by the correct reader
-        reader = readers.MarkdownReader({})
-        content, metadata = reader.read(_filename('article_with_markdown_extension.markdown'))
-        expected = "<h1>Test Markdown File Header</h1>\n"\
-                "<h2>Used for pelican test</h2>\n"\
-                "<p>This is another markdown test file.  Uses the markdown extension.</p>"
-        
+        # test to ensure the mkd file extension is being processed by the
+        # correct reader
+        content, metadata = reader.read(
+            _path('article_with_mkd_extension.mkd'))
+        expected = "<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"\
+                   " test</h2>\n<p>This is another markdown test file.  Uses"\
+                   " the mkd extension.</p>"
+        self.assertEqual(content, expected)
+        # test to ensure the markdown file extension is being processed by the
+        # correct reader
+        content, metadata = reader.read(
+            _path('article_with_markdown_extension.markdown'))
+        expected = "<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"\
+                   " test</h2>\n<p>This is another markdown test file.  Uses"\
+                   " the markdown extension.</p>"
         self.assertEqual(content, expected)
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
