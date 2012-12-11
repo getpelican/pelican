@@ -71,6 +71,8 @@ class TestArticlesGenerator(unittest.TestCase):
         articles = self.distill_articles(generator.articles)
         articles_expected = [
             [u'Article title', 'published', 'Default', 'article'],
+            [u'Article with markdown and summary metadata single', 'published', u'Default', 'article'],
+            [u'Article with markdown and summary metadata multi', 'published', u'Default', 'article'],
             [u'Article with template', 'published', 'Default', 'custom'],
             [u'Test md File', 'published', 'test', 'article'],
             [u'Rst with filename metadata', 'published', u'yeah', 'article'],
