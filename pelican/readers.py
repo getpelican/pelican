@@ -133,21 +133,27 @@ class MarkdownReader(Reader):
     file_extensions = ['md', 'markdown', 'mkd']
     extensions = ['codehilite', 'extra']
 
+    def _parse_metadata(self, meta):
+        """Return the dict containing document metadata"""
+        md = Markdown(extensions=set(self.extensions + ['meta']))
+        output = {}
+        for name, value in meta.items():
+            name = name.lower()
+            if name == "summary":
+                summary_values = "\n".join(str(item) for item in value)
+                summary = md.convert(summary_values)
+                output[name] = self.process_metadata(name, summary)
+            else:
+                output[name] = self.process_metadata(name, value[0])
+        return output
+
     def read(self, filename):
         """Parse content and metadata of markdown files"""
         text = pelican_open(filename)
         md = Markdown(extensions=set(self.extensions + ['meta']))
         content = md.convert(text)
 
-        metadata = {}
-        for name, value in md.Meta.items():
-            name = name.lower()
-            if name == "summary":
-                summary_values = "\n".join(str(item) for item in value)
-                summary = md.convert(summary_values)
-                metadata[name] = self.process_metadata(name, summary)
-            else:
-                metadata[name] = self.process_metadata(name, value[0])
+        metadata = self._parse_metadata(md.Meta)
         return content, metadata
 
 
