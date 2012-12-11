@@ -203,6 +203,20 @@ class MdReaderTest(unittest.TestCase):
         for key, value in expected.items():
             self.assertEquals(value, metadata[key], key)
 
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
+    def test_article_with_summary_metadata(self):
+        reader = readers.MarkdownReader({})
+        content, metadata = reader.read(
+            _filename('article_with_markdown_and_summary_metadata_single.md'))
+        expected_summary = u'<p>A single-line summary should be supported'\
+                           u' as well as <strong>inline markup</strong>.</p>'
+        self.assertEquals(expected_summary, metadata['summary'], 'summary')
+        content, metadata = reader.read(
+            _filename('article_with_markdown_and_summary_metadata_multi.md'))
+        expected_summary =  u'<p>A multi-line summary should be supported'\
+                            u'\nas well as <strong>inline markup</strong>.</p>'
+        self.assertEquals(expected_summary, metadata['summary'], 'summary')
+
 class AdReaderTest(unittest.TestCase):
 
     @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
