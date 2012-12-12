@@ -15,9 +15,13 @@ except ImportError:
     Markdown = False  # NOQA
 import re
 
+try:
+    import yaml
+except ImportError:
+    Yaml = False # NOQA
+
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
-
 
 _METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
@@ -152,7 +156,6 @@ class HtmlReader(Reader):
     def read(self, filename):
         """Parse content and metadata of (x)HTML files"""
         with open(filename) as content:
-            metadata = {'title': 'unnamed'}
             for i in self._re.findall(content):
                 key = i.split(':')[0][5:].strip()
                 value = i.split(':')[-1][:-3].strip()
@@ -161,6 +164,37 @@ class HtmlReader(Reader):
 
             return content, metadata
 
+class YamlReader(Reader):
+    enabled = bool(Yaml)
+    file_extensions = ['yml']
+
+    def read(self, filename):
+        """Parse content and metadata of YAML files"""
+        raw = open(filename).read()
+        docs = []
+        metadata = {}
+        raw_doc = raw.split('---')
+        docs.append(yaml.load(raw_doc[1]))
+
+        md = docs[0]
+
+        # yaml returns date as a datetime.datetime object.
+        # We need to turn this back into a string.
+        md['date'] = md['date'].strftime('%Y-%m-%d')
+
+        for key, value in md.items():
+            name = key.lower()
+            if name == "tags":
+                tags = ''
+                for item in value:
+                    tags = tags + ", " + item
+                metadata[name] = self.process_metadata(name, tags)
+            else:
+                metadata[name] = self.process_metadata(name, value)
+
+        udata = raw_doc[2].decode("utf-8")
+        asciidata = udata.encode("ascii", "ignore")
+        return asciidata, metadata
 
 _EXTENSIONS = {}
 
