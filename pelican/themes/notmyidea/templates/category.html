@@ -1,2 +1,9 @@
 {% extends "index.html" %}
 {% block title %}{{ SITENAME }} - {{ category }}{% endblock %}
+{% block rssfeeds %}
+{{ super() }}
+<li><a href="{{ FEED_DOMAIN }}/{{ CATEGORY_FEED_ATOM|format(category) }}">{{ category }} atom feed</a></li>
+{% if CATEGORY_FEED_RSS %}
+<li><a href="{{ FEED_DOMAIN }}/{{ CATEGORY_FEED_RSS|format(category) }}">{{ category }} rss feed</a></li>
+{% endif %}
+{% endblock %}
