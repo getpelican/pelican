@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-import re
 try:
     import docutils
     import docutils.core
@@ -15,15 +13,15 @@ try:
     from markdown import Markdown
 except ImportError:
     Markdown = False  # NOQA
+import re
+
 try:
-    from asciidocapi import AsciiDocAPI
-    asciidoc = True
+    import yaml
 except ImportError:
-    asciidoc = False
+    Yaml = False # NOQA
 
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
-
 
 _METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
@@ -133,27 +131,21 @@ class MarkdownReader(Reader):
     file_extensions = ['md', 'markdown', 'mkd']
     extensions = ['codehilite', 'extra']
 
-    def _parse_metadata(self, meta):
-        """Return the dict containing document metadata"""
-        md = Markdown(extensions=set(self.extensions + ['meta']))
-        output = {}
-        for name, value in meta.items():
-            name = name.lower()
-            if name == "summary":
-                summary_values = "\n".join(str(item) for item in value)
-                summary = md.convert(summary_values)
-                output[name] = self.process_metadata(name, summary)
-            else:
-                output[name] = self.process_metadata(name, value[0])
-        return output
-
     def read(self, filename):
         """Parse content and metadata of markdown files"""
+        markdown_extensions = self.settings.get('MARKDOWN_EXTENSIONS', [])
+        if isinstance(markdown_extensions, (str, unicode)):
+            markdown_extensions = [m.strip() for m in
+                                   markdown_extensions.split(',')]
         text = pelican_open(filename)
-        md = Markdown(extensions=set(self.extensions + ['meta']))
+        md = Markdown(extensions=set(
+            self.extensions + markdown_extensions + ['meta']))
         content = md.convert(text)
 
-        metadata = self._parse_metadata(md.Meta)
+        metadata = {}
+        for name, value in md.Meta.items():
+            name = name.lower()
+            metadata[name] = self.process_metadata(name, value[0])
         return content, metadata
 
 
@@ -164,7 +156,6 @@ class HtmlReader(Reader):
     def read(self, filename):
         """Parse content and metadata of (x)HTML files"""
         with open(filename) as content:
-            metadata = {'title': 'unnamed'}
             for i in self._re.findall(content):
                 key = i.split(':')[0][5:].strip()
                 value = i.split(':')[-1][:-3].strip()
@@ -173,37 +164,37 @@ class HtmlReader(Reader):
 
             return content, metadata
 
-
-class AsciiDocReader(Reader):
-    enabled = bool(asciidoc)
-    file_extensions = ['asc']
-    default_options = ["--no-header-footer", "-a newline=\\n"]
+class YamlReader(Reader):
+    enabled = bool(Yaml)
+    file_extensions = ['yml']
 
     def read(self, filename):
-        """Parse content and metadata of asciidoc files"""
-        from cStringIO import StringIO
-        text = StringIO(pelican_open(filename))
-        content = StringIO()
-        ad = AsciiDocAPI()
-
-        options = self.settings.get('ASCIIDOC_OPTIONS', [])
-        if isinstance(options, (str, unicode)):
-            options = [m.strip() for m in options.split(',')]
-        options = self.default_options + options
-        for o in options:
-            ad.options(*o.split())
-
-        ad.execute(text, content, backend="html4")
-        content = content.getvalue()
-
+        """Parse content and metadata of YAML files"""
+        raw = open(filename).read()
+        docs = []
         metadata = {}
-        for name, value in ad.asciidoc.document.attributes.items():
-            name = name.lower()
-            metadata[name] = self.process_metadata(name, value)
-        if 'doctitle' in metadata:
-            metadata['title'] = metadata['doctitle']
-        return content, metadata
+        raw_doc = raw.split('---')
+        docs.append(yaml.load(raw_doc[1]))
 
+        md = docs[0]
+
+        # yaml returns date as a datetime.datetime object.
+        # We need to turn this back into a string.
+        md['date'] = md['date'].strftime('%Y-%m-%d')
+
+        for key, value in md.items():
+            name = key.lower()
+            if name == "tags":
+                tags = ''
+                for item in value:
+                    tags = tags + ", " + item
+                metadata[name] = self.process_metadata(name, tags)
+            else:
+                metadata[name] = self.process_metadata(name, value)
+
+        udata = raw_doc[2].decode("utf-8")
+        asciidata = udata.encode("ascii", "ignore")
+        return asciidata, metadata
 
 _EXTENSIONS = {}
 
@@ -214,9 +205,8 @@ for cls in Reader.__subclasses__():
 
 def read_file(filename, fmt=None, settings=None):
     """Return a reader object using the given format."""
-    base, ext = os.path.splitext(os.path.basename(filename))
     if not fmt:
-        fmt = ext[1:]
+        fmt = filename.split('.')[-1]
 
     if fmt not in _EXTENSIONS:
         raise TypeError('Pelican does not know how to parse %s' % filename)
@@ -233,18 +223,9 @@ def read_file(filename, fmt=None, settings=None):
     content, metadata = reader.read(filename)
 
     # eventually filter the content with typogrify if asked so
-    if settings and settings.get('TYPOGRIFY'):
+    if settings and settings['TYPOGRIFY']:
         from typogrify.filters import typogrify
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
-
-    filename_metadata = settings and settings.get('FILENAME_METADATA')
-    if filename_metadata:
-        match = re.match(filename_metadata, base)
-        if match:
-            for k, v in match.groupdict().iteritems():
-                if k not in metadata:
-                    k = k.lower()  # metadata must be lowercase
-                    metadata[k] = reader.process_metadata(k, v)
 
     return content, metadata
