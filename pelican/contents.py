@@ -266,7 +266,7 @@ class URLWrapper(object):
         return self.name
 
     def _from_settings(self, key, get_page_name=False):
-        """Returns URL information as defined in settings. 
+        """Returns URL information as defined in settings.
         When get_page_name=True returns URL without anything after {slug}
         e.g. if in settings: CATEGORY_URL="cat/{slug}.html" this returns "cat/{slug}"
         Useful for pagination."""
@@ -320,6 +320,6 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError, e:
-        logger.error(u"Skipping %s: impossible to find informations about"
+        logger.error(u"Skipping %s: impossible to find information about"
                       "'%s'" % (f, e))
         return False
