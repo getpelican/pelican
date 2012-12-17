@@ -350,6 +350,10 @@ class ArticlesGenerator(Generator):
                     metadata['date'] = datetime.datetime(
                             *self.settings['DEFAULT_DATE'])
 
+            if 'updated' not in metadata:
+                metadata['updated'] = datetime.datetime.fromtimestamp(
+                        os.stat(f).st_mtime)
+
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
                               filename=f, context=self.context)
