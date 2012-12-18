@@ -167,43 +167,6 @@ def dc2fields(file):
         yield (post_title, content, slugify(post_title), post_creadt, author, categories, tags, post_format)
 
 
-def posterous2fields(api_token, email, password):
-    """Imports posterous posts"""
-    import base64
-    from datetime import datetime, timedelta
-    import simplejson as json
-    import urllib2
-
-    def get_posterous_posts(api_token, email, password, page = 1):
-        base64string = base64.encodestring('%s:%s' % (email, password)).replace('\n', '')
-        url = "http://posterous.com/api/v2/users/me/sites/primary/posts?api_token=%s&page=%d" % (api_token, page)
-        request = urllib2.Request(url)
-        request.add_header("Authorization", "Basic %s" % base64string)
-        handle = urllib2.urlopen(request)
-        posts = json.loads(handle.read())
-        return posts
-
-    page = 1
-    posts = get_posterous_posts(api_token, email, password, page)
-    while len(posts) > 0:
-        posts = get_posterous_posts(api_token, email, password, page)
-        page += 1
-
-        for post in posts:
-            slug = post.get('slug')
-            if not slug:
-                slug = slugify(post.get('title'))
-            tags = [tag.get('name') for tag in post.get('tags')]
-            raw_date = post.get('display_date')
-            date_object = datetime.strptime(raw_date[:-6], "%Y/%m/%d %H:%M:%S")
-            offset = int(raw_date[-5:])
-            delta = timedelta(hours = offset / 100)
-            date_object -= delta
-            date = date_object.strftime("%Y-%m-%d %H:%M")
-
-            yield (post.get('title'), post.get('body_cleaned'), slug, date,
-                post.get('user').get('display_name'), [], tags, "html")
-
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
@@ -324,8 +287,6 @@ def main():
         help='Wordpress XML export')
     parser.add_argument('--dotclear', action='store_true', dest='dotclear',
         help='Dotclear export')
-    parser.add_argument('--posterous', action='store_true', dest='posterous',
-        help='Posterous export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
@@ -337,11 +298,6 @@ def main():
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
-    parser.add_argument('-e', '--email', dest='email',
-        help="Email address (posterous import only)")
-    parser.add_argument('-p', '--password', dest='password',
-        help="Password (posterous import only)")
-
 
 
     args = parser.parse_args()
@@ -356,7 +312,7 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous or --feed options"
+        error = "You must provide either --wpfile, --dotclear or --feed options"
         exit(error)
 
     if not os.path.exists(args.output):
@@ -370,8 +326,6 @@ def main():
         fields = wp2fields(args.input)
     elif input_type == 'dotclear':
         fields = dc2fields(args.input)
-    elif input_type == 'posterous':
-        fields = posterous2fields(args.input, args.email, args.password)
     elif input_type == 'feed':
         fields = feed2fields(args.input)
 
