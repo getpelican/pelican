@@ -4,54 +4,56 @@
  Import from other blog software
 =================================
 
+
 Description
 ===========
 
-``pelican-import`` is a command line tool for converting articles from other
-software to ReStructuredText. The supported formats are:
+``pelican-import`` is a command-line tool for converting articles from other
+software to ReStructuredText or Markdown. The supported import formats are:
 
 - WordPress XML export
 - Dotclear export
 - RSS/Atom feed
 
-The conversion from HTML to reStructuredText relies on `pandoc
-<http://johnmacfarlane.net/pandoc/>`_. For Dotclear, if the source posts are
-written with Markdown syntax, they will not be converted (as Pelican also
-supports Markdown).
+The conversion from HTML to reStructuredText or Markdown relies on `Pandoc`_.
+For Dotclear, if the source posts are written with Markdown syntax, they will
+not be converted (as Pelican also supports Markdown).
+
 
 Dependencies
-""""""""""""
+============
 
-``pelican-import`` has two dependencies not required by the rest of pelican:
+``pelican-import`` has some dependencies not required by the rest of pelican:
 
-- BeautifulSoup
-- pandoc
+- *BeautifulSoup*, for WordPress and Dotclear import. Can be installed like
+  any other Python package (``pip install BeautifulSoup``).
+- *Feedparser*, for feed import (``pip install feedparser``).
+- *Pandoc*, see the `Pandoc site`_ for installation instructions on your
+  operating system.
 
-BeatifulSoup can be installed like any other Python package::
-
-    $ pip install BeautifulSoup
-
-For pandoc, install a package for your operating system from the
-`pandoc site <http://johnmacfarlane.net/pandoc/installing.html>`_.
+.. _Pandoc: http://johnmacfarlane.net/pandoc/
+.. _Pandoc site: http://johnmacfarlane.net/pandoc/installing.html
 
 
 Usage
-"""""
+=====
 
-| pelican-import [-h] [--wpfile] [--dotclear] [--feed] [-o OUTPUT]
-|                [-m MARKUP] [--dir-cat] [--strip-raw] [--disable-slugs]
-|                input
+::
+
+    pelican-import [-h] [--wpfile] [--dotclear] [--feed] [-o OUTPUT]
+                   [-m MARKUP] [--dir-cat] [--strip-raw] [--disable-slugs]
+                   input
 
 Positional arguments
-====================
+--------------------
 
   input                 The input file to read
 
 Optional arguments
-""""""""""""""""""
+------------------
 
-  -h, --help            show this help message and exit
-  --wpfile              Wordpress XML export (default: False)
+  -h, --help            Show this help message and exit
+  --wpfile              WordPress XML export (default: False)
   --dotclear            Dotclear export (default: False)
   --feed                Feed to parse (default: False)
   -o OUTPUT, --output OUTPUT
@@ -69,6 +71,7 @@ Optional arguments
                         be consistent with your original posts. (default:
                         False)
 
+
 Examples
 ========
 
@@ -80,10 +83,11 @@ For Dotclear::
 
     $ pelican-import --dotclear -o ~/output ~/backup.txt
 
+
 Tests
 =====
 
 To test the module, one can use sample files:
 
-- for Wordpress: http://wpcandy.com/made/the-sample-post-collection
+- for WordPress: http://wpcandy.com/made/the-sample-post-collection
 - for Dotclear: http://themes.dotaddict.org/files/public/downloads/lorem-backup.txt
