@@ -290,8 +290,9 @@ class ArticlesGenerator(Generator):
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in self.drafts:
-            write('drafts/articles/%s.html' % article.slug,
-                self.get_template(article.template), self.context,
+            name = '%s.html' % os.path.join(
+                self.settings['DRAFT_ARTICLES_OUTPUT_PATH'], article.slug)
+            write(name, self.get_template(article.template), self.context,
                 article=article, category=article.category)
 
     def generate_pages(self, writer):
@@ -453,8 +454,10 @@ class PagesGenerator(Generator):
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for page in self.drafts:
-            write('drafts/pages/%s.html' % page.slug,
-                self.get_template(page.template), self.context, page=page)
+            name = '%s.html' % os.path.join(
+                self.settings['DRAFT_PAGES_OUTPUT_PATH'], page.slug)
+            write(name, self.get_template(page.template), self.context,
+                page=page)
 
     def generate_context(self):
         all_pages = []
