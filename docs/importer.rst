@@ -71,7 +71,7 @@ for Dotclear::
 
 for Posterous::
 
-    $ pelican-import --posterus -o ~/output <api_token> --email=<email_address> --password=<password>
+    $ pelican-import --posterous -o ~/output <api_token> --email=<email_address> --password=<password>
 
 api_token can be obtained from http://posterous.com/api/
 
