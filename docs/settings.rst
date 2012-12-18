@@ -82,6 +82,8 @@ Setting name (default value)                                            What doe
 `PAGE_EXCLUDES` (``()``)                                                A list of directories to exclude when looking for pages.
 `ARTICLE_DIR` (``''``)                                                  Directory to look at for articles, relative to `PATH`.
 `ARTICLE_EXCLUDES`: (``('pages',)``)                                    A list of directories to exclude when looking for articles.
+`DRAFT_PAGES_OUTPUT_PATH`: (``'draft/pages/'``)                         Where to output the generated draft pages.
+`DRAFT_ARTICLES_OUTPUT_PATH`: (``'draft/articles/'``)                   Where to output the generated draft articles.
 `PDF_GENERATOR` (``False``)                                             Set to ``True`` if you want PDF versions of your documents to be.
                                                                         generated. You will need to install ``rst2pdf``.
 `OUTPUT_SOURCES` (``False``)                                            Set to True if you want to copy the articles and pages in their

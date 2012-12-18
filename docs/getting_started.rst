@@ -366,9 +366,13 @@ Publishing drafts
 
 If you want to publish an article or page as a draft (for friends to review
 before publishing, for example), you can add a ``status: draft`` attribute to
-its metadata. Articles and pages will be output to the ``drafts/articles`` and 
-``drafts/pages`` folders respectively and will not be listed on the index page
+its metadata. Draft articles and pages will not be listed on the index page
 nor on any category page.
+
+By default articles will be output to the path ``drafts/articles/`` and pages
+will be output to the path ``drafts/pages``. You can use the
+``DRAFT_ARTICLES_OUTPUT_PATH`` and ``DRAFT_PAGES_OUTPUT_PATH`` settings to
+change the paths articles and pages will be output to.
 
 Viewing the generated files
 ---------------------------
