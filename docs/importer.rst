@@ -12,7 +12,6 @@ software to ReStructuredText. The supported formats are:
 
 - WordPress XML export
 - Dotclear export
-- Posterous API
 - RSS/Atom feed
 
 The conversion from HTML to reStructuredText relies on `pandoc

@@ -299,7 +299,6 @@ def main():
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
 
-
     args = parser.parse_args()
 
     input_type = None
@@ -307,8 +306,6 @@ def main():
         input_type = 'wordpress'
     elif args.dotclear:
         input_type = 'dotclear'
-    elif args.posterous:
-        input_type = 'posterous'
     elif args.feed:
         input_type = 'feed'
     else:
