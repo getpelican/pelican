@@ -58,10 +58,10 @@
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            {% block rssfeeds %}<li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate">atom feed</a></li>
                             {% if FEED_ALL_RSS %}
                             <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}" type="application/rss+xml" rel="alternate">rss feed</a></li>
-                            {% endif %}
+                            {% endif %}{% endblock %}
 
                         {% for name, link in SOCIAL %}
                             <li><a href="{{ link }}">{{ name }}</a></li>
