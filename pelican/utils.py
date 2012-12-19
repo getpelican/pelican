@@ -10,6 +10,7 @@ import traceback
 import logging
 import errno
 import locale
+import fnmatch
 from collections import defaultdict, Hashable
 from functools import partial
 
@@ -406,8 +407,7 @@ def process_translations(content_list):
 
 LAST_MTIME = 0
 
-
-def files_changed(path, extensions):
+def files_changed(path, extensions, ignores=[]):
     """Return True if the files have changed since the last check"""
 
     def file_times(path):
@@ -415,7 +415,8 @@ def files_changed(path, extensions):
         for root, dirs, files in os.walk(path):
             dirs[:] = [x for x in dirs if x[0] != '.']
             for f in files:
-                if any(f.endswith(ext) for ext in extensions):
+                if any(f.endswith(ext) for ext in extensions) \
+                        and not any(fnmatch.fnmatch(f, ignore) for ignore in ignores):
                     yield os.stat(os.path.join(root, f)).st_mtime
 
     global LAST_MTIME
