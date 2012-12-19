@@ -305,6 +305,9 @@ class StaticContent(object):
             settings = copy.deepcopy(_DEFAULT_CONFIG)
         self.src = src
         self.url = dst or src
+        # On Windows, make sure we end up with Unix-like paths.
+        if os.name == 'nt':
+            self.url = self.url.replace('\\', '/')
         self.filepath = os.path.join(settings['PATH'], src)
         self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
 
