@@ -297,7 +297,7 @@ def check_pattern(filename, pattern):
 
 LAST_MTIME = 0
 
-def files_changed(path, extensions, ignores):
+def files_changed(path, extensions, ignores=[]):
     """Return True if the files have changed since the last check"""
 
     def file_times(path):
