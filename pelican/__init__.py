@@ -40,6 +40,7 @@ class Pelican(object):
         self.theme = settings['THEME']
         self.output_path = settings['OUTPUT_PATH']
         self.markup = settings['MARKUP']
+        self.ignore_files = settings['IGNORE_FILES']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
 
         self.init_path()
@@ -288,8 +289,8 @@ def main():
                     # restriction; all files are recursively checked if they
                     # have changed, no matter what extension the filenames
                     # have.
-                    if files_changed(pelican.path, pelican.markup) or \
-                            files_changed(pelican.theme, ['']):
+                    if files_changed(pelican.path, pelican.markup, pelican.ignore_files) or \
+                            files_changed(pelican.theme, [''], pelican.ignore_files):
                         if not files_found_error:
                             files_found_error = True
                         pelican.run()
