@@ -270,23 +270,19 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
 
                 fp.write(new_content)
 
-
-            parse_raw = '--parse-raw' if not strip_raw else ''
-            cmd = ('pandoc --normalize --reference-links {0} --from=html'
-                   ' --to={1} -o "{2}" "{3}"').format(
-                    parse_raw, out_markup, out_filename, html_filename)
-
+            cmd_args = ['pandoc']
+            if not strip_raw:
+                cmd_args += ['--parse-raw']
+            cmd_args += ['--normalize',
+                         '--reference-links',
+                         '--from', 'html',
+                         '--to', out_markup,
+                         '-o', out_filename,
+                         html_filename]
             try:
-                rc = subprocess.call(cmd, shell=True)
-                if rc < 0:
-                    error = "Child was terminated by signal %d" % -rc
-                    exit(error)
-
-                elif rc > 0:
-                    error = "Please, check your Pandoc installation."
-                    exit(error)
-            except OSError as e:
-                error = "Pandoc execution failed: %s" % e
+                subprocess.check_call(cmd_args)
+            except subprocess.CalledProcessError as e:
+                error = "Pandoc execution failed: {0}".format(e)
                 exit(error)
 
             os.remove(html_filename)

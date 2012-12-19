@@ -7,3 +7,8 @@ BeautifulSoup4
 lxml
 typogrify
 webassets
+blinker
+pytz
+jinja2
+docutils
+feedgenerator
