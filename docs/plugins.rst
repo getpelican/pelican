@@ -183,10 +183,19 @@ The above will produce a minified and gzipped JS file:
     <script src="http://{SITEURL}/theme/js/packed.js?00703b9d"></script>
 
 Pelican's debug mode is propagated to Webassets to disable asset packaging
-and instead work with the uncompressed assets. However, this also means that
-the LESS and SASS files are not compiled. This should be fixed in a future
-version of Webassets (cf. the related `bug report
-<https://github.com/getpelican/pelican/issues/481>`_).
+and instead work with the uncompressed assets.
+
+Many of Webasset's available compilers have additional configuration options
+(i.e. 'Less', 'Sass', 'Stylus', 'Closure_js').  You can pass these options to
+Webassets using the ``ASSET_CONFIG`` in your settings file.
+
+The following will handle Google Closure's compilation level and locate
+LessCSS's binary:
+
+.. code-block:: python
+
+    ASSET_CONFIG = (('closure_compressor_optimization', 'WHITESPACE_ONLY'),
+                    ('less_bin', 'lessc.cmd'), )
 
 .. _Webassets: https://github.com/miracle2k/webassets
 .. _Webassets documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
