@@ -163,8 +163,9 @@ class HtmlReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of (x)HTML files"""
-        with open(filename) as content:
+        with open(filename) as text:
             metadata = {'title': 'unnamed'}
+            content = text.read()
             for i in self._re.findall(content):
                 key = i.split(':')[0][5:].strip()
                 value = i.split(':')[-1][:-3].strip()
