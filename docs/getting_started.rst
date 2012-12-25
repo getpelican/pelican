@@ -61,17 +61,20 @@ perform the same step to install the most recent version.
 Dependencies
 ------------
 
-At this time, Pelican is dependent on the following Python packages:
+At this time, Pelican core is dependent on the following Python packages:
 
 * feedgenerator, to generate the Atom feeds
 * jinja2, for templating support
+* pygments, for syntax highlighting
 * docutils, for supporting reStructuredText as an input format
+* pytz, for timezone definitions
+* blinker, an object-to-object and broadcast signaling system
+* unidecode, for ASCII transliterations of Unicode text
 
 If you're not using Python 2.7, you will also need the ``argparse`` package.
 
 Optionally:
 
-* pygments, for syntax highlighting
 * Markdown, for supporting Markdown as an input format
 * Typogrify, for typographical enhancements
 
