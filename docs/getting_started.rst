@@ -63,20 +63,26 @@ Dependencies
 
 At this time, Pelican core is dependent on the following Python packages:
 
-* feedgenerator, to generate the Atom feeds
-* jinja2, for templating support
-* pygments, for syntax highlighting
-* docutils, for supporting reStructuredText as an input format
-* pytz, for timezone definitions
-* blinker, an object-to-object and broadcast signaling system
-* unidecode, for ASCII transliterations of Unicode text
+* `feedgenerator <http://pypi.python.org/pypi/feedgenerator>`_, to generate the
+  Atom feeds
+* `jinja2 <http://pypi.python.org/pypi/Jinja2>`_, for templating support
+* `pygments <http://pypi.python.org/pypi/Pygments>`_, for syntax highlighting
+* `docutils <http://pypi.python.org/pypi/docutils>`_, for supporting
+  reStructuredText as an input format
+* `pytz <http://pypi.python.org/pypi/pytz>`_, for timezone definitions
+* `blinker <http://pypi.python.org/pypi/blinker>`_, an object-to-object and
+  broadcast signaling system
+* `unidecode <http://pypi.python.org/pypi/Unidecode>`_, for ASCII
+  transliterations of Unicode text
 
 If you're not using Python 2.7, you will also need the ``argparse`` package.
 
 Optionally:
 
-* Markdown, for supporting Markdown as an input format
-* Typogrify, for typographical enhancements
+* `markdown <http://pypi.python.org/pypi/Markdown>`_, for supporting Markdown as
+  an input format
+* `typogrify <http://pypi.python.org/pypi/typogrify>`_, for typographical
+  enhancements
 
 Kickstart a blog
 ================
