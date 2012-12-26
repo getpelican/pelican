@@ -10,6 +10,7 @@ except ImportError:
     # py2 import
     from HTMLParser import HTMLParser  # NOQA
 import os
+import re
 import subprocess
 import sys
 import time
@@ -17,6 +18,79 @@ import time
 from codecs import open
 
 from pelican.utils import slugify
+
+
+def decode_wp_content(content, br=True):
+    pre_tags = {}
+    if content.strip() == "":
+        return ""
+
+    content += "\n"
+    if "<pre" in content:
+        pre_parts = content.split("</pre>")
+        last_pre = pre_parts.pop()
+        content = ""
+        pre_index = 0
+
+        for pre_part in pre_parts:
+            start = pre_part.index("<pre")
+            if start == -1:
+                content = content + pre_part
+                continue
+            name = "<pre wp-pre-tag-{0}></pre>".format(pre_index)
+            pre_tags[name] = pre_part[start:] + "</pre>"
+            content = content + pre_part[0:start] + name
+            pre_index += 1
+        content = content + last_pre
+
+    content = re.sub(r'<br />\s*<br />', "\n\n", content)
+    allblocks = ('(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|'
+                 'td|th|div|dl|dd|dt|ul|ol|li|pre|select|option|form|'
+                 'map|area|blockquote|address|math|style|p|h[1-6]|hr|'
+                 'fieldset|noscript|samp|legend|section|article|aside|'
+                 'hgroup|header|footer|nav|figure|figcaption|details|'
+                 'menu|summary)')
+    content = re.sub(r'(<' + allblocks + r'[^>]*>)', "\n\\1", content)
+    content = re.sub(r'(</' + allblocks + r'>)', "\\1\n\n", content)
+    #    content = content.replace("\r\n", "\n")
+    if "<object" in content:
+        # no <p> inside object/embed
+        content = re.sub(r'|\s*<param([^>]*)>\s*|', "<param\1>", content)
+        content = re.sub(r'|\s*</embed>\s*|', '</embed>', content)
+        #    content = re.sub(r'/\n\n+/', '\n\n', content)
+    pgraphs = filter(lambda s: s != "", re.split(r'\n\s*\n', content))
+    content = ""
+    for p in pgraphs:
+        content = content + "<p>" + p.strip() + "</p>\n"
+    # under certain strange conditions it could create a P of entirely whitespace
+    content = re.sub(r'<p>\s*</p>', '', content)
+    content = re.sub(r'<p>([^<]+)</(div|address|form)>', "<p>\\1</p></\\2>", content)
+    # don't wrap tags
+    content = re.sub(r'<p>\s*(</?' + allblocks + r'[^>]*>)\s*</p>', "\\1", content)
+    #problem with nested lists
+    content = re.sub(r'<p>(<li.+?)</p>', "\1", content)
+    content = re.sub(r'<p><blockquote([^>]*)>', "<blockquote\\1><p>", content)
+    content = content.replace('</blockquote></p>', '</p></blockquote>')
+    content = re.sub(r'<p>\s*(</?' + allblocks + '[^>]*>)', "\\1", content)
+    content = re.sub(r'(</?' + allblocks + '[^>]*>)\s*</p>', "\\1", content)
+    if br:
+        def _preserve_newline(match):
+            return match.group(0).replace("\n", "<WPPreserveNewline />")
+        content = re.sub(r'/<(script|style).*?<\/\\1>/s', _preserve_newline, content)
+        # optionally make line breaks
+        content = re.sub(r'(?<!<br />)\s*\n', "<br />\n", content)
+        content = content.replace("<WPPreserveNewline />", "\n")
+    content = re.sub(r'(</?' + allblocks + r'[^>]*>)\s*<br />', "\\1", content)
+    content = re.sub(r'<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)', '\\1', content)
+    content = re.sub(r'\n</p>', "</p>", content)
+
+    if pre_tags:
+        def _multi_replace(dic, string):
+            pattern = r'|'.join(map(re.escape, dic.keys()))
+            return re.sub(pattern, lambda m: dic[m.group()], string)
+        content = _multi_replace(pre_tags, content)
+
+    return content
 
 
 def wp2fields(xml):
