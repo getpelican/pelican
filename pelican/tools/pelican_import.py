@@ -55,8 +55,8 @@ def decode_wp_content(content, br=True):
     #    content = content.replace("\r\n", "\n")
     if "<object" in content:
         # no <p> inside object/embed
-        content = re.sub(r'|\s*<param([^>]*)>\s*|', "<param\1>", content)
-        content = re.sub(r'|\s*</embed>\s*|', '</embed>', content)
+        content = re.sub(r'\s*<param([^>]*)>\s*', "<param\\1>", content)
+        content = re.sub(r'\s*</embed>\s*', '</embed>', content)
         #    content = re.sub(r'/\n\n+/', '\n\n', content)
     pgraphs = filter(lambda s: s != "", re.split(r'\n\s*\n', content))
     content = ""
@@ -130,7 +130,7 @@ def wp2fields(xml):
 
             tags = [tag.contents[0] for tag in item.fetch(domain='post_tag')]
 
-            yield (title, content, filename, date, author, categories, tags, "html")
+            yield (title, content, filename, date, author, categories, tags, "wp-html")
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
@@ -332,15 +332,18 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
 
         print(out_filename)
 
-        if in_markup == "html":
+        if in_markup in ("html", "wp-html"):
             html_filename = os.path.join(output_path, filename+'.html')
 
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
-                paragraphs = content.splitlines()
-                paragraphs = ['<p>{0}</p>'.format(p) for p in paragraphs]
-                new_content = ''.join(paragraphs)
+                if in_markup == "wp-html":
+                    new_content = decode_wp_content(content)
+                else:
+                    paragraphs = content.splitlines()
+                    paragraphs = [u'<p>{0}</p>'.format(p) for p in paragraphs]
+                    new_content = ''.join(paragraphs)
 
                 fp.write(new_content)
 
