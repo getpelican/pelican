@@ -2,14 +2,26 @@
 from __future__ import unicode_literals, print_function
 
 # From django.core.paginator
+import functools
+import logging
+
 from math import ceil
 
+logger = logging.getLogger(__name__)
 
 class Paginator(object):
-    def __init__(self, object_list, per_page, orphans=0):
+    def __init__(self, name, object_list, settings):
+        self.name = name
         self.object_list = object_list
-        self.per_page = per_page
-        self.orphans = orphans
+        self.settings = settings
+
+        if settings.get('DEFAULT_PAGINATION'):
+            self.per_page = settings.get('DEFAULT_PAGINATION')
+            self.orphans = settings.get('DEFAULT_ORPHANS')
+        else:
+            self.per_page = len(object_list)
+            self.orphans = 0
+
         self._num_pages = self._count = None
 
     def page(self, number):
@@ -18,7 +30,8 @@ class Paginator(object):
         top = bottom + self.per_page
         if top + self.orphans >= self.count:
             top = self.count
-        return Page(self.object_list[bottom:top], number, self)
+        return Page(self.name, self.object_list[bottom:top], number, self,
+                    self.settings)
 
     def _get_count(self):
         "Returns the total number of objects, across all pages."
@@ -45,10 +58,12 @@ class Paginator(object):
 
 
 class Page(object):
-    def __init__(self, object_list, number, paginator):
+    def __init__(self, name, object_list, number, paginator, settings):
+        self.name = name
         self.object_list = object_list
         self.number = number
         self.paginator = paginator
+        self.settings = settings
 
     def __repr__(self):
         return '<Page %s of %s>' % (self.number, self.paginator.num_pages)
@@ -87,3 +102,22 @@ class Page(object):
         if self.number == self.paginator.num_pages:
             return self.paginator.count
         return self.number * self.paginator.per_page
+
+    def _from_settings(self, key):
+        """Returns URL information as defined in settings. Similar to
+        URLWrapper._from_settings, but specialized to deal with pagination
+        logic."""
+        setting = "%s_%s" % ('PAGINATION', key)
+        value = self.settings[setting]
+        if not isinstance(value, basestring):
+            logger.warning(u'%s is set to %s' % (setting, value))
+            return value
+        else:
+            context = self.__dict__
+            if self.number == 1:
+                # no page numbers on the first page
+                context['number'] = ''
+            return unicode(value).format(**context)
+
+    url = property(functools.partial(_from_settings, key='URL'))
+    save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
