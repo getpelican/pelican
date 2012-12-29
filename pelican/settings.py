@@ -73,6 +73,8 @@ DEFAULT_CONFIG = {
     'TAG_SAVE_AS': os.path.join('tag', '{slug}.html'),
     'AUTHOR_URL': 'author/{slug}.html',
     'AUTHOR_SAVE_AS': os.path.join('author', '{slug}.html'),
+    'PAGINATION_URL': '{name}{number}.html',
+    'PAGINATION_SAVE_AS': '{name}{number}.html',
     'YEAR_ARCHIVE_SAVE_AS': False,
     'MONTH_ARCHIVE_SAVE_AS': False,
     'DAY_ARCHIVE_SAVE_AS': False,
