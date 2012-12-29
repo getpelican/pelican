@@ -98,15 +98,18 @@ directives.register_directive('youtube', YouTube)
 
 _abbr_re = re.compile('\((.*)\)$')
 
-class abbreviation(nodes.Inline, nodes.TextElement): pass
+
+class abbreviation(nodes.Inline, nodes.TextElement):
+    pass
+
 
 def abbr_role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
-	text = utils.unescape(text)
-	m = _abbr_re.search(text)
-	if m is None:
-		return [abbreviation(text, text)], []
-	abbr = text[:m.start()].strip()
-	expl = m.group(1)
-	return [abbreviation(abbr, abbr, explanation=expl)], []
+    text = utils.unescape(text)
+    m = _abbr_re.search(text)
+    if m is None:
+        return [abbreviation(text, text)], []
+    abbr = text[:m.start()].strip()
+    expl = m.group(1)
+    return [abbreviation(abbr, abbr, explanation=expl)], []
 
 roles.register_local_role('abbr', abbr_role)
