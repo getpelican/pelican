@@ -85,6 +85,21 @@ class TestArticlesGenerator(unittest.TestCase):
         ]
         self.assertItemsEqual(articles_expected, articles)
 
+    def test_previous_and_next_urls(self):
+        generator = self.get_populated_generator()
+        articles = generator.articles
+        expected_next_urls = [
+            'asdf'
+        ]
+        expected_previous_urls = [
+            'asdf'
+        ]        
+        previous_urls = [x for x in articles.previous_url]
+        next_urls = [y for y in articles.next_url)
+        
+        self.assertItemsEqual(expected_previous_urls, previous_urls)
+        self.assertItemsEqual(expected_next_urls, next_urls)
+
     def test_generate_categories(self):
 
         generator = self.get_populated_generator()
