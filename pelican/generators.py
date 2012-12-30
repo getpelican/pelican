@@ -425,6 +425,14 @@ class ArticlesGenerator(Generator):
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
 
+        # generate previous and next urls        
+        previous_article = None
+        for article in self.articles:
+            if previous_article is not None:
+                previous_article.next_url = article.url
+                article.previous_url = previous_article.url
+            previous_article = article
+
         signals.article_generator_finalized.send(self)
 
     def generate_output(self, writer):
