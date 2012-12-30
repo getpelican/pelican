@@ -85,6 +85,47 @@ class TestArticlesGenerator(unittest.TestCase):
         ]
         self.assertItemsEqual(articles_expected, articles)
 
+    def test_previous_and_next_urls(self):
+        generator = self.get_populated_generator()
+        articles = generator.articles
+        expected_next_urls = [
+            u'article-with-markdown-and-summary-metadata-multi.html',
+            u'article-with-markdown-and-summary-metadata-single.html',
+            u'this-is-a-super-article.html',
+            u'article-title.html',
+            u'article-with-template.html',
+            u'test-markdown-extensions.html',
+            u'test-md-file.html',
+            u'this-is-a-super-article.html',
+            u'this-is-an-article-with-category.html',
+            u'this-is-an-article-without-category.html',
+            u'this-is-an-article-without-category.html',
+            None
+        ]
+        expected_previous_urls = [
+            None,
+            u'rst-with-filename-metadata.html',
+            u'article-with-markdown-and-summary-metadata-multi.html',
+            u'article-with-markdown-and-summary-metadata-single.html',
+            u'this-is-a-super-article.html',
+            u'article-title.html',
+            u'article-with-template.html',
+            u'test-markdown-extensions.html',
+            u'test-md-file.html',
+            u'this-is-a-super-article.html',
+            u'this-is-an-article-with-category.html',
+            u'this-is-an-article-without-category.html',
+        ]
+                
+        next_urls = []
+        previous_urls = []
+        for r in articles:
+            next_urls.append(r.next_url)
+            previous_urls.append(r.previous_url)
+        
+        self.assertItemsEqual(expected_next_urls, next_urls)
+        self.assertItemsEqual(expected_previous_urls, previous_urls)
+
     def test_generate_categories(self):
 
         generator = self.get_populated_generator()
