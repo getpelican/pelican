@@ -4,6 +4,7 @@ from __future__ import unicode_literals, print_function
 # From django.core.paginator
 import functools
 import logging
+import os
 
 from math import ceil
 
@@ -114,10 +115,16 @@ class Page(object):
             return value
         else:
             context = self.__dict__
+            context['base_name'] = os.path.dirname(self.name)
+            context['number_sep'] = '/'
             if self.number == 1:
                 # no page numbers on the first page
                 context['number'] = ''
-            return unicode(value).format(**context)
+                context['number_sep'] = ''
+            ret = unicode(value).format(**context)
+            if ret[0] == '/':
+                ret = ret[1:]
+            return ret
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
