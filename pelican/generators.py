@@ -349,6 +349,11 @@ class ArticlesGenerator(Generator):
                 else:
                     metadata['date'] = datetime.datetime(
                             *self.settings['DEFAULT_DATE'])
+               
+            # test_generators.py unable to find these attributes
+            # without being added to metadata here
+            metadata['previous_url'] = None
+            metadata['next_url'] = None
 
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
