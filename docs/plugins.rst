@@ -199,7 +199,7 @@ This plugin allows you to include links to the next and previous articles
 in chronological.  It currently ignores categories and tags. 
 
 To use this plugin it must be included in your pelican settings file as 
-usual 
+usual::
 
     PLUGINS = ['Other Plugins...', 'pelican.plugins.chronological_links',]
 
@@ -211,7 +211,7 @@ It then adds four variables to each article
 - previous_title
 
 These variables can be included in your templates.  For instance in
-``article.html`` you could have
+``article.html`` you could have::
 
     {% if article.next_url %}
     <a href="{{article.next_url}}">{{article.next_title}}</a>
