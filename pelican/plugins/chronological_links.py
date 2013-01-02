@@ -3,7 +3,7 @@
     Chronological Article Links for Pelican
     =======================================
 
-    William Hart <github @will-hart>
+    Will Hart [github: @will-hart]
 
     A plugin to add 'previous_url' and 'next_url' links to an article.
     These links are determined in chronological order, and can be used
@@ -54,6 +54,6 @@ def generate_chronological_links(generator):
 
 def register():
     """
-    Register the plugin against the article_generate_finalized signal
+    Register the plugin
     """
     signals.article_generator_finalized.connect(generate_chronological_links)
