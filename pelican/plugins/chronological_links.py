@@ -2,7 +2,7 @@
 """
     Chronological Article Links for Pelican
     =======================================
-    
+
     William Hart <github @will-hart>
 
     A plugin to add 'previous_url' and 'next_url' links to an article.
@@ -17,12 +17,12 @@
         PLUGINS = [chronological_links]
 
     to your settings.py.
-    
+
     Usage
     -----
-    
+
     You can use this plugin in your templates like this:
-    
+
         {% if article.previous_url %}
         <a href="{{article.previous_url}}">&lt; {{article.previous_title}}</a>
         {% endif %}
@@ -35,6 +35,7 @@
 """
 
 from pelican import signals
+
 
 def generate_chronological_links(generator):
     """
@@ -49,6 +50,7 @@ def generate_chronological_links(generator):
             article.previous_url = previous_article.url
             article.previous_title = previous_article.title
         previous_article = article
+
 
 def register():
     """
