@@ -68,7 +68,7 @@ def decode_wp_content(content, br=True):
     # don't wrap tags
     content = re.sub(r'<p>\s*(</?' + allblocks + r'[^>]*>)\s*</p>', "\\1", content)
     #problem with nested lists
-    content = re.sub(r'<p>(<li.+?)</p>', "\1", content)
+    content = re.sub(r'<p>(<li.*)</p>', "\\1", content)
     content = re.sub(r'<p><blockquote([^>]*)>', "<blockquote\\1><p>", content)
     content = content.replace('</blockquote></p>', '</p></blockquote>')
     content = re.sub(r'<p>\s*(</?' + allblocks + '[^>]*>)', "\\1", content)
