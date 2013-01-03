@@ -5,7 +5,7 @@
 
     Will Hart [github: @will-hart]
 
-    A plugin to add generate a thumbnail image for an article provided
+    A plugin to generate thumbnail image for an article provided
     in the article's meta data. Requires Python Imaging Library (PIL)
     which you can get by typing ``pip install pil`` into the command
     line.

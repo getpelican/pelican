@@ -59,7 +59,7 @@ Signal                          Arguments                       Description
 =============================   ============================   ===========================================================================
 initialized                     pelican object
 finalized                       pelican object                  invoked after all the generators are executed and just before pelican exits
-                                                                usefull for custom post processing actions, such as:
+                                                                useful for custom post processing actions, such as:
                                                                 - minifying js/css assets.
                                                                 - notify/ping search engines with an updated sitemap.
 generator_init                  generator                       invoked in the Generator.__init__
@@ -140,22 +140,22 @@ your settings file::
 
 The plugin has intelligent defaults set for most of its parameters, so 
 adding it to your PLUGINS variable will be enough.  However if you wish to
-configure the plugin further, the table below shows the possible settings:
+configure the plugin further, you can modify the following settings:
 
 ================   ========================   =============================================================
-Setting            Default                    Notes
+Setting            Default                     Notes
 ================   ========================   =============================================================
-THUMBNAIL_PATH      ``'static/thumbs'``       The folder in output directory where files are saved
-THUMBNAIL_WIDTH     100                       The width of thumbnails
-THUMBNAIL_HEIGHT    100                       The height of thumbnails
-THUMBNAIL_PREFIX    ``'thumb_'``              The prefix added to thumbnail images
-THUMBNAIL_DEFAULT   ``'thumb_default.png'``   The default thumbnail if none is supplied by article metadata
+THUMBNAIL_PATH      ``'static/thumbs'``        The folder in output directory where files are saved
+THUMBNAIL_WIDTH     100                        The width of thumbnails
+THUMBNAIL_HEIGHT    100                        The height of thumbnails
+THUMBNAIL_PREFIX    ``'thumb_'``               The prefix added to thumbnail images
+THUMBNAIL_DEFAULT   ``'thumb_default.png'``    The default thumbnail if none is supplied by article metadata
 =================   =======================   =============================================================
 
 To use an article thumbnail in a template, you will first need to set up 
 the correct meta data in the article source.  For rst files, you can add::
 
-    ;thumbnail: path/to/full/sized/imagename.png
+    :thumbnail: path/to/full/sized/imagename.png
 
 The path provided to ``:thumbnail:`` should be relative to the 'content' directory. 
 For instance, if your full sized image is in ``/content/images/myimage.jpg``, you
@@ -178,8 +178,8 @@ instead write::
         {% endif %}
 
 This will show a thumbnail or the default thumbnail if the plugin is installed.
-
-Its up to you to provide a default thumbnail.
+Its up to you to provide a default thumbnail of the correct size and to specify
+the correct path in your settings.
 
 Asset management
 ----------------
