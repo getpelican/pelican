@@ -142,15 +142,15 @@ The plugin has intelligent defaults set for most of its parameters, so
 adding it to your PLUGINS variable will be enough.  However if you wish to
 configure the plugin further, you can modify the following settings:
 
-================   ========================   =============================================================
-Setting            Default                     Notes
-================   ========================   =============================================================
-THUMBNAIL_PATH      ``'static/thumbs'``        The folder in output directory where files are saved
-THUMBNAIL_WIDTH     100                        The width of thumbnails
-THUMBNAIL_HEIGHT    100                        The height of thumbnails
-THUMBNAIL_PREFIX    ``'thumb_'``               The prefix added to thumbnail images
-THUMBNAIL_DEFAULT   ``'thumb_default.png'``    The default thumbnail if none is supplied by article metadata
-=================   =======================   =============================================================
+================== ========================== =============================================================
+Setting               Default                      Notes
+================== ========================== =============================================================
+THUMBNAIL_PATH        'static/thumbs'              The folder in output directory where files are saved
+THUMBNAIL_WIDTH       100                          The width of thumbnails
+THUMBNAIL_HEIGHT      100                          The height of thumbnails
+THUMBNAIL_PREFIX      'thumb\_'                     The prefix added to thumbnail images
+THUMBNAIL_DEFAULT     'thumb_default.png'          The default thumbnail if none is supplied by article metadata
+================== ========================== =============================================================
 
 To use an article thumbnail in a template, you will first need to set up 
 the correct meta data in the article source.  For rst files, you can add::
