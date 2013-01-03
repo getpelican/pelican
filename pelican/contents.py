@@ -250,7 +250,9 @@ class Article(Page):
 class Quote(Page):
     base_properties = ('author', 'date')
 
+
 @python_2_unicode_compatible
+@functools.total_ordering
 class URLWrapper(object):
     def __init__(self, name, settings):
         self.name = name
@@ -263,8 +265,20 @@ class URLWrapper(object):
     def __hash__(self):
         return hash(self.name)
 
+    def _key(self):
+        return self.name
+
+    def _normalize_key(self, key):
+        return six.text_type(key)
+
     def __eq__(self, other):
-        return self.name == other
+        return self._key() == self._normalize_key(other)
+
+    def __ne__(self, other):
+        return self._key() != self._normalize_key(other)
+
+    def __lt__(self, other):
+        return self._key() < self._normalize_key(other)
 
     def __str__(self):
         return self.name
