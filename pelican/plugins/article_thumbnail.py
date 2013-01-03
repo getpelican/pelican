@@ -52,14 +52,18 @@
 """
 
 from pelican import signals
+from pelican import settings
 
 import Image
+import logging
 import os
 import shutil
-from pelican import settings
 
 # defaults
 thumb_settings = {}
+
+# set up logging
+logger = logging.getLogger(__name__)
 
 
 def generate_thumbnail_settings(pelican):
@@ -88,7 +92,12 @@ def generate_thumbnail_settings(pelican):
         os.makedirs(output_dir)
 
     # copy the default file to the output directory
-    shutil.copy(thumb_settings['default_path'], output_dir)
+    # only copy if the thumbnail exists.
+    if os.path.exists(thumb_settings['default_path']):
+        shutil.copy(thumb_settings['default_path'], output_dir)
+    else:
+        logger.warning(u'Could not find default thumbnail at %s' % 
+            thumb_settings['default_path'])
 
 
 def generate_article_thumb(generator, metadata):
