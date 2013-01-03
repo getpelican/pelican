@@ -29,7 +29,7 @@
         THUMBNAIL_WIDTH = 100
         THUMBNAIL_HEIGHT = 100
         THUMBNAIL_PREFIX = 'thumb_'
-        THUMBNAIL_DEFAULT = 'thumb_default.png'
+        THUMBNAIL_DEFAULT = 'images/thumb_default.png'
 
     ``THUMBNAIL_DEFAULT`` is used if no thumbnail path is provided
     in the metadata.  No default image is provided - this is up to you!
@@ -55,6 +55,7 @@ from pelican import signals
 
 import Image
 import os
+import shutil
 from pelican import settings
 
 # defaults
@@ -73,14 +74,21 @@ def generate_thumbnail_settings(pelican):
         pelican.settings.get('THUMBNAIL_HEIGHT', 100)
     thumb_settings['prefix'] = \
         pelican.settings.get('THUMBNAIL_PREFIX', 'thumb_')
-    thumb_settings['default'] = \
-        pelican.settings.get('THUMBNAIL_DEFAULT', 'thumb_default.png')
+    thumb_settings['default_path'] = os.path.abspath(os.path.join(
+        'content',
+        pelican.settings.get('THUMBNAIL_DEFAULT', 'images/thumb_default.png')
+    ))
+    thumb_settings['default_thumb'] = os.path.split(
+        thumb_settings['default_path'])[-1]
     thumb_settings['base_url'] = pelican.settings['SITEURL']
 
     # create the 'output/{{thumbs_path}}' directory
     output_dir = os.path.join('output', thumb_settings['path'])
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    # copy the default file to the output directory
+    shutil.copy(thumb_settings['default_path'], output_dir)
 
 
 def generate_article_thumb(generator, metadata):
@@ -93,7 +101,7 @@ def generate_article_thumb(generator, metadata):
         metadata['thumbnail_url'] = os.path.join(
             thumb_settings['base_url'],
             thumb_settings['path'],
-            thumb_settings['default']
+            thumb_settings['default_thumb']
         )
         metadata['has_thumb'] = False
 
@@ -115,10 +123,12 @@ def generate_article_thumb(generator, metadata):
         im.save(out_path)
 
         # set the metadata
-        metadata['has_thumb'] = True
         metadata['thumbnail_url'] = os.path.join(
-            thumb_settings['base_url'], out_path
+            thumb_settings['base_url'],
+            thumb_settings['path'],
+            thumb_settings['prefix'] + image_name
         )
+        metadata['has_thumb'] = True
 
 
 def register():
