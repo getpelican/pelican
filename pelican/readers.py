@@ -347,7 +347,7 @@ def read_file(path, fmt=None, settings=None):
     metadata.update(reader_metadata)
 
     # eventually filter the content with typogrify if asked so
-    if settings and settings.get('TYPOGRIFY'):
+    if content and settings and settings.get('TYPOGRIFY'):
         from typogrify.filters import typogrify
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
