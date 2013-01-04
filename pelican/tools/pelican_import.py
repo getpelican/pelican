@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import time
+import re
 
 from codecs import open
 
@@ -167,6 +168,24 @@ def dc2fields(file):
         yield (post_title, content, slugify(post_title), post_creadt, author, categories, tags, post_format)
 
 
+def chyrp2fields(atom):
+    """Opens a Chyrp Atom file, and yield pelican fields"""
+    import feedparser
+    d = feedparser.parse(atom)
+    for entry in d.entries:
+
+        if entry.chyrp_status == 'public' and entry.chyrp_feather == 'text':
+
+            date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
+                if hasattr(entry, "updated_parsed") else None)
+            author = entry.author if hasattr(entry, "author") else None
+            tags = entry.tags if hasattr(entry, "tags") else None
+            slug = entry.chyrp_url if hasattr(entry, "chyrp_url") else None
+            tags = [tag[0] for tag in re.findall(r"(.*)\:\s*\"(.*)\"", entry.tags)] if hasattr(entry, "tags") else None
+
+            yield (entry.title, entry.summary, slug, date, author, [], tags, "html")
+
+
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
@@ -292,6 +311,8 @@ def main():
         help='Wordpress XML export')
     parser.add_argument('--dotclear', action='store_true', dest='dotclear',
         help='Dotclear export')
+    parser.add_argument('--chyrp', action='store_true', dest='chyrp',
+        help='Chyrp Atom export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
@@ -316,10 +337,12 @@ def main():
         input_type = 'wordpress'
     elif args.dotclear:
         input_type = 'dotclear'
+    elif args.chyrp:
+        input_type = 'chyrp'
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear or --feed options"
+        error = "You must provide either --wpfile, --dotclear, --chyrp or --feed options"
         exit(error)
 
     if not os.path.exists(args.output):
@@ -333,6 +356,8 @@ def main():
         fields = wp2fields(args.input)
     elif input_type == 'dotclear':
         fields = dc2fields(args.input)
+    elif input_type == 'chyrp':
+        fields = chyrp2fields(args.input)
     elif input_type == 'feed':
         fields = feed2fields(args.input)
 

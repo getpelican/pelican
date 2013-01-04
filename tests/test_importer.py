@@ -2,11 +2,12 @@
 
 import os
 
-from pelican.tools.pelican_import import wp2fields, fields2pelican
+from pelican.tools.pelican_import import wp2fields, chyrp2fields, fields2pelican
 from .support import unittest, temporary_folder, mute, skipIfNoExecutable
 
 CUR_DIR = os.path.dirname(__file__)
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
+CHYRP_ATOM_SAMPLE = os.path.join(CUR_DIR, 'content', 'chyrpexport.atom')
 
 try:
     import BeautifulSoup
@@ -16,6 +17,19 @@ except ImportError:
 
 @skipIfNoExecutable(['pandoc', '--version'])
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+
+class TestChyrpAtomImporter(unittest.TestCase):
+
+    def setUp(self):
+        self.posts = chyrp2fields(CHYRP_ATOM_SAMPLE)
+
+    def test_ignore_empty_posts(self):
+
+        posts = list(self.posts)
+        self.assertTrue(posts)
+        for title, content, slug, date, author, tags, format in posts:
+            self.assertTrue(title.strip())    
+
 class TestWordpressXmlImporter(unittest.TestCase):
 
     def setUp(self):
