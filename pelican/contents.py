@@ -81,8 +81,7 @@ class Page(object):
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
-        if source_path:
-            self.source_path = source_path
+        self.source_path = source_path
 
         # manage the date format
         if not hasattr(self, 'date_format'):
@@ -116,6 +115,14 @@ class Page(object):
 
         signals.content_object_init.send(self)
 
+    def __str__(self):
+        if self.source_path is None:
+            return repr(self)
+        elif six.PY3:
+            return self.source_path or repr(self)
+        else:
+            return str(self.source_path.encode('utf-8', 'replace'))
+
     def check_properties(self):
         """test that each mandatory property is set."""
         for prop in self.mandatory_properties:
@@ -126,6 +133,7 @@ class Page(object):
     def url_format(self):
         metadata = copy.copy(self.metadata)
         metadata.update({
+            'path': self.metadata.get('path', self.get_relative_source_path()),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
@@ -236,6 +244,8 @@ class Page(object):
         """
         if not source_path:
             source_path = self.source_path
+        if source_path is None:
+            return None
 
         return os.path.relpath(
             os.path.abspath(os.path.join(self.settings['PATH'], source_path)),
@@ -330,24 +340,18 @@ class Author(URLWrapper):
 
 
 @python_2_unicode_compatible
-class StaticContent(object):
+class Static(Page):
     @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
     def filepath():
         return None
 
-    def __init__(self, src, dst=None, settings=None):
-        if not settings:
-            settings = copy.deepcopy(_DEFAULT_CONFIG)
-        self.src = src
-        self.url = dst or src
-        # On Windows, make sure we end up with Unix-like paths.
-        if os.name == 'nt':
-            self.url = self.url.replace('\\', '/')
-        self.source_path = os.path.join(settings['PATH'], src)
-        self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
+    @deprecated_attribute(old='src', new='source_path', since=(3, 2, 0))
+    def src():
+        return None
 
-    def __str__(self):
-        return self.source_path
+    @deprecated_attribute(old='dst', new='save_as', since=(3, 2, 0))
+    def dst():
+        return None
 
 
 def is_valid_content(content, f):
