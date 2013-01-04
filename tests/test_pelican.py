@@ -13,8 +13,8 @@ from pelican.settings import read_settings
 from .support import LoggedTestCase
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SAMPLES_PATH = os.path.abspath(os.sep.join((CURRENT_DIR, "..", "samples")))
-OUTPUT_PATH = os.path.abspath(os.sep.join((CURRENT_DIR, "output")))
+SAMPLES_PATH = os.path.abspath(os.path.join(CURRENT_DIR, '..', 'samples'))
+OUTPUT_PATH = os.path.abspath(os.path.join(CURRENT_DIR, 'output'))
 
 INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
 SAMPLE_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf.py")
@@ -22,11 +22,11 @@ SAMPLE_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf.py")
 
 def recursiveDiff(dcmp):
     diff = {
-            'diff_files': [os.sep.join((dcmp.right, f))
+            'diff_files': [os.path.join(dcmp.right, f)
                 for f in dcmp.diff_files],
-            'left_only': [os.sep.join((dcmp.right, f))
+            'left_only': [os.path.join(dcmp.right, f)
                 for f in dcmp.left_only],
-            'right_only': [os.sep.join((dcmp.right, f))
+            'right_only': [os.path.join(dcmp.right, f)
                 for f in dcmp.right_only],
             }
     for sub_dcmp in dcmp.subdirs.values():
@@ -72,7 +72,7 @@ class TestPelican(LoggedTestCase):
             })
         pelican = Pelican(settings=settings)
         pelican.run()
-        dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
+        dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertFilesEqual(recursiveDiff(dcmp))
         self.assertLogCountEqual(
             count=10,
@@ -88,5 +88,5 @@ class TestPelican(LoggedTestCase):
             })
         pelican = Pelican(settings=settings)
         pelican.run()
-        dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "custom")))
+        dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
         self.assertFilesEqual(recursiveDiff(dcmp))

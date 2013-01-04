@@ -15,8 +15,8 @@ from os.path import isabs
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
-                              "themes/notmyidea"])
+DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'themes/notmyidea')
 _DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_DIR': '',
                    'ARTICLE_EXCLUDES': ('pages',),
@@ -140,8 +140,9 @@ def configure_settings(settings):
 
     # find the theme in pelican.theme if the given one does not exists
     if not os.path.isdir(settings['THEME']):
-        theme_path = os.sep.join([os.path.dirname(
-            os.path.abspath(__file__)), "themes/%s" % settings['THEME']])
+        theme_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'themes/{}'.format(settings['THEME']))
         if os.path.exists(theme_path):
             settings['THEME'] = theme_path
         else:
