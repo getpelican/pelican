@@ -353,19 +353,24 @@ def parse_path_metadata(path, settings=None, process=None):
     >>> import pprint
     >>> settings = {
     ...     'FILENAME_METADATA': '(?P<slug>[^.]*).*',
+    ...     'PATH_METADATA':
+    ...         '(?P<category>[^/]*)/(?P<date>\d{4}-\d{2}-\d{2})/.*',
     ...     }
     >>> reader = Reader(settings=settings)
     >>> metadata = parse_path_metadata(
     ...     path='my-cat/2013-01-01/my-slug.html',
     ...     settings=settings,
     ...     process=reader.process_metadata)
-    >>> pprint.pprint(metadata)
-    {'slug': 'my-slug'}
+    >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
+    {'category': <pelican.urlwrappers.Category object at ...>,
+     'date': datetime.datetime(2013, 1, 1, 0, 0),
+     'slug': 'my-slug'}
     """
     metadata = {}
     base, ext = os.path.splitext(os.path.basename(path))
     if settings:
         for key,data in [('FILENAME_METADATA', base),
+                         ('PATH_METADATA', path),
                          ]:
             regexp = settings.get(key)
             if regexp:
