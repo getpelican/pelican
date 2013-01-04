@@ -334,7 +334,10 @@ def read_file(path, fmt=None, settings=None):
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
 
-    content, metadata = reader.read(path)
+    metadata = parse_path_metadata(
+        path=path, settings=settings, process=reader.process_metadata)
+    content, reader_metadata = reader.read(path)
+    metadata.update(reader_metadata)
 
     # eventually filter the content with typogrify if asked so
     if settings and settings.get('TYPOGRIFY'):
@@ -342,14 +345,37 @@ def read_file(path, fmt=None, settings=None):
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
 
-    file_metadata = settings and settings.get('FILENAME_METADATA')
-    if file_metadata:
-        match = re.match(file_metadata, base)
-        if match:
-            # .items() for py3k compat.
-            for k, v in match.groupdict().items():
-                if k not in metadata:
-                    k = k.lower()  # metadata must be lowercase
-                    metadata[k] = reader.process_metadata(k, v)
-
     return content, metadata
+
+def parse_path_metadata(path, settings=None, process=None):
+    """Extract a metadata dictionary from a file's path
+
+    >>> import pprint
+    >>> settings = {
+    ...     'FILENAME_METADATA': '(?P<slug>[^.]*).*',
+    ...     }
+    >>> reader = Reader(settings=settings)
+    >>> metadata = parse_path_metadata(
+    ...     path='my-cat/2013-01-01/my-slug.html',
+    ...     settings=settings,
+    ...     process=reader.process_metadata)
+    >>> pprint.pprint(metadata)
+    {'slug': 'my-slug'}
+    """
+    metadata = {}
+    base, ext = os.path.splitext(os.path.basename(path))
+    if settings:
+        for key,data in [('FILENAME_METADATA', base),
+                         ]:
+            regexp = settings.get(key)
+            if regexp:
+                match = re.match(regexp, data)
+                if match:
+                    # .items() for py3k compat.
+                    for k, v in match.groupdict().items():
+                        if k not in metadata:
+                            k = k.lower()  # metadata must be lowercase
+                            if process:
+                                v = process(k, v)
+                            metadata[k] = v
+    return metadata
