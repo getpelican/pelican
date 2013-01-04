@@ -305,11 +305,11 @@ class StaticContent(object):
             settings = copy.deepcopy(_DEFAULT_CONFIG)
         self.src = src
         self.url = dst or src
-        self.filepath = os.path.join(settings['PATH'], src)
+        self.filename = os.path.join(settings['PATH'], src)
         self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
 
     def __str__(self):
-        return self.filepath
+        return self.filename
 
 
 def is_valid_content(content, f):

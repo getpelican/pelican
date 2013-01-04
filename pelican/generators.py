@@ -520,8 +520,8 @@ class StaticGenerator(Generator):
         # copy all StaticContent files
         for sc in self.staticfiles:
             mkdir_p(os.path.dirname(sc.save_as))
-            shutil.copy(sc.filepath, sc.save_as)
-            logger.info('copying %s to %s' % (sc.filepath, sc.save_as))
+            shutil.copy(sc.filename, sc.save_as)
+            logger.info('copying {} to {}'.format(sc.filename, sc.save_as))
 
 
 class PdfGenerator(Generator):
