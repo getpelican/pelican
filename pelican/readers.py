@@ -252,6 +252,7 @@ def parse_path_metadata(path, settings=None, process=None):
     base, ext = os.path.splitext(os.path.basename(path))
     if settings:
         for key,data in [('FILENAME_METADATA', base),
+                         ('PATH_METADATA', path),
                          ]:
             regexp = settings.get(key)
             if regexp:
