@@ -507,16 +507,25 @@ class StaticGenerator(Generator):
             for f in self.get_files(
                     os.path.join(self.path, static_path), extensions=False):
                 f_rel = os.path.relpath(f, self.path)
+                content, metadata = read_file(
+                    f, fmt='static', settings=self.settings)
                 # TODO remove this hardcoded 'static' subdirectory
                 sc = Static(
                     source_path=f_rel,
                     save_as=os.path.join('static', f_rel),
-                    settings=self.settings)
+                    settings=self.settings,
+                    metadata=metadata)
                 self.staticfiles.append(sc)
                 self.add_source_path(sc)
         # same thing for FILES_TO_COPY
         for src, dest in self.settings['FILES_TO_COPY']:
-            sc = Static(source_path=src, save_as=dest, settings=self.settings)
+            content, metadata = read_file(
+                f, fmt='static', settings=self.settings)
+            sc = Static(
+                source_path=src,
+                save_as=dest,
+                settings=self.settings,
+                metadata=metadata)
             self.staticfiles.append(sc)
             self.add_source_path(sc)
 
