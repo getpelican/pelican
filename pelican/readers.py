@@ -25,7 +25,7 @@ except ImportError:
     asciidoc = False
 import re
 
-from pelican.contents import Category, Tag, Author
+from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
 
@@ -223,8 +223,15 @@ for cls in [Reader] + Reader.__subclasses__():
         _EXTENSIONS[ext] = cls
 
 
-def read_file(path, fmt=None, settings=None):
-    """Return a reader object using the given format."""
+def read_file(base_path, path, content_class=Page, fmt=None,
+              settings=None, context=None,
+              preread_signal=None, preread_sender=None,
+              context_signal=None, context_sender=None):
+    """Return a content object parsed with the given format."""
+    if preread_signal:
+        preread_signal.send(preread_sender)
+    path = os.path.abspath(os.path.join(base_path, path))
+    source_path = os.path.relpath(path, base_path)
     base, ext = os.path.splitext(os.path.basename(path))
     if not fmt:
         fmt = ext[1:]
@@ -242,7 +249,7 @@ def read_file(path, fmt=None, settings=None):
         raise ValueError("Missing dependencies for %s" % fmt)
 
     metadata = parse_path_metadata(
-        path=path, settings=settings, process=reader.process_metadata)
+        path=source_path, settings=settings, process=reader.process_metadata)
     content, reader_metadata = reader.read(path)
     metadata.update(reader_metadata)
 
@@ -252,7 +259,14 @@ def read_file(path, fmt=None, settings=None):
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
 
-    return content, metadata
+    if context_signal:
+        context_signal.send(context_sender, metadata=metadata)
+    return content_class(
+        content=content,
+        metadata=metadata,
+        settings=settings,
+        source_path=path,
+        context=context)
 
 def parse_path_metadata(path, settings=None, process=None):
     metadata = {}
