@@ -17,7 +17,7 @@ from operator import attrgetter, itemgetter
 from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
                     BaseLoader, TemplateNotFound)
 
-from pelican.contents import Article, Page, Category, Static, \
+from pelican.contents import Article, Page, Static, \
         is_valid_content
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p
@@ -327,37 +327,17 @@ class ArticlesGenerator(Generator):
                 article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
-                signals.article_generate_preread.send(self)
-                content, metadata = read_file(f, settings=self.settings)
+                article = read_file(
+                    base_path=self.path, path=f, content_class=Article,
+                    settings=self.settings, context=self.context,
+                    preread_signal=signals.article_generate_preread,
+                    preread_sender=self,
+                    context_signal=signals.article_generate_context,
+                    context_sender=self)
             except Exception as e:
-                logger.warning('Could not process %s\n%s' % (f, str(e)))
+                logger.warning('Could not process {}\n{}'.format(f, e))
                 continue
 
-            # if no category is set, use the name of the path as a category
-            if 'category' not in metadata:
-
-                if (self.settings['USE_FOLDER_AS_CATEGORY']
-                    and os.path.dirname(f) != article_path):
-                    # if the article is in a subdirectory
-                    category = os.path.basename(os.path.dirname(f))
-                else:
-                    # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY']
-
-                if category != '':
-                    metadata['category'] = Category(category, self.settings)
-
-            if 'date' not in metadata and self.settings.get('DEFAULT_DATE'):
-                if self.settings['DEFAULT_DATE'] == 'fs':
-                    metadata['date'] = datetime.datetime.fromtimestamp(
-                            os.stat(f).st_ctime)
-                else:
-                    metadata['date'] = datetime.datetime(
-                            *self.settings['DEFAULT_DATE'])
-
-            signals.article_generate_context.send(self, metadata=metadata)
-            article = Article(content, metadata, settings=self.settings,
-                              source_path=f, context=self.context)
             if not is_valid_content(article, f):
                 continue
 
