@@ -71,8 +71,8 @@ article_generator_finalized     article_generator               invoked at the e
 get_generators                  generators                      invoked in Pelican.get_generator_classes,
                                                                 can return a Generator, or several
                                                                 generator in a tuple or in a list.
-pages_generate_context          pages_generator, metadata
-pages_generator_init            pages_generator                 invoked in the PagesGenerator.__init__
+page_generate_context           page_generator, metadata
+page_generator_init             page_generator                 invoked in the PagesGenerator.__init__
 =============================   ============================   ===========================================================================
 
 The list is currently small, so don't hesitate to add signals and make a pull
