@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+import datetime
 import logging
 import os
 import re
@@ -369,8 +370,13 @@ def read_file(base_path, path, content_class=Page, fmt=None,
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
 
-    metadata = parse_path_metadata(
-        path=source_path, settings=settings, process=reader.process_metadata)
+    metadata = default_metadata(
+        settings=settings, process=reader.process_metadata)
+    metadata.update(path_metadata(
+            full_path=path, source_path=source_path, settings=settings))
+    metadata.update(parse_path_metadata(
+            source_path=source_path, settings=settings,
+            process=reader.process_metadata))
     content, reader_metadata = reader.read(path)
     metadata.update(reader_metadata)
 
@@ -391,7 +397,29 @@ def read_file(base_path, path, content_class=Page, fmt=None,
         source_path=path,
         context=context)
 
-def parse_path_metadata(path, settings=None, process=None):
+
+def default_metadata(settings=None, process=None):
+    metadata = {}
+    if settings:
+        if 'DEFAULT_CATEGORY' in settings:
+            value = settings['DEFAULT_CATEGORY']
+            if process:
+                value = process('category', value)
+            metadata['category'] = value
+        if 'DEFAULT_DATE' in settings and settings['DEFAULT_DATE'] != 'fs':
+            metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
+    return metadata
+
+
+def path_metadata(full_path, source_path, settings=None):
+    metadata = {}
+    if settings and settings.get('DEFAULT_DATE', None) == 'fs':
+        metadata['date'] = datetime.datetime.fromtimestamp(
+            os.stat(path).st_ctime)
+    return metadata
+
+
+def parse_path_metadata(source_path, settings=None, process=None):
     """Extract a metadata dictionary from a file's path
 
     >>> import pprint
@@ -402,7 +430,7 @@ def parse_path_metadata(path, settings=None, process=None):
     ...     }
     >>> reader = Reader(settings=settings)
     >>> metadata = parse_path_metadata(
-    ...     path='my-cat/2013-01-01/my-slug.html',
+    ...     source_path='my-cat/2013-01-01/my-slug.html',
     ...     settings=settings,
     ...     process=reader.process_metadata)
     >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
@@ -411,13 +439,19 @@ def parse_path_metadata(path, settings=None, process=None):
      'slug': 'my-slug'}
     """
     metadata = {}
-    base, ext = os.path.splitext(os.path.basename(path))
+    dirname, basename = os.path.split(source_path)
+    base, ext = os.path.splitext(basename)
+    subdir = os.path.basename(dirname)
     if settings:
+        checks = []
         for key,data in [('FILENAME_METADATA', base),
-                         ('PATH_METADATA', path),
+                         ('PATH_METADATA', source_path),
                          ]:
-            regexp = settings.get(key)
-            if regexp:
+            checks.append((settings.get(key, None), data))
+        if settings.get('USE_FOLDER_AS_CATEGORY', None):
+            checks.insert(0, ('(?P<category>.*)', subdir))
+        for regexp,data in checks:
+            if regexp and data:
                 match = re.match(regexp, data)
                 if match:
                     # .items() for py3k compat.
