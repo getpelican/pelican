@@ -6,6 +6,7 @@ import os
 import re
 import pytz
 import shutil
+import traceback
 import logging
 import errno
 import locale
@@ -121,6 +122,48 @@ class memoized(object):
    def __get__(self, obj, objtype):
       '''Support instance methods.'''
       return partial(self.__call__, obj)
+
+
+def deprecated_attribute(old, new, since=None, remove=None, doc=None):
+    """Attribute deprecation decorator for gentle upgrades
+
+    For example:
+
+        class MyClass (object):
+            @deprecated_attribute(
+                old='abc', new='xyz', since=(3, 2, 0), remove=(4, 1, 3))
+            def abc(): return None
+
+            def __init__(self):
+                xyz = 5
+
+    Note that the decorator needs a dummy method to attach to, but the
+    content of the dummy method is ignored.
+    """
+    def _warn():
+        version = '.'.join(six.text_type(x) for x in since)
+        message = ['{} has been deprecated since {}'.format(old, version)]
+        if remove:
+            version = '.'.join(six.text_type(x) for x in remove)
+            message.append(
+                ' and will be removed by version {}'.format(version))
+        message.append('.  Use {} instead.'.format(new))
+        logger.warning(''.join(message))
+        logger.debug(''.join(
+                six.text_type(x) for x in traceback.format_stack()))
+
+    def fget(self):
+        _warn()
+        return getattr(self, new)
+
+    def fset(self, value):
+        _warn()
+        setattr(self, new, value)
+
+    def decorator(dummy):
+        return property(fget=fget, fset=fset, doc=doc)
+
+    return decorator
 
 def get_date(string):
     """Return a datetime object from a string.

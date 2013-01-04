@@ -11,6 +11,17 @@ from pelican.utils import NoFilesError
 
 
 class TestUtils(unittest.TestCase):
+    _new_attribute = 'new_value'
+
+    @utils.deprecated_attribute(
+        old='_old_attribute', new='_new_attribute',
+        since=(3, 1, 0), remove=(4, 1, 3))
+    def _old_attribute(): return None
+
+    def test_deprecated_attribute(self):
+        value = self._old_attribute
+        self.assertEquals(value, self._new_attribute)
+        # TODO: check log warning
 
     def test_get_date(self):
         # valid ones
