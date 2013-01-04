@@ -17,7 +17,7 @@ from operator import attrgetter, itemgetter
 from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
                     BaseLoader, TemplateNotFound)
 
-from pelican.contents import Article, Page, Category, StaticContent, \
+from pelican.contents import Article, Page, Category, Static, \
         is_valid_content
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p
@@ -115,8 +115,7 @@ class Generator(object):
         return files
 
     def add_source_path(self, content):
-        location = os.path.relpath(os.path.abspath(content.source_path),
-                                   os.path.abspath(self.path))
+        location = content.get_relative_source_path()
         self.context['filenames'][location] = content
 
     def _update_context(self, items):
@@ -509,23 +508,27 @@ class StaticGenerator(Generator):
                     os.path.join(self.path, static_path), extensions=False):
                 f_rel = os.path.relpath(f, self.path)
                 # TODO remove this hardcoded 'static' subdirectory
-                sc = StaticContent(f_rel, os.path.join('static', f_rel),
-                        settings=self.settings)
+                sc = Static(
+                    source_path=f_rel,
+                    save_as=os.path.join('static', f_rel),
+                    settings=self.settings)
                 self.staticfiles.append(sc)
-                self.context['filenames'][f_rel] = sc
+                self.add_source_path(sc)
         # same thing for FILES_TO_COPY
         for src, dest in self.settings['FILES_TO_COPY']:
-            sc = StaticContent(src, dest, settings=self.settings)
+            sc = Static(source_path=src, save_as=dest, settings=self.settings)
             self.staticfiles.append(sc)
-            self.context['filenames'][src] = sc
+            self.add_source_path(sc)
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
-        # copy all StaticContent files
+        # copy all Static files
         for sc in self.staticfiles:
-            mkdir_p(os.path.dirname(sc.save_as))
-            shutil.copy(sc.source_path, sc.save_as)
+            source_path = os.path.join(self.path, sc.source_path)
+            save_as = os.path.join(self.output_path, sc.save_as)
+            mkdir_p(os.path.dirname(save_as))
+            shutil.copy(source_path, save_as)
             logger.info('copying {} to {}'.format(sc.source_path, sc.save_as))
 
 
