@@ -44,6 +44,7 @@ METADATA_PROCESSORS = {
 
 class Reader(object):
     enabled = True
+    file_extensions = ['static']
     extensions = None
 
     def __init__(self, settings):
@@ -53,6 +54,12 @@ class Reader(object):
         if name in METADATA_PROCESSORS:
             return METADATA_PROCESSORS[name](value, self.settings)
         return value
+
+    def read(self, source_path):
+        "No-op parser"
+        content = None
+        metadata = {}
+        return content, metadata
 
 
 class _FieldBodyTranslator(HTMLTranslator):
@@ -311,7 +318,7 @@ class AsciiDocReader(Reader):
 
 EXTENSIONS = {}
 
-for cls in Reader.__subclasses__():
+for cls in [Reader] + Reader.__subclasses__():
     for ext in cls.file_extensions:
         EXTENSIONS[ext] = cls
 
