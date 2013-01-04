@@ -108,8 +108,8 @@ class Generator(object):
                     files.append(os.sep.join((root, f)))
         return files
 
-    def add_filename(self, content):
-        location = os.path.relpath(os.path.abspath(content.filename),
+    def add_source_path(self, content):
+        location = os.path.relpath(os.path.abspath(content.source_path),
                                    os.path.abspath(self.path))
         self.context['filenames'][location] = content
 
@@ -352,11 +352,11 @@ class ArticlesGenerator(Generator):
 
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
-                              filename=f, context=self.context)
+                              source_path=f, context=self.context)
             if not is_valid_content(article, f):
                 continue
 
-            self.add_filename(article)
+            self.add_source_path(article)
 
             if article.status == "published":
                 if hasattr(article, 'tags'):
@@ -455,11 +455,11 @@ class PagesGenerator(Generator):
                 continue
             signals.pages_generate_context.send(self, metadata=metadata)
             page = Page(content, metadata, settings=self.settings,
-                        filename=f, context=self.context)
+                        source_path=f, context=self.context)
             if not is_valid_content(page, f):
                 continue
 
-            self.add_filename(page)
+            self.add_source_path(page)
 
             if page.status == "published":
                 all_pages.append(page)
@@ -520,8 +520,8 @@ class StaticGenerator(Generator):
         # copy all StaticContent files
         for sc in self.staticfiles:
             mkdir_p(os.path.dirname(sc.save_as))
-            shutil.copy(sc.filename, sc.save_as)
-            logger.info('copying {} to {}'.format(sc.filename, sc.save_as))
+            shutil.copy(sc.source_path, sc.save_as)
+            logger.info('copying {} to {}'.format(sc.source_path, sc.save_as))
 
 
 class PdfGenerator(Generator):
@@ -544,11 +544,11 @@ class PdfGenerator(Generator):
             raise Exception("unable to find rst2pdf")
 
     def _create_pdf(self, obj, output_path):
-        if obj.filename.endswith(".rst"):
+        if obj.source_path.endswith('.rst'):
             filename = obj.slug + ".pdf"
             output_pdf = os.path.join(output_path, filename)
-            # print "Generating pdf for", obj.filename, " in ", output_pdf
-            with open(obj.filename) as f:
+            # print('Generating pdf for', obj.source_path, 'in', output_pdf)
+            with open(obj.source_path) as f:
                 self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
             logger.info(' [ok] writing %s' % output_pdf)
 
@@ -578,9 +578,9 @@ class SourceFileGenerator(Generator):
         self.output_extension = self.settings['OUTPUT_SOURCES_EXTENSION']
 
     def _create_source(self, obj, output_path):
-        filename = os.path.splitext(obj.save_as)[0]
-        dest = os.path.join(output_path, filename + self.output_extension)
-        copy('', obj.filename, dest)
+        output_path = os.path.splitext(obj.save_as)[0]
+        dest = os.path.join(output_path, output_path + self.output_extension)
+        copy('', obj.source_path, dest)
 
     def generate_output(self, writer=None):
         logger.info(' Generating source files...')

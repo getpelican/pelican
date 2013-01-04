@@ -32,7 +32,7 @@ class Page(object):
     default_template = 'page'
 
     def __init__(self, content, metadata=None, settings=None,
-                 filename=None, context=None):
+                 source_path=None, context=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -75,8 +75,8 @@ class Page(object):
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
-        if filename:
-            self.filename = filename
+        if source_path:
+            self.source_path = source_path
 
         # manage the date format
         if not hasattr(self, 'date_format'):
@@ -160,8 +160,8 @@ class Page(object):
                 if value.startswith('/'):
                     value = value[1:]
                 else:
-                    # relative to the filename of this content
-                    value = self.get_relative_filename(
+                    # relative to the source path of this content
+                    value = self.get_relative_source_path(
                         os.path.join(self.relative_dir, value)
                     )
 
@@ -215,24 +215,25 @@ class Page(object):
         else:
             return self.default_template
 
-    def get_relative_filename(self, filename=None):
+    def get_relative_source_path(self, source_path=None):
         """Return the relative path (from the content path) to the given
-        filename.
+        source_path.
 
-        If no filename is specified, use the filename of this content object.
+        If no source path is specified, use the source path of this
+        content object.
         """
-        if not filename:
-            filename = self.filename
+        if not source_path:
+            source_path = self.source_path
 
         return os.path.relpath(
-            os.path.abspath(os.path.join(self.settings['PATH'], filename)),
+            os.path.abspath(os.path.join(self.settings['PATH'], source_path)),
             os.path.abspath(self.settings['PATH'])
         )
 
     @property
     def relative_dir(self):
         return os.path.dirname(os.path.relpath(
-            os.path.abspath(self.filename),
+            os.path.abspath(self.source_path),
             os.path.abspath(self.settings['PATH']))
         )
 
@@ -305,11 +306,11 @@ class StaticContent(object):
             settings = copy.deepcopy(_DEFAULT_CONFIG)
         self.src = src
         self.url = dst or src
-        self.filename = os.path.join(settings['PATH'], src)
+        self.source_path = os.path.join(settings['PATH'], src)
         self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
 
     def __str__(self):
-        return self.filename
+        return self.source_path
 
 
 def is_valid_content(content, f):

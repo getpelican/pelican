@@ -141,9 +141,9 @@ def get_date(string):
     raise ValueError("'%s' is not a valid date" % string)
 
 
-def pelican_open(filename):
+def pelican_open(path):
     """Open a file and return it's content"""
-    return open(filename, encoding='utf-8').read()
+    return open(path, encoding='utf-8').read()
 
 
 def slugify(value):
@@ -245,9 +245,9 @@ def clean_output_dir(path):
             logger.error("Unable to delete %s, file type unknown" % file)
 
 
-def get_relative_path(filename):
-    """Return the relative path from the given filename to the root path."""
-    nslashes = filename.count('/')
+def get_relative_path(path):
+    """Return the relative path from the given path to the root path."""
+    nslashes = path.count('/')
     if nslashes == 0:
         return '.'
     else:
@@ -344,15 +344,16 @@ def process_translations(content_list):
         if len_ > 1:
             logger.warning('there are %s variants of "%s"' % (len_, slug))
             for x in default_lang_items:
-                logger.warning('    %s' % x.filename)
+                logger.warning('    {}'.format(x.source_path))
         elif len_ == 0:
             default_lang_items = items[:1]
 
         if not slug:
-            msg = 'empty slug for %r. ' % default_lang_items[0].filename\
-                + 'You can fix this by adding a title or a slug to your '\
-                + 'content'
-            logger.warning(msg)
+            logger.warning((
+                    'empty slug for {!r}. '
+                    'You can fix this by adding a title or a slug to your '
+                    'content'
+                    ).format(default_lang_items[0].source_path))
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -388,14 +389,14 @@ def files_changed(path, extensions):
 FILENAMES_MTIMES = defaultdict(int)
 
 
-def file_changed(filename):
-    mtime = os.stat(filename).st_mtime
-    if FILENAMES_MTIMES[filename] == 0:
-        FILENAMES_MTIMES[filename] = mtime
+def file_changed(path):
+    mtime = os.stat(path).st_mtime
+    if FILENAMES_MTIMES[path] == 0:
+        FILENAMES_MTIMES[path] = mtime
         return False
     else:
-        if mtime > FILENAMES_MTIMES[filename]:
-            FILENAMES_MTIMES[filename] = mtime
+        if mtime > FILENAMES_MTIMES[path]:
+            FILENAMES_MTIMES[path] = mtime
             return True
         return False
 
