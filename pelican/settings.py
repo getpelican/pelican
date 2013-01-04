@@ -124,8 +124,7 @@ def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
     Load settings from a file path, returning a dict.
 
     """
-
-    name = os.path.basename(path).rpartition('.')[0]
+    name, ext = os.path.splitext(path)
     module = imp.load_source(name, path)
     return get_settings_from_module(module, default_settings=default_settings)
 
