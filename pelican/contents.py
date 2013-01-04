@@ -85,8 +85,7 @@ class Content(object):
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
-        if source_path:
-            self.source_path = source_path
+        self.source_path = source_path
 
         # manage the date format
         if not hasattr(self, 'date_format'):
@@ -119,6 +118,14 @@ class Content(object):
 
         signals.content_object_init.send(self)
 
+    def __str__(self):
+        if self.source_path is None:
+            return repr(self)
+        elif six.PY3:
+            return self.source_path or repr(self)
+        else:
+            return str(self.source_path.encode('utf-8', 'replace'))
+
     def check_properties(self):
         """Test mandatory properties are set."""
         for prop in self.mandatory_properties:
@@ -130,6 +137,7 @@ class Content(object):
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
         metadata.update({
+            'path': self.metadata.get('path', self.get_relative_source_path()),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
@@ -250,6 +258,8 @@ class Content(object):
         """
         if not source_path:
             source_path = self.source_path
+        if source_path is None:
+            return None
 
         return os.path.relpath(
             os.path.abspath(os.path.join(self.settings['PATH'], source_path)),
@@ -279,26 +289,88 @@ class Quote(Page):
 
 
 @python_2_unicode_compatible
-class StaticContent(object):
+@functools.total_ordering
+class URLWrapper(object):
+    def __init__(self, name, settings):
+        self.name = name
+        self.slug = slugify(self.name)
+        self.settings = settings
 
+    def as_dict(self):
+        return self.__dict__
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def _key(self):
+        return self.name
+
+    def _normalize_key(self, key):
+        return six.text_type(key)
+
+    def __eq__(self, other):
+        return self._key() == self._normalize_key(other)
+
+    def __ne__(self, other):
+        return self._key() != self._normalize_key(other)
+
+    def __lt__(self, other):
+        return self._key() < self._normalize_key(other)
+
+    def __str__(self):
+        return self.name
+
+    def _from_settings(self, key, get_page_name=False):
+        """Returns URL information as defined in settings.
+
+        When get_page_name=True returns URL without anything after {slug} e.g.
+        if in settings: CATEGORY_URL="cat/{slug}.html" this returns
+        "cat/{slug}" Useful for pagination.
+
+        """
+        setting = "%s_%s" % (self.__class__.__name__.upper(), key)
+        value = self.settings[setting]
+        if not isinstance(value, six.string_types):
+            logger.warning('%s is set to %s' % (setting, value))
+            return value
+        else:
+            if get_page_name:
+                return os.path.splitext(value)[0].format(**self.as_dict())
+            else:
+                return value.format(**self.as_dict())
+
+    page_name = property(functools.partial(_from_settings, key='URL',
+                         get_page_name=True))
+    url = property(functools.partial(_from_settings, key='URL'))
+    save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
+
+
+class Category(URLWrapper):
+    pass
+
+
+class Tag(URLWrapper):
+    def __init__(self, name, *args, **kwargs):
+        super(Tag, self).__init__(name.strip(), *args, **kwargs)
+
+
+class Author(URLWrapper):
+    pass
+
+
+@python_2_unicode_compatible
+class Static(Page):
     @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
     def filepath():
         return None
 
-    def __init__(self, src, dst=None, settings=None):
-        if not settings:
-            settings = copy.deepcopy(_DEFAULT_CONFIG)
-        self.src = src
-        self.url = dst or src
+    @deprecated_attribute(old='src', new='source_path', since=(3, 2, 0))
+    def src():
+        return None
 
-        # On Windows, make sure we end up with Unix-like paths.
-        if os.name == 'nt':
-            self.url = self.url.replace('\\', '/')
-        self.source_path = os.path.join(settings['PATH'], src)
-        self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
-
-    def __str__(self):
-        return self.source_path
+    @deprecated_attribute(old='dst', new='save_as', since=(3, 2, 0))
+    def dst():
+        return None
 
 
 def is_valid_content(content, f):
