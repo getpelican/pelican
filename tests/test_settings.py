@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import copy
+import os
 from os.path import dirname, abspath, join
 
 from pelican.settings import read_settings, configure_settings, _DEFAULT_CONFIG, DEFAULT_THEME
@@ -61,7 +62,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings = {
                 'SITEURL': 'http://blog.notmyidea.org/',
                 'LOCALE': '',
-                'PATH': '.',
+                'PATH': os.curdir,
                 'THEME': DEFAULT_THEME,
                 }
         configure_settings(settings)

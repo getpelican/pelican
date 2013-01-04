@@ -292,9 +292,9 @@ def get_relative_path(path):
     """Return the relative path from the given path to the root path."""
     nslashes = path.count('/')
     if nslashes == 0:
-        return '.'
+        return os.curdir
     else:
-        return '/'.join(['..'] * nslashes)
+        return '/'.join([os.pardir] * nslashes)
 
 
 def truncate_html_words(s, num, end_text='...'):
@@ -413,7 +413,7 @@ def files_changed(path, extensions):
     def file_times(path):
         """Return the last time files have been modified"""
         for root, dirs, files in os.walk(path):
-            dirs[:] = [x for x in dirs if x[0] != '.']
+            dirs[:] = [x for x in dirs if x[0] != os.curdir]
             for f in files:
                 if any(f.endswith(ext) for ext in extensions):
                     yield os.stat(os.path.join(root, f)).st_mtime

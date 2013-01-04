@@ -51,7 +51,7 @@ class Pelican(object):
         signals.initialized.send(self)
 
     def init_path(self):
-        if not any(p in sys.path for p in ['', '.']):
+        if not any(p in sys.path for p in ['', os.curdir]):
             logger.debug("Adding current directory to system path")
             sys.path.insert(0, '')
 
