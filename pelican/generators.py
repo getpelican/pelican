@@ -479,7 +479,7 @@ class PagesGenerator(Generator):
         self.hidden_pages = []
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
-        signals.pages_generator_init.send(self)
+        signals.page_generator_init.send(self)
 
     def generate_context(self):
         all_pages = []
@@ -488,13 +488,17 @@ class PagesGenerator(Generator):
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                content, metadata = read_file(f, settings=self.settings)
+                page = read_file(
+                    base_path=self.path, path=f, content_class=Page,
+                    settings=self.settings, context=self.context,
+                    preread_signal=signals.page_generator_preread,
+                    preread_sender=self,
+                    context_signal=signals.page_generator_context,
+                    context_sender=self)
             except Exception as e:
-                logger.warning('Could not process %s\n%s' % (f, str(e)))
+                logger.warning('Could not process {}\n{}'.format(f, e))
                 continue
-            signals.pages_generate_context.send(self, metadata=metadata)
-            page = Page(content, metadata, settings=self.settings,
-                        source_path=f, context=self.context)
+
             if not is_valid_content(page, f):
                 continue
 
@@ -516,7 +520,7 @@ class PagesGenerator(Generator):
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
-        signals.pages_generator_finalized.send(self)
+        signals.page_generator_finalized.send(self)
 
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
