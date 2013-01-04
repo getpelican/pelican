@@ -70,7 +70,7 @@ class TestPelican(unittest.TestCase):
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
         # ones and generate correct output without raising any exception
-        settings = read_settings(filename=None, override={
+        settings = read_settings(path=None, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
             'LOCALE': locale.normalize('en_US'),
@@ -86,7 +86,7 @@ class TestPelican(unittest.TestCase):
 
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
-        settings = read_settings(filename=SAMPLE_CONFIG, override={
+        settings = read_settings(path=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
             'LOCALE': locale.normalize('en_US'),

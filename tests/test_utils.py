@@ -79,17 +79,17 @@ class TestUtils(unittest.TestCase):
         """Test if file changes are correctly detected
         Make sure to handle not getting any files correctly"""
 
-        path = os.path.join(os.path.dirname(__file__), 'content')
-        filename = os.path.join(path, 'article_with_metadata.rst')
-        changed = utils.files_changed(path, 'rst')
+        dirname = os.path.join(os.path.dirname(__file__), 'content')
+        path = os.path.join(dirname, 'article_with_metadata.rst')
+        changed = utils.files_changed(dirname, 'rst')
         self.assertEquals(changed, True)
 
-        changed = utils.files_changed(path, 'rst')
+        changed = utils.files_changed(dirname, 'rst')
         self.assertEquals(changed, False)
 
         t = time.time()
-        os.utime(filename, (t, t))
-        changed = utils.files_changed(path, 'rst')
+        os.utime(path, (t, t))
+        changed = utils.files_changed(dirname, 'rst')
         self.assertEquals(changed, True)
         self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
 
