@@ -34,9 +34,6 @@ DEFAULT_METADATA = (('yeah', 'it is'),)
 # path-specific metadata
 EXTRA_PATH_METADATA = {
     'extra/robots.txt': {'path': 'robots.txt'},
-    'pictures/Fat_Cat.jpg': {'path': 'static/pictures/Fat_Cat.jpg'},
-    'pictures/Sushi.jpg': {'path': 'static/pictures/Sushi.jpg'},
-    'pictures/Sushi_Macro.jpg': {'path': 'static/pictures/Sushi_Macro.jpg'},
     }
 
 # static paths will be copied without parsing their contents
