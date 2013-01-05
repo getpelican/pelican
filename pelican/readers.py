@@ -301,9 +301,12 @@ def default_metadata(settings=None, process=None):
 
 def path_metadata(full_path, source_path, settings=None):
     metadata = {}
-    if settings and settings.get('DEFAULT_DATE', None) == 'fs':
-        metadata['date'] = datetime.datetime.fromtimestamp(
-            os.stat(path).st_ctime)
+    if settings:
+        if settings.get('DEFAULT_DATE', None) == 'fs':
+            metadata['date'] = datetime.datetime.fromtimestamp(
+                os.stat(full_path).st_ctime)
+        metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
+                source_path, {}))
     return metadata
 
 def parse_path_metadata(source_path, settings=None, process=None):

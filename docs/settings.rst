@@ -61,6 +61,7 @@ Setting name (default value)                                            What doe
                                                                         ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
 `PATH_METADATA` (``''``)                                                Like ``FILENAME_METADATA``, but parsed from a page's
                                                                         full path relative to the content source directory.
+`EXTRA_PATH_METADATA` (``{}``)                                          Extra metadata dictionaries keyed by relative path.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
                                                                         generating new files.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
