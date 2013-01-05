@@ -351,13 +351,6 @@ class Static(Page):
     def dst():
         return None
 
-    def __init__(self, source_path, save_as=None, **kwargs):
-        super(Static, self).__init__(
-            content=None, source_path=source_path, **kwargs)
-        if save_as:
-            self._save_as = save_as
-            self._url = save_as
-
 
 def is_valid_content(content, f):
     try:
