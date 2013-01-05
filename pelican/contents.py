@@ -48,6 +48,8 @@ class Content(object):
 
         self.settings = settings
         self._content = content
+        if context is None:
+            context = {}
         self._context = context
         self.translations = []
 
@@ -220,7 +222,7 @@ class Content(object):
 
     @property
     def content(self):
-        return self.get_content(self._context['localsiteurl'])
+        return self.get_content(self._context.get('localsiteurl', ''))
 
     def _get_summary(self):
         """Returns the summary of an article.
