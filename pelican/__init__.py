@@ -143,12 +143,12 @@ class Pelican(object):
         context['localsiteurl'] = self.settings.get('SITEURL')  # share
         generators = [
             cls(
-                context,
-                self.settings,
-                self.path,
-                self.theme,
-                self.output_path,
-                self.markup,
+                context=context,
+                settings=self.settings,
+                path=self.path,
+                theme=self.theme,
+                output_path=self.output_path,
+                markup=self.markup,
             ) for cls in self.get_generator_classes()
         ]
 
