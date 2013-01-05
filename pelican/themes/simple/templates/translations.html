@@ -1,7 +1,7 @@
-{% macro translations_for(article) %}
-{% if article.translations %}
+{% macro translations_for(content) %}
+{% if content.translations %}
 Translations: 
-{% for translation in article.translations %}
+{% for translation in content.translations %}
 <a href="{{ SITEURL }}/{{ translation.url }}">{{ translation.lang }}</a>
 {% endfor %}
 {% endif %}

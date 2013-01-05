@@ -3,23 +3,23 @@
 <section id="content" class="body">
   <header>
     <h2 class="entry-title">
-      <a href="{{ article.url }}" rel="bookmark"
-         title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
+      <a href="{{ content.url }}" rel="bookmark"
+         title="Permalink to {{ content.title|striptags }}">{{ content.title }}</a></h2>
  {% import 'translations.html' as translations with context %}
  {{ translations.translations_for(article) }}
   </header>
   <footer class="post-info">
-    <abbr class="published" title="{{ article.date.isoformat() }}">
-      {{ article.locale_date }}
+    <abbr class="published" title="{{ content.date.isoformat() }}">
+      {{ content.locale_date }}
     </abbr>
-    {% if article.author %}
+    {% if content.author %}
     <address class="vcard author">
-      By <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
+      By <a class="url fn" href="{{ SITEURL }}/{{ content.author.url }}">{{ content.author }}</a>
     </address>
     {% endif %}
   </footer><!-- /.post-info -->
   <div class="entry-content">
-    {{ article.content }}
+    {{ content.content }}
   </div><!-- /.entry-content -->
 </section>
 {% endblock %}
