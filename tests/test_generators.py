@@ -76,7 +76,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_generate_context(self):
 
         generator = self.get_populated_generator()
-        articles = self.distill_articles(generator.articles)
+        articles = self.distill_articles(generator.contents)
         articles_expected = [
             ['Article title', 'published', 'Default', 'article'],
             ['Article with markdown and summary metadata single', 'published', 'Default', 'article'],
@@ -163,7 +163,7 @@ class TestArticlesGenerator(unittest.TestCase):
         Custom template articles get the field but standard/unset are None
         """
         generator = self.get_populated_generator()
-        articles = self.distill_articles(generator.articles)
+        articles = self.distill_articles(generator.contents)
         custom_template = ['Article with template', 'published', 'Default', 'custom']
         standard_template = ['This is a super article !', 'published', 'Yeah', 'article']
         self.assertIn(custom_template, articles)
@@ -198,8 +198,8 @@ class TestPageGenerator(unittest.TestCase):
             path=CUR_DIR, theme=settings['THEME'],
             output_path=None, markup=settings['MARKUP'])
         generator.generate_context()
-        pages = self.distill_pages(generator.pages)
-        hidden_pages = self.distill_pages(generator.hidden_pages)
+        pages = self.distill_pages(generator.contents)
+        hidden_pages = self.distill_pages(generator.hidden)
 
         pages_expected = [
             ['This is a test page', 'published', 'page'],
