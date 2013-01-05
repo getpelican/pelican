@@ -171,19 +171,24 @@ def dc2fields(file):
 def chyrp2fields(atom):
     """Opens a Chyrp Atom file, and yield pelican fields"""
     import feedparser
+    import markdown
+
     d = feedparser.parse(atom)
     for entry in d.entries:
 
         if entry.chyrp_status == 'public' and entry.chyrp_feather == 'text':
+            # Chyrp support both html and markdown, must convert by finding type
+            # content = markdown.markdown(entry.summary)
+            content = HTMLParser().unescape(entry.summary)
 
             date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
                 if hasattr(entry, "updated_parsed") else None)
             author = entry.author if hasattr(entry, "author") else None
             tags = entry.tags if hasattr(entry, "tags") else None
             slug = entry.chyrp_url if hasattr(entry, "chyrp_url") else None
-            tags = [tag[0] for tag in re.findall(r"(.*)\:\s*\"(.*)\"", entry.tags)] if hasattr(entry, "tags") else None
+            tags = [tag[1] for tag in re.findall(r"(.*)\:\s*\"(.*)\"", entry.tags)] if hasattr(entry, "tags") else None
 
-            yield (entry.title, entry.summary, slug, date, author, [], tags, "html")
+            yield (entry.title, content, slug, date, author, [], tags, "html")
 
 
 def feed2fields(file):
