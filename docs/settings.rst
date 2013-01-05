@@ -63,9 +63,6 @@ Setting name (default value)                                            What doe
                                                                         full path relative to the content source directory.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
                                                                         generating new files.
-`FILES_TO_COPY` (``()``)                                                A list of files (or directories) to copy from the source (inside the
-                                                                        content directory) to the destination (inside the output directory).
-                                                                        For example: ``(('extra/robots.txt', 'robots.txt'),)``.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
