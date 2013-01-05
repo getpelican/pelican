@@ -87,7 +87,8 @@ class Page(object):
             if hasattr(self, 'lang') and self.lang in settings['DATE_FORMATS']:
                 self.date_format = settings['DATE_FORMATS'][self.lang]
             else:
-                self.date_format = settings['DEFAULT_DATE_FORMAT']
+                self.date_format = settings.get(
+                    'DEFAULT_DATE_FORMAT', '%a %d %B %Y')
 
         if isinstance(self.date_format, tuple):
             locale_string = self.date_format[0]
@@ -102,8 +103,8 @@ class Page(object):
 
         # manage status
         if not hasattr(self, 'status'):
-            self.status = settings['DEFAULT_STATUS']
-            if not settings['WITH_FUTURE_DATES']:
+            self.status = settings.get('DEFAULT_STATUS', 'published')
+            if not settings.get('WITH_FUTURE_DATES', True):
                 if hasattr(self, 'date') and self.date > datetime.now():
                     self.status = 'draft'
 
