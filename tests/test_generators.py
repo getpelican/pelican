@@ -15,6 +15,7 @@ from pelican.settings import _DEFAULT_CONFIG
 from .support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
+CONTENT_PATH = os.path.join(CUR_DIR, 'content')
 
 
 class TestArticlesGenerator(unittest.TestCase):
@@ -30,12 +31,11 @@ class TestArticlesGenerator(unittest.TestCase):
         """
         if self.generator is None:
             settings = get_settings()
-            settings['ARTICLE_DIR'] = 'content'
+            settings['ARTICLE_DIR'] = os.curdir
             settings['DEFAULT_CATEGORY'] = 'Default'
             settings['DEFAULT_DATE'] = (1970, 1, 1)
             self.generator = ArticlesGenerator(settings.copy(), settings,
-                                CUR_DIR, settings['THEME'], None,
-                                settings['MARKUP'])
+                CONTENT_PATH, settings['THEME'], None,  settings['MARKUP'])
             self.generator.generate_context()
         return self.generator
 
@@ -96,14 +96,14 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_do_not_use_folder_as_category(self):
 
         settings = _DEFAULT_CONFIG.copy()
-        settings['ARTICLE_DIR'] = 'content'
+        settings['ARTICLE_DIR'] = os.curdir
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['filenames'] = {}
-        generator = ArticlesGenerator(settings.copy(), settings,
-                            CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
-                            _DEFAULT_CONFIG['MARKUP'])
+        generator = ArticlesGenerator(
+            settings.copy(), settings, CONTENT_PATH, _DEFAULT_CONFIG['THEME'],
+            None, _DEFAULT_CONFIG['MARKUP'])
         generator.generate_context()
 
         categories = [cat.name for cat, _ in generator.categories]
@@ -182,9 +182,9 @@ class TestPageGenerator(unittest.TestCase):
         settings['PAGE_DIR'] = 'TestPages'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 
-        generator = PagesGenerator(settings.copy(), settings, CUR_DIR,
-                                      settings['THEME'], None,
-                                      settings['MARKUP'])
+        generator = PagesGenerator(
+            settings.copy(), settings, CUR_DIR, settings['THEME'], None,
+            settings['MARKUP'])
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
