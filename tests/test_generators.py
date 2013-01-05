@@ -61,7 +61,7 @@ class TestArticlesGenerator(unittest.TestCase):
             path=None, theme=settings['THEME'],
             output_path=None, markup=settings['MARKUP'])
         writer = MagicMock()
-        generator.generate_feeds(writer)
+        generator._generate_all_feeds(writer)
         writer.write_feed.assert_called_with([], settings, 'feeds/all.atom.xml')
 
         generator = ArticlesGenerator(
@@ -70,8 +70,8 @@ class TestArticlesGenerator(unittest.TestCase):
             path=None, theme=settings['THEME'],
             output_path=None, markup=None)
         writer = MagicMock()
-        generator.generate_feeds(writer)
-        self.assertFalse(writer.write_feed.called)
+        generator._generate_all_feeds(writer)
+        self.assertFalse(bool(writer.mock_calls), writer.mock_calls)
 
     def test_generate_context(self):
 
@@ -124,11 +124,11 @@ class TestArticlesGenerator(unittest.TestCase):
             context=settings, settings=settings,
             path=None, theme=settings['THEME'],
             output_path=None, markup=settings['MARKUP'])
-        write = MagicMock()
-        generator.generate_direct_templates(write)
-        write.assert_called_with("archives.html",
-            generator.get_template("archives"), settings,
-            blog=True, paginated={}, page_name='archives')
+        writer = MagicMock()
+        generator._generate_direct_templates(writer)
+        writer.write_file.assert_called_with('archives.html',
+            generator.get_template('archives'), settings,
+            relative_urls=True, blog=True, paginated={}, page_name='archives')
 
     def test_direct_templates_save_as_modified(self):
 
@@ -139,11 +139,11 @@ class TestArticlesGenerator(unittest.TestCase):
             context=settings, settings=settings,
             path=None, theme=settings['THEME'],
             output_path=None, markup=settings['MARKUP'])
-        write = MagicMock()
-        generator.generate_direct_templates(write)
-        write.assert_called_with("archives/index.html",
-            generator.get_template("archives"), settings,
-            blog=True, paginated={}, page_name='archives')
+        writer = MagicMock()
+        generator._generate_direct_templates(writer)
+        writer.write_file.assert_called_with('archives/index.html',
+            generator.get_template('archives'), settings,
+            relative_urls=True, blog=True, paginated={}, page_name='archives')
 
     def test_direct_templates_save_as_false(self):
 
@@ -154,9 +154,9 @@ class TestArticlesGenerator(unittest.TestCase):
             context=settings, settings=settings,
             path=None, theme=settings['THEME'],
             output_path=None, markup=settings['MARKUP'])
-        write = MagicMock()
-        generator.generate_direct_templates(write)
-        write.assert_called_count == 0
+        writer = MagicMock()
+        generator._generate_direct_templates(writer)
+        self.assertFalse(bool(writer.mock_calls), writer.mock_calls)
 
     def test_per_article_template(self):
         """
