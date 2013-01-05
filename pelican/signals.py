@@ -16,12 +16,20 @@ article_generator_init = signal('article_generator_init')
 article_generator_finalized = signal('article_generate_finalized')
 
 pages_generator_init = signal('pages_generator_init')
+pages_generator_finalized = signal('pages_generate_finalized')
+
+static_generator_init = signal('static_generator_init')
+static_generator_finalized = signal('static_generate_finalized')
 
 # Page-level signals
 
 article_generate_preread = signal('article_generate_preread')
 article_generate_context = signal('article_generate_context')
 
+pages_generate_preread = signal('pages_generate_preread')
 pages_generate_context = signal('pages_generate_context')
+
+static_generate_preread = signal('static_generate_preread')
+static_generate_context = signal('static_generate_context')
 
 content_object_init = signal('content_object_init')
