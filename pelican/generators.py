@@ -604,6 +604,7 @@ class StaticGenerator(ContentGenerator):
             kwargs['name'] = 'static'
         super(StaticGenerator, self).__init__(*args, **kwargs)
         self._check_validity = False
+        self._context_processors.insert(0, self._process_slugs)
 
         # don't try and match extensions for processing
         self.markup = False
@@ -611,6 +612,15 @@ class StaticGenerator(ContentGenerator):
 
     def _content_paths(self):
         return self.get_setting('PATHS', ())
+
+    def _process_slugs(self):
+        """Add slugs for process_translations"""
+        for content in self.all_content:
+            if 'slug' not in content.metadata:
+                filename = os.path.basename(content.source_path)
+                base, ext = os.path.splitext(filename)
+                content.slug = content.metadata['slug'] = base
+        return set()
 
     def _copy_paths(self, paths, source, destination, output_path,
             final_path=None):
