@@ -149,7 +149,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
-        settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        settings['ARCHIVES_SAVE_AS'] = False
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'],
