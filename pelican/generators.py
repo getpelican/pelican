@@ -548,32 +548,29 @@ class StaticGenerator(Generator):
         for static_path in self.settings['STATIC_PATHS']:
             for f in self.get_files(
                     os.path.join(self.path, static_path), extensions=False):
-                f_rel = os.path.relpath(f, self.path)
-                content, metadata = read_file(
-                    f, fmt='static', settings=self.settings)
-                # TODO remove this hardcoded 'static' subdirectory
-                metadata['save_as'] = os.path.join('static', f_rel)
-                metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
-                sc = Static(
-                    content=None,
-                    metadata=metadata,
-                    settings=self.settings,
-                    source_path=f_rel)
-                self.staticfiles.append(sc)
-                self.add_source_path(sc)
+                static = read_file(
+                    base_path=self.path, path=f, content_class=Static,
+                    fmt='static',
+                    settings=self.settings, context=self.context,
+                    preread_signal=signals.static_generator_preread,
+                    preread_sender=self,
+                    context_signal=signals.static_generator_context,
+                    context_sender=self)
+                self.staticfiles.append(static)
+                self.add_source_path(static)
+
         # same thing for FILES_TO_COPY
         for src, dest in self.settings['FILES_TO_COPY']:
-            content, metadata = read_file(
-                src, fmt='static', settings=self.settings)
-            metadata['save_as'] = dest
-            metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
-            sc = Static(
-                content=None,
-                metadata={'save_as': dest},
-                settings=self.settings,
-                source_path=src)
-            self.staticfiles.append(sc)
-            self.add_source_path(sc)
+            static = read_file(
+                base_path=self.path, path=f, content_class=Static,
+                fmt='static',
+                settings=self.settings, context=self.context,
+                preread_signal=signals.static_generator_preread,
+                preread_sender=self,
+                context_signal=signals.static_generator_context,
+                context_sender=self)
+            self.staticfiles.append(static)
+            self.add_source_path(static)
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
