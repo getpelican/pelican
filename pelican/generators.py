@@ -213,7 +213,8 @@ class ContentGenerator(Generator):
         for sig_name in ['init', 'finalized', 'preread', 'context']:
             sig_fn_name = '{}_generator_{}'.format(self.name, sig_name)
             self.signals[sig_name] = getattr(signals, sig_fn_name, None)
-        self.content_class = getattr(pelican.contents, self.name.title())
+        self.content_class = getattr(
+            pelican.contents, self.name.title(), pelican.contents.Page)
         self._check_validity = True
         self._context_processors = [
             self._process_translations,  # sets up .content and .translations
