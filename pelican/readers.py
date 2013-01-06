@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 import six
 
+import logging
 import os
 import re
 try:
@@ -27,6 +28,9 @@ import re
 
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
+
+
+logger = logging.getLogger(__name__)
 
 
 _METADATA_PROCESSORS = {
@@ -235,6 +239,9 @@ def read_file(base_path, path, content_class=Page, fmt=None,
     base, ext = os.path.splitext(os.path.basename(path))
     if not fmt:
         fmt = ext[1:]
+
+    logger.debug(
+        'read file {} -> {}'.format(source_path, content_class.__name__))
 
     if fmt not in _EXTENSIONS:
         raise TypeError('Pelican does not know how to parse {}'.format(path))
