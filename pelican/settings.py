@@ -78,7 +78,9 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'TYPOGRIFY': False,
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
-                   'TEMPLATE_PAGES': {}
+                   'TEMPLATE_PAGES': {},
+                   'READ_MORE_LINK': None,
+                   'READ_MORE_LINK_FORMAT': '<a class="read-more" href="/%(url)s">%(text)s</a>'
                    }
 
 

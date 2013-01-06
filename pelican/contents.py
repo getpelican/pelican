@@ -11,7 +11,7 @@ from sys import platform, stdin
 
 
 from pelican.settings import _DEFAULT_CONFIG
-from pelican.utils import slugify, truncate_html_words, memoized
+from pelican.utils import slugify, truncate_html_words, memoized, insert_into_last_element
 from pelican import signals
 
 logger = logging.getLogger(__name__)
@@ -192,10 +192,16 @@ class Page(object):
         if hasattr(self, '_summary'):
             return self._summary
         else:
+            content = self.content
             if self.settings['SUMMARY_MAX_LENGTH']:
-                return truncate_html_words(self.content,
+                content = truncate_html_words(self.content,
                         self.settings['SUMMARY_MAX_LENGTH'])
-            return self.content
+
+            if self.settings['READ_MORE_LINK']:
+                read_more = self.settings['READ_MORE_LINK_FORMAT'] % {'url': self.url, 'text': self.settings['READ_MORE_LINK']}
+                content = insert_into_last_element(content, read_more)
+
+            return content
 
     def _set_summary(self, summary):
         """Dummy function"""

@@ -336,3 +336,29 @@ def mkdir_p(path):
     except OSError, e:
         if e.errno != errno.EEXIST:
             raise
+
+def insert_into_last_element(html, element):
+    """ function to insert an html element into another html fragment
+        example:
+            html = '<p>paragraph1</p><p>paragraph2...</p>'
+            element = '<a href="/read-more/">read more</a>'
+            ---> '<p>paragraph1</p><p>paragraph2...<a href="/read-more/">read more</a></p>'
+    """
+    try:
+        from lxml.html import fragment_fromstring, fragments_fromstring, tostring
+        from lxml.etree import ParserError
+    except ImportError:
+        raise Exception("Unable to find lxml. To use READ_MORE_LINK, you need lxml")
+    
+    try:
+        item = fragment_fromstring(element)
+    except ParserError, TypeError:
+        item = fragment_fromstring('<span></span>')
+    
+    try:
+        doc = fragments_fromstring(html)
+        doc[-1].append(item)
+        
+        return ''.join(tostring(e) for e in doc)
+    except ParserError, TypeError:
+        return ''
