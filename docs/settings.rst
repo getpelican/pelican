@@ -100,8 +100,6 @@ Setting name (default value)                                            What doe
                                                                         will not be generated with properly-formed URLs. You should
                                                                         include ``http://`` and your domain, with no trailing
                                                                         slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
-`TEMPLATE_PAGES` (``None``)                                             A mapping containing template pages that will be rendered with
-                                                                        the blog entries. See :ref:`template_pages`.
 `STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
                                                                         on the output path "static". By default,
                                                                         Pelican will copy the "images" folder to the
@@ -118,15 +116,19 @@ Setting name (default value)                                            What doe
                                                                         index pages for collections of content (e.g. tags and
                                                                         category index pages).
 `PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
+`EXTRA_TEMPLATES_PATHS` (``[]``)                                        A list of paths you want Jinja2 to search for templates.
+                                                                        Can be used to separate templates from the theme.
+                                                                        Example: projects, resume, profile ...
+                                                                        These templates need to use ``DIRECT_TEMPLATES`` setting.
+`TEMPLATE_PAGES` (``None``)                                             A mapping containing template pages that will be rendered with the
+                                                                        blog entries. The source for ``TEMPLATE_PAGES`` entries lives in the
+                                                                        content directory, while the source for ``DIRECT_TEMPLATES`` lives in
+                                                                        the theme. See :ref:`template_pages`.
 `SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will
                                                                         be the default length in words of the text created.
                                                                         This only applies if your content does not otherwise
                                                                         specify a summary. Setting to ``None`` will cause the summary
                                                                         to be a copy of the original content.
-`EXTRA_TEMPLATES_PATHS` (``[]``)                                        A list of paths you want Jinja2 to search for templates.
-                                                                        Can be used to separate templates from the theme.
-                                                                        Example: projects, resume, profile ...
-                                                                        These templates need to use ``DIRECT_TEMPLATES`` setting.
 `ASCIIDOC_OPTIONS` (``[]``)                                             A list of options to pass to AsciiDoc. See the `manpage
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
 =====================================================================   =====================================================================
