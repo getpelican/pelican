@@ -13,7 +13,7 @@ finalized = signal('pelican_finalized')
 generator_init = signal('generator_init')
 
 article_generator_init = signal('article_generator_init')
-article_generator_finalized = signal('article_generate_finalized')
+article_generator_finalized = signal('article_generator_finalized')
 
 pages_generator_init = signal('pages_generator_init')
 pages_generator_finalized = signal('pages_generator_finalized')
@@ -23,13 +23,13 @@ static_generator_finalized = signal('static_generator_finalized')
 
 # Page-level signals
 
-article_generate_preread = signal('article_generate_preread')
-article_generate_context = signal('article_generate_context')
+article_generator_preread = signal('article_generator_preread')
+article_generator_context = signal('article_generator_context')
 
-pages_generate_preread = signal('pages_generate_preread')
-pages_generate_context = signal('pages_generate_context')
+pages_generator_preread = signal('pages_generator_preread')
+pages_generator_context = signal('pages_generator_context')
 
-static_generate_preread = signal('static_generate_preread')
-static_generate_context = signal('static_generate_context')
+static_generator_preread = signal('static_generator_preread')
+static_generator_context = signal('static_generator_context')
 
 content_object_init = signal('content_object_init')
