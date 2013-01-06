@@ -516,7 +516,14 @@ class ContentGenerator(Generator):
 
     @relative_urls
     def _generate_direct_templates(self, writer):
-        """Generate direct templates pages"""
+        """Generate direct templates pages
+
+        This may not seem like a content-type specific generator, but
+        the templates are paginated based on the particular content
+        type.  For example, ARTICLE_PAGINATED_DIRECT_TEMPLATES and
+        PAGE_PAGINATED_DIRECT_TEMPLATES will paginate by articles and
+        pages respectively.
+        """
         paginated_templates = self.get_setting(
             'PAGINATED_DIRECT_TEMPLATES', fallback=True)
         direct_templates = self.get_setting(
