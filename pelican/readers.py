@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+import logging
 import os
 import re
 try:
@@ -34,6 +35,8 @@ except ImportError:
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
+
+logger = logging.getLogger(__name__)
 
 METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
@@ -343,6 +346,8 @@ def read_file(base_path, path, content_class=Page, fmt=None,
     path = os.path.abspath(os.path.join(base_path, path))
     source_path = os.path.relpath(path, base_path)
     base, ext = os.path.splitext(os.path.basename(path))
+    logger.debug('read file {} -> {}'.format(
+            source_path, content_class.__name__))
     if not fmt:
         fmt = ext[1:]
 
