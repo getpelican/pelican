@@ -178,20 +178,6 @@ class _FileLoader(BaseLoader):
                 lambda: mtime == os.path.getmtime(self.fullpath)
 
 
-class TemplatePagesGenerator(Generator):
-
-    def generate_output(self, writer):
-        super(TemplatePagesGenerator, self).generate_output(writer)
-        for source, dest in self.settings['TEMPLATE_PAGES'].items():
-            self.env.loader.loaders.insert(0, _FileLoader(source, self.path))
-            try:
-                template = self.env.get_template(source)
-                rurls = self.settings.get('RELATIVE_URLS')
-                writer.write_file(dest, template, self.context, rurls)
-            finally:
-                del self.env.loader.loaders[0]
-
-
 class ContentGenerator(Generator):
     """Base-class for content (e.g. Page, Article, ...) generators"""
 
@@ -655,6 +641,53 @@ class StaticGenerator(ContentGenerator):
             shutil.copy(source_path, save_as)
             logger.info('copying {} to {}'.format(
                     content.source_path, content.save_as))
+
+
+class TemplatePagesGenerator(ContentGenerator):
+    """Generate template pages
+
+    This generator renders templates from the source directory (not
+    from the theme) directly to the output.
+    """
+    def __init__(self, *args, **kwargs):
+        if 'name' not in kwargs:
+            kwargs['name'] = 'template_page'
+        super(TemplatePagesGenerator, self).__init__(*args, **kwargs)
+        self._check_validity = False
+        self._context_processors = []
+        self._generators = [
+            self._generate_content,
+            ]
+
+        # don't try and match extensions for processing
+        self.markup = False
+        self.fmt = 'static'
+
+    def _content_paths(self):
+        for src,dest in self.get_setting(
+                'TEMPLATE_PAGES', {}, fallback=True).items():
+            self._destination_mapping = (src, dest)
+            yield src
+
+    def _process_content(self, content, path):
+        src, dest = self._destination_mapping
+        del self._destination_mapping
+        rel_path = os.path.relpath(path, self.path)
+        if rel_path != src:
+            raise ValueError((path, rel_path, src))
+        content.metadata['path'] = dest
+        return super(TemplatePagesGenerator, self)._process_content(content, path)
+
+    @relative_urls
+    def _generate_content(self, writer):
+        for content in self.contents:
+            self.env.loader.loaders.insert(
+                0, _FileLoader(content.source_path, self.path))
+            try:
+                template = self.env.get_template(content.source_path)
+                writer(content.save_as, template, self.context)
+            finally:
+                del self.env.loader.loaders[0]
 
 
 class PdfGenerator(Generator):

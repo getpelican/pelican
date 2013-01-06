@@ -237,7 +237,7 @@ class TestTemplatePagesGenerator(unittest.TestCase):
                 }
 
         generator = TemplatePagesGenerator(
-            context={'foo': 'bar'}, settings=settings,
+            context={'foo': 'bar', 'filenames': {}}, settings=settings,
             path=self.temp_content, theme='',
             output_path=self.temp_output, markup=None)
 
@@ -249,6 +249,7 @@ class TestTemplatePagesGenerator(unittest.TestCase):
             template_file.write(self.TEMPLATE_CONTENT)
 
         writer = Writer(self.temp_output, settings=settings)
+        generator.generate_context()
         generator.generate_output(writer)
 
         output_path = os.path.join(

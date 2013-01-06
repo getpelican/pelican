@@ -355,6 +355,11 @@ class Static(Page):
         return None
 
 
+class Template_Page(Page):
+    # Underscore in name for ._expand_settings naming
+    pass
+
+
 def is_valid_content(content, f):
     try:
         content.check_properties()
