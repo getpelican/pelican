@@ -139,7 +139,6 @@ class Pelican(object):
         """Run the generators and return"""
 
         context = self.settings.copy()
-        context['filenames'] = {}  # share the dict between all the generators
         context['localsiteurl'] = self.settings.get('SITEURL')  # share
         generators = [
             cls(

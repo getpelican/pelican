@@ -107,7 +107,6 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
-        settings['filenames'] = {}
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
             path=CONTENT_PATH, theme=_DEFAULT_CONFIG['THEME'],
@@ -237,7 +236,7 @@ class TestTemplatePagesGenerator(unittest.TestCase):
                 }
 
         generator = TemplatePagesGenerator(
-            context={'foo': 'bar', 'filenames': {}}, settings=settings,
+            context={'foo': 'bar'}, settings=settings,
             path=self.temp_content, theme='',
             output_path=self.temp_output, markup=None)
 

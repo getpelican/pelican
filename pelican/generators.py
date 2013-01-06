@@ -45,6 +45,8 @@ class Generator(object):
 
     def __init__(self, context, settings, path, theme, output_path, markup,
                  **kwargs):
+        if 'filenames' not in context:
+            context['filenames'] = {}
         self.context = context
         self.settings = settings
         self.path = path
