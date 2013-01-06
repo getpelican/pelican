@@ -599,15 +599,10 @@ class PagesGenerator(ContentGenerator):
             ]
 
 
-class StaticGenerator(ContentGenerator):
-    """Copy static pages (images, medias etc.) to output"""
-
+class UnparsedContentGenerator(ContentGenerator):
     def __init__(self, *args, **kwargs):
-        if 'name' not in kwargs:
-            kwargs['name'] = 'static'
-        super(StaticGenerator, self).__init__(*args, **kwargs)
+        super(UnparsedContentGenerator, self).__init__(*args, **kwargs)
         self._check_validity = False
-        self._context_processors.insert(0, self._process_slugs)
 
         # don't try and match extensions for processing
         self.markup = False
@@ -615,6 +610,16 @@ class StaticGenerator(ContentGenerator):
 
     def _content_paths(self):
         return self.get_setting('PATHS', ())
+
+
+class StaticGenerator(UnparsedContentGenerator):
+    """Copy static pages (images, medias etc.) to output"""
+
+    def __init__(self, *args, **kwargs):
+        if 'name' not in kwargs:
+            kwargs['name'] = 'static'
+        super(StaticGenerator, self).__init__(*args, **kwargs)
+        self._context_processors.insert(0, self._process_slugs)
 
     def _process_slugs(self):
         """Add slugs for process_translations"""
@@ -645,7 +650,7 @@ class StaticGenerator(ContentGenerator):
                     content.source_path, content.save_as))
 
 
-class TemplatePagesGenerator(ContentGenerator):
+class TemplatePagesGenerator(UnparsedContentGenerator):
     """Generate template pages
 
     This generator renders templates from the source directory (not
@@ -655,18 +660,10 @@ class TemplatePagesGenerator(ContentGenerator):
         if 'name' not in kwargs:
             kwargs['name'] = 'template_page'
         super(TemplatePagesGenerator, self).__init__(*args, **kwargs)
-        self._check_validity = False
         self._context_processors = []
         self._generators = [
             self._generate_content,
             ]
-
-        # don't try and match extensions for processing
-        self.markup = False
-        self.fmt = 'static'
-
-    def _content_paths(self):
-        return self.get_setting('PATHS', ())
 
     @relative_urls
     def _generate_content(self, writer):
