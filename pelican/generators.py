@@ -106,7 +106,7 @@ class Generator(object):
                         % (name, self._templates_path))
         return self._templates[name]
 
-    def _include_path(self, path, extensions=None):
+    def _include_path(self, path, extensions=None, known=False):
         """Inclusion logic for .get_files()
         """
         if extensions is None:
@@ -114,16 +114,22 @@ class Generator(object):
         basename = os.path.basename(path)
         if extensions is False or \
                 (True in [basename.endswith(ext) for ext in extensions]):
+            if not known:
+                location = os.path.relpath(
+                    os.path.abspath(path), os.path.abspath(self.path))
+                if location in self.context['filenames']:
+                    return False
             return True
         return False
 
-    def get_files(self, path, exclude=[], extensions=None):
+    def get_files(self, path, exclude=[], extensions=None, known=False):
         """Return a list of files to use, based on rules
 
         :param path: the path to search the file on
         :param exclude: the list of path to exclude
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
+        :param known: return files already listed in .context['filenames']
         """
         files = []
 
@@ -134,9 +140,10 @@ class Generator(object):
                         dirs.remove(e)
                 for f in temp_files:
                     fp = os.path.join(root, f)
-                    if self._include_path(fp, extensions):
+                    if self._include_path(fp, extensions, known):
                         files.append(fp)
-        elif os.path.exists(path) and self._include_path(path, extensions):
+        elif (os.path.exists(path) and
+              self._include_path(path, extensions, known)):
             files.append(path)  # can't walk non-directories
         return files
 
