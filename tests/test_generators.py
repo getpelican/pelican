@@ -231,9 +231,10 @@ class TestTemplatePagesGenerator(unittest.TestCase):
 
         settings = get_settings()
         settings['STATIC_PATHS'] = ['static']
-        settings['TEMPLATE_PAGES'] = {
-                'template/source.html': 'generated/file.html'
-                }
+        settings['TEMPLATE_PAGE_PATHS'] = ['template/source.html']
+        settings['EXTRA_PATH_METADATA'] = {
+            'template/source.html': {'path': 'generated/file.html'},
+            }
 
         generator = TemplatePagesGenerator(
             context={'foo': 'bar'}, settings=settings,

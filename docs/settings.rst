@@ -120,10 +120,10 @@ Setting name (default value)                                            What doe
                                                                         Can be used to separate templates from the theme.
                                                                         Example: projects, resume, profile ...
                                                                         These templates need to use ``DIRECT_TEMPLATES`` setting.
-`TEMPLATE_PAGES` (``None``)                                             A mapping containing template pages that will be rendered with the
-                                                                        blog entries. The source for ``TEMPLATE_PAGES`` entries lives in the
-                                                                        content directory, while the source for ``DIRECT_TEMPLATES`` lives in
-                                                                        the theme. See :ref:`template_pages`.
+`TEMPLATE_PAGE_PATHS` (``None``)                                        A list of template paths or files with the same syntax as
+                                                                        ``STATIC_PATHS``.  The source for ``TEMPLATE_PAGE_PATHS`` entries
+                                                                        lives in the content directory, while the source for
+                                                                        ``DIRECT_TEMPLATES`` lives in the theme. See :ref:`template_pages`.
 `SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will
                                                                         be the default length in words of the text created.
                                                                         This only applies if your content does not otherwise
@@ -286,9 +286,18 @@ path for the generated file.
 For instance, if you have a blog with three static pages — a list of books,
 your resume, and a contact page — you could have::
 
-    TEMPLATE_PAGES = {'src/books.html': 'dest/books.html',
-                      'src/resume.html': 'dest/resume.html',
-                      'src/contact.html': 'dest/contact.html'}
+    TEMPLATE_PAGE_PATHS = ['src/books.html', 'src/resume.html', 'contact.html']
+
+You can use ``EXTRA_PATH_METADATA`` to adjust their destination filenames::
+
+    EXTRA_PATH_METADATA = {
+      'src/books.html', {'path': 'dest/books.html'},
+      'src/resume.html', {'path': 'resume.html'},
+      }
+
+This works because the default ``TEMPLATE_PAGE_SAVE_AS`` format
+(``{path}``).  More complicated mappings based on other critera are
+also possible.
 
 Feed settings
 =============

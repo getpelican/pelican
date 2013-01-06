@@ -666,19 +666,7 @@ class TemplatePagesGenerator(ContentGenerator):
         self.fmt = 'static'
 
     def _content_paths(self):
-        for src,dest in self.get_setting(
-                'TEMPLATE_PAGES', {}, fallback=True).items():
-            self._destination_mapping = (src, dest)
-            yield src
-
-    def _process_content(self, content, path):
-        src, dest = self._destination_mapping
-        del self._destination_mapping
-        rel_path = os.path.relpath(path, self.path)
-        if rel_path != src:
-            raise ValueError((path, rel_path, src))
-        content.metadata['path'] = dest
-        return super(TemplatePagesGenerator, self)._process_content(content, path)
+        return self.get_setting('PATHS', ())
 
     @relative_urls
     def _generate_content(self, writer):
