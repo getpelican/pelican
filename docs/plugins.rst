@@ -217,6 +217,11 @@ These variables can be included in your templates.  For instance in
     <a href="{{article.next_url}}">{{article.next_title}}</a>
     {% endif %}
 
+The order of the links defaults to 'reverse chronological', which means
+that the next link link will move backwards in post times.  This can 
+optionally be modified in your settings file by adding::
+
+    LINKS_REVERSE_CHRONOLOGICAL = False  # defaults to True
 
 GitHub activity
 ---------------
