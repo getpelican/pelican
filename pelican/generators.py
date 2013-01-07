@@ -70,7 +70,7 @@ class Generator(object):
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
         self.env = Environment(
-            trim_blocks=True,
+            trim_blocks=self.settings.get('JINJA_TRIM_BLOCKS', True),
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
