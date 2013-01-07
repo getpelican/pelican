@@ -37,13 +37,29 @@
 from pelican import signals
 
 
+def generate_link_settings(pelican):
+    """
+    Check the settings and apply defaults
+    """
+    if 'LINKS_REVERSE_CHRONOLOGICAL' not in pelican.settings:
+        pelican.settings['LINKS_REVERSE_CHRONOLOGICAL'] = True
+
+
 def generate_chronological_links(generator):
     """
     Generates the next and previous links in overall chronological order
     for the articles in the passed generator
     """
     previous_article = None
-    for article in generator.articles:
+
+    # work out which order to generate links in
+    if generator.settings['LINKS_REVERSE_CHRONOLOGICAL']:
+        article_iter = generator.articles
+    else:
+        article_iter = reversed(generator.articles)
+
+    # generate the links
+    for article in article_iter:
         if previous_article is not None:
             previous_article.next_url = article.url
             previous_article.next_title = article.title
@@ -56,4 +72,5 @@ def register():
     """
     Register the plugin
     """
+    signals.initialized.connect(generate_link_settings)
     signals.article_generator_finalized.connect(generate_chronological_links)
