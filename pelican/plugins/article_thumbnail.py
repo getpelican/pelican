@@ -59,9 +59,6 @@ import logging
 import os
 import shutil
 
-# defaults
-thumb_settings = {}
-
 # set up logging
 logger = logging.getLogger(__name__)
 
@@ -70,34 +67,35 @@ def generate_thumbnail_settings(pelican):
     """
     parse the settings or use defaults
     """
-    thumb_settings['path'] = \
-        pelican.settings.get('THUMBNAIL_PATH', 'static/thumbs')
-    thumb_settings['width'] = \
-        pelican.settings.get('THUMBNAIL_WIDTH', 100)
-    thumb_settings['height'] = \
-        pelican.settings.get('THUMBNAIL_HEIGHT', 100)
-    thumb_settings['prefix'] = \
-        pelican.settings.get('THUMBNAIL_PREFIX', 'thumb_')
-    thumb_settings['default_path'] = os.path.abspath(os.path.join(
-        'content',
-        pelican.settings.get('THUMBNAIL_DEFAULT', 'images/thumb_default.png')
-    ))
-    thumb_settings['default_thumb'] = os.path.split(
-        thumb_settings['default_path'])[-1]
-    thumb_settings['base_url'] = pelican.settings['SITEURL']
+    if 'THUMBNAIL_PATH' not in pelican.settings:
+        pelican.settings['THUMBNAIL_PATH'] = 'static/thumbs'
+    if 'THUMBNAIL_WIDTH' not in pelican.settings:
+        pelican.settings['THUMBNAIL_WIDTH'] = 100
+    if 'THUMBNAIL_HEIGHT' not in pelican.settings:
+        pelican.settings['THUMBNAIL_HEIGHT'] = 100
+    if 'THUMBNAIL_PREFIX' not in pelican.settings:
+        pelican.settings['THUMBNAIL_PREFIX'] = 'thumb_'
+    if 'THUMBNAIL_DEFAULT' not in pelican.settings:
+        pelican.settings['THUMBNAIL_DEFAULT'] = 'images/thumb_default.png'
+
+    pelican.settings['THUMBNAIL_DEFAULT_PATH'] = os.path.abspath(
+        os.path.join('content', pelican.settings['THUMBNAIL_DEFAULT']))
+
+    pelican.settings['THUMBNAIL_DEFAULT_FILE'] = os.path.split(
+        pelican.settings['THUMBNAIL_DEFAULT'])[-1]
 
     # create the 'output/{{thumbs_path}}' directory
-    output_dir = os.path.join('output', thumb_settings['path'])
+    output_dir = os.path.join('output', pelican.settings['THUMBNAIL_PATH'])
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     # copy the default file to the output directory
     # only copy if the thumbnail exists.
-    if os.path.exists(thumb_settings['default_path']):
-        shutil.copy(thumb_settings['default_path'], output_dir)
+    if os.path.exists(pelican.settings['THUMBNAIL_DEFAULT_PATH']):
+        shutil.copy(pelican.settings['THUMBNAIL_DEFAULT_PATH'], output_dir)
     else:
-        logger.warning(u'Could not find default thumbnail at %s' % 
-            thumb_settings['default_path'])
+        logger.warning(u'Could not find default thumbnail at %s' %
+            pelican.settings['THUMBNAIL_DEFAULT_PATH'])
 
 
 def generate_article_thumb(generator, metadata):
@@ -108,9 +106,9 @@ def generate_article_thumb(generator, metadata):
     if 'thumbnail' not in metadata:
         # no thumbnail given, set default
         metadata['thumbnail_url'] = os.path.join(
-            thumb_settings['base_url'],
-            thumb_settings['path'],
-            thumb_settings['default_thumb']
+            generator.settings['SITEURL'],
+            generator.settings['THUMBNAIL_PATH'],
+            generator.settings['THUMBNAIL_DEFAULT_FILE']
         )
         metadata['has_thumb'] = False
 
@@ -119,23 +117,24 @@ def generate_article_thumb(generator, metadata):
         image_name = os.path.split(metadata['thumbnail'])[-1]
         out_path = os.path.abspath(os.path.join(
             'output',
-            thumb_settings['path'],
-            thumb_settings['prefix'] + image_name
+            generator.settings['THUMBNAIL_PATH'],
+            generator.settings['THUMBNAIL_PREFIX'] + image_name
         ))
 
         # generate the thumbnail
         im = Image.open(os.path.join('content', metadata['thumbnail']))
         im.thumbnail(
-            (thumb_settings['width'], thumb_settings['height']),
+            (generator.settings['THUMBNAIL_WIDTH'],
+                generator.settings['THUMBNAIL_HEIGHT']),
             Image.ANTIALIAS
         )
         im.save(out_path)
 
         # set the metadata
         metadata['thumbnail_url'] = os.path.join(
-            thumb_settings['base_url'],
-            thumb_settings['path'],
-            thumb_settings['prefix'] + image_name
+            generator.settings['SITEURL'],
+            generator.settings['THUMBNAIL_PATH'],
+            generator.settings['THUMBNAIL_PREFIX'] + image_name
         )
         metadata['has_thumb'] = True
 
