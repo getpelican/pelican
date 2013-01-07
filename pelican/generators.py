@@ -212,6 +212,7 @@ class ContentGenerator(Generator):
             self._process_authors,
             self._process_dates,
             self._process_tag_cloud,
+            self._process_direct_templates,
             ]
         self._generators = [
             # to minimize the number of relative path stuff modification
@@ -405,6 +406,21 @@ class ContentGenerator(Generator):
         # put words in chaos
         random.shuffle(self.tag_cloud)
         return set(('tag_cloud',))
+
+    def _process_direct_templates(self):
+        """Add context entries for linking to direct templates"""
+        direct_templates = self.get_setting(
+            'DIRECT_TEMPLATES', fallback=True)
+        for source_path in direct_templates:
+            content = pelican.contents.Direct_Template_Page(
+                content=None,
+                metadata={},
+                settings=self.settings,
+                source_path=source_path,
+                context=self.context,
+                )
+            self.add_source_path(content)
+        return set()
 
     def generate_output(self, writer):
         super(ContentGenerator, self).generate_output(writer)
