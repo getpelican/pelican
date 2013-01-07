@@ -24,10 +24,10 @@ Dependencies
 
 ``pelican-import`` has two dependencies not required by the rest of pelican:
 
-- BeautifulSoup
+- Beautiful Soup
 - pandoc
 
-BeatifulSoup can be installed like any other Python package::
+Beautiful Soup can be installed like any other Python package::
 
     $ pip install BeautifulSoup
 
