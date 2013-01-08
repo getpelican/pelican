@@ -8,6 +8,7 @@ import errno
 from collections import defaultdict, Hashable
 from functools import partial
 
+import codecs
 from codecs import open
 from datetime import datetime
 from itertools import groupby
@@ -65,11 +66,12 @@ def get_date(string):
             pass
     raise ValueError("'%s' is not a valid date" % string)
 
-
 def pelican_open(filename):
     """Open a file and return it's content"""
-    return open(filename, encoding='utf-8').read()
-
+    content = open(filename, encoding='utf-8').read()
+    if content[0] == codecs.BOM_UTF8.decode('utf8'):
+        content = content[1:]
+    return content
 
 def slugify(value):
     """
