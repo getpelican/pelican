@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 import six
 
+import codecs
 import datetime
 import logging
 import os
@@ -95,6 +96,22 @@ class PelicanHTMLTranslator(HTMLTranslator):
 
     def depart_abbreviation(self, node):
         self.body.append('</abbr>')
+
+
+class RawReader(Reader):
+    enabled = True
+    file_extensions = ['raw']
+
+    def read(self, source_path, encoding=None):
+        "Read file contents into .content without processing"
+        if not encoding:
+            encoding = self.settings.get('CONTENT_ENCODING', None)
+        if encoding:
+            content = codecs.open(source_path, 'r', encoding=encoding).read()
+        else:
+            content = open(source_path, 'rb').read()
+        metadata = {}
+        return content, metadata
 
 
 class RstReader(Reader):

@@ -19,7 +19,8 @@ from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
 
 import pelican.contents
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, mkdir_p
+from pelican.utils import (copy, process_translations, mkdir_p,
+    get_relative_path)
 from pelican import signals
 
 
@@ -676,6 +677,7 @@ class TemplatePagesGenerator(UnparsedContentGenerator):
         if 'name' not in kwargs:
             kwargs['name'] = 'template_page'
         super(TemplatePagesGenerator, self).__init__(*args, **kwargs)
+        self.fmt = 'raw'
         self._context_processors = []
         self._generators = [
             self._generate_content,
@@ -683,14 +685,13 @@ class TemplatePagesGenerator(UnparsedContentGenerator):
 
     @relative_urls
     def _generate_content(self, writer):
+        relative_urls = self.get_setting('RELATIVE_URLS', fallback=True)
         for content in self.contents:
-            self.env.loader.loaders.insert(
-                0, _FileLoader(content.source_path, self.path))
-            try:
-                template = self.env.get_template(content.source_path)
-                writer(content.save_as, template, self.context)
-            finally:
-                del self.env.loader.loaders[0]
+            if relative_urls:
+                self.context['localsiteurl'] = get_relative_path(
+                    content.url)
+            template = self.env.from_string(content.content)
+            writer(content.save_as, template, self.context)
 
 
 class PdfGenerator(Generator):
