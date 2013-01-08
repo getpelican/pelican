@@ -14,7 +14,8 @@ entry_points = {
         'pelican = pelican:main',
         'pelican-import = pelican.tools.pelican_import:main',
         'pelican-quickstart = pelican.tools.pelican_quickstart:main',
-        'pelican-themes = pelican.tools.pelican_themes:main'
+        'pelican-themes = pelican.tools.pelican_themes:main',
+        'pelican-article = pelican.tools.pelican_article:main'
    ]
 }
 
