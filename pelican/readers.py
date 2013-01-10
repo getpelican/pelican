@@ -21,6 +21,7 @@ try:
 except ImportError:
     asciidoc = False
 
+from jinja2 import Template
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
@@ -231,6 +232,13 @@ def read_file(filename, fmt=None, settings=None):
         raise ValueError("Missing dependencies for %s" % fmt)
 
     content, metadata = reader.read(filename)
+    #use content as Template to extract any Jinja2 blocks defined in it
+    templ = Template(content)
+    for name,function in templ.blocks.iteritems():
+        metadata[name] =  function(templ.new_context()).next()
+    #replace content with rendered template to remove the block definitions
+    content = templ.render()
+
 
     # eventually filter the content with typogrify if asked so
     if settings and settings.get('TYPOGRIFY'):
