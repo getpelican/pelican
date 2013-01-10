@@ -6,7 +6,7 @@
 {% endblock %}
 
 <ol id="post-list">
-{% for content in articles_page.object_list %}
+{% for content in contents_page.object_list %}
         <li><article class="hentry">
                 <header> <h2 class="entry-title"><a href="{{ SITEURL }}/{{ content.url }}" rel="bookmark" title="Permalink to {{ content.title|striptags }}">{{ content.title }}</a></h2> </header>
                 <footer class="post-info">
