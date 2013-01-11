@@ -128,6 +128,7 @@ class Writer(object):
             context['localsiteurl'] = relative_path
             localcontext['SITEURL'] = relative_path
 
+        localcontext['output_file'] = name
         localcontext.update(kwargs)
 
         # check paginated
