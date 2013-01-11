@@ -53,8 +53,9 @@ class Reader(object):
         self.settings = settings
 
     def process_metadata(self, name, value):
-        if name in METADATA_PROCESSORS:
-            return METADATA_PROCESSORS[name](value, self.settings)
+        process = METADATA_PROCESSORS.get(name, None)
+        if process:
+            return process(value, self.settings)
         return value
 
     def read(self, source_path):
