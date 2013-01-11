@@ -54,6 +54,9 @@ All of these settings will be available to all templates.
 =============   ===================================================
 Variable        Description
 =============   ===================================================
+output_file     The name of the file currently being generated. For
+                instance, when Pelican is rendering the homepage,
+                output_file will be "index.html".
 articles        The list of articles, ordered descending by date
                 All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
