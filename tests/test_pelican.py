@@ -12,8 +12,6 @@ from shutil import rmtree
 import locale
 import logging
 
-from mock import patch
-
 from pelican import Pelican
 from pelican.settings import read_settings
 from .support import LogCountHandler
@@ -75,6 +73,7 @@ class TestPelican(unittest.TestCase):
         settings = read_settings(filename=None, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
+            'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
         pelican.run()
@@ -90,6 +89,7 @@ class TestPelican(unittest.TestCase):
         settings = read_settings(filename=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
+            'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
         pelican.run()
