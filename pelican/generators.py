@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 import os
 import math
 import random
 import logging
 import datetime
-import subprocess
 import shutil
 
 from codecs import open
@@ -119,7 +120,7 @@ class Generator(object):
         for item in items:
             value = getattr(self, item)
             if hasattr(value, 'items'):
-                value = value.items()
+                value = list(value.items())
             self.context[item] = value
 
 
@@ -133,8 +134,8 @@ class _FileLoader(BaseLoader):
         if template != self.path or not os.path.exists(self.fullpath):
             raise TemplateNotFound(template)
         mtime = os.path.getmtime(self.fullpath)
-        with file(self.fullpath) as f:
-            source = f.read().decode('utf-8')
+        with open(self.fullpath, 'r', encoding='utf-8') as f:
+            source = f.read()
         return source, self.fullpath, \
                 lambda: mtime == os.path.getmtime(self.fullpath)
 
@@ -323,8 +324,8 @@ class ArticlesGenerator(Generator):
             try:
                 signals.article_generate_preread.send(self)
                 content, metadata = read_file(f, settings=self.settings)
-            except Exception, e:
-                logger.warning(u'Could not process %s\n%s' % (f, str(e)))
+            except Exception as e:
+                logger.warning('Could not process %s\n%s' % (f, str(e)))
                 continue
 
             # if no category is set, use the name of the path as a category
@@ -333,8 +334,7 @@ class ArticlesGenerator(Generator):
                 if (self.settings['USE_FOLDER_AS_CATEGORY']
                     and os.path.dirname(f) != article_path):
                     # if the article is in a subdirectory
-                    category = os.path.basename(os.path.dirname(f))\
-                        .decode('utf-8')
+                    category = os.path.basename(os.path.dirname(f))
                 else:
                     # if the article is not in a subdirectory
                     category = self.settings['DEFAULT_CATEGORY']
@@ -366,8 +366,8 @@ class ArticlesGenerator(Generator):
             elif article.status == "draft":
                 self.drafts.append(article)
             else:
-                logger.warning(u"Unknown status %s for file %s, skipping it." %
-                               (repr(unicode.encode(article.status, 'utf-8')),
+                logger.warning("Unknown status %s for file %s, skipping it." %
+                               (repr(article.status),
                                 repr(f)))
 
         self.articles, self.translations = process_translations(all_articles)
@@ -394,7 +394,7 @@ class ArticlesGenerator(Generator):
         tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
         tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
 
-        tags = map(itemgetter(1), tag_cloud)
+        tags = list(map(itemgetter(1), tag_cloud))
         if tags:
             max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
@@ -450,8 +450,8 @@ class PagesGenerator(Generator):
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
                 content, metadata = read_file(f, settings=self.settings)
-            except Exception, e:
-                logger.warning(u'Could not process %s\n%s' % (f, str(e)))
+            except Exception as e:
+                logger.warning('Could not process %s\n%s' % (f, str(e)))
                 continue
             signals.pages_generate_context.send(self, metadata=metadata)
             page = Page(content, metadata, settings=self.settings,
@@ -466,8 +466,8 @@ class PagesGenerator(Generator):
             elif page.status == "hidden":
                 hidden_pages.append(page)
             else:
-                logger.warning(u"Unknown status %s for file %s, skipping it." %
-                               (repr(unicode.encode(page.status, 'utf-8')),
+                logger.warning("Unknown status %s for file %s, skipping it." %
+                               (repr(page.status),
                                 repr(f)))
 
         self.pages, self.translations = process_translations(all_pages)
@@ -550,7 +550,7 @@ class PdfGenerator(Generator):
             # print "Generating pdf for", obj.filename, " in ", output_pdf
             with open(obj.filename) as f:
                 self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
-            logger.info(u' [ok] writing %s' % output_pdf)
+            logger.info(' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
         pass
@@ -558,7 +558,7 @@ class PdfGenerator(Generator):
     def generate_output(self, writer=None):
         # we don't use the writer passed as argument here
         # since we write our own files
-        logger.info(u' Generating PDF files...')
+        logger.info(' Generating PDF files...')
         pdf_path = os.path.join(self.output_path, 'pdf')
         if not os.path.exists(pdf_path):
             try:
@@ -583,6 +583,6 @@ class SourceFileGenerator(Generator):
         copy('', obj.filename, dest)
 
     def generate_output(self, writer=None):
-        logger.info(u' Generating source files...')
+        logger.info(' Generating source files...')
         for object in chain(self.context['articles'], self.context['pages']):
             self._create_source(object, self.output_path)

@@ -1,8 +1,9 @@
 # Tests
-unittest2
 mock
+
 # Optional Packages
 Markdown
-BeautifulSoup
+BeautifulSoup4
+lxml
 typogrify
 webassets

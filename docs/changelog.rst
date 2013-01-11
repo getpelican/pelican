@@ -4,7 +4,7 @@ Release history
 3.2 (XXXX-XX-XX)
 ================
 
-* [...]
+* Support for Python 3!
 
 3.1 (2012-12-04)
 ================

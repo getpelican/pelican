@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import os
 import re
 try:
@@ -20,15 +23,16 @@ try:
     asciidoc = True
 except ImportError:
     asciidoc = False
+import re
 
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
 
 _METADATA_PROCESSORS = {
-    'tags': lambda x, y: [Tag(tag, y) for tag in unicode(x).split(',')],
+    'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
     'date': lambda x, y: get_date(x),
-    'status': lambda x, y: unicode.strip(x),
+    'status': lambda x, y: x.strip(),
     'category': Category,
     'author': Author,
 }
@@ -242,7 +246,7 @@ def read_file(filename, fmt=None, settings=None):
     if filename_metadata:
         match = re.match(filename_metadata, base)
         if match:
-            for k, v in match.groupdict().iteritems():
+            for k, v in match.groupdict().items():
                 if k not in metadata:
                     k = k.lower()  # metadata must be lowercase
                     metadata[k] = reader.process_metadata(k, v)
