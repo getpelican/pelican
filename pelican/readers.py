@@ -246,6 +246,7 @@ def read_file(filename, fmt=None, settings=None):
     if filename_metadata:
         match = re.match(filename_metadata, base)
         if match:
+            # .items() for py3k compat.
             for k, v in match.groupdict().items():
                 if k not in metadata:
                     k = k.lower()  # metadata must be lowercase

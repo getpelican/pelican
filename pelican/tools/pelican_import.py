@@ -4,9 +4,11 @@
 from __future__ import unicode_literals, print_function
 import argparse
 try:
+    # py3k import
     from html.parser import HTMLParser
 except ImportError:
-    from HTMLParser import HTMLParser
+    # py2 import
+    from HTMLParser import HTMLParser  # NOQA
 import os
 import subprocess
 import sys

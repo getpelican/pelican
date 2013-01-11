@@ -120,7 +120,7 @@ class Generator(object):
         for item in items:
             value = getattr(self, item)
             if hasattr(value, 'items'):
-                value = list(value.items())
+                value = list(value.items())  # py3k safeguard for iterators
             self.context[item] = value
 
 

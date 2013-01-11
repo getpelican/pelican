@@ -89,6 +89,7 @@ class SitemapGenerator(object):
                     'yearly', 'never')
 
             if isinstance(pris, dict):
+                # We use items for Py3k compat. .iteritems() otherwise
                 for k, v in pris.items():
                     if k in valid_keys and not isinstance(v, (int, float)):
                         default = self.priorities[k]
@@ -102,6 +103,7 @@ class SitemapGenerator(object):
                 warning("sitemap plugin: using the default values")
 
             if isinstance(chfreqs, dict):
+                # .items() for py3k compat.
                 for k, v in chfreqs.items():
                     if k in valid_keys and v not in valid_chfreqs:
                         default = self.changefreqs[k]
