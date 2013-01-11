@@ -128,6 +128,8 @@ class Writer(object):
             relative_path = get_relative_path(name)
             context['localsiteurl'] = relative_path
             localcontext['SITEURL'] = relative_path
+            localcontext['ABSOLUTE_SITEURL'] = context.get(
+                'SITEURL', relative_path)
 
         localcontext.update(kwargs)
 
