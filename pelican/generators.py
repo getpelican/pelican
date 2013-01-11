@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+import datetime
 import os
 import math
 import random
@@ -48,6 +49,8 @@ class Generator(object):
                  **kwargs):
         if 'filenames' not in context:
             context['filenames'] = {}
+        if 'now' not in context:
+            context['now'] = datetime.datetime.now()
         self.context = context
         self.settings = settings
         self.path = path
