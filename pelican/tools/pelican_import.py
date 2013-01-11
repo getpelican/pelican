@@ -303,7 +303,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
 def main():
     parser = argparse.ArgumentParser(
         description="Transform feed, Wordpress or Dotclear files to reST (rst) "
-            "or Markdown (md) files. Be sure to have pandoc installed",
+                    "or Markdown (md) files. Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='input', help='The input file to read')
@@ -323,10 +323,10 @@ def main():
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
     parser.add_argument('--disable-slugs', action='store_true',
-    dest='disable_slugs',
-    help='Disable storing slugs from imported posts within output. '
-         'With this disabled, your Pelican URLs may not be consistent '
-         'with your original posts.')
+        dest='disable_slugs',
+        help='Disable storing slugs from imported posts within output. '
+             'With this disabled, your Pelican URLs may not be consistent '
+             'with your original posts.')
 
     args = parser.parse_args()
 
@@ -358,4 +358,4 @@ def main():
     fields2pelican(fields, args.markup, args.output,
                    dircat=args.dircat or False,
                    strip_raw=args.strip_raw or False,
-                   strip_slugs=args.disable_slugs or False)
+                   disable_slugs=args.disable_slugs or False)
