@@ -55,6 +55,22 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['SITENAME'] = 'Not a Pelican Blog'
         self.assertNotEqual(settings['SITENAME'], _DEFAULT_CONFIG['SITENAME'])
 
+    def test_path_settings_safety(self):
+        """Don't let people setting the static path listings to strs"""
+        settings = {'STATIC_PATHS': 'foo/bar',
+                'THEME_STATIC_PATHS': 'bar/baz',
+                # These 4 settings are required to run configure_settings
+                'PATH': '.',
+                'THEME': DEFAULT_THEME,
+                'SITEURL': 'http://blog.notmyidea.org/',
+                'LOCALE': '',
+                }
+        configure_settings(settings)
+        self.assertEqual(settings['STATIC_PATHS'],
+                _DEFAULT_CONFIG['STATIC_PATHS'])
+        self.assertEqual(settings['THEME_STATIC_PATHS'],
+                _DEFAULT_CONFIG['THEME_STATIC_PATHS'])
+
     def test_configure_settings(self):
         """Manipulations to settings should be applied correctly."""
 
