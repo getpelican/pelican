@@ -216,4 +216,14 @@ def configure_settings(settings):
         settings['FILENAME_METADATA'] = \
                 _DEFAULT_CONFIG['FILENAME_METADATA']
 
+    # Save people from accidentally setting site/css vs [site/css]
+    path_keys = ['STATIC_PATHS', 'THEME_STATIC_PATHS']
+    for PATH_KEY in filter(lambda k: k in settings, path_keys):
+            if isinstance(settings[PATH_KEY], basestring):
+                logger.warn("Detected misconfiguration with %s setting (must "
+                        "be a list of paths), falling back to the default"
+                        % PATH_KEY)
+                settings[PATH_KEY] = \
+                        _DEFAULT_CONFIG[PATH_KEY]
+
     return settings
