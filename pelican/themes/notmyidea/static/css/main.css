@@ -65,8 +65,8 @@ h1 a:hover {
 }
 	
 /* Paragraphs */
-p { margin-top: 1.5em;
-    margin-bottom: 1.5em;}
+p { margin-top: 1em;
+    margin-bottom: 1em;}
 
 strong, b {font-weight: bold;}
 em, i {font-style: italic;}
@@ -74,12 +74,12 @@ em, i {font-style: italic;}
 /* Lists */
 ul {
 	list-style: outside disc;
-	margin: 0 0 0 1.5em;
+	margin: 0.5em 0 0 1.5em;
 }
 
 ol {
 	list-style: outside decimal;
-	margin: 0 0 0 1.5em;
+	margin: 0.5em 0 0 1.5em;
 }
 
 .post-info {
@@ -89,6 +89,7 @@ ol {
 }
 
 .post-info p{
+    margin-top: 1px;
     margin-bottom: 1px;
 }
 
