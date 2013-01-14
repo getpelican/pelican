@@ -93,14 +93,23 @@ _DEFAULT_CONFIG = {'PATH': os.curdir,
 def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
+        dirname = os.path.dirname(path)
         # Make the paths relative to the settings file
         for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
-                            os.path.dirname(path), local_settings[p])))
+                            dirname, local_settings[p])))
                 if p != 'THEME' or os.path.exists(absp):
                     local_settings[p] = absp
+        for key in ['EXTRA_TEMPLATES_PATHS',]:
+            if key in local_settings and local_settings[key] is not None:
+                local_settings[key] = list(local_settings[key])
+                for i,p in enumerate(local_settings[key]):
+                    absp = os.path.abspath(os.path.normpath(os.path.join(
+                                dirname, p)))
+                    if os.path.exists(absp):
+                        local_settings[key][i] = absp
     else:
         local_settings = copy.deepcopy(_DEFAULT_CONFIG)
 
