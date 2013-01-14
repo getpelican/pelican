@@ -283,6 +283,7 @@ class ContentGenerator(Generator):
                         base_path=self.path, path=f,
                         content_class=self.content_class, fmt=self.fmt,
                         settings=self.settings, context=self.context,
+                        environment=self.env,
                         preread_signal=self.signals['preread'],
                         preread_sender=self,
                         context_signal=self.signals['context'],

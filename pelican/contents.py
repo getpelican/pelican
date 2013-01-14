@@ -38,7 +38,8 @@ class Page(object):
         return None
 
     def __init__(self, content, metadata=None, settings=None,
-                 source_path=None, context=None):
+                 source_path=None, context=None, environment=None,
+                 postprocess=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -50,6 +51,8 @@ class Page(object):
         if context is None:
             context = {}
         self._context = context
+        self._environment = environment  # Jinja environment
+        self._postprocess = postprocess
         self.translations = []
 
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
@@ -208,10 +211,15 @@ class Page(object):
 
     @memoized
     def get_content(self, siteurl):
-        return self._update_content(
+        content = self._update_content(
                 self._get_content() if hasattr(self, "_get_content")
                     else self._content,
                 siteurl)
+        if self._postprocess:
+            content = self._postprocess(
+                obj=self, content=content, context=self._context,
+                environment=self._environment)
+        return content
 
     @property
     def content(self):

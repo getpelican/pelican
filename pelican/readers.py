@@ -4,6 +4,7 @@ import six
 
 import codecs
 import datetime
+import json
 import logging
 import os
 import re
@@ -29,7 +30,7 @@ except ImportError:
 import re
 
 from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open
+from pelican.utils import get_date, pelican_open, get_relative_path
 
 
 logger = logging.getLogger(__name__)
@@ -48,6 +49,7 @@ class Reader(object):
     enabled = True
     file_extensions = ['static']
     extensions = None
+    postprocess = None
 
     def __init__(self, settings):
         self.settings = settings
@@ -231,6 +233,71 @@ class AsciiDocReader(Reader):
         return content, metadata
 
 
+class JinjaReader(Reader):
+    """Read articles etc. written in Jinja
+
+    Templates may contain optional JSON metadata contained in a
+    delimited block at the start of the file:
+
+    >>> import pprint
+    >>> content = '''---
+    ... {
+    ...   "title": "My super title",
+    ...   "date": "2010-12-03 10:20"
+    ... }
+    ... ---
+    ... {% extends "base.html" %}
+    ... {% block content %}etc. etc.{% endblock content %}
+    ... '''
+    >>> r = JinjaReader(settings={})
+    >>> metadata, content = r.parse(content)
+    >>> pprint.pprint(metadata, width=60)
+    {u'date': datetime.datetime(2010, 12, 3, 10, 20),
+     u'title': u'My super title'}
+    >>> print(content)
+    {% extends "base.html" %}
+    {% block content %}etc. etc.{% endblock content %}
+    <BLANKLINE>
+    """
+    file_extensions = ['jinja']
+    _metadata_delimiter = '---\n'
+
+    def read(self, source_path):
+        """Parse content and metadata of Jinja files"""
+        content = pelican_open(source_path)
+        return self.parse(content)
+
+    def parse(self, content):
+        lines = content.splitlines(True)
+        if lines and lines[0] == self._metadata_delimiter:
+            lines, metadata = self._parse_metadata(lines[1:])
+        else:
+            metadata = {}
+        return ''.join(lines), metadata
+
+    def _parse_metadata(self, lines):
+        metadata_lines = []
+        while lines and lines[0] != self._metadata_delimiter:
+            metadata_lines.append(lines.pop(0))
+        if lines and lines[0] == self._metadata_delimiter:
+            lines.pop(0)
+        metadata_text = ''.join(metadata_lines)
+        metadata = {}
+        for key,value in json.loads(metadata_text).items():
+            name = key.lower()
+            metadata[name] = self.process_metadata(name, value)
+        return lines, metadata
+
+    def postprocess(self, obj, content, context, environment):
+        relative_urls = self.settings.get('RELATIVE_URLS', None)
+        local_context = dict(context)  # local copy
+        if relative_urls:
+            local_context['localsiteurl'] = get_relative_path(obj.url)
+        local_context['content'] = obj
+        template = environment.from_string(content)
+        return template.render(local_context)
+
+
 _EXTENSIONS = {}
 
 for cls in [Reader] + Reader.__subclasses__():
@@ -239,7 +306,7 @@ for cls in [Reader] + Reader.__subclasses__():
 
 
 def read_file(base_path, path, content_class=Page, fmt=None,
-              settings=None, context=None,
+              settings=None, context=None, environment=None,
               preread_signal=None, preread_sender=None,
               context_signal=None, context_sender=None):
     """Return a content object parsed with the given format."""
@@ -295,7 +362,9 @@ def read_file(base_path, path, content_class=Page, fmt=None,
         metadata=metadata,
         settings=settings,
         source_path=path,
-        context=context)
+        context=context,
+        environment=environment,
+        postprocess=reader.postprocess)
 
 def default_metadata(settings=None, process=None):
     metadata = {}
