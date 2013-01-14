@@ -103,14 +103,9 @@ class RawReader(Reader):
     enabled = True
     file_extensions = ['raw']
 
-    def read(self, source_path, encoding=None):
+    def read(self, source_path):
         "Read file contents into .content without processing"
-        if not encoding:
-            encoding = self.settings.get('CONTENT_ENCODING', None)
-        if encoding:
-            content = codecs.open(source_path, 'r', encoding=encoding).read()
-        else:
-            content = open(source_path, 'rb').read()
+        content = pelican_open(source_path)
         metadata = {}
         return content, metadata
 
