@@ -188,6 +188,7 @@ class TestPageGenerator(unittest.TestCase):
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
+        drafts = self.distill_pages(generator.drafts)
 
         pages_expected = [
             ['This is a test page', 'published', 'page'],
@@ -199,9 +200,15 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a markdown test hidden page', 'hidden', 'page'],
             ['This is a test hidden page with a custom template', 'hidden', 'custom']
         ]
-
+        drafts_expected = [
+            [u'This is a test draft page', 'draft', 'page'],
+            [u'This is a markdown test draft page', 'draft', 'page'],
+            [u'This is a test draft page with a custom template', 'draft', 'custom']
+        ]
+        
         self.assertItemsEqual(pages_expected,pages)
         self.assertItemsEqual(hidden_pages_expected,hidden_pages)
+        self.assertItemsEqual(drafts_expected,drafts)
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):

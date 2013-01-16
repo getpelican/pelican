@@ -80,7 +80,9 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'TYPOGRIFY': False,
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
-                   'TEMPLATE_PAGES': {}
+                   'TEMPLATE_PAGES': {},
+                   'DRAFT_PAGES_OUTPUT_PATH': 'drafts/pages/',
+                   'DRAFT_ARTICLES_OUTPUT_PATH': 'drafts/articles/',
                    }
 
 

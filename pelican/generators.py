@@ -291,8 +291,9 @@ class ArticlesGenerator(Generator):
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in self.drafts:
-            write('drafts/%s.html' % article.slug,
-                self.get_template(article.template), self.context,
+            name = '%s.html' % os.path.join(
+                self.settings['DRAFT_ARTICLES_OUTPUT_PATH'], article.slug)
+            write(name, self.get_template(article.template), self.context,
                 article=article, category=article.category)
 
     def generate_pages(self, writer):
@@ -440,7 +441,23 @@ class PagesGenerator(Generator):
         self.hidden_pages = []
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
+        self.drafts = []
         signals.pages_generator_init.send(self)
+
+    def generate_pages(self, write):
+        """Generate the pages."""
+        for page in chain(self.translations, self.pages,
+                            self.hidden_translations, self.hidden_pages):
+            write(page.save_as, self.get_template(page.template), self.context,
+                page=page)
+
+    def generate_drafts(self, write):
+        """Generate drafts pages."""
+        for page in self.drafts:
+            name = '%s.html' % os.path.join(
+                self.settings['DRAFT_PAGES_OUTPUT_PATH'], page.slug)
+            write(name, self.get_template(page.template), self.context,
+                page=page)
 
     def generate_context(self):
         all_pages = []
@@ -465,6 +482,8 @@ class PagesGenerator(Generator):
                 all_pages.append(page)
             elif page.status == "hidden":
                 hidden_pages.append(page)
+            elif page.status == "draft":
+                self.drafts.append(page)
             else:
                 logger.warning("Unknown status %s for file %s, skipping it." %
                                (repr(page.status),
@@ -477,11 +496,11 @@ class PagesGenerator(Generator):
         self.context['PAGES'] = self.pages
 
     def generate_output(self, writer):
-        for page in chain(self.translations, self.pages,
-                            self.hidden_translations, self.hidden_pages):
-            writer.write_file(page.save_as, self.get_template(page.template),
-                    self.context, page=page,
-                    relative_urls=self.settings.get('RELATIVE_URLS'))
+        write = partial(writer.write_file,
+                        relative_urls=self.settings.get('RELATIVE_URLS'))
+
+        self.generate_pages(write)
+        self.generate_drafts(write)
 
 
 class StaticGenerator(Generator):
