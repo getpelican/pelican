@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 from .support import unittest
 
-from pelican.contents import Page, Article
+from pelican.contents import Page, Article, URLWrapper
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import truncate_html_words
 from pelican.signals import content_object_init
@@ -187,3 +188,31 @@ class TestArticle(TestPage):
         article_kwargs['metadata']['template'] = 'custom'
         custom_article = Article(**article_kwargs)
         self.assertEqual('custom', custom_article.template)
+
+
+class TestURLWrapper(unittest.TestCase):
+    def test_comparisons(self):
+        """URLWrappers are sorted by name
+        """
+        wrapper_a = URLWrapper(name='first', settings={})
+        wrapper_b = URLWrapper(name='last', settings={})
+        self.assertFalse(wrapper_a > wrapper_b)
+        self.assertFalse(wrapper_a >= wrapper_b)
+        self.assertFalse(wrapper_a == wrapper_b)
+        self.assertTrue(wrapper_a != wrapper_b)
+        self.assertTrue(wrapper_a <= wrapper_b)
+        self.assertTrue(wrapper_a < wrapper_b)
+        wrapper_b.name = 'first'
+        self.assertFalse(wrapper_a > wrapper_b)
+        self.assertTrue(wrapper_a >= wrapper_b)
+        self.assertTrue(wrapper_a == wrapper_b)
+        self.assertFalse(wrapper_a != wrapper_b)
+        self.assertTrue(wrapper_a <= wrapper_b)
+        self.assertFalse(wrapper_a < wrapper_b)
+        wrapper_a.name = 'last'
+        self.assertTrue(wrapper_a > wrapper_b)
+        self.assertTrue(wrapper_a >= wrapper_b)
+        self.assertFalse(wrapper_a == wrapper_b)
+        self.assertTrue(wrapper_a != wrapper_b)
+        self.assertFalse(wrapper_a <= wrapper_b)
+        self.assertFalse(wrapper_a < wrapper_b)
