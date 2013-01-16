@@ -114,14 +114,16 @@ class Page(object):
 
     @property
     def url_format(self):
-        return {
+        metadata = copy.copy(self.metadata)
+        metadata.update({
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
             'author': getattr(self, 'author', ''),
             'category': getattr(self, 'category',
                 self.settings['DEFAULT_CATEGORY']),
-        }
+            })
+        return metadata
 
     def _expand_settings(self, key):
         fq_key = ('%s_%s' % (self.__class__.__name__, key)).upper()
