@@ -504,7 +504,7 @@ class StaticGenerator(Generator):
                     os.path.join(self.path, static_path), extensions=False):
                 f_rel = os.path.relpath(f, self.path)
                 # TODO remove this hardcoded 'static' subdirectory
-                sc = StaticContent(f_rel, os.path.join('static', f_rel),
+                sc = StaticContent(f_rel, os.path.join(self.settings['OUTPUT_STATIC_DIR'], f_rel),
                         settings=self.settings)
                 self.staticfiles.append(sc)
                 self.context['filenames'][f_rel] = sc
