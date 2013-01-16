@@ -503,6 +503,9 @@ class StaticGenerator(Generator):
             for f in self.get_files(
                     os.path.join(self.path, static_path), extensions=False):
                 f_rel = os.path.relpath(f, self.path)
+                # On Windows, make sure we end up with Unix-like paths.
+                if os.name == 'nt':
+                    f_rel = f_rel.replace('\\', '/')
                 # TODO remove this hardcoded 'static' subdirectory
                 sc = StaticContent(f_rel, os.path.join('static', f_rel),
                         settings=self.settings)
