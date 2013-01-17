@@ -8,6 +8,7 @@ import logging
 import functools
 import os
 import re
+import sys
 
 from datetime import datetime
 from sys import platform, stdin
@@ -86,7 +87,10 @@ class Page(object):
                 self.date_format = settings['DEFAULT_DATE_FORMAT']
 
         if isinstance(self.date_format, tuple):
-            locale.setlocale(locale.LC_ALL, self.date_format[0])
+            locale_string = self.date_format[0]
+            if sys.version_info < (3, ) and isinstance(locale_string, six.text_type):
+                locale_string = locale_string.encode('ascii')
+            locale.setlocale(locale.LC_ALL, locale_string)
             self.date_format = self.date_format[1]
 
         if hasattr(self, 'date'):
