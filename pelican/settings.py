@@ -84,15 +84,15 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    }
 
 
-def read_settings(filename=None, override=None):
-    if filename:
-        local_settings = get_settings_from_file(filename)
+def read_settings(path=None, override=None):
+    if path:
+        local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
         for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
-                            os.path.dirname(filename), local_settings[p])))
+                            os.path.dirname(path), local_settings[p])))
                 if p != 'THEME' or os.path.exists(absp):
                     local_settings[p] = absp
     else:
@@ -116,14 +116,14 @@ def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
     return context
 
 
-def get_settings_from_file(filename, default_settings=_DEFAULT_CONFIG):
+def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
     """
     Load settings from a file path, returning a dict.
 
     """
 
-    name = os.path.basename(filename).rpartition(".")[0]
-    module = imp.load_source(name, filename)
+    name = os.path.basename(path).rpartition('.')[0]
+    module = imp.load_source(name, path)
     return get_settings_from_module(module, default_settings=default_settings)
 
 

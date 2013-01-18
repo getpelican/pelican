@@ -47,19 +47,17 @@ Take a look at the Markdown reader::
     class MarkdownReader(Reader):
         enabled = bool(Markdown)
 
-        def read(self, filename):
+        def read(self, source_path):
             """Parse content and metadata of markdown files"""
-            text = open(filename)
+            text = pelican_open(source_path)
             md = Markdown(extensions = ['meta', 'codehilite'])
             content = md.convert(text)
 
             metadata = {}
             for name, value in md.Meta.items():
-                if name in _METADATA_FIELDS:
-                    meta = _METADATA_FIELDS[name](value[0])
-                else:
-                    meta = value[0]
-                metadata[name.lower()] = meta
+                name = name.lower()
+                meta = self.process_metadata(name, value[0])
+                metadata[name] = meta
             return content, metadata
 
 Simple, isn't it?

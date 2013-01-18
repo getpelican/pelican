@@ -6,6 +6,7 @@ import os
 import re
 import pytz
 import shutil
+import traceback
 import logging
 import errno
 import locale
@@ -122,6 +123,48 @@ class memoized(object):
       '''Support instance methods.'''
       return partial(self.__call__, obj)
 
+
+def deprecated_attribute(old, new, since=None, remove=None, doc=None):
+    """Attribute deprecation decorator for gentle upgrades
+
+    For example:
+
+        class MyClass (object):
+            @deprecated_attribute(
+                old='abc', new='xyz', since=(3, 2, 0), remove=(4, 1, 3))
+            def abc(): return None
+
+            def __init__(self):
+                xyz = 5
+
+    Note that the decorator needs a dummy method to attach to, but the
+    content of the dummy method is ignored.
+    """
+    def _warn():
+        version = '.'.join(six.text_type(x) for x in since)
+        message = ['{} has been deprecated since {}'.format(old, version)]
+        if remove:
+            version = '.'.join(six.text_type(x) for x in remove)
+            message.append(
+                ' and will be removed by version {}'.format(version))
+        message.append('.  Use {} instead.'.format(new))
+        logger.warning(''.join(message))
+        logger.debug(''.join(
+                six.text_type(x) for x in traceback.format_stack()))
+
+    def fget(self):
+        _warn()
+        return getattr(self, new)
+
+    def fset(self, value):
+        _warn()
+        setattr(self, new, value)
+
+    def decorator(dummy):
+        return property(fget=fget, fset=fset, doc=doc)
+
+    return decorator
+
 def get_date(string):
     """Return a datetime object from a string.
 
@@ -141,9 +184,9 @@ def get_date(string):
     raise ValueError("'%s' is not a valid date" % string)
 
 
-def pelican_open(filename):
+def pelican_open(path):
     """Open a file and return it's content"""
-    return open(filename, encoding='utf-8').read()
+    return open(path, encoding='utf-8').read()
 
 
 def slugify(value):
@@ -245,9 +288,9 @@ def clean_output_dir(path):
             logger.error("Unable to delete %s, file type unknown" % file)
 
 
-def get_relative_path(filename):
-    """Return the relative path from the given filename to the root path."""
-    nslashes = filename.count('/')
+def get_relative_path(path):
+    """Return the relative path from the given path to the root path."""
+    nslashes = path.count('/')
     if nslashes == 0:
         return '.'
     else:
@@ -344,15 +387,16 @@ def process_translations(content_list):
         if len_ > 1:
             logger.warning('there are %s variants of "%s"' % (len_, slug))
             for x in default_lang_items:
-                logger.warning('    %s' % x.filename)
+                logger.warning('    {}'.format(x.source_path))
         elif len_ == 0:
             default_lang_items = items[:1]
 
         if not slug:
-            msg = 'empty slug for %r. ' % default_lang_items[0].filename\
-                + 'You can fix this by adding a title or a slug to your '\
-                + 'content'
-            logger.warning(msg)
+            logger.warning((
+                    'empty slug for {!r}. '
+                    'You can fix this by adding a title or a slug to your '
+                    'content'
+                    ).format(default_lang_items[0].source_path))
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -388,14 +432,14 @@ def files_changed(path, extensions):
 FILENAMES_MTIMES = defaultdict(int)
 
 
-def file_changed(filename):
-    mtime = os.stat(filename).st_mtime
-    if FILENAMES_MTIMES[filename] == 0:
-        FILENAMES_MTIMES[filename] = mtime
+def file_changed(path):
+    mtime = os.stat(path).st_mtime
+    if FILENAMES_MTIMES[path] == 0:
+        FILENAMES_MTIMES[path] = mtime
         return False
     else:
-        if mtime > FILENAMES_MTIMES[filename]:
-            FILENAMES_MTIMES[filename] = mtime
+        if mtime > FILENAMES_MTIMES[path]:
+            FILENAMES_MTIMES[path] = mtime
             return True
         return False
 

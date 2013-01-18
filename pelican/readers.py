@@ -109,20 +109,20 @@ class RstReader(Reader):
                 output[name] = self.process_metadata(name, value)
         return output
 
-    def _get_publisher(self, filename):
+    def _get_publisher(self, source_path):
         extra_params = {'initial_header_level': '2'}
         pub = docutils.core.Publisher(
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.writer.translator_class = PelicanHTMLTranslator
         pub.process_programmatic_settings(None, extra_params, None)
-        pub.set_source(source_path=filename)
+        pub.set_source(source_path=source_path)
         pub.publish()
         return pub
 
-    def read(self, filename):
+    def read(self, source_path):
         """Parses restructured text"""
-        pub = self._get_publisher(filename)
+        pub = self._get_publisher(source_path)
         parts = pub.writer.parts
         content = parts.get('body')
 
@@ -151,9 +151,9 @@ class MarkdownReader(Reader):
                 output[name] = self.process_metadata(name, value[0])
         return output
 
-    def read(self, filename):
+    def read(self, source_path):
         """Parse content and metadata of markdown files"""
-        text = pelican_open(filename)
+        text = pelican_open(source_path)
         md = Markdown(extensions=set(self.extensions + ['meta']))
         content = md.convert(text)
 
@@ -165,9 +165,9 @@ class HtmlReader(Reader):
     file_extensions = ['html', 'htm']
     _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
 
-    def read(self, filename):
+    def read(self, source_path):
         """Parse content and metadata of (x)HTML files"""
-        with open(filename) as content:
+        with open(source_path) as content:
             metadata = {'title': 'unnamed'}
             for i in self._re.findall(content):
                 key = i.split(':')[0][5:].strip()
@@ -183,10 +183,10 @@ class AsciiDocReader(Reader):
     file_extensions = ['asc']
     default_options = ["--no-header-footer", "-a newline=\\n"]
 
-    def read(self, filename):
+    def read(self, source_path):
         """Parse content and metadata of asciidoc files"""
         from cStringIO import StringIO
-        text = StringIO(pelican_open(filename))
+        text = StringIO(pelican_open(source_path))
         content = StringIO()
         ad = AsciiDocAPI()
 
@@ -216,14 +216,14 @@ for cls in Reader.__subclasses__():
         _EXTENSIONS[ext] = cls
 
 
-def read_file(filename, fmt=None, settings=None):
+def read_file(path, fmt=None, settings=None):
     """Return a reader object using the given format."""
-    base, ext = os.path.splitext(os.path.basename(filename))
+    base, ext = os.path.splitext(os.path.basename(path))
     if not fmt:
         fmt = ext[1:]
 
     if fmt not in _EXTENSIONS:
-        raise TypeError('Pelican does not know how to parse %s' % filename)
+        raise TypeError('Pelican does not know how to parse {}'.format(path))
 
     reader = _EXTENSIONS[fmt](settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()
@@ -234,7 +234,7 @@ def read_file(filename, fmt=None, settings=None):
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
 
-    content, metadata = reader.read(filename)
+    content, metadata = reader.read(path)
 
     # eventually filter the content with typogrify if asked so
     if settings and settings.get('TYPOGRIFY'):
@@ -242,9 +242,9 @@ def read_file(filename, fmt=None, settings=None):
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
 
-    filename_metadata = settings and settings.get('FILENAME_METADATA')
-    if filename_metadata:
-        match = re.match(filename_metadata, base)
+    file_metadata = settings and settings.get('FILENAME_METADATA')
+    if file_metadata:
+        match = re.match(file_metadata, base)
         if match:
             # .items() for py3k compat.
             for k, v in match.groupdict().items():

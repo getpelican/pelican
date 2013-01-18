@@ -229,20 +229,20 @@ class TestTemplatePagesGenerator(unittest.TestCase):
 
         # create a dummy template file
         template_dir = os.path.join(self.temp_content, 'template')
-        template_filename = os.path.join(template_dir, 'source.html')
+        template_path = os.path.join(template_dir, 'source.html')
         os.makedirs(template_dir)
-        with open(template_filename, 'w') as template_file:
+        with open(template_path, 'w') as template_file:
             template_file.write(self.TEMPLATE_CONTENT)
 
         writer = Writer(self.temp_output, settings=settings)
         generator.generate_output(writer)
 
-        output_filename = os.path.join(
+        output_path = os.path.join(
                 self.temp_output, 'generated', 'file.html')
 
         # output file has been generated
-        self.assertTrue(os.path.exists(output_filename))
+        self.assertTrue(os.path.exists(output_path))
 
         # output content is correct
-        with open(output_filename, 'r') as output_file:
+        with open(output_path, 'r') as output_file:
             self.assertEquals(output_file.read(), 'foo: bar')

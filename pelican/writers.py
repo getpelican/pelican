@@ -46,23 +46,23 @@ class Writer(object):
             pubdate=set_date_tzinfo(item.date,
                 self.settings.get('TIMEZONE', None)))
 
-    def write_feed(self, elements, context, filename=None, feed_type='atom'):
+    def write_feed(self, elements, context, path=None, feed_type='atom'):
         """Generate a feed with the list of articles provided
 
-        Return the feed. If no output_path or filename is specified, just
+        Return the feed. If no path or output_path is specified, just
         return the feed object.
 
         :param elements: the articles to put on the feed.
         :param context: the context to get the feed metadata.
-        :param filename: the filename to output.
+        :param path: the path to output.
         :param feed_type: the feed type to use (atom or rss)
         """
         old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
         try:
-            self.site_url = context.get('SITEURL', get_relative_path(filename))
+            self.site_url = context.get('SITEURL', get_relative_path(path))
             self.feed_domain = context.get('FEED_DOMAIN')
-            self.feed_url = '%s/%s' % (self.feed_domain, filename)
+            self.feed_url = '{}/{}'.format(self.feed_domain, path)
 
             feed = self._create_new_feed(feed_type, context)
 
@@ -72,8 +72,8 @@ class Writer(object):
             for i in range(max_items):
                 self._add_item_to_the_feed(feed, elements[i])
 
-            if filename:
-                complete_path = os.path.join(self.output_path, filename)
+            if path:
+                complete_path = os.path.join(self.output_path, path)
                 try:
                     os.makedirs(os.path.dirname(complete_path))
                 except Exception:
@@ -114,14 +114,14 @@ class Writer(object):
                 output = template.render(localcontext)
             finally:
                 locale.setlocale(locale.LC_ALL, old_locale)
-            filename = os.sep.join((output_path, name))
+            path = os.path.join(output_path, name)
             try:
-                os.makedirs(os.path.dirname(filename))
+                os.makedirs(os.path.dirname(path))
             except Exception:
                 pass
-            with open(filename, 'w', encoding='utf-8') as f:
+            with open(path, 'w', encoding='utf-8') as f:
                 f.write(output)
-            logger.info('writing %s' % filename)
+            logger.info('writing {}'.format(path))
 
         localcontext = context.copy()
         if relative_urls:
