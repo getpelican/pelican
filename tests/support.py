@@ -176,3 +176,24 @@ class LogCountHandler(BufferingHandler):
             if (msg is None or re.match(msg, l.getMessage()))
             and (level is None or l.levelno == level)
             ])
+
+
+class LoggedTestCase(unittest.TestCase):
+    """A test case that captures log messages
+    """
+
+    def setUp(self):
+        super(LoggedTestCase, self).setUp()
+        self._logcount_handler = LogCountHandler()
+        logging.getLogger().addHandler(self._logcount_handler)
+
+    def tearDown(self):
+        logging.getLogger().removeHandler(self._logcount_handler)
+        super(LoggedTestCase, self).tearDown()
+
+    def assertLogCountEqual(self, count=None, msg=None, **kwargs):
+        actual = self._logcount_handler.count_logs(msg=msg, **kwargs)
+        self.assertEqual(
+            actual, count,
+            msg='expected {} occurrences of {!r}, but found {}'.format(
+                count, msg, actual))
