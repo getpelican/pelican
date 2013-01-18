@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
+import logging
 import shutil
 import os
 import datetime
 import time
 
 from pelican import utils
-from .support import get_article, unittest
+from .support import get_article, LoggedTestCase
 from pelican.utils import NoFilesError
 
 
-class TestUtils(unittest.TestCase):
+class TestUtils(LoggedTestCase):
     _new_attribute = 'new_value'
 
     @utils.deprecated_attribute(
@@ -21,7 +22,11 @@ class TestUtils(unittest.TestCase):
     def test_deprecated_attribute(self):
         value = self._old_attribute
         self.assertEquals(value, self._new_attribute)
-        # TODO: check log warning
+        self.assertLogCountEqual(
+            count=1,
+            msg=('_old_attribute has been deprecated since 3.1.0 and will be '
+                 'removed by version 4.1.3.  Use _new_attribute instead'),
+            level=logging.WARNING)
 
     def test_get_date(self):
         # valid ones
