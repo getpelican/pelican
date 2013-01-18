@@ -1,16 +1,32 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
+import logging
 import shutil
 import os
 import datetime
 import time
 
 from pelican import utils
-from .support import get_article, unittest
+from .support import get_article, LoggedTestCase
 from pelican.utils import NoFilesError
 
 
-class TestUtils(unittest.TestCase):
+class TestUtils(LoggedTestCase):
+    _new_attribute = 'new_value'
+
+    @utils.deprecated_attribute(
+        old='_old_attribute', new='_new_attribute',
+        since=(3, 1, 0), remove=(4, 1, 3))
+    def _old_attribute(): return None
+
+    def test_deprecated_attribute(self):
+        value = self._old_attribute
+        self.assertEquals(value, self._new_attribute)
+        self.assertLogCountEqual(
+            count=1,
+            msg=('_old_attribute has been deprecated since 3.1.0 and will be '
+                 'removed by version 4.1.3.  Use _new_attribute instead'),
+            level=logging.WARNING)
 
     def test_get_date(self):
         # valid ones
@@ -79,17 +95,17 @@ class TestUtils(unittest.TestCase):
         """Test if file changes are correctly detected
         Make sure to handle not getting any files correctly"""
 
-        path = os.path.join(os.path.dirname(__file__), 'content')
-        filename = os.path.join(path, 'article_with_metadata.rst')
-        changed = utils.files_changed(path, 'rst')
+        dirname = os.path.join(os.path.dirname(__file__), 'content')
+        path = os.path.join(dirname, 'article_with_metadata.rst')
+        changed = utils.files_changed(dirname, 'rst')
         self.assertEquals(changed, True)
 
-        changed = utils.files_changed(path, 'rst')
+        changed = utils.files_changed(dirname, 'rst')
         self.assertEquals(changed, False)
 
         t = time.time()
-        os.utime(filename, (t, t))
-        changed = utils.files_changed(path, 'rst')
+        os.utime(path, (t, t))
+        changed = utils.files_changed(dirname, 'rst')
         self.assertEquals(changed, True)
         self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
 
