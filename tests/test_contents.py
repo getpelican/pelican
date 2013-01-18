@@ -99,6 +99,16 @@ class TestPage(unittest.TestCase):
         page = Page(**self.page_kwargs)
         self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
 
+    def test_metadata_url_format(self):
+        """Arbitrary metadata should be passed through url_format()
+        """
+        page = Page(**self.page_kwargs)
+        self.assertIn('summary', page.url_format.keys())
+        page.metadata['directory'] = 'test-dir'
+        page.settings = _DEFAULT_CONFIG.copy()
+        page.settings['PAGE_SAVE_AS'] = '{directory}/{slug}'
+        self.assertEqual(page.save_as, 'test-dir/foo-bar')
+
     def test_datetime(self):
         """If DATETIME is set to a tuple, it should be used to override LOCALE
         """
