@@ -150,6 +150,8 @@ That's it! Your site should now be live.
 Writing articles using Pelican
 ==============================
 
+.. _internal_metadata:
+
 File metadata
 --------------
 

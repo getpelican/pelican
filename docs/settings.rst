@@ -59,9 +59,12 @@ Setting name (default value)                                            What doe
                                                                         For example, if you would like to extract both the
                                                                         date and the slug, you could set something like:
                                                                         ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
+                                                                        See :ref:`path_metadata`.
 `PATH_METADATA` (``''``)                                                Like ``FILENAME_METADATA``, but parsed from a page's
                                                                         full path relative to the content source directory.
+                                                                        See :ref:`path_metadata`.
 `EXTRA_PATH_METADATA` (``{}``)                                          Extra metadata dictionaries keyed by relative path.
+                                                                        See :ref:`path_metadata`.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
                                                                         generating new files.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
@@ -298,6 +301,52 @@ You can use ``EXTRA_PATH_METADATA`` to adjust their destination filenames::
 This works because the default ``TEMPLATE_PAGE_SAVE_AS`` format
 (``{path}``).  More complicated mappings based on other critera are
 also possible.
+
+
+.. _path_metadata:
+
+Path metadata
+=============
+
+Not all metadata needs to be `embedded in source file itself`__.  For
+exampe, blog posts are often named following a ``YYYY-MM-DD-SLUG.rst``
+pattern, or nested into ``YYYY/MM/DD-SLUG`` directories.  To extract
+metadata from the filename or path, set ``FILENAME_METADATA`` or
+``PATH_METADATA`` to regular expressions that use Python's `group name
+notation`_ ``(?P<name>…)``.  If you want to attach additional metadata
+but don't want to encode it in the path, you can set
+``EXTRA_PATH_METADATA``:
+
+.. parsed-literal::
+
+    EXTRA_PATH_METADATA = {
+        'relative/path/to/file-1': {
+            'key-1a': 'value-1a',
+            'key-1b': 'value-1b',
+            },
+        'relative/path/to/file-2': {
+            'key-2': 'value-2',
+            },
+        }
+
+This can be a convenient way to shift the installed location of a
+particular file:
+
+.. parsed-literal::
+
+    # Take advantage of the following defaults
+    # STATIC_SAVE_AS = '{path}'
+    # STATIC_URL = '{path}'
+    STATIC_PATHS = [
+        'extra/robots.txt',
+        ]
+    EXTRA_PATH_METADATA = {
+        'extra/robots.txt': {'path': 'robots.txt'},
+        }
+
+__ internal_metadata__
+.. _group name notation:
+   http://docs.python.org/3/library/re.html#regular-expression-syntax
 
 Feed settings
 =============
