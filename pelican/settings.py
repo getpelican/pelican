@@ -219,7 +219,7 @@ def configure_settings(settings):
     # Save people from accidentally setting site/css vs [site/css]
     path_keys = ['STATIC_PATHS', 'THEME_STATIC_PATHS']
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
-            if isinstance(settings[PATH_KEY], basestring):
+            if isinstance(settings[PATH_KEY], six.string_types):
                 logger.warn("Detected misconfiguration with %s setting (must "
                         "be a list of paths), falling back to the default"
                         % PATH_KEY)
