@@ -291,7 +291,7 @@ For example::
     {% if article.related_posts %}
         <ul>
         {% for related_post in article.related_posts %}
-            <li>{{ related_post }}</li>
+            <li><a href="{{ related_post.url }}">{{ related_post.title }}</a></li>
         {% endfor %}
         </ul>
     {% endif %}
