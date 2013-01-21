@@ -404,10 +404,26 @@ def process_translations(content_list):
     return index, translations
 
 
+def check_pattern(filename, pattern):
+    """Returns True if filename matches pattern
+    pattern types:
+    starts with: if filename starts with pattern '^pattern'
+                 example: '^.' # dot files
+    ends with: if filename ends with pattern 'pattern$'
+               example: '~$' # emacs backup files
+    exact: if filename is pattern
+           example: 'TODO'
+    """
+    if pattern.startswith('^'):
+        return filename.startswith(pattern[1:])
+    elif pattern.endswith('$'):
+        return filename.endswith(pattern[:-1])
+    else:
+        return filename == pattern
+
 LAST_MTIME = 0
 
-
-def files_changed(path, extensions):
+def files_changed(path, extensions, ignores=[]):
     """Return True if the files have changed since the last check"""
 
     def file_times(path):
@@ -415,7 +431,8 @@ def files_changed(path, extensions):
         for root, dirs, files in os.walk(path):
             dirs[:] = [x for x in dirs if x[0] != '.']
             for f in files:
-                if any(f.endswith(ext) for ext in extensions):
+                if any(f.endswith(ext) for ext in extensions) \
+                        and not any(check_pattern(f, ignore) for ignore in ignores):
                     yield os.stat(os.path.join(root, f)).st_mtime
 
     global LAST_MTIME
