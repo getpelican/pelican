@@ -416,11 +416,10 @@ class ArticlesGenerator(Generator):
         # order the categories per name
         self.categories = list(self.categories.items())
         self.categories.sort(
-                key=lambda item: item[0].name,
                 reverse=self.settings['REVERSE_CATEGORY_ORDER'])
 
         self.authors = list(self.authors.items())
-        self.authors.sort(key=lambda item: item[0].name)
+        self.authors.sort()
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
