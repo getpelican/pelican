@@ -108,27 +108,28 @@ def wp2fields(xml):
 
     for item in items:
 
-        if item.fetch('wp:status')[0].contents[0] == "publish":
+        if item.status.text == "publish":
 
             try:
                 # Use HTMLParser due to issues with BeautifulSoup 3
-                title = HTMLParser().unescape(item.title.contents[0])
+                title = HTMLParser().unescape(item.title.text)
             except IndexError:
                 continue
 
-            content = item.fetch('content:encoded')[0].contents[0]
-            filename = item.fetch('wp:post_name')[0].contents[0]
+            content = item.encoded.text
+            filename = item.post_name.text
 
-            raw_date = item.fetch('wp:post_date')[0].contents[0]
+            raw_date = item.post_date.text
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
 
-            author = item.fetch('dc:creator')[0].contents[0].title()
+            author = item.creator.text
 
-            categories = [cat.contents[0] for cat in item.fetch(domain='category')]
+            # categories = [cat.contents[0] for cat in item.fetch(domain='category')]
             # caturl = [cat['nicename'] for cat in item.fetch(domain='category')]
+            categories = [cat.text for cat in item.find_all("category")]
 
-            tags = [tag.contents[0] for tag in item.fetch(domain='post_tag')]
+            tags = [tag.text for tag in item.find_all("post_tag")]
 
             yield (title, content, filename, date, author, categories, tags, "wp-html")
 

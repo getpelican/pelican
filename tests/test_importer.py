@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 import os
+import re
 
 from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content
 from .support import unittest, temporary_folder, mute, skipIfNoExecutable
@@ -30,7 +31,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
-        for title, content, fname, date, author, categ, tags, format in posts:
+        for title, content, fname, date, author, categ, tags, format in self.posts:
             self.assertTrue(title.strip())
 
     def test_can_toggle_raw_html_code_parsing(self):
@@ -94,7 +95,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
     def test_preserve_verbatim_formatting(self):
         r = lambda f: open(f).read()
         silent_f2p = mute(True)(fields2pelican)
-        test_post = filter(lambda p: p[0].startswith("A normal post"), self.posts)
+        test_post = filter(lambda p: p[0].startswith("Code in List"), self.posts)
         with temporary_folder() as temp:
             md = [r(f) for f in silent_f2p(test_post, 'markdown', temp)][0]
             self.assertTrue(re.search(r'\s+a = \[1, 2, 3\]', md))
