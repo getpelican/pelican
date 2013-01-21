@@ -8,6 +8,7 @@ import logging
 import functools
 import os
 import re
+import sys
 
 from datetime import datetime
 from sys import platform, stdin
@@ -90,7 +91,10 @@ class Page(object):
                 self.date_format = settings['DEFAULT_DATE_FORMAT']
 
         if isinstance(self.date_format, tuple):
-            locale.setlocale(locale.LC_ALL, self.date_format[0])
+            locale_string = self.date_format[0]
+            if sys.version_info < (3, ) and isinstance(locale_string, six.text_type):
+                locale_string = locale_string.encode('ascii')
+            locale.setlocale(locale.LC_ALL, locale_string)
             self.date_format = self.date_format[1]
 
         if hasattr(self, 'date'):
@@ -250,7 +254,9 @@ class Article(Page):
 class Quote(Page):
     base_properties = ('author', 'date')
 
+
 @python_2_unicode_compatible
+@functools.total_ordering
 class URLWrapper(object):
     def __init__(self, name, settings):
         self.name = name
@@ -263,8 +269,20 @@ class URLWrapper(object):
     def __hash__(self):
         return hash(self.name)
 
+    def _key(self):
+        return self.name
+
+    def _normalize_key(self, key):
+        return six.text_type(key)
+
     def __eq__(self, other):
-        return self.name == other
+        return self._key() == self._normalize_key(other)
+
+    def __ne__(self, other):
+        return self._key() != self._normalize_key(other)
+
+    def __lt__(self, other):
+        return self._key() < self._normalize_key(other)
 
     def __str__(self):
         return self.name

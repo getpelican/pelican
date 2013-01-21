@@ -68,6 +68,19 @@ categories      A list of (category, articles) tuples, containing
 pages           The list of pages
 =============   ===================================================
 
+Sorting
+-------
+
+URL wrappers (currently categories, tags, and authors), have
+comparison methods that allow them to be easily sorted by name:
+
+    {% for tag, articles in tags|sort %}
+
+If you want to sort based on different criteria, `Jinja's sort
+command`__ has a number of options.
+
+__ http://jinja.pocoo.org/docs/templates/#sort
+
 index.html
 ----------
 
