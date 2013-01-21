@@ -12,3 +12,4 @@ pytz
 jinja2
 docutils
 feedgenerator
+six
