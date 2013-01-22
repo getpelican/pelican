@@ -1,15 +1,15 @@
 <footer class="post-info">
-        <abbr class="published" title="{{ article.date.isoformat() }}">
-                {{ article.locale_date }}
+        <abbr class="published" title="{{ content.date.isoformat() }}">
+                {{ content.locale_date }}
         </abbr>
 
-        {% if article.author %}
+        {% if content.author %}
         <address class="vcard author">
-                By <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
+                By <a class="url fn" href="{{ SITEURL }}/{{ content.author.url }}">{{ content.author }}</a>
         </address>
         {% endif %}
-<p>In <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
+<p>In <a href="{{ SITEURL }}/{{ content.category.url }}">{{ content.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ content.slug }}.pdf">get the pdf</a>{% endif %}</p>
 {% include 'taglist.html' %}
 {% import 'translations.html' as translations with context %}
-{{ translations.translations_for(article) }}
+{{ translations.translations_for(content) }}
 </footer><!-- /.post-info -->

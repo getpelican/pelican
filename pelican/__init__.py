@@ -51,7 +51,7 @@ class Pelican(object):
         signals.initialized.send(self)
 
     def init_path(self):
-        if not any(p in sys.path for p in ['', '.']):
+        if not any(p in sys.path for p in ['', os.curdir]):
             logger.debug("Adding current directory to system path")
             sys.path.insert(0, '')
 
@@ -139,16 +139,15 @@ class Pelican(object):
         """Run the generators and return"""
 
         context = self.settings.copy()
-        context['filenames'] = {}  # share the dict between all the generators
         context['localsiteurl'] = self.settings.get('SITEURL')  # share
         generators = [
             cls(
-                context,
-                self.settings,
-                self.path,
-                self.theme,
-                self.output_path,
-                self.markup,
+                context=context,
+                settings=self.settings,
+                path=self.path,
+                theme=self.theme,
+                output_path=self.output_path,
+                markup=self.markup,
             ) for cls in self.get_generator_classes()
         ]
 
@@ -173,7 +172,7 @@ class Pelican(object):
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
 
-        if self.settings['TEMPLATE_PAGES']:
+        if self.settings['TEMPLATE_PAGE_PATHS']:
             generators.append(TemplatePagesGenerator)
         if self.settings['PDF_GENERATOR']:
             generators.append(PdfGenerator)

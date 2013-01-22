@@ -15,9 +15,9 @@ from os.path import isabs
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
-                              "themes/notmyidea"])
-_DEFAULT_CONFIG = {'PATH': '.',
+DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'themes/notmyidea')
+_DEFAULT_CONFIG = {'PATH': os.curdir,
                    'ARTICLE_DIR': '',
                    'ARTICLE_EXCLUDES': ('pages',),
                    'PAGE_DIR': 'pages',
@@ -26,6 +26,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'OUTPUT_PATH': 'output/',
                    'MARKUP': ('rst', 'md'),
                    'STATIC_PATHS': ['images', ],
+                   'TEMPLATE_PAGE_PATHS': (),
                    'THEME_STATIC_PATHS': ['static', ],
                    'FEED_ALL_ATOM': 'feeds/all.atom.xml',
                    'CATEGORY_FEED_ATOM': 'feeds/%s.atom.xml',
@@ -52,6 +53,10 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'PAGE_SAVE_AS': 'pages/{slug}.html',
                    'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
                    'PAGE_LANG_SAVE_AS': 'pages/{slug}-{lang}.html',
+                   'STATIC_URL': '{path}',
+                   'STATIC_SAVE_AS': '{path}',
+                   'TEMPLATE_PAGE_URL': '{path}',
+                   'TEMPLATE_PAGE_SAVE_AS': '{path}',
                    'CATEGORY_URL': 'category/{slug}.html',
                    'CATEGORY_SAVE_AS': 'category/{slug}.html',
                    'TAG_URL': 'tag/{slug}.html',
@@ -69,32 +74,42 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
                    'DATE_FORMATS': {},
                    'JINJA_EXTENSIONS': [],
+                   'JINJA_TRIM_BLOCKS': True,
                    'LOCALE': '',  # default to user locale
                    'DEFAULT_PAGINATION': False,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
-                   'FILES_TO_COPY': (),
+                   'PATH_METADATA': '',
+                   'EXTRA_PATH_METADATA': {},
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
-                   'TEMPLATE_PAGES': {}
                    }
 
 
 def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
+        dirname = os.path.dirname(path)
         # Make the paths relative to the settings file
         for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
-                            os.path.dirname(path), local_settings[p])))
+                            dirname, local_settings[p])))
                 if p != 'THEME' or os.path.exists(absp):
                     local_settings[p] = absp
+        for key in ['EXTRA_TEMPLATES_PATHS',]:
+            if key in local_settings and local_settings[key] is not None:
+                local_settings[key] = list(local_settings[key])
+                for i,p in enumerate(local_settings[key]):
+                    absp = os.path.abspath(os.path.normpath(os.path.join(
+                                dirname, p)))
+                    if os.path.exists(absp):
+                        local_settings[key][i] = absp
     else:
         local_settings = copy.deepcopy(_DEFAULT_CONFIG)
 
@@ -121,8 +136,7 @@ def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
     Load settings from a file path, returning a dict.
 
     """
-
-    name = os.path.basename(path).rpartition('.')[0]
+    name, ext = os.path.splitext(path)
     module = imp.load_source(name, path)
     return get_settings_from_module(module, default_settings=default_settings)
 
@@ -137,8 +151,9 @@ def configure_settings(settings):
 
     # find the theme in pelican.theme if the given one does not exists
     if not os.path.isdir(settings['THEME']):
-        theme_path = os.sep.join([os.path.dirname(
-            os.path.abspath(__file__)), "themes/%s" % settings['THEME']])
+        theme_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'themes/{}'.format(settings['THEME']))
         if os.path.exists(theme_path):
             settings['THEME'] = theme_path
         else:

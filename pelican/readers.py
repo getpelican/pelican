@@ -2,6 +2,10 @@
 from __future__ import unicode_literals, print_function
 import six
 
+import codecs
+import datetime
+import json
+import logging
 import os
 import re
 try:
@@ -25,11 +29,14 @@ except ImportError:
     asciidoc = False
 import re
 
-from pelican.contents import Category, Tag, Author
-from pelican.utils import get_date, pelican_open
+from pelican.contents import Page, Category, Tag, Author
+from pelican.utils import get_date, pelican_open, get_relative_path
 
 
-_METADATA_PROCESSORS = {
+logger = logging.getLogger(__name__)
+
+
+METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
     'date': lambda x, y: get_date(x),
     'status': lambda x, y: x.strip(),
@@ -40,15 +47,24 @@ _METADATA_PROCESSORS = {
 
 class Reader(object):
     enabled = True
+    file_extensions = ['static']
     extensions = None
+    postprocess = None
 
     def __init__(self, settings):
         self.settings = settings
 
     def process_metadata(self, name, value):
-        if name in _METADATA_PROCESSORS:
-            return _METADATA_PROCESSORS[name](value, self.settings)
+        process = METADATA_PROCESSORS.get(name, None)
+        if process:
+            return process(value, self.settings)
         return value
+
+    def read(self, source_path):
+        "No-op parser"
+        content = None
+        metadata = {}
+        return content, metadata
 
 
 class _FieldBodyTranslator(HTMLTranslator):
@@ -83,6 +99,17 @@ class PelicanHTMLTranslator(HTMLTranslator):
 
     def depart_abbreviation(self, node):
         self.body.append('</abbr>')
+
+
+class RawReader(Reader):
+    enabled = True
+    file_extensions = ['raw']
+
+    def read(self, source_path):
+        "Read file contents into .content without processing"
+        content = pelican_open(source_path)
+        metadata = {}
+        return content, metadata
 
 
 class RstReader(Reader):
@@ -163,18 +190,15 @@ class MarkdownReader(Reader):
 
 class HtmlReader(Reader):
     file_extensions = ['html', 'htm']
-    _re = re.compile('\<\!\-\-\#\s?[A-z0-9_-]*\s?\:s?[A-z0-9\s_-]*\s?\-\-\>')
+    _re = re.compile('<!--#\s*([A-z0-9_-]*)\s*:\s*([^>]*?)\s*-->')
 
     def read(self, source_path):
         """Parse content and metadata of (x)HTML files"""
         with open(source_path) as content:
             metadata = {'title': 'unnamed'}
-            for i in self._re.findall(content):
-                key = i.split(':')[0][5:].strip()
-                value = i.split(':')[-1][:-3].strip()
+            for key,value in self._re.findall(content):
                 name = key.lower()
                 metadata[name] = self.process_metadata(name, value)
-
             return content, metadata
 
 
@@ -209,18 +233,96 @@ class AsciiDocReader(Reader):
         return content, metadata
 
 
+class JinjaReader(Reader):
+    """Read articles etc. written in Jinja
+
+    Templates may contain optional JSON metadata contained in a
+    delimited block at the start of the file:
+
+    >>> import pprint
+    >>> content = '''---
+    ... {
+    ...   "title": "My super title",
+    ...   "date": "2010-12-03 10:20"
+    ... }
+    ... ---
+    ... {% extends "base.html" %}
+    ... {% block content %}etc. etc.{% endblock content %}
+    ... '''
+    >>> r = JinjaReader(settings={})
+    >>> metadata, content = r.parse(content)
+    >>> pprint.pprint(metadata, width=60)
+    {u'date': datetime.datetime(2010, 12, 3, 10, 20),
+     u'title': u'My super title'}
+    >>> print(content)
+    {% extends "base.html" %}
+    {% block content %}etc. etc.{% endblock content %}
+    <BLANKLINE>
+    """
+    file_extensions = ['jinja']
+    _metadata_delimiter = '---\n'
+
+    def read(self, source_path):
+        """Parse content and metadata of Jinja files"""
+        content = pelican_open(source_path)
+        return self.parse(content)
+
+    def parse(self, content):
+        lines = content.splitlines(True)
+        if lines and lines[0] == self._metadata_delimiter:
+            lines, metadata = self._parse_metadata(lines[1:])
+        else:
+            metadata = {}
+        return ''.join(lines), metadata
+
+    def _parse_metadata(self, lines):
+        metadata_lines = []
+        while lines and lines[0] != self._metadata_delimiter:
+            metadata_lines.append(lines.pop(0))
+        if lines and lines[0] == self._metadata_delimiter:
+            lines.pop(0)
+        metadata_text = ''.join(metadata_lines)
+        metadata = {}
+        for key,value in json.loads(metadata_text).items():
+            name = key.lower()
+            metadata[name] = self.process_metadata(name, value)
+        return lines, metadata
+
+    def postprocess(self, obj, content, context, environment):
+        relative_urls = self.settings.get('RELATIVE_URLS', None)
+        local_context = dict(context)  # local copy
+        if relative_urls:
+            local_context['localsiteurl'] = get_relative_path(obj.url)
+        local_context['content'] = obj
+        template = environment.from_string(content)
+        return template.render(local_context)
+
+
 _EXTENSIONS = {}
 
-for cls in Reader.__subclasses__():
+for cls in [Reader] + Reader.__subclasses__():
     for ext in cls.file_extensions:
         _EXTENSIONS[ext] = cls
 
 
-def read_file(path, fmt=None, settings=None):
-    """Return a reader object using the given format."""
+def read_file(base_path, path, content_class=Page, fmt=None,
+              settings=None, context=None, environment=None,
+              preread_signal=None, preread_sender=None,
+              context_signal=None, context_sender=None):
+    """Return a content object parsed with the given format."""
+    path = os.path.abspath(os.path.join(base_path, path))
+    source_path = os.path.relpath(path, base_path)
     base, ext = os.path.splitext(os.path.basename(path))
     if not fmt:
         fmt = ext[1:]
+
+    logger.debug(
+        'read file {} -> {}'.format(source_path, content_class.__name__))
+
+    if preread_signal:
+        logger.debug(
+            'signal {}.send({})'.format(preread_signal, preread_sender))
+        preread_signal.send(preread_sender)
 
     if fmt not in _EXTENSIONS:
         raise TypeError('Pelican does not know how to parse {}'.format(path))
@@ -234,7 +336,15 @@ def read_file(path, fmt=None, settings=None):
     if not reader.enabled:
         raise ValueError("Missing dependencies for %s" % fmt)
 
-    content, metadata = reader.read(path)
+    metadata = default_metadata(
+        settings=settings, process=reader.process_metadata)
+    metadata.update(path_metadata(
+            full_path=path, source_path=source_path, settings=settings))
+    metadata.update(parse_path_metadata(
+            source_path=source_path, settings=settings,
+            process=reader.process_metadata))
+    content, reader_metadata = reader.read(path)
+    metadata.update(reader_metadata)
 
     # eventually filter the content with typogrify if asked so
     if settings and settings.get('TYPOGRIFY'):
@@ -242,14 +352,64 @@ def read_file(path, fmt=None, settings=None):
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
 
-    file_metadata = settings and settings.get('FILENAME_METADATA')
-    if file_metadata:
-        match = re.match(file_metadata, base)
-        if match:
-            # .items() for py3k compat.
-            for k, v in match.groupdict().items():
-                if k not in metadata:
-                    k = k.lower()  # metadata must be lowercase
-                    metadata[k] = reader.process_metadata(k, v)
+    if context_signal:
+        logger.debug(
+            'signal {}.send({}, <metadata>)'.format(
+                context_signal, context_sender))
+        context_signal.send(context_sender, metadata=metadata)
+    return content_class(
+        content=content,
+        metadata=metadata,
+        settings=settings,
+        source_path=path,
+        context=context,
+        environment=environment,
+        postprocess=reader.postprocess)
 
-    return content, metadata
+def default_metadata(settings=None, process=None):
+    metadata = {}
+    if settings:
+        if 'DEFAULT_CATEGORY' in settings:
+            value = settings['DEFAULT_CATEGORY']
+            if process:
+                value = process('category', value)
+            metadata['category'] = value
+        if 'DEFAULT_DATE' in settings:
+            metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
+    return metadata
+
+def path_metadata(full_path, source_path, settings=None):
+    metadata = {}
+    if settings:
+        if settings.get('DEFAULT_DATE', None) == 'fs':
+            metadata['date'] = datetime.datetime.fromtimestamp(
+                os.stat(full_path).st_ctime)
+        metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
+                source_path, {}))
+    return metadata
+
+def parse_path_metadata(source_path, settings=None, process=None):
+    metadata = {}
+    dirname, basename = os.path.split(source_path)
+    base, ext = os.path.splitext(basename)
+    subdir = os.path.basename(dirname)
+    if settings:
+        checks = []
+        for key,data in [('FILENAME_METADATA', base),
+                         ('PATH_METADATA', source_path),
+                         ]:
+            checks.append((settings.get(key, None), data))
+        if settings.get('USE_FOLDER_AS_CATEGORY', None):
+            checks.insert(0, ('(?P<category>.*)', subdir))
+        for regexp,data in checks:
+            if regexp and data:
+                match = re.match(regexp, data)
+                if match:
+                    # .items() for py3k compat.
+                    for k, v in match.groupdict().items():
+                        if k not in metadata:
+                            k = k.lower()  # metadata must be lowercase
+                            if process:
+                                v = process(k, v)
+                            metadata[k] = v
+    return metadata

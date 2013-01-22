@@ -18,7 +18,7 @@ _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 CONF = {
     'pelican': 'pelican',
     'pelicanopts': '',
-    'basedir': '.',
+    'basedir': os.curdir,
     'ftp_host': 'localhost',
     'ftp_user': 'anonymous',
     'ftp_target_dir': '/',
@@ -146,7 +146,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="A kickstarter for Pelican",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('-p', '--path', default=".",
+    parser.add_argument('-p', '--path', default=os.curdir,
             help="The path to generate the blog into")
     parser.add_argument('-t', '--title', metavar="title",
             help='Set the title of the website')
@@ -166,7 +166,8 @@ needed by Pelican.
 
     '''.format(v=__version__))
 
-    project = os.path.join(os.environ.get('VIRTUAL_ENV', '.'), '.project')
+    project = os.path.join(
+        os.environ.get('VIRTUAL_ENV', os.curdir), '.project')
     if os.path.isfile(project):
         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
         print('Using project associated with current virtual environment.'

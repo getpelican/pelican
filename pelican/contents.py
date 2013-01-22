@@ -9,6 +9,7 @@ import functools
 import os
 import re
 import sys
+import urlparse
 
 from datetime import datetime
 from sys import platform, stdin
@@ -37,7 +38,8 @@ class Page(object):
         return None
 
     def __init__(self, content, metadata=None, settings=None,
-                 source_path=None, context=None):
+                 source_path=None, context=None, environment=None,
+                 postprocess=None):
         # init parameters
         if not metadata:
             metadata = {}
@@ -46,7 +48,11 @@ class Page(object):
 
         self.settings = settings
         self._content = content
+        if context is None:
+            context = {}
         self._context = context
+        self._environment = environment  # Jinja environment
+        self._postprocess = postprocess
         self.translations = []
 
         local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
@@ -80,15 +86,15 @@ class Page(object):
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title)
 
-        if source_path:
-            self.source_path = source_path
+        self.source_path = source_path
 
         # manage the date format
         if not hasattr(self, 'date_format'):
             if hasattr(self, 'lang') and self.lang in settings['DATE_FORMATS']:
                 self.date_format = settings['DATE_FORMATS'][self.lang]
             else:
-                self.date_format = settings['DEFAULT_DATE_FORMAT']
+                self.date_format = settings.get(
+                    'DEFAULT_DATE_FORMAT', '%a %d %B %Y')
 
         if isinstance(self.date_format, tuple):
             locale_string = self.date_format[0]
@@ -103,8 +109,8 @@ class Page(object):
 
         # manage status
         if not hasattr(self, 'status'):
-            self.status = settings['DEFAULT_STATUS']
-            if not settings['WITH_FUTURE_DATES']:
+            self.status = settings.get('DEFAULT_STATUS', 'published')
+            if not settings.get('WITH_FUTURE_DATES', True):
                 if hasattr(self, 'date') and self.date > datetime.now():
                     self.status = 'draft'
 
@@ -113,6 +119,14 @@ class Page(object):
             self._summary = metadata['summary']
 
         signals.content_object_init.send(self.__class__, instance=self)
+
+    def __str__(self):
+        if self.source_path is None:
+            return repr(self)
+        elif six.PY3:
+            return self.source_path or repr(self)
+        else:
+            return str(self.source_path.encode('utf-8', 'replace'))
 
     def check_properties(self):
         """test that each mandatory property is set."""
@@ -124,6 +138,7 @@ class Page(object):
     def url_format(self):
         metadata = copy.copy(self.metadata)
         metadata.update({
+            'path': self.metadata.get('path', self.get_relative_source_path()),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
@@ -138,6 +153,9 @@ class Page(object):
         return self.settings[fq_key].format(**self.url_format)
 
     def get_url_setting(self, key):
+        override = '_{}'.format(key)
+        if hasattr(self, override):
+            return getattr(self, override)
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 
@@ -165,36 +183,47 @@ class Page(object):
             # categories, tags, etc. in the future, but let's keep things
             # simple for now.
             if what == 'filename':
-                if value.startswith('/'):
-                    value = value[1:]
+                scheme,netloc,path,query,fragment = urlparse.urlsplit(value)
+                if scheme or netloc:
+                    raise ValueError(m.groups())
+                if path.startswith('/'):
+                    path = path[1:]
                 else:
                     # relative to the source path of this content
-                    value = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, value)
+                    path = self.get_relative_source_path(
+                        os.path.join(self.relative_dir, path)
                     )
 
-                if value in self._context['filenames']:
+                if path in self._context['filenames']:
                     origin = '/'.join((siteurl,
-                             self._context['filenames'][value].url))
+                             self._context['filenames'][path].url))
                 else:
-                    logger.warning("Unable to find {fn}, skipping url"
-                                    " replacement".format(fn=value))
+                    logger.warning(
+                        'Unable to find {}, skipping url replacement'.format(
+                            path))
 
-            return m.group('markup') + m.group('quote') + origin \
+                link = urlparse.urlunsplit((
+                        scheme, netloc, origin, query, fragment))
+            return m.group('markup') + m.group('quote') + link \
                     + m.group('quote')
 
         return hrefs.sub(replacer, content)
 
     @memoized
     def get_content(self, siteurl):
-        return self._update_content(
+        content = self._update_content(
                 self._get_content() if hasattr(self, "_get_content")
                     else self._content,
                 siteurl)
+        if self._postprocess:
+            content = self._postprocess(
+                obj=self, content=content, context=self._context,
+                environment=self._environment)
+        return content
 
     @property
     def content(self):
-        return self.get_content(self._context['localsiteurl'])
+        return self.get_content(self._context.get('localsiteurl', ''))
 
     def _get_summary(self):
         """Returns the summary of an article, based on the summary metadata
@@ -232,6 +261,8 @@ class Page(object):
         """
         if not source_path:
             source_path = self.source_path
+        if source_path is None:
+            return None
 
         return os.path.relpath(
             os.path.abspath(os.path.join(self.settings['PATH'], source_path)),
@@ -287,6 +318,9 @@ class URLWrapper(object):
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return '<{} {}>'.format(type(self).__name__, str(self))
+
     def _from_settings(self, key, get_page_name=False):
         """Returns URL information as defined in settings. 
         When get_page_name=True returns URL without anything after {slug}
@@ -322,21 +356,28 @@ class Author(URLWrapper):
 
 
 @python_2_unicode_compatible
-class StaticContent(object):
+class Static(Page):
     @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
     def filepath():
         return None
 
-    def __init__(self, src, dst=None, settings=None):
-        if not settings:
-            settings = copy.deepcopy(_DEFAULT_CONFIG)
-        self.src = src
-        self.url = dst or src
-        self.source_path = os.path.join(settings['PATH'], src)
-        self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
+    @deprecated_attribute(old='src', new='source_path', since=(3, 2, 0))
+    def src():
+        return None
 
-    def __str__(self):
-        return self.source_path
+    @deprecated_attribute(old='dst', new='save_as', since=(3, 2, 0))
+    def dst():
+        return None
+
+
+class Direct_Template_Page(Page):
+    # Underscore in name for ._expand_settings naming
+    pass
+
+
+class Template_Page(Page):
+    # Underscore in name for ._expand_settings naming
+    pass
 
 
 def is_valid_content(content, f):
@@ -344,6 +385,7 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError as e:
-        logger.error("Skipping %s: impossible to find informations about"
-                      "'%s'" % (f, e))
+        logger.error(
+            'Skipping {}: impossible to find informations about {!r}'.format(
+                f, e))
         return False

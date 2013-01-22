@@ -32,11 +32,11 @@
                     <li><a href="{{ link }}">{{ title }}</a></li>
                 {% endfor %}
                 {% if DISPLAY_PAGES_ON_MENU %}
-                {% for page in PAGES %}
+                {% for page in page_contents %}
                     <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
                 {% endfor %}
                 {% endif %}
-                {% for cat, null in categories %}
+                {% for cat, null in article_categories %}
                     <li {% if cat == category %}class="active"{% endif %}><a href="{{ SITEURL }}/{{ cat.url }}">{{ cat }}</a></li>
                 {% endfor %}
                 </ul></nav>

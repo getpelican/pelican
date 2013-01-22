@@ -6,14 +6,14 @@
 {% endblock %}
 
 <ol id="post-list">
-{% for article in articles_page.object_list %}
+{% for content in contents_page.object_list %}
         <li><article class="hentry">
-                <header> <h2 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2> </header>
+                <header> <h2 class="entry-title"><a href="{{ SITEURL }}/{{ content.url }}" rel="bookmark" title="Permalink to {{ content.title|striptags }}">{{ content.title }}</a></h2> </header>
                 <footer class="post-info">
-                    <abbr class="published" title="{{ article.date.isoformat() }}"> {{ article.locale_date }} </abbr>
-                    {% if article.author %}<address class="vcard author">By <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a></address>{% endif %}
+                    <abbr class="published" title="{{ content.date.isoformat() }}"> {{ content.locale_date }} </abbr>
+                    {% if content.author %}<address class="vcard author">By <a class="url fn" href="{{ SITEURL }}/{{ content.author.url }}">{{ content.author }}</a></address>{% endif %}
                 </footer><!-- /.post-info -->
-                <div class="entry-content"> {{ article.summary }} </div><!-- /.entry-content -->
+                <div class="entry-content"> {{ content.summary }} </div><!-- /.entry-content -->
         </article></li>
 {% endfor %}
 </ol><!-- /#posts-list -->

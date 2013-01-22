@@ -3,9 +3,9 @@
 <h1>Archives for {{ SITENAME }}</h1>
 
 <dl>
-{% for article in dates %}
-    <dt>{{ article.locale_date }}</dt>
-    <dd><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></dd>
+{% for article in article_dates %}
+    <dt>{{ content.locale_date }}</dt>
+    <dd><a href="{{ SITEURL }}/{{ content.url }}">{{ content.title }}</a></dd>
 {% endfor %}
 </dl>
 {% endblock %}

@@ -150,6 +150,8 @@ That's it! Your site should now be live.
 Writing articles using Pelican
 ==============================
 
+.. _internal_metadata:
+
 File metadata
 --------------
 
@@ -189,6 +191,17 @@ syntax for Markdown posts should follow this pattern::
     Summary: Short version for index and feeds
 
     This is the content of my super blog post.
+
+You can also use HTML (with a file ending in ``.html`` or ``.htm``).
+Metadata for HTML posts is extracted from comments in the page
+content:
+
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <!--# title: My super title -->
+        <!--# date: 2010-12-03 10:20 -->
+    …
 
 Note that, aside from the title, none of this metadata is mandatory: if the
 date is not specified, Pelican can rely on the file's "mtime" timestamp through

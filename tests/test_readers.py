@@ -15,7 +15,16 @@ def _path(*args):
     return os.path.join(CONTENT_PATH, *args)
 
 
-class RstReaderTest(unittest.TestCase):
+class ReaderTest(unittest.TestCase):
+
+    
+    def read_file(self, path, settings=None):
+        # Isolate from future API changes to readers.read_file
+        return readers.read_file(
+            CONTENT_PATH, path, settings=settings)
+
+
+class RstReaderTest(ReaderTest):
 
     def test_article_with_metadata(self):
         reader = readers.RstReader({})
@@ -36,38 +45,36 @@ class RstReaderTest(unittest.TestCase):
             self.assertEquals(value, metadata[key], key)
 
     def test_article_with_filename_metadata(self):
-        content, metadata = readers.read_file(
-                _path('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
-                settings={})
+        page = self.read_file('2012-11-29_rst_w_filename_meta#foo-bar.rst')
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
         }
-        for key, value in metadata.items():
+        for key, value in page.metadata.items():
             self.assertEquals(value, expected[key], key)
 
-        content, metadata = readers.read_file(
-                _path('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
-                settings={
-                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*'
-                    })
+        page = self.read_file(
+            '2012-11-29_rst_w_filename_meta#foo-bar.rst',
+            settings={
+                'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*'
+                })
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
             'date': datetime.datetime(2012, 11, 29),
         }
-        for key, value in metadata.items():
+        for key, value in page.metadata.items():
             self.assertEquals(value, expected[key], key)
 
-        content, metadata = readers.read_file(
-                _path('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
-                settings={
-                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2})_' \
-                                         '_(?P<Slug>.*)' \
-                                         '#(?P<MyMeta>.*)-(?P<author>.*)'
-                    })
+        page = self.read_file(
+            '2012-11-29_rst_w_filename_meta#foo-bar.rst',
+            settings={
+                'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2})_' \
+                                     '_(?P<Slug>.*)' \
+                                     '#(?P<MyMeta>.*)-(?P<author>.*)'
+                })
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
@@ -76,7 +83,7 @@ class RstReaderTest(unittest.TestCase):
             'slug': 'article_with_filename_metadata',
             'mymeta': 'foo',
         }
-        for key, value in metadata.items():
+        for key, value in page.metadata.items():
             self.assertEquals(value, expected[key], key)
 
     def test_article_metadata_key_lowercase(self):
@@ -90,29 +97,28 @@ class RstReaderTest(unittest.TestCase):
     def test_typogrify(self):
         # if nothing is specified in the settings, the content should be
         # unmodified
-        content, _ = readers.read_file(_path('article.rst'))
+        page = self.read_file('article.rst')
         expected = "<p>This is some content. With some stuff to "\
                    "&quot;typogrify&quot;.</p>\n<p>Now with added "\
                    'support for <abbr title="three letter acronym">'\
                    'TLA</abbr>.</p>\n'
 
-        self.assertEqual(content, expected)
+        self.assertEqual(page.content, expected)
 
         try:
             # otherwise, typogrify should be applied
-            content, _ = readers.read_file(_path('article.rst'),
-                                           settings={'TYPOGRIFY': True})
+            page = self.read_file('article.rst', settings={'TYPOGRIFY': True})
             expected = "<p>This is some content. With some stuff to&nbsp;"\
                        "&#8220;typogrify&#8221;.</p>\n<p>Now with added "\
                        'support for <abbr title="three letter acronym">'\
                        '<span class="caps">TLA</span></abbr>.</p>\n'
 
-            self.assertEqual(content, expected)
+            self.assertEqual(page.content, expected)
         except ImportError:
             return unittest.skip('need the typogrify distribution')
 
 
-class MdReaderTest(unittest.TestCase):
+class MdReaderTest(ReaderTest):
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_metadata(self):
@@ -160,9 +166,9 @@ class MdReaderTest(unittest.TestCase):
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_markdown_markup_extension(self):
         # test to ensure the markdown markup extension is being processed as expected
-        content, metadata = readers.read_file(
-                _path('article_with_markdown_markup_extensions.md'),
-                settings={'MD_EXTENSIONS': ['toc', 'codehilite', 'extra']})
+        page = self.read_file(
+            'article_with_markdown_markup_extensions.md',
+            settings={'MD_EXTENSIONS': ['toc', 'codehilite', 'extra']})
         expected = '<div class="toc">\n'\
             '<ul>\n'\
             '<li><a href="#level1">Level1</a><ul>\n'\
@@ -174,40 +180,38 @@ class MdReaderTest(unittest.TestCase):
             '<h2 id="level1">Level1</h2>\n'\
             '<h3 id="level2">Level2</h3>'
 
-        self.assertEqual(content, expected)
+        self.assertEqual(page.content, expected)
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_filename_metadata(self):
-        content, metadata = readers.read_file(
-                _path('2012-11-30_md_w_filename_meta#foo-bar.md'),
-                settings={})
+        page = self.read_file('2012-11-30_md_w_filename_meta#foo-bar.md')
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
         }
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEquals(value, page.metadata[key], key)
 
-        content, metadata = readers.read_file(
-                _path('2012-11-30_md_w_filename_meta#foo-bar.md'),
-                settings={
-                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*'
-                    })
+        page = self.read_file(
+            '2012-11-30_md_w_filename_meta#foo-bar.md',
+            settings={
+                'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*'
+                })
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
             'date': datetime.datetime(2012, 11, 30),
         }
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEquals(value, page.metadata[key], key)
 
-        content, metadata = readers.read_file(
-                _path('2012-11-30_md_w_filename_meta#foo-bar.md'),
-                settings={
-                    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2})'
-                                         '_(?P<Slug>.*)'
-                                         '#(?P<MyMeta>.*)-(?P<author>.*)'
-                    })
+        page = self.read_file(
+            '2012-11-30_md_w_filename_meta#foo-bar.md',
+            settings={
+                'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2})'
+                                     '_(?P<Slug>.*)'
+                                     '#(?P<MyMeta>.*)-(?P<author>.*)'
+                })
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
@@ -216,9 +220,10 @@ class MdReaderTest(unittest.TestCase):
             'mymeta': 'foo',
         }
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEquals(value, page.metadata[key], key)
 
-class AdReaderTest(unittest.TestCase):
+
+class AdReaderTest(ReaderTest):
 
     @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
     def test_article_with_asc_extension(self):

@@ -31,14 +31,22 @@ SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
 # global metadata to all the contents
 DEFAULT_METADATA = (('yeah', 'it is'),)
 
-# static paths will be copied under the same name
-STATIC_PATHS = ["pictures", ]
+# path-specific metadata
+EXTRA_PATH_METADATA = {
+    'extra/robots.txt': {'path': 'robots.txt'},
+    'pages/jinja2_template.html': {'path': 'jinja2_template.html'},
+    }
 
-# A list of files to copy from the source to the destination
-FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
+# static paths will be copied without parsing their contents
+STATIC_PATHS = [
+    'pictures',
+    'extra/robots.txt',
+    ]
 
 # custom page generated with a jinja2 template
-TEMPLATE_PAGES = {'pages/jinja2_template.html': 'jinja2_template.html'}
+TEMPLATE_PAGE_PATHS = [
+    'pages/jinja2_template.html',
+    ]
 
 # foobar will not be used, because it's not in caps. All configuration keys
 # have to be in caps

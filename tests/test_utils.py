@@ -68,9 +68,9 @@ class TestUtils(LoggedTestCase):
 
     def test_get_relative_path(self):
 
-        samples = (('test/test.html', '..'),
-                   ('test/test/test.html', '../..'),
-                   ('test.html', '.'))
+        samples = (('test/test.html', os.pardir),
+                   ('test/test/test.html', os.path.join(os.pardir, os.pardir)),
+                   ('test.html', os.curdir))
 
         for value, expected in samples:
             self.assertEquals(utils.get_relative_path(value), expected)
