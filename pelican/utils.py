@@ -14,7 +14,7 @@ import fnmatch
 from collections import defaultdict, Hashable
 from functools import partial
 
-from codecs import open
+from codecs import open, BOM_UTF8
 from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
@@ -192,7 +192,10 @@ class pelican_open(object):
         self.filename = filename
 
     def __enter__(self):
-        return open(self.filename, encoding='utf-8').read()
+        content = open(self.filename, encoding='utf-8').read()
+        if content[0] == BOM_UTF8.decode('utf8'):
+            content = content[1:]
+        return content
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
