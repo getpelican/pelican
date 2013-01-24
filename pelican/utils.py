@@ -14,7 +14,7 @@ import fnmatch
 from collections import defaultdict, Hashable
 from functools import partial
 
-from codecs import open
+from codecs import open, BOM_UTF8
 from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
@@ -29,7 +29,7 @@ def strftime(date, date_format):
 
     This :func:`strftime()` is compatible to Python 2 and 3. In both cases,
     input and output is always unicode.
-        
+
     Still, Python 3's :func:`strftime()` seems to somehow "normalize" unicode
     chars in the format string. So if e.g. your format string contains 'ø' or
     'ä', the result will be 'o' and 'a'.
@@ -56,7 +56,7 @@ def strftime(date, date_format):
         #        "Øl trinken beim Besäufnis"
         #    --> "&#216;l trinken beim Bes&#228;ufnis"
         date_format = date_format.encode('ascii',
-            errors="xmlcharrefreplace")
+                                         errors="xmlcharrefreplace")
         result = date.strftime(date_format)
         # strftime() returns an encoded byte string
         # which we must decode into unicode.
@@ -67,17 +67,15 @@ def strftime(date, date_format):
             result = unicode(result)
         # Convert XML character references back to unicode characters.
         if "&#" in result:
-            result = re.sub(r'&#(?P<num>\d+);'
-                , lambda m: unichr(int(m.group('num')))
-                , result
-            )
+            result = re.sub(r'&#(?P<num>\d+);',
+                            lambda m: unichr(int(m.group('num'))),
+                            result)
         return result
-
-
 
 #----------------------------------------------------------------------------
 # Stolen from Django: django.utils.encoding
 #
+
 
 def python_2_unicode_compatible(klass):
     """
@@ -94,35 +92,39 @@ def python_2_unicode_compatible(klass):
 
 #----------------------------------------------------------------------------
 
+
 class NoFilesError(Exception):
     pass
 
 
 class memoized(object):
-   '''Decorator. Caches a function's return value each time it is called.
-   If called later with the same arguments, the cached value is returned
-   (not reevaluated).
-   '''
-   def __init__(self, func):
-      self.func = func
-      self.cache = {}
-   def __call__(self, *args):
-      if not isinstance(args, Hashable):
-         # uncacheable. a list, for instance.
-         # better to not cache than blow up.
-         return self.func(*args)
-      if args in self.cache:
-         return self.cache[args]
-      else:
-         value = self.func(*args)
-         self.cache[args] = value
-         return value
-   def __repr__(self):
-      '''Return the function's docstring.'''
-      return self.func.__doc__
-   def __get__(self, obj, objtype):
-      '''Support instance methods.'''
-      return partial(self.__call__, obj)
+    '''Decorator. Caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned
+    (not reevaluated).
+    '''
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+
+    def __call__(self, *args):
+        if not isinstance(args, Hashable):
+            # uncacheable. a list, for instance.
+            # better to not cache than blow up.
+            return self.func(*args)
+        if args in self.cache:
+            return self.cache[args]
+        else:
+            value = self.func(*args)
+            self.cache[args] = value
+            return value
+
+    def __repr__(self):
+        '''Return the function's docstring.'''
+        return self.func.__doc__
+
+    def __get__(self, obj, objtype):
+        '''Support instance methods.'''
+        return partial(self.__call__, obj)
 
 
 def deprecated_attribute(old, new, since=None, remove=None, doc=None):
@@ -151,7 +153,7 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
         message.append('.  Use {} instead.'.format(new))
         logger.warning(''.join(message))
         logger.debug(''.join(
-                six.text_type(x) for x in traceback.format_stack()))
+            six.text_type(x) for x in traceback.format_stack()))
 
     def fget(self):
         _warn()
@@ -165,6 +167,7 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
         return property(fget=fget, fset=fset, doc=doc)
 
     return decorator
+
 
 def get_date(string):
     """Return a datetime object from a string.
@@ -187,7 +190,7 @@ def get_date(string):
 
 def pelican_open(path):
     """Open a file and return it's content"""
-    return open(path, encoding='utf-8').read()
+    return open(path, encoding='utf-8').read().lstrip(unicode(BOM_UTF8, "utf8"))
 
 
 def slugify(value):
@@ -245,7 +248,7 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
                 shutil.rmtree(destination_)
                 shutil.copytree(source_, destination_)
                 logger.info('replacement of %s with %s' % (source_,
-                    destination_))
+                                                           destination_))
 
     elif os.path.isfile(source_):
         dest_dir = os.path.dirname(destination_)
@@ -255,6 +258,7 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
         logger.info('copying %s to %s' % (source_, destination_))
     else:
         logger.warning('skipped copy %s to %s' % (source_, destination_))
+
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
@@ -394,10 +398,10 @@ def process_translations(content_list):
 
         if not slug:
             logger.warning((
-                    'empty slug for {!r}. '
-                    'You can fix this by adding a title or a slug to your '
-                    'content'
-                    ).format(default_lang_items[0].source_path))
+                'empty slug for {!r}. '
+                'You can fix this by adding a title or a slug to your '
+                'content')
+                .format(default_lang_items[0].source_path))
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -406,6 +410,7 @@ def process_translations(content_list):
 
 
 LAST_MTIME = 0
+
 
 def files_changed(path, extensions, ignores=[]):
     """Return True if the files have changed since the last check"""
