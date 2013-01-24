@@ -14,7 +14,7 @@ import fnmatch
 from collections import defaultdict, Hashable
 from functools import partial
 
-from codecs import open
+from codecs import open, BOM_UTF8
 from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
@@ -187,7 +187,7 @@ def get_date(string):
 
 def pelican_open(path):
     """Open a file and return it's content"""
-    return open(path, encoding='utf-8').read()
+    return open(path, encoding='utf-8').read().lstrip(unicode(BOM_UTF8, "utf8"))
 
 
 def slugify(value):
