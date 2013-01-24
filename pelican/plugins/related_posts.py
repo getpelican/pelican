@@ -13,7 +13,7 @@ To enable, add
     from pelican.plugins import related_posts
     PLUGINS = [related_posts]
 
-to your settings.py.
+to your settings's file pelicanconf.py .
 
 Usage
 -----
