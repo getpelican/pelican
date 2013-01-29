@@ -223,10 +223,10 @@ class HTMLReader(Reader):
                 self._data_buffer += self.build_tag(tag, attrs, True)
 
         def handle_comment(self, data):
-            if self._in_body and data.strip() == 'PELICAN_END_SUMMARY':
-                self.metadata['summary'] = self._data_buffer
-            else:
-                self._data_buffer += '<!--{}-->'.format(data)
+        #    if self._in_body and data.strip() == 'PELICAN_END_SUMMARY':
+        #        self.metadata['summary'] = self._data_buffer
+        #    else:
+            self._data_buffer += '<!--{}-->'.format(data)
 
         def handle_data(self, data):
             self._data_buffer += data
@@ -258,7 +258,7 @@ class HTMLReader(Reader):
 
     def read(self, filename):
         """Parse content and metadata of HTML files"""
-        with open(filename) as content:
+        with pelican_open(filename) as content:
             parser = self._HTMLParser(self.settings)
             parser.feed(content)
             parser.close()
