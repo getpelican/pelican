@@ -286,9 +286,9 @@ class HTMLReaderTest(unittest.TestCase):
         content, metadata = reader.read(_path('article_with_metadata.html'))
         expected = {
             'category': 'yeah',
-            'author': u'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'title': 'This is a super article !',
-            'summary': u'''Summary and stuff''',
+            'summary': 'Summary and stuff',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
