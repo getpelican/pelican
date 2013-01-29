@@ -202,23 +202,17 @@ of ``meta`` tags, the title out of the ``title`` tag, and the body out of the
             <meta name="date" contents="2012-07-09 22:28" />
             <meta name="category" contents="yeah" />
             <meta name="author" contents="Alexis Métaireau" />
+            <meta name="summary" contents="Short version for index and feeds" />
         </head>
         <body>
             This is the content of my super blog post.
-            <!-- PELICAN_END_SUMMARY -->
-            Content continues down here.
         </body>
     </html>
 
-With HTML, there are two simple exceptions to the standard metadata. First, 
+With HTML, there is one simple exception to the standard metadata.
 ``tags`` can be specified either with the ``tags`` metadata, as is standard in 
 Pelican, or with the ``keywords`` metadata, as is standard in HTML. The two can 
-be used interchangeably. The second note is that summaries are done differently 
-in HTML posts. Either a ``summary`` metadata tag can be supplied, or, as seen 
-above, you can place an HTML comment, ``<!-- PELICAN_END_SUMMARY -->``, that 
-Pelican will recognize. Everything before the comment will be treated as a 
-summary. The content of the post will contain everything in the body tag, with 
-the special comment stripped out.
+be used interchangeably.
 
 Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified, Pelican will rely on the file's "mtime" timestamp, and the
