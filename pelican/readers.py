@@ -26,7 +26,10 @@ except ImportError:
 import re
 
 import cgi
-from HTMLParser import HTMLParser
+try:
+    from html.parser import HTMLParser
+except ImportError:
+    from HTMLParser import HTMLParser
 
 from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
