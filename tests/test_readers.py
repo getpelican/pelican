@@ -264,25 +264,16 @@ class AdReaderTest(unittest.TestCase):
 class HTMLReaderTest(unittest.TestCase):
     def test_article_with_comments(self):
         reader = readers.HTMLReader({})
-        content, metadata = reader.read(_filename('article_with_comments.html'))
-        expected = {
-            'summary': '''
-        Summary comment is not included.
-        ''',
-        }
-
-        for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+        content, metadata = reader.read(_path('article_with_comments.html'))
 
         self.assertEquals('''
-        Summary comment is not included.
-        
-        <!--  But this comment is (including extra whitespace)    -->
+        Body content
+        <!--  This comment is included (including extra whitespace)   -->
     ''', content)
 
     def test_article_with_keywords(self):
         reader = readers.HTMLReader({})
-        content, metadata = reader.read(_filename('article_with_keywords.html'))
+        content, metadata = reader.read(_path('article_with_keywords.html'))
         expected = {
             'tags': ['foo', 'bar', 'foobar'],
         }
@@ -292,15 +283,12 @@ class HTMLReaderTest(unittest.TestCase):
 
     def test_article_with_metadata(self):
         reader = readers.HTMLReader({})
-        content, metadata = reader.read(_filename('article_with_metadata.html'))
+        content, metadata = reader.read(_path('article_with_metadata.html'))
         expected = {
             'category': 'yeah',
             'author': u'Alexis Métaireau',
             'title': 'This is a super article !',
-            'summary': u'''
-        Multi-line metadata should be supported
-        as well as <strong>inline markup</strong>.
-        ''',
+            'summary': u'''Summary and stuff''',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
@@ -313,6 +301,6 @@ class HTMLReaderTest(unittest.TestCase):
     def test_article_metadata_key_lowercase(self):
         """Keys of metadata should be lowercase."""
         reader = readers.HTMLReader({})
-        content, metadata = reader.read(_filename('article_with_uppercase_metadata.html'))
+        content, metadata = reader.read(_path('article_with_uppercase_metadata.html'))
         self.assertIn('category', metadata, "Key should be lowercase.")
         self.assertEquals('Yeah', metadata.get('category'), "Value keeps cases.")
