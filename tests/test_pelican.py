@@ -1,15 +1,16 @@
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest  # NOQA
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 
 import os
 from filecmp import dircmp
-
-from .support import temporary_folder
+from tempfile import mkdtemp
+from shutil import rmtree
+import locale
+import logging
 
 from pelican import Pelican
 from pelican.settings import read_settings
+from .support import LoggedTestCase
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.sep.join((CURRENT_DIR, "..", "samples")))
@@ -19,31 +20,73 @@ INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
 SAMPLE_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf.py")
 
 
-class TestPelican(unittest.TestCase):
+def recursiveDiff(dcmp):
+    diff = {
+            'diff_files': [os.sep.join((dcmp.right, f))
+                for f in dcmp.diff_files],
+            'left_only': [os.sep.join((dcmp.right, f))
+                for f in dcmp.left_only],
+            'right_only': [os.sep.join((dcmp.right, f))
+                for f in dcmp.right_only],
+            }
+    for sub_dcmp in dcmp.subdirs.values():
+        for k, v in recursiveDiff(sub_dcmp).items():
+            diff[k] += v
+    return diff
+
+
+class TestPelican(LoggedTestCase):
     # general functional testing for pelican. Basically, this test case tries
     # to run pelican in different situations and see how it behaves
 
-    @unittest.skip("Test failing")
+    def setUp(self):
+        super(TestPelican, self).setUp()
+        self.temp_path = mkdtemp()
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
+
+    def tearDown(self):
+        rmtree(self.temp_path)
+        locale.setlocale(locale.LC_ALL, self.old_locale)
+        super(TestPelican, self).tearDown()
+
+    def assertFilesEqual(self, diff):
+        msg = "some generated files differ from the expected functional " \
+              "tests output.\n" \
+              "This is probably because the HTML generated files " \
+              "changed. If these changes are normal, please refer " \
+              "to docs/contribute.rst to update the expected " \
+              "output of the functional tests."
+
+        self.assertEqual(diff['left_only'], [], msg=msg)
+        self.assertEqual(diff['right_only'], [], msg=msg)
+        self.assertEqual(diff['diff_files'], [], msg=msg)
+
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
-        # ones and generate the output without raising any exception / issuing
-        # any warning.
-        with temporary_folder() as temp_path:
-            pelican = Pelican(path=INPUT_PATH, output_path=temp_path)
-            pelican.run()
-            diff = dircmp(temp_path, os.sep.join((OUTPUT_PATH, "basic")))
-            self.assertEqual(diff.left_only, [])
-            self.assertEqual(diff.right_only, [])
-            self.assertEqual(diff.diff_files, [])
+        # ones and generate correct output without raising any exception
+        settings = read_settings(path=None, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'LOCALE': locale.normalize('en_US'),
+            })
+        pelican = Pelican(settings=settings)
+        pelican.run()
+        dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "basic")))
+        self.assertFilesEqual(recursiveDiff(dcmp))
+        self.assertLogCountEqual(
+            count=10,
+            msg="Unable to find.*skipping url replacement",
+            level=logging.WARNING)
 
-    @unittest.skip("Test failing")
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
-        with temporary_folder() as temp_path:
-            pelican = Pelican(path=INPUT_PATH, output_path=temp_path,
-                              settings=read_settings(SAMPLE_CONFIG))
-            pelican.run()
-            diff = dircmp(temp_path, os.sep.join((OUTPUT_PATH, "custom")))
-            self.assertEqual(diff.left_only, [])
-            self.assertEqual(diff.right_only, [])
-            self.assertEqual(diff.diff_files, [])
+        settings = read_settings(path=SAMPLE_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'LOCALE': locale.normalize('en_US'),
+            })
+        pelican = Pelican(settings=settings)
+        pelican.run()
+        dcmp = dircmp(self.temp_path, os.sep.join((OUTPUT_PATH, "custom")))
+        self.assertFilesEqual(recursiveDiff(dcmp))

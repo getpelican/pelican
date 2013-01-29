@@ -9,3 +9,7 @@ build
 dist
 tags
 .tox
+.coverage
+htmlcov
+six-*.egg/
+*.orig

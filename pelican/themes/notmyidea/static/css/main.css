@@ -70,9 +70,6 @@ p {margin-bottom: 1.143em;}
 strong, b {font-weight: bold;}
 em, i {font-style: italic;}
 
-::-moz-selection {background: #F6CF74; color: #fff;}
-::selection {background: #F6CF74; color: #fff;}
-
 /* Lists */
 ul {
 	list-style: outside disc;
@@ -100,7 +97,7 @@ dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
 
-pre{background-color: #000; padding: 10px; color: #fff; margin: 10px; overflow: auto;}
+pre{background-color:  rgb(238, 238, 238); padding: 10px; margin: 10px; overflow: auto;}
 
 /* Quotes */
 blockquote {
@@ -144,8 +141,8 @@ aside, nav, article, figure {
 
 /***** Layout *****/
 .body {clear: both; margin: 0 auto; width: 800px;}
-img.right figure.right {float: right; margin: 0 0 2em 2em;}
-img.left, figure.left {float: right; margin: 0 0 2em 2em;}
+img.right, figure.right {float: right; margin: 0 0 2em 2em;}
+img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 
 /*
 	Header
@@ -163,7 +160,6 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 		font-weight: bold;
 		margin: 0 0 .6em .2em;
 		text-decoration: none;
-		width: 427px;
 	}
 	#banner h1 a:hover, #banner h1 a:active {
 		background: none;
@@ -312,7 +308,11 @@ img.left, figure.left {float: right; margin: 0 0 2em 2em;}
 		.social a[type$='atom+xml'], .social a[type$='rss+xml'] {background-image: url('../images/icons/rss.png');}
 		.social a[href*='twitter.com'] {background-image: url('../images/icons/twitter.png');}
 		.social a[href*='linkedin.com'] {background-image: url('../images/icons/linkedin.png');}
-		.social a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.org');}
+		.social a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.png');}
+		.social a[href*='github.com'],
+		.social a[href*='git.io'] {background-image: url('../images/icons/github.png');}
+		.social a[href*='gittip.com'] {background-image: url('../images/icons/gittip.png');}
+		.social a[href*='plus.google.com'] {background-image: url('../images/icons/google-plus.png');}
 
 /*
 	About

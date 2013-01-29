@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
+import copy
+import imp
+import inspect
 import os
 import locale
 import logging
@@ -21,18 +27,21 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'MARKUP': ('rst', 'md'),
                    'STATIC_PATHS': ['images', ],
                    'THEME_STATIC_PATHS': ['static', ],
-                   'FEED': 'feeds/all.atom.xml',
-                   'CATEGORY_FEED': 'feeds/%s.atom.xml',
-                   'TRANSLATION_FEED': 'feeds/all-%s.atom.xml',
+                   'FEED_ALL_ATOM': 'feeds/all.atom.xml',
+                   'CATEGORY_FEED_ATOM': 'feeds/%s.atom.xml',
+                   'TRANSLATION_FEED_ATOM': 'feeds/all-%s.atom.xml',
                    'FEED_MAX_ITEMS': '',
+                   'SITEURL': '',
                    'SITENAME': 'A Pelican Blog',
                    'DISPLAY_PAGES_ON_MENU': True,
                    'PDF_GENERATOR': False,
+                   'OUTPUT_SOURCES': False,
+                   'OUTPUT_SOURCES_EXTENSION': '.text',
+                   'USE_FOLDER_AS_CATEGORY': True,
                    'DEFAULT_CATEGORY': 'misc',
-                   'FALLBACK_ON_FS_DATE': True,
                    'WITH_FUTURE_DATES': True,
                    'CSS_FILE': 'main.css',
-                   'REVERSE_ARCHIVE_ORDER': False,
+                   'NEWEST_FIRST_ARCHIVES': True,
                    'REVERSE_CATEGORY_ORDER': False,
                    'DELETE_OUTPUT_DIRECTORY': False,
                    'ARTICLE_URL': '{slug}.html',
@@ -47,13 +56,14 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'CATEGORY_SAVE_AS': 'category/{slug}.html',
                    'TAG_URL': 'tag/{slug}.html',
                    'TAG_SAVE_AS': 'tag/{slug}.html',
-                   'AUTHOR_URL': u'author/{slug}.html',
-                   'AUTHOR_SAVE_AS': u'author/{slug}.html',
+                   'AUTHOR_URL': 'author/{slug}.html',
+                   'AUTHOR_SAVE_AS': 'author/{slug}.html',
                    'RELATIVE_URLS': True,
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
                    'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
+                   'EXTRA_TEMPLATES_PATHS': [],
                    'PAGINATED_DIRECT_TEMPLATES': ('index', ),
                    'PELICAN_CLASS': 'pelican.Pelican',
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
@@ -63,59 +73,83 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_PAGINATION': False,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
+                   'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
                    'FILES_TO_COPY': (),
                    'DEFAULT_STATUS': 'published',
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
-                   'LESS_GENERATOR': False,
                    'SUMMARY_MAX_LENGTH': 50,
-                   'WEBASSETS': False,
                    'PLUGINS': [],
+                   'TEMPLATE_PAGES': {},
+                   'IGNORE_FILES': []
                    }
 
 
-def read_settings(filename=None):
-    if filename:
-        local_settings = get_settings_from_file(filename)
+def read_settings(path=None, override=None):
+    if path:
+        local_settings = get_settings_from_file(path)
+        # Make the paths relative to the settings file
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
+            if p in local_settings and local_settings[p] is not None \
+                    and not isabs(local_settings[p]):
+                absp = os.path.abspath(os.path.normpath(os.path.join(
+                            os.path.dirname(path), local_settings[p])))
+                if p != 'THEME' or os.path.exists(absp):
+                    local_settings[p] = absp
     else:
-        local_settings = _DEFAULT_CONFIG
-    configured_settings = configure_settings(local_settings, None, filename)
-    return configured_settings
+        local_settings = copy.deepcopy(_DEFAULT_CONFIG)
+
+    if override:
+        local_settings.update(override)
+
+    return configure_settings(local_settings)
 
 
-def get_settings_from_file(filename, default_settings=None):
-    """Load a Python file into a dictionary.
+def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
     """
-    if default_settings == None:
-        default_settings = _DEFAULT_CONFIG
-    context = default_settings.copy()
-    if filename:
-        tempdict = {}
-        execfile(filename, tempdict)
-        for key in tempdict:
-            if key.isupper():
-                context[key] = tempdict[key]
+    Load settings from a module, returning a dict.
+    """
+
+    context = copy.deepcopy(default_settings)
+    if module is not None:
+        context.update(
+                (k, v) for k, v in inspect.getmembers(module) if k.isupper())
     return context
 
 
-def configure_settings(settings, default_settings=None, filename=None):
-    """Provide optimizations, error checking, and warnings for loaded settings"""
-    if default_settings is None:
-        default_settings = _DEFAULT_CONFIG
+def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
+    """
+    Load settings from a file path, returning a dict.
 
-    # Make the paths relative to the settings file
-    if filename:
-        for path in ['PATH', 'OUTPUT_PATH']:
-            if path in settings:
-                if settings[path] is not None and not isabs(settings[path]):
-                    settings[path] = os.path.abspath(os.path.normpath(
-                        os.path.join(os.path.dirname(filename), settings[path]))
-                    )
+    """
+
+    name = os.path.basename(path).rpartition('.')[0]
+    module = imp.load_source(name, path)
+    return get_settings_from_module(module, default_settings=default_settings)
+
+
+def configure_settings(settings):
+    """
+    Provide optimizations, error checking, and warnings for loaded settings
+    """
+    if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
+        raise Exception('You need to specify a path containing the content'
+                        ' (see pelican --help for more information)')
+
+    # find the theme in pelican.theme if the given one does not exists
+    if not os.path.isdir(settings['THEME']):
+        theme_path = os.sep.join([os.path.dirname(
+            os.path.abspath(__file__)), "themes/%s" % settings['THEME']])
+        if os.path.exists(theme_path):
+            settings['THEME'] = theme_path
+        else:
+            raise Exception("Impossible to find the theme %s"
+                            % settings['THEME'])
 
     # if locales is not a list, make it one
     locales = settings['LOCALE']
 
-    if isinstance(locales, basestring):
+    if isinstance(locales, six.string_types):
         locales = [locales]
 
     # try to set the different locales, fallback on the default.
@@ -124,8 +158,8 @@ def configure_settings(settings, default_settings=None, filename=None):
 
     for locale_ in locales:
         try:
-            locale.setlocale(locale.LC_ALL, locale_)
-            break  # break if it is successfull
+            locale.setlocale(locale.LC_ALL, str(locale_))
+            break  # break if it is successful
         except locale.Error:
             pass
     else:
@@ -142,10 +176,21 @@ def configure_settings(settings, default_settings=None, filename=None):
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    if (('FEED' in settings) or ('FEED_RSS' in settings)) and (not 'FEED_DOMAIN' in settings):
-        logger.warn("Since feed URLs should always be absolute, you should specify "
-                 "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
-                 "http://www.example.com')")
+    feed_keys = ['FEED_ATOM', 'FEED_RSS',
+                 'FEED_ALL_ATOM', 'FEED_ALL_RSS',
+                 'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+                 'TAG_FEED_ATOM', 'TAG_FEED_RSS',
+                 'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
+                ]
+
+    if any(settings.get(k) for k in feed_keys):
+        if not settings.get('FEED_DOMAIN'):
+            logger.warn("Since feed URLs should always be absolute, you should specify "
+                     "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
+                     "http://www.example.com')")
+
+        if not settings.get('SITEURL'):
+            logger.warn("Feeds generated without SITEURL set properly may not be valid")
 
     if not 'TIMEZONE' in settings:
         logger.warn("No timezone information specified in the settings. Assuming"
@@ -153,12 +198,23 @@ def configure_settings(settings, default_settings=None, filename=None):
                  "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
                  "for more information")
 
-    if 'WEBASSETS' in settings and settings['WEBASSETS'] is not False:
-        try:
-            from webassets.ext.jinja2 import AssetsExtension
-            settings['JINJA_EXTENSIONS'].append(AssetsExtension)
-        except ImportError:
-            logger.warn("You must install the webassets module to use WEBASSETS.")
-            settings['WEBASSETS'] = False
+    if 'LESS_GENERATOR' in settings:
+        logger.warn("The LESS_GENERATOR setting has been removed in favor "
+                    "of the Webassets plugin")
+
+    if 'OUTPUT_SOURCES_EXTENSION' in settings:
+        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], six.string_types):
+            settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
+            logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
+                       " falling back to the default extension " +
+                       _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
+
+    filename_metadata = settings.get('FILENAME_METADATA')
+    if filename_metadata and not isinstance(filename_metadata, six.string_types):
+        logger.error("Detected misconfiguration with FILENAME_METADATA"
+                " setting (must be string or compiled pattern), falling"
+                "back to the default")
+        settings['FILENAME_METADATA'] = \
+                _DEFAULT_CONFIG['FILENAME_METADATA']
 
     return settings

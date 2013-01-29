@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 __all__ = [
     'init'
 ]
@@ -9,7 +12,7 @@ import logging
 from logging import Formatter, getLogger, StreamHandler, DEBUG
 
 
-RESET_TERM = u'\033[0;m'
+RESET_TERM = '\033[0;m'
 
 COLOR_CODES = {
     'red': 31,
@@ -24,37 +27,38 @@ COLOR_CODES = {
 def ansi(color, text):
     """Wrap text in an ansi escape sequence"""
     code = COLOR_CODES[color]
-    return u'\033[1;{0}m{1}{2}'.format(code, text, RESET_TERM)
+    return '\033[1;{0}m{1}{2}'.format(code, text, RESET_TERM)
 
 
 class ANSIFormatter(Formatter):
     """
-    Convert a `logging.LogReport' object into colored text, using ANSI escape sequences.
+    Convert a `logging.LogRecord' object into colored text, using ANSI escape sequences.
     """
     ## colors:
 
     def format(self, record):
-        if record.levelname is 'INFO':
-            return ansi('cyan', '-> ') + unicode(record.msg)
-        elif record.levelname is 'WARNING':
-            return ansi('yellow', record.levelname) + ': ' + unicode(record.msg)
-        elif record.levelname is 'ERROR':
-            return ansi('red', record.levelname) + ': ' + unicode(record.msg)
-        elif record.levelname is 'CRITICAL':
-            return ansi('bgred', record.levelname) + ': ' + unicode(record.msg)
-        elif record.levelname is 'DEBUG':
-            return ansi('bggrey', record.levelname) + ': ' + unicode(record.msg)
+        msg = str(record.msg)
+        if record.levelname == 'INFO':
+            return ansi('cyan', '-> ') + msg
+        elif record.levelname == 'WARNING':
+            return ansi('yellow', record.levelname) + ': ' + msg
+        elif record.levelname == 'ERROR':
+            return ansi('red', record.levelname) + ': ' + msg
+        elif record.levelname == 'CRITICAL':
+            return ansi('bgred', record.levelname) + ': ' + msg
+        elif record.levelname == 'DEBUG':
+            return ansi('bggrey', record.levelname) + ': ' + msg
         else:
-            return ansi('white', record.levelname) + ': ' + unicode(record.msg)
+            return ansi('white', record.levelname) + ': ' + msg
 
 
 class TextFormatter(Formatter):
     """
-    Convert a `logging.LogReport' object into text.
+    Convert a `logging.LogRecord' object into text.
     """
 
     def format(self, record):
-        if not record.levelname or record.levelname is 'INFO':
+        if not record.levelname or record.levelname == 'INFO':
             return record.msg
         else:
             return record.levelname + ': ' + record.msg

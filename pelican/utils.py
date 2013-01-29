@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import os
 import re
 import pytz
 import shutil
+import traceback
 import logging
-from collections import defaultdict
+import errno
+import locale
+import fnmatch
+from collections import defaultdict, Hashable
+from functools import partial
 
-from codecs import open as _open
+from codecs import open
 from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
@@ -14,6 +22,149 @@ from operator import attrgetter
 
 logger = logging.getLogger(__name__)
 
+
+def strftime(date, date_format):
+    """
+    Replacement for the builtin strftime().
+
+    This :func:`strftime()` is compatible to Python 2 and 3. In both cases,
+    input and output is always unicode.
+        
+    Still, Python 3's :func:`strftime()` seems to somehow "normalize" unicode
+    chars in the format string. So if e.g. your format string contains 'ø' or
+    'ä', the result will be 'o' and 'a'.
+
+    See here for an `extensive testcase <https://github.com/dmdm/test_strftime>`_.
+
+    :param date: Any object that sports a :meth:`strftime()` method.
+    :param date_format: Format string, can always be unicode.
+    :returns: Unicode string with formatted date.
+    """
+    # As tehkonst confirmed, above mentioned testcase runs correctly on
+    # Python 2 and 3 on Windows as well. Thanks.
+    if six.PY3:
+        # It could be so easy... *sigh*
+        return date.strftime(date_format)
+        # TODO Perhaps we should refactor again, so that the
+        # xmlcharrefreplace-regex-dance is always done, regardless
+        # of the Python version.
+    else:
+        # We must ensure that the format string is an encoded byte
+        # string, ASCII only WTF!!!
+        # But with "xmlcharrefreplace" our formatted date will produce
+        # *yuck* like this:
+        #        "Øl trinken beim Besäufnis"
+        #    --> "&#216;l trinken beim Bes&#228;ufnis"
+        date_format = date_format.encode('ascii',
+            errors="xmlcharrefreplace")
+        result = date.strftime(date_format)
+        # strftime() returns an encoded byte string
+        # which we must decode into unicode.
+        lang_code, enc = locale.getlocale(locale.LC_ALL)
+        if enc:
+            result = result.decode(enc)
+        else:
+            result = unicode(result)
+        # Convert XML character references back to unicode characters.
+        if "&#" in result:
+            result = re.sub(r'&#(?P<num>\d+);'
+                , lambda m: unichr(int(m.group('num')))
+                , result
+            )
+        return result
+
+
+
+#----------------------------------------------------------------------------
+# Stolen from Django: django.utils.encoding
+#
+
+def python_2_unicode_compatible(klass):
+    """
+    A decorator that defines __unicode__ and __str__ methods under Python 2.
+    Under Python 3 it does nothing.
+
+    To support Python 2 and 3 with a single code base, define a __str__ method
+    returning text and apply this decorator to the class.
+    """
+    if not six.PY3:
+        klass.__unicode__ = klass.__str__
+        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
+    return klass
+
+#----------------------------------------------------------------------------
+
+class NoFilesError(Exception):
+    pass
+
+
+class memoized(object):
+   '''Decorator. Caches a function's return value each time it is called.
+   If called later with the same arguments, the cached value is returned
+   (not reevaluated).
+   '''
+   def __init__(self, func):
+      self.func = func
+      self.cache = {}
+   def __call__(self, *args):
+      if not isinstance(args, Hashable):
+         # uncacheable. a list, for instance.
+         # better to not cache than blow up.
+         return self.func(*args)
+      if args in self.cache:
+         return self.cache[args]
+      else:
+         value = self.func(*args)
+         self.cache[args] = value
+         return value
+   def __repr__(self):
+      '''Return the function's docstring.'''
+      return self.func.__doc__
+   def __get__(self, obj, objtype):
+      '''Support instance methods.'''
+      return partial(self.__call__, obj)
+
+
+def deprecated_attribute(old, new, since=None, remove=None, doc=None):
+    """Attribute deprecation decorator for gentle upgrades
+
+    For example:
+
+        class MyClass (object):
+            @deprecated_attribute(
+                old='abc', new='xyz', since=(3, 2, 0), remove=(4, 1, 3))
+            def abc(): return None
+
+            def __init__(self):
+                xyz = 5
+
+    Note that the decorator needs a dummy method to attach to, but the
+    content of the dummy method is ignored.
+    """
+    def _warn():
+        version = '.'.join(six.text_type(x) for x in since)
+        message = ['{} has been deprecated since {}'.format(old, version)]
+        if remove:
+            version = '.'.join(six.text_type(x) for x in remove)
+            message.append(
+                ' and will be removed by version {}'.format(version))
+        message.append('.  Use {} instead.'.format(new))
+        logger.warning(''.join(message))
+        logger.debug(''.join(
+                six.text_type(x) for x in traceback.format_stack()))
+
+    def fget(self):
+        _warn()
+        return getattr(self, new)
+
+    def fset(self, value):
+        _warn()
+        setattr(self, new, value)
+
+    def decorator(dummy):
+        return property(fget=fget, fset=fset, doc=doc)
+
+    return decorator
 
 def get_date(string):
     """Return a datetime object from a string.
@@ -34,12 +185,13 @@ def get_date(string):
     raise ValueError("'%s' is not a valid date" % string)
 
 
-class open(object):
+class pelican_open(object):
     """Open a file and return it's content"""
     def __init__(self, filename):
         self.filename = filename
+
     def __enter__(self):
-        return _open(self.filename, encoding='utf-8').read()
+        return open(self.filename, encoding='utf-8').read()
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
@@ -51,12 +203,24 @@ def slugify(value):
 
     Took from django sources.
     """
+    # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
-    if type(value) == unicode:
-        import unicodedata
-        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
-    return re.sub('[-\s]+', '-', value)
+    # value must be unicode per se
+    import unicodedata
+    from unidecode import unidecode
+    # unidecode returns str in Py2 and 3, so in Py2 we have to make
+    # it unicode again
+    value = unidecode(value)
+    if isinstance(value, six.binary_type):
+        value = value.decode('ascii')
+    # still unicode
+    value = unicodedata.normalize('NFKD', value)
+    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    value = re.sub('[-\s]+', '-', value)
+    # we want only ASCII chars
+    value = value.encode('ascii', 'ignore')
+    # but Pelican should generally use only unicode
+    return value.decode('ascii')
 
 
 def copy(path, source, destination, destination_path=None, overwrite=False):
@@ -86,15 +250,31 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
             if overwrite:
                 shutil.rmtree(destination_)
                 shutil.copytree(source_, destination_)
-                logger.info('replacement of %s with %s' % (source_, destination_))
+                logger.info('replacement of %s with %s' % (source_,
+                    destination_))
 
     elif os.path.isfile(source_):
+        dest_dir = os.path.dirname(destination_)
+        if not os.path.exists(dest_dir):
+            os.makedirs(dest_dir)
         shutil.copy(source_, destination_)
         logger.info('copying %s to %s' % (source_, destination_))
-
+    else:
+        logger.warning('skipped copy %s to %s' % (source_, destination_))
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
+
+    if not os.path.exists(path):
+        logger.debug("Directory already removed: %s" % path)
+        return
+
+    if not os.path.isdir(path):
+        try:
+            os.remove(path)
+        except Exception as e:
+            logger.error("Unable to delete file %s; %e" % path, e)
+        return
 
     # remove all the existing content from the output folder
     for filename in os.listdir(path):
@@ -103,21 +283,25 @@ def clean_output_dir(path):
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s" % file)
-            except Exception, e:
+            except Exception as e:
                 logger.error("Unable to delete directory %s; %e" % file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s" % file)
-            except Exception, e:
+            except Exception as e:
                 logger.error("Unable to delete file %s; %e" % file, e)
         else:
             logger.error("Unable to delete %s, file type unknown" % file)
 
 
-def get_relative_path(filename):
-    """Return the relative path to the given filename"""
-    return '../' * filename.count('/') + '.'
+def get_relative_path(path):
+    """Return the relative path from the given path to the root path."""
+    nslashes = path.count('/')
+    if nslashes == 0:
+        return '.'
+    else:
+        return '/'.join(['..'] * nslashes)
 
 
 def truncate_html_words(s, num, end_text='...'):
@@ -131,7 +315,7 @@ def truncate_html_words(s, num, end_text='...'):
     """
     length = int(num)
     if length <= 0:
-        return u''
+        return ''
     html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
                       'hr', 'input')
 
@@ -205,34 +389,31 @@ def process_translations(content_list):
     for slug, items in grouped_by_slugs:
         items = list(items)
         # find items with default language
-        default_lang_items = filter(attrgetter('in_default_lang'), items)
+        default_lang_items = list(filter(attrgetter('in_default_lang'), items))
         len_ = len(default_lang_items)
         if len_ > 1:
-            logger.warning(u'there are %s variants of "%s"' % (len_, slug))
+            logger.warning('there are %s variants of "%s"' % (len_, slug))
             for x in default_lang_items:
-                logger.warning('    %s' % x.filename)
+                logger.warning('    {}'.format(x.source_path))
         elif len_ == 0:
             default_lang_items = items[:1]
 
         if not slug:
-            msg = 'empty slug for %r. ' % default_lang_items[0].filename\
-                + 'You can fix this by adding a title or a slug to your '\
-                + 'content'
-            logger.warning(msg)
+            logger.warning((
+                    'empty slug for {!r}. '
+                    'You can fix this by adding a title or a slug to your '
+                    'content'
+                    ).format(default_lang_items[0].source_path))
         index.extend(default_lang_items)
-        translations.extend(filter(
-            lambda x: x not in default_lang_items,
-            items
-        ))
+        translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
-            a.translations = filter(lambda x: x != a, items)
+            a.translations = [x for x in items if x != a]
     return index, translations
 
 
 LAST_MTIME = 0
 
-
-def files_changed(path, extensions):
+def files_changed(path, extensions, ignores=[]):
     """Return True if the files have changed since the last check"""
 
     def file_times(path):
@@ -240,28 +421,32 @@ def files_changed(path, extensions):
         for root, dirs, files in os.walk(path):
             dirs[:] = [x for x in dirs if x[0] != '.']
             for f in files:
-                if any(f.endswith(ext) for ext in extensions):
+                if any(f.endswith(ext) for ext in extensions) \
+                        and not any(fnmatch.fnmatch(f, ignore) for ignore in ignores):
                     yield os.stat(os.path.join(root, f)).st_mtime
 
     global LAST_MTIME
-    mtime = max(file_times(path))
-    if mtime > LAST_MTIME:
-        LAST_MTIME = mtime
-        return True
+    try:
+        mtime = max(file_times(path))
+        if mtime > LAST_MTIME:
+            LAST_MTIME = mtime
+            return True
+    except ValueError:
+        raise NoFilesError("No files with the given extension(s) found.")
     return False
 
 
 FILENAMES_MTIMES = defaultdict(int)
 
 
-def file_changed(filename):
-    mtime = os.stat(filename).st_mtime
-    if FILENAMES_MTIMES[filename] == 0:
-        FILENAMES_MTIMES[filename] = mtime
+def file_changed(path):
+    mtime = os.stat(path).st_mtime
+    if FILENAMES_MTIMES[path] == 0:
+        FILENAMES_MTIMES[path] = mtime
         return False
     else:
-        if mtime > FILENAMES_MTIMES[filename]:
-            FILENAMES_MTIMES[filename] = mtime
+        if mtime > FILENAMES_MTIMES[path]:
+            FILENAMES_MTIMES[path] = mtime
             return True
         return False
 
@@ -276,3 +461,11 @@ def set_date_tzinfo(d, tz_name=None):
         return tz.localize(d)
     else:
         return d
+
+
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as e:
+        if e.errno != errno.EEXIST or not os.path.isdir(path):
+            raise

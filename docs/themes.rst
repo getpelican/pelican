@@ -6,7 +6,7 @@ How to create themes for Pelican
 Pelican uses the great `Jinja2 <http://jinja.pocoo.org/>`_ templating engine to
 generate its HTML output. Jinja2 syntax is really simple. If you want to
 create your own theme, feel free to take inspiration from the `"simple" theme
-<https://github.com/ametaireau/pelican/tree/master/pelican/themes/simple/templates>`_.
+<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_.
 
 Structure
 =========
@@ -29,13 +29,13 @@ To make your own theme, you must follow the following structure::
         └── tags.html        // must list all the tags. Can be a tag cloud.
 
 * `static` contains all the static assets, which will be copied to the output
-  `theme/static` folder. I've put the CSS and image folders here, but they are
+  `theme` folder. I've put the CSS and image folders here, but they are
   just examples. Put what you need here.
 
 * `templates` contains all the templates that will be used to generate the content.
   I've just put the mandatory templates here; you can define your own if it helps
   you keep things organized while creating your theme.
- 
+
 Templates and variables
 =======================
 
@@ -44,7 +44,7 @@ This document describes which templates should exist in a theme, and which
 variables will be passed to each template at generation time.
 
 All templates will receive the variables defined in your settings file, if they
-are in all-caps. You can access them directly. 
+are in all-caps. You can access them directly.
 
 Common variables
 ----------------
@@ -55,17 +55,31 @@ All of these settings will be available to all templates.
 Variable        Description
 =============   ===================================================
 articles        The list of articles, ordered descending by date
-                All the elements are `Article` objects, so you can 
+                All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
                 etc.)
 dates           The same list of articles, but ordered by date,
                 ascending
-tags            A key-value dict containing the tags (the keys) and
-                the list of respective articles (the values)
-categories      A key-value dict containing the categories (keys) 
+tags            A list of (tag, articles) tuples, containing all
+                the tags.
+categories      A list of (category, articles) tuples, containing
+                all the categories.
                 and the list of respective articles (values)
 pages           The list of pages
 =============   ===================================================
+
+Sorting
+-------
+
+URL wrappers (currently categories, tags, and authors), have
+comparison methods that allow them to be easily sorted by name:
+
+    {% for tag, articles in tags|sort %}
+
+If you want to sort based on different criteria, `Jinja's sort
+command`__ has a number of options.
+
+__ http://jinja.pocoo.org/docs/templates/#sort
 
 index.html
 ----------
@@ -92,8 +106,8 @@ author.html
 This template will be processed for each of the existing authors, with
 output generated at output/author/`author_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/author/`author_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+AUTHOR_SAVE_AS (`Default:` output/author/`author_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -108,8 +122,8 @@ dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
-page_name               'author/`author_name`' -- useful for pagination
-                        links
+page_name               AUTHOR_URL where everything after `{slug}` is
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 category.html
@@ -118,8 +132,8 @@ category.html
 This template will be processed for each of the existing categories, with
 output generated at output/category/`category_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/category/`category_name``n`.html.
+If pagination is active, subsequent pages will reside as defined by setting
+CATEGORY_SAVE_AS (`Default:` output/category/`category_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -134,8 +148,8 @@ dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'category/`category_name`' -- useful for pagination
-                        links
+page_name               CATEGORY_URL where everything after `{slug}` is
+                        removed -- useful for pagination links
 ===================     ===================================================
 
 article.html
@@ -170,8 +184,8 @@ tag.html
 This template will be processed for each tag, with corresponding .html files
 saved as output/tag/`tag_name`.html.
 
-If pagination is active, subsequent pages will reside at
-output/tag/`tag_name``n`.html.
+If pagination is active, subsequent pages will reside as defined in setting
+TAG_SAVE_AS (`Default:` output/tag/`tag_name'n'`.html).
 
 ===================     ===================================================
 Variable                Description
@@ -182,12 +196,32 @@ dates                   Articles related to this tag, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-dates_paginator         A paginator object for the list of articles, 
+dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-page_name               'tag/`tag_name`' -- useful for pagination links
+page_name               TAG_URL where everything after `{slug}` is removed
+                        -- useful for pagination links
 ===================     ===================================================
+
+Feeds
+=====
+
+The feed variables changed in 3.0. Each variable now explicitly lists ATOM or
+RSS in the name. ATOM is still the default. Old themes will need to be updated.
+Here is a complete list of the feed variables::
+
+    FEED_ATOM
+    FEED_RSS
+    FEED_ALL_ATOM
+    FEED_ALL_RSS
+    CATEGORY_FEED_ATOM
+    CATEGORY_FEED_RSS
+    TAG_FEED_ATOM
+    TAG_FEED_RSS
+    TRANSLATION_FEED_ATOM
+    TRANSLATION_FEED_RSS
+
 
 Inheritance
 ===========

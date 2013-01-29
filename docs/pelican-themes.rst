@@ -64,7 +64,7 @@ In this example, we can see there are three themes available: ``notmyidea``, ``s
 Note that you can combine the ``--list`` option with the ``-v`` or ``--verbose`` option to get more verbose output, like this:
 
 .. code-block:: console
-    
+
     $ pelican-themes -v -l
     /usr/local/lib/python2.6/dist-packages/pelican-2.6.0-py2.6.egg/pelican/themes/notmyidea
     /usr/local/lib/python2.6/dist-packages/pelican-2.6.0-py2.6.egg/pelican/themes/two-column (symbolic link to `/home/skami/Dev/Python/pelican-themes/two-column')
@@ -118,7 +118,7 @@ Creating symbolic links
 To symbolically link a theme, you can use the ``-s`` or ``--symlink``, which works exactly as the ``--install`` option:
 
 .. code-block:: console
-    
+
     # pelican-themes --symlink ~/Dev/Python/pelican-themes/two-column
 
 In this example, the ``two-column`` theme is now symbolically linked to the Pelican themes path, so we can use it, but we can also modify it without having to reinstall it after each modification.
@@ -130,11 +130,11 @@ This is useful for theme development:
     $ sudo pelican-themes -s ~/Dev/Python/pelican-themes/two-column
     $ pelican ~/Blog/content -o /tmp/out -t two-column
     $ firefox /tmp/out/index.html
-    $ vim ~/Dev/Pelican/pelican-themes/two-coumn/static/css/main.css 
+    $ vim ~/Dev/Pelican/pelican-themes/two-coumn/static/css/main.css
     $ pelican ~/Blog/content -o /tmp/out -t two-column
     $ cp /tmp/bg.png ~/Dev/Pelican/pelican-themes/two-coumn/static/img/bg.png
     $ pelican ~/Blog/content -o /tmp/out -t two-column
-    $ vim ~/Dev/Pelican/pelican-themes/two-coumn/templates/index.html 
+    $ vim ~/Dev/Pelican/pelican-themes/two-coumn/templates/index.html
     $ pelican ~/Blog/content -o /tmp/out -t two-column
 
 
@@ -152,7 +152,7 @@ The ``--install``, ``--remove`` and ``--symlink`` option are not mutually exclus
                      --symlink ~/Dev/Python/pelican-themes/two-column \
                      --verbose
 
-In this example, the theme ``notmyidea-cms`` is replaced by the theme ``notmyidea-cms-fr`` 
+In this example, the theme ``notmyidea-cms`` is replaced by the theme ``notmyidea-cms-fr``
 
 
 
@@ -162,5 +162,3 @@ See also
 
 -   http://docs.notmyidea.org/alexis/pelican/
 -   ``/usr/share/doc/pelican/`` if you have installed Pelican using the `APT repository <http://skami18.github.com/pelican-packages/>`_
-
-

@@ -12,8 +12,8 @@ original author wrote with some software design information.
 Overall structure
 =================
 
-What Pelican does is take a list of files and process them into some
-sort of output. Usually, the input files are reStructuredText and Markdown
+What Pelican does is take a list of files and process them into some sort of
+output. Usually, the input files are reStructuredText, Markdown and AsciiDoc
 files, and the output is a blog, but both input and output can be anything you
 want.
 
@@ -23,9 +23,9 @@ The logic is separated into different classes and concepts:
   on. Since those operations are commonly used, the object is created once and
   then passed to the generators.
 
-* **Readers** are used to read from various formats (Markdown and
-  reStructuredText for now, but the system is extensible). Given a file, they return
-  metadata (author, tags, category, etc.) and content (HTML-formatted).
+* **Readers** are used to read from various formats (AsciiDoc, Markdown and
+  reStructuredText for now, but the system is extensible). Given a file, they
+  return metadata (author, tags, category, etc.) and content (HTML-formatted).
 
 * **Generators** generate the different outputs. For instance, Pelican comes with
   ``ArticlesGenerator`` and ``PageGenerator``. Given a configuration, they can do
@@ -47,19 +47,17 @@ Take a look at the Markdown reader::
     class MarkdownReader(Reader):
         enabled = bool(Markdown)
 
-        def read(self, filename):
+        def read(self, source_path):
             """Parse content and metadata of markdown files"""
-            text = open(filename)
+            text = pelican_open(source_path)
             md = Markdown(extensions = ['meta', 'codehilite'])
             content = md.convert(text)
-            
+
             metadata = {}
             for name, value in md.Meta.items():
-                if name in _METADATA_FIELDS:
-                    meta = _METADATA_FIELDS[name](value[0])
-                else:
-                    meta = value[0]
-                metadata[name.lower()] = meta
+                name = name.lower()
+                meta = self.process_metadata(name, value[0])
+                metadata[name] = meta
             return content, metadata
 
 Simple, isn't it?
@@ -81,7 +79,7 @@ both; only the existing ones will be called.
   context is shared between all generators, and will be passed to the
   templates. For instance, the ``PageGenerator`` ``generate_context`` method
   finds all the pages, transforms them into objects, and populates the context
-  with them. Be careful *not* to output anything using this context at this 
+  with them. Be careful *not* to output anything using this context at this
   stage, as it is likely to change by the effect of other generators.
 
 * ``generate_output`` is then called. And guess what is it made for? Oh,
