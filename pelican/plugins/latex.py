@@ -76,23 +76,23 @@ this plugin works with a template, look at
 
 from pelican import signals
 
-latexScript = '\n\
-    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">\n\
-       MathJax.Hub.Config({\n\
-           config: ["MMLorHTML.js"],\n\
-           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],\n\
-           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },\n\
-           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js"],\n\
-           tex2jax: { \n\
-               inlineMath: [ [\'$\',\'$\'] ],\n\
-               displayMath: [ [\'$$\',\'$$\'] ],\n\
-               processEscapes: true },\n\
-           "HTML-CSS": {\n\
-               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}\n\
-           }\n\
-       });\n\
-    </script>\n\
-'
+latexScript = """
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type= "text/javascript">
+       MathJax.Hub.Config({
+           config: ["MMLorHTML.js"],
+           jax: ["input/TeX","input/MathML","output/HTML-CSS","output/NativeMML"],
+           TeX: { extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"], equationNumbers: { autoNumber: "AMS" } },
+           extensions: ["tex2jax.js","mml2jax.js","MathMenu.js","MathZoom.js"],
+           tex2jax: { 
+               inlineMath: [ [\'$\',\'$\'] ],
+               displayMath: [ [\'$$\',\'$$\'] ],
+               processEscapes: true },
+           "HTML-CSS": {
+               styles: { ".MathJax .mo, .MathJax .mi": {color: "black ! important"}}
+           }
+       });
+    </script>
+"""
 
 def addLatex(gen, metadata):
     """
