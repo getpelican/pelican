@@ -36,6 +36,7 @@ def _input_compat(prompt):
     if six.PY3:
         r = input(prompt)
     else:
+        # FIXME: why use this with @decoding_strings?
         r = raw_input(prompt).decode('utf-8')
     return r
 
@@ -49,7 +50,10 @@ def decoding_strings(f):
         out = f(*args, **kwargs)
         if isinstance(out, six.string_types) and not six.PY3:
             # todo: make encoding configurable?
-            return out.decode(sys.stdin.encoding)
+            if six.PY3:
+                return out
+            else:
+                return out.decode(sys.stdin.encoding)
         return out
     return wrapper
 
@@ -240,7 +244,10 @@ needed by Pelican.
     if mkfile:
         try:
             with codecs.open(os.path.join(CONF['basedir'], 'Makefile'), 'w', 'utf-8') as fd:
-                for line in get_template('Makefile'):
+                mkfile_template_name = 'Makefile'
+                if six.PY3:
+                    mkfile_template_name = 'Makefile.py3k'
+                for line in get_template(mkfile_template_name):
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
