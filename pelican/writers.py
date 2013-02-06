@@ -156,9 +156,24 @@ class Writer(object):
                     paginated_localcontext.update(
                             {'%s_paginator' % key: paginator,
                              '%s_page' % key: page})
+
+
                 if page_num > 0:
-                    paginated_name = '%s%s%s' % (
-                        name_root, page_num + 1, ext)
+                    # @jb: blog/index (page 2) → blog/page/2/index.html
+                    #      authors/john (page 2) → authors/john/page/2/index.html
+                    if "/" in name_root:
+                        if name_root.endswith("/index"):
+                            name_root = name_root[:-6]
+
+                        paginated_name = "%s/page/%s/index%s" % (
+                            name_root,
+                            page_num + 1,
+                            ext
+                        )
+                    else:
+                        paginated_name = '%s%s%s' % (
+                            name_root, page_num + 1, ext)
+
                 else:
                     paginated_name = name
 
