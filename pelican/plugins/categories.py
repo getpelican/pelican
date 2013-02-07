@@ -30,7 +30,6 @@ class Category(BaseCategory):
         super(BaseCategory, self).__init__(name, settings)
         remap = settings.get("CATEGORY_MAP", {}).get(self.slug, {})
         for key, value in remap.items():
-            print "REMAPPED", self, key, value
             setattr(self, key, value)
 
 
@@ -44,7 +43,6 @@ def fix_article_metadata(generator, metadata, source_path):
         name = os.path.splitext(basename)[0]
         category_slug = metadata["category"][0].slug
         slug = "%s/%s" % (category_slug, name)
-        print slug
         metadata["slug"] = slug
 
 

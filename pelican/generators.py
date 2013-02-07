@@ -183,8 +183,10 @@ class ArticlesGenerator(Generator):
         if self.settings.get('FEED_ALL_ATOM') or \
                 self.settings.get('FEED_ALL_RSS'):
             all_articles = list(self.articles)
+
             for article in self.articles:
                 all_articles.extend(article.translations)
+
             all_articles.sort(key=attrgetter('date'), reverse=True)
 
             if self.settings.get('FEED_ALL_ATOM'):
@@ -197,9 +199,11 @@ class ArticlesGenerator(Generator):
 
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
+
+            # @jb: Pass the category's `dict` so you can access the slug.
             if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_ATOM'] % cat)
+                                  self.settings['CATEGORY_FEED_ATOM'] % cat.__dict__)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
