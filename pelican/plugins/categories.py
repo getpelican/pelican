@@ -35,14 +35,13 @@ class Category(BaseCategory):
 
 def fix_article_metadata(generator, metadata, source_path):
     """
-    Generate slugs for Articles that are missing them from their filename.
+    Articles without slugs are permalinked at "/blog/:filename".
 
     """
     if "slug" not in metadata:
         basename = os.path.basename(source_path)
         name = os.path.splitext(basename)[0]
-        category_slug = metadata["category"][0].slug
-        slug = "%s/%s" % (category_slug, name)
+        slug = "blog/%s" % name
         metadata["slug"] = slug
 
 
