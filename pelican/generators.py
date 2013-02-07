@@ -350,7 +350,10 @@ class ArticlesGenerator(Generator):
                     metadata['date'] = datetime.datetime(
                             *self.settings['DEFAULT_DATE'])
 
-            signals.article_generate_context.send(self, metadata=metadata)
+            # @jb: Pass in `source_path` so we can build the slug from that.
+            signals.article_generate_context.send(self, metadata=metadata,
+                                                  source_path=f)
+
             article = Article(content, metadata, settings=self.settings,
                               source_path=f, context=self.context)
             if not is_valid_content(article, f):

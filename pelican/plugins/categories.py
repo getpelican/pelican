@@ -7,6 +7,7 @@ allow articles to have multiple categories.
 
 """
 from collections import defaultdict
+import os
 
 from pelican import signals
 from pelican.contents import Category as BaseCategory
@@ -27,33 +28,25 @@ class Category(BaseCategory):
     """
     def __init__(self, name, settings):
         super(BaseCategory, self).__init__(name, settings)
-
-        # Lowercase names.
-        # self.name = self.name.lower()
-
         remap = settings.get("CATEGORY_MAP", {}).get(self.slug, {})
         for key, value in remap.items():
             print "REMAPPED", self, key, value
             setattr(self, key, value)
 
 
-def fix_article_metadata(generator, metadata):
+def fix_article_metadata(generator, metadata, source_path):
     """
-    Generate slugs for Articles that are missing them.
-
-    Normalize Author Names.
+    Generate slugs for Articles that are missing them from their filename.
 
     """
     if "slug" not in metadata:
+        basename = os.path.basename(source_path)
+        name = os.path.splitext(basename)[0]
         category_slug = metadata["category"][0].slug
-        article_slug = slugify(metadata["title"])
-        slug = "%s/%s" % (category_slug, article_slug)
+        slug = "%s/%s" % (category_slug, name)
+        print slug
         metadata["slug"] = slug
 
-    # author = metadata.get("author", None)
-    # if author is not None:
-    #     import pdb;pdb.set_trace()
-    #     metadata["author"] = author.lower()
 
 def fix_categories(generator):
     generator.categories = defaultdict(list)
@@ -68,6 +61,7 @@ def fix_categories(generator):
 
     generator.categories = list(generator.categories.items())
     generator._update_context(("categories",))
+
 
 def register():
     signals.article_generator_finalized.connect(fix_categories)
