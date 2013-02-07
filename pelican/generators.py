@@ -375,7 +375,6 @@ class ArticlesGenerator(Generator):
         for article in self.articles:
             # only main articles are listed in categories, not translations
 
-
             # @jb: Support multiple categories per article.
             for category in article.category:
                 self.categories[category].append(article)
