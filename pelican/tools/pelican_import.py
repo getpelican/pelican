@@ -34,7 +34,7 @@ def wp2fields(xml):
 
     for item in items:
 
-        if item.fetch('wp:status')[0].contents[0] == "publish":
+        if item.status.contents[0] == "publish":
 
             try:
                 # Use HTMLParser due to issues with BeautifulSoup 3
@@ -42,19 +42,30 @@ def wp2fields(xml):
             except IndexError:
                 continue
 
-            content = item.fetch('content:encoded')[0].contents[0]
-            filename = item.fetch('wp:post_name')[0].contents[0]
+            content = item.encoded.contents[0]
+            link = item.link.contents[0]
+            split = [i for i in link.replace("http://www.mobify.com/","").split("/") if i != ""]
+            filename = split[-1]
 
-            raw_date = item.fetch('wp:post_date')[0].contents[0]
+            raw_date = item.post_date.contents[0]
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
 
-            author = item.fetch('dc:creator')[0].contents[0].title()
+            author = item.creator.contents[0].title()
 
-            categories = [cat.contents[0] for cat in item.fetch(domain='category')]
+            tags = []
+            categories = []
+
+            for node in item.find_all('category'):
+                domain = node['domain']
+                if domain == 'category':
+                    categories.append(node['nicename'])
+                if domain == 'post_tag':
+                    tags.append(node['nicename'])
+            #categories = [cat.contents[0] for cat in item.find_all('category')]
             # caturl = [cat['nicename'] for cat in item.fetch(domain='category')]
 
-            tags = [tag.contents[0] for tag in item.fetch(domain='post_tag')]
+            #tags = [tag.contents[0] for tag in item.find_all(domain='post_tag')]
 
             yield (title, content, filename, date, author, categories, tags, "html")
 
