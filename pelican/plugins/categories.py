@@ -28,6 +28,9 @@ class Category(BaseCategory):
     def __init__(self, name, settings):
         super(BaseCategory, self).__init__(name, settings)
 
+        # Lowercase names.
+        self.name = self.name.lower()
+
         remap = settings.get("CATEGORY_MAP", {}).get(self.name, {})
         for key, value in remap.items():
             print "REMAPPED", self, key, value
