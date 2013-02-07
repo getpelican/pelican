@@ -380,7 +380,7 @@ class ArticlesGenerator(Generator):
                 self.categories[category].append(article)
 
             # ignore blank authors as well as undefined
-            if hasattr(article,'author') and article.author.name != '':
+            if hasattr(article, 'author') and article.author.name != '':
                 self.authors[article.author].append(article)
 
         # sort the articles by date

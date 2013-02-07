@@ -29,9 +29,9 @@ class Category(BaseCategory):
         super(BaseCategory, self).__init__(name, settings)
 
         # Lowercase names.
-        self.name = self.name.lower()
+        # self.name = self.name.lower()
 
-        remap = settings.get("CATEGORY_MAP", {}).get(self.name, {})
+        remap = settings.get("CATEGORY_MAP", {}).get(self.slug, {})
         for key, value in remap.items():
             print "REMAPPED", self, key, value
             setattr(self, key, value)
@@ -41,12 +41,19 @@ def fix_article_metadata(generator, metadata):
     """
     Generate slugs for Articles that are missing them.
 
+    Normalize Author Names.
+
     """
     if "slug" not in metadata:
         category_slug = metadata["category"][0].slug
         article_slug = slugify(metadata["title"])
         slug = "%s/%s" % (category_slug, article_slug)
         metadata["slug"] = slug
+
+    # author = metadata.get("author", None)
+    # if author is not None:
+    #     import pdb;pdb.set_trace()
+    #     metadata["author"] = author.lower()
 
 def fix_categories(generator):
     generator.categories = defaultdict(list)

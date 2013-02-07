@@ -162,11 +162,12 @@ class Writer(object):
                     # @jb: blog/index (page 2) → blog/page/2/index.html
                     #      authors/john (page 2) → authors/john/page/2/index.html
                     if "/" in name_root:
-                        if name_root.endswith("/index"):
-                            name_root = name_root[:-6]
+                        root = name_root
+                        if root.endswith("/index"):
+                            root = name_root[:-6]
 
                         paginated_name = "%s/page/%s/index%s" % (
-                            name_root,
+                            root,
                             page_num + 1,
                             ext
                         )
