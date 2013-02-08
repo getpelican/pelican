@@ -28,8 +28,12 @@ class Category(BaseCategory):
     """
     def __init__(self, name, settings):
         super(BaseCategory, self).__init__(name, settings)
-        remap = settings.get("CATEGORY_MAP", {}).get(self.slug, {})
-        for key, value in remap.items():
+        attributes = settings["CATEGORY_MAP"].get(self.slug, {})
+
+        if "slug" not in attributes:
+            attributes["slug"] = "blog/category/%s" % self.slug
+
+        for key, value in attributes.items():
             setattr(self, key, value)
 
 
