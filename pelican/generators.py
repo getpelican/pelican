@@ -172,19 +172,26 @@ class ArticlesGenerator(Generator):
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
 
+        # @jb: To avoid maddness as we change feeds, only show articles
+        #      include articles after Feb 2, 2013 in feeds. Not `article.date`
+        #      does not appear to be TZ aware, so we don't pass in `tzinfo`.
+        after = datetime.datetime(2013, 2, 1)
+
+        articles = [a for a in self.articles if a.date > after]
+
         if self.settings.get('FEED_ATOM'):
-            writer.write_feed(self.articles, self.context,
+            writer.write_feed(articles, self.context,
                               self.settings['FEED_ATOM'])
 
         if self.settings.get('FEED_RSS'):
-            writer.write_feed(self.articles, self.context,
+            writer.write_feed(articles, self.context,
                               self.settings['FEED_RSS'], feed_type='rss')
 
         if self.settings.get('FEED_ALL_ATOM') or \
                 self.settings.get('FEED_ALL_RSS'):
-            all_articles = list(self.articles)
+            all_articles = list(articles)
 
-            for article in self.articles:
+            for article in articles:
                 all_articles.extend(article.translations)
 
             all_articles.sort(key=attrgetter('date'), reverse=True)
@@ -197,16 +204,17 @@ class ArticlesGenerator(Generator):
                 writer.write_feed(all_articles, self.context,
                                   self.settings['FEED_ALL_RSS'], feed_type='rss')
 
-        for cat, arts in self.categories:
-            arts.sort(key=attrgetter('date'), reverse=True)
+        for cat, category_articles in self.categories:
+            category_articles = [a for a in self.articles if a.date > after]
+            category_articles.sort(key=attrgetter('date'), reverse=True)
 
             # @jb: Pass the category's `dict` so you can access the slug.
             if self.settings.get('CATEGORY_FEED_ATOM'):
-                writer.write_feed(arts, self.context,
+                writer.write_feed(category_articles, self.context,
                                   self.settings['CATEGORY_FEED_ATOM'] % cat.__dict__)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
-                writer.write_feed(arts, self.context,
+                writer.write_feed(category_articles, self.context,
                                   self.settings['CATEGORY_FEED_RSS'] % cat,
                                   feed_type='rss')
 
