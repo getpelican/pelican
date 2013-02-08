@@ -36,6 +36,10 @@ class Category(BaseCategory):
         for key, value in attributes.items():
             setattr(self, key, value)
 
+        # Our feeds don't live in the same place as our categories, so create a
+        # custom `feed_slug` to store where the feed should live.
+        self.feed_slug = self.slug.rsplit("/")[-1]
+
 
 def fix_article_metadata(generator, metadata, source_path):
     """
