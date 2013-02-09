@@ -40,7 +40,7 @@ Setting name (default value)                                            What doe
 `DEFAULT_CATEGORY` (``'misc'``)                                         The default category to fall back on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                               The default date format you want to use.
 `DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
-                                                                        template. Templates may or not honor this
+                                                                        template. Templates may or may not honor this
                                                                         setting.
 `DEFAULT_DATE` (``None``)                                               The default date you want to use.
                                                                         If ``fs``, Pelican will use the file system
