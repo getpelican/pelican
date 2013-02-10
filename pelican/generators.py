@@ -475,6 +475,8 @@ class PagesGenerator(Generator):
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
+        signals.pages_generator_finalized.send(self)
+
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
                             self.hidden_translations, self.hidden_pages):
