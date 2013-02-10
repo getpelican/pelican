@@ -23,9 +23,7 @@ from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p
 from pelican import signals
 
-
 logger = logging.getLogger(__name__)
-
 
 class Generator(object):
     """Baseclass generator"""

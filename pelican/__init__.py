@@ -20,6 +20,8 @@ from pelican.utils import (clean_output_dir, files_changed, file_changed,
                            NoFilesError)
 from pelican.writers import Writer
 
+import traceback
+
 __major__ = 3
 __minor__ = 2
 __micro__ = 0
@@ -198,35 +200,39 @@ class Pelican(object):
         return Writer(self.output_path, settings=self.settings)
 
 
-def parse_arguments():
+def parse_arguments(*args, **kwargs):
     parser = argparse.ArgumentParser(description="""A tool to generate a
     static blog, with restructured text input files.""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument(dest='path', nargs='?',
-        help='Path where to find the content files.',
-        default=None)
+    if len(args) > 0:
+        parser.add_argument(dest='path', nargs='?',
+            help='Path where to find the content files.',
+            default=args[0])
+    else:
+        parser.add_argument(dest='path', nargs='?',
+            help='Path where to find the content files.')
 
-    parser.add_argument('-t', '--theme-path', dest='theme',
+    parser.add_argument('-t', '--theme-path', dest='theme', default=kwargs.get('theme'),
         help='Path where to find the theme templates. If not specified, it'
              'will use the default one included with pelican.')
 
-    parser.add_argument('-o', '--output', dest='output',
+    parser.add_argument('-o', '--output', dest='output', default=kwargs.get('otuput'),
         help='Where to output the generated files. If not specified, a '
              'directory will be created, named "output" in the current path.')
 
-    parser.add_argument('-m', '--markup', dest='markup',
+    parser.add_argument('-m', '--markup', dest='markup', default=kwargs.get('markup'),
         help='The list of markup language to use (rst or md). Please indicate '
              'them separated by commas.')
 
-    parser.add_argument('-s', '--settings', dest='settings',
+    parser.add_argument('-s', '--settings', dest='settings', default=kwargs.get('settings'),
         help='The settings of the application.')
 
-    parser.add_argument('-d', '--delete-output-directory',
+    parser.add_argument('-d', '--delete-output-directory', default=kwargs.get('delete_outputdir'),
         dest='delete_outputdir',
         action='store_true', help='Delete the output directory.')
 
-    parser.add_argument('-v', '--verbose', action='store_const',
+    parser.add_argument('-v', '--verbose', action='store_const', default=kwargs.get('verbosity'),
         const=logging.INFO, dest='verbosity',
         help='Show all messages.')
 
@@ -242,9 +248,13 @@ def parse_arguments():
         help='Print the pelican version and exit.')
 
     parser.add_argument('-r', '--autoreload', dest='autoreload',
-        action='store_true',
+        action='store_true', default=kwargs.get('autoreload'),
         help="Relaunch pelican each time a modification occurs"
                              " on the content files.")
+
+    if args or kwargs:
+        return parser.parse_known_args()[0]
+
     return parser.parse_args()
 
 
@@ -278,8 +288,19 @@ def get_instance(args):
     return cls(settings)
 
 
-def main():
-    args = parse_arguments()
+def main(*margs, **kwargs):
+    oldargs = None
+    if margs or kwargs:
+        # Backing up current arguments
+        oldargs = sys.argv
+        sys.argv = sys.argv[:1]
+
+    args = parse_arguments(*margs, **kwargs)
+
+    if margs or kwargs:
+        # Restoring current arguments
+        sys.argv = oldargs
+
     init(args.verbosity)
     pelican = get_instance(args)
 
@@ -320,6 +341,9 @@ def main():
                     logger.warning(
                         "Caught exception \"{}\". Reloading.".format(e)
                     )
+
+                    traceback.print_exc()
+
                     continue
         else:
             pelican.run()
@@ -330,3 +354,6 @@ def main():
             raise
         else:
             sys.exit(getattr(e, 'exitcode', 1))
+
+if __name__ == '__main__':
+    main()
