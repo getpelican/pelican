@@ -140,7 +140,7 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_with("archives/index.html",
             generator.get_template("archives"), settings,
-            blog=True, paginated={}, page_name='archives')
+            blog=True, paginated={}, page_name='archives/index')
 
     def test_direct_templates_save_as_false(self):
 
