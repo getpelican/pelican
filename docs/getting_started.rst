@@ -190,6 +190,36 @@ syntax for Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
+Lastly, you can use vanilla HTML (files ending in ``.htm`` and ``.html``). Pelican 
+interprets the HTML in a very straightforward manner, reading meta data out
+of ``meta`` tags, the title out of the ``title`` tag, and the body out of the 
+``body`` tag::
+
+    <html>
+        <head>
+            <title>My super title</title>
+            <meta name="tags" contents="thats, awesome" />
+            <meta name="date" contents="2012-07-09 22:28" />
+            <meta name="category" contents="yeah" />
+            <meta name="author" contents="Alexis Métaireau" />
+            <meta name="summary" contents="Short version for index and feeds" />
+        </head>
+        <body>
+            This is the content of my super blog post.
+        </body>
+    </html>
+
+With HTML, there is one simple exception to the standard metadata.
+``tags`` can be specified either with the ``tags`` metadata, as is standard in 
+Pelican, or with the ``keywords`` metadata, as is standard in HTML. The two can 
+be used interchangeably.
+
+Note that, aside from the title, none of this metadata is mandatory: if the date
+is not specified and DEFAULT_DATE is 'fs', Pelican will rely on the file's 
+"mtime" timestamp, and the category can be determined by the directory in which 
+the file resides. For example, a file located at ``python/foobar/myfoobar.rst`` 
+will have a category of ``foobar``.
+
 Note that, aside from the title, none of this metadata is mandatory: if the
 date is not specified, Pelican can rely on the file's "mtime" timestamp through
 the ``DEFAULT_DATE`` setting, and the category can be determined by the
