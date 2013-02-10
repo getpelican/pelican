@@ -254,8 +254,8 @@ class ArticlesGenerator(Generator):
                 continue
 
             write(save_as, self.get_template(template),
-                  self.context, blog=True, paginated=paginated,
-                  page_name=template)
+                self.context, blog=True, paginated=paginated,
+                page_name=os.path.splitext(save_as)[0])
 
     def generate_tags(self, write):
         """Generate Tags pages."""
