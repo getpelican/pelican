@@ -298,9 +298,19 @@ class HTMLReaderTest(unittest.TestCase):
             self.assertEquals(value, metadata[key], key)
 
 
+    def test_article_with_null_attributes(self):
+        reader = readers.HTMLReader({})
+        content, metadata = reader.read(_path('article_with_null_attributes.html'))
+
+        self.assertEquals('''
+        Ensure that empty attributes are copied properly.
+        <input name="test" disabled style="" />
+    ''', content)
+
     def test_article_metadata_key_lowercase(self):
         """Keys of metadata should be lowercase."""
         reader = readers.HTMLReader({})
         content, metadata = reader.read(_path('article_with_uppercase_metadata.html'))
         self.assertIn('category', metadata, "Key should be lowercase.")
         self.assertEquals('Yeah', metadata.get('category'), "Value keeps cases.")
+
