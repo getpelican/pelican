@@ -271,7 +271,10 @@ class HTMLReader(Reader):
             
         def build_tag(self, tag, attrs, close_tag):
             result = '<{}'.format(cgi.escape(tag))
-            result += ''.join((' {}="{}"'.format(cgi.escape(k), cgi.escape(v)) for k,v in attrs))
+            for k,v in attrs:
+                result += ' ' + cgi.escape(k)
+                if v is not None:
+                    result += '="{}"'.format(cgi.escape(v))
             if close_tag:
                 return result + ' />'
             return result + '>'
