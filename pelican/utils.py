@@ -273,7 +273,7 @@ def clean_output_dir(path):
         try:
             os.remove(path)
         except Exception as e:
-            logger.error("Unable to delete file %s; %e" % path, e)
+            logger.error("Unable to delete file %s; %s" % (path, str(e)))
         return
 
     # remove all the existing content from the output folder
@@ -284,13 +284,14 @@ def clean_output_dir(path):
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s" % file)
             except Exception as e:
-                logger.error("Unable to delete directory %s; %e" % file, e)
+                logger.error("Unable to delete directory %s; %s" % (
+                        file, str(e)))
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s" % file)
             except Exception as e:
-                logger.error("Unable to delete file %s; %e" % file, e)
+                logger.error("Unable to delete file %s; %s" % (file, str(e)))
         else:
             logger.error("Unable to delete %s, file type unknown" % file)
 
