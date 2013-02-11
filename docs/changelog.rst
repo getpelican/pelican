@@ -4,7 +4,8 @@ Release history
 3.2 (XXXX-XX-XX)
 ================
 
-* [...]
+* Support for Python 3!
+* Posterous Import
 
 3.1 (2012-12-04)
 ================
@@ -37,7 +38,12 @@ Release history
 * Restore basic functional tests
 * New signals: ``generator_init``, ``get_generators``, and
   ``article_generate_preread``
-* Posterous Import
+* Add support for AsciiDoc-formatted content
+* Add ``USE_FOLDER_AS_CATEGORY`` setting so that feature can be toggled on/off
+* Support arbitrary Jinja template files
+* Restore basic functional tests
+* New signals: ``generator_init``, ``get_generators``, and
+  ``article_generate_preread``
 
 3.0 (2012-08-08)
 ================
