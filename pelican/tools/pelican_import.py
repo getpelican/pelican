@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
 import argparse
-from HTMLParser import HTMLParser
+try:
+    # py3k import
+    from html.parser import HTMLParser
+except ImportError:
+    # py2 import
+    from HTMLParser import HTMLParser  # NOQA
 import os
 import subprocess
 import sys
@@ -15,14 +22,14 @@ from pelican.utils import slugify
 def wp2fields(xml):
     """Opens a wordpress XML file, and yield pelican fields"""
     try:
-        from BeautifulSoup import BeautifulStoneSoup
+        from bs4 import BeautifulSoup
     except ImportError:
         error = ('Missing dependency '
-                 '"BeautifulSoup" required to import Wordpress XML files.')
+                 '"BeautifulSoup4" and "lxml" required to import Wordpress XML files.')
         sys.exit(error)
 
     xmlfile = open(xml, encoding='utf-8').read()
-    soup = BeautifulStoneSoup(xmlfile)
+    soup = BeautifulSoup(xmlfile, "xml")
     items = soup.rss.channel.findAll('item')
 
     for item in items:
@@ -54,10 +61,10 @@ def wp2fields(xml):
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
     try:
-        from BeautifulSoup import BeautifulStoneSoup
+        from bs4 import BeautifulSoup
     except ImportError:
         error = ('Missing dependency '
-                 '"BeautifulSoup" required to import Dotclear files.')
+                 '"BeautifulSoup4" and "lxml" required to import Dotclear files.')
         sys.exit(error)
 
 
@@ -142,13 +149,27 @@ def dc2fields(file):
         if len(tag) > 1:
             if int(tag[:1]) == 1:
                 newtag = tag.split('"')[1]
-                tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
+                tags.append(
+                    BeautifulSoup(
+                        newtag
+                        , "xml"
+                    )
+                    # bs4 always outputs UTF-8
+                    .decode('utf-8')
+                )
             else:
                 i=1
                 j=1
                 while(i <= int(tag[:1])):
                     newtag = tag.split('"')[j].replace('\\','')
-                    tags.append(unicode(BeautifulStoneSoup(newtag,convertEntities=BeautifulStoneSoup.HTML_ENTITIES )))
+                    tags.append(
+                        BeautifulSoup(
+                            newtag
+                            , "xml"
+                        )
+                        # bs4 always outputs UTF-8
+                        .decode('utf-8')
+                    )
                     i=i+1
                     if j < int(tag[:1])*2:
                         j=j+2
@@ -171,16 +192,28 @@ def posterous2fields(api_token, email, password):
     """Imports posterous posts"""
     import base64
     from datetime import datetime, timedelta
-    import simplejson as json
-    import urllib2
+    try:
+        # py3k import
+        import json
+    except ImportError:
+        # py2 import
+        import simplejson as json
+
+    try:
+        # py3k import
+        import urllib.request as urllib_request
+    except ImportError:
+        # py2 import
+        import urllib2 as urllib_request
+
 
     def get_posterous_posts(api_token, email, password, page = 1):
-        base64string = base64.encodestring('%s:%s' % (email, password)).replace('\n', '')
+        base64string = base64.encodestring(("%s:%s" % (email, password)).encode('utf-8')).replace(b'\n', b'')
         url = "http://posterous.com/api/v2/users/me/sites/primary/posts?api_token=%s&page=%d" % (api_token, page)
-        request = urllib2.Request(url)
-        request.add_header("Authorization", "Basic %s" % base64string)
-        handle = urllib2.urlopen(request)
-        posts = json.loads(handle.read())
+        request = urllib_request.Request(url)
+        request.add_header("Authorization", "Basic %s" % base64string.decode())
+        handle = urllib_request.urlopen(request)
+        posts = json.loads(handle.read().decode('utf-8'))
         return posts
 
     page = 1
@@ -218,7 +251,7 @@ def feed2fields(file):
         yield (entry.title, entry.description, slug, date, author, [], tags, "html")
 
 
-def build_header(title, date, author, categories, tags):
+def build_header(title, date, author, categories, tags, slug):
     """Build a header from a list of fields"""
     header = '%s\n%s\n' % (title, '#' * len(title))
     if date:
@@ -229,10 +262,12 @@ def build_header(title, date, author, categories, tags):
         header += ':category: %s\n' % ', '.join(categories)
     if tags:
         header += ':tags: %s\n' % ', '.join(tags)
+    if slug:
+        header += ':slug: %s\n' % slug
     header += '\n'
     return header
 
-def build_markdown_header(title, date, author, categories, tags):
+def build_markdown_header(title, date, author, categories, tags, slug):
     """Build a header from a list of fields"""
     header = 'Title: %s\n' % title
     if date:
@@ -243,18 +278,21 @@ def build_markdown_header(title, date, author, categories, tags):
         header += 'Category: %s\n' % ', '.join(categories)
     if tags:
         header += 'Tags: %s\n' % ', '.join(tags)
+    if slug:
+        header += 'Slug: %s\n' % slug
     header += '\n'
     return header
 
-def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=False):
+def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=False, disable_slugs=False):
     for title, content, filename, date, author, categories, tags, in_markup in fields:
+        slug = not disable_slugs and filename or None
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
-            header = build_markdown_header(title, date, author, categories, tags)
+            header = build_markdown_header(title, date, author, categories, tags, slug)
         else:
             out_markup = "rst"
             ext = '.rst'
-            header = build_header(title, date, author, categories, tags)
+            header = build_header(title, date, author, categories, tags, slug)
 
         filename = os.path.basename(filename)
 
@@ -276,7 +314,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
                 paragraphs = content.splitlines()
-                paragraphs = [u'<p>{0}</p>'.format(p) for p in paragraphs]
+                paragraphs = ['<p>{0}</p>'.format(p) for p in paragraphs]
                 new_content = ''.join(paragraphs)
 
                 fp.write(new_content)
@@ -296,7 +334,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
                 elif rc > 0:
                     error = "Please, check your Pandoc installation."
                     exit(error)
-            except OSError, e:
+            except OSError as e:
                 error = "Pandoc execution failed: %s" % e
                 exit(error)
 
@@ -315,8 +353,8 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, Wordpress or Dotclear files to rst files."
-            "Be sure to have pandoc installed",
+        description="Transform feed, Wordpress or Dotclear files to reST (rst) "
+                    "or Markdown (md) files. Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='input', help='The input file to read')
@@ -328,6 +366,10 @@ def main():
         help='Posterous export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
+    parser.add_argument('-e', '--email', dest='email',
+        help="Email address (posterous import only)")
+    parser.add_argument('-p', '--password', dest='password',
+        help="Password (posterous import only)")
     parser.add_argument('-o', '--output', dest='output', default='output',
         help='Output path')
     parser.add_argument('-m', '--markup', dest='markup', default='rst',
@@ -337,12 +379,11 @@ def main():
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
-    parser.add_argument('-e', '--email', dest='email',
-        help="Email address (posterous import only)")
-    parser.add_argument('-p', '--password', dest='password',
-        help="Password (posterous import only)")
-
-
+    parser.add_argument('--disable-slugs', action='store_true',
+        dest='disable_slugs',
+        help='Disable storing slugs from imported posts within output. '
+             'With this disabled, your Pelican URLs may not be consistent '
+             'with your original posts.')
 
     args = parser.parse_args()
 
@@ -377,4 +418,5 @@ def main():
 
     fields2pelican(fields, args.markup, args.output,
                    dircat=args.dircat or False,
-                   strip_raw=args.strip_raw or False)
+                   strip_raw=args.strip_raw or False,
+                   disable_slugs=args.disable_slugs or False)
