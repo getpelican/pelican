@@ -343,7 +343,7 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
                     new_content = decode_wp_content(content)
                 else:
                     paragraphs = content.splitlines()
-                    paragraphs = [u'<p>{0}</p>'.format(p) for p in paragraphs]
+                    paragraphs = ['<P>{0}</p>'.format(p) for p in paragraphs]
                     new_content = ''.join(paragraphs)
 
                 fp.write(new_content)
