@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+
 import os
 import math
 import random
 import logging
 import datetime
-import subprocess
+import shutil
 
+from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter, itemgetter
 
-from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
-from jinja2.exceptions import TemplateNotFound
+from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
+                    BaseLoader, TemplateNotFound)
 
-from pelican.contents import Article, Page, Category, is_valid_content
+from pelican.contents import Article, Page, Category, StaticContent, \
+        is_valid_content
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, open
+from pelican.utils import copy, process_translations, mkdir_p
 from pelican import signals
 
 
@@ -36,14 +40,17 @@ class Generator(object):
 
         # templates cache
         self._templates = {}
-        self._templates_path = os.path.expanduser(
-                os.path.join(self.theme, 'templates'))
+        self._templates_path = []
+        self._templates_path.append(os.path.expanduser(
+                os.path.join(self.theme, 'templates')))
+        self._templates_path += self.settings.get('EXTRA_TEMPLATES_PATHS', [])
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
         self.env = Environment(
+            trim_blocks=True,
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
@@ -57,6 +64,8 @@ class Generator(object):
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
         self.env.filters.update(custom_filters)
+
+        signals.generator_init.send(self)
 
     def get_template(self, name):
         """Return the template by name.
@@ -76,8 +85,10 @@ class Generator(object):
 
         :param path: the path to search the file on
         :param exclude: the list of path to exclude
+        :param extensions: the list of allowed extensions (if False, all
+            extensions are allowed)
         """
-        if not extensions:
+        if extensions is None:
             extensions = self.markup
 
         files = []
@@ -91,9 +102,16 @@ class Generator(object):
             for e in exclude:
                 if e in dirs:
                     dirs.remove(e)
-            files.extend([os.sep.join((root, f)) for f in temp_files
-                if True in [f.endswith(ext) for ext in extensions]])
+            for f in temp_files:
+                if extensions is False or \
+                        (True in [f.endswith(ext) for ext in extensions]):
+                    files.append(os.sep.join((root, f)))
         return files
+
+    def add_source_path(self, content):
+        location = os.path.relpath(os.path.abspath(content.source_path),
+                                   os.path.abspath(self.path))
+        self.context['filenames'][location] = content
 
     def _update_context(self, items):
         """Update the context with the given items from the currrent
@@ -102,8 +120,37 @@ class Generator(object):
         for item in items:
             value = getattr(self, item)
             if hasattr(value, 'items'):
-                value = value.items()
+                value = list(value.items())  # py3k safeguard for iterators
             self.context[item] = value
+
+
+class _FileLoader(BaseLoader):
+
+    def __init__(self, path, basedir):
+        self.path = path
+        self.fullpath = os.path.join(basedir, path)
+
+    def get_source(self, environment, template):
+        if template != self.path or not os.path.exists(self.fullpath):
+            raise TemplateNotFound(template)
+        mtime = os.path.getmtime(self.fullpath)
+        with open(self.fullpath, 'r', encoding='utf-8') as f:
+            source = f.read()
+        return source, self.fullpath, \
+                lambda: mtime == os.path.getmtime(self.fullpath)
+
+
+class TemplatePagesGenerator(Generator):
+
+    def generate_output(self, writer):
+        for source, dest in self.settings['TEMPLATE_PAGES'].items():
+            self.env.loader.loaders.insert(0, _FileLoader(source, self.path))
+            try:
+                template = self.env.get_template(source)
+                rurls = self.settings.get('RELATIVE_URLS')
+                writer.write_file(dest, template, self.context, rurls)
+            finally:
+                del self.env.loader.loaders[0]
 
 
 class ArticlesGenerator(Generator):
@@ -116,6 +163,7 @@ class ArticlesGenerator(Generator):
         self.dates = {}
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
+        self.related_posts = []
         self.authors = defaultdict(list)
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
@@ -124,54 +172,74 @@ class ArticlesGenerator(Generator):
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
 
-        if self.settings.get('FEED'):
+        if self.settings.get('FEED_ATOM'):
             writer.write_feed(self.articles, self.context,
-                              self.settings['FEED'])
+                              self.settings['FEED_ATOM'])
 
         if self.settings.get('FEED_RSS'):
             writer.write_feed(self.articles, self.context,
                               self.settings['FEED_RSS'], feed_type='rss')
 
+        if self.settings.get('FEED_ALL_ATOM') or \
+                self.settings.get('FEED_ALL_RSS'):
+            all_articles = list(self.articles)
+            for article in self.articles:
+                all_articles.extend(article.translations)
+            all_articles.sort(key=attrgetter('date'), reverse=True)
+
+            if self.settings.get('FEED_ALL_ATOM'):
+                writer.write_feed(all_articles, self.context,
+                                  self.settings['FEED_ALL_ATOM'])
+
+            if self.settings.get('FEED_ALL_RSS'):
+                writer.write_feed(all_articles, self.context,
+                                  self.settings['FEED_ALL_RSS'], feed_type='rss')
+
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
-            if self.settings.get('CATEGORY_FEED'):
+            if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED'] % cat)
+                                  self.settings['CATEGORY_FEED_ATOM'] % cat)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_RSS'] % cat,
                                   feed_type='rss')
 
-        if self.settings.get('TAG_FEED') or self.settings.get('TAG_FEED_RSS'):
+        if self.settings.get('TAG_FEED_ATOM') \
+                or self.settings.get('TAG_FEED_RSS'):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
-                if self.settings.get('TAG_FEED'):
+                if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED'] % tag)
+                                      self.settings['TAG_FEED_ATOM'] % tag)
 
                 if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,
                                       self.settings['TAG_FEED_RSS'] % tag,
                                       feed_type='rss')
 
-        if self.settings.get('TRANSLATION_FEED'):
+        if self.settings.get('TRANSLATION_FEED_ATOM') or \
+                self.settings.get('TRANSLATION_FEED_RSS'):
             translations_feeds = defaultdict(list)
             for article in chain(self.articles, self.translations):
                 translations_feeds[article.lang].append(article)
 
             for lang, items in translations_feeds.items():
                 items.sort(key=attrgetter('date'), reverse=True)
-                writer.write_feed(items, self.context,
-                                  self.settings['TRANSLATION_FEED'] % lang)
+                if self.settings.get('TRANSLATION_FEED_ATOM'):
+                    writer.write_feed(items, self.context,
+                            self.settings['TRANSLATION_FEED_ATOM'] % lang)
+                if self.settings.get('TRANSLATION_FEED_RSS'):
+                    writer.write_feed(items, self.context,
+                            self.settings['TRANSLATION_FEED_RSS'] % lang,
+                            feed_type='rss')
 
     def generate_articles(self, write):
         """Generate the articles."""
-        article_template = self.get_template('article')
         for article in chain(self.translations, self.articles):
-            write(article.save_as,
-                          article_template, self.context, article=article,
-                          category=article.category)
+            write(article.save_as, self.get_template(article.template),
+                self.context, article=article, category=article.category)
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -223,7 +291,7 @@ class ArticlesGenerator(Generator):
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
                                                         '%s.html' % template)
             if not save_as:
-                 continue
+                continue
 
             write(save_as, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
@@ -238,7 +306,7 @@ class ArticlesGenerator(Generator):
             write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'tag/%s' % tag)
+                page_name=tag.page_name)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -248,7 +316,7 @@ class ArticlesGenerator(Generator):
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'category/%s' % cat)
+                page_name=cat.page_name)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -258,14 +326,14 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=u'author/%s' % aut)
+                page_name=aut.page_name)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
-        article_template = self.get_template('article')
         for article in self.drafts:
-            write('drafts/%s.html' % article.slug, article_template,
-                  self.context, article=article, category=article.category)
+            write('drafts/%s.html' % article.slug,
+                self.get_template(article.template), self.context,
+                article=article, category=article.category)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -278,7 +346,6 @@ class ArticlesGenerator(Generator):
         self.generate_period_archives(write)
         self.generate_direct_templates(write)
 
-
         # and subfolders after that
         self.generate_tags(write)
         self.generate_categories(write)
@@ -286,7 +353,7 @@ class ArticlesGenerator(Generator):
         self.generate_drafts(write)
 
     def generate_context(self):
-        """change the context"""
+        """Add the articles into the shared context"""
 
         article_path = os.path.normpath(  # we have to remove trailing slashes
             os.path.join(self.path, self.settings['ARTICLE_DIR'])
@@ -296,32 +363,41 @@ class ArticlesGenerator(Generator):
                 article_path,
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
+                signals.article_generate_preread.send(self)
                 content, metadata = read_file(f, settings=self.settings)
-            except Exception, e:
-                logger.warning(u'Could not process %s\n%s' % (f, str(e)))
+            except Exception as e:
+                logger.warning('Could not process %s\n%s' % (f, str(e)))
                 continue
 
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata:
 
-                if os.path.dirname(f) == article_path:  # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY'] 
+                if (self.settings['USE_FOLDER_AS_CATEGORY']
+                    and os.path.dirname(f) != article_path):
+                    # if the article is in a subdirectory
+                    category = os.path.basename(os.path.dirname(f))
                 else:
-                    category = os.path.basename(os.path.dirname(f))\
-                                .decode('utf-8')
+                    # if the article is not in a subdirectory
+                    category = self.settings['DEFAULT_CATEGORY']
 
                 if category != '':
                     metadata['category'] = Category(category, self.settings)
 
-            if 'date' not in metadata and self.settings['FALLBACK_ON_FS_DATE']:
+            if 'date' not in metadata and self.settings.get('DEFAULT_DATE'):
+                if self.settings['DEFAULT_DATE'] == 'fs':
                     metadata['date'] = datetime.datetime.fromtimestamp(
-                                        os.stat(f).st_ctime)
+                            os.stat(f).st_ctime)
+                else:
+                    metadata['date'] = datetime.datetime(
+                            *self.settings['DEFAULT_DATE'])
 
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
-                              filename=f)
+                              source_path=f, context=self.context)
             if not is_valid_content(article, f):
                 continue
+
+            self.add_source_path(article)
 
             if article.status == "published":
                 if hasattr(article, 'tags'):
@@ -331,8 +407,8 @@ class ArticlesGenerator(Generator):
             elif article.status == "draft":
                 self.drafts.append(article)
             else:
-                logger.warning(u"Unknown status %s for file %s, skipping it." %
-                               (repr(unicode.encode(article.status, 'utf-8')),
+                logger.warning("Unknown status %s for file %s, skipping it." %
+                               (repr(article.status),
                                 repr(f)))
 
         self.articles, self.translations = process_translations(all_articles)
@@ -340,13 +416,15 @@ class ArticlesGenerator(Generator):
         for article in self.articles:
             # only main articles are listed in categories, not translations
             self.categories[article.category].append(article)
-            self.authors[article.author].append(article)
+            # ignore blank authors as well as undefined
+            if hasattr(article,'author') and article.author.name != '':
+                self.authors[article.author].append(article)
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
         self.dates.sort(key=attrgetter('date'),
-                reverse=self.context['REVERSE_ARCHIVE_ORDER'])
+                reverse=self.context['NEWEST_FIRST_ARCHIVES'])
 
         # create tag cloud
         tag_cloud = defaultdict(int)
@@ -357,7 +435,7 @@ class ArticlesGenerator(Generator):
         tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
         tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
 
-        tags = map(itemgetter(1), tag_cloud)
+        tags = list(map(itemgetter(1), tag_cloud))
         if tags:
             max_count = max(tags)
         steps = self.settings.get('TAG_CLOUD_STEPS')
@@ -379,14 +457,15 @@ class ArticlesGenerator(Generator):
         # order the categories per name
         self.categories = list(self.categories.items())
         self.categories.sort(
-                key=lambda item: item[0].name,
                 reverse=self.settings['REVERSE_CATEGORY_ORDER'])
 
         self.authors = list(self.authors.items())
-        self.authors.sort(key=lambda item: item[0].name)
+        self.authors.sort()
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
-                              'tag_cloud', 'authors'))
+                              'tag_cloud', 'authors', 'related_posts'))
+
+        signals.article_generator_finalized.send(self)
 
     def generate_output(self, writer):
         self.generate_feeds(writer)
@@ -398,32 +477,51 @@ class PagesGenerator(Generator):
 
     def __init__(self, *args, **kwargs):
         self.pages = []
+        self.hidden_pages = []
+        self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
+        signals.pages_generator_init.send(self)
 
     def generate_context(self):
         all_pages = []
+        hidden_pages = []
         for f in self.get_files(
                 os.path.join(self.path, self.settings['PAGE_DIR']),
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                content, metadata = read_file(f)
-            except Exception, e:
-                logger.error(u'Could not process %s\n%s' % (f, str(e)))
+                content, metadata = read_file(f, settings=self.settings)
+            except Exception as e:
+                logger.warning('Could not process %s\n%s' % (f, str(e)))
                 continue
+            signals.pages_generate_context.send(self, metadata=metadata)
             page = Page(content, metadata, settings=self.settings,
-                        filename=f)
+                        source_path=f, context=self.context)
             if not is_valid_content(page, f):
                 continue
-            all_pages.append(page)
+
+            self.add_source_path(page)
+
+            if page.status == "published":
+                all_pages.append(page)
+            elif page.status == "hidden":
+                hidden_pages.append(page)
+            else:
+                logger.warning("Unknown status %s for file %s, skipping it." %
+                               (repr(page.status),
+                                repr(f)))
 
         self.pages, self.translations = process_translations(all_pages)
+        self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
 
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
+        signals.pages_generator_finalized.send(self)
+
     def generate_output(self, writer):
-        for page in chain(self.translations, self.pages):
-            writer.write_file(page.save_as, self.get_template('page'),
+        for page in chain(self.translations, self.pages,
+                            self.hidden_translations, self.hidden_pages):
+            writer.write_file(page.save_as, self.get_template(page.template),
                     self.context, page=page,
                     relative_urls=self.settings.get('RELATIVE_URLS'))
 
@@ -440,53 +538,61 @@ class StaticGenerator(Generator):
                  final_path, overwrite=True)
 
     def generate_context(self):
+        self.staticfiles = []
 
-        if self.settings['WEBASSETS']:
-            from webassets import Environment as AssetsEnvironment
-
-            # Define the assets environment that will be passed to the
-            # generators. The StaticGenerator must then be run first to have
-            # the assets in the output_path before generating the templates.
-            assets_url = self.settings['SITEURL'] + '/theme/'
-            assets_src = os.path.join(self.output_path, 'theme')
-            self.assets_env = AssetsEnvironment(assets_src, assets_url)
-
-            if logging.getLevelName(logger.getEffectiveLevel()) == "DEBUG":
-                self.assets_env.debug = True
+        # walk static paths
+        for static_path in self.settings['STATIC_PATHS']:
+            for f in self.get_files(
+                    os.path.join(self.path, static_path), extensions=False):
+                f_rel = os.path.relpath(f, self.path)
+                # TODO remove this hardcoded 'static' subdirectory
+                sc = StaticContent(f_rel, os.path.join('static', f_rel),
+                        settings=self.settings)
+                self.staticfiles.append(sc)
+                self.context['filenames'][f_rel] = sc
+        # same thing for FILES_TO_COPY
+        for src, dest in self.settings['FILES_TO_COPY']:
+            sc = StaticContent(src, dest, settings=self.settings)
+            self.staticfiles.append(sc)
+            self.context['filenames'][src] = sc
 
     def generate_output(self, writer):
-
-        self._copy_paths(self.settings['STATIC_PATHS'], self.path,
-                         'static', self.output_path)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, '.')
-
-        # copy all the files needed
-        for source, destination in self.settings['FILES_TO_COPY']:
-            copy(source, self.path, self.output_path, destination,
-                 overwrite=True)
+        # copy all StaticContent files
+        for sc in self.staticfiles:
+            mkdir_p(os.path.dirname(sc.save_as))
+            shutil.copy(sc.source_path, sc.save_as)
+            logger.info('copying {} to {}'.format(sc.source_path, sc.save_as))
 
 
 class PdfGenerator(Generator):
     """Generate PDFs on the output dir, for all articles and pages coming from
     rst"""
     def __init__(self, *args, **kwargs):
+        super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
+            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH']) \
+                                if 'PDF_STYLE_PATH' in self.settings.keys() \
+                                else ''
+            pdf_style = self.settings['PDF_STYLE'] if 'PDF_STYLE' \
+                                                    in self.settings.keys() \
+                                                    else 'twelvepoint'
             self.pdfcreator = RstToPdf(breakside=0,
-                                       stylesheets=['twelvepoint'])
+                                       stylesheets=[pdf_style],
+                                       style_path=[pdf_style_path])
         except ImportError:
             raise Exception("unable to find rst2pdf")
-        super(PdfGenerator, self).__init__(*args, **kwargs)
 
     def _create_pdf(self, obj, output_path):
-        if obj.filename.endswith(".rst"):
+        if obj.source_path.endswith('.rst'):
             filename = obj.slug + ".pdf"
             output_pdf = os.path.join(output_path, filename)
-            # print "Generating pdf for", obj.filename, " in ", output_pdf
-            with open(obj.filename) as f:
-                self.pdfcreator.createPdf(text=f, output=output_pdf)
-            logger.info(u' [ok] writing %s' % output_pdf)
+            # print('Generating pdf for', obj.source_path, 'in', output_pdf)
+            with open(obj.source_path) as f:
+                self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
+            logger.info(' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
         pass
@@ -494,14 +600,14 @@ class PdfGenerator(Generator):
     def generate_output(self, writer=None):
         # we don't use the writer passed as argument here
         # since we write our own files
-        logger.info(u' Generating PDF files...')
+        logger.info(' Generating PDF files...')
         pdf_path = os.path.join(self.output_path, 'pdf')
         if not os.path.exists(pdf_path):
             try:
                 os.mkdir(pdf_path)
             except OSError:
-                logger.error("Couldn't create the pdf output folder in " + pdf_path)
-                pass
+                logger.error("Couldn't create the pdf output folder in " +
+                             pdf_path)
 
         for article in self.context['articles']:
             self._create_pdf(article, pdf_path)
@@ -509,49 +615,16 @@ class PdfGenerator(Generator):
         for page in self.context['pages']:
             self._create_pdf(page, pdf_path)
 
+class SourceFileGenerator(Generator):
+    def generate_context(self):
+        self.output_extension = self.settings['OUTPUT_SOURCES_EXTENSION']
 
-class LessCSSGenerator(Generator):
-    """Compile less css files."""
-
-    def _compile(self, less_file, source_dir, dest_dir):
-        base = os.path.relpath(less_file, source_dir)
-        target = os.path.splitext(
-                os.path.join(dest_dir, base))[0] + '.css'
-        target_dir = os.path.dirname(target)
-
-        if not os.path.exists(target_dir):
-            try:
-                os.makedirs(target_dir)
-            except OSError:
-                logger.error("Couldn't create the less css output folder in " +
-                        target_dir)
-
-        subprocess.call([self._lessc, less_file, target])
-        logger.info(u' [ok] compiled %s' % base)
+    def _create_source(self, obj, output_path):
+        output_path = os.path.splitext(obj.save_as)[0]
+        dest = os.path.join(output_path, output_path + self.output_extension)
+        copy('', obj.source_path, dest)
 
     def generate_output(self, writer=None):
-        logger.info(u' Compiling less css')
-
-        # store out compiler here, so it won't be evaulted on each run of
-        # _compile
-        lg = self.settings['LESS_GENERATOR']
-        self._lessc = lg if isinstance(lg, basestring) else 'lessc'
-
-        # walk static paths
-        for static_path in self.settings['STATIC_PATHS']:
-            for f in self.get_files(
-                    os.path.join(self.path, static_path),
-                    extensions=['less']):
-
-                self._compile(f, self.path, self.output_path)
-
-        # walk theme static paths
-        theme_output_path = os.path.join(self.output_path, 'theme')
-
-        for static_path in self.settings['THEME_STATIC_PATHS']:
-            theme_static_path = os.path.join(self.theme, static_path)
-            for f in self.get_files(
-                    theme_static_path,
-                    extensions=['less']):
-
-                self._compile(f, theme_static_path, theme_output_path)
+        logger.info(' Generating source files...')
+        for object in chain(self.context['articles'], self.context['pages']):
+            self._create_source(object, self.output_path)

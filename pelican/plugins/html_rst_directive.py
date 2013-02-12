@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from docutils import nodes
 from docutils.parsers.rst import directives, Directive
-from pelican import log
 
 """
 HTML tags for reStructuredText
@@ -52,7 +53,7 @@ class RawHtml(Directive):
     has_content = True
 
     def run(self):
-        html = u' '.join(self.content)
+        html = ' '.join(self.content)
         node = nodes.raw('', html, format='html')
         return [node]
 

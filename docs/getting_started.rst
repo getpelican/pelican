@@ -1,29 +1,32 @@
 Getting started
 ###############
 
-Installing
-==========
+Installing Pelican
+==================
 
 You're ready? Let's go! You can install Pelican via several different methods.
 The simplest is via `pip <http://www.pip-installer.org/>`_::
 
     $ pip install pelican
 
-If you don't have pip installed, an alternative method is easy_install::
+If you don't have ``pip`` installed, an alternative method is ``easy_install``::
 
     $ easy_install pelican
 
 While the above is the simplest method, the recommended approach is to create
-a virtual environment for Pelican via `virtualenv <http://www.virtualenv.org/>`_
-and `virtualenvwrapper <http://www.doughellmann.com/projects/virtualenvwrapper/>`_
-before installing Pelican::
+a virtual environment for Pelican via virtualenv_ and virtualenvwrapper_ before
+installing Pelican. Assuming you've followed the virtualenvwrapper
+`installation <http://virtualenvwrapper.readthedocs.org/en/latest/install.html>`_
+and `shell configuration
+<http://virtualenvwrapper.readthedocs.org/en/latest/install.html#shell-startup-file>`_
+steps, you can then open a new terminal session and create a new virtual
+environment for Pelican::
 
-    $ pip install virtualenvwrapper
     $ mkvirtualenv pelican
 
 Once the virtual environment has been created and activated, Pelican can be
-be installed via pip or easy_install as noted above. Alternatively, if you
-have the project source, you can install Pelican using the distutils 
+be installed via ``pip`` or ``easy_install`` as noted above. Alternatively, if
+you have the project source, you can install Pelican using the distutils
 method::
 
     $ cd path-to-Pelican-source
@@ -32,14 +35,23 @@ method::
 If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
 
-    $ pip install -e git://github.com/ametaireau/pelican#egg=pelican
+    $ pip install -e git://github.com/getpelican/pelican#egg=pelican
+
+If you plan on using Markdown as a markup format, you'll need to install the
+Markdown library as well::
+
+    $ pip install Markdown
+
+If you want to use AsciiDoc you need to install it from `source
+<http://www.methods.co.nz/asciidoc/INSTALL.html>`_ or use your operating
+system's package manager.
 
 Upgrading
 ---------
 
-If you installed a stable Pelican release via pip or easy_install and wish to
-upgrade to the latest stable release, you can do so by adding `--upgrade` to
-the relevant command. For pip, that would be::
+If you installed a stable Pelican release via ``pip`` or ``easy_install`` and
+wish to upgrade to the latest stable release, you can do so by adding
+``--upgrade`` to the relevant command. For pip, that would be::
 
     $ pip install --upgrade pelican
 
@@ -49,18 +61,91 @@ perform the same step to install the most recent version.
 Dependencies
 ------------
 
-At this time, Pelican is dependent on the following Python packages:
+At this time, Pelican core is dependent on the following Python packages:
 
-* feedgenerator, to generate the Atom feeds
-* jinja2, for templating support
-* docutils, for supporting reStructuredText as an input format
+* `feedgenerator <http://pypi.python.org/pypi/feedgenerator>`_, to generate the
+  Atom feeds
+* `jinja2 <http://pypi.python.org/pypi/Jinja2>`_, for templating support
+* `pygments <http://pypi.python.org/pypi/Pygments>`_, for syntax highlighting
+* `docutils <http://pypi.python.org/pypi/docutils>`_, for supporting
+  reStructuredText as an input format
+* `pytz <http://pypi.python.org/pypi/pytz>`_, for timezone definitions
+* `blinker <http://pypi.python.org/pypi/blinker>`_, an object-to-object and
+  broadcast signaling system
+* `unidecode <http://pypi.python.org/pypi/Unidecode>`_, for ASCII
+  transliterations of Unicode text
 
-If you're not using Python 2.7, you will also need `argparse`.
+If you're not using Python 2.7, you will also need the ``argparse`` package.
 
 Optionally:
 
-* pygments, for syntax highlighting
-* Markdown, for supporting Markdown as an input format
+* `markdown <http://pypi.python.org/pypi/Markdown>`_, for supporting Markdown as
+  an input format
+* `typogrify <http://pypi.python.org/pypi/typogrify>`_, for typographical
+  enhancements
+
+Kickstart a blog
+================
+
+Following is a brief tutorial for those who want to get started right away.
+We're going to assume that virtualenv_ and virtualenvwrapper_ are installed and
+configured; if you've installed Pelican outside of a virtual environment,
+you can skip to the ``pelican-quickstart`` command. Let's first create a new
+virtual environment and install Pelican into it::
+
+    $ mkvirtualenv pelican
+    $ pip install pelican Markdown
+
+Next we'll create a directory to house our site content and configuration files,
+which can be located any place you prefer, and associate this new project with
+the currently-active virtual environment::
+
+    $ mkdir ~/code/yoursitename
+    $ cd ~/code/yoursitename
+    $ setvirtualenvproject
+
+Now we can run the ``pelican-quickstart`` command, which will ask some questions
+about your site::
+
+    $ pelican-quickstart
+
+Once you finish answering all the questions, you can begin adding content to the
+*content* folder that has been created for you. (See *Writing articles using
+Pelican* section below for more information about how to format your content.)
+Once you have some content to generate, you can convert it to HTML via the
+following command::
+
+    $ make html
+
+If you'd prefer to have Pelican automatically regenerate your site every time a
+change is detected (handy when testing locally), use the following command
+instead::
+
+    $ make regenerate
+
+To serve the site so it can be previewed in your browser at
+http://localhost:8000::
+
+    $ make serve
+
+Normally you would need to run ``make regenerate`` and ``make serve`` in two
+separate terminal sessions, but you can run both at once via::
+
+    $ make devserver
+
+The above command will simultaneously run Pelican in regeneration mode as well
+as serve the output at http://localhost:8000. Once you are done testing your
+changes, you should stop the development server via::
+
+    $ ./develop_server.sh stop
+
+When you're ready to publish your site, you can upload it via the method(s) you
+chose during the ``pelican-quickstart`` questionnaire. For this example, we'll
+use rsync over ssh::
+
+    $ make rsync_upload
+
+That's it! Your site should now be live.
 
 Writing articles using Pelican
 ==============================
@@ -73,7 +158,7 @@ file system (for instance, about the category of your articles), but some
 information you need to provide in the form of metadata inside your files.
 
 You can provide this metadata in reStructuredText text files via the
-following syntax (give your file the `.rst` extension)::
+following syntax (give your file the ``.rst`` extension)::
 
     My super title
     ##############
@@ -81,72 +166,181 @@ following syntax (give your file the `.rst` extension)::
     :date: 2010-10-03 10:20
     :tags: thats, awesome
     :category: yeah
+    :slug: my-super-post
     :author: Alexis Metaireau
+    :summary: Short version for index and feeds
 
+Pelican implements an extension to reStructuredText to enable support for the
+``abbr`` HTML tag. To use it, write something like this in your post::
 
-You can also use Markdown syntax (with a file ending in `.md`).
-Markdown generation will not work until you explicitly install the `Markdown`
-package, which can be done via `pip install Markdown`. Metadata syntax for
-Markdown posts should follow this pattern::
+    This will be turned into :abbr:`HTML (HyperText Markup Language)`.
 
-    Date: 2010-12-03
+You can also use Markdown syntax (with a file ending in ``.md``, ``.markdown``,
+or ``.mkd``). Markdown generation will not work until you explicitly install the
+``Markdown`` package, which can be done via ``pip install Markdown``. Metadata
+syntax for Markdown posts should follow this pattern::
+
     Title: My super title
+    Date: 2010-12-03 10:20
     Tags: thats, awesome
+    Category: yeah
     Slug: my-super-post
+    Author: Alexis Metaireau
+    Summary: Short version for index and feeds
 
     This is the content of my super blog post.
 
+Lastly, you can use vanilla HTML (files ending in ``.htm`` and ``.html``). Pelican 
+interprets the HTML in a very straightforward manner, reading meta data out
+of ``meta`` tags, the title out of the ``title`` tag, and the body out of the 
+``body`` tag::
+
+    <html>
+        <head>
+            <title>My super title</title>
+            <meta name="tags" contents="thats, awesome" />
+            <meta name="date" contents="2012-07-09 22:28" />
+            <meta name="category" contents="yeah" />
+            <meta name="author" contents="Alexis Métaireau" />
+            <meta name="summary" contents="Short version for index and feeds" />
+        </head>
+        <body>
+            This is the content of my super blog post.
+        </body>
+    </html>
+
+With HTML, there is one simple exception to the standard metadata.
+``tags`` can be specified either with the ``tags`` metadata, as is standard in 
+Pelican, or with the ``keywords`` metadata, as is standard in HTML. The two can 
+be used interchangeably.
+
 Note that, aside from the title, none of this metadata is mandatory: if the date
-is not specified, Pelican will rely on the file's "mtime" timestamp, and the
-category can be determined by the directory in which the file resides. For
-example, a file located at `python/foobar/myfoobar.rst` will have a category of
-`foobar`.
+is not specified and DEFAULT_DATE is 'fs', Pelican will rely on the file's 
+"mtime" timestamp, and the category can be determined by the directory in which 
+the file resides. For example, a file located at ``python/foobar/myfoobar.rst`` 
+will have a category of ``foobar``.
+
+Note that, aside from the title and date, none of this metadata is mandatory.
+If the date is not specified and you have ``DEFAULT_DATE`` set, Pelican will
+use that instead, making the ``date`` metadata attribute optional. The category
+can be determined by the directory in which the file resides. For example, a
+file located at ``python/foobar/myfoobar.rst`` will have a category of
+``foobar``. If you would like to organize your files in other ways where the
+name of the subfolder would not be a good category name, you can set the
+setting ``USE_FOLDER_AS_CATEGORY`` to ``False``. If there is no summary
+metadata for a given post, the ``SUMMARY_MAX_LENGTH`` setting can be used to
+specify how many words from the beginning of an article are used as the
+summary.
+
+You can also extract any metadata from the filename through a regular
+expression to be set in the ``FILENAME_METADATA`` setting.
+All named groups that are matched will be set in the metadata object. The
+default value for the ``FILENAME_METADATA`` setting will only extract the date
+from the filename. For example, if you would like to extract both the date and
+the slug, you could set something like:
+``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``
+
+Please note that the metadata available inside your files takes precedence over
+the metadata extracted from the filename.
 
 Generate your blog
 ------------------
 
-To launch Pelican, just use the `pelican` command::
+The ``make`` shortcut commands mentioned in the *Kickstart a blog* section
+are mostly wrappers around the ``pelican`` command that generates the HTML from
+the content. The ``pelican`` command can also be run directly::
 
     $ pelican /path/to/your/content/ [-s path/to/your/settings.py]
 
-And… that's all! Your weblog will be generated and saved in the `content/`
-folder.
+The above command will generate your weblog and save it in the ``output/``
+folder, using the default theme to produce a simple site. The default theme is
+simple HTML without styling and is provided so folks may use it as a basis for
+creating their own themes.
 
-The above command will use the default theme to produce a simple site. It's not
-very sexy, as it's just simple HTML output (without any style).
-
-You can create your own style if you want. Have a look at the help to see all
-the options you can use::
+Pelican has other command-line switches available. Have a look at the help to
+see all the options you can use::
 
     $ pelican --help
 
-Kickstart a blog
-----------------
+Auto-reload
+-----------
 
-You also can use the `pelican-quickstart` script to start a new blog in
-seconds by just answering a few questions. Just run `pelican-quickstart` and
-you're done! (Added in Pelican 3.0)
+It's possible to tell Pelican to watch for your modifications, instead of
+manually re-running it every time you want to see your changes. To enable this,
+run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
 
 Pages
 -----
 
-If you create a folder named `pages`, all the files in it will be used to
-generate static pages.
+If you create a folder named ``pages`` inside the content folder, all the
+files in it will be used to generate static pages.
 
-Then, use the `DISPLAY_PAGES_ON_MENU` setting, which will add all the pages to 
-the menu.
+Then, use the ``DISPLAY_PAGES_ON_MENU`` setting to add all those pages to
+the primary navigation menu.
+
+If you want to exclude any pages from being linked to or listed in the menu
+then add a ``status: hidden`` attribute to its metadata. This is useful for
+things like making error pages that fit the generated theme of your site.
+
+Linking to internal content
+---------------------------
+
+From Pelican 3.1 onwards, it is now possible to specify intra-site links to
+files in the *source content* hierarchy instead of files in the *generated*
+hierarchy. This makes it easier to link from the current post to other posts
+and images that may be sitting alongside the current post (instead of having
+to determine where those resources will be placed after site generation).
+
+To link to internal content, use the following syntax:
+``|filename|path/to/file``.
+
+For example, you may want to add links between "article1" and "article2" given
+the structure::
+
+    website/
+    ├── content
+    │   ├── article1.rst
+    │   └── cat/
+    │       └── article2.md
+    └── pelican.conf.py
+
+In this example, ``article1.rst`` could look like::
+
+    Title: The first article
+    Date: 2012-12-01
+
+    See below intra-site link examples in reStructuredText format.
+
+    `a link relative to content root <|filename|/cat/article2.md>`_
+    `a link relative to current file <|filename|cat/article2.md>`_
+
+and ``article2.md``::
+
+    Title: The second article
+    Date: 2012-12-01
+
+    See below intra-site link examples in Markdown format.
+
+    [a link relative to content root](|filename|/article1.rst)
+    [a link relative to current file](|filename|../article1.rst)
+
+.. note::
+
+    You can use the same syntax to link to internal pages or even static
+    content (like images) which would be available in a directory listed in
+    ``settings["STATIC_PATHS"]``.
 
 Importing an existing blog
 --------------------------
 
-It is possible to import your blog from Dotclear, WordPress, and RSS feeds using 
+It is possible to import your blog from Dotclear, WordPress, and RSS feeds using
 a simple script. See :ref:`import`.
 
 Translations
 ------------
 
-It is possible to translate articles. To do so, you need to add a `lang` meta
-attribute to your articles/pages and set a `DEFAULT_LANG` setting (which is
+It is possible to translate articles. To do so, you need to add a ``lang`` meta
+attribute to your articles/pages and set a ``DEFAULT_LANG`` setting (which is
 English [en] by default). With those settings in place, only articles with the
 default language will be listed, and each article will be accompanied by a list
 of available translations for that article.
@@ -185,32 +379,27 @@ then instead ensure that the translated article titles are identical, since the
 slug will be auto-generated from the article title.
 
 Syntax highlighting
----------------------
+-------------------
 
 Pelican is able to provide colorized syntax highlighting for your code blocks.
-To do so, you have to use the following conventions (you need to put this in
-your content files).
+To do so, you have to use the following conventions inside your content files.
 
-For RestructuredText::
+For reStructuredText, use the code-block directive::
 
     .. code-block:: identifier
 
-       your code goes here
+       <indented code block goes here>
 
-For Markdown, format your code blocks thusly::
+For Markdown, include the language identifier just above the code block,
+indenting both the identifier and code::
 
-    :::identifier
-    your code goes here
+    A block of text.
 
-The specified identifier should be one that appears on the 
-`list of available lexers <http://pygments.org/docs/lexers/>`_.
+        :::identifier
+        <code goes here>
 
-Auto-reload
------------
-
-It's possible to tell Pelican to watch for your modifications, instead of
-manually re-running it every time you want to see your changes. To enable this,
-run the `pelican` command with the `-r` or `--autoreload` option.
+The specified identifier (e.g. ``python``, ``ruby``) should be one that
+appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
 
 Publishing drafts
 -----------------
@@ -228,11 +417,11 @@ anything special to see what's happening with the generated files.
 
 You can either use your browser to open the files on your disk::
 
-    $ firefox output/index.html
+    firefox output/index.html
 
 Or run a simple web server using Python::
 
     cd output && python -m SimpleHTTPServer
 
-(Tip: If using the latter method in conjunction with the auto-reload feature,
-ensure that `DELETE_OUTPUT_DIRECTORY` is set to `False` in your settings file.)
+.. _virtualenv: http://www.virtualenv.org/
+.. _virtualenvwrapper: http://www.doughellmann.com/projects/virtualenvwrapper/

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 from .support import unittest
 
-from pelican.contents import Page
+from pelican.contents import Page, Article, URLWrapper
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import truncate_html_words
-
+from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
 
 # generate one paragraph, enclosed with <p>
@@ -19,6 +20,9 @@ class TestPage(unittest.TestCase):
         super(TestPage, self).setUp()
         self.page_kwargs = {
             'content': TEST_CONTENT,
+            'context': {
+                'localsiteurl': '',
+            },
             'metadata': {
                 'summary': TEST_SUMMARY,
                 'title': 'foo bar',
@@ -32,7 +36,8 @@ class TestPage(unittest.TestCase):
 
         """
         metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
-        page = Page(TEST_CONTENT, metadata=metadata)
+        page = Page(TEST_CONTENT, metadata=metadata,
+                context={'localsiteurl': ''})
         for key, value in metadata.items():
             self.assertTrue(hasattr(page, key))
             self.assertEqual(value, getattr(page, key))
@@ -40,8 +45,11 @@ class TestPage(unittest.TestCase):
 
     def test_mandatory_properties(self):
         """If the title is not set, must throw an exception."""
-        self.assertRaises(AttributeError, Page, 'content')
-        page = Page(**self.page_kwargs)
+        page = Page('content')
+        with self.assertRaises(NameError) as cm:
+            page.check_properties()
+
+        page = Page('content', metadata={'title': 'foobar'})
         page.check_properties()
 
     def test_summary_from_metadata(self):
@@ -92,6 +100,16 @@ class TestPage(unittest.TestCase):
         page = Page(**self.page_kwargs)
         self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
 
+    def test_metadata_url_format(self):
+        """Arbitrary metadata should be passed through url_format()
+        """
+        page = Page(**self.page_kwargs)
+        self.assertIn('summary', page.url_format.keys())
+        page.metadata['directory'] = 'test-dir'
+        page.settings = _DEFAULT_CONFIG.copy()
+        page.settings['PAGE_SAVE_AS'] = '{directory}/{slug}'
+        self.assertEqual(page.save_as, 'test-dir/foo-bar')
+
     def test_datetime(self):
         """If DATETIME is set to a tuple, it should be used to override LOCALE
         """
@@ -106,8 +124,8 @@ class TestPage(unittest.TestCase):
         page = Page(**page_kwargs)
 
         self.assertEqual(page.locale_date,
-            unicode(dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']),
-                                'utf-8'))
+            dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
+
 
         page_kwargs['settings'] = dict([(x, _DEFAULT_CONFIG[x]) for x in
                                         _DEFAULT_CONFIG])
@@ -124,7 +142,7 @@ class TestPage(unittest.TestCase):
         import locale as locale_module
         try:
             page = Page(**page_kwargs)
-            self.assertEqual(page.locale_date, u'2015-09-13(\u65e5)')
+            self.assertEqual(page.locale_date, '2015-09-13(\u65e5)')
         except locale_module.Error:
             # The constructor of ``Page`` will try to set the locale to
             # ``ja_JP.utf8``. But this attempt will failed when there is no
@@ -134,6 +152,17 @@ class TestPage(unittest.TestCase):
             # Until we find some other method to test this functionality, we
             # will simply skip this test.
             unittest.skip("There is no locale %s in this system." % locale)
+
+    def test_template(self):
+        """
+        Pages default to page, metadata overwrites
+        """
+        default_page = Page(**self.page_kwargs)
+        self.assertEqual('page', default_page.template)
+        page_kwargs = self._copy_page_kwargs()
+        page_kwargs['metadata']['template'] = 'custom'
+        custom_page = Page(**page_kwargs)
+        self.assertEqual('custom', custom_page.template)
 
     def _copy_page_kwargs(self):
         # make a deep copy of page_kwargs
@@ -146,3 +175,54 @@ class TestPage(unittest.TestCase):
                                      for subkey in page_kwargs[key]])
 
         return page_kwargs
+
+    def test_signal(self):
+        """If a title is given, it should be used to generate the slug."""
+
+        def receiver_test_function(sender,instance):
+            pass
+
+        content_object_init.connect(receiver_test_function ,sender=Page)
+        page = Page(**self.page_kwargs)
+        self.assertTrue(content_object_init.has_receivers_for(Page))
+
+
+class TestArticle(TestPage):
+    def test_template(self):
+        """
+        Articles default to article, metadata overwrites
+        """
+        default_article = Article(**self.page_kwargs)
+        self.assertEqual('article', default_article.template)
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['template'] = 'custom'
+        custom_article = Article(**article_kwargs)
+        self.assertEqual('custom', custom_article.template)
+
+
+class TestURLWrapper(unittest.TestCase):
+    def test_comparisons(self):
+        """URLWrappers are sorted by name
+        """
+        wrapper_a = URLWrapper(name='first', settings={})
+        wrapper_b = URLWrapper(name='last', settings={})
+        self.assertFalse(wrapper_a > wrapper_b)
+        self.assertFalse(wrapper_a >= wrapper_b)
+        self.assertFalse(wrapper_a == wrapper_b)
+        self.assertTrue(wrapper_a != wrapper_b)
+        self.assertTrue(wrapper_a <= wrapper_b)
+        self.assertTrue(wrapper_a < wrapper_b)
+        wrapper_b.name = 'first'
+        self.assertFalse(wrapper_a > wrapper_b)
+        self.assertTrue(wrapper_a >= wrapper_b)
+        self.assertTrue(wrapper_a == wrapper_b)
+        self.assertFalse(wrapper_a != wrapper_b)
+        self.assertTrue(wrapper_a <= wrapper_b)
+        self.assertFalse(wrapper_a < wrapper_b)
+        wrapper_a.name = 'last'
+        self.assertTrue(wrapper_a > wrapper_b)
+        self.assertTrue(wrapper_a >= wrapper_b)
+        self.assertFalse(wrapper_a == wrapper_b)
+        self.assertTrue(wrapper_a != wrapper_b)
+        self.assertFalse(wrapper_a <= wrapper_b)
+        self.assertFalse(wrapper_a < wrapper_b)

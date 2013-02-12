@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+
+import six
 
 import argparse
 import os
@@ -28,7 +31,7 @@ _BUILTIN_THEMES = ['simple', 'notmyidea']
 
 def err(msg, die=None):
     """Print an error message and exits if an exit code is given"""
-    sys.stderr.write(str(msg) + '\n')
+    sys.stderr.write(msg + '\n')
     if die:
         sys.exit((die if type(die) is int else 1))
 
@@ -48,9 +51,11 @@ def main():
 
 
     parser.add_argument('-i', '--install', dest='to_install', nargs='+', metavar="theme path",
-        help='The themes to install ')
+        help='The themes to install')
     parser.add_argument('-r', '--remove', dest='to_remove', nargs='+', metavar="theme name",
         help='The themes to remove')
+    parser.add_argument('-U', '--upgrade', dest='to_upgrade', nargs='+',
+            metavar="theme path", help='The themes to upgrade')
     parser.add_argument('-s', '--symlink', dest='to_symlink', nargs='+', metavar="theme path",
         help="Same as `--install', but create a symbolic link instead of copying the theme. Useful for theme development")
     parser.add_argument('-c', '--clean', dest='clean', action="store_true",
@@ -62,6 +67,9 @@ def main():
 
 
     args = parser.parse_args()
+    
+    to_install = args.to_install or args.to_upgrade
+    to_sym = args.to_symlink or args.clean
 
 
     if args.action:
@@ -69,8 +77,7 @@ def main():
             list_themes(args.verbose)
         elif args.action is 'path':
             print(_THEMES_PATH)
-    elif args.to_install or args.to_remove or args.to_symlink or args.clean:
-
+    elif to_install or args.to_remove or to_sym:
         if args.to_remove:
             if args.verbose:
                 print('Removing themes...')
@@ -84,6 +91,13 @@ def main():
 
             for i in args.to_install:
                 install(i, v=args.verbose)
+
+        if args.to_upgrade:
+            if args.verbose:
+                print('Upgrading themes...')
+            
+            for i in args.to_upgrade:
+                install(i, v=args.verbose, u=True)
 
         if args.to_symlink:
             if args.verbose:
@@ -149,23 +163,39 @@ def remove(theme_name, v=False):
         err(target + ' : no such file or directory')
 
 
-def install(path, v=False):
+def install(path, v=False, u=False):
     """Installs a theme"""
     if not os.path.exists(path):
         err(path + ' : no such file or directory')
     elif not os.path.isdir(path):
-        err(path + ' : no a directory')
+        err(path + ' : not a directory')
     else:
         theme_name = os.path.basename(os.path.normpath(path))
         theme_path = os.path.join(_THEMES_PATH, theme_name)
-        if os.path.exists(theme_path):
+        exists = os.path.exists(theme_path)
+        if exists and not u:
             err(path + ' : already exists')
+        elif exists and u:
+            remove(theme_name, v)
+            install(path, v)
         else:
             if v:
                 print("Copying `{p}' to `{t}' ...".format(p=path, t=theme_path))
             try:
                 shutil.copytree(path, theme_path)
-            except Exception, e:
+
+                try:
+                    if os.name == 'posix':
+                        for root, dirs, files in os.walk(theme_path):
+                            for d in dirs:
+                                dname = os.path.join(root, d)
+                                os.chmod(dname, 493) # 0o755
+                            for f in files:
+                                fname = os.path.join(root, f)
+                                os.chmod(fname, 420) # 0o644
+                except OSError as e:
+                    err("Cannot change permissions of files or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)), die=False)
+            except Exception as e:
                 err("Cannot copy `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
 
@@ -174,7 +204,7 @@ def symlink(path, v=False):
     if not os.path.exists(path):
         err(path + ' : no such file or directory')
     elif not os.path.isdir(path):
-        err(path + ' : no a directory')
+        err(path + ' : not a directory')
     else:
         theme_name = os.path.basename(os.path.normpath(path))
         theme_path = os.path.join(_THEMES_PATH, theme_name)
@@ -185,7 +215,7 @@ def symlink(path, v=False):
                 print("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path))
             try:
                 os.symlink(path, theme_path)
-            except Exception, e:
+            except Exception as e:
                 err("Cannot link `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
 
@@ -206,7 +236,7 @@ def clean(v=False):
                     print('Removing {0}'.format(path))
                 try:
                     os.remove(path)
-                except OSError, e:
+                except OSError as e:
                     print('Error: cannot remove {0}'.format(path))
                 else:
                     c+=1
