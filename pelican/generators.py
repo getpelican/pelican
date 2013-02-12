@@ -8,7 +8,7 @@ import subprocess
 
 from collections import defaultdict
 from functools import partial
-from itertools import chain
+from itertools import chain, groupby
 from operator import attrgetter, itemgetter
 
 from jinja2 import Environment, FileSystemLoader, PrefixLoader, ChoiceLoader
@@ -180,42 +180,38 @@ class ArticlesGenerator(Generator):
         except Exception:
             template = self.get_template('archives')
 
-        year_save_as = self.settings.get('YEAR_ARCHIVE_SAVE_AS')
-        month_save_as = self.settings.get('MONTH_ARCHIVE_SAVE_AS')
-        day_save_as = self.settings.get('DAY_ARCHIVE_SAVE_AS')
-
-        # Use `self.dates` rather than `self.articles` since it's
-        # sorted based on the REVERSE_ARCHIVE_ORDER setting.
-        archives = [a for a in self.dates if a in self.articles]
-        article_dates = sorted(set([a.date for a in archives]))
-
-        get_month = attrgetter('year', 'month')
-
-        prev_year = None
-        prev_month = None
-        for date in article_dates:
-            year = date.year
-            month = get_month(date)
-            if year_save_as and year != prev_year:
-                # Pass the full `datetime.date` object for formatting
-                # `save_as` so that the user can employ the same syntax
-                # as for article URLs.
-                save_as = year_save_as.format(date=date)
-                articles = [a for a in archives if a.date.year == year]
+        def _generate_period_archives(dates, key, save_as_fmt):
+            """Generate period archives from `dates`, grouped by
+            `key` and written to `save_as`.
+            """
+            # `dates` is already sorted by date
+            for _period, group in groupby(dates, key=key):
+                archive = list(group)
+                # arbitrarily grab the first date so that the usual
+                # format string syntax can be used for specifying the
+                # period archive dates
+                date = archive[0].date
+                save_as = save_as_fmt.format(date=date)
                 write(save_as, template, self.context,
-                      articles=articles, blog=True)
-                prev_year = year
-            if month_save_as and month != prev_month:
-                save_as = month_save_as.format(date=date)
-                articles = [a for a in archives if get_month(a.date) == month]
-                write(save_as, template, self.context,
-                      articles=articles, blog=True)
-                prev_month = month
-            if day_save_as:
-                save_as = day_save_as.format(date=date)
-                articles = [a for a in archives if a.date == date]
-                write(save_as, template, self.context,
-                      articles=articles, blog=True)
+                      dates=archive, blog=True)
+
+        period_save_as = {
+                'year' : self.settings.get('YEAR_ARCHIVE_SAVE_AS'),
+                'month': self.settings.get('MONTH_ARCHIVE_SAVE_AS'),
+                'day'  : self.settings.get('DAY_ARCHIVE_SAVE_AS')
+                }
+
+        period_date_key = {
+                'year' : attrgetter('date.year'),
+                'month': attrgetter('date.year', 'date.month'),
+                'day'  : attrgetter('date.year', 'date.month', 'date.day')
+                }
+
+        for period in 'year', 'month', 'day':
+            save_as = period_save_as[period]
+            if save_as:
+                key = period_date_key[period]
+                _generate_period_archives(self.dates, key, save_as)
 
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
