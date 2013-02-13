@@ -218,19 +218,14 @@ Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified and DEFAULT_DATE is 'fs', Pelican will rely on the file's 
 "mtime" timestamp, and the category can be determined by the directory in which 
 the file resides. For example, a file located at ``python/foobar/myfoobar.rst`` 
-will have a category of ``foobar``.
+will have a category of ``foobar``. If you would like to organize your files in 
+other ways where the name of the subfolder would not be a good category name, 
+you can set the setting ``USE_FOLDER_AS_CATEGORY`` to ``False``.
 
-Note that, aside from the title and date, none of this metadata is mandatory.
-If the date is not specified and you have ``DEFAULT_DATE`` set, Pelican will
-use that instead, making the ``date`` metadata attribute optional. The category
-can be determined by the directory in which the file resides. For example, a
-file located at ``python/foobar/myfoobar.rst`` will have a category of
-``foobar``. If you would like to organize your files in other ways where the
-name of the subfolder would not be a good category name, you can set the
-setting ``USE_FOLDER_AS_CATEGORY`` to ``False``. If there is no summary
-metadata for a given post, the ``SUMMARY_MAX_LENGTH`` setting can be used to
-specify how many words from the beginning of an article are used as the
-summary.
+If there is no summary metadata for a given post, the ``SUMMARY_MAX_LENGTH`` 
+setting can be used to specify how many words from the beginning of an article 
+are used as the summary. Summaries can also be specified inline with the body 
+using the :ref:`Summary Plugin <plugin-summary>`.
 
 You can also extract any metadata from the filename through a regular
 expression to be set in the ``FILENAME_METADATA`` setting.
