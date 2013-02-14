@@ -47,7 +47,7 @@ else:
 def decoding_strings(f):
     def wrapper(*args, **kwargs):
         out = f(*args, **kwargs)
-        if isinstance(out, six.string_types):
+        if isinstance(out, six.string_types) and not six.PY3:
             # todo: make encoding configurable?
             return out.decode(sys.stdin.encoding)
         return out
