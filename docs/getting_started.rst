@@ -190,9 +190,9 @@ syntax for Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
-Lastly, you can use vanilla HTML (files ending in ``.htm`` and ``.html``). Pelican 
+You can use vanilla HTML (files ending in ``.htm`` and ``.html``). Pelican
 interprets the HTML in a very straightforward manner, reading meta data out
-of ``meta`` tags, the title out of the ``title`` tag, and the body out of the 
+of ``meta`` tags, the title out of the ``title`` tag, and the body out of the
 ``body`` tag::
 
     <html>
@@ -210,14 +210,41 @@ of ``meta`` tags, the title out of the ``title`` tag, and the body out of the
     </html>
 
 With HTML, there is one simple exception to the standard metadata.
-``tags`` can be specified either with the ``tags`` metadata, as is standard in 
-Pelican, or with the ``keywords`` metadata, as is standard in HTML. The two can 
+``tags`` can be specified either with the ``tags`` metadata, as is standard in
+Pelican, or with the ``keywords`` metadata, as is standard in HTML. The two can
 be used interchangeably.
 
+Lastly, you can use an iPython notebook to blog. Create the notebook using the
+iPython notebook interface and when you finish just add the metadata.
+
+All iPython notebooks have a metadata json tag at the beginning with the name
+of the notebook:
+
+    {
+     "metadata": {
+      "name": "Notebook Name"
+    },
+    { THE_NOTENOOK_CONTENT }
+
+Just add more json tags to the metadata tag.
+
+    {
+    "metadata": {
+      "name": "Notebook Name",
+      "title": "Bloggin with iPython notebooks and pelican",
+      "Date": "2013-01-27",
+      "Category": "Super awesome category",
+      "Tags": "blog, ipython-notebook, pelican",
+      "slug": "blogging-with-ipython-notebooks",
+      "author": "Daniel Rodriguez",
+      "featured_image": "custom_value"
+    },
+    { THE_NOTENOOK_CONTENT }
+
 Note that, aside from the title, none of this metadata is mandatory: if the date
-is not specified and DEFAULT_DATE is 'fs', Pelican will rely on the file's 
-"mtime" timestamp, and the category can be determined by the directory in which 
-the file resides. For example, a file located at ``python/foobar/myfoobar.rst`` 
+is not specified and DEFAULT_DATE is 'fs', Pelican will rely on the file's
+"mtime" timestamp, and the category can be determined by the directory in which
+the file resides. For example, a file located at ``python/foobar/myfoobar.rst``
 will have a category of ``foobar``.
 
 Note that, aside from the title and date, none of this metadata is mandatory.

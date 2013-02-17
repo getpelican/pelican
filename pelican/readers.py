@@ -316,7 +316,6 @@ class IPythonReader(Reader):
     file_extensions = ['ipynb']
 
     def read(self, filename):
-        print ("IPython FILE")
         text = open(filename)
         converter = ConverterHTML(filename)
         converter.read()
