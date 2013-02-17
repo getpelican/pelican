@@ -43,7 +43,7 @@ $$(OUTPUTDIR)/%.html:
 	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 
 clean:
-	find $$(OUTPUTDIR) -mindepth 1 -delete
+    if [ -d $(OUTPUTDIR) ]; then find $(OUTPUTDIR) -mindepth 1 -delete; fi
 
 regenerate: clean
 	$$(PELICAN) -r $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
