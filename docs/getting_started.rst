@@ -241,6 +241,8 @@ Just add more json tags to the metadata tag.
     },
     { THE_NOTENOOK_CONTENT }
 
+Note: Be sure to have iPython installed when using the iPython notebook format.
+
 Note that, aside from the title, none of this metadata is mandatory: if the date
 is not specified and DEFAULT_DATE is 'fs', Pelican will rely on the file's
 "mtime" timestamp, and the category can be determined by the directory in which
