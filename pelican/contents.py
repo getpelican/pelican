@@ -201,11 +201,11 @@ class Page(object):
         if it is set, else truncate the content."""
         if hasattr(self, '_summary'):
             return self._summary
-        else:
-            if self.settings['SUMMARY_MAX_LENGTH']:
-                return truncate_html_words(self.content,
-                        self.settings['SUMMARY_MAX_LENGTH'])
-            return self.content
+
+        if self.settings['SUMMARY_MAX_LENGTH']:
+            return truncate_html_words(self.content,
+                    self.settings['SUMMARY_MAX_LENGTH'])
+        return self.content
 
     def _set_summary(self, summary):
         """Dummy function"""
