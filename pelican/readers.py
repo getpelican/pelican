@@ -237,7 +237,7 @@ class HTMLReader(Reader):
 
         def handle_charref(self, data):
             self._data_buffer += '&#{};'.format(data)
-            
+
         def build_tag(self, tag, attrs, close_tag):
             result = '<{}'.format(cgi.escape(tag))
             for k,v in attrs:
@@ -280,7 +280,8 @@ class AsciiDocReader(Reader):
     def read(self, source_path):
         """Parse content and metadata of asciidoc files"""
         from cStringIO import StringIO
-        text = StringIO(pelican_open(source_path))
+        with pelican_open(source_path) as source:
+            text = StringIO(source)
         content = StringIO()
         ad = AsciiDocAPI()
 
