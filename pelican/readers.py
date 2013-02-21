@@ -285,7 +285,8 @@ class AsciiDocReader(Reader):
     def read(self, source_path):
         """Parse content and metadata of asciidoc files"""
         from cStringIO import StringIO
-        text = StringIO(pelican_open(source_path))
+        with pelican_open(source_path) as source:
+            text = StringIO(source)
         content = StringIO()
         ad = AsciiDocAPI()
 
