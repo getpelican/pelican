@@ -140,17 +140,23 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd']
-    extensions = ['codehilite', 'extra']
+    default_extensions = ['codehilite', 'extra']
+
+    def __init__(self, *args, **kwargs):
+        super(MarkdownReader, self).__init__(*args, **kwargs)
+        self.extensions = self.settings.get('MD_EXTENSIONS',
+                                            self.default_extensions)
+        self.extensions.append('meta')
+        self._md = Markdown(extensions=self.extensions)
 
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
-        md = Markdown(extensions=set(self.extensions + ['meta']))
         output = {}
         for name, value in meta.items():
             name = name.lower()
             if name == "summary":
                 summary_values = "\n".join(str(item) for item in value)
-                summary = md.convert(summary_values)
+                summary = self._md.convert(summary_values)
                 output[name] = self.process_metadata(name, summary)
             else:
                 output[name] = self.process_metadata(name, value[0])
@@ -160,10 +166,9 @@ class MarkdownReader(Reader):
         """Parse content and metadata of markdown files"""
 
         with pelican_open(source_path) as text:
-            md = Markdown(extensions=set(self.extensions + ['meta']))
-            content = md.convert(text)
+            content = self._md.convert(text)
 
-        metadata = self._parse_metadata(md.Meta)
+        metadata = self._parse_metadata(self._md.Meta)
         return content, metadata
 
 
