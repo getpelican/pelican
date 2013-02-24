@@ -2,7 +2,7 @@ Pelican
 =======
 
 .. image:: https://secure.travis-ci.org/getpelican/pelican.png?branch=master
-   :target: http://travis-ci.org/#!/getpelican/pelican
+   :target: http://travis-ci.org/getpelican/pelican
    :alt: Travis-ci: continuous integration status.
 
 Pelican is a static site generator, written in Python_.
