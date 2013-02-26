@@ -49,11 +49,11 @@ def wp2fields(xml):
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
             author = item.find('creator').string
-
-            categories = [cat.string for cat in item.findAll(name='category')]
+ 
+            categories = [cat.string for cat in item.findAll('category', {'domain' : 'category'})]
             # caturl = [cat['nicename'] for cat in item.find(domain='category')]
 
-            tags = [tag.string for tag in item.findAll(name='post_tag')]
+            tags = [tag.string for tag in item.findAll('category', {'domain' : 'post_tag'})]
 
             yield (title, content, filename, date, author, categories, tags, "html")
 
