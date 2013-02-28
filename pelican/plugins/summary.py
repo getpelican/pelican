@@ -30,8 +30,6 @@ def content_object_init(instance):
     prev_get_content = instance.get_content
     def get_content(self, siteurl):
         content = prev_get_content(siteurl)
-        self.settings['SUMMARY_BEGIN_MARKER'] = '<!-- PELICAN_BEGIN_SUMMARY -->'
-        self.settings['SUMMARY_END_MARKER'] = '<!-- PELICAN_END_SUMMARY -->'
         if self.settings['SUMMARY_BEGIN_MARKER']:
             content = content.replace(
                 self.settings['SUMMARY_BEGIN_MARKER'], '', 1)
