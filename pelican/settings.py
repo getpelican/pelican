@@ -81,7 +81,10 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
                    'TEMPLATE_PAGES': {},
-                   'IGNORE_FILES': []
+                   'IGNORE_FILES': [],
+                   'GENERATE_AUTHORS': True,
+                   'GENERATE_TAGS': True,
+                   'GENERATE_CATEGORIES': True,
                    }
 
 
