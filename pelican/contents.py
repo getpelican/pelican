@@ -112,7 +112,7 @@ class Page(object):
         if 'summary' in metadata:
             self._summary = metadata['summary']
 
-        signals.content_object_init.send(self.__class__, instance=self)
+        signals.content_object_init.send(self)
 
     def check_properties(self):
         """test that each mandatory property is set."""

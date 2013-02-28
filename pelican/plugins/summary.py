@@ -14,7 +14,7 @@ def initialized(pelican):
         pelican.settings.setdefault('SUMMARY_END_MARKER',
                                     '<!-- PELICAN_END_SUMMARY -->')
 
-def content_object_init(PageClass, instance):
+def content_object_init(instance):
     # if summary is already specified, use it
     if 'summary' in instance.metadata:
         return
