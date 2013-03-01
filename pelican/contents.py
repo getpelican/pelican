@@ -101,6 +101,10 @@ class Page(object):
             self.locale_date = pelican.utils.strftime(self.date,
                 self.date_format)
 
+        if hasattr(self, 'updated'):
+            self.locale_updated = pelican.utils.strftime(self.updated,
+                self.date_format)
+
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
@@ -127,6 +131,7 @@ class Page(object):
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
+            'updated': getattr(self, 'updated', datetime.now()),
             'author': getattr(self, 'author', ''),
             'category': getattr(self, 'category',
                 self.settings['DEFAULT_CATEGORY']),
@@ -247,7 +252,7 @@ class Page(object):
 
 
 class Article(Page):
-    mandatory_properties = ('title', 'date', 'category')
+    mandatory_properties = ('title', 'date', 'updated', 'category')
     default_template = 'article'
 
 
@@ -288,7 +293,7 @@ class URLWrapper(object):
         return self.name
 
     def _from_settings(self, key, get_page_name=False):
-        """Returns URL information as defined in settings. 
+        """Returns URL information as defined in settings.
         When get_page_name=True returns URL without anything after {slug}
         e.g. if in settings: CATEGORY_URL="cat/{slug}.html" this returns "cat/{slug}"
         Useful for pagination."""
