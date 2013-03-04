@@ -28,6 +28,7 @@ help:
 	@echo '   make publish                     generate using production settings '
 	@echo '   make serve                       serve site at http://localhost:8000'
 	@echo '   make devserver                   start/restart develop_server.sh    '
+	@echo '   make stopserver                  stop local server                  '
 	@echo '   ssh_upload                       upload the web site via SSH        '
 	@echo '   rsync_upload                     upload the web site via rsync+ssh  '
 	@echo '   dropbox_upload                   upload the web site via Dropbox    '
@@ -54,6 +55,11 @@ serve:
 devserver:
 	$$(BASEDIR)/develop_server.sh restart
 
+stopserver:
+_   kill -9 `cat pelican.pid`
+_   kill -9 `cat srv.pid`
+_   @echo 'Stopped Pelican and SimpleHTTPServer processes running in background.
+
 publish:
 	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(PUBLISHCONF) $$(PELICANOPTS)
 
@@ -61,7 +67,7 @@ ssh_upload: publish
 	scp -P $$(SSH_PORT) -r $$(OUTPUTDIR)/* $$(SSH_USER)@$$(SSH_HOST):$$(SSH_TARGET_DIR)
 
 rsync_upload: publish
-	rsync -e "ssh -p $(SSH_PORT)" -P -rvz --delete $(OUTPUTDIR) $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+	rsync -e "ssh -p $(SSH_PORT)" -P -rvz --delete $(OUTPUTDIR)/ $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR) --cvs-exclude
 
 dropbox_upload: publish
 	cp -r $$(OUTPUTDIR)/* $$(DROPBOX_DIR)
