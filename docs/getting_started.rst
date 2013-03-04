@@ -286,11 +286,10 @@ hierarchy. This makes it easier to link from the current post to other posts
 and images that may be sitting alongside the current post (instead of having
 to determine where those resources will be placed after site generation).
 
-To link to internal content, use the following syntax:
+To link to internal content (files in the ``content`` directory), use the
+following syntax:
 ``|filename|path/to/file``.
 
-For example, you may want to add links between "article1" and "article2" given
-the structure::
 
     website/
     ├── content
@@ -319,11 +318,30 @@ and ``article2.md``::
     [a link relative to content root](|filename|/article1.rst)
     [a link relative to current file](|filename|../article1.rst)
 
-.. note::
+Embedding non-article or non-page content is slightly different in that the
+directories need to be specified in ``pelicanconf.py`` file. The ``images``
+directory is configured for this by default but others will need to be added
+manually.
 
-    You can use the same syntax to link to internal pages or even static
-    content (like images) which would be available in a directory listed in
-    ``settings["STATIC_PATHS"]``.
+    content
+    ├── images
+    │   └── han.jpg
+    └── misc
+        └── image-test.md
+
+And ``image-test.md`` would include::
+
+    ![Alt Text](|filename|/images/han.jpg)
+
+Any content can be linked in this way. What happens is that the ``images``
+directory gets copied to ``output/static/`` upon publishing. This is
+because ``images`` is in the ``settings["STATIC_PATHS"]`` list by default. If
+you want to have another directory, say ``pdfs`` you would need to add the
+following to ``pelicanconf.py``::
+
+    STATIC_PATHS = ['images', 'pdfs']
+
+And then the ``pdfs`` directory would also be copied to ``output/static/``.
 
 Importing an existing blog
 --------------------------
