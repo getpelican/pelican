@@ -53,6 +53,8 @@ class Page(object):
 
         # set metadata as attributes
         for key, value in local_metadata.items():
+            if key in ('save_as', 'url'):
+                key = 'override_' + key
             setattr(self, key.lower(), value)
 
         # also keep track of the metadata attributes available
@@ -138,6 +140,8 @@ class Page(object):
         return self.settings[fq_key].format(**self.url_format)
 
     def get_url_setting(self, key):
+        if hasattr(self, 'override_' + key):
+            return getattr(self, 'override_' + key)
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 

@@ -92,6 +92,22 @@ want to have its own template.
 Then just make sure your theme contains the relevant template file (e.g.
 ``template_name.html``).
 
+How can I override the generated url of a specific page or article?
+===================================================================
+
+It's as simple as specifying the ``url`` and ``save_as`` special metadata to
+any pages or articles you want to override the generated url.
+Here is an example rst page::
+
+    Override url/save_as page
+    #########################
+
+    :url: override/url/
+    :save_as: override/url/index.html
+
+You're done, the page will be written to ``override/url/index.html``
+and Pelican will use url ``override/url/`` to link to this page.
+
 What if I want to disable feed generation?
 ==========================================
 
