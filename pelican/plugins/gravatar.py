@@ -1,4 +1,5 @@
 import hashlib
+import six
 
 from pelican import signals
 """
@@ -33,8 +34,9 @@ def add_gravatar(generator, metadata):
 
     #then add gravatar url
     if 'email' in metadata.keys():
+        email_bytes = six.b(metadata['email']).lower()
         gravatar_url = "http://www.gravatar.com/avatar/" + \
-                        hashlib.md5(metadata['email'].lower()).hexdigest()
+                        hashlib.md5(email_bytes).hexdigest()
         metadata["author_gravatar"] = gravatar_url
 
 
