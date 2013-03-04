@@ -62,7 +62,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_LANG': 'en',
                    'TAG_CLOUD_STEPS': 4,
                    'TAG_CLOUD_MAX_ITEMS': 100,
-                   'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
+                   'DIRECT_TEMPLATES': ('index', 'tags', 'categories',
+                                        'archives'),
                    'EXTRA_TEMPLATES_PATHS': [],
                    'PAGINATED_DIRECT_TEMPLATES': ('index', ),
                    'PELICAN_CLASS': 'pelican.Pelican',
@@ -171,7 +172,8 @@ def configure_settings(settings):
         if (siteurl.endswith('/')):
             settings['SITEURL'] = siteurl[:-1]
             logger.warn("Removed extraneous trailing slash from SITEURL.")
-        # If SITEURL is defined but FEED_DOMAIN isn't, set FEED_DOMAIN = SITEURL
+        # If SITEURL is defined but FEED_DOMAIN isn't,
+        # set FEED_DOMAIN to SITEURL
         if not 'FEED_DOMAIN' in settings:
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
@@ -185,36 +187,45 @@ def configure_settings(settings):
 
     if any(settings.get(k) for k in feed_keys):
         if not settings.get('FEED_DOMAIN'):
-            logger.warn("Since feed URLs should always be absolute, you should specify "
-                     "FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
-                     "http://www.example.com')")
+            logger.warn(
+                "Since feed URLs should always be absolute, you should specify"
+                " FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
+                "http://www.example.com')")
 
         if not settings.get('SITEURL'):
-            logger.warn("Feeds generated without SITEURL set properly may not be valid")
+            logger.warn('Feeds generated without SITEURL set properly may not'
+                        ' be valid')
 
     if not 'TIMEZONE' in settings:
-        logger.warn("No timezone information specified in the settings. Assuming"
-                 " your timezone is UTC for feed generation. Check "
-                 "http://docs.notmyidea.org/alexis/pelican/settings.html#timezone "
-                 "for more information")
+        logger.warn(
+            'No timezone information specified in the settings. Assuming'
+            ' your timezone is UTC for feed generation. Check '
+            'http://docs.notmyidea.org/alexis/pelican/settings.html#timezone '
+            'for more information')
 
     if 'LESS_GENERATOR' in settings:
-        logger.warn("The LESS_GENERATOR setting has been removed in favor "
-                    "of the Webassets plugin")
+        logger.warn(
+            'The LESS_GENERATOR setting has been removed in favor '
+            'of the Webassets plugin')
 
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
-        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'], six.string_types):
-            settings['OUTPUT_SOURCES_EXTENSION'] = _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION']
-            logger.warn("Detected misconfiguration with OUTPUT_SOURCES_EXTENSION."
-                       " falling back to the default extension " +
-                       _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
+        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'],
+                          six.string_types):
+            settings['OUTPUT_SOURCES_EXTENSION'] = (
+                    _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
+            logger.warn(
+                'Detected misconfiguration with OUTPUT_SOURCES_EXTENSION, '
+                'falling back to the default extension ' +
+                _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
 
     filename_metadata = settings.get('FILENAME_METADATA')
-    if filename_metadata and not isinstance(filename_metadata, six.string_types):
-        logger.error("Detected misconfiguration with FILENAME_METADATA"
-                " setting (must be string or compiled pattern), falling"
-                "back to the default")
-        settings['FILENAME_METADATA'] = \
-                _DEFAULT_CONFIG['FILENAME_METADATA']
+    if filename_metadata and not isinstance(filename_metadata,
+                                            six.string_types):
+        logger.error(
+            'Detected misconfiguration with FILENAME_METADATA '
+            'setting (must be string or compiled pattern), falling '
+            'back to the default')
+        settings['FILENAME_METADATA'] = (
+                _DEFAULT_CONFIG['FILENAME_METADATA'])
 
     return settings

@@ -11,7 +11,6 @@ import re
 import sys
 
 from datetime import datetime
-from sys import platform, stdin
 
 
 from pelican.settings import _DEFAULT_CONFIG
@@ -92,7 +91,8 @@ class Page(object):
 
         if isinstance(self.date_format, tuple):
             locale_string = self.date_format[0]
-            if sys.version_info < (3, ) and isinstance(locale_string, six.text_type):
+            if sys.version_info < (3, ) and isinstance(locale_string,
+                                                       six.text_type):
                 locale_string = locale_string.encode('ascii')
             locale.setlocale(locale.LC_ALL, locale_string)
             self.date_format = self.date_format[1]
@@ -288,10 +288,13 @@ class URLWrapper(object):
         return self.name
 
     def _from_settings(self, key, get_page_name=False):
-        """Returns URL information as defined in settings. 
-        When get_page_name=True returns URL without anything after {slug}
-        e.g. if in settings: CATEGORY_URL="cat/{slug}.html" this returns "cat/{slug}"
-        Useful for pagination."""
+        """Returns URL information as defined in settings.
+
+        When get_page_name=True returns URL without anything after {slug} e.g.
+        if in settings: CATEGORY_URL="cat/{slug}.html" this returns
+        "cat/{slug}" Useful for pagination.
+
+        """
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
         if not isinstance(value, six.string_types):
@@ -303,7 +306,8 @@ class URLWrapper(object):
             else:
                 return value.format(**self.as_dict())
 
-    page_name = property(functools.partial(_from_settings, key='URL', get_page_name=True))
+    page_name = property(functools.partial(_from_settings, key='URL',
+                         get_page_name=True))
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
 

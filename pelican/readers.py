@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-import six
 
 import os
 import re
@@ -23,7 +22,6 @@ try:
     asciidoc = True
 except ImportError:
     asciidoc = False
-import re
 
 import cgi
 try:
@@ -168,6 +166,7 @@ class MarkdownReader(Reader):
         metadata = self._parse_metadata(md.Meta)
         return content, metadata
 
+
 class HTMLReader(Reader):
     """Parses HTML files as input, looking for meta, title, and body tags"""
     file_extensions = ['htm', 'html']
@@ -237,10 +236,10 @@ class HTMLReader(Reader):
 
         def handle_charref(self, data):
             self._data_buffer += '&#{};'.format(data)
-            
+
         def build_tag(self, tag, attrs, close_tag):
             result = '<{}'.format(cgi.escape(tag))
-            for k,v in attrs:
+            for k, v in attrs:
                 result += ' ' + cgi.escape(k)
                 if v is not None:
                     result += '="{}"'.format(cgi.escape(v))
@@ -271,6 +270,7 @@ class HTMLReader(Reader):
         for k in parser.metadata:
             metadata[k] = self.process_metadata(k, parser.metadata[k])
         return parser.body, metadata
+
 
 class AsciiDocReader(Reader):
     enabled = bool(asciidoc)

@@ -14,11 +14,14 @@ from functools import partial
 from itertools import chain
 from operator import attrgetter, itemgetter
 
-from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
-                    BaseLoader, TemplateNotFound)
+from jinja2 import (
+        Environment, FileSystemLoader, PrefixLoader, ChoiceLoader, BaseLoader,
+        TemplateNotFound
+)
 
-from pelican.contents import Article, Page, Category, StaticContent, \
-        is_valid_content
+from pelican.contents import (
+        Article, Page, Category, StaticContent, is_valid_content
+)
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p
 from pelican import signals
@@ -76,8 +79,9 @@ class Generator(object):
             try:
                 self._templates[name] = self.env.get_template(name + '.html')
             except TemplateNotFound:
-                raise Exception('[templates] unable to load %s.html from %s' \
-                        % (name, self._templates_path))
+                raise Exception(
+                        ('[templates] unable to load %s.html from %s'
+                         % (name, self._templates_path)))
         return self._templates[name]
 
     def get_files(self, path, exclude=[], extensions=None):
@@ -165,8 +169,8 @@ class ArticlesGenerator(Generator):
         self.categories = defaultdict(list)
         self.related_posts = []
         self.authors = defaultdict(list)
-        super(ArticlesGenerator, self).__init__(*args, **kwargs)
         self.drafts = []
+        super(ArticlesGenerator, self).__init__(*args, **kwargs)
         signals.article_generator_init.send(self)
 
     def generate_feeds(self, writer):
@@ -180,8 +184,8 @@ class ArticlesGenerator(Generator):
             writer.write_feed(self.articles, self.context,
                               self.settings['FEED_RSS'], feed_type='rss')
 
-        if self.settings.get('FEED_ALL_ATOM') or \
-                self.settings.get('FEED_ALL_RSS'):
+        if (self.settings.get('FEED_ALL_ATOM')
+                or self.settings.get('FEED_ALL_RSS')):
             all_articles = list(self.articles)
             for article in self.articles:
                 all_articles.extend(article.translations)
@@ -193,7 +197,8 @@ class ArticlesGenerator(Generator):
 
             if self.settings.get('FEED_ALL_RSS'):
                 writer.write_feed(all_articles, self.context,
-                                  self.settings['FEED_ALL_RSS'], feed_type='rss')
+                                  self.settings['FEED_ALL_RSS'],
+                                  feed_type='rss')
 
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
@@ -206,8 +211,8 @@ class ArticlesGenerator(Generator):
                                   self.settings['CATEGORY_FEED_RSS'] % cat,
                                   feed_type='rss')
 
-        if self.settings.get('TAG_FEED_ATOM') \
-                or self.settings.get('TAG_FEED_RSS'):
+        if (self.settings.get('TAG_FEED_ATOM')
+                or self.settings.get('TAG_FEED_RSS')):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
@@ -219,8 +224,8 @@ class ArticlesGenerator(Generator):
                                       self.settings['TAG_FEED_RSS'] % tag,
                                       feed_type='rss')
 
-        if self.settings.get('TRANSLATION_FEED_ATOM') or \
-                self.settings.get('TRANSLATION_FEED_RSS'):
+        if (self.settings.get('TRANSLATION_FEED_ATOM')
+                or self.settings.get('TRANSLATION_FEED_RSS')):
             translations_feeds = defaultdict(list)
             for article in chain(self.articles, self.translations):
                 translations_feeds[article.lang].append(article)
@@ -376,7 +381,7 @@ class ArticlesGenerator(Generator):
             # only main articles are listed in categories, not translations
             self.categories[article.category].append(article)
             # ignore blank authors as well as undefined
-            if hasattr(article,'author') and article.author.name != '':
+            if hasattr(article, 'author') and article.author.name != '':
                 self.authors[article.author].append(article)
 
         # sort the articles by date
@@ -470,7 +475,8 @@ class PagesGenerator(Generator):
                                 repr(f)))
 
         self.pages, self.translations = process_translations(all_pages)
-        self.hidden_pages, self.hidden_translations = process_translations(hidden_pages)
+        self.hidden_pages, self.hidden_translations = (
+                process_translations(hidden_pages))
 
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
@@ -573,6 +579,7 @@ class PdfGenerator(Generator):
 
         for page in self.context['pages']:
             self._create_pdf(page, pdf_path)
+
 
 class SourceFileGenerator(Generator):
     def generate_context(self):

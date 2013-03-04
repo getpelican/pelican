@@ -78,11 +78,11 @@ class Writer(object):
                     os.makedirs(os.path.dirname(complete_path))
                 except Exception:
                     pass
-                fp = open(complete_path, 'w', encoding='utf-8' if six.PY3 else None)
-                feed.write(fp, 'utf-8')
-                logger.info('writing %s' % complete_path)
 
-                fp.close()
+                encoding = 'utf-8' if six.PY3 else None
+                with open(complete_path, 'w', encoding=encoding) as fp:
+                    feed.write(fp, 'utf-8')
+                    logger.info('writing %s' % complete_path)
             return feed
         finally:
             locale.setlocale(locale.LC_ALL, old_locale)

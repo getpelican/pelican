@@ -293,8 +293,15 @@ def main():
                     # restriction; all files are recursively checked if they
                     # have changed, no matter what extension the filenames
                     # have.
-                    if files_changed(pelican.path, pelican.markup, pelican.ignore_files) or \
-                            files_changed(pelican.theme, [''], pelican.ignore_files):
+                    if (files_changed(
+                            pelican.path,
+                            pelican.markup,
+                            pelican.ignore_files)
+                        or files_changed(
+                            pelican.theme,
+                            [''],
+                            pelican.ignore_files
+                    )):
                         if not files_found_error:
                             files_found_error = True
                         pelican.run()
@@ -318,8 +325,7 @@ def main():
                     time.sleep(1)  # sleep to avoid cpu load
                 except Exception as e:
                     logger.warning(
-                        "Caught exception \"{}\". Reloading.".format(e)
-                    )
+                            'Caught exception "{0}". Reloading.'.format(e))
                     continue
         else:
             pelican.run()

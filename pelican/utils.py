@@ -29,12 +29,13 @@ def strftime(date, date_format):
 
     This :func:`strftime()` is compatible to Python 2 and 3. In both cases,
     input and output is always unicode.
-        
+
     Still, Python 3's :func:`strftime()` seems to somehow "normalize" unicode
     chars in the format string. So if e.g. your format string contains 'ø' or
     'ä', the result will be 'o' and 'a'.
 
-    See here for an `extensive testcase <https://github.com/dmdm/test_strftime>`_.
+    See here for an `extensive testcase
+    <https://github.com/dmdm/test_strftime>`_.
 
     :param date: Any object that sports a :meth:`strftime()` method.
     :param date_format: Format string, can always be unicode.
@@ -67,17 +68,11 @@ def strftime(date, date_format):
             result = unicode(result)
         # Convert XML character references back to unicode characters.
         if "&#" in result:
-            result = re.sub(r'&#(?P<num>\d+);'
-                , lambda m: unichr(int(m.group('num')))
-                , result
-            )
+            result = re.sub(r'&#(?P<num>\d+);',
+                            lambda m: unichr(int(m.group('num'))),
+                            result)
         return result
 
-
-
-#----------------------------------------------------------------------------
-# Stolen from Django: django.utils.encoding
-#
 
 def python_2_unicode_compatible(klass):
     """
@@ -86,43 +81,48 @@ def python_2_unicode_compatible(klass):
 
     To support Python 2 and 3 with a single code base, define a __str__ method
     returning text and apply this decorator to the class.
+
+    From django.utils.encoding.
     """
     if not six.PY3:
         klass.__unicode__ = klass.__str__
         klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
     return klass
 
-#----------------------------------------------------------------------------
 
 class NoFilesError(Exception):
     pass
 
 
 class memoized(object):
-   '''Decorator. Caches a function's return value each time it is called.
-   If called later with the same arguments, the cached value is returned
-   (not reevaluated).
-   '''
-   def __init__(self, func):
-      self.func = func
-      self.cache = {}
-   def __call__(self, *args):
-      if not isinstance(args, Hashable):
-         # uncacheable. a list, for instance.
-         # better to not cache than blow up.
-         return self.func(*args)
-      if args in self.cache:
-         return self.cache[args]
-      else:
-         value = self.func(*args)
-         self.cache[args] = value
-         return value
-   def __repr__(self):
-      '''Return the function's docstring.'''
-      return self.func.__doc__
-   def __get__(self, obj, objtype):
-      '''Support instance methods.'''
-      return partial(self.__call__, obj)
+    """Function decorator to cache return values.
+
+    If called later with the same arguments, the cached value is returned
+    (not reevaluated).
+
+    """
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+
+    def __call__(self, *args):
+        if not isinstance(args, Hashable):
+            # uncacheable. a list, for instance.
+            # better to not cache than blow up.
+            return self.func(*args)
+        if args in self.cache:
+            return self.cache[args]
+        else:
+            value = self.func(*args)
+            self.cache[args] = value
+            return value
+
+    def __repr__(self):
+        return self.func.__doc__
+
+    def __get__(self, obj, objtype):
+        '''Support instance methods.'''
+        return partial(self.__call__, obj)
 
 
 def deprecated_attribute(old, new, since=None, remove=None, doc=None):
@@ -166,6 +166,7 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
 
     return decorator
 
+
 def get_date(string):
     """Return a datetime object from a string.
 
@@ -195,6 +196,7 @@ class pelican_open(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
+
 
 def slugify(value):
     """
@@ -261,6 +263,7 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
         logger.info('copying %s to %s' % (source_, destination_))
     else:
         logger.warning('skipped copy %s to %s' % (source_, destination_))
+
 
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
@@ -414,6 +417,7 @@ def process_translations(content_list):
 
 LAST_MTIME = 0
 
+
 def files_changed(path, extensions, ignores=[]):
     """Return True if the files have changed since the last check"""
 
@@ -423,7 +427,8 @@ def files_changed(path, extensions, ignores=[]):
             dirs[:] = [x for x in dirs if x[0] != '.']
             for f in files:
                 if any(f.endswith(ext) for ext in extensions) \
-                        and not any(fnmatch.fnmatch(f, ignore) for ignore in ignores):
+                        and not any(fnmatch.fnmatch(f, ignore)
+                                    for ignore in ignores):
                     yield os.stat(os.path.join(root, f)).st_mtime
 
     global LAST_MTIME
