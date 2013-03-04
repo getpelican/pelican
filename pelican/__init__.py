@@ -224,7 +224,9 @@ def parse_arguments():
 
     parser.add_argument('-d', '--delete-output-directory',
         dest='delete_outputdir',
-        action='store_true', help='Delete the output directory.')
+        action='store_true', 
+        default=None,
+        help='Delete the output directory.')
 
     parser.add_argument('-v', '--verbose', action='store_const',
         const=logging.INFO, dest='verbosity',
