@@ -264,34 +264,37 @@ class ArticlesGenerator(Generator):
 
     def generate_tags(self, write):
         """Generate Tags pages."""
-        tag_template = self.get_template('tag')
-        for tag, articles in self.tags.items():
-            articles.sort(key=attrgetter('date'), reverse=True)
-            dates = [article for article in self.dates if article in articles]
-            write(tag.save_as, tag_template, self.context, tag=tag,
-                articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=tag.page_name)
+        if self.settings.get('GENERATE_TAGS'):
+            tag_template = self.get_template('tag')
+            for tag, articles in self.tags.items():
+                articles.sort(key=attrgetter('date'), reverse=True)
+                dates = [article for article in self.dates if article in articles]
+                write(tag.save_as, tag_template, self.context, tag=tag,
+                    articles=articles, dates=dates,
+                    paginated={'articles': articles, 'dates': dates},
+                    page_name=tag.page_name)
 
     def generate_categories(self, write):
         """Generate category pages."""
-        category_template = self.get_template('category')
-        for cat, articles in self.categories:
-            dates = [article for article in self.dates if article in articles]
-            write(cat.save_as, category_template, self.context,
-                category=cat, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=cat.page_name)
+        if self.settings.get('GENERATE_CATEGORIES'):
+            category_template = self.get_template('category')
+            for cat, articles in self.categories:
+                dates = [article for article in self.dates if article in articles]
+                write(cat.save_as, category_template, self.context,
+                    category=cat, articles=articles, dates=dates,
+                    paginated={'articles': articles, 'dates': dates},
+                    page_name=cat.page_name)
 
     def generate_authors(self, write):
         """Generate Author pages."""
-        author_template = self.get_template('author')
-        for aut, articles in self.authors:
-            dates = [article for article in self.dates if article in articles]
-            write(aut.save_as, author_template, self.context,
-                author=aut, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=aut.page_name)
+        if self.settings.get('GENERATE_AUTHORS'):
+            author_template = self.get_template('author')
+            for aut, articles in self.authors:
+                dates = [article for article in self.dates if article in articles]
+                write(aut.save_as, author_template, self.context,
+                    author=aut, articles=articles, dates=dates,
+                    paginated={'articles': articles, 'dates': dates},
+                    page_name=aut.page_name)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""

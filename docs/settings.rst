@@ -129,6 +129,12 @@ Setting name (default value)                                            What doe
                                                                         These templates need to use ``DIRECT_TEMPLATES`` setting.
 `ASCIIDOC_OPTIONS` (``[]``)                                             A list of options to pass to AsciiDoc. See the `manpage
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
+`GENERATE_AUTHORS` (``True``)											If set to ``False``, Pelican will not generate separate files for
+																		each author.
+`GENERATE_TAGS` (``True``)												If set to ``False``, Pelican will not generate separate files for
+																		each tag.
+`GENERATE_CATEGORIES` (``True``)										If set to ``False``, Pelican will not generate separate files for
+																		each category.																		
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
