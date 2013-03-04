@@ -517,9 +517,28 @@ class StaticGenerator(Generator):
                 self.context['filenames'][f_rel] = sc
         # same thing for FILES_TO_COPY
         for src, dest in self.settings['FILES_TO_COPY']:
-            sc = StaticContent(src, dest, settings=self.settings)
-            self.staticfiles.append(sc)
-            self.context['filenames'][src] = sc
+            if os.path.isdir(os.path.join(self.settings['PATH'], src)):
+                # Walk the directory rooted at src and add static content 
+                # recursively
+                for dirname, subdirs, filenames in \
+                    os.walk(os.path.join(self.settings['PATH'], src)):
+                    for filename in filenames:
+                        path = os.path.join(
+                            os.path.relpath(dirname, 
+                                            self.settings['PATH']),
+                            filename
+                        )
+                        sc = StaticContent(path, 
+                                           os.path.join(dest, 
+                                                        os.path.relpath(path, 
+                                                                        src)),
+                                           settings=self.settings)
+                        self.staticfiles.append(sc)
+                        self.context['filenames'][path] = sc
+            else:
+                sc = StaticContent(src, dest, settings=self.settings)
+                self.staticfiles.append(sc)
+                self.context['filenames'][src] = sc
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
