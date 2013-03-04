@@ -59,7 +59,7 @@ Signal                          Arguments                       Description
 =============================   ============================   ===========================================================================
 initialized                     pelican object
 finalized                       pelican object                  invoked after all the generators are executed and just before pelican exits
-                                                                usefull for custom post processing actions, such as:
+                                                                useful for custom post processing actions, such as:
                                                                 - minifying js/css assets.
                                                                 - notify/ping search engines with an updated sitemap.
 generator_init                  generator                       invoked in the Generator.__init__
@@ -103,6 +103,7 @@ List of plugins
 
 The following plugins are currently included with Pelican:
 
+* `Article thumbnail`_ ``pelican.plugins.article_thumbnail``
 * `Asset management`_ ``pelican.plugins.assets``
 * `GitHub activity`_ ``pelican.plugins.github_activity``
 * `Global license`_ ``pelican.plugins.global_license``
@@ -120,6 +121,67 @@ Ideas for plugins that haven't been written yet:
 
 Plugin descriptions
 ===================
+
+Article thumbnail
+-----------------
+
+This plugin uses the Python Image Library (PIL) to generate thumbnails
+for articles from a specified image.  These can then be included in template.
+
+This requires installation of PIL, which can be a bit complicated.  You 
+may find that ``pip install pil`` works, but if you are getting ``zlib``
+errors or similar, then the instructions on 
+`this page <http://jj.isgeek.net/2011/09/install-pil-with-jpeg-support-on-ubuntu-oneiric-64bits/>`_
+may prove useful.
+
+Once PIL is installed, you can activate the plugin in the usual way in 
+your settings file::
+
+    from pelican.plugins import article_thumbnail
+    PLUGINS = [article_thumbnail,]
+
+The plugin has intelligent defaults set for most of its parameters, so 
+adding it to your PLUGINS variable will be enough.  However if you wish to
+configure the plugin further, you can modify the following settings:
+
+================== ========================== =============================================================
+Setting               Default                      Notes
+================== ========================== =============================================================
+THUMBNAIL_PATH        'static/thumbs'              The folder in output directory where files are saved
+THUMBNAIL_WIDTH       100                          The width of thumbnails
+THUMBNAIL_HEIGHT      100                          The height of thumbnails
+THUMBNAIL_PREFIX      'thumb\_'                     The prefix added to thumbnail images
+THUMBNAIL_DEFAULT     'thumb_default.png'          The default thumbnail if none is supplied by article metadata
+================== ========================== =============================================================
+
+To use an article thumbnail in a template, you will first need to set up 
+the correct meta data in the article source.  For rst files, you can add::
+
+    :thumbnail: path/to/full/sized/imagename.png
+
+The path provided to ``:thumbnail:`` should be relative to the 'content' directory. 
+For instance, if your full sized image is in ``/content/images/myimage.jpg``, you
+would write::
+
+    :thumbnail: images/myimage.jpg
+
+To use the thumbnail in a template::
+
+        {% if article.has_thumb %}
+        <img src="{{article.thumbnail_url}}">
+        {% endif %}
+
+The example code above will only show a thumbnail if one was specified in the
+article metadata.  If you would like to show a thumbnail regardless, you can 
+instead write::
+
+        {% if article.thumbnail_url %}
+        <img src="{{article.thumbnail_url}}">
+        {% endif %}
+
+This will show a thumbnail or the default thumbnail if the plugin is installed.
+Its up to you to provide a default thumbnail of the correct size and to specify
+the correct path in your settings.
 
 Asset management
 ----------------
