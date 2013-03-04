@@ -104,6 +104,7 @@ List of plugins
 The following plugins are currently included with Pelican:
 
 * `Asset management`_ ``pelican.plugins.assets``
+* `Chronological Links`_ ``pelican.plugins.chronological_links``
 * `GitHub activity`_ ``pelican.plugins.github_activity``
 * `Global license`_ ``pelican.plugins.global_license``
 * `Gravatar`_ ``pelican.plugins.gravatar``
@@ -202,6 +203,36 @@ LessCSS's binary:
 .. _Webassets: https://github.com/miracle2k/webassets
 .. _Webassets documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
 
+Chronological Links
+-------------------
+
+This plugin allows you to include links to the next and previous articles
+in chronological.  It currently ignores categories and tags. 
+
+To use this plugin it must be included in your pelican settings file as 
+usual::
+
+    PLUGINS = ['Other Plugins...', 'pelican.plugins.chronological_links',]
+
+It then adds four variables to each article
+
+- next_url
+- next_title
+- previous_url
+- previous_title
+
+These variables can be included in your templates.  For instance in
+``article.html`` you could have::
+
+    {% if article.next_url %}
+    <a href="{{article.next_url}}">{{article.next_title}}</a>
+    {% endif %}
+
+The order of the links defaults to 'reverse chronological', which means
+that the next link link will move backwards in post times.  This can 
+optionally be modified in your settings file by adding::
+
+    LINKS_REVERSE_CHRONOLOGICAL = False  # defaults to True
 
 GitHub activity
 ---------------
