@@ -48,6 +48,7 @@ class Reader(object):
 
     def __init__(self, settings):
         self.settings = settings
+        self.mdextensions = self.settings.get('MARKDOWNEXTENSIONS', ['codehilite', 'extra'])
 
     def process_metadata(self, name, value):
         if name in _METADATA_PROCESSORS:
@@ -140,7 +141,7 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd']
-    extensions = ['codehilite', 'extra']
+    extensions = self.mdextensions
 
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
