@@ -53,8 +53,9 @@ class TestWordpressXmlImporter(unittest.TestCase):
         posts = list(self.posts)
         test_posts = [post for post in posts if post[2] == 'html-entity-test']
         self.assertTrue(len(test_posts) == 1)
-        
+
         post = test_posts[0]
         title = post[0]
-        self.assertTrue(title, "A normal post with some <html> entities in the title. You can't miss them.")
+        self.assertTrue(title, "A normal post with some <html> entities in the"
+                               " title. You can't miss them.")
         self.assertTrue('&' not in title)

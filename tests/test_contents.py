@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
+from sys import platform
+
 from .support import unittest
 
 from pelican.contents import Page, Article, URLWrapper
@@ -31,10 +34,8 @@ class TestPage(unittest.TestCase):
         }
 
     def test_use_args(self):
-        """Creating a page with arguments passed to the constructor should use
-        them to initialise object's attributes.
-
-        """
+        # Creating a page with arguments passed to the constructor should use
+        # them to initialise object's attributes.
         metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
         page = Page(TEST_CONTENT, metadata=metadata,
                 context={'localsiteurl': ''})
@@ -44,22 +45,22 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.content, TEST_CONTENT)
 
     def test_mandatory_properties(self):
-        """If the title is not set, must throw an exception."""
+        # If the title is not set, must throw an exception.
         page = Page('content')
-        with self.assertRaises(NameError) as cm:
+        with self.assertRaises(NameError):
             page.check_properties()
 
         page = Page('content', metadata={'title': 'foobar'})
         page.check_properties()
 
     def test_summary_from_metadata(self):
-        """If a :summary: metadata is given, it should be used."""
+        # If a :summary: metadata is given, it should be used
         page = Page(**self.page_kwargs)
         self.assertEqual(page.summary, TEST_SUMMARY)
 
     def test_summary_max_length(self):
-        """If a :SUMMARY_MAX_LENGTH: is set, and there is no other summary, generated summary
-           should not exceed the given length."""
+        # If a :SUMMARY_MAX_LENGTH: is set, and there is no other summary,
+        # generated summary should not exceed the given length.
         page_kwargs = self._copy_page_kwargs()
         settings = _DEFAULT_CONFIG.copy()
         page_kwargs['settings'] = settings
@@ -72,12 +73,12 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10))
 
     def test_slug(self):
-        """If a title is given, it should be used to generate the slug."""
+        # If a title is given, it should be used to generate the slug.
         page = Page(**self.page_kwargs)
         self.assertEqual(page.slug, 'foo-bar')
 
     def test_defaultlang(self):
-        """If no lang is given, default to the default one."""
+        # If no lang is given, default to the default one.
         page = Page(**self.page_kwargs)
         self.assertEqual(page.lang, _DEFAULT_CONFIG['DEFAULT_LANG'])
 
@@ -87,10 +88,9 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.lang, 'fr')
 
     def test_save_as(self):
-        """If a lang is not the default lang, save_as should be set
-        accordingly.
+        # If a lang is not the default lang, save_as should be set
+        # accordingly.
 
-        """
         # if a title is defined, save_as should be set
         page = Page(**self.page_kwargs)
         self.assertEqual(page.save_as, "pages/foo-bar.html")
@@ -101,8 +101,7 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
 
     def test_metadata_url_format(self):
-        """Arbitrary metadata should be passed through url_format()
-        """
+        # Arbitrary metadata should be passed through url_format()
         page = Page(**self.page_kwargs)
         self.assertIn('summary', page.url_format.keys())
         page.metadata['directory'] = 'test-dir'
@@ -111,10 +110,7 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.save_as, 'test-dir/foo-bar')
 
     def test_datetime(self):
-        """If DATETIME is set to a tuple, it should be used to override LOCALE
-        """
-        from datetime import datetime
-        from sys import platform
+        # If DATETIME is set to a tuple, it should be used to override LOCALE
         dt = datetime(2015, 9, 13)
 
         page_kwargs = self._copy_page_kwargs()
@@ -125,7 +121,6 @@ class TestPage(unittest.TestCase):
 
         self.assertEqual(page.locale_date,
             dt.strftime(_DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
-
 
         page_kwargs['settings'] = dict([(x, _DEFAULT_CONFIG[x]) for x in
                                         _DEFAULT_CONFIG])
@@ -154,9 +149,7 @@ class TestPage(unittest.TestCase):
             unittest.skip("There is no locale %s in this system." % locale)
 
     def test_template(self):
-        """
-        Pages default to page, metadata overwrites
-        """
+        # Pages default to page, metadata overwrites
         default_page = Page(**self.page_kwargs)
         self.assertEqual('page', default_page.template)
         page_kwargs = self._copy_page_kwargs()
@@ -177,21 +170,19 @@ class TestPage(unittest.TestCase):
         return page_kwargs
 
     def test_signal(self):
-        """If a title is given, it should be used to generate the slug."""
+        # If a title is given, it should be used to generate the slug.
 
-        def receiver_test_function(sender,instance):
+        def receiver_test_function(sender, instance):
             pass
 
-        content_object_init.connect(receiver_test_function ,sender=Page)
-        page = Page(**self.page_kwargs)
+        content_object_init.connect(receiver_test_function, sender=Page)
+        Page(**self.page_kwargs)
         self.assertTrue(content_object_init.has_receivers_for(Page))
 
 
 class TestArticle(TestPage):
     def test_template(self):
-        """
-        Articles default to article, metadata overwrites
-        """
+        # Articles default to article, metadata overwrites
         default_article = Article(**self.page_kwargs)
         self.assertEqual('article', default_article.template)
         article_kwargs = self._copy_page_kwargs()
@@ -202,8 +193,7 @@ class TestArticle(TestPage):
 
 class TestURLWrapper(unittest.TestCase):
     def test_comparisons(self):
-        """URLWrappers are sorted by name
-        """
+        # URLWrappers are sorted by name
         wrapper_a = URLWrapper(name='first', settings={})
         wrapper_b = URLWrapper(name='last', settings={})
         self.assertFalse(wrapper_a > wrapper_b)

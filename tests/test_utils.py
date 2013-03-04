@@ -17,7 +17,8 @@ class TestUtils(LoggedTestCase):
     @utils.deprecated_attribute(
         old='_old_attribute', new='_new_attribute',
         since=(3, 1, 0), remove=(4, 1, 3))
-    def _old_attribute(): return None
+    def _old_attribute():
+        return None
 
     def test_deprecated_attribute(self):
         value = self._old_attribute
@@ -60,8 +61,10 @@ class TestUtils(LoggedTestCase):
                    ('this        is a test', 'this-is-a-test'),
                    ('this → is ← a ↑ test', 'this-is-a-test'),
                    ('this--is---a test', 'this-is-a-test'),
-                   ('unicode測試許功蓋，你看到了嗎？', 'unicodece-shi-xu-gong-gai-ni-kan-dao-liao-ma'),
-                   ('大飯原発４号機、１８日夜起動へ', 'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),)
+                   ('unicode測試許功蓋，你看到了嗎？',
+                    'unicodece-shi-xu-gong-gai-ni-kan-dao-liao-ma'),
+                   ('大飯原発４号機、１８日夜起動へ',
+                    'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),)
 
         for value, expected in samples:
             self.assertEquals(utils.slugify(value), expected)
@@ -122,7 +125,8 @@ class TestUtils(LoggedTestCase):
             shutil.rmtree(empty_path, True)
 
     def test_clean_output_dir(self):
-        test_directory = os.path.join(os.path.dirname(__file__), 'clean_output')
+        test_directory = os.path.join(os.path.dirname(__file__),
+                                      'clean_output')
         content = os.path.join(os.path.dirname(__file__), 'content')
         shutil.copytree(content, test_directory)
         utils.clean_output_dir(test_directory)
@@ -131,12 +135,14 @@ class TestUtils(LoggedTestCase):
         shutil.rmtree(test_directory)
 
     def test_clean_output_dir_not_there(self):
-        test_directory = os.path.join(os.path.dirname(__file__), 'does_not_exist')
+        test_directory = os.path.join(os.path.dirname(__file__),
+                                      'does_not_exist')
         utils.clean_output_dir(test_directory)
         self.assertTrue(not os.path.exists(test_directory))
 
     def test_clean_output_dir_is_file(self):
-        test_directory = os.path.join(os.path.dirname(__file__), 'this_is_a_file')
+        test_directory = os.path.join(os.path.dirname(__file__),
+                                      'this_is_a_file')
         f = open(test_directory, 'w')
         f.write('')
         f.close()

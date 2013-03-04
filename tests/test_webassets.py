@@ -45,8 +45,8 @@ class TestWebAssets(unittest.TestCase):
     def check_link_tag(self, css_file, html_file):
         """Check the presence of `css_file` in `html_file`."""
 
-        link_tag = '<link rel="stylesheet" href="{css_file}">'.\
-                   format(css_file=css_file)
+        link_tag = ('<link rel="stylesheet" href="{css_file}">'
+                    .format(css_file=css_file))
         html = open(html_file).read()
         self.assertRegexpMatches(html, link_tag)
 
@@ -94,8 +94,8 @@ class TestWebAssetsAbsoluteURLS(TestWebAssets):
     def test_absolute_url(self):
         """Look in the output files for the link tag with absolute url."""
 
-        css_file = 'http://localhost/theme/gen/style.{0}.min.css'.\
-                   format(CSS_HASH)
+        css_file = ('http://localhost/theme/gen/style.{0}.min.css'
+                    .format(CSS_HASH))
         html_files = ['index.html', 'archives.html',
                       'this-is-an-article-with-category.html']
         for f in html_files:

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
-__all__ = [
-    'get_article',
-    'unittest',
-]
+__all__ = ['get_article', 'unittest', ]
 
 import os
 import re
@@ -44,19 +41,19 @@ def temporary_folder():
 
 
 def isplit(s, sep=None):
-    """
-        Behave like str.split but returns a generator instead of a list.
+    """Behaves like str.split but returns a generator instead of a list.
 
-        >>> list(isplit('\tUse the force\n')) == '\tUse the force\n'.split()
-        True
-        >>> list(isplit('\tUse the force\n')) == ['Use', 'the', 'force']
-        True
-        >>> list(isplit('\tUse the force\n', "e")) == '\tUse the force\n'.split("e")
-        True
-        >>> list(isplit('Use the force', "e")) == 'Use the force'.split("e")
-        True
-        >>> list(isplit('Use the force', "e")) == ['Us', ' th', ' forc', '']
-        True
+    >>> list(isplit('\tUse the force\n')) == '\tUse the force\n'.split()
+    True
+    >>> list(isplit('\tUse the force\n')) == ['Use', 'the', 'force']
+    True
+    >>> (list(isplit('\tUse the force\n', "e"))
+         == '\tUse the force\n'.split("e"))
+    True
+    >>> list(isplit('Use the force', "e")) == 'Use the force'.split("e")
+    True
+    >>> list(isplit('Use the force', "e")) == ['Us', ' th', ' forc', '']
+    True
 
     """
     sep, hardsep = r'\s+' if sep is None else re.escape(sep), sep is not None
@@ -76,24 +73,23 @@ def isplit(s, sep=None):
 
 
 def mute(returns_output=False):
-    """
-        Decorate a function that prints to stdout, intercepting the output.
-        If "returns_output" is True, the function will return a generator
-        yielding the printed lines instead of the return values.
+    """Decorate a function that prints to stdout, intercepting the output.
+    If "returns_output" is True, the function will return a generator
+    yielding the printed lines instead of the return values.
 
-        The decorator litterally hijack sys.stdout during each function
-        execution, so be careful with what you apply it to.
+    The decorator litterally hijack sys.stdout during each function
+    execution, so be careful with what you apply it to.
 
-        >>> def numbers():
-            print "42"
-            print "1984"
-        ...
-        >>> numbers()
-        42
-        1984
-        >>> mute()(numbers)()
-        >>> list(mute(True)(numbers)())
-        ['42', '1984']
+    >>> def numbers():
+        print "42"
+        print "1984"
+    ...
+    >>> numbers()
+    42
+    1984
+    >>> mute()(numbers)()
+    >>> list(mute(True)(numbers)())
+    ['42', '1984']
 
     """
 
@@ -164,9 +160,7 @@ def get_settings():
 
 
 class LogCountHandler(BufferingHandler):
-    """
-    Capturing and counting logged messages.
-    """
+    """Capturing and counting logged messages."""
 
     def __init__(self, capacity=1000):
         logging.handlers.BufferingHandler.__init__(self, capacity)
@@ -179,8 +173,7 @@ class LogCountHandler(BufferingHandler):
 
 
 class LoggedTestCase(unittest.TestCase):
-    """A test case that captures log messages
-    """
+    """A test case that captures log messages."""
 
     def setUp(self):
         super(LoggedTestCase, self).setUp()

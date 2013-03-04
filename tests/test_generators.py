@@ -26,7 +26,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def get_populated_generator(self):
         """
         We only need to pull all the test articles once, but read from it
-         for each test.
+        for each test.
         """
         if self.generator is None:
             settings = get_settings()
@@ -58,7 +58,8 @@ class TestArticlesGenerator(unittest.TestCase):
                 settings['THEME'], None, settings['MARKUP'])
         writer = MagicMock()
         generator.generate_feeds(writer)
-        writer.write_feed.assert_called_with([], settings, 'feeds/all.atom.xml')
+        writer.write_feed.assert_called_with([], settings,
+                                             'feeds/all.atom.xml')
 
         generator = ArticlesGenerator(settings, {'FEED_ALL_ATOM': None}, None,
                                       settings['THEME'], None, None)
@@ -72,16 +73,21 @@ class TestArticlesGenerator(unittest.TestCase):
         articles = self.distill_articles(generator.articles)
         articles_expected = [
             ['Article title', 'published', 'Default', 'article'],
-            ['Article with markdown and summary metadata single', 'published', 'Default', 'article'],
-            ['Article with markdown and summary metadata multi', 'published', 'Default', 'article'],
+            ['Article with markdown and summary metadata single', 'published',
+             'Default', 'article'],
+            ['Article with markdown and summary metadata multi', 'published',
+             'Default', 'article'],
             ['Article with template', 'published', 'Default', 'custom'],
             ['Test md File', 'published', 'test', 'article'],
             ['Rst with filename metadata', 'published', 'yeah', 'article'],
             ['Test Markdown extensions', 'published', 'Default', 'article'],
             ['This is a super article !', 'published', 'Yeah', 'article'],
-            ['This is an article with category !', 'published', 'yeah', 'article'],
-            ['This is an article without category !', 'published', 'Default', 'article'],
-            ['This is an article without category !', 'published', 'TestCategory', 'article'],
+            ['This is an article with category !', 'published', 'yeah',
+              'article'],
+            ['This is an article without category !', 'published', 'Default',
+             'article'],
+            ['This is an article without category !', 'published',
+             'TestCategory', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article']
         ]
         self.assertItemsEqual(articles_expected, articles)
@@ -90,7 +96,8 @@ class TestArticlesGenerator(unittest.TestCase):
 
         generator = self.get_populated_generator()
         categories = [cat.name for cat, _ in generator.categories]
-        categories_expected = ['Default', 'TestCategory', 'Yeah', 'test', 'yeah']
+        categories_expected = ['Default', 'TestCategory', 'Yeah', 'test',
+                               'yeah']
         self.assertEquals(categories, categories_expected)
 
     def test_do_not_use_folder_as_category(self):
@@ -153,23 +160,24 @@ class TestArticlesGenerator(unittest.TestCase):
         """
         generator = self.get_populated_generator()
         articles = self.distill_articles(generator.articles)
-        custom_template = ['Article with template', 'published', 'Default', 'custom']
-        standard_template = ['This is a super article !', 'published', 'Yeah', 'article']
+        custom_template = ['Article with template', 'published', 'Default',
+                           'custom']
+        standard_template = ['This is a super article !', 'published', 'Yeah',
+                             'article']
         self.assertIn(custom_template, articles)
         self.assertIn(standard_template, articles)
 
+
 class TestPageGenerator(unittest.TestCase):
-    """
-    Every time you want to test for a new field;
-    Make sure the test pages in "TestPages" have all the fields
-    Add it to distilled in distill_pages
-    Then update the assertItemsEqual in test_generate_context to match expected
-    """
+    # Note: Every time you want to test for a new field; Make sure the test
+    # pages in "TestPages" have all the fields Add it to distilled in
+    # distill_pages Then update the assertItemsEqual in test_generate_context
+    # to match expected
 
     def distill_pages(self, pages):
         distilled = []
         for page in pages:
-           distilled.append([
+            distilled.append([
                     page.title,
                     page.status,
                     page.template
@@ -192,16 +200,18 @@ class TestPageGenerator(unittest.TestCase):
         pages_expected = [
             ['This is a test page', 'published', 'page'],
             ['This is a markdown test page', 'published', 'page'],
-            ['This is a test page with a preset template', 'published', 'custom']
+            ['This is a test page with a preset template', 'published',
+             'custom']
         ]
         hidden_pages_expected = [
             ['This is a test hidden page', 'hidden', 'page'],
             ['This is a markdown test hidden page', 'hidden', 'page'],
-            ['This is a test hidden page with a custom template', 'hidden', 'custom']
+            ['This is a test hidden page with a custom template', 'hidden',
+             'custom']
         ]
 
-        self.assertItemsEqual(pages_expected,pages)
-        self.assertItemsEqual(hidden_pages_expected,hidden_pages)
+        self.assertItemsEqual(pages_expected, pages)
+        self.assertItemsEqual(hidden_pages_expected, hidden_pages)
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):

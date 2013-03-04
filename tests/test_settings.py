@@ -3,7 +3,8 @@ from __future__ import unicode_literals, print_function
 import copy
 from os.path import dirname, abspath, join
 
-from pelican.settings import read_settings, configure_settings, _DEFAULT_CONFIG, DEFAULT_THEME
+from pelican.settings import (read_settings, configure_settings,
+                              _DEFAULT_CONFIG, DEFAULT_THEME)
 from .support import unittest
 
 
@@ -35,7 +36,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         """providing no file should return the default values."""
         settings = read_settings(None)
         expected = copy.deepcopy(_DEFAULT_CONFIG)
-        expected["FEED_DOMAIN"] = '' #This is added by configure settings
+        expected['FEED_DOMAIN'] = ''  # Added by configure settings
         self.maxDiff = None
         self.assertDictEqual(settings, expected)
 
