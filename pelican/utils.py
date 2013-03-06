@@ -480,3 +480,24 @@ def mkdir_p(path):
     except OSError as e:
         if e.errno != errno.EEXIST or not os.path.isdir(path):
             raise
+
+
+def split_all(path):
+    """Split a path into a list of components
+
+    While os.path.split() splits a single component off the back of
+    `path`, this function splits all components:
+
+    >>> split_all(os.path.join('a', 'b', 'c'))
+    ['a', 'b', 'c']
+    """
+    components = []
+    while path:
+        head,tail = os.path.split(path)
+        if tail:
+            components.insert(0, tail)
+        elif head == path:
+            components.insert(0, head)
+            break
+        path = head
+    return components

@@ -25,6 +25,7 @@ from pelican.contents import (
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p
 from pelican import signals
+import pelican.utils
 
 
 logger = logging.getLogger(__name__)
@@ -518,13 +519,15 @@ class StaticGenerator(Generator):
             for f in self.get_files(
                     os.path.join(self.path, static_path), extensions=False):
                 f_rel = os.path.relpath(f, self.path)
-                # On Windows, make sure we end up with Unix-like paths.
-                if os.name == 'nt':
-                    f_rel = f_rel.replace('\\', '/')
                 # TODO remove this hardcoded 'static' subdirectory
+                dest = os.path.join('static', f_rel)
+                url = '/'.join(pelican.utils.split_all(dest))
                 sc = Static(
                     content=None,
-                    metadata={'save_as': os.path.join('static', f_rel)},
+                    metadata={
+                        'save_as': dest,
+                        'url': url,
+                        },
                     settings=self.settings,
                     source_path=f_rel)
                 self.staticfiles.append(sc)

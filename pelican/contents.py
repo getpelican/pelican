@@ -16,7 +16,8 @@ from datetime import datetime
 from pelican import signals
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.utils import (slugify, truncate_html_words, memoized, strftime,
-                           python_2_unicode_compatible, deprecated_attribute)
+                           python_2_unicode_compatible, deprecated_attribute,
+                           split_all)
 
 # Import these so that they're avalaible when you import from pelican.contents.
 from pelican.urlwrappers import (URLWrapper, Author, Category, Tag)  # NOQA
@@ -136,8 +137,9 @@ class Content(object):
     def url_format(self):
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
+        path = self.metadata.get('path', self.get_relative_source_path())
         metadata.update({
-            'path': self.metadata.get('path', self.get_relative_source_path()),
+            'path': '/'.join(split_all(path)),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
