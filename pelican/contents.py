@@ -132,8 +132,9 @@ class Page(object):
     @property
     def url_format(self):
         metadata = copy.copy(self.metadata)
+        path = self.metadata.get('path', self.get_relative_source_path())
         metadata.update({
-            'path': self.metadata.get('path', self.get_relative_source_path()),
+            'path': '/'.join(pelican.utils.split_all(path)),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
