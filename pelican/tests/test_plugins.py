@@ -7,8 +7,8 @@ import tempfile
 from pelican.contents import Page
 from pelican.plugins import gzip_cache
 
-from .test_contents import TEST_CONTENT, TEST_SUMMARY
-from .support import unittest, temporary_folder
+from pelican.tests.test_contents import TEST_CONTENT, TEST_SUMMARY
+from pelican.tests.support import unittest, temporary_folder
 
 
 class TestGzipCache(unittest.TestCase):

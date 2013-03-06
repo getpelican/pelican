@@ -5,7 +5,7 @@ from os.path import dirname, abspath, join
 
 from pelican.settings import (read_settings, configure_settings,
                               _DEFAULT_CONFIG, DEFAULT_THEME)
-from .support import unittest
+from pelican.tests.support import unittest
 
 
 class TestSettingsConfiguration(unittest.TestCase):

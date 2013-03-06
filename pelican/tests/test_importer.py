@@ -4,7 +4,8 @@ from __future__ import unicode_literals, print_function
 import os
 
 from pelican.tools.pelican_import import wp2fields, fields2pelican
-from .support import unittest, temporary_folder, mute, skipIfNoExecutable
+from pelican.tests.support import (unittest, temporary_folder, mute,
+                                   skipIfNoExecutable)
 
 CUR_DIR = os.path.dirname(__file__)
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')

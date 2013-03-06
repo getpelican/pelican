@@ -12,7 +12,7 @@ from pelican.generators import ArticlesGenerator, PagesGenerator, \
     TemplatePagesGenerator
 from pelican.writers import Writer
 from pelican.settings import _DEFAULT_CONFIG
-from .support import unittest, get_settings
+from pelican.tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
 

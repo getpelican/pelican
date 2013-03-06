@@ -5,7 +5,7 @@ import datetime
 import os
 
 from pelican import readers
-from .support import unittest
+from pelican.tests.support import unittest
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_PATH = os.path.join(CUR_DIR, 'content')
