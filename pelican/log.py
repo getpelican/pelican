@@ -58,9 +58,9 @@ class TextFormatter(Formatter):
 
     def format(self, record):
         if not record.levelname or record.levelname == 'INFO':
-            return record.msg
+            return str(record.msg)
         else:
-            return record.levelname + ': ' + record.msg
+            return record.levelname + ': ' + str(record.msg)
 
 
 def init(level=None, logger=getLogger(), handler=StreamHandler()):
