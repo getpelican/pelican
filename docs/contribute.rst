@@ -54,9 +54,9 @@ If you have made changes that affect the output of a Pelican-generated weblog,
 then you should update the output used by functional tests.
 To do so, you can use the following two commands::
 
-    $ LC_ALL="C" pelican -o tests/output/custom/ -s samples/pelican.conf.py \
+    $ LC_ALL="C" pelican -o pelican/tests/output/custom/ -s samples/pelican.conf.py \
         samples/content/
-    $ LC_ALL="C" pelican -o tests/output/basic/ samples/content/
+    $ LC_ALL="C" pelican -o pelican/tests/output/basic/ samples/content/
 
 testing for python3
 -------------------
