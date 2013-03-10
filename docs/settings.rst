@@ -186,7 +186,9 @@ Setting name (default value)                            What does it do?
 `ARTICLE_LANG_SAVE_AS` (``'{slug}-{lang}.html'``)       The place where we will save an article which
                                                         doesn't use the default language.
 `PAGE_URL` (``'pages/{slug}.html'``)                    The URL we will use to link to a page.
-`PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page.
+`PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page. This value has to be
+                                                        the same as PAGE_URL or you need to use a rewrite in
+                                                        your server config.
 `PAGE_LANG_URL` (``'pages/{slug}-{lang}.html'``)        The URL we will use to link to a page which doesn't
                                                         use the default language.
 `PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
