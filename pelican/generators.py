@@ -84,6 +84,20 @@ class Generator(object):
                          % (name, self._templates_path)))
         return self._templates[name]
 
+    def _include_path(self, path, extensions=None):
+        """Inclusion logic for .get_files(), returns True/False
+
+        :param path: the path which might be including
+        :param extensions: the list of allowed extensions (if False, all
+            extensions are allowed)
+        """
+        if extensions is None:
+            extensions = self.markup
+        basename = os.path.basename(path)
+        if extensions is False or basename.endswith(extensions):
+            return True
+        return False
+
     def get_files(self, path, exclude=[], extensions=None):
         """Return a list of files to use, based on rules
 
@@ -92,24 +106,19 @@ class Generator(object):
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
-        if extensions is None:
-            extensions = self.markup
-
         files = []
 
-        try:
-            iter = os.walk(path, followlinks=True)
-        except TypeError:  # python 2.5 does not support followlinks
-            iter = os.walk(path)
-
-        for root, dirs, temp_files in iter:
-            for e in exclude:
-                if e in dirs:
-                    dirs.remove(e)
-            for f in temp_files:
-                if extensions is False or \
-                        (True in [f.endswith(ext) for ext in extensions]):
-                    files.append(os.sep.join((root, f)))
+        if os.path.isdir(path):
+            for root, dirs, temp_files in os.walk(path, followlinks=True):
+                for e in exclude:
+                    if e in dirs:
+                        dirs.remove(e)
+                for f in temp_files:
+                    fp = os.path.join(root, f)
+                    if self._include_path(fp, extensions):
+                        files.append(fp)
+        elif os.path.exists(path) and self._include_path(path, extensions):
+            files.append(path)  # can't walk non-directories
         return files
 
     def add_source_path(self, content):
@@ -140,8 +149,8 @@ class _FileLoader(BaseLoader):
         mtime = os.path.getmtime(self.fullpath)
         with open(self.fullpath, 'r', encoding='utf-8') as f:
             source = f.read()
-        return source, self.fullpath, \
-                lambda: mtime == os.path.getmtime(self.fullpath)
+        return (source, self.fullpath,
+                lambda: mtime == os.path.getmtime(self.fullpath))
 
 
 class TemplatePagesGenerator(Generator):
@@ -510,6 +519,9 @@ class StaticGenerator(Generator):
             for f in self.get_files(
                     os.path.join(self.path, static_path), extensions=False):
                 f_rel = os.path.relpath(f, self.path)
+                # On Windows, make sure we end up with Unix-like paths.
+                if os.name == 'nt':
+                    f_rel = f_rel.replace('\\', '/')
                 # TODO remove this hardcoded 'static' subdirectory
                 sc = StaticContent(f_rel, os.path.join('static', f_rel),
                         settings=self.settings)
@@ -538,12 +550,14 @@ class PdfGenerator(Generator):
         super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
-            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH']) \
-                                if 'PDF_STYLE_PATH' in self.settings.keys() \
-                                else ''
-            pdf_style = self.settings['PDF_STYLE'] if 'PDF_STYLE' \
-                                                    in self.settings.keys() \
-                                                    else 'twelvepoint'
+            if 'PDF_STYLE_PATH' in self.settings.keys():
+                pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH'])
+            else:
+                pdf_style_path = ''
+
+            if 'PDF_STYLE' in self.settings.keys():
+                pdf_style = self.settings.get('PDF_STYLE', 'twelvepoint')
+
             self.pdfcreator = RstToPdf(breakside=0,
                                        stylesheets=[pdf_style],
                                        style_path=[pdf_style_path])

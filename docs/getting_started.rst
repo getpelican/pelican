@@ -300,8 +300,10 @@ following syntax:
 
 In this example, ``article1.rst`` could look like::
 
-    Title: The first article
-    Date: 2012-12-01
+    The first article
+    #################
+
+    :date: 2012-12-01 10:02
 
     See below intra-site link examples in reStructuredText format.
 
@@ -311,7 +313,7 @@ In this example, ``article1.rst`` could look like::
 and ``article2.md``::
 
     Title: The second article
-    Date: 2012-12-01
+    Date: 2012-12-01 10:02
 
     See below intra-site link examples in Markdown format.
 

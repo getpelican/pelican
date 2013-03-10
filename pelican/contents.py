@@ -53,6 +53,8 @@ class Page(object):
 
         # set metadata as attributes
         for key, value in local_metadata.items():
+            if key in ('save_as', 'url'):
+                key = 'override_' + key
             setattr(self, key.lower(), value)
 
         # also keep track of the metadata attributes available
@@ -138,6 +140,8 @@ class Page(object):
         return self.settings[fq_key].format(**self.url_format)
 
     def get_url_setting(self, key):
+        if hasattr(self, 'override_' + key):
+            return getattr(self, 'override_' + key)
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 
@@ -336,6 +340,9 @@ class StaticContent(object):
             settings = copy.deepcopy(_DEFAULT_CONFIG)
         self.src = src
         self.url = dst or src
+        # On Windows, make sure we end up with Unix-like paths.
+        if os.name == 'nt':
+            self.url = self.url.replace('\\', '/')
         self.source_path = os.path.join(settings['PATH'], src)
         self.save_as = os.path.join(settings['OUTPUT_PATH'], self.url)
 
