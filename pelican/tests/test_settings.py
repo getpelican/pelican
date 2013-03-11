@@ -24,16 +24,16 @@ class TestSettingsConfiguration(unittest.TestCase):
                 'http://blog.notmyidea.org')
 
     def test_keep_default_settings(self):
-        """keep default settings if not defined"""
+        # Keep default settings if not defined.
         self.assertEqual(self.settings.get('DEFAULT_CATEGORY'),
             _DEFAULT_CONFIG['DEFAULT_CATEGORY'])
 
     def test_dont_copy_small_keys(self):
-        """do not copy keys not in caps."""
+        # Do not copy keys not in caps.
         self.assertNotIn('foobar', self.settings)
 
     def test_read_empty_settings(self):
-        """providing no file should return the default values."""
+        # Providing no file should return the default values.
         settings = read_settings(None)
         expected = copy.deepcopy(_DEFAULT_CONFIG)
         expected['FEED_DOMAIN'] = ''  # Added by configure settings
@@ -41,8 +41,8 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.assertDictEqual(settings, expected)
 
     def test_settings_return_independent(self):
-        """Make sure that the results from one settings call doesn't
-        effect past or future instances."""
+        # Make sure that the results from one settings call doesn't
+        # effect past or future instances.
         self.PATH = abspath(dirname(__file__))
         default_conf = join(self.PATH, 'default_conf.py')
         settings = read_settings(default_conf)
@@ -51,13 +51,13 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.assertNotEqual(new_settings['SITEURL'], settings['SITEURL'])
 
     def test_defaults_not_overwritten(self):
-        """This assumes 'SITENAME': 'A Pelican Blog'"""
+        # This assumes 'SITENAME': 'A Pelican Blog'
         settings = read_settings(None)
         settings['SITENAME'] = 'Not a Pelican Blog'
         self.assertNotEqual(settings['SITENAME'], _DEFAULT_CONFIG['SITENAME'])
 
     def test_configure_settings(self):
-        """Manipulations to settings should be applied correctly."""
+        #Manipulations to settings should be applied correctly.
 
         settings = {
                 'SITEURL': 'http://blog.notmyidea.org/',

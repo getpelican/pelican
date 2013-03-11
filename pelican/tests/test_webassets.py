@@ -55,13 +55,13 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
     """Test pelican with relative urls."""
 
     def test_jinja2_ext(self):
-        """Test that the Jinja2 extension was correctly added."""
+        # Test that the Jinja2 extension was correctly added.
 
         from webassets.ext.jinja2 import AssetsExtension
         self.assertIn(AssetsExtension, self.settings['JINJA_EXTENSIONS'])
 
     def test_compilation(self):
-        """Compare the compiled css with the reference."""
+        # Compare the compiled css with the reference.
 
         gen_file = os.path.join(self.temp_path, 'theme', 'gen',
                                 'style.{0}.min.css'.format(CSS_HASH))
@@ -71,7 +71,7 @@ class TestWebAssetsRelativeURLS(TestWebAssets):
         self.assertEqual(css_new, CSS_REF)
 
     def test_template(self):
-        """Look in the output files for the link tag."""
+        # Look in the output files for the link tag.
 
         css_file = './theme/gen/style.{0}.min.css'.format(CSS_HASH)
         html_files = ['index.html', 'archives.html',
@@ -92,7 +92,7 @@ class TestWebAssetsAbsoluteURLS(TestWebAssets):
                                             'SITEURL': 'http://localhost'})
 
     def test_absolute_url(self):
-        """Look in the output files for the link tag with absolute url."""
+        # Look in the output files for the link tag with absolute url.
 
         css_file = ('http://localhost/theme/gen/style.{0}.min.css'
                     .format(CSS_HASH))

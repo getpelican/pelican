@@ -95,8 +95,8 @@ class TestUtils(LoggedTestCase):
         self.assertNotIn(fr_article1, index)
 
     def test_files_changed(self):
-        """Test if file changes are correctly detected
-        Make sure to handle not getting any files correctly"""
+        # Test if file changes are correctly detected
+        # Make sure to handle not getting any files correctly.
 
         dirname = os.path.join(os.path.dirname(__file__), 'content')
         path = os.path.join(dirname, 'article_with_metadata.rst')

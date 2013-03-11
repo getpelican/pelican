@@ -80,7 +80,7 @@ class RstReaderTest(unittest.TestCase):
             self.assertEquals(value, expected[key], key)
 
     def test_article_metadata_key_lowercase(self):
-        """Keys of metadata should be lowercase."""
+        # Keys of metadata should be lowercase.
         reader = readers.RstReader({})
         content, metadata = reader.read(
                 _path('article_with_uppercase_metadata.rst'))
@@ -317,7 +317,7 @@ class HTMLReaderTest(unittest.TestCase):
     ''', content)
 
     def test_article_metadata_key_lowercase(self):
-        """Keys of metadata should be lowercase."""
+        # Keys of metadata should be lowercase.
         reader = readers.HTMLReader({})
         content, metadata = reader.read(
                 _path('article_with_uppercase_metadata.html'))
