@@ -287,8 +287,7 @@ and images that may be sitting alongside the current post (instead of having
 to determine where those resources will be placed after site generation).
 
 To link to internal content (files in the ``content`` directory), use the
-following syntax:
-``|filename|path/to/file``.
+following syntax: ``|filename|path/to/file``::
 
 
     website/
@@ -323,7 +322,7 @@ and ``article2.md``::
 Embedding non-article or non-page content is slightly different in that the
 directories need to be specified in ``pelicanconf.py`` file. The ``images``
 directory is configured for this by default but others will need to be added
-manually.
+manually::
 
     content
     ├── images
