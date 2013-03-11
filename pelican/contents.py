@@ -189,12 +189,13 @@ class Content(object):
                 if value in self._context['filenames']:
                     origin = '/'.join((siteurl,
                              self._context['filenames'][value].url))
+                    origin = origin.replace('\\', '/')  # Fow windows paths.
                 else:
                     logger.warning("Unable to find {fn}, skipping url"
                                     " replacement".format(fn=value))
 
-            return m.group('markup') + m.group('quote') + origin \
-                    + m.group('quote')
+            return ''.join((m.group('markup'), m.group('quote'), origin,
+                            m.group('quote')))
 
         return hrefs.sub(replacer, content)
 
