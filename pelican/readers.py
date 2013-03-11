@@ -322,10 +322,14 @@ def read_file(path, fmt=None, settings=None):
     if not fmt:
         fmt = ext[1:]
 
+    extensions = dict(_EXTENSIONS)
+    if settings and settings.get('READERS'):
+        extensions.update(settings.get('READERS'))
+
     if fmt not in _EXTENSIONS:
         raise TypeError('Pelican does not know how to parse {}'.format(path))
 
-    reader = _EXTENSIONS[fmt](settings)
+    reader = extensions[fmt](settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()
 
     if settings and settings_key in settings:

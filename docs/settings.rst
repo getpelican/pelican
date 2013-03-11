@@ -500,6 +500,27 @@ adding the following to your configuration::
 
     CSS_FILE = "wide.css"
 
+Custom readers
+==============
+
+Creating Pelican custom readers is addressed in a dedicated section
+(see :ref:`implement-reader`). To load them, use the settings described below.
+
+=======================   =======================================================
+Setting name              What does it do ?
+=======================   =======================================================
+`READERS`                 Additional file extensions -> reader mapping
+                          allowing to redefine the readers used by pelican, or
+                          add oneself readers.
+=======================   =======================================================
+
+For example, if you redefined the reStructuredText reader in
+``mypelican.RstReader``, you can use it with the following in your
+configuration::
+
+    import mypelican.RstReader
+    READERS = {'rst': mypelican.RstReader, }
+
 Example settings
 ================
 

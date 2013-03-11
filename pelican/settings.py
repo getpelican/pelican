@@ -84,7 +84,8 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
                    'TEMPLATE_PAGES': {},
-                   'IGNORE_FILES': []
+                   'IGNORE_FILES': [],
+                   'READERS': {},
                    }
 
 
