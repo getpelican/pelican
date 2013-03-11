@@ -14,8 +14,3 @@ install:
     - pip install webassets
     - pip install cssmin
 script: nosetests -s pelican
-notifications:
-    irc:
-        channels:
-            - "irc.freenode.org#pelican"
-        on_success: change
