@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import sys, os
 
-sys.path.append(os.path.abspath('..'))
+sys.path.append(os.path.abspath(os.pardir))
 
 from pelican import __version__, __major__
 
