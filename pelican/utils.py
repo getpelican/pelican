@@ -312,13 +312,13 @@ def get_relative_path(path):
 
 
 def truncate_html_words(s, num, end_text='...'):
-    """Truncates HTML to a certain number of words (not counting tags and
-    comments). Closes opened tags if they were correctly closed in the given
-    html. Takes an optional argument of what should be used to notify that the
-    string has been truncated, defaulting to ellipsis (...).
+    """Truncates HTML to a certain number of words.
 
-    Newlines in the HTML are preserved.
-    From the django framework.
+    (not counting tags and comments). Closes opened tags if they were correctly
+    closed in the given html. Takes an optional argument of what should be used
+    to notify that the string has been truncated, defaulting to ellipsis (...).
+
+    Newlines in the HTML are preserved. (From the django framework).
     """
     length = int(num)
     if length <= 0:
@@ -382,11 +382,13 @@ def truncate_html_words(s, num, end_text='...'):
 
 
 def process_translations(content_list):
-    """ Finds all translation and returns tuple with two lists (index,
-    translations).  Index list includes items in default language or items
-    which have no variant in default language.
+    """ Finds translation and returns them.
 
-    Also, for each content_list item, it sets attribute 'translations'
+    Returns a tuple with two lists (index, translations).  Index list includes
+    items in default language or items which have no variant in default
+    language.
+
+    For each content_list item, sets the 'translations' attribute.
     """
     content_list.sort(key=attrgetter('slug'))
     grouped_by_slugs = groupby(content_list, attrgetter('slug'))

@@ -70,7 +70,7 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
                    'DATE_FORMATS': {},
                    'JINJA_EXTENSIONS': [],
-                   'LOCALE': '',  # default to user locale
+                   'LOCALE': '',  # defaults to user locale
                    'DEFAULT_PAGINATION': False,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),
@@ -107,9 +107,7 @@ def read_settings(path=None, override=None):
 
 
 def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
-    """
-    Load settings from a module, returning a dict.
-    """
+    """Loads settings from a module, returns a dictionary."""
 
     context = copy.deepcopy(default_settings)
     if module is not None:
@@ -119,10 +117,7 @@ def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
 
 
 def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
-    """
-    Load settings from a file path, returning a dict.
-
-    """
+    """Loads settings from a file path, returning a dict."""
 
     name = os.path.basename(path).rpartition('.')[0]
     module = imp.load_source(name, path)
@@ -130,14 +125,15 @@ def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
 
 
 def configure_settings(settings):
-    """
-    Provide optimizations, error checking, and warnings for loaded settings
+    """Provide optimizations, error checking and warnings for the given
+    settings.
+
     """
     if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
                         ' (see pelican --help for more information)')
 
-    # find the theme in pelican.theme if the given one does not exists
+    # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):
         theme_path = os.sep.join([os.path.dirname(
             os.path.abspath(__file__)), "themes/%s" % settings['THEME']])
