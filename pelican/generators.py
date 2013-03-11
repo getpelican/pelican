@@ -565,7 +565,7 @@ class StaticGenerator(Generator):
                 f_rel = os.path.relpath(f, self.path)
                 # TODO remove this hardcoded 'static' subdirectory
                 dest = os.path.join('static', f_rel)
-                url = '/'.join(pelican.utils.split_all(dest))
+                url = pelican.utils.path_to_url(dest)
                 sc = Static(
                     content=None,
                     metadata={

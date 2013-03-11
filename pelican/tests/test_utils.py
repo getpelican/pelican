@@ -71,8 +71,9 @@ class TestUtils(LoggedTestCase):
 
     def test_get_relative_path(self):
 
-        samples = (('test/test.html', os.pardir),
-                   ('test/test/test.html', os.path.join(os.pardir, os.pardir)),
+        samples = ((os.path.join('test', 'test.html'), os.pardir),
+                   (os.path.join('test', 'test', 'test.html'),
+                    os.path.join(os.pardir, os.pardir)),
                    ('test.html', os.curdir))
 
         for value, expected in samples:

@@ -304,11 +304,20 @@ def clean_output_dir(path):
 
 def get_relative_path(path):
     """Return the relative path from the given path to the root path."""
-    nslashes = path.count('/')
-    if nslashes == 0:
+    components = split_all(path)
+    if len(components) <= 1:
         return os.curdir
     else:
-        return '/'.join([os.pardir] * nslashes)
+        parents = [os.pardir] * (len(components) - 1)
+        return os.path.join(*parents)
+
+
+def path_to_url(path):
+    """Return the URL corresponding to a given path."""
+    if os.sep == '/':
+        return path
+    else:
+        '/'.join(split_all(path))
 
 
 def truncate_html_words(s, num, end_text='...'):

@@ -10,7 +10,7 @@ from codecs import open
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from jinja2 import Markup
 from pelican.paginator import Paginator
-from pelican.utils import get_relative_path, set_date_tzinfo
+from pelican.utils import get_relative_path, path_to_url, set_date_tzinfo
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,9 @@ class Writer(object):
         old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
         try:
-            self.site_url = context.get('SITEURL', get_relative_path(path))
+            self.site_url = context.get(
+                'SITEURL', path_to_url(get_relative_path(path)))
+
             self.feed_domain = context.get('FEED_DOMAIN')
             self.feed_url = '{}/{}'.format(self.feed_domain, path)
 
@@ -125,9 +127,9 @@ class Writer(object):
 
         localcontext = context.copy()
         if relative_urls:
-            relative_path = get_relative_path(name)
-            context['localsiteurl'] = relative_path
-            localcontext['SITEURL'] = relative_path
+            relative_url = path_to_url(get_relative_path(name))
+            context['localsiteurl'] = relative_url
+            localcontext['SITEURL'] = relative_url
 
         localcontext['output_file'] = name
         localcontext.update(kwargs)
