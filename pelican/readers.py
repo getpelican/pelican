@@ -222,7 +222,7 @@ class HTMLReader(Reader):
                 self._in_body = False
                 self._in_top_level = True
             elif self._in_body:
-                self._data_buffer += '</{}>'.format(cgi.escape(tag))
+                self._data_buffer += '</{0}>'.format(cgi.escape(tag))
 
         def handle_startendtag(self, tag, attrs):
             if tag == 'meta' and self._in_head:
@@ -231,23 +231,23 @@ class HTMLReader(Reader):
                 self._data_buffer += self.build_tag(tag, attrs, True)
 
         def handle_comment(self, data):
-            self._data_buffer += '<!--{}-->'.format(data)
+            self._data_buffer += '<!--{0}-->'.format(data)
 
         def handle_data(self, data):
             self._data_buffer += data
 
         def handle_entityref(self, data):
-            self._data_buffer += '&{};'.format(data)
+            self._data_buffer += '&{0};'.format(data)
 
         def handle_charref(self, data):
-            self._data_buffer += '&#{};'.format(data)
+            self._data_buffer += '&#{0};'.format(data)
 
         def build_tag(self, tag, attrs, close_tag):
-            result = '<{}'.format(cgi.escape(tag))
+            result = '<{0}'.format(cgi.escape(tag))
             for k, v in attrs:
                 result += ' ' + cgi.escape(k)
                 if v is not None:
-                    result += '="{}"'.format(cgi.escape(v))
+                    result += '="{0}"'.format(cgi.escape(v))
             if close_tag:
                 return result + ' />'
             return result + '>'
@@ -323,7 +323,7 @@ def read_file(path, fmt=None, settings=None):
         fmt = ext[1:]
 
     if fmt not in _EXTENSIONS:
-        raise TypeError('Pelican does not know how to parse {}'.format(path))
+        raise TypeError('Pelican does not know how to parse {0}'.format(path))
 
     reader = _EXTENSIONS[fmt](settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()

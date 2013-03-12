@@ -554,7 +554,7 @@ class StaticGenerator(Generator):
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
             shutil.copy(source_path, save_as)
-            logger.info('copying {} to {}'.format(sc.source_path, sc.save_as))
+            logger.info('copying {0} to {1}'.format(sc.source_path, sc.save_as))
 
 
 class PdfGenerator(Generator):

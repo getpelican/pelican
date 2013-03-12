@@ -62,7 +62,7 @@ class Writer(object):
         try:
             self.site_url = context.get('SITEURL', get_relative_path(path))
             self.feed_domain = context.get('FEED_DOMAIN')
-            self.feed_url = '{}/{}'.format(self.feed_domain, path)
+            self.feed_url = '{0}/{1}'.format(self.feed_domain, path)
 
             feed = self._create_new_feed(feed_type, context)
 
@@ -121,7 +121,7 @@ class Writer(object):
                 pass
             with open(path, 'w', encoding='utf-8') as f:
                 f.write(output)
-            logger.info('writing {}'.format(path))
+            logger.info('writing {0}'.format(path))
 
         localcontext = context.copy()
         if relative_urls:

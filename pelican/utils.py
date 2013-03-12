@@ -143,12 +143,12 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
     """
     def _warn():
         version = '.'.join(six.text_type(x) for x in since)
-        message = ['{} has been deprecated since {}'.format(old, version)]
+        message = ['{0} has been deprecated since {1}'.format(old, version)]
         if remove:
             version = '.'.join(six.text_type(x) for x in remove)
             message.append(
-                ' and will be removed by version {}'.format(version))
-        message.append('.  Use {} instead.'.format(new))
+                ' and will be removed by version {0}'.format(version))
+        message.append('.  Use {0} instead.'.format(new))
         logger.warning(''.join(message))
         logger.debug(''.join(
                 six.text_type(x) for x in traceback.format_stack()))
@@ -403,7 +403,7 @@ def process_translations(content_list):
         if len_ > 1:
             logger.warning('there are %s variants of "%s"' % (len_, slug))
             for x in default_lang_items:
-                logger.warning('    {}'.format(x.source_path))
+                logger.warning('    {0}'.format(x.source_path))
         elif len_ == 0:
             default_lang_items = items[:1]
 
