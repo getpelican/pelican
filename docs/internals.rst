@@ -35,6 +35,8 @@ The logic is separated into different classes and concepts:
   syntax is `Jinja2 <http://jinja.pocoo.org/>`_ and is very easy to learn, so
   don't hesitate to jump in and build your own theme.
 
+.. _implement-reader:
+
 How to implement a new reader?
 ==============================
 
