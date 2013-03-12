@@ -33,7 +33,7 @@ from pelican.contents import Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
 
-_METADATA_PROCESSORS = {
+METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
     'date': lambda x, y: get_date(x),
     'status': lambda x, y: x.strip(),
@@ -50,8 +50,8 @@ class Reader(object):
         self.settings = settings
 
     def process_metadata(self, name, value):
-        if name in _METADATA_PROCESSORS:
-            return _METADATA_PROCESSORS[name](value, self.settings)
+        if name in METADATA_PROCESSORS:
+            return METADATA_PROCESSORS[name](value, self.settings)
         return value
 
 
@@ -309,11 +309,11 @@ class AsciiDocReader(Reader):
         return content, metadata
 
 
-_EXTENSIONS = {}
+EXTENSIONS = {}
 
 for cls in Reader.__subclasses__():
     for ext in cls.file_extensions:
-        _EXTENSIONS[ext] = cls
+        EXTENSIONS[ext] = cls
 
 
 def read_file(path, fmt=None, settings=None):
@@ -322,10 +322,10 @@ def read_file(path, fmt=None, settings=None):
     if not fmt:
         fmt = ext[1:]
 
-    if fmt not in _EXTENSIONS:
+    if fmt not in EXTENSIONS:
         raise TypeError('Pelican does not know how to parse {}'.format(path))
 
-    reader = _EXTENSIONS[fmt](settings)
+    reader = EXTENSIONS[fmt](settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()
 
     if settings and settings_key in settings:
