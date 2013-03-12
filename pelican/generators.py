@@ -213,12 +213,13 @@ class ArticlesGenerator(Generator):
             arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_ATOM'] % cat.slug)
+                                  self.settings['CATEGORY_FEED_ATOM']
+                                  % cat.slug)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_RSS'] % cat.slug,
-                                  feed_type='rss')
+                                  self.settings['CATEGORY_FEED_RSS']
+                                  % cat.slug, feed_type='rss')
 
         if (self.settings.get('TAG_FEED_ATOM')
                 or self.settings.get('TAG_FEED_RSS')):
@@ -226,7 +227,8 @@ class ArticlesGenerator(Generator):
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_ATOM'] % tag.slug)
+                                      self.settings['TAG_FEED_ATOM']
+                                      % tag.slug)
 
                 if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,
@@ -280,7 +282,7 @@ class ArticlesGenerator(Generator):
             write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=tag.page_name)
+                page_name=tag.page_name, all_articles=self.articles)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -290,7 +292,7 @@ class ArticlesGenerator(Generator):
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=cat.page_name)
+                page_name=cat.page_name, all_articles=self.articles)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -300,14 +302,15 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=aut.page_name)
+                page_name=aut.page_name, all_articles=self.articles)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in self.drafts:
             write('drafts/%s.html' % article.slug,
                 self.get_template(article.template), self.context,
-                article=article, category=article.category)
+                article=article, category=article.category,
+                all_articles=self.articles)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
