@@ -188,5 +188,5 @@ class LoggedTestCase(unittest.TestCase):
         actual = self._logcount_handler.count_logs(msg=msg, **kwargs)
         self.assertEqual(
             actual, count,
-            msg='expected {} occurrences of {!r}, but found {}'.format(
+            msg='expected {0} occurrences of {1!r}, but found {2}'.format(
                 count, msg, actual))
