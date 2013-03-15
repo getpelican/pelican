@@ -16,6 +16,8 @@ SSH_PORT=$ssh_port
 SSH_USER=$ssh_user
 SSH_TARGET_DIR=$ssh_target_dir
 
+S3_BUCKET=$s3_bucket
+
 DROPBOX_DIR=$dropbox_dir
 
 help:
@@ -33,6 +35,7 @@ help:
 	@echo '   rsync_upload                     upload the web site via rsync+ssh  '
 	@echo '   dropbox_upload                   upload the web site via Dropbox    '
 	@echo '   ftp_upload                       upload the web site via FTP        '
+	@echo '   s3_upload                        upload the web site via S3         '
 	@echo '   github                           upload the web site via gh-pages   '
 	@echo '                                                                       '
 
@@ -75,8 +78,11 @@ dropbox_upload: publish
 ftp_upload: publish
 	lftp ftp://$$(FTP_USER)@$$(FTP_HOST) -e "mirror -R $$(OUTPUTDIR) $$(FTP_TARGET_DIR) ; quit"
 
+s3_upload: publish
+	s3cmd sync $(OUTPUTDIR)/ s3://$(S3_BUCKET) --acl-public --delete-removed
+
 github: publish
 	ghp-import $$(OUTPUTDIR)
 	git push origin gh-pages
 
-.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload github
+.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload s3_upload github
