@@ -49,7 +49,7 @@ regenerate: clean
 	$$(PELICAN) -r $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 
 serve:
-	cd $$(OUTPUTDIR) && python -m pelican.server
+	cd $$(OUTPUTDIR) && $(PY) -m pelican.server
 
 devserver:
 	$$(BASEDIR)/develop_server.sh restart
