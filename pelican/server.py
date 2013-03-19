@@ -22,4 +22,8 @@ except OSError as e:
 
 
 print("serving at port", PORT)
-httpd.serve_forever()
+try:
+    httpd.serve_forever()
+except KeyboardInterrupt as e:
+    print("shutting down server")
+    httpd.socket.close()
