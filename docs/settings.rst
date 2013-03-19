@@ -67,6 +67,10 @@ Setting name (default value)                                            What doe
                                                                         content directory) to the destination (inside the output directory).
                                                                         For example: ``(('extra/robots.txt', 'robots.txt'),)``.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
+`JINJA_FILTERSS` (``{}``)                                               A list of custom Jinja2 filters you want to use.
+                                                                        The dictionnary should map the filtername to the filter function.
+                                                                        For exemple: ``{'urlencode': urlencode_filter}``
+                                                                        See `Jinja custom filters documentation`_.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
@@ -507,3 +511,6 @@ Example settings
 
 .. literalinclude:: ../samples/pelican.conf.py
     :language: python
+
+
+.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
