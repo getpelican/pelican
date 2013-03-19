@@ -478,6 +478,7 @@ free to use them in your themes as well.
 =======================   =======================================================
 Setting name              What does it do ?
 =======================   =======================================================
+`SITESUBTITLE`            A subitle to appear in the header.
 `DISQUS_SITENAME`         Pelican can handle Disqus comments. Specify the
                           Disqus sitename identifier here.
 `GITHUB_URL`              Your GitHub URL (if you have one). It will then
