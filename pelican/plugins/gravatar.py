@@ -24,7 +24,7 @@ If one of them are defined, the author_gravatar variable is added to the
 article's context.
 """
 
-def add_gravatar(generator, metadata):
+def add_gravatar(generator, metadata, **kwargs):
 
     #first check email
     if 'email' not in metadata.keys()\
