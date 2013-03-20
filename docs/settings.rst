@@ -67,7 +67,7 @@ Setting name (default value)                                            What doe
                                                                         content directory) to the destination (inside the output directory).
                                                                         For example: ``(('extra/robots.txt', 'robots.txt'),)``.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
-`JINJA_FILTERSS` (``{}``)                                               A list of custom Jinja2 filters you want to use.
+`JINJA_FILTERS` (``{}``)                                                A list of custom Jinja2 filters you want to use.
                                                                         The dictionnary should map the filtername to the filter function.
                                                                         For exemple: ``{'urlencode': urlencode_filter}``
                                                                         See `Jinja custom filters documentation`_.
@@ -478,7 +478,7 @@ free to use them in your themes as well.
 =======================   =======================================================
 Setting name              What does it do ?
 =======================   =======================================================
-`SITESUBTITLE`            A subitle to appear in the header.
+`SITESUBTITLE`            A subtitle to appear in the header.
 `DISQUS_SITENAME`         Pelican can handle Disqus comments. Specify the
                           Disqus sitename identifier here.
 `GITHUB_URL`              Your GitHub URL (if you have one). It will then
