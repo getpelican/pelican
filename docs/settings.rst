@@ -68,8 +68,8 @@ Setting name (default value)                                            What doe
                                                                         For example: ``(('extra/robots.txt', 'robots.txt'),)``.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
 `JINJA_FILTERS` (``{}``)                                                A list of custom Jinja2 filters you want to use.
-                                                                        The dictionnary should map the filtername to the filter function.
-                                                                        For exemple: ``{'urlencode': urlencode_filter}``
+                                                                        The dictionary should map the filtername to the filter function.
+                                                                        For example: ``{'urlencode': urlencode_filter}``
                                                                         See `Jinja custom filters documentation`_.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
