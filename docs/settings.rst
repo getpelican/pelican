@@ -67,6 +67,10 @@ Setting name (default value)                                            What doe
                                                                         content directory) to the destination (inside the output directory).
                                                                         For example: ``(('extra/robots.txt', 'robots.txt'),)``.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
+`JINJA_FILTERS` (``{}``)                                                A list of custom Jinja2 filters you want to use.
+                                                                        The dictionary should map the filtername to the filter function.
+                                                                        For example: ``{'urlencode': urlencode_filter}``
+                                                                        See `Jinja custom filters documentation`_.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
@@ -504,6 +508,7 @@ free to use them in your themes as well.
 =======================   =======================================================
 Setting name              What does it do ?
 =======================   =======================================================
+`SITESUBTITLE`            A subtitle to appear in the header.
 `DISQUS_SITENAME`         Pelican can handle Disqus comments. Specify the
                           Disqus sitename identifier here.
 `GITHUB_URL`              Your GitHub URL (if you have one). It will then
@@ -537,3 +542,6 @@ Example settings
 
 .. literalinclude:: ../samples/pelican.conf.py
     :language: python
+
+
+.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
