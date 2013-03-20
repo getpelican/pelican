@@ -7,7 +7,10 @@
       <h1 class="entry-title">
         <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
            title="Permalink to {{ article.title|striptags }}">{{ article.title}}</a></h1>
+      {%- set share_url = [SITEURL, article.url]|join('/') -%}
+      {%- set share_title = article.title -%}
       {% include 'twitter.html' %}
+      {% include 'plusone.html' %}
     </header>
 
     <div class="entry-content">
