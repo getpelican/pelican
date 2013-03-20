@@ -74,6 +74,9 @@ Setting name (default value)                                            What doe
 `MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
                                                                         to use. For the moment, the only available values
                                                                         are `rst`, `md`, `markdown`, `mkd`, `html`, and `htm`.
+`IGNORE_FILES` (``[]``)                                                 A list of file globbing patterns to match against the
+                                                                        source files to be ignored by the processor. For example
+                                                                        ``['.#*']`` will ignore emacs temporary files.
 `MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
                                                                         will use. Refer to the extensions chapter in the
                                                                         Python-Markdown documentation for a complete list of
