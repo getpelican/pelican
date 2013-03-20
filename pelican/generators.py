@@ -11,7 +11,7 @@ import shutil
 from codecs import open
 from collections import defaultdict
 from functools import partial
-from itertools import chain
+from itertools import chain, groupby
 from operator import attrgetter, itemgetter
 
 from jinja2 import (
@@ -257,6 +257,46 @@ class ArticlesGenerator(Generator):
             write(article.save_as, self.get_template(article.template),
                 self.context, article=article, category=article.category)
 
+    def generate_period_archives(self, write):
+        """Generate per-year, per-month, and per-day archives."""
+        try:
+            template = self.get_template('period_archives')
+        except Exception:
+            template = self.get_template('archives')
+
+        def _generate_period_archives(dates, key, save_as_fmt):
+            """Generate period archives from `dates`, grouped by
+            `key` and written to `save_as`.
+            """
+            # `dates` is already sorted by date
+            for _period, group in groupby(dates, key=key):
+                archive = list(group)
+                # arbitrarily grab the first date so that the usual
+                # format string syntax can be used for specifying the
+                # period archive dates
+                date = archive[0].date
+                save_as = save_as_fmt.format(date=date)
+                write(save_as, template, self.context,
+                      dates=archive, blog=True)
+
+        period_save_as = {
+                'year' : self.settings.get('YEAR_ARCHIVE_SAVE_AS'),
+                'month': self.settings.get('MONTH_ARCHIVE_SAVE_AS'),
+                'day'  : self.settings.get('DAY_ARCHIVE_SAVE_AS')
+                }
+
+        period_date_key = {
+                'year' : attrgetter('date.year'),
+                'month': attrgetter('date.year', 'date.month'),
+                'day'  : attrgetter('date.year', 'date.month', 'date.day')
+                }
+
+        for period in 'year', 'month', 'day':
+            save_as = period_save_as[period]
+            if save_as:
+                key = period_date_key[period]
+                _generate_period_archives(self.dates, key, save_as)
+
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
         PAGINATED_TEMPLATES = self.settings.get('PAGINATED_DIRECT_TEMPLATES')
@@ -320,6 +360,7 @@ class ArticlesGenerator(Generator):
         # to minimize the number of relative path stuff modification
         # in writer, articles pass first
         self.generate_articles(write)
+        self.generate_period_archives(write)
         self.generate_direct_templates(write)
 
         # and subfolders after that
