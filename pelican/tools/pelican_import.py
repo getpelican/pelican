@@ -365,10 +365,6 @@ def main():
         help='Posterous export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
-    parser.add_argument('-e', '--email', dest='email',
-        help="Email address (posterous import only)")
-    parser.add_argument('-p', '--password', dest='password',
-        help="Password (posterous import only)")
     parser.add_argument('-o', '--output', dest='output', default='output',
         help='Output path')
     parser.add_argument('-m', '--markup', dest='markup', default='rst',
