@@ -65,8 +65,6 @@ Optional arguments
   -m MARKUP, --markup MARKUP
                         Output markup format (supports rst & markdown)
                         (default: rst)
-  -e EMAIL              Email used to authenticate Posterous API
-  -p PASSWORD           Password used to authenticate Posterous API
   --dir-cat             Put files in directories with categories name
                         (default: False)
   --strip-raw           Strip raw HTML code that can't be converted to markup
