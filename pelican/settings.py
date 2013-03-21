@@ -15,21 +15,22 @@ from os.path import isabs
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_THEME = os.sep.join([os.path.dirname(os.path.abspath(__file__)),
-                              "themes/notmyidea"])
-_DEFAULT_CONFIG = {'PATH': '.',
+DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'themes', 'notmyidea')
+_DEFAULT_CONFIG = {'PATH': os.curdir,
                    'ARTICLE_DIR': '',
                    'ARTICLE_EXCLUDES': ('pages',),
                    'PAGE_DIR': 'pages',
                    'PAGE_EXCLUDES': (),
                    'THEME': DEFAULT_THEME,
-                   'OUTPUT_PATH': 'output/',
+                   'OUTPUT_PATH': 'output',
                    'MARKUP': ('rst', 'md'),
                    'STATIC_PATHS': ['images', ],
                    'THEME_STATIC_PATHS': ['static', ],
-                   'FEED_ALL_ATOM': 'feeds/all.atom.xml',
-                   'CATEGORY_FEED_ATOM': 'feeds/%s.atom.xml',
-                   'TRANSLATION_FEED_ATOM': 'feeds/all-%s.atom.xml',
+                   'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
+                   'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
+                   'TRANSLATION_FEED_ATOM': os.path.join(
+                       'feeds', 'all-%s.atom.xml'),
                    'FEED_MAX_ITEMS': '',
                    'SITEURL': '',
                    'SITENAME': 'A Pelican Blog',
@@ -49,17 +50,18 @@ _DEFAULT_CONFIG = {'PATH': '.',
                    'ARTICLE_LANG_URL': '{slug}-{lang}.html',
                    'ARTICLE_LANG_SAVE_AS': '{slug}-{lang}.html',
                    'PAGE_URL': 'pages/{slug}.html',
-                   'PAGE_SAVE_AS': 'pages/{slug}.html',
+                   'PAGE_SAVE_AS': os.path.join('pages', '{slug}.html'),
                    'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
-                   'PAGE_LANG_SAVE_AS': 'pages/{slug}-{lang}.html',
+                   'PAGE_LANG_SAVE_AS': os.path.join(
+                       'pages', '{slug}-{lang}.html'),
                    'STATIC_URL': '{path}',
                    'STATIC_SAVE_AS': '{path}',
                    'CATEGORY_URL': 'category/{slug}.html',
-                   'CATEGORY_SAVE_AS': 'category/{slug}.html',
+                   'CATEGORY_SAVE_AS': os.path.join('category', '{slug}.html'),
                    'TAG_URL': 'tag/{slug}.html',
-                   'TAG_SAVE_AS': 'tag/{slug}.html',
+                   'TAG_SAVE_AS': os.path.join('tag', '{slug}.html'),
                    'AUTHOR_URL': 'author/{slug}.html',
-                   'AUTHOR_SAVE_AS': 'author/{slug}.html',
+                   'AUTHOR_SAVE_AS': os.path.join('author', '{slug}.html'),
                    'YEAR_ARCHIVE_SAVE_AS': False,
                    'MONTH_ARCHIVE_SAVE_AS': False,
                    'DAY_ARCHIVE_SAVE_AS': False,
@@ -125,7 +127,7 @@ def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
 def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
     """Loads settings from a file path, returning a dict."""
 
-    name = os.path.basename(path).rpartition('.')[0]
+    name, ext = os.path.splitext(os.path.basename(path))
     module = imp.load_source(name, path)
     return get_settings_from_module(module, default_settings=default_settings)
 
@@ -141,8 +143,10 @@ def configure_settings(settings):
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):
-        theme_path = os.sep.join([os.path.dirname(
-            os.path.abspath(__file__)), "themes/%s" % settings['THEME']])
+        theme_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'themes',
+            settings['THEME'])
         if os.path.exists(theme_path):
             settings['THEME'] = theme_path
         else:
