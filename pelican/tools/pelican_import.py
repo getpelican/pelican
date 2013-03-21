@@ -365,6 +365,10 @@ def main():
         help='Posterous export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
+    parser.add_argument('-e', '--email', dest='email',
+        help="Email address (posterous import only)")
+    parser.add_argument('-p', '--password', dest='password',
+        help="Password (posterous import only)")
     parser.add_argument('-o', '--output', dest='output', default='output',
         help='Output path')
     parser.add_argument('-m', '--markup', dest='markup', default='rst',
@@ -379,6 +383,10 @@ def main():
         help='Disable storing slugs from imported posts within output. '
              'With this disabled, your Pelican URLs may not be consistent '
              'with your original posts.')
+    parser.add_argument('-e', '--email', dest='email',
+        help="Email address (posterous import only)")
+    parser.add_argument('-p', '--password', dest='password',
+        help="Password (posterous import only)")
 
     args = parser.parse_args()
 
