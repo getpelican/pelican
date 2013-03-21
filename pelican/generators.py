@@ -563,21 +563,24 @@ class StaticGenerator(Generator):
             for f in self.get_files(
                     os.path.join(self.path, static_path), extensions=False):
                 f_rel = os.path.relpath(f, self.path)
+                content, metadata = read_file(
+                    f, fmt='static', settings=self.settings)
                 # TODO remove this hardcoded 'static' subdirectory
-                dest = os.path.join('static', f_rel)
-                url = pelican.utils.path_to_url(dest)
+                metadata['save_as'] = os.path.join('static', f_rel)
+                metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
                 sc = Static(
                     content=None,
-                    metadata={
-                        'save_as': dest,
-                        'url': url,
-                        },
+                    metadata=metadata,
                     settings=self.settings,
                     source_path=f_rel)
                 self.staticfiles.append(sc)
                 self.add_source_path(sc)
         # same thing for FILES_TO_COPY
         for src, dest in self.settings['FILES_TO_COPY']:
+            content, metadata = read_file(
+                src, fmt='static', settings=self.settings)
+            metadata['save_as'] = dest
+            metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
             sc = Static(
                 content=None,
                 metadata={'save_as': dest},
