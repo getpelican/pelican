@@ -347,7 +347,7 @@ class ArticlesGenerator(Generator):
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in self.drafts:
-            write('drafts/%s.html' % article.slug,
+            write(os.path.join('drafts', '%s.html' % article.slug),
                 self.get_template(article.template), self.context,
                 article=article, category=article.category,
                 all_articles=self.articles)
@@ -565,7 +565,7 @@ class StaticGenerator(Generator):
                 f_rel = os.path.relpath(f, self.path)
                 # TODO remove this hardcoded 'static' subdirectory
                 dest = os.path.join('static', f_rel)
-                url = '/'.join(pelican.utils.split_all(dest))
+                url = pelican.utils.path_to_url(dest)
                 sc = Static(
                     content=None,
                     metadata={
@@ -588,7 +588,7 @@ class StaticGenerator(Generator):
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
-                         'theme', self.output_path, '.')
+                         'theme', self.output_path, os.curdir)
         # copy all Static files
         for sc in self.staticfiles:
             source_path = os.path.join(self.path, sc.source_path)
