@@ -383,6 +383,10 @@ def main():
         help='Disable storing slugs from imported posts within output. '
              'With this disabled, your Pelican URLs may not be consistent '
              'with your original posts.')
+    parser.add_argument('-e', '--email', dest='email',
+        help="Email address (posterous import only)")
+    parser.add_argument('-p', '--password', dest='password',
+        help="Password (posterous import only)")
 
     args = parser.parse_args()
 
