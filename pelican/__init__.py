@@ -326,6 +326,9 @@ def main():
                         files_found_error = False
                     time.sleep(1)  # sleep to avoid cpu load
                 except Exception as e:
+                    if (args.verbosity == logging.DEBUG):
+                        logger.critical(e.args)
+                        raise
                     logger.warning(
                             'Caught exception "{0}". Reloading.'.format(e))
                     continue
