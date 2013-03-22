@@ -120,10 +120,26 @@ class SitemapGenerator(object):
 
     def write_url(self, page, fd):
 
+        # ignore any url start with "/_" - these are internal files (ie. "/_/guide")
+        if "/_" in page.url:
+            return
+        
+        # ignore any url with customer-only, customer-exclusive, krypton, thank-you strings
+        if "customer-only" in page.url or \
+            "customer-exclusive" in page.url or \
+            "krypton" in page.url or \
+            "thank-you" in page.url:
+            return
+
         if getattr(page, 'status', 'published') != 'published':
             return
 
-        page_path = os.path.join(self.output_path, page.url)
+        # make sure the page url is not a absolute path so that os.path.join will work properly
+        page_url = page.url
+        if page.url[0] == '/':
+            page_url = page.url[1:]
+
+        page_path = os.path.join(self.output_path, page_url)
         if not os.path.exists(page_path):
             return
 
@@ -141,7 +157,7 @@ class SitemapGenerator(object):
 
 
         if self.format == 'xml':
-            fd.write(XML_URL.format(self.siteurl, page.url, lastmod, chfreq, pri))
+            fd.write(XML_URL.format(self.siteurl, page_url, lastmod, chfreq, pri))
         else:
             fd.write(self.siteurl + '/' + loc + '\n')
 
