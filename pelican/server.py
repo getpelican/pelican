@@ -1,4 +1,5 @@
 from __future__ import print_function
+import sys
 try:
     import SimpleHTTPServer as srvmod
 except ImportError:
@@ -13,7 +14,16 @@ PORT = 8000
 
 Handler = srvmod.SimpleHTTPRequestHandler
 
-httpd = socketserver.TCPServer(("", PORT), Handler)
+try:
+    httpd = socketserver.TCPServer(("", PORT), Handler)
+except OSError as e:
+    print("Could not listen on port", PORT)
+    sys.exit(getattr(e, 'exitcode', 1))
+
 
 print("serving at port", PORT)
-httpd.serve_forever()
+try:
+    httpd.serve_forever()
+except KeyboardInterrupt as e:
+    print("shutting down server")
+    httpd.socket.close()
