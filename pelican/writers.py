@@ -35,11 +35,17 @@ class Writer(object):
     def _add_item_to_the_feed(self, feed, item):
 
         title = Markup(item.title).striptags()
+        if hasattr(item, 'id'):
+            unique_id = item.id
+        else:
+            unique_id = ('tag:%s,%s:%s'
+                         % (self.site_url.replace('http://', ''),
+                            item.date.date(),
+                            item.url))
         feed.add_item(
             title=title,
             link='%s/%s' % (self.site_url, item.url),
-            unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
-                                        item.date.date(), item.url),
+            unique_id=unique_id,
             description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
