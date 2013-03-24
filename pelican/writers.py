@@ -5,6 +5,7 @@ import six
 import os
 import locale
 import logging
+import StringIO
 
 from codecs import open
 from feedgenerator import Atom1Feed, Rss201rev2Feed
@@ -120,10 +121,11 @@ class Writer(object):
                 os.makedirs(os.path.dirname(path))
             except Exception:
                 pass
-            output_context = OutputContext(output)
-            signals.writer_output.send(self, output_context=output_context)
+
+            output = StringIO.StringIO(output)
+            signals.writer_output.send(self, output=output)
             with open(path, 'w', encoding='utf-8') as f:
-                f.write(output_context.output)
+                f.write(output.getvalue())
             logger.info('writing {}'.format(path))
 
         localcontext = context.copy()
@@ -170,7 +172,3 @@ class Writer(object):
         else:
             # no pagination
             _write_file(template, localcontext, self.output_path, name)
-
-class OutputContext(object):
-    def __init__(self, output):
-        self.output = output

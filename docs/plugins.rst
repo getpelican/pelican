@@ -73,6 +73,9 @@ get_generators                  generators                      invoked in Pelic
                                                                 generator in a tuple or in a list.
 pages_generate_context          pages_generator, metadata
 pages_generator_init            pages_generator                 invoked in the PagesGenerator.__init__
+
+writer_output                   output                          invoked just before content is written out to disk. `output` is StringIO
+                                                                object that can be read from and written to to filter the final output.
 =============================   ============================   ===========================================================================
 
 The list is currently small, so don't hesitate to add signals and make a pull
