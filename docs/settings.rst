@@ -530,6 +530,8 @@ Setting name              What does it do ?
 `TWITTER_USERNAME`        Allows for adding a button to articles to encourage
                           others to tweet about them. Add your Twitter username
                           if you want this button to appear.
+`GOOGLE_PLUSONE`          Allows for adding a Google Plus One button to articles.
+                          Set it to ``True`` if you want this button to appear.
 =======================   =======================================================
 
 In addition, you can use the "wide" version of the ``notmyidea`` theme by
