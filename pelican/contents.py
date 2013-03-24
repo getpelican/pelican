@@ -51,7 +51,7 @@ class Content(object):
         self._context = context
         self.translations = []
 
-        local_metadata = dict(settings.get('DEFAULT_METADATA', ()))
+        local_metadata = dict(settings['DEFAULT_METADATA'])
         local_metadata.update(metadata)
 
         # set metadata as attributes

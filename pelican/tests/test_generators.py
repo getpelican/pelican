@@ -53,16 +53,16 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_feeds(self):
         settings = get_settings()
-        generator = ArticlesGenerator(settings,
-                {'FEED_ALL_ATOM': settings['FEED_ALL_ATOM']}, None,
+        generator = ArticlesGenerator(settings, settings, None,
                 settings['THEME'], None, settings['MARKUP'])
         writer = MagicMock()
         generator.generate_feeds(writer)
         writer.write_feed.assert_called_with([], settings,
                                              'feeds/all.atom.xml')
 
-        generator = ArticlesGenerator(settings, {'FEED_ALL_ATOM': None}, None,
-                                      settings['THEME'], None, None)
+        generator = ArticlesGenerator(
+            settings, get_settings(FEED_ALL_ATOM=None), None,
+            settings['THEME'], None, None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)

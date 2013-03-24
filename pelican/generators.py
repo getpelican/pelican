@@ -47,7 +47,7 @@ class Generator(object):
         self._templates_path = []
         self._templates_path.append(os.path.expanduser(
                 os.path.join(self.theme, 'templates')))
-        self._templates_path += self.settings.get('EXTRA_TEMPLATES_PATHS', [])
+        self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -60,7 +60,7 @@ class Generator(object):
                 simple_loader,  # implicit inheritance
                 PrefixLoader({'!simple': simple_loader})  # explicit one
             ]),
-            extensions=self.settings.get('JINJA_EXTENSIONS', []),
+            extensions=self.settings['JINJA_EXTENSIONS'],
         )
 
         logger.debug('template list: {0}'.format(self.env.list_templates()))
@@ -69,7 +69,7 @@ class Generator(object):
         self.env.filters.update({'strftime': DateFormatter()})
 
         # get custom Jinja filters from user settings
-        custom_filters = self.settings.get('JINJA_FILTERS', {})
+        custom_filters = self.settings['JINJA_FILTERS']
         self.env.filters.update(custom_filters)
 
         signals.generator_init.send(self)
@@ -163,7 +163,7 @@ class TemplatePagesGenerator(Generator):
             self.env.loader.loaders.insert(0, _FileLoader(source, self.path))
             try:
                 template = self.env.get_template(source)
-                rurls = self.settings.get('RELATIVE_URLS')
+                rurls = self.settings['RELATIVE_URLS']
                 writer.write_file(dest, template, self.context, rurls)
             finally:
                 del self.env.loader.loaders[0]
@@ -283,9 +283,9 @@ class ArticlesGenerator(Generator):
                       dates=archive, blog=True)
 
         period_save_as = {
-                'year' : self.settings.get('YEAR_ARCHIVE_SAVE_AS'),
-                'month': self.settings.get('MONTH_ARCHIVE_SAVE_AS'),
-                'day'  : self.settings.get('DAY_ARCHIVE_SAVE_AS')
+                'year' : self.settings['YEAR_ARCHIVE_SAVE_AS'],
+                'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
+                'day'  : self.settings['DAY_ARCHIVE_SAVE_AS'],
                 }
 
         period_date_key = {
@@ -302,8 +302,8 @@ class ArticlesGenerator(Generator):
 
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
-        PAGINATED_TEMPLATES = self.settings.get('PAGINATED_DIRECT_TEMPLATES')
-        for template in self.settings.get('DIRECT_TEMPLATES'):
+        PAGINATED_TEMPLATES = self.settings['PAGINATED_DIRECT_TEMPLATES']
+        for template in self.settings['DIRECT_TEMPLATES']:
             paginated = {}
             if template in PAGINATED_TEMPLATES:
                 paginated = {'articles': self.articles, 'dates': self.dates}
@@ -358,7 +358,7 @@ class ArticlesGenerator(Generator):
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
         write = partial(writer.write_file,
-                        relative_urls=self.settings.get('RELATIVE_URLS'))
+                        relative_urls=self.settings['RELATIVE_URLS'])
 
         # to minimize the number of relative path stuff modification
         # in writer, articles pass first
@@ -546,7 +546,7 @@ class PagesGenerator(Generator):
                             self.hidden_translations, self.hidden_pages):
             writer.write_file(page.save_as, self.get_template(page.template),
                     self.context, page=page,
-                    relative_urls=self.settings.get('RELATIVE_URLS'))
+                    relative_urls=self.settings['RELATIVE_URLS'])
 
 
 class StaticGenerator(Generator):
@@ -613,14 +613,8 @@ class PdfGenerator(Generator):
         super(PdfGenerator, self).__init__(*args, **kwargs)
         try:
             from rst2pdf.createpdf import RstToPdf
-            if 'PDF_STYLE_PATH' in self.settings.keys():
-                pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH'])
-            else:
-                pdf_style_path = ''
-
-            if 'PDF_STYLE' in self.settings.keys():
-                pdf_style = self.settings.get('PDF_STYLE', 'twelvepoint')
-
+            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH'])
+            pdf_style = self.settings['PDF_STYLE']
             self.pdfcreator = RstToPdf(breakside=0,
                                        stylesheets=[pdf_style],
                                        style_path=[pdf_style_path])

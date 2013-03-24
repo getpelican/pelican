@@ -85,7 +85,7 @@ class RstReaderTest(ReaderTest):
 
     def test_article_metadata_key_lowercase(self):
         # Keys of metadata should be lowercase.
-        reader = readers.RstReader({})
+        reader = readers.RstReader(settings=get_settings())
         content, metadata = reader.read(
                 _path('article_with_uppercase_metadata.rst'))
 
@@ -121,7 +121,7 @@ class MdReaderTest(ReaderTest):
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_metadata(self):
-        reader = readers.MarkdownReader({})
+        reader = readers.MarkdownReader(settings=get_settings())
         content, metadata = reader.read(
             _path('article_with_md_extension.md'))
         expected = {
@@ -150,7 +150,7 @@ class MdReaderTest(ReaderTest):
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_footnote(self):
-        reader = readers.MarkdownReader({})
+        reader = readers.MarkdownReader(settings=get_settings())
         content, metadata = reader.read(
             _path('article_with_markdown_and_footnote.md'))
         expected_content = (
@@ -186,7 +186,7 @@ class MdReaderTest(ReaderTest):
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_file_extensions(self):
-        reader = readers.MarkdownReader({})
+        reader = readers.MarkdownReader(settings=get_settings())
         # test to ensure the md file extension is being processed by the
         # correct reader
         content, metadata = reader.read(
