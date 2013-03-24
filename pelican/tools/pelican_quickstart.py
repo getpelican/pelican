@@ -26,6 +26,7 @@ CONF = {
     'ssh_port': 22,
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
+    's3_bucket': 'my_s3_bucket',
     'dropbox_dir': '~/Dropbox/Public/',
     'default_pagination': 10,
     'siteurl': '',
@@ -204,6 +205,8 @@ needed by Pelican.
             CONF['ssh_target_dir'] = ask('Where do you want to put your web site on that server?', str_compat, CONF['ssh_target_dir'])
         if ask('Do you want to upload your website using Dropbox?', answer=bool, default=False):
             CONF['dropbox_dir'] = ask('Where is your Dropbox directory?', str_compat, CONF['dropbox_dir'])
+        if ask('Do you want to upload your website using S3?', answer=bool, default=False):
+            CONF['s3_bucket'] = ask('What is the name of your S3 bucket?', str_compat, CONF['s3_bucket'])
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
