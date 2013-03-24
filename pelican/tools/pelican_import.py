@@ -19,6 +19,14 @@ from codecs import open
 from pelican.utils import slugify
 
 
+TIDYLIB = False
+try:
+    import tidylib
+    TIDYLIB = True
+except ImportError:
+    print('Install optional dependency "pytidylib" for cleaner HTML.')
+
+
 def wp2fields(xml):
     """Opens a wordpress XML file, and yield pelican fields"""
     try:
@@ -261,11 +269,14 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
             html_filename = os.path.join(output_path, filename+'.html')
 
             with open(html_filename, 'w', encoding='utf-8') as fp:
-                # Replace newlines with paragraphs wrapped with <p> so
-                # HTML is valid before conversion
-                paragraphs = content.splitlines()
-                paragraphs = ['<p>{0}</p>'.format(p) for p in paragraphs]
-                new_content = ''.join(paragraphs)
+                if TIDYLIB:
+                    (new_content, spew) = tidylib.tidy_fragment(content, {'indent': 0})
+                else:
+                    # Replace newlines with paragraphs wrapped with <p> so
+                    # HTML is valid before conversion
+                    paragraphs = content.splitlines()
+                    paragraphs = ['<p>{0}</p>'.format(p) for p in paragraphs]
+                    new_content = ''.join(paragraphs)
 
                 fp.write(new_content)
 

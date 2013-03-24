@@ -7,3 +7,4 @@ BeautifulSoup4
 lxml
 typogrify
 webassets
+pytidylib
