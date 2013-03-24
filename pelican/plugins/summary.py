@@ -31,7 +31,7 @@ def content_object_init(instance):
     instance._get_content = types.MethodType(_get_content, instance)
 
     # extract out our summary
-    if not hasattr(instance, '_summary'):
+    if not hasattr(instance, '_summary') and instance._content is not None:
         content = instance._content
         begin_summary = -1
         end_summary = -1
