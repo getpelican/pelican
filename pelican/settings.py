@@ -84,7 +84,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
     'DATE_FORMATS': {},
     'JINJA_EXTENSIONS': [],
-    'LOCALE': '',  # defaults to user locale
+    'LOCALE': [],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
     'DEFAULT_METADATA': (),
@@ -160,15 +160,34 @@ def configure_settings(settings):
             raise Exception("Could not find the theme %s"
                             % settings['THEME'])
 
-    # if locales is not a list, make it one
-    locales = settings['LOCALE']
+    # standardize strings to lowercase strings
+    for key in [
+            'DEFAULT_LANG',
+            ]:
+        if key in settings:
+            settings[key] = settings[key].lower()
 
-    if isinstance(locales, six.string_types):
-        locales = [locales]
+    # standardize strings to lists
+    for key in [
+            'LOCALE',
+            ]:
+        if key in settings and isinstance(settings[key], six.string_types):
+            settings[key] = [settings[key]]
+
+    # check settings that must be a particular type
+    for key, types in [
+            ('OUTPUT_SOURCES_EXTENSION', six.string_types),
+            ('FILENAME_METADATA', six.string_types),
+            ]:
+        if key in settings and not isinstance(settings[key], types):
+            value = settings.pop(key)
+            logger.warn(
+                'Detected misconfigured {} ({}), '
+                'falling back to the default ({})'.format(
+                    key, value, DEFAULT_CONFIG[key]))
 
     # try to set the different locales, fallback on the default.
-    if not locales:
-        locales = DEFAULT_CONFIG['LOCALE']
+    locales = settings.get('LOCALE', DEFAULT_CONFIG['LOCALE'])
 
     for locale_ in locales:
         try:
@@ -209,26 +228,6 @@ def configure_settings(settings):
             ' your timezone is UTC for feed generation. Check '
             'http://docs.getpelican.com/en/latest/settings.html#timezone '
             'for more information')
-
-    if 'OUTPUT_SOURCES_EXTENSION' in settings:
-        if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'],
-                          six.string_types):
-            settings['OUTPUT_SOURCES_EXTENSION'] = (
-                    DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
-            logger.warning(
-                'Detected misconfiguration with OUTPUT_SOURCES_EXTENSION, '
-                'falling back to the default extension ' +
-                DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
-
-    filename_metadata = settings.get('FILENAME_METADATA')
-    if filename_metadata and not isinstance(filename_metadata,
-                                            six.string_types):
-        logger.error(
-            'Detected misconfiguration with FILENAME_METADATA '
-            'setting (must be string or compiled pattern), falling '
-            'back to the default')
-        settings['FILENAME_METADATA'] = (
-                DEFAULT_CONFIG['FILENAME_METADATA'])
 
     # Save people from accidentally setting a string rather than a list
     path_keys = (
