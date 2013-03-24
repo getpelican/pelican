@@ -5,6 +5,7 @@ Release history
 ================
 
 * Support for Python 3!
+* Posterous Import
 
 3.1 (2012-12-04)
 ================
