@@ -9,6 +9,7 @@ import logging
 from codecs import open
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from jinja2 import Markup
+from pelican import signals
 from pelican.paginator import Paginator
 from pelican.utils import get_relative_path, path_to_url, set_date_tzinfo
 
@@ -121,8 +122,10 @@ class Writer(object):
                 os.makedirs(os.path.dirname(path))
             except Exception:
                 pass
+            output_context = OutputContext(output)
+            signals.writer_output.send(self, output_context=output_context)
             with open(path, 'w', encoding='utf-8') as f:
-                f.write(output)
+                f.write(output_context.output)
             logger.info('writing {}'.format(path))
 
         localcontext = context.copy()
@@ -170,3 +173,7 @@ class Writer(object):
         else:
             # no pagination
             _write_file(template, localcontext, self.output_path, name)
+
+class OutputContext(object):
+    def __init__(self, output):
+        self.output = output
