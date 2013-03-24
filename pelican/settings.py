@@ -257,6 +257,8 @@ def configure_settings(settings):
 
     for old,new,doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),
+            ('FILES_TO_COPY', 'STATIC_PATHS and EXTRA_PATH_METADATA',
+             'https://github.com/getpelican/pelican/pull/795'),
             ]:
         if old in settings:
             message = 'The {} setting has been removed in favor of {}'
