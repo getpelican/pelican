@@ -29,7 +29,7 @@ class TestArticlesGenerator(unittest.TestCase):
         for each test.
         """
         if self.generator is None:
-            settings = get_settings()
+            settings = get_settings(filenames={})
             settings['ARTICLE_DIR'] = 'content'
             settings['DEFAULT_CATEGORY'] = 'Default'
             settings['DEFAULT_DATE'] = (1970, 1, 1)
@@ -144,7 +144,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_direct_templates_save_as_default(self):
 
-        settings = get_settings()
+        settings = get_settings(filenames={})
         generator = ArticlesGenerator(settings, settings, None,
                                       settings['THEME'], None,
                                       settings['MARKUP'])
@@ -212,7 +212,7 @@ class TestPageGenerator(unittest.TestCase):
         return distilled
 
     def test_generate_context(self):
-        settings = get_settings()
+        settings = get_settings(filenames={})
         settings['PAGE_DIR'] = 'TestPages'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 from sys import platform
 
-from .support import unittest
+from .support import unittest, get_settings
 
 from pelican.contents import Page, Article, URLWrapper
 from pelican.settings import DEFAULT_CONFIG
@@ -62,7 +62,7 @@ class TestPage(unittest.TestCase):
         # If a :SUMMARY_MAX_LENGTH: is set, and there is no other summary,
         # generated summary should not exceed the given length.
         page_kwargs = self._copy_page_kwargs()
-        settings = DEFAULT_CONFIG.copy()
+        settings = get_settings()
         page_kwargs['settings'] = settings
         del page_kwargs['metadata']['summary']
         settings['SUMMARY_MAX_LENGTH'] = None
@@ -108,8 +108,7 @@ class TestPage(unittest.TestCase):
         page = Page(**self.page_kwargs)
         self.assertIn('summary', page.url_format.keys())
         page.metadata['directory'] = 'test-dir'
-        page.settings = DEFAULT_CONFIG.copy()
-        page.settings['PAGE_SAVE_AS'] = '{directory}/{slug}'
+        page.settings = get_settings(PAGE_SAVE_AS='{directory}/{slug}')
         self.assertEqual(page.save_as, 'test-dir/foo-bar')
 
     def test_datetime(self):
@@ -125,8 +124,7 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.locale_date,
             dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
 
-        page_kwargs['settings'] = dict([(x, DEFAULT_CONFIG[x]) for x in
-                                        DEFAULT_CONFIG])
+        page_kwargs['settings'] = get_settings()
 
         # I doubt this can work on all platforms ...
         if platform == "win32":

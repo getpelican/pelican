@@ -161,10 +161,14 @@ def locale_available(locale_):
         return True
 
 
-def get_settings():
+def get_settings(**kwargs):
+    """Provide tweaked setting dictionaries for testing
+
+    Set keyword arguments to override specific settings.
+    """
     settings = DEFAULT_CONFIG.copy()
-    settings['DIRECT_TEMPLATES'] = ['archives']
-    settings['filenames'] = {}
+    for key,value in kwargs.items():
+        settings[key] = value
     return settings
 
 
