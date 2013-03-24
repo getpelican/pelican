@@ -210,11 +210,6 @@ def configure_settings(settings):
             'http://docs.getpelican.com/en/latest/settings.html#timezone '
             'for more information')
 
-    if 'LESS_GENERATOR' in settings:
-        logger.warning(
-            'The LESS_GENERATOR setting has been removed in favor '
-            'of the Webassets plugin')
-
     if 'OUTPUT_SOURCES_EXTENSION' in settings:
         if not isinstance(settings['OUTPUT_SOURCES_EXTENSION'],
                           six.string_types):
@@ -255,5 +250,14 @@ def configure_settings(settings):
                         "be a list), falling back to the default"
                         % PATH_KEY)
                 settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
+
+    for old,new,doc in [
+            ('LESS_GENERATOR', 'the Webassets plugin', None),
+            ]:
+        if old in settings:
+            message = 'The {} setting has been removed in favor of {}'
+            if doc:
+                message += ', see {} for details'
+            logger.warning(message)
 
     return settings
