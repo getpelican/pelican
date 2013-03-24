@@ -18,7 +18,7 @@ from tempfile import mkdtemp
 from shutil import rmtree
 
 from pelican.contents import Article
-from pelican.settings import _DEFAULT_CONFIG
+from pelican.settings import DEFAULT_CONFIG
 
 
 @contextmanager
@@ -162,7 +162,7 @@ def locale_available(locale_):
 
 
 def get_settings():
-    settings = _DEFAULT_CONFIG.copy()
+    settings = DEFAULT_CONFIG.copy()
     settings['DIRECT_TEMPLATES'] = ['archives']
     settings['filenames'] = {}
     return settings

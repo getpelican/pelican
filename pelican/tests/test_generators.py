@@ -11,7 +11,7 @@ from shutil import rmtree
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 TemplatePagesGenerator)
 from pelican.writers import Writer
-from pelican.settings import _DEFAULT_CONFIG
+from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
@@ -117,15 +117,15 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_do_not_use_folder_as_category(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = DEFAULT_CONFIG.copy()
         settings['ARTICLE_DIR'] = 'content'
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['filenames'] = {}
-        generator = ArticlesGenerator(settings.copy(), settings,
-                            CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
-                            _DEFAULT_CONFIG['MARKUP'])
+        generator = ArticlesGenerator(
+            settings.copy(), settings, CUR_DIR, DEFAULT_CONFIG['THEME'], None,
+            DEFAULT_CONFIG['MARKUP'])
         generator.generate_context()
         # test for name
         # categories are grouped by slug; if two categories have the same slug

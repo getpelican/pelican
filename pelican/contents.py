@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 from pelican import signals
-from pelican.settings import _DEFAULT_CONFIG
+from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import (slugify, truncate_html_words, memoized, strftime,
                            python_2_unicode_compatible, deprecated_attribute,
                            path_to_url)
@@ -44,7 +44,7 @@ class Content(object):
         if metadata is None:
             metadata = {}
         if settings is None:
-            settings = copy.deepcopy(_DEFAULT_CONFIG)
+            settings = copy.deepcopy(DEFAULT_CONFIG)
 
         self.settings = settings
         self._content = content
