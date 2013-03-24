@@ -234,14 +234,25 @@ def configure_settings(settings):
         settings['FILENAME_METADATA'] = (
                 _DEFAULT_CONFIG['FILENAME_METADATA'])
 
-    # Save people from accidentally setting site/css vs [site/css]
-    path_keys = ['STATIC_PATHS', 'THEME_STATIC_PATHS']
+    # Save people from accidentally setting a string rather than a list
+    path_keys = (
+            'ARTICLE_EXCLUDES',
+            'DEFAULT_METADATA',
+            'DIRECT_TEMPLATES',
+            'EXTRA_TEMPLATES_PATHS',
+            'FILES_TO_COPY',
+            'IGNORE_FILES',
+            'JINJA_EXTENSIONS',
+            'MARKUP',
+            'PAGINATED_DIRECT_TEMPLATES',
+            'PLUGINS',
+            'STATIC_PATHS',
+            'THEME_STATIC_PATHS',)
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
             if isinstance(settings[PATH_KEY], six.string_types):
                 logger.warn("Detected misconfiguration with %s setting (must "
-                        "be a list of paths), falling back to the default"
+                        "be a list), falling back to the default"
                         % PATH_KEY)
-                settings[PATH_KEY] = \
-                        _DEFAULT_CONFIG[PATH_KEY]
+                settings[PATH_KEY] = _DEFAULT_CONFIG[PATH_KEY]
 
     return settings
