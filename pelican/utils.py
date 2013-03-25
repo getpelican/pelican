@@ -268,14 +268,6 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
         logger.warning('skipped copy %s to %s' % (source_, destination_))
 
 
-def file_exists(path):
-    """Checks path exists and is a file
-
-    :param path: the path to be checked
-    """
-    return os.path.exists(path) and os.path.isfile(path)
-
-
 def clean_output_dir(path):
     """Remove all the files from the output directory"""
 

@@ -17,7 +17,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
 from pelican.log import init
 from pelican.settings import read_settings
 from pelican.utils import (clean_output_dir, files_changed, file_changed,
-                           file_exists, NoFilesError)
+                           NoFilesError)
 from pelican.writers import Writer
 
 __major__ = 3
@@ -272,7 +272,7 @@ def get_config(args):
 def get_instance(args):
 
     config_file = args.settings
-    if config_file is None and file_exists(DEFAULT_CONFIG_NAME):
+    if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
             config_file = DEFAULT_CONFIG_NAME
 
     settings = read_settings(config_file, override=get_config(args))
