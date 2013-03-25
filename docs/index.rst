@@ -68,6 +68,7 @@ A French version of the documentation is available at :doc:`fr/index`.
    contribute
    report
    changelog
+   tutorial1_blog
 
 .. Links
 

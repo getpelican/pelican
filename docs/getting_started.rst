@@ -1,6 +1,8 @@
 Getting started
 ###############
 
+.. _installing_pelican:
+
 Installing Pelican
 ==================
 
