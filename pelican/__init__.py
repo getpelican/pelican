@@ -222,8 +222,8 @@ def parse_arguments():
              'them separated by commas.')
 
     parser.add_argument('-s', '--settings', dest='settings',
-        help='The settings of the application, this defaults to {0} if a file, '
-        'exists with this name.'.format(DEFAULT_CONFIG_NAME))
+        help='The settings of the application, this is automatically set to '
+        '{0} if a file exists with this name.'.format(DEFAULT_CONFIG_NAME))
 
     parser.add_argument('-d', '--delete-output-directory',
         dest='delete_outputdir',
