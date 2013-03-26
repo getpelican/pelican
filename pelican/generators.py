@@ -417,9 +417,6 @@ class ArticlesGenerator(Generator):
             self.add_source_path(article)
 
             if article.status == "published":
-                if hasattr(article, 'tags'):
-                    for tag in article.tags:
-                        self.tags[tag].append(article)
                 all_articles.append(article)
             elif article.status == "draft":
                 self.drafts.append(article)
@@ -431,11 +428,16 @@ class ArticlesGenerator(Generator):
         self.articles, self.translations = process_translations(all_articles)
 
         for article in self.articles:
-            # only main articles are listed in categories, not translations
+            # only main articles are listed in categories and tags
+            # not translations
             self.categories[article.category].append(article)
+            if hasattr(article, 'tags'):
+                for tag in article.tags:
+                    self.tags[tag].append(article)
             # ignore blank authors as well as undefined
             if hasattr(article, 'author') and article.author.name != '':
                 self.authors[article.author].append(article)
+
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
