@@ -42,7 +42,7 @@ class TestPelican(LoggedTestCase):
 
     def setUp(self):
         super(TestPelican, self).setUp()
-        self.temp_path = mkdtemp()
+        self.temp_path = mkdtemp(prefix='pelicantests.')
         self.old_locale = locale.setlocale(locale.LC_ALL)
         self.maxDiff = None
         locale.setlocale(locale.LC_ALL, str('C'))
@@ -53,12 +53,12 @@ class TestPelican(LoggedTestCase):
         super(TestPelican, self).tearDown()
 
     def assertFilesEqual(self, diff):
-        msg = "some generated files differ from the expected functional " \
-              "tests output.\n" \
-              "This is probably because the HTML generated files " \
-              "changed. If these changes are normal, please refer " \
-              "to docs/contribute.rst to update the expected " \
-              "output of the functional tests."
+        msg = ("some generated files differ from the expected functional "
+               "tests output.\n"
+               "This is probably because the HTML generated files "
+               "changed. If these changes are normal, please refer "
+               "to docs/contribute.rst to update the expected "
+               "output of the functional tests.")
 
         self.assertEqual(diff['left_only'], [], msg=msg)
         self.assertEqual(diff['right_only'], [], msg=msg)
