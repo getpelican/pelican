@@ -73,7 +73,7 @@ Can I use arbitrary meta-data in my templates?
 Yes. For example, to include a modified date in a Markdown post, one could
 include the following at the top of the article::
 
-    :Modified: 2012-08-08
+    Modified: 2012-08-08
 
 That meta-data can then be accessed in the template::
 
