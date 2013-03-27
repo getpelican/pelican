@@ -4,7 +4,7 @@ import sys, os
 
 sys.path.append(os.path.abspath(os.pardir))
 
-from pelican import __version__, __major__, __minor__
+from pelican import __version__
 
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
@@ -14,9 +14,9 @@ master_doc = 'index'
 project = 'Pelican'
 copyright = '2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
-version = '%s.%s' % (__major__, __minor__)
 release = __version__
-last_stable = '3.1.1'
+version = '.'.join(release.split('.')[:1])
+last_stable = '3.2.2'
 rst_prolog = '''
 .. |last_stable| replace:: :pelican-doc:`{0}`
 '''.format(last_stable)
