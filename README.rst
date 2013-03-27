@@ -29,6 +29,7 @@ Pelican currently supports:
 * Code syntax highlighting
 * Asset management with `webassets`_ (optional)
 * Import from WordPress, Dotclear, or RSS feeds
+* Clean up imported HTML with pytidylib_ (optional)
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
 
 Have a look at the `Pelican documentation`_ for more information.
@@ -68,3 +69,4 @@ client handy, use the webchat_ for quick feedback.
 .. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
 .. _contribute: http://docs.getpelican.com/en/latest/contribute.html
 .. _webassets: https://github.com/miracle2k/webassets
+.. _pytidylib: http://countergram.com/open-source/pytidylib
