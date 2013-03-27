@@ -75,7 +75,7 @@ include the following at the top of the article::
 
     Modified: 2012-08-08
 
-In a reStructuredText post, this is how the meta-data would be enterend::
+In a reStructuredText post, the meta-data would be entered like this::
 
     :Modified: 2012-08-08
 
