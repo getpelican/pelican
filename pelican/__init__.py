@@ -25,7 +25,7 @@ from pelican.writers import Writer
 __major__ = 3
 __minor__ = 2
 __micro__ = 0
-__version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
+__version__ = "{0}.{1}.{2}.dev".format(__major__, __minor__, __micro__)
 
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 
