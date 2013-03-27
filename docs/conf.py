@@ -4,18 +4,26 @@ import sys, os
 
 sys.path.append(os.path.abspath(os.pardir))
 
-from pelican import __version__, __major__
+from pelican import __version__, __major__, __minor__
 
 # -- General configuration -----------------------------------------------------
 templates_path = ['_templates']
-extensions = ['sphinx.ext.autodoc',]
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.ifconfig', 'sphinx.ext.extlinks']
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Pelican'
 copyright = '2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
-version = __version__
-release = __major__
+version = '%s.%s' % (__major__, __minor__)
+release = __version__
+last_stable = '3.1.1'
+rst_prolog = '''
+.. |last_stable| replace:: :pelican-doc:`{0}`
+'''.format(last_stable)
+
+extlinks = {
+    'pelican-doc':  ('http://docs.getpelican.com/%s/', '')
+}
 
 # -- Options for HTML output ---------------------------------------------------
 
