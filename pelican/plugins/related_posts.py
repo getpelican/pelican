@@ -1,71 +1,35 @@
-from pelican import signals
-
 """
 Related posts plugin for Pelican
 ================================
 
 Adds related_posts variable to article's context
-
-Settings
---------
-To enable, add
-
-    from pelican.plugins import related_posts
-    PLUGINS = [related_posts]
-
-to your pelicanconf.py.
-
-Control the number of entries with in the config file with:
-
-RELATED_POSTS = {
-   'numentries': 6,
-}
-
-
-Usage
------
-    {% if article.related_posts %}
-        <ul>
-        {% for related_post in article.related_posts %}
-            <li><a href="{{ related_post.url }}">{{ related_post.title }}</a></li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
-
 """
 
-related_posts = []
+from pelican import signals
+from collections import Counter
 
 
-def add_related_posts(generator, metadata):
-    if 'tags' in metadata:
-        for tag in metadata['tags']:
-            #print tag
-            for related_article in generator.tags[tag]:
-                related_posts.append(related_article)
+def add_related_posts(generator):
+    # get the max number of entries from settings
+    # or fall back to default (5)
+    numentries = generator.settings.get('RELATED_POSTS_MAX', 5)
 
-        if len(related_posts) < 1:
-            return
-        
-        metadata["related_posts"] = sorted(set(related_posts))
+    for article in generator.articles:
+        # no tag, no relation
+        if not hasattr(article, 'tags'):
+            continue
 
-        relation_score = dict(list(zip(set(related_posts), list(map(related_posts.count,
-                              set(related_posts))))))
-        ranked_related = sorted(relation_score, key=relation_score.get)
-        
-        #Load the confg file and get the number of entries specified there
-        settings =  generator.settings
-        config = settings.get('RELATED_POSTS', {})
+        # score = number of common tags
+        scores = Counter()
+        for tag in article.tags:
+            scores += Counter(generator.tags[tag])
 
-        #check if the related_posts var is set in the pythonconfig.py
-        if not isinstance(config, dict):
-            info("realted_links plugin: Using default number of related links ("+numentries+")")
-        else:
-            numentries = config.get('numentries', 5)
-        
-        metadata["related_posts"] = ranked_related[:numentries]
+        # remove itself
+        scores.pop(article)
+
+        article.related_posts = [other for other, count 
+            in scores.most_common(numentries)]
 
 
 def register():
-    signals.article_generate_context.connect(add_related_posts)
+    signals.article_generator_finalized.connect(add_related_posts)
