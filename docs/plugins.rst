@@ -291,10 +291,10 @@ Related posts
 -------------
 
 This plugin adds the ``related_posts`` variable to the article's context.
-To enable, add the following to your settings file::
+By default, up to 5 articles are listed. You can customize this value by 
+defining ``RELATED_POSTS_MAX`` in your settings file::
 
-    from pelican.plugins import related_posts
-    PLUGINS = [related_posts]
+    RELATED_POSTS_MAX = 10
 
 You can then use the ``article.related_posts`` variable in your templates.
 For example::
