@@ -9,7 +9,8 @@ from pygments.lexers import get_lexer_by_name, TextLexer
 import re
 
 INLINESTYLES = False
-DEFAULT = HtmlFormatter(noclasses=INLINESTYLES)
+# import ipdb;ipdb.set_trace()
+DEFAULT = HtmlFormatter(noclasses=INLINESTYLES, linenos=True)
 VARIANTS = {
     'linenos': HtmlFormatter(noclasses=INLINESTYLES, linenos=True),
 }

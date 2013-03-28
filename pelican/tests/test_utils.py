@@ -153,3 +153,6 @@ class TestUtils(LoggedTestCase):
         f.close()
         utils.clean_output_dir(test_directory)
         self.assertTrue(not os.path.exists(test_directory))
+
+    def test_import_lib(self):
+      import ipdb;ipdb.set_trace()

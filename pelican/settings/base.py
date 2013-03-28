@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import six
 
@@ -10,6 +9,8 @@ import locale
 import logging
 
 from os.path import isabs
+
+from pelican.settings.conf import load_settings_into_global_conf
 
 
 logger = logging.getLogger(__name__)
@@ -111,7 +112,10 @@ def read_settings(path=None, override=None):
     if override:
         local_settings.update(override)
 
-    return configure_settings(local_settings)
+    
+    settings = configure_settings(local_settings)
+    load_settings_into_global_conf(settings)
+    return settings
 
 
 def get_settings_from_module(module=None, default_settings=_DEFAULT_CONFIG):
@@ -256,3 +260,4 @@ def configure_settings(settings):
                 settings[PATH_KEY] = _DEFAULT_CONFIG[PATH_KEY]
 
     return settings
+
