@@ -20,7 +20,7 @@ class TestImportLib(unittest.TestCase):
     def test_importedsettings(self):
         self.settings = read_settings(path=None, override={
             'LOCALE': locale.normalize('en_US'),
-            'THEME': '/'.join([self.path, 'themes/simple'])
+            'THEME': '/'.join([self.path, 'pelican/themes/simple'])
             })
         from pelican.settings import conf
         for key in _DEFAULT_CONFIG.keys():
