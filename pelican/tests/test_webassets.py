@@ -2,6 +2,7 @@
 # from __future__ import unicode_literals
 
 import hashlib
+import locale
 import os
 from codecs import open
 from tempfile import mkdtemp
@@ -31,6 +32,7 @@ class TestWebAssets(unittest.TestCase):
             'OUTPUT_PATH': self.temp_path,
             'PLUGINS': ['pelican.plugins.assets', ],
             'THEME': THEME_DIR,
+            'LOCALE': locale.normalize('en_US'),
         }
         if override:
             settings.update(override)
