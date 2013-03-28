@@ -13,14 +13,14 @@ from pelican.settings.base import _DEFAULT_CONFIG
 # cd ~/pelican/pelican/tests && python -m unittest discover . 'test_importeds*' && cd -
 class TestImportLib(unittest.TestCase):
     def setUp(self):
-        path = os.path.join(os.path.dirname(__file__), '../..')
+        self.path = path = os.path.join(os.path.dirname(__file__), '../..')
         sys.path.append(os.path.abspath(path))
 
 
     def test_importedsettings(self):
         self.settings = read_settings(path=None, override={
             'LOCALE': locale.normalize('en_US'),
-            'THEME': '/tmp/theme'# You might want tho change this...
+            'THEME': '/'.join([self.path, 'themes/simple'])
             })
         from pelican.settings import conf
         for key in _DEFAULT_CONFIG.keys():
