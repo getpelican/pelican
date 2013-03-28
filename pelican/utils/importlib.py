@@ -37,3 +37,20 @@ def import_module(name, package=None):
         name = _resolve_name(name[level:], package, level)
     __import__(name)
     return sys.modules[name]
+
+def import_class(name, package=None):
+    """
+    Imports just the class and not the module. 
+    """
+    if package is None:
+        package = '.'.join(name.split('.')[:-1])
+        name = ''.join(name.split('.')[-1:])
+        
+        if package == '':
+            package = None
+
+    module = import_module(package)
+    if not hasattr(module, name):
+        raise AttributeError("%s is not part of %s" % (name, package))
+
+    return getattr(module, name)

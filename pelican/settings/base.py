@@ -91,7 +91,12 @@ _DEFAULT_CONFIG = {'PATH': os.curdir,
                    'SUMMARY_MAX_LENGTH': 50,
                    'PLUGINS': [],
                    'TEMPLATE_PAGES': {},
-                   'IGNORE_FILES': []
+                   'IGNORE_FILES': [],
+                   'PYGMENTS_FORMATTER_SHOW_LINENO': False,
+                   # This will allow users to import formatters form
+                   # outside the pelican source. 
+                   # pelicanconf.py : PYGMENTS_FORMATTER = "my.custom.formatter"
+                   'PYGMENTS_FORMATTER': 'pygments.formatters.HtmlFormatter'
                    }
 
 
