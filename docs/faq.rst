@@ -49,6 +49,14 @@ class in your theme's CSS file. To see how various styles can be used to render
 Django code, for example, you can use the demo `on the project website
 <http://pygments.org/demo/15101/>`_.
 
+One you have deicded which style you like, you can find a list of pregenerated css
+files for each in `this github repo <https://github.com/richleland/pygments-css>`_.
+Then go ahead drop your chosen stylesheet into the ``static/css`` directory of your custom 
+theme and you're free to link it in your templates or import it into other stylesheets.
+To get an idea of how to do this, check out the `samples
+<https://github.com/getpelican/pelican/tree/master/samples>`_. Of course, you can also change
+the pygments stylesheet to your heart's desire if none of the default themes satisfy you.
+
 How do I create my own theme?
 ==============================
 
