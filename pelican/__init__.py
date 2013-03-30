@@ -62,7 +62,8 @@ class Pelican(object):
             # if it's a string, then import it
             if isinstance(plugin, six.string_types):
                 logger.debug("Loading plugin `{0}' ...".format(plugin))
-                plugin = __import__(plugin, globals(), locals(), 'module')
+                # http://stackoverflow.com/questions/1971356/haystack-whoosh-index-generation-error#answer-2683624
+                plugin = __import__(plugin, globals(), locals(), 'module'.encode('ascii'))
 
             logger.debug("Registering plugin `{0}'".format(plugin.__name__))
             plugin.register()
@@ -247,6 +248,7 @@ def parse_arguments():
         action='store_true',
         help="Relaunch pelican each time a modification occurs"
                              " on the content files.")
+    
     return parser.parse_args()
 
 
@@ -284,6 +286,7 @@ def main():
     args = parse_arguments()
     init(args.verbosity)
     pelican = get_instance(args)
+    
 
     try:
         if args.autoreload:

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+from pelican.settings import conf as pelican_settings
+from pelican.utils.importlib import import_class
 from docutils import nodes, utils
 from docutils.parsers.rst import directives, roles, Directive
 from pygments.formatters import HtmlFormatter
@@ -9,11 +11,7 @@ from pygments.lexers import get_lexer_by_name, TextLexer
 import re
 
 INLINESTYLES = False
-DEFAULT = HtmlFormatter(noclasses=INLINESTYLES)
-VARIANTS = {
-    'linenos': HtmlFormatter(noclasses=INLINESTYLES, linenos=True),
-}
-
+VARIANTS = {}
 
 class Pygments(Directive):
     """ Source code syntax hightlighting.
@@ -32,8 +30,10 @@ class Pygments(Directive):
             # no lexer found - use the text one instead of an exception
             lexer = TextLexer()
         # take an arbitrary option if more than one is given
-        formatter = self.options and VARIANTS[self.options.keys()[0]] \
-                    or DEFAULT
+        formatter = import_class(pelican_settings.PYGMENTS_FORMATTER)
+        formatter = formatter(noclasses=INLINESTYLES, 
+            linenos=pelican_settings.PYGMENTS_FORMATTER_SHOW_LINENO)
+        
         parsed = highlight('\n'.join(self.content), lexer, formatter)
         return [nodes.raw('', parsed, format='html')]
 

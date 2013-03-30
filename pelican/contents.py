@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 from pelican import signals
-from pelican.settings import _DEFAULT_CONFIG
+from pelican.settings.base import _DEFAULT_CONFIG
 from pelican.utils import (slugify, truncate_html_words, memoized, strftime,
                            python_2_unicode_compatible, deprecated_attribute,
                            path_to_url)
