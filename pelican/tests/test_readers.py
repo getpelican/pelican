@@ -94,9 +94,9 @@ class RstReaderTest(unittest.TestCase):
         # unmodified
         content, _ = readers.read_file(_path('article.rst'))
         expected = ('<p>This is some content. With some stuff to '
-                   '&quot;typogrify&quot;.</p>\n<p>Now with added '
-                   'support for <abbr title="three letter acronym">'
-                   'TLA</abbr>.</p>\n')
+                    '&quot;typogrify&quot;.</p>\n<p>Now with added '
+                    'support for <abbr title="three letter acronym">'
+                    'TLA</abbr>.</p>\n')
 
         self.assertEqual(content, expected)
 
@@ -138,25 +138,26 @@ class MdReaderTest(unittest.TestCase):
         # correct reader
         content, metadata = reader.read(
             _path('article_with_md_extension.md'))
-        expected = "<h1>Test Markdown File Header</h1>\n"\
-                "<h2>Used for pelican test</h2>\n"\
-                "<p>The quick brown fox jumped over the lazy dog's back.</p>"
+        expected = (
+                "<h1>Test Markdown File Header</h1>\n"
+                "<h2>Used for pelican test</h2>\n"
+                "<p>The quick brown fox jumped over the lazy dog's back.</p>")
         self.assertEqual(content, expected)
         # test to ensure the mkd file extension is being processed by the
         # correct reader
         content, metadata = reader.read(
             _path('article_with_mkd_extension.mkd'))
-        expected = "<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"\
-                   " test</h2>\n<p>This is another markdown test file.  Uses"\
-                   " the mkd extension.</p>"
+        expected = ("<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"
+                    " test</h2>\n<p>This is another markdown test file.  Uses"
+                    " the mkd extension.</p>")
         self.assertEqual(content, expected)
         # test to ensure the markdown file extension is being processed by the
         # correct reader
         content, metadata = reader.read(
             _path('article_with_markdown_extension.markdown'))
-        expected = "<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"\
-                   " test</h2>\n<p>This is another markdown test file.  Uses"\
-                   " the markdown extension.</p>"
+        expected = ("<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"
+                    " test</h2>\n<p>This is another markdown test file.  Uses"
+                    " the markdown extension.</p>")
         self.assertEqual(content, expected)
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
@@ -166,16 +167,16 @@ class MdReaderTest(unittest.TestCase):
         content, metadata = readers.read_file(
                 _path('article_with_markdown_markup_extensions.md'),
                 settings={'MD_EXTENSIONS': ['toc', 'codehilite', 'extra']})
-        expected = '<div class="toc">\n'\
-            '<ul>\n'\
-            '<li><a href="#level1">Level1</a><ul>\n'\
-            '<li><a href="#level2">Level2</a></li>\n'\
-            '</ul>\n'\
-            '</li>\n'\
-            '</ul>\n'\
-            '</div>\n'\
-            '<h2 id="level1">Level1</h2>\n'\
-            '<h3 id="level2">Level2</h3>'
+        expected = ('<div class="toc">\n'
+                    '<ul>\n'
+                    '<li><a href="#level1">Level1</a><ul>\n'
+                    '<li><a href="#level2">Level2</a></li>\n'
+                    '</ul>\n'
+                    '</li>\n'
+                    '</ul>\n'
+                    '</div>\n'
+                    '<h2 id="level1">Level1</h2>\n'
+                    '<h3 id="level2">Level2</h3>')
 
         self.assertEqual(content, expected)
 
@@ -231,9 +232,9 @@ class AdReaderTest(unittest.TestCase):
         content, metadata = reader.read(
                                 _path('article_with_asc_extension.asc'))
         expected = ('<hr>\n<h2><a name="_used_for_pelican_test">'
-                   '</a>Used for pelican test</h2>\n'
-                   '<p>The quick brown fox jumped over'
-                   ' the lazy dog&#8217;s back.</p>\n')
+                    '</a>Used for pelican test</h2>\n'
+                    '<p>The quick brown fox jumped over'
+                    ' the lazy dog&#8217;s back.</p>\n')
         self.assertEqual(content, expected)
         expected = {
             'category': 'Blog',

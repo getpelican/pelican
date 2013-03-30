@@ -8,8 +8,8 @@ from codecs import open
 from tempfile import mkdtemp
 from shutil import rmtree
 
-from pelican.generators import ArticlesGenerator, PagesGenerator, \
-    TemplatePagesGenerator
+from pelican.generators import (ArticlesGenerator, PagesGenerator,
+                                TemplatePagesGenerator)
 from pelican.writers import Writer
 from pelican.settings import _DEFAULT_CONFIG
 from pelican.tests.support import unittest, get_settings
@@ -219,8 +219,8 @@ class TestTemplatePagesGenerator(unittest.TestCase):
     TEMPLATE_CONTENT = "foo: {{ foo }}"
 
     def setUp(self):
-        self.temp_content = mkdtemp()
-        self.temp_output = mkdtemp()
+        self.temp_content = mkdtemp(prefix='pelicantests.')
+        self.temp_output = mkdtemp(prefix='pelicantests.')
 
     def tearDown(self):
         rmtree(self.temp_content)

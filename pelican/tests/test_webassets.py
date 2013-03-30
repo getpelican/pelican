@@ -26,7 +26,7 @@ class TestWebAssets(unittest.TestCase):
     """Base class for testing webassets."""
 
     def setUp(self, override=None):
-        self.temp_path = mkdtemp()
+        self.temp_path = mkdtemp(prefix='pelicantests.')
         settings = {
             'PATH': os.path.join(CUR_DIR, 'content', 'TestCategory'),
             'OUTPUT_PATH': self.temp_path,
