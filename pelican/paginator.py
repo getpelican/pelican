@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
+import six
 
 # From django.core.paginator
 import functools
@@ -110,7 +111,7 @@ class Page(object):
         logic."""
         setting = "%s_%s" % ('PAGINATION', key)
         value = self.settings[setting]
-        if not isinstance(value, basestring):
+        if not isinstance(value, six.string_types):
             logger.warning(u'%s is set to %s' % (setting, value))
             return value
         else:
