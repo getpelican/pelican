@@ -7,6 +7,8 @@ Release history
 * Support for Python 3!
 * Ensure exceptions are raised if they take place during processing
   with autoreload enabled with debug enabled.
+* Provide ability to show or hide categories from menu using
+  ``DISPLAY_CATEGORIES_ON_MENU`` option.
 
 3.1 (2012-12-04)
 ================
