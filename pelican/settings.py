@@ -95,6 +95,7 @@ DEFAULT_CONFIG = {
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
     'LOCALE': [''],  # defaults to user locale
+    'TEMPLATE_PAGINATION': {},
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
     'DEFAULT_METADATA': (),

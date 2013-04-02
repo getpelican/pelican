@@ -175,6 +175,7 @@ class Writer(object):
         paginated = paginated or {}
         if paginated:
             name_root = os.path.splitext(name)[0]
+            template_root = os.path.splitext(template.name)[0]
 
             # pagination needed, init paginators
             paginators = {}
@@ -183,6 +184,7 @@ class Writer(object):
 
                 paginators[key] = Paginator(
                     name_root,
+                    template_root,
                     object_list,
                     self.settings,
                 )
