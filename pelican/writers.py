@@ -142,7 +142,14 @@ class Writer(object):
             for key in paginated.keys():
                 object_list = paginated[key]
 
-                if self.settings.get('DEFAULT_PAGINATION'):
+                template_pagination = self.settings.get('TEMPLATE_PAGINATION')
+                if template_pagination:
+                    per_page = template_pagination.get(template.name.strip('.html'))
+
+                if per_page:
+                    paginators[key] = Paginator(object_list,
+                        per_page, self.settings.get('DEFAULT_ORPHANS'))
+                elif self.settings.get('DEFAULT_PAGINATION'):
                     paginators[key] = Paginator(object_list,
                         self.settings.get('DEFAULT_PAGINATION'),
                         self.settings.get('DEFAULT_ORPHANS'))
