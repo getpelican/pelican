@@ -44,7 +44,7 @@ I'm creating my own theme. How do I use Pygments for syntax highlighting?
 
 Pygments adds some classes to the generated content. These classes are used by
 themes to style code syntax highlighting via CSS. Specifically, you can
-customize the appearance of your syntax highlighting via the ``.codehilite pre``
+customize the appearance of your syntax highlighting via the ``.highlight pre``
 class in your theme's CSS file. To see how various styles can be used to render
 Django code, for example, you can use the demo `on the project website
 <http://pygments.org/demo/15101/>`_.

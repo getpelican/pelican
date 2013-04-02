@@ -84,10 +84,15 @@ Setting name (default value)                                            What doe
 `IGNORE_FILES` (``[]``)                                                 A list of file globbing patterns to match against the
                                                                         source files to be ignored by the processor. For example
                                                                         ``['.#*']`` will ignore emacs temporary files.
-`MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
-                                                                        will use. Refer to the extensions chapter in the
-                                                                        Python-Markdown documentation for a complete list of
-                                                                        supported extensions.
+`MD_EXTENSIONS` (``['codehilite(css_class=highlight)','extra']``)       A list of the extensions that the Markdown processor
+                                                                        will use. Refer to the Python Markdown documentation's
+                                                                        `Extensions section <http://pythonhosted.org/Markdown/extensions/>`_
+                                                                        for a complete list of supported extensions. (Note that
+                                                                        defining this in your settings file will override and
+                                                                        replace the default values. If your goal is to *add*
+                                                                        to the default values for this setting, you'll need to
+                                                                        include them explicitly and enumerate the full list of
+                                                                        desired Markdown extensions.)
 `OUTPUT_PATH` (``'output/'``)                                           Where to output the generated files.
 `PATH` (``None``)                                                       Path to content directory to be processed by Pelican.
 `PAGE_DIR` (``'pages'``)                                                Directory to look at for pages, relative to `PATH`.
