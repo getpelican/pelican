@@ -162,7 +162,7 @@ class MarkdownReader(Reader):
         for name, value in meta.items():
             name = name.lower()
             if name == "summary":
-                summary_values = "\n".join(str(item) for item in value)
+                summary_values = "\n".join(value)
                 summary = self._md.convert(summary_values)
                 output[name] = self.process_metadata(name, summary)
             else:

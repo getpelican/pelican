@@ -131,6 +131,19 @@ class MdReaderTest(unittest.TestCase):
         for key, value in metadata.items():
             self.assertEquals(value, expected[key], key)
 
+        content, metadata = reader.read(
+            _path('article_with_markdown_and_nonascii_summary.md'))
+        expected = {
+            'title': 'マックOS X 10.8でパイソンとVirtualenvをインストールと設定',
+            'summary': '<p>パイソンとVirtualenvをまっくでインストールする方法について明確に説明します。</p>',
+            'category': '指導書',
+            'date': datetime.datetime(2012, 12, 20),
+            'tags': ['パイソン', 'マック'],
+            'slug': 'python-virtualenv-on-mac-osx-mountain-lion-10.8',
+        }
+        for key, value in metadata.items():
+            self.assertEquals(value, expected[key], key)
+
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_file_extensions(self):
         reader = readers.MarkdownReader({})
