@@ -88,7 +88,8 @@ class TestArticlesGenerator(unittest.TestCase):
              'article'],
             ['This is an article without category !', 'published',
              'TestCategory', 'article'],
-            ['This is a super article !', 'published', 'yeah', 'article']
+            ['This is a super article !', 'published', 'yeah', 'article'],
+            ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定', 'published', '指導書', 'article']
         ]
         self.assertItemsEqual(articles_expected, articles)
 
@@ -97,7 +98,7 @@ class TestArticlesGenerator(unittest.TestCase):
         generator = self.get_populated_generator()
         categories = [cat.name for cat, _ in generator.categories]
         categories_expected = ['Default', 'TestCategory', 'Yeah', 'test',
-                               'yeah']
+                               'yeah', '指導書']
         self.assertEquals(categories, categories_expected)
 
     def test_do_not_use_folder_as_category(self):
@@ -114,7 +115,7 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_context()
 
         categories = [cat.name for cat, _ in generator.categories]
-        self.assertEquals(categories, ['Default', 'Yeah', 'test', 'yeah'])
+        self.assertEquals(categories, ['Default', 'Yeah', 'test', 'yeah', '指導書'])
 
     def test_direct_templates_save_as_default(self):
 
