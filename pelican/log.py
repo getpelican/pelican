@@ -36,7 +36,7 @@ class ANSIFormatter(Formatter):
 
     """
     def format(self, record):
-        msg = str(record.msg)
+        msg = record.getMessage()
         if record.levelname == 'INFO':
             return ansi('cyan', '-> ') + msg
         elif record.levelname == 'WARNING':
@@ -58,9 +58,9 @@ class TextFormatter(Formatter):
 
     def format(self, record):
         if not record.levelname or record.levelname == 'INFO':
-            return record.msg
+            return record.getMessage()
         else:
-            return record.levelname + ': ' + record.msg
+            return record.levelname + ': ' + record.getMessage()
 
 
 def init(level=None, logger=getLogger(), handler=StreamHandler()):
