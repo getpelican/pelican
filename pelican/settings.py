@@ -79,6 +79,7 @@ _DEFAULT_CONFIG = {'PATH': os.curdir,
                    'DATE_FORMATS': {},
                    'JINJA_EXTENSIONS': [],
                    'LOCALE': '',  # defaults to user locale
+                   'TEMPLATE_PAGINATION': {},
                    'DEFAULT_PAGINATION': False,
                    'DEFAULT_ORPHANS': 0,
                    'DEFAULT_METADATA': (),

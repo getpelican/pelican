@@ -412,6 +412,10 @@ Setting name (default value)                        What does it do?
 `DEFAULT_PAGINATION` (``False``)                    The maximum number of articles to include on a
                                                     page, not including orphans. False to disable
                                                     pagination.
+`TEMPLATE_PAGINATION` (``{}``)                      A dictionary used to set per-template pagination,
+                                                    used when you wish different templates to have
+                                                    a specific number of articles per page.
+                                                    For example: ``{'index': 10}``
 ================================================    =====================================================
 
 Tag cloud
