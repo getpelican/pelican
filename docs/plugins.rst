@@ -24,7 +24,8 @@ Alternatively, another method is to import them and add them to the list::
     PLUGINS = [gravatar,]
 
 If your plugins are not in an importable path, you can specify a ``PLUGIN_PATH``
-in the settings::
+in the settings. ``PLUGIN_PATH`` can be an absolute path or a path relative to
+the settings file::
 
     PLUGIN_PATH = "plugins"
     PLUGINS = ["list", "of", "plugins"]
