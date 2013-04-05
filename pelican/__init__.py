@@ -57,15 +57,25 @@ class Pelican(object):
             sys.path.insert(0, '')
 
     def init_plugins(self):
-        self.plugins = self.settings['PLUGINS']
-        for plugin in self.plugins:
+        self.plugins = []
+        logger.debug('Temporarily adding PLUGIN_PATH to system path')
+        _sys_path = sys.path[:]
+        sys.path.insert(0, self.settings['PLUGIN_PATH'])
+        for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
             if isinstance(plugin, six.string_types):
-                logger.debug("Loading plugin `{0}' ...".format(plugin))
-                plugin = __import__(plugin, globals(), locals(), 'module')
+                logger.debug("Loading plugin `{0}`".format(plugin))
+                try:
+                    plugin = __import__(plugin, globals(), locals(), 'module')
+                except ImportError as e:
+                    logger.error("Can't find plugin `{0}`: {1}".format(plugin, e))
+                    continue
 
-            logger.debug("Registering plugin `{0}'".format(plugin.__name__))
+            logger.debug("Registering plugin `{0}`".format(plugin.__name__))
             plugin.register()
+            self.plugins.append(plugin)
+        logger.debug('Restoring system path')
+        sys.path = _sys_path
 
     def _handle_deprecation(self):
 

@@ -89,6 +89,7 @@ _DEFAULT_CONFIG = {'PATH': os.curdir,
                    'ARTICLE_PERMALINK_STRUCTURE': '',
                    'TYPOGRIFY': False,
                    'SUMMARY_MAX_LENGTH': 50,
+                   'PLUGIN_PATH': '',
                    'PLUGINS': [],
                    'TEMPLATE_PAGES': {},
                    'IGNORE_FILES': []
@@ -99,12 +100,12 @@ def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'PLUGIN_PATH']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
                             os.path.dirname(path), local_settings[p])))
-                if p != 'THEME' or os.path.exists(absp):
+                if p not in ('THEME', 'PLUGIN_PATH') or os.path.exists(absp):
                     local_settings[p] = absp
     else:
         local_settings = copy.deepcopy(_DEFAULT_CONFIG)
