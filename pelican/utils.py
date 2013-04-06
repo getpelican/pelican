@@ -395,7 +395,9 @@ def process_translations(content_list):
 
     Returns a tuple with two lists (index, translations).  Index list includes
     items in default language or items which have no variant in default
-    language.
+    language. Items with the `translation` metadata set to something else than
+    `False` or `false` will be used as translations, unless all the items with
+    the same slug have that metadata.
 
     For each content_list item, sets the 'translations' attribute.
     """
@@ -406,8 +408,18 @@ def process_translations(content_list):
 
     for slug, items in grouped_by_slugs:
         items = list(items)
+        # items with `translation` metadata will be used as translations…
+        default_lang_items = list(filter(
+                lambda i: i.metadata.get('translation', 'false').lower()
+                        == 'false',
+                items))
+        # …unless all items with that slug are translations
+        if not default_lang_items:
+            default_lang_items = items
+
         # find items with default language
-        default_lang_items = list(filter(attrgetter('in_default_lang'), items))
+        default_lang_items = list(filter(attrgetter('in_default_lang'),
+                default_lang_items))
         len_ = len(default_lang_items)
         if len_ > 1:
             logger.warning('there are %s variants of "%s"' % (len_, slug))

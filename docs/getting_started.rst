@@ -392,6 +392,19 @@ identifier. If you'd rather not explicitly define the slug this way, you must
 then instead ensure that the translated article titles are identical, since the
 slug will be auto-generated from the article title.
 
+If you do not want the original version of one specific article to be detected
+by the ``DEFAULT_LANG`` setting, use the ``translation`` metadata to specify
+which posts are translations::
+
+    Foobar is not dead
+    ##################
+
+    :slug: foobar-is-not-dead
+    :lang: en
+    :translation: true
+
+    That's true, foobar is still alive!
+
 Syntax highlighting
 -------------------
 
