@@ -219,6 +219,11 @@ Setting name (default value)                            What does it do?
 ====================================================    =====================================================
 `ARTICLE_URL` (``'{slug}.html'``)                       The URL to refer to an ARTICLE.
 `ARTICLE_SAVE_AS` (``'{slug}.html'``)                   The place where we will save an article.
+`ARTICLE_ORDER_BY` (``'slug'``)                         The metadata attribute used to sort articles. By default
+                                                        the articles_page.object_list template variable is 
+                                                        ordered by slug. If you modify this, make sure all 
+                                                        articles contain the attribute you specify. You can
+                                                        also specify a sorting function.
 `ARTICLE_LANG_URL` (``'{slug}-{lang}.html'``)           The URL to refer to an ARTICLE which doesn't use the
                                                         default language.
 `ARTICLE_LANG_SAVE_AS` (``'{slug}-{lang}.html'``)       The place where we will save an article which
@@ -227,6 +232,11 @@ Setting name (default value)                            What does it do?
 `PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page. This value has to be
                                                         the same as PAGE_URL or you need to use a rewrite in
                                                         your server config.
+`PAGE_ORDER_BY` (``None``)                              The metadata attribute used to sort pages. By default
+                                                        the PAGES template variable is ordered by filename.
+                                                        If you modify this, make sure all pages contain the
+                                                        attribute you specify. You can also specify a sorting
+                                                        function.
 `PAGE_LANG_URL` (``'pages/{slug}-{lang}.html'``)        The URL we will use to link to a page which doesn't
                                                         use the default language.
 `PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
