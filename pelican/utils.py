@@ -390,7 +390,7 @@ def truncate_html_words(s, num, end_text='...'):
     return out
 
 
-def process_translations(content_list):
+def process_translations(content_list, order_by=None):
     """ Finds translation and returns them.
 
     Returns a tuple with two lists (index, translations).  Index list includes
@@ -398,9 +398,31 @@ def process_translations(content_list):
     language.
 
     For each content_list item, sets the 'translations' attribute.
+
+    order_by can be a string of an attribute or sorting function. If defined, 
+    content will be ordered by that attribute or sorting function.
+    By default, content is ordered by filename.
+
+    Different content types can have default order_by attributes defined
+    in settings, e.g. PAGES_order_by.
     """
-    content_list.sort(key=attrgetter('slug'))
-    grouped_by_slugs = groupby(content_list, attrgetter('slug'))
+    if order_by:
+        if hasattr(order_by, '__call__'):
+            content_list.sort(key=order_by)
+        else:
+            content_list.sort(key=attrgetter(order_by))
+    else:
+        content_list.sort(key=lambda x:os.path.basename(x.source_path))
+
+    if order_by:
+        if hasattr(order_by, '__call__'):
+            grouped_by_slugs = groupby(content_list, order_by)
+        else:
+            grouped_by_slugs = groupby(content_list, attrgetter(order_by))
+    else:
+        grouped_by_slugs = groupby(content_list,
+                lambda x:os.path.basename(x.source_path))
+
     index = []
     translations = []
 
