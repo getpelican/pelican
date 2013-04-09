@@ -75,10 +75,10 @@ class TestUtils(LoggedTestCase):
                    (os.path.join('test', 'test', 'test.html'),
                     os.path.join(os.pardir, os.pardir)),
                    ('test.html', os.curdir),
-                   (os.path.join('/test', 'test.html'), os.pardir),
-                   (os.path.join('/test', 'test', 'test.html'),
+                   (os.path.join(os.sep, 'test', 'test.html'), os.pardir),
+                   (os.path.join(os.sep, 'test', 'test', 'test.html'),
                     os.path.join(os.pardir, os.pardir)),
-                   ('/test.html', os.curdir),)
+                   (os.path.join(os.sep, 'test.html'), os.curdir),)
 
         for value, expected in samples:
             self.assertEquals(utils.get_relative_path(value), expected)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import os
 from datetime import datetime
 from sys import platform
 
@@ -93,12 +94,12 @@ class TestPage(unittest.TestCase):
 
         # if a title is defined, save_as should be set
         page = Page(**self.page_kwargs)
-        self.assertEqual(page.save_as, "pages/foo-bar.html")
+        self.assertEqual(page.save_as, os.path.join("pages", "foo-bar.html"))
 
         # if a language is defined, save_as should include it accordingly
         self.page_kwargs['metadata'].update({'lang': 'fr', })
         page = Page(**self.page_kwargs)
-        self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
+        self.assertEqual(page.save_as, os.path.join("pages", "foo-bar-fr.html"))
 
     def test_metadata_url_format(self):
         # Arbitrary metadata should be passed through url_format()
