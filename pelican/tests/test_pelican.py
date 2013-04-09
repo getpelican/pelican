@@ -7,6 +7,7 @@ from tempfile import mkdtemp
 from shutil import rmtree
 import locale
 import logging
+import codecs
 
 from pelican import Pelican
 from pelican.settings import read_settings
@@ -34,6 +35,21 @@ def recursiveDiff(dcmp):
         for k, v in recursiveDiff(sub_dcmp).items():
             diff[k] += v
     return diff
+
+def ensure_nix_line_endings(path):
+    # Test files are all saved with LF line endings,
+    # so if Windows, convert all line endings to LF.
+    # Without this, dircmp will fail on Windows.
+    if os.linesep == '\r\n':
+        for dirname, dirnames, filenames in os.walk(path):
+            for filename in filenames:
+                fpath = os.path.join(dirname, filename)
+                if os.path.splitext(fpath)[1] in ['.html', '.xml']:
+                    with codecs.open(fpath, 'r', 'utf-8') as f:
+                        data = f.read()
+                    newdata = data.replace('\r\n', '\n')
+                    with codecs.open(fpath, 'w', 'utf-8') as f:
+                        f.write(newdata)
 
 
 class TestPelican(LoggedTestCase):
@@ -74,6 +90,7 @@ class TestPelican(LoggedTestCase):
             })
         pelican = Pelican(settings=settings)
         pelican.run()
+        ensure_nix_line_endings(self.temp_path)
         dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertFilesEqual(recursiveDiff(dcmp))
         self.assertLogCountEqual(
@@ -90,5 +107,6 @@ class TestPelican(LoggedTestCase):
             })
         pelican = Pelican(settings=settings)
         pelican.run()
+        ensure_nix_line_endings(self.temp_path)
         dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
         self.assertFilesEqual(recursiveDiff(dcmp))

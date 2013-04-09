@@ -189,7 +189,7 @@ class Content(object):
             # XXX Put this in a different location.
             if what == 'filename':
                 if value.startswith('/'):
-                    value = value[1:]
+                    value = value[1:].replace('/', os.sep)
                 else:
                     # relative to the source path of this content
                     value = self.get_relative_source_path(

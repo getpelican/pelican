@@ -75,7 +75,8 @@ class Writer(object):
                 self._add_item_to_the_feed(feed, elements[i])
 
             if path:
-                complete_path = os.path.join(self.output_path, path)
+                os_path = path.replace('/', os.sep)
+                complete_path = os.path.join(self.output_path, os_path)
                 try:
                     os.makedirs(os.path.dirname(complete_path))
                 except Exception:

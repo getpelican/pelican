@@ -32,9 +32,10 @@ class TestGzipCache(unittest.TestCase):
         # so it is safe to assume that the file exists (otherwise walk would
         # not report it). Therefore, create a dummy file to use.
         with temporary_folder() as tempdir:
-            _, a_html_filename = tempfile.mkstemp(suffix='.html', dir=tempdir)
+            f, a_html_filename = tempfile.mkstemp(suffix='.html', dir=tempdir)
             gzip_cache.create_gzip_file(a_html_filename)
             self.assertTrue(os.path.exists(a_html_filename + '.gz'))
+            os.close(f)
 
 
 class TestSummary(unittest.TestCase):
