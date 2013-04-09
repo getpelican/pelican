@@ -304,21 +304,25 @@ def clean_output_dir(path):
 
 def get_relative_path(path):
     """Return the relative path from the given path to the root path."""
-    components = split_all(path)
-    if len(components) <= 1:
-        return os.curdir
+    if path:
+        components = split_all(path)
+        if len(components) <= 1:
+            return os.curdir
+        else:
+            parents = [os.pardir] * (len(components) - 1)
+            return os.path.join(*parents)
     else:
-        parents = [os.pardir] * (len(components) - 1)
-        return os.path.join(*parents)
-
+        return ''
 
 def path_to_url(path):
     """Return the URL corresponding to a given path."""
-    if os.sep == '/':
-        return path
+    if path:
+        if os.sep == '/':
+            return path
+        else:
+            return '/'.join(split_all(path))
     else:
-        '/'.join(split_all(path))
-
+        return ''
 
 def truncate_html_words(s, num, end_text='...'):
     """Truncates HTML to a certain number of words.
@@ -501,13 +505,16 @@ def split_all(path):
     ['a', 'b', 'c']
     """
     components = []
-    path = path.lstrip('/')
-    while path:
-        head, tail = os.path.split(path)
-        if tail:
-            components.insert(0, tail)
-        elif head == path:
-            components.insert(0, head)
-            break
-        path = head
-    return components
+    if path:
+        path = path.lstrip(os.sep)
+        while path:
+            head, tail = os.path.split(path)
+            if tail:
+                components.insert(0, tail)
+            elif head == path:
+                components.insert(0, head)
+                break
+            path = head
+        return components
+    else:
+        return ['']
