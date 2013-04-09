@@ -116,6 +116,10 @@ class TestPage(unittest.TestCase):
 
         page_kwargs = self._copy_page_kwargs()
 
+        # store locale to reset at end of method
+        import locale
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+
         # set its date to dt
         page_kwargs['metadata']['date'] = dt
         page = Page(**page_kwargs)
@@ -128,18 +132,17 @@ class TestPage(unittest.TestCase):
 
         # I doubt this can work on all platforms ...
         if platform == "win32":
-            locale = 'jpn'
+            new_locale = 'jpn'
         else:
-            locale = 'ja_JP.utf8'
-        page_kwargs['settings']['DATE_FORMATS'] = {'jp': (locale,
+            new_locale = 'ja_JP.utf8'
+        page_kwargs['settings']['DATE_FORMATS'] = {'jp': (new_locale,
                                                           '%Y-%m-%d(%a)')}
         page_kwargs['metadata']['lang'] = 'jp'
 
-        import locale as locale_module
         try:
             page = Page(**page_kwargs)
             self.assertEqual(page.locale_date, '2015-09-13(\u65e5)')
-        except locale_module.Error:
+        except locale.Error:
             # The constructor of ``Page`` will try to set the locale to
             # ``ja_JP.utf8``. But this attempt will failed when there is no
             # such locale in the system. You can see which locales there are
@@ -148,6 +151,9 @@ class TestPage(unittest.TestCase):
             # Until we find some other method to test this functionality, we
             # will simply skip this test.
             unittest.skip("There is no locale %s in this system." % locale)
+
+        # reset locale
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_template(self):
         # Pages default to page, metadata overwrites
