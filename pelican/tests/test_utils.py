@@ -85,12 +85,28 @@ class TestUtils(LoggedTestCase):
 
     def test_process_translations(self):
         # create a bunch of articles
+        # 1: no translation metadata
         fr_article1 = get_article(lang='fr', slug='yay', title='Un titre',
                                   content='en français')
         en_article1 = get_article(lang='en', slug='yay', title='A title',
                                   content='in english')
+        # 2: reverse which one is the translation thanks to metadata
+        fr_article2 = get_article(lang='fr', slug='yay2', title='Un titre',
+                                  content='en français')
+        en_article2 = get_article(lang='en', slug='yay2', title='A title',
+                                  content='in english',
+                                  extra_metadata={'translation': 'true'})
+        # 3: back to default language detection if all items have the
+        #    translation metadata
+        fr_article3 = get_article(lang='fr', slug='yay3', title='Un titre',
+                                  content='en français',
+                                  extra_metadata={'translation': 'yep'})
+        en_article3 = get_article(lang='en', slug='yay3', title='A title',
+                                  content='in english',
+                                  extra_metadata={'translation': 'yes'})
 
-        articles = [fr_article1, en_article1]
+        articles = [fr_article1, en_article1, fr_article2, en_article2,
+                    fr_article3, en_article3]
 
         index, trans = utils.process_translations(articles)
 
@@ -98,6 +114,16 @@ class TestUtils(LoggedTestCase):
         self.assertIn(fr_article1, trans)
         self.assertNotIn(en_article1, trans)
         self.assertNotIn(fr_article1, index)
+
+        self.assertIn(fr_article2, index)
+        self.assertIn(en_article2, trans)
+        self.assertNotIn(fr_article2, trans)
+        self.assertNotIn(en_article2, index)
+
+        self.assertIn(en_article3, index)
+        self.assertIn(fr_article3, trans)
+        self.assertNotIn(en_article3, trans)
+        self.assertNotIn(fr_article3, index)
 
     def test_files_changed(self):
         # Test if file changes are correctly detected
