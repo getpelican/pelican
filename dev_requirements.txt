@@ -1,4 +1,5 @@
 # Tests
+unittest2
 mock
 
 # Optional Packages
