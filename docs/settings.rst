@@ -107,9 +107,9 @@ Setting name (default value)                                            What doe
 `OUTPUT_SOURCES_EXTENSION` (``.text``)                                  Controls the extension that will be used by the SourcesGenerator.
                                                                         Defaults to ``.text``. If not a valid string the default value
                                                                         will be used.
-`RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use document-relative URLs or
-                                                                        not. If set to ``False``, Pelican will use the SITEURL
-                                                                        setting to construct absolute URLs.
+`RELATIVE_URLS` (``False``)                                             Defines whether Pelican should use document-relative URLs or
+                                                                        not. Only set this to ``True`` when developing/testing and only
+                                                                        if you fully understand the effect it can have on links/feeds.
 `PLUGINS` (``[]``)                                                      The list of plugins to load. See :ref:`plugins`.
 `SITENAME` (``'A Pelican Blog'``)                                       Your site name
 `SITEURL`                                                               Base URL of your website. Not defined by default,
