@@ -317,7 +317,7 @@ def path_to_url(path):
     if os.sep == '/':
         return path
     else:
-        '/'.join(split_all(path))
+        return '/'.join(split_all(path))
 
 
 def truncate_html_words(s, num, end_text='...'):
