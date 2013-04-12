@@ -75,6 +75,10 @@ include the following at the top of the article::
 
     Modified: 2012-08-08
 
+In a reStructuredText post, the meta-data would be entered like this::
+
+    :Modified: 2012-08-08
+
 That meta-data can then be accessed in the template::
 
     {% if article.modified %}
