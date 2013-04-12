@@ -77,7 +77,7 @@ class TestPelican(LoggedTestCase):
         dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertFilesEqual(recursiveDiff(dcmp))
         self.assertLogCountEqual(
-            count=10,
+            count=4,
             msg="Unable to find.*skipping url replacement",
             level=logging.WARNING)
 
