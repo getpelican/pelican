@@ -89,7 +89,7 @@ class Writer(object):
         finally:
             locale.setlocale(locale.LC_ALL, old_locale)
 
-    def write_file(self, name, template, context, relative_urls=True,
+    def write_file(self, name, template, context, relative_urls=False,
         paginated=None, **kwargs):
         """Render the template and write the file.
 

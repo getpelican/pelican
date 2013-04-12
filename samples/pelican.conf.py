@@ -6,6 +6,9 @@ SITENAME = "Alexis' log"
 SITEURL = 'http://blog.notmyidea.org'
 TIMEZONE = "Europe/Paris"
 
+# can be useful in development, but set to False when you're ready to publish
+RELATIVE_URLS = True
+
 GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"
 PDF_GENERATOR = False

@@ -56,6 +56,9 @@ class TestWebAssets(unittest.TestCase):
 class TestWebAssetsRelativeURLS(TestWebAssets):
     """Test pelican with relative urls."""
 
+    def setUp(self):
+        TestWebAssets.setUp(self, override={'RELATIVE_URLS': True})
+
     def test_jinja2_ext(self):
         # Test that the Jinja2 extension was correctly added.
 
@@ -90,8 +93,7 @@ class TestWebAssetsAbsoluteURLS(TestWebAssets):
     """Test pelican with absolute urls."""
 
     def setUp(self):
-        TestWebAssets.setUp(self, override={'RELATIVE_URLS': False,
-                                            'SITEURL': 'http://localhost'})
+        TestWebAssets.setUp(self, override={'SITEURL': 'http://localhost'})
 
     def test_absolute_url(self):
         # Look in the output files for the link tag with absolute url.
