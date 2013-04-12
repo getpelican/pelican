@@ -83,8 +83,6 @@ At this time, Pelican core is dependent on the following Python packages:
 * `unidecode <http://pypi.python.org/pypi/Unidecode>`_, for ASCII
   transliterations of Unicode text
 
-If you're not using Python 2.7, you will also need the ``argparse`` package.
-
 Optionally:
 
 * `markdown <http://pypi.python.org/pypi/Markdown>`_, for supporting Markdown as
