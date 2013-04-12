@@ -4,14 +4,22 @@ Getting started
 Installing Pelican
 ==================
 
-You're ready? Let's go! You can install Pelican via several different methods.
-The simplest is via `pip <http://www.pip-installer.org/>`_::
+Pelican currently runs best on Python 2.7.x; earlier versions of Python are not
+supported. There is provisional support for Python 3.2 and higher, although
+there may be rough edges, particularly with regards to optional 3rd-party
+components.
+
+You can install Pelican via several different methods. The simplest is via
+`pip <http://www.pip-installer.org/>`_::
 
     $ pip install pelican
 
 If you don't have ``pip`` installed, an alternative method is ``easy_install``::
 
     $ easy_install pelican
+
+(Keep in mind that operating systems will often require you to prefix the above
+commands with ``sudo`` in order to install Pelican system-wide.)
 
 While the above is the simplest method, the recommended approach is to create
 a virtual environment for Pelican via virtualenv_ and virtualenvwrapper_ before
