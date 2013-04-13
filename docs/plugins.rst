@@ -6,9 +6,6 @@ Plugins
 Beginning with version 3.0, Pelican supports plugins. Plugins are a way to add
 features to Pelican without having to directly modify the Pelican core.
 
-Pelican is shipped with a set of bundled plugins, but you can easily implement
-your own. This page describes how to use and create plugins.
-
 How to use plugins
 ==================
 
@@ -16,12 +13,12 @@ To load plugins, you have to specify them in your settings file. There are two
 ways to do so. The first method is to specify strings with the path to the
 callables::
 
-    PLUGINS = ['pelican.plugins.gravatar',]
+    PLUGINS = ['package.myplugin',]
 
 Alternatively, another method is to import them and add them to the list::
 
-    from pelican.plugins import gravatar
-    PLUGINS = [gravatar,]
+    from package import myplugin
+    PLUGINS = [myplugin,]
 
 If your plugins are not in an importable path, you can specify a ``PLUGIN_PATH``
 in the settings. ``PLUGIN_PATH`` can be an absolute path or a path relative to
@@ -29,6 +26,17 @@ the settings file::
 
     PLUGIN_PATH = "plugins"
     PLUGINS = ["list", "of", "plugins"]
+
+Where to find plugins
+=====================
+
+We maintain a separate repository of plugins for people to share and use. 
+Please see the `pelican-plugins`_ repository for the official place for plugins.
+
+.. _pelican-plugins: https://github.com/getpelican/pelican-plugins
+
+Please note that while we will give best effort, the submitted plugins are all 
+community driven and supported.
 
 How to create plugins
 =====================
@@ -96,311 +104,3 @@ request if you need them!
 
        def register():
                signals.content_object_init.connect(test, sender=contents.Article)
-
-
-
-List of plugins
-===============
-
-The following plugins are currently included with Pelican:
-
-* `Asset management`_ ``pelican.plugins.assets``
-* `GitHub activity`_ ``pelican.plugins.github_activity``
-* `Global license`_ ``pelican.plugins.global_license``
-* `Gravatar`_ ``pelican.plugins.gravatar``
-* `Gzip cache`_ ``pelican.plugins.gzip_cache``
-* `HTML tags for reStructuredText`_ ``pelican.plugins.html_rst_directive``
-* `Related posts`_ ``pelican.plugins.related_posts``
-* `Sitemap`_ ``pelican.plugins.sitemap``
-* `Summary`_ ``pelican.plugins.summary``
-
-Ideas for plugins that haven't been written yet:
-
-* Tag cloud
-* Translation
-
-Plugin descriptions
-===================
-
-Asset management
-----------------
-
-This plugin allows you to use the `Webassets`_ module to manage assets such as
-CSS and JS files. The module must first be installed::
-
-    pip install webassets
-
-The Webassets module allows you to perform a number of useful asset management
-functions, including:
-
-* CSS minifier (``cssmin``, ``yui_css``, ...)
-* CSS compiler (``less``, ``sass``, ...)
-* JS minifier (``uglifyjs``, ``yui_js``, ``closure``, ...)
-
-Others filters include gzip compression, integration of images in CSS via data
-URIs, and more. Webassets can also append a version identifier to your asset
-URL to convince browsers to download new versions of your assets when you use
-far-future expires headers. Please refer to the `Webassets documentation`_ for
-more information.
-
-When used with Pelican, Webassets is configured to process assets in the
-``OUTPUT_PATH/theme`` directory. You can use Webassets in your templates by
-including one or more template tags. The Jinja variable ``{{ ASSET_URL }}`` can
-be used in templates and is relative to the ``theme/`` url. The
-``{{ ASSET_URL }}`` variable should be used in conjunction with the
-``{{ SITEURL }}`` variable in order to generate URLs properly. For example:
-
-.. code-block:: jinja
-
-    {% assets filters="cssmin", output="css/style.min.css", "css/inuit.css", "css/pygment-monokai.css", "css/main.css" %}
-        <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
-    {% endassets %}
-
-... will produce a minified css file with a version identifier that looks like:
-
-.. code-block:: html
-
-    <link href="http://{SITEURL}/theme/css/style.min.css?b3a7c807" rel="stylesheet">
-
-These filters can be combined. Here is an example that uses the SASS compiler
-and minifies the output:
-
-.. code-block:: jinja
-
-    {% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
-        <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
-    {% endassets %}
-
-Another example for Javascript:
-
-.. code-block:: jinja
-
-    {% assets filters="uglifyjs,gzip", output="js/packed.js", "js/jquery.js", "js/base.js", "js/widgets.js" %}
-        <script src="{{ SITEURL }}/{{ ASSET_URL }}"></script>
-    {% endassets %}
-
-The above will produce a minified and gzipped JS file:
-
-.. code-block:: html
-
-    <script src="http://{SITEURL}/theme/js/packed.js?00703b9d"></script>
-
-Pelican's debug mode is propagated to Webassets to disable asset packaging
-and instead work with the uncompressed assets.
-
-Many of Webasset's available compilers have additional configuration options
-(i.e. 'Less', 'Sass', 'Stylus', 'Closure_js').  You can pass these options to
-Webassets using the ``ASSET_CONFIG`` in your settings file.
-
-The following will handle Google Closure's compilation level and locate
-LessCSS's binary:
-
-.. code-block:: python
-
-    ASSET_CONFIG = (('closure_compressor_optimization', 'WHITESPACE_ONLY'),
-                    ('less_bin', 'lessc.cmd'), )
-
-.. _Webassets: https://github.com/miracle2k/webassets
-.. _Webassets documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
-
-
-GitHub activity
----------------
-
-This plugin makes use of the `feedparser`_ library that you'll need to
-install.
-
-Set the ``GITHUB_ACTIVITY_FEED`` parameter to your GitHub activity feed.
-For example, to track Pelican project activity, the setting would be::
-
-     GITHUB_ACTIVITY_FEED = 'https://github.com/getpelican.atom'
-
-On the template side, you just have to iterate over the ``github_activity``
-variable, as in this example::
-
-     {% if GITHUB_ACTIVITY_FEED %}
-        <div class="social">
-                <h2>Github Activity</h2>
-                <ul>
-
-                {% for entry in github_activity %}
-                    <li><b>{{ entry[0] }}</b><br /> {{ entry[1] }}</li>
-                {% endfor %}
-                </ul>
-        </div><!-- /.github_activity -->
-     {% endif %}
-
-``github_activity`` is a list of lists. The first element is the title,
-and the second element is the raw HTML from GitHub.
-
-.. _feedparser: https://crate.io/packages/feedparser/
-
-Global license
---------------
-
-This plugin allows you to define a ``LICENSE`` setting and adds the contents of that
-license variable to the article's context, making that variable available to use
-from within your theme's templates.
-
-Gravatar
---------
-
-This plugin assigns the ``author_gravatar`` variable to the Gravatar URL and
-makes the variable available within the article's context. You can add
-``AUTHOR_EMAIL`` to your settings file to define the default author's email
-address. Obviously, that email address must be associated with a Gravatar
-account.
-
-Alternatively, you can provide an email address from within article metadata::
-
-    :email:  john.doe@example.com
-
-If the email address is defined via at least one of the two methods above,
-the ``author_gravatar`` variable is added to the article's context.
-
-Gzip cache
-----------
-
-Certain web servers (e.g., Nginx) can use a static cache of gzip-compressed
-files to prevent the server from compressing files during an HTTP call. Since
-compression occurs at another time, these compressed files can be compressed
-at a higher compression level for increased optimization.
-
-The ``gzip_cache`` plugin compresses all common text type files into a ``.gz``
-file within the same directory as the original file.
-
-HTML tags for reStructuredText
-------------------------------
-
-This plugin allows you to use HTML tags from within reST documents. Following
-is a usage example, which is in this case a contact form::
-
-    .. html::
-
-        <form method="GET" action="mailto:some email">
-          <p>
-            <input type="text" placeholder="Subject" name="subject">
-            <br />
-            <textarea name="body" placeholder="Message">
-            </textarea>
-            <br />
-            <input type="reset"><input type="submit">
-          </p>
-        </form>
-
-Related posts
--------------
-
-This plugin adds the ``related_posts`` variable to the article's context.
-By default, up to 5 articles are listed. You can customize this value by 
-defining ``RELATED_POSTS_MAX`` in your settings file::
-
-    RELATED_POSTS_MAX = 10
-
-You can then use the ``article.related_posts`` variable in your templates.
-For example::
-
-    {% if article.related_posts %}
-        <ul>
-        {% for related_post in article.related_posts %}
-            <li><a href="{{ SITEURL }}/{{ related_post.url }}">{{ related_post.title }}</a></li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-
-Sitemap
--------
-
-The sitemap plugin generates plain-text or XML sitemaps. You can use the
-``SITEMAP`` variable in your settings file to configure the behavior of the
-plugin.
-
-The ``SITEMAP`` variable must be a Python dictionary and can contain three keys:
-
-- ``format``, which sets the output format of the plugin (``xml`` or ``txt``)
-
-- ``priorities``, which is a dictionary with three keys:
-
-  - ``articles``, the priority for the URLs of the articles and their
-    translations
-
-  - ``pages``, the priority for the URLs of the static pages
-
-  - ``indexes``, the priority for the URLs of the index pages, such as tags,
-     author pages, categories indexes, archives, etc...
-
-  All the values of this dictionary must be decimal numbers between ``0`` and ``1``.
-
-- ``changefreqs``, which is a dictionary with three items:
-
-  - ``articles``, the update frequency of the articles
-
-  - ``pages``, the update frequency of the pages
-
-  - ``indexes``, the update frequency of the index pages
-
-  Valid frequency values are ``always``, ``hourly``, ``daily``, ``weekly``, ``monthly``,
-  ``yearly`` and ``never``.
-
-If a key is missing or a value is incorrect, it will be replaced with the
-default value.
-
-The sitemap is saved in ``<output_path>/sitemap.<format>``.
-
-.. note::
-   ``priorities`` and ``changefreqs`` are information for search engines.
-   They are only used in the XML sitemaps.
-   For more information: <http://www.sitemaps.org/protocol.html#xmlTagDefinitions>
-
-**Example**
-
-Here is an example configuration (it's also the default settings):
-
-.. code-block:: python
-
-    PLUGINS=['pelican.plugins.sitemap',]
-
-    SITEMAP = {
-        'format': 'xml',
-        'priorities': {
-            'articles': 0.5,
-            'indexes': 0.5,
-            'pages': 0.5
-        },
-        'changefreqs': {
-            'articles': 'monthly',
-            'indexes': 'daily',
-            'pages': 'monthly'
-        }
-    }
-
-.. _plugin-summary:
-
-Summary
--------------
-
-This plugin allows easy, variable length summaries directly embedded into the 
-body of your articles. It introduces two new settings: ``SUMMARY_BEGIN_MARKER``
-and ``SUMMARY_END_MARKER``: strings which can be placed directly into an article
-to mark the beginning and end of a summary. When found, the standard 
-``SUMMARY_MAX_LENGTH`` setting will be ignored. The markers themselves will also
-be removed from your articles before they are published. The default values
-are ``<!-- PELICAN_BEGIN_SUMMARY -->`` and ``<!-- PELICAN_END_SUMMARY -->``.
-For example::
-
-    Title: My super title
-    Date: 2010-12-03 10:20
-    Tags: thats, awesome
-    Category: yeah
-    Slug: my-super-post
-    Author: Alexis Metaireau
-    
-    This is the content of my super blog post.
-    <!-- PELICAN_END_SUMMARY -->
-    and this content occurs after the summary.
-
-Here, the summary is taken to be the first line of the post. Because no
-beginning marker was found, it starts at the top of the body. It is possible
-to leave out the end marker instead, in which case the summary will start at the
-beginning marker and continue to the end of the body.
-

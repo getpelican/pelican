@@ -32,7 +32,7 @@ setup(
     description="A tool to generate a static blog from reStructuredText or "
                 "Markdown input files.",
     long_description=README + '\n' + CHANGELOG,
-    packages=['pelican', 'pelican.tools', 'pelican.plugins'],
+    packages=['pelican', 'pelican.tools'],
     include_package_data=True,
     install_requires=requires,
     entry_points=entry_points,
