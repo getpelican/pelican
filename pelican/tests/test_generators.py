@@ -91,7 +91,7 @@ class TestArticlesGenerator(unittest.TestCase):
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定', 'published', '指導書', 'article']
         ]
-        self.assertItemsEqual(articles_expected, articles)
+        self.assertEqual(sorted(articles_expected), sorted(articles))
 
     def test_generate_categories(self):
 
@@ -99,7 +99,7 @@ class TestArticlesGenerator(unittest.TestCase):
         categories = [cat.name for cat, _ in generator.categories]
         categories_expected = ['Default', 'TestCategory', 'Yeah', 'test',
                                'yeah', '指導書']
-        self.assertEquals(categories, categories_expected)
+        self.assertEqual(categories, categories_expected)
 
     def test_do_not_use_folder_as_category(self):
 
@@ -115,7 +115,7 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_context()
 
         categories = [cat.name for cat, _ in generator.categories]
-        self.assertEquals(categories, ['Default', 'Yeah', 'test', 'yeah', '指導書'])
+        self.assertEqual(categories, ['Default', 'Yeah', 'test', 'yeah', '指導書'])
 
     def test_direct_templates_save_as_default(self):
 
@@ -172,7 +172,7 @@ class TestArticlesGenerator(unittest.TestCase):
 class TestPageGenerator(unittest.TestCase):
     # Note: Every time you want to test for a new field; Make sure the test
     # pages in "TestPages" have all the fields Add it to distilled in
-    # distill_pages Then update the assertItemsEqual in test_generate_context
+    # distill_pages Then update the assertEqual in test_generate_context
     # to match expected
 
     def distill_pages(self, pages):
@@ -211,8 +211,8 @@ class TestPageGenerator(unittest.TestCase):
              'custom']
         ]
 
-        self.assertItemsEqual(pages_expected, pages)
-        self.assertItemsEqual(hidden_pages_expected, hidden_pages)
+        self.assertEqual(sorted(pages_expected), sorted(pages))
+        self.assertEqual(sorted(hidden_pages_expected), sorted(hidden_pages))
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):
@@ -256,4 +256,4 @@ class TestTemplatePagesGenerator(unittest.TestCase):
 
         # output content is correct
         with open(output_path, 'r') as output_file:
-            self.assertEquals(output_file.read(), 'foo: bar')
+            self.assertEqual(output_file.read(), 'foo: bar')

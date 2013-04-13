@@ -33,7 +33,7 @@ class RstReaderTest(unittest.TestCase):
         }
 
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
     def test_article_with_filename_metadata(self):
         content, metadata = readers.read_file(
@@ -45,7 +45,7 @@ class RstReaderTest(unittest.TestCase):
             'title': 'Rst with filename metadata',
         }
         for key, value in metadata.items():
-            self.assertEquals(value, expected[key], key)
+            self.assertEqual(value, expected[key], key)
 
         content, metadata = readers.read_file(
                 _path('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
@@ -59,7 +59,7 @@ class RstReaderTest(unittest.TestCase):
             'date': datetime.datetime(2012, 11, 29),
         }
         for key, value in metadata.items():
-            self.assertEquals(value, expected[key], key)
+            self.assertEqual(value, expected[key], key)
 
         content, metadata = readers.read_file(
                 _path('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
@@ -77,7 +77,7 @@ class RstReaderTest(unittest.TestCase):
             'mymeta': 'foo',
         }
         for key, value in metadata.items():
-            self.assertEquals(value, expected[key], key)
+            self.assertEqual(value, expected[key], key)
 
     def test_article_metadata_key_lowercase(self):
         # Keys of metadata should be lowercase.
@@ -86,7 +86,7 @@ class RstReaderTest(unittest.TestCase):
                 _path('article_with_uppercase_metadata.rst'))
 
         self.assertIn('category', metadata, 'Key should be lowercase.')
-        self.assertEquals('Yeah', metadata.get('category'),
+        self.assertEqual('Yeah', metadata.get('category'),
                           'Value keeps case.')
 
     def test_typogrify(self):
@@ -129,7 +129,7 @@ class MdReaderTest(unittest.TestCase):
             'tags': ['foo', 'bar', 'foobar'],
         }
         for key, value in metadata.items():
-            self.assertEquals(value, expected[key], key)
+            self.assertEqual(value, expected[key], key)
 
         content, metadata = reader.read(
             _path('article_with_markdown_and_nonascii_summary.md'))
@@ -142,7 +142,7 @@ class MdReaderTest(unittest.TestCase):
             'slug': 'python-virtualenv-on-mac-osx-mountain-lion-10.8',
         }
         for key, value in metadata.items():
-            self.assertEquals(value, expected[key], key)
+            self.assertEqual(value, expected[key], key)
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_file_extensions(self):
@@ -203,7 +203,7 @@ class MdReaderTest(unittest.TestCase):
             'author': 'Alexis Métaireau',
         }
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
         content, metadata = readers.read_file(
                 _path('2012-11-30_md_w_filename_meta#foo-bar.md'),
@@ -216,7 +216,7 @@ class MdReaderTest(unittest.TestCase):
             'date': datetime.datetime(2012, 11, 30),
         }
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
         content, metadata = readers.read_file(
                 _path('2012-11-30_md_w_filename_meta#foo-bar.md'),
@@ -233,7 +233,7 @@ class MdReaderTest(unittest.TestCase):
             'mymeta': 'foo',
         }
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
 
 class AdReaderTest(unittest.TestCase):
@@ -258,7 +258,7 @@ class AdReaderTest(unittest.TestCase):
         }
 
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
         expected = {
             'category': 'Blog',
@@ -269,7 +269,7 @@ class AdReaderTest(unittest.TestCase):
         }
 
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
     @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
     def test_article_with_asc_options(self):
@@ -289,7 +289,7 @@ class HTMLReaderTest(unittest.TestCase):
         reader = readers.HTMLReader({})
         content, metadata = reader.read(_path('article_with_comments.html'))
 
-        self.assertEquals('''
+        self.assertEqual('''
         Body content
         <!--  This comment is included (including extra whitespace)   -->
     ''', content)
@@ -302,7 +302,7 @@ class HTMLReaderTest(unittest.TestCase):
         }
 
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
     def test_article_with_metadata(self):
         reader = readers.HTMLReader({})
@@ -318,14 +318,14 @@ class HTMLReaderTest(unittest.TestCase):
         }
 
         for key, value in expected.items():
-            self.assertEquals(value, metadata[key], key)
+            self.assertEqual(value, metadata[key], key)
 
     def test_article_with_null_attributes(self):
         reader = readers.HTMLReader({})
         content, metadata = reader.read(
                 _path('article_with_null_attributes.html'))
 
-        self.assertEquals('''
+        self.assertEqual('''
         Ensure that empty attributes are copied properly.
         <input name="test" disabled style="" />
     ''', content)
@@ -336,5 +336,5 @@ class HTMLReaderTest(unittest.TestCase):
         content, metadata = reader.read(
                 _path('article_with_uppercase_metadata.html'))
         self.assertIn('category', metadata, 'Key should be lowercase.')
-        self.assertEquals('Yeah', metadata.get('category'),
+        self.assertEqual('Yeah', metadata.get('category'),
                           'Value keeps cases.')

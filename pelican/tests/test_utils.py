@@ -22,7 +22,7 @@ class TestUtils(LoggedTestCase):
 
     def test_deprecated_attribute(self):
         value = self._old_attribute
-        self.assertEquals(value, self._new_attribute)
+        self.assertEqual(value, self._new_attribute)
         self.assertLogCountEqual(
             count=1,
             msg=('_old_attribute has been deprecated since 3.1.0 and will be '
@@ -48,7 +48,7 @@ class TestUtils(LoggedTestCase):
                  '2012-11-22 22:11:10': date_hour_sec}
 
         for value, expected in dates.items():
-            self.assertEquals(utils.get_date(value), expected, value)
+            self.assertEqual(utils.get_date(value), expected, value)
 
         # invalid ones
         invalid_dates = ('2010-110-12', 'yay')
@@ -67,7 +67,7 @@ class TestUtils(LoggedTestCase):
                     'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),)
 
         for value, expected in samples:
-            self.assertEquals(utils.slugify(value), expected)
+            self.assertEqual(utils.slugify(value), expected)
 
     def test_get_relative_path(self):
 
@@ -81,7 +81,7 @@ class TestUtils(LoggedTestCase):
                    ('/test.html', os.curdir),)
 
         for value, expected in samples:
-            self.assertEquals(utils.get_relative_path(value), expected)
+            self.assertEqual(utils.get_relative_path(value), expected)
 
     def test_process_translations(self):
         # create a bunch of articles
@@ -132,15 +132,15 @@ class TestUtils(LoggedTestCase):
         dirname = os.path.join(os.path.dirname(__file__), 'content')
         path = os.path.join(dirname, 'article_with_metadata.rst')
         changed = utils.files_changed(dirname, 'rst')
-        self.assertEquals(changed, True)
+        self.assertEqual(changed, True)
 
         changed = utils.files_changed(dirname, 'rst')
-        self.assertEquals(changed, False)
+        self.assertEqual(changed, False)
 
         t = time.time()
         os.utime(path, (t, t))
         changed = utils.files_changed(dirname, 'rst')
-        self.assertEquals(changed, True)
+        self.assertEqual(changed, True)
         self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
 
         empty_path = os.path.join(os.path.dirname(__file__), 'empty')
