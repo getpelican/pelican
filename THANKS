@@ -1,10 +1,10 @@
-Pelican is a project by Alexis Métaireau <http://notmyidea.org> but there is
-a quite big number of people that contributed or implemented key features over
-time.  We try to keep this list up to date, but you can have a look at the nice
-graphs proposed by github about contributors here:
-https://github.com/getpelican/pelican/graphs/contributors
+Pelican is a project originally created by Alexis Métaireau
+<http://notmyidea.org/>, but there are a large number of people that have
+contributed or implemented key features over time. We do our best to keep this
+list up-to-date, but you can also have a look at the nice contributor graphs
+produced by GitHub: https://github.com/getpelican/pelican/graphs/contributors
 
-If you want to contibute, check the documentation section about how to do so
+If you want to contibute, check the documentation section about how to do so:
 <http://docs.getpelican.com/en/latest/contribute.html>
 
 Aaron Kavlie
@@ -38,6 +38,7 @@ Dana Woodman
 dave mankoff
 David Beitey
 David Marble
+Deniz Turgut (Avaris)
 derdon
 Dirkjan Ochtman
 Dirk Makowski
@@ -66,7 +67,6 @@ joe di castro
 Jökull Sólberg Auðunsson
 Joshua Adelman
 Julian Berman
-justinmayer
 Justin Mayer
 Kyle Fuller
 Laureline Guerin
@@ -105,6 +105,7 @@ Rory McCann
 saghul
 sam
 Samrat Man Singh
+Simon Conseil
 Simon Liedtke
 Skami18
 solsTiCe d'Hiver
