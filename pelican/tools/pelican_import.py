@@ -14,10 +14,14 @@ import re
 import subprocess
 import sys
 import time
+import logging
 
 from codecs import open
 
 from pelican.utils import slugify
+from pelican.log import init
+
+logger = logging.getLogger(__name__)
 
 
 def decode_wp_content(content, br=True):
@@ -114,7 +118,8 @@ def wp2fields(xml):
                 # Use HTMLParser due to issues with BeautifulSoup 3
                 title = HTMLParser().unescape(item.title.contents[0])
             except IndexError:
-                continue
+                title = 'No title [%s]' % item.find('post_name').string
+                logger.warn('Post "%s" is lacking a proper title' % title)
 
             content = item.find('encoded').string
             filename = item.find('post_name').string
@@ -491,6 +496,8 @@ def main():
         fields = posterous2fields(args.input, args.email, args.password)
     elif input_type == 'feed':
         fields = feed2fields(args.input)
+
+    init() # init logging
 
     fields2pelican(fields, args.markup, args.output,
                    dircat=args.dircat or False,
