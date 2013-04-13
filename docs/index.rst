@@ -23,7 +23,6 @@ Pelican currently supports:
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
-* Asset management with `webassets`_ (optional)
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
 
@@ -80,4 +79,3 @@ A French version of the documentation is available at :doc:`fr/index`.
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
 .. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
 .. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
-.. _webassets: https://github.com/miracle2k/webassets
