@@ -202,12 +202,6 @@ def configure_settings(settings):
                 ]
 
     if any(settings.get(k) for k in feed_keys):
-        if not settings.get('FEED_DOMAIN'):
-            logger.warning(
-                "Since feed URLs should always be absolute, you should specify"
-                " FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
-                "http://www.example.com')")
-
         if not settings.get('SITEURL'):
             logger.warning('Feeds generated without SITEURL set properly may not'
                         ' be valid')
