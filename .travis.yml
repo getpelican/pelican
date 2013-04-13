@@ -4,12 +4,11 @@ python:
     - "3.2"
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq --no-install-recommends asciidoc ruby-sass
+ - sudo apt-get install -qq --no-install-recommends asciidoc
 install:
     - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then ln -s /usr/share/asciidoc/asciidocapi.py ~/virtualenv/python2.7/lib/python2.7/site-packages/; fi
     - pip install nose mock --use-mirrors
     - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install --use-mirrors unittest2; else pip install --use-mirrors unittest2py3k; fi
     - pip install . --use-mirrors
     - pip install --use-mirrors Markdown
-    - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install --use-mirrors webassets cssmin; fi
 script: nosetests -s pelican
