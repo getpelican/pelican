@@ -1,7 +1,0 @@
-{% extends "!simple/base.html" %}
-
-{% block head %}
-  {% assets filters="scss,cssmin", output="gen/style.%(version)s.min.css", "css/style.scss" %}
-    <link rel="stylesheet" href="{{ SITEURL }}/{{ ASSET_URL }}">
-  {% endassets %}
-{% endblock %}
