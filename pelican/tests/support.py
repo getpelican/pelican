@@ -9,6 +9,7 @@ import sys
 from six import StringIO
 import logging
 from logging.handlers import BufferingHandler
+import unittest
 
 from functools import wraps
 from contextlib import contextmanager
@@ -17,11 +18,6 @@ from shutil import rmtree
 
 from pelican.contents import Article
 from pelican.settings import _DEFAULT_CONFIG
-
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
 
 
 @contextmanager

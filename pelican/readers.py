@@ -22,8 +22,10 @@ try:
     asciidoc = True
 except ImportError:
     asciidoc = False
-
-import cgi
+try:
+    from html import escape
+except ImportError:
+    from cgi import escape
 try:
     from html.parser import HTMLParser
 except ImportError:
@@ -122,7 +124,8 @@ class RstReader(Reader):
 
     def _get_publisher(self, source_path):
         extra_params = {'initial_header_level': '2',
-                        'syntax_highlight': 'short'}
+                        'syntax_highlight': 'short',
+                        'input_encoding': 'utf-8'}
         pub = docutils.core.Publisher(
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
@@ -229,7 +232,7 @@ class HTMLReader(Reader):
                 self._in_body = False
                 self._in_top_level = True
             elif self._in_body:
-                self._data_buffer += '</{}>'.format(cgi.escape(tag))
+                self._data_buffer += '</{}>'.format(escape(tag))
 
         def handle_startendtag(self, tag, attrs):
             if tag == 'meta' and self._in_head:
@@ -250,11 +253,11 @@ class HTMLReader(Reader):
             self._data_buffer += '&#{};'.format(data)
 
         def build_tag(self, tag, attrs, close_tag):
-            result = '<{}'.format(cgi.escape(tag))
+            result = '<{}'.format(escape(tag))
             for k, v in attrs:
-                result += ' ' + cgi.escape(k)
+                result += ' ' + escape(k)
                 if v is not None:
-                    result += '="{}"'.format(cgi.escape(v))
+                    result += '="{}"'.format(escape(v))
             if close_tag:
                 return result + ' />'
             return result + '>'

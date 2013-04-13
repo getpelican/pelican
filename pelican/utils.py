@@ -192,7 +192,8 @@ class pelican_open(object):
         self.filename = filename
 
     def __enter__(self):
-        content = open(self.filename, encoding='utf-8').read()
+        with open(self.filename, encoding='utf-8') as infile:
+            content = infile.read()
         if content[0] == BOM_UTF8.decode('utf8'):
             content = content[1:]
         return content
