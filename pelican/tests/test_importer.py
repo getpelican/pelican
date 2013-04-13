@@ -36,7 +36,9 @@ class TestWordpressXmlImporter(unittest.TestCase):
             self.assertTrue(title.strip())
 
     def test_can_toggle_raw_html_code_parsing(self):
-        r = lambda f: open(f).read()
+        def r(f):
+            with open(f) as infile:
+                return infile.read()
         silent_f2p = mute(True)(fields2pelican)
 
         with temporary_folder() as temp:
@@ -76,7 +78,9 @@ class TestWordpressXmlImporter(unittest.TestCase):
                 self.assertEqual(decode_wp_content(encoded_content, br=False), decoded_content)
 
     def test_preserve_verbatim_formatting(self):
-        r = lambda f: open(f).read()
+        def r(f):
+            with open(f) as infile:
+                return infile.read()
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Code in List"), self.posts)
         with temporary_folder() as temp:
@@ -89,7 +93,9 @@ class TestWordpressXmlImporter(unittest.TestCase):
             self.assertTrue(for_line.rindex('for') < print_line.rindex('print'))
 
     def test_code_in_list(self):
-        r = lambda f: open(f).read()
+        def r(f):
+            with open(f) as infile:
+                return infile.read()
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Code in List"), self.posts)
         with temporary_folder() as temp:

@@ -102,7 +102,9 @@ def wp2fields(xml):
                  '"BeautifulSoup4" and "lxml" required to import Wordpress XML files.')
         sys.exit(error)
 
-    xmlfile = open(xml, encoding='utf-8').read()
+
+    with open(xml, encoding='utf-8') as infile:
+        xmlfile = infile.read()
     soup = BeautifulSoup(xmlfile, "xml")
     items = soup.rss.channel.findAll('item')
 

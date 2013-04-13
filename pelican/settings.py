@@ -3,11 +3,19 @@ from __future__ import unicode_literals, print_function
 import six
 
 import copy
-import imp
 import inspect
 import os
 import locale
 import logging
+
+try:
+    # SourceFileLoader is the recommended way in 3.3+
+    from importlib.machinery import SourceFileLoader
+    load_source = lambda name, path: SourceFileLoader(name, path).load_module()
+except ImportError:
+    # but it does not exist in 3.2-, so fall back to imp
+    import imp
+    load_source = imp.load_source
 
 from os.path import isabs
 
@@ -130,7 +138,7 @@ def get_settings_from_file(path, default_settings=_DEFAULT_CONFIG):
     """Loads settings from a file path, returning a dict."""
 
     name, ext = os.path.splitext(os.path.basename(path))
-    module = imp.load_source(name, path)
+    module = load_source(name, path)
     return get_settings_from_module(module, default_settings=default_settings)
 
 
@@ -172,14 +180,14 @@ def configure_settings(settings):
         except locale.Error:
             pass
     else:
-        logger.warn("LOCALE option doesn't contain a correct value")
+        logger.warning("LOCALE option doesn't contain a correct value")
 
     if ('SITEURL' in settings):
         # If SITEURL has a trailing slash, remove it and provide a warning
         siteurl = settings['SITEURL']
         if (siteurl.endswith('/')):
             settings['SITEURL'] = siteurl[:-1]
-            logger.warn("Removed extraneous trailing slash from SITEURL.")
+            logger.warning("Removed extraneous trailing slash from SITEURL.")
         # If SITEURL is defined but FEED_DOMAIN isn't,
         # set FEED_DOMAIN to SITEURL
         if not 'FEED_DOMAIN' in settings:
@@ -195,24 +203,24 @@ def configure_settings(settings):
 
     if any(settings.get(k) for k in feed_keys):
         if not settings.get('FEED_DOMAIN'):
-            logger.warn(
+            logger.warning(
                 "Since feed URLs should always be absolute, you should specify"
                 " FEED_DOMAIN in your settings. (e.g., 'FEED_DOMAIN = "
                 "http://www.example.com')")
 
         if not settings.get('SITEURL'):
-            logger.warn('Feeds generated without SITEURL set properly may not'
+            logger.warning('Feeds generated without SITEURL set properly may not'
                         ' be valid')
 
     if not 'TIMEZONE' in settings:
-        logger.warn(
+        logger.warning(
             'No timezone information specified in the settings. Assuming'
             ' your timezone is UTC for feed generation. Check '
             'http://docs.notmyidea.org/alexis/pelican/settings.html#timezone '
             'for more information')
 
     if 'LESS_GENERATOR' in settings:
-        logger.warn(
+        logger.warning(
             'The LESS_GENERATOR setting has been removed in favor '
             'of the Webassets plugin')
 
@@ -221,7 +229,7 @@ def configure_settings(settings):
                           six.string_types):
             settings['OUTPUT_SOURCES_EXTENSION'] = (
                     _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
-            logger.warn(
+            logger.warning(
                 'Detected misconfiguration with OUTPUT_SOURCES_EXTENSION, '
                 'falling back to the default extension ' +
                 _DEFAULT_CONFIG['OUTPUT_SOURCES_EXTENSION'])
@@ -252,7 +260,7 @@ def configure_settings(settings):
             'THEME_STATIC_PATHS',)
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
             if isinstance(settings[PATH_KEY], six.string_types):
-                logger.warn("Detected misconfiguration with %s setting (must "
+                logger.warning("Detected misconfiguration with %s setting (must "
                         "be a list), falling back to the default"
                         % PATH_KEY)
                 settings[PATH_KEY] = _DEFAULT_CONFIG[PATH_KEY]
