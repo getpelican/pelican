@@ -89,17 +89,29 @@ class TestArticlesGenerator(unittest.TestCase):
             ['This is an article without category !', 'published',
              'TestCategory', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
-            ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定', 'published', '指導書', 'article']
+            ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定',
+             'published', '指導書', 'article']
         ]
         self.assertEqual(sorted(articles_expected), sorted(articles))
 
     def test_generate_categories(self):
 
         generator = self.get_populated_generator()
+        # test for name
+        # categories are grouped by slug; if two categories have the same slug
+        # but different names they will be grouped together, the first one in
+        # terms of process order will define the name for that category
         categories = [cat.name for cat, _ in generator.categories]
-        categories_expected = ['Default', 'TestCategory', 'Yeah', 'test',
-                               'yeah', '指導書']
-        self.assertEqual(categories, categories_expected)
+        categories_alternatives = (
+            sorted(['Default', 'TestCategory', 'Yeah', 'test', '指導書']),
+            sorted(['Default', 'TestCategory', 'yeah', 'test', '指導書']),
+        )
+        self.assertTrue(sorted(categories) in categories_alternatives)
+        # test for slug
+        categories = [cat.slug for cat, _ in generator.categories]
+        categories_expected = ['default', 'testcategory', 'yeah', 'test',
+                               'zhi-dao-shu']
+        self.assertEqual(sorted(categories), sorted(categories_expected))
 
     def test_do_not_use_folder_as_category(self):
 
@@ -113,9 +125,20 @@ class TestArticlesGenerator(unittest.TestCase):
                             CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
                             _DEFAULT_CONFIG['MARKUP'])
         generator.generate_context()
-
+        # test for name
+        # categories are grouped by slug; if two categories have the same slug
+        # but different names they will be grouped together, the first one in
+        # terms of process order will define the name for that category
         categories = [cat.name for cat, _ in generator.categories]
-        self.assertEqual(categories, ['Default', 'Yeah', 'test', 'yeah', '指導書'])
+        categories_alternatives = (
+            sorted(['Default', 'Yeah', 'test', '指導書']),
+            sorted(['Default', 'yeah', 'test', '指導書']),
+        )
+        self.assertTrue(sorted(categories) in categories_alternatives)
+        # test for slug
+        categories = [cat.slug for cat, _ in generator.categories]
+        categories_expected = ['default', 'yeah', 'test', 'zhi-dao-shu']
+        self.assertEqual(sorted(categories), sorted(categories_expected))
 
     def test_direct_templates_save_as_default(self):
 

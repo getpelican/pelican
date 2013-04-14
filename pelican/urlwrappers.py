@@ -13,21 +13,35 @@ logger = logging.getLogger(__name__)
 @functools.total_ordering
 class URLWrapper(object):
     def __init__(self, name, settings):
+        # next 2 lines are redundant with the setter of the name property
+        # but are here for clarity
+        self._name = name
+        self.slug = slugify(name)
         self.name = name
-        self.slug = slugify(self.name)
         self.settings = settings
 
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = name
+        self.slug = slugify(name)
+
     def as_dict(self):
-        return self.__dict__
+        d = self.__dict__
+        d['name'] = self.name
+        return d
 
     def __hash__(self):
-        return hash(self.name)
+        return hash(self.slug)
 
     def _key(self):
-        return self.name
+        return self.slug
 
     def _normalize_key(self, key):
-        return six.text_type(key)
+        return six.text_type(slugify(key))
 
     def __eq__(self, other):
         return self._key() == self._normalize_key(other)
