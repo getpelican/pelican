@@ -12,7 +12,7 @@ Those who don't have an IRC client handy can jump in immediately via
 `IRC webchat <http://webchat.freenode.net/?channels=pelican&uio=d4>`_. Because
 of differing time zones, you may not get an immediate response to your question,
 but please be patient and stay logged into IRC — someone will almost always
-respond.
+respond if you wait long enough (it may take a few hours).
 
 If you are unable to resolve your issue or if you have a feature request, please
 refer to the `issue tracker <https://github.com/getpelican/pelican/issues>`_.
@@ -20,9 +20,11 @@ refer to the `issue tracker <https://github.com/getpelican/pelican/issues>`_.
 How can I help?
 ================
 
-There are several ways to help out. First, you can use Pelican and report any
+There are several ways to help out. First, you can report any Pelican
 suggestions or problems you might have via IRC or the `issue tracker
-<https://github.com/getpelican/pelican/issues>`_.
+<https://github.com/getpelican/pelican/issues>`_. If submitting an issue
+report, please check the existing issue list first in order to avoid submitting
+a duplicate issue.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
@@ -35,7 +37,7 @@ You can also contribute by creating themes and improving the documentation.
 Is it mandatory to have a configuration file?
 =============================================
 
-No, it's not. Configuration files are just an easy way to configure Pelican.
+Configuration files are optional and are just an easy way to configure Pelican.
 For basic operations, it's possible to specify options while invoking Pelican
 via the command line. See ``pelican --help`` for more information.
 
@@ -58,14 +60,14 @@ I want to use Markdown, but I got an error.
 ===========================================
 
 Markdown is not a hard dependency for Pelican, so you will need to explicitly
-install it. You can do so by typing the following, including ``sudo`` if
-required::
+install it. You can do so by typing the following command, prepending ``sudo``
+if permissions require it::
 
-    (sudo) pip install markdown
+    pip install markdown
 
-If you don't have pip installed, consider installing the pip installer via::
+If you don't have ``pip`` installed, consider installing it via::
 
-    (sudo) easy_install pip
+    easy_install pip
 
 Can I use arbitrary meta-data in my templates?
 ==============================================
@@ -84,20 +86,24 @@ That meta-data can then be accessed in the template::
 How do I assign custom templates on a per-page basis?
 =====================================================
 
-It's as simple as adding an extra line of metadata to any pages or articles you
-want to have its own template.
+It's as simple as adding an extra line of meta-data to any pages or articles
+you want to have its own template. For example, this is how it would be handled
+for content in reST format::
 
     :template: template_name
+
+For content in Markdown format::
+
+    Template: template_name
 
 Then just make sure your theme contains the relevant template file (e.g.
 ``template_name.html``).
 
-How can I override the generated url of a specific page or article?
+How can I override the generated URL of a specific page or article?
 ===================================================================
 
-It's as simple as specifying the ``url`` and ``save_as`` special metadata to
-any pages or articles you want to override the generated url.
-Here is an example rst page::
+Include ``url`` and ``save_as`` meta-data in any pages or articles that you want
+to override the generated URL. Here is an example page in reST format::
 
     Override url/save_as page
     #########################
@@ -105,18 +111,32 @@ Here is an example rst page::
     :url: override/url/
     :save_as: override/url/index.html
 
-You're done, the page will be written to ``override/url/index.html``
+With this meta-data, the page will be written to ``override/url/index.html``
 and Pelican will use url ``override/url/`` to link to this page.
+
+How can I use a static page as my home page?
+============================================
+
+The override feature mentioned above can be used to specify a static page as
+your home page. The following Markdown example could be stored in
+``content/pages/home.md``::
+
+    Title: Welcome to My Site
+    URL: /
+    save_as: index.html
+
+    Thank you for visiting. Welcome!
 
 What if I want to disable feed generation?
 ==========================================
 
-To disable all feed generation, all feed settings should be set to ``None``.
-All but two feed settings already default to ``None``, so if you want to disable
-all feed generation, you only need to specify the following settings::
+To disable feed generation, all feed settings should be set to ``None``.
+All but three feed settings already default to ``None``, so if you want to
+disable all feed generation, you only need to specify the following settings::
 
     FEED_ALL_ATOM = None
     CATEGORY_FEED_ATOM = None
+    TRANSLATION_FEED_ATOM = None
 
 Please note that ``None`` and ``''`` are not the same thing. The word ``None``
 should not be surrounded by quotes.
@@ -124,23 +144,20 @@ should not be surrounded by quotes.
 I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================
 
-`RSS and Atom feeds require all URLs and links in them to be absolute
+`RSS and Atom feeds require all URL links to be absolute
 <http://validator.w3.org/feed/docs/rss2.html#comments>`_.
-In order to properly generate all URLs properly in Pelican you will need to set
-``SITEURL`` to the full path of your blog. When using ``make html`` and the
-default Makefile provided by the `pelican-quickstart` bootstrap script to test
-build your site, it's normal to see this warning since ``SITEURL`` is
-deliberately left undefined. If configured properly no other ``make`` commands
-should result in this warning.
+In order to properly generate links in Pelican you will need to set ``SITEURL``
+to the full path of your site.
 
-Feeds are still generated when this warning is displayed but may not validate.
+Feeds are still generated when this warning is displayed, but links within may
+be malformed and thus the feed may not validate.
 
 My feeds are broken since I upgraded to Pelican 3.x
 ===================================================
 
 Starting in 3.0, some of the FEED setting names were changed to more explicitly
 refer to the Atom feeds they inherently represent (much like the FEED_RSS
-setting names). Here is an exact list of the renamed setting names::
+setting names). Here is an exact list of the renamed settings::
 
     FEED -> FEED_ATOM
     TAG_FEED -> TAG_FEED_ATOM

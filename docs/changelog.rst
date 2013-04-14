@@ -5,10 +5,17 @@ Release history
 ================
 
 * Support for Python 3!
-* Ensure exceptions are raised if they take place during processing
-  with autoreload enabled with debug enabled.
+* Override page save-to location from meta-data (enables using a static page as
+  the site's home page, for example)
+* Time period archives (per-year, per-month, and per-day archives of posts)
+* Posterous blog import
+* Improve WordPress blog import
+* Migrate plugins to separate repository
+* Improve HTML parser
 * Provide ability to show or hide categories from menu using
-  ``DISPLAY_CATEGORIES_ON_MENU`` option.
+  ``DISPLAY_CATEGORIES_ON_MENU`` option
+* Auto-regeneration can be told to ignore files via ``IGNORE_FILES`` setting
+* Document-relative URL generation (``RELATIVE_URLS``) is now off by default
 
 3.1 (2012-12-04)
 ================
