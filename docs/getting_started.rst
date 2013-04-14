@@ -274,10 +274,11 @@ Pages
 -----
 
 If you create a folder named ``pages`` inside the content folder, all the
-files in it will be used to generate static pages.
+files in it will be used to generate static pages, such as **About** or
+**Contact** pages. (See example filesystem layout below.)
 
-Then, use the ``DISPLAY_PAGES_ON_MENU`` setting to add all those pages to
-the primary navigation menu.
+You can use the ``DISPLAY_PAGES_ON_MENU`` setting to control whether all those
+pages are displayed in the primary navigation menu. (Default is ``True``.)
 
 If you want to exclude any pages from being linked to or listed in the menu
 then add a ``status: hidden`` attribute to its metadata. This is useful for
@@ -299,8 +300,9 @@ following syntax: ``|filename|path/to/file``::
     website/
     ├── content
     │   ├── article1.rst
-    │   └── cat/
-    │       └── article2.md
+    │   ├── cat/
+    │   │   └── article2.md
+    │   └── pages
     └── pelican.conf.py
 
 In this example, ``article1.rst`` could look like::
