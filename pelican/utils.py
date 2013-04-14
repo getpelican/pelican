@@ -56,12 +56,11 @@ def strftime(date, date_format):
         # *yuck* like this:
         #        "Øl trinken beim Besäufnis"
         #    --> "&#216;l trinken beim Bes&#228;ufnis"
-        date_format = date_format.encode('ascii',
-            errors="xmlcharrefreplace")
+        date_format = date_format.encode('ascii', errors="xmlcharrefreplace")
         result = date.strftime(date_format)
         # strftime() returns an encoded byte string
         # which we must decode into unicode.
-        lang_code, enc = locale.getlocale(locale.LC_ALL)
+        lang_code, enc = locale.getlocale(locale.LC_TIME)
         if enc:
             result = result.decode(enc)
         else:
