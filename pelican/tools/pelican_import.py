@@ -376,6 +376,15 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
 
         filename = os.path.basename(filename)
 
+        # Enforce filename restrictions for various filesystems at once; see
+        # http://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+        # we do not need to filter words because an extension will be appended
+        filename = re.sub(r'[<>:"/\\|?*^% ]', '-', filename) # invalid chars
+        filename = filename.lstrip('.') # should not start with a dot
+        if not filename:
+            filename = '_'
+        filename = filename[:249] # allow for 5 extra characters
+
         # option to put files in directories with categories names
         if dircat and (len(categories) > 0):
             catname = slugify(categories[0])
