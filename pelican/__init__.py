@@ -66,7 +66,7 @@ class Pelican(object):
             if isinstance(plugin, six.string_types):
                 logger.debug("Loading plugin `{0}`".format(plugin))
                 try:
-                    plugin = __import__(plugin, globals(), locals(), 'module')
+                    plugin = __import__(plugin, globals(), locals(), str('module'))
                 except ImportError as e:
                     logger.error("Can't find plugin `{0}`: {1}".format(plugin, e))
                     continue
