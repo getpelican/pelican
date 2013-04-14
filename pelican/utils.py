@@ -418,15 +418,22 @@ def process_translations(content_list):
         if not default_lang_items:
             default_lang_items = items
 
+        # display warnings if several items have the same lang
+        for lang, lang_items in groupby(items, attrgetter('lang')):
+            lang_items = list(lang_items)
+            len_ = len(lang_items)
+            if len_ > 1:
+                logger.warning('There are %s variants of "%s" with lang %s' \
+                        % (len_, slug, lang))
+                for x in lang_items:
+                    logger.warning('    %s' % x.source_path)
+
         # find items with default language
         default_lang_items = list(filter(attrgetter('in_default_lang'),
                 default_lang_items))
-        len_ = len(default_lang_items)
-        if len_ > 1:
-            logger.warning('there are %s variants of "%s"' % (len_, slug))
-            for x in default_lang_items:
-                logger.warning('    {}'.format(x.source_path))
-        elif len_ == 0:
+
+        # if there is no article with default language, take an other one
+        if not default_lang_items:
             default_lang_items = items[:1]
 
         if not slug:
