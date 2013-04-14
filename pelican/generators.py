@@ -669,3 +669,5 @@ class SourceFileGenerator(Generator):
         logger.info(' Generating source files...')
         for obj in chain(self.context['articles'], self.context['pages']):
             self._create_source(obj)
+            for obj_trans in obj.translations:
+                self._create_source(obj_trans)
