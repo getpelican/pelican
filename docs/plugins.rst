@@ -30,13 +30,14 @@ the settings file::
 Where to find plugins
 =====================
 
-We maintain a separate repository of plugins for people to share and use. 
-Please see the `pelican-plugins`_ repository for the official place for plugins.
+We maintain a separate repository of plugins for people to share and use.
+Please visit the `pelican-plugins`_ repository for a list of available plugins.
 
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 
-Please note that while we will give best effort, the submitted plugins are all 
-community driven and supported.
+Please note that while we do our best to review and maintain these plugins,
+they are submitted by the Pelican community and thus may have varying levels of
+support and interoperability.
 
 How to create plugins
 =====================
@@ -55,8 +56,6 @@ which you map the signals to your plugin logic. Let's take a simple example::
 
     def register():
         signals.initialized.connect(test)
-
-
 
 List of signals
 ===============

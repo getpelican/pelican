@@ -9,7 +9,7 @@ Description
 ===========
 
 ``pelican-import`` is a command-line tool for converting articles from other
-software to ReStructuredText or Markdown. The supported import formats are:
+software to reStructuredText or Markdown. The supported import formats are:
 
 - WordPress XML export
 - Dotclear export
@@ -24,7 +24,7 @@ not be converted (as Pelican also supports Markdown).
 Dependencies
 ============
 
-``pelican-import`` has some dependencies not required by the rest of pelican:
+``pelican-import`` has some dependencies not required by the rest of Pelican:
 
 - *BeautifulSoup*, for WordPress and Dotclear import. Can be installed like
   any other Python package (``pip install BeautifulSoup``).
@@ -94,6 +94,7 @@ For Dotclear::
 for Posterous::
 
     $ pelican-import --posterous -o ~/output --email=<email_address> --password=<password> <api_token>
+
 
 Tests
 =====

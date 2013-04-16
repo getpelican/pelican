@@ -269,10 +269,10 @@ Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 Date format and locale
 ----------------------
 
-If no DATE_FORMATS is set, fall back to DEFAULT_DATE_FORMAT. If you need to
-maintain multiple languages with different date formats, you can set this dict
-using language name (``lang`` in your posts) as key. Regarding available format
-codes, see `strftime document of python`_ :
+If no DATE_FORMATS are set, Pelican will fall back to DEFAULT_DATE_FORMAT. If
+you need to maintain multiple languages with different date formats, you can
+set this dict using the language name (``lang`` metadata in your post content)
+as the key. Regarding available format codes, see `strftime document of python`_ :
 
 .. parsed-literal::
 

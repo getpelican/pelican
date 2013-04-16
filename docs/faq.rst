@@ -10,11 +10,11 @@ If you have a problem, question, or suggestion, please start by striking up a
 conversation on `#pelican on Freenode <irc://irc.freenode.net/pelican>`_.
 Those who don't have an IRC client handy can jump in immediately via
 `IRC webchat <http://webchat.freenode.net/?channels=pelican&uio=d4>`_. Because
-of differing time zones, you may not get an immediate response to your question,
-but please be patient and stay logged into IRC — someone will almost always
-respond if you wait long enough (it may take a few hours).
+of differing time zones, you may not get an immediate response to your
+question, but please be patient and stay logged into IRC — someone will almost
+always respond if you wait long enough (it may take a few hours).
 
-If you are unable to resolve your issue or if you have a feature request, please
+If you're unable to resolve your issue or if you have a feature request, please
 refer to the `issue tracker <https://github.com/getpelican/pelican/issues>`_.
 
 How can I help?
@@ -28,9 +28,9 @@ a duplicate issue.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
-your changes, and issue a pull request. Someone will review your changes as soon
-as possible. Please refer to the :doc:`How to Contribute <contribute>` section
-for more details.
+your changes, and issue a pull request. Someone will review your changes as
+soon as possible. Please refer to the :doc:`How to Contribute <contribute>`
+section for more details.
 
 You can also contribute by creating themes and improving the documentation.
 
@@ -69,7 +69,7 @@ If you don't have ``pip`` installed, consider installing it via::
 
     easy_install pip
 
-Can I use arbitrary meta-data in my templates?
+Can I use arbitrary metadata in my templates?
 ==============================================
 
 Yes. For example, to include a modified date in a Markdown post, one could
@@ -77,7 +77,7 @@ include the following at the top of the article::
 
     Modified: 2012-08-08
 
-That meta-data can then be accessed in the template::
+That metadata can then be accessed in the template::
 
     {% if article.modified %}
     Last modified: {{ article.modified }}
@@ -86,7 +86,7 @@ That meta-data can then be accessed in the template::
 How do I assign custom templates on a per-page basis?
 =====================================================
 
-It's as simple as adding an extra line of meta-data to any pages or articles
+It's as simple as adding an extra line of metadata to any page or article that
 you want to have its own template. For example, this is how it would be handled
 for content in reST format::
 
@@ -102,7 +102,7 @@ Then just make sure your theme contains the relevant template file (e.g.
 How can I override the generated URL of a specific page or article?
 ===================================================================
 
-Include ``url`` and ``save_as`` meta-data in any pages or articles that you want
+Include ``url`` and ``save_as`` metadata in any pages or articles that you want
 to override the generated URL. Here is an example page in reST format::
 
     Override url/save_as page
@@ -111,7 +111,7 @@ to override the generated URL. Here is an example page in reST format::
     :url: override/url/
     :save_as: override/url/index.html
 
-With this meta-data, the page will be written to ``override/url/index.html``
+With this metadata, the page will be written to ``override/url/index.html``
 and Pelican will use url ``override/url/`` to link to this page.
 
 How can I use a static page as my home page?

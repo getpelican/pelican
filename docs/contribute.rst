@@ -26,7 +26,7 @@ different projects.
 
 To create and activate a virtual environment, use the following syntax::
 
-    $ virtualenv pelican ~/virtualenvs/pelican
+    $ virtualenv ~/virtualenvs/pelican
     $ cd ~/virtualenvs/pelican
     $ . bin/activate
 
