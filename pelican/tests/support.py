@@ -10,6 +10,7 @@ from six import StringIO
 import logging
 from logging.handlers import BufferingHandler
 import unittest
+import locale
 
 from functools import wraps
 from contextlib import contextmanager
@@ -145,6 +146,18 @@ def module_exists(module_name):
     except ImportError:
         return False
     else:
+        return True
+
+
+def locale_available(locale_):
+    old_locale = locale.setlocale(locale.LC_TIME)
+
+    try:
+        locale.setlocale(locale.LC_TIME, str(locale_))
+    except locale.Error:
+        return False
+    else:
+        locale.setlocale(locale.LC_TIME, old_locale)
         return True
 
 

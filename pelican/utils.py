@@ -24,54 +24,50 @@ logger = logging.getLogger(__name__)
 
 
 def strftime(date, date_format):
-    """
-    Replacement for the builtin strftime().
+    '''
+    Replacement for built-in strftime
 
-    This :func:`strftime()` is compatible to Python 2 and 3. In both cases,
-    input and output is always unicode.
+    This is necessary because of the way Py2 handles date format strings.
+    Specifically, Py2 strftime takes a bytestring. In the case of text output
+    (e.g. %b, %a, etc), the output is encoded with an encoding defined by
+    locale.LC_TIME. Things get messy if the formatting string has chars that
+    are not valid in LC_TIME defined encoding.
 
-    Still, Python 3's :func:`strftime()` seems to somehow "normalize" unicode
-    chars in the format string. So if e.g. your format string contains 'ø' or
-    'ä', the result will be 'o' and 'a'.
+    This works by 'grabbing' possible format strings (those starting with %),
+    formatting them with the date, (if necessary) decoding the output and
+    replacing formatted output back.
+    '''
 
-    See here for an `extensive testcase
-    <https://github.com/dmdm/test_strftime>`_.
+    # grab candidate format options
+    format_options = '%+.?'
+    candidates = re.findall(format_options, date_format)
 
-    :param date: Any object that sports a :meth:`strftime()` method.
-    :param date_format: Format string, can always be unicode.
-    :returns: Unicode string with formatted date.
-    """
-    # As tehkonst confirmed, above mentioned testcase runs correctly on
-    # Python 2 and 3 on Windows as well. Thanks.
-    if six.PY3:
-        # It could be so easy... *sigh*
-        return date.strftime(date_format)
-        # TODO Perhaps we should refactor again, so that the
-        # xmlcharrefreplace-regex-dance is always done, regardless
-        # of the Python version.
-    else:
-        # We must ensure that the format string is an encoded byte
-        # string, ASCII only WTF!!!
-        # But with "xmlcharrefreplace" our formatted date will produce
-        # *yuck* like this:
-        #        "Øl trinken beim Besäufnis"
-        #    --> "&#216;l trinken beim Bes&#228;ufnis"
-        date_format = date_format.encode('ascii',
-            errors="xmlcharrefreplace")
-        result = date.strftime(date_format)
-        # strftime() returns an encoded byte string
-        # which we must decode into unicode.
-        lang_code, enc = locale.getlocale(locale.LC_ALL)
-        if enc:
-            result = result.decode(enc)
+    # replace candidates with placeholders for later % formatting
+    template = re.sub(format_options, '%s', date_format)
+
+    # we need to convert formatted dates back to unicode in Py2
+    # LC_TIME determines the encoding for built-in strftime outputs
+    lang_code, enc = locale.getlocale(locale.LC_TIME)
+
+    formatted_candidates = []
+    for candidate in candidates:
+        try:
+            # a valid format string should be ascii
+            candidate.encode('ascii')
+        except UnicodeEncodeError:
+            # if it fails, it's not a valid format option
+            # put the candidate back as it was
+            formatted = candidate
         else:
-            result = unicode(result)
-        # Convert XML character references back to unicode characters.
-        if "&#" in result:
-            result = re.sub(r'&#(?P<num>\d+);',
-                            lambda m: unichr(int(m.group('num'))),
-                            result)
-        return result
+            # if it's ascii, pass it to strftime to format
+            formatted = date.strftime(candidate)
+            # convert Py2 result to unicode
+            if not six.PY3 and enc is not None:
+                formatted = formatted.decode(enc)
+        formatted_candidates.append(formatted)
+
+    # put formatted candidates back and return
+    return template % tuple(formatted_candidates)
 
 
 def python_2_unicode_compatible(klass):
