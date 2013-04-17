@@ -208,13 +208,11 @@ class TestUtils(LoggedTestCase):
 
 
     # test the output of utils.strftime in a different locale
-    # right now, this uses Turkish locale
-    # why Turkish? because I know Turkish :). And it produces non-ascii output
-    # Feel free to extend with different locales
+    # Turkish locale
     @unittest.skipUnless(locale_available('tr_TR.UTF-8') or
                          locale_available('Turkish'),
                          'Turkish locale needed')
-    def test_strftime_locale_dependent(self):
+    def test_strftime_locale_dependent_turkish(self):
         # store current locale
         old_locale = locale.setlocale(locale.LC_TIME)
 
@@ -227,7 +225,6 @@ class TestUtils(LoggedTestCase):
 
         # simple
         self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 Ağustos 2012')
-        self.assertEqual(utils.strftime(d, '%d %b %Y'), '29 Ağu 2012')
         self.assertEqual(utils.strftime(d, '%A, %d %B %Y'),
                          'Çarşamba, 29 Ağustos 2012')
 
@@ -238,6 +235,40 @@ class TestUtils(LoggedTestCase):
         # non-ascii format candidate (someone might pass it... for some reason)
         self.assertEqual(utils.strftime(d, '%Y yılında %üretim artışı'),
             '2012 yılında %üretim artışı')
+
+        # restore locale back
+        locale.setlocale(locale.LC_TIME, old_locale)
+
+
+    # test the output of utils.strftime in a different locale
+    # French locale
+    @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
+                         locale_available('French'),
+                         'French locale needed')
+    def test_strftime_locale_dependent_french(self):
+        # store current locale
+        old_locale = locale.setlocale(locale.LC_TIME)
+
+        if platform == 'win32':
+            locale.setlocale(locale.LC_TIME, str('French'))
+        else:
+            locale.setlocale(locale.LC_TIME, str('fr_FR.UTF-8'))
+
+        d = datetime.date(2012, 8, 29)
+
+        # simple
+        self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 août 2012')
+
+        # depending on OS, the first letter is m or M
+        self.assertTrue(utils.strftime(d, '%A') in ('mercredi', 'Mercredi'))
+
+        # with text
+        self.assertEqual(utils.strftime(d, 'Écrit le %d %B %Y'),
+            'Écrit le 29 août 2012')
+
+        # non-ascii format candidate (someone might pass it... for some reason)
+        self.assertEqual(utils.strftime(d, '%écrits en %Y'),
+            '%écrits en 2012')
 
         # restore locale back
         locale.setlocale(locale.LC_TIME, old_locale)
