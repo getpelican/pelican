@@ -122,7 +122,7 @@ your home page. The following Markdown example could be stored in
 ``content/pages/home.md``::
 
     Title: Welcome to My Site
-    URL: /
+    URL: 
     save_as: index.html
 
     Thank you for visiting. Welcome!
