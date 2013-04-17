@@ -211,7 +211,7 @@ class TestUtils(LoggedTestCase):
     # right now, this uses Turkish locale
     # why Turkish? because I know Turkish :). And it produces non-ascii output
     # Feel free to extend with different locales
-    @unittest.skipUnless(locale_available('tr_TR') or
+    @unittest.skipUnless(locale_available('tr_TR.UTF-8') or
                          locale_available('Turkish'),
                          'Turkish locale needed')
     def test_strftime_locale_dependent(self):
@@ -221,15 +221,13 @@ class TestUtils(LoggedTestCase):
         if platform == 'win32':
             locale.setlocale(locale.LC_TIME, str('Turkish'))
         else:
-            locale.setlocale(locale.LC_TIME, str('tr_TR'))
+            locale.setlocale(locale.LC_TIME, str('tr_TR.UTF-8'))
 
         d = datetime.date(2012, 8, 29)
 
         # simple
         self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 Ağustos 2012')
         self.assertEqual(utils.strftime(d, '%d %b %Y'), '29 Ağu 2012')
-        self.assertEqual(utils.strftime(d, '%a, %d %b %Y'),
-                         'Çrş, 29 Ağu 2012')
         self.assertEqual(utils.strftime(d, '%A, %d %B %Y'),
                          'Çarşamba, 29 Ağustos 2012')
 

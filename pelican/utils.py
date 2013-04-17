@@ -39,7 +39,7 @@ def strftime(date, date_format):
     '''
 
     # grab candidate format options
-    format_options = '%+.?'
+    format_options = '%.'
     candidates = re.findall(format_options, date_format)
 
     # replace candidates with placeholders for later % formatting
@@ -51,19 +51,14 @@ def strftime(date, date_format):
 
     formatted_candidates = []
     for candidate in candidates:
-        try:
-            # a valid format string should be ascii
-            candidate.encode('ascii')
-        except UnicodeEncodeError:
-            # if it fails, it's not a valid format option
-            # put the candidate back as it was
-            formatted = candidate
-        else:
-            # if it's ascii, pass it to strftime to format
+        # test for valid C89 directives only
+        if candidate[1] in 'aAbBcdfHIjmMpSUwWxXyYzZ%':
             formatted = date.strftime(candidate)
             # convert Py2 result to unicode
             if not six.PY3 and enc is not None:
                 formatted = formatted.decode(enc)
+        else:
+            formatted = candidate
         formatted_candidates.append(formatted)
 
     # put formatted candidates back and return
