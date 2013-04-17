@@ -5,9 +5,11 @@ import shutil
 import os
 import datetime
 import time
+import locale
+from sys import platform
 
 from pelican import utils
-from .support import get_article, LoggedTestCase
+from .support import get_article, LoggedTestCase, locale_available, unittest
 from pelican.utils import NoFilesError
 
 
@@ -179,3 +181,65 @@ class TestUtils(LoggedTestCase):
         f.close()
         utils.clean_output_dir(test_directory)
         self.assertTrue(not os.path.exists(test_directory))
+
+    def test_strftime(self):
+        d = datetime.date(2012, 8, 29)
+
+        # simple formatting
+        self.assertEqual(utils.strftime(d, '%d/%m/%y'), '29/08/12')
+        self.assertEqual(utils.strftime(d, '%d/%m/%Y'), '29/08/2012')
+
+        # % escaped
+        self.assertEqual(utils.strftime(d, '%d%%%m%%%y'), '29%08%12')
+        self.assertEqual(utils.strftime(d, '%d %% %m %% %y'), '29 % 08 % 12')
+        # not valid % formatter
+        self.assertEqual(utils.strftime(d, '10% reduction in %Y'),
+                         '10% reduction in 2012')
+        self.assertEqual(utils.strftime(d, '%10 reduction in %Y'),
+                         '%10 reduction in 2012')
+
+        # with text
+        self.assertEqual(utils.strftime(d, 'Published in %d-%m-%Y'),
+                         'Published in 29-08-2012')
+
+        # with non-ascii text
+        self.assertEqual(utils.strftime(d, '%d/%m/%Y Øl trinken beim Besäufnis'),
+                         '29/08/2012 Øl trinken beim Besäufnis')
+
+
+    # test the output of utils.strftime in a different locale
+    # right now, this uses Turkish locale
+    # why Turkish? because I know Turkish :). And it produces non-ascii output
+    # Feel free to extend with different locales
+    @unittest.skipUnless(locale_available('tr_TR') or
+                         locale_available('Turkish'),
+                         'Turkish locale needed')
+    def test_strftime_locale_dependent(self):
+        # store current locale
+        old_locale = locale.setlocale(locale.LC_TIME)
+
+        if platform == 'win32':
+            locale.setlocale(locale.LC_TIME, str('Turkish'))
+        else:
+            locale.setlocale(locale.LC_TIME, str('tr_TR'))
+
+        d = datetime.date(2012, 8, 29)
+
+        # simple
+        self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 Ağustos 2012')
+        self.assertEqual(utils.strftime(d, '%d %b %Y'), '29 Ağu 2012')
+        self.assertEqual(utils.strftime(d, '%a, %d %b %Y'),
+                         'Çrş, 29 Ağu 2012')
+        self.assertEqual(utils.strftime(d, '%A, %d %B %Y'),
+                         'Çarşamba, 29 Ağustos 2012')
+
+        # with text
+        self.assertEqual(utils.strftime(d, 'Yayınlanma tarihi: %A, %d %B %Y'),
+            'Yayınlanma tarihi: Çarşamba, 29 Ağustos 2012')
+
+        # non-ascii format candidate (someone might pass it... for some reason)
+        self.assertEqual(utils.strftime(d, '%Y yılında %üretim artışı'),
+            '2012 yılında %üretim artışı')
+
+        # restore locale back
+        locale.setlocale(locale.LC_TIME, old_locale)
