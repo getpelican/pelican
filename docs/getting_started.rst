@@ -232,10 +232,11 @@ Pelican implements an extension to reStructuredText to enable support for the
 
     This will be turned into :abbr:`HTML (HyperText Markup Language)`.
 
-You can also use Markdown syntax (with a file ending in ``.md``, ``.markdown``,
-or ``.mkd``). Markdown generation requires that you first explicitly install
-the ``Markdown`` package, which can be done via ``pip install Markdown``.
-Metadata syntax for Markdown posts should follow this pattern::
+You can also use Markdown syntax (with a file ending in ``.md``,
+``.markdown``, ``.mkd``, or ``.mdown``). Markdown generation requires that you
+first explicitly install the ``Markdown`` package, which can be done via ``pip
+install Markdown``. Metadata syntax for Markdown posts should follow this
+pattern::
 
     Title: My super title
     Date: 2010-12-03 10:20

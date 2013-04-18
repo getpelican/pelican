@@ -149,7 +149,7 @@ class RstReader(Reader):
 
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
-    file_extensions = ['md', 'markdown', 'mkd']
+    file_extensions = ['md', 'markdown', 'mkd', 'mdown']
     default_extensions = ['codehilite(css_class=highlight)', 'extra']
 
     def __init__(self, *args, **kwargs):
