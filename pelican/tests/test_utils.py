@@ -10,7 +10,6 @@ from sys import platform
 
 from pelican import utils
 from .support import get_article, LoggedTestCase, locale_available, unittest
-from pelican.utils import NoFilesError
 
 
 class TestUtils(LoggedTestCase):
@@ -127,31 +126,39 @@ class TestUtils(LoggedTestCase):
         self.assertNotIn(en_article3, trans)
         self.assertNotIn(fr_article3, index)
 
-    def test_files_changed(self):
+    def test_watchers(self):
         # Test if file changes are correctly detected
         # Make sure to handle not getting any files correctly.
 
         dirname = os.path.join(os.path.dirname(__file__), 'content')
+        folder_watcher = utils.folder_watcher(dirname, ['rst'])
+
         path = os.path.join(dirname, 'article_with_metadata.rst')
-        changed = utils.files_changed(dirname, 'rst')
-        self.assertEqual(changed, True)
+        file_watcher = utils.file_watcher(path)
 
-        changed = utils.files_changed(dirname, 'rst')
-        self.assertEqual(changed, False)
+        # first check returns True
+        self.assertEqual(next(folder_watcher), True)
+        self.assertEqual(next(file_watcher), True)
 
+        # next check without modification returns False
+        self.assertEqual(next(folder_watcher), False)
+        self.assertEqual(next(file_watcher), False)
+
+        # after modification, returns True
         t = time.time()
         os.utime(path, (t, t))
-        changed = utils.files_changed(dirname, 'rst')
-        self.assertEqual(changed, True)
-        self.assertAlmostEqual(utils.LAST_MTIME, t, delta=1)
+        self.assertEqual(next(folder_watcher), True)
+        self.assertEqual(next(file_watcher), True)
 
         empty_path = os.path.join(os.path.dirname(__file__), 'empty')
         try:
             os.mkdir(empty_path)
             os.mkdir(os.path.join(empty_path, "empty_folder"))
             shutil.copy(__file__, empty_path)
-            with self.assertRaises(NoFilesError):
-                utils.files_changed(empty_path, 'rst')
+
+            # if no files of interest, returns None
+            watcher = utils.folder_watcher(empty_path, ['rst'])
+            self.assertEqual(next(watcher), None)
         except OSError:
             self.fail("OSError Exception in test_files_changed test")
         finally:

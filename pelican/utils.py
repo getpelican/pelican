@@ -11,7 +11,7 @@ import logging
 import errno
 import locale
 import fnmatch
-from collections import defaultdict, Hashable
+from collections import Hashable
 from functools import partial
 
 from codecs import open, BOM_UTF8
@@ -79,10 +79,6 @@ def python_2_unicode_compatible(klass):
         klass.__unicode__ = klass.__str__
         klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
     return klass
-
-
-class NoFilesError(Exception):
-    pass
 
 
 class memoized(object):
@@ -433,46 +429,46 @@ def process_translations(content_list):
     return index, translations
 
 
-LAST_MTIME = 0
+def folder_watcher(path, extensions, ignores=[]):
+    '''Generator for monitoring a folder for modifications.
 
-
-def files_changed(path, extensions, ignores=[]):
-    """Return True if the files have changed since the last check"""
+    Returns a boolean indicating if files are changed since last check.
+    Returns None if there are no matching files in the folder'''
 
     def file_times(path):
-        """Return the last time files have been modified"""
+        '''Return `mtime` for each file in path'''
+
         for root, dirs, files in os.walk(path):
-            dirs[:] = [x for x in dirs if x[0] != os.curdir]
+            dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
+
             for f in files:
-                if any(f.endswith(ext) for ext in extensions) \
-                        and not any(fnmatch.fnmatch(f, ignore)
-                                    for ignore in ignores):
+                if (f.endswith(tuple(extensions)) and
+                    not any(fnmatch.fnmatch(f, ignore) for ignore in ignores)):
                     yield os.stat(os.path.join(root, f)).st_mtime
 
-    global LAST_MTIME
-    try:
-        mtime = max(file_times(path))
+    LAST_MTIME = 0
+    while True:
+        try:
+            mtime = max(file_times(path))
+            if mtime > LAST_MTIME:
+                LAST_MTIME = mtime
+                yield True
+        except ValueError:
+            yield None
+        else:
+            yield False
+
+
+def file_watcher(path):
+    '''Generator for monitoring a file for modifications'''
+    LAST_MTIME = 0
+    while True:
+        mtime = os.stat(path).st_mtime
         if mtime > LAST_MTIME:
             LAST_MTIME = mtime
-            return True
-    except ValueError:
-        raise NoFilesError("No files with the given extension(s) found.")
-    return False
-
-
-FILENAMES_MTIMES = defaultdict(int)
-
-
-def file_changed(path):
-    mtime = os.stat(path).st_mtime
-    if FILENAMES_MTIMES[path] == 0:
-        FILENAMES_MTIMES[path] = mtime
-        return False
-    else:
-        if mtime > FILENAMES_MTIMES[path]:
-            FILENAMES_MTIMES[path] = mtime
-            return True
-        return False
+            yield True
+        else:
+            yield False
 
 
 def set_date_tzinfo(d, tz_name=None):

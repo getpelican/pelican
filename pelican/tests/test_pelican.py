@@ -10,7 +10,7 @@ import logging
 
 from pelican import Pelican
 from pelican.settings import read_settings
-from pelican.tests.support import LoggedTestCase
+from pelican.tests.support import LoggedTestCase, mute
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(
@@ -73,7 +73,7 @@ class TestPelican(LoggedTestCase):
             'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
-        pelican.run()
+        mute(True)(pelican.run)()
         dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertFilesEqual(recursiveDiff(dcmp))
         self.assertLogCountEqual(
@@ -89,6 +89,6 @@ class TestPelican(LoggedTestCase):
             'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
-        pelican.run()
+        mute(True)(pelican.run)()
         dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
         self.assertFilesEqual(recursiveDiff(dcmp))
