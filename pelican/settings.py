@@ -210,7 +210,7 @@ def configure_settings(settings):
         logger.warning(
             'No timezone information specified in the settings. Assuming'
             ' your timezone is UTC for feed generation. Check '
-            'http://docs.notmyidea.org/alexis/pelican/settings.html#timezone '
+            'http://docs.getpelican.com/en/latest/settings.html#timezone '
             'for more information')
 
     if 'LESS_GENERATOR' in settings:
