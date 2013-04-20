@@ -17,8 +17,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 SourceFileGenerator, TemplatePagesGenerator)
 from pelican.log import init
 from pelican.settings import read_settings
-from pelican.utils import (clean_output_dir, files_changed, file_changed,
-                           NoFilesError)
+from pelican.utils import clean_output_dir, folder_watcher, file_watcher
 from pelican.writers import Writer
 
 __major__ = 3
@@ -149,6 +148,7 @@ class Pelican(object):
 
     def run(self):
         """Run the generators and return"""
+        start_time = time.time()
 
         context = self.settings.copy()
         context['filenames'] = {}  # share the dict between all the generators
@@ -181,6 +181,14 @@ class Pelican(object):
                 p.generate_output(writer)
 
         signals.finalized.send(self)
+
+        articles_generator = next(g for g in generators if isinstance(g, ArticlesGenerator))
+        pages_generator = next(g for g in generators if isinstance(g, PagesGenerator))
+
+        print('Done: Processed {} articles and {} pages in {:.2f} seconds.'.format(
+            len(articles_generator.articles) + len(articles_generator.translations),
+            len(pages_generator.pages) + len(pages_generator.translations),
+            time.time() - start_time))
 
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
@@ -308,9 +316,19 @@ def main():
     init(args.verbosity)
     pelican = get_instance(args)
 
+    watchers = {'content': folder_watcher(pelican.path,
+                                          pelican.markup,
+                                          pelican.ignore_files),
+                'theme': folder_watcher(pelican.theme,
+                                        [''],
+                                        pelican.ignore_files),
+                'settings': file_watcher(args.settings)}
+
     try:
         if args.autoreload:
-            files_found_error = True
+            print('  --- AutoReload Mode: Monitoring `content`, `theme` and `settings`'
+                  ' for changes. ---')
+
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -318,45 +336,45 @@ def main():
                     # restriction; all files are recursively checked if they
                     # have changed, no matter what extension the filenames
                     # have.
-                    if (files_changed(
-                            pelican.path,
-                            pelican.markup,
-                            pelican.ignore_files)
-                        or files_changed(
-                            pelican.theme,
-                            [''],
-                            pelican.ignore_files
-                    )):
-                        if not files_found_error:
-                            files_found_error = True
-                        pelican.run()
+                    modified = {k: next(v) for k, v in watchers.items()}
 
-                    # reload also if settings.py changed
-                    if file_changed(args.settings):
-                        logger.info('%s changed, re-generating' %
-                                    args.settings)
+                    if modified['settings']:
                         pelican = get_instance(args)
+
+                    if any(modified.values()):
+                        print('\n-> Modified: {}. re-generating...'.format(
+                                ', '.join(k for k, v in modified.items() if v)))
+
+                        if modified['content'] is None:
+                            logger.warning('No valid files found in content.')
+
+                        if modified['theme'] is None:
+                            logger.warning('Empty theme folder. Using `basic` theme.')
+ 
                         pelican.run()
 
                     time.sleep(.5)  # sleep to avoid cpu load
+
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
                     break
-                except NoFilesError:
-                    if files_found_error:
-                        logger.warning("No valid files found in content. "
-                                       "Nothing to generate.")
-                        files_found_error = False
-                    time.sleep(1)  # sleep to avoid cpu load
+
                 except Exception as e:
                     if (args.verbosity == logging.DEBUG):
                         logger.critical(e.args)
                         raise
                     logger.warning(
                             'Caught exception "{0}". Reloading.'.format(e))
-                    continue
+
         else:
+            if next(watchers['content']) is None:
+                logger.warning('No valid files found in content.')
+
+            if next(watchers['theme']) is None:
+                logger.warning('Empty theme folder. Using `basic` theme.')
+
             pelican.run()
+
     except Exception as e:
         logger.critical(e)
 
