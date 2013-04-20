@@ -65,6 +65,26 @@ def strftime(date, date_format):
     return template % tuple(formatted_candidates)
 
 
+class DateFormatter(object):
+    '''A date formatter object used as a jinja filter
+    
+    Uses the `strftime` implementation and makes sure jinja uses the locale 
+    defined in LOCALE setting
+    '''
+    
+    def __init__(self):
+        self.locale = locale.setlocale(locale.LC_TIME)
+
+    def __call__(self, date, date_format):
+        old_locale = locale.setlocale(locale.LC_TIME)
+        locale.setlocale(locale.LC_TIME, self.locale)
+
+        formatted = strftime(date, date_format)
+
+        locale.setlocale(locale.LC_TIME, old_locale)
+        return formatted
+
+
 def python_2_unicode_compatible(klass):
     """
     A decorator that defines __unicode__ and __str__ methods under Python 2.

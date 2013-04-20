@@ -78,7 +78,7 @@ Sorting
 -------
 
 URL wrappers (currently categories, tags, and authors), have
-comparison methods that allow them to be easily sorted by name:
+comparison methods that allow them to be easily sorted by name::
 
     {% for tag, articles in tags|sort %}
 
@@ -86,6 +86,24 @@ If you want to sort based on different criteria, `Jinja's sort
 command`__ has a number of options.
 
 __ http://jinja.pocoo.org/docs/templates/#sort
+
+
+Date Formatting
+---------------
+
+Pelican formats the date with according to your settings and locale 
+(``DATE_FORMATS``/``DEFAULT_DATE_FORMAT``) and provides a 
+``locale_date`` attribute. On the other hand, ``date`` attribute will
+be a `datetime`_ object. If you need custom formatting for a date 
+different than your settings, use the Jinja filter ``strftime`` 
+that comes with Pelican. Usage is same as Python `strftime`_ format, 
+but the filter will do the right thing and format your date according
+to the locale given in your settings::
+
+    {{ article.date|strftime('%d %B %Y') }}
+
+.. _datetime: http://docs.python.org/2/library/datetime.html#datetime-objects
+.. _strftime: http://docs.python.org/2/library/datetime.html#strftime-strptime-behavior
 
 index.html
 ----------
