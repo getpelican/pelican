@@ -8,6 +8,7 @@ import sys
 import time
 import logging
 import argparse
+import locale
 
 from pelican import signals
 
@@ -274,6 +275,18 @@ def get_config(args):
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
     if args.delete_outputdir is not None:
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
+
+    # argparse returns bytes in Py2. There is no definite answer as to which
+    # encoding argparse (or sys.argv) uses.
+    # "Best" option seems to be locale.getpreferredencoding()
+    # ref: http://mail.python.org/pipermail/python-list/2006-October/405766.html
+    if not six.PY3:
+        enc = locale.getpreferredencoding()
+        for key in config:
+            if key in ('PATH', 'OUTPUT_PATH', 'THEME'):
+                config[key] = config[key].decode(enc)
+            if key == "MARKUP":
+                config[key] = [a.decode(enc) for a in config[key]]
     return config
 
 
