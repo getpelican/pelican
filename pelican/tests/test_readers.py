@@ -172,6 +172,14 @@ class MdReaderTest(unittest.TestCase):
                     " test</h2>\n<p>This is another markdown test file.  Uses"
                     " the markdown extension.</p>")
         self.assertEqual(content, expected)
+        # test to ensure the mdown file extension is being processed by the
+        # correct reader
+        content, metadata = reader.read(
+            _path('article_with_mdown_extension.mdown'))
+        expected = ("<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"
+                    " test</h2>\n<p>This is another markdown test file.  Uses"
+                    " the mdown extension.</p>")
+        self.assertEqual(content, expected)
 
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_markdown_markup_extension(self):

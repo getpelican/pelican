@@ -80,7 +80,7 @@ Setting name (default value)                                            What doe
                                                                         until one works.
 `MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
                                                                         to use. For the moment, the only available values
-                                                                        are `rst`, `md`, `markdown`, `mkd`, `html`, and `htm`.
+                                                                        are `rst`, `md`, `markdown`, `mkd`, `mdown`, `html`, and `htm`.
 `IGNORE_FILES` (``[]``)                                                 A list of file globbing patterns to match against the
                                                                         source files to be ignored by the processor. For example
                                                                         ``['.#*']`` will ignore emacs temporary files.
