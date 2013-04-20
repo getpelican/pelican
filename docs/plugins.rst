@@ -82,6 +82,7 @@ get_generators                  generators                      invoked in Pelic
 pages_generate_context          pages_generator, metadata
 pages_generator_init            pages_generator                 invoked in the PagesGenerator.__init__
 pages_generator_finalized       pages_generator                 invoked at the end of PagesGenerator.generate_context
+content_object_init             content_object                  invoked at the end of Content.__init__ (see note below)
 =============================   ============================   ===========================================================================
 
 The list is currently small, so don't hesitate to add signals and make a pull
