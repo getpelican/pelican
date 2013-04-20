@@ -463,12 +463,15 @@ def file_watcher(path):
     '''Generator for monitoring a file for modifications'''
     LAST_MTIME = 0
     while True:
-        mtime = os.stat(path).st_mtime
-        if mtime > LAST_MTIME:
-            LAST_MTIME = mtime
-            yield True
+        if path:
+            mtime = os.stat(path).st_mtime
+            if mtime > LAST_MTIME:
+                LAST_MTIME = mtime
+                yield True
+            else:
+                yield False
         else:
-            yield False
+            yield None
 
 
 def set_date_tzinfo(d, tz_name=None):

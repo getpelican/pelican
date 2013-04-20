@@ -150,6 +150,10 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(next(folder_watcher), True)
         self.assertEqual(next(file_watcher), True)
 
+        # file watcher with None or empty path should return None
+        self.assertEqual(next(utils.file_watcher('')), None)
+        self.assertEqual(next(utils.file_watcher(None)), None)
+
         empty_path = os.path.join(os.path.dirname(__file__), 'empty')
         try:
             os.mkdir(empty_path)
