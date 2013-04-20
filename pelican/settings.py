@@ -160,7 +160,7 @@ def configure_settings(settings):
         if os.path.exists(theme_path):
             settings['THEME'] = theme_path
         else:
-            raise Exception("Impossible to find the theme %s"
+            raise Exception("Could not find the theme %s"
                             % settings['THEME'])
 
     # if locales is not a list, make it one

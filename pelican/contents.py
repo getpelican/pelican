@@ -310,6 +310,6 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError as e:
-        logger.error("Skipping %s: impossible to find information about "
+        logger.error("Skipping %s: could not find information about "
                       "'%s'" % (f, e))
         return False
