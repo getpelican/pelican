@@ -125,7 +125,8 @@ class RstReader(Reader):
     def _get_publisher(self, source_path):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
-                        'input_encoding': 'utf-8'}
+                        'input_encoding': 'utf-8',
+                        'math_output': 'HTML'}
         pub = docutils.core.Publisher(
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
