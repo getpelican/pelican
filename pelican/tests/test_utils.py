@@ -7,7 +7,11 @@ import datetime
 import time
 import locale
 from sys import platform
+from tempfile import mkdtemp
 
+from pelican.generators import TemplatePagesGenerator
+from pelican.writers import Writer
+from pelican.settings import read_settings
 from pelican import utils
 from .support import get_article, LoggedTestCase, locale_available, unittest
 
@@ -283,3 +287,82 @@ class TestUtils(LoggedTestCase):
 
         # restore locale back
         locale.setlocale(locale.LC_TIME, old_locale)
+
+
+class TestDateFormatter(unittest.TestCase):
+    '''Tests that the output of DateFormatter jinja filter is same as
+    utils.strftime'''
+
+    def setUp(self):
+        # prepare a temp content and output folder
+        self.temp_content = mkdtemp(prefix='pelicantests.')
+        self.temp_output = mkdtemp(prefix='pelicantests.')
+
+        # prepare a template file
+        template_dir = os.path.join(self.temp_content, 'template')
+        template_path = os.path.join(template_dir, 'source.html')
+        os.makedirs(template_dir)
+        with open(template_path, 'w') as template_file:
+            template_file.write('date = {{ date|strftime("%A, %d %B %Y") }}')
+        self.date = datetime.date(2012, 8, 29)
+
+
+    def tearDown(self):
+        shutil.rmtree(self.temp_content)
+        shutil.rmtree(self.temp_output)
+
+
+    @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
+                         locale_available('French'),
+                         'French locale needed')
+    def test_french_locale(self):
+        settings = read_settings(
+            override = {'LOCALE': locale.normalize('fr_FR.UTF-8'),
+                        'TEMPLATE_PAGES': {'template/source.html':
+                                           'generated/file.html'}})
+
+        generator = TemplatePagesGenerator({'date': self.date}, settings,
+                self.temp_content, '', self.temp_output, None)
+        generator.env.filters.update({'strftime': utils.DateFormatter()})
+
+        writer = Writer(self.temp_output, settings=settings)
+        generator.generate_output(writer)
+
+        output_path = os.path.join(
+                self.temp_output, 'generated', 'file.html')
+
+        # output file has been generated
+        self.assertTrue(os.path.exists(output_path))
+
+        # output content is correct
+        with utils.pelican_open(output_path) as output_file:
+            self.assertEqual(output_file,
+                             utils.strftime(self.date, 'date = %A, %d %B %Y'))
+
+
+    @unittest.skipUnless(locale_available('tr_TR.UTF-8') or
+                         locale_available('Turkish'),
+                         'Turkish locale needed')
+    def test_turkish_locale(self):
+        settings = read_settings(
+            override = {'LOCALE': locale.normalize('tr_TR.UTF-8'),
+                        'TEMPLATE_PAGES': {'template/source.html':
+                                           'generated/file.html'}})
+
+        generator = TemplatePagesGenerator({'date': self.date}, settings,
+                self.temp_content, '', self.temp_output, None)
+        generator.env.filters.update({'strftime': utils.DateFormatter()})
+
+        writer = Writer(self.temp_output, settings=settings)
+        generator.generate_output(writer)
+
+        output_path = os.path.join(
+                self.temp_output, 'generated', 'file.html')
+
+        # output file has been generated
+        self.assertTrue(os.path.exists(output_path))
+
+        # output content is correct
+        with utils.pelican_open(output_path) as output_file:
+            self.assertEqual(output_file,
+                             utils.strftime(self.date, 'date = %A, %d %B %Y'))
