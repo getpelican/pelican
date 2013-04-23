@@ -23,7 +23,7 @@ from pelican.contents import (
         Article, Page, Category, Static, is_valid_content
 )
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, mkdir_p
+from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
 from pelican import signals
 import pelican.utils
 
@@ -64,6 +64,9 @@ class Generator(object):
         )
 
         logger.debug('template list: {0}'.format(self.env.list_templates()))
+
+        # provide utils.strftime as a jinja filter
+        self.env.filters.update({'strftime': DateFormatter()})
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings.get('JINJA_FILTERS', {})
