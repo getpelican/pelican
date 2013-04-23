@@ -41,7 +41,6 @@ help:
 
 
 html: clean $$(OUTPUTDIR)/index.html
-	@echo 'Done'
 
 $$(OUTPUTDIR)/%.html:
 	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
