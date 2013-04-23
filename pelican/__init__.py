@@ -353,8 +353,6 @@ def main():
  
                         pelican.run()
 
-                    time.sleep(.5)  # sleep to avoid cpu load
-
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
                     break
@@ -365,6 +363,10 @@ def main():
                         raise
                     logger.warning(
                             'Caught exception "{0}". Reloading.'.format(e))
+
+                finally:
+                    time.sleep(.5)  # sleep to avoid cpu load
+
 
         else:
             if next(watchers['content']) is None:
