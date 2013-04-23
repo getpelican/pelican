@@ -100,7 +100,7 @@ _DEFAULT_CONFIG = {'PATH': os.curdir,
                    'PLUGIN_PATH': '',
                    'PLUGINS': [],
                    'TEMPLATE_PAGES': {},
-                   'IGNORE_FILES': []
+                   'IGNORE_FILES': ['.#*']
                    }
 
 
