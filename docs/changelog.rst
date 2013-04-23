@@ -1,7 +1,7 @@
 Release history
 ###############
 
-3.2 (XXXX-XX-XX)
+3.2 (2013-04-23)
 ================
 
 * Support for Python 3!
@@ -15,6 +15,10 @@ Release history
 * Provide ability to show or hide categories from menu using
   ``DISPLAY_CATEGORIES_ON_MENU`` option
 * Auto-regeneration can be told to ignore files via ``IGNORE_FILES`` setting
+* Improve post-generation feedback to user
+* For multilingual posts, use meta-data to designate which is the original
+  and which is the translation
+* Add ``.mdown`` to list of supported Markdown file extensions
 * Document-relative URL generation (``RELATIVE_URLS``) is now off by default
 
 3.1 (2012-12-04)

@@ -76,6 +76,10 @@ see all the options you can use::
 
     $ pelican --help
 
+Continue reading below for more detail, and check out the Pelican wiki's
+`Tutorials <https://github.com/getpelican/pelican/wiki/Tutorials>`_ page for
+links to community-published tutorials.
+
 Viewing the generated files
 ---------------------------
 
