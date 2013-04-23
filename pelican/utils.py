@@ -444,7 +444,10 @@ def folder_watcher(path, extensions, ignores=[]):
             for f in files:
                 if (f.endswith(tuple(extensions)) and
                     not any(fnmatch.fnmatch(f, ignore) for ignore in ignores)):
-                    yield os.stat(os.path.join(root, f)).st_mtime
+                    try:
+                        yield os.stat(os.path.join(root, f)).st_mtime
+                    except OSError as e:
+                        logger.warning('Caught Exception: {}'.format(e))
 
     LAST_MTIME = 0
     while True:
@@ -464,7 +467,12 @@ def file_watcher(path):
     LAST_MTIME = 0
     while True:
         if path:
-            mtime = os.stat(path).st_mtime
+            try:
+                mtime = os.stat(path).st_mtime
+            except OSError as e:
+                logger.warning('Caught Exception: {}'.format(e))
+                continue
+
             if mtime > LAST_MTIME:
                 LAST_MTIME = mtime
                 yield True
