@@ -310,6 +310,8 @@ class TestDateFormatter(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.temp_content)
         shutil.rmtree(self.temp_output)
+        # reset locale to default
+        locale.setlocale(locale.LC_ALL, '')
 
 
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
