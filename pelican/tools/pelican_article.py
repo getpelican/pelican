@@ -21,10 +21,10 @@ def create_template(args):
             exit(error)
 
     title =  args.title.decode('utf-8')
-    slug = slugify(title)
+    slug = args.slug if args.slug else slugify(title)
     date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-    categories = args.categories.split('\W+') if args.categories else None
-    tags = args.tags.split('\W+') if args.tags else None
+    categories = args.categories.split('\W+') if args.categories else ''
+    tags = args.tags.split('\W+') if args.tags else ''
 
     if (args.markup == 'markdown') or (args.markup == 'md') :
         ext = '.md'
