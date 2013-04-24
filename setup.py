@@ -25,7 +25,7 @@ CHANGELOG = open('docs/changelog.rst').read()
 
 setup(
     name="pelican",
-    version="3.2",
+    version="3.3",
     url='http://getpelican.com/',
     author='Alexis Metaireau',
     author_email='authors@getpelican.com',
