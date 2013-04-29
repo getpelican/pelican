@@ -231,7 +231,10 @@ class Content(object):
         if hasattr(self, '_summary'):
             return self._summary
 
-        if self.settings['SUMMARY_MAX_LENGTH']:
+        elif self.settings['SUMMARY_END']:
+            return self.content.split(self.settings['SUMMARY_MARK'])[0]
+
+        elif self.settings['SUMMARY_MAX_LENGTH']:
             return truncate_html_words(self.content,
                     self.settings['SUMMARY_MAX_LENGTH'])
         return self.content
