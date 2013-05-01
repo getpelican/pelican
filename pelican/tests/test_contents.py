@@ -71,6 +71,9 @@ class TestPage(unittest.TestCase):
         settings['SUMMARY_MAX_LENGTH'] = 10
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10))
+        settings['SUMMARY_MAX_LENGTH'] = 0
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, '')
 
     def test_slug(self):
         # If a title is given, it should be used to generate the slug.

@@ -231,10 +231,11 @@ class Content(object):
         if hasattr(self, '_summary'):
             return self._summary
 
-        if self.settings['SUMMARY_MAX_LENGTH']:
-            return truncate_html_words(self.content,
-                    self.settings['SUMMARY_MAX_LENGTH'])
-        return self.content
+        if self.settings['SUMMARY_MAX_LENGTH'] is None:
+            return self.content
+
+        return truncate_html_words(self.content,
+                self.settings['SUMMARY_MAX_LENGTH'])
 
     def _set_summary(self, summary):
         """Dummy function"""
