@@ -64,8 +64,10 @@ Setting name (default value)                                            What doe
                                                                         ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
 `PATH_METADATA` (``''``)                                                Like ``FILENAME_METADATA``, but parsed from a page's
                                                                         full path relative to the content source directory.
-`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
-                                                                        generating new files.
+`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the output directory, and **all** of its contents, before
+                                                                        generating new files. This can be useful in preventing older,
+                                                                        unnecessary files from persisting in your output. However, **this is
+                                                                        a destructive setting and should be handled with extreme care.**
 `FILES_TO_COPY` (``()``)                                                A list of files (or directories) to copy from the source (inside the
                                                                         content directory) to the destination (inside the output directory).
                                                                         For example: ``(('extra/robots.txt', 'robots.txt'),)``.
