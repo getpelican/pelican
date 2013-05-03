@@ -14,6 +14,7 @@ software to reStructuredText or Markdown. The supported import formats are:
 - WordPress XML export
 - Dotclear export
 - Posterous API
+- Tumblr API
 - RSS/Atom feed
 
 The conversion from HTML to reStructuredText or Markdown relies on `Pandoc`_.
@@ -41,16 +42,17 @@ Usage
 
 ::
 
-    pelican-import [-h] [--wpfile] [--dotclear] [--posterous] [--feed] [-o OUTPUT]
+    pelican-import [-h] [--wpfile] [--dotclear] [--posterous] [--tumblr] [--feed] [-o OUTPUT]
                    [-m MARKUP] [--dir-cat] [--dir-page] [--strip-raw] [--disable-slugs]
-                   [-e EMAIL] [-p PASSWORD]
-                   input|api_token
+                   [-e EMAIL] [-p PASSWORD] [-b BLOGNAME]
+                   input|api_token|api_key
 
 Positional arguments
 --------------------
 
   input                 The input file to read
   api_token             [Posterous only] api_token can be obtained from http://posterous.com/api/
+  api_key               [Tumblr only] api_key can be obtained from http://www.tumblr.com/oauth/apps
 
 Optional arguments
 ------------------
@@ -59,6 +61,7 @@ Optional arguments
   --wpfile              WordPress XML export (default: False)
   --dotclear            Dotclear export (default: False)
   --posterous           Posterous API (default: False)
+  --tumblr              Tumblr API (default: False)
   --feed                Feed to parse (default: False)
   -o OUTPUT, --output OUTPUT
                         Output path (default: output)
@@ -80,6 +83,8 @@ Optional arguments
                         Email used to authenticate Posterous API
   -p PASSWORD, --password=PASSWORD
                         Password used to authenticate Posterous API
+  -b BLOGNAME, --blogname=BLOGNAME
+                        Blog name used in Tumblr API
 
 
 Examples
@@ -97,6 +102,9 @@ for Posterous::
 
     $ pelican-import --posterous -o ~/output --email=<email_address> --password=<password> <api_token>
 
+For Tumblr::
+
+    $ pelican-import --tumblr -o ~/output --blogname=<blogname> <api_token>
 
 Tests
 =====
