@@ -378,7 +378,13 @@ def main():
             pelican.run()
 
     except Exception as e:
-        logger.critical(e)
+        # localized systems have errors in native language if locale is set
+        # so convert the message to unicode with the correct encoding
+        msg = str(e)
+        if not six.PY3:
+            msg = msg.decode(locale.getpreferredencoding(False))
+
+        logger.critical(msg)
 
         if (args.verbosity == logging.DEBUG):
             raise
