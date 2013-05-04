@@ -370,6 +370,7 @@ def tumblr2fields(api_key, blogname):
                 else:
                     fmtstr = '<img alt="%s" src="%s" />'
                 content = '\n'.join(fmtstr % (photo.get('caption'), photo.get('original_size').get('url')) for photo in post.get('photos'))
+                content += '\n\n' + post.get('caption')
             elif type == 'quote':
                 if format == 'markdown':
                     fmtstr = '\n\n&mdash; %s'
@@ -397,6 +398,8 @@ def tumblr2fields(api_key, blogname):
             elif type == 'answer':
                 title = post.get('question')
                 content = '<p><a href="%s" rel="external nofollow">%s</a>: %s</p>\n%s' % (post.get('asking_name'), post.get('asking_url'), post.get('question'), post.get('answer'))
+
+            content = content.rstrip() + '\n'
 
             yield (title, content, slug, date, post.get('blog_name'), [type], tags, format)
 
