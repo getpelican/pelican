@@ -355,7 +355,7 @@ def tumblr2fields(api_key, blogname):
     posts = get_tumblr_posts(api_key, blogname, offset)
     while len(posts) > 0:
         for post in posts:
-            title = post.get('title') or post.get('source_title')
+            title = post.get('title') or post.get('source_title') or post.get('type').capitalize()
             slug = post.get('slug') or slugify(title)
             tags = post.get('tags')
             timestamp = post.get('timestamp')
