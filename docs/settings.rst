@@ -119,8 +119,10 @@ Setting name (default value)                                            What doe
                                                                         slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
 `TEMPLATE_PAGES` (``None``)                                             A mapping containing template pages that will be rendered with
                                                                         the blog entries. See :ref:`template_pages`.
+`STATIC_OUT_DIR` (``'static'``)                                         The name of the output subdirectory to which static paths will be copied.
 `STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
-                                                                        on the output path "static". By default,
+                                                                        on the output path "static", or an alternative specified by the
+									STATIC_OUT_DIR setting. By default,
                                                                         Pelican will copy the "images" folder to the
                                                                         output folder.
 `TIMEZONE`                                                              The timezone used in the date information, to
