@@ -77,7 +77,11 @@ include the following at the top of the article::
 
     Modified: 2012-08-08
 
-That metadata can then be accessed in the template::
+For reStructuredText, this metadata should of course be prefixed with a colon::
+
+    :Modified: 2012-08-08
+
+This metadata can then be accessed in the template::
 
     {% if article.modified %}
     Last modified: {{ article.modified }}
