@@ -48,8 +48,17 @@ Pygments adds some classes to the generated content. These classes are used by
 themes to style code syntax highlighting via CSS. Specifically, you can
 customize the appearance of your syntax highlighting via the ``.highlight pre``
 class in your theme's CSS file. To see how various styles can be used to render
-Django code, for example, you can use the demo `on the project website
-<http://pygments.org/demo/15101/>`_.
+Django code, for example, use the style selector drop-down at top-right on the
+`Pygments project demo site <http://pygments.org/demo/15101/>`_.
+
+You can use the following example commands to generate a starting CSS file from
+a Pygments built-in style (in this case, "monokai") and then copy the generated
+CSS file to your new theme::
+
+    pygmentize -S monokai -f html -a .highlight > pygment.css
+    cp pygment.css path/to/theme/static/css/
+
+Don't forget to import your ``pygment.css`` file from your main CSS file.
 
 How do I create my own theme?
 ==============================
