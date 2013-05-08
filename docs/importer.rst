@@ -26,8 +26,8 @@ Dependencies
 
 ``pelican-import`` has some dependencies not required by the rest of Pelican:
 
-- *BeautifulSoup*, for WordPress and Dotclear import. Can be installed like
-  any other Python package (``pip install BeautifulSoup``).
+- *BeautifulSoup4* and *lxml*, for WordPress and Dotclear import. Can be installed like
+  any other Python package (``pip install BeautifulSoup4 lxml``).
 - *Feedparser*, for feed import (``pip install feedparser``).
 - *Pandoc*, see the `Pandoc site`_ for installation instructions on your
   operating system.
