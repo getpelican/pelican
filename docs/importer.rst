@@ -67,6 +67,8 @@ Optional arguments
                         (default: rst)
   --dir-cat             Put files in directories with categories name
                         (default: False)
+  --dir-date             Put files in directories with date arborescence
+                        (default: False)
   --strip-raw           Strip raw HTML code that can't be converted to markup
                         such as flash embeds or iframes (wordpress import
                         only) (default: False)
