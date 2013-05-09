@@ -363,7 +363,7 @@ def build_markdown_header(title, date, author, categories, tags, slug):
     header += '\n'
     return header
 
-def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=False, disable_slugs=False):
+def fields2pelican(fields, out_markup, output_path, dircat=False, dirdate=False, strip_raw=False, disable_slugs=False):
     for title, content, filename, date, author, categories, tags, in_markup in fields:
         slug = not disable_slugs and filename or None
         if (in_markup == "markdown") or (out_markup == "markdown") :
@@ -391,6 +391,14 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
             out_filename = os.path.join(output_path, catname, filename+ext)
             if not os.path.isdir(os.path.join(output_path, catname)):
                 os.mkdir(os.path.join(output_path, catname))
+        elif dirdate:
+            date_object = time.strptime(date, "%Y-%m-%d %H:%M")
+            year = time.strftime("%Y", date_object)
+            month = time.strftime("%m", date_object)
+            day = time.strftime("%d", date_object)
+            out_filename = os.path.join(output_path, year, month, day, filename+ext)
+            if not os.path.isdir(os.path.join(output_path, year, month, day)):
+                os.makedirs(os.path.join(output_path, year, month, day))
         else:
             out_filename = os.path.join(output_path, filename+ext)
 
@@ -464,6 +472,8 @@ def main():
         help='Output markup format (supports rst & markdown)')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
         help='Put files in directories with categories name')
+    parser.add_argument('--dir-date', action='store_true', dest='dirdate',
+        help='Put files in directories with date arborescence')
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
@@ -492,6 +502,10 @@ def main():
         error = "You must provide either --wpfile, --dotclear, --posterous or --feed options"
         exit(error)
 
+    if (args.dircat and args.dirdate):
+        error = "You can't use dir-date and dir-cat together"
+        exit(error)
+
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
@@ -512,5 +526,6 @@ def main():
 
     fields2pelican(fields, args.markup, args.output,
                    dircat=args.dircat or False,
+                   dirdate=args.dirdate or False,
                    strip_raw=args.strip_raw or False,
                    disable_slugs=args.disable_slugs or False)
