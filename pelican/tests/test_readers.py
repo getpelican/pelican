@@ -144,6 +144,43 @@ class MdReaderTest(unittest.TestCase):
         for key, value in metadata.items():
             self.assertEqual(value, expected[key], key)
 
+
+    @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
+    def test_article_with_footnote(self):
+        reader = readers.MarkdownReader({})
+        content, metadata = reader.read(
+            _path('article_with_markdown_and_footnote.md'))
+        expected_content = (
+            '<p>This is some content'
+            '<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" '
+            'rel="footnote">1</a></sup>'
+            ' with some footnotes'
+            '<sup id="fnref:footnote"><a class="footnote-ref" '
+            'href="#fn:footnote" rel="footnote">2</a></sup></p>\n'
+            
+            '<div class="footnote">\n'
+            '<hr />\n<ol>\n<li id="fn:1">\n'
+            '<p>Numbered footnote&#160;'
+            '<a class="footnote-backref" href="#fnref:1" rev="footnote" '
+            'title="Jump back to footnote 1 in the text">&#8617;</a></p>\n'
+            '</li>\n<li id="fn:footnote">\n'
+            '<p>Named footnote&#160;'
+            '<a class="footnote-backref" href="#fnref:footnote" rev="footnote" '
+            'title="Jump back to footnote 2 in the text">&#8617;</a></p>\n'
+            '</li>\n</ol>\n</div>')
+        expected_metadata = {
+            'title': 'Article with markdown containing footnotes',
+            'summary': (
+                '<p>Summary with <strong>inline</strong> markup '
+                '<em>should</em> be supported.</p>'),
+            'date': datetime.datetime(2012, 10, 31),
+            'slug': 'article-with-markdown-containing-footnotes',
+        }
+        self.assertEqual(content, expected_content)
+        for key, value in metadata.items():
+            self.assertEqual(value, expected_metadata[key], key)
+
+
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_file_extensions(self):
         reader = readers.MarkdownReader({})

@@ -166,6 +166,8 @@ class MarkdownReader(Reader):
             name = name.lower()
             if name == "summary":
                 summary_values = "\n".join(value)
+                # reset the markdown instance to clear any state
+                self._md.reset()
                 summary = self._md.convert(summary_values)
                 output[name] = self.process_metadata(name, summary)
             else:
