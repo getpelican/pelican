@@ -136,7 +136,12 @@ def wp2fields(xml):
 
             tags = [tag.string for tag in item.findAll('category', {'domain' : 'post_tag'})]
 
-            yield (title, content, filename, date, author, categories, tags, "wp-html")
+            kind = 'article'
+            if item.find('post_type').string == 'page':
+                kind = 'page'
+
+            yield (title, content, filename, date, author, categories, tags,
+                   kind, "wp-html")
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
@@ -265,7 +270,10 @@ def dc2fields(file):
             content = content.replace('\\n', '')
             post_format = "html"
 
-        yield (post_title, content, slugify(post_title), post_creadt, author, categories, tags, post_format)
+        kind = 'article'  # TODO: Recognise pages
+
+        yield (post_title, content, slugify(post_title), post_creadt, author,
+               categories, tags, kind, post_format)
 
 
 def posterous2fields(api_token, email, password):
@@ -313,9 +321,10 @@ def posterous2fields(api_token, email, password):
             delta = timedelta(hours = offset / 100)
             date_object -= delta
             date = date_object.strftime("%Y-%m-%d %H:%M")
+            kind = 'article'  # TODO: Recognise pages
 
             yield (post.get('title'), post.get('body_cleaned'), slug, date,
-                post.get('user').get('display_name'), [], tags, "html")
+                post.get('user').get('display_name'), [], tags, kind, "html")
 
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
@@ -328,7 +337,9 @@ def feed2fields(file):
         tags = [e['term'] for e in entry.tags] if hasattr(entry, "tags") else None
 
         slug = slugify(entry.title)
-        yield (entry.title, entry.description, slug, date, author, [], tags, "html")
+        kind = 'article'
+        yield (entry.title, entry.description, slug, date, author, [], tags,
+               kind, "html")
 
 
 def build_header(title, date, author, categories, tags, slug):
@@ -363,8 +374,11 @@ def build_markdown_header(title, date, author, categories, tags, slug):
     header += '\n'
     return header
 
-def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=False, disable_slugs=False):
-    for title, content, filename, date, author, categories, tags, in_markup in fields:
+def fields2pelican(fields, out_markup, output_path,
+        dircat=False, strip_raw=False, disable_slugs=False,
+        dirpage=False, filename_template=None):
+    for (title, content, filename, date, author, categories, tags,
+            kind, in_markup) in fields:
         slug = not disable_slugs and filename or None
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
@@ -385,8 +399,14 @@ def fields2pelican(fields, out_markup, output_path, dircat=False, strip_raw=Fals
             filename = '_'
         filename = filename[:249] # allow for 5 extra characters
 
+        # option to put page posts in pages/ subdirectory
+        if dirpage and kind == 'page':
+            pages_dir = os.path.join(output_path, 'pages')
+            if not os.path.isdir(pages_dir):
+                os.mkdir(pages_dir)
+            out_filename = os.path.join(pages_dir, filename+ext)
         # option to put files in directories with categories names
-        if dircat and (len(categories) > 0):
+        elif dircat and (len(categories) > 0):
             catname = slugify(categories[0])
             out_filename = os.path.join(output_path, catname, filename+ext)
             if not os.path.isdir(os.path.join(output_path, catname)):
@@ -464,6 +484,9 @@ def main():
         help='Output markup format (supports rst & markdown)')
     parser.add_argument('--dir-cat', action='store_true', dest='dircat',
         help='Put files in directories with categories name')
+    parser.add_argument('--dir-page', action='store_true', dest='dirpage',
+        help=('Put files recognised as pages in "pages/" sub-directory'
+              ' (wordpress import only)'))
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
@@ -512,5 +535,6 @@ def main():
 
     fields2pelican(fields, args.markup, args.output,
                    dircat=args.dircat or False,
+                   dirpage=args.dirpage or False,
                    strip_raw=args.strip_raw or False,
                    disable_slugs=args.disable_slugs or False)
