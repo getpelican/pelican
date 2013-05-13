@@ -25,6 +25,8 @@ __minor__ = 2
 __micro__ = 0
 __version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
 
+DEFAULT_CONFIG_NAME = 'pelicanconf.py'
+
 
 logger = logging.getLogger(__name__)
 
@@ -239,7 +241,8 @@ def parse_arguments():
              'them separated by commas.')
 
     parser.add_argument('-s', '--settings', dest='settings',
-        help='The settings of the application.')
+        help='The settings of the application, this is automatically set to '
+        '{0} if a file exists with this name.'.format(DEFAULT_CONFIG_NAME))
 
     parser.add_argument('-d', '--delete-output-directory',
         dest='delete_outputdir',
@@ -300,7 +303,11 @@ def get_config(args):
 
 def get_instance(args):
 
-    settings = read_settings(args.settings, override=get_config(args))
+    config_file = args.settings
+    if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
+            config_file = DEFAULT_CONFIG_NAME
+
+    settings = read_settings(config_file, override=get_config(args))
 
     cls = settings.get('PELICAN_CLASS')
     if isinstance(cls, six.string_types):
