@@ -42,7 +42,7 @@ Usage
 ::
 
     pelican-import [-h] [--wpfile] [--dotclear] [--posterous] [--feed] [-o OUTPUT]
-                   [-m MARKUP] [--dir-cat] [--strip-raw] [--disable-slugs]
+                   [-m MARKUP] [--dir-cat] [--dir-page] [--strip-raw] [--disable-slugs]
                    [-e EMAIL] [-p PASSWORD]
                    input|api_token
 
@@ -67,6 +67,8 @@ Optional arguments
                         (default: rst)
   --dir-cat             Put files in directories with categories name
                         (default: False)
+  --dir-page            Put files recognised as pages in "pages/" sub-
+                          directory (wordpress import only) (default: False)
   --strip-raw           Strip raw HTML code that can't be converted to markup
                         such as flash embeds or iframes (wordpress import
                         only) (default: False)

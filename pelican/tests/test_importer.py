@@ -32,8 +32,27 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
-        for title, content, fname, date, author, categ, tags, format in self.posts:
+        for title, content, fname, date, author, categ, tags, kind, format in self.posts:
             self.assertTrue(title.strip())
+
+    def test_recognise_page_kind(self):
+        """ Check that we recognise pages in wordpress, as opposed to posts """
+        self.assertTrue(self.posts)
+        # Collect (title, filename, kind) of non-empty posts recognised as page
+        pages_data = []
+        for title, content, fname, date, author, categ, tags, kind, format in self.posts:
+            if kind == 'page':
+                pages_data.append((title, fname))
+        self.assertEqual(2, len(pages_data))
+        self.assertEqual(('Page', 'contact'), pages_data[0])
+        self.assertEqual(('Empty Page', 'empty'), pages_data[1])
+
+    def test_dirpage_directive_for_page_kind(self):
+        silent_f2p = mute(True)(fields2pelican)
+        test_post = filter(lambda p: p[0].startswith("Empty Page"), self.posts)
+        with temporary_folder() as temp:
+            fname = list(silent_f2p(test_post, 'markdown', temp, dirpage=True))[0]
+            self.assertTrue(fname.endswith('pages%sempty.md' % os.path.sep))
 
     def test_can_toggle_raw_html_code_parsing(self):
         def r(f):
