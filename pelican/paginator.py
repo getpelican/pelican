@@ -112,7 +112,7 @@ class Page(object):
         setting = "%s_%s" % ('PAGINATION', key)
         value = self.settings[setting]
         if not isinstance(value, six.string_types):
-            logger.warning(u'%s is set to %s' % (setting, value))
+            logger.warning('%s is set to %s' % (setting, value))
             return value
         else:
             context = self.__dict__
