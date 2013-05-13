@@ -246,7 +246,7 @@ def parse_arguments():
 
     parser.add_argument('-d', '--delete-output-directory',
         dest='delete_outputdir',
-        action='store_true', 
+        action='store_true',
         default=None,
         help='Delete the output directory.')
 
@@ -357,7 +357,7 @@ def main():
 
                         if modified['theme'] is None:
                             logger.warning('Empty theme folder. Using `basic` theme.')
- 
+
                         pelican.run()
 
                 except KeyboardInterrupt:
@@ -373,7 +373,6 @@ def main():
 
                 finally:
                     time.sleep(.5)  # sleep to avoid cpu load
-
 
         else:
             if next(watchers['content']) is None:
