@@ -90,7 +90,9 @@ class TestArticlesGenerator(unittest.TestCase):
              'TestCategory', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定',
-             'published', '指導書', 'article']
+             'published', '指導書', 'article'],
+            ['Article with markdown containing footnotes', 'published',
+             'Default', 'article']
         ]
         self.assertEqual(sorted(articles_expected), sorted(articles))
 
