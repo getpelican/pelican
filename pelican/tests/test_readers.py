@@ -37,8 +37,7 @@ class RstReaderTest(unittest.TestCase):
 
     def test_article_with_filename_metadata(self):
         content, metadata = readers.read_file(
-                _path('2012-11-29_rst_w_filename_meta#foo-bar.rst'),
-                settings={})
+                _path('2012-11-29_rst_w_filename_meta#foo-bar.rst'))
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
@@ -204,8 +203,7 @@ class MdReaderTest(unittest.TestCase):
     @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
     def test_article_with_filename_metadata(self):
         content, metadata = readers.read_file(
-                _path('2012-11-30_md_w_filename_meta#foo-bar.md'),
-                settings={})
+                _path('2012-11-30_md_w_filename_meta#foo-bar.md'))
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',

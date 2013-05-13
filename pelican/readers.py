@@ -102,6 +102,9 @@ class RstReader(Reader):
     enabled = bool(docutils)
     file_extensions = ['rst']
 
+    def __init__(self, *args, **kwargs):
+        super(RstReader, self).__init__(*args, **kwargs)
+
     def _parse_metadata(self, document):
         """Return the dict containing document metadata"""
         output = {}
@@ -126,6 +129,10 @@ class RstReader(Reader):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8'}
+        user_params = self.settings.get('DOCUTILS_SETTINGS')
+        if user_params:
+            extra_params.update(user_params)
+
         pub = docutils.core.Publisher(
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
@@ -334,6 +341,9 @@ def read_file(path, fmt=None, settings=None):
 
     if fmt not in EXTENSIONS:
         raise TypeError('Pelican does not know how to parse {}'.format(path))
+
+    if settings is None:
+        settings = {}
 
     reader = EXTENSIONS[fmt](settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()
