@@ -21,6 +21,7 @@ class Writer(object):
         self.output_path = output_path
         self.reminder = dict()
         self.settings = settings or {}
+        self._written_files = set()
 
     def _create_new_feed(self, feed_type, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
@@ -45,6 +46,16 @@ class Writer(object):
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(item.date,
                 self.settings.get('TIMEZONE', None)))
+
+    def _open_w(self, filename, encoding):
+        """Open a file to write some content to it.
+
+        Exit if we have already written to that file.
+        """
+        if filename in self._written_files:
+            raise IOError('File %s is to be overwritten' % filename)
+        self._written_files.add(filename)
+        return open(filename, 'w', encoding=encoding)
 
     def write_feed(self, elements, context, path=None, feed_type='atom'):
         """Generate a feed with the list of articles provided
@@ -82,7 +93,7 @@ class Writer(object):
                     pass
 
                 encoding = 'utf-8' if six.PY3 else None
-                with open(complete_path, 'w', encoding=encoding) as fp:
+                with self._open_w(complete_path, encoding) as fp:
                     feed.write(fp, 'utf-8')
                     logger.info('writing %s' % complete_path)
             return feed
@@ -121,7 +132,7 @@ class Writer(object):
                 os.makedirs(os.path.dirname(path))
             except Exception:
                 pass
-            with open(path, 'w', encoding='utf-8') as f:
+            with self._open_w(path, 'utf-8') as f:
                 f.write(output)
             logger.info('writing {}'.format(path))
 
