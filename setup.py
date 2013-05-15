@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-requires = ['feedgenerator>=1.5', 'jinja2 >= 2.6', 'pygments', 'docutils', 'pytz',
-            'blinker', 'unidecode', 'six']
+requires = ['feedgenerator>=1.5', 'jinja2 >= 2.6', 'pygments', 'docutils',
+            'pytz', 'blinker', 'unidecode', 'six']
 
 try:
     import argparse  # NOQA
@@ -15,7 +15,7 @@ entry_points = {
         'pelican-import = pelican.tools.pelican_import:main',
         'pelican-quickstart = pelican.tools.pelican_quickstart:main',
         'pelican-themes = pelican.tools.pelican_themes:main'
-   ]
+    ]
 }
 
 
