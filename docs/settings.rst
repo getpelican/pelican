@@ -124,7 +124,8 @@ Setting name (default value)                                            What doe
 `STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
                                                                         on the output path "static". By default,
                                                                         Pelican will copy the "images" folder to the
-                                                                        output folder.
+                                                                        output folder.  The output path "static" can itself be
+                                                                        overridden with the ``STATIC_DIR`` setting.
 `TIMEZONE`                                                              The timezone used in the date information, to
                                                                         generate Atom and RSS feeds. See the *Timezone*
                                                                         section below for more info.
@@ -248,6 +249,8 @@ Setting name (default value)                            What does it do?
                                                         posts.
 `DAY_ARCHIVE_SAVE_AS` (False)                           The location to save per-day archives of your
                                                         posts.
+`STATIC_DIR` (``'static'``)                             The location to save static content copied by the
+                                                        ``STATIC_PATHS`` setting.
 ====================================================    =====================================================
 
 .. note::
