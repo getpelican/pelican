@@ -570,8 +570,9 @@ class StaticGenerator(Generator):
                 f_rel = os.path.relpath(f, self.path)
                 content, metadata = read_file(
                     f, fmt='static', settings=self.settings)
-                # TODO remove this hardcoded 'static' subdirectory
-                metadata['save_as'] = os.path.join('static', f_rel)
+                
+                static_dir = self.settings['STATIC_OUT_DIR']
+                metadata['save_as'] = os.path.join(static_dir, f_rel)
                 metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
                 sc = Static(
                     content=None,
