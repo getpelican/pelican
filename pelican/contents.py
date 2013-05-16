@@ -145,8 +145,8 @@ class Content(object):
             'date': getattr(self, 'date', datetime.now()),
             'author': getattr(self, 'author', ''),
             'category': getattr(self, 'category',
-                self.settings['DEFAULT_CATEGORY']),
-            })
+                                self.settings['DEFAULT_CATEGORY']),
+        })
         return metadata
 
     def _expand_settings(self, key):
@@ -202,7 +202,7 @@ class Content(object):
                     origin = origin.replace('\\', '/')  # Fow windows paths.
                 else:
                     logger.warning("Unable to find {fn}, skipping url"
-                                    " replacement".format(fn=value))
+                                   " replacement".format(fn=value))
 
             return ''.join((m.group('markup'), m.group('quote'), origin,
                             m.group('quote')))
@@ -235,7 +235,7 @@ class Content(object):
             return self.content
 
         return truncate_html_words(self.content,
-                self.settings['SUMMARY_MAX_LENGTH'])
+                                   self.settings['SUMMARY_MAX_LENGTH'])
 
     def _set_summary(self, summary):
         """Dummy function"""
@@ -312,5 +312,5 @@ def is_valid_content(content, f):
         return True
     except NameError as e:
         logger.error("Skipping %s: could not find information about "
-                      "'%s'" % (f, e))
+                     "'%s'" % (f, e))
         return False
