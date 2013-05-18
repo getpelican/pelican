@@ -74,7 +74,7 @@ function start_up(){
     echo "Pelican didn't start. Is the pelican package installed?"
     return 1
   elif ! alive $$srv_pid ; then
-    echo "pelican.server didn't start. Is the pelican package installed?"
+    echo "pelican.server didn't start. Is there something else which uses port 8000?"
     return 1
   fi
   echo 'Pelican and pelican.server processes now running in background.'
