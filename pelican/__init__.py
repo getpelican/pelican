@@ -68,9 +68,11 @@ class Pelican(object):
             if isinstance(plugin, six.string_types):
                 logger.debug("Loading plugin `{0}`".format(plugin))
                 try:
-                    plugin = __import__(plugin, globals(), locals(), str('module'))
+                    plugin = __import__(plugin, globals(), locals(),
+                                        str('module'))
                 except ImportError as e:
-                    logger.error("Can't find plugin `{0}`: {1}".format(plugin, e))
+                    logger.error("Can't find plugin `{0}`: {1}"
+                                 .format(plugin, e))
                     continue
 
             logger.debug("Registering plugin `{0}`".format(plugin.__name__))
@@ -83,8 +85,8 @@ class Pelican(object):
 
         if self.settings.get('CLEAN_URLS', False):
             logger.warning('Found deprecated `CLEAN_URLS` in settings.'
-                        ' Modifying the following settings for the'
-                        ' same behaviour.')
+                           ' Modifying the following settings for the'
+                           ' same behaviour.')
 
             self.settings['ARTICLE_URL'] = '{slug}/'
             self.settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
@@ -97,8 +99,8 @@ class Pelican(object):
 
         if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
             logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
-                        ' settings.  Modifying the following settings for'
-                        ' the same behaviour.')
+                           ' settings.  Modifying the following settings for'
+                           ' the same behaviour.')
 
             structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
 
@@ -120,33 +122,37 @@ class Pelican(object):
                 logger.warning("%s = '%s'" % (setting, self.settings[setting]))
 
         if self.settings.get('FEED', False):
-            logger.warning('Found deprecated `FEED` in settings. Modify FEED'
-            ' to FEED_ATOM in your settings and theme for the same behavior.'
-            ' Temporarily setting FEED_ATOM for backwards compatibility.')
+            logger.warning(
+                'Found deprecated `FEED` in settings. Modify FEED to '
+                'FEED_ATOM in your settings and theme for the same behavior.'
+                ' Temporarily setting FEED_ATOM for backwards compatibility.')
             self.settings['FEED_ATOM'] = self.settings['FEED']
 
         if self.settings.get('TAG_FEED', False):
-            logger.warning('Found deprecated `TAG_FEED` in settings. Modify '
-            ' TAG_FEED to TAG_FEED_ATOM in your settings and theme for the '
-            'same behavior. Temporarily setting TAG_FEED_ATOM for backwards '
-            'compatibility.')
+            logger.warning(
+                'Found deprecated `TAG_FEED` in settings. Modify '
+                ' TAG_FEED to TAG_FEED_ATOM in your settings and theme for '
+                'the same behavior. Temporarily setting TAG_FEED_ATOM for '
+                'backwards compatibility.')
             self.settings['TAG_FEED_ATOM'] = self.settings['TAG_FEED']
 
         if self.settings.get('CATEGORY_FEED', False):
-            logger.warning('Found deprecated `CATEGORY_FEED` in settings. '
-            'Modify CATEGORY_FEED to CATEGORY_FEED_ATOM in your settings and '
-            'theme for the same behavior. Temporarily setting '
-            'CATEGORY_FEED_ATOM for backwards compatibility.')
+            logger.warning(
+                'Found deprecated `CATEGORY_FEED` in settings. '
+                'Modify CATEGORY_FEED to CATEGORY_FEED_ATOM in your settings '
+                'and theme for the same behavior. Temporarily setting '
+                'CATEGORY_FEED_ATOM for backwards compatibility.')
             self.settings['CATEGORY_FEED_ATOM'] =\
-                    self.settings['CATEGORY_FEED']
+                self.settings['CATEGORY_FEED']
 
         if self.settings.get('TRANSLATION_FEED', False):
-            logger.warning('Found deprecated `TRANSLATION_FEED` in settings. '
-            'Modify TRANSLATION_FEED to TRANSLATION_FEED_ATOM in your '
-            'settings and theme for the same behavior. Temporarily setting '
-            'TRANSLATION_FEED_ATOM for backwards compatibility.')
+            logger.warning(
+                'Found deprecated `TRANSLATION_FEED` in settings. '
+                'Modify TRANSLATION_FEED to TRANSLATION_FEED_ATOM in your '
+                'settings and theme for the same behavior. Temporarily '
+                'setting TRANSLATION_FEED_ATOM for backwards compatibility.')
             self.settings['TRANSLATION_FEED_ATOM'] =\
-                    self.settings['TRANSLATION_FEED']
+                self.settings['TRANSLATION_FEED']
 
     def run(self):
         """Run the generators and return"""
@@ -184,11 +190,14 @@ class Pelican(object):
 
         signals.finalized.send(self)
 
-        articles_generator = next(g for g in generators if isinstance(g, ArticlesGenerator))
-        pages_generator = next(g for g in generators if isinstance(g, PagesGenerator))
+        articles_generator = next(
+            g for g in generators if isinstance(g, ArticlesGenerator))
+        pages_generator = next(
+            g for g in generators if isinstance(g, PagesGenerator))
 
         print('Done: Processed {} articles and {} pages in {:.2f} seconds.'.format(
-            len(articles_generator.articles) + len(articles_generator.translations),
+            len(articles_generator.articles) +
+            len(articles_generator.translations),
             len(pages_generator.pages) + len(pages_generator.translations),
             time.time() - start_time))
 
@@ -356,7 +365,8 @@ def main():
                             logger.warning('No valid files found in content.')
 
                         if modified['theme'] is None:
-                            logger.warning('Empty theme folder. Using `basic` theme.')
+                            logger.warning(
+                                'Empty theme folder. Using `basic` theme.')
 
                         pelican.run()
 
@@ -369,7 +379,7 @@ def main():
                         logger.critical(e.args)
                         raise
                     logger.warning(
-                            'Caught exception "{0}". Reloading.'.format(e))
+                        'Caught exception "{0}". Reloading.'.format(e))
 
                 finally:
                     time.sleep(.5)  # sleep to avoid cpu load

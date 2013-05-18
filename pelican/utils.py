@@ -67,11 +67,11 @@ def strftime(date, date_format):
 
 class DateFormatter(object):
     '''A date formatter object used as a jinja filter
-    
-    Uses the `strftime` implementation and makes sure jinja uses the locale 
+
+    Uses the `strftime` implementation and makes sure jinja uses the locale
     defined in LOCALE setting
     '''
-    
+
     def __init__(self):
         self.locale = locale.setlocale(locale.LC_TIME)
 
@@ -158,7 +158,7 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
         message.append('.  Use {} instead.'.format(new))
         logger.warning(''.join(message))
         logger.debug(''.join(
-                six.text_type(x) for x in traceback.format_stack()))
+            six.text_type(x) for x in traceback.format_stack()))
 
     def fget(self):
         _warn()
@@ -264,7 +264,7 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
                 shutil.rmtree(destination_)
                 shutil.copytree(source_, destination_)
                 logger.info('replacement of %s with %s' % (source_,
-                    destination_))
+                            destination_))
 
     elif os.path.isfile(source_):
         dest_dir = os.path.dirname(destination_)
@@ -299,7 +299,7 @@ def clean_output_dir(path):
                 logger.debug("Deleted directory %s" % file)
             except Exception as e:
                 logger.error("Unable to delete directory %s; %s" % (
-                        file, str(e)))
+                             file, str(e)))
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
@@ -418,9 +418,8 @@ def process_translations(content_list):
         items = list(items)
         # items with `translation` metadata will be used as translations…
         default_lang_items = list(filter(
-                lambda i: i.metadata.get('translation', 'false').lower()
-                        == 'false',
-                items))
+            lambda i: i.metadata.get('translation', 'false').lower()
+            == 'false', items))
         # …unless all items with that slug are translations
         if not default_lang_items:
             default_lang_items = items
@@ -430,14 +429,14 @@ def process_translations(content_list):
             lang_items = list(lang_items)
             len_ = len(lang_items)
             if len_ > 1:
-                logger.warning('There are %s variants of "%s" with lang %s' \
-                        % (len_, slug, lang))
+                logger.warning('There are %s variants of "%s" with lang %s'
+                               % (len_, slug, lang))
                 for x in lang_items:
                     logger.warning('    %s' % x.source_path)
 
         # find items with default language
         default_lang_items = list(filter(attrgetter('in_default_lang'),
-                default_lang_items))
+                                  default_lang_items))
 
         # if there is no article with default language, take an other one
         if not default_lang_items:
@@ -445,10 +444,9 @@ def process_translations(content_list):
 
         if not slug:
             logger.warning((
-                    'empty slug for {!r}. '
-                    'You can fix this by adding a title or a slug to your '
-                    'content'
-                    ).format(default_lang_items[0].source_path))
+                'empty slug for {!r}. '
+                'You can fix this by adding a title or a slug to your '
+                'content').format(default_lang_items[0].source_path))
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -469,8 +467,11 @@ def folder_watcher(path, extensions, ignores=[]):
             dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
 
             for f in files:
-                if (f.endswith(tuple(extensions)) and
-                    not any(fnmatch.fnmatch(f, ignore) for ignore in ignores)):
+                validExtension = f.endswith(tuple(extensions))
+                ignoresExpr = not any(fnmatch.fnmatch(f, ignore)
+                                      for ignore in ignores)
+                doSomething = validExtension and ignoresExpr
+                if (doSomething):
                     try:
                         yield os.stat(os.path.join(root, f)).st_mtime
                     except OSError as e:

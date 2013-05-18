@@ -14,14 +14,11 @@ from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter, itemgetter
 
-from jinja2 import (
-        Environment, FileSystemLoader, PrefixLoader, ChoiceLoader, BaseLoader,
-        TemplateNotFound
-)
+from jinja2 import (Environment, FileSystemLoader, PrefixLoader,
+                    ChoiceLoader, BaseLoader, TemplateNotFound)
 
-from pelican.contents import (
-        Article, Page, Category, Static, is_valid_content
-)
+from pelican.contents import (Article, Page, Category, Static,
+                              is_valid_content)
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
 from pelican import signals
@@ -36,7 +33,7 @@ class Generator(object):
 
     def __init__(self, *args, **kwargs):
         for idx, item in enumerate(('context', 'settings', 'path', 'theme',
-                'output_path', 'markup')):
+                                    'output_path', 'markup')):
             setattr(self, item, args[idx])
 
         for arg, value in kwargs.items():
@@ -46,7 +43,7 @@ class Generator(object):
         self._templates = {}
         self._templates_path = []
         self._templates_path.append(os.path.expanduser(
-                os.path.join(self.theme, 'templates')))
+                                    os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings.get('EXTRA_TEMPLATES_PATHS', [])
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
@@ -84,8 +81,8 @@ class Generator(object):
                 self._templates[name] = self.env.get_template(name + '.html')
             except TemplateNotFound:
                 raise Exception(
-                        ('[templates] unable to load %s.html from %s'
-                         % (name, self._templates_path)))
+                    ('[templates] unable to load %s.html from %s'
+                        % (name, self._templates_path)))
         return self._templates[name]
 
     def _include_path(self, path, extensions=None):
@@ -247,18 +244,20 @@ class ArticlesGenerator(Generator):
             for lang, items in translations_feeds.items():
                 items.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TRANSLATION_FEED_ATOM'):
+                    atom_setting = self.settings['TRANSLATION_FEED_ATOM']
                     writer.write_feed(items, self.context,
-                            self.settings['TRANSLATION_FEED_ATOM'] % lang)
+                                      atom_setting % lang)
                 if self.settings.get('TRANSLATION_FEED_RSS'):
+                    rss_setting = self.settings['TRANSLATION_FEED_RSS']
                     writer.write_feed(items, self.context,
-                            self.settings['TRANSLATION_FEED_RSS'] % lang,
-                            feed_type='rss')
+                                      rss_setting % lang,
+                                      feed_type='rss')
 
     def generate_articles(self, write):
         """Generate the articles."""
         for article in chain(self.translations, self.articles):
             write(article.save_as, self.get_template(article.template),
-                self.context, article=article, category=article.category)
+                  self.context, article=article, category=article.category)
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -283,16 +282,16 @@ class ArticlesGenerator(Generator):
                       dates=archive, blog=True)
 
         period_save_as = {
-                'year' : self.settings.get('YEAR_ARCHIVE_SAVE_AS'),
-                'month': self.settings.get('MONTH_ARCHIVE_SAVE_AS'),
-                'day'  : self.settings.get('DAY_ARCHIVE_SAVE_AS')
-                }
+            'year': self.settings.get('YEAR_ARCHIVE_SAVE_AS'),
+            'month': self.settings.get('MONTH_ARCHIVE_SAVE_AS'),
+            'day': self.settings.get('DAY_ARCHIVE_SAVE_AS')
+        }
 
         period_date_key = {
-                'year' : attrgetter('date.year'),
-                'month': attrgetter('date.year', 'date.month'),
-                'day'  : attrgetter('date.year', 'date.month', 'date.day')
-                }
+            'year': attrgetter('date.year'),
+            'month': attrgetter('date.year', 'date.month'),
+            'day': attrgetter('date.year', 'date.month', 'date.day')
+        }
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
@@ -308,13 +307,13 @@ class ArticlesGenerator(Generator):
             if template in PAGINATED_TEMPLATES:
                 paginated = {'articles': self.articles, 'dates': self.dates}
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
-                                                        '%s.html' % template)
+                                        '%s.html' % template)
             if not save_as:
                 continue
 
             write(save_as, self.get_template(template),
-                self.context, blog=True, paginated=paginated,
-                page_name=os.path.splitext(save_as)[0])
+                  self.context, blog=True, paginated=paginated,
+                  page_name=os.path.splitext(save_as)[0])
 
     def generate_tags(self, write):
         """Generate Tags pages."""
@@ -323,9 +322,9 @@ class ArticlesGenerator(Generator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
-                articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=tag.page_name, all_articles=self.articles)
+                  articles=articles, dates=dates,
+                  paginated={'articles': articles, 'dates': dates},
+                  page_name=tag.page_name, all_articles=self.articles)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -333,9 +332,9 @@ class ArticlesGenerator(Generator):
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
-                category=cat, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=cat.page_name, all_articles=self.articles)
+                  category=cat, articles=articles, dates=dates,
+                  paginated={'articles': articles, 'dates': dates},
+                  page_name=cat.page_name, all_articles=self.articles)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -343,17 +342,17 @@ class ArticlesGenerator(Generator):
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
-                author=aut, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=aut.page_name, all_articles=self.articles)
+                  author=aut, articles=articles, dates=dates,
+                  paginated={'articles': articles, 'dates': dates},
+                  page_name=aut.page_name, all_articles=self.articles)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in self.drafts:
             write(os.path.join('drafts', '%s.html' % article.slug),
-                self.get_template(article.template), self.context,
-                article=article, category=article.category,
-                all_articles=self.articles)
+                  self.get_template(article.template), self.context,
+                  article=article, category=article.category,
+                  all_articles=self.articles)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -392,8 +391,8 @@ class ArticlesGenerator(Generator):
             # if no category is set, use the name of the path as a category
             if 'category' not in metadata:
 
-                if (self.settings['USE_FOLDER_AS_CATEGORY']
-                    and os.path.dirname(f) != article_path):
+                pathMatch = os.path.dirname(f) != article_path
+                if (self.settings['USE_FOLDER_AS_CATEGORY'] and pathMatch):
                     # if the article is in a subdirectory
                     category = os.path.basename(os.path.dirname(f))
                 else:
@@ -406,10 +405,10 @@ class ArticlesGenerator(Generator):
             if 'date' not in metadata and self.settings.get('DEFAULT_DATE'):
                 if self.settings['DEFAULT_DATE'] == 'fs':
                     metadata['date'] = datetime.datetime.fromtimestamp(
-                            os.stat(f).st_ctime)
+                        os.stat(f).st_ctime)
                 else:
                     metadata['date'] = datetime.datetime(
-                            *self.settings['DEFAULT_DATE'])
+                        *self.settings['DEFAULT_DATE'])
 
             signals.article_generate_context.send(self, metadata=metadata)
             article = Article(content, metadata, settings=self.settings,
@@ -441,12 +440,11 @@ class ArticlesGenerator(Generator):
             if hasattr(article, 'author') and article.author.name != '':
                 self.authors[article.author].append(article)
 
-
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
         self.dates.sort(key=attrgetter('date'),
-                reverse=self.context['NEWEST_FIRST_ARCHIVES'])
+                        reverse=self.context['NEWEST_FIRST_ARCHIVES'])
 
         # create tag cloud
         tag_cloud = defaultdict(int)
@@ -479,7 +477,7 @@ class ArticlesGenerator(Generator):
         # order the categories per name
         self.categories = list(self.categories.items())
         self.categories.sort(
-                reverse=self.settings['REVERSE_CATEGORY_ORDER'])
+            reverse=self.settings['REVERSE_CATEGORY_ORDER'])
 
         self.authors = list(self.authors.items())
         self.authors.sort()
@@ -534,7 +532,7 @@ class PagesGenerator(Generator):
 
         self.pages, self.translations = process_translations(all_pages)
         self.hidden_pages, self.hidden_translations = (
-                process_translations(hidden_pages))
+            process_translations(hidden_pages))
 
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
@@ -543,10 +541,10 @@ class PagesGenerator(Generator):
 
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
-                            self.hidden_translations, self.hidden_pages):
+                          self.hidden_translations, self.hidden_pages):
             writer.write_file(page.save_as, self.get_template(page.template),
-                    self.context, page=page,
-                    relative_urls=self.settings.get('RELATIVE_URLS'))
+                              self.context, page=page,
+                              relative_urls=self.settings.get('RELATIVE_URLS'))
 
 
 class StaticGenerator(Generator):
@@ -554,7 +552,7 @@ class StaticGenerator(Generator):
     to output"""
 
     def _copy_paths(self, paths, source, destination, output_path,
-            final_path=None):
+                    final_path=None):
         """Copy all the paths from source to destination"""
         for path in paths:
             copy(path, source, os.path.join(output_path, destination),
@@ -572,7 +570,8 @@ class StaticGenerator(Generator):
                     f, fmt='static', settings=self.settings)
                 # TODO remove this hardcoded 'static' subdirectory
                 metadata['save_as'] = os.path.join('static', f_rel)
-                metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
+                metadata['url'] = pelican.utils.path_to_url(
+                    metadata['save_as'])
                 sc = Static(
                     content=None,
                     metadata=metadata,

@@ -44,8 +44,8 @@ class Writer(object):
             description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
-            pubdate=set_date_tzinfo(item.date,
-                self.settings.get('TIMEZONE', None)))
+            pubdate=set_date_tzinfo(
+                item.date, self.settings.get('TIMEZONE', None)))
 
     def _open_w(self, filename, encoding):
         """Open a file to write some content to it.
@@ -101,7 +101,8 @@ class Writer(object):
             locale.setlocale(locale.LC_ALL, old_locale)
 
     def write_file(self, name, template, context, relative_urls=False,
-        paginated=None, **kwargs):
+                   paginated=None, **kwargs):
+
         """Render the template and write the file.
 
         :param name: name of the file to output
@@ -154,7 +155,8 @@ class Writer(object):
                 object_list = paginated[key]
 
                 if self.settings.get('DEFAULT_PAGINATION'):
-                    paginators[key] = Paginator(object_list,
+                    paginators[key] = Paginator(
+                        object_list,
                         self.settings.get('DEFAULT_PAGINATION'),
                         self.settings.get('DEFAULT_ORPHANS'))
                 else:
@@ -168,15 +170,19 @@ class Writer(object):
                     paginator = paginators[key]
                     page = paginator.page(page_num + 1)
                     paginated_localcontext.update(
-                            {'%s_paginator' % key: paginator,
-                             '%s_page' % key: page})
+                        {
+                            '%s_paginator' % key: paginator,
+                            '%s_page' % key: page
+                        }
+                    )
                 if page_num > 0:
                     paginated_name = '%s%s%s' % (
                         name_root, page_num + 1, ext)
                 else:
                     paginated_name = name
 
-                _write_file(template, paginated_localcontext, self.output_path,
+                _write_file(
+                    template, paginated_localcontext, self.output_path,
                     paginated_name)
         else:
             # no pagination
