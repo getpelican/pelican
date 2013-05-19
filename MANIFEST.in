@@ -1,6 +1,4 @@
 include *.rst
 global-include *.py
-recursive-include pelican *.html *.css *png *.in
+recursive-include pelican *.html *.css *png *.in *.rst *.md
 include LICENSE THANKS docs/changelog.rst
-recursive-include tests *
-recursive-exclude tests *.pyc
