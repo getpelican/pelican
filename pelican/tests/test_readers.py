@@ -14,6 +14,17 @@ CONTENT_PATH = os.path.join(CUR_DIR, 'content')
 def _path(*args):
     return os.path.join(CONTENT_PATH, *args)
 
+class ReaderTests(unittest.TestCase):
+    def test_readfile_unknown_extension(self):
+        f = _path('article_with_metadata.unknownextension')
+        with self.assertRaises(TypeError) as cm:
+            readers.read_file(f)
+        ex = cm.exception
+        self.assertEqual('Pelican does not know how to parse ' + f, ex.message)
+        #, setattr, root.c1.c2, 'text',  "test")
+        #  self.assertTrue(1 == 0)
+        #  except TypeError:
+        #  self.assertTrue(1 == 1)
 
 class RstReaderTest(unittest.TestCase):
 
