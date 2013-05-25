@@ -428,7 +428,8 @@ class ArticlesGenerator(Generator):
                                (repr(article.status),
                                 repr(f)))
 
-        self.articles, self.translations = process_translations(all_articles)
+        self.articles, self.translations = process_translations(all_articles,
+                order_by=self.settings['ARTICLE_ORDER_BY'])
 
         for article in self.articles:
             # only main articles are listed in categories and tags
@@ -532,7 +533,8 @@ class PagesGenerator(Generator):
                                (repr(page.status),
                                 repr(f)))
 
-        self.pages, self.translations = process_translations(all_pages)
+        self.pages, self.translations = process_translations(all_pages,
+                order_by=self.settings['PAGE_ORDER_BY'])
         self.hidden_pages, self.hidden_translations = (
                 process_translations(hidden_pages))
 

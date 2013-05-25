@@ -398,7 +398,7 @@ def truncate_html_words(s, num, end_text='...'):
     return out
 
 
-def process_translations(content_list):
+def process_translations(content_list, order_by=None):
     """ Finds translation and returns them.
 
     Returns a tuple with two lists (index, translations).  Index list includes
@@ -408,6 +408,14 @@ def process_translations(content_list):
     the same slug have that metadata.
 
     For each content_list item, sets the 'translations' attribute.
+
+    order_by can be a string of an attribute or sorting function. If order_by
+    is defined, content will be ordered by that attribute or sorting function.
+    By default, content is ordered by slug.
+
+    Different content types can have default order_by attributes defined
+    in settings, e.g. PAGES_ORDER_BY='sort-order', in which case `sort-order`
+    should be a defined metadata attribute in each page.
     """
     content_list.sort(key=attrgetter('slug'))
     grouped_by_slugs = groupby(content_list, attrgetter('slug'))
@@ -453,6 +461,22 @@ def process_translations(content_list):
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
             a.translations = [x for x in items if x != a]
+
+    if order_by:
+        if hasattr(order_by, '__call__'):
+            try:
+                index.sort(key=order_by)
+            except:
+                if hasattr(order_by, 'func_name'):
+                    logger.error("Error sorting with function %s" % order_by.func_name)
+                else:
+                    logger.error("Error sorting with function %r" % order_by)
+        elif order_by == 'filename':
+            index.sort(key=lambda x:os.path.basename(
+                    x.source_path or ''))
+        elif order_by != 'slug':
+            index.sort(key=attrgetter(order_by))
+
     return index, translations
 
 
