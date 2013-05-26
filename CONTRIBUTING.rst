@@ -13,7 +13,7 @@ Contribution submission guidelines
 * Adhere to PEP8 coding standards whenever possible.
 * Check for unnecessary whitespace via ``git diff --check`` before committing.
 * **Add docs and tests for your changes**.
-* `Run all the tests`_ **on both Python 2.7+ and 3.2+** to ensure nothing was
+* `Run all the tests`_ **on both Python 2.7 and 3.3** to ensure nothing was
   accidentally broken.
 * First line of your commit message should start with present-tense verb, be 50
   characters or less, and include the relevant issue number(s) if applicable.
