@@ -6,7 +6,9 @@ import os
 import locale
 import logging
 
-from codecs import open
+if not six.PY3:
+    from codecs import open
+
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from jinja2 import Markup
 from pelican.paginator import Paginator
