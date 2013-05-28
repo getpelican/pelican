@@ -117,7 +117,7 @@ def wp2fields(xml):
         if item.find('status').string == "publish":
 
             try:
-                # Use HTMLParser due to issues with BeautifulSoup 3
+                # Use HTMLParxser due to issues with BeautifulSoup 3
                 title = HTMLParser().unescape(item.title.contents[0])
             except IndexError:
                 title = 'No title [%s]' % item.find('post_name').string
@@ -465,7 +465,7 @@ def fields2pelican(fields, out_markup, output_path,
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, Wordpress or Dotclear files to reST (rst) "
+        description="Transform feed, Posterous, Wordpress or Dotclear files to reST (rst) "
                     "or Markdown (md) files. Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
