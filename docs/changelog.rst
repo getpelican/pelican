@@ -4,6 +4,8 @@ Release history
 3.3 (XXXX-XX-XX)
 ================
 
+* Provide ability to hide menu with ``DISPLAY_MENU=False``
+
 3.2 (2013-04-24)
 ================
 
