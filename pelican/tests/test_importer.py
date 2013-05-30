@@ -4,12 +4,17 @@ from __future__ import unicode_literals, print_function
 import os
 import re
 
-from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content
+from pelican.tools.pelican_import import dc2fields, wp2fields, fields2pelican, decode_wp_content
 from pelican.tests.support import (unittest, temporary_folder, mute,
                                    skipIfNoExecutable)
 
 CUR_DIR = os.path.dirname(__file__)
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
+
+# based on http://themes.dotaddict.org/files/public/downloads/lorem-backup.txt
+# suggested by http://docs.getpelican.com/en/2.8/importer.html
+DOTCLEAR_SAMPLE = os.path.join(CUR_DIR, 'content', 'lorem_backup_dotclear-2.1.5.txt')
+
 WORDPRESS_ENCODED_CONTENT_SAMPLE = os.path.join(CUR_DIR,
                                                 'content',
                                                 'wordpress_content_encoded')
@@ -21,6 +26,17 @@ try:
     from bs4 import BeautifulSoup
 except ImportError:
     BeautifulSoup = False  # NOQA
+
+@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+class DotClearImporter(unittest.TestCase):
+    def test_dotclear(self):
+        # Act
+        self.posts = list(dc2fields(DOTCLEAR_SAMPLE))
+
+        # Assert
+        self.assertEqual(26, len(self.posts))
+        self.assertEqual(u'Mon premier billet', self.posts[0][0])
+        #x = self.posts
 
 
 @skipIfNoExecutable(['pandoc', '--version'])
