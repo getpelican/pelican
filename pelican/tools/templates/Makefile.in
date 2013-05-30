@@ -1,4 +1,4 @@
-PELICAN=$pelican
+PELICAN?=$pelican
 PELICANOPTS=$pelicanopts
 
 BASEDIR=$$(CURDIR)

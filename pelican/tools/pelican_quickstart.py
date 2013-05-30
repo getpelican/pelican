@@ -248,9 +248,9 @@ needed by Pelican.
         try:
             with codecs.open(os.path.join(CONF['basedir'], 'Makefile'), 'w', 'utf-8') as fd:
                 mkfile_template_name = 'Makefile'
-                py_v = 'PY=python'
+                py_v = 'PY?=python'
                 if six.PY3:
-                    py_v = 'PY=python3'
+                    py_v = 'PY?=python3'
                 template = string.Template(py_v)
                 fd.write(template.safe_substitute(CONF))
                 fd.write('\n')
@@ -270,9 +270,9 @@ needed by Pelican.
         try:
             with codecs.open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w', 'utf-8') as fd:
                 lines = list(get_template('develop_server.sh'))
-                py_v = 'PY=python\n'
+                py_v = 'PY=${PY:-python}\n'
                 if six.PY3:
-                    py_v = 'PY=python3\n'
+                    py_v = 'PY=${PY:-python3}\n'
                 lines = lines[:4] + [py_v] + lines[4:]
                 for line in lines:
                     template = string.Template(line)
