@@ -39,6 +39,7 @@ Setting name (default value)                                            What doe
                                                                         ``DEFAULT_CATEGORY`` will be used as a fallback.
 `DEFAULT_CATEGORY` (``'misc'``)                                         The default category to fall back on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                               The default date format you want to use.
+`DISPLAY_MENU` (``True``)                                               Whether to display menu.
 `DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
                                                                         template. Templates may or may not honor this
                                                                         setting.
