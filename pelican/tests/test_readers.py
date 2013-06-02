@@ -303,17 +303,6 @@ class AdReaderTest(unittest.TestCase):
         for key, value in expected.items():
             self.assertEqual(value, metadata[key], key)
 
-        expected = {
-            'category': 'Blog',
-            'author': 'Author O. Article',
-            'title': 'Test AsciiDoc File Header',
-            'date': datetime.datetime(2011, 9, 15, 9, 5),
-            'tags': ['Linux', 'Python', 'Pelican'],
-        }
-
-        for key, value in expected.items():
-            self.assertEqual(value, metadata[key], key)
-
     @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
     def test_article_with_asc_options(self):
         # test to ensure the ASCIIDOC_OPTIONS is being used
