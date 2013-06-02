@@ -1,7 +1,7 @@
 language: python
 python:
     - "2.7"
-    - "3.2"
+    - "3.3"
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq --no-install-recommends asciidoc

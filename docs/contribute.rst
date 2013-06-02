@@ -43,6 +43,10 @@ To install Pelican and its dependencies::
 
     $ python setup.py develop
 
+Or using ``pip``::
+
+    $ pip install -e .
+
 Coding standards
 ================
 
@@ -88,28 +92,22 @@ functional tests. To do so, you can use the following two commands::
         samples/content/
     $ pelican -o pelican/tests/output/basic/ samples/content/
 
-Testing on Python 3.x
----------------------
+Testing on Python 2 and 3
+-------------------------
 
-Testing on Python 3.x currently requires some extra steps: installing
-Python 3.x-compatible versions of dependent packages and plugins.
+Testing on Python 3 currently requires some extra steps: installing
+Python 3-compatible versions of dependent packages and plugins.
 
-However, you must tell ``tox`` to use those Python 3.x-compatible libraries.
-If you forget this, ``tox`` will pull the regular packages from PyPI, and the
-tests will fail.
+Tox_ is a useful tool to run tests on both versions. It will install the
+Python 3-compatible version of dependent packages.
 
-Tell ``tox`` about the local packages thusly: enter the source directory of
-smartypants and run ``tox`` there. Do this again for the ``typogrify`` and
-``webassets`` packages. SmartyPants and Typogrify do not have real tests, and
-``webassets`` will fail noisily, but as a result we get these libraries neatly
-packaged in tox's ``distshare`` directory, which we need in order to run
-``tox`` for Pelican.
+.. _Tox: http://testrun.org/tox/latest/
 
-Python 3.x development tips
-===========================
+Python 3 development tips
+=========================
 
 Here are some tips that may be useful when doing some code for both Python 2.7
-and Python 3.x at the same time:
+and Python 3 at the same time:
 
 - Assume every string and literal is unicode (import unicode_literals):
 
@@ -144,4 +142,3 @@ and Python 3.x at the same time:
   changed it where I felt necessary.
 
 - Changed xrange() back to range(), so it is valid in both Python versions.
-

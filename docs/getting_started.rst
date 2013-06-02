@@ -4,10 +4,9 @@ Getting started
 Installing Pelican
 ==================
 
-Pelican currently runs best on Python 2.7.x; earlier versions of Python are not
-supported. There is provisional support for Python 3.2 and higher, although
-there may be rough edges, particularly with regards to optional 3rd-party
-components.
+Pelican currently runs best on Python 2.7.x; earlier versions of Python are
+not supported. There is provisional support for Python 3.3, although there may
+be rough edges, particularly with regards to optional 3rd-party components.
 
 You can install Pelican via several different methods. The simplest is via
 `pip <http://www.pip-installer.org/>`_::
