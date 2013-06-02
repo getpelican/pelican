@@ -237,8 +237,8 @@ def parse_arguments():
              'directory will be created, named "output" in the current path.')
 
     parser.add_argument('-m', '--markup', dest='markup',
-        help='The list of markup language to use (rst or md). Please indicate '
-             'them separated by commas.')
+        help='The list of markup language to use (rst, md or asc). Please '
+             'indicate them separated by commas.')
 
     parser.add_argument('-s', '--settings', dest='settings',
         help='The settings of the application, this is automatically set to '
