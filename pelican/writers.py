@@ -155,10 +155,10 @@ class Writer(object):
             for key in paginated.keys():
                 object_list = paginated[key]
 
-                if self.settings.get('DEFAULT_PAGINATION'):
+                if self.settings['DEFAULT_PAGINATION']:
                     paginators[key] = Paginator(object_list,
-                        self.settings.get('DEFAULT_PAGINATION'),
-                        self.settings.get('DEFAULT_ORPHANS'))
+                        self.settings['DEFAULT_PAGINATION'],
+                        self.settings['DEFAULT_ORPHANS'])
                 else:
                     paginators[key] = Paginator(object_list, len(object_list))
 

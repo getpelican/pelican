@@ -157,12 +157,10 @@ class RstReader(Reader):
 class MarkdownReader(Reader):
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd', 'mdown']
-    default_extensions = ['codehilite(css_class=highlight)', 'extra']
 
     def __init__(self, *args, **kwargs):
         super(MarkdownReader, self).__init__(*args, **kwargs)
-        self.extensions = self.settings.get('MD_EXTENSIONS',
-                                            self.default_extensions)
+        self.extensions = self.settings['MD_EXTENSIONS']
         self.extensions.append('meta')
         self._md = Markdown(extensions=self.extensions)
 
@@ -309,7 +307,7 @@ class AsciiDocReader(Reader):
         content = StringIO()
         ad = AsciiDocAPI()
 
-        options = self.settings.get('ASCIIDOC_OPTIONS', [])
+        options = self.settings['ASCIIDOC_OPTIONS']
         if isinstance(options, (str, unicode)):
             options = [m.strip() for m in options.split(',')]
         options = self.default_options + options
@@ -362,7 +360,7 @@ def read_file(path, fmt=None, settings=None):
     metadata.update(reader_metadata)
 
     # eventually filter the content with typogrify if asked so
-    if content and settings and settings.get('TYPOGRIFY'):
+    if content and settings and settings['TYPOGRIFY']:
         from typogrify.filters import typogrify
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])

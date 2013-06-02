@@ -18,7 +18,7 @@ from tempfile import mkdtemp
 from shutil import rmtree
 
 from pelican.contents import Article
-from pelican.settings import _DEFAULT_CONFIG
+from pelican.settings import DEFAULT_CONFIG
 
 
 @contextmanager
@@ -161,10 +161,14 @@ def locale_available(locale_):
         return True
 
 
-def get_settings():
-    settings = _DEFAULT_CONFIG.copy()
-    settings['DIRECT_TEMPLATES'] = ['archives']
-    settings['filenames'] = {}
+def get_settings(**kwargs):
+    """Provide tweaked setting dictionaries for testing
+
+    Set keyword arguments to override specific settings.
+    """
+    settings = DEFAULT_CONFIG.copy()
+    for key,value in kwargs.items():
+        settings[key] = value
     return settings
 
 
