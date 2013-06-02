@@ -1,4 +1,4 @@
 include *.rst
 global-include *.py
-recursive-include pelican *.html *.css *png *.in *.rst *.md
+recursive-include pelican *.html *.css *png *.in *.rst *.md *.mkd *.xml
 include LICENSE THANKS docs/changelog.rst

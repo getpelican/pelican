@@ -1,13 +1,8 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-requires = ['feedgenerator>=1.5', 'jinja2 >= 2.6', 'pygments', 'docutils',
+requires = ['feedgenerator >= 1.6', 'jinja2 >= 2.6', 'pygments', 'docutils',
             'pytz', 'blinker', 'unidecode', 'six']
-
-try:
-    import argparse  # NOQA
-except ImportError:
-    requires.append('argparse')
 
 entry_points = {
     'console_scripts': [
@@ -41,9 +36,9 @@ setup(
          'Environment :: Console',
          'License :: OSI Approved :: GNU Affero General Public License v3',
          'Operating System :: OS Independent',
+         'Programming Language :: Python :: 2',
          'Programming Language :: Python :: 2.7',
          'Programming Language :: Python :: 3',
-         'Programming Language :: Python :: 3.2',
          'Programming Language :: Python :: 3.3',
          'Topic :: Internet :: WWW/HTTP',
          'Topic :: Software Development :: Libraries :: Python Modules',
