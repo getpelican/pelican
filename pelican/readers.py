@@ -361,14 +361,16 @@ def read_file(base_path, path, content_class=Page, fmt=None,
     if settings is None:
         settings = {}
 
-    reader = EXTENSIONS[fmt](settings)
+    reader_class = EXTENSIONS[fmt]
+    if not reader_class.enabled:
+        raise ValueError('Missing dependencies for {}'.format(fmt))
+
+    reader = reader_class(settings)
+
     settings_key = '%s_EXTENSIONS' % fmt.upper()
 
     if settings and settings_key in settings:
         reader.extensions = settings[settings_key]
-
-    if not reader.enabled:
-        raise ValueError("Missing dependencies for %s" % fmt)
 
     metadata = default_metadata(
         settings=settings, process=reader.process_metadata)
