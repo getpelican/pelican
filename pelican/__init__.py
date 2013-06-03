@@ -154,7 +154,7 @@ class Pelican(object):
 
         context = self.settings.copy()
         context['filenames'] = {}  # share the dict between all the generators
-        context['localsiteurl'] = self.settings.get('SITEURL')  # share
+        context['localsiteurl'] = self.settings['SITEURL']  # share
         generators = [
             cls(
                 context,
@@ -309,7 +309,7 @@ def get_instance(args):
 
     settings = read_settings(config_file, override=get_config(args))
 
-    cls = settings.get('PELICAN_CLASS')
+    cls = settings['PELICAN_CLASS']
     if isinstance(cls, six.string_types):
         module, cls_name = cls.rsplit('.', 1)
         module = __import__(module)

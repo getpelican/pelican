@@ -11,7 +11,7 @@ from shutil import rmtree
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 TemplatePagesGenerator)
 from pelican.writers import Writer
-from pelican.settings import _DEFAULT_CONFIG
+from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
@@ -29,7 +29,7 @@ class TestArticlesGenerator(unittest.TestCase):
         for each test.
         """
         if self.generator is None:
-            settings = get_settings()
+            settings = get_settings(filenames={})
             settings['ARTICLE_DIR'] = 'content'
             settings['DEFAULT_CATEGORY'] = 'Default'
             settings['DEFAULT_DATE'] = (1970, 1, 1)
@@ -53,16 +53,16 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_feeds(self):
         settings = get_settings()
-        generator = ArticlesGenerator(settings,
-                {'FEED_ALL_ATOM': settings['FEED_ALL_ATOM']}, None,
+        generator = ArticlesGenerator(settings, settings, None,
                 settings['THEME'], None, settings['MARKUP'])
         writer = MagicMock()
         generator.generate_feeds(writer)
         writer.write_feed.assert_called_with([], settings,
                                              'feeds/all.atom.xml')
 
-        generator = ArticlesGenerator(settings, {'FEED_ALL_ATOM': None}, None,
-                                      settings['THEME'], None, None)
+        generator = ArticlesGenerator(
+            settings, get_settings(FEED_ALL_ATOM=None), None,
+            settings['THEME'], None, None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
@@ -117,15 +117,15 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_do_not_use_folder_as_category(self):
 
-        settings = _DEFAULT_CONFIG.copy()
+        settings = DEFAULT_CONFIG.copy()
         settings['ARTICLE_DIR'] = 'content'
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['filenames'] = {}
-        generator = ArticlesGenerator(settings.copy(), settings,
-                            CUR_DIR, _DEFAULT_CONFIG['THEME'], None,
-                            _DEFAULT_CONFIG['MARKUP'])
+        generator = ArticlesGenerator(
+            settings.copy(), settings, CUR_DIR, DEFAULT_CONFIG['THEME'], None,
+            DEFAULT_CONFIG['MARKUP'])
         generator.generate_context()
         # test for name
         # categories are grouped by slug; if two categories have the same slug
@@ -144,7 +144,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_direct_templates_save_as_default(self):
 
-        settings = get_settings()
+        settings = get_settings(filenames={})
         generator = ArticlesGenerator(settings, settings, None,
                                       settings['THEME'], None,
                                       settings['MARKUP'])
@@ -212,7 +212,7 @@ class TestPageGenerator(unittest.TestCase):
         return distilled
 
     def test_generate_context(self):
-        settings = get_settings()
+        settings = get_settings(filenames={})
         settings['PAGE_DIR'] = 'TestPages'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 

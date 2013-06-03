@@ -5,7 +5,7 @@ import os
 from os.path import dirname, abspath, join
 
 from pelican.settings import (read_settings, configure_settings,
-                              _DEFAULT_CONFIG, DEFAULT_THEME)
+                              DEFAULT_CONFIG, DEFAULT_THEME)
 from pelican.tests.support import unittest
 
 
@@ -27,7 +27,7 @@ class TestSettingsConfiguration(unittest.TestCase):
     def test_keep_default_settings(self):
         # Keep default settings if not defined.
         self.assertEqual(self.settings.get('DEFAULT_CATEGORY'),
-            _DEFAULT_CONFIG['DEFAULT_CATEGORY'])
+            DEFAULT_CONFIG['DEFAULT_CATEGORY'])
 
     def test_dont_copy_small_keys(self):
         # Do not copy keys not in caps.
@@ -36,7 +36,7 @@ class TestSettingsConfiguration(unittest.TestCase):
     def test_read_empty_settings(self):
         # Providing no file should return the default values.
         settings = read_settings(None)
-        expected = copy.deepcopy(_DEFAULT_CONFIG)
+        expected = copy.deepcopy(DEFAULT_CONFIG)
         expected['FEED_DOMAIN'] = ''  # Added by configure settings
         self.maxDiff = None
         self.assertDictEqual(settings, expected)
@@ -55,7 +55,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         # This assumes 'SITENAME': 'A Pelican Blog'
         settings = read_settings(None)
         settings['SITENAME'] = 'Not a Pelican Blog'
-        self.assertNotEqual(settings['SITENAME'], _DEFAULT_CONFIG['SITENAME'])
+        self.assertNotEqual(settings['SITENAME'], DEFAULT_CONFIG['SITENAME'])
 
     def test_path_settings_safety(self):
         """Don't let people setting the static path listings to strs"""
@@ -69,9 +69,9 @@ class TestSettingsConfiguration(unittest.TestCase):
                 }
         configure_settings(settings)
         self.assertEqual(settings['STATIC_PATHS'],
-                _DEFAULT_CONFIG['STATIC_PATHS'])
+                DEFAULT_CONFIG['STATIC_PATHS'])
         self.assertEqual(settings['THEME_STATIC_PATHS'],
-                _DEFAULT_CONFIG['THEME_STATIC_PATHS'])
+                DEFAULT_CONFIG['THEME_STATIC_PATHS'])
 
     def test_configure_settings(self):
         #Manipulations to settings should be applied correctly.
