@@ -95,6 +95,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_METADATA': (),
     'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
     'PATH_METADATA': '',
+    'EXTRA_PATH_METADATA': {},
     'DEFAULT_STATUS': 'published',
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
