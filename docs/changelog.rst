@@ -1,10 +1,28 @@
 Release history
 ###############
 
-3.2 (XXXX-XX-XX)
+3.3 (XXXX-XX-XX)
 ================
 
-* [...]
+3.2 (2013-04-24)
+================
+
+* Support for Python 3!
+* Override page save-to location from meta-data (enables using a static page as
+  the site's home page, for example)
+* Time period archives (per-year, per-month, and per-day archives of posts)
+* Posterous blog import
+* Improve WordPress blog import
+* Migrate plugins to separate repository
+* Improve HTML parser
+* Provide ability to show or hide categories from menu using
+  ``DISPLAY_CATEGORIES_ON_MENU`` option
+* Auto-regeneration can be told to ignore files via ``IGNORE_FILES`` setting
+* Improve post-generation feedback to user
+* For multilingual posts, use meta-data to designate which is the original
+  and which is the translation
+* Add ``.mdown`` to list of supported Markdown file extensions
+* Document-relative URL generation (``RELATIVE_URLS``) is now off by default
 
 3.1 (2012-12-04)
 ================

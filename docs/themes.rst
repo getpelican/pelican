@@ -17,16 +17,17 @@ To make your own theme, you must follow the following structure::
     │   ├── css
     │   └── images
     └── templates
-        ├── archives.html    // to display archives
-        ├── article.html     // processed for each article
-        ├── author.html      // processed for each author
-        ├── authors.html     // must list all the authors
-        ├── categories.html  // must list all the categories
-        ├── category.html    // processed for each category
-        ├── index.html       // the index. List all the articles
-        ├── page.html        // processed for each page
-        ├── tag.html         // processed for each tag
-        └── tags.html        // must list all the tags. Can be a tag cloud.
+        ├── archives.html         // to display archives
+        ├── period_archives.html  // to display time-period archives
+        ├── article.html          // processed for each article
+        ├── author.html           // processed for each author
+        ├── authors.html          // must list all the authors
+        ├── categories.html       // must list all the categories
+        ├── category.html         // processed for each category
+        ├── index.html            // the index. List all the articles
+        ├── page.html             // processed for each page
+        ├── tag.html              // processed for each tag
+        └── tags.html             // must list all the tags. Can be a tag cloud.
 
 * `static` contains all the static assets, which will be copied to the output
   `theme` folder. I've put the CSS and image folders here, but they are
@@ -54,10 +55,15 @@ All of these settings will be available to all templates.
 =============   ===================================================
 Variable        Description
 =============   ===================================================
+output_file     The name of the file currently being generated. For
+                instance, when Pelican is rendering the homepage,
+                output_file will be "index.html".
 articles        The list of articles, ordered descending by date
                 All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
-                etc.)
+                etc.). Sometimes this is shadowed (for instance in
+                the tags page). You will then find info about it
+                in the `all_articles` variable.
 dates           The same list of articles, but ordered by date,
                 ascending
 tags            A list of (tag, articles) tuples, containing all
@@ -67,6 +73,37 @@ categories      A list of (category, articles) tuples, containing
                 and the list of respective articles (values)
 pages           The list of pages
 =============   ===================================================
+
+Sorting
+-------
+
+URL wrappers (currently categories, tags, and authors), have
+comparison methods that allow them to be easily sorted by name::
+
+    {% for tag, articles in tags|sort %}
+
+If you want to sort based on different criteria, `Jinja's sort
+command`__ has a number of options.
+
+__ http://jinja.pocoo.org/docs/templates/#sort
+
+
+Date Formatting
+---------------
+
+Pelican formats the date with according to your settings and locale 
+(``DATE_FORMATS``/``DEFAULT_DATE_FORMAT``) and provides a 
+``locale_date`` attribute. On the other hand, ``date`` attribute will
+be a `datetime`_ object. If you need custom formatting for a date 
+different than your settings, use the Jinja filter ``strftime`` 
+that comes with Pelican. Usage is same as Python `strftime`_ format, 
+but the filter will do the right thing and format your date according
+to the locale given in your settings::
+
+    {{ article.date|strftime('%d %B %Y') }}
+
+.. _datetime: http://docs.python.org/2/library/datetime.html#datetime-objects
+.. _strftime: http://docs.python.org/2/library/datetime.html#strftime-strptime-behavior
 
 index.html
 ----------

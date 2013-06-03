@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import sys, os
 
-sys.path.append(os.path.abspath('..'))
+sys.path.append(os.path.abspath(os.pardir))
 
 from pelican import __version__, __major__
 
@@ -10,8 +11,8 @@ templates_path = ['_templates']
 extensions = ['sphinx.ext.autodoc',]
 source_suffix = '.rst'
 master_doc = 'index'
-project = u'Pelican'
-copyright = u'2010, Alexis Metaireau and contributors'
+project = 'Pelican'
+copyright = '2010, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
 version = __version__
 release = __major__
@@ -34,16 +35,16 @@ htmlhelp_basename = 'Pelicandoc'
 
 # -- Options for LaTeX output --------------------------------------------------
 latex_documents = [
-  ('index', 'Pelican.tex', u'Pelican Documentation',
-   u'Alexis Métaireau', 'manual'),
+  ('index', 'Pelican.tex', 'Pelican Documentation',
+   'Alexis Métaireau', 'manual'),
 ]
 
 # -- Options for manual page output --------------------------------------------
 man_pages = [
-    ('index', 'pelican', u'pelican documentation',
-     [u'Alexis Métaireau'], 1),
-    ('pelican-themes', 'pelican-themes', u'A theme manager for Pelican',
-     [u'Mickaël Raybaud'], 1),
-    ('themes', 'pelican-theming', u'How to create themes for Pelican',
-     [u'The Pelican contributors'], 1)
+    ('index', 'pelican', 'pelican documentation',
+     ['Alexis Métaireau'], 1),
+    ('pelican-themes', 'pelican-themes', 'A theme manager for Pelican',
+     ['Mickaël Raybaud'], 1),
+    ('themes', 'pelican-theming', 'How to create themes for Pelican',
+     ['The Pelican contributors'], 1)
 ]

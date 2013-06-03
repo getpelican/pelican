@@ -40,6 +40,9 @@ Setting name (default value)                                            What doe
 `DEFAULT_CATEGORY` (``'misc'``)                                         The default category to fall back on.
 `DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                               The default date format you want to use.
 `DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
+                                                                        template. Templates may or may not honor this
+                                                                        setting.
+`DISPLAY_CATEGORIES_ON_MENU` (``True``)                                 Whether to display categories on the menu of the
                                                                         template. Templates may or not honor this
                                                                         setting.
 `DEFAULT_DATE` (``None``)                                               The default date you want to use.
@@ -59,23 +62,39 @@ Setting name (default value)                                            What doe
                                                                         For example, if you would like to extract both the
                                                                         date and the slug, you could set something like:
                                                                         ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
-`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
-                                                                        generating new files.
+`PATH_METADATA` (``''``)                                                Like ``FILENAME_METADATA``, but parsed from a page's
+                                                                        full path relative to the content source directory.
+`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the output directory, and **all** of its contents, before
+                                                                        generating new files. This can be useful in preventing older,
+                                                                        unnecessary files from persisting in your output. However, **this is
+                                                                        a destructive setting and should be handled with extreme care.**
 `FILES_TO_COPY` (``()``)                                                A list of files (or directories) to copy from the source (inside the
                                                                         content directory) to the destination (inside the output directory).
                                                                         For example: ``(('extra/robots.txt', 'robots.txt'),)``.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
+`JINJA_FILTERS` (``{}``)                                                A list of custom Jinja2 filters you want to use.
+                                                                        The dictionary should map the filtername to the filter function.
+                                                                        For example: ``{'urlencode': urlencode_filter}``
+                                                                        See `Jinja custom filters documentation`_.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
                                                                         until one works.
 `MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
                                                                         to use. For the moment, the only available values
-                                                                        are `rst`, `md`, `markdown`, `mkd`, `html`, and `htm`.
-`MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
-                                                                        will use. Refer to the extensions chapter in the
-                                                                        Python-Markdown documentation for a complete list of
-                                                                        supported extensions.
+                                                                        are `rst`, `md`, `markdown`, `mkd`, `mdown`, `html`, and `htm`.
+`IGNORE_FILES` (``['.#*']``)                                            A list of file globbing patterns to match against the
+                                                                        source files to be ignored by the processor. For example,
+                                                                        the default ``['.#*']`` will ignore emacs lock files.
+`MD_EXTENSIONS` (``['codehilite(css_class=highlight)','extra']``)       A list of the extensions that the Markdown processor
+                                                                        will use. Refer to the Python Markdown documentation's
+                                                                        `Extensions section <http://pythonhosted.org/Markdown/extensions/>`_
+                                                                        for a complete list of supported extensions. (Note that
+                                                                        defining this in your settings file will override and
+                                                                        replace the default values. If your goal is to *add*
+                                                                        to the default values for this setting, you'll need to
+                                                                        include them explicitly and enumerate the full list of
+                                                                        desired Markdown extensions.)
 `OUTPUT_PATH` (``'output/'``)                                           Where to output the generated files.
 `PATH` (``None``)                                                       Path to content directory to be processed by Pelican.
 `PAGE_DIR` (``'pages'``)                                                Directory to look at for pages, relative to `PATH`.
@@ -90,9 +109,9 @@ Setting name (default value)                                            What doe
 `OUTPUT_SOURCES_EXTENSION` (``.text``)                                  Controls the extension that will be used by the SourcesGenerator.
                                                                         Defaults to ``.text``. If not a valid string the default value
                                                                         will be used.
-`RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use document-relative URLs or
-                                                                        not. If set to ``False``, Pelican will use the SITEURL
-                                                                        setting to construct absolute URLs.
+`RELATIVE_URLS` (``False``)                                             Defines whether Pelican should use document-relative URLs or
+                                                                        not. Only set this to ``True`` when developing/testing and only
+                                                                        if you fully understand the effect it can have on links/feeds.
 `PLUGINS` (``[]``)                                                      The list of plugins to load. See :ref:`plugins`.
 `SITENAME` (``'A Pelican Blog'``)                                       Your site name
 `SITEURL`                                                               Base URL of your website. Not defined by default,
@@ -176,6 +195,27 @@ Example usage:
 This would save your articles in something like ``/posts/2011/Aug/07/sample-post/index.html``,
 and the URL to this would be ``/posts/2011/Aug/07/sample-post/``.
 
+Pelican can optionally create per-year, per-month, and per-day archives of your
+posts. These secondary archives are disabled by default but are automatically
+enabled if you supply format strings for their respective `_SAVE_AS` settings.
+Period archives fit intuitively with the hierarchical model of web URLs and can
+make it easier for readers to navigate through the posts you've written over time.
+
+Example usage:
+
+* YEAR_ARCHIVE_SAVE_AS = ``'posts/{date:%Y}/index.html'``
+* MONTH_ARCHIVE_SAVE_AS = ``'posts/{date:%Y}/{date:%b}/index.html'``
+
+With these settings, Pelican will create an archive of all your posts for the year
+at (for instance) 'posts/2011/index.html', and an archive of all your posts for
+the month at 'posts/2011/Aug/index.html'.
+
+.. note::
+    Period archives work best when the final path segment is 'index.html'.
+    This way a reader can remove a portion of your URL and automatically
+    arrive at an appropriate archive of posts, without having to specify
+    a page name.
+
 ====================================================    =====================================================
 Setting name (default value)                            What does it do?
 ====================================================    =====================================================
@@ -186,7 +226,9 @@ Setting name (default value)                            What does it do?
 `ARTICLE_LANG_SAVE_AS` (``'{slug}-{lang}.html'``)       The place where we will save an article which
                                                         doesn't use the default language.
 `PAGE_URL` (``'pages/{slug}.html'``)                    The URL we will use to link to a page.
-`PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page.
+`PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page. This value has to be
+                                                        the same as PAGE_URL or you need to use a rewrite in
+                                                        your server config.
 `PAGE_LANG_URL` (``'pages/{slug}-{lang}.html'``)        The URL we will use to link to a page which doesn't
                                                         use the default language.
 `PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
@@ -200,6 +242,12 @@ Setting name (default value)                            What does it do?
 `<DIRECT_TEMPLATE_NAME>_SAVE_AS`                        The location to save content generated from direct
                                                         templates. Where <DIRECT_TEMPLATE_NAME> is the
                                                         upper case template name.
+`YEAR_ARCHIVE_SAVE_AS` (False)                          The location to save per-year archives of your
+                                                        posts.
+`MONTH_ARCHIVE_SAVE_AS` (False)                         The location to save per-month archives of your
+                                                        posts.
+`DAY_ARCHIVE_SAVE_AS` (False)                           The location to save per-day archives of your
+                                                        posts.
 ====================================================    =====================================================
 
 .. note::
@@ -223,10 +271,10 @@ Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 Date format and locale
 ----------------------
 
-If no DATE_FORMATS is set, fall back to DEFAULT_DATE_FORMAT. If you need to
-maintain multiple languages with different date formats, you can set this dict
-using language name (``lang`` in your posts) as key. Regarding available format
-codes, see `strftime document of python`_ :
+If no DATE_FORMATS are set, Pelican will fall back to DEFAULT_DATE_FORMAT. If
+you need to maintain multiple languages with different date formats, you can
+set this dict using the language name (``lang`` metadata in your post content)
+as the key. Regarding available format codes, see `strftime document of python`_ :
 
 .. parsed-literal::
 
@@ -386,7 +434,7 @@ The default theme does not support tag clouds, but it is pretty easy to add::
 
     <ul>
         {% for tag in tag_cloud %}
-            <li class="tag-{{ tag.1 }}"><a href="/tag/{{ tag.0 }}/">{{ tag.0 }}</a></li>
+            <li class="tag-{{ tag.1 }}"><a href="/tag/{{ tag.0|string|replace(" ", "-" ) }}.html">{{ tag.0 }}</a></li>
         {% endfor %}
     </ul>
 
@@ -470,6 +518,7 @@ free to use them in your themes as well.
 =======================   =======================================================
 Setting name              What does it do ?
 =======================   =======================================================
+`SITESUBTITLE`            A subtitle to appear in the header.
 `DISQUS_SITENAME`         Pelican can handle Disqus comments. Specify the
                           Disqus sitename identifier here.
 `GITHUB_URL`              Your GitHub URL (if you have one). It will then
@@ -503,3 +552,6 @@ Example settings
 
 .. literalinclude:: ../samples/pelican.conf.py
     :language: python
+
+
+.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters

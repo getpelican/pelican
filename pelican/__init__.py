@@ -1,9 +1,14 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, print_function
+import six
+
 import os
 import re
 import sys
 import time
 import logging
 import argparse
+import locale
 
 from pelican import signals
 
@@ -12,14 +17,15 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 SourceFileGenerator, TemplatePagesGenerator)
 from pelican.log import init
 from pelican.settings import read_settings
-from pelican.utils import (clean_output_dir, files_changed, file_changed,
-                           NoFilesError)
+from pelican.utils import clean_output_dir, folder_watcher, file_watcher
 from pelican.writers import Writer
 
 __major__ = 3
 __minor__ = 2
 __micro__ = 0
 __version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
+
+DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 
 
 logger = logging.getLogger(__name__)
@@ -40,6 +46,7 @@ class Pelican(object):
         self.theme = settings['THEME']
         self.output_path = settings['OUTPUT_PATH']
         self.markup = settings['MARKUP']
+        self.ignore_files = settings['IGNORE_FILES']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
 
         self.init_path()
@@ -47,20 +54,30 @@ class Pelican(object):
         signals.initialized.send(self)
 
     def init_path(self):
-        if not any(p in sys.path for p in ['', '.']):
+        if not any(p in sys.path for p in ['', os.curdir]):
             logger.debug("Adding current directory to system path")
             sys.path.insert(0, '')
 
     def init_plugins(self):
-        self.plugins = self.settings['PLUGINS']
-        for plugin in self.plugins:
+        self.plugins = []
+        logger.debug('Temporarily adding PLUGIN_PATH to system path')
+        _sys_path = sys.path[:]
+        sys.path.insert(0, self.settings['PLUGIN_PATH'])
+        for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
-            if isinstance(plugin, basestring):
-                logger.debug("Loading plugin `{0}' ...".format(plugin))
-                plugin = __import__(plugin, globals(), locals(), 'module')
+            if isinstance(plugin, six.string_types):
+                logger.debug("Loading plugin `{0}`".format(plugin))
+                try:
+                    plugin = __import__(plugin, globals(), locals(), str('module'))
+                except ImportError as e:
+                    logger.error("Can't find plugin `{0}`: {1}".format(plugin, e))
+                    continue
 
-            logger.debug("Registering plugin `{0}'".format(plugin.__name__))
+            logger.debug("Registering plugin `{0}`".format(plugin.__name__))
             plugin.register()
+            self.plugins.append(plugin)
+        logger.debug('Restoring system path')
+        sys.path = _sys_path
 
     def _handle_deprecation(self):
 
@@ -133,10 +150,11 @@ class Pelican(object):
 
     def run(self):
         """Run the generators and return"""
+        start_time = time.time()
 
         context = self.settings.copy()
         context['filenames'] = {}  # share the dict between all the generators
-        context['localsiteurl'] = self.settings.get('SITEURL')  # share
+        context['localsiteurl'] = self.settings['SITEURL']  # share
         generators = [
             cls(
                 context,
@@ -165,6 +183,14 @@ class Pelican(object):
                 p.generate_output(writer)
 
         signals.finalized.send(self)
+
+        articles_generator = next(g for g in generators if isinstance(g, ArticlesGenerator))
+        pages_generator = next(g for g in generators if isinstance(g, PagesGenerator))
+
+        print('Done: Processed {} articles and {} pages in {:.2f} seconds.'.format(
+            len(articles_generator.articles) + len(articles_generator.translations),
+            len(pages_generator.pages) + len(pages_generator.translations),
+            time.time() - start_time))
 
     def get_generator_classes(self):
         generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
@@ -215,11 +241,14 @@ def parse_arguments():
              'them separated by commas.')
 
     parser.add_argument('-s', '--settings', dest='settings',
-        help='The settings of the application.')
+        help='The settings of the application, this is automatically set to '
+        '{0} if a file exists with this name.'.format(DEFAULT_CONFIG_NAME))
 
     parser.add_argument('-d', '--delete-output-directory',
         dest='delete_outputdir',
-        action='store_true', help='Delete the output directory.')
+        action='store_true',
+        default=None,
+        help='Delete the output directory.')
 
     parser.add_argument('-v', '--verbose', action='store_const',
         const=logging.INFO, dest='verbosity',
@@ -257,15 +286,31 @@ def get_config(args):
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
     if args.delete_outputdir is not None:
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
+
+    # argparse returns bytes in Py2. There is no definite answer as to which
+    # encoding argparse (or sys.argv) uses.
+    # "Best" option seems to be locale.getpreferredencoding()
+    # ref: http://mail.python.org/pipermail/python-list/2006-October/405766.html
+    if not six.PY3:
+        enc = locale.getpreferredencoding()
+        for key in config:
+            if key in ('PATH', 'OUTPUT_PATH', 'THEME'):
+                config[key] = config[key].decode(enc)
+            if key == "MARKUP":
+                config[key] = [a.decode(enc) for a in config[key]]
     return config
 
 
 def get_instance(args):
 
-    settings = read_settings(args.settings, override=get_config(args))
+    config_file = args.settings
+    if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
+            config_file = DEFAULT_CONFIG_NAME
 
-    cls = settings.get('PELICAN_CLASS')
-    if isinstance(cls, basestring):
+    settings = read_settings(config_file, override=get_config(args))
+
+    cls = settings['PELICAN_CLASS']
+    if isinstance(cls, six.string_types):
         module, cls_name = cls.rsplit('.', 1)
         module = __import__(module)
         cls = getattr(module, cls_name)
@@ -278,9 +323,19 @@ def main():
     init(args.verbosity)
     pelican = get_instance(args)
 
+    watchers = {'content': folder_watcher(pelican.path,
+                                          pelican.markup,
+                                          pelican.ignore_files),
+                'theme': folder_watcher(pelican.theme,
+                                        [''],
+                                        pelican.ignore_files),
+                'settings': file_watcher(args.settings)}
+
     try:
         if args.autoreload:
-            files_found_error = True
+            print('  --- AutoReload Mode: Monitoring `content`, `theme` and `settings`'
+                  ' for changes. ---')
+
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -288,38 +343,54 @@ def main():
                     # restriction; all files are recursively checked if they
                     # have changed, no matter what extension the filenames
                     # have.
-                    if files_changed(pelican.path, pelican.markup) or \
-                            files_changed(pelican.theme, ['']):
-                        if not files_found_error:
-                            files_found_error = True
-                        pelican.run()
+                    modified = {k: next(v) for k, v in watchers.items()}
 
-                    # reload also if settings.py changed
-                    if file_changed(args.settings):
-                        logger.info('%s changed, re-generating' %
-                                    args.settings)
+                    if modified['settings']:
                         pelican = get_instance(args)
+
+                    if any(modified.values()):
+                        print('\n-> Modified: {}. re-generating...'.format(
+                                ', '.join(k for k, v in modified.items() if v)))
+
+                        if modified['content'] is None:
+                            logger.warning('No valid files found in content.')
+
+                        if modified['theme'] is None:
+                            logger.warning('Empty theme folder. Using `basic` theme.')
+
                         pelican.run()
 
-                    time.sleep(.5)  # sleep to avoid cpu load
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
                     break
-                except NoFilesError:
-                    if files_found_error:
-                        logger.warning("No valid files found in content. "
-                                       "Nothing to generate.")
-                        files_found_error = False
-                    time.sleep(1)  # sleep to avoid cpu load
-                except Exception, e:
+
+                except Exception as e:
+                    if (args.verbosity == logging.DEBUG):
+                        logger.critical(e.args)
+                        raise
                     logger.warning(
-                        "Caught exception \"{}\". Reloading.".format(e)
-                    )
-                    continue
+                            'Caught exception "{0}". Reloading.'.format(e))
+
+                finally:
+                    time.sleep(.5)  # sleep to avoid cpu load
+
         else:
+            if next(watchers['content']) is None:
+                logger.warning('No valid files found in content.')
+
+            if next(watchers['theme']) is None:
+                logger.warning('Empty theme folder. Using `basic` theme.')
+
             pelican.run()
-    except Exception, e:
-        logger.critical(unicode(e))
+
+    except Exception as e:
+        # localized systems have errors in native language if locale is set
+        # so convert the message to unicode with the correct encoding
+        msg = str(e)
+        if not six.PY3:
+            msg = msg.decode(locale.getpreferredencoding(False))
+
+        logger.critical(msg)
 
         if (args.verbosity == logging.DEBUG):
             raise

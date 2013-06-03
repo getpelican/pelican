@@ -1,19 +1,14 @@
 language: python
 python:
-    - "2.6"
     - "2.7"
+    - "3.3"
 before_install:
  - sudo apt-get update -qq
- - sudo apt-get install -qq ruby-sass
+ - sudo apt-get install -qq --no-install-recommends asciidoc
+ - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
-    - pip install nose unittest2 mock --use-mirrors
+    - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then ln -s /usr/share/asciidoc/asciidocapi.py ~/virtualenv/python2.7/lib/python2.7/site-packages/; fi
+    - pip install mock --use-mirrors
     - pip install . --use-mirrors
-    - pip install Markdown
-    - pip install webassets
-    - pip install cssmin
-script: nosetests -s tests
-notifications:
-    irc:
-        channels:
-            - "irc.freenode.org#pelican"
-        on_success: change
+    - pip install --use-mirrors Markdown
+script: python -m unittest discover
