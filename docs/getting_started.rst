@@ -121,6 +121,10 @@ automatically installed without any action on your part:
   broadcast signaling system
 * `unidecode <http://pypi.python.org/pypi/Unidecode>`_, for ASCII
   transliterations of Unicode text
+* `six <http://pypi.python.org/pypi/six>`_,  for Python 2 and 3 compatibility
+  utilities
+* `MarkupSafe <http://pypi.python.org/pypi/MarkupSafe>`_, for a markup safe
+  string implementation
 
 If you want the following optional packages, you will need to install them
 manually via ``pip``:
