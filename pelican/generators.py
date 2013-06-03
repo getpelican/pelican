@@ -559,19 +559,6 @@ class StaticGenerator(Generator):
                 self.staticfiles.append(static)
                 self.add_source_path(static)
 
-        # same thing for FILES_TO_COPY
-        for src, dest in self.settings['FILES_TO_COPY']:
-            static = read_file(
-                base_path=self.path, path=f, content_class=Static,
-                fmt='static',
-                settings=self.settings, context=self.context,
-                preread_signal=signals.static_generator_preread,
-                preread_sender=self,
-                context_signal=signals.static_generator_context,
-                context_sender=self)
-            self.staticfiles.append(static)
-            self.add_source_path(static)
-
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          'theme', self.output_path, os.curdir)

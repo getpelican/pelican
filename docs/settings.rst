@@ -68,9 +68,6 @@ Setting name (default value)                                            What doe
                                                                         generating new files. This can be useful in preventing older,
                                                                         unnecessary files from persisting in your output. However, **this is
                                                                         a destructive setting and should be handled with extreme care.**
-`FILES_TO_COPY` (``()``)                                                A list of files (or directories) to copy from the source (inside the
-                                                                        content directory) to the destination (inside the output directory).
-                                                                        For example: ``(('extra/robots.txt', 'robots.txt'),)``.
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
 `JINJA_FILTERS` (``{}``)                                                A list of custom Jinja2 filters you want to use.
                                                                         The dictionary should map the filtername to the filter function.
