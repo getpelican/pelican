@@ -341,8 +341,6 @@ def read_file(base_path, path, content_class=Page, fmt=None,
               preread_signal=None, preread_sender=None,
               context_signal=None, context_sender=None):
     """Return a content object parsed with the given format."""
-    if preread_signal:
-        preread_signal.send(preread_sender)
     path = os.path.abspath(os.path.join(base_path, path))
     source_path = os.path.relpath(path, base_path)
     base, ext = os.path.splitext(os.path.basename(path))
@@ -353,6 +351,11 @@ def read_file(base_path, path, content_class=Page, fmt=None,
 
     if fmt not in EXTENSIONS:
         raise TypeError('Pelican does not know how to parse {}'.format(path))
+
+    if preread_signal:
+        logger.debug('signal {}.send({})'.format(
+                preread_signal, preread_sender))
+        preread_signal.send(preread_sender)
 
     if settings is None:
         settings = {}
@@ -378,6 +381,8 @@ def read_file(base_path, path, content_class=Page, fmt=None,
         metadata['title'] = typogrify(metadata['title'])
 
     if context_signal:
+        logger.debug('signal {}.send({}, <metadata>)'.format(
+                context_signal, context_sender))
         context_signal.send(context_sender, metadata=metadata)
     return content_class(
         content=content,
