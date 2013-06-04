@@ -37,8 +37,7 @@ def _input_compat(prompt):
     if six.PY3:
         r = input(prompt)
     else:
-        # FIXME: why use this with @decoding_strings?
-        r = raw_input(prompt).decode('utf-8')
+        r = raw_input(prompt)
     return r
 
 if six.PY3:
