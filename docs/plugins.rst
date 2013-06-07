@@ -104,3 +104,22 @@ request if you need them!
 
        def register():
                signals.content_object_init.connect(test, sender=contents.Article)
+
+.. note::
+
+   After Pelican 3.2, signal names were standardized.  Older plugins
+   may need to be updated to use the new names:
+
+   ==========================  ===========================
+   Old name                    New name
+   ==========================  ===========================
+   article_generate_context    article_generator_context
+   article_generate_finalized  article_generator_finalized
+   article_generate_preread    article_generator_preread
+   pages_generate_context      page_generator_context
+   pages_generate_preread      page_generator_preread
+   pages_generator_finalized   page_generator_finalized
+   pages_generator_init        page_generator_init
+   static_generate_context     static_generator_context
+   static_generate_preread     static_generator_preread
+   ==========================  ===========================
