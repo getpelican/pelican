@@ -344,7 +344,9 @@ def feed2fields(file):
 
 def build_header(title, date, author, categories, tags, slug):
     """Build a header from a list of fields"""
-    header = '%s\n%s\n' % (title, '#' * len(title))
+    import unicodedata
+    title_width = sum([(2 if unicodedata.east_asian_width(c) in u"WFA" else 1) for c in title])
+    header = '%s\n%s\n' % (title, '#' * title_width)
     if date:
         header += ':date: %s\n' % date
     if author:
