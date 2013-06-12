@@ -76,13 +76,13 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_decode_html_entities_in_titles(self):
         test_posts = [post for post in self.posts if post[2] == 'html-entity-test']
-        self.assertTrue(len(test_posts) == 1)
+        self.assertEqual(len(test_posts), 1)
 
         post = test_posts[0]
         title = post[0]
         self.assertTrue(title, "A normal post with some <html> entities in the"
                                " title. You can't miss them.")
-        self.assertTrue('&' not in title)
+        self.assertNotIn('&', title)
 
     def test_decode_wp_content_returns_empty(self):
         """ Check that given an empty string we return an empty string."""
