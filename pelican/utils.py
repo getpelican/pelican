@@ -15,7 +15,7 @@ from collections import Hashable
 from functools import partial
 
 from codecs import open, BOM_UTF8
-from datetime import datetime, timezone
+from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
@@ -210,7 +210,7 @@ def get_date(string):
         except ValueError:
             continue
         if date_format.endswith('Z'):
-            date = date.replace(tzinfo=timezone.utc)
+            date = date.replace(tzinfo=pytz.timezone('UTC'))
         return date
     raise ValueError('{0!r} is not a valid date'.format(string))
 

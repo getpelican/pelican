@@ -9,6 +9,8 @@ import locale
 from sys import platform, version_info
 from tempfile import mkdtemp
 
+import pytz
+
 from pelican.generators import TemplatePagesGenerator
 from pelican.writers import Writer
 from pelican.settings import read_settings
@@ -43,13 +45,13 @@ class TestUtils(LoggedTestCase):
             year=2012, month=11, day=22, hour=22, minute=11, second=10)
         date_hour_sec_z = datetime.datetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
-            tzinfo=datetime.timezone.utc)
-        date_hour_sec_0430 = datetime.datetime(
+            tzinfo=pytz.timezone('UTC'))
+        date_hour_sec_est = datetime.datetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
-            tzinfo=datetime.timezone(datetime.timedelta(hours=4, minutes=30)))
+            tzinfo=pytz.timezone('EST'))
         date_hour_sec_frac_z = datetime.datetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
-            microsecond=123000, tzinfo=datetime.timezone.utc)
+            microsecond=123000, tzinfo=pytz.timezone('UTC'))
         dates = {
             '2012-11-22': date,
             '2012/11/22': date,
@@ -61,7 +63,7 @@ class TestUtils(LoggedTestCase):
             '22.11.2012 22:11': date_hour,
             '2012-11-22 22:11:10': date_hour_sec,
             '2012-11-22T22:11:10Z': date_hour_sec_z,
-            '2012-11-22T22:11:10+0430': date_hour_sec_0430,
+            '2012-11-22T22:11:10-0500': date_hour_sec_est,
             '2012-11-22T22:11:10.123Z': date_hour_sec_frac_z,
             }
 
