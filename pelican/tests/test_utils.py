@@ -186,7 +186,7 @@ class TestUtils(LoggedTestCase):
         test_directory = os.path.join(os.path.dirname(__file__),
                                       'does_not_exist')
         utils.clean_output_dir(test_directory)
-        self.assertTrue(not os.path.exists(test_directory))
+        self.assertFalse(os.path.exists(test_directory))
 
     def test_clean_output_dir_is_file(self):
         test_directory = os.path.join(os.path.dirname(__file__),
@@ -195,7 +195,7 @@ class TestUtils(LoggedTestCase):
         f.write('')
         f.close()
         utils.clean_output_dir(test_directory)
-        self.assertTrue(not os.path.exists(test_directory))
+        self.assertFalse(os.path.exists(test_directory))
 
     def test_strftime(self):
         d = datetime.date(2012, 8, 29)

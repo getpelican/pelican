@@ -108,7 +108,7 @@ class TestArticlesGenerator(unittest.TestCase):
             sorted(['Default', 'TestCategory', 'Yeah', 'test', '指導書']),
             sorted(['Default', 'TestCategory', 'yeah', 'test', '指導書']),
         )
-        self.assertTrue(sorted(categories) in categories_alternatives)
+        self.assertIn(sorted(categories), categories_alternatives)
         # test for slug
         categories = [cat.slug for cat, _ in generator.categories]
         categories_expected = ['default', 'testcategory', 'yeah', 'test',
@@ -136,7 +136,7 @@ class TestArticlesGenerator(unittest.TestCase):
             sorted(['Default', 'Yeah', 'test', '指導書']),
             sorted(['Default', 'yeah', 'test', '指導書']),
         )
-        self.assertTrue(sorted(categories) in categories_alternatives)
+        self.assertIn(sorted(categories), categories_alternatives)
         # test for slug
         categories = [cat.slug for cat, _ in generator.categories]
         categories_expected = ['default', 'yeah', 'test', 'zhi-dao-shu']
