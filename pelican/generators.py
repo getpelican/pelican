@@ -23,7 +23,9 @@ from pelican.contents import (
         Article, Page, Category, Static, is_valid_content
 )
 from pelican.readers import read_file
-from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
+from pelican.utils import (
+        copy, process_translations, mkdir_p, DateFormatter, git_mtime
+)
 from pelican import signals
 import pelican.utils
 
@@ -407,6 +409,10 @@ class ArticlesGenerator(Generator):
                 if self.settings['DEFAULT_DATE'] == 'fs':
                     metadata['date'] = datetime.datetime.fromtimestamp(
                             os.stat(f).st_ctime)
+                elif self.settings['DEFAULT_DATE'] == 'git-last-modified':
+                    metadata['date'] = git_mtime(f, True)
+                elif self.settings['DEFAULT_DATE'] == 'git-creation':
+                    metadata['date'] = git_mtime(f, False)
                 else:
                     metadata['date'] = datetime.datetime(
                             *self.settings['DEFAULT_DATE'])

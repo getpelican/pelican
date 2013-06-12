@@ -279,14 +279,17 @@ be specified either via the ``tags`` metadata, as is standard in Pelican, or
 via the ``keywords`` metadata, as is standard in HTML. The two can be used
 interchangeably.
 
-Note that, aside from the title, none of this article metadata is mandatory:
-if the date is not specified and ``DEFAULT_DATE`` is set to ``fs``, Pelican
-will rely on the file's "mtime" timestamp, and the category can be determined
-by the directory in which the file resides. For example, a file located at
-``python/foobar/myfoobar.rst`` will have a category of ``foobar``. If you would
-like to organize your files in other ways where the name of the subfolder would
-not be a good category name, you can set the setting ``USE_FOLDER_AS_CATEGORY``
-to ``False``.
+Note that, aside from the title, none of this article metadata is mandatory: if
+the date is not specified and ``DEFAULT_DATE`` is set to ``fs``, Pelican will
+rely on the file's "mtime" timestamp. If you keep your content in a git
+repository, you can set ``DEFAULT_DATE`` to ``git-last-modified`` or
+``git-creation`` to let Pelican use git information (either the time of the last
+commit when the file was modified, or the time of the commit when the file was
+created). The category can be determined by the directory in which the file
+resides. For example, a file located at ``python/foobar/myfoobar.rst`` will have
+a category of ``foobar``. If you would like to organize your files in other ways
+where the name of the subfolder would not be a good category name, you can set
+the setting ``USE_FOLDER_AS_CATEGORY`` to ``False``.
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the

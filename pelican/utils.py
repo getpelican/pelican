@@ -11,6 +11,7 @@ import logging
 import errno
 import locale
 import fnmatch
+import subprocess
 from collections import Hashable
 from functools import partial
 
@@ -549,3 +550,30 @@ def split_all(path):
             break
         path = head
     return components
+
+
+def git_mtime(filename, use_last_modification=True, git_binary="git"):
+
+    """Determines the git modification time of a file and returns it as a
+    datetime.datetime object.
+
+    If use_last_modification is True, then the  date and time of the last
+    modification will be returned. Otherwise the date and time of the first
+    commit containing the file will be returned.
+
+    The optional argument 'git_binary' can be used to specify the git binary to
+    use.
+    """
+
+    call = [git_binary, "log", "--pretty=format:%at ", filename]
+    repository= os.path.dirname(filename)
+    try:
+        output = subprocess.check_output(call, cwd=repository).decode('utf-8').splitlines()
+    except Exception as e:
+        print("ERROR: Could not get git time information for {0}: {1}".format(filename, str(e)))
+        return None
+
+    dates = [ datetime.fromtimestamp(int(x)) for x in output ]
+    sorted_dates = sorted(dates)
+
+    return sorted_dates[-1] if use_last_modification else sorted_dates[0]
