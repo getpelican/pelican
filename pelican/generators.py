@@ -102,23 +102,25 @@ class Generator(object):
     def get_files(self, path, exclude=[], extensions=None):
         """Return a list of files to use, based on rules
 
-        :param path: the path to search the file on
+        :param path: the path to search (relative to self.path)
         :param exclude: the list of path to exclude
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
         files = []
+        root = os.path.join(self.path, path)
 
-        if os.path.isdir(path):
-            for root, dirs, temp_files in os.walk(path, followlinks=True):
+        if os.path.isdir(root):
+            for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
                 for e in exclude:
                     if e in dirs:
                         dirs.remove(e)
+                reldir = os.path.relpath(dirpath, self.path)
                 for f in temp_files:
-                    fp = os.path.join(root, f)
+                    fp = os.path.join(reldir, f)
                     if self._include_path(fp, extensions):
                         files.append(fp)
-        elif os.path.exists(path) and self._include_path(path, extensions):
+        elif os.path.exists(root) and self._include_path(path, extensions):
             files.append(path)  # can't walk non-directories
         return files
 
@@ -372,12 +374,9 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """Add the articles into the shared context"""
 
-        article_path = os.path.normpath(  # we have to remove trailing slashes
-            os.path.join(self.path, self.settings['ARTICLE_DIR'])
-        )
         all_articles = []
         for f in self.get_files(
-                article_path,
+                self.settings['ARTICLE_DIR'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
                 article = read_file(
@@ -485,7 +484,7 @@ class PagesGenerator(Generator):
         all_pages = []
         hidden_pages = []
         for f in self.get_files(
-                os.path.join(self.path, self.settings['PAGE_DIR']),
+                self.settings['PAGE_DIR'],
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
                 page = read_file(
@@ -547,7 +546,7 @@ class StaticGenerator(Generator):
         # walk static paths
         for static_path in self.settings['STATIC_PATHS']:
             for f in self.get_files(
-                    os.path.join(self.path, static_path), extensions=False):
+                    static_path, extensions=False):
                 static = read_file(
                     base_path=self.path, path=f, content_class=Static,
                     fmt='static',
