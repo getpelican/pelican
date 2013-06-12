@@ -15,7 +15,7 @@ from collections import Hashable
 from functools import partial
 
 from codecs import open, BOM_UTF8
-from datetime import datetime
+from datetime import datetime, timezone
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
@@ -180,17 +180,39 @@ def get_date(string):
     If no format matches the given date, raise a ValueError.
     """
     string = re.sub(' +', ' ', string)
-    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M',
-               '%Y-%m-%d', '%Y/%m/%d',
-               '%d-%m-%Y', '%Y-%d-%m',  # Weird ones
-               '%d/%m/%Y', '%d.%m.%Y',
-               '%d.%m.%Y %H:%M', '%Y-%m-%d %H:%M:%S']
+    formats = [
+        # ISO 8601
+        '%Y',
+        '%Y-%m',
+        '%Y-%m-%d',
+        '%Y-%m-%dT%H:%M%z',
+        '%Y-%m-%dT%H:%MZ',
+        '%Y-%m-%dT%H:%M',
+        '%Y-%m-%dT%H:%M:%S%z',
+        '%Y-%m-%dT%H:%M:%SZ',
+        '%Y-%m-%dT%H:%M:%S',
+        '%Y-%m-%dT%H:%M:%S.%f%z',
+        '%Y-%m-%dT%H:%M:%S.%fZ',
+        '%Y-%m-%dT%H:%M:%S.%f',
+        # end ISO 8601 forms
+        '%Y-%m-%d %H:%M',
+        '%Y-%m-%d %H:%M:%S',
+        '%Y/%m/%d %H:%M',
+        '%Y/%m/%d',
+        '%d-%m-%Y',
+        '%d.%m.%Y %H:%M',
+        '%d.%m.%Y',
+        '%d/%m/%Y',
+        ]
     for date_format in formats:
         try:
-            return datetime.strptime(string, date_format)
+            date = datetime.strptime(string, date_format)
         except ValueError:
-            pass
-    raise ValueError("'%s' is not a valid date" % string)
+            continue
+        if date_format.endswith('Z'):
+            date = date.replace(tzinfo=timezone.utc)
+        return date
+    raise ValueError('{0!r} is not a valid date'.format(string))
 
 
 class pelican_open(object):
@@ -510,15 +532,11 @@ def file_watcher(path):
 
 
 def set_date_tzinfo(d, tz_name=None):
-    """ Date without tzinfo shoudbe utc.
-    This function set the right tz to date that aren't utc and don't have
-    tzinfo.
-    """
-    if tz_name is not None:
+    """Set the timezone for dates that don't have tzinfo"""
+    if tz_name and not d.tzinfo:
         tz = pytz.timezone(tz_name)
         return tz.localize(d)
-    else:
-        return d
+    return d
 
 
 def mkdir_p(path):

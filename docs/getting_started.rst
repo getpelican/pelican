@@ -286,7 +286,10 @@ by the directory in which the file resides. For example, a file located at
 ``python/foobar/myfoobar.rst`` will have a category of ``foobar``. If you would
 like to organize your files in other ways where the name of the subfolder would
 not be a good category name, you can set the setting ``USE_FOLDER_AS_CATEGORY``
-to ``False``.
+to ``False``.  When parsing dates given in the page metadata, Pelican supports
+the W3C's `suggested subset ISO 8601`__.
+
+__ `W3C ISO 8601`_
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the
@@ -478,3 +481,4 @@ metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category page.
 
 .. _virtualenv: http://www.virtualenv.org/
+.. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
