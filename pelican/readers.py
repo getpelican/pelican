@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
+import datetime
+import logging
 import os
 import re
 try:
@@ -31,9 +33,11 @@ try:
 except ImportError:
     from HTMLParser import HTMLParser
 
-from pelican.contents import Category, Tag, Author
+from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
+
+logger = logging.getLogger(__name__)
 
 METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
@@ -333,29 +337,48 @@ for cls in [Reader] + Reader.__subclasses__():
         EXTENSIONS[ext] = cls
 
 
-def read_file(path, fmt=None, settings=None):
-    """Return a reader object using the given format."""
+def read_file(base_path, path, content_class=Page, fmt=None,
+              settings=None, context=None,
+              preread_signal=None, preread_sender=None,
+              context_signal=None, context_sender=None):
+    """Return a content object parsed with the given format."""
+    path = os.path.abspath(os.path.join(base_path, path))
+    source_path = os.path.relpath(path, base_path)
     base, ext = os.path.splitext(os.path.basename(path))
+    logger.debug('read file {} -> {}'.format(
+            source_path, content_class.__name__))
     if not fmt:
         fmt = ext[1:]
 
     if fmt not in EXTENSIONS:
         raise TypeError('Pelican does not know how to parse {}'.format(path))
 
+    if preread_signal:
+        logger.debug('signal {}.send({})'.format(
+                preread_signal, preread_sender))
+        preread_signal.send(preread_sender)
+
     if settings is None:
         settings = {}
 
-    reader = EXTENSIONS[fmt](settings)
+    reader_class = EXTENSIONS[fmt]
+    if not reader_class.enabled:
+        raise ValueError('Missing dependencies for {}'.format(fmt))
+
+    reader = reader_class(settings)
+
     settings_key = '%s_EXTENSIONS' % fmt.upper()
 
     if settings and settings_key in settings:
         reader.extensions = settings[settings_key]
 
-    if not reader.enabled:
-        raise ValueError("Missing dependencies for %s" % fmt)
-
-    metadata = parse_path_metadata(
-        path=path, settings=settings, process=reader.process_metadata)
+    metadata = default_metadata(
+        settings=settings, process=reader.process_metadata)
+    metadata.update(path_metadata(
+            full_path=path, source_path=source_path, settings=settings))
+    metadata.update(parse_path_metadata(
+            source_path=source_path, settings=settings,
+            process=reader.process_metadata))
     content, reader_metadata = reader.read(path)
     metadata.update(reader_metadata)
 
@@ -365,9 +388,43 @@ def read_file(path, fmt=None, settings=None):
         content = typogrify(content)
         metadata['title'] = typogrify(metadata['title'])
 
-    return content, metadata
+    if context_signal:
+        logger.debug('signal {}.send({}, <metadata>)'.format(
+                context_signal, context_sender))
+        context_signal.send(context_sender, metadata=metadata)
+    return content_class(
+        content=content,
+        metadata=metadata,
+        settings=settings,
+        source_path=path,
+        context=context)
 
-def parse_path_metadata(path, settings=None, process=None):
+
+def default_metadata(settings=None, process=None):
+    metadata = {}
+    if settings:
+        if 'DEFAULT_CATEGORY' in settings:
+            value = settings['DEFAULT_CATEGORY']
+            if process:
+                value = process('category', value)
+            metadata['category'] = value
+        if 'DEFAULT_DATE' in settings and settings['DEFAULT_DATE'] != 'fs':
+            metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
+    return metadata
+
+
+def path_metadata(full_path, source_path, settings=None):
+    metadata = {}
+    if settings:
+        if settings.get('DEFAULT_DATE', None) == 'fs':
+            metadata['date'] = datetime.datetime.fromtimestamp(
+                os.stat(full_path).st_ctime)
+        metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
+                source_path, {}))
+    return metadata
+
+
+def parse_path_metadata(source_path, settings=None, process=None):
     """Extract a metadata dictionary from a file's path
 
     >>> import pprint
@@ -378,7 +435,7 @@ def parse_path_metadata(path, settings=None, process=None):
     ...     }
     >>> reader = Reader(settings=settings)
     >>> metadata = parse_path_metadata(
-    ...     path='my-cat/2013-01-01/my-slug.html',
+    ...     source_path='my-cat/2013-01-01/my-slug.html',
     ...     settings=settings,
     ...     process=reader.process_metadata)
     >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
@@ -387,13 +444,19 @@ def parse_path_metadata(path, settings=None, process=None):
      'slug': 'my-slug'}
     """
     metadata = {}
-    base, ext = os.path.splitext(os.path.basename(path))
+    dirname, basename = os.path.split(source_path)
+    base, ext = os.path.splitext(basename)
+    subdir = os.path.basename(dirname)
     if settings:
+        checks = []
         for key,data in [('FILENAME_METADATA', base),
-                         ('PATH_METADATA', path),
+                         ('PATH_METADATA', source_path),
                          ]:
-            regexp = settings.get(key)
-            if regexp:
+            checks.append((settings.get(key, None), data))
+        if settings.get('USE_FOLDER_AS_CATEGORY', None):
+            checks.insert(0, ('(?P<category>.*)', subdir))
+        for regexp,data in checks:
+            if regexp and data:
                 match = re.match(regexp, data)
                 if match:
                     # .items() for py3k compat.

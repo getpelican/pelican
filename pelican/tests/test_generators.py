@@ -15,6 +15,7 @@ from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
+CONTENT_DIR = os.path.join(CUR_DIR, 'content')
 
 
 class TestArticlesGenerator(unittest.TestCase):
@@ -30,12 +31,10 @@ class TestArticlesGenerator(unittest.TestCase):
         """
         if self.generator is None:
             settings = get_settings(filenames={})
-            settings['ARTICLE_DIR'] = 'content'
             settings['DEFAULT_CATEGORY'] = 'Default'
             settings['DEFAULT_DATE'] = (1970, 1, 1)
             self.generator = ArticlesGenerator(settings.copy(), settings,
-                                CUR_DIR, settings['THEME'], None,
-                                settings['MARKUP'])
+                CONTENT_DIR, settings['THEME'], None,  settings['MARKUP'])
             self.generator.generate_context()
         return self.generator
 
@@ -118,14 +117,13 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_do_not_use_folder_as_category(self):
 
         settings = DEFAULT_CONFIG.copy()
-        settings['ARTICLE_DIR'] = 'content'
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['filenames'] = {}
         generator = ArticlesGenerator(
-            settings.copy(), settings, CUR_DIR, DEFAULT_CONFIG['THEME'], None,
-            DEFAULT_CONFIG['MARKUP'])
+            settings.copy(), settings, CONTENT_DIR, DEFAULT_CONFIG['THEME'],
+            None, DEFAULT_CONFIG['MARKUP'])
         generator.generate_context()
         # test for name
         # categories are grouped by slug; if two categories have the same slug
@@ -213,12 +211,12 @@ class TestPageGenerator(unittest.TestCase):
 
     def test_generate_context(self):
         settings = get_settings(filenames={})
-        settings['PAGE_DIR'] = 'TestPages'
+        settings['PAGE_DIR'] = 'TestPages'  # relative to CUR_DIR
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 
-        generator = PagesGenerator(settings.copy(), settings, CUR_DIR,
-                                      settings['THEME'], None,
-                                      settings['MARKUP'])
+        generator = PagesGenerator(
+            settings.copy(), settings, CUR_DIR, settings['THEME'], None,
+            settings['MARKUP'])
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)

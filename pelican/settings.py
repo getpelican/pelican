@@ -95,7 +95,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_METADATA': (),
     'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
     'PATH_METADATA': '',
-    'FILES_TO_COPY': (),
+    'EXTRA_PATH_METADATA': {},
     'DEFAULT_STATUS': 'published',
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
@@ -257,11 +257,14 @@ def configure_settings(settings):
 
     for old,new,doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),
+            ('FILES_TO_COPY', 'STATIC_PATHS and EXTRA_PATH_METADATA',
+             'https://github.com/getpelican/pelican/blob/master/docs/settings.rst#path-metadata'),
             ]:
         if old in settings:
-            message = 'The {} setting has been removed in favor of {}'
+            message = 'The {} setting has been removed in favor of {}'.format(
+                old, new)
             if doc:
-                message += ', see {} for details'
+                message += ', see {} for details'.format(doc)
             logger.warning(message)
 
     return settings
