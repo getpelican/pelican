@@ -94,6 +94,17 @@ class TestUtils(LoggedTestCase):
         for value, expected in samples:
             self.assertEqual(utils.slugify(value), expected)
 
+    def test_slugify_substitute(self):
+
+        samples = (('C++ is based on C', 'cpp-is-based-on-c'),
+                   ('C+++ test C+ test', 'cpp-test-c-test'),
+                   ('c++, c#, C#, C++', 'cpp-c-sharp-c-sharp-cpp'),
+                   ('c++-streams', 'cpp-streams'),)
+
+        subs = (('C++', 'CPP'), ('C#', 'C-SHARP'))
+        for value, expected in samples:
+            self.assertEqual(utils.slugify(value, subs), expected)
+
     def test_get_relative_path(self):
 
         samples = ((os.path.join('test', 'test.html'), os.pardir),
