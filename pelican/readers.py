@@ -367,6 +367,7 @@ def read_file(path, fmt=None, settings=None):
 
     return content, metadata
 
+
 def parse_path_metadata(path, settings=None, process=None):
     """Extract a metadata dictionary from a file's path
 
@@ -389,9 +390,8 @@ def parse_path_metadata(path, settings=None, process=None):
     metadata = {}
     base, ext = os.path.splitext(os.path.basename(path))
     if settings:
-        for key,data in [('FILENAME_METADATA', base),
-                         ('PATH_METADATA', path),
-                         ]:
+        items = [('FILENAME_METADATA', base), ('PATH_METADATA', path), ]
+        for key, data in items:
             regexp = settings.get(key)
             if regexp:
                 match = re.match(regexp, data)
