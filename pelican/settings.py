@@ -261,9 +261,10 @@ def configure_settings(settings):
              'https://github.com/getpelican/pelican/blob/master/docs/settings.rst#path-metadata'),
             ]:
         if old in settings:
-            message = 'The {} setting has been removed in favor of {}'
+            message = 'The {} setting has been removed in favor of {}'.format(
+                old, new)
             if doc:
-                message += ', see {} for details'
+                message += ', see {} for details'.format(doc)
             logger.warning(message)
 
     return settings
