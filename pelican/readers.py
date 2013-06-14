@@ -345,14 +345,15 @@ def read_file(path, fmt=None, settings=None):
     if settings is None:
         settings = {}
 
-    reader = EXTENSIONS[fmt](settings)
+    cls = EXTENSIONS[fmt]
+    if not cls.enabled:
+        raise ValueError("Missing dependencies for %s" % fmt)
+
+    reader = cls(settings)
     settings_key = '%s_EXTENSIONS' % fmt.upper()
 
     if settings and settings_key in settings:
         reader.extensions = settings[settings_key]
-
-    if not reader.enabled:
-        raise ValueError("Missing dependencies for %s" % fmt)
 
     metadata = parse_path_metadata(
         path=path, settings=settings, process=reader.process_metadata)
