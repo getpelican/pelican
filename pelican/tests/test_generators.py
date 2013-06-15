@@ -38,25 +38,17 @@ class TestGenerator(unittest.TestCase):
 
 class TestArticlesGenerator(unittest.TestCase):
 
-    def setUp(self):
-        super(TestArticlesGenerator, self).setUp()
-        self.generator = None
+    @classmethod
+    def setUpClass(cls):
+        settings = get_settings(filenames={})
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
 
-    def get_populated_generator(self):
-        """
-        We only need to pull all the test articles once, but read from it
-        for each test.
-        """
-        if self.generator is None:
-            settings = get_settings(filenames={})
-            settings['DEFAULT_CATEGORY'] = 'Default'
-            settings['DEFAULT_DATE'] = (1970, 1, 1)
-            self.generator = ArticlesGenerator(
-                context=settings.copy(), settings=settings,
-                path=CONTENT_DIR, theme=settings['THEME'],
-                output_path=None, markup=settings['MARKUP'])
-            self.generator.generate_context()
-        return self.generator
+        cls.generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'],
+            output_path=None, markup=settings['MARKUP'])
+        cls.generator.generate_context()
 
     def distill_articles(self, articles):
         distilled = []
@@ -91,8 +83,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_context(self):
 
-        generator = self.get_populated_generator()
-        articles = self.distill_articles(generator.articles)
+        articles = self.distill_articles(self.generator.articles)
         articles_expected = [
             ['Article title', 'published', 'Default', 'article'],
             ['Article with markdown and summary metadata single', 'published',
@@ -120,19 +111,18 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_categories(self):
 
-        generator = self.get_populated_generator()
         # test for name
         # categories are grouped by slug; if two categories have the same slug
         # but different names they will be grouped together, the first one in
         # terms of process order will define the name for that category
-        categories = [cat.name for cat, _ in generator.categories]
+        categories = [cat.name for cat, _ in self.generator.categories]
         categories_alternatives = (
             sorted(['Default', 'TestCategory', 'Yeah', 'test', '指導書']),
             sorted(['Default', 'TestCategory', 'yeah', 'test', '指導書']),
         )
         self.assertIn(sorted(categories), categories_alternatives)
         # test for slug
-        categories = [cat.slug for cat, _ in generator.categories]
+        categories = [cat.slug for cat, _ in self.generator.categories]
         categories_expected = ['default', 'testcategory', 'yeah', 'test',
                                'zhi-dao-shu']
         self.assertEqual(sorted(categories), sorted(categories_expected))
@@ -209,8 +199,7 @@ class TestArticlesGenerator(unittest.TestCase):
         """
         Custom template articles get the field but standard/unset are None
         """
-        generator = self.get_populated_generator()
-        articles = self.distill_articles(generator.articles)
+        articles = self.distill_articles(self.generator.articles)
         custom_template = ['Article with template', 'published', 'Default',
                            'custom']
         standard_template = ['This is a super article !', 'published', 'Yeah',
