@@ -5,7 +5,6 @@ import os
 import math
 import random
 import logging
-import datetime
 import shutil
 
 from codecs import open
@@ -19,9 +18,7 @@ from jinja2 import (
         TemplateNotFound
 )
 
-from pelican.contents import (
-        Article, Page, Category, Static, is_valid_content
-)
+from pelican.contents import Article, Page, Static, is_valid_content
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
 from pelican import signals
@@ -105,23 +102,25 @@ class Generator(object):
     def get_files(self, path, exclude=[], extensions=None):
         """Return a list of files to use, based on rules
 
-        :param path: the path to search the file on
+        :param path: the path to search (relative to self.path)
         :param exclude: the list of path to exclude
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
         files = []
+        root = os.path.join(self.path, path)
 
-        if os.path.isdir(path):
-            for root, dirs, temp_files in os.walk(path, followlinks=True):
+        if os.path.isdir(root):
+            for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
                 for e in exclude:
                     if e in dirs:
                         dirs.remove(e)
+                reldir = os.path.relpath(dirpath, self.path)
                 for f in temp_files:
-                    fp = os.path.join(root, f)
+                    fp = os.path.join(reldir, f)
                     if self._include_path(fp, extensions):
                         files.append(fp)
-        elif os.path.exists(path) and self._include_path(path, extensions):
+        elif os.path.exists(root) and self._include_path(path, extensions):
             files.append(path)  # can't walk non-directories
         return files
 
@@ -375,45 +374,22 @@ class ArticlesGenerator(Generator):
     def generate_context(self):
         """Add the articles into the shared context"""
 
-        article_path = os.path.normpath(  # we have to remove trailing slashes
-            os.path.join(self.path, self.settings['ARTICLE_DIR'])
-        )
         all_articles = []
         for f in self.get_files(
-                article_path,
+                self.settings['ARTICLE_DIR'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
-                signals.article_generate_preread.send(self)
-                content, metadata = read_file(f, settings=self.settings)
+                article = read_file(
+                    base_path=self.path, path=f, content_class=Article,
+                    settings=self.settings, context=self.context,
+                    preread_signal=signals.article_generator_preread,
+                    preread_sender=self,
+                    context_signal=signals.article_generator_context,
+                    context_sender=self)
             except Exception as e:
-                logger.warning('Could not process %s\n%s' % (f, str(e)))
+                logger.warning('Could not process {}\n{}'.format(f, e))
                 continue
 
-            # if no category is set, use the name of the path as a category
-            if 'category' not in metadata:
-
-                if (self.settings['USE_FOLDER_AS_CATEGORY']
-                    and os.path.dirname(f) != article_path):
-                    # if the article is in a subdirectory
-                    category = os.path.basename(os.path.dirname(f))
-                else:
-                    # if the article is not in a subdirectory
-                    category = self.settings['DEFAULT_CATEGORY']
-
-                if category != '':
-                    metadata['category'] = Category(category, self.settings)
-
-            if 'date' not in metadata and self.settings.get('DEFAULT_DATE'):
-                if self.settings['DEFAULT_DATE'] == 'fs':
-                    metadata['date'] = datetime.datetime.fromtimestamp(
-                            os.stat(f).st_ctime)
-                else:
-                    metadata['date'] = datetime.datetime(
-                            *self.settings['DEFAULT_DATE'])
-
-            signals.article_generate_context.send(self, metadata=metadata)
-            article = Article(content, metadata, settings=self.settings,
-                              source_path=f, context=self.context)
             if not is_valid_content(article, f):
                 continue
 
@@ -502,22 +478,26 @@ class PagesGenerator(Generator):
         self.hidden_pages = []
         self.hidden_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
-        signals.pages_generator_init.send(self)
+        signals.page_generator_init.send(self)
 
     def generate_context(self):
         all_pages = []
         hidden_pages = []
         for f in self.get_files(
-                os.path.join(self.path, self.settings['PAGE_DIR']),
+                self.settings['PAGE_DIR'],
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                content, metadata = read_file(f, settings=self.settings)
+                page = read_file(
+                    base_path=self.path, path=f, content_class=Page,
+                    settings=self.settings, context=self.context,
+                    preread_signal=signals.page_generator_preread,
+                    preread_sender=self,
+                    context_signal=signals.page_generator_context,
+                    context_sender=self)
             except Exception as e:
-                logger.warning('Could not process %s\n%s' % (f, str(e)))
+                logger.warning('Could not process {}\n{}'.format(f, e))
                 continue
-            signals.pages_generate_context.send(self, metadata=metadata)
-            page = Page(content, metadata, settings=self.settings,
-                        source_path=f, context=self.context)
+
             if not is_valid_content(page, f):
                 continue
 
@@ -539,7 +519,7 @@ class PagesGenerator(Generator):
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
-        signals.pages_generator_finalized.send(self)
+        signals.page_generator_finalized.send(self)
 
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
@@ -566,33 +546,17 @@ class StaticGenerator(Generator):
         # walk static paths
         for static_path in self.settings['STATIC_PATHS']:
             for f in self.get_files(
-                    os.path.join(self.path, static_path), extensions=False):
-                f_rel = os.path.relpath(f, self.path)
-                content, metadata = read_file(
-                    f, fmt='static', settings=self.settings)
-                # TODO remove this hardcoded 'static' subdirectory
-                metadata['save_as'] = os.path.join('static', f_rel)
-                metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
-                sc = Static(
-                    content=None,
-                    metadata=metadata,
-                    settings=self.settings,
-                    source_path=f_rel)
-                self.staticfiles.append(sc)
-                self.add_source_path(sc)
-        # same thing for FILES_TO_COPY
-        for src, dest in self.settings['FILES_TO_COPY']:
-            content, metadata = read_file(
-                src, fmt='static', settings=self.settings)
-            metadata['save_as'] = dest
-            metadata['url'] = pelican.utils.path_to_url(metadata['save_as'])
-            sc = Static(
-                content=None,
-                metadata={'save_as': dest},
-                settings=self.settings,
-                source_path=src)
-            self.staticfiles.append(sc)
-            self.add_source_path(sc)
+                    static_path, extensions=False):
+                static = read_file(
+                    base_path=self.path, path=f, content_class=Static,
+                    fmt='static',
+                    settings=self.settings, context=self.context,
+                    preread_signal=signals.static_generator_preread,
+                    preread_sender=self,
+                    context_signal=signals.static_generator_context,
+                    context_sender=self)
+                self.staticfiles.append(static)
+                self.add_source_path(static)
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,

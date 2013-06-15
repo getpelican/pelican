@@ -34,11 +34,19 @@ SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
 # global metadata to all the contents
 DEFAULT_METADATA = (('yeah', 'it is'),)
 
-# static paths will be copied under the same name
-STATIC_PATHS = ["pictures", ]
+# path-specific metadata
+EXTRA_PATH_METADATA = {
+    'extra/robots.txt': {'path': 'robots.txt'},
+    'pictures/Fat_Cat.jpg': {'path': 'static/pictures/Fat_Cat.jpg'},
+    'pictures/Sushi.jpg': {'path': 'static/pictures/Sushi.jpg'},
+    'pictures/Sushi_Macro.jpg': {'path': 'static/pictures/Sushi_Macro.jpg'},
+    }
 
-# A list of files to copy from the source to the destination
-FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
+# static paths will be copied without parsing their contents
+STATIC_PATHS = [
+    'pictures',
+    'extra/robots.txt',
+    ]
 
 # custom page generated with a jinja2 template
 TEMPLATE_PAGES = {'pages/jinja2_template.html': 'jinja2_template.html'}

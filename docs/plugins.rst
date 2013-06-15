@@ -79,9 +79,9 @@ article_generator_finalized     article_generator               invoked at the e
 get_generators                  generators                      invoked in Pelican.get_generator_classes,
                                                                 can return a Generator, or several
                                                                 generator in a tuple or in a list.
-pages_generate_context          pages_generator, metadata
-pages_generator_init            pages_generator                 invoked in the PagesGenerator.__init__
-pages_generator_finalized       pages_generator                 invoked at the end of PagesGenerator.generate_context
+page_generate_context           page_generator, metadata
+page_generator_init             page_generator                  invoked in the PagesGenerator.__init__
+page_generator_finalized        page_generator                  invoked at the end of PagesGenerator.generate_context
 content_object_init             content_object                  invoked at the end of Content.__init__ (see note below)
 =============================   ============================   ===========================================================================
 
@@ -104,3 +104,22 @@ request if you need them!
 
        def register():
                signals.content_object_init.connect(test, sender=contents.Article)
+
+.. note::
+
+   After Pelican 3.2, signal names were standardized.  Older plugins
+   may need to be updated to use the new names:
+
+   ==========================  ===========================
+   Old name                    New name
+   ==========================  ===========================
+   article_generate_context    article_generator_context
+   article_generate_finalized  article_generator_finalized
+   article_generate_preread    article_generator_preread
+   pages_generate_context      page_generator_context
+   pages_generate_preread      page_generator_preread
+   pages_generator_finalized   page_generator_finalized
+   pages_generator_init        page_generator_init
+   static_generate_context     static_generator_context
+   static_generate_preread     static_generator_preread
+   ==========================  ===========================
