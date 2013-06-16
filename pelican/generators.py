@@ -31,10 +31,14 @@ logger = logging.getLogger(__name__)
 class Generator(object):
     """Baseclass generator"""
 
-    def __init__(self, *args, **kwargs):
-        for idx, item in enumerate(('context', 'settings', 'path', 'theme',
-                'output_path', 'markup')):
-            setattr(self, item, args[idx])
+    def __init__(self, context, settings, path, theme, output_path, markup,
+                 **kwargs):
+        self.context = context
+        self.settings = settings
+        self.path = path
+        self.theme = theme
+        self.output_path = output_path
+        self.markup = markup
 
         for arg, value in kwargs.items():
             setattr(self, arg, value)
