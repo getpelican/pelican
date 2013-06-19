@@ -9,6 +9,7 @@ import time
 import logging
 import argparse
 import locale
+import collections
 
 from pelican import signals
 
@@ -205,7 +206,7 @@ class Pelican(object):
         for pair in signals.get_generators.send(self):
             (funct, value) = pair
 
-            if not isinstance(value, (tuple, list)):
+            if not isinstance(value, collections.Iterable):
                 value = (value, )
 
             for v in value:
