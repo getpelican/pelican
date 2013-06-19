@@ -97,7 +97,7 @@ class Generator(object):
             extensions are allowed)
         """
         if extensions is None:
-            extensions = self.markup
+            extensions = tuple(self.markup)
         basename = os.path.basename(path)
         if extensions is False or basename.endswith(extensions):
             return True
