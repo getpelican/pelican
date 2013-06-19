@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
-from mock import MagicMock
 import os
-
 from codecs import open
-from tempfile import mkdtemp
+from mock import MagicMock
 from shutil import rmtree
+from tempfile import mkdtemp
 
-from pelican.generators import (ArticlesGenerator, PagesGenerator,
+from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
                                 TemplatePagesGenerator)
 from pelican.writers import Writer
 from pelican.settings import DEFAULT_CONFIG
@@ -16,6 +15,25 @@ from pelican.tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, 'content')
+
+
+class TestGenerator(unittest.TestCase):
+    def setUp(self):
+        self.settings = get_settings()
+        self.generator = Generator(self.settings.copy(), self.settings,
+                                   CUR_DIR, self.settings['THEME'], None,
+                                   self.settings['MARKUP'])
+
+    def test_include_path(self):
+        filename = os.path.join(CUR_DIR, 'content', 'article.rst')
+        include_path = self.generator._include_path
+        self.assertTrue(include_path(filename))
+        self.assertTrue(include_path(filename, extensions=('rst',)))
+        self.assertFalse(include_path(filename, extensions=('md',)))
+
+        # markup must be a tuple, test that this works also with a list
+        self.generator.markup = ['rst', 'md']
+        self.assertTrue(include_path(filename))
 
 
 class TestArticlesGenerator(unittest.TestCase):
