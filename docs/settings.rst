@@ -149,6 +149,7 @@ Setting name (default value)                                            What doe
                                                                         These templates need to use ``DIRECT_TEMPLATES`` setting.
 `ASCIIDOC_OPTIONS` (``[]``)                                             A list of options to pass to AsciiDoc. See the `manpage
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
+`DRAFT_PATH` (``drafts``)                                               Path where drafts will be saved.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
