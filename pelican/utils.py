@@ -67,11 +67,11 @@ def strftime(date, date_format):
 
 class DateFormatter(object):
     '''A date formatter object used as a jinja filter
-    
-    Uses the `strftime` implementation and makes sure jinja uses the locale 
+
+    Uses the `strftime` implementation and makes sure jinja uses the locale
     defined in LOCALE setting
     '''
-    
+
     def __init__(self):
         self.locale = locale.setlocale(locale.LC_TIME)
 
@@ -216,7 +216,7 @@ def get_date(string):
 
 
 class pelican_open(object):
-    """Open a file and return it's content"""
+    """Open a file and return its content"""
     def __init__(self, filename):
         self.filename = filename
 
@@ -236,7 +236,7 @@ def slugify(value):
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
 
-    Took from django sources.
+    Took from Django sources.
     """
     # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
