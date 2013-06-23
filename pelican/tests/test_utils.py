@@ -193,28 +193,31 @@ class TestUtils(LoggedTestCase):
             shutil.rmtree(empty_path, True)
 
     def test_clean_output_dir(self):
+        retention = ()
         test_directory = os.path.join(os.path.dirname(__file__),
                                       'clean_output')
         content = os.path.join(os.path.dirname(__file__), 'content')
         shutil.copytree(content, test_directory)
-        utils.clean_output_dir(test_directory)
+        utils.clean_output_dir(test_directory, retention)
         self.assertTrue(os.path.isdir(test_directory))
         self.assertListEqual([], os.listdir(test_directory))
         shutil.rmtree(test_directory)
 
     def test_clean_output_dir_not_there(self):
+        retention = ()
         test_directory = os.path.join(os.path.dirname(__file__),
                                       'does_not_exist')
-        utils.clean_output_dir(test_directory)
+        utils.clean_output_dir(test_directory, retention)
         self.assertFalse(os.path.exists(test_directory))
 
     def test_clean_output_dir_is_file(self):
+        retention = ()
         test_directory = os.path.join(os.path.dirname(__file__),
                                       'this_is_a_file')
         f = open(test_directory, 'w')
         f.write('')
         f.close()
-        utils.clean_output_dir(test_directory)
+        utils.clean_output_dir(test_directory, retention)
         self.assertFalse(os.path.exists(test_directory))
 
     def test_strftime(self):

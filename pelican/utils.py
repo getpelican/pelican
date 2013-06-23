@@ -298,8 +298,8 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
         logger.warning('skipped copy %s to %s' % (source_, destination_))
 
 
-def clean_output_dir(path):
-    """Remove all the files from the output directory"""
+def clean_output_dir(path, retention):
+    """Remove all files from output directory except those in retention list"""
 
     if not os.path.exists(path):
         logger.debug("Directory already removed: %s" % path)
@@ -312,10 +312,13 @@ def clean_output_dir(path):
             logger.error("Unable to delete file %s; %s" % (path, str(e)))
         return
 
-    # remove all the existing content from the output folder
+    # remove existing content from output folder unless in retention list
     for filename in os.listdir(path):
         file = os.path.join(path, filename)
-        if os.path.isdir(file):
+        if any(filename == retain for retain in retention):
+            logger.debug("Skipping deletion; %s is on retention list: %s" \
+                         % (filename, file))
+        elif os.path.isdir(file):
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s" % file)
