@@ -5,7 +5,7 @@ import datetime
 import logging
 import os
 import re
-import logging
+
 try:
     import docutils
     import docutils.core
@@ -15,7 +15,7 @@ try:
     # import the directives to have pygments support
     from pelican import rstdirectives  # NOQA
 except ImportError:
-    core = False
+    docutils = False
 try:
     from markdown import Markdown
 except ImportError:
