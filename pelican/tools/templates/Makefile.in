@@ -20,6 +20,11 @@ S3_BUCKET=$s3_bucket
 
 DROPBOX_DIR=$dropbox_dir
 
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	PELICANOPTS += -D
+endif 
+
 help:
 	@echo 'Makefile for a pelican Web site                                        '
 	@echo '                                                                       '
