@@ -49,6 +49,7 @@ class Pelican(object):
         self.markup = settings['MARKUP']
         self.ignore_files = settings['IGNORE_FILES']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
+        self.output_retention = settings['OUTPUT_RETENTION']
 
         self.init_path()
         self.init_plugins()
@@ -175,7 +176,7 @@ class Pelican(object):
         # explicitely asked
         if (self.delete_outputdir and not
                 os.path.realpath(self.path).startswith(self.output_path)):
-            clean_output_dir(self.output_path)
+            clean_output_dir(self.output_path, self.output_retention)
 
         writer = self.get_writer()
 

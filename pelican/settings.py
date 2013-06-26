@@ -54,6 +54,7 @@ DEFAULT_CONFIG = {
     'NEWEST_FIRST_ARCHIVES': True,
     'REVERSE_CATEGORY_ORDER': False,
     'DELETE_OUTPUT_DIRECTORY': False,
+    'OUTPUT_RETENTION': (),
     'ARTICLE_URL': '{slug}.html',
     'ARTICLE_SAVE_AS': '{slug}.html',
     'ARTICLE_LANG_URL': '{slug}-{lang}.html',
