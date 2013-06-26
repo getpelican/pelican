@@ -49,7 +49,7 @@ To publish a Pelican site as User Pages you need to *push* the content of the
 
 Again, you can take advantage of ``ghp-import``::
 
-    $ pelican content -o output pelicanconf.py
+    $ pelican content -o output -s pelicanconf.py
     $ ghp-import output
     $ git push git@github.com:elemoine/elemoine.github.com.git gh-pages:master
 
@@ -71,7 +71,7 @@ To automatically update your Pelican site on each commit you can create
 a post-commit hook. For example, you can add the following to
 ``.git/hooks/post-commit``::
 
-    pelican pelican content -o output pelicanconf.py && ghp-import output && git push origin gh-pages
+    pelican pelican content -o output -s pelicanconf.py && ghp-import output && git push origin gh-pages
 
 Tip #2:
 
