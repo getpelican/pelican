@@ -26,7 +26,7 @@ For example, if the sources of your Pelican site are contained in a GitHub
 repository, and if you want to publish your Pelican site as Project Pages of
 this repository, you can then use the following::
 
-    $ pelican content -o output pelicanconf.py
+    $ pelican content -o output -s pelicanconf.py
     $ ghp-import output
     $ git push origin gh-pages
 
