@@ -237,12 +237,16 @@ Setting name (default value)                            What does it do?
                                                         use the default language.
 `PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
                                                         use the default language.
-`AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
-`AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.
 `CATEGORY_URL` (``'category/{slug}.html'``)             The URL to use for a category.
 `CATEGORY_SAVE_AS` (``'category/{slug}.html'``)         The location to save a category.
 `TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
 `TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
+`TAGS_URL` (``'tag/{slug}.html'``)                      The URL to use for the tag list.
+`TAGS_SAVE_AS` (``'tags.html'``)                        The location to save the tag list.
+`AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
+`AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.
+`AUTHORS_URL` (``'authors.html'``)                      The URL to use for the author list.
+`AUTHORS_SAVE_AS` (``'authors.html'``)                  The location to save the author list.
 `<DIRECT_TEMPLATE_NAME>_SAVE_AS`                        The location to save content generated from direct
                                                         templates. Where <DIRECT_TEMPLATE_NAME> is the
                                                         upper case template name.
