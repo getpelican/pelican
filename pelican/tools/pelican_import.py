@@ -37,7 +37,7 @@ def decode_wp_content(content, br=True):
         pre_index = 0
 
         for pre_part in pre_parts:
-            start = pre_part.index("<pre")
+            start = pre_part.find("<pre")
             if start == -1:
                 content = content + pre_part
                 continue
