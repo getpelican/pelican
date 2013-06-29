@@ -138,8 +138,9 @@ Setting name (default value)                                            What doe
                                                                         library, which can be installed via: ``pip install typogrify``
 `DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'archives')``)    List of templates that are used directly to render
                                                                         content. Typically direct templates are used to generate
-                                                                        index pages for collections of content (e.g. tags and
-                                                                        category index pages).
+                                                                        index pages for collections of content (e.g., tags and
+                                                                        category index pages). If the tag and category collections
+                                                                        are not needed, set ``DIRECT_TEMPLATES = ('index', 'archives')``
 `PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
 `SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will
                                                                         be the default length in words of the text created.
@@ -261,7 +262,10 @@ Setting name (default value)                            What does it do?
 
 .. note::
 
-    When any of the `*_SAVE_AS` settings is set to False, files will not be created.
+    If you do not want one or more of the default pages to be created (e.g.,
+    you are the only author on your site and thus do not need an Authors page),
+    set the corresponding ``*_SAVE_AS`` setting to ``False`` to prevent the
+    relevant page from being generated.
 
 Timezone
 --------
