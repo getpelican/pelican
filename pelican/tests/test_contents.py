@@ -346,6 +346,17 @@ class TestPage(unittest.TestCase):
             '<a href="http://notmyidea.org/article-spaces.html">link</a>'
         )
 
+    def test_multiple_authors(self):
+        """Test article with multiple authors."""
+        args = self.page_kwargs.copy()
+        content = Page(**args)
+        assert content.authors == [content.author]
+        args['metadata'].pop('author')
+        args['metadata']['authors'] = ['First Author', 'Second Author']
+        content = Page(**args)
+        assert content.authors
+        assert content.author == content.authors[0]
+
 
 class TestArticle(TestPage):
     def test_template(self):

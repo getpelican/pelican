@@ -360,6 +360,15 @@ class HTMLReaderTest(ReaderTest):
         for key, value in expected.items():
             self.assertEqual(value, page.metadata[key], key)
 
+    def test_article_with_multiple_authors(self):
+        page = self.read_file(path='article_with_multiple_authors.rst')
+        expected = {
+            'authors': ['First Author', 'Second Author']
+        }
+
+        for key, value in expected.items():
+            self.assertEqual(value, page.metadata[key], key)
+
     def test_article_with_metadata_and_contents_attrib(self):
         page = self.read_file(path='article_with_metadata_and_contents.html')
         expected = {

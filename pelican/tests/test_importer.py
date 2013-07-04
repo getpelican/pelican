@@ -10,7 +10,7 @@ from pelican.tests.support import (unittest, temporary_folder, mute,
 
 from pelican.utils import slugify
 
-CUR_DIR = os.path.dirname(__file__)
+CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
 WORDPRESS_ENCODED_CONTENT_SAMPLE = os.path.join(CUR_DIR,
                                                 'content',
@@ -75,7 +75,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
             out_name = fnames[index]
             self.assertTrue(out_name.endswith(filename))
             index += 1
-    
+
     def test_unless_custom_post_all_items_should_be_pages_or_posts(self):
         self.assertTrue(self.posts)
         pages_data = []
@@ -85,7 +85,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
             else:
                 pages_data.append((title, fname))
         self.assertEqual(0, len(pages_data))
-    
+
     def test_recognise_custom_post_type(self):
         self.assertTrue(self.custposts)
         cust_data = []
@@ -98,7 +98,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         self.assertEqual(('A custom post in category 4', 'custom1'), cust_data[0])
         self.assertEqual(('A custom post in category 5', 'custom1'), cust_data[1])
         self.assertEqual(('A 2nd custom post type also in category 5', 'custom2'), cust_data[2])
-     
+
     def test_custom_posts_put_in_own_dir(self):
         silent_f2p = mute(True)(fields2pelican)
         test_posts = []
@@ -130,7 +130,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
             else:
                 test_posts.append(post)
         with temporary_folder() as temp:
-            fnames = list(silent_f2p(test_posts, 'markdown', temp, 
+            fnames = list(silent_f2p(test_posts, 'markdown', temp,
                 wp_custpost=True, dircat=True))
         index = 0
         for post in test_posts:
@@ -152,7 +152,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
             if post[7] == 'page':
                 test_posts.append(post)
         with temporary_folder() as temp:
-            fnames = list(silent_f2p(test_posts, 'markdown', temp, 
+            fnames = list(silent_f2p(test_posts, 'markdown', temp,
                 wp_custpost=True, dirpage=False))
         index = 0
         for post in test_posts:
@@ -161,8 +161,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
             filename = os.path.join('pages', name)
             out_name = fnames[index]
             self.assertFalse(out_name.endswith(filename))
-        
- 
+
+
     def test_can_toggle_raw_html_code_parsing(self):
         def r(f):
             with open(f) as infile:
@@ -247,9 +247,9 @@ class TestBuildHeader(unittest.TestCase):
                 '##############################################\n\n')
 
     def test_galleries_added_to_header(self):
-        header = build_header('test', None, None, None, None, 
+        header = build_header('test', None, None, None, None,
                 None, ['output/test1', 'output/test2'])
-        self.assertEqual(header, 'test\n####\n' + ':attachments: output/test1, ' 
+        self.assertEqual(header, 'test\n####\n' + ':attachments: output/test1, '
                 + 'output/test2\n\n')
 
     def test_galleries_added_to_markdown_header(self):
@@ -258,11 +258,11 @@ class TestBuildHeader(unittest.TestCase):
         self.assertEqual(header, 'Title: test\n' + 'Attachments: output/test1, '
                 + 'output/test2\n\n')
 
-@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')       
-class TestWordpressXMLAttachements(unittest.TestCase):        
+@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+class TestWordpressXMLAttachements(unittest.TestCase):
     def setUp(self):
         self.attachments = get_attachments(WORDPRESS_XML_SAMPLE)
-    
+
     def test_recognise_attachments(self):
         self.assertTrue(self.attachments)
         self.assertTrue(len(self.attachments.keys()) == 3)
@@ -283,7 +283,7 @@ class TestWordpressXMLAttachements(unittest.TestCase):
     def test_download_attachments(self):
         real_file = os.path.join(CUR_DIR, 'content/article.rst')
         good_url = 'file://' + real_file
-        bad_url = 'http://www.notarealsite.notarealdomain/not_a_file.txt'
+        bad_url = 'http://localhost:1/not_a_file.txt'
         silent_da = mute()(download_attachments)
         with temporary_folder() as temp:
             #locations = download_attachments(temp, [good_url, bad_url])
