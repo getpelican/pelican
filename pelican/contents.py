@@ -68,10 +68,16 @@ class Content(object):
         #default template if it's not defined in page
         self.template = self._get_template()
 
-        # default author to the one in settings if not defined
-        if not hasattr(self, 'author'):
-            if 'AUTHOR' in settings:
-                self.author = Author(settings['AUTHOR'], settings)
+        # First, read the authors from "authors", if not, fallback to "author"
+        # and if not use the settings defined one, if any.
+        if not hasattr(self, 'author') and 'AUTHOR' in settings:
+            self.author = Author(settings['AUTHOR'], settings)
+
+        if not hasattr(self, 'authors') and hasattr(self, 'author'):
+            setattr(self, 'authors', [self.author])
+
+        if hasattr(self, 'authors') and not hasattr(self, 'author'):
+            setattr(self, 'author', self.authors[0])
 
         # XXX Split all the following code into pieces, there is too much here.
 

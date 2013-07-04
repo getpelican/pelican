@@ -27,7 +27,7 @@ except ImportError:
 try:
     from html import escape
 except ImportError:
-    from cgi import escape
+    from cgi import escape  # NOQA
 try:
     from html.parser import HTMLParser
 except ImportError:
@@ -45,6 +45,7 @@ METADATA_PROCESSORS = {
     'status': lambda x, y: x.strip(),
     'category': Category,
     'author': Author,
+    'authors': lambda x, y: [Author(name, y) for name in x.split(',')],
 }
 
 
@@ -449,13 +450,13 @@ def parse_path_metadata(source_path, settings=None, process=None):
     subdir = os.path.basename(dirname)
     if settings:
         checks = []
-        for key,data in [('FILENAME_METADATA', base),
-                         ('PATH_METADATA', source_path),
-                         ]:
+        for key, data in [('FILENAME_METADATA', base),
+                          ('PATH_METADATA', source_path),
+                          ]:
             checks.append((settings.get(key, None), data))
         if settings.get('USE_FOLDER_AS_CATEGORY', None):
             checks.insert(0, ('(?P<category>.*)', subdir))
-        for regexp,data in checks:
+        for regexp, data in checks:
             if regexp and data:
                 match = re.match(regexp, data)
                 if match:

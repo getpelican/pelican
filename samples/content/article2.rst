@@ -5,5 +5,6 @@ Second article
 :date: 2012-02-29
 :lang: en
 :slug: second-article
+:authors: babar, celestine
 
 This is some article, in english

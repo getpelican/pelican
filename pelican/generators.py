@@ -22,7 +22,6 @@ from pelican.contents import Article, Page, Static, is_valid_content
 from pelican.readers import read_file
 from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
 from pelican import signals
-import pelican.utils
 
 
 logger = logging.getLogger(__name__)
@@ -286,16 +285,16 @@ class ArticlesGenerator(Generator):
                       dates=archive, blog=True)
 
         period_save_as = {
-                'year' : self.settings['YEAR_ARCHIVE_SAVE_AS'],
-                'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
-                'day'  : self.settings['DAY_ARCHIVE_SAVE_AS'],
-                }
+            'year': self.settings['YEAR_ARCHIVE_SAVE_AS'],
+            'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
+            'day': self.settings['DAY_ARCHIVE_SAVE_AS'],
+        }
 
         period_date_key = {
-                'year' : attrgetter('date.year'),
-                'month': attrgetter('date.year', 'date.month'),
-                'day'  : attrgetter('date.year', 'date.month', 'date.day')
-                }
+            'year': attrgetter('date.year'),
+            'month': attrgetter('date.year', 'date.month'),
+            'day': attrgetter('date.year', 'date.month', 'date.day')
+        }
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
@@ -418,9 +417,10 @@ class ArticlesGenerator(Generator):
                 for tag in article.tags:
                     self.tags[tag].append(article)
             # ignore blank authors as well as undefined
-            if hasattr(article, 'author') and article.author.name != '':
-                self.authors[article.author].append(article)
-
+            if hasattr(article, 'authors'):
+                for author in article.authors:
+                    if author.name != '':
+                        self.authors[author].append(article)
 
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
