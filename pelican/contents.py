@@ -86,7 +86,8 @@ class Content(object):
 
         # create the slug if not existing, from the title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
-            self.slug = slugify(self.title)
+            self.slug = slugify(self.title,
+                                settings.get('SLUG_SUBSTITUTIONS', ()))
 
         self.source_path = source_path
 

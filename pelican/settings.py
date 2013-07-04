@@ -105,6 +105,7 @@ DEFAULT_CONFIG = {
     'PLUGINS': [],
     'TEMPLATE_PAGES': {},
     'IGNORE_FILES': ['.#*'],
+    'SLUG_SUBSTITUTIONS': (),
     }
 
 def read_settings(path=None, override=None):

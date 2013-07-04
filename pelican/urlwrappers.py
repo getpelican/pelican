@@ -15,10 +15,10 @@ class URLWrapper(object):
     def __init__(self, name, settings):
         # next 2 lines are redundant with the setter of the name property
         # but are here for clarity
-        self._name = name
-        self.slug = slugify(name)
-        self.name = name
         self.settings = settings
+        self._name = name
+        self.slug = slugify(name, self.settings.get('SLUG_SUBSTITUTIONS', ()))
+        self.name = name
 
     @property
     def name(self):
@@ -27,7 +27,7 @@ class URLWrapper(object):
     @name.setter
     def name(self, name):
         self._name = name
-        self.slug = slugify(name)
+        self.slug = slugify(name, self.settings.get('SLUG_SUBSTITUTIONS', ()))
 
     def as_dict(self):
         d = self.__dict__
@@ -41,7 +41,8 @@ class URLWrapper(object):
         return self.slug
 
     def _normalize_key(self, key):
-        return six.text_type(slugify(key))
+        subs = self.settings.get('SLUG_SUBSTITUTIONS', ())
+        return six.text_type(slugify(key, subs))
 
     def __eq__(self, other):
         return self._key() == self._normalize_key(other)

@@ -258,6 +258,10 @@ Setting name (default value)                            What does it do?
                                                         posts.
 `DAY_ARCHIVE_SAVE_AS` (False)                           The location to save per-day archives of your
                                                         posts.
+`SLUG_SUBSTITUTIONS`  (``()``)                          Substitutions to make prior to stripping out
+                                                        non-alphanumerics when generating slugs. Specified
+                                                        as a list of 2-tuples of ``(from, to)`` which are
+                                                        applied in order.
 ====================================================    =====================================================
 
 .. note::
