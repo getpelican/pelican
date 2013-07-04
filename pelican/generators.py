@@ -434,7 +434,7 @@ class ArticlesGenerator(Generator):
 
         self.articles, self.translations = process_translations(all_articles)
 
-        signals.article_generator_pretaxonomy.send(self)        
+        signals.article_generator_pretaxonomy.send(self)
 
         for article in self.articles:
             # only main articles are listed in categories and tags
@@ -444,9 +444,9 @@ class ArticlesGenerator(Generator):
                 for tag in article.tags:
                     self.tags[tag].append(article)
             # ignore blank authors as well as undefined
-            if hasattr(article, 'author') and article.author.name != '':
-                self.authors[article.author].append(article)
-
+            for author in getattr(article, 'authors', []):
+                if author.name != '':
+                    self.authors[author].append(article)
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)

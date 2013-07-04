@@ -311,7 +311,7 @@ this metadata in text files via the following syntax (give your file the
     :tags: thats, awesome
     :category: yeah
     :slug: my-super-post
-    :author: Alexis Metaireau
+    :authors: Alexis Metaireau, Conan Doyle
     :summary: Short version for index and feeds
 
 Pelican implements an extension to reStructuredText to enable support for the
@@ -331,7 +331,7 @@ pattern::
     Category: Python
     Tags: pelican, publishing
     Slug: my-super-post
-    Author: Alexis Metaireau
+    Authors: Alexis Metaireau, Conan Doyle
     Summary: Short version for index and feeds
 
     This is the content of my super blog post.
@@ -351,7 +351,7 @@ interprets the HTML in a very straightforward manner, reading metadata from
             <meta name="date" content="2012-07-09 22:28" />
             <meta name="modified" content="2012-07-10 20:14" />
             <meta name="category" content="yeah" />
-            <meta name="author" content="Alexis Métaireau" />
+            <meta name="authors" content="Alexis Métaireau, Conan Doyle" />
             <meta name="summary" content="Short version for index and feeds" />
         </head>
         <body>
@@ -379,6 +379,9 @@ __ `W3C ISO 8601`_
 ``modified`` should be last time you updated the article, and defaults to ``date`` if not specified.
 Besides you can show ``modified`` in the templates, feed entries in feed readers will be updated automatically
 when you set ``modified`` to the current date after you modified your article.
+
+``authors`` is a comma-separated list of article authors. If there's only one author you
+can use ``author`` field.
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the
@@ -587,12 +590,12 @@ classprefix     string        String to prepend to token class names
 hl_lines        numbers       List of lines to be highlighted.
 lineanchors     string        Wrap each line in an anchor using this
                               string and -linenumber.
-linenos         string        If present or set to "table" output line 
+linenos         string        If present or set to "table" output line
                               numbers in a table, if set to
                               "inline" output them inline. "none" means
-                              do not output the line numbers for this 
+                              do not output the line numbers for this
                               table.
-linenospecial   number        If set every nth line will be given the 
+linenospecial   number        If set every nth line will be given the
                               'special' css class.
 linenostart     number        Line number for the first line.
 linenostep      number        Print every nth line number.

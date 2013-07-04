@@ -124,7 +124,7 @@ def get_filename(filename, post_id):
 
 def wp2fields(xml, wp_custpost=False):
     """Opens a wordpress XML file, and yield Pelican fields"""
-    
+
     items = get_items(xml)
     for item in items:
 
@@ -140,7 +140,7 @@ def wp2fields(xml, wp_custpost=False):
             filename = item.find('post_name').string
             post_id = item.find('post_id').string
             filename = get_filename(filename, post_id)
-            
+
             content = item.find('encoded').string
             raw_date = item.find('post_date').string
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
@@ -161,7 +161,7 @@ def wp2fields(xml, wp_custpost=False):
                     pass
                 # Old behaviour was to name everything not a page as an article.
                 # Theoretically all attachments have status == inherit so
-                # no attachments should be here. But this statement is to 
+                # no attachments should be here. But this statement is to
                 # maintain existing behaviour in case that doesn't hold true.
                 elif post_type == 'attachment':
                     pass
@@ -469,7 +469,7 @@ def build_header(title, date, author, categories, tags, slug, attachments=None):
     header += '\n'
     return header
 
-def build_markdown_header(title, date, author, categories, tags, slug, 
+def build_markdown_header(title, date, author, categories, tags, slug,
         attachments=None):
     """Build a header from a list of fields"""
     header = 'Title: %s\n' % title
@@ -494,8 +494,8 @@ def get_ext(out_markup, in_markup='html'):
     else:
         ext = '.rst'
     return ext
-    
-def get_out_filename(output_path, filename, ext, kind, 
+
+def get_out_filename(output_path, filename, ext, kind,
         dirpage, dircat, categories, wp_custpost):
     filename = os.path.basename(filename)
 
@@ -516,7 +516,7 @@ def get_out_filename(output_path, filename, ext, kind,
             os.mkdir(pages_dir)
         out_filename = os.path.join(pages_dir, filename+ext)
     elif not dirpage and kind == 'page':
-        pass 
+        pass
     # option to put wp custom post types in directories with post type
     # names. Custom post types can also have categories so option to
     # create subdirectories with category names
@@ -530,7 +530,7 @@ def get_out_filename(output_path, filename, ext, kind,
             catname = slugify(categories[0])
         else:
             catname = ''
-        out_filename = os.path.join(output_path, typename, 
+        out_filename = os.path.join(output_path, typename,
             catname, filename+ext)
         if not os.path.isdir(os.path.join(output_path, typename, catname)):
             os.makedirs(os.path.join(output_path, typename, catname))
@@ -544,20 +544,20 @@ def get_out_filename(output_path, filename, ext, kind,
     return out_filename
 
 def get_attachments(xml):
-    """returns a dictionary of posts that have attachments with a list 
+    """returns a dictionary of posts that have attachments with a list
     of the attachment_urls
     """
     items = get_items(xml)
     names = {}
     attachments = []
-    
+
     for item in items:
         kind = item.find('post_type').string
         filename = item.find('post_name').string
         post_id = item.find('post_id').string
-        
+
         if kind == 'attachment':
-            attachments.append((item.find('post_parent').string, 
+            attachments.append((item.find('post_parent').string,
                 item.find('attachment_url').string))
         else:
             filename = get_filename(filename, post_id)
@@ -569,7 +569,7 @@ def get_attachments(xml):
         except KeyError:
             #attachment's parent is not a valid post
             parent_name = None
-        
+
         try:
             attachedposts[parent_name].append(url)
         except KeyError:
@@ -578,13 +578,13 @@ def get_attachments(xml):
     return attachedposts
 
 def download_attachments(output_path, urls):
-    """Downloads wordpress attachments and returns a list of paths to 
-    attachments that can be associated with a post (relative path to output 
+    """Downloads wordpress attachments and returns a list of paths to
+    attachments that can be associated with a post (relative path to output
     directory). Files that fail to download, will not be added to posts"""
     locations = []
     for url in urls:
         path = urlparse(url).path
-        #teardown path and rebuild to negate any errors with 
+        #teardown path and rebuild to negate any errors with
         #os.path.join and leading /'s
         path = path.split('/')
         filename = path.pop(-1)
@@ -625,16 +625,16 @@ def fields2pelican(fields, out_markup, output_path,
                 attached_files = download_attachments(output_path, urls)
             except KeyError:
                 attached_files = None
-        else: 
+        else:
             attached_files = None
 
         ext = get_ext(out_markup, in_markup)
         if ext == '.md':
-            header = build_markdown_header(title, date, author, categories, 
+            header = build_markdown_header(title, date, author, categories,
                     tags, slug, attached_files)
         else:
             out_markup = "rst"
-            header = build_header(title, date, author, categories, 
+            header = build_header(title, date, author, categories,
                     tags, slug, attached_files)
 
         out_filename = get_out_filename(output_path, filename, ext,
@@ -690,7 +690,7 @@ def fields2pelican(fields, out_markup, output_path,
         print("downloading attachments that don't have a parent post")
         urls = attachments[None]
         orphan_galleries = download_attachments(output_path, urls)
-            
+
 def main():
     parser = argparse.ArgumentParser(
         description="Transform feed, WordPress, Tumblr, Dotclear, or Posterous "
@@ -723,7 +723,7 @@ def main():
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
-    parser.add_argument('--wp-custpost', action='store_true', 
+    parser.add_argument('--wp-custpost', action='store_true',
         dest='wp_custpost',
         help='Put wordpress custom post types in directories. If used with '
              '--dir-cat option directories will be created as '
@@ -775,7 +775,7 @@ def main():
     if args.wp_attach and input_type != 'wordpress':
         error = "You must be importing a wordpress xml to use the --wp-attach option"
         exit(error)
-          
+
     if input_type == 'wordpress':
         fields = wp2fields(args.input, args.wp_custpost or False)
     elif input_type == 'dotclear':
