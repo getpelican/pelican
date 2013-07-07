@@ -10,7 +10,7 @@ try:
 except ImportError:
     import socketserver  # NOQA
 
-PORT = 8000
+PORT = len(sys.argv) == 2 and int(sys.argv[1]) or 8000
 
 Handler = srvmod.SimpleHTTPRequestHandler
 
