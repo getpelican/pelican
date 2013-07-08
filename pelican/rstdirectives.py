@@ -98,6 +98,65 @@ class YouTube(Directive):
 
 directives.register_directive('youtube', YouTube)
 
+
+class Vimeo(Directive):
+    """ Embed Vimeo video in posts.
+
+    Based on the YouTube directive by Brian Hsu: https://gist.github.com/1422773
+
+    VIDEO_ID is required, with / height are optional integer,
+    and align could be left / center / right.
+
+    Usage:
+    .. vimeo:: VIDEO_ID
+        :width: 640
+        :height: 480
+        :align: center
+    """
+
+    def align(argument):
+        """Conversion function for the "align" option."""
+        return directives.choice(argument, ('left', 'center', 'right'))
+
+    required_arguments = 1
+    optional_arguments = 2
+    option_spec = {
+        'width': directives.positive_int,
+        'height': directives.positive_int,
+        'align': align
+    }
+
+    final_argument_whitespace = False
+    has_content = False
+
+    def run(self):
+        videoID = self.arguments[0].strip()
+        width = 420
+        height = 315
+        align = 'left'
+
+        if 'width' in self.options:
+            width = self.options['width']
+
+        if 'height' in self.options:
+            height = self.options['height']
+
+        if 'align' in self.options:
+            align = self.options['align']
+
+        url = 'http://player.vimeo.com/video/%s' % videoID
+        div_block = '<div class="vimeo" align="%s">' % align
+        embed_block = '<iframe width="%s" height="%s" src="%s" '\
+                      'frameborder="0"></iframe>' % (width, height, url)
+
+        return [
+            nodes.raw('', div_block, format='html'),
+            nodes.raw('', embed_block, format='html'),
+            nodes.raw('', '</div>', format='html')]
+
+directives.register_directive('vimeo', Vimeo)
+
+
 _abbr_re = re.compile('\((.*)\)$')
 
 
