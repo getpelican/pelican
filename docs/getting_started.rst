@@ -390,6 +390,23 @@ following to ``pelicanconf.py``::
 
 And then the ``pdfs`` directory would also be copied to ``output/static/``.
 
+Adding videos from YouTube or Vimeo to your content
+---------------------------------------------------
+
+You can easily embed videos from YouTube or Vimeo using the relevant directives,
+each directive requires a video ID and you can optionally specify a width, height
+and alignment::
+
+    .. youtube:: VIDEO_ID
+        :width: 640
+        :height: 480
+        :align: center
+
+    .. vimeo:: VIDEO_ID
+         :width: 640
+         :height: 480
+         :align: center
+
 Importing an existing blog
 --------------------------
 
