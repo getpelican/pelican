@@ -141,14 +141,21 @@ class Content(object):
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
         path = self.metadata.get('path', self.get_relative_source_path())
+        default_category = self.settings['DEFAULT_CATEGORY']
+        slug_substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
         metadata.update({
             'path': path_to_url(path),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', datetime.now()),
-            'author': getattr(self, 'author', ''),
-            'category': getattr(self, 'category',
-                                self.settings['DEFAULT_CATEGORY']),
+            'author': slugify(
+                getattr(self, 'author', ''),
+                slug_substitutions
+            ),
+            'category': slugify(
+                getattr(self, 'category', default_category),
+                slug_substitutions
+            )
         })
         return metadata
 
