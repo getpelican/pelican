@@ -231,7 +231,7 @@ class pelican_open(object):
         pass
 
 
-def slugify(value):
+def slugify(value, substitutions=()):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
@@ -249,8 +249,10 @@ def slugify(value):
     if isinstance(value, six.binary_type):
         value = value.decode('ascii')
     # still unicode
-    value = unicodedata.normalize('NFKD', value)
-    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    value = unicodedata.normalize('NFKD', value).lower()
+    for src, dst in substitutions:
+        value = value.replace(src.lower(), dst.lower())
+    value = re.sub('[^\w\s-]', '', value).strip()
     value = re.sub('[-\s]+', '-', value)
     # we want only ASCII chars
     value = value.encode('ascii', 'ignore')
