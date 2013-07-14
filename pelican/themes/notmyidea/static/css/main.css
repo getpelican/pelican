@@ -326,6 +326,7 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 		.social a[type$='atom+xml'], .social a[type$='rss+xml'] {background-image: url('../images/icons/rss.png');}
 		.social a[href*='slideshare.net'] {background-image: url('../images/icons/slideshare.png');}
 		.social a[href*='speakerdeck.com'] {background-image: url('../images/icons/speakerdeck.png');}
+		.social a[href*='stackoverflow.com'] {background-image: url('../images/icons/stackoverflow.png');}
 		.social a[href*='twitter.com'] {background-image: url('../images/icons/twitter.png');}
 		.social a[href*='vimeo.com'] {background-image: url('../images/icons/vimeo.png');}
 		.social a[href*='youtube.com'] {background-image: url('../images/icons/youtube.png');}
