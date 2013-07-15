@@ -493,11 +493,11 @@ Setting name (default value)                        What does it do?
 `TAG_CLOUD_MAX_ITEMS` (``100``)                     Maximum number of tags in the cloud.
 ================================================    =====================================================
 
-The default theme does not support tag clouds, but it is pretty easy to add::
+The default theme does not include a tag cloud, but it is pretty easy to add::
 
     <ul>
         {% for tag in tag_cloud %}
-            <li class="tag-{{ tag.1 }}"><a href="{{ tag.0.url }}">{{ tag.0 }}</a></li>
+            <li class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a></li>
         {% endfor %}
     </ul>
 
