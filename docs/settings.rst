@@ -497,7 +497,7 @@ The default theme does not support tag clouds, but it is pretty easy to add::
 
     <ul>
         {% for tag in tag_cloud %}
-            <li class="tag-{{ tag.1 }}"><a href="/tag/{{ tag.0|string|replace(" ", "-" ) }}.html">{{ tag.0 }}</a></li>
+            <li class="tag-{{ tag.1 }}"><a href="{{ tag.0.url }}">{{ tag.0 }}</a></li>
         {% endfor %}
     </ul>
 
