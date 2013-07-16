@@ -376,9 +376,11 @@ def build_markdown_header(title, date, author, categories, tags, slug):
 
 def fields2pelican(fields, out_markup, output_path,
         dircat=False, strip_raw=False, disable_slugs=False,
-        dirpage=False, filename_template=None):
+        dirpage=False, filename_template=None, filter_author=None):
     for (title, content, filename, date, author, categories, tags,
             kind, in_markup) in fields:
+        if filter_author and filter_author != author:
+            continue
         slug = not disable_slugs and filename or None
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
@@ -487,6 +489,8 @@ def main():
     parser.add_argument('--dir-page', action='store_true', dest='dirpage',
         help=('Put files recognised as pages in "pages/" sub-directory'
               ' (wordpress import only)'))
+    parser.add_argument('--filter-author', dest='author',
+        help='Import only post from the specified author')
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
@@ -537,4 +541,5 @@ def main():
                    dircat=args.dircat or False,
                    dirpage=args.dirpage or False,
                    strip_raw=args.strip_raw or False,
-                   disable_slugs=args.disable_slugs or False)
+                   disable_slugs=args.disable_slugs or False,
+                   filter_author=args.author)
