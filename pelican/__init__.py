@@ -390,7 +390,7 @@ def main():
         # so convert the message to unicode with the correct encoding
         msg = str(e)
         if not six.PY3:
-            msg = msg.decode(locale.getpreferredencoding(False))
+            msg = msg.decode(locale.getpreferredencoding())
 
         logger.critical(msg)
 
