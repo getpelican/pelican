@@ -326,6 +326,87 @@ def posterous2fields(api_token, email, password):
             yield (post.get('title'), post.get('body_cleaned'), slug, date,
                 post.get('user').get('display_name'), [], tags, kind, "html")
 
+
+def tumblr2fields(api_key, blogname):
+    """ Imports Tumblr posts (API v2)"""
+    from time import strftime, localtime
+    try:
+        # py3k import
+        import json
+    except ImportError:
+        # py2 import
+        import simplejson as json
+
+    try:
+        # py3k import
+        import urllib.request as urllib_request
+    except ImportError:
+        # py2 import
+        import urllib2 as urllib_request
+
+    def get_tumblr_posts(api_key, blogname, offset=0):
+        url = "http://api.tumblr.com/v2/blog/%s.tumblr.com/posts?api_key=%s&offset=%d&filter=raw" % (blogname, api_key, offset)
+        request = urllib_request.Request(url)
+        handle = urllib_request.urlopen(request)
+        posts = json.loads(handle.read().decode('utf-8'))
+        return posts.get('response').get('posts')
+
+    offset = 0
+    posts = get_tumblr_posts(api_key, blogname, offset)
+    while len(posts) > 0:
+        for post in posts:
+            title = post.get('title') or post.get('source_title') or post.get('type').capitalize()
+            slug = post.get('slug') or slugify(title)
+            tags = post.get('tags')
+            timestamp = post.get('timestamp')
+            date = strftime("%Y-%m-%d %H:%M:%S", localtime(int(timestamp)))
+            slug = strftime("%Y-%m-%d-", localtime(int(timestamp))) + slug
+            format = post.get('format')
+            content = post.get('body')
+            type = post.get('type')
+            if type == 'photo':
+                if format == 'markdown':
+                    fmtstr = '![%s](%s)'
+                else:
+                    fmtstr = '<img alt="%s" src="%s" />'
+                content = '\n'.join(fmtstr % (photo.get('caption'), photo.get('original_size').get('url')) for photo in post.get('photos'))
+                content += '\n\n' + post.get('caption')
+            elif type == 'quote':
+                if format == 'markdown':
+                    fmtstr = '\n\n&mdash; %s'
+                else:
+                    fmtstr = '<p>&mdash; %s</p>'
+                content = post.get('text') + fmtstr % post.get('source')
+            elif type == 'link':
+                if format == 'markdown':
+                    fmtstr = '[via](%s)\n\n'
+                else:
+                    fmtstr = '<p><a href="%s">via</a></p>\n'
+                content = fmtstr % post.get('url') + post.get('description')
+            elif type == 'audio':
+                if format == 'markdown':
+                    fmtstr = '[via](%s)\n\n'
+                else:
+                    fmtstr = '<p><a href="%s">via</a></p>\n'
+                content = fmtstr % post.get('source_url') + post.get('caption') + post.get('player')
+            elif type == 'video':
+                if format == 'markdown':
+                    fmtstr = '[via](%s)\n\n'
+                else:
+                    fmtstr = '<p><a href="%s">via</a></p>\n'
+                content = fmtstr % post.get('source_url') + post.get('caption') + '\n'.join(player.get('embed_code') for player in post.get('player'))
+            elif type == 'answer':
+                title = post.get('question')
+                content = '<p><a href="%s" rel="external nofollow">%s</a>: %s</p>\n%s' % (post.get('asking_name'), post.get('asking_url'), post.get('question'), post.get('answer'))
+
+            content = content.rstrip() + '\n'
+
+            yield (title, content, slug, date, post.get('blog_name'), [type], tags, format)
+
+        offset += len(posts)
+        posts = get_tumblr_posts(api_key, blogname, offset)
+
+
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
@@ -478,6 +559,8 @@ def main():
         help='Dotclear export')
     parser.add_argument('--posterous', action='store_true', dest='posterous',
         help='Posterous export')
+    parser.add_argument('--tumblr', action='store_true', dest='tumblr',
+        help='Tumblr export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
@@ -503,6 +586,8 @@ def main():
         help="Email address (posterous import only)")
     parser.add_argument('-p', '--password', dest='password',
         help="Password (posterous import only)")
+    parser.add_argument('-b', '--blogname', dest='blogname',
+        help="Blog name (Tumblr import only)")
 
     args = parser.parse_args()
 
@@ -513,10 +598,12 @@ def main():
         input_type = 'dotclear'
     elif args.posterous:
         input_type = 'posterous'
+    elif args.tumblr:
+        input_type = 'tumblr'
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous or --feed options"
+        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr or --feed options"
         exit(error)
 
     if not os.path.exists(args.output):
@@ -532,6 +619,8 @@ def main():
         fields = dc2fields(args.input)
     elif input_type == 'posterous':
         fields = posterous2fields(args.input, args.email, args.password)
+    elif input_type == 'tumblr':
+        fields = tumblr2fields(args.input, args.blogname)
     elif input_type == 'feed':
         fields = feed2fields(args.input)
 
