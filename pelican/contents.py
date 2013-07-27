@@ -9,8 +9,11 @@ import functools
 import os
 import re
 import sys
+import pytz
+import pdb
 
 from datetime import datetime
+
 
 
 from pelican import signals
@@ -108,6 +111,11 @@ class Content(object):
 
         if hasattr(self, 'date'):
             self.locale_date = strftime(self.date, self.date_format)
+            #Set UTC timezone
+            if self.date.tzinfo is not None:
+                local_tz = pytz.timezone(settings['TIMEZONE'])
+                self.date = self.date.replace(tzinfo=local_tz)
+                self.utcdate = datetime.astimezone(self.date, pytz.timezone("UTC"))
 
         # manage status
         if not hasattr(self, 'status'):
