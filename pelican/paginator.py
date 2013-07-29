@@ -3,6 +3,7 @@ from __future__ import unicode_literals, print_function
 import six
 
 # From django.core.paginator
+from collections import namedtuple
 import functools
 import logging
 import os
@@ -10,6 +11,13 @@ import os
 from math import ceil
 
 logger = logging.getLogger(__name__)
+
+
+PaginationRule = namedtuple(
+    'PaginationRule',
+    'min_page URL SAVE_AS',
+)
+
 
 class Paginator(object):
     def __init__(self, name, object_list, settings):
@@ -109,8 +117,16 @@ class Page(object):
         """Returns URL information as defined in settings. Similar to
         URLWrapper._from_settings, but specialized to deal with pagination
         logic."""
-        setting = "%s_%s" % ('PAGINATION', key)
-        value = self.settings[setting]
+
+        rule = None
+
+        # find the last matching pagination rule
+        for p in self.settings['PAGINATION_PATTERNS']:
+            if p.min_page <= self.number:
+                rule = p
+
+        value = getattr(rule, key)
+
         if not isinstance(value, six.string_types):
             logger.warning('%s is set to %s' % (setting, value))
             return value
