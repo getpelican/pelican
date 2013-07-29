@@ -193,10 +193,10 @@ needed by Pelican.
     else:
         CONF['default_pagination'] = False
 
-    mkfile = ask('Do you want to generate a Makefile to easily manage your website?', bool, True)
+    automation = ask('Do you want to generate a Fabfile/Makefile to automate generation and publishing?', bool, True)
     develop = ask('Do you want an auto-reload & simpleHTTP script to assist with theme and site development?', bool, True)
 
-    if mkfile:
+    if automation:
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server?', str_compat, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on that server?', str_compat, CONF['ftp_user'])
@@ -243,7 +243,15 @@ needed by Pelican.
     except OSError as e:
         print('Error: {0}'.format(e))
 
-    if mkfile:
+    if automation:
+        try:
+            with codecs.open(os.path.join(CONF['basedir'], 'fabfile.py'), 'w', 'utf-8') as fd:
+                for line in get_template('fabfile.py'):
+                    template = string.Template(line)
+                    fd.write(template.safe_substitute(CONF))
+                fd.close()
+        except OSError as e:
+            print('Error: {0}'.format(e))
         try:
             with codecs.open(os.path.join(CONF['basedir'], 'Makefile'), 'w', 'utf-8') as fd:
                 mkfile_template_name = 'Makefile'

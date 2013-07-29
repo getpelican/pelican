@@ -152,21 +152,87 @@ if you plan to create non-chronological content)::
     │   └── (pages)
     ├── output
     ├── develop_server.sh
+    ├── fabfile.py
     ├── Makefile
     ├── pelicanconf.py       # Main settings file
     └── publishconf.py       # Settings to use when ready to publish
 
 The next step is to begin to adding content to the *content* folder that has
-been created for you. (See *Writing articles using Pelican* section below for
-more information about how to format your content.)
+been created for you. (See the **Writing content using Pelican** section below
+for more information about how to format your content.)
 
 Once you have written some content to generate, you can use the ``pelican``
 command to generate your site, which will be placed in the output folder.
-Alternatively, you can use automation tools that "wrap" the ``pelican`` command
-to simplify the process of generating, previewing, and uploading your site. One
-such tool is the ``Makefile`` that's automatically created for you when you use
-``pelican-quickstart`` to create a skeleton project. To use ``make`` to
-generate your site, run::
+
+Automation tools
+================
+
+While the ``pelican`` command is the canonical way to generate your site,
+automation tools can be used to streamline the generation and publication
+flow. One of the questions asked during the ``pelican-quickstart`` process
+described above pertains to whether you want to automate site generation and
+publication. If you answered "yes" to that question, a ``fabfile.py`` and
+``Makefile`` will be generated in the root of your project. These files,
+pre-populated with certain information gleaned from other answers provided
+during the ``pelican-quickstart`` process, are meant as a starting point and
+should be customized to fit your particular needs and usage patterns. If you
+find one or both of these automation tools to be of limited utility, these
+files can deleted at any time and will not affect usage of the canonical
+``pelican`` command.
+
+Following are automation tools that "wrap" the ``pelican`` command and can
+simplify the process of generating, previewing, and uploading your site.
+
+Fabric
+------
+
+The advantage of Fabric_ is that it is written in Python and thus can be used
+in a wide range of environments. The downside is that it must be installed
+separately. Use the following command to install Fabric, prefixing with
+``sudo`` if your environment requires it::
+
+    $ pip install Fabric
+
+Take a moment to open the ``fabfile.py`` file that was generated in your
+project root. You will see a number of commands, any one of which can be
+renamed, removed, and/or customized to your liking. Using the out-of-the-box
+configuration, you can generate your site via::
+
+    $ fab build
+
+If you'd prefer to have Pelican automatically regenerate your site every time a
+change is detected (which is handy when testing locally), use the following
+command instead::
+
+    $ fab regenerate
+
+To serve the generated site so it can be previewed in your browser at
+http://localhost:8000/::
+
+    $ fab serve
+
+If during the ``pelican-quickstart`` process you answered "yes" when asked
+whether you want to upload your site via SSH, you can use the following command
+to publish your site via rsync over SSH::
+
+    $ fab publish
+
+These are just a few of the commands available by default, so feel free to
+explore ``fabfile.py`` and see what other commands are available. More
+importantly, don't hesitate to customize ``fabfile.py`` to suit your specific
+needs and preferences.
+
+Make
+----
+
+A ``Makefile`` is also automatically created for you when you say "yes" to
+the relevant question during the ``pelican-quickstart`` process. The advantage
+of this method is that the ``make`` command is built into most POSIX systems
+and thus doesn't require installing anything else in order to use it. The
+downside is that non-POSIX systems (e.g., Windows) do not include ``make``,
+and installing it on those systems can be a non-trivial task.
+
+If you want to use ``make`` to generate your site, run::
 
     $ make html
 
@@ -177,7 +243,7 @@ command instead::
     $ make regenerate
 
 To serve the generated site so it can be previewed in your browser at
-http://localhost:8000::
+http://localhost:8000/::
 
     $ make serve
 
@@ -484,3 +550,4 @@ listed on the index page nor on any category page.
 
 .. _virtualenv: http://www.virtualenv.org/
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
+.. _Fabric: http://fabfile.org/
