@@ -497,12 +497,22 @@ The default theme does not include a tag cloud, but it is pretty easy to add::
 
     <ul>
         {% for tag in tag_cloud %}
-            <li class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a></li>
+            <span class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a>&nbsp;</span>
         {% endfor %}
     </ul>
 
 You should then also define a CSS style with the appropriate classes (tag-0 to tag-N, where
-N matches `TAG_CLOUD_STEPS` -1).
+N matches `TAG_CLOUD_STEPS` -1), tag-0 being the largest.
+
+      span.tag-0 {
+      font-size: 150%;
+      }
+
+      span.tag-1 {
+      font-size: 120%;
+      }
+
+      ...    
 
 Translations
 ============
