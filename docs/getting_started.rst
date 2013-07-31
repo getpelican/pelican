@@ -418,8 +418,8 @@ In this example, ``article1.rst`` could look like::
 
     See below intra-site link examples in reStructuredText format.
 
-    `a link relative to content root <|filename|/cat/article2.md>`_
-    `a link relative to current file <|filename|cat/article2.md>`_
+    `a link relative to content root <|filename|/cat/article2.rst>`_
+    `a link relative to current file <|filename|cat/article2.rst>`_
 
 and ``article2.md``::
 
@@ -428,8 +428,8 @@ and ``article2.md``::
 
     See below intra-site link examples in Markdown format.
 
-    [a link relative to content root](|filename|/article1.rst)
-    [a link relative to current file](|filename|../article1.rst)
+    [a link relative to content root](|filename|/article1.md)
+    [a link relative to current file](|filename|../article1.md)
 
 Embedding non-article or non-page content is slightly different in that the
 directories need to be specified in ``pelicanconf.py`` file. The ``images``
