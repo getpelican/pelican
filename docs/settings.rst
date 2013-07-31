@@ -153,6 +153,8 @@ Setting name (default value)                                            What doe
                                                                         These templates need to use ``DIRECT_TEMPLATES`` setting.
 `ASCIIDOC_OPTIONS` (``[]``)                                             A list of options to pass to AsciiDoc. See the `manpage
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
+`WITH_FUTURE_DATES` (``True``)                                          If disabled, content with dates in the future will get a
+                                                                        default status of draft.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
