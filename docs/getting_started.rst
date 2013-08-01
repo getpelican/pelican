@@ -41,7 +41,7 @@ method::
 If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
 
-    $ pip install -e git://github.com/getpelican/pelican#egg=pelican
+    $ pip install -e git+https://github.com/getpelican/pelican.git#egg=pelican
 
 If you plan on using Markdown as a markup format, you'll need to install the
 Markdown library as well::
