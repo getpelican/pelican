@@ -35,6 +35,7 @@ DEFAULT_CONFIG = {
     'OUTPUT_PATH': 'output',
     'MARKUP': ('rst', 'md'),
     'STATIC_PATHS': ['images', ],
+    'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
     'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),

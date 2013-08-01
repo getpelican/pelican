@@ -564,7 +564,8 @@ class StaticGenerator(Generator):
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
-                         'theme', self.output_path, os.curdir)
+                         self.settings['THEME_STATIC_DIR'], self.output_path,
+                         os.curdir)
         # copy all Static files
         for sc in self.staticfiles:
             source_path = os.path.join(self.path, sc.source_path)
