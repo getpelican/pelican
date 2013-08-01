@@ -138,7 +138,7 @@ class Page(object):
                 # no page numbers on the first page
                 context['number'] = ''
                 context['number_sep'] = ''
-            ret = unicode(value).format(**context)
+            ret = six.u(value).format(**context)
             if ret[0] == '/':
                 ret = ret[1:]
             return ret
