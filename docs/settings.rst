@@ -495,11 +495,11 @@ Setting name (default value)                        What does it do?
 
 The default theme does not include a tag cloud, but it is pretty easy to add::
 
-    <ul>
+    <p>
         {% for tag in tag_cloud %}
             <span class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a>&nbsp;</span>
         {% endfor %}
-    </ul>
+    </p>
 
 You should then also define a CSS style with the appropriate classes (tag-0 to tag-N, where
 N matches `TAG_CLOUD_STEPS` -1), tag-0 being the largest.
