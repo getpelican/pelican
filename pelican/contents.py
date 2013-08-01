@@ -10,7 +10,6 @@ import os
 import re
 import sys
 import pytz
-import pdb
 
 from datetime import datetime
 
