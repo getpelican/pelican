@@ -547,6 +547,9 @@ Setting name (default value)                        What does it do?
                                                     or absolute path to a theme folder, or the name of a
                                                     default theme or a theme installed via
                                                     ``pelican-themes`` (see below).
+`THEME_STATIC_DIR` (``'theme'``)                    Destination directory in the output path where
+                                                    Pelican will place the files collected from
+                                                    `THEME_STATIC_PATHS`. Default is `theme`.
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
                                                     value is `static`, but if your theme has
                                                     other static paths, you can put them here.
