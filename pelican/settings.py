@@ -46,6 +46,7 @@ DEFAULT_CONFIG = {
     'DISPLAY_PAGES_ON_MENU': True,
     'DISPLAY_CATEGORIES_ON_MENU': True,
     'PDF_GENERATOR': False,
+    'PDF_STYLE': 'twelvepoint',
     'OUTPUT_SOURCES': False,
     'OUTPUT_SOURCES_EXTENSION': '.text',
     'USE_FOLDER_AS_CATEGORY': True,
