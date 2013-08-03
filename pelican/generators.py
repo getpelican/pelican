@@ -56,6 +56,7 @@ class Generator(object):
                                          "themes", "simple", "templates"))
         self.env = Environment(
             trim_blocks=True,
+            lstrip_blocks=True,
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
