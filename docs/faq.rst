@@ -92,7 +92,7 @@ For reStructuredText, this metadata should of course be prefixed with a colon::
 
 This metadata can then be accessed in the template::
 
-    {% if article.modified %}
+    {% if article and article.modified %}
     Last modified: {{ article.modified }}
     {% endif %}
 
