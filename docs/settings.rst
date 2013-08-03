@@ -477,7 +477,31 @@ Setting name (default value)                        What does it do?
 `DEFAULT_PAGINATION` (``False``)                    The maximum number of articles to include on a
                                                     page, not including orphans. False to disable
                                                     pagination.
+`PAGINATION_PATTERNS`                               A set of patterns that are used to determine advanced
+                                                    pagination output.
 ================================================    =====================================================
+
+Using Pagination Patterns
+-------------------------
+
+The ``PAGINATION_PATTERNS`` setting can be used to configure where
+subsequent pages are created. The setting is a sequence of three
+element tuples, where each tuple consists of::
+
+  (minimum page, URL setting, SAVE_AS setting,)
+
+For example, if you wanted the first page to just be ``/``, and the
+second (and subsequent) pages to be ``/page/2/``, you would set
+``PAGINATION_PATTERNS`` as follows::
+
+  PAGINATION_PATTERNS = (
+      (1, '{base_name}/', '{base_name}/index.html'),
+      (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
+  )
+
+This would cause the first page to be written to
+``{base_name}/index.html``, and subsequent ones would be written into
+``page/{number}`` directories.
 
 Tag cloud
 =========
