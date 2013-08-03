@@ -191,6 +191,20 @@ class TestArticle(TestPage):
         custom_article = Article(**article_kwargs)
         self.assertEqual('custom', custom_article.template)
 
+    def test_slugify_category_author(self):
+        settings = get_settings()
+        settings['SLUG_SUBSTITUTIONS'] = [ ('C#', 'csharp') ]
+        settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
+        settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['author'] = "O'Brien"
+        article_kwargs['metadata']['category'] = 'C# & stuff'
+        article_kwargs['metadata']['title'] = 'fnord'
+        article_kwargs['settings'] = settings
+        article = Article(**article_kwargs)
+        self.assertEqual(article.url, 'obrien/csharp-stuff/fnord/')
+        self.assertEqual(article.save_as, 'obrien/csharp-stuff/fnord/index.html')
+
 
 class TestURLWrapper(unittest.TestCase):
     def test_comparisons(self):
