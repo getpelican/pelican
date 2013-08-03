@@ -20,6 +20,11 @@ S3_BUCKET=$s3_bucket
 
 DROPBOX_DIR=$dropbox_dir
 
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	PELICANOPTS += -D
+endif 
+
 help:
 	@echo 'Makefile for a pelican Web site                                        '
 	@echo '                                                                       '
@@ -38,7 +43,8 @@ help:
 	@echo '   s3_upload                        upload the web site via S3         '
 	@echo '   github                           upload the web site via gh-pages   '
 	@echo '                                                                       '
-
+	@echo 'Set the DEBUG variable to 1 to enable debugging, e.g. make DEBUG=1 html'
+	@echo '                                                                       '
 
 html:
 	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
