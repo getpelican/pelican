@@ -125,23 +125,35 @@ class Page(object):
             if p.min_page <= self.number:
                 rule = p
 
-        value = getattr(rule, key)
+        if not rule:
+            return ''
 
-        if not isinstance(value, six.string_types):
-            logger.warning('%s is set to %s' % (setting, value))
-            return value
-        else:
-            context = self.__dict__
-            context['base_name'] = os.path.dirname(self.name)
-            context['number_sep'] = '/'
-            if self.number == 1:
-                # no page numbers on the first page
-                context['number'] = ''
-                context['number_sep'] = ''
-            ret = six.u(value).format(**context)
-            if ret[0] == '/':
-                ret = ret[1:]
-            return ret
+        prop_value = getattr(rule, key)
+
+        if not isinstance(prop_value, six.string_types):
+            logger.warning('%s is set to %s' % (key, prop_value))
+            return prop_value
+
+        # URL or SAVE_AS is a string, format it with a controlled context
+        context = {
+            'name': self.name,
+            'object_list': self.object_list,
+            'number': self.number,
+            'paginator': self.paginator,
+            'settings': self.settings,
+            'base_name': os.path.dirname(self.name),
+            'number_sep': '/',
+        }
+
+        if self.number == 1:
+            # no page numbers on the first page
+            context['number'] = ''
+            context['number_sep'] = ''
+
+        ret = prop_value.format(**context)
+        if ret[0] == '/':
+            ret = ret[1:]
+        return ret
 
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
