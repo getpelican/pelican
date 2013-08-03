@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-requires = ['feedgenerator >= 1.6', 'jinja2 >= 2.6', 'pygments', 'docutils',
+requires = ['feedgenerator >= 1.6', 'jinja2 >= 2.7', 'pygments', 'docutils',
             'pytz', 'blinker', 'unidecode', 'six']
 
 entry_points = {
