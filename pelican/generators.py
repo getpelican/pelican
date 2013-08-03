@@ -595,9 +595,11 @@ class PdfGenerator(Generator):
         if obj.source_path.endswith('.rst'):
             filename = obj.slug + ".pdf"
             output_pdf = os.path.join(output_path, filename)
-            # print('Generating pdf for', obj.source_path, 'in', output_pdf)
-            with open(obj.source_path) as f:
-                self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
+            with open(obj.source_path, encoding='utf-8') as f:
+                pdf_content = f.read()
+                siteurl = "/".join((self.settings['SITEURL'], 'static', ''))[:-1]
+                pdf_content = pdf_content.replace("|filename|", siteurl)
+                self.pdfcreator.createPdf(text=pdf_content, output=output_pdf)
             logger.info(' [ok] writing %s' % output_pdf)
 
     def generate_context(self):
