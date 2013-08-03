@@ -150,36 +150,37 @@ class Writer(object):
         # check paginated
         paginated = paginated or {}
         if paginated:
+            name_root = os.path.splitext(name)[0]
+
             # pagination needed, init paginators
             paginators = {}
             for key in paginated.keys():
                 object_list = paginated[key]
 
-                if self.settings['DEFAULT_PAGINATION']:
-                    paginators[key] = Paginator(object_list,
-                        self.settings['DEFAULT_PAGINATION'],
-                        self.settings['DEFAULT_ORPHANS'])
-                else:
-                    paginators[key] = Paginator(object_list, len(object_list))
+                paginators[key] = Paginator(
+                    name_root,
+                    object_list,
+                    self.settings,
+                )
 
             # generated pages, and write
-            name_root, ext = os.path.splitext(name)
             for page_num in range(list(paginators.values())[0].num_pages):
                 paginated_localcontext = localcontext.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]
+                    previous_page = paginator.page(page_num) \
+                            if page_num > 0 else None
                     page = paginator.page(page_num + 1)
+                    next_page = paginator.page(page_num + 2) \
+                            if page_num + 1 < paginator.num_pages else None
                     paginated_localcontext.update(
                             {'%s_paginator' % key: paginator,
-                             '%s_page' % key: page})
-                if page_num > 0:
-                    paginated_name = '%s%s%s' % (
-                        name_root, page_num + 1, ext)
-                else:
-                    paginated_name = name
+                             '%s_page' % key: page,
+                             '%s_previous_page' % key: previous_page,
+                             '%s_next_page' % key: next_page})
 
                 _write_file(template, paginated_localcontext, self.output_path,
-                    paginated_name)
+                            page.save_as)
         else:
             # no pagination
             _write_file(template, localcontext, self.output_path, name)
