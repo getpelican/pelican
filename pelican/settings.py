@@ -242,7 +242,10 @@ def configure_settings(settings):
     # fix up pagination rules
     from pelican.paginator import PaginationRule
     pagination_rules = [
-        PaginationRule(*r) for r in settings.get('PAGINATION_PATTERNS', [])
+        PaginationRule(*r) for r in settings.get(
+            'PAGINATION_PATTERNS',
+            DEFAULT_CONFIG['PAGINATION_PATTERNS'],
+        )
     ]
     settings['PAGINATION_PATTERNS'] = sorted(
         pagination_rules,
