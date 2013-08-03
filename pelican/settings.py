@@ -74,6 +74,9 @@ DEFAULT_CONFIG = {
     'TAG_SAVE_AS': os.path.join('tag', '{slug}.html'),
     'AUTHOR_URL': 'author/{slug}.html',
     'AUTHOR_SAVE_AS': os.path.join('author', '{slug}.html'),
+    'PAGINATION_PATTERNS': [
+        (0, '{name}{number}.html', '{name}{number}.html'),
+    ],
     'YEAR_ARCHIVE_SAVE_AS': False,
     'MONTH_ARCHIVE_SAVE_AS': False,
     'DAY_ARCHIVE_SAVE_AS': False,
@@ -236,6 +239,19 @@ def configure_settings(settings):
             ' your timezone is UTC for feed generation. Check '
             'http://docs.getpelican.com/en/latest/settings.html#timezone '
             'for more information')
+
+    # fix up pagination rules
+    from pelican.paginator import PaginationRule
+    pagination_rules = [
+        PaginationRule(*r) for r in settings.get(
+            'PAGINATION_PATTERNS',
+            DEFAULT_CONFIG['PAGINATION_PATTERNS'],
+        )
+    ]
+    settings['PAGINATION_PATTERNS'] = sorted(
+        pagination_rules,
+        key=lambda r: r[0],
+    )
 
     # Save people from accidentally setting a string rather than a list
     path_keys = (
