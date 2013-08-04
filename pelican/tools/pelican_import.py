@@ -400,8 +400,9 @@ def tumblr2fields(api_key, blogname):
                 content = '<p><a href="%s" rel="external nofollow">%s</a>: %s</p>\n%s' % (post.get('asking_name'), post.get('asking_url'), post.get('question'), post.get('answer'))
 
             content = content.rstrip() + '\n'
-
-            yield (title, content, slug, date, post.get('blog_name'), [type], tags, format)
+            kind = 'article'
+            yield (title, content, slug, date, post.get('blog_name'), [type],
+                   tags, kind, format)
 
         offset += len(posts)
         posts = get_tumblr_posts(api_key, blogname, offset)
