@@ -33,7 +33,7 @@ DEFAULT_CONFIG = {
     'PAGE_EXCLUDES': (),
     'THEME': DEFAULT_THEME,
     'OUTPUT_PATH': 'output',
-    'MARKUP': ('rst', 'md'),
+    'READERS': {},
     'STATIC_PATHS': ['images', ],
     'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
@@ -112,6 +112,7 @@ DEFAULT_CONFIG = {
     'SLUG_SUBSTITUTIONS': (),
     }
 
+
 def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
@@ -120,7 +121,7 @@ def read_settings(path=None, override=None):
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
-                            os.path.dirname(path), local_settings[p])))
+                    os.path.dirname(path), local_settings[p])))
                 if p not in ('THEME', 'PLUGIN_PATH') or os.path.exists(absp):
                     local_settings[p] = absp
     else:
@@ -138,7 +139,7 @@ def get_settings_from_module(module=None, default_settings=DEFAULT_CONFIG):
     context = copy.deepcopy(default_settings)
     if module is not None:
         context.update(
-                (k, v) for k, v in inspect.getmembers(module) if k.isupper())
+            (k, v) for k, v in inspect.getmembers(module) if k.isupper())
     return context
 
 
@@ -221,17 +222,18 @@ def configure_settings(settings):
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    feed_keys = ['FEED_ATOM', 'FEED_RSS',
-                 'FEED_ALL_ATOM', 'FEED_ALL_RSS',
-                 'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
-                 'TAG_FEED_ATOM', 'TAG_FEED_RSS',
-                 'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
-                ]
+    feed_keys = [
+        'FEED_ATOM', 'FEED_RSS',
+        'FEED_ALL_ATOM', 'FEED_ALL_RSS',
+        'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+        'TAG_FEED_ATOM', 'TAG_FEED_RSS',
+        'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
+    ]
 
     if any(settings.get(k) for k in feed_keys):
         if not settings.get('SITEURL'):
-            logger.warning('Feeds generated without SITEURL set properly may not'
-                        ' be valid')
+            logger.warning('Feeds generated without SITEURL set properly may'
+                           ' not be valid')
 
     if not 'TIMEZONE' in settings:
         logger.warning(
@@ -255,26 +257,26 @@ def configure_settings(settings):
 
     # Save people from accidentally setting a string rather than a list
     path_keys = (
-            'ARTICLE_EXCLUDES',
-            'DEFAULT_METADATA',
-            'DIRECT_TEMPLATES',
-            'EXTRA_TEMPLATES_PATHS',
-            'FILES_TO_COPY',
-            'IGNORE_FILES',
-            'JINJA_EXTENSIONS',
-            'MARKUP',
-            'PAGINATED_DIRECT_TEMPLATES',
-            'PLUGINS',
-            'STATIC_PATHS',
-            'THEME_STATIC_PATHS',)
+        'ARTICLE_EXCLUDES',
+        'DEFAULT_METADATA',
+        'DIRECT_TEMPLATES',
+        'EXTRA_TEMPLATES_PATHS',
+        'FILES_TO_COPY',
+        'IGNORE_FILES',
+        'JINJA_EXTENSIONS',
+        'PAGINATED_DIRECT_TEMPLATES',
+        'PLUGINS',
+        'STATIC_PATHS',
+        'THEME_STATIC_PATHS',
+    )
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
             if isinstance(settings[PATH_KEY], six.string_types):
-                logger.warning("Detected misconfiguration with %s setting (must "
-                        "be a list), falling back to the default"
-                        % PATH_KEY)
+                logger.warning("Detected misconfiguration with %s setting "
+                               "(must be a list), falling back to the default"
+                               % PATH_KEY)
                 settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
 
-    for old,new,doc in [
+    for old, new, doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),
             ('FILES_TO_COPY', 'STATIC_PATHS and EXTRA_PATH_METADATA',
              'https://github.com/getpelican/pelican/blob/master/docs/settings.rst#path-metadata'),

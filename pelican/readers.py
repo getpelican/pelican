@@ -37,7 +37,6 @@ except ImportError:
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
-logger = logging.getLogger(__name__)
 
 METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
@@ -50,7 +49,7 @@ METADATA_PROCESSORS = {
 logger = logging.getLogger(__name__)
 
 
-class Reader(object):
+class BaseReader(object):
     enabled = True
     file_extensions = ['static']
     extensions = None
@@ -110,7 +109,7 @@ class PelicanHTMLTranslator(HTMLTranslator):
         return HTMLTranslator.visit_image(self, node)
 
 
-class RstReader(Reader):
+class RstReader(BaseReader):
     enabled = bool(docutils)
     file_extensions = ['rst']
 
@@ -166,7 +165,7 @@ class RstReader(Reader):
         return content, metadata
 
 
-class MarkdownReader(Reader):
+class MarkdownReader(BaseReader):
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd', 'mdown']
 
@@ -174,7 +173,6 @@ class MarkdownReader(Reader):
         super(MarkdownReader, self).__init__(*args, **kwargs)
         self.extensions = self.settings['MD_EXTENSIONS']
         self.extensions.append('meta')
-        self._md = Markdown(extensions=self.extensions)
 
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
@@ -194,6 +192,7 @@ class MarkdownReader(Reader):
     def read(self, source_path):
         """Parse content and metadata of markdown files"""
 
+        self._md = Markdown(extensions=self.extensions)
         with pelican_open(source_path) as text:
             content = self._md.convert(text)
 
@@ -201,7 +200,7 @@ class MarkdownReader(Reader):
         return content, metadata
 
 
-class HTMLReader(Reader):
+class HTMLReader(BaseReader):
     """Parses HTML files as input, looking for meta, title, and body tags"""
     file_extensions = ['htm', 'html']
     enabled = True
@@ -312,7 +311,7 @@ class HTMLReader(Reader):
         return parser.body, metadata
 
 
-class AsciiDocReader(Reader):
+class AsciiDocReader(BaseReader):
     enabled = bool(asciidoc)
     file_extensions = ['asc']
     default_options = ["--no-header-footer", "-a newline=\\n"]
@@ -344,109 +343,125 @@ class AsciiDocReader(Reader):
         return content, metadata
 
 
-EXTENSIONS = {}
+class Readers(object):
 
-for cls in [Reader] + Reader.__subclasses__():
-    for ext in cls.file_extensions:
-        EXTENSIONS[ext] = cls
+    def __init__(self, settings=None):
+        self.settings = settings or {}
+        self.readers = {}
 
+        extensions = {}
+        for cls in [BaseReader] + BaseReader.__subclasses__():
+            for ext in cls.file_extensions:
+                extensions[ext] = cls
 
-def read_file(base_path, path, content_class=Page, fmt=None,
-              settings=None, context=None,
-              preread_signal=None, preread_sender=None,
-              context_signal=None, context_sender=None):
-    """Return a content object parsed with the given format."""
-    path = os.path.abspath(os.path.join(base_path, path))
-    source_path = os.path.relpath(path, base_path)
-    base, ext = os.path.splitext(os.path.basename(path))
-    logger.debug('read file {} -> {}'.format(
+        if self.settings['READERS']:
+            extensions.update(self.settings['READERS'])
+
+        for fmt, reader_class in extensions.items():
+            if not reader_class:
+                continue
+
+            if not reader_class.enabled:
+                logger.warning('Missing dependencies for {}'.format(fmt))
+                continue
+
+            self.readers[fmt] = reader_class(self.settings)
+
+            settings_key = '%s_EXTENSIONS' % fmt.upper()
+
+            if settings_key in self.settings:
+                self.readers[fmt].extensions = self.settings[settings_key]
+
+    @property
+    def extensions(self):
+        return self.readers.keys()
+
+    def read_file(self, base_path, path, content_class=Page, fmt=None,
+                  context=None, preread_signal=None, preread_sender=None,
+                  context_signal=None, context_sender=None):
+        """Return a content object parsed with the given format."""
+
+        path = os.path.abspath(os.path.join(base_path, path))
+        source_path = os.path.relpath(path, base_path)
+        logger.debug('read file {} -> {}'.format(
             source_path, content_class.__name__))
-    if not fmt:
-        fmt = ext[1:]
 
-    if fmt not in EXTENSIONS:
-        raise TypeError('Pelican does not know how to parse {}'.format(path))
+        if not fmt:
+            _, ext = os.path.splitext(os.path.basename(path))
+            fmt = ext[1:]
 
-    if preread_signal:
-        logger.debug('signal {}.send({})'.format(
+        if fmt not in self.readers:
+            raise TypeError(
+                'Pelican does not know how to parse {}'.format(path))
+
+        if preread_signal:
+            logger.debug('signal {}.send({})'.format(
                 preread_signal, preread_sender))
-        preread_signal.send(preread_sender)
+            preread_signal.send(preread_sender)
 
-    if settings is None:
-        settings = {}
+        reader = self.readers[fmt]
 
-    reader_class = EXTENSIONS[fmt]
-    if not reader_class.enabled:
-        raise ValueError('Missing dependencies for {}'.format(fmt))
-
-    reader = reader_class(settings)
-
-    settings_key = '%s_EXTENSIONS' % fmt.upper()
-
-    if settings and settings_key in settings:
-        reader.extensions = settings[settings_key]
-
-    metadata = default_metadata(
-        settings=settings, process=reader.process_metadata)
-    metadata.update(path_metadata(
-            full_path=path, source_path=source_path, settings=settings))
-    metadata.update(parse_path_metadata(
-            source_path=source_path, settings=settings,
+        metadata = default_metadata(
+            settings=self.settings, process=reader.process_metadata)
+        metadata.update(path_metadata(
+            full_path=path, source_path=source_path,
+            settings=self.settings))
+        metadata.update(parse_path_metadata(
+            source_path=source_path, settings=self.settings,
             process=reader.process_metadata))
-    content, reader_metadata = reader.read(path)
-    metadata.update(reader_metadata)
 
-    # create warnings for all images with empty alt (up to a certain number)
-    # as they are really likely to be accessibility flaws
-    if content:
-        # find images with empty alt
-        imgs = re.compile(r"""
-            (?:
-                # src before alt
-                <img
-                [^\>]*
-                src=(['"])(.*)\1
-                [^\>]*
-                alt=(['"])\3
-            )|(?:
-                # alt before src
-                <img
-                [^\>]*
-                alt=(['"])\4
-                [^\>]*
-                src=(['"])(.*)\5
-            )
-            """, re.X)
-        matches = re.findall(imgs, content)
-        # find a correct threshold
-        nb_warnings = 10
-        if len(matches) == nb_warnings + 1:
-            nb_warnings += 1 # avoid bad looking case
-        # print one warning per image with empty alt until threshold
-        for match in matches[:nb_warnings]:
-            logger.warning('Empty alt attribute for image {} in {}'.format(
-                           os.path.basename(match[1] + match[5]), path))
-        # print one warning for the other images with empty alt
-        if len(matches) > nb_warnings:
-            logger.warning('{} other images with empty alt attributes'.format(
-                           len(matches) - nb_warnings))
+        content, reader_metadata = reader.read(path)
+        metadata.update(reader_metadata)
 
-    # eventually filter the content with typogrify if asked so
-    if content and settings and settings['TYPOGRIFY']:
-        from typogrify.filters import typogrify
-        content = typogrify(content)
-        metadata['title'] = typogrify(metadata['title'])
+        # create warnings for all images with empty alt (up to a certain
+        # number) # as they are really likely to be accessibility flaws
+        if content:
+            # find images with empty alt
+            imgs = re.compile(r"""
+                (?:
+                    # src before alt
+                    <img
+                    [^\>]*
+                    src=(['"])(.*)\1
+                    [^\>]*
+                    alt=(['"])\3
+                )|(?:
+                    # alt before src
+                    <img
+                    [^\>]*
+                    alt=(['"])\4
+                    [^\>]*
+                    src=(['"])(.*)\5
+                )
+                """, re.X)
+            matches = re.findall(imgs, content)
+            # find a correct threshold
+            nb_warnings = 10
+            if len(matches) == nb_warnings + 1:
+                nb_warnings += 1  # avoid bad looking case
+            # print one warning per image with empty alt until threshold
+            for match in matches[:nb_warnings]:
+                logger.warning('Empty alt attribute for image {} in {}'.format(
+                               os.path.basename(match[1] + match[5]), path))
+            # print one warning for the other images with empty alt
+            if len(matches) > nb_warnings:
+                logger.warning('{} other images with empty alt attributes'
+                               .format(len(matches) - nb_warnings))
 
-    if context_signal:
-        logger.debug('signal {}.send({}, <metadata>)'.format(
+        # eventually filter the content with typogrify if asked so
+        if content and self.settings['TYPOGRIFY']:
+            from typogrify.filters import typogrify
+            content = typogrify(content)
+            metadata['title'] = typogrify(metadata['title'])
+
+        if context_signal:
+            logger.debug('signal {}.send({}, <metadata>)'.format(
                 context_signal, context_sender))
-        context_signal.send(context_sender, metadata=metadata)
-    return content_class(
-        content=content,
-        metadata=metadata,
-        settings=settings,
-        source_path=path,
-        context=context)
+            context_signal.send(context_sender, metadata=metadata)
+
+        return content_class(content=content, metadata=metadata,
+                             settings=self.settings, source_path=path,
+                             context=context)
 
 
 def default_metadata(settings=None, process=None):
@@ -482,7 +497,7 @@ def parse_path_metadata(source_path, settings=None, process=None):
     ...     'PATH_METADATA':
     ...         '(?P<category>[^/]*)/(?P<date>\d{4}-\d{2}-\d{2})/.*',
     ...     }
-    >>> reader = Reader(settings=settings)
+    >>> reader = BaseReader(settings=settings)
     >>> metadata = parse_path_metadata(
     ...     source_path='my-cat/2013-01-01/my-slug.html',
     ...     settings=settings,

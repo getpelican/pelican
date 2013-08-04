@@ -353,12 +353,13 @@ class TestDateFormatter(unittest.TestCase):
                          'French locale needed')
     def test_french_locale(self):
         settings = read_settings(
-            override = {'LOCALE': locale.normalize('fr_FR.UTF-8'),
-                        'TEMPLATE_PAGES': {'template/source.html':
-                                           'generated/file.html'}})
+            override={'LOCALE': locale.normalize('fr_FR.UTF-8'),
+                      'TEMPLATE_PAGES': {'template/source.html':
+                                         'generated/file.html'}})
 
-        generator = TemplatePagesGenerator({'date': self.date}, settings,
-                self.temp_content, '', self.temp_output, None)
+        generator = TemplatePagesGenerator(
+            {'date': self.date}, settings,
+            self.temp_content, '', self.temp_output)
         generator.env.filters.update({'strftime': utils.DateFormatter()})
 
         writer = Writer(self.temp_output, settings=settings)
