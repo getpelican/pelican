@@ -331,11 +331,11 @@ interprets the HTML in a very straightforward manner, reading metadata from
     <html>
         <head>
             <title>My super title</title>
-            <meta name="tags" contents="thats, awesome" />
-            <meta name="date" contents="2012-07-09 22:28" />
-            <meta name="category" contents="yeah" />
-            <meta name="author" contents="Alexis Métaireau" />
-            <meta name="summary" contents="Short version for index and feeds" />
+            <meta name="tags" content="thats, awesome" />
+            <meta name="date" content="2012-07-09 22:28" />
+            <meta name="category" content="yeah" />
+            <meta name="author" content="Alexis Métaireau" />
+            <meta name="summary" content="Short version for index and feeds" />
         </head>
         <body>
             This is the content of my super blog post.

@@ -5,6 +5,7 @@ import datetime
 import logging
 import os
 import re
+import logging
 try:
     import docutils
     import docutils.core
@@ -46,6 +47,8 @@ METADATA_PROCESSORS = {
     'category': Category,
     'author': Author,
 }
+
+logger = logging.getLogger(__name__)
 
 
 class Reader(object):
@@ -199,13 +202,15 @@ class HTMLReader(Reader):
     enabled = True
 
     class _HTMLParser(HTMLParser):
-        def __init__(self, settings):
+        def __init__(self, settings, filename):
             HTMLParser.__init__(self)
             self.body = ''
             self.metadata = {}
             self.settings = settings
 
             self._data_buffer = ''
+
+            self._filename = filename
 
             self._in_top_level = True
             self._in_head = False
@@ -275,7 +280,11 @@ class HTMLReader(Reader):
 
         def _handle_meta_tag(self, attrs):
             name = self._attr_value(attrs, 'name').lower()
-            contents = self._attr_value(attrs, 'contents', '')
+            contents = self._attr_value(attrs, 'content', '')
+            if not contents:
+                contents = self._attr_value(attrs, 'contents', '')
+                if contents:
+                    logger.warning("Meta tag attribute 'contents' used in file %s, should be changed to 'content'", self._filename)
 
             if name == 'keywords':
                 name = 'tags'
@@ -288,7 +297,7 @@ class HTMLReader(Reader):
     def read(self, filename):
         """Parse content and metadata of HTML files"""
         with pelican_open(filename) as content:
-            parser = self._HTMLParser(self.settings)
+            parser = self._HTMLParser(self.settings, filename)
             parser.feed(content)
             parser.close()
 
