@@ -335,6 +335,7 @@ class ArticlesGenerator(Generator):
         """Generate category pages."""
         category_template = self.get_template('category')
         for cat, articles in self.categories:
+            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
@@ -345,6 +346,7 @@ class ArticlesGenerator(Generator):
         """Generate Author pages."""
         author_template = self.get_template('author')
         for aut, articles in self.authors:
+            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
