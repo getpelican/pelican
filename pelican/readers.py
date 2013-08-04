@@ -274,12 +274,14 @@ class HTMLReader(Reader):
             return result + '>'
 
         def _handle_meta_tag(self, attrs):
-            name = self._attr_value(attrs, 'name').lower()
-            contents = self._attr_value(attrs, 'contents', '')
+            name = self._attr_value(attrs, 'name')
+            if name:
+                name = name.lower()
+                contents = self._attr_value(attrs, 'contents', '')
 
-            if name == 'keywords':
-                name = 'tags'
-            self.metadata[name] = contents
+                if name == 'keywords':
+                    name = 'tags'
+                self.metadata[name] = contents
 
         @classmethod
         def _attr_value(cls, attrs, name, default=None):
