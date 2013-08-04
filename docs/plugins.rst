@@ -71,6 +71,7 @@ finalized                       pelican object                  invoked after al
                                                                 - minifying js/css assets.
                                                                 - notify/ping search engines with an updated sitemap.
 generator_init                  generator                       invoked in the Generator.__init__
+readers_init                    readers                         invoked in the Readers.__init__
 article_generate_context        article_generator, metadata
 article_generate_preread        article_generator               invoked before a article is read in ArticlesGenerator.generate_context;
                                                                 use if code needs to do something before every article is parsed
@@ -144,13 +145,13 @@ write and don't slow down pelican itself when they're not active.
 No more talking, here is the example::
 
     from pelican import signals
-    from pelican.readers import EXTENSIONS, Reader
+    from pelican.readers import BaseReader
 
-    # Create a new reader class, inheriting from the pelican.reader.Reader
-    class NewReader(Reader):
+    # Create a new reader class, inheriting from the pelican.reader.BaseReader
+    class NewReader(BaseReader):
         enabled = True  # Yeah, you probably want that :-)
 
-        # The list of extensions you want this reader to match with.
+        # The list of file extensions you want this reader to match with.
         # In the case multiple readers use the same extensions, the latest will
         # win (so the one you're defining here, most probably).
         file_extensions = ['yeah']
@@ -168,12 +169,12 @@ No more talking, here is the example::
 
             return "Some content", parsed
 
-    def add_reader(arg):
-        EXTENSIONS['yeah'] = NewReader
+    def add_reader(readers):
+        readers.reader_classes['yeah'] = NewReader
 
     # this is how pelican works.
     def register():
-        signals.initialized.connect(add_reader)
+        signals.readers_init.connect(add_reader)
 
 
 Adding a new generator

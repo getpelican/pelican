@@ -51,6 +51,18 @@ logger = logging.getLogger(__name__)
 
 
 class BaseReader(object):
+    """Base class to read files.
+
+    This class is used to process static files, and it can be inherited for
+    other types of file. A Reader class must have the following attributes:
+
+    - enabled: (boolean) tell if the Reader class is enabled. It
+      generally depends on the import of some dependency.
+    - file_extensions: a list of file extensions that the Reader will process.
+    - extensions: a list of extensions to use in the reader (typical use is
+      Markdown).
+
+    """
     enabled = True
     file_extensions = ['static']
     extensions = None
@@ -111,6 +123,8 @@ class PelicanHTMLTranslator(HTMLTranslator):
 
 
 class RstReader(BaseReader):
+    """Reader for reStructuredText files"""
+
     enabled = bool(docutils)
     file_extensions = ['rst']
 
@@ -167,6 +181,8 @@ class RstReader(BaseReader):
 
 
 class MarkdownReader(BaseReader):
+    """Reader for Markdown files"""
+
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd', 'mdown']
 
@@ -203,6 +219,7 @@ class MarkdownReader(BaseReader):
 
 class HTMLReader(BaseReader):
     """Parses HTML files as input, looking for meta, title, and body tags"""
+
     file_extensions = ['htm', 'html']
     enabled = True
 
@@ -313,6 +330,8 @@ class HTMLReader(BaseReader):
 
 
 class AsciiDocReader(BaseReader):
+    """Reader for AsciiDoc files"""
+
     enabled = bool(asciidoc)
     file_extensions = ['asc']
     default_options = ["--no-header-footer", "-a newline=\\n"]
@@ -345,7 +364,14 @@ class AsciiDocReader(BaseReader):
 
 
 class Readers(object):
+    """Interface for all readers.
 
+    This class contains a mapping of file extensions / Reader classes, to know
+    which Reader class must be used to read a file (based on its extension).
+    This is customizable both with the 'READERS' setting, and with the
+    'readers_init' signall for plugins.
+
+    """
     def __init__(self, settings=None):
         self.settings = settings or {}
         self.readers = {}
