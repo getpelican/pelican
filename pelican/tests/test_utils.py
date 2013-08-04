@@ -386,8 +386,9 @@ class TestDateFormatter(unittest.TestCase):
                         'TEMPLATE_PAGES': {'template/source.html':
                                            'generated/file.html'}})
 
-        generator = TemplatePagesGenerator({'date': self.date}, settings,
-                self.temp_content, '', self.temp_output, None)
+        generator = TemplatePagesGenerator(
+            {'date': self.date}, settings,
+            self.temp_content, '', self.temp_output)
         generator.env.filters.update({'strftime': utils.DateFormatter()})
 
         writer = Writer(self.temp_output, settings=settings)

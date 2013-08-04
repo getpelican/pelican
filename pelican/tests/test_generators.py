@@ -19,6 +19,7 @@ CONTENT_DIR = os.path.join(CUR_DIR, 'content')
 class TestGenerator(unittest.TestCase):
     def setUp(self):
         self.settings = get_settings()
+        self.settings['READERS'] = {'asc': None}
         self.generator = Generator(self.settings.copy(), self.settings,
                                    CUR_DIR, self.settings['THEME'], None)
 
@@ -37,6 +38,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['READERS'] = {'asc': None}
 
         cls.generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
@@ -120,6 +122,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
+        settings['READERS'] = {'asc': None}
         settings['filenames'] = {}
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
