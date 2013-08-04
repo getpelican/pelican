@@ -168,7 +168,8 @@ class TemplatePagesGenerator(Generator):
             try:
                 template = self.env.get_template(source)
                 rurls = self.settings['RELATIVE_URLS']
-                writer.write_file(dest, template, self.context, rurls)
+                writer.write_file(dest, template, self.context, rurls,
+                                  override_output=True)
             finally:
                 del self.env.loader.loaders[0]
 
@@ -262,7 +263,8 @@ class ArticlesGenerator(Generator):
         """Generate the articles."""
         for article in chain(self.translations, self.articles):
             write(article.save_as, self.get_template(article.template),
-                self.context, article=article, category=article.category)
+                self.context, article=article, category=article.category,
+                override_output=hasattr(article, 'override_save_as'))
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -533,7 +535,8 @@ class PagesGenerator(Generator):
                             self.hidden_translations, self.hidden_pages):
             writer.write_file(page.save_as, self.get_template(page.template),
                     self.context, page=page,
-                    relative_urls=self.settings['RELATIVE_URLS'])
+                    relative_urls=self.settings['RELATIVE_URLS'],
+                    override_output=hasattr(page, 'override_save_as'))
 
 
 class StaticGenerator(Generator):

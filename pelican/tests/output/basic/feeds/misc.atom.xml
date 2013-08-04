@@ -4,4 +4,5 @@
 </summary><category term="foo"></category><category term="bar"></category><category term="baz"></category></entry><entry><title>Unbelievable !</title><link href="/unbelievable.html" rel="alternate"></link><updated>2010-10-15T20:30:00Z</updated><author><name></name></author><id>tag:,2010-10-15:unbelievable.html</id><summary type="html">&lt;p&gt;Or completely awesome. Depends the needs.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="/a-markdown-powered-article.html"&gt;a root-relative link to markdown-article&lt;/a&gt;
 &lt;a class="reference external" href="/a-markdown-powered-article.html"&gt;a file-relative link to markdown-article&lt;/a&gt;&lt;/p&gt;
+</summary></entry><entry><title>The baz tag</title><link href="/tag/baz.html" rel="alternate"></link><updated>2010-03-14T00:00:00Z</updated><author><name></name></author><id>tag:,2010-03-14:tag/baz.html</id><summary type="html">&lt;p&gt;This article overrides the listening of the articles under the &lt;em&gt;baz&lt;/em&gt; tag.&lt;/p&gt;
 </summary></entry></feed>
