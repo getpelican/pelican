@@ -90,13 +90,13 @@ For reStructuredText, this metadata should of course be prefixed with a colon::
 
     :Modified: 2012-08-08
 
-This metadata can then be accessed in templates such as `article.html` via::
+This metadata can then be accessed in templates such as ``article.html`` via::
 
     {% if article.modified %}
     Last modified: {{ article.modified }}
     {% endif %}
 
-If you want to include metadata in templates outside the article context (e.g., `base.html`), the `if` statement should instead be:
+If you want to include metadata in templates outside the article context (e.g., ``base.html``), the ``if`` statement should instead be:
 
     {% if article and article.modified %}
 
