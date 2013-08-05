@@ -22,7 +22,6 @@ Pelican currently supports:
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
-* PDF generation of the articles/pages (optional)
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
 
