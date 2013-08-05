@@ -2,20 +2,21 @@
 from __future__ import unicode_literals, print_function
 import six
 
+import codecs
+import errno
+import fnmatch
+import locale
+import logging
 import os
-import re
 import pytz
+import re
 import shutil
 import traceback
-import logging
-import errno
-import locale
-import fnmatch
-from collections import Hashable
-from functools import partial
 
-from codecs import open, BOM_UTF8
+from collections import Hashable
+from contextlib import contextmanager
 from datetime import datetime
+from functools import partial
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
@@ -215,20 +216,15 @@ def get_date(string):
     raise ValueError('{0!r} is not a valid date'.format(string))
 
 
-class pelican_open(object):
+@contextmanager
+def pelican_open(filename):
     """Open a file and return its content"""
-    def __init__(self, filename):
-        self.filename = filename
 
-    def __enter__(self):
-        with open(self.filename, encoding='utf-8') as infile:
-            content = infile.read()
-        if content[0] == BOM_UTF8.decode('utf8'):
-            content = content[1:]
-        return content
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
+    with codecs.open(filename, encoding='utf-8') as infile:
+        content = infile.read()
+    if content[0] == codecs.BOM_UTF8.decode('utf8'):
+        content = content[1:]
+    yield content
 
 
 def slugify(value, substitutions=()):
