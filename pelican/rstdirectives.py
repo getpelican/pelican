@@ -8,20 +8,29 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, TextLexer
 import re
 
-INLINESTYLES = False
-DEFAULT = HtmlFormatter(noclasses=INLINESTYLES)
-VARIANTS = {
-    'linenos': HtmlFormatter(noclasses=INLINESTYLES, linenos=True),
-}
-
 
 class Pygments(Directive):
-    """ Source code syntax hightlighting.
+    """ Source code syntax highlighting.
     """
     required_arguments = 1
     optional_arguments = 0
     final_argument_whitespace = True
-    option_spec = dict([(key, directives.flag) for key in VARIANTS])
+    option_spec = {
+        'anchorlinenos': directives.flag,
+        'classprefix': directives.unchanged,
+        'hl_lines': directives.unchanged,
+        'lineanchors': directives.unchanged,
+        'linenos': directives.unchanged,
+        'linenospecial': directives.nonnegative_int,
+        'linenostart': directives.nonnegative_int,
+        'linenostep': directives.nonnegative_int,
+        'lineseparator': directives.unchanged,
+        'linespans': directives.unchanged,
+        'nobackground': directives.flag,
+        'nowrap': directives.flag,
+        'tagsfile': directives.unchanged,
+        'tagurlformat': directives.unchanged,
+    }
     has_content = True
 
     def run(self):
@@ -31,9 +40,17 @@ class Pygments(Directive):
         except ValueError:
             # no lexer found - use the text one instead of an exception
             lexer = TextLexer()
-        # take an arbitrary option if more than one is given
-        formatter = self.options and VARIANTS[list(self.options.keys())[0]] \
-                    or DEFAULT
+
+        if ('linenos' in self.options and
+                self.options['linenos'] not in ('table', 'inline')):
+            self.options['linenos'] = 'table'
+
+        for flag in ('nowrap', 'nobackground', 'anchorlinenos'):
+            if flag in self.options:
+                self.options[flag] = True
+
+        # noclasses should already default to False, but just in case...
+        formatter = HtmlFormatter(noclasses=False, **self.options)
         parsed = highlight('\n'.join(self.content), lexer, formatter)
         return [nodes.raw('', parsed, format='html')]
 
