@@ -416,40 +416,9 @@ class Readers(object):
         content, reader_metadata = reader.read(path)
         metadata.update(reader_metadata)
 
-        # create warnings for all images with empty alt (up to a certain
-        # number) # as they are really likely to be accessibility flaws
         if content:
             # find images with empty alt
-            imgs = re.compile(r"""
-                (?:
-                    # src before alt
-                    <img
-                    [^\>]*
-                    src=(['"])(.*)\1
-                    [^\>]*
-                    alt=(['"])\3
-                )|(?:
-                    # alt before src
-                    <img
-                    [^\>]*
-                    alt=(['"])\4
-                    [^\>]*
-                    src=(['"])(.*)\5
-                )
-                """, re.X)
-            matches = re.findall(imgs, content)
-            # find a correct threshold
-            nb_warnings = 10
-            if len(matches) == nb_warnings + 1:
-                nb_warnings += 1  # avoid bad looking case
-            # print one warning per image with empty alt until threshold
-            for match in matches[:nb_warnings]:
-                logger.warning('Empty alt attribute for image {} in {}'.format(
-                               os.path.basename(match[1] + match[5]), path))
-            # print one warning for the other images with empty alt
-            if len(matches) > nb_warnings:
-                logger.warning('{} other images with empty alt attributes'
-                               .format(len(matches) - nb_warnings))
+            find_empty_alt(content, path)
 
         # eventually filter the content with typogrify if asked so
         if content and self.settings['TYPOGRIFY']:
@@ -465,6 +434,45 @@ class Readers(object):
         return content_class(content=content, metadata=metadata,
                              settings=self.settings, source_path=path,
                              context=context)
+
+
+def find_empty_alt(content, path):
+    """Find images with empty alt
+
+    Create warnings for all images with empty alt (up to a certain number),
+    as they are really likely to be accessibility flaws.
+
+    """
+    imgs = re.compile(r"""
+        (?:
+            # src before alt
+            <img
+            [^\>]*
+            src=(['"])(.*)\1
+            [^\>]*
+            alt=(['"])\3
+        )|(?:
+            # alt before src
+            <img
+            [^\>]*
+            alt=(['"])\4
+            [^\>]*
+            src=(['"])(.*)\5
+        )
+        """, re.X)
+    matches = re.findall(imgs, content)
+    # find a correct threshold
+    nb_warnings = 10
+    if len(matches) == nb_warnings + 1:
+        nb_warnings += 1  # avoid bad looking case
+    # print one warning per image with empty alt until threshold
+    for match in matches[:nb_warnings]:
+        logger.warning('Empty alt attribute for image {} in {}'.format(
+            os.path.basename(match[1] + match[5]), path))
+    # print one warning for the other images with empty alt
+    if len(matches) > nb_warnings:
+        logger.warning('{} other images with empty alt attributes'
+                       .format(len(matches) - nb_warnings))
 
 
 def default_metadata(settings=None, process=None):
@@ -516,13 +524,12 @@ def parse_path_metadata(source_path, settings=None, process=None):
     subdir = os.path.basename(dirname)
     if settings:
         checks = []
-        for key,data in [('FILENAME_METADATA', base),
-                         ('PATH_METADATA', source_path),
-                         ]:
+        for key, data in [('FILENAME_METADATA', base),
+                          ('PATH_METADATA', source_path)]:
             checks.append((settings.get(key, None), data))
         if settings.get('USE_FOLDER_AS_CATEGORY', None):
             checks.insert(0, ('(?P<category>.*)', subdir))
-        for regexp,data in checks:
+        for regexp, data in checks:
             if regexp and data:
                 match = re.match(regexp, data)
                 if match:
