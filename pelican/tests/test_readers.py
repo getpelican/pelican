@@ -350,6 +350,21 @@ class HTMLReaderTest(ReaderTest):
         for key, value in expected.items():
             self.assertEqual(value, page.metadata[key], key)
 
+    def test_article_with_metadata_and_contents_attrib(self):
+        page = self.read_file(path='article_with_metadata_and_contents.html')
+        expected = {
+            'category': 'yeah',
+            'author': 'Alexis Métaireau',
+            'title': 'This is a super article !',
+            'summary': 'Summary and stuff',
+            'date': datetime.datetime(2010, 12, 2, 10, 14),
+            'tags': ['foo', 'bar', 'foobar'],
+            'custom_field': 'http://notmyidea.org',
+        }
+        for key, value in expected.items():
+            self.assertEqual(value, page.metadata[key], key)
+
+
     def test_article_with_null_attributes(self):
         page = self.read_file(path='article_with_null_attributes.html')
 

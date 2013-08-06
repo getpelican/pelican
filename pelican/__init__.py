@@ -14,8 +14,8 @@ import collections
 from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-                                StaticGenerator, PdfGenerator,
-                                SourceFileGenerator, TemplatePagesGenerator)
+                                StaticGenerator, SourceFileGenerator,
+                                TemplatePagesGenerator)
 from pelican.log import init
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, folder_watcher, file_watcher
@@ -168,15 +168,15 @@ class Pelican(object):
             ) for cls in self.get_generator_classes()
         ]
 
-        for p in generators:
-            if hasattr(p, 'generate_context'):
-                p.generate_context()
-
         # erase the directory if it is not the source and if that's
         # explicitely asked
         if (self.delete_outputdir and not
                 os.path.realpath(self.path).startswith(self.output_path)):
             clean_output_dir(self.output_path, self.output_retention)
+
+        for p in generators:
+            if hasattr(p, 'generate_context'):
+                p.generate_context()
 
         writer = self.get_writer()
 
@@ -199,8 +199,6 @@ class Pelican(object):
 
         if self.settings['TEMPLATE_PAGES']:
             generators.append(TemplatePagesGenerator)
-        if self.settings['PDF_GENERATOR']:
-            generators.append(PdfGenerator)
         if self.settings['OUTPUT_SOURCES']:
             generators.append(SourceFileGenerator)
 
@@ -390,7 +388,7 @@ def main():
         # so convert the message to unicode with the correct encoding
         msg = str(e)
         if not six.PY3:
-            msg = msg.decode(locale.getpreferredencoding(False))
+            msg = msg.decode(locale.getpreferredencoding())
 
         logger.critical(msg)
 

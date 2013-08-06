@@ -35,6 +35,7 @@ DEFAULT_CONFIG = {
     'OUTPUT_PATH': 'output',
     'MARKUP': ('rst', 'md'),
     'STATIC_PATHS': ['images', ],
+    'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
     'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
@@ -44,7 +45,6 @@ DEFAULT_CONFIG = {
     'SITENAME': 'A Pelican Blog',
     'DISPLAY_PAGES_ON_MENU': True,
     'DISPLAY_CATEGORIES_ON_MENU': True,
-    'PDF_GENERATOR': False,
     'OUTPUT_SOURCES': False,
     'OUTPUT_SOURCES_EXTENSION': '.text',
     'USE_FOLDER_AS_CATEGORY': True,
@@ -65,6 +65,7 @@ DEFAULT_CONFIG = {
     'PAGE_LANG_SAVE_AS': os.path.join('pages', '{slug}-{lang}.html'),
     'STATIC_URL': '{path}',
     'STATIC_SAVE_AS': '{path}',
+    'PDF_GENERATOR': False,
     'PDF_STYLE_PATH': '',
     'PDF_STYLE': 'twelvepoint',
     'CATEGORY_URL': 'category/{slug}.html',
@@ -73,6 +74,9 @@ DEFAULT_CONFIG = {
     'TAG_SAVE_AS': os.path.join('tag', '{slug}.html'),
     'AUTHOR_URL': 'author/{slug}.html',
     'AUTHOR_SAVE_AS': os.path.join('author', '{slug}.html'),
+    'PAGINATION_PATTERNS': [
+        (0, '{name}{number}.html', '{name}{number}.html'),
+    ],
     'YEAR_ARCHIVE_SAVE_AS': False,
     'MONTH_ARCHIVE_SAVE_AS': False,
     'DAY_ARCHIVE_SAVE_AS': False,
@@ -90,7 +94,7 @@ DEFAULT_CONFIG = {
     'MD_EXTENSIONS': ['codehilite(css_class=highlight)', 'extra'],
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
-    'LOCALE': [],  # defaults to user locale
+    'LOCALE': [''],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
     'DEFAULT_METADATA': (),
@@ -235,6 +239,19 @@ def configure_settings(settings):
             ' your timezone is UTC for feed generation. Check '
             'http://docs.getpelican.com/en/latest/settings.html#timezone '
             'for more information')
+
+    # fix up pagination rules
+    from pelican.paginator import PaginationRule
+    pagination_rules = [
+        PaginationRule(*r) for r in settings.get(
+            'PAGINATION_PATTERNS',
+            DEFAULT_CONFIG['PAGINATION_PATTERNS'],
+        )
+    ]
+    settings['PAGINATION_PATTERNS'] = sorted(
+        pagination_rules,
+        key=lambda r: r[0],
+    )
 
     # Save people from accidentally setting a string rather than a list
     path_keys = (

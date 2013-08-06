@@ -56,6 +56,7 @@ class Generator(object):
                                          "themes", "simple", "templates"))
         self.env = Environment(
             trim_blocks=True,
+            lstrip_blocks=True,
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
@@ -167,7 +168,8 @@ class TemplatePagesGenerator(Generator):
             try:
                 template = self.env.get_template(source)
                 rurls = self.settings['RELATIVE_URLS']
-                writer.write_file(dest, template, self.context, rurls)
+                writer.write_file(dest, template, self.context, rurls,
+                                  override_output=True)
             finally:
                 del self.env.loader.loaders[0]
 
@@ -261,7 +263,8 @@ class ArticlesGenerator(Generator):
         """Generate the articles."""
         for article in chain(self.translations, self.articles):
             write(article.save_as, self.get_template(article.template),
-                self.context, article=article, category=article.category)
+                self.context, article=article, category=article.category,
+                override_output=hasattr(article, 'override_save_as'))
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -334,6 +337,7 @@ class ArticlesGenerator(Generator):
         """Generate category pages."""
         category_template = self.get_template('category')
         for cat, articles in self.categories:
+            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
@@ -344,6 +348,7 @@ class ArticlesGenerator(Generator):
         """Generate Author pages."""
         author_template = self.get_template('author')
         for aut, articles in self.authors:
+            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
@@ -530,7 +535,8 @@ class PagesGenerator(Generator):
                             self.hidden_translations, self.hidden_pages):
             writer.write_file(page.save_as, self.get_template(page.template),
                     self.context, page=page,
-                    relative_urls=self.settings['RELATIVE_URLS'])
+                    relative_urls=self.settings['RELATIVE_URLS'],
+                    override_output=hasattr(page, 'override_save_as'))
 
 
 class StaticGenerator(Generator):
@@ -564,7 +570,8 @@ class StaticGenerator(Generator):
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
-                         'theme', self.output_path, os.curdir)
+                         self.settings['THEME_STATIC_DIR'], self.output_path,
+                         os.curdir)
         # copy all Static files
         for sc in self.staticfiles:
             source_path = os.path.join(self.path, sc.source_path)
@@ -572,52 +579,6 @@ class StaticGenerator(Generator):
             mkdir_p(os.path.dirname(save_as))
             shutil.copy(source_path, save_as)
             logger.info('copying {} to {}'.format(sc.source_path, sc.save_as))
-
-
-class PdfGenerator(Generator):
-    """Generate PDFs on the output dir, for all articles and pages coming from
-    rst"""
-    def __init__(self, *args, **kwargs):
-        super(PdfGenerator, self).__init__(*args, **kwargs)
-        try:
-            from rst2pdf.createpdf import RstToPdf
-            pdf_style_path = os.path.join(self.settings['PDF_STYLE_PATH'])
-            pdf_style = self.settings['PDF_STYLE']
-            self.pdfcreator = RstToPdf(breakside=0,
-                                       stylesheets=[pdf_style],
-                                       style_path=[pdf_style_path])
-        except ImportError:
-            raise Exception("unable to find rst2pdf")
-
-    def _create_pdf(self, obj, output_path):
-        if obj.source_path.endswith('.rst'):
-            filename = obj.slug + ".pdf"
-            output_pdf = os.path.join(output_path, filename)
-            # print('Generating pdf for', obj.source_path, 'in', output_pdf)
-            with open(obj.source_path) as f:
-                self.pdfcreator.createPdf(text=f.read(), output=output_pdf)
-            logger.info(' [ok] writing %s' % output_pdf)
-
-    def generate_context(self):
-        pass
-
-    def generate_output(self, writer=None):
-        # we don't use the writer passed as argument here
-        # since we write our own files
-        logger.info(' Generating PDF files...')
-        pdf_path = os.path.join(self.output_path, 'pdf')
-        if not os.path.exists(pdf_path):
-            try:
-                os.mkdir(pdf_path)
-            except OSError:
-                logger.error("Couldn't create the pdf output folder in " +
-                             pdf_path)
-
-        for article in self.context['articles']:
-            self._create_pdf(article, pdf_path)
-
-        for page in self.context['pages']:
-            self._create_pdf(page, pdf_path)
 
 
 class SourceFileGenerator(Generator):

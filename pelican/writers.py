@@ -24,6 +24,7 @@ class Writer(object):
         self.reminder = dict()
         self.settings = settings or {}
         self._written_files = set()
+        self._overridden_files = set()
 
     def _create_new_feed(self, feed_type, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
@@ -49,13 +50,26 @@ class Writer(object):
             pubdate=set_date_tzinfo(item.date,
                 self.settings.get('TIMEZONE', None)))
 
-    def _open_w(self, filename, encoding):
+    def _open_w(self, filename, encoding, override=False):
         """Open a file to write some content to it.
 
-        Exit if we have already written to that file.
+        Exit if we have already written to that file, unless one (and no more
+        than one) of the writes has the override parameter set to True.
         """
-        if filename in self._written_files:
-            raise IOError('File %s is to be overwritten' % filename)
+        if filename in self._overridden_files:
+            if override:
+                raise StandardError('File %s is set to be overridden twice'
+                                    % filename)
+            else:
+                logger.info('skipping %s' % filename)
+                filename = os.devnull
+        elif filename in self._written_files:
+            if override:
+                logger.info('overwriting %s' % filename)
+            else:
+                raise StandardError('File %s is to be overwritten' % filename)
+        if override:
+            self._overridden_files.add(filename)
         self._written_files.add(filename)
         return open(filename, 'w', encoding=encoding)
 
@@ -103,7 +117,7 @@ class Writer(object):
             locale.setlocale(locale.LC_ALL, old_locale)
 
     def write_file(self, name, template, context, relative_urls=False,
-        paginated=None, **kwargs):
+        paginated=None, override_output=False, **kwargs):
         """Render the template and write the file.
 
         :param name: name of the file to output
@@ -112,6 +126,9 @@ class Writer(object):
         :param relative_urls: use relative urls or absolutes ones
         :param paginated: dict of article list to paginate - must have the
             same length (same list in different orders)
+        :param override_output: boolean telling if we can override previous
+            output with the same name (and if next files written with the same
+            name should be skipped to keep that one)
         :param **kwargs: additional variables to pass to the templates
         """
 
@@ -121,7 +138,7 @@ class Writer(object):
             # other stuff, just return for now
             return
 
-        def _write_file(template, localcontext, output_path, name):
+        def _write_file(template, localcontext, output_path, name, override):
             """Render the template write the file."""
             old_locale = locale.setlocale(locale.LC_ALL)
             locale.setlocale(locale.LC_ALL, str('C'))
@@ -134,7 +151,7 @@ class Writer(object):
                 os.makedirs(os.path.dirname(path))
             except Exception:
                 pass
-            with self._open_w(path, 'utf-8') as f:
+            with self._open_w(path, 'utf-8', override=override) as f:
                 f.write(output)
             logger.info('writing {}'.format(path))
 
@@ -150,36 +167,38 @@ class Writer(object):
         # check paginated
         paginated = paginated or {}
         if paginated:
+            name_root = os.path.splitext(name)[0]
+
             # pagination needed, init paginators
             paginators = {}
             for key in paginated.keys():
                 object_list = paginated[key]
 
-                if self.settings['DEFAULT_PAGINATION']:
-                    paginators[key] = Paginator(object_list,
-                        self.settings['DEFAULT_PAGINATION'],
-                        self.settings['DEFAULT_ORPHANS'])
-                else:
-                    paginators[key] = Paginator(object_list, len(object_list))
+                paginators[key] = Paginator(
+                    name_root,
+                    object_list,
+                    self.settings,
+                )
 
             # generated pages, and write
-            name_root, ext = os.path.splitext(name)
             for page_num in range(list(paginators.values())[0].num_pages):
                 paginated_localcontext = localcontext.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]
+                    previous_page = paginator.page(page_num) \
+                            if page_num > 0 else None
                     page = paginator.page(page_num + 1)
+                    next_page = paginator.page(page_num + 2) \
+                            if page_num + 1 < paginator.num_pages else None
                     paginated_localcontext.update(
                             {'%s_paginator' % key: paginator,
-                             '%s_page' % key: page})
-                if page_num > 0:
-                    paginated_name = '%s%s%s' % (
-                        name_root, page_num + 1, ext)
-                else:
-                    paginated_name = name
+                             '%s_page' % key: page,
+                             '%s_previous_page' % key: previous_page,
+                             '%s_next_page' % key: next_page})
 
                 _write_file(template, paginated_localcontext, self.output_path,
-                    paginated_name)
+                            page.save_as, override_output)
         else:
             # no pagination
-            _write_file(template, localcontext, self.output_path, name)
+            _write_file(template, localcontext, self.output_path, name,
+                        override_output)

@@ -5,6 +5,7 @@ import datetime
 import logging
 import os
 import re
+
 try:
     import docutils
     import docutils.core
@@ -14,7 +15,7 @@ try:
     # import the directives to have pygments support
     from pelican import rstdirectives  # NOQA
 except ImportError:
-    core = False
+    docutils = False
 try:
     from markdown import Markdown
 except ImportError:
@@ -36,7 +37,6 @@ except ImportError:
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
-
 logger = logging.getLogger(__name__)
 
 METADATA_PROCESSORS = {
@@ -46,6 +46,8 @@ METADATA_PROCESSORS = {
     'category': Category,
     'author': Author,
 }
+
+logger = logging.getLogger(__name__)
 
 
 class Reader(object):
@@ -100,6 +102,12 @@ class PelicanHTMLTranslator(HTMLTranslator):
 
     def depart_abbreviation(self, node):
         self.body.append('</abbr>')
+
+    def visit_image(self, node):
+        # set an empty alt if alt is not specified
+        # avoids that alt is taken from src
+        node['alt'] = node.get('alt', '')
+        return HTMLTranslator.visit_image(self, node)
 
 
 class RstReader(Reader):
@@ -199,13 +207,15 @@ class HTMLReader(Reader):
     enabled = True
 
     class _HTMLParser(HTMLParser):
-        def __init__(self, settings):
+        def __init__(self, settings, filename):
             HTMLParser.__init__(self)
             self.body = ''
             self.metadata = {}
             self.settings = settings
 
             self._data_buffer = ''
+
+            self._filename = filename
 
             self._in_top_level = True
             self._in_head = False
@@ -275,7 +285,11 @@ class HTMLReader(Reader):
 
         def _handle_meta_tag(self, attrs):
             name = self._attr_value(attrs, 'name').lower()
-            contents = self._attr_value(attrs, 'contents', '')
+            contents = self._attr_value(attrs, 'content', '')
+            if not contents:
+                contents = self._attr_value(attrs, 'contents', '')
+                if contents:
+                    logger.warning("Meta tag attribute 'contents' used in file %s, should be changed to 'content'", self._filename)
 
             if name == 'keywords':
                 name = 'tags'
@@ -288,7 +302,7 @@ class HTMLReader(Reader):
     def read(self, filename):
         """Parse content and metadata of HTML files"""
         with pelican_open(filename) as content:
-            parser = self._HTMLParser(self.settings)
+            parser = self._HTMLParser(self.settings, filename)
             parser.feed(content)
             parser.close()
 
@@ -381,6 +395,41 @@ def read_file(base_path, path, content_class=Page, fmt=None,
             process=reader.process_metadata))
     content, reader_metadata = reader.read(path)
     metadata.update(reader_metadata)
+
+    # create warnings for all images with empty alt (up to a certain number)
+    # as they are really likely to be accessibility flaws
+    if content:
+        # find images with empty alt
+        imgs = re.compile(r"""
+            (?:
+                # src before alt
+                <img
+                [^\>]*
+                src=(['"])(.*)\1
+                [^\>]*
+                alt=(['"])\3
+            )|(?:
+                # alt before src
+                <img
+                [^\>]*
+                alt=(['"])\4
+                [^\>]*
+                src=(['"])(.*)\5
+            )
+            """, re.X)
+        matches = re.findall(imgs, content)
+        # find a correct threshold
+        nb_warnings = 10
+        if len(matches) == nb_warnings + 1:
+            nb_warnings += 1 # avoid bad looking case
+        # print one warning per image with empty alt until threshold
+        for match in matches[:nb_warnings]:
+            logger.warning('Empty alt attribute for image {} in {}'.format(
+                           os.path.basename(match[1] + match[5]), path))
+        # print one warning for the other images with empty alt
+        if len(matches) > nb_warnings:
+            logger.warning('{} other images with empty alt attributes'.format(
+                           len(matches) - nb_warnings))
 
     # eventually filter the content with typogrify if asked so
     if content and settings and settings['TYPOGRIFY']:

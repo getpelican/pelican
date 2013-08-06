@@ -41,7 +41,7 @@ method::
 If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
 
-    $ pip install -e git://github.com/getpelican/pelican#egg=pelican
+    $ pip install -e git+https://github.com/getpelican/pelican.git#egg=pelican
 
 If you plan on using Markdown as a markup format, you'll need to install the
 Markdown library as well::
@@ -331,11 +331,11 @@ interprets the HTML in a very straightforward manner, reading metadata from
     <html>
         <head>
             <title>My super title</title>
-            <meta name="tags" contents="thats, awesome" />
-            <meta name="date" contents="2012-07-09 22:28" />
-            <meta name="category" contents="yeah" />
-            <meta name="author" contents="Alexis Métaireau" />
-            <meta name="summary" contents="Short version for index and feeds" />
+            <meta name="tags" content="thats, awesome" />
+            <meta name="date" content="2012-07-09 22:28" />
+            <meta name="category" content="yeah" />
+            <meta name="author" content="Alexis Métaireau" />
+            <meta name="summary" content="Short version for index and feeds" />
         </head>
         <body>
             This is the content of my super blog post.
@@ -418,8 +418,8 @@ In this example, ``article1.rst`` could look like::
 
     See below intra-site link examples in reStructuredText format.
 
-    `a link relative to content root <|filename|/cat/article2.md>`_
-    `a link relative to current file <|filename|cat/article2.md>`_
+    `a link relative to content root <|filename|/cat/article2.rst>`_
+    `a link relative to current file <|filename|cat/article2.rst>`_
 
 and ``article2.md``::
 
@@ -428,8 +428,8 @@ and ``article2.md``::
 
     See below intra-site link examples in Markdown format.
 
-    [a link relative to content root](|filename|/article1.rst)
-    [a link relative to current file](|filename|../article1.rst)
+    [a link relative to content root](|filename|/article1.md)
+    [a link relative to current file](|filename|../article1.md)
 
 Embedding non-article or non-page content is slightly different in that the
 directories need to be specified in ``pelicanconf.py`` file. The ``images``
