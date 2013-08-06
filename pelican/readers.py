@@ -34,6 +34,7 @@ try:
 except ImportError:
     from HTMLParser import HTMLParser
 
+from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
@@ -348,16 +349,18 @@ class Readers(object):
     def __init__(self, settings=None):
         self.settings = settings or {}
         self.readers = {}
+        self.reader_classes = {}
 
-        extensions = {}
         for cls in [BaseReader] + BaseReader.__subclasses__():
             for ext in cls.file_extensions:
-                extensions[ext] = cls
+                self.reader_classes[ext] = cls
 
         if self.settings['READERS']:
-            extensions.update(self.settings['READERS'])
+            self.reader_classes.update(self.settings['READERS'])
 
-        for fmt, reader_class in extensions.items():
+        signals.readers_init.send(self)
+
+        for fmt, reader_class in self.reader_classes.items():
             if not reader_class:
                 continue
 
@@ -484,7 +487,7 @@ def path_metadata(full_path, source_path, settings=None):
             metadata['date'] = datetime.datetime.fromtimestamp(
                 os.stat(full_path).st_ctime)
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
-                source_path, {}))
+            source_path, {}))
     return metadata
 
 
