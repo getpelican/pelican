@@ -244,7 +244,7 @@ Setting name (default value)                            What does it do?
 `CATEGORY_SAVE_AS` (``'category/{slug}.html'``)         The location to save a category.
 `TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
 `TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
-`TAGS_URL` (``'tag/{slug}.html'``)                      The URL to use for the tag list.
+`TAGS_URL` (``'tags.html'``)                            The URL to use for the tag list.
 `TAGS_SAVE_AS` (``'tags.html'``)                        The location to save the tag list.
 `AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
 `AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.
