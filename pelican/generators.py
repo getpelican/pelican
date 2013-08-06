@@ -13,16 +13,13 @@ from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter, itemgetter
 
-from jinja2 import (
-        Environment, FileSystemLoader, PrefixLoader, ChoiceLoader, BaseLoader,
-        TemplateNotFound
-)
+from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
+                    BaseLoader, TemplateNotFound)
 
 from pelican.contents import Article, Page, Static, is_valid_content
-from pelican.readers import read_file
+from pelican.readers import Readers
 from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
 from pelican import signals
-import pelican.utils
 
 
 logger = logging.getLogger(__name__)
@@ -31,23 +28,23 @@ logger = logging.getLogger(__name__)
 class Generator(object):
     """Baseclass generator"""
 
-    def __init__(self, context, settings, path, theme, output_path, markup,
-                 **kwargs):
+    def __init__(self, context, settings, path, theme, output_path, **kwargs):
         self.context = context
         self.settings = settings
         self.path = path
         self.theme = theme
         self.output_path = output_path
-        self.markup = markup
 
         for arg, value in kwargs.items():
             setattr(self, arg, value)
+
+        self.readers = Readers(self.settings)
 
         # templates cache
         self._templates = {}
         self._templates_path = []
         self._templates_path.append(os.path.expanduser(
-                os.path.join(self.theme, 'templates')))
+            os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
@@ -85,9 +82,8 @@ class Generator(object):
             try:
                 self._templates[name] = self.env.get_template(name + '.html')
             except TemplateNotFound:
-                raise Exception(
-                        ('[templates] unable to load %s.html from %s'
-                         % (name, self._templates_path)))
+                raise Exception('[templates] unable to load %s.html from %s'
+                                % (name, self._templates_path))
         return self._templates[name]
 
     def _include_path(self, path, extensions=None):
@@ -98,7 +94,7 @@ class Generator(object):
             extensions are allowed)
         """
         if extensions is None:
-            extensions = tuple(self.markup)
+            extensions = tuple(self.readers.extensions)
         basename = os.path.basename(path)
         if extensions is False or basename.endswith(extensions):
             return True
@@ -388,9 +384,9 @@ class ArticlesGenerator(Generator):
                 self.settings['ARTICLE_DIR'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             try:
-                article = read_file(
+                article = self.readers.read_file(
                     base_path=self.path, path=f, content_class=Article,
-                    settings=self.settings, context=self.context,
+                    context=self.context,
                     preread_signal=signals.article_generator_preread,
                     preread_sender=self,
                     context_signal=signals.article_generator_context,
@@ -496,9 +492,9 @@ class PagesGenerator(Generator):
                 self.settings['PAGE_DIR'],
                 exclude=self.settings['PAGE_EXCLUDES']):
             try:
-                page = read_file(
+                page = self.readers.read_file(
                     base_path=self.path, path=f, content_class=Page,
-                    settings=self.settings, context=self.context,
+                    context=self.context,
                     preread_signal=signals.page_generator_preread,
                     preread_sender=self,
                     context_signal=signals.page_generator_context,
@@ -557,10 +553,9 @@ class StaticGenerator(Generator):
         for static_path in self.settings['STATIC_PATHS']:
             for f in self.get_files(
                     static_path, extensions=False):
-                static = read_file(
+                static = self.readers.read_file(
                     base_path=self.path, path=f, content_class=Static,
-                    fmt='static',
-                    settings=self.settings, context=self.context,
+                    fmt='static', context=self.context,
                     preread_signal=signals.static_generator_preread,
                     preread_sender=self,
                     context_signal=signals.static_generator_context,
