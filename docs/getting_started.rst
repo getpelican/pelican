@@ -48,7 +48,7 @@ Markdown library as well::
 
     $ pip install Markdown
 
-If you want to use AsciiDoc you need to install it from `source
+If you want to use AsciiDoc_ you need to install it from `source
 <http://www.methods.co.nz/asciidoc/INSTALL.html>`_ or use your operating
 system's package manager.
 
@@ -323,6 +323,9 @@ pattern::
 
     This is the content of my super blog post.
 
+Conventions for AsciiDoc_ posts, which should have an ``.asc`` extension, can
+be found on the AsciiDoc_ site.
+
 Pelican can also process HTML files ending in ``.html`` and ``.htm``. Pelican
 interprets the HTML in a very straightforward manner, reading metadata from
 ``meta`` tags, the title from the ``title`` tag, and the body out from the
@@ -551,3 +554,4 @@ listed on the index page nor on any category page.
 .. _virtualenv: http://www.virtualenv.org/
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
 .. _Fabric: http://fabfile.org/
+.. _AsciiDoc: http://www.methods.co.nz/asciidoc/
