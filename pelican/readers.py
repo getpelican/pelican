@@ -372,14 +372,27 @@ class Readers(object):
     'readers_init' signall for plugins.
 
     """
+
+    # used to warn about missing dependencies only once, at the first
+    # instanciation of a Readers object.
+    warn_missing_deps = True
+
     def __init__(self, settings=None):
         self.settings = settings or {}
         self.readers = {}
         self.reader_classes = {}
 
         for cls in [BaseReader] + BaseReader.__subclasses__():
+            if not cls.enabled:
+                if self.__class__.warn_missing_deps:
+                    logger.debug('Missing dependencies for {}'
+                                 .format(', '.join(cls.file_extensions)))
+                continue
+
             for ext in cls.file_extensions:
                 self.reader_classes[ext] = cls
+
+        self.__class__.warn_missing_deps = False
 
         if self.settings['READERS']:
             self.reader_classes.update(self.settings['READERS'])
@@ -388,10 +401,6 @@ class Readers(object):
 
         for fmt, reader_class in self.reader_classes.items():
             if not reader_class:
-                continue
-
-            if not reader_class.enabled:
-                logger.warning('Missing dependencies for {}'.format(fmt))
                 continue
 
             self.readers[fmt] = reader_class(self.settings)
