@@ -19,9 +19,9 @@ CONTENT_DIR = os.path.join(CUR_DIR, 'content')
 class TestGenerator(unittest.TestCase):
     def setUp(self):
         self.settings = get_settings()
+        self.settings['READERS'] = {'asc': None}
         self.generator = Generator(self.settings.copy(), self.settings,
-                                   CUR_DIR, self.settings['THEME'], None,
-                                   self.settings['MARKUP'])
+                                   CUR_DIR, self.settings['THEME'], None)
 
     def test_include_path(self):
         filename = os.path.join(CUR_DIR, 'content', 'article.rst')
@@ -29,10 +29,6 @@ class TestGenerator(unittest.TestCase):
         self.assertTrue(include_path(filename))
         self.assertTrue(include_path(filename, extensions=('rst',)))
         self.assertFalse(include_path(filename, extensions=('md',)))
-
-        # markup must be a tuple, test that this works also with a list
-        self.generator.markup = ['rst', 'md']
-        self.assertTrue(include_path(filename))
 
 
 class TestArticlesGenerator(unittest.TestCase):
@@ -42,11 +38,11 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['READERS'] = {'asc': None}
 
         cls.generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'],
-            output_path=None, markup=settings['MARKUP'])
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         cls.generator.generate_context()
         cls.articles = [[page.title, page.status, page.category.name,
                          page.template] for page in cls.generator.articles]
@@ -55,8 +51,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings()
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'],
-            output_path=None, markup=settings['MARKUP'])
+            path=None, theme=settings['THEME'], output_path=None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         writer.write_feed.assert_called_with([], settings,
@@ -64,8 +59,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
         generator = ArticlesGenerator(
             context=settings, settings=get_settings(FEED_ALL_ATOM=None),
-            path=None, theme=settings['THEME'],
-            output_path=None, markup=None)
+            path=None, theme=settings['THEME'], output_path=None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
@@ -74,26 +68,33 @@ class TestArticlesGenerator(unittest.TestCase):
 
         articles_expected = [
             ['Article title', 'published', 'Default', 'article'],
-            ['Article with markdown and summary metadata single', 'published',
-             'Default', 'article'],
             ['Article with markdown and summary metadata multi', 'published',
              'Default', 'article'],
+            ['Article with markdown and summary metadata single', 'published',
+             'Default', 'article'],
+            ['Article with markdown containing footnotes', 'published',
+             'Default', 'article'],
             ['Article with template', 'published', 'Default', 'custom'],
-            ['Test md File', 'published', 'test', 'article'],
             ['Rst with filename metadata', 'published', 'yeah', 'article'],
             ['Test Markdown extensions', 'published', 'Default', 'article'],
+            ['Test markdown File', 'published', 'test', 'article'],
+            ['Test md File', 'published', 'test', 'article'],
+            ['Test mdown File', 'published', 'test', 'article'],
+            ['Test mkd File', 'published', 'test', 'article'],
             ['This is a super article !', 'published', 'Yeah', 'article'],
+            ['This is a super article !', 'published', 'Yeah', 'article'],
+            ['This is a super article !', 'published', 'yeah', 'article'],
+            ['This is a super article !', 'published', 'yeah', 'article'],
+            ['This is a super article !', 'published', 'yeah', 'article'],
+            ['This is a super article !', 'published', 'Default', 'article'],
             ['This is an article with category !', 'published', 'yeah',
-              'article'],
+             'article'],
             ['This is an article without category !', 'published', 'Default',
              'article'],
             ['This is an article without category !', 'published',
              'TestCategory', 'article'],
-            ['This is a super article !', 'published', 'yeah', 'article'],
-            ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定',
-             'published', '指導書', 'article'],
-            ['Article with markdown containing footnotes', 'published',
-             'Default', 'article']
+            ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定', 'published',
+             '指導書', 'article'],
         ]
         self.assertEqual(sorted(articles_expected), sorted(self.articles))
 
@@ -121,11 +122,11 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
+        settings['READERS'] = {'asc': None}
         settings['filenames'] = {}
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'],
-            output_path=None, markup=settings['MARKUP'])
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         # test for name
         # categories are grouped by slug; if two categories have the same slug
@@ -147,8 +148,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'],
-            output_path=None, markup=settings['MARKUP'])
+            path=None, theme=settings['THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
@@ -162,8 +162,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'],
-            output_path=None, markup=settings['MARKUP'])
+            path=None, theme=settings['THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives/index.html",
@@ -178,8 +177,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'],
-            output_path=None, markup=settings['MARKUP'])
+            path=None, theme=settings['THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_count == 0
@@ -212,8 +210,7 @@ class TestPageGenerator(unittest.TestCase):
 
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
-            path=CUR_DIR, theme=settings['THEME'],
-            output_path=None, markup=settings['MARKUP'])
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
@@ -252,13 +249,12 @@ class TestTemplatePagesGenerator(unittest.TestCase):
         settings = get_settings()
         settings['STATIC_PATHS'] = ['static']
         settings['TEMPLATE_PAGES'] = {
-                'template/source.html': 'generated/file.html'
-                }
+            'template/source.html': 'generated/file.html'
+        }
 
         generator = TemplatePagesGenerator(
             context={'foo': 'bar'}, settings=settings,
-            path=self.temp_content, theme='',
-            output_path=self.temp_output, markup=None)
+            path=self.temp_content, theme='', output_path=self.temp_output)
 
         # create a dummy template file
         template_dir = os.path.join(self.temp_content, 'template')

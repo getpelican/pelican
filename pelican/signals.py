@@ -8,6 +8,10 @@ initialized = signal('pelican_initialized')
 get_generators = signal('get_generators')
 finalized = signal('pelican_finalized')
 
+# Reader-level signals
+
+readers_init = signal('readers_init')
+
 # Generator-level signals
 
 generator_init = signal('generator_init')

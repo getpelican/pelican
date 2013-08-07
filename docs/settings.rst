@@ -84,9 +84,10 @@ Setting name (default value)                                            What doe
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
                                                                         until one works.
-`MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
-                                                                        to use. For the moment, the only available values
-                                                                        are `rst`, `md`, `markdown`, `mkd`, `mdown`, `html`, and `htm`.
+`READERS` (``{}``)                                                      A dict of file extensions / Reader classes to overwrite or
+                                                                        add file readers. for instance, to avoid processing .html files:
+                                                                        ``READERS = {'html': None}``. Or to add a custom reader for the
+                                                                        `foo` extension: ``READERS = {'foo': FooReader}``
 `IGNORE_FILES` (``['.#*']``)                                            A list of file globbing patterns to match against the
                                                                         source files to be ignored by the processor. For example,
                                                                         the default ``['.#*']`` will ignore emacs lock files.
