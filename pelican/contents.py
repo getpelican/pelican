@@ -9,17 +9,14 @@ import functools
 import os
 import re
 import sys
-import pytz
 
 from datetime import datetime
-
-
 
 from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import (slugify, truncate_html_words, memoized, strftime,
                            python_2_unicode_compatible, deprecated_attribute,
-                           path_to_url)
+                           path_to_url, set_date_tzinfo)
 
 # Import these so that they're avalaible when you import from pelican.contents.
 from pelican.urlwrappers import (URLWrapper, Author, Category, Tag)  # NOQA
@@ -108,13 +105,15 @@ class Content(object):
             locale.setlocale(locale.LC_ALL, locale_string)
             self.date_format = self.date_format[1]
 
+        #Give valid timezone for date object
         if hasattr(self, 'date'):
             self.locale_date = strftime(self.date, self.date_format)
-            #Set UTC timezone
-            if self.date.tzinfo is not None:
-                local_tz = pytz.timezone(settings['TIMEZONE'])
-                self.date = self.date.replace(tzinfo=local_tz)
-                self.utcdate = datetime.astimezone(self.date, pytz.timezone("UTC"))
+            if hasattr(self, 'timezone'):
+                set_date_tzinfo(self.date,self.timezone)
+            elif 'TIMEZONE' in self.settings:
+                set_date_tzinfo(self.date, settings['TIMEZONE'])
+            else:
+                set_date_tzinfo(self.date,'UTC')
 
         # manage status
         if not hasattr(self, 'status'):

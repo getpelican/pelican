@@ -19,6 +19,7 @@ from datetime import datetime
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
+from dateutil import parser
 
 logger = logging.getLogger(__name__)
 
@@ -179,40 +180,44 @@ def get_date(string):
 
     If no format matches the given date, raise a ValueError.
     """
-    string = re.sub(' +', ' ', string)
-    formats = [
-        # ISO 8601
-        '%Y',
-        '%Y-%m',
-        '%Y-%m-%d',
-        '%Y-%m-%dT%H:%M%z',
-        '%Y-%m-%dT%H:%MZ',
-        '%Y-%m-%dT%H:%M',
-        '%Y-%m-%dT%H:%M:%S%z',
-        '%Y-%m-%dT%H:%M:%SZ',
-        '%Y-%m-%dT%H:%M:%S',
-        '%Y-%m-%dT%H:%M:%S.%f%z',
-        '%Y-%m-%dT%H:%M:%S.%fZ',
-        '%Y-%m-%dT%H:%M:%S.%f',
-        # end ISO 8601 forms
-        '%Y-%m-%d %H:%M',
-        '%Y-%m-%d %H:%M:%S',
-        '%Y/%m/%d %H:%M',
-        '%Y/%m/%d',
-        '%d-%m-%Y',
-        '%d.%m.%Y %H:%M',
-        '%d.%m.%Y',
-        '%d/%m/%Y',
-        ]
-    for date_format in formats:
-        try:
-            date = datetime.strptime(string, date_format)
-        except ValueError:
-            continue
-        if date_format.endswith('Z'):
-            date = date.replace(tzinfo=pytz.timezone('UTC'))
-        return date
-    raise ValueError('{0!r} is not a valid date'.format(string))
+   #string = re.sub(' +', ' ', string)
+   #formats = [
+   #    # ISO 8601
+   #    '%Y',
+   #    '%Y-%m',
+   #    '%Y-%m-%d',
+   #    '%Y-%m-%dT%H:%M%z',
+   #    '%Y-%m-%dT%H:%MZ',
+   #    '%Y-%m-%dT%H:%M',
+   #    '%Y-%m-%dT%H:%M:%S%z',
+   #    '%Y-%m-%dT%H:%M:%SZ',
+   #    '%Y-%m-%dT%H:%M:%S',
+   #    '%Y-%m-%dT%H:%M:%S.%f%z',
+   #    '%Y-%m-%dT%H:%M:%S.%fZ',
+   #    '%Y-%m-%dT%H:%M:%S.%f',
+   #    # end ISO 8601 forms
+   #    '%Y-%m-%d %H:%M',
+   #    '%Y-%m-%d %H:%M:%S',
+   #    '%Y/%m/%d %H:%M',
+   #    '%Y/%m/%d',
+   #    '%d-%m-%Y',
+   #    '%d.%m.%Y %H:%M',
+   #    '%d.%m.%Y',
+   #    '%d/%m/%Y',
+   #    ]
+   #for date_format in formats:
+   #    try:
+   #        date = datetime.strptime(string, date_format)
+   #    except ValueError:
+   #        continue
+   #    if date_format.endswith('Z'):
+   #        date = date.replace(tzinfo=pytz.timezone('UTC'))
+   #    return date
+   #raise ValueError('{0!r} is not a valid date'.format(string))
+    try:
+        return parser.parse(string)
+    except ValueError:
+        raise ValueError('{0!r} is not a valid date'.format(string))
 
 
 class pelican_open(object):
