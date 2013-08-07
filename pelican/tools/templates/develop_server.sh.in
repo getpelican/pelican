@@ -2,6 +2,8 @@
 ##
 # This section should match your Makefile
 ##
+PY=$python_binary
+
 PELICAN=$pelican
 PELICANOPTS=$pelicanopts
 

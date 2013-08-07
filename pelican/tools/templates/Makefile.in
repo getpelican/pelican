@@ -1,3 +1,5 @@
+PY=$python_binary
+
 PELICAN=$pelican
 PELICANOPTS=$pelicanopts
 
