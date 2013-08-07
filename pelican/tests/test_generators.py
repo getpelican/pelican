@@ -67,7 +67,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_generate_context(self):
 
         articles_expected = [
-            ['Article title', 'published', 'Default', 'article'],
+            ['Article TITLE', 'published', 'Default', 'article'],
             ['Article with markdown and summary metadata multi', 'published',
              'Default', 'article'],
             ['Article with markdown and summary metadata single', 'published',

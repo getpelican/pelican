@@ -51,6 +51,7 @@ class RstReaderTest(ReaderTest):
             'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
         }
+        expected['bare_title'] = expected['title']
         for key, value in page.metadata.items():
             self.assertEqual(value, expected[key], key)
 
@@ -63,6 +64,7 @@ class RstReaderTest(ReaderTest):
             'title': 'Rst with filename metadata',
             'date': datetime.datetime(2012, 11, 29),
         }
+        expected['bare_title'] = expected['title']
         for key, value in page.metadata.items():
             self.assertEqual(value, expected[key], key)
 
@@ -80,6 +82,7 @@ class RstReaderTest(ReaderTest):
             'slug': 'article_with_filename_metadata',
             'mymeta': 'foo',
         }
+        expected['bare_title'] = expected['title']
         for key, value in page.metadata.items():
             self.assertEqual(value, expected[key], key)
 
@@ -113,6 +116,26 @@ class RstReaderTest(ReaderTest):
                         '<span class="caps">TLA</span></abbr>.</p>\n')
 
             self.assertEqual(page.content, expected)
+        except ImportError:
+            return unittest.skip('need the typogrify distribution')
+
+    def test_bare_title(self):
+        # if nothing is specified in the settings, the content should be
+        # unmodified
+        page = self.read_file(path='article.rst')
+        expected_bare_title = 'Article TITLE'
+        expected_title = 'Article TITLE'
+        self.assertEqual(page.bare_title, expected_bare_title)
+        self.assertEqual(page.title, expected_title)
+
+        try:
+            # otherwise, typogrify should be applied to title,
+            # but not to bare_title
+            page = self.read_file(path='article.rst', TYPOGRIFY=True)
+            expected_bare_title = 'Article TITLE'
+            expected_title = 'Article&nbsp;<span class="caps">TITLE</span>'
+            self.assertEqual(page.bare_title, expected_bare_title)
+            self.assertEqual(page.title, expected_title)
         except ImportError:
             return unittest.skip('need the typogrify distribution')
 

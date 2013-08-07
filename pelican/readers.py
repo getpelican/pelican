@@ -447,6 +447,9 @@ class Readers(object):
             find_empty_alt(content, path)
 
         # eventually filter the content with typogrify if asked so
+        if 'title' in metadata:
+            # Allow templates to include non-typogrified title in <title> tag.
+            metadata['bare_title'] = metadata['title']
         if content and self.settings['TYPOGRIFY']:
             from typogrify.filters import typogrify
             content = typogrify(content)

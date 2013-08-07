@@ -9,6 +9,8 @@ Release history
   longer article-specific
 * Deprecate ``FILES_TO_COPY`` in favor of ``STATIC_PATHS`` and
   ``EXTRA_PATH_METADATA``
+* Add ``bare_title`` to metadata when ``title`` exists,
+  allowing for non-typogrified ``<title>`` tag when ``TYPOGRIFY=True``.
 
 3.2.1 and 3.2.2
 ===============

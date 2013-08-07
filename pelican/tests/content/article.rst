@@ -1,4 +1,4 @@
-Article title
+Article TITLE
 #############
 
 This is some content. With some stuff to "typogrify".
