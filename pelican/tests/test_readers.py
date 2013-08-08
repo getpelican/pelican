@@ -19,8 +19,8 @@ class ReaderTest(unittest.TestCase):
 
     def read_file(self, path, **kwargs):
         # Isolate from future API changes to readers.read_file
-        return readers.read_file(
-            base_path=CONTENT_PATH, path=path, settings=get_settings(**kwargs))
+        r = readers.Readers(settings=get_settings(**kwargs))
+        return r.read_file(base_path=CONTENT_PATH, path=path)
 
 
 class RstReaderTest(ReaderTest):
@@ -160,7 +160,7 @@ class MdReaderTest(ReaderTest):
             ' with some footnotes'
             '<sup id="fnref:footnote"><a class="footnote-ref" '
             'href="#fn:footnote" rel="footnote">2</a></sup></p>\n'
-            
+
             '<div class="footnote">\n'
             '<hr />\n<ol>\n<li id="fn:1">\n'
             '<p>Numbered footnote&#160;'

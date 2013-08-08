@@ -84,9 +84,10 @@ Setting name (default value)                                            What doe
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
                                                                         until one works.
-`MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
-                                                                        to use. For the moment, the only available values
-                                                                        are `rst`, `md`, `markdown`, `mkd`, `mdown`, `html`, and `htm`.
+`READERS` (``{}``)                                                      A dict of file extensions / Reader classes to overwrite or
+                                                                        add file readers. for instance, to avoid processing .html files:
+                                                                        ``READERS = {'html': None}``. Or to add a custom reader for the
+                                                                        `foo` extension: ``READERS = {'foo': FooReader}``
 `IGNORE_FILES` (``['.#*']``)                                            A list of file globbing patterns to match against the
                                                                         source files to be ignored by the processor. For example,
                                                                         the default ``['.#*']`` will ignore emacs lock files.
@@ -244,7 +245,7 @@ Setting name (default value)                            What does it do?
 `CATEGORY_SAVE_AS` (``'category/{slug}.html'``)         The location to save a category.
 `TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
 `TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
-`TAGS_URL` (``'tag/{slug}.html'``)                      The URL to use for the tag list.
+`TAGS_URL` (``'tags.html'``)                            The URL to use for the tag list.
 `TAGS_SAVE_AS` (``'tags.html'``)                        The location to save the tag list.
 `AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
 `AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.

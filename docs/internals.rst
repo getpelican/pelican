@@ -24,7 +24,7 @@ The logic is separated into different classes and concepts:
   then passed to the generators.
 
 * **Readers** are used to read from various formats (AsciiDoc, HTML, Markdown and
-  reStructuredText for now, but the system is extensible). Given a file, they 
+  reStructuredText for now, but the system is extensible). Given a file, they
   return metadata (author, tags, category, etc.) and content (HTML-formatted).
 
 * **Generators** generate the different outputs. For instance, Pelican comes with
@@ -44,7 +44,7 @@ method that returns HTML content and some metadata.
 
 Take a look at the Markdown reader::
 
-    class MarkdownReader(Reader):
+    class MarkdownReader(BaseReader):
         enabled = bool(Markdown)
 
         def read(self, source_path):

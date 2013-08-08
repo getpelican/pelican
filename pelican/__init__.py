@@ -17,6 +17,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, SourceFileGenerator,
                                 TemplatePagesGenerator)
 from pelican.log import init
+from pelican.readers import Readers
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, folder_watcher, file_watcher
 from pelican.writers import Writer
@@ -46,7 +47,6 @@ class Pelican(object):
         self.path = settings['PATH']
         self.theme = settings['THEME']
         self.output_path = settings['OUTPUT_PATH']
-        self.markup = settings['MARKUP']
         self.ignore_files = settings['IGNORE_FILES']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
         self.output_retention = settings['OUTPUT_RETENTION']
@@ -164,7 +164,6 @@ class Pelican(object):
                 path=self.path,
                 theme=self.theme,
                 output_path=self.output_path,
-                markup=self.markup,
             ) for cls in self.get_generator_classes()
         ]
 
@@ -236,10 +235,6 @@ def parse_arguments():
         help='Where to output the generated files. If not specified, a '
              'directory will be created, named "output" in the current path.')
 
-    parser.add_argument('-m', '--markup', dest='markup',
-        help='The list of markup language to use (rst or md). Please indicate '
-             'them separated by commas.')
-
     parser.add_argument('-s', '--settings', dest='settings',
         help='The settings of the application, this is automatically set to '
         '{0} if a file exists with this name.'.format(DEFAULT_CONFIG_NAME))
@@ -279,8 +274,6 @@ def get_config(args):
     if args.output:
         config['OUTPUT_PATH'] = \
                 os.path.abspath(os.path.expanduser(args.output))
-    if args.markup:
-        config['MARKUP'] = [a.strip().lower() for a in args.markup.split(',')]
     if args.theme:
         abstheme = os.path.abspath(os.path.expanduser(args.theme))
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
@@ -296,8 +289,6 @@ def get_config(args):
         for key in config:
             if key in ('PATH', 'OUTPUT_PATH', 'THEME'):
                 config[key] = config[key].decode(enc)
-            if key == "MARKUP":
-                config[key] = [a.decode(enc) for a in config[key]]
     return config
 
 
@@ -315,16 +306,17 @@ def get_instance(args):
         module = __import__(module)
         cls = getattr(module, cls_name)
 
-    return cls(settings)
+    return cls(settings), settings
 
 
 def main():
     args = parse_arguments()
     init(args.verbosity)
-    pelican = get_instance(args)
+    pelican, settings = get_instance(args)
+    readers = Readers(settings)
 
     watchers = {'content': folder_watcher(pelican.path,
-                                          pelican.markup,
+                                          readers.extensions,
                                           pelican.ignore_files),
                 'theme': folder_watcher(pelican.theme,
                                         [''],
@@ -333,8 +325,8 @@ def main():
 
     try:
         if args.autoreload:
-            print('  --- AutoReload Mode: Monitoring `content`, `theme` and `settings`'
-                  ' for changes. ---')
+            print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
+                  ' `settings` for changes. ---')
 
             while True:
                 try:
