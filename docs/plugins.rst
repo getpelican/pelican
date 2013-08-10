@@ -72,8 +72,8 @@ finalized                       pelican object                  invoked after al
                                                                 - notify/ping search engines with an updated sitemap.
 generator_init                  generator                       invoked in the Generator.__init__
 readers_init                    readers                         invoked in the Readers.__init__
-article_generate_context        article_generator, metadata
-article_generate_preread        article_generator               invoked before a article is read in ArticlesGenerator.generate_context;
+article_generator_context        article_generator, metadata
+article_generator_preread        article_generator               invoked before a article is read in ArticlesGenerator.generate_context;
                                                                 use if code needs to do something before every article is parsed
 article_generator_init          article_generator               invoked in the ArticlesGenerator.__init__
 article_generator_finalized     article_generator               invoked at the end of ArticlesGenerator.generate_context
