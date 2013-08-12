@@ -522,14 +522,34 @@ Setting name (default value)                        What does it do?
 
 The default theme does not include a tag cloud, but it is pretty easy to add::
 
-    <ul>
+    <ul class="tagcloud">
         {% for tag in tag_cloud %}
             <li class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a></li>
         {% endfor %}
     </ul>
 
-You should then also define a CSS style with the appropriate classes (tag-0 to tag-N, where
-N matches `TAG_CLOUD_STEPS` -1).
+You should then also define CSS styles with appropriate classes (tag-0 to tag-N, where
+N matches `TAG_CLOUD_STEPS` -1), tag-0 being the most frequent, and define a ul.tagcloud 
+class with appropriate list-style to create the cloud, for example::
+
+    ul.tagcloud {
+    	list-style: none;
+        padding: 0;
+    }
+
+    ul.tagcloud li {
+        display: inline-block;
+    }
+
+    li.tag-0 {
+        font-size: 150%;
+    }
+
+    li.tag-1 {
+        font-size: 120%;
+    }
+
+      ...    
 
 Translations
 ============
