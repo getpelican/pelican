@@ -9,6 +9,11 @@ before_install:
 install:
     - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then ln -s /usr/share/asciidoc/asciidocapi.py ~/virtualenv/python2.7/lib/python2.7/site-packages/; fi
     - pip install mock
+    - pip install mock nose nose-cov
     - pip install .
     - pip install Markdown
-script: python -m unittest discover
+script: nosetests -sv --with-coverage --cover-package=pelican pelican
+after_success:
+  # Report coverage results to coveralls.io
+  - pip install coveralls
+  - coveralls
