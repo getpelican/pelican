@@ -338,7 +338,7 @@ def main():
                     modified = {k: next(v) for k, v in watchers.items()}
 
                     if modified['settings']:
-                        pelican = get_instance(args)
+                        pelican, settings  = get_instance(args)
 
                     if any(modified.values()):
                         print('\n-> Modified: {}. re-generating...'.format(
