@@ -27,6 +27,9 @@ CONF = {
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
     's3_bucket': 'my_s3_bucket',
+    'cloudfiles_username': 'my_rackspace_username',
+    'cloudfiles_api_key': 'my_rackspace_api_key',
+    'cloudfiles_container': 'my_cloudfiles_container',
     'dropbox_dir': '~/Dropbox/Public/',
     'default_pagination': 10,
     'siteurl': '',
@@ -210,6 +213,10 @@ needed by Pelican.
             CONF['dropbox_dir'] = ask('Where is your Dropbox directory?', str_compat, CONF['dropbox_dir'])
         if ask('Do you want to upload your website using S3?', answer=bool, default=False):
             CONF['s3_bucket'] = ask('What is the name of your S3 bucket?', str_compat, CONF['s3_bucket'])
+        if ask('Do you want to upload your website using Rackspace Cloud Files?', answer=bool, default=False):
+            CONF['cloudfiles_username'] = ask('What is your Rackspace Cloud username?', str_compat, CONF['cloudfiles_username'])
+            CONF['cloudfiles_api_key'] = ask('What is your Rackspace Cloud API key?', str_compat, CONF['cloudfiles_api_key'])
+            CONF['cloudfiles_container'] = ask('What is the name of your Cloud Files container?', str_compat, CONF['cloudfiles_container'])
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
