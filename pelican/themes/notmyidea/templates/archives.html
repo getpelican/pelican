@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <section id="content" class="body">
-<h1>Archives for {{ SITENAME }}</h1>
+<h1>Archives for {% if month %}{{ month_name }} {% endif %}{% if day %}{{ day }}, {% endif %}{{ year or SITENAME }}</h1>
 
 <dl>
 {% for article in dates %}

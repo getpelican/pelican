@@ -6,6 +6,7 @@ import math
 import random
 import logging
 import shutil
+import calendar
 
 from codecs import open
 from collections import defaultdict
@@ -276,13 +277,24 @@ class ArticlesGenerator(Generator):
             # `dates` is already sorted by date
             for _period, group in groupby(dates, key=key):
                 archive = list(group)
-                # arbitrarily grab the first date so that the usual
+                # Arbitrarily grab the first date so that the usual
                 # format string syntax can be used for specifying the
                 # period archive dates
                 date = archive[0].date
                 save_as = save_as_fmt.format(date=date)
-                write(save_as, template, self.context,
-                      dates=archive, blog=True)
+                # Add period information to context
+                context = self.context.copy()
+                try:
+                    context['year'] = _period[0]
+                    if len(_period) >= 2:
+                        context['month'] = _period[1]
+                        context['month_name'] = calendar.month_name[_period[1]]
+                    if len(_period) >= 3:
+                        context['day'] = _period[2]
+                except TypeError:
+                    context['year'] = _period
+                # Write period archive to file
+                write(save_as, template, context, dates=archive, blog=True)
 
         period_save_as = {
                 'year' : self.settings['YEAR_ARCHIVE_SAVE_AS'],
