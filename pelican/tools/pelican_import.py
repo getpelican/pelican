@@ -119,7 +119,7 @@ def wp2fields(xml):
             try:
                 # Use HTMLParser due to issues with BeautifulSoup 3
                 title = HTMLParser().unescape(item.title.contents[0])
-            except IndexError:
+            except (AttributeError, NameError):
                 title = 'No title [%s]' % item.find('post_name').string
                 logger.warn('Post "%s" is lacking a proper title' % title)
 

@@ -4,12 +4,16 @@ from __future__ import unicode_literals, print_function
 import os
 import re
 
-from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content
+from pelican.tools.pelican_import import (wp2fields,
+                                          fields2pelican, decode_wp_content)
+
 from pelican.tests.support import (unittest, temporary_folder, mute,
                                    skipIfNoExecutable)
 
 CUR_DIR = os.path.dirname(__file__)
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
+WORDPRESS_XML_SAMPLE_NO_TITLE = os.path.join(CUR_DIR, 'content', 'wordpressexport-notitle.xml')
+
 WORDPRESS_ENCODED_CONTENT_SAMPLE = os.path.join(CUR_DIR,
                                                 'content',
                                                 'wordpress_content_encoded')
@@ -122,3 +126,21 @@ class TestWordpressXmlImporter(unittest.TestCase):
             sample_line = re.search(r'-   This is a code sample', md).group(0)
             code_line = re.search(r'\s+a = \[1, 2, 3\]', md).group(0)
             self.assertTrue(sample_line.rindex('This') < code_line.rindex('a'))
+
+
+@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+class TestWordpressXmlImporter_OtherCases(unittest.TestCase):
+
+    def test_no_title(self):
+        self.posts = list(wp2fields(WORDPRESS_XML_SAMPLE_NO_TITLE))
+
+        # format of each tuple in self.posts:
+        # (title, content, filename, date, author, categories, tags, kind, "wp-html")
+        first_post = self.posts[0]
+        self.assertEqual('No title [contact]', first_post[0]) # title
+        self.assertEqual('contact', first_post[2]) # filename
+        self.assertEqual('2012-04-11 06:38', first_post[3]) # date - '2012-04-11 06:38'
+        self.assertEqual('bob', first_post[4]) # author - bob
+        self.assertEqual([], first_post[5]) # categories []
+        self.assertEqual([], first_post[6]) # tags []
+        self.assertEqual('page', first_post[7]) # kind
