@@ -26,10 +26,8 @@ class ReaderTest(unittest.TestCase):
 class DefaultReaderTest(ReaderTest):
 
     def test_readfile_unknown_extension(self):
-        with self.assertRaises(TypeError) as cm:
+        with self.assertRaises(TypeError):
             self.read_file(path='article_with_metadata.unknownextension')
-        ex = cm.exception
-        self.assertIn('Pelican does not know how to parse', ex.message)
 
 
 class RstReaderTest(ReaderTest):
