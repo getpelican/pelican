@@ -562,13 +562,14 @@ class StaticGenerator(Generator):
                     context_sender=self)
                 self.staticfiles.append(static)
                 self.add_source_path(static)
+        self._update_context(('staticfiles',))
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          self.settings['THEME_STATIC_DIR'], self.output_path,
                          os.curdir)
         # copy all Static files
-        for sc in self.staticfiles:
+        for sc in self.context['staticfiles']:
             source_path = os.path.join(self.path, sc.source_path)
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
