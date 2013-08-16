@@ -88,9 +88,10 @@ Pelican, and the changes to that output are expected and deemed correct given
 the nature of your changes, then you should update the output used by the
 functional tests. To do so, you can use the following two commands::
 
-    $ pelican -o pelican/tests/output/custom/ -s samples/pelican.conf.py \
+    $ LC_ALL=en_US.utf8 pelican -o pelican/tests/output/custom/ \
+        -s samples/pelican.conf.py samples/content/
+    $ LC_ALL=en_US.utf8 pelican -o pelican/tests/output/basic/ \
         samples/content/
-    $ pelican -o pelican/tests/output/basic/ samples/content/
 
 Testing on Python 2 and 3
 -------------------------
