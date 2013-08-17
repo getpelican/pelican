@@ -152,17 +152,20 @@ def dc2fields(file):
                  '"BeautifulSoup4" and "lxml" required to import Dotclear files.')
         sys.exit(error)
 
-
     in_cat = False
     in_post = False
     category_list = {}
     posts = []
 
     with open(file, 'r', encoding='utf-8') as f:
-
         for line in f:
             # remove final \n
             line = line[:-1]
+
+            # When there is a line break, interpret this as a section break
+            if line == '\r':
+                in_cat = False
+                in_post = False
 
             if line.startswith('[category'):
                 in_cat = True
