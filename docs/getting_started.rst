@@ -459,6 +459,10 @@ following to ``pelicanconf.py``::
 
 And then the ``pdfs`` directory would also be copied to ``output/static/``.
 
+You can also link to categories or tags, using the `|tag|tagname` and
+`|category|foobar` syntax.
+
+
 Importing an existing blog
 --------------------------
 
