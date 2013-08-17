@@ -216,6 +216,10 @@ class Content(object):
                 else:
                     logger.warning("Unable to find {fn}, skipping url"
                                    " replacement".format(fn=value))
+            elif what == 'category':
+                origin = Category(value, self.settings).url
+            elif what == 'tag':
+                origin = Tag(value, self.settings).url
 
             return ''.join((m.group('markup'), m.group('quote'), origin,
                             m.group('quote')))
