@@ -84,6 +84,7 @@ page_generate_context           page_generator, metadata
 page_generator_init             page_generator                  invoked in the PagesGenerator.__init__
 page_generator_finalized        page_generator                  invoked at the end of PagesGenerator.generate_context
 content_object_init             content_object                  invoked at the end of Content.__init__ (see note below)
+content_written                 path, context                   invoked each time a content file is written.
 =============================   ============================   ===========================================================================
 
 The list is currently small, so don't hesitate to add signals and make a pull

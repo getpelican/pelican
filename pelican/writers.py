@@ -11,8 +11,10 @@ if not six.PY3:
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed
 from jinja2 import Markup
+
 from pelican.paginator import Paginator
 from pelican.utils import get_relative_path, path_to_url, set_date_tzinfo
+from pelican import signals
 
 logger = logging.getLogger(__name__)
 
@@ -151,9 +153,14 @@ class Writer(object):
                 os.makedirs(os.path.dirname(path))
             except Exception:
                 pass
+
             with self._open_w(path, 'utf-8', override=override) as f:
                 f.write(output)
             logger.info('writing {}'.format(path))
+
+            # Send a signal to say we're writing a file with some specific
+            # local context.
+            signals.content_written.send(path, context=localcontext)
 
         localcontext = context.copy()
         if relative_urls:
