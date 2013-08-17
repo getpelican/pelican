@@ -41,7 +41,7 @@ class Writer(object):
         title = Markup(item.title).striptags()
         feed.add_item(
             title=title,
-            link='%s/%s' % (self.site_url, item.url),
+            link='%s/%s' % (self.feed_domain, item.url),
             unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
                                         item.date.date(), item.url),
             description=item.get_content(self.site_url),
