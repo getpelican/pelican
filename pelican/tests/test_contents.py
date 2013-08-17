@@ -180,6 +180,30 @@ class TestPage(unittest.TestCase):
         Page(**self.page_kwargs)
         self.assertTrue(content_object_init.has_receivers_for(Page))
 
+    def test_get_content(self):
+        # Test that the content is updated with the relative links to
+        # filenames, tags and categories.
+        settings = get_settings()
+        args = self.page_kwargs.copy()
+        args['settings'] = settings
+
+        # Tag
+        args['content'] = ('A simple test, with a '
+                           '<a href="|tag|tagname">link</a>')
+        page = Page(**args)
+        content = page.get_content('http://notmyidea.org')
+        self.assertEquals(content, ('A simple test, with a '
+                                    '<a href="tag/tagname.html">link</a>'))
+
+        # Category
+        args['content'] = ('A simple test, with a '
+                           '<a href="|category|category">link</a>')
+        page = Page(**args)
+        content = page.get_content('http://notmyidea.org')
+        self.assertEquals(content,
+                          ('A simple test, with a '
+                           '<a href="category/category.html">link</a>'))
+
 
 class TestArticle(TestPage):
     def test_template(self):
