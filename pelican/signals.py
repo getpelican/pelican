@@ -37,3 +37,6 @@ static_generator_preread = signal('static_generator_preread')
 static_generator_context = signal('static_generator_context')
 
 content_object_init = signal('content_object_init')
+
+# Writers signals
+content_written = signal('content_written')
