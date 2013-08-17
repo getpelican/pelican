@@ -17,7 +17,6 @@ from pelican.settings import read_settings
 from pelican import utils
 from .support import get_article, LoggedTestCase, locale_available, unittest
 
-
 class TestUtils(LoggedTestCase):
     _new_attribute = 'new_value'
 
@@ -70,15 +69,12 @@ class TestUtils(LoggedTestCase):
         # invalid ones
         invalid_dates = ['2010-110-12', 'yay']
 
-        if version_info < (3, 2):
-            dates.pop('2012-11-22T22:11:10-0500')
-            invalid_dates.append('2012-11-22T22:11:10-0500')
-
         for value, expected in dates.items():
             self.assertEqual(utils.get_date(value), expected, value)
 
-        for item in invalid_dates:
-            self.assertRaises(ValueError, utils.get_date, item)
+        for date in invalid_dates:
+            self.assertRaises(ValueError, utils.get_date, date)
+
 
     def test_slugify(self):
 
@@ -238,6 +234,8 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(utils.strftime(d, '%d/%m/%y'), '29/08/12')
         self.assertEqual(utils.strftime(d, '%d/%m/%Y'), '29/08/2012')
 
+        # RFC 339 Test
+        self.assertEqual(utils.strftime(d, '%Y-%m-%dT%H:%M:%SZ'),'2012-08-29T00:00:00Z')
         # % escaped
         self.assertEqual(utils.strftime(d, '%d%%%m%%%y'), '29%08%12')
         self.assertEqual(utils.strftime(d, '%d %% %m %% %y'), '29 % 08 % 12')
