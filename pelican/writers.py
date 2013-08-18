@@ -33,7 +33,7 @@ class Writer(object):
         sitename = Markup(context['SITENAME']).striptags()
         feed = feed_class(
             title=sitename,
-            link=(self.site_url + '/'),
+            link=(self.feed_domain + '/'),
             feed_url=self.feed_url,
             description=context.get('SITESUBTITLE', ''))
         return feed
@@ -44,7 +44,7 @@ class Writer(object):
         feed.add_item(
             title=title,
             link='%s/%s' % (self.feed_domain, item.url),
-            unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
+            unique_id='tag:%s,%s:%s' % (self.feed_domain.replace('http://', ''),
                                         item.date.date(), item.url),
             description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
