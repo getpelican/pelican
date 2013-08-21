@@ -105,15 +105,15 @@ class Content(object):
             locale.setlocale(locale.LC_ALL, locale_string)
             self.date_format = self.date_format[1]
 
-        #Give valid timezone for date object
+        # Give valid timezone for date object.
         if hasattr(self, 'date'):
             self.locale_date = strftime(self.date, self.date_format)
             if hasattr(self, 'timezone'):
-                set_date_tzinfo(self.date,self.timezone)
+                set_date_tzinfo(self.date, self.timezone)
             elif 'TIMEZONE' in self.settings:
                 set_date_tzinfo(self.date, settings['TIMEZONE'])
             else:
-                set_date_tzinfo(self.date,'UTC')
+                set_date_tzinfo(self.date, 'UTC')
 
         # manage status
         if not hasattr(self, 'status'):
