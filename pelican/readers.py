@@ -186,11 +186,6 @@ class MarkdownReader(BaseReader):
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd', 'mdown']
 
-    def __init__(self, *args, **kwargs):
-        super(MarkdownReader, self).__init__(*args, **kwargs)
-        self.extensions = self.settings['MD_EXTENSIONS']
-        self.extensions.append('meta')
-
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
         output = {}
@@ -208,8 +203,7 @@ class MarkdownReader(BaseReader):
 
     def read(self, source_path):
         """Parse content and metadata of markdown files"""
-
-        self._md = Markdown(extensions=self.extensions)
+        self._md = Markdown(extensions=self.extensions + ['meta'])
         with pelican_open(source_path) as text:
             content = self._md.convert(text)
 
