@@ -1,4 +1,14 @@
 {% extends "base.html" %}
+{% block head %}
+  {% for keyword in article.keywords %}
+    <meta name="keywords" contents="{{keyword}}">
+  {% endfor %}
+
+  {% for description in article.description %}
+    <meta name="description" contents="{{description}}">
+  {% endfor %}
+{% endblock %}
+
 {% block content %}
 <section id="content" class="body">
   <header>
