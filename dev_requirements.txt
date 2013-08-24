@@ -6,3 +6,6 @@ Markdown
 BeautifulSoup4
 lxml
 typogrify
+
+# To perform release
+bumpr
