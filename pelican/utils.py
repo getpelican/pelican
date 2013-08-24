@@ -256,7 +256,7 @@ def slugify(value, substitutions=()):
     return value.decode('ascii')
 
 
-def copy(path, source, destination, destination_path=None, overwrite=False):
+def copy(path, source, destination, destination_path=None):
     """Copy path from origin to destination.
 
     The function is able to copy either files or directories.
@@ -265,8 +265,6 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     :param source: the source dir
     :param destination: the destination dir
     :param destination_path: the destination path (optional)
-    :param overwrite: whether to overwrite the destination if already exists
-                      or not
     """
     if not destination_path:
         destination_path = path
