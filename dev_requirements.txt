@@ -8,4 +8,4 @@ lxml
 typogrify
 
 # To perform release
-bumpr
+bumpr==0.2.0
