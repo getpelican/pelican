@@ -188,8 +188,9 @@ class MarkdownReader(BaseReader):
 
     def __init__(self, *args, **kwargs):
         super(MarkdownReader, self).__init__(*args, **kwargs)
-        self.extensions = self.settings['MD_EXTENSIONS']
-        self.extensions.append('meta')
+        self.extensions = list(self.settings['MD_EXTENSIONS'])
+        if 'meta' not in self.extensions:
+            self.extensions.append('meta')
 
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
@@ -404,11 +405,6 @@ class Readers(object):
                 continue
 
             self.readers[fmt] = reader_class(self.settings)
-
-            settings_key = '%s_EXTENSIONS' % fmt.upper()
-
-            if settings_key in self.settings:
-                self.readers[fmt].extensions = self.settings[settings_key]
 
     @property
     def extensions(self):
