@@ -1,5 +1,14 @@
-Pelican
-=======
+Pelican |release|
+=================
+
+
+.. ifconfig:: release.endswith('.dev')
+
+    .. warning::
+
+        This documentation is for the version of Pelican currently under development.
+        Were you looking for version |last_stable| documentation?
+
 
 Pelican is a static site generator, written in Python_.
 
@@ -12,7 +21,7 @@ Pelican is a static site generator, written in Python_.
 Features
 --------
 
-Pelican currently supports:
+Pelican |version| currently supports:
 
 * Articles (e.g., blog posts) and pages (e.g., "About", "Projects", "Contact")
 * Comments, via an external service (Disqus). (Please note that while
