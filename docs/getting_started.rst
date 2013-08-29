@@ -400,7 +400,7 @@ and images that may be sitting alongside the current post (instead of having
 to determine where those resources will be placed after site generation).
 
 To link to internal content (files in the ``content`` directory), use the
-following syntax: ``|filename|path/to/file``::
+following syntax: ``{filename}path/to/file``::
 
 
     website/
@@ -421,8 +421,8 @@ In this example, ``article1.rst`` could look like::
 
     See below intra-site link examples in reStructuredText format.
 
-    `a link relative to content root <|filename|/cat/article2.rst>`_
-    `a link relative to current file <|filename|cat/article2.rst>`_
+    `a link relative to content root <{filename}/cat/article2.rst>`_
+    `a link relative to current file <{filename}cat/article2.rst>`_
 
 and ``article2.md``::
 
@@ -431,8 +431,8 @@ and ``article2.md``::
 
     See below intra-site link examples in Markdown format.
 
-    [a link relative to content root](|filename|/article1.md)
-    [a link relative to current file](|filename|../article1.md)
+    [a link relative to content root]({filename}/article1.md)
+    [a link relative to current file]({filename}../article1.md)
 
 Embedding non-article or non-page content is slightly different in that the
 directories need to be specified in ``pelicanconf.py`` file. The ``images``
@@ -447,7 +447,7 @@ manually::
 
 And ``image-test.md`` would include::
 
-    ![Alt Text](|filename|/images/han.jpg)
+    ![Alt Text]({filename}/images/han.jpg)
 
 Any content can be linked in this way. What happens is that the ``images``
 directory gets copied to ``output/static/`` upon publishing. This is
@@ -459,9 +459,16 @@ following to ``pelicanconf.py``::
 
 And then the ``pdfs`` directory would also be copied to ``output/static/``.
 
-You can also link to categories or tags, using the `|tag|tagname` and
-`|category|foobar` syntax.
+You can also link to categories or tags, using the ``{tag}tagname`` and
+``{category}foobar`` syntax.
 
+For backward compatibility, Pelican also supports bars ``||``, besides ``{}``,
+i.e. the ``filename``, ``tag`` and ``category`` identifiers can be enclosed
+in bars ``|`` instead of braces ``{}``, for example, ``|filename|an_article.rst``,
+``|tag|tagname``,  ``|category|foobar``.
+
+Using ``{}`` ensures that the syntax will not collide with markdown extensions or
+reST directives.
 
 Importing an existing blog
 --------------------------
