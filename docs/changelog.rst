@@ -1,8 +1,8 @@
 Release history
 ###############
 
-3.3 (XXXX-XX-XX)
-================
+Next release
+============
 
 * Rename signals for better consistency (some plugins may need to be updated)
 * Move metadata extraction from generators to readers; metadata extraction no
