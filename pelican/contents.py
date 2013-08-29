@@ -182,13 +182,7 @@ class Content(object):
         if not content:
             return content
 
-        hrefs = re.compile(r"""
-            (?P<markup><\s*[^\>]*  # match tag with src and href attr
-                (?:href|src)\s*=)
-
-            (?P<quote>["\'])      # require value to be quoted
-            (?P<path>[|{](?P<what>.*?)[|}](?P<value>.*?))  # the url value
-            \2""", re.X)
+        hrefs = re.compile(self.settings['INTRASITE_LINK_REGEX'], re.X)
 
         def replacer(m):
             what = m.group('what')
