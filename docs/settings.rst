@@ -156,9 +156,11 @@ Setting name (default value)                                            What doe
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
 `WITH_FUTURE_DATES` (``True``)                                          If disabled, content with dates in the future will get a
                                                                         default status of draft.
+`INTRASITE_LINK_REGEX` (''[#]_)                                          Regex to parse intra site links to files, images, category, tags etc
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
+.. [#] Default is ``'(?P<markup><\s*[^\>]*(?:href|src)\s*=) (?P<quote>["\'])(?P<path>[|{](?P<what>.*?)[|}] (?P<value>.*?))\2'``
 
 
 URL settings
