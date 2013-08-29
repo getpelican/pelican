@@ -187,7 +187,7 @@ class Content(object):
                 (?:href|src)\s*=)
 
             (?P<quote>["\'])      # require value to be quoted
-            (?P<path>\|(?P<what>.*?)\|(?P<value>.*?))  # the url value
+            (?P<path>[|{](?P<what>.*?)[|}](?P<value>.*?))  # the url value
             \2""", re.X)
 
         def replacer(m):
