@@ -110,6 +110,13 @@ DEFAULT_CONFIG = {
     'TEMPLATE_PAGES': {},
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
+    'INTRASITE_LINK_REGEX': r"""
+            (?P<markup><\s*[^\>]*  # match tag with src and href attr
+                (?:href|src)\s*=)
+
+            (?P<quote>["\'])      # require value to be quoted
+            (?P<path>[|{](?P<what>.*?)[|}](?P<value>.*?))  # the url value
+            \2""",
     }
 
 
