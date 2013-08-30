@@ -209,6 +209,9 @@ class Content(object):
                         os.path.join(self.relative_dir, value)
                     )
 
+                # Make sure value has os-compatible path string, which is how
+                # it will be keyed in the context filenames dictionary.
+                value = os.path.join(*value.split('/'))
                 if value in self._context['filenames']:
                     origin = '/'.join((siteurl,
                              self._context['filenames'][value].url))
