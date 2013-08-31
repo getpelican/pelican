@@ -99,6 +99,7 @@ class TestPelican(LoggedTestCase):
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
             'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'very'),
+                                   os.path.join(SAMPLES_PATH, 'kinda'),
                                    os.path.join(SAMPLES_PATH, 'theme_standard')]
             })
         pelican = Pelican(settings=settings)
@@ -109,5 +110,5 @@ class TestPelican(LoggedTestCase):
         for file in ['a_stylesheet', 'a_template']:
             self.assertTrue(os.path.exists(os.path.join(theme_output, file)))
 
-        for file in ['wow!', 'boom!', 'bap!']:
+        for file in ['wow!', 'boom!', 'bap!', 'zap!']:
             self.assertTrue(os.path.exists(os.path.join(extra_path, file)))
