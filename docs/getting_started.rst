@@ -390,6 +390,8 @@ If you want to exclude any pages from being linked to or listed in the menu
 then add a ``status: hidden`` attribute to its metadata. This is useful for
 things like making error pages that fit the generated theme of your site.
 
+.. _ref-linking-to-internal-content:
+
 Linking to internal content
 ---------------------------
 
