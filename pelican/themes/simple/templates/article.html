@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block head %}
   {% for keyword in article.keywords %}
-    <meta name="keywords" contents="{{keyword}}">
+    <meta name="keywords" contents="{{keyword}}" />
   {% endfor %}
 
   {% for description in article.description %}
-    <meta name="description" contents="{{description}}">
+    <meta name="description" contents="{{description}}" />
   {% endfor %}
 
   {% for tag in article.tags %}
-    <meta name="tags" contents="{{tag}}"
+    <meta name="tags" contents="{{tag}}" />
   {% endfor %}
 
 {% endblock %}
