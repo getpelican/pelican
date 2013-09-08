@@ -156,6 +156,11 @@ Setting name (default value)                                            What doe
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
 `WITH_FUTURE_DATES` (``True``)                                          If disabled, content with dates in the future will get a
                                                                         default status of draft.
+`INTRASITE_LINK_REGEX` (``'[{|](?P<what>.*?)[|}]'``)                    Regular expression that is used to parse internal links.  
+                                                                        Default syntax of links to internal files, tags, etc. is 
+                                                                        to enclose the identifier, say ``filename``, in ``{}`` or ``||``.
+                                                                        Identifier between ``{`` and ``}`` goes into the ``what`` capturing group.
+                                                                        For details see :ref:`ref-linking-to-internal-content`.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.

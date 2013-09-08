@@ -110,6 +110,7 @@ DEFAULT_CONFIG = {
     'TEMPLATE_PAGES': {},
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
+    'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
     }
 
 
