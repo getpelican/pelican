@@ -83,3 +83,12 @@ that you will add ``CNAME`` file to your ``content``, dir and use the
 to the ``output`` dir. For example::
 
     FILES_TO_COPY = (('extra/CNAME', 'CNAME'),)
+
+How to add Youtube or Vimeo Videos
+==================================
+
+The easiest way is to paste embed code of the video from these sites in your 
+markup file.
+
+Alternatively, you can also use Pelican plugins like ``liquid_tags`` or ``pelican_youtube``
+or ``pelican_vimeo`` to embed videos in your blog.
