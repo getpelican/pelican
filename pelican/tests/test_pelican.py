@@ -92,3 +92,23 @@ class TestPelican(LoggedTestCase):
         mute(True)(pelican.run)()
         dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
         self.assertFilesEqual(recursiveDiff(dcmp))
+
+    def test_theme_static_paths_copy(self):
+        # the same thing with a specified set of settings should work
+        settings = read_settings(path=SAMPLE_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'very'),
+                                   os.path.join(SAMPLES_PATH, 'kinda'),
+                                   os.path.join(SAMPLES_PATH, 'theme_standard')]
+            })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+        theme_output = os.path.join(self.temp_path, 'theme')
+        extra_path = os.path.join(theme_output, 'exciting', 'new', 'files')
+
+        for file in ['a_stylesheet', 'a_template']:
+            self.assertTrue(os.path.exists(os.path.join(theme_output, file)))
+
+        for file in ['wow!', 'boom!', 'bap!', 'zap!']:
+            self.assertTrue(os.path.exists(os.path.join(extra_path, file)))
