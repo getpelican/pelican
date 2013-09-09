@@ -10,7 +10,7 @@ Next release
 * Deprecate ``FILES_TO_COPY`` in favor of ``STATIC_PATHS`` and
   ``EXTRA_PATH_METADATA``
 * Add support for ``{}`` in relative links syntax, besides ``||``
-* Add support for |tag| and |category| relative links
+* Add support for ``{tag}`` and ``{category}`` relative links
 
 3.2.1 and 3.2.2
 ===============
