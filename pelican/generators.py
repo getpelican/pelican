@@ -544,7 +544,7 @@ class StaticGenerator(Generator):
         """Copy all the paths from source to destination"""
         for path in paths:
             copy(path, source, os.path.join(output_path, destination),
-                 final_path, overwrite=True)
+                 final_path)
 
     def generate_context(self):
         self.staticfiles = []

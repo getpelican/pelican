@@ -256,7 +256,7 @@ def slugify(value, substitutions=()):
     return value.decode('ascii')
 
 
-def copy(path, source, destination, destination_path=None, overwrite=False):
+def copy(path, source, destination, destination_path=None):
     """Copy path from origin to destination.
 
     The function is able to copy either files or directories.
@@ -265,8 +265,6 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     :param source: the source dir
     :param destination: the destination dir
     :param destination_path: the destination path (optional)
-    :param overwrite: whether to overwrite the destination if already exists
-                      or not
     """
     if not destination_path:
         destination_path = path
@@ -275,16 +273,24 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     destination_ = os.path.abspath(
         os.path.expanduser(os.path.join(destination, destination_path)))
 
+    def recurse(source, destination):
+        for entry in os.listdir(source):
+            entry_path = os.path.join(source, entry)
+            if os.path.isdir(entry_path):
+                entry_dest = os.path.join(destination, entry)
+                if os.path.exists(entry_dest):
+                    if not os.path.isdir(entry_dest):
+                        raise IOError('Failed to copy {0} a directory.'
+                                      .format(entry_dest))
+                    recurse(entry_path, entry_dest)
+                else:
+                    shutil.copytree(entry_path, entry_dest)
+            else:
+                shutil.copy(entry_path, destination)
+
+
     if os.path.isdir(source_):
-        try:
-            shutil.copytree(source_, destination_)
-            logger.info('copying %s to %s' % (source_, destination_))
-        except OSError:
-            if overwrite:
-                shutil.rmtree(destination_)
-                shutil.copytree(source_, destination_)
-                logger.info('replacement of %s with %s' % (source_,
-                    destination_))
+        recurse(source_, destination_)
 
     elif os.path.isfile(source_):
         dest_dir = os.path.dirname(destination_)
