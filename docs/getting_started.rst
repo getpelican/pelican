@@ -533,6 +533,9 @@ which posts are translations::
 
     That's true, foobar is still alive!
 
+
+.. _internal_pygments_options:
+
 Syntax highlighting
 -------------------
 
@@ -555,6 +558,65 @@ indenting both the identifier and code::
 
 The specified identifier (e.g. ``python``, ``ruby``) should be one that
 appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
+
+When using reStructuredText the following options are available in the
+code-block directive:
+
+=============   ============  =========================================
+Option          Valid values  Description
+=============   ============  =========================================
+anchorlinenos   N/A           If present wrap line numbers in <a> tags.
+classprefix     string        String to prepend to token class names
+hl_lines        numbers       List of lines to be highlighted.
+lineanchors     string        Wrap each line in an anchor using this
+                              string and -linenumber.
+linenos         string        If present or set to "table" output line 
+                              numbers in a table, if set to
+                              "inline" output them inline. "none" means
+                              do not output the line numbers for this 
+                              table.
+linenospecial   number        If set every nth line will be given the 
+                              'special' css class.
+linenostart     number        Line number for the first line.
+linenostep      number        Print every nth line number.
+lineseparator   string        String to print between lines of code,
+                              '\n' by default.
+linespans       string        Wrap each line in a span using this and
+                              -linenumber.
+nobackground    N/A           If set do not output background color for
+                              the wrapping element
+nowrap          N/A           If set do not wrap the tokens at all.
+tagsfile        string        ctags file to use for name definitions.
+tagurlformat    string        format for the ctag links.
+=============   ============  =========================================
+
+Note that, depending on its version, your pygments module might not have
+all of these available. See the `Pygments documentation
+<http://pygments.org/docs/formatters/>`_ for the HTML formatter for more
+details on each of the options.
+
+for example the below code block enables line numbers, starting at 153,
+and prefixes the Pygments CSS classes with *pgcss* to make the names
+more unique and avoid possible CSS conflicts::
+
+    .. code-block:: identifier
+        :classprefix: pgcss
+        :linenos: table
+        :linenostart: 153
+
+       <indented code block goes here>
+
+It is also possible to specify the ``PYGMENTS_RST_OPTIONS`` variable
+in your Pelican configuration file for settings that will be
+automatically applied to every code block.
+
+For example, if you wanted to have line numbers on for every code block
+and a CSS prefix you would set this variable to::
+
+    PYGMENTS_RST_OPTIONS = { 'classprefix': 'pgcss', 'linenos': 'table'}
+
+If specified, settings for individual code blocks will override the
+defaults in the configuration file.
 
 Publishing drafts
 -----------------
