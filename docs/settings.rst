@@ -161,6 +161,9 @@ Setting name (default value)                                            What doe
                                                                         to enclose the identifier, say ``filename``, in ``{}`` or ``||``.
                                                                         Identifier between ``{`` and ``}`` goes into the ``what`` capturing group.
                                                                         For details see :ref:`ref-linking-to-internal-content`.
+`PYGMENTS_RST_OPTIONS` (``[]``)                                         A list of default Pygments settings for your reStructuredText
+                                                                        code blocks. See :ref:`internal_pygments_options` for a list of
+                                                                        supported options.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
