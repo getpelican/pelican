@@ -107,11 +107,14 @@ DEFAULT_CONFIG = {
     'SUMMARY_MAX_LENGTH': 50,
     'PLUGIN_PATH': '',
     'PLUGINS': [],
+    'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
     }
+
+PYGMENTS_RST_OPTIONS = None
 
 
 def read_settings(path=None, override=None):
@@ -131,7 +134,14 @@ def read_settings(path=None, override=None):
     if override:
         local_settings.update(override)
 
-    return configure_settings(local_settings)
+    parsed_settings = configure_settings(local_settings)
+    # This is because there doesn't seem to be a way to pass extra
+    # parameters to docutils directive handlers, so we have to have a
+    # variable here that we'll import from within Pygments.run (see
+    # rstdirectives.py) to see what the user defaults were.
+    global PYGMENTS_RST_OPTIONS
+    PYGMENTS_RST_OPTIONS = parsed_settings.get('PYGMENTS_RST_OPTIONS', None)
+    return parsed_settings
 
 
 def get_settings_from_module(module=None, default_settings=DEFAULT_CONFIG):
