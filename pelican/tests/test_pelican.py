@@ -112,3 +112,18 @@ class TestPelican(LoggedTestCase):
 
         for file in ['wow!', 'boom!', 'bap!', 'zap!']:
             self.assertTrue(os.path.exists(os.path.join(extra_path, file)))
+
+    def test_theme_static_paths_copy_single_file(self):
+        # the same thing with a specified set of settings should work
+        settings = read_settings(path=SAMPLE_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'theme_standard')]
+            })
+
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+        theme_output = os.path.join(self.temp_path, 'theme')
+
+        for file in ['a_stylesheet', 'a_template']:
+            self.assertTrue(os.path.exists(os.path.join(theme_output, file)))
