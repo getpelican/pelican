@@ -12,9 +12,20 @@ Testing sourcecode directive
 ----------------------------
 
 .. sourcecode:: python
-  :linenos:
+    :linenos:
 
-  formatter = self.options and VARIANTS[self.options.keys()[0]]
+    formatter = self.options and VARIANTS[self.options.keys()[0]]
+
+
+Testing another case
+--------------------
+
+This will now have a line number in 'custom' since it's the default in
+pelican.conf, it will have nothing in default.
+
+.. sourcecode:: python
+
+    formatter = self.options and VARIANTS[self.options.keys()[0]]
 
 
 Lovely.
@@ -65,6 +76,20 @@ Testing even more sourcecode directives
 .. sourcecode:: python
     :linenos: table
     :nowrap:
+    
+  
+    formatter = self.options and VARIANTS[self.options.keys()[0]]
+
+
+Lovely.
+
+Testing overriding config defaults
+----------------------------------
+
+Even if the default is line numbers, we can override it here
+
+.. sourcecode:: python
+    :linenos: none
     
   
     formatter = self.options and VARIANTS[self.options.keys()[0]]

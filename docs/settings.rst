@@ -161,6 +161,9 @@ Setting name (default value)                                            What doe
                                                                         to enclose the identifier, say ``filename``, in ``{}`` or ``||``.
                                                                         Identifier between ``{`` and ``}`` goes into the ``what`` capturing group.
                                                                         For details see :ref:`ref-linking-to-internal-content`.
+`PYGMENTS_RST_OPTIONS` (``[]``)                                         A list of default Pygments settings for your reStructuredText
+                                                                        code blocks. See :ref:`internal_pygments_options` for a list of
+                                                                        supported options.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
@@ -602,7 +605,10 @@ Setting name (default value)                        What does it do?
                                                     `THEME_STATIC_PATHS`. Default is `theme`.
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
                                                     value is `static`, but if your theme has
-                                                    other static paths, you can put them here.
+                                                    other static paths, you can put them here. If files
+                                                    or directories with the same names are included in
+                                                    the paths defined in this settings, they will be
+                                                    progressively overwritten.
 `CSS_FILE` (``'main.css'``)                         Specify the CSS file you want to load.
 ================================================    =====================================================
 
