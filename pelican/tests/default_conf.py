@@ -9,7 +9,6 @@ GITHUB_URL = 'http://github.com/ametaireau/'
 DISQUS_SITENAME = "blog-notmyidea"
 PDF_GENERATOR = False
 REVERSE_CATEGORY_ORDER = True
-LOCALE = ""
 DEFAULT_PAGINATION = 2
 
 FEED_RSS = 'feeds/all.rss.xml'
@@ -29,11 +28,16 @@ SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
 # global metadata to all the contents
 DEFAULT_METADATA = (('yeah', 'it is'),)
 
-# static paths will be copied under the same name
-STATIC_PATHS = ["pictures", ]
+# path-specific metadata
+EXTRA_PATH_METADATA = {
+    'extra/robots.txt': {'path': 'robots.txt'},
+    }
 
-# A list of files to copy from the source to the destination
-FILES_TO_COPY = (('extra/robots.txt', 'robots.txt'),)
+# static paths will be copied without parsing their contents
+STATIC_PATHS = [
+    'pictures',
+    'extra/robots.txt',
+    ]
 
 # foobar will not be used, because it's not in caps. All configuration keys
 # have to be in caps

@@ -2,20 +2,21 @@
 from __future__ import unicode_literals, print_function
 import six
 
+import codecs
+import errno
+import fnmatch
+import locale
+import logging
 import os
-import re
 import pytz
+import re
 import shutil
 import traceback
-import logging
-import errno
-import locale
-import fnmatch
-from collections import Hashable
-from functools import partial
 
-from codecs import open, BOM_UTF8
+from collections import Hashable
+from contextlib import contextmanager
 from datetime import datetime
+from functools import partial
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
@@ -67,11 +68,11 @@ def strftime(date, date_format):
 
 class DateFormatter(object):
     '''A date formatter object used as a jinja filter
-    
-    Uses the `strftime` implementation and makes sure jinja uses the locale 
+
+    Uses the `strftime` implementation and makes sure jinja uses the locale
     defined in LOCALE setting
     '''
-    
+
     def __init__(self):
         self.locale = locale.setlocale(locale.LC_TIME)
 
@@ -180,41 +181,58 @@ def get_date(string):
     If no format matches the given date, raise a ValueError.
     """
     string = re.sub(' +', ' ', string)
-    formats = ['%Y-%m-%d %H:%M', '%Y/%m/%d %H:%M',
-               '%Y-%m-%d', '%Y/%m/%d',
-               '%d-%m-%Y', '%Y-%d-%m',  # Weird ones
-               '%d/%m/%Y', '%d.%m.%Y',
-               '%d.%m.%Y %H:%M', '%Y-%m-%d %H:%M:%S']
+    formats = [
+        # ISO 8601
+        '%Y',
+        '%Y-%m',
+        '%Y-%m-%d',
+        '%Y-%m-%dT%H:%M%z',
+        '%Y-%m-%dT%H:%MZ',
+        '%Y-%m-%dT%H:%M',
+        '%Y-%m-%dT%H:%M:%S%z',
+        '%Y-%m-%dT%H:%M:%SZ',
+        '%Y-%m-%dT%H:%M:%S',
+        '%Y-%m-%dT%H:%M:%S.%f%z',
+        '%Y-%m-%dT%H:%M:%S.%fZ',
+        '%Y-%m-%dT%H:%M:%S.%f',
+        # end ISO 8601 forms
+        '%Y-%m-%d %H:%M',
+        '%Y-%m-%d %H:%M:%S',
+        '%Y/%m/%d %H:%M',
+        '%Y/%m/%d',
+        '%d-%m-%Y',
+        '%d.%m.%Y %H:%M',
+        '%d.%m.%Y',
+        '%d/%m/%Y',
+        ]
     for date_format in formats:
         try:
-            return datetime.strptime(string, date_format)
+            date = datetime.strptime(string, date_format)
         except ValueError:
-            pass
-    raise ValueError("'%s' is not a valid date" % string)
+            continue
+        if date_format.endswith('Z'):
+            date = date.replace(tzinfo=pytz.timezone('UTC'))
+        return date
+    raise ValueError('{0!r} is not a valid date'.format(string))
 
 
-class pelican_open(object):
-    """Open a file and return it's content"""
-    def __init__(self, filename):
-        self.filename = filename
+@contextmanager
+def pelican_open(filename):
+    """Open a file and return its content"""
 
-    def __enter__(self):
-        with open(self.filename, encoding='utf-8') as infile:
-            content = infile.read()
-        if content[0] == BOM_UTF8.decode('utf8'):
-            content = content[1:]
-        return content
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
+    with codecs.open(filename, encoding='utf-8') as infile:
+        content = infile.read()
+    if content[0] == codecs.BOM_UTF8.decode('utf8'):
+        content = content[1:]
+    yield content
 
 
-def slugify(value):
+def slugify(value, substitutions=()):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
 
-    Took from django sources.
+    Took from Django sources.
     """
     # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
@@ -227,8 +245,10 @@ def slugify(value):
     if isinstance(value, six.binary_type):
         value = value.decode('ascii')
     # still unicode
-    value = unicodedata.normalize('NFKD', value)
-    value = re.sub('[^\w\s-]', '', value).strip().lower()
+    value = unicodedata.normalize('NFKD', value).lower()
+    for src, dst in substitutions:
+        value = value.replace(src.lower(), dst.lower())
+    value = re.sub('[^\w\s-]', '', value).strip()
     value = re.sub('[-\s]+', '-', value)
     # we want only ASCII chars
     value = value.encode('ascii', 'ignore')
@@ -236,7 +256,7 @@ def slugify(value):
     return value.decode('ascii')
 
 
-def copy(path, source, destination, destination_path=None, overwrite=False):
+def copy(path, source, destination, destination_path=None):
     """Copy path from origin to destination.
 
     The function is able to copy either files or directories.
@@ -245,8 +265,6 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     :param source: the source dir
     :param destination: the destination dir
     :param destination_path: the destination path (optional)
-    :param overwrite: whether to overwrite the destination if already exists
-                      or not
     """
     if not destination_path:
         destination_path = path
@@ -255,16 +273,27 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
     destination_ = os.path.abspath(
         os.path.expanduser(os.path.join(destination, destination_path)))
 
+    if not os.path.exists(destination_):
+        os.makedirs(destination_)
+
+    def recurse(source, destination):
+        for entry in os.listdir(source):
+            entry_path = os.path.join(source, entry)
+            if os.path.isdir(entry_path):
+                entry_dest = os.path.join(destination, entry)
+                if os.path.exists(entry_dest):
+                    if not os.path.isdir(entry_dest):
+                        raise IOError('Failed to copy {0} a directory.'
+                                      .format(entry_dest))
+                    recurse(entry_path, entry_dest)
+                else:
+                    shutil.copytree(entry_path, entry_dest)
+            else:
+                shutil.copy(entry_path, destination)
+
+
     if os.path.isdir(source_):
-        try:
-            shutil.copytree(source_, destination_)
-            logger.info('copying %s to %s' % (source_, destination_))
-        except OSError:
-            if overwrite:
-                shutil.rmtree(destination_)
-                shutil.copytree(source_, destination_)
-                logger.info('replacement of %s with %s' % (source_,
-                    destination_))
+        recurse(source_, destination_)
 
     elif os.path.isfile(source_):
         dest_dir = os.path.dirname(destination_)
@@ -276,8 +305,8 @@ def copy(path, source, destination, destination_path=None, overwrite=False):
         logger.warning('skipped copy %s to %s' % (source_, destination_))
 
 
-def clean_output_dir(path):
-    """Remove all the files from the output directory"""
+def clean_output_dir(path, retention):
+    """Remove all files from output directory except those in retention list"""
 
     if not os.path.exists(path):
         logger.debug("Directory already removed: %s" % path)
@@ -290,10 +319,13 @@ def clean_output_dir(path):
             logger.error("Unable to delete file %s; %s" % (path, str(e)))
         return
 
-    # remove all the existing content from the output folder
+    # remove existing content from output folder unless in retention list
     for filename in os.listdir(path):
         file = os.path.join(path, filename)
-        if os.path.isdir(file):
+        if any(filename == retain for retain in retention):
+            logger.debug("Skipping deletion; %s is on retention list: %s" \
+                         % (filename, file))
+        elif os.path.isdir(file):
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s" % file)
@@ -510,15 +542,11 @@ def file_watcher(path):
 
 
 def set_date_tzinfo(d, tz_name=None):
-    """ Date without tzinfo shoudbe utc.
-    This function set the right tz to date that aren't utc and don't have
-    tzinfo.
-    """
-    if tz_name is not None:
+    """Set the timezone for dates that don't have tzinfo"""
+    if tz_name and not d.tzinfo:
         tz = pytz.timezone(tz_name)
         return tz.localize(d)
-    else:
-        return d
+    return d
 
 
 def mkdir_p(path):

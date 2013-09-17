@@ -62,15 +62,19 @@ Setting name (default value)                                            What doe
                                                                         For example, if you would like to extract both the
                                                                         date and the slug, you could set something like:
                                                                         ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
+                                                                        See :ref:`path_metadata`.
 `PATH_METADATA` (``''``)                                                Like ``FILENAME_METADATA``, but parsed from a page's
                                                                         full path relative to the content source directory.
+                                                                        See :ref:`path_metadata`.
+`EXTRA_PATH_METADATA` (``{}``)                                          Extra metadata dictionaries keyed by relative path.
+                                                                        See :ref:`path_metadata`.
 `DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the output directory, and **all** of its contents, before
                                                                         generating new files. This can be useful in preventing older,
                                                                         unnecessary files from persisting in your output. However, **this is
                                                                         a destructive setting and should be handled with extreme care.**
-`FILES_TO_COPY` (``()``)                                                A list of files (or directories) to copy from the source (inside the
-                                                                        content directory) to the destination (inside the output directory).
-                                                                        For example: ``(('extra/robots.txt', 'robots.txt'),)``.
+`OUTPUT_RETENTION` (``()``)                                             A tuple of filenames that should be retained and not deleted from the
+                                                                        output directory. One use case would be the preservation of version
+                                                                        control data. For example: ``(".hg", ".git", ".bzr")``
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
 `JINJA_FILTERS` (``{}``)                                                A list of custom Jinja2 filters you want to use.
                                                                         The dictionary should map the filtername to the filter function.
@@ -80,9 +84,10 @@ Setting name (default value)                                            What doe
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
                                                                         until one works.
-`MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
-                                                                        to use. For the moment, the only available values
-                                                                        are `rst`, `md`, `markdown`, `mkd`, `mdown`, `html`, and `htm`.
+`READERS` (``{}``)                                                      A dict of file extensions / Reader classes to overwrite or
+                                                                        add file readers. for instance, to avoid processing .html files:
+                                                                        ``READERS = {'html': None}``. Or to add a custom reader for the
+                                                                        `foo` extension: ``READERS = {'foo': FooReader}``
 `IGNORE_FILES` (``['.#*']``)                                            A list of file globbing patterns to match against the
                                                                         source files to be ignored by the processor. For example,
                                                                         the default ``['.#*']`` will ignore emacs lock files.
@@ -134,8 +139,9 @@ Setting name (default value)                                            What doe
                                                                         library, which can be installed via: ``pip install typogrify``
 `DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'archives')``)    List of templates that are used directly to render
                                                                         content. Typically direct templates are used to generate
-                                                                        index pages for collections of content (e.g. tags and
-                                                                        category index pages).
+                                                                        index pages for collections of content (e.g., tags and
+                                                                        category index pages). If the tag and category collections
+                                                                        are not needed, set ``DIRECT_TEMPLATES = ('index', 'archives')``
 `PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
 `SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will
                                                                         be the default length in words of the text created.
@@ -148,6 +154,16 @@ Setting name (default value)                                            What doe
                                                                         These templates need to use ``DIRECT_TEMPLATES`` setting.
 `ASCIIDOC_OPTIONS` (``[]``)                                             A list of options to pass to AsciiDoc. See the `manpage
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
+`WITH_FUTURE_DATES` (``True``)                                          If disabled, content with dates in the future will get a
+                                                                        default status of draft.
+`INTRASITE_LINK_REGEX` (``'[{|](?P<what>.*?)[|}]'``)                    Regular expression that is used to parse internal links.  
+                                                                        Default syntax of links to internal files, tags, etc. is 
+                                                                        to enclose the identifier, say ``filename``, in ``{}`` or ``||``.
+                                                                        Identifier between ``{`` and ``}`` goes into the ``what`` capturing group.
+                                                                        For details see :ref:`ref-linking-to-internal-content`.
+`PYGMENTS_RST_OPTIONS` (``[]``)                                         A list of default Pygments settings for your reStructuredText
+                                                                        code blocks. See :ref:`internal_pygments_options` for a list of
+                                                                        supported options.
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
@@ -233,26 +249,38 @@ Setting name (default value)                            What does it do?
                                                         use the default language.
 `PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
                                                         use the default language.
-`AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
-`AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.
 `CATEGORY_URL` (``'category/{slug}.html'``)             The URL to use for a category.
 `CATEGORY_SAVE_AS` (``'category/{slug}.html'``)         The location to save a category.
 `TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
 `TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
+`TAGS_URL` (``'tags.html'``)                            The URL to use for the tag list.
+`TAGS_SAVE_AS` (``'tags.html'``)                        The location to save the tag list.
+`AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
+`AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.
+`AUTHORS_URL` (``'authors.html'``)                      The URL to use for the author list.
+`AUTHORS_SAVE_AS` (``'authors.html'``)                  The location to save the author list.
 `<DIRECT_TEMPLATE_NAME>_SAVE_AS`                        The location to save content generated from direct
                                                         templates. Where <DIRECT_TEMPLATE_NAME> is the
                                                         upper case template name.
+`ARCHIVES_SAVE_AS` (``'archives.html'``)                The location to save the article archives page.
 `YEAR_ARCHIVE_SAVE_AS` (False)                          The location to save per-year archives of your
                                                         posts.
 `MONTH_ARCHIVE_SAVE_AS` (False)                         The location to save per-month archives of your
                                                         posts.
 `DAY_ARCHIVE_SAVE_AS` (False)                           The location to save per-day archives of your
                                                         posts.
+`SLUG_SUBSTITUTIONS`  (``()``)                          Substitutions to make prior to stripping out
+                                                        non-alphanumerics when generating slugs. Specified
+                                                        as a list of 2-tuples of ``(from, to)`` which are
+                                                        applied in order.
 ====================================================    =====================================================
 
 .. note::
 
-    When any of the `*_SAVE_AS` settings is set to False, files will not be created.
+    If you do not want one or more of the default pages to be created (e.g.,
+    you are the only author on your site and thus do not need an Authors page),
+    set the corresponding ``*_SAVE_AS`` setting to ``False`` to prevent the
+    relevant page from being generated.
 
 Timezone
 --------
@@ -336,6 +364,52 @@ your resume, and a contact page — you could have::
                       'src/resume.html': 'dest/resume.html',
                       'src/contact.html': 'dest/contact.html'}
 
+
+.. _path_metadata:
+
+Path metadata
+=============
+
+Not all metadata needs to be `embedded in source file itself`__.  For
+example, blog posts are often named following a ``YYYY-MM-DD-SLUG.rst``
+pattern, or nested into ``YYYY/MM/DD-SLUG`` directories.  To extract
+metadata from the filename or path, set ``FILENAME_METADATA`` or
+``PATH_METADATA`` to regular expressions that use Python's `group name
+notation`_ ``(?P<name>…)``.  If you want to attach additional metadata
+but don't want to encode it in the path, you can set
+``EXTRA_PATH_METADATA``:
+
+.. parsed-literal::
+
+    EXTRA_PATH_METADATA = {
+        'relative/path/to/file-1': {
+            'key-1a': 'value-1a',
+            'key-1b': 'value-1b',
+            },
+        'relative/path/to/file-2': {
+            'key-2': 'value-2',
+            },
+        }
+
+This can be a convenient way to shift the installed location of a
+particular file:
+
+.. parsed-literal::
+
+    # Take advantage of the following defaults
+    # STATIC_SAVE_AS = '{path}'
+    # STATIC_URL = '{path}'
+    STATIC_PATHS = [
+        'extra/robots.txt',
+        ]
+    EXTRA_PATH_METADATA = {
+        'extra/robots.txt': {'path': 'robots.txt'},
+        }
+
+__ internal_metadata__
+.. _group name notation:
+   http://docs.python.org/3/library/re.html#regular-expression-syntax
+
 Feed settings
 =============
 
@@ -414,7 +488,31 @@ Setting name (default value)                        What does it do?
 `DEFAULT_PAGINATION` (``False``)                    The maximum number of articles to include on a
                                                     page, not including orphans. False to disable
                                                     pagination.
+`PAGINATION_PATTERNS`                               A set of patterns that are used to determine advanced
+                                                    pagination output.
 ================================================    =====================================================
+
+Using Pagination Patterns
+-------------------------
+
+The ``PAGINATION_PATTERNS`` setting can be used to configure where
+subsequent pages are created. The setting is a sequence of three
+element tuples, where each tuple consists of::
+
+  (minimum page, URL setting, SAVE_AS setting,)
+
+For example, if you wanted the first page to just be ``/``, and the
+second (and subsequent) pages to be ``/page/2/``, you would set
+``PAGINATION_PATTERNS`` as follows::
+
+  PAGINATION_PATTERNS = (
+      (1, '{base_name}/', '{base_name}/index.html'),
+      (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
+  )
+
+This would cause the first page to be written to
+``{base_name}/index.html``, and subsequent ones would be written into
+``page/{number}`` directories.
 
 Tag cloud
 =========
@@ -430,16 +528,36 @@ Setting name (default value)                        What does it do?
 `TAG_CLOUD_MAX_ITEMS` (``100``)                     Maximum number of tags in the cloud.
 ================================================    =====================================================
 
-The default theme does not support tag clouds, but it is pretty easy to add::
+The default theme does not include a tag cloud, but it is pretty easy to add::
 
-    <ul>
+    <ul class="tagcloud">
         {% for tag in tag_cloud %}
-            <li class="tag-{{ tag.1 }}"><a href="/tag/{{ tag.0|string|replace(" ", "-" ) }}.html">{{ tag.0 }}</a></li>
+            <li class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a></li>
         {% endfor %}
     </ul>
 
-You should then also define a CSS style with the appropriate classes (tag-0 to tag-N, where
-N matches `TAG_CLOUD_STEPS` -1).
+You should then also define CSS styles with appropriate classes (tag-0 to tag-N, where
+N matches `TAG_CLOUD_STEPS` -1), tag-0 being the most frequent, and define a ul.tagcloud 
+class with appropriate list-style to create the cloud, for example::
+
+    ul.tagcloud {
+      list-style: none;
+        padding: 0;
+    }
+
+    ul.tagcloud li {
+        display: inline-block;
+    }
+
+    li.tag-0 {
+        font-size: 150%;
+    }
+
+    li.tag-1 {
+        font-size: 120%;
+    }
+
+    ...    
 
 Translations
 ============
@@ -482,9 +600,15 @@ Setting name (default value)                        What does it do?
                                                     or absolute path to a theme folder, or the name of a
                                                     default theme or a theme installed via
                                                     ``pelican-themes`` (see below).
+`THEME_STATIC_DIR` (``'theme'``)                    Destination directory in the output path where
+                                                    Pelican will place the files collected from
+                                                    `THEME_STATIC_PATHS`. Default is `theme`.
 `THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
                                                     value is `static`, but if your theme has
-                                                    other static paths, you can put them here.
+                                                    other static paths, you can put them here. If files
+                                                    or directories with the same names are included in
+                                                    the paths defined in this settings, they will be
+                                                    progressively overwritten.
 `CSS_FILE` (``'main.css'``)                         Specify the CSS file you want to load.
 ================================================    =====================================================
 

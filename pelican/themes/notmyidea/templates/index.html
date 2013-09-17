@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content_title %}{% endblock %}
-{% block content %}        
+{% block content %}
 {% if articles %}
-    {% for article in articles_page.object_list %}        
+    {% for article in articles_page.object_list %}
 
         {# First item #}
         {% if loop.first and not articles_page.has_previous() %}
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h1> 
+                    <h1 class="entry-title"><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h1>
                     {% include 'article_infos.html' %}{{ article.content }}{% include 'comments.html' %}
                 </article>
                 {% if loop.length == 1 %}
@@ -22,17 +22,17 @@
                     <ol id="posts-list" class="hfeed">
             {% endif %}
         {# other items #}
-        {% else %} 
+        {% else %}
             {% if loop.first and articles_page.has_previous %}
                 <section id="content" class="body">
                     <ol id="posts-list" class="hfeed" start="{{ articles_paginator.per_page -1 }}">
             {% endif %}
-            <li><article class="hentry">    
+            <li><article class="hentry">
                 <header>
                     <h1><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
                            title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h1>
                 </header>
-                
+
                 <div class="entry-content">
                 {% include 'article_infos.html' %}
                 {{ article.summary }}
@@ -43,7 +43,7 @@
         {% endif %}
         {% if loop.last %}
             </ol><!-- /#posts-list -->
-            {% if loop.last and (articles_page.has_previous() 
+            {% if loop.last and (articles_page.has_previous()
             or not articles_page.has_previous() and loop.length > 1) %}
                 {% include 'pagination.html' %}
             {% endif %}
@@ -51,7 +51,7 @@
         {% endif %}
     {% endfor %}
 {% else %}
-<section id="content" class="body">    
+<section id="content" class="body">
 <h2>Pages</h2>
     {% for page in PAGES %}
         <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>

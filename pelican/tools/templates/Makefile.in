@@ -18,7 +18,16 @@ SSH_TARGET_DIR=$ssh_target_dir
 
 S3_BUCKET=$s3_bucket
 
+CLOUDFILES_USERNAME=$cloudfiles_username
+CLOUDFILES_API_KEY=$cloudfiles_api_key
+CLOUDFILES_CONTAINER=$cloudfiles_container
+
 DROPBOX_DIR=$dropbox_dir
+
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	PELICANOPTS += -D
+endif
 
 help:
 	@echo 'Makefile for a pelican Web site                                        '
@@ -28,34 +37,42 @@ help:
 	@echo '   make clean                       remove the generated files         '
 	@echo '   make regenerate                  regenerate files upon modification '
 	@echo '   make publish                     generate using production settings '
-	@echo '   make serve                       serve site at http://localhost:8000'
-	@echo '   make devserver                   start/restart develop_server.sh    '
+	@echo '   make serve [PORT=8000]           serve site at http://localhost:8000'
+	@echo '   make devserver [PORT=8000]       start/restart develop_server.sh    '
 	@echo '   make stopserver                  stop local server                  '
-	@echo '   ssh_upload                       upload the web site via SSH        '
-	@echo '   rsync_upload                     upload the web site via rsync+ssh  '
-	@echo '   dropbox_upload                   upload the web site via Dropbox    '
-	@echo '   ftp_upload                       upload the web site via FTP        '
-	@echo '   s3_upload                        upload the web site via S3         '
-	@echo '   github                           upload the web site via gh-pages   '
+	@echo '   make ssh_upload                  upload the web site via SSH        '
+	@echo '   make rsync_upload                upload the web site via rsync+ssh  '
+	@echo '   make dropbox_upload              upload the web site via Dropbox    '
+	@echo '   make ftp_upload                  upload the web site via FTP        '
+	@echo '   make s3_upload                   upload the web site via S3         '
+	@echo '   make cf_upload                   upload the web site via Cloud Files'
+	@echo '   make github                      upload the web site via gh-pages   '
+	@echo '                                                                       '
+	@echo 'Set the DEBUG variable to 1 to enable debugging, e.g. make DEBUG=1 html'
 	@echo '                                                                       '
 
-
-html: clean $$(OUTPUTDIR)/index.html
-
-$$(OUTPUTDIR)/%.html:
+html:
 	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 
 clean:
-	[ ! -d $$(OUTPUTDIR) ] || find $$(OUTPUTDIR) -mindepth 1 -delete
+	[ ! -d $$(OUTPUTDIR) ] || rm -rf $$(OUTPUTDIR)
 
-regenerate: clean
+regenerate:
 	$$(PELICAN) -r $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 
 serve:
+ifdef PORT
+	cd $$(OUTPUTDIR) && $(PY) -m pelican.server $$(PORT)
+else
 	cd $$(OUTPUTDIR) && $(PY) -m pelican.server
+endif
 
 devserver:
+ifdef PORT
+	$$(BASEDIR)/develop_server.sh restart $$(PORT)
+else
 	$$(BASEDIR)/develop_server.sh restart
+endif
 
 stopserver:
 	kill -9 `cat pelican.pid`
@@ -80,8 +97,11 @@ ftp_upload: publish
 s3_upload: publish
 	s3cmd sync $(OUTPUTDIR)/ s3://$(S3_BUCKET) --acl-public --delete-removed
 
+cf_upload: publish
+	cd $(OUTPUTDIR) && swift -v -A https://auth.api.rackspacecloud.com/v1.0 -U $(CLOUDFILES_USERNAME) -K $(CLOUDFILES_API_KEY) upload -c $(CLOUDFILES_CONTAINER) .
+
 github: publish
 	ghp-import $$(OUTPUTDIR)
 	git push origin gh-pages
 
-.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload s3_upload github
+.PHONY: html help clean regenerate serve devserver publish ssh_upload rsync_upload dropbox_upload ftp_upload s3_upload cf_upload github

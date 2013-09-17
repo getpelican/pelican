@@ -33,8 +33,9 @@ DEFAULT_CONFIG = {
     'PAGE_EXCLUDES': (),
     'THEME': DEFAULT_THEME,
     'OUTPUT_PATH': 'output',
-    'MARKUP': ('rst', 'md'),
+    'READERS': {},
     'STATIC_PATHS': ['images', ],
+    'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
     'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
@@ -44,7 +45,6 @@ DEFAULT_CONFIG = {
     'SITENAME': 'A Pelican Blog',
     'DISPLAY_PAGES_ON_MENU': True,
     'DISPLAY_CATEGORIES_ON_MENU': True,
-    'PDF_GENERATOR': False,
     'OUTPUT_SOURCES': False,
     'OUTPUT_SOURCES_EXTENSION': '.text',
     'USE_FOLDER_AS_CATEGORY': True,
@@ -54,6 +54,7 @@ DEFAULT_CONFIG = {
     'NEWEST_FIRST_ARCHIVES': True,
     'REVERSE_CATEGORY_ORDER': False,
     'DELETE_OUTPUT_DIRECTORY': False,
+    'OUTPUT_RETENTION': (),
     'ARTICLE_URL': '{slug}.html',
     'ARTICLE_SAVE_AS': '{slug}.html',
     'ARTICLE_LANG_URL': '{slug}-{lang}.html',
@@ -64,6 +65,7 @@ DEFAULT_CONFIG = {
     'PAGE_LANG_SAVE_AS': os.path.join('pages', '{slug}-{lang}.html'),
     'STATIC_URL': '{path}',
     'STATIC_SAVE_AS': '{path}',
+    'PDF_GENERATOR': False,
     'PDF_STYLE_PATH': '',
     'PDF_STYLE': 'twelvepoint',
     'CATEGORY_URL': 'category/{slug}.html',
@@ -72,6 +74,9 @@ DEFAULT_CONFIG = {
     'TAG_SAVE_AS': os.path.join('tag', '{slug}.html'),
     'AUTHOR_URL': 'author/{slug}.html',
     'AUTHOR_SAVE_AS': os.path.join('author', '{slug}.html'),
+    'PAGINATION_PATTERNS': [
+        (0, '{name}{number}.html', '{name}{number}.html'),
+    ],
     'YEAR_ARCHIVE_SAVE_AS': False,
     'MONTH_ARCHIVE_SAVE_AS': False,
     'DAY_ARCHIVE_SAVE_AS': False,
@@ -79,7 +84,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_LANG': 'en',
     'TAG_CLOUD_STEPS': 4,
     'TAG_CLOUD_MAX_ITEMS': 100,
-    'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'archives'),
+    'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'authors', 'archives'),
     'EXTRA_TEMPLATES_PATHS': [],
     'PAGINATED_DIRECT_TEMPLATES': ('index', ),
     'PELICAN_CLASS': 'pelican.Pelican',
@@ -89,22 +94,28 @@ DEFAULT_CONFIG = {
     'MD_EXTENSIONS': ['codehilite(css_class=highlight)', 'extra'],
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
-    'LOCALE': [],  # defaults to user locale
+    'LOCALE': [''],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
     'DEFAULT_METADATA': (),
     'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
     'PATH_METADATA': '',
-    'FILES_TO_COPY': (),
+    'EXTRA_PATH_METADATA': {},
     'DEFAULT_STATUS': 'published',
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
     'SUMMARY_MAX_LENGTH': 50,
     'PLUGIN_PATH': '',
     'PLUGINS': [],
+    'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
     'IGNORE_FILES': ['.#*'],
+    'SLUG_SUBSTITUTIONS': (),
+    'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
     }
+
+PYGMENTS_RST_OPTIONS = None
+
 
 def read_settings(path=None, override=None):
     if path:
@@ -114,7 +125,7 @@ def read_settings(path=None, override=None):
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
-                            os.path.dirname(path), local_settings[p])))
+                    os.path.dirname(path), local_settings[p])))
                 if p not in ('THEME', 'PLUGIN_PATH') or os.path.exists(absp):
                     local_settings[p] = absp
     else:
@@ -123,7 +134,14 @@ def read_settings(path=None, override=None):
     if override:
         local_settings.update(override)
 
-    return configure_settings(local_settings)
+    parsed_settings = configure_settings(local_settings)
+    # This is because there doesn't seem to be a way to pass extra
+    # parameters to docutils directive handlers, so we have to have a
+    # variable here that we'll import from within Pygments.run (see
+    # rstdirectives.py) to see what the user defaults were.
+    global PYGMENTS_RST_OPTIONS
+    PYGMENTS_RST_OPTIONS = parsed_settings.get('PYGMENTS_RST_OPTIONS', None)
+    return parsed_settings
 
 
 def get_settings_from_module(module=None, default_settings=DEFAULT_CONFIG):
@@ -132,7 +150,7 @@ def get_settings_from_module(module=None, default_settings=DEFAULT_CONFIG):
     context = copy.deepcopy(default_settings)
     if module is not None:
         context.update(
-                (k, v) for k, v in inspect.getmembers(module) if k.isupper())
+            (k, v) for k, v in inspect.getmembers(module) if k.isupper())
     return context
 
 
@@ -215,17 +233,18 @@ def configure_settings(settings):
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
-    feed_keys = ['FEED_ATOM', 'FEED_RSS',
-                 'FEED_ALL_ATOM', 'FEED_ALL_RSS',
-                 'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
-                 'TAG_FEED_ATOM', 'TAG_FEED_RSS',
-                 'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
-                ]
+    feed_keys = [
+        'FEED_ATOM', 'FEED_RSS',
+        'FEED_ALL_ATOM', 'FEED_ALL_RSS',
+        'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+        'TAG_FEED_ATOM', 'TAG_FEED_RSS',
+        'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
+    ]
 
     if any(settings.get(k) for k in feed_keys):
         if not settings.get('SITEURL'):
-            logger.warning('Feeds generated without SITEURL set properly may not'
-                        ' be valid')
+            logger.warning('Feeds generated without SITEURL set properly may'
+                           ' not be valid')
 
     if not 'TIMEZONE' in settings:
         logger.warning(
@@ -234,34 +253,50 @@ def configure_settings(settings):
             'http://docs.getpelican.com/en/latest/settings.html#timezone '
             'for more information')
 
+    # fix up pagination rules
+    from pelican.paginator import PaginationRule
+    pagination_rules = [
+        PaginationRule(*r) for r in settings.get(
+            'PAGINATION_PATTERNS',
+            DEFAULT_CONFIG['PAGINATION_PATTERNS'],
+        )
+    ]
+    settings['PAGINATION_PATTERNS'] = sorted(
+        pagination_rules,
+        key=lambda r: r[0],
+    )
+
     # Save people from accidentally setting a string rather than a list
     path_keys = (
-            'ARTICLE_EXCLUDES',
-            'DEFAULT_METADATA',
-            'DIRECT_TEMPLATES',
-            'EXTRA_TEMPLATES_PATHS',
-            'FILES_TO_COPY',
-            'IGNORE_FILES',
-            'JINJA_EXTENSIONS',
-            'MARKUP',
-            'PAGINATED_DIRECT_TEMPLATES',
-            'PLUGINS',
-            'STATIC_PATHS',
-            'THEME_STATIC_PATHS',)
+        'ARTICLE_EXCLUDES',
+        'DEFAULT_METADATA',
+        'DIRECT_TEMPLATES',
+        'EXTRA_TEMPLATES_PATHS',
+        'FILES_TO_COPY',
+        'IGNORE_FILES',
+        'JINJA_EXTENSIONS',
+        'PAGINATED_DIRECT_TEMPLATES',
+        'PLUGINS',
+        'STATIC_PATHS',
+        'THEME_STATIC_PATHS',
+    )
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
             if isinstance(settings[PATH_KEY], six.string_types):
-                logger.warning("Detected misconfiguration with %s setting (must "
-                        "be a list), falling back to the default"
-                        % PATH_KEY)
+                logger.warning("Detected misconfiguration with %s setting "
+                               "(must be a list), falling back to the default"
+                               % PATH_KEY)
                 settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
 
-    for old,new,doc in [
+    for old, new, doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),
+            ('FILES_TO_COPY', 'STATIC_PATHS and EXTRA_PATH_METADATA',
+             'https://github.com/getpelican/pelican/blob/master/docs/settings.rst#path-metadata'),
             ]:
         if old in settings:
-            message = 'The {} setting has been removed in favor of {}'
+            message = 'The {} setting has been removed in favor of {}'.format(
+                old, new)
             if doc:
-                message += ', see {} for details'
+                message += ', see {} for details'.format(doc)
             logger.warning(message)
 
     return settings

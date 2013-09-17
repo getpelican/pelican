@@ -2,15 +2,41 @@
 from __future__ import unicode_literals, print_function
 from blinker import signal
 
+# Run-level signals:
+
 initialized = signal('pelican_initialized')
-finalized = signal('pelican_finalized')
-article_generate_preread = signal('article_generate_preread')
-generator_init = signal('generator_init')
-article_generate_context = signal('article_generate_context')
-article_generator_init = signal('article_generator_init')
-article_generator_finalized = signal('article_generate_finalized')
 get_generators = signal('get_generators')
-pages_generate_context = signal('pages_generate_context')
-pages_generator_init = signal('pages_generator_init')
-pages_generator_finalized = signal('pages_generator_finalized')
+finalized = signal('pelican_finalized')
+
+# Reader-level signals
+
+readers_init = signal('readers_init')
+
+# Generator-level signals
+
+generator_init = signal('generator_init')
+
+article_generator_init = signal('article_generator_init')
+article_generator_finalized = signal('article_generator_finalized')
+
+page_generator_init = signal('page_generator_init')
+page_generator_finalized = signal('page_generator_finalized')
+
+static_generator_init = signal('static_generator_init')
+static_generator_finalized = signal('static_generator_finalized')
+
+# Page-level signals
+
+article_generator_preread = signal('article_generator_preread')
+article_generator_context = signal('article_generator_context')
+
+page_generator_preread = signal('page_generator_preread')
+page_generator_context = signal('page_generator_context')
+
+static_generator_preread = signal('static_generator_preread')
+static_generator_context = signal('static_generator_context')
+
 content_object_init = signal('content_object_init')
+
+# Writers signals
+content_written = signal('content_written')

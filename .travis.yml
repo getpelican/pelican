@@ -8,7 +8,15 @@ before_install:
  - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
     - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then ln -s /usr/share/asciidoc/asciidocapi.py ~/virtualenv/python2.7/lib/python2.7/site-packages/; fi
-    - pip install mock --use-mirrors
-    - pip install . --use-mirrors
-    - pip install --use-mirrors Markdown
-script: python -m unittest discover
+    - pip install mock nose nose-cov Markdown
+    - pip install .
+script: nosetests -sv --with-coverage --cover-package=pelican pelican
+after_success:
+  # Report coverage results to coveralls.io
+  - pip install coveralls
+  - coveralls
+notifications:
+    irc:
+        channels:
+            - "irc.freenode.org#pelican"
+        on_success: change

@@ -6,8 +6,10 @@ import os
 import datetime
 import time
 import locale
-from sys import platform
+from sys import platform, version_info
 from tempfile import mkdtemp
+
+import pytz
 
 from pelican.generators import TemplatePagesGenerator
 from pelican.writers import Writer
@@ -37,26 +39,44 @@ class TestUtils(LoggedTestCase):
     def test_get_date(self):
         # valid ones
         date = datetime.datetime(year=2012, month=11, day=22)
-        date_hour = datetime.datetime(year=2012, month=11, day=22, hour=22,
-                                      minute=11)
-        date_hour_sec = datetime.datetime(year=2012, month=11, day=22, hour=22,
-                                          minute=11, second=10)
-        dates = {'2012-11-22': date,
-                 '2012/11/22': date,
-                 '2012-11-22 22:11': date_hour,
-                 '2012/11/22 22:11': date_hour,
-                 '22-11-2012': date,
-                 '22/11/2012': date,
-                 '22.11.2012': date,
-                 '2012-22-11': date,
-                 '22.11.2012 22:11': date_hour,
-                 '2012-11-22 22:11:10': date_hour_sec}
+        date_hour = datetime.datetime(
+            year=2012, month=11, day=22, hour=22, minute=11)
+        date_hour_sec = datetime.datetime(
+            year=2012, month=11, day=22, hour=22, minute=11, second=10)
+        date_hour_sec_z = datetime.datetime(
+            year=2012, month=11, day=22, hour=22, minute=11, second=10,
+            tzinfo=pytz.timezone('UTC'))
+        date_hour_sec_est = datetime.datetime(
+            year=2012, month=11, day=22, hour=22, minute=11, second=10,
+            tzinfo=pytz.timezone('EST'))
+        date_hour_sec_frac_z = datetime.datetime(
+            year=2012, month=11, day=22, hour=22, minute=11, second=10,
+            microsecond=123000, tzinfo=pytz.timezone('UTC'))
+        dates = {
+            '2012-11-22': date,
+            '2012/11/22': date,
+            '2012-11-22 22:11': date_hour,
+            '2012/11/22 22:11': date_hour,
+            '22-11-2012': date,
+            '22/11/2012': date,
+            '22.11.2012': date,
+            '22.11.2012 22:11': date_hour,
+            '2012-11-22 22:11:10': date_hour_sec,
+            '2012-11-22T22:11:10Z': date_hour_sec_z,
+            '2012-11-22T22:11:10-0500': date_hour_sec_est,
+            '2012-11-22T22:11:10.123Z': date_hour_sec_frac_z,
+            }
+
+        # invalid ones
+        invalid_dates = ['2010-110-12', 'yay']
+
+        if version_info < (3, 2):
+            dates.pop('2012-11-22T22:11:10-0500')
+            invalid_dates.append('2012-11-22T22:11:10-0500')
 
         for value, expected in dates.items():
             self.assertEqual(utils.get_date(value), expected, value)
 
-        # invalid ones
-        invalid_dates = ('2010-110-12', 'yay')
         for item in invalid_dates:
             self.assertRaises(ValueError, utils.get_date, item)
 
@@ -73,6 +93,17 @@ class TestUtils(LoggedTestCase):
 
         for value, expected in samples:
             self.assertEqual(utils.slugify(value), expected)
+
+    def test_slugify_substitute(self):
+
+        samples = (('C++ is based on C', 'cpp-is-based-on-c'),
+                   ('C+++ test C+ test', 'cpp-test-c-test'),
+                   ('c++, c#, C#, C++', 'cpp-c-sharp-c-sharp-cpp'),
+                   ('c++-streams', 'cpp-streams'),)
+
+        subs = (('C++', 'CPP'), ('C#', 'C-SHARP'))
+        for value, expected in samples:
+            self.assertEqual(utils.slugify(value, subs), expected)
 
     def test_get_relative_path(self):
 
@@ -173,29 +204,32 @@ class TestUtils(LoggedTestCase):
             shutil.rmtree(empty_path, True)
 
     def test_clean_output_dir(self):
+        retention = ()
         test_directory = os.path.join(os.path.dirname(__file__),
                                       'clean_output')
         content = os.path.join(os.path.dirname(__file__), 'content')
         shutil.copytree(content, test_directory)
-        utils.clean_output_dir(test_directory)
+        utils.clean_output_dir(test_directory, retention)
         self.assertTrue(os.path.isdir(test_directory))
         self.assertListEqual([], os.listdir(test_directory))
         shutil.rmtree(test_directory)
 
     def test_clean_output_dir_not_there(self):
+        retention = ()
         test_directory = os.path.join(os.path.dirname(__file__),
                                       'does_not_exist')
-        utils.clean_output_dir(test_directory)
-        self.assertTrue(not os.path.exists(test_directory))
+        utils.clean_output_dir(test_directory, retention)
+        self.assertFalse(os.path.exists(test_directory))
 
     def test_clean_output_dir_is_file(self):
+        retention = ()
         test_directory = os.path.join(os.path.dirname(__file__),
                                       'this_is_a_file')
         f = open(test_directory, 'w')
         f.write('')
         f.close()
-        utils.clean_output_dir(test_directory)
-        self.assertTrue(not os.path.exists(test_directory))
+        utils.clean_output_dir(test_directory, retention)
+        self.assertFalse(os.path.exists(test_directory))
 
     def test_strftime(self):
         d = datetime.date(2012, 8, 29)
@@ -319,12 +353,13 @@ class TestDateFormatter(unittest.TestCase):
                          'French locale needed')
     def test_french_locale(self):
         settings = read_settings(
-            override = {'LOCALE': locale.normalize('fr_FR.UTF-8'),
-                        'TEMPLATE_PAGES': {'template/source.html':
-                                           'generated/file.html'}})
+            override={'LOCALE': locale.normalize('fr_FR.UTF-8'),
+                      'TEMPLATE_PAGES': {'template/source.html':
+                                         'generated/file.html'}})
 
-        generator = TemplatePagesGenerator({'date': self.date}, settings,
-                self.temp_content, '', self.temp_output, None)
+        generator = TemplatePagesGenerator(
+            {'date': self.date}, settings,
+            self.temp_content, '', self.temp_output)
         generator.env.filters.update({'strftime': utils.DateFormatter()})
 
         writer = Writer(self.temp_output, settings=settings)
@@ -351,8 +386,9 @@ class TestDateFormatter(unittest.TestCase):
                         'TEMPLATE_PAGES': {'template/source.html':
                                            'generated/file.html'}})
 
-        generator = TemplatePagesGenerator({'date': self.date}, settings,
-                self.temp_content, '', self.temp_output, None)
+        generator = TemplatePagesGenerator(
+            {'date': self.date}, settings,
+            self.temp_content, '', self.temp_output)
         generator.env.filters.update({'strftime': utils.DateFormatter()})
 
         writer = Writer(self.temp_output, settings=settings)

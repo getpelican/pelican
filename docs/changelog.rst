@@ -1,8 +1,21 @@
 Release history
 ###############
 
-3.3 (XXXX-XX-XX)
-================
+Next release
+============
+
+* Rename signals for better consistency (some plugins may need to be updated)
+* Move metadata extraction from generators to readers; metadata extraction no
+  longer article-specific
+* Deprecate ``FILES_TO_COPY`` in favor of ``STATIC_PATHS`` and
+  ``EXTRA_PATH_METADATA``
+* Add support for ``{}`` in relative links syntax, besides ``||``
+* Add support for ``{tag}`` and ``{category}`` relative links
+
+3.2.1 and 3.2.2
+===============
+
+* Facilitate inclusion in FreeBSD Ports Collection
 
 3.2 (2013-04-24)
 ================

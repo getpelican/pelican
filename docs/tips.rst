@@ -26,7 +26,7 @@ For example, if the sources of your Pelican site are contained in a GitHub
 repository, and if you want to publish your Pelican site as Project Pages of
 this repository, you can then use the following::
 
-    $ pelican content -o output pelicanconf.py
+    $ pelican content -o output -s pelicanconf.py
     $ ghp-import output
     $ git push origin gh-pages
 
@@ -49,7 +49,7 @@ To publish a Pelican site as User Pages you need to *push* the content of the
 
 Again, you can take advantage of ``ghp-import``::
 
-    $ pelican content -o output pelicanconf.py
+    $ pelican content -o output -s pelicanconf.py
     $ ghp-import output
     $ git push git@github.com:elemoine/elemoine.github.com.git gh-pages:master
 
@@ -71,7 +71,7 @@ To automatically update your Pelican site on each commit you can create
 a post-commit hook. For example, you can add the following to
 ``.git/hooks/post-commit``::
 
-    pelican pelican content -o output pelicanconf.py && ghp-import output && git push origin gh-pages
+    pelican pelican content -o output -s pelicanconf.py && ghp-import output && git push origin gh-pages
 
 Tip #2:
 
@@ -83,3 +83,12 @@ that you will add ``CNAME`` file to your ``content``, dir and use the
 to the ``output`` dir. For example::
 
     FILES_TO_COPY = (('extra/CNAME', 'CNAME'),)
+
+How to add Youtube or Vimeo Videos
+==================================
+
+The easiest way is to paste embed code of the video from these sites in your 
+markup file.
+
+Alternatively, you can also use Pelican plugins like ``liquid_tags`` or ``pelican_youtube``
+or ``pelican_vimeo`` to embed videos in your blog.

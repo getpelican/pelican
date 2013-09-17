@@ -1,9 +1,0 @@
-syntax: glob
-output/*
-*.pyc
-MANIFEST
-build
-dist
-docs/_build
-Paste-*
-*.egg-info

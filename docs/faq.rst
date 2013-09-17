@@ -90,11 +90,15 @@ For reStructuredText, this metadata should of course be prefixed with a colon::
 
     :Modified: 2012-08-08
 
-This metadata can then be accessed in the template::
+This metadata can then be accessed in templates such as ``article.html`` via::
 
     {% if article.modified %}
     Last modified: {{ article.modified }}
     {% endif %}
+
+If you want to include metadata in templates outside the article context (e.g., ``base.html``), the ``if`` statement should instead be::
+
+    {% if article and article.modified %}
 
 How do I assign custom templates on a per-page basis?
 =====================================================
@@ -187,3 +191,15 @@ Older themes that referenced the old setting names may not link properly.
 In order to rectify this, please update your theme for compatibility by changing
 the relevant values in your template files. For an example of complete feed
 headers and usage please check out the ``simple`` theme.
+
+Is Pelican only suitable for blogs?
+===================================
+
+No. Pelican can be easily configured to create and maintain any type of static site.
+This may require little customization of your theme and Pelican configuration.
+For example, if you are building a launch site for your product and do not need
+tags on your site. You can hide tags by removing relevant html code from your theme. 
+You can also disable generation of tags pages::
+
+    TAGS_SAVE_AS = ''
+    TAG_SAVE_AS = ''

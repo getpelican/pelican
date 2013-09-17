@@ -38,7 +38,7 @@ def decode_wp_content(content, br=True):
         pre_index = 0
 
         for pre_part in pre_parts:
-            start = pre_part.index("<pre")
+            start = pre_part.find("<pre")
             if start == -1:
                 content = content + pre_part
                 continue
@@ -350,6 +350,88 @@ def chyrp2fields(atom):
             yield (entry.title, content, slug, date, author, [], tags, "html")
 
 
+
+def tumblr2fields(api_key, blogname):
+    """ Imports Tumblr posts (API v2)"""
+    from time import strftime, localtime
+    try:
+        # py3k import
+        import json
+    except ImportError:
+        # py2 import
+        import simplejson as json
+
+    try:
+        # py3k import
+        import urllib.request as urllib_request
+    except ImportError:
+        # py2 import
+        import urllib2 as urllib_request
+
+    def get_tumblr_posts(api_key, blogname, offset=0):
+        url = "http://api.tumblr.com/v2/blog/%s.tumblr.com/posts?api_key=%s&offset=%d&filter=raw" % (blogname, api_key, offset)
+        request = urllib_request.Request(url)
+        handle = urllib_request.urlopen(request)
+        posts = json.loads(handle.read().decode('utf-8'))
+        return posts.get('response').get('posts')
+
+    offset = 0
+    posts = get_tumblr_posts(api_key, blogname, offset)
+    while len(posts) > 0:
+        for post in posts:
+            title = post.get('title') or post.get('source_title') or post.get('type').capitalize()
+            slug = post.get('slug') or slugify(title)
+            tags = post.get('tags')
+            timestamp = post.get('timestamp')
+            date = strftime("%Y-%m-%d %H:%M:%S", localtime(int(timestamp)))
+            slug = strftime("%Y-%m-%d-", localtime(int(timestamp))) + slug
+            format = post.get('format')
+            content = post.get('body')
+            type = post.get('type')
+            if type == 'photo':
+                if format == 'markdown':
+                    fmtstr = '![%s](%s)'
+                else:
+                    fmtstr = '<img alt="%s" src="%s" />'
+                content = '\n'.join(fmtstr % (photo.get('caption'), photo.get('original_size').get('url')) for photo in post.get('photos'))
+                content += '\n\n' + post.get('caption')
+            elif type == 'quote':
+                if format == 'markdown':
+                    fmtstr = '\n\n&mdash; %s'
+                else:
+                    fmtstr = '<p>&mdash; %s</p>'
+                content = post.get('text') + fmtstr % post.get('source')
+            elif type == 'link':
+                if format == 'markdown':
+                    fmtstr = '[via](%s)\n\n'
+                else:
+                    fmtstr = '<p><a href="%s">via</a></p>\n'
+                content = fmtstr % post.get('url') + post.get('description')
+            elif type == 'audio':
+                if format == 'markdown':
+                    fmtstr = '[via](%s)\n\n'
+                else:
+                    fmtstr = '<p><a href="%s">via</a></p>\n'
+                content = fmtstr % post.get('source_url') + post.get('caption') + post.get('player')
+            elif type == 'video':
+                if format == 'markdown':
+                    fmtstr = '[via](%s)\n\n'
+                else:
+                    fmtstr = '<p><a href="%s">via</a></p>\n'
+                content = fmtstr % post.get('source_url') + post.get('caption') + '\n'.join(player.get('embed_code') for player in post.get('player'))
+            elif type == 'answer':
+                title = post.get('question')
+                content = '<p><a href="%s" rel="external nofollow">%s</a>: %s</p>\n%s' % (post.get('asking_name'), post.get('asking_url'), post.get('question'), post.get('answer'))
+
+            content = content.rstrip() + '\n'
+            kind = 'article'
+            yield (title, content, slug, date, post.get('blog_name'), [type],
+                   tags, kind, format)
+
+        offset += len(posts)
+        posts = get_tumblr_posts(api_key, blogname, offset)
+
+
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
@@ -400,9 +482,11 @@ def build_markdown_header(title, date, author, categories, tags, slug):
 
 def fields2pelican(fields, out_markup, output_path,
         dircat=False, strip_raw=False, disable_slugs=False,
-        dirpage=False, filename_template=None):
+        dirpage=False, filename_template=None, filter_author=None):
     for (title, content, filename, date, author, categories, tags,
             kind, in_markup) in fields:
+        if filter_author and filter_author != author:
+            continue
         slug = not disable_slugs and filename or None
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
@@ -502,6 +586,8 @@ def main():
         help='Chyrp Atom export')
     parser.add_argument('--posterous', action='store_true', dest='posterous',
         help='Posterous export')
+    parser.add_argument('--tumblr', action='store_true', dest='tumblr',
+        help='Tumblr export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
     parser.add_argument('-o', '--output', dest='output', default='output',
@@ -513,6 +599,8 @@ def main():
     parser.add_argument('--dir-page', action='store_true', dest='dirpage',
         help=('Put files recognised as pages in "pages/" sub-directory'
               ' (wordpress import only)'))
+    parser.add_argument('--filter-author', dest='author',
+        help='Import only post from the specified author')
     parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
@@ -525,6 +613,8 @@ def main():
         help="Email address (posterous import only)")
     parser.add_argument('-p', '--password', dest='password',
         help="Password (posterous import only)")
+    parser.add_argument('-b', '--blogname', dest='blogname',
+        help="Blog name (Tumblr import only)")
 
     args = parser.parse_args()
 
@@ -537,10 +627,12 @@ def main():
         input_type = 'chyrp'
     elif args.posterous:
         input_type = 'posterous'
+    elif args.tumblr:
+        input_type = 'tumblr'
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous --chyrp or --feed options"
+        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr, --chrpy or --feed options"
         exit(error)
 
     if not os.path.exists(args.output):
@@ -558,6 +650,8 @@ def main():
         fields = chyrp2fields(args.input)
     elif input_type == 'posterous':
         fields = posterous2fields(args.input, args.email, args.password)
+    elif input_type == 'tumblr':
+        fields = tumblr2fields(args.input, args.blogname)
     elif input_type == 'feed':
         fields = feed2fields(args.input)
 
@@ -567,4 +661,5 @@ def main():
                    dircat=args.dircat or False,
                    dirpage=args.dirpage or False,
                    strip_raw=args.strip_raw or False,
-                   disable_slugs=args.disable_slugs or False)
+                   disable_slugs=args.disable_slugs or False,
+                   filter_author=args.author)

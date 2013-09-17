@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 import copy
 import os
+import locale
 from os.path import dirname, abspath, join
 
 from pelican.settings import (read_settings, configure_settings,
@@ -92,3 +93,14 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['FEED_DOMAIN'] = 'http://feeds.example.com'
         configure_settings(settings)
         self.assertEqual(settings['FEED_DOMAIN'], 'http://feeds.example.com')
+
+    def test_default_encoding(self):
+        # test that the default locale is set if
+        # locale is not specified in the settings
+
+        #reset locale to python default
+        locale.setlocale(locale.LC_ALL, str('C'))
+        self.assertEqual(self.settings['LOCALE'], DEFAULT_CONFIG['LOCALE'])
+
+        configure_settings(self.settings)
+        self.assertEqual(locale.getlocale(), locale.getdefaultlocale())

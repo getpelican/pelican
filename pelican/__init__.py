@@ -9,21 +9,20 @@ import time
 import logging
 import argparse
 import locale
+import collections
 
 from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-                                StaticGenerator, PdfGenerator,
-                                SourceFileGenerator, TemplatePagesGenerator)
+                                StaticGenerator, SourceFileGenerator,
+                                TemplatePagesGenerator)
 from pelican.log import init
+from pelican.readers import Readers
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, folder_watcher, file_watcher
 from pelican.writers import Writer
 
-__major__ = 3
-__minor__ = 2
-__micro__ = 0
-__version__ = "{0}.{1}.{2}".format(__major__, __minor__, __micro__)
+__version__ = "3.2.3.dev"
 
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 
@@ -45,9 +44,9 @@ class Pelican(object):
         self.path = settings['PATH']
         self.theme = settings['THEME']
         self.output_path = settings['OUTPUT_PATH']
-        self.markup = settings['MARKUP']
         self.ignore_files = settings['IGNORE_FILES']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
+        self.output_retention = settings['OUTPUT_RETENTION']
 
         self.init_path()
         self.init_plugins()
@@ -157,24 +156,23 @@ class Pelican(object):
         context['localsiteurl'] = self.settings['SITEURL']  # share
         generators = [
             cls(
-                context,
-                self.settings,
-                self.path,
-                self.theme,
-                self.output_path,
-                self.markup,
+                context=context,
+                settings=self.settings,
+                path=self.path,
+                theme=self.theme,
+                output_path=self.output_path,
             ) for cls in self.get_generator_classes()
         ]
-
-        for p in generators:
-            if hasattr(p, 'generate_context'):
-                p.generate_context()
 
         # erase the directory if it is not the source and if that's
         # explicitely asked
         if (self.delete_outputdir and not
                 os.path.realpath(self.path).startswith(self.output_path)):
-            clean_output_dir(self.output_path)
+            clean_output_dir(self.output_path, self.output_retention)
+
+        for p in generators:
+            if hasattr(p, 'generate_context'):
+                p.generate_context()
 
         writer = self.get_writer()
 
@@ -197,15 +195,13 @@ class Pelican(object):
 
         if self.settings['TEMPLATE_PAGES']:
             generators.append(TemplatePagesGenerator)
-        if self.settings['PDF_GENERATOR']:
-            generators.append(PdfGenerator)
         if self.settings['OUTPUT_SOURCES']:
             generators.append(SourceFileGenerator)
 
         for pair in signals.get_generators.send(self):
             (funct, value) = pair
 
-            if not isinstance(value, (tuple, list)):
+            if not isinstance(value, collections.Iterable):
                 value = (value, )
 
             for v in value:
@@ -235,10 +231,6 @@ def parse_arguments():
     parser.add_argument('-o', '--output', dest='output',
         help='Where to output the generated files. If not specified, a '
              'directory will be created, named "output" in the current path.')
-
-    parser.add_argument('-m', '--markup', dest='markup',
-        help='The list of markup language to use (rst or md). Please indicate '
-             'them separated by commas.')
 
     parser.add_argument('-s', '--settings', dest='settings',
         help='The settings of the application, this is automatically set to '
@@ -279,8 +271,6 @@ def get_config(args):
     if args.output:
         config['OUTPUT_PATH'] = \
                 os.path.abspath(os.path.expanduser(args.output))
-    if args.markup:
-        config['MARKUP'] = [a.strip().lower() for a in args.markup.split(',')]
     if args.theme:
         abstheme = os.path.abspath(os.path.expanduser(args.theme))
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
@@ -296,8 +286,6 @@ def get_config(args):
         for key in config:
             if key in ('PATH', 'OUTPUT_PATH', 'THEME'):
                 config[key] = config[key].decode(enc)
-            if key == "MARKUP":
-                config[key] = [a.decode(enc) for a in config[key]]
     return config
 
 
@@ -315,16 +303,17 @@ def get_instance(args):
         module = __import__(module)
         cls = getattr(module, cls_name)
 
-    return cls(settings)
+    return cls(settings), settings
 
 
 def main():
     args = parse_arguments()
     init(args.verbosity)
-    pelican = get_instance(args)
+    pelican, settings = get_instance(args)
+    readers = Readers(settings)
 
     watchers = {'content': folder_watcher(pelican.path,
-                                          pelican.markup,
+                                          readers.extensions,
                                           pelican.ignore_files),
                 'theme': folder_watcher(pelican.theme,
                                         [''],
@@ -333,8 +322,8 @@ def main():
 
     try:
         if args.autoreload:
-            print('  --- AutoReload Mode: Monitoring `content`, `theme` and `settings`'
-                  ' for changes. ---')
+            print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
+                  ' `settings` for changes. ---')
 
             while True:
                 try:
@@ -346,7 +335,7 @@ def main():
                     modified = {k: next(v) for k, v in watchers.items()}
 
                     if modified['settings']:
-                        pelican = get_instance(args)
+                        pelican, settings  = get_instance(args)
 
                     if any(modified.values()):
                         print('\n-> Modified: {}. re-generating...'.format(
@@ -388,7 +377,7 @@ def main():
         # so convert the message to unicode with the correct encoding
         msg = str(e)
         if not six.PY3:
-            msg = msg.decode(locale.getpreferredencoding(False))
+            msg = msg.decode(locale.getpreferredencoding())
 
         logger.critical(msg)
 

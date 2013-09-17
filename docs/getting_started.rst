@@ -41,14 +41,14 @@ method::
 If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
 
-    $ pip install -e git://github.com/getpelican/pelican#egg=pelican
+    $ pip install -e git+https://github.com/getpelican/pelican.git#egg=pelican
 
 If you plan on using Markdown as a markup format, you'll need to install the
 Markdown library as well::
 
     $ pip install Markdown
 
-If you want to use AsciiDoc you need to install it from `source
+If you want to use AsciiDoc_ you need to install it from `source
 <http://www.methods.co.nz/asciidoc/INSTALL.html>`_ or use your operating
 system's package manager.
 
@@ -121,6 +121,10 @@ automatically installed without any action on your part:
   broadcast signaling system
 * `unidecode <http://pypi.python.org/pypi/Unidecode>`_, for ASCII
   transliterations of Unicode text
+* `six <http://pypi.python.org/pypi/six>`_,  for Python 2 and 3 compatibility
+  utilities
+* `MarkupSafe <http://pypi.python.org/pypi/MarkupSafe>`_, for a markup safe
+  string implementation
 
 If you want the following optional packages, you will need to install them
 manually via ``pip``:
@@ -148,21 +152,87 @@ if you plan to create non-chronological content)::
     │   └── (pages)
     ├── output
     ├── develop_server.sh
+    ├── fabfile.py
     ├── Makefile
     ├── pelicanconf.py       # Main settings file
     └── publishconf.py       # Settings to use when ready to publish
 
 The next step is to begin to adding content to the *content* folder that has
-been created for you. (See *Writing articles using Pelican* section below for
-more information about how to format your content.)
+been created for you. (See the **Writing content using Pelican** section below
+for more information about how to format your content.)
 
 Once you have written some content to generate, you can use the ``pelican``
 command to generate your site, which will be placed in the output folder.
-Alternatively, you can use automation tools that "wrap" the ``pelican`` command
-to simplify the process of generating, previewing, and uploading your site. One
-such tool is the ``Makefile`` that's automatically created for you when you use
-``pelican-quickstart`` to create a skeleton project. To use ``make`` to
-generate your site, run::
+
+Automation tools
+================
+
+While the ``pelican`` command is the canonical way to generate your site,
+automation tools can be used to streamline the generation and publication
+flow. One of the questions asked during the ``pelican-quickstart`` process
+described above pertains to whether you want to automate site generation and
+publication. If you answered "yes" to that question, a ``fabfile.py`` and
+``Makefile`` will be generated in the root of your project. These files,
+pre-populated with certain information gleaned from other answers provided
+during the ``pelican-quickstart`` process, are meant as a starting point and
+should be customized to fit your particular needs and usage patterns. If you
+find one or both of these automation tools to be of limited utility, these
+files can deleted at any time and will not affect usage of the canonical
+``pelican`` command.
+
+Following are automation tools that "wrap" the ``pelican`` command and can
+simplify the process of generating, previewing, and uploading your site.
+
+Fabric
+------
+
+The advantage of Fabric_ is that it is written in Python and thus can be used
+in a wide range of environments. The downside is that it must be installed
+separately. Use the following command to install Fabric, prefixing with
+``sudo`` if your environment requires it::
+
+    $ pip install Fabric
+
+Take a moment to open the ``fabfile.py`` file that was generated in your
+project root. You will see a number of commands, any one of which can be
+renamed, removed, and/or customized to your liking. Using the out-of-the-box
+configuration, you can generate your site via::
+
+    $ fab build
+
+If you'd prefer to have Pelican automatically regenerate your site every time a
+change is detected (which is handy when testing locally), use the following
+command instead::
+
+    $ fab regenerate
+
+To serve the generated site so it can be previewed in your browser at
+http://localhost:8000/::
+
+    $ fab serve
+
+If during the ``pelican-quickstart`` process you answered "yes" when asked
+whether you want to upload your site via SSH, you can use the following command
+to publish your site via rsync over SSH::
+
+    $ fab publish
+
+These are just a few of the commands available by default, so feel free to
+explore ``fabfile.py`` and see what other commands are available. More
+importantly, don't hesitate to customize ``fabfile.py`` to suit your specific
+needs and preferences.
+
+Make
+----
+
+A ``Makefile`` is also automatically created for you when you say "yes" to
+the relevant question during the ``pelican-quickstart`` process. The advantage
+of this method is that the ``make`` command is built into most POSIX systems
+and thus doesn't require installing anything else in order to use it. The
+downside is that non-POSIX systems (e.g., Windows) do not include ``make``,
+and installing it on those systems can be a non-trivial task.
+
+If you want to use ``make`` to generate your site, run::
 
     $ make html
 
@@ -173,7 +243,7 @@ command instead::
     $ make regenerate
 
 To serve the generated site so it can be previewed in your browser at
-http://localhost:8000::
+http://localhost:8000/::
 
     $ make serve
 
@@ -208,6 +278,8 @@ blog, and thus associated with a date.
 The idea behind "pages" is that they are usually not temporal in nature and are
 used for content that does not change very often (e.g., "About" or "Contact"
 pages).
+
+.. _internal_metadata:
 
 File metadata
 -------------
@@ -251,6 +323,9 @@ pattern::
 
     This is the content of my super blog post.
 
+Conventions for AsciiDoc_ posts, which should have an ``.asc`` extension, can
+be found on the AsciiDoc_ site.
+
 Pelican can also process HTML files ending in ``.html`` and ``.htm``. Pelican
 interprets the HTML in a very straightforward manner, reading metadata from
 ``meta`` tags, the title from the ``title`` tag, and the body out from the
@@ -259,11 +334,11 @@ interprets the HTML in a very straightforward manner, reading metadata from
     <html>
         <head>
             <title>My super title</title>
-            <meta name="tags" contents="thats, awesome" />
-            <meta name="date" contents="2012-07-09 22:28" />
-            <meta name="category" contents="yeah" />
-            <meta name="author" contents="Alexis Métaireau" />
-            <meta name="summary" contents="Short version for index and feeds" />
+            <meta name="tags" content="thats, awesome" />
+            <meta name="date" content="2012-07-09 22:28" />
+            <meta name="category" content="yeah" />
+            <meta name="author" content="Alexis Métaireau" />
+            <meta name="summary" content="Short version for index and feeds" />
         </head>
         <body>
             This is the content of my super blog post.
@@ -282,7 +357,10 @@ by the directory in which the file resides. For example, a file located at
 ``python/foobar/myfoobar.rst`` will have a category of ``foobar``. If you would
 like to organize your files in other ways where the name of the subfolder would
 not be a good category name, you can set the setting ``USE_FOLDER_AS_CATEGORY``
-to ``False``.
+to ``False``.  When parsing dates given in the page metadata, Pelican supports
+the W3C's `suggested subset ISO 8601`__.
+
+__ `W3C ISO 8601`_
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the
@@ -312,6 +390,8 @@ If you want to exclude any pages from being linked to or listed in the menu
 then add a ``status: hidden`` attribute to its metadata. This is useful for
 things like making error pages that fit the generated theme of your site.
 
+.. _ref-linking-to-internal-content:
+
 Linking to internal content
 ---------------------------
 
@@ -322,7 +402,7 @@ and images that may be sitting alongside the current post (instead of having
 to determine where those resources will be placed after site generation).
 
 To link to internal content (files in the ``content`` directory), use the
-following syntax: ``|filename|path/to/file``::
+following syntax: ``{filename}path/to/file``::
 
 
     website/
@@ -343,8 +423,8 @@ In this example, ``article1.rst`` could look like::
 
     See below intra-site link examples in reStructuredText format.
 
-    `a link relative to content root <|filename|/cat/article2.md>`_
-    `a link relative to current file <|filename|cat/article2.md>`_
+    `a link relative to content root <{filename}/cat/article2.rst>`_
+    `a link relative to current file <{filename}cat/article2.rst>`_
 
 and ``article2.md``::
 
@@ -353,8 +433,8 @@ and ``article2.md``::
 
     See below intra-site link examples in Markdown format.
 
-    [a link relative to content root](|filename|/article1.rst)
-    [a link relative to current file](|filename|../article1.rst)
+    [a link relative to content root]({filename}/article1.md)
+    [a link relative to current file]({filename}../article1.md)
 
 Embedding non-article or non-page content is slightly different in that the
 directories need to be specified in ``pelicanconf.py`` file. The ``images``
@@ -369,7 +449,7 @@ manually::
 
 And ``image-test.md`` would include::
 
-    ![Alt Text](|filename|/images/han.jpg)
+    ![Alt Text]({filename}/images/han.jpg)
 
 Any content can be linked in this way. What happens is that the ``images``
 directory gets copied to ``output/static/`` upon publishing. This is
@@ -380,6 +460,17 @@ following to ``pelicanconf.py``::
     STATIC_PATHS = ['images', 'pdfs']
 
 And then the ``pdfs`` directory would also be copied to ``output/static/``.
+
+You can also link to categories or tags, using the ``{tag}tagname`` and
+``{category}foobar`` syntax.
+
+For backward compatibility, Pelican also supports bars ``||``, besides ``{}``,
+i.e. the ``filename``, ``tag`` and ``category`` identifiers can be enclosed
+in bars ``|`` instead of braces ``{}``, for example, ``|filename|an_article.rst``,
+``|tag|tagname``,  ``|category|foobar``.
+
+Using ``{}`` ensures that the syntax will not collide with markdown extensions or
+reST directives.
 
 Importing an existing blog
 --------------------------
@@ -442,6 +533,9 @@ which posts are translations::
 
     That's true, foobar is still alive!
 
+
+.. _internal_pygments_options:
+
 Syntax highlighting
 -------------------
 
@@ -465,6 +559,65 @@ indenting both the identifier and code::
 The specified identifier (e.g. ``python``, ``ruby``) should be one that
 appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
 
+When using reStructuredText the following options are available in the
+code-block directive:
+
+=============   ============  =========================================
+Option          Valid values  Description
+=============   ============  =========================================
+anchorlinenos   N/A           If present wrap line numbers in <a> tags.
+classprefix     string        String to prepend to token class names
+hl_lines        numbers       List of lines to be highlighted.
+lineanchors     string        Wrap each line in an anchor using this
+                              string and -linenumber.
+linenos         string        If present or set to "table" output line 
+                              numbers in a table, if set to
+                              "inline" output them inline. "none" means
+                              do not output the line numbers for this 
+                              table.
+linenospecial   number        If set every nth line will be given the 
+                              'special' css class.
+linenostart     number        Line number for the first line.
+linenostep      number        Print every nth line number.
+lineseparator   string        String to print between lines of code,
+                              '\n' by default.
+linespans       string        Wrap each line in a span using this and
+                              -linenumber.
+nobackground    N/A           If set do not output background color for
+                              the wrapping element
+nowrap          N/A           If set do not wrap the tokens at all.
+tagsfile        string        ctags file to use for name definitions.
+tagurlformat    string        format for the ctag links.
+=============   ============  =========================================
+
+Note that, depending on its version, your pygments module might not have
+all of these available. See the `Pygments documentation
+<http://pygments.org/docs/formatters/>`_ for the HTML formatter for more
+details on each of the options.
+
+for example the below code block enables line numbers, starting at 153,
+and prefixes the Pygments CSS classes with *pgcss* to make the names
+more unique and avoid possible CSS conflicts::
+
+    .. code-block:: identifier
+        :classprefix: pgcss
+        :linenos: table
+        :linenostart: 153
+
+       <indented code block goes here>
+
+It is also possible to specify the ``PYGMENTS_RST_OPTIONS`` variable
+in your Pelican configuration file for settings that will be
+automatically applied to every code block.
+
+For example, if you wanted to have line numbers on for every code block
+and a CSS prefix you would set this variable to::
+
+    PYGMENTS_RST_OPTIONS = { 'classprefix': 'pgcss', 'linenos': 'table'}
+
+If specified, settings for individual code blocks will override the
+defaults in the configuration file.
+
 Publishing drafts
 -----------------
 
@@ -474,3 +627,6 @@ metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category page.
 
 .. _virtualenv: http://www.virtualenv.org/
+.. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
+.. _Fabric: http://fabfile.org/
+.. _AsciiDoc: http://www.methods.co.nz/asciidoc/

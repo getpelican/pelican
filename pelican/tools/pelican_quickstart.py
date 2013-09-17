@@ -27,6 +27,9 @@ CONF = {
     'ssh_user': 'root',
     'ssh_target_dir': '/var/www',
     's3_bucket': 'my_s3_bucket',
+    'cloudfiles_username': 'my_rackspace_username',
+    'cloudfiles_api_key': 'my_rackspace_api_key',
+    'cloudfiles_container': 'my_cloudfiles_container',
     'dropbox_dir': '~/Dropbox/Public/',
     'default_pagination': 10,
     'siteurl': '',
@@ -37,8 +40,7 @@ def _input_compat(prompt):
     if six.PY3:
         r = input(prompt)
     else:
-        # FIXME: why use this with @decoding_strings?
-        r = raw_input(prompt).decode('utf-8')
+        r = raw_input(prompt)
     return r
 
 if six.PY3:
@@ -194,10 +196,10 @@ needed by Pelican.
     else:
         CONF['default_pagination'] = False
 
-    mkfile = ask('Do you want to generate a Makefile to easily manage your website?', bool, True)
+    automation = ask('Do you want to generate a Fabfile/Makefile to automate generation and publishing?', bool, True)
     develop = ask('Do you want an auto-reload & simpleHTTP script to assist with theme and site development?', bool, True)
 
-    if mkfile:
+    if automation:
         if ask('Do you want to upload your website using FTP?', answer=bool, default=False):
             CONF['ftp_host'] = ask('What is the hostname of your FTP server?', str_compat, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on that server?', str_compat, CONF['ftp_user'])
@@ -211,6 +213,10 @@ needed by Pelican.
             CONF['dropbox_dir'] = ask('Where is your Dropbox directory?', str_compat, CONF['dropbox_dir'])
         if ask('Do you want to upload your website using S3?', answer=bool, default=False):
             CONF['s3_bucket'] = ask('What is the name of your S3 bucket?', str_compat, CONF['s3_bucket'])
+        if ask('Do you want to upload your website using Rackspace Cloud Files?', answer=bool, default=False):
+            CONF['cloudfiles_username'] = ask('What is your Rackspace Cloud username?', str_compat, CONF['cloudfiles_username'])
+            CONF['cloudfiles_api_key'] = ask('What is your Rackspace Cloud API key?', str_compat, CONF['cloudfiles_api_key'])
+            CONF['cloudfiles_container'] = ask('What is the name of your Cloud Files container?', str_compat, CONF['cloudfiles_container'])
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
@@ -244,7 +250,15 @@ needed by Pelican.
     except OSError as e:
         print('Error: {0}'.format(e))
 
-    if mkfile:
+    if automation:
+        try:
+            with codecs.open(os.path.join(CONF['basedir'], 'fabfile.py'), 'w', 'utf-8') as fd:
+                for line in get_template('fabfile.py'):
+                    template = string.Template(line)
+                    fd.write(template.safe_substitute(CONF))
+                fd.close()
+        except OSError as e:
+            print('Error: {0}'.format(e))
         try:
             with codecs.open(os.path.join(CONF['basedir'], 'Makefile'), 'w', 'utf-8') as fd:
                 mkfile_template_name = 'Makefile'
@@ -283,3 +297,6 @@ needed by Pelican.
             print('Error: {0}'.format(e))
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
+
+if __name__ == "__main__":
+    main()
