@@ -49,7 +49,7 @@ themes to style code syntax highlighting via CSS. Specifically, you can
 customize the appearance of your syntax highlighting via the ``.highlight pre``
 class in your theme's CSS file. To see how various styles can be used to render
 Django code, for example, use the style selector drop-down at top-right on the
-`Pygments project demo site <http://pygments.org/demo/15101/>`_.
+`Pygments project demo site <http://pygments.org/demo/>`_.
 
 You can use the following example commands to generate a starting CSS file from
 a Pygments built-in style (in this case, "monokai") and then copy the generated
