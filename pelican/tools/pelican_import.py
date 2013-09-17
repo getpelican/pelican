@@ -632,7 +632,7 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr, --chrpy or --feed options"
+        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr, --chyrp or --feed options"
         exit(error)
 
     if not os.path.exists(args.output):
