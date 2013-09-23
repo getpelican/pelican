@@ -51,9 +51,13 @@ If you want to see new features in Pelican, don't hesitate to offer suggestions,
 clone the repository, etc. There are many ways to :doc:`contribute<contribute>`.
 That's open source, dude!
 
-Send a message to "authors at getpelican dot com" with any requests/feedback! You
-can also join the team at `#pelican on Freenode`_ (or if you don't have an IRC
-client handy, use the webchat_ for quick feedback.
+Send a message to "authors at getpelican dot com" with any requests/feedback.
+For a more immediate response, you can also join the team via IRC at
+`#pelican on Freenode`_ — if you don't have an IRC client handy, use the
+webchat_ for quick feedback. If you ask a question via IRC and don't get an
+immediate response, don't leave the channel! It may take a few hours because
+of time zone differences, but f you are patient and remain in the channel,
+someone will almost always respond to your inquiry.
 
 Documentation
 -------------

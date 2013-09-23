@@ -84,10 +84,10 @@ Setting name (default value)                                            What doe
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
                                                                         until one works.
-`READERS` (``{}``)                                                      A dict of file extensions / Reader classes to overwrite or
-                                                                        add file readers. for instance, to avoid processing .html files:
-                                                                        ``READERS = {'html': None}``. Or to add a custom reader for the
-                                                                        `foo` extension: ``READERS = {'foo': FooReader}``
+`READERS` (``{}``)                                                      A dictionary of file extensions / Reader classes for Pelican to
+                                                                        process or ignore. For example, to avoid processing .html files,
+                                                                        set: ``READERS = {'html': None}``. To add a custom reader for the
+                                                                        `foo` extension, set: ``READERS = {'foo': FooReader}``
 `IGNORE_FILES` (``['.#*']``)                                            A list of file globbing patterns to match against the
                                                                         source files to be ignored by the processor. For example,
                                                                         the default ``['.#*']`` will ignore emacs lock files.
@@ -106,11 +106,9 @@ Setting name (default value)                                            What doe
 `PAGE_EXCLUDES` (``()``)                                                A list of directories to exclude when looking for pages.
 `ARTICLE_DIR` (``''``)                                                  Directory to look at for articles, relative to `PATH`.
 `ARTICLE_EXCLUDES`: (``('pages',)``)                                    A list of directories to exclude when looking for articles.
-`PDF_GENERATOR` (``False``)                                             Set to ``True`` if you want PDF versions of your documents to be.
-                                                                        generated. You will need to install ``rst2pdf``.
 `OUTPUT_SOURCES` (``False``)                                            Set to True if you want to copy the articles and pages in their
                                                                         original format (e.g. Markdown or reStructuredText) to the
-                                                                        specified OUTPUT_PATH.
+                                                                        specified ``OUTPUT_PATH``.
 `OUTPUT_SOURCES_EXTENSION` (``.text``)                                  Controls the extension that will be used by the SourcesGenerator.
                                                                         Defaults to ``.text``. If not a valid string the default value
                                                                         will be used.
@@ -144,7 +142,7 @@ Setting name (default value)                                            What doe
                                                                         are not needed, set ``DIRECT_TEMPLATES = ('index', 'archives')``
 `PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
 `SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will
-                                                                        be the default length in words of the text created.
+                                                                        be the default length (measured in words) of the text created.
                                                                         This only applies if your content does not otherwise
                                                                         specify a summary. Setting to ``None`` will cause the summary
                                                                         to be a copy of the original content.
@@ -155,9 +153,9 @@ Setting name (default value)                                            What doe
 `ASCIIDOC_OPTIONS` (``[]``)                                             A list of options to pass to AsciiDoc. See the `manpage
                                                                         <http://www.methods.co.nz/asciidoc/manpage.html>`_
 `WITH_FUTURE_DATES` (``True``)                                          If disabled, content with dates in the future will get a
-                                                                        default status of draft.
+                                                                        default status of ``draft``.
 `INTRASITE_LINK_REGEX` (``'[{|](?P<what>.*?)[|}]'``)                    Regular expression that is used to parse internal links.  
-                                                                        Default syntax of links to internal files, tags, etc. is 
+                                                                        Default syntax of links to internal files, tags, etc., is 
                                                                         to enclose the identifier, say ``filename``, in ``{}`` or ``||``.
                                                                         Identifier between ``{`` and ``}`` goes into the ``what`` capturing group.
                                                                         For details see :ref:`ref-linking-to-internal-content`.
@@ -173,7 +171,7 @@ URL settings
 ------------
 
 The first thing to understand is that there are currently two supported methods
-for URL formation: *relative* and *absolute*. Document-relative URLs are useful
+for URL formation: *relative* and *absolute*. Relative URLs are useful
 when testing locally, and absolute URLs are reliable and most useful when
 publishing. One method of supporting both is to have one Pelican configuration
 file for local development and another for publishing. To see an example of this
@@ -181,16 +179,17 @@ type of setup, use the ``pelican-quickstart`` script as described at the top of
 the :doc:`Getting Started <getting_started>` page, which will produce two separate
 configuration files for local development and publishing, respectively.
 
-You can customize the URLs and locations where files will be saved. The URLs and
-SAVE_AS variables use Python's format strings. These variables allow you to place
-your articles in a location such as ``{slug}/index.html`` and link to them as
-``{slug}`` for clean URLs. These settings give you the flexibility to place your
-articles and pages anywhere you want.
+You can customize the URLs and locations where files will be saved. The
+``*_URL`` and ``*_SAVE_AS`` variables use Python's format strings. These
+variables allow you to place your articles in a location such as
+``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs. These
+settings give you the flexibility to place your articles and pages anywhere you
+want.
 
 .. note::
-    If you specify a datetime directive, it will be substituted using the
+    If you specify a ``datetime`` directive, it will be substituted using the
     input files' date metadata attribute. If the date is not specified for a
-    particular file, Pelican will rely on the file's mtime timestamp.
+    particular file, Pelican will rely on the file's ``mtime`` timestamp.
 
 Check the Python datetime documentation at http://bit.ly/cNcJUC for more
 information.
@@ -213,7 +212,7 @@ and the URL to this would be ``/posts/2011/Aug/07/sample-post/``.
 
 Pelican can optionally create per-year, per-month, and per-day archives of your
 posts. These secondary archives are disabled by default but are automatically
-enabled if you supply format strings for their respective `_SAVE_AS` settings.
+enabled if you supply format strings for their respective ``_SAVE_AS`` settings.
 Period archives fit intuitively with the hierarchical model of web URLs and can
 make it easier for readers to navigate through the posts you've written over time.
 
@@ -222,12 +221,12 @@ Example usage:
 * YEAR_ARCHIVE_SAVE_AS = ``'posts/{date:%Y}/index.html'``
 * MONTH_ARCHIVE_SAVE_AS = ``'posts/{date:%Y}/{date:%b}/index.html'``
 
-With these settings, Pelican will create an archive of all your posts for the year
-at (for instance) 'posts/2011/index.html', and an archive of all your posts for
-the month at 'posts/2011/Aug/index.html'.
+With these settings, Pelican will create an archive of all your posts for the
+year at (for instance) ``posts/2011/index.html`` and an archive of all your
+posts for the month at ``posts/2011/Aug/index.html``.
 
 .. note::
-    Period archives work best when the final path segment is 'index.html'.
+    Period archives work best when the final path segment is ``index.html``.
     This way a reader can remove a portion of your URL and automatically
     arrive at an appropriate archive of posts, without having to specify
     a page name.
@@ -299,10 +298,11 @@ Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 Date format and locale
 ----------------------
 
-If no DATE_FORMATS are set, Pelican will fall back to DEFAULT_DATE_FORMAT. If
-you need to maintain multiple languages with different date formats, you can
-set this dict using the language name (``lang`` metadata in your post content)
-as the key. Regarding available format codes, see `strftime document of python`_ :
+If no ``DATE_FORMATS`` are set, Pelican will fall back to
+``DEFAULT_DATE_FORMAT``. If you need to maintain multiple languages with
+different date formats, you can set the ``DATE_FORMATS`` dictionary using the
+language name (``lang`` metadata in your post content) as the key. Regarding
+available format codes, see `strftime document of python`_ :
 
 .. parsed-literal::
 
@@ -320,8 +320,8 @@ You can set locale to further control date format:
         )
 
 Also, it is possible to set different locale settings for each language. If you
-put (locale, format) tuples in the dict, this will override the LOCALE setting
-above:
+put (locale, format) tuples in the dict, this will override the ``LOCALE``
+setting above:
 
 .. parsed-literal::
     # On Unix/Linux
@@ -473,9 +473,9 @@ Pagination
 ==========
 
 The default behaviour of Pelican is to list all the article titles along
-with a short description on the index page. While it works pretty well
-for small-to-medium blogs, for sites with large quantity of articles it would
-be convenient to have a way to paginate the list.
+with a short description on the index page. While this works well for
+small-to-medium sites, sites with a large quantity of articles will probably
+benefit from paginating this list.
 
 You can use the following settings to configure the pagination.
 
@@ -483,8 +483,8 @@ You can use the following settings to configure the pagination.
 Setting name (default value)                        What does it do?
 ================================================    =====================================================
 `DEFAULT_ORPHANS` (``0``)                           The minimum number of articles allowed on the
-                                                    last page. Use this when you don't want to
-                                                    have a last page with very few articles.
+                                                    last page. Use this when you don't want the last page
+                                                    to only contain a handful of articles.
 `DEFAULT_PAGINATION` (``False``)                    The maximum number of articles to include on a
                                                     page, not including orphans. False to disable
                                                     pagination.
@@ -528,7 +528,7 @@ Setting name (default value)                        What does it do?
 `TAG_CLOUD_MAX_ITEMS` (``100``)                     Maximum number of tags in the cloud.
 ================================================    =====================================================
 
-The default theme does not include a tag cloud, but it is pretty easy to add::
+The default theme does not include a tag cloud, but it is pretty easy to add one::
 
     <ul class="tagcloud">
         {% for tag in tag_cloud %}
@@ -536,9 +536,10 @@ The default theme does not include a tag cloud, but it is pretty easy to add::
         {% endfor %}
     </ul>
 
-You should then also define CSS styles with appropriate classes (tag-0 to tag-N, where
-N matches `TAG_CLOUD_STEPS` -1), tag-0 being the most frequent, and define a ul.tagcloud 
-class with appropriate list-style to create the cloud, for example::
+You should then also define CSS styles with appropriate classes (tag-0 to tag-N,
+where N matches ``TAG_CLOUD_STEPS`` -1), tag-0 being the most frequent, and
+define a ``ul.tagcloud`` class with appropriate list-style to create the cloud.
+For example::
 
     ul.tagcloud {
       list-style: none;

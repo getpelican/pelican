@@ -30,12 +30,12 @@ To make your own theme, you must follow the following structure::
         └── tags.html             // must list all the tags. Can be a tag cloud.
 
 * `static` contains all the static assets, which will be copied to the output
-  `theme` folder. I've put the CSS and image folders here, but they are
-  just examples. Put what you need here.
+  `theme` folder. The above filesystem layout includes CSS and image folders,
+  but those are just examples. Put what you need here.
 
 * `templates` contains all the templates that will be used to generate the content.
-  I've just put the mandatory templates here; you can define your own if it helps
-  you keep things organized while creating your theme.
+  The template files listed above are mandatory; you can add your own templates
+  if it helps you keep things organized while creating your theme.
 
 Templates and variables
 =======================
@@ -44,8 +44,8 @@ The idea is to use a simple syntax that you can embed into your HTML pages.
 This document describes which templates should exist in a theme, and which
 variables will be passed to each template at generation time.
 
-All templates will receive the variables defined in your settings file, if they
-are in all-caps. You can access them directly.
+All templates will receive the variables defined in your settings file, as long
+as they are in all-caps. You can access them directly.
 
 Common variables
 ----------------
@@ -58,19 +58,18 @@ Variable        Description
 output_file     The name of the file currently being generated. For
                 instance, when Pelican is rendering the homepage,
                 output_file will be "index.html".
-articles        The list of articles, ordered descending by date
+articles        The list of articles, ordered descending by date.
                 All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
                 etc.). Sometimes this is shadowed (for instance in
                 the tags page). You will then find info about it
                 in the `all_articles` variable.
 dates           The same list of articles, but ordered by date,
-                ascending
+                ascending.
 tags            A list of (tag, articles) tuples, containing all
                 the tags.
 categories      A list of (category, articles) tuples, containing
-                all the categories.
-                and the list of respective articles (values)
+                all the categories and corresponding articles (values)
 pages           The list of pages
 =============   ===================================================
 
@@ -91,9 +90,9 @@ __ http://jinja.pocoo.org/docs/templates/#sort
 Date Formatting
 ---------------
 
-Pelican formats the date with according to your settings and locale 
+Pelican formats the date according to your settings and locale 
 (``DATE_FORMATS``/``DEFAULT_DATE_FORMAT``) and provides a 
-``locale_date`` attribute. On the other hand, ``date`` attribute will
+``locale_date`` attribute. On the other hand, the ``date`` attribute will
 be a `datetime`_ object. If you need custom formatting for a date 
 different than your settings, use the Jinja filter ``strftime`` 
 that comes with Pelican. Usage is same as Python `strftime`_ format, 

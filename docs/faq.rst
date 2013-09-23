@@ -23,8 +23,8 @@ How can I help?
 There are several ways to help out. First, you can report any Pelican
 suggestions or problems you might have via IRC or the `issue tracker
 <https://github.com/getpelican/pelican/issues>`_. If submitting an issue
-report, please check the existing issue list first in order to avoid submitting
-a duplicate issue.
+report, please first check the existing issue list (both open and closed) in
+order to avoid submitting a duplicate issue.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
@@ -96,7 +96,8 @@ This metadata can then be accessed in templates such as ``article.html`` via::
     Last modified: {{ article.modified }}
     {% endif %}
 
-If you want to include metadata in templates outside the article context (e.g., ``base.html``), the ``if`` statement should instead be::
+If you want to include metadata in templates outside the article context (e.g.,
+``base.html``), the ``if`` statement should instead be::
 
     {% if article and article.modified %}
 
@@ -196,10 +197,10 @@ Is Pelican only suitable for blogs?
 ===================================
 
 No. Pelican can be easily configured to create and maintain any type of static site.
-This may require little customization of your theme and Pelican configuration.
+This may require a little customization of your theme and Pelican configuration.
 For example, if you are building a launch site for your product and do not need
-tags on your site. You can hide tags by removing relevant html code from your theme. 
-You can also disable generation of tags pages::
+tags on your site, you could remove the relevant HTML code from your theme. 
+You can also disable generation of tag-related pages via::
 
     TAGS_SAVE_AS = ''
     TAG_SAVE_AS = ''
