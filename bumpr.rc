@@ -27,4 +27,4 @@ prepare = Next release
 url = http://docs.getpelican.com/{tag}
 
 [commands]
-bump = sed -i "s/last_stable\s*=.*/last_stable = '{version}'/" docs/conf.py
+bump = sed -i "" "s/last_stable\s*=.*/last_stable = '{version}'/" docs/conf.py
