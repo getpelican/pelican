@@ -197,10 +197,6 @@ class Content(object):
             value = m.group('value')
             origin = m.group('path')
 
-            # we support only filename for now. the plan is to support
-            # categories, tags, etc. in the future, but let's keep things
-            # simple for now.
-
             # XXX Put this in a different location.
             if what == 'filename':
                 if value.startswith('/'):
