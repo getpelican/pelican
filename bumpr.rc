@@ -4,7 +4,7 @@ vcs = git
 clean =
     python setup.py clean
     rm -rf *egg-info build dist
-tests = tox
+tests = python -m unittest discover
 publish = python setup.py sdist register upload
 files = README.rst
 
