@@ -1,8 +1,8 @@
 Release history
 ###############
 
-Next release
-============
+3.3.0 (2013-09-24)
+==================
 
 * Drop Python 3.2 support in favor of Python 3.3
 * Add ``Fabfile`` so Fabric can be used for workflow automation instead of Make
