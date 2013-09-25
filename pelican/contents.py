@@ -217,6 +217,11 @@ class Content(object):
                     origin = '/'.join((siteurl,
                              self._context['filenames'][path].url))
                     origin = origin.replace('\\', '/')  # for Windows paths.
+                elif path.replace('%20', ' ') in self._context['filenames']:
+                    path_with_spaces = path.replace('%20', ' ')
+                    origin = '/'.join((siteurl,
+                             self._context['filenames'][path_with_spaces].url))
+                    origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
                     logger.warning("Unable to find {fn}, skipping url"
                                    " replacement".format(fn=path))
