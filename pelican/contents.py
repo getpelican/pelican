@@ -5,11 +5,15 @@ import six
 import copy
 import locale
 import logging
-import urlparse
 import functools
 import os
 import re
 import sys
+
+try:
+    from urlparse import urlparse, urlunparse
+except ImportError:
+    from urllib.parse import urlparse, urlunparse
 
 from datetime import datetime
 
@@ -195,7 +199,7 @@ class Content(object):
 
         def replacer(m):
             what = m.group('what')
-            value = urlparse.urlparse(m.group('value'))
+            value = urlparse(m.group('value'))
             path = value.path
             origin = m.group('path')
 
@@ -224,7 +228,7 @@ class Content(object):
             # keep all other parts, such as query, fragment, etc.
             parts = list(value)
             parts[2] = origin
-            origin = urlparse.urlunparse(parts)
+            origin = urlunparse(parts)
 
             return ''.join((m.group('markup'), m.group('quote'), origin,
                             m.group('quote')))
