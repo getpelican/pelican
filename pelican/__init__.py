@@ -13,13 +13,16 @@ import collections
 
 from pelican import signals
 
-from pelican.generators import (ArticlesGenerator, PagesGenerator,
-                                StaticGenerator, SourceFileGenerator,
-                                TemplatePagesGenerator)
+from pelican.generators import (
+    ArticlesGenerator, PagesGenerator, StaticGenerator, SourceFileGenerator,
+    TemplatePagesGenerator
+)
 from pelican.log import init
 from pelican.readers import Readers
 from pelican.settings import read_settings
-from pelican.utils import clean_output_dir, folder_watcher, file_watcher
+from pelican.utils import (
+    clean_output_dir, folder_watcher, file_watcher, mkdir_p
+)
 from pelican.writers import Writer
 
 __version__ = "3.3.1.dev"
@@ -48,9 +51,16 @@ class Pelican(object):
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
         self.output_retention = settings['OUTPUT_RETENTION']
 
+        self.init_filesystem()
         self.init_path()
         self.init_plugins()
         signals.initialized.send(self)
+
+    def init_filesystem(self):
+        cache_dir = self.settings['CACHE_PATH']
+        if self.settings['USE_CACHE'] and not os.path.exists(cache_dir):
+            logger.debug('Creating directory {0}'.format(cache_dir))
+            mkdir_p(cache_dir)
 
     def init_path(self):
         if not any(p in sys.path for p in ['', os.curdir]):
@@ -261,6 +271,9 @@ def parse_arguments():
         action='store_true',
         help="Relaunch pelican each time a modification occurs"
                              " on the content files.")
+
+    parser.add_argument('--cache', dest='use_cache', action='store_true',
+        help='Cache the file rendering between runs')
     return parser.parse_args()
 
 
@@ -276,6 +289,8 @@ def get_config(args):
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
     if args.delete_outputdir is not None:
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
+    if args.use_cache:
+        config['USE_CACHE'] = True
 
     # argparse returns bytes in Py2. There is no definite answer as to which
     # encoding argparse (or sys.argv) uses.

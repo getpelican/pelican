@@ -112,6 +112,8 @@ DEFAULT_CONFIG = {
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
+    'CACHE_PATH': '_pelican_cache',
+    'USE_CACHE': False,
     }
 
 PYGMENTS_RST_OPTIONS = None
@@ -121,7 +123,7 @@ def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'PLUGIN_PATH']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'PLUGIN_PATH', 'CACHE_PATH']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(

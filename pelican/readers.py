@@ -35,6 +35,7 @@ except ImportError:
     from HTMLParser import HTMLParser
 
 from pelican import signals
+from pelican.cache import CachedReader
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open
 
@@ -434,6 +435,12 @@ class Readers(object):
             preread_signal.send(preread_sender)
 
         reader = self.readers[fmt]
+
+        if self.settings['USE_CACHE']:
+            # If we are using a cache, then the reader class should be a cached
+            # one.
+            reader = CachedReader(reader=reader,
+                                  cache_path=self.settings['CACHE_PATH'])
 
         metadata = default_metadata(
             settings=self.settings, process=reader.process_metadata)
