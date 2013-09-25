@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import six
 from datetime import datetime
 from sys import platform
 
@@ -203,6 +204,69 @@ class TestPage(unittest.TestCase):
         self.assertEquals(content,
                           ('A simple test, with a '
                            '<a href="category/category.html">link</a>'))
+
+    def test_intrasite_link(self):
+        # type does not take unicode in PY2 and bytes in PY3, which in
+        # combination with unicode literals leads to following insane line:
+        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        article = type(cls_name, (object,), {'url': 'article.html'})
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {'article.rst': article}
+
+        # Classic intrasite link via filename
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEquals(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html">link</a>'
+        )
+
+        # fragment
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst#section-2">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEquals(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html#section-2">link</a>'
+        )
+
+        # query
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst'
+            '?utm_whatever=234&highlight=word">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEquals(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html'
+            '?utm_whatever=234&highlight=word">link</a>'
+        )
+
+        # combination
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst'
+            '?utm_whatever=234&highlight=word#section-2">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEquals(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html'
+            '?utm_whatever=234&highlight=word#section-2">link</a>'
+        )
 
 
 class TestArticle(TestPage):
