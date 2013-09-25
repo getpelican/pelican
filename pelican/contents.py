@@ -10,6 +10,11 @@ import os
 import re
 import sys
 
+try:
+    from urlparse import urlparse, urlunparse
+except ImportError:
+    from urllib.parse import urlparse, urlunparse
+
 from datetime import datetime
 
 
@@ -194,34 +199,36 @@ class Content(object):
 
         def replacer(m):
             what = m.group('what')
-            value = m.group('value')
+            value = urlparse(m.group('value'))
+            path = value.path
             origin = m.group('path')
-
-            # we support only filename for now. the plan is to support
-            # categories, tags, etc. in the future, but let's keep things
-            # simple for now.
 
             # XXX Put this in a different location.
             if what == 'filename':
-                if value.startswith('/'):
-                    value = value[1:]
+                if path.startswith('/'):
+                    path = path[1:]
                 else:
                     # relative to the source path of this content
-                    value = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, value)
+                    path = self.get_relative_source_path(
+                        os.path.join(self.relative_dir, path)
                     )
 
-                if value in self._context['filenames']:
+                if path in self._context['filenames']:
                     origin = '/'.join((siteurl,
-                             self._context['filenames'][value].url))
-                    origin = origin.replace('\\', '/')  # Fow windows paths.
+                             self._context['filenames'][path].url))
+                    origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
                     logger.warning("Unable to find {fn}, skipping url"
-                                   " replacement".format(fn=value))
+                                   " replacement".format(fn=path))
             elif what == 'category':
-                origin = Category(value, self.settings).url
+                origin = Category(path, self.settings).url
             elif what == 'tag':
-                origin = Tag(value, self.settings).url
+                origin = Tag(path, self.settings).url
+
+            # keep all other parts, such as query, fragment, etc.
+            parts = list(value)
+            parts[2] = origin
+            origin = urlunparse(parts)
 
             return ''.join((m.group('markup'), m.group('quote'), origin,
                             m.group('quote')))
