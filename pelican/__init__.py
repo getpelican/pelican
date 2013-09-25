@@ -320,6 +320,9 @@ def main():
                                         pelican.ignore_files),
                 'settings': file_watcher(args.settings)}
 
+    for static_path in settings.get("STATIC_PATHS", []):
+        watchers[static_path] = file_watcher(static_path)
+
     try:
         if args.autoreload:
             print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
