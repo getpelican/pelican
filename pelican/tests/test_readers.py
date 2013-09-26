@@ -104,8 +104,8 @@ class RstReaderTest(ReaderTest):
         # if nothing is specified in the settings, the content should be
         # unmodified
         page = self.read_file(path='article.rst')
-        expected = ('<p>This is some content. With some stuff to '
-                    '&quot;typogrify&quot;.</p>\n<p>Now with added '
+        expected = ('<p>THIS is some content. With some stuff to '
+                    '&quot;typogrify&quot;...</p>\n<p>Now with added '
                     'support for <abbr title="three letter acronym">'
                     'TLA</abbr>.</p>\n')
 
@@ -114,10 +114,11 @@ class RstReaderTest(ReaderTest):
         try:
             # otherwise, typogrify should be applied
             page = self.read_file(path='article.rst', TYPOGRIFY=True)
-            expected = ('<p>This is some content. With some stuff to&nbsp;'
-                        '&#8220;typogrify&#8221;.</p>\n<p>Now with added '
-                        'support for <abbr title="three letter acronym">'
-                        '<span class="caps">TLA</span></abbr>.</p>\n')
+            expected = (
+                '<p><span class="caps">THIS</span> is some content. '
+                'With some stuff to&nbsp;&quot;typogrify&quot;&#8230;</p>\n'
+                '<p>Now with added support for <abbr title="three letter '
+                'acronym"><span class="caps">TLA</span></abbr>.</p>\n')
 
             self.assertEqual(page.content, expected)
         except ImportError:
