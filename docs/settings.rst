@@ -278,7 +278,7 @@ Setting name (default value)                            What does it do?
 
     If you do not want one or more of the default pages to be created (e.g.,
     you are the only author on your site and thus do not need an Authors page),
-    set the corresponding ``*_SAVE_AS`` setting to ``False`` to prevent the
+    set the corresponding ``*_SAVE_AS`` setting to ``None`` to prevent the
     relevant page from being generated.
 
 Timezone
