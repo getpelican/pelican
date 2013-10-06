@@ -32,7 +32,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
-        for title, content, fname, date, author, categ, tags, kind, format in self.posts:
+        for title, content, fname, date, author, post_id, categ, tags, kind, format in self.posts:
             self.assertTrue(title.strip())
 
     def test_recognise_page_kind(self):
@@ -40,7 +40,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         self.assertTrue(self.posts)
         # Collect (title, filename, kind) of non-empty posts recognised as page
         pages_data = []
-        for title, content, fname, date, author, categ, tags, kind, format in self.posts:
+        for title, content, fname, date, author, post_id, categ, tags, kind, format in self.posts:
             if kind == 'page':
                 pages_data.append((title, fname))
         self.assertEqual(2, len(pages_data))
