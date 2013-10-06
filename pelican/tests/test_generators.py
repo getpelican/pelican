@@ -3,7 +3,10 @@ from __future__ import unicode_literals
 
 import os
 from codecs import open
-from mock import MagicMock
+try:
+    from unittest.mock import MagicMock
+except ImportError:
+    from mock import MagicMock
 from shutil import rmtree
 from tempfile import mkdtemp
 
