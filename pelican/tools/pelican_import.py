@@ -124,13 +124,14 @@ def wp2fields(xml):
                 logger.warn('Post "%s" is lacking a proper title' % title)
 
             content = item.find('encoded').string
+            post_id = item.find('post_id').string
             filename = item.find('post_name').string
 
             raw_date = item.find('post_date').string
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
             author = item.find('creator').string
- 
+
             categories = [cat.string for cat in item.findAll('category', {'domain' : 'category'})]
             # caturl = [cat['nicename'] for cat in item.find(domain='category')]
 
@@ -140,7 +141,7 @@ def wp2fields(xml):
             if item.find('post_type').string == 'page':
                 kind = 'page'
 
-            yield (title, content, filename, date, author, categories, tags,
+            yield (title, content, filename, date, author, post_id, categories, tags,
                    kind, "wp-html")
 
 def dc2fields(file):
@@ -440,13 +441,15 @@ def build_header(title, date, author, categories, tags, slug):
     header += '\n'
     return header
 
-def build_markdown_header(title, date, author, categories, tags, slug):
+def build_markdown_header(title, date, author, post_id, categories, tags, slug):
     """Build a header from a list of fields"""
     header = 'Title: %s\n' % title
     if date:
         header += 'Date: %s\n' % date
     if author:
         header += 'Author: %s\n' % author
+    if post_id:
+        header += 'Post_ID: %s\n' % post_id
     if categories:
         header += 'Category: %s\n' % ', '.join(categories)
     if tags:
@@ -459,14 +462,14 @@ def build_markdown_header(title, date, author, categories, tags, slug):
 def fields2pelican(fields, out_markup, output_path,
         dircat=False, strip_raw=False, disable_slugs=False,
         dirpage=False, filename_template=None, filter_author=None):
-    for (title, content, filename, date, author, categories, tags,
+    for (title, content, filename, date, author, post_id, categories, tags,
             kind, in_markup) in fields:
         if filter_author and filter_author != author:
             continue
         slug = not disable_slugs and filename or None
         if (in_markup == "markdown") or (out_markup == "markdown") :
             ext = '.md'
-            header = build_markdown_header(title, date, author, categories, tags, slug)
+            header = build_markdown_header(title, date, author, post_id, categories, tags, slug)
         else:
             out_markup = "rst"
             ext = '.rst'
