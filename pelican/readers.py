@@ -302,16 +302,18 @@ class HTMLReader(BaseReader):
             return result + '>'
 
         def _handle_meta_tag(self, attrs):
-            name = self._attr_value(attrs, 'name').lower()
-            contents = self._attr_value(attrs, 'content', '')
-            if not contents:
-                contents = self._attr_value(attrs, 'contents', '')
-                if contents:
-                    logger.warning("Meta tag attribute 'contents' used in file %s, should be changed to 'content'", self._filename)
+            name = self._attr_value(attrs, 'name')
+            if name:
+                name = name.lower()
+                contents = self._attr_value(attrs, 'content', '')
+                if not contents:
+                    contents = self._attr_value(attrs, 'contents', '')
+                    if contents:
+                        logger.warning("Meta tag attribute 'contents' used in file %s, should be changed to 'content'", self._filename)
 
-            if name == 'keywords':
-                name = 'tags'
-            self.metadata[name] = contents
+                if name == 'keywords':
+                    name = 'tags'
+                self.metadata[name] = contents
 
         @classmethod
         def _attr_value(cls, attrs, name, default=None):
