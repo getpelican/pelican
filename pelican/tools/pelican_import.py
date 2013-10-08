@@ -425,8 +425,10 @@ def feed2fields(file):
 
 
 def build_header(title, date, author, categories, tags, slug):
+    from docutils.utils import column_width
+
     """Build a header from a list of fields"""
-    header = '%s\n%s\n' % (title, '#' * len(title))
+    header = '%s\n%s\n' % (title, '#' * column_width(title))
     if date:
         header += ':date: %s\n' % date
     if author:
