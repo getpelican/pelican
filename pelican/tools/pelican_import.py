@@ -98,7 +98,7 @@ def decode_wp_content(content, br=True):
 
 
 def wp2fields(xml):
-    """Opens a wordpress XML file, and yield pelican fields"""
+    """Opens a wordpress XML file, and yield Pelican fields"""
     try:
         from bs4 import BeautifulSoup
     except ImportError:
@@ -551,8 +551,9 @@ def fields2pelican(fields, out_markup, output_path,
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, Wordpress or Dotclear files to reST (rst) "
-                    "or Markdown (md) files. Be sure to have pandoc installed.",
+        description="Transform feed, WordPress, Tumblr, Dotclear, or Posterous "
+                    "files into reST (rst) or Markdown (md) files. Be sure to "
+                    "have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='input', help='The input file to read')
