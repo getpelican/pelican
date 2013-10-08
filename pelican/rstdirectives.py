@@ -7,6 +7,8 @@ from pygments.formatters import HtmlFormatter
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, TextLexer
 import re
+import six
+import pelican.settings as pys
 
 
 class Pygments(Directive):
@@ -41,9 +43,19 @@ class Pygments(Directive):
             # no lexer found - use the text one instead of an exception
             lexer = TextLexer()
 
+        # Fetch the defaults
+        if pys.PYGMENTS_RST_OPTIONS is not None:
+            for k, v in six.iteritems(pys.PYGMENTS_RST_OPTIONS):
+                # Locally set options overrides the defaults
+                if k not in self.options:
+                    self.options[k] = v
+
         if ('linenos' in self.options and
                 self.options['linenos'] not in ('table', 'inline')):
-            self.options['linenos'] = 'table'
+            if self.options['linenos'] == 'none':
+                self.options.pop('linenos')
+            else:
+                self.options['linenos'] = 'table'
 
         for flag in ('nowrap', 'nobackground', 'anchorlinenos'):
             if flag in self.options:

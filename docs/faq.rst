@@ -23,8 +23,8 @@ How can I help?
 There are several ways to help out. First, you can report any Pelican
 suggestions or problems you might have via IRC or the `issue tracker
 <https://github.com/getpelican/pelican/issues>`_. If submitting an issue
-report, please check the existing issue list first in order to avoid submitting
-a duplicate issue.
+report, please first check the existing issue list (both open and closed) in
+order to avoid submitting a duplicate issue.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
@@ -49,7 +49,7 @@ themes to style code syntax highlighting via CSS. Specifically, you can
 customize the appearance of your syntax highlighting via the ``.highlight pre``
 class in your theme's CSS file. To see how various styles can be used to render
 Django code, for example, use the style selector drop-down at top-right on the
-`Pygments project demo site <http://pygments.org/demo/15101/>`_.
+`Pygments project demo site <http://pygments.org/demo/>`_.
 
 You can use the following example commands to generate a starting CSS file from
 a Pygments built-in style (in this case, "monokai") and then copy the generated
@@ -96,7 +96,8 @@ This metadata can then be accessed in templates such as ``article.html`` via::
     Last modified: {{ article.modified }}
     {% endif %}
 
-If you want to include metadata in templates outside the article context (e.g., ``base.html``), the ``if`` statement should instead be:
+If you want to include metadata in templates outside the article context (e.g.,
+``base.html``), the ``if`` statement should instead be::
 
     {% if article and article.modified %}
 
@@ -191,3 +192,15 @@ Older themes that referenced the old setting names may not link properly.
 In order to rectify this, please update your theme for compatibility by changing
 the relevant values in your template files. For an example of complete feed
 headers and usage please check out the ``simple`` theme.
+
+Is Pelican only suitable for blogs?
+===================================
+
+No. Pelican can be easily configured to create and maintain any type of static site.
+This may require a little customization of your theme and Pelican configuration.
+For example, if you are building a launch site for your product and do not need
+tags on your site, you could remove the relevant HTML code from your theme. 
+You can also disable generation of tag-related pages via::
+
+    TAGS_SAVE_AS = ''
+    TAG_SAVE_AS = ''

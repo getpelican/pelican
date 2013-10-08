@@ -1,0 +1,30 @@
+[bumpr]
+file = pelican/__init__.py
+vcs = git
+clean =
+    python setup.py clean
+    rm -rf *egg-info build dist
+tests = python -m unittest discover
+publish = python setup.py sdist register upload
+files = README.rst
+
+[bump]
+unsuffix = true
+message = Bump version {version}
+
+[prepare]
+part = patch
+suffix = dev
+message = Prepare version {version} for next development cycle
+
+[changelog]
+file = docs/changelog.rst
+separator = =
+bump = {version} ({date:%Y-%m-%d})
+prepare = Next release
+
+[readthedoc]
+url = http://docs.getpelican.com/{tag}
+
+[commands]
+bump = sed -i "" "s/last_stable\s*=.*/last_stable = '{version}'/" docs/conf.py

@@ -4,7 +4,7 @@ from __future__ import unicode_literals, print_function
 import os
 import re
 
-from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content
+from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content, build_header
 from pelican.tests.support import (unittest, temporary_folder, mute,
                                    skipIfNoExecutable)
 
@@ -122,3 +122,18 @@ class TestWordpressXmlImporter(unittest.TestCase):
             sample_line = re.search(r'-   This is a code sample', md).group(0)
             code_line = re.search(r'\s+a = \[1, 2, 3\]', md).group(0)
             self.assertTrue(sample_line.rindex('This') < code_line.rindex('a'))
+
+
+class TestBuildHeader(unittest.TestCase):
+    def test_build_header(self):
+        header = build_header('test', None, None, None, None, None)
+        self.assertEqual(header, 'test\n####\n\n')
+
+    def test_build_header_with_east_asian_characters(self):
+        header = build_header('これは広い幅の文字だけで構成されたタイトルです',
+                None, None, None, None, None)
+
+        self.assertEqual(header,
+                'これは広い幅の文字だけで構成されたタイトルです\n' +
+                '##############################################\n\n')
+

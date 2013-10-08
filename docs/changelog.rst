@@ -1,15 +1,35 @@
 Release history
 ###############
 
-3.3 (XXXX-XX-XX)
-================
+Next release
+============
 
+- Nothing yet
+
+3.3.0 (2013-09-24)
+==================
+
+* Drop Python 3.2 support in favor of Python 3.3
+* Add ``Fabfile`` so Fabric can be used for workflow automation instead of Make
+* ``OUTPUT_RETENTION`` setting can be used to preserve metadata (e.g., VCS
+  data such as ``.hg`` and ``.git``) from being removed from output directory
+* Tumblr import
+* Improve logic and consistency when cleaning output folder
+* Improve documentation versioning and release automation
+* Improve pagination flexibility
 * Rename signals for better consistency (some plugins may need to be updated)
 * Move metadata extraction from generators to readers; metadata extraction no
   longer article-specific
 * Deprecate ``FILES_TO_COPY`` in favor of ``STATIC_PATHS`` and
   ``EXTRA_PATH_METADATA``
-* Add support for |tag| and |category| relative links.
+* Summaries in Markdown posts no longer include footnotes
+* Remove unnecessary whitespace in output via ``lstrip_blocks`` Jinja parameter
+* Move PDF generation from core to plugin
+* Replace ``MARKUP`` setting with ``READERS``
+* Add warning if img tag is missing ``alt`` attribute
+* Add support for ``{}`` in relative links syntax, besides ``||``
+* Add support for ``{tag}`` and ``{category}`` relative links
+* Add a ``content_written`` signal
 
 3.2.1 and 3.2.2
 ===============

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8" />
         <title>Unbelievable !</title>
-        <link rel="stylesheet" href="/theme/css/main.css">
+        <link rel="stylesheet" href="/theme/css/main.css" />
         <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A Pelican Blog Atom Feed" />
 
         <!--[if IE]>
@@ -47,7 +47,14 @@
 <h2>Testing sourcecode directive</h2>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
 </pre></div>
-</td></tr></table><p>Lovely.</p>
+</td></tr></table></div>
+<div class="section" id="testing-another-case">
+<h2>Testing another case</h2>
+<p>This will now have a line number in 'custom' since it's the default in
+pelican.conf, it will have nothing in default.</p>
+<div class="highlight"><pre><span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+<p>Lovely.</p>
 </div>
 <div class="section" id="testing-more-sourcecode-directives">
 <h2>Testing more sourcecode directives</h2>
@@ -57,6 +64,13 @@
 <div class="section" id="testing-even-more-sourcecode-directives">
 <h2>Testing even more sourcecode directives</h2>
 <span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+<p>Lovely.</p>
+</div>
+<div class="section" id="testing-overriding-config-defaults">
+<h2>Testing overriding config defaults</h2>
+<p>Even if the default is line numbers, we can override it here</p>
+<div class="highlight"><pre><span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
 <p>Lovely.</p>
 </div>
 

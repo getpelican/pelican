@@ -135,15 +135,15 @@ shared in the documentation somewhere, so here they are!
 How to create a new reader
 --------------------------
 
-One thing you might want is to add the support for your very own input
-format. While it might make sense to add this feature in pelican core, we
-wisely chose to avoid this situation, and have the different readers defined in
-plugins.
+One thing you might want is to add support for your very own input format.
+While it might make sense to add this feature in Pelican core, we
+wisely chose to avoid this situation and instead have the different readers
+defined via plugins.
 
 The rationale behind this choice is mainly that plugins are really easy to
-write and don't slow down pelican itself when they're not active.
+write and don't slow down Pelican itself when they're not active.
 
-No more talking, here is the example::
+No more talking — here is an example::
 
     from pelican import signals
     from pelican.readers import BaseReader
@@ -153,7 +153,7 @@ No more talking, here is the example::
         enabled = True  # Yeah, you probably want that :-)
 
         # The list of file extensions you want this reader to match with.
-        # In the case multiple readers use the same extensions, the latest will
+        # If multiple readers were to use the same extension, the latest will
         # win (so the one you're defining here, most probably).
         file_extensions = ['yeah']
 
@@ -173,7 +173,7 @@ No more talking, here is the example::
     def add_reader(readers):
         readers.reader_classes['yeah'] = NewReader
 
-    # this is how pelican works.
+    # This is how pelican works.
     def register():
         signals.readers_init.connect(add_reader)
 
