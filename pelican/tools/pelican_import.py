@@ -109,7 +109,7 @@ def wp2fields(xml):
 
     with open(xml, encoding='utf-8') as infile:
         xmlfile = infile.read()
-    soup = BeautifulSoup(xmlfile, "xml")
+    soup = BeautifulSoup(xmlfile, "lxml")
     items = soup.rss.channel.findAll('item')
 
     for item in items:
