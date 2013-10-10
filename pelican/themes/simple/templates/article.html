@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
+  {{ super() }}
   {% for keyword in article.keywords %}
     <meta name="keywords" contents="{{keyword}}" />
   {% endfor %}
