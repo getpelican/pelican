@@ -354,9 +354,10 @@ class ArticlesGenerator(Generator):
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in chain(self.translations, self.drafts):
-            filename = article.save_as
+            filename = article.slug
             if article.lang != self.settings["DEFAULT_LANG"]:
-                filename + "."+article.lang
+                filename += "-" + article.lang
+            filename += ".html"
 
             write(os.path.join('drafts', filename),
                 self.get_template(article.template), self.context,
