@@ -289,7 +289,7 @@ def copy(path, source, destination, destination_path=None):
                 else:
                     shutil.copytree(entry_path, entry_dest)
             else:
-                shutil.copy(entry_path, destination)
+                shutil.copy2(entry_path, destination)
 
 
     if os.path.isdir(source_):
@@ -299,7 +299,7 @@ def copy(path, source, destination, destination_path=None):
         dest_dir = os.path.dirname(destination_)
         if not os.path.exists(dest_dir):
             os.makedirs(dest_dir)
-        shutil.copy(source_, destination_)
+        shutil.copy2(source_, destination_)
         logger.info('copying %s to %s' % (source_, destination_))
     else:
         logger.warning('skipped copy %s to %s' % (source_, destination_))
