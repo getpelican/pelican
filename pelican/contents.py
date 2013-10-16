@@ -125,6 +125,52 @@ class Content(object):
         if 'summary' in metadata:
             self._summary = metadata['summary']
 
+        # prepare the list of HTML tag attributes which have a URL value.
+        # refer: http://stackoverflow.com/questions/2725156/complete-list-of-html-tag-attributes-which-have-a-url-value
+        self._url_attributes = {  # each item in this set is a tuple composed by tag_name, attr_name
+            # HTML4 tags
+            ('a', 'href'),
+            ('applet', 'codebase'),
+            ('area', 'href'),
+            ('base', 'href'),
+            ('blockquote', 'cite'),
+            ('body', 'background'),
+            ('del', 'cite'),
+            ('form', 'action'),
+            ('frame', 'longdesc'),
+            ('frame', 'src'),
+            ('head', 'profile'),
+            ('iframe', 'longdesc'),
+            ('iframe', 'src'),
+            ('img', 'longdesc'),
+            ('img', 'src'),
+            ('img', 'usemap'),
+            ('input', 'src'),
+            ('input', 'usemap'),
+            ('ins', 'cite'),
+            ('link', 'href'),
+            ('object', 'classid'),
+            ('object', 'codebase'),
+            ('object', 'data'),
+            ('object', 'usemap'),
+            ('q', 'cite'),
+            ('script', 'src'),
+
+            # HTML5 tags
+            ('audio', 'src'),
+            ('button', 'formaction'),
+            ('command', 'icon'),
+            ('embed', 'src'),
+            ('html', 'manifest'),
+            ('input', 'formaction'),
+            ('source', 'src'),
+            ('video', 'poster'),
+            ('video', 'src'),
+        }
+        """:type: set of (tuple of (string, string)"""
+        attribute_names = set(pair[1] for pair in self._url_attributes)
+        self._url_attr_pattern = '|'.join(attribute_names)
+
         signals.content_object_init.send(self)
 
     def __str__(self):
@@ -189,19 +235,25 @@ class Content(object):
 
         instrasite_link_regex = self.settings['INTRASITE_LINK_REGEX']
         regex = r"""
-            (?P<markup><\s*[^\>]*  # match tag with src and href attr
-                (?:href|src|poster)\s*=)
-
+            (?P<markup><\s*(?P<tag>[^\s\>]+)[^\>]*  # match tag with all url-value attributes
+            (?P<attr>{1})\s*=)
             (?P<quote>["\'])      # require value to be quoted
             (?P<path>{0}(?P<value>.*?))  # the url value
-            \2""".format(instrasite_link_regex)
+            \4""".format(instrasite_link_regex, self._url_attr_pattern)
         hrefs = re.compile(regex, re.X)
 
         def replacer(m):
+            print(m.group(0))
             what = m.group('what')
             value = urlparse(m.group('value'))
             path = value.path
             origin = m.group('path')
+
+            # verify HTML tag and attribute pair to avoid miss-replacing
+            tag = m.group('tag')
+            attr = m.group('attr')
+            if attr != 'href' and attr != 'src' and (tag, attr) not in self._url_attributes:
+                return m.group(0)
 
             # XXX Put this in a different location.
             if what == 'filename':
