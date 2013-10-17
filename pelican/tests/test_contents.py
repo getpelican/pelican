@@ -194,7 +194,12 @@ class TestPage(unittest.TestCase):
         page = Page(**args)
         content = page.get_content('http://notmyidea.org')
         self.assertEqual(content, ('A simple test, with a '
-                                   '<a href="tag/tagname.html">link</a>'))
+                                   '<a href="http://notmyidea.org/tag/tagname.html">link</a>'))
+
+        page = Page(**args)
+        content = page.get_content('..')
+        self.assertEqual(content, ('A simple test, with a '
+                                   '<a href="../tag/tagname.html">link</a>'))
 
         # Category
         args['content'] = ('A simple test, with a '
@@ -203,7 +208,13 @@ class TestPage(unittest.TestCase):
         content = page.get_content('http://notmyidea.org')
         self.assertEqual(content,
                          ('A simple test, with a '
-                          '<a href="category/category.html">link</a>'))
+                          '<a href="http://notmyidea.org/category/category.html">link</a>'))
+
+        page = Page(**args)
+        content = page.get_content('..')
+        self.assertEqual(content,
+                         ('A simple test, with a '
+                          '<a href="../category/category.html">link</a>'))
 
     def test_intrasite_link(self):
         # type does not take unicode in PY2 and bytes in PY3, which in

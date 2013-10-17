@@ -197,6 +197,9 @@ class Content(object):
             \2""".format(instrasite_link_regex)
         hrefs = re.compile(regex, re.X)
 
+        def join_siteurl(path):
+            return '/'.join((siteurl, path))
+
         def replacer(m):
             what = m.group('what')
             value = urlparse(m.group('value'))
@@ -214,16 +217,15 @@ class Content(object):
                     )
 
                 if path in self._context['filenames']:
-                    origin = '/'.join((siteurl,
-                             self._context['filenames'][path].url))
+                    origin = join_siteurl(self._context['filenames'][path].url)
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
                     logger.warning("Unable to find {fn}, skipping url"
                                    " replacement".format(fn=path))
             elif what == 'category':
-                origin = Category(path, self.settings).url
+                origin = join_siteurl(Category(path, self.settings).url)
             elif what == 'tag':
-                origin = Tag(path, self.settings).url
+                origin = join_siteurl(Tag(path, self.settings).url)
 
             # keep all other parts, such as query, fragment, etc.
             parts = list(value)
@@ -237,7 +239,6 @@ class Content(object):
 
     @memoized
     def get_content(self, siteurl):
-
         if hasattr(self, '_get_content'):
             content = self._get_content()
         else:
