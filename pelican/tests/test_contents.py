@@ -268,6 +268,61 @@ class TestPage(unittest.TestCase):
             '?utm_whatever=234&highlight=word#section-2">link</a>'
         )
 
+    def test_intrasite_link_more(self):
+        # type does not take unicode in PY2 and bytes in PY3, which in
+        # combination with unicode literals leads to following insane line:
+        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {
+            'images/poster.jpg': type(cls_name, (object,), {'url': 'images/poster.jpg'}),
+            'assets/video.mp4': type(cls_name, (object,), {'url': 'assets/video.mp4'}),
+            'images/graph.svg': type(cls_name, (object,), {'url': 'images/graph.svg'}),
+            'reference.rst': type(cls_name, (object,), {'url': 'reference.html'}),
+        }
+
+        # video.poster
+        args['content'] = (
+            'There is a video with poster '
+            '<video controls poster="{filename}/images/poster.jpg">'
+            '<source src="|filename|/assets/video.mp4" type="video/mp4">'
+            '</video>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a video with poster '
+            '<video controls poster="http://notmyidea.org/images/poster.jpg">'
+            '<source src="http://notmyidea.org/assets/video.mp4" type="video/mp4">'
+            '</video>'
+        )
+
+        # object.data
+        args['content'] = (
+            'There is a svg object '
+            '<object data="{filename}/images/graph.svg" type="image/svg+xml"></object>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a svg object '
+            '<object data="http://notmyidea.org/images/graph.svg" type="image/svg+xml"></object>'
+        )
+
+        # blockquote.cite
+        args['content'] = (
+            'There is a blockquote with cite attribute '
+            '<blockquote cite="{filename}reference.rst">blah blah</blockquote>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a blockquote with cite attribute '
+            '<blockquote cite="http://notmyidea.org/reference.html">blah blah</blockquote>'
+        )
+
 
 class TestArticle(TestPage):
     def test_template(self):
