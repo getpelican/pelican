@@ -56,7 +56,7 @@ For a more immediate response, you can also join the team via IRC at
 `#pelican on Freenode`_ — if you don't have an IRC client handy, use the
 webchat_ for quick feedback. If you ask a question via IRC and don't get an
 immediate response, don't leave the channel! It may take a few hours because
-of time zone differences, but f you are patient and remain in the channel,
+of time zone differences, but if you are patient and remain in the channel,
 someone will almost always respond to your inquiry.
 
 Documentation
