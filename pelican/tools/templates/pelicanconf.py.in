@@ -6,7 +6,7 @@ AUTHOR = $author
 SITENAME = $sitename
 SITEURL = ''
 
-PATH = 'content/'
+PATH = 'content'
 
 TIMEZONE = 'Europe/Paris'
 
