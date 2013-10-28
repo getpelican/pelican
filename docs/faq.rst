@@ -65,12 +65,13 @@ How do I create my own theme?
 
 Please refer to :ref:`theming-pelican`.
 
-I want to use Markdown, but I got an error.
-===========================================
+I'm using Markdown and getting ``No valid files found in content`` errors.
+==========================================================================
 
-Markdown is not a hard dependency for Pelican, so you will need to explicitly
-install it. You can do so by typing the following command, prepending ``sudo``
-if permissions require it::
+Markdown is not a hard dependency for Pelican, so if you have content in
+Markdown format, you will need to explicitly install the Markdown library.
+You can do so by typing the following command, prepending ``sudo`` if
+permissions require it::
 
     pip install markdown
 

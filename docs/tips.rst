@@ -94,3 +94,8 @@ directly into your source content.
 
 Alternatively, you can also use Pelican plugins like ``liquid_tags``,
 ``pelican_youtube``, or ``pelican_vimeo`` to embed videos in your content.
+
+Moreover, markup languages like reST and Markdown have plugins that let you
+embed videos in the markup. You can use `reST video directive
+<https://gist.github.com/dbrgn/2922648>`_ for reST or `mdx_video plugin
+<https://github.com/italomaia/mdx-video>`_ for Markdown.

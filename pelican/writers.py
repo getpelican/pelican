@@ -60,7 +60,7 @@ class Writer(object):
         """
         if filename in self._overridden_files:
             if override:
-                raise StandardError('File %s is set to be overridden twice'
+                raise RuntimeError('File %s is set to be overridden twice'
                                     % filename)
             else:
                 logger.info('skipping %s' % filename)
@@ -69,7 +69,7 @@ class Writer(object):
             if override:
                 logger.info('overwriting %s' % filename)
             else:
-                raise StandardError('File %s is to be overwritten' % filename)
+                raise RuntimeError('File %s is to be overwritten' % filename)
         if override:
             self._overridden_files.add(filename)
         self._written_files.add(filename)

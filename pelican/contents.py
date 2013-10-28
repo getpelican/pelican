@@ -189,8 +189,8 @@ class Content(object):
 
         instrasite_link_regex = self.settings['INTRASITE_LINK_REGEX']
         regex = r"""
-            (?P<markup><\s*[^\>]*  # match tag with src and href attr
-                (?:href|src)\s*=)
+            (?P<markup><\s*[^\>]*  # match tag with all url-value attributes
+                (?:href|src|poster|data|cite|formaction|action)\s*=)
 
             (?P<quote>["\'])      # require value to be quoted
             (?P<path>{0}(?P<value>.*?))  # the url value
