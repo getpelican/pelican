@@ -6,6 +6,8 @@ AUTHOR = $author
 SITENAME = $sitename
 SITEURL = ''
 
+PATH = 'content'
+
 TIMEZONE = 'Europe/Paris'
 
 DEFAULT_LANG = $lang
