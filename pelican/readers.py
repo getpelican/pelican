@@ -302,7 +302,7 @@ class HTMLReader(BaseReader):
             return result + '>'
 
         def _handle_meta_tag(self, attrs):
-            name = self._attr_value(attrs, 'name').lower()
+            name = self._attr_value(attrs, 'name', self._attr_value(attrs, 'http-equiv', '')).lower()
             contents = self._attr_value(attrs, 'content', '')
             if not contents:
                 contents = self._attr_value(attrs, 'contents', '')
