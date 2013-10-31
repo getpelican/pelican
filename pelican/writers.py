@@ -5,6 +5,7 @@ import six
 import os
 import locale
 import logging
+from urlparse import urlparse
 
 from codecs import open
 from feedgenerator import Atom1Feed, Rss201rev2Feed
@@ -35,11 +36,12 @@ class Writer(object):
     def _add_item_to_the_feed(self, feed, item):
 
         title = Markup(item.title).striptags()
+        link='%s/%s' % (self.site_url, item.url)
         feed.add_item(
             title=title,
-            link='%s/%s' % (self.site_url, item.url),
-            unique_id='tag:%s,%s:%s' % (self.site_url.replace('http://', ''),
-                                        item.date.date(), item.url),
+            link=link,
+            unique_id='tag:%s,%s:%s' % (urlparse(link).netloc,
+                                        item.date.date(), urlparse(link).path),
             description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
