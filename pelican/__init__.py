@@ -225,7 +225,7 @@ def parse_arguments():
         default=None)
 
     parser.add_argument('-t', '--theme-path', dest='theme',
-        help='Path where to find the theme templates. If not specified, it'
+        help='Path where to find the theme templates. If not specified, it '
              'will use the default one included with pelican.')
 
     parser.add_argument('-o', '--output', dest='output',
