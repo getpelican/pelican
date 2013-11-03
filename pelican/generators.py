@@ -6,6 +6,7 @@ import math
 import random
 import logging
 import shutil
+import fnmatch
 
 from codecs import open
 from collections import defaultdict
@@ -96,6 +97,12 @@ class Generator(object):
         if extensions is None:
             extensions = tuple(self.readers.extensions)
         basename = os.path.basename(path)
+
+        #check IGNORE_FILES
+        ignores = self.settings['IGNORE_FILES']
+        if any(fnmatch.fnmatch(basename, ignore) for ignore in ignores):
+            return False
+
         if extensions is False or basename.endswith(extensions):
             return True
         return False
