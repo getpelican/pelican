@@ -301,6 +301,7 @@ this metadata in text files via the following syntax (give your file the
     ##############
 
     :date: 2010-10-03 10:20
+    :modified: 2010-10-04 18:40
     :tags: thats, awesome
     :category: yeah
     :slug: my-super-post
@@ -320,6 +321,7 @@ pattern::
 
     Title: My super title
     Date: 2010-12-03 10:20
+    Modified: 2010-12-05 19:30
     Category: Python
     Tags: pelican, publishing
     Slug: my-super-post
@@ -341,6 +343,7 @@ interprets the HTML in a very straightforward manner, reading metadata from
             <title>My super title</title>
             <meta name="tags" content="thats, awesome" />
             <meta name="date" content="2012-07-09 22:28" />
+            <meta name="modified" content="2012-07-10 20:14" />
             <meta name="category" content="yeah" />
             <meta name="author" content="Alexis Métaireau" />
             <meta name="summary" content="Short version for index and feeds" />
@@ -366,6 +369,10 @@ to ``False``.  When parsing dates given in the page metadata, Pelican supports
 the W3C's `suggested subset ISO 8601`__.
 
 __ `W3C ISO 8601`_
+
+``modified`` should be last time you updated the article, and defaults to ``date`` if not specified.
+Besides you can show ``modified`` in the templates, feed entries in feed readers will be updated automatically
+when you set ``modified`` to the current date after you modified your article.
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the

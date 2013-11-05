@@ -28,6 +28,11 @@
     <abbr class="published" title="{{ article.date.isoformat() }}">
       {{ article.locale_date }}
     </abbr>
+	{% if article.modified != article.date %}
+    <abbr class="modified" title="{{ article.modified.isoformat() }}">
+      {{ article.locale_modified }}
+    </abbr>
+	{% endif %}
     {% if article.author %}
     <address class="vcard author">
       By <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
