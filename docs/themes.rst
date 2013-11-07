@@ -90,12 +90,12 @@ __ http://jinja.pocoo.org/docs/templates/#sort
 Date Formatting
 ---------------
 
-Pelican formats the date according to your settings and locale 
-(``DATE_FORMATS``/``DEFAULT_DATE_FORMAT``) and provides a 
+Pelican formats the date according to your settings and locale
+(``DATE_FORMATS``/``DEFAULT_DATE_FORMAT``) and provides a
 ``locale_date`` attribute. On the other hand, the ``date`` attribute will
-be a `datetime`_ object. If you need custom formatting for a date 
-different than your settings, use the Jinja filter ``strftime`` 
-that comes with Pelican. Usage is same as Python `strftime`_ format, 
+be a `datetime`_ object. If you need custom formatting for a date
+different than your settings, use the Jinja filter ``strftime``
+that comes with Pelican. Usage is same as Python `strftime`_ format,
 but the filter will do the right thing and format your date according
 to the locale given in your settings::
 
@@ -188,12 +188,12 @@ article         The article object to be displayed
 category        The name of the category for the current article
 =============   ===================================================
 
-All the metadata that your inserted in the header of the article source file
-are available as fields on the article object. The field name is the downcased
-name of the metadata field.
+Any metadata that you put in the header of the article source file
+will be available as fields on the ``article`` object. The field name will be
+the same as the name of the metadata field, except in all-lowercase characters.
 
-For example, if you inserted the meta `FacebookImage` at the end of your metadata in
-an article, like this:
+For example, you could add a field called `FacebookImage` to your article
+metadata, as shown below:
 
 .. code-block:: markdown
 
@@ -205,13 +205,13 @@ an article, like this:
     Author: Francis Cabrel
     FacebookImage: http://franciscabrel.com/images/pythonlove.png
 
-This metadata will be made available as `article.facebookimage` in your `article.html` template.
-You could for example use this to specify an image for the Facebook open graph tags that will
-change for each article, like this
+This new metadata will be made available as `article.facebookimage` in your
+`article.html` template. This would allow you, for example, to specify an
+image for the Facebook open graph tags that will change for each article:
 
 .. code-block:: html+jinja
 
-    <meta property="og:image" content="{{article.facebookimage}}"/>
+    <meta property="og:image" content="{{ article.facebookimage }}"/>
 
 
 page.html
@@ -283,7 +283,8 @@ missing, it will be replaced by the matching template from the ``simple`` theme.
 So if the HTML structure of a template in the ``simple`` theme is right for you,
 you don't have to write a new template from scratch.
 
-You can also extend templates from the ``simple`` themes in your own themes by using the ``{% extends %}`` directive as in the following example:
+You can also extend templates from the ``simple`` themes in your own themes by
+using the ``{% extends %}`` directive as in the following example:
 
 .. code-block:: html+jinja
 
@@ -311,14 +312,17 @@ The first file is the ``templates/base.html`` template:
        <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/style.css" />
     {% endblock %}
 
+1. On the first line, we extend the ``base.html`` template from the ``simple``
+   theme, so we don't have to rewrite the entire file.
+2. On the third line, we open the ``head`` block which has already been defined
+   in the ``simple`` theme.
+3. On the fourth line, the function ``super()`` keeps the content previously
+   inserted in the ``head`` block.
+4. On the fifth line, we append a stylesheet to the page.
+5. On the last line, we close the ``head`` block.
 
-1.    On the first line, we extend the ``base.html`` template from the ``simple`` theme, so we don't have to rewrite the entire file.
-2.    On the third line, we open the ``head`` block which has already been defined in the ``simple`` theme.
-3.    On the fourth line, the function ``super()`` keeps the content previously inserted in the ``head`` block.
-4.    On the fifth line, we append a stylesheet to the page.
-5.    On the last line, we close the ``head`` block.
-
-This file will be extended by all the other templates, so the stylesheet will be linked from all pages.
+This file will be extended by all the other templates, so the stylesheet will
+be linked from all pages.
 
 style.css
 """""""""
