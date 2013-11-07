@@ -188,6 +188,32 @@ article         The article object to be displayed
 category        The name of the category for the current article
 =============   ===================================================
 
+All the metadata that your inserted in the header of the article source file
+are available as fields on the article object. The field name is the downcased
+name of the metadata field.
+
+For example, if you inserted the meta `FacebookImage` at the end of your metadata in
+an article, like this:
+
+.. code-block:: markdown
+
+    Title: I love Python more than music
+    Date: 2013-11-06 10:06
+    Tags: personal, python
+    Category: Tech
+    Slug: python-je-l-aime-a-mourir
+    Author: Francis Cabrel
+    FacebookImage: http://franciscabrel.com/images/pythonlove.png
+
+This metadata will be made available as `article.facebookimage` in your `article.html` template.
+You could for example use this to specify an image for the Facebook open graph tags that will
+change for each article, like this
+
+.. code-block:: html+jinja
+
+    <meta property="og:image" content="{{article.facebookimage}}"/>
+
+
 page.html
 ---------
 
