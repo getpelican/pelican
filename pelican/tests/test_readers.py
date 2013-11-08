@@ -384,3 +384,13 @@ class HTMLReaderTest(ReaderTest):
         self.assertIn('category', page.metadata, 'Key should be lowercase.')
         self.assertEqual('Yeah', page.metadata.get('category'),
                          'Value keeps cases.')
+
+    def test_article_with_nonconformant_meta_tags(self):
+        page = self.read_file(path='article_with_nonconformant_meta_tags.html')
+        expected = {
+            'summary': 'Summary and stuff',
+            'title': 'Article with Nonconformant HTML meta tags',
+        }
+
+        for key, value in expected.items():
+            self.assertEqual(value, page.metadata[key], key)
