@@ -1,7 +1,13 @@
 <footer class="post-info">
         <abbr class="published" title="{{ article.date.isoformat() }}">
-                {{ article.locale_date }}
+                Published: {{ article.locale_date }}
         </abbr>
+        {% if article.modified != article.date %}
+		<br />
+        <abbr class="modified" title="{{ article.modified.isoformat() }}">
+                Updated: {{ article.locale_modified }}
+        </abbr>
+        {% endif %}
 
         {% if article.author %}
         <address class="vcard author">

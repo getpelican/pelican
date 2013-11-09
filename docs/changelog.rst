@@ -4,7 +4,8 @@ Release history
 Next release
 ============
 
-- Nothing yet
+* Added the `:modified:` metadata field to complement `:date:`.
+  Used to specify the last date and time an article was updated independently from the date and time it was published.
 
 3.3.0 (2013-09-24)
 ==================
