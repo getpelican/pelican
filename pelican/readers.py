@@ -42,6 +42,7 @@ from pelican.utils import get_date, pelican_open
 METADATA_PROCESSORS = {
     'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
     'date': lambda x, y: get_date(x),
+    'modified_date': lambda x, y: get_date(x),
     'status': lambda x, y: x.strip(),
     'category': Category,
     'author': Author,

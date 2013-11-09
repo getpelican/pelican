@@ -301,6 +301,7 @@ this metadata in text files via the following syntax (give your file the
     ##############
 
     :date: 2010-10-03 10:20
+    :modified_date: 2011-01-10 16:56
     :tags: thats, awesome
     :category: yeah
     :slug: my-super-post
@@ -320,6 +321,7 @@ pattern::
 
     Title: My super title
     Date: 2010-12-03 10:20
+    Modified_date: 2011-01-10 16:56
     Category: Python
     Tags: pelican, publishing
     Slug: my-super-post
