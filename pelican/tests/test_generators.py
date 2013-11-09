@@ -86,6 +86,7 @@ class TestArticlesGenerator(unittest.TestCase):
             ['Test mkd File', 'published', 'test', 'article'],
             ['This is a super article !', 'published', 'Yeah', 'article'],
             ['This is a super article !', 'published', 'Yeah', 'article'],
+            ['Article with Nonconformant HTML meta tags', 'published', 'Default', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],

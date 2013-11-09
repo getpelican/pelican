@@ -302,7 +302,12 @@ class HTMLReader(BaseReader):
             return result + '>'
 
         def _handle_meta_tag(self, attrs):
-            name = self._attr_value(attrs, 'name').lower()
+            name = self._attr_value(attrs, 'name')
+            if name is None:
+                attr_serialized = ', '.join(['{}="{}"'.format(k, v) for k, v in attrs])
+                logger.warning("Meta tag in file %s does not have a 'name' attribute, skipping. Attributes: %s", self._filename, attr_serialized)
+                return
+            name = name.lower()
             contents = self._attr_value(attrs, 'content', '')
             if not contents:
                 contents = self._attr_value(attrs, 'contents', '')
