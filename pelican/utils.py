@@ -180,6 +180,8 @@ def get_date(string):
 
     If no format matches the given date, raise a ValueError.
     """
+    if isinstance(string, datetime):
+        return string
     string = re.sub(' +', ' ', string)
     formats = [
         # ISO 8601
