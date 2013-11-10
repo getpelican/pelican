@@ -244,9 +244,10 @@ class Content(object):
                                     "Other resources were not found"
                                     " and their urls not replaced"))
             elif what == 'category':
-                origin = Category(path, self.settings).url
+                origin = '/'.join((siteurl,
+                                   Category(path, self.settings).url))
             elif what == 'tag':
-                origin = Tag(path, self.settings).url
+                origin = '/'.join((siteurl, Tag(path, self.settings).url))
 
             # keep all other parts, such as query, fragment, etc.
             parts = list(value)
