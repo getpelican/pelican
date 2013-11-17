@@ -28,7 +28,7 @@
     <abbr class="published" title="{{ article.date.isoformat() }}">
       {{ article.locale_date }}
     </abbr>
-	{% if article.modified != article.date %}
+	{% if article.modified %}
     <abbr class="modified" title="{{ article.modified.isoformat() }}">
       {{ article.locale_modified }}
     </abbr>

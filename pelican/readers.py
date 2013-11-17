@@ -522,7 +522,6 @@ def default_metadata(settings=None, process=None):
             metadata['category'] = value
         if 'DEFAULT_DATE' in settings and settings['DEFAULT_DATE'] != 'fs':
             metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
-            metadata['modified'] = metadata['date']
     return metadata
 
 
@@ -532,7 +531,6 @@ def path_metadata(full_path, source_path, settings=None):
         if settings.get('DEFAULT_DATE', None) == 'fs':
             metadata['date'] = datetime.datetime.fromtimestamp(
                 os.stat(full_path).st_ctime)
-            metadata['modified'] = metadata['date']
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
             source_path, {}))
     return metadata

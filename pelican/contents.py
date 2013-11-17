@@ -113,8 +113,6 @@ class Content(object):
 
         if hasattr(self, 'date'):
             self.locale_date = strftime(self.date, self.date_format)
-            if not hasattr(self, 'modified'):
-                self.modified = self.date
         if hasattr(self, 'modified'):
             self.locale_modified = strftime(self.modified, self.date_format)
 

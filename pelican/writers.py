@@ -54,7 +54,7 @@ class Writer(object):
             description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
-            pubdate=set_date_tzinfo(item.modified,
+            pubdate=set_date_tzinfo(item.modified if hasattr(item, 'modified') else item.date,
                 self.settings.get('TIMEZONE', None)))
 
     def _open_w(self, filename, encoding, override=False):
