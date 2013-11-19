@@ -340,7 +340,7 @@ class AsciiDocReader(BaseReader):
     """Reader for AsciiDoc files"""
 
     enabled = bool(asciidoc)
-    file_extensions = ['asc']
+    file_extensions = ['asc', 'asciidoc']
     default_options = ["--no-header-footer", "-a newline=\\n"]
 
     def read(self, source_path):
