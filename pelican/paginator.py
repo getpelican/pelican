@@ -20,12 +20,18 @@ PaginationRule = namedtuple(
 
 
 class Paginator(object):
-    def __init__(self, name, object_list, settings):
+    def __init__(self, name, template_name, object_list, settings):
         self.name = name
         self.object_list = object_list
         self.settings = settings
 
-        if settings.get('DEFAULT_PAGINATION'):
+        # Are there specific pagination settings for this template?
+        per_page = settings.get('TEMPLATE_PAGINATION').get(template_name)
+
+        if per_page:
+            self.per_page = per_page
+            self.orphans = settings.get('DEFAULT_ORPHANS')
+        elif settings.get('DEFAULT_PAGINATION'):
             self.per_page = settings.get('DEFAULT_PAGINATION')
             self.orphans = settings.get('DEFAULT_ORPHANS')
         else:
