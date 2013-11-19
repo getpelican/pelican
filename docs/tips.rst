@@ -79,7 +79,7 @@ To use a `custom domain
 <https://help.github.com/articles/setting-up-a-custom-domain-with-pages>`_ with
 GitHub Pages, you need to put the domain of your site (e.g.,
 ``blog.example.com``) inside a ``CNAME`` file at the root of your site. To do
-this, create the ``content/extras/`` directory and add a ``CNAME`` file to it.
+this, create the ``content/extra/`` directory and add a ``CNAME`` file to it.
 Then use the ``STATIC_PATHS`` setting to tell Pelican to copy this file to your
 output directory. For example::
 
