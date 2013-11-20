@@ -3,6 +3,7 @@ This is a super article !
 
 :tags: foo, bar, foobar
 :date: 2010-12-02 10:14
+:modified: 2013-11-17 23:29
 :category: yeah
 :author: Alexis Métaireau
 :summary:
