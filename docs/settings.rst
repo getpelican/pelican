@@ -250,6 +250,7 @@ Setting name (default value)                            What does it do?
                                                         use the default language.
 `CATEGORY_URL` (``'category/{slug}.html'``)             The URL to use for a category.
 `CATEGORY_SAVE_AS` (``'category/{slug}.html'``)         The location to save a category.
+`CATEGORIES_SAVE_AS` (``'categories.html'``)            The location to save the categories list.
 `TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
 `TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
 `TAGS_URL` (``'tags.html'``)                            The URL to use for the tag list.
