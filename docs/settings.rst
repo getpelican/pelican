@@ -264,6 +264,7 @@ Setting name (default value)                            What does it do?
                                                         templates. Where <DIRECT_TEMPLATE_NAME> is the
                                                         upper case template name.
 `ARCHIVES_SAVE_AS` (``'archives.html'``)                The location to save the article archives page.
+`ARCHIVES_URL` (``'archives.html'``)                    The URL to use for the article archives page.
 `YEAR_ARCHIVE_SAVE_AS` (False)                          The location to save per-year archives of your
                                                         posts.
 `MONTH_ARCHIVE_SAVE_AS` (False)                         The location to save per-month archives of your
