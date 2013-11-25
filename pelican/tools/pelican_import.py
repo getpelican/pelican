@@ -14,6 +14,7 @@ import re
 import subprocess
 import sys
 import time
+import re
 import logging
 
 from codecs import open
@@ -326,6 +327,29 @@ def posterous2fields(api_token, email, password):
             yield (post.get('title'), post.get('body_cleaned'), slug, date,
                 post.get('user').get('display_name'), [], tags, kind, "html")
 
+def chyrp2fields(atom):
+    """Opens a Chyrp Atom file, and yield pelican fields"""
+    import feedparser
+    import markdown
+
+    d = feedparser.parse(atom)
+    for entry in d.entries:
+
+        if entry.chyrp_status == 'public' and entry.chyrp_feather == 'text':
+            # Chyrp support both html and markdown, must convert by finding type
+            # content = markdown.markdown(entry.summary)
+            content = HTMLParser().unescape(entry.summary)
+
+            date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
+                if hasattr(entry, "updated_parsed") else None)
+            author = entry.author if hasattr(entry, "author") else None
+            tags = entry.tags if hasattr(entry, "tags") else None
+            slug = entry.chyrp_url if hasattr(entry, "chyrp_url") else None
+            tags = [tag[1] for tag in re.findall(r"(.*)\:\s*\"(.*)\"", entry.tags)] if hasattr(entry, "tags") else None
+
+            yield (entry.title, content, slug, date, author, [], tags, "html")
+
+
 
 def tumblr2fields(api_key, blogname):
     """ Imports Tumblr posts (API v2)"""
@@ -561,6 +585,8 @@ def main():
         help='Wordpress XML export')
     parser.add_argument('--dotclear', action='store_true', dest='dotclear',
         help='Dotclear export')
+    parser.add_argument('--chyrp', action='store_true', dest='chyrp',
+        help='Chyrp Atom export')
     parser.add_argument('--posterous', action='store_true', dest='posterous',
         help='Posterous export')
     parser.add_argument('--tumblr', action='store_true', dest='tumblr',
@@ -600,6 +626,8 @@ def main():
         input_type = 'wordpress'
     elif args.dotclear:
         input_type = 'dotclear'
+    elif args.chyrp:
+        input_type = 'chyrp'
     elif args.posterous:
         input_type = 'posterous'
     elif args.tumblr:
@@ -607,7 +635,7 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr or --feed options"
+        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr, --chyrp or --feed options"
         exit(error)
 
     if not os.path.exists(args.output):
@@ -621,6 +649,8 @@ def main():
         fields = wp2fields(args.input)
     elif input_type == 'dotclear':
         fields = dc2fields(args.input)
+    elif input_type == 'chyrp':
+        fields = chyrp2fields(args.input)
     elif input_type == 'posterous':
         fields = posterous2fields(args.input, args.email, args.password)
     elif input_type == 'tumblr':
