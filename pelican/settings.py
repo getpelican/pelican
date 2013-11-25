@@ -111,6 +111,7 @@ DEFAULT_CONFIG = {
     'TEMPLATE_PAGES': {},
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
+    'ALLOW_NON_ASCII_IN_SLUG': False,
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
     }
 

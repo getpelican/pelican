@@ -227,7 +227,7 @@ def pelican_open(filename):
     yield content
 
 
-def slugify(value, substitutions=()):
+def slugify(value, substitutions=(), allow_non_ascii=False):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
@@ -236,24 +236,27 @@ def slugify(value, substitutions=()):
     """
     # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
-    # value must be unicode per se
-    import unicodedata
-    from unidecode import unidecode
-    # unidecode returns str in Py2 and 3, so in Py2 we have to make
-    # it unicode again
-    value = unidecode(value)
-    if isinstance(value, six.binary_type):
-        value = value.decode('ascii')
-    # still unicode
-    value = unicodedata.normalize('NFKD', value).lower()
+
     for src, dst in substitutions:
         value = value.replace(src.lower(), dst.lower())
-    value = re.sub('[^\w\s-]', '', value).strip()
-    value = re.sub('[-\s]+', '-', value)
-    # we want only ASCII chars
-    value = value.encode('ascii', 'ignore')
+
+    if not allow_non_ascii:
+        # value must be unicode per se
+        from unidecode import unidecode
+        # unidecode returns str in Py2 and 3, so in Py2 we have to make
+        # it unicode again
+        value = unidecode(value)
+        if isinstance(value, six.binary_type):
+            value = value.decode('ascii')
+        # still unicode
+        import unicodedata
+        value = unicodedata.normalize('NFKD', value).lower()
+        value = re.sub('[^\w\s-]', '', value).strip()
+        value = re.sub('[-\s]+', '-', value)
+        # we want only ASCII chars
+        value = value.encode('ascii', 'ignore')
     # but Pelican should generally use only unicode
-    return value.decode('ascii')
+    return unicode(value)
 
 
 def copy(path, source, destination, destination_path=None):

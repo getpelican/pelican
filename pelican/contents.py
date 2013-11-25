@@ -92,7 +92,8 @@ class Content(object):
         # create the slug if not existing, from the title
         if not hasattr(self, 'slug') and hasattr(self, 'title'):
             self.slug = slugify(self.title,
-                                settings.get('SLUG_SUBSTITUTIONS', ()))
+                                settings.get('SLUG_SUBSTITUTIONS', ()),
+                                settings['ALLOW_NON_ASCII_IN_SLUG'])
 
         self.source_path = source_path
 
@@ -157,11 +158,13 @@ class Content(object):
             'date': getattr(self, 'date', datetime.now()),
             'author': slugify(
                 getattr(self, 'author', ''),
-                slug_substitutions
+                slug_substitutions,
+                self.settings['ALLOW_NON_ASCII_IN_SLUG']
             ),
             'category': slugify(
                 getattr(self, 'category', default_category),
-                slug_substitutions
+                slug_substitutions,
+                self.settings['ALLOW_NON_ASCII_IN_SLUG']
             )
         })
         return metadata

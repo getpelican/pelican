@@ -17,7 +17,9 @@ class URLWrapper(object):
         # but are here for clarity
         self.settings = settings
         self._name = name
-        self.slug = slugify(name, self.settings.get('SLUG_SUBSTITUTIONS', ()))
+        self.slug = slugify(name,
+                self.settings.get('SLUG_SUBSTITUTIONS', ()),
+                self.settings['ALLOW_NON_ASCII_IN_SLUG'])
         self.name = name
 
     @property
@@ -27,7 +29,9 @@ class URLWrapper(object):
     @name.setter
     def name(self, name):
         self._name = name
-        self.slug = slugify(name, self.settings.get('SLUG_SUBSTITUTIONS', ()))
+        self.slug = slugify(name,
+                self.settings.get('SLUG_SUBSTITUTIONS', ()),
+                self.settings['ALLOW_NON_ASCII_IN_SLUG'])
 
     def as_dict(self):
         d = self.__dict__
@@ -42,7 +46,7 @@ class URLWrapper(object):
 
     def _normalize_key(self, key):
         subs = self.settings.get('SLUG_SUBSTITUTIONS', ())
-        return six.text_type(slugify(key, subs))
+        return six.text_type(slugify(key, subs, self.settings['ALLOW_NON_ASCII_IN_SLUG']))
 
     def __eq__(self, other):
         return self._key() == self._normalize_key(other)
