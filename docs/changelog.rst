@@ -6,6 +6,7 @@ Next release
 
 * Added the `:modified:` metadata field to complement `:date:`.
   Used to specify the last date and time an article was updated independently from the date and time it was published.
+* Produce inline links instead of reference-style links when importing content.
 
 3.3.0 (2013-09-24)
 ==================
