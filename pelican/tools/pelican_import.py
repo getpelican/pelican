@@ -519,7 +519,7 @@ def fields2pelican(fields, out_markup, output_path,
 
 
             parse_raw = '--parse-raw' if not strip_raw else ''
-            cmd = ('pandoc --normalize --reference-links {0} --from=html'
+            cmd = ('pandoc --normalize {0} --from=html'
                    ' --to={1} -o "{2}" "{3}"').format(
                     parse_raw, out_markup, out_filename, html_filename)
 
