@@ -1,4 +1,15 @@
 {% extends "basic/layout.html" %}
+{%- block linktags -%}
+  {{ super() }}
+  <link rel="canonical" href="http://docs.getpelican.com/en/latest/
+  {%- for word in pagename.split('/') -%}
+    {%- if word != 'index' -%}
+        {%- if word != '' -%}
+            {{ word }}.html
+        {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}">
+{%- endblock -%}
 {% block header %}
   {{ super() }}
   {% if pagename == 'index' %}
