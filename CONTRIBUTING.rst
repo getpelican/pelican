@@ -10,8 +10,7 @@ Contribution submission guidelines
   For example, if you're hacking on a new feature and find a bugfix that
   doesn't *require* your new feature, **make a new distinct branch and pull
   request** for the bugfix.
-* Adhere to [PEP8 coding standards](http://www.python.org/dev/peps/pep-0008/)
-  whenever possible.
+* Adhere to `PEP8 coding standards`_ whenever possible.
 * Check for unnecessary whitespace via ``git diff --check`` before committing.
 * **Add docs and tests for your changes**.
 * `Run all the tests`_ **on both Python 2.7 and 3.3** to ensure nothing was
@@ -39,3 +38,5 @@ need assistance or have any questions about these guidelines.
 .. _`Create a new git branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
 .. _`Run all the tests`: http://docs.getpelican.com/en/latest/contribute.html#running-the-test-suite
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
+.. _`PEP8 coding standards`: http://www.python.org/dev/peps/pep-0008/
+
