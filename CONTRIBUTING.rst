@@ -10,7 +10,8 @@ Contribution submission guidelines
   For example, if you're hacking on a new feature and find a bugfix that
   doesn't *require* your new feature, **make a new distinct branch and pull
   request** for the bugfix.
-* Adhere to PEP8 coding standards whenever possible.
+* Adhere to [PEP8 coding standards](http://www.python.org/dev/peps/pep-0008/)
+  whenever possible.
 * Check for unnecessary whitespace via ``git diff --check`` before committing.
 * **Add docs and tests for your changes**.
 * `Run all the tests`_ **on both Python 2.7 and 3.3** to ensure nothing was
