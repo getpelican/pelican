@@ -407,9 +407,9 @@ class ArticlesGenerator(Generator):
 
             self.add_source_path(article)
 
-            if article.status == "published":
+            if article.status.lower() == "published":
                 all_articles.append(article)
-            elif article.status == "draft":
+            elif article.status.lower() == "draft":
                 self.drafts.append(article)
             else:
                 logger.warning("Unknown status %s for file %s, skipping it." %
