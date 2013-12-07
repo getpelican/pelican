@@ -273,7 +273,7 @@ def copy(path, source, destination, destination_path=None):
     destination_ = os.path.abspath(
         os.path.expanduser(os.path.join(destination, destination_path)))
 
-    if not os.path.exists(destination_):
+    if not os.path.exists(destination_) and not os.path.isfile(source_):
         os.makedirs(destination_)
 
     def recurse(source, destination):
