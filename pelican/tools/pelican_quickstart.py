@@ -15,6 +15,11 @@ from pelican import __version__
 _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               "templates")
 
+_GITHUB_PAGES_BRANCHES = {
+    'personal': 'master',
+    'project': 'gh-pages'
+}
+
 CONF = {
     'pelican': 'pelican',
     'pelicanopts': '',
@@ -31,6 +36,7 @@ CONF = {
     'cloudfiles_api_key': 'my_rackspace_api_key',
     'cloudfiles_container': 'my_cloudfiles_container',
     'dropbox_dir': '~/Dropbox/Public/',
+    'github_pages_branch': _GITHUB_PAGES_BRANCHES['project'],
     'default_pagination': 10,
     'siteurl': '',
     'lang': 'en'
@@ -217,6 +223,11 @@ needed by Pelican.
             CONF['cloudfiles_username'] = ask('What is your Rackspace Cloud username?', str_compat, CONF['cloudfiles_username'])
             CONF['cloudfiles_api_key'] = ask('What is your Rackspace Cloud API key?', str_compat, CONF['cloudfiles_api_key'])
             CONF['cloudfiles_container'] = ask('What is the name of your Cloud Files container?', str_compat, CONF['cloudfiles_container'])
+        if ask('Do you want to upload your website using GitHub Pages?', answer=bool, default=False):
+            if ask('Is this your personal page (username.github.io)?', answer=bool, default=False):
+                CONF['github_pages_branch'] = _GITHUB_PAGES_BRANCHES['personal']
+            else:
+                CONF['github_pages_branch'] = _GITHUB_PAGES_BRANCHES['project']
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
