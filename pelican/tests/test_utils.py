@@ -350,29 +350,23 @@ class TestCopy(unittest.TestCase):
 
     def test_copy_file_same_path(self):
         self._create_file('a.txt')
-        utils.copy('',
-                   os.path.join(self.root_dir, 'a.txt'),
-                   os.path.join(self.root_dir, 'b.txt')
-                   )
+        utils.copy(os.path.join(self.root_dir, 'a.txt'),
+                   os.path.join(self.root_dir, 'b.txt'))
         self._exist_file('b.txt')
 
     def test_copy_file_different_path(self):
         self._create_dir('a')
         self._create_dir('b')
         self._create_file('a', 'a.txt')
-        utils.copy('',
-                   os.path.join(self.root_dir, 'a', 'a.txt'),
-                   os.path.join(self.root_dir, 'b', 'b.txt')
-                   )
+        utils.copy(os.path.join(self.root_dir, 'a', 'a.txt'),
+                   os.path.join(self.root_dir, 'b', 'b.txt'))
         self._exist_dir('b')
         self._exist_file('b', 'b.txt')
 
     def test_copy_file_create_dirs(self):
         self._create_file('a.txt')
-        utils.copy('',
-                   os.path.join(self.root_dir, 'a.txt'),
-                   os.path.join(self.root_dir, 'b0', 'b1', 'b2', 'b3', 'b.txt')
-                   )
+        utils.copy(os.path.join(self.root_dir, 'a.txt'),
+                   os.path.join(self.root_dir, 'b0', 'b1', 'b2', 'b3', 'b.txt'))
         self._exist_dir('b0')
         self._exist_dir('b0', 'b1')
         self._exist_dir('b0', 'b1', 'b2')
@@ -382,10 +376,8 @@ class TestCopy(unittest.TestCase):
     def test_copy_dir_same_path(self):
         self._create_dir('a')
         self._create_file('a', 'a.txt')
-        utils.copy('',
-                   os.path.join(self.root_dir, 'a'),
-                   os.path.join(self.root_dir, 'b')
-                   )
+        utils.copy(os.path.join(self.root_dir, 'a'),
+                   os.path.join(self.root_dir, 'b'))
         self._exist_dir('b')
         self._exist_file('b', 'a.txt')
 
@@ -394,20 +386,16 @@ class TestCopy(unittest.TestCase):
         self._create_dir('a0', 'a1')
         self._create_file('a0', 'a1', 'a.txt')
         self._create_dir('b0')
-        utils.copy('',
-                   os.path.join(self.root_dir, 'a0', 'a1'),
-                   os.path.join(self.root_dir, 'b0', 'b1')
-                   )
+        utils.copy(os.path.join(self.root_dir, 'a0', 'a1'),
+                   os.path.join(self.root_dir, 'b0', 'b1'))
         self._exist_dir('b0', 'b1')
         self._exist_file('b0', 'b1', 'a.txt')
 
     def test_copy_dir_create_dirs(self):
         self._create_dir('a')
         self._create_file('a', 'a.txt')
-        utils.copy('',
-                   os.path.join(self.root_dir, 'a'),
-                   os.path.join(self.root_dir, 'b0', 'b1', 'b2', 'b3', 'b')
-                   )
+        utils.copy(os.path.join(self.root_dir, 'a'),
+                   os.path.join(self.root_dir, 'b0', 'b1', 'b2', 'b3', 'b'))
         self._exist_dir('b0')
         self._exist_dir('b0', 'b1')
         self._exist_dir('b0', 'b1', 'b2')

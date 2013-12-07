@@ -256,22 +256,19 @@ def slugify(value, substitutions=()):
     return value.decode('ascii')
 
 
-def copy(path, source, destination, destination_path=None):
-    """Copy path from origin to destination.
+def copy(source, destination):
+    """Recursively copy source into destination.
+
+    If source is a file, destination has to be a file as well.
 
     The function is able to copy either files or directories.
 
-    :param path: the path to be copied from the source to the destination
-    :param source: the source dir
-    :param destination: the destination dir
-    :param destination_path: the destination path (optional)
+    :param source: the source file or directory
+    :param destination: the destination file or directory
     """
-    if not destination_path:
-        destination_path = path
 
-    source_ = os.path.abspath(os.path.expanduser(os.path.join(source, path)))
-    destination_ = os.path.abspath(
-        os.path.expanduser(os.path.join(destination, destination_path)))
+    source_ = os.path.abspath(os.path.expanduser(source))
+    destination_ = os.path.abspath(os.path.expanduser(destination))
 
     if not os.path.exists(destination_) and not os.path.isfile(source_):
         os.makedirs(destination_)
