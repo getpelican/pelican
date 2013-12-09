@@ -215,6 +215,10 @@ class Content(object):
                         os.path.join(self.relative_dir, path)
                     )
 
+                # spaces in filename
+                if path not in self._context['filenames'] and '%20' in path:
+                    path = path.replace('%20', ' ')
+
                 if path in self._context['filenames']:
                     origin = '/'.join((siteurl,
                              self._context['filenames'][path].url))
