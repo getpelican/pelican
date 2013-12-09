@@ -323,6 +323,29 @@ class TestPage(unittest.TestCase):
             '<blockquote cite="http://notmyidea.org/reference.html">blah blah</blockquote>'
         )
 
+    def test_intrasite_link_markdown_spaces(self):
+        # Markdown introduces %20 instead of spaces, this tests that
+        # we support markdown doing this.
+        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        article = type(cls_name, (object,), {'url': 'article-spaces.html'})
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {'article spaces.rst': article}
+
+        # An intrasite link via filename with %20 as a space
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article%20spaces.rst">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article-spaces.html">link</a>'
+        )
+
 
 class TestArticle(TestPage):
     def test_template(self):

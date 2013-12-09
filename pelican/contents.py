@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import six
+from six.moves.urllib.parse import unquote
 
 import copy
 import locale
@@ -214,6 +215,12 @@ class Content(object):
                     path = self.get_relative_source_path(
                         os.path.join(self.relative_dir, path)
                     )
+
+                if path not in self._context['filenames']:
+                    unquoted_path = path.replace('%20', ' ')
+
+                    if unquoted_path in self._context['filenames']:
+                        path = unquoted_path
 
                 if path in self._context['filenames']:
                     origin = '/'.join((siteurl,
