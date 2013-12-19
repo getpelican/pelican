@@ -126,6 +126,9 @@ def wp2fields(xml):
             content = item.find('encoded').string
             filename = item.find('post_name').string
 
+            if filename is None:
+                filename = item.find('post_id').string
+
             raw_date = item.find('post_date').string
             date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
             date = time.strftime("%Y-%m-%d %H:%M", date_object)
