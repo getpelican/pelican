@@ -332,8 +332,7 @@ class ArticlesGenerator(Generator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
-                articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
+                articles_page=articles, dates=dates,
                 page_name=tag.page_name, all_articles=self.articles)
 
     def generate_categories(self, write):
@@ -343,8 +342,7 @@ class ArticlesGenerator(Generator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
-                category=cat, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
+                category=cat, articles_page=articles, dates=dates,
                 page_name=cat.page_name, all_articles=self.articles)
 
     def generate_authors(self, write):
@@ -354,8 +352,7 @@ class ArticlesGenerator(Generator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
-                author=aut, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
+                author=aut, articles_page=articles, dates=dates,
                 page_name=aut.page_name, all_articles=self.articles)
 
     def generate_drafts(self, write):
