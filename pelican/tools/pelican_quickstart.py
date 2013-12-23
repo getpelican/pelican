@@ -186,7 +186,8 @@ needed by Pelican.
         print('Using project associated with current virtual environment.'
               'Will save to:\n%s\n' % CONF['basedir'])
     else:
-        CONF['basedir'] = os.path.abspath(ask('Where do you want to create your new web site?', answer=str_compat, default=args.path))
+        CONF['basedir'] = os.path.abspath(os.path.expanduser(
+            ask('Where do you want to create your new web site?', answer=str_compat, default=args.path)))
 
     CONF['sitename'] = ask('What will be the title of this web site?', answer=str_compat, default=args.title)
     CONF['author'] = ask('Who will be the author of this web site?', answer=str_compat, default=args.author)
