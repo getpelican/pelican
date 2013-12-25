@@ -255,20 +255,22 @@ class ArticlesGenerator(Generator):
             for lang, items in translations_feeds.items():
                 items.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TRANSLATION_FEED_ATOM'):
-                    writer.write_feed(items, self.context,
-                            self.settings['TRANSLATION_FEED_ATOM'] % lang)
+                    writer.write_feed(
+                        items, self.context,
+                        self.settings['TRANSLATION_FEED_ATOM'] % lang)
                 if self.settings.get('TRANSLATION_FEED_RSS'):
-                    writer.write_feed(items, self.context,
-                            self.settings['TRANSLATION_FEED_RSS'] % lang,
-                            feed_type='rss')
+                    writer.write_feed(
+                        items, self.context,
+                        self.settings['TRANSLATION_FEED_RSS'] % lang,
+                        feed_type='rss')
 
     def generate_articles(self, write):
         """Generate the articles."""
         for article in chain(self.translations, self.articles):
             signals.article_generator_write_article.send(self, content=article)
             write(article.save_as, self.get_template(article.template),
-                self.context, article=article, category=article.category,
-                override_output=hasattr(article, 'override_save_as'))
+                  self.context, article=article, category=article.category,
+                  override_output=hasattr(article, 'override_save_as'))
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -293,16 +295,16 @@ class ArticlesGenerator(Generator):
                       dates=archive, blog=True)
 
         period_save_as = {
-                'year' : self.settings['YEAR_ARCHIVE_SAVE_AS'],
-                'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
-                'day'  : self.settings['DAY_ARCHIVE_SAVE_AS'],
-                }
+            'year': self.settings['YEAR_ARCHIVE_SAVE_AS'],
+            'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
+            'day': self.settings['DAY_ARCHIVE_SAVE_AS'],
+        }
 
         period_date_key = {
-                'year' : attrgetter('date.year'),
-                'month': attrgetter('date.year', 'date.month'),
-                'day'  : attrgetter('date.year', 'date.month', 'date.day')
-                }
+            'year': attrgetter('date.year'),
+            'month': attrgetter('date.year', 'date.month'),
+            'day': attrgetter('date.year', 'date.month', 'date.day')
+        }
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
@@ -318,13 +320,13 @@ class ArticlesGenerator(Generator):
             if template in PAGINATED_TEMPLATES:
                 paginated = {'articles': self.articles, 'dates': self.dates}
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
-                                                        '%s.html' % template)
+                                        '%s.html' % template)
             if not save_as:
                 continue
 
             write(save_as, self.get_template(template),
-                self.context, blog=True, paginated=paginated,
-                page_name=os.path.splitext(save_as)[0])
+                  self.context, blog=True, paginated=paginated,
+                  page_name=os.path.splitext(save_as)[0])
 
     def generate_tags(self, write):
         """Generate Tags pages."""
@@ -333,9 +335,9 @@ class ArticlesGenerator(Generator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
-                articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=tag.page_name, all_articles=self.articles)
+                  articles=articles, dates=dates,
+                  paginated={'articles': articles, 'dates': dates},
+                  page_name=tag.page_name, all_articles=self.articles)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -344,9 +346,9 @@ class ArticlesGenerator(Generator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
-                category=cat, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=cat.page_name, all_articles=self.articles)
+                  category=cat, articles=articles, dates=dates,
+                  paginated={'articles': articles, 'dates': dates},
+                  page_name=cat.page_name, all_articles=self.articles)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -355,17 +357,17 @@ class ArticlesGenerator(Generator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
-                author=aut, articles=articles, dates=dates,
-                paginated={'articles': articles, 'dates': dates},
-                page_name=aut.page_name, all_articles=self.articles)
+                  author=aut, articles=articles, dates=dates,
+                  paginated={'articles': articles, 'dates': dates},
+                  page_name=aut.page_name, all_articles=self.articles)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in self.drafts:
             write(os.path.join('drafts', '%s.html' % article.slug),
-                self.get_template(article.template), self.context,
-                article=article, category=article.category,
-                all_articles=self.articles)
+                  self.get_template(article.template), self.context,
+                  article=article, category=article.category,
+                  all_articles=self.articles)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -430,12 +432,11 @@ class ArticlesGenerator(Generator):
             if hasattr(article, 'author') and article.author.name != '':
                 self.authors[article.author].append(article)
 
-
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
         self.dates.sort(key=attrgetter('date'),
-                reverse=self.context['NEWEST_FIRST_ARCHIVES'])
+                        reverse=self.context['NEWEST_FIRST_ARCHIVES'])
 
         # create tag cloud
         tag_cloud = defaultdict(int)
@@ -468,7 +469,7 @@ class ArticlesGenerator(Generator):
         # order the categories per name
         self.categories = list(self.categories.items())
         self.categories.sort(
-                reverse=self.settings['REVERSE_CATEGORY_ORDER'])
+            reverse=self.settings['REVERSE_CATEGORY_ORDER'])
 
         self.authors = list(self.authors.items())
         self.authors.sort()
@@ -527,7 +528,7 @@ class PagesGenerator(Generator):
 
         self.pages, self.translations = process_translations(all_pages)
         self.hidden_pages, self.hidden_translations = (
-                process_translations(hidden_pages))
+            process_translations(hidden_pages))
 
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
@@ -536,11 +537,12 @@ class PagesGenerator(Generator):
 
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
-                            self.hidden_translations, self.hidden_pages):
-            writer.write_file(page.save_as, self.get_template(page.template),
-                    self.context, page=page,
-                    relative_urls=self.settings['RELATIVE_URLS'],
-                    override_output=hasattr(page, 'override_save_as'))
+                          self.hidden_translations, self.hidden_pages):
+            writer.write_file(
+                page.save_as, self.get_template(page.template),
+                self.context, page=page,
+                relative_urls=self.settings['RELATIVE_URLS'],
+                override_output=hasattr(page, 'override_save_as'))
 
 
 class StaticGenerator(Generator):
@@ -548,7 +550,7 @@ class StaticGenerator(Generator):
     to output"""
 
     def _copy_paths(self, paths, source, destination, output_path,
-            final_path=None):
+                    final_path=None):
         """Copy all the paths from source to destination"""
         for path in paths:
             copy(path, source, os.path.join(output_path, destination),
@@ -586,6 +588,7 @@ class StaticGenerator(Generator):
 
 
 class SourceFileGenerator(Generator):
+
     def generate_context(self):
         self.output_extension = self.settings['OUTPUT_SOURCES_EXTENSION']
 
