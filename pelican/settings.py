@@ -94,6 +94,8 @@ DEFAULT_CONFIG = {
     'MD_EXTENSIONS': ['codehilite(css_class=highlight)', 'extra'],
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
+    'JINJA_GLOBALS': {},
+    'JINJA_TESTS': {},
     'LOCALE': [''],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,

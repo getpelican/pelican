@@ -76,10 +76,16 @@ Setting name (default value)                                            What doe
                                                                         output directory. One use case would be the preservation of version
                                                                         control data. For example: ``(".hg", ".git", ".bzr")``
 `JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
-`JINJA_FILTERS` (``{}``)                                                A list of custom Jinja2 filters you want to use.
+`JINJA_FILTERS` (``{}``)                                                A dictionary of custom Jinja2 filters you want to use.
                                                                         The dictionary should map the filtername to the filter function.
                                                                         For example: ``{'urlencode': urlencode_filter}``
                                                                         See `Jinja custom filters documentation`_.
+`JINJA_GLOBALS` (``{}``)                                                A dictionary of custom objects to map into the Jinja2 global environment
+                                                                        namespace. The dictionary should map the global name to the global
+                                                                        attribute. See `Jinja global namespace documentation`_.
+`JINJA_TESTS` (``{}``)                                                  A dictionary of custom Jinja2 tests you want to use.
+                                                                        The dictionary should map the testname to the test function.
+                                                                        See `Jinja custom tests documentation`_.
 `LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
                                                                         here or a single string representing one locale.
                                                                         When providing a list, all the locales will be tried
@@ -165,6 +171,10 @@ Setting name (default value)                                            What doe
 =====================================================================   =====================================================================
 
 .. [#] Default is the system locale.
+
+.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
+.. _Jinja global namespace documentation: http://jinja.pocoo.org/docs/api/#the-global-namespace
+.. _Jinja custom tests documentation: http://jinja.pocoo.org/docs/api/#custom-tests
 
 
 URL settings
@@ -680,6 +690,3 @@ Example settings
 
 .. literalinclude:: ../samples/pelican.conf.py
     :language: python
-
-
-.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters

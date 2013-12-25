@@ -72,6 +72,14 @@ class Generator(object):
         custom_filters = self.settings['JINJA_FILTERS']
         self.env.filters.update(custom_filters)
 
+        # get custom Jinja globals from user settings
+        custom_globals = self.settings['JINJA_GLOBALS']
+        self.env.globals.update(custom_globals)
+
+        # get custom Jinja tests from user settings
+        custom_tests = self.settings['JINJA_TESTS']
+        self.env.tests.update(custom_tests)
+
         signals.generator_init.send(self)
 
     def get_template(self, name):
