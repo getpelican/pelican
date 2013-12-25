@@ -177,21 +177,13 @@ class Writer(object):
         localcontext['output_file'] = name
         localcontext.update(kwargs)
 
-        # check paginated
-        paginated = paginated or {}
+        # pagination
         if paginated:
             name_root = os.path.splitext(name)[0]
 
             # pagination needed, init paginators
-            paginators = {}
-            for key in paginated.keys():
-                object_list = paginated[key]
-
-                paginators[key] = Paginator(
-                    name_root,
-                    object_list,
-                    self.settings,
-                )
+            paginators = {key: Paginator(name_root, val, self.settings)
+                          for key, val in paginated.items()}
 
             # generated pages, and write
             for page_num in range(list(paginators.values())[0].num_pages):
