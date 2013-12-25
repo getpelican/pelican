@@ -146,6 +146,11 @@ Setting name (default value)                                            What doe
                                                                         This only applies if your content does not otherwise
                                                                         specify a summary. Setting to ``None`` will cause the summary
                                                                         to be a copy of the original content.
+`SUMMARY_END_TEXT` (``' ...'``)                                         When creating a short summary of an article, this will
+                                                                        be the final displayed text string of the summary.
+                                                                        This only applies if your content does not otherwise
+                                                                        specify a summary and ``SUMMARY_MAX_LENGTH`` is not set
+                                                                        to ``None``.
 `EXTRA_TEMPLATES_PATHS` (``[]``)                                        A list of paths you want Jinja2 to search for templates.
                                                                         Can be used to separate templates from the theme.
                                                                         Example: projects, resume, profile ...

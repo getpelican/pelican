@@ -270,7 +270,8 @@ class Content(object):
             return self.content
 
         return truncate_html_words(self.content,
-                                   self.settings['SUMMARY_MAX_LENGTH'])
+                                   self.settings['SUMMARY_MAX_LENGTH'],
+                                   self.settings['SUMMARY_END_TEXT'])
 
     def _set_summary(self, summary):
         """Dummy function"""

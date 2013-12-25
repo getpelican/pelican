@@ -360,7 +360,7 @@ def path_to_url(path):
         return '/'.join(split_all(path))
 
 
-def truncate_html_words(s, num, end_text='...'):
+def truncate_html_words(s, num, end_text=' ...'):
     """Truncates HTML to a certain number of words.
 
     (not counting tags and comments). Closes opened tags if they were correctly
@@ -420,9 +420,7 @@ def truncate_html_words(s, num, end_text='...'):
     if words <= length:
         # Don't try to close tags if we don't need to truncate
         return s
-    out = s[:end_text_pos]
-    if end_text:
-        out += ' ' + end_text
+    out = s[:end_text_pos] + end_text
     # Close any tags still open
     for tag in open_tags:
         out += '</%s>' % tag
