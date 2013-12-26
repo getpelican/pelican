@@ -18,7 +18,7 @@ from operator import attrgetter, itemgetter
 from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
                     BaseLoader, TemplateNotFound)
 
-from pelican.contents import Article, Page, Static, is_valid_content
+from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
 from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
 from pelican import signals
@@ -190,7 +190,8 @@ class ArticlesGenerator(Generator):
         self.categories = defaultdict(list)
         self.related_posts = []
         self.authors = defaultdict(list)
-        self.drafts = []
+        self.drafts = [] # only drafts in default language
+        self.drafts_translations = []
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         signals.article_generator_init.send(self)
 
@@ -376,11 +377,11 @@ class ArticlesGenerator(Generator):
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
-        for article in self.drafts:
-            write(os.path.join('drafts', '%s.html' % article.slug),
-                  self.get_template(article.template), self.context,
-                  article=article, category=article.category,
-                  all_articles=self.articles)
+        for draft in chain(self.drafts_translations, self.drafts):
+            write(draft.save_as, self.get_template(draft.template),
+                self.context, article=draft, category=draft.category,
+                override_output=hasattr(draft, 'override_save_as'),
+                all_articles=self.articles)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -403,6 +404,7 @@ class ArticlesGenerator(Generator):
         """Add the articles into the shared context"""
 
         all_articles = []
+        all_drafts = []
         for f in self.get_files(
                 self.settings['ARTICLE_DIR'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
@@ -426,13 +428,22 @@ class ArticlesGenerator(Generator):
             if article.status.lower() == "published":
                 all_articles.append(article)
             elif article.status.lower() == "draft":
-                self.drafts.append(article)
+                draft = self.readers.read_file(
+                    base_path=self.path, path=f, content_class=Draft,
+                    context=self.context,
+                    preread_signal=signals.article_generator_preread,
+                    preread_sender=self,
+                    context_signal=signals.article_generator_context,
+                    context_sender=self)
+                all_drafts.append(draft)
             else:
                 logger.warning("Unknown status %s for file %s, skipping it." %
                                (repr(article.status),
                                 repr(f)))
 
         self.articles, self.translations = process_translations(all_articles)
+        self.drafts, self.drafts_translations = \
+            process_translations(all_drafts)
 
         signals.article_generator_pretaxonomy.send(self)
 
