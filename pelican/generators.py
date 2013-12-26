@@ -172,7 +172,8 @@ class TemplatePagesGenerator(Generator):
                 template = self.env.get_template(source)
                 rurls = self.settings['RELATIVE_URLS']
                 writer.write_file(dest, template, self.context, rurls,
-                                  override_output=True)
+                                  override_output=True,
+                                  save_as=dest, url=dest)
             finally:
                 del self.env.loader.loaders[0]
 
@@ -267,7 +268,8 @@ class ArticlesGenerator(Generator):
         for article in chain(self.translations, self.articles):
             write(article.save_as, self.get_template(article.template),
                 self.context, article=article, category=article.category,
-                override_output=hasattr(article, 'override_save_as'))
+                override_output=hasattr(article, 'override_save_as'),
+                save_as=article.save_as, url=article.url)
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -289,7 +291,8 @@ class ArticlesGenerator(Generator):
                 date = archive[0].date
                 save_as = save_as_fmt.format(date=date)
                 write(save_as, template, self.context,
-                      dates=archive, blog=True)
+                      dates=archive, blog=True,
+                      save_as=save_as, url=save_as)
 
         period_save_as = {
                 'year' : self.settings['YEAR_ARCHIVE_SAVE_AS'],
@@ -323,7 +326,8 @@ class ArticlesGenerator(Generator):
 
             write(save_as, self.get_template(template),
                 self.context, blog=True, paginated=paginated,
-                page_name=os.path.splitext(save_as)[0])
+                page_name=os.path.splitext(save_as)[0],
+                save_as=save_as, url=save_as)
 
     def generate_tags(self, write):
         """Generate Tags pages."""
@@ -334,7 +338,8 @@ class ArticlesGenerator(Generator):
             write(tag.save_as, tag_template, self.context, tag=tag,
                 articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=tag.page_name, all_articles=self.articles)
+                page_name=tag.page_name, all_articles=self.articles,
+                save_as=tag.save_as, url=tag.url)
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -345,7 +350,8 @@ class ArticlesGenerator(Generator):
             write(cat.save_as, category_template, self.context,
                 category=cat, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=cat.page_name, all_articles=self.articles)
+                page_name=cat.page_name, all_articles=self.articles,
+                save_as=cat.save_as, url=cat.url)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -356,15 +362,18 @@ class ArticlesGenerator(Generator):
             write(aut.save_as, author_template, self.context,
                 author=aut, articles=articles, dates=dates,
                 paginated={'articles': articles, 'dates': dates},
-                page_name=aut.page_name, all_articles=self.articles)
+                page_name=aut.page_name, all_articles=self.articles,
+                save_as=aut.save_as, url=aut.url)
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
         for article in self.drafts:
-            write(os.path.join('drafts', '%s.html' % article.slug),
+            save_as=os.path.join('drafts', '%s.html' % article.slug)
+            write(save_as,
                 self.get_template(article.template), self.context,
                 article=article, category=article.category,
-                all_articles=self.articles)
+                all_articles=self.articles,
+                save_as=save_as, url=save_as)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -539,7 +548,8 @@ class PagesGenerator(Generator):
             writer.write_file(page.save_as, self.get_template(page.template),
                     self.context, page=page,
                     relative_urls=self.settings['RELATIVE_URLS'],
-                    override_output=hasattr(page, 'override_save_as'))
+                    override_output=hasattr(page, 'override_save_as'),
+                    save_as=page.save_as, url=page.url)
 
 
 class StaticGenerator(Generator):
