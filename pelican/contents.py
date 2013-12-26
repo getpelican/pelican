@@ -328,6 +328,11 @@ class Article(Page):
     default_template = 'article'
 
 
+class Draft(Page):
+    mandatory_properties = ('title', 'category')
+    default_template = 'article'
+
+
 class Quote(Page):
     base_properties = ('author', 'date')
 

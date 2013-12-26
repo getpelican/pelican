@@ -114,9 +114,10 @@ class Pelican(object):
             structure = re.sub('^/', '', structure)
 
             for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
-                            'PAGE_LANG_URL', 'ARTICLE_SAVE_AS',
-                            'ARTICLE_LANG_SAVE_AS', 'PAGE_SAVE_AS',
-                            'PAGE_LANG_SAVE_AS'):
+                            'PAGE_LANG_URL', 'DRAFT_URL', 'DRAFT_LANG_URL',
+                            'ARTICLE_SAVE_AS', 'ARTICLE_LANG_SAVE_AS',
+                            'DRAFT_SAVE_AS', 'DRAFT_LANG_SAVE_AS',
+                            'PAGE_SAVE_AS', 'PAGE_LANG_SAVE_AS'):
                 self.settings[setting] = os.path.join(structure,
                                                       self.settings[setting])
                 logger.warning("%s = '%s'" % (setting, self.settings[setting]))
@@ -174,8 +175,11 @@ class Pelican(object):
         pages_generator = next(g for g in generators
                                if isinstance(g, PagesGenerator))
 
-        print('Done: Processed {} articles and {} pages in {:.2f} seconds.'.format(
+        print('Done: Processed {} article(s), {} draft(s) and {} page(s) in ' \
+              '{:.2f} seconds.'.format(
             len(articles_generator.articles) + len(articles_generator.translations),
+            len(articles_generator.drafts) + \
+            len(articles_generator.drafts_translations),
             len(pages_generator.pages) + len(pages_generator.translations),
             time.time() - start_time))
 
