@@ -398,6 +398,9 @@ class ArticlesGenerator(Generator):
                     preread_sender=self,
                     context_signal=signals.article_generator_context,
                     context_sender=self)
+            except IndexError as e:
+                # Ignore empty files silently
+                continue
             except Exception as e:
                 logger.warning('Could not process {}\n{}'.format(f, e))
                 continue
@@ -506,6 +509,9 @@ class PagesGenerator(Generator):
                     preread_sender=self,
                     context_signal=signals.page_generator_context,
                     context_sender=self)
+            except IndexError as e:
+                # Ignore empty files silently
+                continue
             except Exception as e:
                 logger.warning('Could not process {}\n{}'.format(f, e))
                 continue
