@@ -6,6 +6,7 @@ Markdown
 BeautifulSoup4
 lxml
 typogrify
+six
 
 # To perform release
 bumpr==0.2.0
