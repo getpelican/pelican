@@ -539,8 +539,8 @@ The default theme does not include a tag cloud, but it is pretty easy to add one
         {% endfor %}
     </ul>
 
-You should then also define CSS styles with appropriate classes (tag-0 to tag-N,
-where N matches ``TAG_CLOUD_STEPS`` -1), tag-0 being the most frequent, and
+You should then also define CSS styles with appropriate classes (tag-1 to tag-N,
+where N matches ``TAG_CLOUD_STEPS``), tag-1 being the most frequent, and
 define a ``ul.tagcloud`` class with appropriate list-style to create the cloud.
 For example::
 
@@ -553,11 +553,11 @@ For example::
         display: inline-block;
     }
 
-    li.tag-0 {
+    li.tag-1 {
         font-size: 150%;
     }
 
-    li.tag-1 {
+    li.tag-2 {
         font-size: 120%;
     }
 
