@@ -201,6 +201,7 @@ Also, you can use other file metadata attributes as well:
 * lang
 * author
 * category
+* post_id
 
 Example usage:
 

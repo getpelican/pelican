@@ -371,6 +371,21 @@ class TestArticle(TestPage):
         self.assertEqual(article.url, 'obrien/csharp-stuff/fnord/')
         self.assertEqual(article.save_as, 'obrien/csharp-stuff/fnord/index.html')
 
+    def test_slugify_post_id(self):
+        settings = get_settings()
+        settings['SLUG_SUBSTITUTIONS'] = [ ('C#', 'csharp') ]
+        settings['ARTICLE_URL'] = '{post_id}/{slug}/'
+        settings['ARTICLE_SAVE_AS'] = '{post_id}/{slug}/index.html'
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['author'] = "O'Brien"
+        article_kwargs['metadata']['category'] = 'C# & stuff'
+        article_kwargs['metadata']['title'] = 'fnord'
+        article_kwargs['metadata']['post_id'] = '10'
+        article_kwargs['settings'] = settings
+        article = Article(**article_kwargs)
+        self.assertEqual(article.url, '10/fnord/')
+        self.assertEqual(article.save_as, '10/fnord/index.html')
+
 
 class TestURLWrapper(unittest.TestCase):
     def test_comparisons(self):
