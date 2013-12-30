@@ -592,7 +592,7 @@ class SourceFileGenerator(Generator):
         output_path, _ = os.path.splitext(obj.save_as)
         dest = os.path.join(self.output_path,
                             output_path + self.output_extension)
-        copy('', obj.source_path, dest)
+        copy('', obj.source_path, dest, is_file=True)
 
     def generate_output(self, writer=None):
         logger.info(' Generating source files...')

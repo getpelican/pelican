@@ -256,7 +256,7 @@ def slugify(value, substitutions=()):
     return value.decode('ascii')
 
 
-def copy(path, source, destination, destination_path=None):
+def copy(path, source, destination, destination_path=None, is_file=False):
     """Copy path from origin to destination.
 
     The function is able to copy either files or directories.
@@ -273,7 +273,7 @@ def copy(path, source, destination, destination_path=None):
     destination_ = os.path.abspath(
         os.path.expanduser(os.path.join(destination, destination_path)))
 
-    if not os.path.exists(destination_):
+    if not os.path.exists(destination_) and not is_file:
         os.makedirs(destination_)
 
     def recurse(source, destination):
