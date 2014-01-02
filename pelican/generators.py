@@ -265,6 +265,7 @@ class ArticlesGenerator(Generator):
     def generate_articles(self, write):
         """Generate the articles."""
         for article in chain(self.translations, self.articles):
+            signals.article_generator_write_article.send(self, content=article)
             write(article.save_as, self.get_template(article.template),
                 self.context, article=article, category=article.category,
                 override_output=hasattr(article, 'override_save_as'))

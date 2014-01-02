@@ -18,6 +18,7 @@ generator_init = signal('generator_init')
 
 article_generator_init = signal('article_generator_init')
 article_generator_finalized = signal('article_generator_finalized')
+article_generator_write_article = signal('article_generator_write_article')
 
 page_generator_init = signal('page_generator_init')
 page_generator_finalized = signal('page_generator_finalized')

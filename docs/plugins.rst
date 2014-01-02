@@ -62,30 +62,31 @@ List of signals
 
 Here is the list of currently implemented signals:
 
-=============================   ============================   ===========================================================================
-Signal                          Arguments                       Description
-=============================   ============================   ===========================================================================
-initialized                     pelican object
-finalized                       pelican object                  invoked after all the generators are executed and just before pelican exits
-                                                                usefull for custom post processing actions, such as:
-                                                                - minifying js/css assets.
-                                                                - notify/ping search engines with an updated sitemap.
-generator_init                  generator                       invoked in the Generator.__init__
-readers_init                    readers                         invoked in the Readers.__init__
-article_generator_context        article_generator, metadata
-article_generator_preread        article_generator               invoked before a article is read in ArticlesGenerator.generate_context;
-                                                                use if code needs to do something before every article is parsed
-article_generator_init          article_generator               invoked in the ArticlesGenerator.__init__
-article_generator_finalized     article_generator               invoked at the end of ArticlesGenerator.generate_context
-get_generators                  generators                      invoked in Pelican.get_generator_classes,
-                                                                can return a Generator, or several
-                                                                generator in a tuple or in a list.
-page_generator_context          page_generator, metadata
-page_generator_init             page_generator                  invoked in the PagesGenerator.__init__
-page_generator_finalized        page_generator                  invoked at the end of PagesGenerator.generate_context
-content_object_init             content_object                  invoked at the end of Content.__init__ (see note below)
-content_written                 path, context                   invoked each time a content file is written.
-=============================   ============================   ===========================================================================
+=================================   ============================   ===========================================================================
+Signal                              Arguments                       Description
+=================================   ============================   ===========================================================================
+initialized                         pelican object
+finalized                           pelican object                 invoked after all the generators are executed and just before pelican exits
+                                                                   usefull for custom post processing actions, such as:
+                                                                   - minifying js/css assets.
+                                                                   - notify/ping search engines with an updated sitemap.
+generator_init                      generator                      invoked in the Generator.__init__
+readers_init                        readers                        invoked in the Readers.__init__
+article_generator_context           article_generator, metadata
+article_generator_preread           article_generator              invoked before a article is read in ArticlesGenerator.generate_context;
+                                                                   use if code needs to do something before every article is parsed
+article_generator_init              article_generator              invoked in the ArticlesGenerator.__init__
+article_generator_finalized         article_generator              invoked at the end of ArticlesGenerator.generate_context
+article_generator_write_article     article_generator, content     invoked before writing each article, the article is passed as content
+get_generators                      generators                     invoked in Pelican.get_generator_classes,
+                                                                   can return a Generator, or several
+                                                                   generator in a tuple or in a list.
+page_generator_context              page_generator, metadata
+page_generator_init                 page_generator                 invoked in the PagesGenerator.__init__
+page_generator_finalized            page_generator                 invoked at the end of PagesGenerator.generate_context
+content_object_init                 content_object                 invoked at the end of Content.__init__ (see note below)
+content_written                     path, context                  invoked each time a content file is written.
+=================================   ============================   ===========================================================================
 
 The list is currently small, so don't hesitate to add signals and make a pull
 request if you need them!
