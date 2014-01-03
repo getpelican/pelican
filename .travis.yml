@@ -8,9 +8,7 @@ before_install:
  - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
     - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then ln -s /usr/share/asciidoc/asciidocapi.py ~/virtualenv/python2.7/lib/python2.7/site-packages/; fi
-    - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then pip install typogrify ; fi
-    - if [[ $TRAVIS_PYTHON_VERSION == '3.3' ]]; then pip install git+https://github.com/dmdm/typogrify.git@py3k#egg=typogrify; fi
-    - pip install mock nose nose-cov Markdown
+    - pip install mock nose nose-cov Markdown typogrify-web
     - pip install .
 script: nosetests -sv --with-coverage --cover-package=pelican pelican
 after_success:

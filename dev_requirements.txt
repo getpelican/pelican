@@ -5,7 +5,7 @@ mock
 Markdown
 BeautifulSoup4
 lxml
-typogrify
+typogrify-web
 
 # To perform release
 bumpr==0.2.0
