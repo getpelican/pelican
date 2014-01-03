@@ -133,8 +133,8 @@ Setting name (default value)                                            What doe
                                                                         section below for more info.
 `TYPOGRIFY` (``False``)                                                 If set to True, several typographical improvements will be
                                                                         incorporated into the generated HTML via the `Typogrify
-                                                                        <http://static.mintchaos.com/projects/typogrify/>`_
-                                                                        library, which can be installed via: ``pip install typogrify``
+                                                                        <https://pypi.python.org/pypi/typogrify-web>`_ library,
+                                                                        which can be installed via: ``pip install typogrify-web``
 `DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'archives')``)    List of templates that are used directly to render
                                                                         content. Typically direct templates are used to generate
                                                                         index pages for collections of content (e.g., tags and

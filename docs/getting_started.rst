@@ -136,8 +136,8 @@ manually via ``pip``:
 
 * `markdown <http://pypi.python.org/pypi/Markdown>`_, for supporting Markdown as
   an input format
-* `typogrify <http://pypi.python.org/pypi/typogrify>`_, for typographical
-  enhancements
+* `typogrify-web <http://pypi.python.org/pypi/typogrify-web>`_, for
+  typographical enhancements
 
 Kickstart your site
 ===================
