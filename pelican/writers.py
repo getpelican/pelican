@@ -54,7 +54,8 @@ class Writer(object):
             description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
-            pubdate=set_date_tzinfo(item.modified if hasattr(item, 'modified') else item.date,
+            pubdate=set_date_tzinfo(
+                item.modified if hasattr(item, 'modified') else item.date,
                 self.settings.get('TIMEZONE', None)))
 
     def _open_w(self, filename, encoding, override=False):
@@ -66,7 +67,7 @@ class Writer(object):
         if filename in self._overridden_files:
             if override:
                 raise RuntimeError('File %s is set to be overridden twice'
-                                    % filename)
+                                   % filename)
             else:
                 logger.info('skipping %s' % filename)
                 filename = os.devnull
@@ -124,7 +125,7 @@ class Writer(object):
             locale.setlocale(locale.LC_ALL, old_locale)
 
     def write_file(self, name, template, context, relative_urls=False,
-        paginated=None, override_output=False, **kwargs):
+                   paginated=None, override_output=False, **kwargs):
         """Render the template and write the file.
 
         :param name: name of the file to output
@@ -176,21 +177,13 @@ class Writer(object):
         localcontext['output_file'] = name
         localcontext.update(kwargs)
 
-        # check paginated
-        paginated = paginated or {}
+        # pagination
         if paginated:
             name_root = os.path.splitext(name)[0]
 
             # pagination needed, init paginators
-            paginators = {}
-            for key in paginated.keys():
-                object_list = paginated[key]
-
-                paginators[key] = Paginator(
-                    name_root,
-                    object_list,
-                    self.settings,
-                )
+            paginators = {key: Paginator(name_root, val, self.settings)
+                          for key, val in paginated.items()}
 
             # generated pages, and write
             for page_num in range(list(paginators.values())[0].num_pages):
@@ -198,15 +191,15 @@ class Writer(object):
                 for key in paginators.keys():
                     paginator = paginators[key]
                     previous_page = paginator.page(page_num) \
-                            if page_num > 0 else None
+                        if page_num > 0 else None
                     page = paginator.page(page_num + 1)
                     next_page = paginator.page(page_num + 2) \
-                            if page_num + 1 < paginator.num_pages else None
+                        if page_num + 1 < paginator.num_pages else None
                     paginated_localcontext.update(
-                            {'%s_paginator' % key: paginator,
-                             '%s_page' % key: page,
-                             '%s_previous_page' % key: previous_page,
-                             '%s_next_page' % key: next_page})
+                        {'%s_paginator' % key: paginator,
+                         '%s_page' % key: page,
+                         '%s_previous_page' % key: previous_page,
+                         '%s_next_page' % key: next_page})
 
                 _write_file(template, paginated_localcontext, self.output_path,
                             page.save_as, override_output)
