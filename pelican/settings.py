@@ -68,6 +68,8 @@ DEFAULT_CONFIG = {
     'PDF_GENERATOR': False,
     'PDF_STYLE_PATH': '',
     'PDF_STYLE': 'twelvepoint',
+    'CATEGORIES_URL': 'categories.html',
+    'CATEGORIES_SAVE_AS': 'categories.html',
     'CATEGORY_URL': 'category/{slug}.html',
     'CATEGORY_SAVE_AS': os.path.join('category', '{slug}.html'),
     'TAG_URL': 'tag/{slug}.html',

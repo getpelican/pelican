@@ -248,8 +248,8 @@ Setting name (default value)                            What does it do?
                                                         use the default language.
 `PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
                                                         use the default language.
-`CATEGORIES_URL` (``'categories/'``)                    The URL to use for the category list.
-`CATEGORIES_SAVE_AS` (``'categories/index.html'``)      The location to save the category list.
+`CATEGORIES_URL` (``'categories.html'``)                The URL to use for the category list.
+`CATEGORIES_SAVE_AS` (``'categories.html'``)            The location to save the category list.
 `CATEGORY_URL` (``'category/{slug}.html'``)             The URL to use for a category.
 `CATEGORY_SAVE_AS` (``'category/{slug}.html'``)         The location to save a category.
 `TAG_URL` (``'tag/{slug}.html'``)                       The URL to use for a tag.
