@@ -482,6 +482,7 @@ class ArticlesGenerator(Generator):
     def generate_output(self, writer):
         self.generate_feeds(writer)
         self.generate_pages(writer)
+        signals.article_writer_finalized.send(self, writer=writer)
 
 
 class PagesGenerator(Generator):
