@@ -78,6 +78,8 @@ article_generator_preread           article_generator              invoked befor
 article_generator_init              article_generator              invoked in the ArticlesGenerator.__init__
 article_generator_finalized         article_generator              invoked at the end of ArticlesGenerator.generate_context
 article_generator_write_article     article_generator, content     invoked before writing each article, the article is passed as content
+article_writer_finalized            article_generator, writer      invoked after all articles and related pages have been written, but before
+                                                                   the article generator is closed.
 get_generators                      generators                     invoked in Pelican.get_generator_classes,
                                                                    can return a Generator, or several
                                                                    generator in a tuple or in a list.
