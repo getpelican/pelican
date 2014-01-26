@@ -253,6 +253,29 @@ page_name               TAG_URL where everything after `{slug}` is removed
                         -- useful for pagination links
 ===================     ===================================================
 
+period_archives.html
+--------------------
+
+This template will be processed for each year of your posts if a path
+for YEAR_ARCHIVE_SAVE_AS is defined, each month if MONTH_ARCHIVE_SAVE_AS
+is defined and each day if DAY_ARCHIVE_SAVE_AS is defined.
+
+===================     ===================================================
+Variable                Description
+===================     ===================================================
+period                  A tuple of the form (`year`, `month`, `day`) that
+                        indicates the current time period. `year` and `day`
+                        are numbers while `month` is a string. This tuple
+                        only contains `year` if the time period is a
+                        given year. It contains both `year` and `month`
+                        if the time period is over years and months and
+                        so on.
+
+===================     ===================================================
+
+You can see an example of how to use `period` in the ``simple`` theme's
+period_archives.html
+
 Feeds
 =====
 
