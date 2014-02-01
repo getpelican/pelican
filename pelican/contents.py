@@ -96,9 +96,15 @@ class Content(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, from the title
-        if not hasattr(self, 'slug') and hasattr(self, 'title'):
-            self.slug = slugify(self.title,
+        # create the slug if not existing, generate slug according to 
+        # setting of SLUG_ATTRIBUTE
+        if not hasattr(self, 'slug'):
+            if settings['SLUGIFY_SOURCE'] == 'title' and hasattr(self, 'title'):
+                self.slug = slugify(self.title,
+                                settings.get('SLUG_SUBSTITUTIONS', ()))
+            elif settings['SLUGIFY_SOURCE'] == 'basename' and source_path != None:
+                basename = os.path.basename(os.path.splitext(source_path)[0])
+                self.slug = slugify(basename,
                                 settings.get('SLUG_SUBSTITUTIONS', ()))
 
         self.source_path = source_path
