@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import unicode_literals, print_function, absolute_import
 import logging
 import shutil
 import os
@@ -15,7 +15,7 @@ from pelican.generators import TemplatePagesGenerator
 from pelican.writers import Writer
 from pelican.settings import read_settings
 from pelican import utils
-from .support import get_article, LoggedTestCase, locale_available, unittest
+from pelican.tests.support import get_article, LoggedTestCase, locale_available, unittest
 
 
 class TestUtils(LoggedTestCase):

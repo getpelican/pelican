@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
 import six
 from datetime import datetime
 from sys import platform
 
-from .support import unittest, get_settings
+from pelican.tests.support import unittest, get_settings
 
 from pelican.contents import Page, Article, URLWrapper
 from pelican.settings import DEFAULT_CONFIG
