@@ -554,8 +554,12 @@ class StaticGenerator(Generator):
                     final_path=None):
         """Copy all the paths from source to destination"""
         for path in paths:
-            copy(path, source, os.path.join(output_path, destination),
-                 final_path)
+            if final_path:
+                copy(os.path.join(source, path),
+                     os.path.join(output_path, destination, final_path))
+            else:
+                copy(os.path.join(source, path),
+                     os.path.join(output_path, destination, path))
 
     def generate_context(self):
         self.staticfiles = []
@@ -597,7 +601,7 @@ class SourceFileGenerator(Generator):
         output_path, _ = os.path.splitext(obj.save_as)
         dest = os.path.join(self.output_path,
                             output_path + self.output_extension)
-        copy('', obj.source_path, dest)
+        copy(obj.source_path, dest)
 
     def generate_output(self, writer=None):
         logger.info(' Generating source files...')
