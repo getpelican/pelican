@@ -81,6 +81,73 @@ def get_template(name, as_encoding='utf-8'):
         fd.close()
 
 
+def makedirs(dirpath):
+    """ Makedirs ignoring errors
+
+    :param dirpath:
+        The path to the directory to create
+    """
+
+    try:
+        os.makedirs(dirpath)
+    except OSError as e:
+        print('Error: {0}'.format(e))
+
+
+def chmod(path, mode):
+    """ Chmod, ignoring errors
+
+    :param path:
+        Path to change the mode on
+    :param mode:
+        Mode to change
+    """
+
+    try:
+        os.chmod(path, mode)
+    except OSError as e:
+        print('Error: {0}'.format(e))
+
+
+def make_template(filepath, conf, as_encoding='utf-8'):
+    """ Make a template in the output dir
+
+    :param filepath:
+        The path to the output file
+    :param conf:
+        The dictionary of config parameters
+    :param as_encoding:
+        The file encoding to write (default: 'utf-8')
+    """
+
+    try:
+        with codecs.open(filepath, 'w', as_encoding) as fd:
+            filename = os.path.basename(filepath)
+            for line in get_template(filename, as_encoding=as_encoding):
+                template = string.Template(line)
+                fd.write(template.safe_substitute(conf))
+            fd.close()
+    except OSError as e:
+        print('Error: {0}'.format(e))
+
+
+def escape_shell(conf):
+    """ Shell escape the keys in the config
+
+    :param conf:
+        The config dictionary
+    :returns:
+        A copy of the dictionary with strings escaped
+    """
+
+    new_conf = {}
+    for key, value in conf.items():
+        if isinstance(value, six.string_types) and ' ' in value:
+            value = '"' + value.replace('"', '\\"') + '"'
+        new_conf[key] = value
+    return new_conf
+
+
 @decoding_strings
 def ask(question, answer=str_compat, default=None, l=None):
     if answer == str_compat:
@@ -153,6 +220,43 @@ def ask(question, answer=str_compat, default=None, l=None):
         return r
     else:
         raise NotImplemented('Argument `answer` must be str_compat, bool, or integer')
+
+
+def quickstart(conf, automation=True, develop=True):
+    """ Generate the templates
+
+    :param conf:
+        The config to generate the templates with
+    """
+
+    if six.PY3:
+        python_binary = 'python3'
+    else:
+        python_binary = 'python'
+
+    makedirs(os.path.join(conf['basedir'], 'content'))
+    makedirs(os.path.join(conf['basedir'], 'output'))
+
+    conf_python = {key: repr(value) for key, value in conf.items()}
+
+    make_template(os.path.join(conf['basedir'], 'pelicanconf.py'), conf_python)
+    make_template(os.path.join(conf['basedir'], 'publishconf.py'), conf)
+
+    if automation:
+
+        make_template(os.path.join(conf['basedir'], 'fabfile.py'), conf)
+
+        makefile_conf = dict(conf)
+        makefile_conf['python_binary'] = python_binary
+
+        make_template(os.path.join(conf['basedir'], 'Makefile'), makefile_conf)
+
+    if develop:
+        shell_conf = escape_shell(conf)
+        shell_conf['python_binary'] = python_binary 
+
+        make_template(os.path.join(conf['basedir'], 'develop_server.sh'), shell_conf)
+        chmod(os.path.join(conf['basedir'], 'develop_server.sh'), 493)  # mode 0o755
 
 
 def main():
@@ -230,83 +334,7 @@ needed by Pelican.
             else:
                 CONF['github_pages_branch'] = _GITHUB_PAGES_BRANCHES['project']
 
-    try:
-        os.makedirs(os.path.join(CONF['basedir'], 'content'))
-    except OSError as e:
-        print('Error: {0}'.format(e))
-
-    try:
-        os.makedirs(os.path.join(CONF['basedir'], 'output'))
-    except OSError as e:
-        print('Error: {0}'.format(e))
-
-    try:
-        with codecs.open(os.path.join(CONF['basedir'], 'pelicanconf.py'), 'w', 'utf-8') as fd:
-            conf_python = dict()
-            for key, value in CONF.items():
-                conf_python[key] = repr(value)
-
-            for line in get_template('pelicanconf.py'):
-                template = string.Template(line)
-                fd.write(template.safe_substitute(conf_python))
-            fd.close()
-    except OSError as e:
-        print('Error: {0}'.format(e))
-
-    try:
-        with codecs.open(os.path.join(CONF['basedir'], 'publishconf.py'), 'w', 'utf-8') as fd:
-            for line in get_template('publishconf.py'):
-                template = string.Template(line)
-                fd.write(template.safe_substitute(CONF))
-            fd.close()
-    except OSError as e:
-        print('Error: {0}'.format(e))
-
-    if automation:
-        try:
-            with codecs.open(os.path.join(CONF['basedir'], 'fabfile.py'), 'w', 'utf-8') as fd:
-                for line in get_template('fabfile.py'):
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
-                fd.close()
-        except OSError as e:
-            print('Error: {0}'.format(e))
-        try:
-            with codecs.open(os.path.join(CONF['basedir'], 'Makefile'), 'w', 'utf-8') as fd:
-                mkfile_template_name = 'Makefile'
-                py_v = 'PY=python'
-                if six.PY3:
-                    py_v = 'PY=python3'
-                template = string.Template(py_v)
-                fd.write(template.safe_substitute(CONF))
-                fd.write('\n')
-                for line in get_template(mkfile_template_name):
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
-                fd.close()
-        except OSError as e:
-            print('Error: {0}'.format(e))
-
-    if develop:
-        conf_shell = dict()
-        for key, value in CONF.items():
-            if isinstance(value, six.string_types) and ' ' in value:
-                value = '"' + value.replace('"', '\\"') + '"'
-            conf_shell[key] = value
-        try:
-            with codecs.open(os.path.join(CONF['basedir'], 'develop_server.sh'), 'w', 'utf-8') as fd:
-                lines = list(get_template('develop_server.sh'))
-                py_v = 'PY=python\n'
-                if six.PY3:
-                    py_v = 'PY=python3\n'
-                lines = lines[:4] + [py_v] + lines[4:]
-                for line in lines:
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(conf_shell))
-                fd.close()
-                os.chmod((os.path.join(CONF['basedir'], 'develop_server.sh')), 493) # mode 0o755
-        except OSError as e:
-            print('Error: {0}'.format(e))
+    quickstart(CONF, automation=automation, develop=develop)
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
 
