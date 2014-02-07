@@ -17,6 +17,7 @@ readers_init = signal('readers_init')
 generator_init = signal('generator_init')
 
 article_generator_init = signal('article_generator_init')
+article_generator_pretaxonomy = signal('article_generator_pretaxonomy')
 article_generator_finalized = signal('article_generator_finalized')
 article_generator_write_article = signal('article_generator_write_article')
 article_writer_finalized = signal('article_writer_finalized')

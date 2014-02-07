@@ -421,6 +421,8 @@ class ArticlesGenerator(Generator):
 
         self.articles, self.translations = process_translations(all_articles)
 
+        signals.article_generator_pretaxonomy.send(self)        
+
         for article in self.articles:
             # only main articles are listed in categories and tags
             # not translations
