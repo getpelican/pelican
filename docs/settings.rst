@@ -138,6 +138,10 @@ Setting name (default value)                                                    
                                                                                  incorporated into the generated HTML via the `Typogrify
                                                                                  <https://pypi.python.org/pypi/typogrify-web>`_ library,
                                                                                  which can be installed via: ``pip install typogrify-web``
+`TYPOGRIFY_FILTERS` (``['typogrify']``)                                          List of Typogrify filterst to apply if ``TYPOGRIFY`` is set to ``True``.  
+                                                                                 Default is ``['typogrify']`` which applies all the filters. For example, 
+                                                                                 to disable the ``caps`` filter, you can set ``TYPOGRIFY_FILTERS = ['amp', 
+                                                                                 'initial_quotes', 'smartypants', 'titlecase', 'widont']``.  
 `DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'authors', 'archives')``)  List of templates that are used directly to render
                                                                                  content. Typically direct templates are used to generate
                                                                                  index pages for collections of content (e.g., tags and

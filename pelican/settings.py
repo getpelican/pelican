@@ -112,6 +112,7 @@ DEFAULT_CONFIG = {
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
+    'TYPOGRIFY_FILTERS': ['typogrify'],
     }
 
 PYGMENTS_RST_OPTIONS = None

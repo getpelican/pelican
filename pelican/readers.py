@@ -458,10 +458,13 @@ class Readers(object):
             find_empty_alt(content, path)
 
         # eventually filter the content with typogrify if asked so
+
         if content and self.settings['TYPOGRIFY']:
-            from typogrify.filters import typogrify
-            content = typogrify(content)
-            metadata['title'] = typogrify(metadata['title'])
+            import typogrify.filters
+            for filter_name in self.settings['TYPOGRIFY_FILTERS']:
+                filter = getattr(typogrify.filters, filter_name)
+                content = filter(content)
+                metadata['title'] = filter(metadata['title'])
 
         if context_signal:
             logger.debug('signal {}.send({}, <metadata>)'.format(
