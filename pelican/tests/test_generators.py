@@ -197,6 +197,66 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertIn(custom_template, self.articles)
         self.assertIn(standard_template, self.articles)
 
+    def test_period_in_timeperiod_archive(self):
+        """
+        Test that the context of a generated period_archive is passed
+        'period' : a tuple of year, month, day according to the time period
+        """
+        settings = get_settings(filenames={})
+
+        settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
+        generator = ArticlesGenerator(
+            context=settings, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        write = MagicMock()
+        generator.generate_period_archives(write)
+        dates = [d for d in generator.dates if d.date.year == 1970]
+        self.assertEqual(len(dates), 1)
+        #among other things it must have at least been called with this
+        settings["period"] = (1970,)
+        write.assert_called_with("posts/1970/index.html",
+                                 generator.get_template("period_archives"),
+                                 settings,
+                                 blog=True, dates=dates)
+
+        del settings["period"]
+        settings['MONTH_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/index.html'
+        generator = ArticlesGenerator(
+            context=settings, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        write = MagicMock()
+        generator.generate_period_archives(write)
+        dates = [d for d in generator.dates if d.date.year == 1970
+                                            and d.date.month == 1]
+        self.assertEqual(len(dates), 1)
+        settings["period"] = (1970, "January")
+        #among other things it must have at least been called with this
+        write.assert_called_with("posts/1970/Jan/index.html",
+                                 generator.get_template("period_archives"),
+                                 settings,
+                                 blog=True, dates=dates)
+
+        del settings["period"]
+        settings['DAY_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
+        generator = ArticlesGenerator(
+            context=settings, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        write = MagicMock()
+        generator.generate_period_archives(write)
+        dates = [d for d in generator.dates if d.date.year == 1970
+                                            and d.date.month == 1
+                                            and d.date.day == 1]
+        self.assertEqual(len(dates), 1)
+        settings["period"] = (1970, "January", 1)
+        #among other things it must have at least been called with this
+        write.assert_called_with("posts/1970/Jan/01/index.html",
+                                 generator.get_template("period_archives"),
+                                 settings,
+                                 blog=True, dates=dates)
+
 
 class TestPageGenerator(unittest.TestCase):
     # Note: Every time you want to test for a new field; Make sure the test

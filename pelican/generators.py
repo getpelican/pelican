@@ -7,6 +7,7 @@ import random
 import logging
 import shutil
 import fnmatch
+import calendar
 
 from codecs import open
 from collections import defaultdict
@@ -279,6 +280,18 @@ class ArticlesGenerator(Generator):
         except Exception:
             template = self.get_template('archives')
 
+        period_save_as = {
+            'year': self.settings['YEAR_ARCHIVE_SAVE_AS'],
+            'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
+            'day': self.settings['DAY_ARCHIVE_SAVE_AS'],
+        }
+
+        period_date_key = {
+            'year': attrgetter('date.year'),
+            'month': attrgetter('date.year', 'date.month'),
+            'day': attrgetter('date.year', 'date.month', 'date.day')
+        }
+
         def _generate_period_archives(dates, key, save_as_fmt):
             """Generate period archives from `dates`, grouped by
             `key` and written to `save_as`.
@@ -291,20 +304,20 @@ class ArticlesGenerator(Generator):
                 # period archive dates
                 date = archive[0].date
                 save_as = save_as_fmt.format(date=date)
-                write(save_as, template, self.context,
+                context = self.context.copy()
+
+                if key == period_date_key['year']:
+                    context["period"] = (_period,)
+                elif key == period_date_key['month']:
+                    context["period"] = (_period[0],
+                                         calendar.month_name[_period[1]])
+                else:
+                    context["period"] = (_period[0],
+                                         calendar.month_name[_period[1]],
+                                         _period[2])
+
+                write(save_as, template, context,
                       dates=archive, blog=True)
-
-        period_save_as = {
-            'year': self.settings['YEAR_ARCHIVE_SAVE_AS'],
-            'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
-            'day': self.settings['DAY_ARCHIVE_SAVE_AS'],
-        }
-
-        period_date_key = {
-            'year': attrgetter('date.year'),
-            'month': attrgetter('date.year', 'date.month'),
-            'day': attrgetter('date.year', 'date.month', 'date.day')
-        }
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
