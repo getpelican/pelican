@@ -76,6 +76,9 @@ article_generator_context           article_generator, metadata
 article_generator_preread           article_generator              invoked before a article is read in ArticlesGenerator.generate_context;
                                                                    use if code needs to do something before every article is parsed
 article_generator_init              article_generator              invoked in the ArticlesGenerator.__init__
+article_generator_pretaxonomy       article_generator              invoked before categories and tags lists are created
+                                                                   useful when e.g. modifying the list of articles to be generated
+                                                                   so that removed articles are not leaked in categories or tags
 article_generator_finalized         article_generator              invoked at the end of ArticlesGenerator.generate_context
 article_generator_write_article     article_generator, content     invoked before writing each article, the article is passed as content
 article_writer_finalized            article_generator, writer      invoked after all articles and related pages have been written, but before
