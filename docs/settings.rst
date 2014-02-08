@@ -4,11 +4,14 @@ Settings
 Pelican is configurable thanks to a configuration file you can pass to
 the command line::
 
-    $ pelican -s path/to/your/settingsfile.py path
+    $ pelican content -s path/to/your/settingsfile.py
 
-Settings are configured in the form of a Python module (a file). You can see an
-example by looking at `/samples/pelican.conf.py
+(If you used the `pelican-quickstart` command, your primary settings file will be named `pelicanconf.py` by default.)
+
+Settings are configured in the form of a Python module (a file). There is an
+`example settings file
 <https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_
+available for reference.
 
 All the setting identifiers must be set in all-caps, otherwise they will not be
 processed. Setting values that are numbers (5, 20, etc.), booleans (True,
