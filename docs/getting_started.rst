@@ -271,6 +271,12 @@ use rsync over ssh::
 
 That's it! Your site should now be live.
 
+(The default ``Makefile`` and ``devserver.sh`` scripts use the ``python`` and
+``pelican`` executables to complete its tasks. If you want to use different
+executables, such as ``python3``, you can set the ``PY`` and ``PELICAN``
+environment variables, respectively, to override the default executable names.)
+
+
 Writing content using Pelican
 =============================
 
