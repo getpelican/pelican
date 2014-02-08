@@ -13,23 +13,26 @@ except ImportError:
     import socketserver  # NOQA
 
 PORT = len(sys.argv) == 2 and int(sys.argv[1]) or 8000
-SUFFIXES = ['','.html','/index.html']
+SUFFIXES = ['', '.html', '/index.html']
+
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
     def do_GET(self):
         # we are trying to detect the file by having a fallback mechanism
-        r = None
+        found = False
         for suffix in SUFFIXES:
             if not hasattr(self,'original_path'):
                 self.original_path = self.path
             self.path = self.original_path + suffix
             path = self.translate_path(self.path)
             if os.path.exists(path):
-                r = srvmod.SimpleHTTPRequestHandler.do_GET(self)
-            if r is not None:
+                srvmod.SimpleHTTPRequestHandler.do_GET(self)
+                logging.info("Found: %s" % self.path)
+                found = True
                 break
-            logging.warning("Unable to find %s file." % self.path)
-        return r
+            logging.info("Tried to find file %s, but it doesn't exist. " % self.path)
+        if not found:
+            logging.warning("Unable to find file %s or variations." % self.path)
 
 Handler = ComplexHTTPRequestHandler
 
