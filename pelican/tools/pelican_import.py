@@ -112,7 +112,7 @@ def get_items(xml):
         sys.exit(error)
     with open(xml, encoding='utf-8') as infile:
         xmlfile = infile.read()
-    soup = BeautifulSoup(xmlfile, "lxml")
+    soup = BeautifulSoup(xmlfile, ["lxml", "xml"])
     items = soup.rss.channel.findAll('item')
     return items
 
@@ -167,7 +167,7 @@ def wp2fields(xml, wp_custpost=False):
                     pass
                 else:
                     kind = post_type
-            yield (title, content, filename, date, author, categories, tags,
+            yield (title, content, slugify(filename), date, author, categories, tags,
                    kind, "wp-html")
 
 def dc2fields(file):
