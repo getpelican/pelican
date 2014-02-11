@@ -297,7 +297,11 @@ class HTMLReader(BaseReader):
             for k, v in attrs:
                 result += ' ' + escape(k)
                 if v is not None:
-                    result += '="{}"'.format(escape(v))
+                    # figure out the proper surrounding quote-marks
+                    if '"' in v:
+                        result += "='{}'".format(escape(v))
+                    else:
+                        result += '="{}"'.format(escape(v))
             if close_tag:
                 return result + ' />'
             return result + '>'
