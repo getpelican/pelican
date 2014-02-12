@@ -4,8 +4,6 @@ Release history
 Next release
 ============
 
-* Replace the neglected ``typogrify`` package with the actively-maintained
-  ``typogrify-web`` package.
 * Added the `:modified:` metadata field to complement `:date:`.
   Used to specify the last date and time an article was updated independently from the date and time it was published.
 * Produce inline links instead of reference-style links when importing content.
