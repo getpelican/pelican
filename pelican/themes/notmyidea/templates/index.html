@@ -42,11 +42,15 @@
             </article></li>
         {% endif %}
         {% if loop.last %}
-            </ol><!-- /#posts-list -->
+            {% if loop.length > 1 %}
+                </ol><!-- /#posts-list -->
+            {% endif %}
             {% if articles_page.has_previous() or loop.length > 1 %}
                 {% include 'pagination.html' %}
             {% endif %}
-            </section><!-- /#content -->
+            {% if loop.length > 1 %}
+                </section><!-- /#content -->
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% else %}
