@@ -36,6 +36,7 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
 
 Handler = ComplexHTTPRequestHandler
 
+socketserver.TCPServer.allow_reuse_address = True
 try:
     httpd = socketserver.TCPServer(("", PORT), Handler)
 except OSError as e:
