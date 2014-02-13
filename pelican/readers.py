@@ -521,7 +521,7 @@ def default_metadata(settings=None, process=None):
             if process:
                 value = process('category', value)
             metadata['category'] = value
-        if 'DEFAULT_DATE' in settings and settings['DEFAULT_DATE'] != 'fs':
+        if settings.get('DEFAULT_DATE', None) and settings['DEFAULT_DATE'] != 'fs':
             metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
     return metadata
 
