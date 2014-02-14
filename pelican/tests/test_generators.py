@@ -93,6 +93,7 @@ class TestArticlesGenerator(unittest.TestCase):
             ['This is a super article !', 'published', 'Default', 'article'],
             ['This is an article with category !', 'published', 'yeah',
              'article'],
+            ['This is an article with multiple authors!', 'published', 'Default', 'article'],
             ['This is an article without category !', 'published', 'Default',
              'article'],
             ['This is an article without category !', 'published',
@@ -256,6 +257,16 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  settings,
                                  blog=True, dates=dates)
+
+    def test_generate_authors(self):
+        """Check authors generation."""
+        authors = [author.name for author, _ in self.generator.authors]
+        authors_expected = sorted(['Alexis Métaireau', 'First Author', 'Second Author'])
+        self.assertEqual(sorted(authors), authors_expected)
+        # test for slug
+        authors = [author.slug for author, _ in self.generator.authors]
+        authors_expected = ['alexis-metaireau', 'first-author', 'second-author']
+        self.assertEqual(sorted(authors), sorted(authors_expected))
 
 
 class TestPageGenerator(unittest.TestCase):

@@ -2,11 +2,11 @@
 from __future__ import unicode_literals, print_function
 
 import os
-from filecmp import dircmp
 from tempfile import mkdtemp
 from shutil import rmtree
 import locale
 import logging
+import subprocess
 
 from pelican import Pelican
 from pelican.settings import read_settings
@@ -64,6 +64,13 @@ class TestPelican(LoggedTestCase):
         self.assertEqual(diff['right_only'], [], msg=msg)
         self.assertEqual(diff['diff_files'], [], msg=msg)
 
+    def assertDirsEqual(self, left_path, right_path):
+        out, err = subprocess.Popen(
+            ['git', 'diff', '--no-ext-diff', '--exit-code', '-w', left_path, right_path], env={'PAGER': ''},
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+        assert not out, out
+        assert not err, err
+
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
         # ones and generate correct output without raising any exception
@@ -74,8 +81,7 @@ class TestPelican(LoggedTestCase):
             })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
-        dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
-        self.assertFilesEqual(recursiveDiff(dcmp))
+        self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertLogCountEqual(
             count=4,
             msg="Unable to find.*skipping url replacement",
@@ -90,8 +96,7 @@ class TestPelican(LoggedTestCase):
             })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
-        dcmp = dircmp(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
-        self.assertFilesEqual(recursiveDiff(dcmp))
+        self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
 
     def test_theme_static_paths_copy(self):
         # the same thing with a specified set of settings should work
