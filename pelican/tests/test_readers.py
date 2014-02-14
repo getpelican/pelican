@@ -374,18 +374,6 @@ class HTMLReaderTest(ReaderTest):
         for key, value in expected.items():
             self.assertEqual(value, page.metadata[key], key)
 
-    def test_article_with_attributes(self):
-        page = self.read_file(path='article_with_attributes.html')
-
-        self.assertEqual('''
-        <section id="double-quote-attribute-value">
-            Both double quoted attribute values should
-            be supported.
-            As well as single quoted, so they can accept some
-            <span data-json='{"key": "value"}'>JSON data-attributes</span>
-        </section>
-    ''', page.content)
-
     def test_article_with_null_attributes(self):
         page = self.read_file(path='article_with_null_attributes.html')
 
