@@ -22,12 +22,14 @@ Contribution submission guidelines
   #585`` syntax (so the relevant issue is automatically closed upon PR merge).
 * After the first line of the commit message, add a blank line and then a more
   detailed explanation (when relevant).
+* `Squash your commits`_ to eliminate merge commits and ensure a clean and
+  readable commit history.
 * If you have previously filed a GitHub issue and want to contribute code that
   addresses that issue, **please use** ``hub pull-request`` instead of using
   GitHub's web UI to submit the pull request. This isn't an absolute
   requirement, but makes the maintainers' lives much easier! Specifically:
-  `install hub <https://github.com/defunkt/hub/#installation>`_ and then run
-  `hub pull-request <https://github.com/defunkt/hub/#git-pull-request>`_ to
+  `install hub <https://github.com/github/hub/#installation>`_ and then run
+  `hub pull-request <https://github.com/github/hub/#git-pull-request>`_ to
   turn your GitHub issue into a pull request containing your code.
 
 Check out our `Git Tips`_ page or ask on the `#pelican IRC channel`_ if you
@@ -36,6 +38,7 @@ need assistance or have any questions about these guidelines.
 .. _`plugin`: http://docs.getpelican.com/en/latest/plugins.html
 .. _`#pelican IRC channel`: http://webchat.freenode.net/?channels=pelican&uio=d4
 .. _`Create a new git branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
+.. _`Squash your commits`: https://github.com/getpelican/pelican/wiki/Git-Tips#squashing-commits
 .. _`Run all the tests`: http://docs.getpelican.com/en/latest/contribute.html#running-the-test-suite
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
 .. _`PEP8 coding standards`: http://www.python.org/dev/peps/pep-0008/
