@@ -46,6 +46,7 @@ METADATA_PROCESSORS = {
     'status': lambda x, y: x.strip(),
     'category': Category,
     'author': Author,
+    'authors': lambda x, y: [Author(author, y) for author in x],
 }
 
 logger = logging.getLogger(__name__)
@@ -144,6 +145,9 @@ class RstReader(BaseReader):
                         value = render_node_to_html(document, body_elem)
                     else:
                         value = body_elem.astext()
+                elif element.tagname == 'authors':  # author list
+                    name = element.tagname
+                    value = [element.astext() for element in element.children]
                 else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()
@@ -520,7 +524,7 @@ def default_metadata(settings=None, process=None):
             if process:
                 value = process('category', value)
             metadata['category'] = value
-        if 'DEFAULT_DATE' in settings and settings['DEFAULT_DATE'] != 'fs':
+        if settings.get('DEFAULT_DATE', None) and settings['DEFAULT_DATE'] != 'fs':
             metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
     return metadata
 
