@@ -20,14 +20,15 @@ from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
 
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
-from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
+from pelican.utils import (copy, process_translations, mkdir_p, DateFormatter,
+                           FileStampDataCacher)
 from pelican import signals
 
 
 logger = logging.getLogger(__name__)
 
 
-class Generator(object):
+class Generator(FileStampDataCacher):
     """Baseclass generator"""
 
     def __init__(self, context, settings, path, theme, output_path, **kwargs):
@@ -72,6 +73,10 @@ class Generator(object):
         # get custom Jinja filters from user settings
         custom_filters = self.settings['JINJA_FILTERS']
         self.env.filters.update(custom_filters)
+
+        # set up caching
+        super(Generator, self).__init__(settings, 'CACHE_CONTENT',
+                                        'LOAD_CONTENT_CACHE')
 
         signals.generator_init.send(self)
 
@@ -408,20 +413,24 @@ class ArticlesGenerator(Generator):
         for f in self.get_files(
                 self.settings['ARTICLE_DIR'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
-            try:
-                article = self.readers.read_file(
-                    base_path=self.path, path=f, content_class=Article,
-                    context=self.context,
-                    preread_signal=signals.article_generator_preread,
-                    preread_sender=self,
-                    context_signal=signals.article_generator_context,
-                    context_sender=self)
-            except Exception as e:
-                logger.warning('Could not process {}\n{}'.format(f, e))
-                continue
+            article = self.get_cached_data(f, None)
+            if article is None:
+                try:
+                    article = self.readers.read_file(
+                        base_path=self.path, path=f, content_class=Article,
+                        context=self.context,
+                        preread_signal=signals.article_generator_preread,
+                        preread_sender=self,
+                        context_signal=signals.article_generator_context,
+                        context_sender=self)
+                except Exception as e:
+                    logger.warning('Could not process {}\n{}'.format(f, e))
+                    continue
 
-            if not is_valid_content(article, f):
-                continue
+                if not is_valid_content(article, f):
+                    continue
+
+                self.cache_data(f, article)
 
             self.add_source_path(article)
 
@@ -502,7 +511,7 @@ class ArticlesGenerator(Generator):
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
-
+        self.save_cache()
         signals.article_generator_finalized.send(self)
 
     def generate_output(self, writer):
@@ -527,20 +536,24 @@ class PagesGenerator(Generator):
         for f in self.get_files(
                 self.settings['PAGE_DIR'],
                 exclude=self.settings['PAGE_EXCLUDES']):
-            try:
-                page = self.readers.read_file(
-                    base_path=self.path, path=f, content_class=Page,
-                    context=self.context,
-                    preread_signal=signals.page_generator_preread,
-                    preread_sender=self,
-                    context_signal=signals.page_generator_context,
-                    context_sender=self)
-            except Exception as e:
-                logger.warning('Could not process {}\n{}'.format(f, e))
-                continue
+            page = self.get_cached_data(f, None)
+            if page is None:
+                try:
+                    page = self.readers.read_file(
+                        base_path=self.path, path=f, content_class=Page,
+                        context=self.context,
+                        preread_signal=signals.page_generator_preread,
+                        preread_sender=self,
+                        context_signal=signals.page_generator_context,
+                        context_sender=self)
+                except Exception as e:
+                    logger.warning('Could not process {}\n{}'.format(f, e))
+                    continue
 
-            if not is_valid_content(page, f):
-                continue
+                if not is_valid_content(page, f):
+                    continue
+
+                self.cache_data(f, page)
 
             self.add_source_path(page)
 
@@ -560,6 +573,7 @@ class PagesGenerator(Generator):
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
+        self.save_cache()
         signals.page_generator_finalized.send(self)
 
     def generate_output(self, writer):
