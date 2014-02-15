@@ -12,6 +12,8 @@ import pytz
 import re
 import shutil
 import traceback
+import pickle
+import hashlib
 
 from collections import Hashable
 from contextlib import contextmanager
@@ -545,3 +547,114 @@ def split_all(path):
             break
         path = head
     return components
+
+
+class FileDataCacher(object):
+    '''Class that can cache data contained in files'''
+
+    def __init__(self, settings, cache_policy_key, load_policy_key):
+        '''Load the specified cache within CACHE_DIRECTORY
+
+        only if load_policy_key in setttings is True,
+        May use gzip if GZIP_CACHE.
+        Sets caching policy according to *cache_policy_key*
+        in *settings*
+        '''
+        self.settings = settings
+        name = self.__class__.__name__
+        self._cache_path = os.path.join(self.settings['CACHE_DIRECTORY'], name)
+        self._cache_data_policy = self.settings[cache_policy_key]
+        if not self.settings[load_policy_key]:
+            self._cache = {}
+            return
+        if self.settings['GZIP_CACHE']:
+            import gzip
+            self._cache_open = gzip.open
+        else:
+            self._cache_open = open
+        try:
+            with self._cache_open(self._cache_path, 'rb') as f:
+                self._cache = pickle.load(f)
+        except Exception as e:
+            self._cache = {}
+
+    def cache_data(self, filename, data):
+        '''Cache data for given file'''
+        if not self._cache_data_policy:
+            return
+        self._cache[filename] = data
+
+    def get_cached_data(self, filename, default={}):
+        '''Get cached data for the given file
+
+        if no data is cached, return the default object
+        '''
+        return self._cache.get(filename, default)
+
+    def save_cache(self):
+        '''Save the updated cache'''
+        if not self._cache_data_policy:
+            return
+        try:
+            mkdir_p(self.settings['CACHE_DIRECTORY'])
+            with self._cache_open(self._cache_path, 'wb') as f:
+                pickle.dump(self._cache, f)
+        except Exception as e:
+            logger.warning('Could not save cache {}\n{}'.format(
+                self._cache_path, e))
+
+
+class FileStampDataCacher(FileDataCacher):
+    '''Subclass that also caches the stamp of the file'''
+
+    def __init__(self, settings, cache_policy_key, load_policy_key):
+        '''This sublcass additionaly sets filestamp function'''
+        super(FileStampDataCacher, self).__init__(settings, cache_policy_key,
+                                                  load_policy_key)
+
+        method = self.settings['CHECK_MODIFIED_METHOD']
+        if method == 'mtime':
+            self._filestamp_func = os.path.getmtime
+        else:
+            try:
+                hash_func = getattr(hashlib, method)
+                def filestamp_func(buf):
+                    return hash_func(buf).digest()
+                self._filestamp_func = filestamp_func
+            except ImportError:
+                self._filestamp_func = None
+
+    def cache_data(self, filename, data):
+        '''Cache stamp and data for the given file'''
+        stamp = self._get_file_stamp(filename)
+        super(FileStampDataCacher, self).cache_data(filename, (stamp, data))
+
+    def _get_file_stamp(self, filename):
+        '''Check if the given file has been modified
+        since the previous build.
+
+        depending on CHECK_MODIFIED_METHOD
+        a float may be returned for 'mtime',
+        a hash for a function name in the hashlib module
+        or an empty bytes string otherwise
+        '''
+        filename = os.path.join(self.path, filename)
+        try:
+            with open(filename, 'rb') as f:
+                return self._filestamp_func(f.read())
+        except Exception:
+            return b''
+
+    def get_cached_data(self, filename, default=None):
+        '''Get the cached data for the given filename
+        if the file has not been modified.
+
+        If no record exists or file has been modified, return default.
+        Modification is checked by compaing the cached
+        and current file stamp.
+        '''
+        stamp, data = super(FileStampDataCacher, self).get_cached_data(
+            filename, (None, default))
+        if stamp != self._get_file_stamp(filename):
+            return default
+        return data

@@ -260,6 +260,10 @@ def parse_arguments():
                         action='store_true',
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
+
+    parser.add_argument('-f', '--full-rebuild', action='store_true',
+                        dest='full_rebuild', help='Rebuild everything by not loading from cache')
+
     return parser.parse_args()
 
 
@@ -275,6 +279,8 @@ def get_config(args):
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
     if args.delete_outputdir is not None:
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
+    if args.full_rebuild:
+        config['LOAD_CONTENT_CACHE'] = False
 
     # argparse returns bytes in Py2. There is no definite answer as to which
     # encoding argparse (or sys.argv) uses.
@@ -327,6 +333,7 @@ def main():
             print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
                   ' `settings` for changes. ---')
 
+            first_run = True              # load cache on first run
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -335,9 +342,14 @@ def main():
                     # have changed, no matter what extension the filenames
                     # have.
                     modified = {k: next(v) for k, v in watchers.items()}
+                    original_load_cache = settings['LOAD_CONTENT_CACHE']
 
                     if modified['settings']:
                         pelican, settings = get_instance(args)
+                        if not first_run:
+                            original_load_cache = settings['LOAD_CONTENT_CACHE']
+                            # invalidate cache
+                            pelican.settings['LOAD_CONTENT_CACHE'] = False
 
                     if any(modified.values()):
                         print('\n-> Modified: {}. re-generating...'.format(
@@ -349,8 +361,15 @@ def main():
                         if modified['theme'] is None:
                             logger.warning('Empty theme folder. Using `basic` '
                                            'theme.')
+                        elif modified['theme']:
+                            # theme modified, needs full rebuild -> no cache
+                            if not first_run:   # but not on first run
+                                pelican.settings['LOAD_CONTENT_CACHE'] = False
 
                         pelican.run()
+                        first_run = False
+                        # restore original caching policy
+                        pelican.settings['LOAD_CONTENT_CACHE'] = original_load_cache
 
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
