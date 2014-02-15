@@ -173,6 +173,12 @@ Setting name (default value)                                                    
 `SLUGIFY_SOURCE` (``'input'``)                                                   Specifies where you want the slug to be automatically generated
                                                                                  from. Can be set to 'title' to use the 'Title:' metadata tag or
                                                                                  'basename' to use the articles basename when creating the slug.
+`CACHE_CONTENT` (``True``)                                                       If ``True``, save read content in a cache file. 
+                                                                                 See :ref:`reading_only_modified_content` for details about caching.
+`CACHE_DIRECTORY` (``cache``)                                                    Directory in which to store cache files.
+`CHECK_MODIFIED_METHOD` (``mtime``)                                              Controls how files are checked for modifications.
+`LOAD_CONTENT_CACHE` (``True``)                                                  If ``True``, load unmodified content from cache.
+`GZIP_CACHE` (``True``)                                                          If ``True``, use gzip to (de)compress the cache files.
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
@@ -602,7 +608,7 @@ Setting name (default value)                             What does it do?
 .. [3] %s is the language
 
 Ordering content
-=================
+================
 
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
@@ -697,7 +703,6 @@ adding the following to your configuration::
 
     CSS_FILE = "wide.css"
 
-
 Logging
 =======
 
@@ -713,6 +718,61 @@ be filtered out.
 
 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 
+.. _reading_only_modified_content:
+
+Reading only modified content
+=============================
+
+To speed up the build process, pelican can optionally read only articles
+and pages with modified content.
+
+When Pelican is about to read some content source file:
+
+1. The hash or modification time information for the file from a
+   previous build are loaded from a cache file if `LOAD_CONTENT_CACHE`
+   is ``True``. These files are stored in the `CACHE_DIRECTORY`
+   directory.  If the file has no record in the cache file, it is read
+   as usual.
+2. The file is checked according to `CHECK_MODIFIED_METHOD`:
+
+    - If set to ``'mtime'``, the modification time of the file is
+      checked.
+    - If set to a name of a function provided by the ``hashlib``
+      module, e.g. ``'md5'``, the file hash is checked.
+    - If set to anything else or the necessary information about the
+      file cannot be found in the cache file, the content is read as
+      usual.
+
+3. If the file is considered unchanged, the content object saved in a
+   previous build corresponding to the file is loaded from the cache
+   and the file is not read.
+4. If the file is considered changed, the file is read and the new
+   modification information and the content object are saved to the
+   cache if `CACHE_CONTENT` is ``True``.
+
+Modification time based checking is faster than comparing file hashes,
+but is not as reliable, because mtime information can be lost when
+e.g. copying the content sources using the ``cp`` or ``rsync``
+commands without the mtime preservation mode (invoked e.g. by
+``--archive``).
+
+The cache files are Python pickles, so they may not be readable by
+different versions of Python as the pickle format often changes. If
+such an error is encountered, the cache files have to be rebuilt
+using the pelican command-line option ``--full-rebuild``.
+The cache files also have to be rebuilt when changing the
+`GZIP_CACHE` setting for cache file reading to work.
+
+The ``--full-rebuild`` command-line option is also useful when the
+whole site needs to be regenerated due to e.g. modifications to the
+settings file or theme files. When pelican runs in autorealod mode,
+modification of the settings file or theme will trigger a full rebuild
+automatically.
+
+Note that even when using cached content, all output is always
+written, so the modification times of the ``*.html`` files always
+change.  Therefore, ``rsync`` based upload may benefit from the
+``--checksum`` option.
 
 Example settings
 ================

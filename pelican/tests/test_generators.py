@@ -42,6 +42,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
+        settings['CACHE_CONTENT'] = False   # cache not needed for this logic tests
 
         cls.generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
@@ -50,8 +51,15 @@ class TestArticlesGenerator(unittest.TestCase):
         cls.articles = [[page.title, page.status, page.category.name,
                          page.template] for page in cls.generator.articles]
 
+    def setUp(self):
+        self.temp_cache = mkdtemp(prefix='pelican_cache.')
+
+    def tearDown(self):
+        rmtree(self.temp_cache)
+
     def test_generate_feeds(self):
         settings = get_settings()
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -127,6 +135,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         settings['READERS'] = {'asc': None}
         settings['filenames'] = {}
         generator = ArticlesGenerator(
@@ -151,6 +160,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_direct_templates_save_as_default(self):
 
         settings = get_settings(filenames={})
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -165,6 +175,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -180,6 +191,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -206,6 +218,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
 
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -268,6 +281,25 @@ class TestArticlesGenerator(unittest.TestCase):
         authors_expected = ['alexis-metaireau', 'first-author', 'second-author']
         self.assertEqual(sorted(authors), sorted(authors_expected))
 
+    def test_content_caching(self):
+        """Test that the articles are read only once when caching"""
+        settings = get_settings(filenames={})
+        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['READERS'] = {'asc': None}
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        self.assertTrue(hasattr(generator, '_cache'))
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock()
+        generator.generate_context()
+        generator.readers.read_file.assert_called_count == 0
+
 
 class TestPageGenerator(unittest.TestCase):
     # Note: Every time you want to test for a new field; Make sure the test
@@ -275,12 +307,19 @@ class TestPageGenerator(unittest.TestCase):
     # distill_pages Then update the assertEqual in test_generate_context
     # to match expected
 
+    def setUp(self):
+        self.temp_cache = mkdtemp(prefix='pelican_cache.')
+
+    def tearDown(self):
+        rmtree(self.temp_cache)
+
     def distill_pages(self, pages):
         return [[page.title, page.status, page.template] for page in pages]
 
     def test_generate_context(self):
         settings = get_settings(filenames={})
         settings['PAGE_DIR'] = 'TestPages'  # relative to CUR_DIR
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 
         generator = PagesGenerator(
@@ -305,6 +344,26 @@ class TestPageGenerator(unittest.TestCase):
 
         self.assertEqual(sorted(pages_expected), sorted(pages))
         self.assertEqual(sorted(hidden_pages_expected), sorted(hidden_pages))
+
+    def test_content_caching(self):
+        """Test that the pages are read only once when caching"""
+        settings = get_settings(filenames={})
+        settings['CACHE_DIRECTORY'] = 'cache_dir'   #TODO
+        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['READERS'] = {'asc': None}
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        self.assertTrue(hasattr(generator, '_cache'))
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock()
+        generator.generate_context()
+        generator.readers.read_file.assert_called_count == 0
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):

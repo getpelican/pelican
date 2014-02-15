@@ -119,7 +119,12 @@ DEFAULT_CONFIG = {
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
-    'SLUGIFY_SOURCE': 'title'
+    'SLUGIFY_SOURCE': 'title',
+    'CACHE_CONTENT': True,
+    'CACHE_DIRECTORY': 'cache',
+    'GZIP_CACHE': True,
+    'CHECK_MODIFIED_METHOD': 'mtime',
+    'LOAD_CONTENT_CACHE': True,
     }
 
 PYGMENTS_RST_OPTIONS = None
