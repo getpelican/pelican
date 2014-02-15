@@ -6,9 +6,11 @@
 
 <section id="content" class="body">
     <h1>Authors on {{ SITENAME }}</h1>
-    {%- for author, articles in authors|sort %}
+    <ul>
+    {% for author, articles in authors|sort %}
         <li><a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a> ({{ articles|count }})</li>
     {% endfor %}
+    </ul>
 </section>
 
 {% endblock %}
