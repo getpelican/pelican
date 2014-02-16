@@ -2,7 +2,7 @@
 from setuptools import setup
 
 requires = ['feedgenerator >= 1.6', 'jinja2 >= 2.7', 'pygments', 'docutils',
-            'pytz >= 0a', 'blinker', 'unidecode', 'six']
+            'pytz >= 0a', 'blinker', 'unidecode', 'six', 'python-dateutil']
 
 entry_points = {
     'console_scripts': [

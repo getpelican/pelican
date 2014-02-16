@@ -41,6 +41,12 @@ class TestUtils(LoggedTestCase):
         date = datetime.datetime(year=2012, month=11, day=22)
         date_hour = datetime.datetime(
             year=2012, month=11, day=22, hour=22, minute=11)
+        date_hour_z = datetime.datetime(
+            year=2012, month=11, day=22, hour=22, minute=11,
+            tzinfo=pytz.timezone('UTC'))
+        date_hour_est = datetime.datetime(
+            year=2012, month=11, day=22, hour=22, minute=11,
+            tzinfo=pytz.timezone('EST'))
         date_hour_sec = datetime.datetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10)
         date_hour_sec_z = datetime.datetime(
@@ -61,20 +67,40 @@ class TestUtils(LoggedTestCase):
             '22/11/2012': date,
             '22.11.2012': date,
             '22.11.2012 22:11': date_hour,
+            '2012-11-22T22:11Z': date_hour_z,
+            '2012-11-22T22:11-0500': date_hour_est,
             '2012-11-22 22:11:10': date_hour_sec,
             '2012-11-22T22:11:10Z': date_hour_sec_z,
             '2012-11-22T22:11:10-0500': date_hour_sec_est,
             '2012-11-22T22:11:10.123Z': date_hour_sec_frac_z,
             }
 
+        # examples from http://www.w3.org/TR/NOTE-datetime
+        iso_8601_date = datetime.datetime(year=1997, month=7, day=16)
+        iso_8601_date_hour_tz = datetime.datetime(
+            year=1997, month=7, day=16, hour=19, minute=20,
+            tzinfo=pytz.timezone('CET'))
+        iso_8601_date_hour_sec_tz = datetime.datetime(
+            year=1997, month=7, day=16, hour=19, minute=20, second=30,
+            tzinfo=pytz.timezone('CET'))
+        iso_8601_date_hour_sec_ms_tz = datetime.datetime(
+            year=1997, month=7, day=16, hour=19, minute=20, second=30,
+            microsecond=450000, tzinfo=pytz.timezone('CET'))
+        iso_8601 = {
+            '1997-07-16': iso_8601_date,
+            '1997-07-16T19:20+01:00': iso_8601_date_hour_tz,
+            '1997-07-16T19:20:30+01:00': iso_8601_date_hour_sec_tz,
+            '1997-07-16T19:20:30.45+01:00': iso_8601_date_hour_sec_ms_tz,
+        }
+
         # invalid ones
         invalid_dates = ['2010-110-12', 'yay']
 
-        if version_info < (3, 2):
-            dates.pop('2012-11-22T22:11:10-0500')
-            invalid_dates.append('2012-11-22T22:11:10-0500')
 
         for value, expected in dates.items():
+            self.assertEqual(utils.get_date(value), expected, value)
+
+        for value, expected in iso_8601.items():
             self.assertEqual(utils.get_date(value), expected, value)
 
         for item in invalid_dates:
