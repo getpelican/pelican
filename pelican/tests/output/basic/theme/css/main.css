@@ -314,7 +314,10 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 		.social a[href*='facebook.com'] {background-image: url('../images/icons/facebook.png');}
 		.social a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.png');}
 		.social a[href*='github.com'],
-		.social a[href*='git.io'] {background-image: url('../images/icons/github.png');}
+		.social a[href*='git.io'] {
+			background-image: url('../images/icons/github.png');
+			background-size: 16px 16px;
+		}
 		.social a[href*='gittip.com'] {background-image: url('../images/icons/gittip.png');}
 		.social a[href*='plus.google.com'] {background-image: url('../images/icons/google-plus.png');}
 		.social a[href*='groups.google.com'] {background-image: url('../images/icons/google-groups.png');}
