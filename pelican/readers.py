@@ -46,7 +46,7 @@ METADATA_PROCESSORS = {
     'status': lambda x, y: x.strip(),
     'category': Category,
     'author': Author,
-    'authors': lambda x, y: [Author(author, y) for author in x],
+    'authors': lambda x, y: [Author(author.strip(), y) for author in x.split(',')],
 }
 
 logger = logging.getLogger(__name__)
