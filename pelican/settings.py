@@ -108,6 +108,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_STATUS': 'published',
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
+    'TYPOGRIFY_FILTERS': ['typogrify'],
     'SUMMARY_MAX_LENGTH': 50,
     'PLUGIN_PATH': '',
     'PLUGINS': [],
