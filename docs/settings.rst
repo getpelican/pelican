@@ -6,7 +6,8 @@ the command line::
 
     $ pelican content -s path/to/your/settingsfile.py
 
-(If you used the `pelican-quickstart` command, your primary settings file will be named `pelicanconf.py` by default.)
+(If you used the `pelican-quickstart` command, your primary settings file will
+be named `pelicanconf.py` by default.)
 
 Settings are configured in the form of a Python module (a file). There is an
 `example settings file
@@ -193,9 +194,10 @@ want.
     If you specify a ``datetime`` directive, it will be substituted using the
     input files' date metadata attribute. If the date is not specified for a
     particular file, Pelican will rely on the file's ``mtime`` timestamp.
+    Check the `Python datetime documentation`_ for more information.
 
-Check the Python datetime documentation at http://bit.ly/cNcJUC for more
-information.
+.. _Python datetime documentation:
+    http://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
 
 Also, you can use other file metadata attributes as well:
 
