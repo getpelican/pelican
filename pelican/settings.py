@@ -112,7 +112,7 @@ DEFAULT_CONFIG = {
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
     'SUMMARY_MAX_LENGTH': 50,
-    'PLUGIN_PATH': '',
+    'PLUGIN_PATH': [],
     'PLUGINS': [],
     'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
@@ -135,13 +135,21 @@ def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'PLUGIN_PATH']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
                     os.path.dirname(path), local_settings[p])))
-                if p not in ('THEME', 'PLUGIN_PATH') or os.path.exists(absp):
+                if p not in ('THEME') or os.path.exists(absp):
                     local_settings[p] = absp
+
+        if isinstance(local_settings['PLUGIN_PATH'], six.string_types):
+            logger.warning("Detected misconfiguration with %s setting ""(must be a list)" % 'PLUGIN_PATH')
+            local_settings['PLUGIN_PATH'] = [local_settings['PLUGIN_PATH']]
+        else:
+            if 'PLUGIN_PATH' in local_settings and local_settings['PLUGIN_PATH'] is not None:
+                local_settings['PLUGIN_PATH'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
+                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATH']]
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
