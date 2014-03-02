@@ -24,7 +24,7 @@ If your plugins are not in an importable path, you can specify a ``PLUGIN_PATH``
 in the settings. ``PLUGIN_PATH`` can be an absolute path or a path relative to
 the settings file::
 
-    PLUGIN_PATH = "plugins"
+    PLUGIN_PATH = ["list", "of", plugins path"]
     PLUGINS = ["list", "of", "plugins"]
 
 Where to find plugins
