@@ -32,6 +32,7 @@ class TestPage(unittest.TestCase):
                 'title': 'foo bar',
                 'author': 'Blogger',
             },
+            'source_path': '/path/to/file/foo.ext'
         }
 
     def test_use_args(self):
@@ -77,9 +78,15 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.summary, '')
 
     def test_slug(self):
-        # If a title is given, it should be used to generate the slug.
-        page = Page(**self.page_kwargs)
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs['settings'] = settings
+        settings['SLUGIFY_SOURCE'] = "title"
+        page = Page(**page_kwargs)
         self.assertEqual(page.slug, 'foo-bar')
+        settings['SLUGIFY_SOURCE'] = "basename"
+        page = Page(**page_kwargs)
+        self.assertEqual(page.slug, 'foo')
 
     def test_defaultlang(self):
         # If no lang is given, default to the default one.

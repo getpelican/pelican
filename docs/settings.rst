@@ -166,6 +166,10 @@ Setting name (default value)                                                    
 `PYGMENTS_RST_OPTIONS` (``[]``)                                                  A list of default Pygments settings for your reStructuredText
                                                                                  code blocks. See :ref:`internal_pygments_options` for a list of
                                                                                  supported options.
+
+`SLUGIFY_SOURCE` (``'input'``)                                                Specifies where you want the slug to be automatically generated 
+                                                                                 from. Can be set to 'title' to use the Title: metadata tag or 
+                                                                                 'basename' to use the articles basename to make a slug. 
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
