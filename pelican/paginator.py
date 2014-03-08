@@ -69,7 +69,7 @@ class Paginator(object):
 
 class Page(object):
     def __init__(self, name, object_list, number, paginator, settings):
-        self.name = name
+        self.name, self.extension = os.path.splitext(name)
         self.object_list = object_list
         self.number = number
         self.paginator = paginator
@@ -143,6 +143,7 @@ class Page(object):
             'settings': self.settings,
             'base_name': os.path.dirname(self.name),
             'number_sep': '/',
+            'extension':  self.extension,
         }
 
         if self.number == 1:
