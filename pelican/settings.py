@@ -79,7 +79,7 @@ DEFAULT_CONFIG = {
     'AUTHOR_URL': 'author/{slug}.html',
     'AUTHOR_SAVE_AS': os.path.join('author', '{slug}.html'),
     'PAGINATION_PATTERNS': [
-        (0, '{name}{number}.html', '{name}{number}.html'),
+        (0, '{name}{number}{extension}', '{name}{number}{extension}'),
     ],
     'YEAR_ARCHIVE_SAVE_AS': False,
     'MONTH_ARCHIVE_SAVE_AS': False,
