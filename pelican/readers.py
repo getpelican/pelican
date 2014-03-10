@@ -6,16 +6,13 @@ import logging
 import os
 import re
 
-try:
-    import docutils
-    import docutils.core
-    import docutils.io
-    from docutils.writers.html4css1 import HTMLTranslator
+import docutils
+import docutils.core
+import docutils.io
+from docutils.writers.html4css1 import HTMLTranslator
 
-    # import the directives to have pygments support
-    from pelican import rstdirectives  # NOQA
-except ImportError:
-    docutils = False
+# import the directives to have pygments support
+from pelican import rstdirectives  # NOQA
 try:
     from markdown import Markdown
 except ImportError:
