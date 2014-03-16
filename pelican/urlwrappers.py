@@ -1,12 +1,9 @@
 import os
 import functools
-import logging
 
 import six
 
 from pelican.utils import (slugify, python_2_unicode_compatible)
-
-logger = logging.getLogger(__name__)
 
 
 @python_2_unicode_compatible
