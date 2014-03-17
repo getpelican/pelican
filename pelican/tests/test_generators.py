@@ -24,7 +24,7 @@ class TestGenerator(unittest.TestCase):
         self.settings = get_settings()
         self.settings['READERS'] = {'asc': None}
         self.generator = Generator(self.settings.copy(), self.settings,
-                                   CUR_DIR, self.settings['THEME'], None)
+                                   CUR_DIR, self.settings['THEME'], self.settings['BASE_THEME'], None)
 
     def test_include_path(self):
         filename = os.path.join(CUR_DIR, 'content', 'article.rst')
@@ -45,7 +45,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
         cls.generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            path=CONTENT_DIR, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         cls.generator.generate_context()
         cls.articles = [[page.title, page.status, page.category.name,
                          page.template] for page in cls.generator.articles]
@@ -54,7 +54,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings()
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'], output_path=None)
+            path=None, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         writer.write_feed.assert_called_with([], settings,
@@ -62,7 +62,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
         generator = ArticlesGenerator(
             context=settings, settings=get_settings(FEED_ALL_ATOM=None),
-            path=None, theme=settings['THEME'], output_path=None)
+            path=None, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
@@ -131,7 +131,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['filenames'] = {}
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            path=CONTENT_DIR, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         generator.generate_context()
         # test for name
         # categories are grouped by slug; if two categories have the same slug
@@ -153,7 +153,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'], output_path=None)
+            path=None, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
@@ -167,7 +167,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'], output_path=None)
+            path=None, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives/index.html",
@@ -182,7 +182,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=None, theme=settings['THEME'], output_path=None)
+            path=None, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_count == 0
@@ -208,7 +208,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            path=CONTENT_DIR, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         generator.generate_context()
         write = MagicMock()
         generator.generate_period_archives(write)
@@ -225,7 +225,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['MONTH_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            path=CONTENT_DIR, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         generator.generate_context()
         write = MagicMock()
         generator.generate_period_archives(write)
@@ -243,7 +243,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DAY_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            path=CONTENT_DIR, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         generator.generate_context()
         write = MagicMock()
         generator.generate_period_archives(write)
@@ -285,7 +285,7 @@ class TestPageGenerator(unittest.TestCase):
 
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
-            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+            path=CUR_DIR, theme=settings['THEME'], base_theme=settings['BASE_THEME'], output_path=None)
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
@@ -329,7 +329,7 @@ class TestTemplatePagesGenerator(unittest.TestCase):
 
         generator = TemplatePagesGenerator(
             context={'foo': 'bar'}, settings=settings,
-            path=self.temp_content, theme='', output_path=self.temp_output)
+            path=self.temp_content, theme='', base_theme=settings['BASE_THEME'], output_path=self.temp_output)
 
         # create a dummy template file
         template_dir = os.path.join(self.temp_content, 'template')

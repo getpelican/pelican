@@ -25,18 +25,23 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
+DEFAULT_BASE_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'themes', 'simple')
+
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
     'ARTICLE_DIR': '',
     'ARTICLE_EXCLUDES': ('pages',),
     'PAGE_DIR': 'pages',
     'PAGE_EXCLUDES': (),
+    'BASE_THEME': DEFAULT_BASE_THEME,
     'THEME': DEFAULT_THEME,
     'OUTPUT_PATH': 'output',
     'READERS': {},
     'STATIC_PATHS': ['images', ],
     'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
+    'BASE_THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
     'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
     'TRANSLATION_FEED_ATOM': os.path.join('feeds', 'all-%s.atom.xml'),
@@ -126,12 +131,12 @@ def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'PLUGIN_PATH']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'BASE_THEME', 'PLUGIN_PATH']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
                     os.path.dirname(path), local_settings[p])))
-                if p not in ('THEME', 'PLUGIN_PATH') or os.path.exists(absp):
+                if p not in ('THEME', 'BASE_THEME', 'PLUGIN_PATH') or os.path.exists(absp):
                     local_settings[p] = absp
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
@@ -187,6 +192,18 @@ def configure_settings(settings):
         else:
             raise Exception("Could not find the theme %s"
                             % settings['THEME'])
+
+    # lookup the base theme in "pelican/themes" if the given one doesn't exist
+    if not os.path.isdir(settings['BASE_THEME']):
+        theme_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'themes',
+            settings['BASE_THEME'])
+        if os.path.exists(theme_path):
+            settings['BASE_THEME'] = theme_path
+        else:
+            raise Exception("Could not find the base theme %s"
+                            % settings['BASE_THEME'])
 
     # standardize strings to lowercase strings
     for key in [

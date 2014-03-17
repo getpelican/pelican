@@ -44,6 +44,7 @@ class Pelican(object):
 
         self.path = settings['PATH']
         self.theme = settings['THEME']
+        self.base_theme = settings['BASE_THEME']
         self.output_path = settings['OUTPUT_PATH']
         self.ignore_files = settings['IGNORE_FILES']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
@@ -148,6 +149,7 @@ class Pelican(object):
                 settings=self.settings,
                 path=self.path,
                 theme=self.theme,
+                base_theme=self.base_theme,
                 output_path=self.output_path,
             ) for cls in self.get_generator_classes()
         ]
@@ -224,6 +226,11 @@ def parse_arguments():
                         'specified, it will use the default one included with '
                         'pelican.')
 
+    parser.add_argument('-b', '--base-theme-path', dest='base_theme',
+                        help='Path where to find the base theme templates. If not '
+                        'specified, it will use the default one included with '
+                        'pelican.')
+
     parser.add_argument('-o', '--output', dest='output',
                         help='Where to output the generated files. If not '
                         'specified, a directory will be created, named '
@@ -270,6 +277,9 @@ def get_config(args):
     if args.theme:
         abstheme = os.path.abspath(os.path.expanduser(args.theme))
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
+    if args.base_theme:
+        absbasetheme = os.path.abspath(os.path.expanduser(args.base_theme))
+        config['BASE_THEME'] = absbasetheme if os.path.exists(absbasetheme) else args.base_theme
     if args.delete_outputdir is not None:
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
 
@@ -280,7 +290,7 @@ def get_config(args):
     if not six.PY3:
         enc = locale.getpreferredencoding()
         for key in config:
-            if key in ('PATH', 'OUTPUT_PATH', 'THEME'):
+            if key in ('PATH', 'OUTPUT_PATH', 'THEME', 'BASE_THEME'):
                 config[key] = config[key].decode(enc)
     return config
 
@@ -314,6 +324,9 @@ def main():
                 'theme': folder_watcher(pelican.theme,
                                         [''],
                                         pelican.ignore_files),
+                'base_theme': folder_watcher(pelican.base_theme,
+                                        [''],
+                                        pelican.ignore_files),
                 'settings': file_watcher(args.settings)}
 
     for static_path in settings.get("STATIC_PATHS", []):
@@ -321,13 +334,13 @@ def main():
 
     try:
         if args.autoreload:
-            print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
+            print('  --- AutoReload Mode: Monitoring `content`, `theme`, `base_theme` and'
                   ' `settings` for changes. ---')
 
             while True:
                 try:
                     # Check source dir for changed files ending with the given
-                    # extension in the settings. In the theme dir is no such
+                    # extension in the settings. In the theme and base_theme dir there is no such
                     # restriction; all files are recursively checked if they
                     # have changed, no matter what extension the filenames
                     # have.
@@ -345,6 +358,10 @@ def main():
 
                         if modified['theme'] is None:
                             logger.warning('Empty theme folder. Using `basic` '
+                                           'theme.')
+
+                        if modified['base_theme'] is None:
+                            logger.warning('Empty base_theme folder. Using `simple` '
                                            'theme.')
 
                         pelican.run()
@@ -369,6 +386,10 @@ def main():
 
             if next(watchers['theme']) is None:
                 logger.warning('Empty theme folder. Using `basic` theme.')
+
+            if next(watchers['base_theme']) is None:
+                logger.warning('Empty base_theme folder. Using `simple` '
+                                           'theme.')
 
             pelican.run()
 

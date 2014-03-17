@@ -30,11 +30,12 @@ logger = logging.getLogger(__name__)
 class Generator(object):
     """Baseclass generator"""
 
-    def __init__(self, context, settings, path, theme, output_path, **kwargs):
+    def __init__(self, context, settings, path, theme, base_theme, output_path, **kwargs):
         self.context = context
         self.settings = settings
         self.path = path
         self.theme = theme
+        self.base_theme = base_theme
         self.output_path = output_path
 
         for arg, value in kwargs.items():
@@ -53,13 +54,19 @@ class Generator(object):
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
+
+        base_theme = self.settings['BASE_THEME']
+
+        base_loader = FileSystemLoader(os.path.join(theme_path,
+                                         "themes", base_theme, "templates"))
         self.env = Environment(
             trim_blocks=True,
             lstrip_blocks=True,
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
-                simple_loader,  # implicit inheritance
-                PrefixLoader({'!simple': simple_loader})  # explicit one
+                base_loader,  # implicit inheritance
+                PrefixLoader({'!simple': simple_loader}),  # explicit one
+                PrefixLoader({'!base': base_loader})  # explicit one
             ]),
             extensions=self.settings['JINJA_EXTENSIONS'],
         )
@@ -606,6 +613,10 @@ class StaticGenerator(Generator):
         self._update_context(('staticfiles',))
 
     def generate_output(self, writer):
+
+        self._copy_paths(self.settings['BASE_THEME_STATIC_PATHS'], self.base_theme,
+                         self.settings['THEME_STATIC_DIR'], self.output_path,
+                         os.curdir)
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          self.settings['THEME_STATIC_DIR'], self.output_path,
                          os.curdir)
