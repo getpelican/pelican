@@ -322,7 +322,14 @@ class ArticlesGenerator(Generator):
                     # Let date.__format__() work with byte strings instead of characters since it fails to work with characters
                     bytes_save_as_fmt = save_as_fmt.encode('utf8')
                     bytes_save_as     = bytes_save_as_fmt.format(date=date)
-                    save_as           = unicode(bytes_save_as,'utf8')
+                    save_as           = unicode(bytes_save_as, 'utf8')
+                category = archive[0].category
+                lang = archive[0].lang
+                save_as = save_as_fmt.format(
+                    date=date,
+                    category=category,
+                    lang=lang
+                )
                 context = self.context.copy()
 
                 if key == period_date_key['year']:
