@@ -9,5 +9,5 @@ This is a super article !
 :author: Alexis Métaireau
 :summary:
     Multi-line metadata should be supported
-    as well as **inline markup**.
+    as well as **inline markup** and stuff to "typogrify"...
 :custom_field: http://notmyidea.org

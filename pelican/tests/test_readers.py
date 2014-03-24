@@ -40,7 +40,8 @@ class RstReaderTest(ReaderTest):
             'title': 'This is a super article !',
             'summary': '<p class="first last">Multi-line metadata should be'
                        ' supported\nas well as <strong>inline'
-                       ' markup</strong>.</p>\n',
+                       ' markup</strong> and stuff to &quot;typogrify'
+                       '&quot;...</p>\n',
             'date': datetime.datetime(2010, 12, 2, 10, 14),
             'modified': datetime.datetime(2010, 12, 2, 10, 20),
             'tags': ['foo', 'bar', 'foobar'],
@@ -122,6 +123,30 @@ class RstReaderTest(ReaderTest):
                 'acronym"><span class="caps">TLA</span></abbr>.</p>\n')
 
             self.assertEqual(page.content, expected)
+        except ImportError:
+            return unittest.skip('need the typogrify distribution')
+
+    def test_typogrify_summary(self):
+        # if nothing is specified in the settings, the summary should be
+        # unmodified
+        page = self.read_file(path='article_with_metadata.rst')
+        expected = ('<p class="first last">Multi-line metadata should be'
+                    ' supported\nas well as <strong>inline'
+                    ' markup</strong> and stuff to &quot;typogrify'
+                    '&quot;...</p>\n')
+
+        self.assertEqual(page.metadata['summary'], expected)
+
+        try:
+            # otherwise, typogrify should be applied
+            page = self.read_file(path='article_with_metadata.rst',
+                                  TYPOGRIFY=True)
+            expected = ('<p class="first last">Multi-line metadata should be'
+                        ' supported\nas well as <strong>inline'
+                        ' markup</strong> and stuff to&nbsp;&quot;typogrify'
+                        '&quot;&#8230;</p>\n')
+
+            self.assertEqual(page.metadata['summary'], expected)
         except ImportError:
             return unittest.skip('need the typogrify distribution')
 
