@@ -306,12 +306,10 @@ class ArticlesGenerator(Generator):
                 date = archive[0].date
                 category = archive[0].category
                 lang = archive[0].lang
-                author = archive[0].author
                 save_as = save_as_fmt.format(
                     date=date,
                     category=category,
-                    lang=lang,
-                    author=author
+                    lang=lang
                 )
                 context = self.context.copy()
 
