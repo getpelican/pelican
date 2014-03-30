@@ -179,10 +179,9 @@ class Writer(object):
 
         # pagination
         if paginated:
-            name_root = os.path.splitext(name)[0]
 
             # pagination needed, init paginators
-            paginators = {key: Paginator(name_root, val, self.settings)
+            paginators = {key: Paginator(name, val, self.settings)
                           for key, val in paginated.items()}
 
             # generated pages, and write
