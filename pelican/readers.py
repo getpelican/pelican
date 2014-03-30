@@ -159,7 +159,8 @@ class RstReader(BaseReader):
     def _get_publisher(self, source_path):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
-                        'input_encoding': 'utf-8'}
+                        'input_encoding': 'utf-8',
+                        'exit_status_level': 2}
         user_params = self.settings.get('DOCUTILS_SETTINGS')
         if user_params:
             extra_params.update(user_params)
@@ -170,7 +171,7 @@ class RstReader(BaseReader):
         pub.writer.translator_class = PelicanHTMLTranslator
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=source_path)
-        pub.publish()
+        pub.publish(enable_exit_status=True)
         return pub
 
     def read(self, source_path):
