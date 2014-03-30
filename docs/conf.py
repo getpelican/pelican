@@ -12,11 +12,11 @@ extensions = ['sphinx.ext.autodoc', 'sphinx.ext.ifconfig', 'sphinx.ext.extlinks'
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Pelican'
-copyright = '2010, Alexis Metaireau and contributors'
+copyright = '2014, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
 release = __version__
 version = '.'.join(release.split('.')[:1])
-last_stable = '3.2.2'
+last_stable = '3.3.0'
 rst_prolog = '''
 .. |last_stable| replace:: :pelican-doc:`{0}`
 '''.format(last_stable)
