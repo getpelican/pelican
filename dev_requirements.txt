@@ -9,3 +9,6 @@ typogrify
 
 # To perform release
 bumpr==0.2.0
+
+# For docs theme
+sphinx_rtd_theme
