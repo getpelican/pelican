@@ -269,9 +269,9 @@ Setting name (default value)                            What does it do?
 `TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
 `AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
 `AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.
-`YEAR_ARCHIVE_SAVE_AS` (False)                          The location to save per-year archives of your posts.
-`MONTH_ARCHIVE_SAVE_AS` (False)                         The location to save per-month archives of your posts.
-`DAY_ARCHIVE_SAVE_AS` (False)                           The location to save per-day archives of your posts.
+`YEAR_ARCHIVE_SAVE_AS` (``''``)                         The location to save per-year archives of your posts.
+`MONTH_ARCHIVE_SAVE_AS` (``''``)                        The location to save per-month archives of your posts.
+`DAY_ARCHIVE_SAVE_AS` (``''``)                          The location to save per-day archives of your posts.
 `SLUG_SUBSTITUTIONS`  (``()``)                          Substitutions to make prior to stripping out
                                                         non-alphanumerics when generating slugs. Specified
                                                         as a list of 2-tuples of ``(from, to)`` which are
@@ -282,7 +282,7 @@ Setting name (default value)                            What does it do?
 
     If you do not want one or more of the default pages to be created (e.g.,
     you are the only author on your site and thus do not need an Authors page),
-    set the corresponding ``*_SAVE_AS`` setting to ``None`` to prevent the
+    set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
     relevant page from being generated.
 
 `DIRECT_TEMPLATES`

@@ -140,7 +140,7 @@ class Writer(object):
         :param **kwargs: additional variables to pass to the templates
         """
 
-        if name is False:
+        if name is False or name == "":
             return
         elif not name:
             # other stuff, just return for now
