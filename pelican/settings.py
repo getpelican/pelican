@@ -81,9 +81,9 @@ DEFAULT_CONFIG = {
     'PAGINATION_PATTERNS': [
         (0, '{name}{number}{extension}', '{name}{number}{extension}'),
     ],
-    'YEAR_ARCHIVE_SAVE_AS': False,
-    'MONTH_ARCHIVE_SAVE_AS': False,
-    'DAY_ARCHIVE_SAVE_AS': False,
+    'YEAR_ARCHIVE_SAVE_AS': '',
+    'MONTH_ARCHIVE_SAVE_AS': '',
+    'DAY_ARCHIVE_SAVE_AS': '',
     'RELATIVE_URLS': False,
     'DEFAULT_LANG': 'en',
     'TAG_CLOUD_STEPS': 4,
