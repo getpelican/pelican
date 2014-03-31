@@ -167,9 +167,9 @@ Setting name (default value)                                                    
                                                                                  code blocks. See :ref:`internal_pygments_options` for a list of
                                                                                  supported options.
 
-`SLUGIFY_SOURCE` (``'input'``)                                                Specifies where you want the slug to be automatically generated 
-                                                                                 from. Can be set to 'title' to use the Title: metadata tag or 
-                                                                                 'basename' to use the articles basename to make a slug. 
+`SLUGIFY_SOURCE` (``'input'``)                                                   Specifies where you want the slug to be automatically generated 
+                                                                                 from. Can be set to 'title' to use the 'Title:' metadata tag or 
+                                                                                 'basename' to use the articles basename when creating the slug. 
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
