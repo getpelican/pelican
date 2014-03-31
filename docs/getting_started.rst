@@ -130,6 +130,8 @@ automatically installed without any action on your part:
   utilities
 * `MarkupSafe <http://pypi.python.org/pypi/MarkupSafe>`_, for a markup safe
   string implementation
+* `python-dateutil <https://pypi.python.org/pypi/python-dateutil>`_, to read
+  the date metadata
 
 If you want the following optional packages, you will need to install them
 manually via ``pip``:
