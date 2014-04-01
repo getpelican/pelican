@@ -318,7 +318,11 @@ class HTMLReader(BaseReader):
             if not contents:
                 contents = self._attr_value(attrs, 'contents', '')
                 if contents:
-                    logger.warning("Meta tag attribute 'contents' used in file %s, should be changed to 'content'", self._filename)
+                    logger.warning((
+                        "Meta tag attribute 'contents' used in file {}, should"
+                        " be changed to 'content'".format(self._filename),
+                        "Other files have meta tag attribute 'contents' that"
+                        " should be changed to 'content'"))
 
             if name == 'keywords':
                 name = 'tags'
@@ -385,10 +389,6 @@ class Readers(object):
 
     """
 
-    # used to warn about missing dependencies only once, at the first
-    # instanciation of a Readers object.
-    warn_missing_deps = True
-
     def __init__(self, settings=None):
         self.settings = settings or {}
         self.readers = {}
@@ -396,15 +396,12 @@ class Readers(object):
 
         for cls in [BaseReader] + BaseReader.__subclasses__():
             if not cls.enabled:
-                if self.__class__.warn_missing_deps:
-                    logger.debug('Missing dependencies for {}'
-                                 .format(', '.join(cls.file_extensions)))
+                logger.debug('Missing dependencies for {}'
+                             .format(', '.join(cls.file_extensions)))
                 continue
 
             for ext in cls.file_extensions:
                 self.reader_classes[ext] = cls
-
-        self.__class__.warn_missing_deps = False
 
         if self.settings['READERS']:
             self.reader_classes.update(self.settings['READERS'])
@@ -505,19 +502,10 @@ def find_empty_alt(content, path):
             src=(['"])(.*)\5
         )
         """, re.X)
-    matches = re.findall(imgs, content)
-    # find a correct threshold
-    nb_warnings = 10
-    if len(matches) == nb_warnings + 1:
-        nb_warnings += 1  # avoid bad looking case
-    # print one warning per image with empty alt until threshold
-    for match in matches[:nb_warnings]:
-        logger.warning('Empty alt attribute for image {} in {}'.format(
-            os.path.basename(match[1] + match[5]), path))
-    # print one warning for the other images with empty alt
-    if len(matches) > nb_warnings:
-        logger.warning('{} other images with empty alt attributes'
-                       .format(len(matches) - nb_warnings))
+    for match in re.findall(imgs, content):
+        logger.warning(('Empty alt attribute for image {} in {}'.format(
+            os.path.basename(match[1] + match[5]), path),
+            'Other images have empty alt attributes'))
 
 
 def default_metadata(settings=None, process=None):

@@ -9,7 +9,7 @@ import os
 import sys
 import logging
 
-from logging import Formatter, getLogger, StreamHandler, DEBUG
+from collections import defaultdict
 
 
 RESET_TERM = '\033[0;m'
@@ -30,7 +30,7 @@ def ansi(color, text):
     return '\033[1;{0}m{1}{2}'.format(code, text, RESET_TERM)
 
 
-class ANSIFormatter(Formatter):
+class ANSIFormatter(logging.Formatter):
     """Convert a `logging.LogRecord' object into colored text, using ANSI
        escape sequences.
 
@@ -51,7 +51,7 @@ class ANSIFormatter(Formatter):
             return ansi('white', record.levelname) + ': ' + msg
 
 
-class TextFormatter(Formatter):
+class TextFormatter(logging.Formatter):
     """
     Convert a `logging.LogRecord' object into text.
     """
@@ -63,7 +63,62 @@ class TextFormatter(Formatter):
             return record.levelname + ': ' + record.getMessage()
 
 
-def init(level=None, logger=getLogger(), handler=StreamHandler()):
+class LimitFilter(logging.Filter):
+    """
+    Remove duplicates records, and limit the number of records in the same
+    group.
+
+    Groups are specified by the message to use when the number of records in
+    the same group hit the limit.
+    E.g.: log.warning(('43 is not the answer', 'More erroneous answers'))
+    """
+
+    ignore = set()
+    threshold = 5
+    group_count = defaultdict(int)
+
+    def filter(self, record):
+        # don't limit levels over warnings
+        if record.levelno > logging.WARN:
+            return record
+        # extract group
+        group = None
+        if len(record.msg) == 2:
+            record.msg, group = record.msg
+        # ignore record if it was already raised
+        # use .getMessage() and not .msg for string formatting
+        ignore_key = (record.levelno, record.getMessage())
+        to_ignore = ignore_key in LimitFilter.ignore
+        LimitFilter.ignore.add(ignore_key)
+        if to_ignore:
+            return False
+        # check if we went over threshold
+        if group:
+            key = (record.levelno, group)
+            LimitFilter.group_count[key] += 1
+            if LimitFilter.group_count[key] == LimitFilter.threshold:
+                record.msg = group
+            if LimitFilter.group_count[key] > LimitFilter.threshold:
+                return False
+        return record
+
+
+class LimitLogger(logging.Logger):
+    """
+    A logger which add LimitFilter automatically
+    """
+
+    limit_filter = LimitFilter()
+
+    def __init__(self, *args, **kwargs):
+        super(LimitLogger, self).__init__(*args, **kwargs)
+        self.addFilter(LimitLogger.limit_filter)
+
+logging.setLoggerClass(LimitLogger)
+
+
+def init(level=None, handler=logging.StreamHandler()):
+
     logger = logging.getLogger()
 
     if (os.isatty(sys.stdout.fileno())
@@ -79,7 +134,7 @@ def init(level=None, logger=getLogger(), handler=StreamHandler()):
 
 
 if __name__ == '__main__':
-    init(level=DEBUG)
+    init(level=logging.DEBUG)
 
     root_logger = logging.getLogger()
     root_logger.debug('debug')

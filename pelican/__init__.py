@@ -11,12 +11,15 @@ import argparse
 import locale
 import collections
 
+# pelican.log has to be the first pelican module to be loaded
+# because logging.setLoggerClass has to be called before logging.getLogger
+from pelican.log import init
+
 from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, SourceFileGenerator,
                                 TemplatePagesGenerator)
-from pelican.log import init
 from pelican.readers import Readers
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, folder_watcher, file_watcher

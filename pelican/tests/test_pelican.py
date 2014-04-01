@@ -83,7 +83,7 @@ class TestPelican(LoggedTestCase):
         mute(True)(pelican.run)()
         self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertLogCountEqual(
-            count=4,
+            count=3,
             msg="Unable to find.*skipping url replacement",
             level=logging.WARNING)
 
