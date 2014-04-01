@@ -19,6 +19,8 @@ except ImportError:
 
 from os.path import isabs
 
+from pelican.log import LimitFilter
+
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +100,7 @@ DEFAULT_CONFIG = {
     'MD_EXTENSIONS': ['codehilite(css_class=highlight)', 'extra'],
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
+    'LOG_FILTER': [],
     'LOCALE': [''],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
@@ -170,11 +173,15 @@ def get_settings_from_file(path, default_settings=DEFAULT_CONFIG):
 def configure_settings(settings):
     """Provide optimizations, error checking and warnings for the given
     settings.
-
+    Set up the logs to be ignored as well.
     """
     if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
                         ' (see pelican --help for more information)')
+
+    # set up logs to be ignored
+    LimitFilter.ignore.update(set(settings.get('LOG_FILTER',
+                                               DEFAULT_CONFIG['LOG_FILTER'])))
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):

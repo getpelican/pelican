@@ -88,6 +88,9 @@ Setting name (default value)                                                    
                                                                                  here or a single string representing one locale.
                                                                                  When providing a list, all the locales will be tried
                                                                                  until one works.
+`LOG_FILTER` (``[]``)                                                            A list of tuples containing the logging level (up to warning)
+                                                                                 and the message to be ignored.
+                                                                                 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 `READERS` (``{}``)                                                               A dictionary of file extensions / Reader classes for Pelican to
                                                                                  process or ignore. For example, to avoid processing .html files,
                                                                                  set: ``READERS = {'html': None}``. To add a custom reader for the
@@ -693,6 +696,23 @@ In addition, you can use the "wide" version of the ``notmyidea`` theme by
 adding the following to your configuration::
 
     CSS_FILE = "wide.css"
+
+
+Logging
+=======
+
+Sometimes, useless lines of log appears while the generation occurs. Finding
+**the** meaningful error message in the middle of tons of annoying log outputs
+can be quite tricky. To be able to filter out all useless log messages, Pelican
+comes with the ``LOG_FILTER`` setting.
+
+``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them being
+composed of the logging level (up to warning) and the message to be ignored.
+Simply populate the list with the logs you want to hide and they will be
+filtered out.
+
+For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
+
 
 Example settings
 ================
