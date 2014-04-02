@@ -135,7 +135,7 @@ def wp2fields(xml, wp_custpost=False):
                 title = HTMLParser().unescape(item.title.contents[0])
             except IndexError:
                 title = 'No title [%s]' % item.find('post_name').string
-                logger.warn('Post "%s" is lacking a proper title' % title)
+                logger.warning('Post "%s" is lacking a proper title' % title)
 
             filename = item.find('post_name').string
             post_id = item.find('post_id').string
@@ -601,11 +601,11 @@ def download_attachments(output_path, urls):
         except URLError as e:
             error = ("No file could be downloaded from {}; Error {}"
                     .format(url, e))
-            logger.warn(error)
+            logger.warning(error)
         except IOError as e: #Python 2.7 throws an IOError rather Than URLError
             error = ("No file could be downloaded from {}; Error {}"
                     .format(url, e))
-            logger.warn(error)
+            logger.warning(error)
     return locations
 
 
