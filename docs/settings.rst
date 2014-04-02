@@ -594,6 +594,14 @@ Setting name (default value)                             What does it do?
 `DEFAULT_LANG` (``'en'``)                                The default language to use.
 `TRANSLATION_FEED_ATOM` ('feeds/all-%s.atom.xml'[3]_)    Where to put the Atom feed for translations.
 `TRANSLATION_FEED_RSS` (``None``, i.e. no RSS)           Where to put the RSS feed for translations.
+`LANG_TAG_FEED_ATOM` (``None``, i.e. no Atom feed)       Where to put the Atom feed for a given lang and a
+                                                         given tag. For example:
+                                                         ``'feeds/%(lang)s-%(tag)s.atom.xml'``
+`LANG_TAG_FEED_RSS` (``None``, i.e. no RSS)`             Where to put the RSS feed for a given lang and a
+                                                         given tag.
+`LANG_TAG_FEED_FILTER` (``None``, i.e. no filter         Allow to filter which lang and tag you want
+                                                         to generate. You need to use tuple list.
+                                                         For example: ``{('fr, 'myTag'), (en, myTag)}``
 =====================================================    =====================================================
 
 .. [3] %s is the language

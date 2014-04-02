@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 import os
 from codecs import open
 try:
-    from unittest.mock import MagicMock
+    from unittest.mock import MagicMock, ANY
 except ImportError:
-    from mock import MagicMock
+    from mock import MagicMock, ANY
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -267,6 +267,23 @@ class TestArticlesGenerator(unittest.TestCase):
         authors = [author.slug for author, _ in self.generator.authors]
         authors_expected = ['alexis-metaireau', 'first-author', 'second-author']
         self.assertEqual(sorted(authors), sorted(authors_expected))
+
+    def test_generate_lang_tag_feeds(self):
+        settings = get_settings(filenames={})
+        settings['LANG_TAG_FEED_FILTER'] = {('en', 'bar'), }
+        settings['LANG_TAG_FEED_ATOM'] = 'feeds/%(lang)s-%(tag)s.atom.xml'
+        settings['FEED_ALL_ATOM'] = None
+        settings['TRANSLATION_FEED_ATOM'] = None
+        settings['CATEGORY_FEED_ATOM'] = None
+
+        generator = ArticlesGenerator(
+            context=settings, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        writer = MagicMock()
+        generator.generate_feeds(writer)
+        writer.write_feed.assert_called_with(ANY, ANY,
+                                             'feeds/en-bar.atom.xml')
 
 
 class TestPageGenerator(unittest.TestCase):
