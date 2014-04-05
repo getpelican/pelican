@@ -474,6 +474,8 @@ Setting name (default value)                        What does it do?
                                                     language.
 `CATEGORY_FEED_ATOM` ('feeds/%s.atom.xml'[2]_)      Where to put the category Atom feeds.
 `CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
+`AUTHOR_FEED_ATOM` ('feeds/%s.atom.xml'[2]_)        Where to put the author Atom feeds.
+`AUTHOR_FEED_RSS` ('feeds/%s.rss.xml'[2]_)          Where to put the author RSS feeds.
 `TAG_FEED_ATOM` (``None``, i.e. no tag feed)        Relative URL to output the tag Atom feed. It should
                                                     be defined using a "%s" match in the tag name.
 `TAG_FEED_RSS` (``None``, ie no RSS tag feed)       Relative URL to output the tag RSS feed
