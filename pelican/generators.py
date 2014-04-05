@@ -234,6 +234,18 @@ class ArticlesGenerator(Generator):
                                   self.settings['CATEGORY_FEED_RSS']
                                   % cat.slug, feed_type='rss')
 
+        for auth, arts in self.authors:
+            arts.sort(key=attrgetter('date'), reverse=True)
+            if self.settings.get('AUTHOR_FEED_ATOM'):
+                writer.write_feed(arts, self.context,
+                                  self.settings['AUTHOR_FEED_ATOM']
+                                  % auth.slug)
+
+            if self.settings.get('AUTHOR_FEED_RSS'):
+                writer.write_feed(arts, self.context,
+                                  self.settings['AUTHOR_FEED_RSS']
+                                  % auth.slug, feed_type='rss')
+
         if (self.settings.get('TAG_FEED_ATOM')
                 or self.settings.get('TAG_FEED_RSS')):
             for tag, arts in self.tags.items():

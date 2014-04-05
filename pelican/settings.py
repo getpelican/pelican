@@ -39,6 +39,8 @@ DEFAULT_CONFIG = {
     'THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
     'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
+    'AUTHOR_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
+    'AUTHOR_FEED_RSS': os.path.join('feeds', '%s.rss.xml'),
     'TRANSLATION_FEED_ATOM': os.path.join('feeds', 'all-%s.atom.xml'),
     'FEED_MAX_ITEMS': '',
     'SITEURL': '',
@@ -242,6 +244,7 @@ def configure_settings(settings):
         'FEED_ATOM', 'FEED_RSS',
         'FEED_ALL_ATOM', 'FEED_ALL_RSS',
         'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+        'AUTHOR_FEED_ATOM', 'AUTHOR_FEED_RSS',
         'TAG_FEED_ATOM', 'TAG_FEED_RSS',
         'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
     ]
