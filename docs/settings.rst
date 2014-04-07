@@ -36,7 +36,7 @@ Setting name (default value)                                                    
 ===============================================================================  =====================================================================
 `AUTHOR`                                                                         Default author (put your name)
 `DATE_FORMATS` (``{}``)                                                          If you manage multiple languages, you can set the date formatting
-                                                                                 here. See the "Date format and locales" section below for details.
+                                                                                 here. See the "Date format and locale" section below for details.
 `USE_FOLDER_AS_CATEGORY` (``True``)                                              When you don't specify a category in your post metadata, set this
                                                                                  setting to ``True``, and organize your articles in subfolders, the
                                                                                  subfolder will become the category of your post. If set to ``False``,
@@ -170,9 +170,9 @@ Setting name (default value)                                                    
                                                                                  code blocks. See :ref:`internal_pygments_options` for a list of
                                                                                  supported options.
 
-`SLUGIFY_SOURCE` (``'input'``)                                                   Specifies where you want the slug to be automatically generated 
-                                                                                 from. Can be set to 'title' to use the 'Title:' metadata tag or 
-                                                                                 'basename' to use the articles basename when creating the slug. 
+`SLUGIFY_SOURCE` (``'input'``)                                                   Specifies where you want the slug to be automatically generated
+                                                                                 from. Can be set to 'title' to use the 'Title:' metadata tag or
+                                                                                 'basename' to use the articles basename when creating the slug.
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
