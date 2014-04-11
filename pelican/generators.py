@@ -266,6 +266,32 @@ class ArticlesGenerator(Generator):
                         self.settings['TRANSLATION_FEED_RSS'] % lang,
                         feed_type='rss')
 
+        if (self.settings.get('LANG_TAG_FEED_ATOM')
+                or self.settings.get('LANG_TAG_FEED_RSS')):
+            translations_tag_feeds = defaultdict(list)
+            all_articles = list(self.articles)
+            for article in self.articles:
+                all_articles.extend(article.translations)
+                all_articles.sort(key=attrgetter('date'), reverse=True)
+
+            lang_tag_feeds = defaultdict(list)
+            for article in all_articles:
+                if hasattr(article, 'tags'):
+                    for tag in article.tags:
+                        lang_tag_feeds[(article.lang, tag.slug)].append(article)
+            if self.settings.get('LANG_TAG_FEED_FILTER'):
+                lt_filter = self.settings['LANG_TAG_FEED_FILTER']
+            for lang_tag, items in lang_tag_feeds.items():
+                if lang_tag not in lt_filter:
+                    continue
+                items.sort(key=attrgetter('date'), reverse=True)
+                if self.settings.get('LANG_TAG_FEED_ATOM'):
+                    writer.write_feed(items, self.context,
+                                      self.settings['LANG_TAG_FEED_ATOM'] % {"lang": lang_tag[0], "tag": lang_tag[1]})
+                if self.settings.get('LANG_TAG_FEED_RSS'):
+                    writer.write_feed(items, self.context,
+                                      self.settings['LANG_TAG_FEED_RSS'] % {"lang": lang_tag[0], "tag": lang_tag[1]}, feed_type='rss')
+
     def generate_articles(self, write):
         """Generate the articles."""
         for article in chain(self.translations, self.articles):
