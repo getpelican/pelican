@@ -157,24 +157,24 @@ For logging messages that are not repeated, use the usual Python way:
     logger = logging.getLogger(__name__)
 
     # when needed
-    logger.warning('A warning that could occur only once")
+    logger.warning("A warning that would usually occur only once")
 
 However, if you want to log messages that may occur several times, instead of
-a string, gives a tuple to the logging method, with two arguments:
+a string, give a tuple to the logging method, with two arguments:
 
- 1. The message to log for this very execution
- 2. A generic message that will appear if the previous one would occur to many
+ 1. The message to log for the initial execution
+ 2. A generic message that will appear if the previous one would occur too many
     times.
 
 For example, if you want to log missing resources, use the following code:
 
-    for ressource in ressources:
-        if ressource.is_missing:
+    for resource in resources:
+        if resource.is_missing:
             logger.warning((
-                'The resource {r} is missing'.format(r=ressource.name),
+                'The resource {r} is missing'.format(r=resource.name),
                 'Other resources were missing'))
 
-The logs will be displayed as follows:
+The log messages will be displayed as follows:
 
     WARNING: The resource prettiest_cat.jpg is missing
     WARNING: The resource best_cat_ever.jpg is missing

@@ -78,7 +78,7 @@ class LimitFilter(logging.Filter):
     group_count = defaultdict(int)
 
     def filter(self, record):
-        # don't limit levels over warnings
+        # don't limit log messages for anything above "warning"
         if record.levelno > logging.WARN:
             return record
         # extract group
@@ -105,7 +105,7 @@ class LimitFilter(logging.Filter):
 
 class LimitLogger(logging.Logger):
     """
-    A logger which add LimitFilter automatically
+    A logger which adds LimitFilter automatically
     """
 
     limit_filter = LimitFilter()
