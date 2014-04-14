@@ -239,8 +239,10 @@ class Content(object):
                              self._context['filenames'][path].url))
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
-                    logger.warning("Unable to find {fn}, skipping url"
-                                   " replacement".format(fn=path))
+                    logger.warning(("Unable to find {fn}, skipping url"
+                                    " replacement".format(fn=value),
+                                    "Other ressources were not found"
+                                    " and their urls not replaced"))
             elif what == 'category':
                 origin = Category(path, self.settings).url
             elif what == 'tag':

@@ -143,3 +143,41 @@ and Python 3 at the same time:
   changed it where I felt necessary.
 
 - Changed xrange() back to range(), so it is valid in both Python versions.
+
+
+Logging tips
+============
+
+Try to use logging with appropriate levels.
+
+For logging messages that are not repeated, use the usual Python way:
+
+    # at top of file
+    import logging
+    logger = logging.getLogger(__name__)
+
+    # when needed
+    logger.warning('A warning that could occur only once")
+
+However, if you want to log messages that may occur several times, instead of
+a string, gives a tuple to the logging method, with two arguments:
+
+ 1. The message to log for this very execution
+ 2. A generic message that will appear if the previous one would occur to many
+    times.
+
+For example, if you want to log missing resources, use the following code:
+
+    for ressource in ressources:
+        if ressource.is_missing:
+            logger.warning((
+                'The resource {r} is missing'.format(r=ressource.name),
+                'Other resources were missing'))
+
+The logs will be displayed as follows:
+
+    WARNING: The resource prettiest_cat.jpg is missing
+    WARNING: The resource best_cat_ever.jpg is missing
+    WARNING: The resource cutest_cat.jpg is missing
+    WARNING: The resource lolcat.jpg is missing
+    WARNING: Other resources were missing
