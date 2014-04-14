@@ -171,15 +171,15 @@ def get_settings_from_file(path, default_settings=DEFAULT_CONFIG):
 
 
 def configure_settings(settings):
-    """Provide optimizations, error checking and warnings for the given
+    """Provide optimizations, error checking, and warnings for the given
     settings.
-    Set up the logs to be ignored as well.
+    Also, specify the log messages to be ignored.
     """
     if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
                         ' (see pelican --help for more information)')
 
-    # set up logs to be ignored
+    # specify the log messages to be ignored
     LimitFilter.ignore.update(set(settings.get('LOG_FILTER',
                                                DEFAULT_CONFIG['LOG_FILTER'])))
 

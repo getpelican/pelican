@@ -88,7 +88,7 @@ Setting name (default value)                                                    
                                                                                  here or a single string representing one locale.
                                                                                  When providing a list, all the locales will be tried
                                                                                  until one works.
-`LOG_FILTER` (``[]``)                                                            A list of tuples containing the logging level (up to warning)
+`LOG_FILTER` (``[]``)                                                            A list of tuples containing the logging level (up to ``warning``)
                                                                                  and the message to be ignored.
                                                                                  For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 `READERS` (``{}``)                                                               A dictionary of file extensions / Reader classes for Pelican to
@@ -701,15 +701,15 @@ adding the following to your configuration::
 Logging
 =======
 
-Sometimes, useless lines of log appears while the generation occurs. Finding
-**the** meaningful error message in the middle of tons of annoying log outputs
-can be quite tricky. To be able to filter out all useless log messages, Pelican
+Sometimes, a long list of warnings may appear during site generation. Finding
+the **meaningful** error message in the middle of tons of annoying log output
+can be quite tricky. In order to filter out redundant log messages, Pelican
 comes with the ``LOG_FILTER`` setting.
 
 ``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them being
-composed of the logging level (up to warning) and the message to be ignored.
-Simply populate the list with the logs you want to hide and they will be
-filtered out.
+composed of the logging level (up to ``warning``) and the message to be ignored.
+Simply populate the list with the log messages you want to hide, and they will
+be filtered out.
 
 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 
