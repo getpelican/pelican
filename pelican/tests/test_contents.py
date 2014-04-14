@@ -129,9 +129,15 @@ class TestPage(unittest.TestCase):
         page_kwargs['metadata']['date'] = dt
         page = Page(**page_kwargs)
 
-        self.assertEqual(page.locale_date,
-            dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
+        # page.locale_date is a unicode string in both python2 and python3
+        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']) 
+        # dt_date is a byte string in python2, and a unicode string in python3
+        # Let's make sure it is a unicode string (relies on python 3.3 supporting the u prefix)
+        if type(dt_date) != type(u''):
+            # python2:
+            dt_date = unicode(dt_date, 'utf8')
 
+        self.assertEqual(page.locale_date, dt_date )
         page_kwargs['settings'] = get_settings()
 
         # I doubt this can work on all platforms ...
