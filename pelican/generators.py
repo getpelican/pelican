@@ -304,7 +304,13 @@ class ArticlesGenerator(Generator):
                 # format string syntax can be used for specifying the
                 # period archive dates
                 date = archive[0].date
-                save_as = save_as_fmt.format(date=date)
+                category = archive[0].category
+                lang = archive[0].lang
+                save_as = save_as_fmt.format(
+                    date=date,
+                    category=category,
+                    lang=lang
+                )
                 context = self.context.copy()
 
                 if key == period_date_key['year']:
