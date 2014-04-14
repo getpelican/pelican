@@ -243,9 +243,9 @@ posts for the month at ``posts/2011/Aug/index.html``.
     arrive at an appropriate archive of posts, without having to specify
     a page name.
 
-====================================================    =====================================================
+======================================================  =====================================================
 Setting name (default value)                            What does it do?
-====================================================    =====================================================
+======================================================  =====================================================
 `ARTICLE_URL` (``'{slug}.html'``)                       The URL to refer to an article.
 `ARTICLE_SAVE_AS` (``'{slug}.html'``)                   The place where we will save an article.
 `ARTICLE_LANG_URL` (``'{slug}-{lang}.html'``)           The URL to refer to an article which doesn't use the
@@ -256,7 +256,7 @@ Setting name (default value)                            What does it do?
 `DRAFT_SAVE_AS` (``'drafts/{slug}.html'``)              The place where we will save an article draft.
 `DRAFT_LANG_URL` (``'drafts/{slug}-{lang}.html'``)      The URL to refer to an article draft which doesn't
                                                         use the default language.
-`DRAFT_LANG_SAVE_AS` (``'drafts/{slug}-{lang}.html'``)  The place where we will save an article draft which 
+`DRAFT_LANG_SAVE_AS` (``'drafts/{slug}-{lang}.html'``)  The place where we will save an article draft which
                                                         doesn't use the default language.
 `PAGE_URL` (``'pages/{slug}.html'``)                    The URL we will use to link to a page.
 `PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page. This value has to be
@@ -279,7 +279,7 @@ Setting name (default value)                            What does it do?
                                                         non-alphanumerics when generating slugs. Specified
                                                         as a list of 2-tuples of ``(from, to)`` which are
                                                         applied in order.
-====================================================    =====================================================
+======================================================  =====================================================
 
 .. note::
 
