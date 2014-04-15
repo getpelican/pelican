@@ -354,9 +354,12 @@ class TestCopy(unittest.TestCase):
 
     def setUp(self):
         self.root_dir = mkdtemp(prefix='pelicantests.')
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
 
     def tearDown(self):
         shutil.rmtree(self.root_dir)
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def _create_file(self, *path):
         with open(os.path.join(self.root_dir, *path), 'w') as f:

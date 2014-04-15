@@ -4,6 +4,7 @@ from __future__ import unicode_literals, absolute_import
 import six
 from datetime import datetime
 from sys import platform
+import locale
 
 from pelican.tests.support import unittest, get_settings
 
@@ -22,6 +23,8 @@ class TestPage(unittest.TestCase):
 
     def setUp(self):
         super(TestPage, self).setUp()
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
         self.page_kwargs = {
             'content': TEST_CONTENT,
             'context': {
@@ -34,6 +37,9 @@ class TestPage(unittest.TestCase):
             },
             'source_path': '/path/to/file/foo.ext'
         }
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_use_args(self):
         # Creating a page with arguments passed to the constructor should use
