@@ -309,7 +309,20 @@ class ArticlesGenerator(Generator):
                 # format string syntax can be used for specifying the
                 # period archive dates
                 date = archive[0].date
-                save_as = save_as_fmt.format(date=date)
+                # Under python 2, with non-ascii locales, u"{:%b}".format(date) might raise UnicodeDecodeError
+                # because u"{:%b}".format(date) will call date.__format__(u"%b"), which will return a byte string
+                # and not a unicode string.
+                # eg:
+                # locale.setlocale(locale.LC_ALL, 'ja_JP.utf8')
+                # date.__format__(u"%b") == '12\xe6\x9c\x88' # True
+                try:
+                    save_as = save_as_fmt.format(date=date)
+                except UnicodeDecodeError:
+                    # Python2 only:
+                    # Let date.__format__() work with byte strings instead of characters since it fails to work with characters
+                    bytes_save_as_fmt = save_as_fmt.encode('utf8')
+                    bytes_save_as     = bytes_save_as_fmt.format(date=date)
+                    save_as           = unicode(bytes_save_as,'utf8')
                 context = self.context.copy()
 
                 if key == period_date_key['year']:
