@@ -14,6 +14,7 @@ from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
                                 TemplatePagesGenerator)
 from pelican.writers import Writer
 from pelican.tests.support import unittest, get_settings
+import locale
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, 'content')
@@ -21,10 +22,16 @@ CONTENT_DIR = os.path.join(CUR_DIR, 'content')
 
 class TestGenerator(unittest.TestCase):
     def setUp(self):
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
         self.settings = get_settings()
         self.settings['READERS'] = {'asc': None}
         self.generator = Generator(self.settings.copy(), self.settings,
                                    CUR_DIR, self.settings['THEME'], None)
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
+
 
     def test_include_path(self):
         filename = os.path.join(CUR_DIR, 'content', 'article.rst')
@@ -373,10 +380,14 @@ class TestTemplatePagesGenerator(unittest.TestCase):
     def setUp(self):
         self.temp_content = mkdtemp(prefix='pelicantests.')
         self.temp_output = mkdtemp(prefix='pelicantests.')
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
+
 
     def tearDown(self):
         rmtree(self.temp_content)
         rmtree(self.temp_output)
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_generate_output(self):
 
