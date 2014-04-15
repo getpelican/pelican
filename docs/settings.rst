@@ -174,7 +174,7 @@ Setting name (default value)                                                    
                                                                                  from. Can be set to 'title' to use the 'Title:' metadata tag or
                                                                                  'basename' to use the articles basename when creating the slug.
 `CACHE_CONTENT` (``True``)                                                       If ``True``, save read content in a cache file. 
-                                                                                 See :ref:`generating_only_modified_content` for details about caching.
+                                                                                 See :ref:`reading_only_modified_content` for details about caching.
 `CACHE_DIRECTORY` (``cache``)                                                    Directory in which to store cache files.
 `CHECK_MODIFIED_METHOD` (``mtime``)                                              Controls how files are checked for modifications.
 `LOAD_CONTENT_CACHE` (``True``)                                                  If ``True``, load unmodified content from cache.
@@ -718,13 +718,13 @@ be filtered out.
 
 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 
-.. _generating_only_modified_content:
+.. _reading_only_modified_content:
 
-Generating only modified content
-================================
+Reading only modified content
+=============================
 
-To speed up the build process, pelican can optionally generate only
-pages with changed content.
+To speed up the build process, pelican can optionally read only articles
+and pages with modified content.
 
 When Pelican is about to read some content source file:
 
