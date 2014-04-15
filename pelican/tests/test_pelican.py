@@ -44,8 +44,8 @@ class TestPelican(LoggedTestCase):
         super(TestPelican, self).setUp()
         self.temp_path = mkdtemp(prefix='pelicantests.')
         self.temp_cache = mkdtemp(prefix='pelican_cache.')
-        self.old_locale = locale.setlocale(locale.LC_ALL)
         self.maxDiff = None
+        self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
 
     def tearDown(self):
