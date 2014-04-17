@@ -179,6 +179,10 @@ Setting name (default value)                                                    
 `CHECK_MODIFIED_METHOD` (``mtime``)                                              Controls how files are checked for modifications.
 `LOAD_CONTENT_CACHE` (``True``)                                                  If ``True``, load unmodified content from cache.
 `GZIP_CACHE` (``True``)                                                          If ``True``, use gzip to (de)compress the cache files.
+`WRITE_SELECTED` (``[]``)                                                        If this list is not empty, **only** output files with their paths
+                                                                                 in this list are written. Paths should be either relative to the current
+										 working directory of Pelican or absolute. For possible use cases see
+										 :ref:`writing_only_selected_content`.
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
@@ -773,6 +777,21 @@ Note that even when using cached content, all output is always
 written, so the modification times of the ``*.html`` files always
 change.  Therefore, ``rsync`` based upload may benefit from the
 ``--checksum`` option.
+
+.. _writing_only_selected_content:
+
+Writing only selected content
+=============================
+
+When one article or page or the theme is being worked on it is often
+desirable to display selected output files as soon as possible. In
+such cases generating and writing all output is often unnecessary.
+These selected output files can be given as output paths in the
+`WRITE_SELECTED` list and **only** those files will be written. This
+list can be also specified on the command-line using the
+``--write-selected`` option which accepts a comma separated list
+of output file paths. By default the list is empty so all output is
+written.
 
 Example settings
 ================

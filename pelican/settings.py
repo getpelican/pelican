@@ -125,6 +125,7 @@ DEFAULT_CONFIG = {
     'GZIP_CACHE': True,
     'CHECK_MODIFIED_METHOD': 'mtime',
     'LOAD_CONTENT_CACHE': True,
+    'WRITE_SELECTED': [],
     }
 
 PYGMENTS_RST_OPTIONS = None
@@ -199,6 +200,12 @@ def configure_settings(settings):
         else:
             raise Exception("Could not find the theme %s"
                             % settings['THEME'])
+
+    # make paths selected for writing absolute if necessary
+    settings['WRITE_SELECTED'] = [
+        os.path.abspath(path) for path in
+        settings.get('WRITE_SELECTED', DEFAULT_CONFIG['WRITE_SELECTED'])
+        ]
 
     # standardize strings to lowercase strings
     for key in [
