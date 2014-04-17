@@ -264,6 +264,10 @@ def parse_arguments():
     parser.add_argument('-f', '--full-rebuild', action='store_true',
                         dest='full_rebuild', help='Rebuild everything by not loading from cache')
 
+    parser.add_argument('-w', '--write-selected', type=str,
+                        dest='selected_paths', default=None,
+                        help='Comma separated list of selected paths to write')
+
     return parser.parse_args()
 
 
@@ -281,6 +285,8 @@ def get_config(args):
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
     if args.full_rebuild:
         config['LOAD_CONTENT_CACHE'] = False
+    if args.selected_paths:
+        config['WRITE_SELECTED'] = args.selected_paths.split(',')
 
     # argparse returns bytes in Py2. There is no definite answer as to which
     # encoding argparse (or sys.argv) uses.
