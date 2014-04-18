@@ -224,3 +224,8 @@ every time, so a ``rsync`` based upload will transfer them even if
 their content hasn't changed. A simple solution is to make ``rsync``
 use the ``--checksum`` option, which will make it compare the file
 checksums in a much faster way than Pelican would.
+
+When only several specific output files are of interest (e.g. when
+working on some specific page or the theme templates), the
+`WRITE_SELECTED` option may help, see
+:ref:`writing_only_selected_content`.

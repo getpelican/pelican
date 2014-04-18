@@ -16,7 +16,8 @@ from feedgenerator import Atom1Feed, Rss201rev2Feed
 from jinja2 import Markup
 
 from pelican.paginator import Paginator
-from pelican.utils import get_relative_path, path_to_url, set_date_tzinfo
+from pelican.utils import (get_relative_path, path_to_url, set_date_tzinfo,
+                           is_selected_for_writing)
 from pelican import signals
 
 logger = logging.getLogger(__name__)
@@ -92,6 +93,8 @@ class Writer(object):
         :param path: the path to output.
         :param feed_type: the feed type to use (atom or rss)
         """
+        if not is_selected_for_writing(self.settings, path):
+            return
         old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
         try:
@@ -140,7 +143,9 @@ class Writer(object):
         :param **kwargs: additional variables to pass to the templates
         """
 
-        if name is False or name == "":
+        if name is False or name == "" or\
+           not is_selected_for_writing(self.settings,\
+               os.path.join(self.output_path, name)):
             return
         elif not name:
             # other stuff, just return for now
