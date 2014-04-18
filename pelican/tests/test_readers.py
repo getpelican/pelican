@@ -214,6 +214,14 @@ class MdReaderTest(ReaderTest):
             'date': datetime.datetime(2012, 10, 31),
             'modified': datetime.datetime(2012, 11, 1),
             'slug': 'article-with-markdown-containing-footnotes',
+            'multiline': [
+                'Line Metadata should be handle properly.',
+                'See syntax of Meta-Data extension of Python Markdown package:',
+                'If a line is indented by 4 or more spaces,',
+                'that line is assumed to be an additional line of the value',
+                'for the previous keyword.',
+                'A keyword may have as many lines as desired.',
+            ]
         }
         self.assertEqual(content, expected_content)
         for key, value in metadata.items():
