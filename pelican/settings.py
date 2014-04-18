@@ -144,7 +144,7 @@ def read_settings(path=None, override=None):
                     local_settings[p] = absp
 
         if isinstance(local_settings['PLUGIN_PATH'], six.string_types):
-            logger.warning("Detected misconfiguration with %s setting ""(must be a list)" % 'PLUGIN_PATH')
+            logger.warning("Defining %s setting as string has been deprecated (should be a list)" % 'PLUGIN_PATH')
             local_settings['PLUGIN_PATH'] = [local_settings['PLUGIN_PATH']]
         else:
             if 'PLUGIN_PATH' in local_settings and local_settings['PLUGIN_PATH'] is not None:
