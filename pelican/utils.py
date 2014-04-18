@@ -564,25 +564,24 @@ class FileDataCacher(object):
         name = self.__class__.__name__
         self._cache_path = os.path.join(self.settings['CACHE_DIRECTORY'], name)
         self._cache_data_policy = self.settings[cache_policy_key]
-        if not self.settings[load_policy_key]:
-            self._cache = {}
-            return
         if self.settings['GZIP_CACHE']:
             import gzip
             self._cache_open = gzip.open
         else:
             self._cache_open = open
-        try:
-            with self._cache_open(self._cache_path, 'rb') as f:
-                self._cache = pickle.load(f)
-        except Exception as e:
+        if self.settings[load_policy_key]:
+            try:
+                with self._cache_open(self._cache_path, 'rb') as f:
+                    self._cache = pickle.load(f)
+            except Exception as e:
+                self._cache = {}
+        else:
             self._cache = {}
 
     def cache_data(self, filename, data):
         '''Cache data for given file'''
-        if not self._cache_data_policy:
-            return
-        self._cache[filename] = data
+        if self._cache_data_policy:
+            self._cache[filename] = data
 
     def get_cached_data(self, filename, default={}):
         '''Get cached data for the given file
@@ -593,15 +592,14 @@ class FileDataCacher(object):
 
     def save_cache(self):
         '''Save the updated cache'''
-        if not self._cache_data_policy:
-            return
-        try:
-            mkdir_p(self.settings['CACHE_DIRECTORY'])
-            with self._cache_open(self._cache_path, 'wb') as f:
-                pickle.dump(self._cache, f)
-        except Exception as e:
-            logger.warning('Could not save cache {}\n{}'.format(
-                self._cache_path, e))
+        if self._cache_data_policy:
+            try:
+                mkdir_p(self.settings['CACHE_DIRECTORY'])
+                with self._cache_open(self._cache_path, 'wb') as f:
+                    pickle.dump(self._cache, f)
+            except Exception as e:
+                logger.warning('Could not save cache {}\n{}'.format(
+                    self._cache_path, e))
 
 
 class FileStampDataCacher(FileDataCacher):

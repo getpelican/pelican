@@ -307,6 +307,30 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_context()
         generator.readers.read_file.assert_called_count == 0
 
+    def test_full_rebuild(self):
+        """Test that all the articles are read again when not loading cache
+
+        used in --full-rebuild or autoreload mode"""
+        settings = get_settings(filenames={})
+        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['READERS'] = {'asc': None}
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock()
+        generator.generate_context()
+        self.assertTrue(hasattr(generator, '_cache_open'))
+        orig_call_count = generator.readers.read_file.call_count
+
+        settings['LOAD_CONTENT_CACHE'] = False
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock()
+        generator.generate_context()
+        generator.readers.read_file.assert_called_count == orig_call_count
+
 
 class TestPageGenerator(unittest.TestCase):
     # Note: Every time you want to test for a new field; Make sure the test
@@ -371,6 +395,30 @@ class TestPageGenerator(unittest.TestCase):
         generator.readers.read_file = MagicMock()
         generator.generate_context()
         generator.readers.read_file.assert_called_count == 0
+
+    def test_full_rebuild(self):
+        """Test that all the pages are read again when not loading cache
+
+        used in --full-rebuild or autoreload mode"""
+        settings = get_settings(filenames={})
+        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['READERS'] = {'asc': None}
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock()
+        generator.generate_context()
+        self.assertTrue(hasattr(generator, '_cache_open'))
+        orig_call_count = generator.readers.read_file.call_count
+
+        settings['LOAD_CONTENT_CACHE'] = False
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock()
+        generator.generate_context()
+        generator.readers.read_file.assert_called_count == orig_call_count
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):
