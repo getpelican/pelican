@@ -201,12 +201,18 @@ class MarkdownReader(BaseReader):
         for name, value in meta.items():
             name = name.lower()
             if name == "summary":
+                # handle summary metadata as markdown
+                # summary metadata is special case and join all list values
                 summary_values = "\n".join(value)
                 # reset the markdown instance to clear any state
                 self._md.reset()
                 summary = self._md.convert(summary_values)
                 output[name] = self.process_metadata(name, summary)
+            elif len(value) > 1:
+                # handle list metadata as list of string
+                output[name] = self.process_metadata(name, value)
             else:
+                # otherwise, handle metadata as single string
                 output[name] = self.process_metadata(name, value[0])
         return output
 
