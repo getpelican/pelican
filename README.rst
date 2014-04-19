@@ -19,9 +19,11 @@ Features
 Pelican currently supports:
 
 * Blog articles and pages
-* Comments, via an external service (Disqus). (Please note that while
-  useful, Disqus is an external service, and thus the comment data will be
-  somewhat outside of your control and potentially subject to data loss.)
+* Comments
+
+  * via a pelican plugin (`Pelican Comment System`_)
+  * via an external service (Disqus). (Please note that while useful, Disqus is an external service, and thus the comment data will be somewhat outside of your control and potentially subject to data loss.)
+
 * Theming support (themes are created using Jinja2_ templates)
 * PDF generation of the articles/pages (optional)
 * Publication of articles in multiple languages
@@ -66,3 +68,4 @@ client handy, use the webchat_ for quick feedback.
 .. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
 .. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
 .. _contribute: http://docs.getpelican.com/en/latest/contribute.html
+.. _`Pelican Comment System`: https://github.com/getpelican/pelican-plugins/tree/master/pelican_comment_system
