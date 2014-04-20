@@ -161,6 +161,7 @@ Setting name (default value)                                                    
                                                                                  <http://www.methods.co.nz/asciidoc/manpage.html>`_
 `WITH_FUTURE_DATES` (``True``)                                                   If disabled, content with dates in the future will get a
                                                                                  default status of ``draft``.
+										 see :ref:`reading_only_modified_content` for details.
 `INTRASITE_LINK_REGEX` (``'[{|](?P<what>.*?)[|}]'``)                             Regular expression that is used to parse internal links.
                                                                                  Default syntax of links to internal files, tags, etc., is
                                                                                  to enclose the identifier, say ``filename``, in ``{}`` or ``||``.
@@ -173,12 +174,16 @@ Setting name (default value)                                                    
 `SLUGIFY_SOURCE` (``'input'``)                                                   Specifies where you want the slug to be automatically generated
                                                                                  from. Can be set to 'title' to use the 'Title:' metadata tag or
                                                                                  'basename' to use the articles basename when creating the slug.
-`CACHE_CONTENT` (``True``)                                                       If ``True``, save read content in a cache file. 
+`CACHE_CONTENT` (``True``)                                                       If ``True``, save content in a cache file.
                                                                                  See :ref:`reading_only_modified_content` for details about caching.
+`CONTENT_CACHING_LAYER` (``'reader'``)                                           If set to ``'reader'``, save only the raw content and metadata returned
+                                                                                 by readers, if set to ``'generator'``, save processed content objects.
 `CACHE_DIRECTORY` (``cache``)                                                    Directory in which to store cache files.
+`GZIP_CACHE` (``True``)                                                          If ``True``, use gzip to (de)compress the cache files.
 `CHECK_MODIFIED_METHOD` (``mtime``)                                              Controls how files are checked for modifications.
 `LOAD_CONTENT_CACHE` (``True``)                                                  If ``True``, load unmodified content from cache.
-`GZIP_CACHE` (``True``)                                                          If ``True``, use gzip to (de)compress the cache files.
+`AUTORELOAD_IGNORE_CACHE` (``False``)                                            If ``True``, do not load content cache in autoreload mode
+                                                                                 when the settings file changes.
 `WRITE_SELECTED` (``[]``)                                                        If this list is not empty, **only** output files with their paths
                                                                                  in this list are written. Paths should be either relative to the current
 										 working directory of Pelican or absolute. For possible use cases see
@@ -749,12 +754,20 @@ When Pelican is about to read some content source file:
       file cannot be found in the cache file, the content is read as
       usual.
 
-3. If the file is considered unchanged, the content object saved in a
+3. If the file is considered unchanged, the content data saved in a
    previous build corresponding to the file is loaded from the cache
    and the file is not read.
 4. If the file is considered changed, the file is read and the new
-   modification information and the content object are saved to the
+   modification information and the content data are saved to the
    cache if `CACHE_CONTENT` is ``True``.
+
+Depending on `CONTENT_CACHING_LAYER` either the raw content and
+metadata returned by a reader are cached if set to ``'reader'``, or
+the processed content object is cached if set to ``'generator'``.
+Caching the processed content object may conflict with plugins (as
+some reading related signals may be skipped) or e.g. the
+`WITH_FUTURE_DATES` functionality (as the ``draft`` status of the
+cached content objects would not change automatically over time).
 
 Modification time based checking is faster than comparing file hashes,
 but is not as reliable, because mtime information can be lost when
@@ -764,16 +777,18 @@ commands without the mtime preservation mode (invoked e.g. by
 
 The cache files are Python pickles, so they may not be readable by
 different versions of Python as the pickle format often changes. If
-such an error is encountered, the cache files have to be rebuilt
-using the pelican command-line option ``--full-rebuild``.
-The cache files also have to be rebuilt when changing the
-`GZIP_CACHE` setting for cache file reading to work.
+such an error is encountered, the cache files have to be rebuilt by
+running pelican after removing them or by using the pelican
+command-line option ``--ignore-cache``.  The cache files also have to
+be rebuilt when changing the `GZIP_CACHE` setting for cache file
+reading to work.
 
-The ``--full-rebuild`` command-line option is also useful when the
-whole site needs to be regenerated due to e.g. modifications to the
-settings file or theme files. When pelican runs in autorealod mode,
-modification of the settings file or theme will trigger a full rebuild
-automatically.
+The ``--ignore-cache`` command-line option is also useful when the
+whole cache needs to be regenerated due to e.g. modifications to the
+settings file which should change the cached content or just for
+debugging purposes. When pelican runs in autoreload mode, modification
+of the settings file will make it ignore the cache automatically if
+`AUTORELOAD_IGNORE_CACHE` is ``True``.
 
 Note that even when using cached content, all output is always
 written, so the modification times of the ``*.html`` files always

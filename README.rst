@@ -29,6 +29,7 @@ Pelican currently supports:
 * Code syntax highlighting
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
+* Fast rebuild times thanks to content caching and selective output writing.
 
 Have a look at the `Pelican documentation`_ for more information.
 
