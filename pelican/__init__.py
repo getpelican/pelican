@@ -262,8 +262,9 @@ def parse_arguments():
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
 
-    parser.add_argument('-f', '--full-rebuild', action='store_true',
-                        dest='full_rebuild', help='Rebuild everything by not loading from cache')
+    parser.add_argument('-c', '--ignore-cache', action='store_true',
+                        dest='ignore_cache', help='Ignore content cache '
+                        'from previous runs by not loading cache files.')
 
     parser.add_argument('-w', '--write-selected', type=str,
                         dest='selected_paths', default=None,
@@ -284,7 +285,7 @@ def get_config(args):
         config['THEME'] = abstheme if os.path.exists(abstheme) else args.theme
     if args.delete_outputdir is not None:
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
-    if args.full_rebuild:
+    if args.ignore_cache:
         config['LOAD_CONTENT_CACHE'] = False
     if args.selected_paths:
         config['WRITE_SELECTED'] = args.selected_paths.split(',')
@@ -340,7 +341,10 @@ def main():
             print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
                   ' `settings` for changes. ---')
 
-            first_run = True              # load cache on first run
+            def _ignore_cache(pelican_obj):
+                if pelican_obj.settings['AUTORELOAD_IGNORE_CACHE']:
+                    pelican_obj.settings['LOAD_CONTENT_CACHE'] = False
+
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -353,10 +357,9 @@ def main():
 
                     if modified['settings']:
                         pelican, settings = get_instance(args)
-                        if not first_run:
-                            original_load_cache = settings['LOAD_CONTENT_CACHE']
-                            # invalidate cache
-                            pelican.settings['LOAD_CONTENT_CACHE'] = False
+                        original_load_cache = settings['LOAD_CONTENT_CACHE']
+                        print(pelican.settings['AUTORELOAD_IGNORE_CACHE'])
+                        _ignore_cache(pelican)
 
                     if any(modified.values()):
                         print('\n-> Modified: {}. re-generating...'.format(
@@ -368,13 +371,8 @@ def main():
                         if modified['theme'] is None:
                             logger.warning('Empty theme folder. Using `basic` '
                                            'theme.')
-                        elif modified['theme']:
-                            # theme modified, needs full rebuild -> no cache
-                            if not first_run:   # but not on first run
-                                pelican.settings['LOAD_CONTENT_CACHE'] = False
 
                         pelican.run()
-                        first_run = False
                         # restore original caching policy
                         pelican.settings['LOAD_CONTENT_CACHE'] = original_load_cache
 

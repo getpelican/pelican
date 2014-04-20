@@ -123,10 +123,12 @@ DEFAULT_CONFIG = {
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
     'SLUGIFY_SOURCE': 'title',
     'CACHE_CONTENT': True,
+    'CONTENT_CACHING_LAYER': 'reader',
     'CACHE_DIRECTORY': 'cache',
     'GZIP_CACHE': True,
     'CHECK_MODIFIED_METHOD': 'mtime',
     'LOAD_CONTENT_CACHE': True,
+    'AUTORELOAD_IGNORE_CACHE': False,
     'WRITE_SELECTED': [],
     }
 
@@ -265,6 +267,14 @@ def configure_settings(settings):
         # set FEED_DOMAIN to SITEURL
         if not 'FEED_DOMAIN' in settings:
             settings['FEED_DOMAIN'] = settings['SITEURL']
+
+    # check content caching layer and warn of incompatibilities
+    if (settings.get('CACHE_CONTENT', False) and
+        settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and
+        settings.get('WITH_FUTURE_DATES', DEFAULT_CONFIG['WITH_FUTURE_DATES'])):
+        logger.warning('WITH_FUTURE_DATES conflicts with '
+                        "CONTENT_CACHING_LAYER set to 'generator', "
+                        "use 'reader' layer instead")
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     feed_keys = [
