@@ -28,10 +28,11 @@ from pelican import signals
 logger = logging.getLogger(__name__)
 
 
-class Generator(FileStampDataCacher):
+class Generator(object):
     """Baseclass generator"""
 
-    def __init__(self, context, settings, path, theme, output_path, **kwargs):
+    def __init__(self, context, settings, path, theme, output_path,
+                 readers_cache_name='', **kwargs):
         self.context = context
         self.settings = settings
         self.path = path
@@ -41,7 +42,7 @@ class Generator(FileStampDataCacher):
         for arg, value in kwargs.items():
             setattr(self, arg, value)
 
-        self.readers = Readers(self.settings)
+        self.readers = Readers(self.settings, readers_cache_name)
 
         # templates cache
         self._templates = {}
@@ -73,10 +74,6 @@ class Generator(FileStampDataCacher):
         # get custom Jinja filters from user settings
         custom_filters = self.settings['JINJA_FILTERS']
         self.env.filters.update(custom_filters)
-
-        # set up caching
-        super(Generator, self).__init__(settings, 'CACHE_CONTENT',
-                                        'LOAD_CONTENT_CACHE')
 
         signals.generator_init.send(self)
 
@@ -153,6 +150,35 @@ class Generator(FileStampDataCacher):
             self.context[item] = value
 
 
+class CachingGenerator(Generator, FileStampDataCacher):
+    '''Subclass of Generator and FileStampDataCacher classes
+
+    enables content caching, either at the generator or reader level
+    '''
+
+    def __init__(self, *args, **kwargs):
+        '''Initialize the generator, then set up caching
+
+        note the multiple inheritance structure
+        '''
+        cls_name = self.__class__.__name__
+        Generator.__init__(self, *args,
+                           readers_cache_name=(cls_name + '-Readers'),
+                           **kwargs)
+
+        cache_this_level = self.settings['CONTENT_CACHING_LAYER'] == 'generator'
+        caching_policy = cache_this_level and self.settings['CACHE_CONTENT']
+        load_policy = cache_this_level and self.settings['LOAD_CONTENT_CACHE']
+        FileStampDataCacher.__init__(self, self.settings, cls_name,
+                                     caching_policy, load_policy
+                                     )
+
+    def _get_file_stamp(self, filename):
+        '''Get filestamp for path relative to generator.path'''
+        filename = os.path.join(self.path, filename)
+        return super(Generator, self)._get_file_stamp(filename)
+
+
 class _FileLoader(BaseLoader):
 
     def __init__(self, path, basedir):
@@ -183,7 +209,7 @@ class TemplatePagesGenerator(Generator):
                 del self.env.loader.loaders[0]
 
 
-class ArticlesGenerator(Generator):
+class ArticlesGenerator(CachingGenerator):
     """Generate blog articles"""
 
     def __init__(self, *args, **kwargs):
@@ -537,6 +563,7 @@ class ArticlesGenerator(Generator):
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
         self.save_cache()
+        self.readers.save_cache()
         signals.article_generator_finalized.send(self)
 
     def generate_output(self, writer):
@@ -545,7 +572,7 @@ class ArticlesGenerator(Generator):
         signals.article_writer_finalized.send(self, writer=writer)
 
 
-class PagesGenerator(Generator):
+class PagesGenerator(CachingGenerator):
     """Generate pages"""
 
     def __init__(self, *args, **kwargs):
@@ -599,6 +626,7 @@ class PagesGenerator(Generator):
         self.context['PAGES'] = self.pages
 
         self.save_cache()
+        self.readers.save_cache()
         signals.page_generator_finalized.send(self)
 
     def generate_output(self, writer):

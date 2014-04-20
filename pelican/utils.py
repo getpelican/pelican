@@ -552,28 +552,30 @@ def split_all(path):
 class FileDataCacher(object):
     '''Class that can cache data contained in files'''
 
-    def __init__(self, settings, cache_policy_key, load_policy_key):
-        '''Load the specified cache within CACHE_DIRECTORY
+    def __init__(self, settings, cache_name, caching_policy, load_policy):
+        '''Load the specified cache within CACHE_DIRECTORY in settings
 
-        only if load_policy_key in setttings is True,
-        May use gzip if GZIP_CACHE.
-        Sets caching policy according to *cache_policy_key*
-        in *settings*
+        only if *load_policy* is True,
+        May use gzip if GZIP_CACHE ins settings is True.
+        Sets caching policy according to *caching_policy*.
         '''
         self.settings = settings
-        name = self.__class__.__name__
-        self._cache_path = os.path.join(self.settings['CACHE_DIRECTORY'], name)
-        self._cache_data_policy = self.settings[cache_policy_key]
+        self._cache_path = os.path.join(self.settings['CACHE_DIRECTORY'],
+                                        cache_name)
+        self._cache_data_policy = caching_policy
         if self.settings['GZIP_CACHE']:
             import gzip
             self._cache_open = gzip.open
         else:
             self._cache_open = open
-        if self.settings[load_policy_key]:
+        if load_policy:
             try:
-                with self._cache_open(self._cache_path, 'rb') as f:
-                    self._cache = pickle.load(f)
-            except Exception as e:
+                with self._cache_open(self._cache_path, 'rb') as fhandle:
+                    self._cache = pickle.load(fhandle)
+            except (IOError, OSError, pickle.UnpicklingError) as err:
+                logger.warning(('Cannot load cache {}, '
+                    'proceeding with empty cache.\n{}').format(
+                        self._cache_path, err))
                 self._cache = {}
         else:
             self._cache = {}
@@ -583,7 +585,7 @@ class FileDataCacher(object):
         if self._cache_data_policy:
             self._cache[filename] = data
 
-    def get_cached_data(self, filename, default={}):
+    def get_cached_data(self, filename, default=None):
         '''Get cached data for the given file
 
         if no data is cached, return the default object
@@ -595,20 +597,23 @@ class FileDataCacher(object):
         if self._cache_data_policy:
             try:
                 mkdir_p(self.settings['CACHE_DIRECTORY'])
-                with self._cache_open(self._cache_path, 'wb') as f:
-                    pickle.dump(self._cache, f)
-            except Exception as e:
+                with self._cache_open(self._cache_path, 'wb') as fhandle:
+                    pickle.dump(self._cache, fhandle)
+            except (IOError, OSError, pickle.PicklingError) as err:
                 logger.warning('Could not save cache {}\n{}'.format(
-                    self._cache_path, e))
+                    self._cache_path, err))
 
 
 class FileStampDataCacher(FileDataCacher):
     '''Subclass that also caches the stamp of the file'''
 
-    def __init__(self, settings, cache_policy_key, load_policy_key):
-        '''This sublcass additionaly sets filestamp function'''
-        super(FileStampDataCacher, self).__init__(settings, cache_policy_key,
-                                                  load_policy_key)
+    def __init__(self, settings, cache_name, caching_policy, load_policy):
+        '''This sublcass additionaly sets filestamp function
+        and base path for filestamping operations
+        '''
+        super(FileStampDataCacher, self).__init__(settings, cache_name,
+                                                  caching_policy,
+                                                  load_policy)
 
         method = self.settings['CHECK_MODIFIED_METHOD']
         if method == 'mtime':
@@ -616,10 +621,14 @@ class FileStampDataCacher(FileDataCacher):
         else:
             try:
                 hash_func = getattr(hashlib, method)
-                def filestamp_func(buf):
-                    return hash_func(buf).digest()
+                def filestamp_func(filename):
+                    '''return hash of file contents'''
+                    with open(filename, 'rb') as fhandle:
+                        return hash_func(fhandle.read()).digest()
                 self._filestamp_func = filestamp_func
-            except ImportError:
+            except AttributeError as err:
+                logger.warning('Could not get hashing function\n{}'.format(
+                    err))
                 self._filestamp_func = None
 
     def cache_data(self, filename, data):
@@ -636,11 +645,11 @@ class FileStampDataCacher(FileDataCacher):
         a hash for a function name in the hashlib module
         or an empty bytes string otherwise
         '''
-        filename = os.path.join(self.path, filename)
         try:
-            with open(filename, 'rb') as f:
-                return self._filestamp_func(f.read())
-        except Exception:
+            return self._filestamp_func(filename)
+        except (IOError, OSError, TypeError) as err:
+            logger.warning('Cannot get modification stamp for {}\n{}'.format(
+                filename, err))
             return b''
 
     def get_cached_data(self, filename, default=None):
@@ -648,7 +657,7 @@ class FileStampDataCacher(FileDataCacher):
         if the file has not been modified.
 
         If no record exists or file has been modified, return default.
-        Modification is checked by compaing the cached
+        Modification is checked by comparing the cached
         and current file stamp.
         '''
         stamp, data = super(FileStampDataCacher, self).get_cached_data(

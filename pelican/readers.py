@@ -33,7 +33,7 @@ except ImportError:
 
 from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open
+from pelican.utils import get_date, pelican_open, FileStampDataCacher
 
 
 METADATA_PROCESSORS = {
@@ -382,7 +382,7 @@ class AsciiDocReader(BaseReader):
         return content, metadata
 
 
-class Readers(object):
+class Readers(FileStampDataCacher):
     """Interface for all readers.
 
     This class contains a mapping of file extensions / Reader classes, to know
@@ -392,7 +392,7 @@ class Readers(object):
 
     """
 
-    def __init__(self, settings=None):
+    def __init__(self, settings=None, cache_name=''):
         self.settings = settings or {}
         self.readers = {}
         self.reader_classes = {}
@@ -416,6 +416,15 @@ class Readers(object):
                 continue
 
             self.readers[fmt] = reader_class(self.settings)
+
+        # set up caching
+        cache_this_level = (cache_name != '' and
+                            self.settings['CONTENT_CACHING_LAYER'] == 'reader')
+        caching_policy = cache_this_level and self.settings['CACHE_CONTENT']
+        load_policy = cache_this_level and self.settings['LOAD_CONTENT_CACHE']
+        super(Readers, self).__init__(settings, cache_name,
+                                      caching_policy, load_policy,
+                                      )
 
     @property
     def extensions(self):
@@ -455,7 +464,10 @@ class Readers(object):
             source_path=source_path, settings=self.settings,
             process=reader.process_metadata))
 
-        content, reader_metadata = reader.read(path)
+        content, reader_metadata = self.get_cached_data(path, (None, None))
+        if content is None:
+            content, reader_metadata = reader.read(path)
+            self.cache_data(path, (content, reader_metadata))
         metadata.update(reader_metadata)
 
         if content:

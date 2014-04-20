@@ -288,10 +288,11 @@ class TestArticlesGenerator(unittest.TestCase):
         authors_expected = ['alexis-metaireau', 'first-author', 'second-author']
         self.assertEqual(sorted(authors), sorted(authors_expected))
 
-    def test_content_caching(self):
-        """Test that the articles are read only once when caching"""
+    def test_article_object_caching(self):
+        """Test Article objects caching at the generator level"""
         settings = get_settings(filenames={})
         settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
@@ -307,10 +308,32 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_context()
         generator.readers.read_file.assert_called_count == 0
 
-    def test_full_rebuild(self):
+    def test_reader_content_caching(self):
+        """Test raw content caching at the reader level"""
+        settings = get_settings(filenames={})
+        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['READERS'] = {'asc': None}
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        self.assertTrue(hasattr(generator.readers, '_cache'))
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        readers = generator.readers.readers
+        for reader in readers.values():
+            reader.read = MagicMock()
+        generator.generate_context()
+        for reader in readers.values():
+            reader.read.assert_called_count == 0
+
+    def test_ignore_cache(self):
         """Test that all the articles are read again when not loading cache
 
-        used in --full-rebuild or autoreload mode"""
+        used in --ignore-cache or autoreload mode"""
         settings = get_settings(filenames={})
         settings['CACHE_DIRECTORY'] = self.temp_cache
         settings['READERS'] = {'asc': None}
@@ -376,30 +399,52 @@ class TestPageGenerator(unittest.TestCase):
         self.assertEqual(sorted(pages_expected), sorted(pages))
         self.assertEqual(sorted(hidden_pages_expected), sorted(hidden_pages))
 
-    def test_content_caching(self):
-        """Test that the pages are read only once when caching"""
+    def test_page_object_caching(self):
+        """Test Page objects caching at the generator level"""
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = 'cache_dir'   #TODO
         settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['READERS'] = {'asc': None}
 
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
-            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         self.assertTrue(hasattr(generator, '_cache'))
 
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
-            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
         generator.readers.read_file.assert_called_count == 0
 
-    def test_full_rebuild(self):
+    def test_reader_content_caching(self):
+        """Test raw content caching at the reader level"""
+        settings = get_settings(filenames={})
+        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['READERS'] = {'asc': None}
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        self.assertTrue(hasattr(generator.readers, '_cache'))
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        readers = generator.readers.readers
+        for reader in readers.values():
+            reader.read = MagicMock()
+        generator.generate_context()
+        for reader in readers.values():
+            reader.read.assert_called_count == 0
+
+    def test_ignore_cache(self):
         """Test that all the pages are read again when not loading cache
 
-        used in --full-rebuild or autoreload mode"""
+        used in --ignore_cache or autoreload mode"""
         settings = get_settings(filenames={})
         settings['CACHE_DIRECTORY'] = self.temp_cache
         settings['READERS'] = {'asc': None}

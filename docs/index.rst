@@ -33,6 +33,7 @@ Pelican |version| currently supports:
 * Code syntax highlighting
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
+* Fast rebuild times thanks to content caching and selective output writing.
 
 Why the name "Pelican"?
 -----------------------
