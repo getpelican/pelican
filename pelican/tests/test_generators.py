@@ -372,8 +372,8 @@ class TestPageGenerator(unittest.TestCase):
 
     def test_generate_context(self):
         settings = get_settings(filenames={})
-        settings['PAGE_DIR'] = 'TestPages'  # relative to CUR_DIR
-        settings['CACHE_PATH'] = self.temp_cache
+        settings['PAGE_PATHS'] = ['TestPages']  # relative to CUR_DIR
+        settings['CACHE_DIRECTORY'] = self.temp_cache
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 
         generator = PagesGenerator(
@@ -398,6 +398,7 @@ class TestPageGenerator(unittest.TestCase):
 
         self.assertEqual(sorted(pages_expected), sorted(pages))
         self.assertEqual(sorted(hidden_pages_expected), sorted(hidden_pages))
+        
 
     def test_page_object_caching(self):
         """Test Page objects caching at the generator level"""
