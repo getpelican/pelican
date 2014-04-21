@@ -110,29 +110,30 @@ class Generator(object):
             return True
         return False
 
-    def get_files(self, path, exclude=[], extensions=None):
+    def get_files(self, paths, exclude=[], extensions=None):
         """Return a list of files to use, based on rules
 
-        :param path: the path to search (relative to self.path)
+        :param paths: the list pf paths to search (relative to self.path)
         :param exclude: the list of path to exclude
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
         files = []
-        root = os.path.join(self.path, path)
+        for path in paths:
+            root = os.path.join(self.path, path)
 
-        if os.path.isdir(root):
-            for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
-                for e in exclude:
-                    if e in dirs:
-                        dirs.remove(e)
-                reldir = os.path.relpath(dirpath, self.path)
-                for f in temp_files:
-                    fp = os.path.join(reldir, f)
-                    if self._include_path(fp, extensions):
-                        files.append(fp)
-        elif os.path.exists(root) and self._include_path(path, extensions):
-            files.append(path)  # can't walk non-directories
+            if os.path.isdir(root):
+                for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
+                    for e in exclude:
+                        if e in dirs:
+                            dirs.remove(e)
+                    reldir = os.path.relpath(dirpath, self.path)
+                    for f in temp_files:
+                        fp = os.path.join(reldir, f)
+                        if self._include_path(fp, extensions):
+                            files.append(fp)
+            elif os.path.exists(root) and self._include_path(path, extensions):
+                files.append(path)  # can't walk non-directories
         return files
 
     def add_source_path(self, content):
@@ -462,7 +463,7 @@ class ArticlesGenerator(CachingGenerator):
         all_articles = []
         all_drafts = []
         for f in self.get_files(
-                self.settings['ARTICLE_DIR'],
+                self.settings['ARTICLE_PATHS'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             article = self.get_cached_data(f, None)
             if article is None:
@@ -586,7 +587,7 @@ class PagesGenerator(CachingGenerator):
         all_pages = []
         hidden_pages = []
         for f in self.get_files(
-                self.settings['PAGE_DIR'],
+                self.settings['PAGE_PATHS'],
                 exclude=self.settings['PAGE_EXCLUDES']):
             page = self.get_cached_data(f, None)
             if page is None:

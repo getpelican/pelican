@@ -372,7 +372,7 @@ class TestPageGenerator(unittest.TestCase):
 
     def test_generate_context(self):
         settings = get_settings(filenames={})
-        settings['PAGE_DIR'] = 'TestPages'  # relative to CUR_DIR
+        settings['PAGE_PATHS'] = ['TestPages']  # relative to CUR_DIR
         settings['CACHE_DIRECTORY'] = self.temp_cache
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 
