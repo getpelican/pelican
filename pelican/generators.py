@@ -110,29 +110,30 @@ class Generator(object):
             return True
         return False
 
-    def get_files(self, path, exclude=[], extensions=None):
+    def get_files(self, paths, exclude=[], extensions=None):
         """Return a list of files to use, based on rules
 
-        :param path: the path to search (relative to self.path)
+        :param paths: the list pf paths to search (relative to self.path)
         :param exclude: the list of path to exclude
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
         files = []
-        root = os.path.join(self.path, path)
+        for path in paths:
+            root = os.path.join(self.path, path)
 
-        if os.path.isdir(root):
-            for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
-                for e in exclude:
-                    if e in dirs:
-                        dirs.remove(e)
-                reldir = os.path.relpath(dirpath, self.path)
-                for f in temp_files:
-                    fp = os.path.join(reldir, f)
-                    if self._include_path(fp, extensions):
-                        files.append(fp)
-        elif os.path.exists(root) and self._include_path(path, extensions):
-            files.append(path)  # can't walk non-directories
+            if os.path.isdir(root):
+                for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
+                    for e in exclude:
+                        if e in dirs:
+                            dirs.remove(e)
+                    reldir = os.path.relpath(dirpath, self.path)
+                    for f in temp_files:
+                        fp = os.path.join(reldir, f)
+                        if self._include_path(fp, extensions):
+                            files.append(fp)
+            elif os.path.exists(root) and self._include_path(path, extensions):
+                files.append(path)  # can't walk non-directories
         return files
 
     def add_source_path(self, content):
@@ -462,7 +463,7 @@ class ArticlesGenerator(CachingGenerator):
         all_articles = []
         all_drafts = []
         for f in self.get_files(
-                self.settings['ARTICLE_DIR'],
+                self.settings['ARTICLE_PATHS'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             article = self.get_cached_data(f, None)
             if article is None:
@@ -586,7 +587,7 @@ class PagesGenerator(CachingGenerator):
         all_pages = []
         hidden_pages = []
         for f in self.get_files(
-                self.settings['PAGE_DIR'],
+                self.settings['PAGE_PATHS'],
                 exclude=self.settings['PAGE_EXCLUDES']):
             page = self.get_cached_data(f, None)
             if page is None:
@@ -660,20 +661,17 @@ class StaticGenerator(Generator):
 
     def generate_context(self):
         self.staticfiles = []
-
-        # walk static paths
-        for static_path in self.settings['STATIC_PATHS']:
-            for f in self.get_files(
-                    static_path, extensions=False):
-                static = self.readers.read_file(
-                    base_path=self.path, path=f, content_class=Static,
-                    fmt='static', context=self.context,
-                    preread_signal=signals.static_generator_preread,
-                    preread_sender=self,
-                    context_signal=signals.static_generator_context,
-                    context_sender=self)
-                self.staticfiles.append(static)
-                self.add_source_path(static)
+        for f in self.get_files(self.settings['STATIC_PATHS'],
+                                extensions=False):
+            static = self.readers.read_file(
+                base_path=self.path, path=f, content_class=Static,
+                fmt='static', context=self.context,
+                preread_signal=signals.static_generator_preread,
+                preread_sender=self,
+                context_signal=signals.static_generator_context,
+                context_sender=self)
+            self.staticfiles.append(static)
+            self.add_source_path(static)
         self._update_context(('staticfiles',))
         signals.static_generator_finalized.send(self)
 

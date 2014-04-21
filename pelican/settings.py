@@ -29,9 +29,9 @@ DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
-    'ARTICLE_DIR': '',
+    'ARTICLE_PATHS': [''],
     'ARTICLE_EXCLUDES': ('pages',),
-    'PAGE_DIR': 'pages',
+    'PAGE_PATHS': ['pages'],
     'PAGE_EXCLUDES': (),
     'THEME': DEFAULT_THEME,
     'OUTPUT_PATH': 'output',
@@ -311,6 +311,16 @@ def configure_settings(settings):
         key=lambda r: r[0],
     )
 
+    # move {ARTICLE,PAGE}_DIR -> {ARTICLE,PAGE}_PATHS
+    for key in ['ARTICLE', 'PAGE']:
+        old_key = key + '_DIR'
+        new_key = key + '_PATHS'
+        if old_key in settings:
+            logger.warning('Deprecated setting {}, moving it to {} list'.format(
+                old_key, new_key))
+            settings[new_key] = [settings[old_key]]   # also make a list
+            del settings[old_key]
+
     # Save people from accidentally setting a string rather than a list
     path_keys = (
         'ARTICLE_EXCLUDES',
@@ -324,13 +334,15 @@ def configure_settings(settings):
         'PLUGINS',
         'STATIC_PATHS',
         'THEME_STATIC_PATHS',
+        'ARTICLE_PATHS',
+        'PAGE_PATHS',
     )
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
-            if isinstance(settings[PATH_KEY], six.string_types):
-                logger.warning("Detected misconfiguration with %s setting "
-                               "(must be a list), falling back to the default"
-                               % PATH_KEY)
-                settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
+        if isinstance(settings[PATH_KEY], six.string_types):
+            logger.warning("Detected misconfiguration with %s setting "
+                           "(must be a list), falling back to the default"
+                           % PATH_KEY)
+            settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
 
     for old, new, doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),
