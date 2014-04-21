@@ -461,6 +461,25 @@ class TestDateFormatter(unittest.TestCase):
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'),
                          'French locale needed')
+    def test_french_strftime(self):
+        # This test tries to reproduce an issue that occured with python3.3 under macos10 only
+        locale.setlocale(locale.LC_ALL, str('fr_FR.UTF-8'))
+        date = datetime.datetime(2014,8,14)
+        # we compare the lower() dates since macos10 returns "Jeudi" for %A whereas linux reports "jeudi"
+        self.assertEqual( u'jeudi, 14 août 2014', utils.strftime(date, date_format="%A, %d %B %Y").lower() )
+        df = utils.DateFormatter()
+        self.assertEqual( u'jeudi, 14 août 2014', df(date, date_format="%A, %d %B %Y").lower() )
+        # Let us now set the global locale to C:
+        locale.setlocale(locale.LC_ALL, str('C'))
+        # DateFormatter should still work as expected since it is the whole point of DateFormatter
+        # (This is where pre-2014/4/15 code fails on macos10)
+        df_date = df(date, date_format="%A, %d %B %Y").lower()
+        self.assertEqual( u'jeudi, 14 août 2014', df_date )
+
+
+    @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
+                         locale_available('French'),
+                         'French locale needed')
     def test_french_locale(self):
         settings = read_settings(
             override={'LOCALE': locale.normalize('fr_FR.UTF-8'),
