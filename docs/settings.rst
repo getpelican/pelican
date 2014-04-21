@@ -111,9 +111,9 @@ Setting name (followed by default value, if any)                                
 ``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
                                                                                  and content path is not specified via an argument to the ``pelican``
                                                                                  command, Pelican will use the current working directory.
-``PAGE_DIR = 'pages'``                                                           Directory to look at for pages, relative to ``PATH``.
+``PAGE_PATHS = ['pages']``                                                       A list of directories to look at for pages, relative to ``PATH``.
 ``PAGE_EXCLUDES = ()``                                                           A list of directories to exclude when looking for pages.
-``ARTICLE_DIR = ''``                                                             Directory to look at for articles, relative to ``PATH``.
+``ARTICLE_PATHS = ['']``                                                         A list of directories to look at for articles, relative to ``PATH``.
 ``ARTICLE_EXCLUDES = ('pages',)``                                                A list of directories to exclude when looking for articles.
 ``OUTPUT_SOURCES = False``                                                       Set to True if you want to copy the articles and pages in their
                                                                                  original format (e.g. Markdown or reStructuredText) to the
