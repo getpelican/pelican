@@ -59,6 +59,7 @@ class RstReaderTest(ReaderTest):
             'category': 'yeah',
             'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
+            'reader': 'rst',
         }
         for key, value in page.metadata.items():
             self.assertEqual(value, expected[key], key)
@@ -71,6 +72,7 @@ class RstReaderTest(ReaderTest):
             'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
             'date': SafeDatetime(2012, 11, 29),
+            'reader': 'rst',
         }
         for key, value in page.metadata.items():
             self.assertEqual(value, expected[key], key)
@@ -88,6 +90,7 @@ class RstReaderTest(ReaderTest):
             'date': SafeDatetime(2012, 11, 29),
             'slug': 'article_with_filename_metadata',
             'mymeta': 'foo',
+            'reader': 'rst',
         }
         for key, value in page.metadata.items():
             self.assertEqual(value, expected[key], key)

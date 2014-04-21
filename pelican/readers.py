@@ -440,6 +440,8 @@ class Readers(FileStampDataCacher):
         metadata.update(parse_path_metadata(
             source_path=source_path, settings=self.settings,
             process=reader.process_metadata))
+        reader_name = reader.__class__.__name__
+        metadata['reader'] = reader_name.replace('Reader', '').lower()
 
         content, reader_metadata = self.get_cached_data(path, (None, None))
         if content is None:
