@@ -19,6 +19,8 @@ except ImportError:
 
 from os.path import isabs
 
+from pelican.log import LimitFilter
+
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +46,8 @@ DEFAULT_CONFIG = {
     'BASE_THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
     'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
+    'AUTHOR_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
+    'AUTHOR_FEED_RSS': os.path.join('feeds', '%s.rss.xml'),
     'TRANSLATION_FEED_ATOM': os.path.join('feeds', 'all-%s.atom.xml'),
     'FEED_MAX_ITEMS': '',
     'SITEURL': '',
@@ -86,9 +90,9 @@ DEFAULT_CONFIG = {
     'PAGINATION_PATTERNS': [
         (0, '{name}{number}{extension}', '{name}{number}{extension}'),
     ],
-    'YEAR_ARCHIVE_SAVE_AS': False,
-    'MONTH_ARCHIVE_SAVE_AS': False,
-    'DAY_ARCHIVE_SAVE_AS': False,
+    'YEAR_ARCHIVE_SAVE_AS': '',
+    'MONTH_ARCHIVE_SAVE_AS': '',
+    'DAY_ARCHIVE_SAVE_AS': '',
     'RELATIVE_URLS': False,
     'DEFAULT_LANG': 'en',
     'TAG_CLOUD_STEPS': 4,
@@ -103,6 +107,7 @@ DEFAULT_CONFIG = {
     'MD_EXTENSIONS': ['codehilite(css_class=highlight)', 'extra'],
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
+    'LOG_FILTER': [],
     'LOCALE': [''],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
@@ -114,14 +119,22 @@ DEFAULT_CONFIG = {
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
     'SUMMARY_MAX_LENGTH': 50,
-    'PLUGIN_PATH': '',
+    'PLUGIN_PATH': [],
     'PLUGINS': [],
     'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
-    'SLUGIFY_SOURCE': 'title'
+    'SLUGIFY_SOURCE': 'title',
+    'CACHE_CONTENT': True,
+    'CONTENT_CACHING_LAYER': 'reader',
+    'CACHE_DIRECTORY': 'cache',
+    'GZIP_CACHE': True,
+    'CHECK_MODIFIED_METHOD': 'mtime',
+    'LOAD_CONTENT_CACHE': True,
+    'AUTORELOAD_IGNORE_CACHE': False,
+    'WRITE_SELECTED': [],
     }
 
 PYGMENTS_RST_OPTIONS = None
@@ -131,13 +144,22 @@ def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'BASE_THEME', 'PLUGIN_PATH']:
+
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'BASE_THEME']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
                     os.path.dirname(path), local_settings[p])))
-                if p not in ('THEME', 'BASE_THEME', 'PLUGIN_PATH') or os.path.exists(absp):
+                if p not in ('THEME', 'BASE_THEME') or os.path.exists(absp):
                     local_settings[p] = absp
+
+        if isinstance(local_settings['PLUGIN_PATH'], six.string_types):
+            logger.warning("Defining %s setting as string has been deprecated (should be a list)" % 'PLUGIN_PATH')
+            local_settings['PLUGIN_PATH'] = [local_settings['PLUGIN_PATH']]
+        else:
+            if 'PLUGIN_PATH' in local_settings and local_settings['PLUGIN_PATH'] is not None:
+                local_settings['PLUGIN_PATH'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
+                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATH']]
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
@@ -173,13 +195,17 @@ def get_settings_from_file(path, default_settings=DEFAULT_CONFIG):
 
 
 def configure_settings(settings):
-    """Provide optimizations, error checking and warnings for the given
+    """Provide optimizations, error checking, and warnings for the given
     settings.
-
+    Also, specify the log messages to be ignored.
     """
     if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
                         ' (see pelican --help for more information)')
+
+    # specify the log messages to be ignored
+    LimitFilter.ignore.update(set(settings.get('LOG_FILTER',
+                                               DEFAULT_CONFIG['LOG_FILTER'])))
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):
@@ -204,6 +230,13 @@ def configure_settings(settings):
         else:
             raise Exception("Could not find the base theme %s"
                             % settings['BASE_THEME'])
+
+    # make paths selected for writing absolute if necessary
+    settings['WRITE_SELECTED'] = [
+        os.path.abspath(path) for path in
+        settings.get('WRITE_SELECTED', DEFAULT_CONFIG['WRITE_SELECTED'])
+        ]
+
 
     # standardize strings to lowercase strings
     for key in [
@@ -254,11 +287,20 @@ def configure_settings(settings):
         if not 'FEED_DOMAIN' in settings:
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
+    # check content caching layer and warn of incompatibilities
+    if (settings.get('CACHE_CONTENT', False) and
+        settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and
+        settings.get('WITH_FUTURE_DATES', DEFAULT_CONFIG['WITH_FUTURE_DATES'])):
+        logger.warning('WITH_FUTURE_DATES conflicts with '
+                        "CONTENT_CACHING_LAYER set to 'generator', "
+                        "use 'reader' layer instead")
+
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     feed_keys = [
         'FEED_ATOM', 'FEED_RSS',
         'FEED_ALL_ATOM', 'FEED_ALL_RSS',
         'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+        'AUTHOR_FEED_ATOM', 'AUTHOR_FEED_RSS',
         'TAG_FEED_ATOM', 'TAG_FEED_RSS',
         'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
     ]

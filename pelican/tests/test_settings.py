@@ -16,9 +16,14 @@ class TestSettingsConfiguration(unittest.TestCase):
     optimizations.
     """
     def setUp(self):
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
         self.PATH = abspath(dirname(__file__))
         default_conf = join(self.PATH, 'default_conf.py')
         self.settings = read_settings(default_conf)
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_overwrite_existing_settings(self):
         self.assertEqual(self.settings.get('SITENAME'), "Alexis' log")

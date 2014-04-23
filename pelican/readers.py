@@ -6,16 +6,13 @@ import logging
 import os
 import re
 
-try:
-    import docutils
-    import docutils.core
-    import docutils.io
-    from docutils.writers.html4css1 import HTMLTranslator
+import docutils
+import docutils.core
+import docutils.io
+from docutils.writers.html4css1 import HTMLTranslator
 
-    # import the directives to have pygments support
-    from pelican import rstdirectives  # NOQA
-except ImportError:
-    docutils = False
+# import the directives to have pygments support
+from pelican import rstdirectives  # NOQA
 try:
     from markdown import Markdown
 except ImportError:
@@ -36,7 +33,7 @@ except ImportError:
 
 from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open
+from pelican.utils import get_date, pelican_open, FileStampDataCacher
 
 
 METADATA_PROCESSORS = {
@@ -204,12 +201,18 @@ class MarkdownReader(BaseReader):
         for name, value in meta.items():
             name = name.lower()
             if name == "summary":
+                # handle summary metadata as markdown
+                # summary metadata is special case and join all list values
                 summary_values = "\n".join(value)
                 # reset the markdown instance to clear any state
                 self._md.reset()
                 summary = self._md.convert(summary_values)
                 output[name] = self.process_metadata(name, summary)
+            elif len(value) > 1:
+                # handle list metadata as list of string
+                output[name] = self.process_metadata(name, value)
             else:
+                # otherwise, handle metadata as single string
                 output[name] = self.process_metadata(name, value[0])
         return output
 
@@ -318,7 +321,11 @@ class HTMLReader(BaseReader):
             if not contents:
                 contents = self._attr_value(attrs, 'contents', '')
                 if contents:
-                    logger.warning("Meta tag attribute 'contents' used in file %s, should be changed to 'content'", self._filename)
+                    logger.warning((
+                        "Meta tag attribute 'contents' used in file {}, should"
+                        " be changed to 'content'".format(self._filename),
+                        "Other files have meta tag attribute 'contents' that"
+                        " should be changed to 'content'"))
 
             if name == 'keywords':
                 name = 'tags'
@@ -375,7 +382,7 @@ class AsciiDocReader(BaseReader):
         return content, metadata
 
 
-class Readers(object):
+class Readers(FileStampDataCacher):
     """Interface for all readers.
 
     This class contains a mapping of file extensions / Reader classes, to know
@@ -385,26 +392,19 @@ class Readers(object):
 
     """
 
-    # used to warn about missing dependencies only once, at the first
-    # instanciation of a Readers object.
-    warn_missing_deps = True
-
-    def __init__(self, settings=None):
+    def __init__(self, settings=None, cache_name=''):
         self.settings = settings or {}
         self.readers = {}
         self.reader_classes = {}
 
         for cls in [BaseReader] + BaseReader.__subclasses__():
             if not cls.enabled:
-                if self.__class__.warn_missing_deps:
-                    logger.debug('Missing dependencies for {}'
-                                 .format(', '.join(cls.file_extensions)))
+                logger.debug('Missing dependencies for {}'
+                             .format(', '.join(cls.file_extensions)))
                 continue
 
             for ext in cls.file_extensions:
                 self.reader_classes[ext] = cls
-
-        self.__class__.warn_missing_deps = False
 
         if self.settings['READERS']:
             self.reader_classes.update(self.settings['READERS'])
@@ -416,6 +416,15 @@ class Readers(object):
                 continue
 
             self.readers[fmt] = reader_class(self.settings)
+
+        # set up caching
+        cache_this_level = (cache_name != '' and
+                            self.settings['CONTENT_CACHING_LAYER'] == 'reader')
+        caching_policy = cache_this_level and self.settings['CACHE_CONTENT']
+        load_policy = cache_this_level and self.settings['LOAD_CONTENT_CACHE']
+        super(Readers, self).__init__(settings, cache_name,
+                                      caching_policy, load_policy,
+                                      )
 
     @property
     def extensions(self):
@@ -455,7 +464,10 @@ class Readers(object):
             source_path=source_path, settings=self.settings,
             process=reader.process_metadata))
 
-        content, reader_metadata = reader.read(path)
+        content, reader_metadata = self.get_cached_data(path, (None, None))
+        if content is None:
+            content, reader_metadata = reader.read(path)
+            self.cache_data(path, (content, reader_metadata))
         metadata.update(reader_metadata)
 
         if content:
@@ -505,19 +517,10 @@ def find_empty_alt(content, path):
             src=(['"])(.*)\5
         )
         """, re.X)
-    matches = re.findall(imgs, content)
-    # find a correct threshold
-    nb_warnings = 10
-    if len(matches) == nb_warnings + 1:
-        nb_warnings += 1  # avoid bad looking case
-    # print one warning per image with empty alt until threshold
-    for match in matches[:nb_warnings]:
-        logger.warning('Empty alt attribute for image {} in {}'.format(
-            os.path.basename(match[1] + match[5]), path))
-    # print one warning for the other images with empty alt
-    if len(matches) > nb_warnings:
-        logger.warning('{} other images with empty alt attributes'
-                       .format(len(matches) - nb_warnings))
+    for match in re.findall(imgs, content):
+        logger.warning(('Empty alt attribute for image {} in {}'.format(
+            os.path.basename(match[1] + match[5]), path),
+            'Other images have empty alt attributes'))
 
 
 def default_metadata(settings=None, process=None):

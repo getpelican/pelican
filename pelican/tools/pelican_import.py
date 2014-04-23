@@ -135,7 +135,7 @@ def wp2fields(xml, wp_custpost=False):
                 title = HTMLParser().unescape(item.title.contents[0])
             except IndexError:
                 title = 'No title [%s]' % item.find('post_name').string
-                logger.warn('Post "%s" is lacking a proper title' % title)
+                logger.warning('Post "%s" is lacking a proper title' % title)
 
             filename = item.find('post_name').string
             post_id = item.find('post_id').string
@@ -601,11 +601,21 @@ def download_attachments(output_path, urls):
         except URLError as e:
             error = ("No file could be downloaded from {}; Error {}"
                     .format(url, e))
-            logger.warn(error)
+            logger.warning(error)
         except IOError as e: #Python 2.7 throws an IOError rather Than URLError
-            error = ("No file could be downloaded from {}; Error {}"
-                    .format(url, e))
-            logger.warn(error)
+            # For japanese, the error might look kind of like this:
+            # e = IOError( 'socket error', socket.error(111, u'\u63a5\u7d9a\u3092\u62d2\u5426\u3055\u308c\u307e\u3057\u305f') )
+            # and not be suitable to use in "{}".format(e) , raising UnicodeDecodeError
+            # (This is at least the case on my Fedora running Python 2.7.5 
+            # (default, Feb 19 2014, 13:47:28) [GCC 4.8.2 20131212 (Red Hat 4.8.2-7)] on linux2
+            try:
+                error = ("No file could be downloaded from {}; Error {}"
+                        .format(url, e))
+            except UnicodeDecodeError:
+                # For lack of a better log message because we could not decode e, let's use repr(e)
+                error = ("No file could be downloaded from {}; Error {}"
+                        .format(url, repr(e)))
+            logger.warning(error)
     return locations
 
 

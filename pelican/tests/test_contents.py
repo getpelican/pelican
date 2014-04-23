@@ -4,6 +4,7 @@ from __future__ import unicode_literals, absolute_import
 import six
 from datetime import datetime
 from sys import platform
+import locale
 
 from pelican.tests.support import unittest, get_settings
 
@@ -22,6 +23,8 @@ class TestPage(unittest.TestCase):
 
     def setUp(self):
         super(TestPage, self).setUp()
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
         self.page_kwargs = {
             'content': TEST_CONTENT,
             'context': {
@@ -34,6 +37,9 @@ class TestPage(unittest.TestCase):
             },
             'source_path': '/path/to/file/foo.ext'
         }
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_use_args(self):
         # Creating a page with arguments passed to the constructor should use
@@ -129,9 +135,15 @@ class TestPage(unittest.TestCase):
         page_kwargs['metadata']['date'] = dt
         page = Page(**page_kwargs)
 
-        self.assertEqual(page.locale_date,
-            dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']))
+        # page.locale_date is a unicode string in both python2 and python3
+        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']) 
+        # dt_date is a byte string in python2, and a unicode string in python3
+        # Let's make sure it is a unicode string (relies on python 3.3 supporting the u prefix)
+        if type(dt_date) != type(u''):
+            # python2:
+            dt_date = unicode(dt_date, 'utf8')
 
+        self.assertEqual(page.locale_date, dt_date )
         page_kwargs['settings'] = get_settings()
 
         # I doubt this can work on all platforms ...

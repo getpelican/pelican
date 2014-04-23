@@ -205,3 +205,27 @@ You can also disable generation of tag-related pages via::
 
     TAGS_SAVE_AS = ''
     TAG_SAVE_AS = ''
+
+Why does Pelican always write all HTML files even with content caching enabled?
+===============================================================================
+
+In order to reliably determine whether the HTML output is different
+before writing it, a large part of the generation environment
+including the template contexts, imported plugins, etc. would have to
+be saved and compared, at least in the form of a hash (which would
+require special handling of unhashable types), because of all the
+possible combinations of plugins, pagination, etc. which may change in
+many different ways. This would require a lot more processing time
+and memory and storage space. Simply writing the files each time is a
+lot faster and a lot more reliable.
+
+However, this means that the modification time of the files changes
+every time, so a ``rsync`` based upload will transfer them even if
+their content hasn't changed. A simple solution is to make ``rsync``
+use the ``--checksum`` option, which will make it compare the file
+checksums in a much faster way than Pelican would.
+
+When only several specific output files are of interest (e.g. when
+working on some specific page or the theme templates), the
+`WRITE_SELECTED` option may help, see
+:ref:`writing_only_selected_content`.

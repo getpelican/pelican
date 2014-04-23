@@ -43,12 +43,14 @@ class TestPelican(LoggedTestCase):
     def setUp(self):
         super(TestPelican, self).setUp()
         self.temp_path = mkdtemp(prefix='pelicantests.')
-        self.old_locale = locale.setlocale(locale.LC_ALL)
+        self.temp_cache = mkdtemp(prefix='pelican_cache.')
         self.maxDiff = None
+        self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
 
     def tearDown(self):
         rmtree(self.temp_path)
+        rmtree(self.temp_cache)
         locale.setlocale(locale.LC_ALL, self.old_locale)
         super(TestPelican, self).tearDown()
 
@@ -77,13 +79,14 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=None, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
+            'CACHE_DIRECTORY': self.temp_cache,
             'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
         self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertLogCountEqual(
-            count=4,
+            count=3,
             msg="Unable to find.*skipping url replacement",
             level=logging.WARNING)
 
@@ -92,6 +95,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
+            'CACHE_DIRECTORY': self.temp_cache,
             'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
@@ -103,6 +107,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
+            'CACHE_DIRECTORY': self.temp_cache,
             'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'very'),
                                    os.path.join(SAMPLES_PATH, 'kinda'),
                                    os.path.join(SAMPLES_PATH, 'theme_standard')]
@@ -123,6 +128,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
+            'CACHE_DIRECTORY': self.temp_cache,
             'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'theme_standard')]
             })
 
@@ -132,3 +138,26 @@ class TestPelican(LoggedTestCase):
 
         for file in ['a_stylesheet', 'a_template']:
             self.assertTrue(os.path.exists(os.path.join(theme_output, file)))
+
+    def test_write_only_selected(self):
+        """Test that only the selected files are written"""
+        settings = read_settings(path=None, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'CACHE_DIRECTORY': self.temp_cache,
+            'WRITE_SELECTED': [
+                os.path.join(self.temp_path, 'oh-yeah.html'),
+                os.path.join(self.temp_path, 'categories.html'),
+                ],
+            'LOCALE': locale.normalize('en_US'),
+            })
+        pelican = Pelican(settings=settings)
+        logger = logging.getLogger()
+        orig_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.INFO)
+        mute(True)(pelican.run)()
+        logger.setLevel(orig_level)
+        self.assertLogCountEqual(
+            count=2,
+            msg="writing .*",
+            level=logging.INFO)

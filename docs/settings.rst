@@ -36,7 +36,7 @@ Setting name (default value)                                                    
 ===============================================================================  =====================================================================
 `AUTHOR`                                                                         Default author (put your name)
 `DATE_FORMATS` (``{}``)                                                          If you manage multiple languages, you can set the date formatting
-                                                                                 here. See the "Date format and locales" section below for details.
+                                                                                 here. See the "Date format and locale" section below for details.
 `USE_FOLDER_AS_CATEGORY` (``True``)                                              When you don't specify a category in your post metadata, set this
                                                                                  setting to ``True``, and organize your articles in subfolders, the
                                                                                  subfolder will become the category of your post. If set to ``False``,
@@ -88,6 +88,9 @@ Setting name (default value)                                                    
                                                                                  here or a single string representing one locale.
                                                                                  When providing a list, all the locales will be tried
                                                                                  until one works.
+`LOG_FILTER` (``[]``)                                                            A list of tuples containing the logging level (up to ``warning``)
+                                                                                 and the message to be ignored.
+                                                                                 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 `READERS` (``{}``)                                                               A dictionary of file extensions / Reader classes for Pelican to
                                                                                  process or ignore. For example, to avoid processing .html files,
                                                                                  set: ``READERS = {'html': None}``. To add a custom reader for the
@@ -158,6 +161,7 @@ Setting name (default value)                                                    
                                                                                  <http://www.methods.co.nz/asciidoc/manpage.html>`_
 `WITH_FUTURE_DATES` (``True``)                                                   If disabled, content with dates in the future will get a
                                                                                  default status of ``draft``.
+										 see :ref:`reading_only_modified_content` for details.
 `INTRASITE_LINK_REGEX` (``'[{|](?P<what>.*?)[|}]'``)                             Regular expression that is used to parse internal links.
                                                                                  Default syntax of links to internal files, tags, etc., is
                                                                                  to enclose the identifier, say ``filename``, in ``{}`` or ``||``.
@@ -167,9 +171,23 @@ Setting name (default value)                                                    
                                                                                  code blocks. See :ref:`internal_pygments_options` for a list of
                                                                                  supported options.
 
-`SLUGIFY_SOURCE` (``'input'``)                                                   Specifies where you want the slug to be automatically generated 
-                                                                                 from. Can be set to 'title' to use the 'Title:' metadata tag or 
-                                                                                 'basename' to use the articles basename when creating the slug. 
+`SLUGIFY_SOURCE` (``'input'``)                                                   Specifies where you want the slug to be automatically generated
+                                                                                 from. Can be set to 'title' to use the 'Title:' metadata tag or
+                                                                                 'basename' to use the articles basename when creating the slug.
+`CACHE_CONTENT` (``True``)                                                       If ``True``, save content in a cache file.
+                                                                                 See :ref:`reading_only_modified_content` for details about caching.
+`CONTENT_CACHING_LAYER` (``'reader'``)                                           If set to ``'reader'``, save only the raw content and metadata returned
+                                                                                 by readers, if set to ``'generator'``, save processed content objects.
+`CACHE_DIRECTORY` (``cache``)                                                    Directory in which to store cache files.
+`GZIP_CACHE` (``True``)                                                          If ``True``, use gzip to (de)compress the cache files.
+`CHECK_MODIFIED_METHOD` (``mtime``)                                              Controls how files are checked for modifications.
+`LOAD_CONTENT_CACHE` (``True``)                                                  If ``True``, load unmodified content from cache.
+`AUTORELOAD_IGNORE_CACHE` (``False``)                                            If ``True``, do not load content cache in autoreload mode
+                                                                                 when the settings file changes.
+`WRITE_SELECTED` (``[]``)                                                        If this list is not empty, **only** output files with their paths
+                                                                                 in this list are written. Paths should be either relative to the current
+										 working directory of Pelican or absolute. For possible use cases see
+										 :ref:`writing_only_selected_content`.
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
@@ -240,9 +258,9 @@ posts for the month at ``posts/2011/Aug/index.html``.
     arrive at an appropriate archive of posts, without having to specify
     a page name.
 
-====================================================    =====================================================
+======================================================  =====================================================
 Setting name (default value)                            What does it do?
-====================================================    =====================================================
+======================================================  =====================================================
 `ARTICLE_URL` (``'{slug}.html'``)                       The URL to refer to an article.
 `ARTICLE_SAVE_AS` (``'{slug}.html'``)                   The place where we will save an article.
 `ARTICLE_LANG_URL` (``'{slug}-{lang}.html'``)           The URL to refer to an article which doesn't use the
@@ -253,7 +271,7 @@ Setting name (default value)                            What does it do?
 `DRAFT_SAVE_AS` (``'drafts/{slug}.html'``)              The place where we will save an article draft.
 `DRAFT_LANG_URL` (``'drafts/{slug}-{lang}.html'``)      The URL to refer to an article draft which doesn't
                                                         use the default language.
-`DRAFT_LANG_SAVE_AS` (``'drafts/{slug}-{lang}.html'``)  The place where we will save an article draft which 
+`DRAFT_LANG_SAVE_AS` (``'drafts/{slug}-{lang}.html'``)  The place where we will save an article draft which
                                                         doesn't use the default language.
 `PAGE_URL` (``'pages/{slug}.html'``)                    The URL we will use to link to a page.
 `PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page. This value has to be
@@ -269,20 +287,20 @@ Setting name (default value)                            What does it do?
 `TAG_SAVE_AS` (``'tag/{slug}.html'``)                   The location to save the tag page.
 `AUTHOR_URL` (``'author/{slug}.html'``)                 The URL to use for an author.
 `AUTHOR_SAVE_AS` (``'author/{slug}.html'``)             The location to save an author.
-`YEAR_ARCHIVE_SAVE_AS` (False)                          The location to save per-year archives of your posts.
-`MONTH_ARCHIVE_SAVE_AS` (False)                         The location to save per-month archives of your posts.
-`DAY_ARCHIVE_SAVE_AS` (False)                           The location to save per-day archives of your posts.
+`YEAR_ARCHIVE_SAVE_AS` (``''``)                         The location to save per-year archives of your posts.
+`MONTH_ARCHIVE_SAVE_AS` (``''``)                        The location to save per-month archives of your posts.
+`DAY_ARCHIVE_SAVE_AS` (``''``)                          The location to save per-day archives of your posts.
 `SLUG_SUBSTITUTIONS`  (``()``)                          Substitutions to make prior to stripping out
                                                         non-alphanumerics when generating slugs. Specified
                                                         as a list of 2-tuples of ``(from, to)`` which are
                                                         applied in order.
-====================================================    =====================================================
+======================================================  =====================================================
 
 .. note::
 
     If you do not want one or more of the default pages to be created (e.g.,
     you are the only author on your site and thus do not need an Authors page),
-    set the corresponding ``*_SAVE_AS`` setting to ``None`` to prevent the
+    set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
     relevant page from being generated.
 
 `DIRECT_TEMPLATES`
@@ -461,6 +479,8 @@ Setting name (default value)                        What does it do?
                                                     language.
 `CATEGORY_FEED_ATOM` ('feeds/%s.atom.xml'[2]_)      Where to put the category Atom feeds.
 `CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
+`AUTHOR_FEED_ATOM` ('feeds/%s.atom.xml'[2]_)        Where to put the author Atom feeds.
+`AUTHOR_FEED_RSS` ('feeds/%s.rss.xml'[2]_)          Where to put the author RSS feeds.
 `TAG_FEED_ATOM` (``None``, i.e. no tag feed)        Relative URL to output the tag Atom feed. It should
                                                     be defined using a "%s" match in the tag name.
 `TAG_FEED_RSS` (``None``, ie no RSS tag feed)       Relative URL to output the tag RSS feed
@@ -599,7 +619,7 @@ Setting name (default value)                             What does it do?
 .. [3] %s is the language
 
 Ordering content
-=================
+================
 
 ================================================    =====================================================
 Setting name (default value)                        What does it do?
@@ -693,6 +713,102 @@ In addition, you can use the "wide" version of the ``notmyidea`` theme by
 adding the following to your configuration::
 
     CSS_FILE = "wide.css"
+
+Logging
+=======
+
+Sometimes, a long list of warnings may appear during site generation. Finding
+the **meaningful** error message in the middle of tons of annoying log output
+can be quite tricky. In order to filter out redundant log messages, Pelican
+comes with the ``LOG_FILTER`` setting.
+
+``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them being
+composed of the logging level (up to ``warning``) and the message to be ignored.
+Simply populate the list with the log messages you want to hide, and they will
+be filtered out.
+
+For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
+
+.. _reading_only_modified_content:
+
+Reading only modified content
+=============================
+
+To speed up the build process, pelican can optionally read only articles
+and pages with modified content.
+
+When Pelican is about to read some content source file:
+
+1. The hash or modification time information for the file from a
+   previous build are loaded from a cache file if `LOAD_CONTENT_CACHE`
+   is ``True``. These files are stored in the `CACHE_DIRECTORY`
+   directory.  If the file has no record in the cache file, it is read
+   as usual.
+2. The file is checked according to `CHECK_MODIFIED_METHOD`:
+
+    - If set to ``'mtime'``, the modification time of the file is
+      checked.
+    - If set to a name of a function provided by the ``hashlib``
+      module, e.g. ``'md5'``, the file hash is checked.
+    - If set to anything else or the necessary information about the
+      file cannot be found in the cache file, the content is read as
+      usual.
+
+3. If the file is considered unchanged, the content data saved in a
+   previous build corresponding to the file is loaded from the cache
+   and the file is not read.
+4. If the file is considered changed, the file is read and the new
+   modification information and the content data are saved to the
+   cache if `CACHE_CONTENT` is ``True``.
+
+Depending on `CONTENT_CACHING_LAYER` either the raw content and
+metadata returned by a reader are cached if set to ``'reader'``, or
+the processed content object is cached if set to ``'generator'``.
+Caching the processed content object may conflict with plugins (as
+some reading related signals may be skipped) or e.g. the
+`WITH_FUTURE_DATES` functionality (as the ``draft`` status of the
+cached content objects would not change automatically over time).
+
+Modification time based checking is faster than comparing file hashes,
+but is not as reliable, because mtime information can be lost when
+e.g. copying the content sources using the ``cp`` or ``rsync``
+commands without the mtime preservation mode (invoked e.g. by
+``--archive``).
+
+The cache files are Python pickles, so they may not be readable by
+different versions of Python as the pickle format often changes. If
+such an error is encountered, the cache files have to be rebuilt by
+running pelican after removing them or by using the pelican
+command-line option ``--ignore-cache``.  The cache files also have to
+be rebuilt when changing the `GZIP_CACHE` setting for cache file
+reading to work.
+
+The ``--ignore-cache`` command-line option is also useful when the
+whole cache needs to be regenerated due to e.g. modifications to the
+settings file which should change the cached content or just for
+debugging purposes. When pelican runs in autoreload mode, modification
+of the settings file will make it ignore the cache automatically if
+`AUTORELOAD_IGNORE_CACHE` is ``True``.
+
+Note that even when using cached content, all output is always
+written, so the modification times of the ``*.html`` files always
+change.  Therefore, ``rsync`` based upload may benefit from the
+``--checksum`` option.
+
+.. _writing_only_selected_content:
+
+Writing only selected content
+=============================
+
+When one article or page or the theme is being worked on it is often
+desirable to display selected output files as soon as possible. In
+such cases generating and writing all output is often unnecessary.
+These selected output files can be given as output paths in the
+`WRITE_SELECTED` list and **only** those files will be written. This
+list can be also specified on the command-line using the
+``--write-selected`` option which accepts a comma separated list
+of output file paths. By default the list is empty so all output is
+written.
 
 Example settings
 ================

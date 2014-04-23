@@ -20,7 +20,8 @@ from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
 
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
-from pelican.utils import copy, process_translations, mkdir_p, DateFormatter
+from pelican.utils import (copy, process_translations, mkdir_p, DateFormatter,
+                           FileStampDataCacher)
 from pelican import signals
 
 
@@ -30,7 +31,8 @@ logger = logging.getLogger(__name__)
 class Generator(object):
     """Baseclass generator"""
 
-    def __init__(self, context, settings, path, theme, base_theme, output_path, **kwargs):
+    def __init__(self, context, settings, path, theme, base_theme, output_path,
+                 readers_cache_name='', **kwargs):
         self.context = context
         self.settings = settings
         self.path = path
@@ -41,7 +43,7 @@ class Generator(object):
         for arg, value in kwargs.items():
             setattr(self, arg, value)
 
-        self.readers = Readers(self.settings)
+        self.readers = Readers(self.settings, readers_cache_name)
 
         # templates cache
         self._templates = {}
@@ -155,6 +157,35 @@ class Generator(object):
             self.context[item] = value
 
 
+class CachingGenerator(Generator, FileStampDataCacher):
+    '''Subclass of Generator and FileStampDataCacher classes
+
+    enables content caching, either at the generator or reader level
+    '''
+
+    def __init__(self, *args, **kwargs):
+        '''Initialize the generator, then set up caching
+
+        note the multiple inheritance structure
+        '''
+        cls_name = self.__class__.__name__
+        Generator.__init__(self, *args,
+                           readers_cache_name=(cls_name + '-Readers'),
+                           **kwargs)
+
+        cache_this_level = self.settings['CONTENT_CACHING_LAYER'] == 'generator'
+        caching_policy = cache_this_level and self.settings['CACHE_CONTENT']
+        load_policy = cache_this_level and self.settings['LOAD_CONTENT_CACHE']
+        FileStampDataCacher.__init__(self, self.settings, cls_name,
+                                     caching_policy, load_policy
+                                     )
+
+    def _get_file_stamp(self, filename):
+        '''Get filestamp for path relative to generator.path'''
+        filename = os.path.join(self.path, filename)
+        return super(Generator, self)._get_file_stamp(filename)
+
+
 class _FileLoader(BaseLoader):
 
     def __init__(self, path, basedir):
@@ -185,7 +216,7 @@ class TemplatePagesGenerator(Generator):
                 del self.env.loader.loaders[0]
 
 
-class ArticlesGenerator(Generator):
+class ArticlesGenerator(CachingGenerator):
     """Generate blog articles"""
 
     def __init__(self, *args, **kwargs):
@@ -240,6 +271,18 @@ class ArticlesGenerator(Generator):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_RSS']
                                   % cat.slug, feed_type='rss')
+
+        for auth, arts in self.authors:
+            arts.sort(key=attrgetter('date'), reverse=True)
+            if self.settings.get('AUTHOR_FEED_ATOM'):
+                writer.write_feed(arts, self.context,
+                                  self.settings['AUTHOR_FEED_ATOM']
+                                  % auth.slug)
+
+            if self.settings.get('AUTHOR_FEED_RSS'):
+                writer.write_feed(arts, self.context,
+                                  self.settings['AUTHOR_FEED_RSS']
+                                  % auth.slug, feed_type='rss')
 
         if (self.settings.get('TAG_FEED_ATOM')
                 or self.settings.get('TAG_FEED_RSS')):
@@ -311,7 +354,20 @@ class ArticlesGenerator(Generator):
                 # format string syntax can be used for specifying the
                 # period archive dates
                 date = archive[0].date
-                save_as = save_as_fmt.format(date=date)
+                # Under python 2, with non-ascii locales, u"{:%b}".format(date) might raise UnicodeDecodeError
+                # because u"{:%b}".format(date) will call date.__format__(u"%b"), which will return a byte string
+                # and not a unicode string.
+                # eg:
+                # locale.setlocale(locale.LC_ALL, 'ja_JP.utf8')
+                # date.__format__(u"%b") == '12\xe6\x9c\x88' # True
+                try:
+                    save_as = save_as_fmt.format(date=date)
+                except UnicodeDecodeError:
+                    # Python2 only:
+                    # Let date.__format__() work with byte strings instead of characters since it fails to work with characters
+                    bytes_save_as_fmt = save_as_fmt.encode('utf8')
+                    bytes_save_as     = bytes_save_as_fmt.format(date=date)
+                    save_as           = unicode(bytes_save_as,'utf8')
                 context = self.context.copy()
 
                 if key == period_date_key['year']:
@@ -415,20 +471,24 @@ class ArticlesGenerator(Generator):
         for f in self.get_files(
                 self.settings['ARTICLE_DIR'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
-            try:
-                article = self.readers.read_file(
-                    base_path=self.path, path=f, content_class=Article,
-                    context=self.context,
-                    preread_signal=signals.article_generator_preread,
-                    preread_sender=self,
-                    context_signal=signals.article_generator_context,
-                    context_sender=self)
-            except Exception as e:
-                logger.warning('Could not process {}\n{}'.format(f, e))
-                continue
+            article = self.get_cached_data(f, None)
+            if article is None:
+                try:
+                    article = self.readers.read_file(
+                        base_path=self.path, path=f, content_class=Article,
+                        context=self.context,
+                        preread_signal=signals.article_generator_preread,
+                        preread_sender=self,
+                        context_signal=signals.article_generator_context,
+                        context_sender=self)
+                except Exception as e:
+                    logger.warning('Could not process {}\n{}'.format(f, e))
+                    continue
 
-            if not is_valid_content(article, f):
-                continue
+                if not is_valid_content(article, f):
+                    continue
+
+                self.cache_data(f, article)
 
             self.add_source_path(article)
 
@@ -509,7 +569,8 @@ class ArticlesGenerator(Generator):
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
                               'tag_cloud', 'authors', 'related_posts'))
-
+        self.save_cache()
+        self.readers.save_cache()
         signals.article_generator_finalized.send(self)
 
     def generate_output(self, writer):
@@ -518,7 +579,7 @@ class ArticlesGenerator(Generator):
         signals.article_writer_finalized.send(self, writer=writer)
 
 
-class PagesGenerator(Generator):
+class PagesGenerator(CachingGenerator):
     """Generate pages"""
 
     def __init__(self, *args, **kwargs):
@@ -534,20 +595,24 @@ class PagesGenerator(Generator):
         for f in self.get_files(
                 self.settings['PAGE_DIR'],
                 exclude=self.settings['PAGE_EXCLUDES']):
-            try:
-                page = self.readers.read_file(
-                    base_path=self.path, path=f, content_class=Page,
-                    context=self.context,
-                    preread_signal=signals.page_generator_preread,
-                    preread_sender=self,
-                    context_signal=signals.page_generator_context,
-                    context_sender=self)
-            except Exception as e:
-                logger.warning('Could not process {}\n{}'.format(f, e))
-                continue
+            page = self.get_cached_data(f, None)
+            if page is None:
+                try:
+                    page = self.readers.read_file(
+                        base_path=self.path, path=f, content_class=Page,
+                        context=self.context,
+                        preread_signal=signals.page_generator_preread,
+                        preread_sender=self,
+                        context_signal=signals.page_generator_context,
+                        context_sender=self)
+                except Exception as e:
+                    logger.warning('Could not process {}\n{}'.format(f, e))
+                    continue
 
-            if not is_valid_content(page, f):
-                continue
+                if not is_valid_content(page, f):
+                    continue
+
+                self.cache_data(f, page)
 
             self.add_source_path(page)
 
@@ -567,6 +632,8 @@ class PagesGenerator(Generator):
         self._update_context(('pages', ))
         self.context['PAGES'] = self.pages
 
+        self.save_cache()
+        self.readers.save_cache()
         signals.page_generator_finalized.send(self)
 
     def generate_output(self, writer):

@@ -12,10 +12,12 @@ import pytz
 import re
 import shutil
 import traceback
+import pickle
+import hashlib
 
 from collections import Hashable
 from contextlib import contextmanager
-from datetime import datetime
+import dateutil.parser
 from functools import partial
 from itertools import groupby
 from jinja2 import Markup
@@ -181,39 +183,10 @@ def get_date(string):
     If no format matches the given date, raise a ValueError.
     """
     string = re.sub(' +', ' ', string)
-    formats = [
-        # ISO 8601
-        '%Y',
-        '%Y-%m',
-        '%Y-%m-%d',
-        '%Y-%m-%dT%H:%M%z',
-        '%Y-%m-%dT%H:%MZ',
-        '%Y-%m-%dT%H:%M',
-        '%Y-%m-%dT%H:%M:%S%z',
-        '%Y-%m-%dT%H:%M:%SZ',
-        '%Y-%m-%dT%H:%M:%S',
-        '%Y-%m-%dT%H:%M:%S.%f%z',
-        '%Y-%m-%dT%H:%M:%S.%fZ',
-        '%Y-%m-%dT%H:%M:%S.%f',
-        # end ISO 8601 forms
-        '%Y-%m-%d %H:%M',
-        '%Y-%m-%d %H:%M:%S',
-        '%Y/%m/%d %H:%M',
-        '%Y/%m/%d',
-        '%d-%m-%Y',
-        '%d.%m.%Y %H:%M',
-        '%d.%m.%Y',
-        '%d/%m/%Y',
-        ]
-    for date_format in formats:
-        try:
-            date = datetime.strptime(string, date_format)
-        except ValueError:
-            continue
-        if date_format.endswith('Z'):
-            date = date.replace(tzinfo=pytz.timezone('UTC'))
-        return date
-    raise ValueError('{0!r} is not a valid date'.format(string))
+    try:
+        return dateutil.parser.parse(string)
+    except (TypeError, ValueError):
+        raise ValueError('{0!r} is not a valid date'.format(string))
 
 
 @contextmanager
@@ -574,3 +547,135 @@ def split_all(path):
             break
         path = head
     return components
+
+
+class FileDataCacher(object):
+    '''Class that can cache data contained in files'''
+
+    def __init__(self, settings, cache_name, caching_policy, load_policy):
+        '''Load the specified cache within CACHE_DIRECTORY in settings
+
+        only if *load_policy* is True,
+        May use gzip if GZIP_CACHE ins settings is True.
+        Sets caching policy according to *caching_policy*.
+        '''
+        self.settings = settings
+        self._cache_path = os.path.join(self.settings['CACHE_DIRECTORY'],
+                                        cache_name)
+        self._cache_data_policy = caching_policy
+        if self.settings['GZIP_CACHE']:
+            import gzip
+            self._cache_open = gzip.open
+        else:
+            self._cache_open = open
+        if load_policy:
+            try:
+                with self._cache_open(self._cache_path, 'rb') as fhandle:
+                    self._cache = pickle.load(fhandle)
+            except (IOError, OSError, pickle.UnpicklingError) as err:
+                logger.warning(('Cannot load cache {}, '
+                    'proceeding with empty cache.\n{}').format(
+                        self._cache_path, err))
+                self._cache = {}
+        else:
+            self._cache = {}
+
+    def cache_data(self, filename, data):
+        '''Cache data for given file'''
+        if self._cache_data_policy:
+            self._cache[filename] = data
+
+    def get_cached_data(self, filename, default=None):
+        '''Get cached data for the given file
+
+        if no data is cached, return the default object
+        '''
+        return self._cache.get(filename, default)
+
+    def save_cache(self):
+        '''Save the updated cache'''
+        if self._cache_data_policy:
+            try:
+                mkdir_p(self.settings['CACHE_DIRECTORY'])
+                with self._cache_open(self._cache_path, 'wb') as fhandle:
+                    pickle.dump(self._cache, fhandle)
+            except (IOError, OSError, pickle.PicklingError) as err:
+                logger.warning('Could not save cache {}\n{}'.format(
+                    self._cache_path, err))
+
+
+class FileStampDataCacher(FileDataCacher):
+    '''Subclass that also caches the stamp of the file'''
+
+    def __init__(self, settings, cache_name, caching_policy, load_policy):
+        '''This sublcass additionaly sets filestamp function
+        and base path for filestamping operations
+        '''
+        super(FileStampDataCacher, self).__init__(settings, cache_name,
+                                                  caching_policy,
+                                                  load_policy)
+
+        method = self.settings['CHECK_MODIFIED_METHOD']
+        if method == 'mtime':
+            self._filestamp_func = os.path.getmtime
+        else:
+            try:
+                hash_func = getattr(hashlib, method)
+                def filestamp_func(filename):
+                    '''return hash of file contents'''
+                    with open(filename, 'rb') as fhandle:
+                        return hash_func(fhandle.read()).digest()
+                self._filestamp_func = filestamp_func
+            except AttributeError as err:
+                logger.warning('Could not get hashing function\n{}'.format(
+                    err))
+                self._filestamp_func = None
+
+    def cache_data(self, filename, data):
+        '''Cache stamp and data for the given file'''
+        stamp = self._get_file_stamp(filename)
+        super(FileStampDataCacher, self).cache_data(filename, (stamp, data))
+
+    def _get_file_stamp(self, filename):
+        '''Check if the given file has been modified
+        since the previous build.
+
+        depending on CHECK_MODIFIED_METHOD
+        a float may be returned for 'mtime',
+        a hash for a function name in the hashlib module
+        or an empty bytes string otherwise
+        '''
+        try:
+            return self._filestamp_func(filename)
+        except (IOError, OSError, TypeError) as err:
+            logger.warning('Cannot get modification stamp for {}\n{}'.format(
+                filename, err))
+            return b''
+
+    def get_cached_data(self, filename, default=None):
+        '''Get the cached data for the given filename
+        if the file has not been modified.
+
+        If no record exists or file has been modified, return default.
+        Modification is checked by comparing the cached
+        and current file stamp.
+        '''
+        stamp, data = super(FileStampDataCacher, self).get_cached_data(
+            filename, (None, default))
+        if stamp != self._get_file_stamp(filename):
+            return default
+        return data
+
+
+def is_selected_for_writing(settings, path):
+    '''Check whether path is selected for writing
+    according to the WRITE_SELECTED list
+
+    If WRITE_SELECTED is an empty list (default),
+    any path is selected for writing.
+    '''
+    if settings['WRITE_SELECTED']:
+        return path in settings['WRITE_SELECTED']
+    else:
+        return True
+        

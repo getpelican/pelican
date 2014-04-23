@@ -11,12 +11,15 @@ import argparse
 import locale
 import collections
 
+# pelican.log has to be the first pelican module to be loaded
+# because logging.setLoggerClass has to be called before logging.getLogger
+from pelican.log import init
+
 from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, SourceFileGenerator,
                                 TemplatePagesGenerator)
-from pelican.log import init
 from pelican.readers import Readers
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, folder_watcher, file_watcher
@@ -63,7 +66,8 @@ class Pelican(object):
         self.plugins = []
         logger.debug('Temporarily adding PLUGIN_PATH to system path')
         _sys_path = sys.path[:]
-        sys.path.insert(0, self.settings['PLUGIN_PATH'])
+        for pluginpath in self.settings['PLUGIN_PATH']:
+            sys.path.insert(0, pluginpath)
         for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
             if isinstance(plugin, six.string_types):
@@ -264,6 +268,15 @@ def parse_arguments():
                         action='store_true',
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
+
+    parser.add_argument('-c', '--ignore-cache', action='store_true',
+                        dest='ignore_cache', help='Ignore content cache '
+                        'from previous runs by not loading cache files.')
+
+    parser.add_argument('-w', '--write-selected', type=str,
+                        dest='selected_paths', default=None,
+                        help='Comma separated list of selected paths to write')
+
     return parser.parse_args()
 
 
@@ -282,6 +295,10 @@ def get_config(args):
         config['BASE_THEME'] = absbasetheme if os.path.exists(absbasetheme) else args.base_theme
     if args.delete_outputdir is not None:
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
+    if args.ignore_cache:
+        config['LOAD_CONTENT_CACHE'] = False
+    if args.selected_paths:
+        config['WRITE_SELECTED'] = args.selected_paths.split(',')
 
     # argparse returns bytes in Py2. There is no definite answer as to which
     # encoding argparse (or sys.argv) uses.
@@ -337,6 +354,10 @@ def main():
             print('  --- AutoReload Mode: Monitoring `content`, `theme`, `base_theme` and'
                   ' `settings` for changes. ---')
 
+            def _ignore_cache(pelican_obj):
+                if pelican_obj.settings['AUTORELOAD_IGNORE_CACHE']:
+                    pelican_obj.settings['LOAD_CONTENT_CACHE'] = False
+
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -345,9 +366,13 @@ def main():
                     # have changed, no matter what extension the filenames
                     # have.
                     modified = {k: next(v) for k, v in watchers.items()}
+                    original_load_cache = settings['LOAD_CONTENT_CACHE']
 
                     if modified['settings']:
                         pelican, settings = get_instance(args)
+                        original_load_cache = settings['LOAD_CONTENT_CACHE']
+                        print(pelican.settings['AUTORELOAD_IGNORE_CACHE'])
+                        _ignore_cache(pelican)
 
                     if any(modified.values()):
                         print('\n-> Modified: {}. re-generating...'.format(
@@ -365,6 +390,8 @@ def main():
                                            'theme.')
 
                         pelican.run()
+                        # restore original caching policy
+                        pelican.settings['LOAD_CONTENT_CACHE'] = original_load_cache
 
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")

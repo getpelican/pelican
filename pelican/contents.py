@@ -239,8 +239,10 @@ class Content(object):
                              self._context['filenames'][path].url))
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
-                    logger.warning("Unable to find {fn}, skipping url"
-                                   " replacement".format(fn=path))
+                    logger.warning(("Unable to find {fn}, skipping url"
+                                    " replacement".format(fn=value),
+                                    "Other resources were not found"
+                                    " and their urls not replaced"))
             elif what == 'category':
                 origin = Category(path, self.settings).url
             elif what == 'tag':
@@ -322,6 +324,13 @@ class Content(object):
             os.path.abspath(self.source_path),
             os.path.abspath(self.settings['PATH']))
         )
+
+    def __eq__(self, other):
+        """Compare with metadata and content of other Content object"""
+        return other and self.metadata == other.metadata and self.content == other.content
+
+    # keep basic hashing functionality for caching to work
+    __hash__ = object.__hash__
 
 
 class Page(Content):

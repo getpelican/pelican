@@ -20,12 +20,12 @@ Alternatively, another method is to import them and add them to the list::
     from package import myplugin
     PLUGINS = [myplugin,]
 
-If your plugins are not in an importable path, you can specify a ``PLUGIN_PATH``
-in the settings. ``PLUGIN_PATH`` can be an absolute path or a path relative to
-the settings file::
+If your plugins are not in an importable path, you can specify a list of paths
+via the ``PLUGIN_PATH`` setting. As shown in the following example, paths in
+the ``PLUGIN_PATH`` list can be absolute or relative to the settings file::
 
-    PLUGIN_PATH = "plugins"
-    PLUGINS = ["list", "of", "plugins"]
+    PLUGIN_PATH = ["plugins", "/srv/pelican/plugins"]
+    PLUGINS = ["assets", "liquid_tags", "sitemap"]
 
 Where to find plugins
 =====================

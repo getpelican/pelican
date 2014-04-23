@@ -4,6 +4,7 @@ from __future__ import unicode_literals, print_function
 import os
 import re
 
+import locale
 from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content, build_header, build_markdown_header, get_attachments, download_attachments
 from pelican.tests.support import (unittest, temporary_folder, mute,
                                    skipIfNoExecutable)
@@ -30,8 +31,13 @@ except ImportError:
 class TestWordpressXmlImporter(unittest.TestCase):
 
     def setUp(self):
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
         self.posts = list(wp2fields(WORDPRESS_XML_SAMPLE))
         self.custposts = list(wp2fields(WORDPRESS_XML_SAMPLE, True))
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
@@ -261,7 +267,12 @@ class TestBuildHeader(unittest.TestCase):
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
 class TestWordpressXMLAttachements(unittest.TestCase):
     def setUp(self):
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
         self.attachments = get_attachments(WORDPRESS_XML_SAMPLE)
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_recognise_attachments(self):
         self.assertTrue(self.attachments)
