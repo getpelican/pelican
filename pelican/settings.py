@@ -27,8 +27,6 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
-DEFAULT_BASE_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                             'themes', 'simple')
 
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
@@ -36,14 +34,13 @@ DEFAULT_CONFIG = {
     'ARTICLE_EXCLUDES': ('pages',),
     'PAGE_DIR': 'pages',
     'PAGE_EXCLUDES': (),
-    'BASE_THEME': DEFAULT_BASE_THEME,
     'THEME': DEFAULT_THEME,
+    'THEMES':['simple',],
     'OUTPUT_PATH': 'output',
     'READERS': {},
     'STATIC_PATHS': ['images', ],
     'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
-    'BASE_THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
     'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
     'AUTHOR_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
@@ -144,13 +141,12 @@ def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
-
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'BASE_THEME']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
                     os.path.dirname(path), local_settings[p])))
-                if p not in ('THEME', 'BASE_THEME') or os.path.exists(absp):
+                if p not in ('THEME') or os.path.exists(absp):
                     local_settings[p] = absp
 
         if isinstance(local_settings['PLUGIN_PATH'], six.string_types):
@@ -160,6 +156,14 @@ def read_settings(path=None, override=None):
             if 'PLUGIN_PATH' in local_settings and local_settings['PLUGIN_PATH'] is not None:
                 local_settings['PLUGIN_PATH'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
                                     if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATH']]
+
+        if 'THEMES' in local_settings and local_settings[p] is not None:
+            for p in local_settings['THEMES']:
+                if p is not isabs(p):
+                     absp = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), p)))
+                if os.path.exists(absp):
+                    local_settings['THEMES'][p] = absp
+
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
@@ -219,17 +223,18 @@ def configure_settings(settings):
             raise Exception("Could not find the theme %s"
                             % settings['THEME'])
 
-    # lookup the base theme in "pelican/themes" if the given one doesn't exist
-    if not os.path.isdir(settings['BASE_THEME']):
-        theme_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            'themes',
-            settings['BASE_THEME'])
-        if os.path.exists(theme_path):
-            settings['BASE_THEME'] = theme_path
-        else:
-            raise Exception("Could not find the base theme %s"
-                            % settings['BASE_THEME'])
+    for theme in settings['THEMES']:
+        if not os.path.isdir(theme):
+            theme_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                'themes',
+                theme)
+            if os.path.exists(theme_path):
+                index = settings['THEMES'].index(theme)
+                settings['THEMES'][index] = theme_path
+            else:
+                raise Exception("Could not find the theme %s"
+                                % theme)
 
     # make paths selected for writing absolute if necessary
     settings['WRITE_SELECTED'] = [
