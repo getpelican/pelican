@@ -497,7 +497,7 @@ class TestDateFormatter(unittest.TestCase):
 
         generator = TemplatePagesGenerator(
             {'date': self.date}, settings,
-            self.temp_content, '', self.temp_output)
+            self.temp_content, '', '', self.temp_output)
         generator.env.filters.update({'strftime': utils.DateFormatter()})
 
         writer = Writer(self.temp_output, settings=settings)
@@ -526,7 +526,7 @@ class TestDateFormatter(unittest.TestCase):
 
         generator = TemplatePagesGenerator(
             {'date': self.date}, settings,
-            self.temp_content, '', self.temp_output)
+            self.temp_content, '', '', self.temp_output)
         generator.env.filters.update({'strftime': utils.DateFormatter()})
 
         writer = Writer(self.temp_output, settings=settings)
