@@ -576,6 +576,10 @@ class StaticGenerator(Generator):
     """copy static paths (what you want to copy, like images, medias etc.
     to output"""
 
+    def __init__(self, *args, **kwargs):
+        super(StaticGenerator, self).__init__(*args, **kwargs)
+        signals.static_generator_init.send(self)
+
     def _copy_paths(self, paths, source, destination, output_path,
                     final_path=None):
         """Copy all the paths from source to destination"""
@@ -604,6 +608,7 @@ class StaticGenerator(Generator):
                 self.staticfiles.append(static)
                 self.add_source_path(static)
         self._update_context(('staticfiles',))
+        signals.static_generator_finalized.send(self)
 
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
