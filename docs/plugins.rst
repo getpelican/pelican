@@ -87,8 +87,16 @@ get_generators                      generators                     invoked in Pe
                                                                    can return a Generator, or several
                                                                    generator in a tuple or in a list.
 page_generator_context              page_generator, metadata
+page_generator_preread              page_generator                 invoked before a page is read in PageGenerator.generate_context;
+                                                                   use if code needs to do something before every page is parsed.
 page_generator_init                 page_generator                 invoked in the PagesGenerator.__init__
 page_generator_finalized            page_generator                 invoked at the end of PagesGenerator.generate_context
+static_generator_context            static_generator, metadata
+static_generator_preread            static_generator               invoked before a static file is read in StaticGenerator.generate_context;
+                                                                   use if code needs to do something before every static file is added to the
+                                                                   staticfiles list.
+static_generator_init               static_generator               invoked in the StaticGenerator.__init__
+static_generator_finalized          static_generator               invoked at the end of StaticGenerator.generate_context
 content_object_init                 content_object                 invoked at the end of Content.__init__ (see note below)
 content_written                     path, context                  invoked each time a content file is written.
 =================================   ============================   ===========================================================================
