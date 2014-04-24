@@ -28,6 +28,9 @@ logger = logging.getLogger(__name__)
 DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
 
+DEFAULT_THEMES = {'!simple': os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'themes', 'simple')}
+
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
     'ARTICLE_DIR': '',
@@ -35,7 +38,7 @@ DEFAULT_CONFIG = {
     'PAGE_DIR': 'pages',
     'PAGE_EXCLUDES': (),
     'THEME': DEFAULT_THEME,
-    'THEMES':['simple',],
+    'THEMES': DEFAULT_THEMES,
     'OUTPUT_PATH': 'output',
     'READERS': {},
     'STATIC_PATHS': ['images', ],
@@ -159,7 +162,7 @@ def read_settings(path=None, override=None):
 
         if 'THEMES' in local_settings and local_settings[p] is not None:
             for p in local_settings['THEMES']:
-                if p is not isabs(p):
+                if local_settings['THEMES'][p] is not isabs(local_settings['THEMES'][p]):
                      absp = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), p)))
                 if os.path.exists(absp):
                     local_settings['THEMES'][p] = absp
@@ -224,14 +227,13 @@ def configure_settings(settings):
                             % settings['THEME'])
 
     for theme in settings['THEMES']:
-        if not os.path.isdir(theme):
+        if not os.path.isdir(settings['THEMES'][theme]):
             theme_path = os.path.join(
                 os.path.dirname(os.path.abspath(__file__)),
                 'themes',
-                theme)
+                settings['THEMES'][theme])
             if os.path.exists(theme_path):
-                index = settings['THEMES'].index(theme)
-                settings['THEMES'][index] = theme_path
+                settings['THEMES'][theme] = theme_path
             else:
                 raise Exception("Could not find the theme %s"
                                 % theme)

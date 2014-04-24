@@ -6,7 +6,7 @@ import locale
 from os.path import dirname, abspath, join
 
 from pelican.settings import (read_settings, configure_settings,
-                              DEFAULT_CONFIG, DEFAULT_THEME, DEFAULT_BASE_THEME)
+                              DEFAULT_CONFIG, DEFAULT_THEME)
 from pelican.tests.support import unittest
 
 
@@ -70,7 +70,7 @@ class TestSettingsConfiguration(unittest.TestCase):
                 # These 4 settings are required to run configure_settings
                 'PATH': '.',
                 'THEME': DEFAULT_THEME,
-                'BASE_THEME': DEFAULT_BASE_THEME,
+                'THEMES': {'!simple': 'simple'},
                 'SITEURL': 'http://blog.notmyidea.org/',
                 'LOCALE': '',
                 }
@@ -88,7 +88,7 @@ class TestSettingsConfiguration(unittest.TestCase):
                 'LOCALE': '',
                 'PATH': os.curdir,
                 'THEME': DEFAULT_THEME,
-                'BASE_THEME': DEFAULT_BASE_THEME,
+                'THEMES': {'!simple': 'simple'},
                 }
         configure_settings(settings)
         # SITEURL should not have a trailing slash
