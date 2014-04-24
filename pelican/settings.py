@@ -27,6 +27,10 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
+
+DEFAULT_THEMES = {'!simple': os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'themes', 'simple')}
+
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
     'ARTICLE_DIR': '',
@@ -34,6 +38,7 @@ DEFAULT_CONFIG = {
     'PAGE_DIR': 'pages',
     'PAGE_EXCLUDES': (),
     'THEME': DEFAULT_THEME,
+    'THEMES': DEFAULT_THEMES,
     'OUTPUT_PATH': 'output',
     'READERS': {},
     'STATIC_PATHS': ['images', ],
@@ -154,6 +159,14 @@ def read_settings(path=None, override=None):
             if 'PLUGIN_PATH' in local_settings and local_settings['PLUGIN_PATH'] is not None:
                 local_settings['PLUGIN_PATH'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
                                     if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATH']]
+
+        if 'THEMES' in local_settings and local_settings[p] is not None:
+            for p in local_settings['THEMES']:
+                if local_settings['THEMES'][p] is not isabs(local_settings['THEMES'][p]):
+                     absp = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), p)))
+                if os.path.exists(absp):
+                    local_settings['THEMES'][p] = absp
+
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
@@ -213,11 +226,24 @@ def configure_settings(settings):
             raise Exception("Could not find the theme %s"
                             % settings['THEME'])
 
+    for theme in settings['THEMES']:
+        if not os.path.isdir(settings['THEMES'][theme]):
+            theme_path = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                'themes',
+                settings['THEMES'][theme])
+            if os.path.exists(theme_path):
+                settings['THEMES'][theme] = theme_path
+            else:
+                raise Exception("Could not find the theme %s"
+                                % theme)
+
     # make paths selected for writing absolute if necessary
     settings['WRITE_SELECTED'] = [
         os.path.abspath(path) for path in
         settings.get('WRITE_SELECTED', DEFAULT_CONFIG['WRITE_SELECTED'])
         ]
+
 
     # standardize strings to lowercase strings
     for key in [

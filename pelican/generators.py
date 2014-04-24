@@ -30,13 +30,13 @@ logger = logging.getLogger(__name__)
 
 class Generator(object):
     """Baseclass generator"""
-
-    def __init__(self, context, settings, path, theme, output_path,
+    def __init__(self, context, settings, path, theme, themes, output_path,
                  readers_cache_name='', **kwargs):
         self.context = context
         self.settings = settings
         self.path = path
         self.theme = theme
+        self.themes = themes
         self.output_path = output_path
 
         for arg, value in kwargs.items():
@@ -51,18 +51,26 @@ class Generator(object):
             os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
 
-        theme_path = os.path.dirname(os.path.abspath(__file__))
 
+
+        theme_path = os.path.dirname(os.path.abspath(__file__))
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
+
+        themes = {}
+        for theme in self.themes:
+            themes[theme] = FileSystemLoader(os.path.join(theme, "templates"))
+
+        loader=ChoiceLoader([
+                FileSystemLoader(self._templates_path),
+                simple_loader,  # implicit inheritance
+                PrefixLoader(themes)  # explicit one
+            ])
+
         self.env = Environment(
             trim_blocks=True,
             lstrip_blocks=True,
-            loader=ChoiceLoader([
-                FileSystemLoader(self._templates_path),
-                simple_loader,  # implicit inheritance
-                PrefixLoader({'!simple': simple_loader})  # explicit one
-            ]),
+            loader=loader,
             extensions=self.settings['JINJA_EXTENSIONS'],
         )
 
@@ -673,9 +681,16 @@ class StaticGenerator(Generator):
         self._update_context(('staticfiles',))
 
     def generate_output(self, writer):
+
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          self.settings['THEME_STATIC_DIR'], self.output_path,
                          os.curdir)
+
+        for theme in self.themes:
+            self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.themes[theme],
+                         self.settings['THEME_STATIC_DIR'], self.output_path,
+                         os.curdir)
+
         # copy all Static files
         for sc in self.context['staticfiles']:
             source_path = os.path.join(self.path, sc.source_path)
