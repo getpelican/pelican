@@ -47,6 +47,7 @@ class Pelican(object):
 
         self.path = settings['PATH']
         self.theme = settings['THEME']
+        self.themes = settings['THEMES']
         self.output_path = settings['OUTPUT_PATH']
         self.ignore_files = settings['IGNORE_FILES']
         self.delete_outputdir = settings['DELETE_OUTPUT_DIRECTORY']
@@ -86,6 +87,10 @@ class Pelican(object):
         sys.path = _sys_path
 
     def _handle_deprecation(self):
+
+        if self.settings['EXTRA_TEMPLATES_PATHS']:
+            logger.warning('`EXTRA_TEMPLATES_PATHS` is soon to be deprecated.'
+                           ' Use the `THEMES` setting for the same behaviour')
 
         if self.settings.get('CLEAN_URLS', False):
             logger.warning('Found deprecated `CLEAN_URLS` in settings.'
@@ -152,6 +157,7 @@ class Pelican(object):
                 settings=self.settings,
                 path=self.path,
                 theme=self.theme,
+                themes=self.themes,
                 output_path=self.output_path,
             ) for cls in self.get_generator_classes()
         ]
@@ -336,9 +342,12 @@ def main():
     for static_path in settings.get("STATIC_PATHS", []):
         watchers[static_path] = folder_watcher(static_path, [''], pelican.ignore_files)
 
+    for theme in pelican.themes:
+        watchers[theme] = folder_watcher(pelican.themes[theme], [''], pelican.ignore_files)
+
     try:
         if args.autoreload:
-            print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
+            print('  --- AutoReload Mode: Monitoring `content`, `theme`, and'
                   ' `settings` for changes. ---')
 
             def _ignore_cache(pelican_obj):
@@ -348,7 +357,7 @@ def main():
             while True:
                 try:
                     # Check source dir for changed files ending with the given
-                    # extension in the settings. In the theme dir is no such
+                    # extension in the settings. In the theme dir there is no such
                     # restriction; all files are recursively checked if they
                     # have changed, no matter what extension the filenames
                     # have.

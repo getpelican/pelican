@@ -298,15 +298,22 @@ Here is a complete list of the feed variables::
 Inheritance
 ===========
 
-Since version 3.0, Pelican supports inheritance from the ``simple`` theme, so
-you can re-use the ``simple`` theme templates in your own themes.
+Since version 3.4, Pelican supports inheritance from the ``simple`` theme, as well
+as any themes specified in the ``THEMES`` setting. You can re-use 
+their theme templates in your own themes.
+
+Implicit Inheritance
+--------------------
 
 If one of the mandatory files in the ``templates/`` directory of your theme is
 missing, it will be replaced by the matching template from the ``simple`` theme.
 So if the HTML structure of a template in the ``simple`` theme is right for you,
 you don't have to write a new template from scratch.
 
-You can also extend templates from the ``simple`` themes in your own themes by
+Explicit Inheritance
+--------------------
+
+You explicitly extend templates from the ``simple`` themes in your own themes by
 using the ``{% extends %}`` directive as in the following example:
 
 .. code-block:: html+jinja
@@ -315,6 +322,16 @@ using the ``{% extends %}`` directive as in the following example:
 
     {% extends "index.html" %}   <!-- "regular" extending -->
 
+You can extend from a user created theme by adding that theme to the ``THEMES``
+setting.
+
+.. code-block:: python
+
+    THEMES = {'!foo':foo}
+
+.. code-block:: html+jinja
+
+    {% extends "!foo/index.html" %}   <!-- extends the ``index.html`` template from the ``foo`` theme -->
 
 Example
 -------

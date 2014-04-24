@@ -653,6 +653,12 @@ Setting name (default value)                        What does it do?
                                                     the paths defined in this settings, they will be
                                                     progressively overwritten.
 `CSS_FILE` (``'main.css'``)                         Specify the CSS file you want to load.
+`THEMES`                                            Extra themes that can be inherited from. They can also
+                                                    inherit from each other. Use a dictionary to make a list
+                                                    of all the available list. The key in the dictionary will
+                                                    also be the prefix you use to inherit from the theme.
+
+                                                    Example: ``THEMES = {'!foo': foo, '!foobar':foobar}``
 ================================================    =====================================================
 
 
