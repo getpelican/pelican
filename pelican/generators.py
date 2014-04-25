@@ -176,7 +176,7 @@ class CachingGenerator(Generator, FileStampDataCacher):
     def _get_file_stamp(self, filename):
         '''Get filestamp for path relative to generator.path'''
         filename = os.path.join(self.path, filename)
-        return super(Generator, self)._get_file_stamp(filename)
+        return super(CachingGenerator, self)._get_file_stamp(filename)
 
 
 class _FileLoader(BaseLoader):
