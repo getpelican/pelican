@@ -3,7 +3,6 @@ from __future__ import unicode_literals, print_function, absolute_import
 import logging
 import shutil
 import os
-import datetime
 import time
 import locale
 from sys import platform, version_info
@@ -38,24 +37,24 @@ class TestUtils(LoggedTestCase):
 
     def test_get_date(self):
         # valid ones
-        date = datetime.datetime(year=2012, month=11, day=22)
-        date_hour = datetime.datetime(
+        date = utils.SafeDatetime(year=2012, month=11, day=22)
+        date_hour = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11)
-        date_hour_z = datetime.datetime(
+        date_hour_z = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11,
             tzinfo=pytz.timezone('UTC'))
-        date_hour_est = datetime.datetime(
+        date_hour_est = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11,
             tzinfo=pytz.timezone('EST'))
-        date_hour_sec = datetime.datetime(
+        date_hour_sec = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10)
-        date_hour_sec_z = datetime.datetime(
+        date_hour_sec_z = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
             tzinfo=pytz.timezone('UTC'))
-        date_hour_sec_est = datetime.datetime(
+        date_hour_sec_est = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
             tzinfo=pytz.timezone('EST'))
-        date_hour_sec_frac_z = datetime.datetime(
+        date_hour_sec_frac_z = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
             microsecond=123000, tzinfo=pytz.timezone('UTC'))
         dates = {
@@ -76,14 +75,14 @@ class TestUtils(LoggedTestCase):
             }
 
         # examples from http://www.w3.org/TR/NOTE-datetime
-        iso_8601_date = datetime.datetime(year=1997, month=7, day=16)
-        iso_8601_date_hour_tz = datetime.datetime(
+        iso_8601_date = utils.SafeDatetime(year=1997, month=7, day=16)
+        iso_8601_date_hour_tz = utils.SafeDatetime(
             year=1997, month=7, day=16, hour=19, minute=20,
             tzinfo=pytz.timezone('CET'))
-        iso_8601_date_hour_sec_tz = datetime.datetime(
+        iso_8601_date_hour_sec_tz = utils.SafeDatetime(
             year=1997, month=7, day=16, hour=19, minute=20, second=30,
             tzinfo=pytz.timezone('CET'))
-        iso_8601_date_hour_sec_ms_tz = datetime.datetime(
+        iso_8601_date_hour_sec_ms_tz = utils.SafeDatetime(
             year=1997, month=7, day=16, hour=19, minute=20, second=30,
             microsecond=450000, tzinfo=pytz.timezone('CET'))
         iso_8601 = {
@@ -258,7 +257,7 @@ class TestUtils(LoggedTestCase):
         self.assertFalse(os.path.exists(test_directory))
 
     def test_strftime(self):
-        d = datetime.date(2012, 8, 29)
+        d = utils.SafeDatetime(2012, 8, 29)
 
         # simple formatting
         self.assertEqual(utils.strftime(d, '%d/%m/%y'), '29/08/12')
@@ -296,7 +295,7 @@ class TestUtils(LoggedTestCase):
         else:
             locale.setlocale(locale.LC_TIME, str('tr_TR.UTF-8'))
 
-        d = datetime.date(2012, 8, 29)
+        d = utils.SafeDatetime(2012, 8, 29)
 
         # simple
         self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 Ağustos 2012')
@@ -329,7 +328,7 @@ class TestUtils(LoggedTestCase):
         else:
             locale.setlocale(locale.LC_TIME, str('fr_FR.UTF-8'))
 
-        d = datetime.date(2012, 8, 29)
+        d = utils.SafeDatetime(2012, 8, 29)
 
         # simple
         self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 août 2012')
@@ -448,7 +447,7 @@ class TestDateFormatter(unittest.TestCase):
         os.makedirs(template_dir)
         with open(template_path, 'w') as template_file:
             template_file.write('date = {{ date|strftime("%A, %d %B %Y") }}')
-        self.date = datetime.date(2012, 8, 29)
+        self.date = utils.SafeDatetime(2012, 8, 29)
 
 
     def tearDown(self):
@@ -464,7 +463,7 @@ class TestDateFormatter(unittest.TestCase):
     def test_french_strftime(self):
         # This test tries to reproduce an issue that occured with python3.3 under macos10 only
         locale.setlocale(locale.LC_ALL, str('fr_FR.UTF-8'))
-        date = datetime.datetime(2014,8,14)
+        date = utils.SafeDatetime(2014,8,14)
         # we compare the lower() dates since macos10 returns "Jeudi" for %A whereas linux reports "jeudi"
         self.assertEqual( u'jeudi, 14 août 2014', utils.strftime(date, date_format="%A, %d %B %Y").lower() )
         df = utils.DateFormatter()

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
-import datetime
 import os
 
 from pelican import readers
+from pelican.utils import SafeDatetime
 from pelican.tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
@@ -42,8 +42,8 @@ class RstReaderTest(ReaderTest):
                        ' supported\nas well as <strong>inline'
                        ' markup</strong> and stuff to &quot;typogrify'
                        '&quot;...</p>\n',
-            'date': datetime.datetime(2010, 12, 2, 10, 14),
-            'modified': datetime.datetime(2010, 12, 2, 10, 20),
+            'date': SafeDatetime(2010, 12, 2, 10, 14),
+            'modified': SafeDatetime(2010, 12, 2, 10, 20),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
         }
@@ -70,7 +70,7 @@ class RstReaderTest(ReaderTest):
             'category': 'yeah',
             'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
-            'date': datetime.datetime(2012, 11, 29),
+            'date': SafeDatetime(2012, 11, 29),
         }
         for key, value in page.metadata.items():
             self.assertEqual(value, expected[key], key)
@@ -85,7 +85,7 @@ class RstReaderTest(ReaderTest):
             'category': 'yeah',
             'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
-            'date': datetime.datetime(2012, 11, 29),
+            'date': SafeDatetime(2012, 11, 29),
             'slug': 'article_with_filename_metadata',
             'mymeta': 'foo',
         }
@@ -171,8 +171,8 @@ class MdReaderTest(ReaderTest):
             'category': 'test',
             'title': 'Test md File',
             'summary': '<p>I have a lot to test</p>',
-            'date': datetime.datetime(2010, 12, 2, 10, 14),
-            'modified': datetime.datetime(2010, 12, 2, 10, 20),
+            'date': SafeDatetime(2010, 12, 2, 10, 14),
+            'modified': SafeDatetime(2010, 12, 2, 10, 20),
             'tags': ['foo', 'bar', 'foobar'],
         }
         for key, value in metadata.items():
@@ -184,8 +184,8 @@ class MdReaderTest(ReaderTest):
             'title': 'マックOS X 10.8でパイソンとVirtualenvをインストールと設定',
             'summary': '<p>パイソンとVirtualenvをまっくでインストールする方法について明確に説明します。</p>',
             'category': '指導書',
-            'date': datetime.datetime(2012, 12, 20),
-            'modified': datetime.datetime(2012, 12, 22),
+            'date': SafeDatetime(2012, 12, 20),
+            'modified': SafeDatetime(2012, 12, 22),
             'tags': ['パイソン', 'マック'],
             'slug': 'python-virtualenv-on-mac-osx-mountain-lion-10.8',
         }
@@ -220,8 +220,8 @@ class MdReaderTest(ReaderTest):
             'summary': (
                 '<p>Summary with <strong>inline</strong> markup '
                 '<em>should</em> be supported.</p>'),
-            'date': datetime.datetime(2012, 10, 31),
-            'modified': datetime.datetime(2012, 11, 1),
+            'date': SafeDatetime(2012, 10, 31),
+            'modified': SafeDatetime(2012, 11, 1),
             'slug': 'article-with-markdown-containing-footnotes',
             'multiline': [
                 'Line Metadata should be handle properly.',
@@ -311,7 +311,7 @@ class MdReaderTest(ReaderTest):
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
-            'date': datetime.datetime(2012, 11, 30),
+            'date': SafeDatetime(2012, 11, 30),
         }
         for key, value in expected.items():
             self.assertEqual(value, page.metadata[key], key)
@@ -325,7 +325,7 @@ class MdReaderTest(ReaderTest):
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
-            'date': datetime.datetime(2012, 11, 30),
+            'date': SafeDatetime(2012, 11, 30),
             'slug': 'md_w_filename_meta',
             'mymeta': 'foo',
         }
@@ -358,7 +358,7 @@ class HTMLReaderTest(ReaderTest):
             'author': 'Alexis Métaireau',
             'title': 'This is a super article !',
             'summary': 'Summary and stuff',
-            'date': datetime.datetime(2010, 12, 2, 10, 14),
+            'date': SafeDatetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
         }
@@ -382,7 +382,7 @@ class HTMLReaderTest(ReaderTest):
             'author': 'Alexis Métaireau',
             'title': 'This is a super article !',
             'summary': 'Summary and stuff',
-            'date': datetime.datetime(2010, 12, 2, 10, 14),
+            'date': SafeDatetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
         }
