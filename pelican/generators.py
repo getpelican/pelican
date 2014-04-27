@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 import os
+import six
 import math
 import random
 import logging
@@ -348,31 +349,22 @@ class ArticlesGenerator(CachingGenerator):
                 # format string syntax can be used for specifying the
                 # period archive dates
                 date = archive[0].date
-                # Under python 2, with non-ascii locales, u"{:%b}".format(date) might raise UnicodeDecodeError
-                # because u"{:%b}".format(date) will call date.__format__(u"%b"), which will return a byte string
-                # and not a unicode string.
-                # eg:
-                # locale.setlocale(locale.LC_ALL, 'ja_JP.utf8')
-                # date.__format__(u"%b") == '12\xe6\x9c\x88' # True
-                try:
-                    save_as = save_as_fmt.format(date=date)
-                except UnicodeDecodeError:
-                    # Python2 only:
-                    # Let date.__format__() work with byte strings instead of characters since it fails to work with characters
-                    bytes_save_as_fmt = save_as_fmt.encode('utf8')
-                    bytes_save_as     = bytes_save_as_fmt.format(date=date)
-                    save_as           = unicode(bytes_save_as,'utf8')
+                save_as = save_as_fmt.format(date=date)
                 context = self.context.copy()
 
                 if key == period_date_key['year']:
                     context["period"] = (_period,)
-                elif key == period_date_key['month']:
-                    context["period"] = (_period[0],
-                                         calendar.month_name[_period[1]])
                 else:
-                    context["period"] = (_period[0],
-                                         calendar.month_name[_period[1]],
-                                         _period[2])
+                    month_name = calendar.month_name[_period[1]]
+                    if not six.PY3:
+                        month_name = month_name.decode('utf-8')
+                    if key == period_date_key['month']:
+                        context["period"] = (_period[0],
+                                             month_name)
+                    else:
+                        context["period"] = (_period[0],
+                                             month_name,
+                                             _period[2])
 
                 write(save_as, template, context,
                       dates=archive, blog=True)

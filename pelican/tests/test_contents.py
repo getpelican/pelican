@@ -2,7 +2,6 @@
 from __future__ import unicode_literals, absolute_import
 
 import six
-from datetime import datetime
 from sys import platform
 import locale
 
@@ -10,7 +9,7 @@ from pelican.tests.support import unittest, get_settings
 
 from pelican.contents import Page, Article, URLWrapper
 from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import truncate_html_words
+from pelican.utils import truncate_html_words, SafeDatetime
 from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
 
@@ -127,7 +126,7 @@ class TestPage(unittest.TestCase):
 
     def test_datetime(self):
         # If DATETIME is set to a tuple, it should be used to override LOCALE
-        dt = datetime(2015, 9, 13)
+        dt = SafeDatetime(2015, 9, 13)
 
         page_kwargs = self._copy_page_kwargs()
 

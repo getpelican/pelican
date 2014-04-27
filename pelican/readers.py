@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 
-import datetime
 import logging
 import os
 import re
@@ -28,7 +27,7 @@ except ImportError:
 
 from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open, FileStampDataCacher
+from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime
 
 
 METADATA_PROCESSORS = {
@@ -494,7 +493,7 @@ def default_metadata(settings=None, process=None):
                 value = process('category', value)
             metadata['category'] = value
         if settings.get('DEFAULT_DATE', None) and settings['DEFAULT_DATE'] != 'fs':
-            metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
+            metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
     return metadata
 
 
@@ -502,7 +501,7 @@ def path_metadata(full_path, source_path, settings=None):
     metadata = {}
     if settings:
         if settings.get('DEFAULT_DATE', None) == 'fs':
-            metadata['date'] = datetime.datetime.fromtimestamp(
+            metadata['date'] = SafeDatetime.fromtimestamp(
                 os.stat(full_path).st_ctime)
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
             source_path, {}))
@@ -525,7 +524,7 @@ def parse_path_metadata(source_path, settings=None, process=None):
     ...     process=reader.process_metadata)
     >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
     {'category': <pelican.urlwrappers.Category object at ...>,
-     'date': datetime.datetime(2013, 1, 1, 0, 0),
+     'date': SafeDatetime(2013, 1, 1, 0, 0),
      'slug': 'my-slug'}
     """
     metadata = {}

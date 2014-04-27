@@ -11,13 +11,12 @@ import os
 import re
 import sys
 
-from datetime import datetime
 
 from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import (slugify, truncate_html_words, memoized, strftime,
                            python_2_unicode_compatible, deprecated_attribute,
-                           path_to_url)
+                           path_to_url, SafeDatetime)
 
 # Import these so that they're avalaible when you import from pelican.contents.
 from pelican.urlwrappers import (URLWrapper, Author, Category, Tag)  # NOQA
@@ -127,7 +126,7 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
             if not settings['WITH_FUTURE_DATES']:
-                if hasattr(self, 'date') and self.date > datetime.now():
+                if hasattr(self, 'date') and self.date > SafeDatetime.now():
                     self.status = 'draft'
 
         # store the summary metadata if it is set
@@ -161,7 +160,7 @@ class Content(object):
             'path': path_to_url(path),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
-            'date': getattr(self, 'date', datetime.now()),
+            'date': getattr(self, 'date', SafeDatetime.now()),
             'author': slugify(
                 getattr(self, 'author', ''),
                 slug_substitutions
