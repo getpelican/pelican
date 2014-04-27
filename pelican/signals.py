@@ -6,6 +6,7 @@ from blinker import signal
 
 initialized = signal('pelican_initialized')
 get_generators = signal('get_generators')
+get_writer = signal('get_writer')
 finalized = signal('pelican_finalized')
 
 # Reader-level signals
