@@ -79,7 +79,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=None, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
-            'CACHE_DIRECTORY': self.temp_cache,
+            'CACHE_PATH': self.temp_cache,
             'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
@@ -95,7 +95,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
-            'CACHE_DIRECTORY': self.temp_cache,
+            'CACHE_PATH': self.temp_cache,
             'LOCALE': locale.normalize('en_US'),
             })
         pelican = Pelican(settings=settings)
@@ -107,7 +107,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
-            'CACHE_DIRECTORY': self.temp_cache,
+            'CACHE_PATH': self.temp_cache,
             'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'very'),
                                    os.path.join(SAMPLES_PATH, 'kinda'),
                                    os.path.join(SAMPLES_PATH, 'theme_standard')]
@@ -128,7 +128,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=SAMPLE_CONFIG, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
-            'CACHE_DIRECTORY': self.temp_cache,
+            'CACHE_PATH': self.temp_cache,
             'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'theme_standard')]
             })
 
@@ -144,7 +144,7 @@ class TestPelican(LoggedTestCase):
         settings = read_settings(path=None, override={
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
-            'CACHE_DIRECTORY': self.temp_cache,
+            'CACHE_PATH': self.temp_cache,
             'WRITE_SELECTED': [
                 os.path.join(self.temp_path, 'oh-yeah.html'),
                 os.path.join(self.temp_path, 'categories.html'),

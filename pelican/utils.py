@@ -553,14 +553,14 @@ class FileDataCacher(object):
     '''Class that can cache data contained in files'''
 
     def __init__(self, settings, cache_name, caching_policy, load_policy):
-        '''Load the specified cache within CACHE_DIRECTORY in settings
+        '''Load the specified cache within CACHE_PATH in settings
 
         only if *load_policy* is True,
         May use gzip if GZIP_CACHE ins settings is True.
         Sets caching policy according to *caching_policy*.
         '''
         self.settings = settings
-        self._cache_path = os.path.join(self.settings['CACHE_DIRECTORY'],
+        self._cache_path = os.path.join(self.settings['CACHE_PATH'],
                                         cache_name)
         self._cache_data_policy = caching_policy
         if self.settings['GZIP_CACHE']:
@@ -572,9 +572,15 @@ class FileDataCacher(object):
             try:
                 with self._cache_open(self._cache_path, 'rb') as fhandle:
                     self._cache = pickle.load(fhandle)
-            except (IOError, OSError, pickle.UnpicklingError) as err:
-                logger.warning(('Cannot load cache {}, '
-                    'proceeding with empty cache.\n{}').format(
+            except (IOError, OSError) as err:
+                logger.debug(('Cannot load cache {} (this is normal on first '
+                    'run). Proceeding with empty cache.\n{}').format(
+                        self._cache_path, err))
+                self._cache = {}
+            except pickle.UnpicklingError as err:
+                logger.warning(('Cannot unpickle cache {}, cache may be using '
+                    'an incompatible protocol (see pelican caching docs). '
+                    'Proceeding with empty cache.\n{}').format(
                         self._cache_path, err))
                 self._cache = {}
         else:
@@ -596,7 +602,7 @@ class FileDataCacher(object):
         '''Save the updated cache'''
         if self._cache_data_policy:
             try:
-                mkdir_p(self.settings['CACHE_DIRECTORY'])
+                mkdir_p(self.settings['CACHE_PATH'])
                 with self._cache_open(self._cache_path, 'wb') as fhandle:
                     pickle.dump(self._cache, fhandle)
             except (IOError, OSError, pickle.PicklingError) as err:

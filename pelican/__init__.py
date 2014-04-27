@@ -275,7 +275,11 @@ def parse_arguments():
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
 
-    parser.add_argument('-c', '--ignore-cache', action='store_true',
+    parser.add_argument('--cache-path', dest='cache_path',
+                        help=('Directory in which to store cache files. '
+                              'If not specified, defaults to "cache".'))
+
+    parser.add_argument('--ignore-cache', action='store_true',
                         dest='ignore_cache', help='Ignore content cache '
                         'from previous runs by not loading cache files.')
 
@@ -300,6 +304,8 @@ def get_config(args):
         config['DELETE_OUTPUT_DIRECTORY'] = args.delete_outputdir
     if args.ignore_cache:
         config['LOAD_CONTENT_CACHE'] = False
+    if args.cache_path:
+        config['CACHE_PATH'] = args.cache_path
     if args.selected_paths:
         config['WRITE_SELECTED'] = args.selected_paths.split(',')
 

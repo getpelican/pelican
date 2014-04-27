@@ -178,7 +178,7 @@ Setting name (followed by default value, if any)                                
 ``CONTENT_CACHING_LAYER = 'reader'``                                             If set to ``'reader'``, save only the raw content and metadata
                                                                                  returned by readers. If set to ``'generator'``, save processed
                                                                                  content objects.
-``CACHE_DIRECTORY = 'cache'``                                                    Directory in which to store cache files.
+``CACHE_PATH = 'cache'``                                                         Directory in which to store cache files.
 ``GZIP_CACHE = True``                                                            If ``True``, use gzip to (de)compress the cache files.
 ``CHECK_MODIFIED_METHOD = 'mtime'``                                              Controls how files are checked for modifications.
 ``LOAD_CONTENT_CACHE = True``                                                    If ``True``, load unmodified content from cache.
@@ -739,7 +739,7 @@ When Pelican is about to read some content source file:
 
 1. The hash or modification time information for the file from a
    previous build are loaded from a cache file if ``LOAD_CONTENT_CACHE``
-   is ``True``. These files are stored in the ``CACHE_DIRECTORY``
+   is ``True``. These files are stored in the ``CACHE_PATH``
    directory.  If the file has no record in the cache file, it is read
    as usual.
 2. The file is checked according to ``CHECK_MODIFIED_METHOD``:
