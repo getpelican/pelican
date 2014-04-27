@@ -83,9 +83,11 @@ article_generator_finalized         article_generator              invoked at th
 article_generator_write_article     article_generator, content     invoked before writing each article, the article is passed as content
 article_writer_finalized            article_generator, writer      invoked after all articles and related pages have been written, but before
                                                                    the article generator is closed.
-get_generators                      generators                     invoked in Pelican.get_generator_classes,
+get_generators                      pelican object                 invoked in Pelican.get_generator_classes,
                                                                    can return a Generator, or several
-                                                                   generator in a tuple or in a list.
+                                                                   generators in a tuple or in a list.
+get_writer                          pelican object                 invoked in Pelican.get_writer,
+                                                                   can return a custom Writer.
 page_generator_context              page_generator, metadata
 page_generator_preread              page_generator                 invoked before a page is read in PageGenerator.generate_context;
                                                                    use if code needs to do something before every page is parsed.
@@ -200,8 +202,8 @@ Adding a new generator is also really easy. You might want to have a look at
 
 ::
 
-    def get_generators(generators):
+    def get_generators(pelican_object):
         # define a new generator here if you need to
-        return generators
+        return MyGenerator
 
     signals.get_generators.connect(get_generators)
