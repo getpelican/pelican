@@ -209,7 +209,20 @@ class Pelican(object):
         return generators
 
     def get_writer(self):
-        return Writer(self.output_path, settings=self.settings)
+        writers = [ w for w in signals.get_writer.send(self)
+                    if isinstance(w, type) ]
+        writers_found = len(writers)
+        if writers_found == 0:
+            return Writer(self.output_path, settings=self.settings)
+        else:
+            _, writer = writers[0]
+            if writers_found == 1:
+                logger.debug('Found writer: {}'.format(writer))
+            else:
+                logger.warning(
+                    '{} writers found, using only first one: {}'.format(
+                    writers_found, writer))
+            return writer(self.output_path, settings=self.settings)
 
 
 def parse_arguments():
