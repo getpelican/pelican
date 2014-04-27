@@ -66,7 +66,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_feeds(self):
         settings = get_settings()
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -142,7 +142,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['READERS'] = {'asc': None}
         settings['filenames'] = {}
         generator = ArticlesGenerator(
@@ -167,7 +167,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_direct_templates_save_as_default(self):
 
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -182,7 +182,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -198,7 +198,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
@@ -225,7 +225,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
 
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -291,7 +291,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_article_object_caching(self):
         """Test Article objects caching at the generator level"""
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['READERS'] = {'asc': None}
 
@@ -311,7 +311,7 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_reader_content_caching(self):
         """Test raw content caching at the reader level"""
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
@@ -335,7 +335,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
         used in --ignore-cache or autoreload mode"""
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
@@ -373,7 +373,7 @@ class TestPageGenerator(unittest.TestCase):
     def test_generate_context(self):
         settings = get_settings(filenames={})
         settings['PAGE_DIR'] = 'TestPages'  # relative to CUR_DIR
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 
         generator = PagesGenerator(
@@ -402,7 +402,7 @@ class TestPageGenerator(unittest.TestCase):
     def test_page_object_caching(self):
         """Test Page objects caching at the generator level"""
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['READERS'] = {'asc': None}
 
@@ -422,7 +422,7 @@ class TestPageGenerator(unittest.TestCase):
     def test_reader_content_caching(self):
         """Test raw content caching at the reader level"""
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['READERS'] = {'asc': None}
 
         generator = PagesGenerator(
@@ -446,7 +446,7 @@ class TestPageGenerator(unittest.TestCase):
 
         used in --ignore_cache or autoreload mode"""
         settings = get_settings(filenames={})
-        settings['CACHE_DIRECTORY'] = self.temp_cache
+        settings['CACHE_PATH'] = self.temp_cache
         settings['READERS'] = {'asc': None}
 
         generator = PagesGenerator(

@@ -124,7 +124,7 @@ DEFAULT_CONFIG = {
     'SLUGIFY_SOURCE': 'title',
     'CACHE_CONTENT': True,
     'CONTENT_CACHING_LAYER': 'reader',
-    'CACHE_DIRECTORY': 'cache',
+    'CACHE_PATH': 'cache',
     'GZIP_CACHE': True,
     'CHECK_MODIFIED_METHOD': 'mtime',
     'LOAD_CONTENT_CACHE': True,
@@ -139,7 +139,7 @@ def read_settings(path=None, override=None):
     if path:
         local_settings = get_settings_from_file(path)
         # Make the paths relative to the settings file
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'CACHE_PATH']:
             if p in local_settings and local_settings[p] is not None \
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
