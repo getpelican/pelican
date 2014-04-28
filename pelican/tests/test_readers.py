@@ -331,10 +331,12 @@ class AdReaderTest(ReaderTest):
         # Ensure the asc extension is being processed by the correct reader
         page = self.read_file(
             path='article_with_asc_extension.asc')
-        expected = ('<hr>\n<h2><a name="_used_for_pelican_test">'
-                    '</a>Used for pelican test</h2>\n'
-                    '<p>The quick brown fox jumped over'
-                    ' the lazy dog&#8217;s back.</p>\n')
+        expected = ('<div class="sect1">\n'
+                    '<h2 id="_used_for_pelican_test">Used for pelican test</h2>\n'
+                    '<div class="sectionbody">\n'
+                    '<div class="paragraph"><p>The quick brown fox jumped over the lazy dog&#8217;s back.</p></div>\n'
+                    '</div>\n'
+                    '</div>\n')
         self.assertEqual(page.content, expected)
         expected = {
             'category': 'Blog',
@@ -351,13 +353,30 @@ class AdReaderTest(ReaderTest):
     def test_article_with_asc_options(self):
         # test to ensure the ASCIIDOC_OPTIONS is being used
         reader = readers.AsciiDocReader(
-            dict(ASCIIDOC_OPTIONS=["-a revision=1.0.42"]))
+            dict(ASCIIDOC_OPTIONS=["-a revision=1.0.42", "--backend=html4"]))
         content, metadata = reader.read(_path('article_with_asc_options.asc'))
         expected = ('<hr>\n<h2><a name="_used_for_pelican_test"></a>Used for'
                     ' pelican test</h2>\n<p>version 1.0.42</p>\n'
                     '<p>The quick brown fox jumped over the lazy'
                     ' dog&#8217;s back.</p>\n')
         self.assertEqual(content, expected)
+
+    @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
+    def test_article_with_pygments_syntax_highlighting(self):
+        # test to ensure ASCIIDOC is performing syntax highlighting with Pygments
+        page = self.read_file(
+            path='article_using_pygments_source_highlighter.asc')
+        expected = ('<div class="sect1">\n'
+                    '<h2 id="_pelican_pygments_test">Pelican Pygments Test</h2>\n'
+                    '<div class="sectionbody">\n'
+                    '<div class="listingblock">\n'
+                    '<div class="content"><div class="highlight"><pre><span class="c"># Source highlighter test</span>\n'
+                    '<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>\n'
+                    '    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Hello world.&quot;</span><span class="p">)</span>\n'
+                    '</pre></div></div></div>\n'
+                    '</div>\n'
+                    '</div>\n')
+        self.assertEqual(page.content, expected)
 
 
 class HTMLReaderTest(ReaderTest):
