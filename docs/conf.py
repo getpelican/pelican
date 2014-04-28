@@ -57,6 +57,12 @@ html_use_index = False
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False
 
+
+def setup(app):
+    # overrides for wide tables in RTD theme
+    app.add_stylesheet('theme_overrides.css')   # path relative to _static
+
+
 # -- Options for LaTeX output --------------------------------------------------
 latex_documents = [
     ('index', 'Pelican.tex', 'Pelican Documentation',
