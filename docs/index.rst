@@ -63,8 +63,6 @@ someone will almost always respond to your inquiry.
 Documentation
 -------------
 
-A French version of the documentation is available at :doc:`fr/index`.
-
 .. toctree::
    :maxdepth: 2
 
