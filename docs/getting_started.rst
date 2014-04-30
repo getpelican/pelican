@@ -578,14 +578,8 @@ indenting both the identifier and code::
         :::identifier
         <code goes here>
 
-Alternatively, in Markdown you can use the fenced code blocks, wrapping
-your code in ``````` which does not require indenting::
-
-    A block of text
-    
-    ```identifier
-    <code goes here>
-    ```
+The python-markdown package offers many extensions to the official Markdown
+syntax; you can find them `in the package documentation <http://pythonhosted.org/Markdown/extensions/>`_.
 
 The specified identifier (e.g. ``python``, ``ruby``) should be one that
 appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
