@@ -209,13 +209,13 @@ class Pelican(object):
         return generators
 
     def get_writer(self):
-        writers = [ w for w in signals.get_writer.send(self)
+        writers = [ w for (_, w) in signals.get_writer.send(self)
                     if isinstance(w, type) ]
         writers_found = len(writers)
         if writers_found == 0:
             return Writer(self.output_path, settings=self.settings)
         else:
-            _, writer = writers[0]
+            writer = writers[0]
             if writers_found == 1:
                 logger.debug('Found writer: {}'.format(writer))
             else:
