@@ -370,7 +370,17 @@ class AsciiDocReader(BaseReader):
         for o in options:
             ad.options(*o.split())
 
-        ad.execute(text, content, backend="html4")
+        # set the backend option for ad.execute() if the backend options has been set in 'ASCIIDOC_OPTIONS'
+        # (at the time of writing, asciidoc.py seems to have trouble with options of the form: "--setting=value",
+        # which is why we have to extract and pass the value manually)
+        backend_values = [m.group(1) for o in options for m in [re.match(r"^--backend=(\w+)$", o), re.match(r"^-b\s+(\w+)$", o)] if m]
+        try:
+            backend_option = backend_values[0]
+        except IndexError:
+            # default to HTML5
+            backend_option = "html5"
+
+        ad.execute(text, content, backend=backend_option)
         content = content.getvalue()
 
         metadata = {}
