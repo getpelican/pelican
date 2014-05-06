@@ -107,13 +107,13 @@ Setting name (followed by default value, if any)                                
                                                                                  to the default values for this setting, you'll need to
                                                                                  include them explicitly and enumerate the full list of
                                                                                  desired Markdown extensions.)
-``OUTPUT_PATH = 'output/'``                                                      Where to output the generated files.
-``PATH = None``                                                                  Path to content directory to be processed by Pelican.
-``PAGE_DIR = 'pages'``                                                           Directory to look at for pages, relative to `PATH`.
-``PAGE_EXCLUDES = ()``                                                           A list of directories to exclude when looking for pages.
-``ARTICLE_DIR = ''``                                                             Directory to look at for articles, relative to `PATH`.
-``ARTICLE_EXCLUDES = ('pages',)``                                                A list of directories to exclude when looking for articles.
-``OUTPUT_SOURCES = False``                                                       Set to True if you want to copy the articles and pages in their
+``OUTPUT_PATH = ('output/')``                                                    Where to output the generated files.
+``PATH = (None)``                                                                Path to content directory to be processed by Pelican.
+``PAGE_PATHS = (['pages'])``                                                     Directories to look at for pages, relative to `PATH`.
+``PAGE_EXCLUDES = (())``                                                         A list of directories to exclude when looking for pages.
+``ARTICLE_PATHS = ([''])``                                                       Directories to look at for articles, relative to `PATH`.
+``ARTICLE_EXCLUDES = (('pages',))``                                              A list of directories to exclude when looking for articles.
+``OUTPUT_SOURCES = (False)``                                                     Set to True if you want to copy the articles and pages in their
                                                                                  original format (e.g. Markdown or reStructuredText) to the
                                                                                  specified ``OUTPUT_PATH``.
 ``OUTPUT_SOURCES_EXTENSION = '.text'``                                           Controls the extension that will be used by the SourcesGenerator.
