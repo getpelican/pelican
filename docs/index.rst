@@ -78,6 +78,7 @@ Documentation
    contribute
    report
    changelog
+   tutorial1_blog
 
 .. Links
 
