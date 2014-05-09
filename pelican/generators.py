@@ -650,13 +650,16 @@ class StaticGenerator(Generator):
     def _copy_paths(self, paths, source, destination, output_path,
                     final_path=None):
         """Copy all the paths from source to destination"""
+        just_link = self.settings['STATIC_JUST_LINK']
         for path in paths:
             if final_path:
                 copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, final_path))
+                     os.path.join(output_path, destination, final_path),
+                    just_link)
             else:
                 copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, path))
+                     os.path.join(output_path, destination, path),
+                    just_link)
 
     def generate_context(self):
         self.staticfiles = []
@@ -680,14 +683,14 @@ class StaticGenerator(Generator):
     def generate_output(self, writer):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          self.settings['THEME_STATIC_DIR'], self.output_path,
-                         os.curdir)
+            os.curdir)
         # copy all Static files
+        just_link = self.settings['STATIC_JUST_LINK']
         for sc in self.context['staticfiles']:
             source_path = os.path.join(self.path, sc.source_path)
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
-            shutil.copy2(source_path, save_as)
-            logger.info('copying {} to {}'.format(sc.source_path, sc.save_as))
+            copy(source_path, save_as, just_link)
 
 
 class SourceFileGenerator(Generator):
@@ -699,7 +702,8 @@ class SourceFileGenerator(Generator):
         output_path, _ = os.path.splitext(obj.save_as)
         dest = os.path.join(self.output_path,
                             output_path + self.output_extension)
-        copy(obj.source_path, dest)
+        just_link = self.settings['SOURCES_JUST_LINK']
+        copy(obj.source_path, dest, just_link)
 
     def generate_output(self, writer=None):
         logger.info(' Generating source files...')

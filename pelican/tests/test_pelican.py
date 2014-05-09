@@ -102,6 +102,39 @@ class TestPelican(LoggedTestCase):
         mute(True)(pelican.run)()
         self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
 
+    def test_static_symlinking(self):
+        '''Test that symbolic linking of static files works'''
+        settings = read_settings(path=SAMPLE_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'CACHE_PATH': self.temp_cache,
+            'LOCALE': locale.normalize('en_US'),
+            'STATIC_JUST_LINK': 'symbolic',
+            })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+
+        for fname in ['pictures/Fat_Cat.jpg', 'pictures/Sushi_Macro.jpg', 'robots.txt']:
+            dest = os.path.join(self.temp_path, fname)
+            self.assertTrue(os.path.exists(dest) and os.path.islink(dest))
+
+    def test_static_hardlinking(self):
+        '''Test that hard linking of static files works'''
+        settings = read_settings(path=SAMPLE_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'CACHE_PATH': self.temp_cache,
+            'LOCALE': locale.normalize('en_US'),
+            'STATIC_JUST_LINK': 'hard',
+            })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+
+        for fname in ['pictures/Fat_Cat.jpg', 'pictures/Sushi_Macro.jpg']:
+            src = os.path.join(INPUT_PATH, fname)
+            dest = os.path.join(self.temp_path, fname)
+            self.assertTrue(os.path.exists(dest) and os.path.samefile(src, dest))
+
     def test_theme_static_paths_copy(self):
         # the same thing with a specified set of settings should work
         settings = read_settings(path=SAMPLE_CONFIG, override={

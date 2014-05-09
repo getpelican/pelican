@@ -229,7 +229,12 @@ def slugify(value, substitutions=()):
     return value.decode('ascii')
 
 
-def copy(source, destination):
+_LINK_FUNCS = {             # map: link type -> func name in os module
+    'hard': 'link',
+    'symbolic': 'symlink',
+    }
+
+def copy(source, destination, just_link=''):
     """Recursively copy source into destination.
 
     If source is a file, destination has to be a file as well.
@@ -238,10 +243,39 @@ def copy(source, destination):
 
     :param source: the source file or directory
     :param destination: the destination file or directory
+    :param just_link: type of link to use instead of copying,
+                      'hard' or 'symbolic'
     """
 
     source_ = os.path.abspath(os.path.expanduser(source))
     destination_ = os.path.abspath(os.path.expanduser(destination))
+
+    if just_link:
+        try:
+            dest = destination_
+            link_func = getattr(os, _LINK_FUNCS[just_link])
+            if just_link == 'symbolic' and six.PY3:
+                link_func = partial(link_func,
+                                    target_is_directory=os.path.isdir(source_))
+            if os.path.exists(dest) and os.path.isdir(dest):
+                dest = os.path.join(dest, os.path.basename(source_))
+            else:
+                dest_dir = os.path.dirname(dest)
+                if not os.path.exists(dest_dir):
+                    os.makedirs(dest_dir)
+            link_func(source_, dest)
+            logger.info('linking ({}) {} -> {}'.format(
+                        just_link, source_, dest))
+            return
+        except KeyError:
+            logger.error('Unknown link type: {}'.format(just_link))
+        except AttributeError as err:
+            logger.error(('{} linking not supported by platform, '
+                         'falling back to copying\n{}').format(just_link, err))
+        except (OSError, IOError) as err:
+            logger.error(('Cannot make {} link {} -> {}, '
+                         'falling back to copying\n{}').format(
+                             just_link, source_, dest ,err))
 
     if not os.path.exists(destination_) and not os.path.isfile(source_):
         os.makedirs(destination_)
@@ -684,4 +718,3 @@ def is_selected_for_writing(settings, path):
         return path in settings['WRITE_SELECTED']
     else:
         return True
-        

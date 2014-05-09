@@ -119,6 +119,7 @@ Setting name (followed by default value, if any)                                
 ``OUTPUT_SOURCES_EXTENSION = '.text'``                                           Controls the extension that will be used by the SourcesGenerator.
                                                                                  Defaults to ``.text``. If not a valid string the default value
                                                                                  will be used.
+``OUTPUT_SOURCES_JUST_LINK = ''``                                                Works like ``STATIC_JUST_LINK``.
 ``RELATIVE_URLS = False``                                                        Defines whether Pelican should use document-relative URLs or
                                                                                  not. Only set this to ``True`` when developing/testing and only
                                                                                  if you fully understand the effect it can have on links/feeds.
@@ -135,6 +136,10 @@ Setting name (followed by default value, if any)                                
                                                                                  on the output path "static". By default,
                                                                                  Pelican will copy the "images" folder to the
                                                                                  output folder.
+``STATIC_JUST_LINK = ''``                                                        Instead of copying the static files to the output directory, they can
+                                                                                 be linked as symbolic links if set to ``symbolic`` (``rsync`` based uploads may require the ``--copy-links`` option) or as hard links if
+                                                                                 set to ``hard``. Note that this functionality may be available only on
+                                                                                 some operating systems and Python distributions.
 ``TIMEZONE``                                                                     The timezone used in the date information, to
                                                                                  generate Atom and RSS feeds. See the *Timezone*
                                                                                  section below for more info.
