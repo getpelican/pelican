@@ -325,13 +325,6 @@ class Content(object):
             os.path.abspath(self.settings['PATH']))
         )
 
-    def __eq__(self, other):
-        """Compare with metadata and content of other Content object"""
-        return other and self.metadata == other.metadata and self.content == other.content
-
-    # keep basic hashing functionality for caching to work
-    __hash__ = object.__hash__
-
 
 class Page(Content):
     mandatory_properties = ('title',)
