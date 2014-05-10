@@ -265,7 +265,7 @@ def parse_arguments():
 
     parser.add_argument('-D', '--debug', action='store_const',
                         const=logging.DEBUG, dest='verbosity',
-                        help='Show all message, including debug messages.')
+                        help='Show all messages, including debug messages.')
 
     parser.add_argument('--version', action='version', version=__version__,
                         help='Print the pelican version and exit.')
