@@ -1,10 +1,10 @@
 Settings
 ########
 
-Pelican is configurable thanks to a configuration file you can pass to
+Pelican is configurable thanks to a settings file you can pass to
 the command line::
 
-    $ pelican content -s path/to/your/settingsfile.py
+    pelican content -s path/to/your/settingsfile.py
 
 (If you used the ``pelican-quickstart`` command, your primary settings file will
 be named ``pelicanconf.py`` by default.)
@@ -201,8 +201,8 @@ for URL formation: *relative* and *absolute*. Relative URLs are useful
 when testing locally, and absolute URLs are reliable and most useful when
 publishing. One method of supporting both is to have one Pelican configuration
 file for local development and another for publishing. To see an example of this
-type of setup, use the ``pelican-quickstart`` script as described at the top of
-the :doc:`Getting Started <getting_started>` page, which will produce two separate
+type of setup, use the ``pelican-quickstart`` script as described in the
+:doc:`Installation <install>` section, which will produce two separate
 configuration files for local development and publishing, respectively.
 
 You can customize the URLs and locations where files will be saved. The
@@ -603,7 +603,7 @@ For example::
 Translations
 ============
 
-Pelican offers a way to translate articles. See the :doc:`Getting Started <getting_started>` section for
+Pelican offers a way to translate articles. See the :doc:`Content <content>` section for
 more information.
 
 ========================================================    =====================================================

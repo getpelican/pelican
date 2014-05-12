@@ -65,19 +65,17 @@ How do I create my own theme?
 
 Please refer to :ref:`theming-pelican`.
 
-I'm using Markdown and getting ``No valid files found in content`` errors.
+I want to use Markdown, but I got an error.
 ==========================================================================
 
+If you try to generate Markdown content without first installing the Markdown
+library, may see a message that says ``No valid files found in content``.
 Markdown is not a hard dependency for Pelican, so if you have content in
 Markdown format, you will need to explicitly install the Markdown library.
 You can do so by typing the following command, prepending ``sudo`` if
 permissions require it::
 
     pip install markdown
-
-If you don't have ``pip`` installed, consider installing it via::
-
-    easy_install pip
 
 Can I use arbitrary metadata in my templates?
 ==============================================
@@ -157,8 +155,8 @@ disable all feed generation, you only need to specify the following settings::
     CATEGORY_FEED_ATOM = None
     TRANSLATION_FEED_ATOM = None
 
-Please note that ``None`` and ``''`` are not the same thing. The word ``None``
-should not be surrounded by quotes.
+The word ``None`` should not be surrounded by quotes. Please note that ``None``
+and ``''`` are not the same thing. 
 
 I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================

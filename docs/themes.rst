@@ -1,12 +1,20 @@
 .. _theming-pelican:
 
-How to create themes for Pelican
-################################
+Creating themes
+###############
 
-Pelican uses the great `Jinja2 <http://jinja.pocoo.org/>`_ templating engine to
-generate its HTML output. Jinja2 syntax is really simple. If you want to
-create your own theme, feel free to take inspiration from the `"simple" theme
+To generate its HTML output, Pelican uses the `Jinja <http://jinja.pocoo.org/>`_
+templating engine due to its flexibility and straightforward syntax. If you want
+to create your own theme, feel free to take inspiration from the `"simple" theme
 <https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_.
+
+To generate your site using a theme you have created (or downloaded manually and
+then modified), you can specify that theme via the ``-t`` flag::
+
+    pelican content -s pelicanconf.py -t /projects/your-site/themes/your-theme
+
+If you'd rather not specify the theme on every invocation, you can define
+``THEME`` in your settings to point to the location of your preferred theme.
 
 Structure
 =========

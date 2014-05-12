@@ -1,9 +1,7 @@
 .. _import:
 
-=================================
- Import from other blog software
-=================================
-
+Importing an existing site
+##########################
 
 Description
 ===========
