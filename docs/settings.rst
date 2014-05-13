@@ -1,10 +1,10 @@
 Settings
 ########
 
-Pelican is configurable thanks to a configuration file you can pass to
+Pelican is configurable thanks to a settings file you can pass to
 the command line::
 
-    $ pelican content -s path/to/your/settingsfile.py
+    pelican content -s path/to/your/settingsfile.py
 
 (If you used the ``pelican-quickstart`` command, your primary settings file will
 be named ``pelicanconf.py`` by default.)
@@ -94,7 +94,7 @@ Setting name (followed by default value, if any)                                
 ``READERS = {}``                                                                 A dictionary of file extensions / Reader classes for Pelican to
                                                                                  process or ignore. For example, to avoid processing .html files,
                                                                                  set: ``READERS = {'html': None}``. To add a custom reader for the
-                                                                                 `foo` extension, set: ``READERS = {'foo': FooReader}``
+                                                                                 ``foo`` extension, set: ``READERS = {'foo': FooReader}``
 ``IGNORE_FILES = ['.#*']``                                                       A list of file globbing patterns to match against the
                                                                                  source files to be ignored by the processor. For example,
                                                                                  the default ``['.#*']`` will ignore emacs lock files.
@@ -108,10 +108,12 @@ Setting name (followed by default value, if any)                                
                                                                                  include them explicitly and enumerate the full list of
                                                                                  desired Markdown extensions.)
 ``OUTPUT_PATH = 'output/'``                                                      Where to output the generated files.
-``PATH = None``                                                                  Path to content directory to be processed by Pelican.
-``PAGE_DIR = 'pages'``                                                           Directory to look at for pages, relative to `PATH`.
+``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
+                                                                                 and content path is not specified via an argument to the ``pelican``
+                                                                                 command, Pelican will use the current working directory.
+``PAGE_DIR = 'pages'``                                                           Directory to look at for pages, relative to ``PATH``.
 ``PAGE_EXCLUDES = ()``                                                           A list of directories to exclude when looking for pages.
-``ARTICLE_DIR = ''``                                                             Directory to look at for articles, relative to `PATH`.
+``ARTICLE_DIR = ''``                                                             Directory to look at for articles, relative to ``PATH``.
 ``ARTICLE_EXCLUDES = ('pages',)``                                                A list of directories to exclude when looking for articles.
 ``OUTPUT_SOURCES = False``                                                       Set to True if you want to copy the articles and pages in their
                                                                                  original format (e.g. Markdown or reStructuredText) to the
@@ -201,8 +203,8 @@ for URL formation: *relative* and *absolute*. Relative URLs are useful
 when testing locally, and absolute URLs are reliable and most useful when
 publishing. One method of supporting both is to have one Pelican configuration
 file for local development and another for publishing. To see an example of this
-type of setup, use the ``pelican-quickstart`` script as described at the top of
-the :doc:`Getting Started <getting_started>` page, which will produce two separate
+type of setup, use the ``pelican-quickstart`` script as described in the
+:doc:`Installation <install>` section, which will produce two separate
 configuration files for local development and publishing, respectively.
 
 You can customize the URLs and locations where files will be saved. The
@@ -603,7 +605,7 @@ For example::
 Translations
 ============
 
-Pelican offers a way to translate articles. See the :doc:`Getting Started <getting_started>` section for
+Pelican offers a way to translate articles. See the :doc:`Content <content>` section for
 more information.
 
 ========================================================    =====================================================

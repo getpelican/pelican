@@ -10,13 +10,15 @@ Pelican |release|
         Were you looking for version |last_stable| documentation?
 
 
-Pelican is a static site generator, written in Python_.
+Pelican is a static site generator, written in Python_. Highlights include:
 
-* Write your content directly with your editor of choice (vim!)
+* Write your content directly with your editor of choice
   in reStructuredText_, Markdown_, or AsciiDoc_ formats
 * Includes a simple CLI tool to (re)generate your site
 * Easy to interface with distributed version control systems and web hooks
 * Completely static output is easy to host anywhere
+
+Ready to get started? Check out the :doc:`Quickstart<quickstart>` guide.
 
 Features
 --------
@@ -24,16 +26,16 @@ Features
 Pelican |version| currently supports:
 
 * Articles (e.g., blog posts) and pages (e.g., "About", "Projects", "Contact")
-* Comments, via an external service (Disqus). (Please note that while
-  useful, Disqus is an external service, and thus the comment data will be
-  somewhat outside of your control and potentially subject to data loss.)
+* Comments, via an external service (Disqus). If you prefer to have more
+  control over your comment data, self-hosted comments are another option.
+  Check out the `Pelican Plugins`_ repository for more details.
 * Theming support (themes are created using Jinja2_ templates)
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
-* Fast rebuild times thanks to content caching and selective output writing.
+* Fast rebuild times thanks to content caching and selective output writing
 
 Why the name "Pelican"?
 -----------------------
@@ -66,16 +68,19 @@ Documentation
 .. toctree::
    :maxdepth: 2
 
-   getting_started
+   quickstart
+   install
+   content
+   publish
    settings
    themes
    plugins
-   internals
    pelican-themes
    importer
    faq
    tips
    contribute
+   internals
    report
    changelog
 
@@ -88,5 +93,6 @@ Documentation
 .. _Jinja2: http://jinja.pocoo.org/
 .. _`Pelican documentation`: http://docs.getpelican.com/latest/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
+.. _`Pelican plugins`: https://github.com/getpelican/pelican-plugins
 .. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
 .. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
