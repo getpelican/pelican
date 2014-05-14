@@ -58,6 +58,12 @@ class TestArticlesGenerator(unittest.TestCase):
         cls.generator.generate_context()
         cls.articles = cls.distill_articles(cls.generator.articles)
 
+    def setUp(self):
+        self.temp_cache = mkdtemp(prefix='pelican_cache.')
+
+    def tearDown(self):
+        rmtree(self.temp_cache)
+
     @staticmethod
     def distill_articles(articles):
         return [[article.title, article.status, article.category.name,
