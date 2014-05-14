@@ -125,6 +125,7 @@ Setting name (followed by default value, if any)                                
                                                                                  not. Only set this to ``True`` when developing/testing and only
                                                                                  if you fully understand the effect it can have on links/feeds.
 ``PLUGINS = []``                                                                 The list of plugins to load. See :ref:`plugins`.
+``PLUGIN_PATHS = []``                                                            A list of directories where to look for plugins. See :ref:`plugins`.
 ``SITENAME = 'A Pelican Blog'``                                                  Your site name
 ``SITEURL``                                                                      Base URL of your website. Not defined by default,
                                                                                  so it is best to specify your SITEURL; if you do not, feeds

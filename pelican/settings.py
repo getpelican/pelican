@@ -114,7 +114,7 @@ DEFAULT_CONFIG = {
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
     'SUMMARY_MAX_LENGTH': 50,
-    'PLUGIN_PATH': [],
+    'PLUGIN_PATHS': [],
     'PLUGINS': [],
     'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
@@ -147,13 +147,17 @@ def read_settings(path=None, override=None):
                 if p not in ('THEME') or os.path.exists(absp):
                     local_settings[p] = absp
 
-        if isinstance(local_settings['PLUGIN_PATH'], six.string_types):
-            logger.warning("Defining %s setting as string has been deprecated (should be a list)" % 'PLUGIN_PATH')
-            local_settings['PLUGIN_PATH'] = [local_settings['PLUGIN_PATH']]
-        else:
-            if 'PLUGIN_PATH' in local_settings and local_settings['PLUGIN_PATH'] is not None:
-                local_settings['PLUGIN_PATH'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
-                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATH']]
+        if 'PLUGIN_PATH' in local_settings:
+            logger.warning('PLUGIN_PATH setting has been replaced by '
+                           'PLUGIN_PATHS, moving it to the new setting name.')
+            local_settings['PLUGIN_PATHS'] = local_settings['PLUGIN_PATH']
+            del local_settings['PLUGIN_PATH']
+        if isinstance(local_settings['PLUGIN_PATHS'], six.string_types):
+            logger.warning("Defining %s setting as string has been deprecated (should be a list)" % 'PLUGIN_PATHS')
+            local_settings['PLUGIN_PATHS'] = [local_settings['PLUGIN_PATHS']]
+        elif local_settings['PLUGIN_PATHS'] is not None:
+                local_settings['PLUGIN_PATHS'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
+                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATHS']]
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
