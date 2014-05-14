@@ -30,9 +30,9 @@ DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
     'ARTICLE_PATHS': [''],
-    'ARTICLE_EXCLUDES': ('pages',),
+    'ARTICLE_EXCLUDES': [],
     'PAGE_PATHS': ['pages'],
-    'PAGE_EXCLUDES': (),
+    'PAGE_EXCLUDES': [],
     'THEME': DEFAULT_THEME,
     'OUTPUT_PATH': 'output',
     'READERS': {},
@@ -347,6 +347,18 @@ def configure_settings(settings):
                            "(must be a list), falling back to the default"
                            % PATH_KEY)
             settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
+
+    # Add {PAGE,ARTICLE}_PATHS to {ARTICLE,PAGE}_EXCLUDES
+    mutually_exclusive = ('ARTICLE', 'PAGE')
+    for type_1, type_2 in [mutually_exclusive, mutually_exclusive[::-1]]:
+        try:
+            includes = settings[type_1 + '_PATHS']
+            excludes = settings[type_2 + '_EXCLUDES']
+            for path in includes:
+                if path not in excludes:
+                    excludes.append(path)
+        except KeyError:
+            continue            # setting not specified, nothing to do
 
     for old, new, doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),

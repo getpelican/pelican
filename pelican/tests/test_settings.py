@@ -43,7 +43,10 @@ class TestSettingsConfiguration(unittest.TestCase):
         # Providing no file should return the default values.
         settings = read_settings(None)
         expected = copy.deepcopy(DEFAULT_CONFIG)
-        expected['FEED_DOMAIN'] = ''  # Added by configure settings
+        # Added by configure settings
+        expected['FEED_DOMAIN'] = ''
+        expected['ARTICLE_EXCLUDES'] = ['pages']
+        expected['PAGE_EXCLUDES'] = ['']
         self.maxDiff = None
         self.assertDictEqual(settings, expected)
 
