@@ -63,9 +63,9 @@ class Pelican(object):
 
     def init_plugins(self):
         self.plugins = []
-        logger.debug('Temporarily adding PLUGIN_PATH to system path')
+        logger.debug('Temporarily adding PLUGIN_PATHS to system path')
         _sys_path = sys.path[:]
-        for pluginpath in self.settings['PLUGIN_PATH']:
+        for pluginpath in self.settings['PLUGIN_PATHS']:
             sys.path.insert(0, pluginpath)
         for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
