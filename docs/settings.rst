@@ -4,7 +4,7 @@ Settings
 Pelican is configurable thanks to a settings file you can pass to
 the command line::
 
-    pelican content -s path/to/your/settingsfile.py
+    pelican content -s path/to/your/pelicanconf.py
 
 (If you used the ``pelican-quickstart`` command, your primary settings file will
 be named ``pelicanconf.py`` by default.)
@@ -27,6 +27,7 @@ The settings you define in the configuration file will be passed to the
 templates, which allows you to use your settings to add site-wide content.
 
 Here is a list of settings for Pelican:
+
 
 Basic settings
 ==============
@@ -210,9 +211,9 @@ configuration files for local development and publishing, respectively.
 You can customize the URLs and locations where files will be saved. The
 ``*_URL`` and ``*_SAVE_AS`` variables use Python's format strings. These
 variables allow you to place your articles in a location such as
-``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs. These
-settings give you the flexibility to place your articles and pages anywhere you
-want.
+``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see
+example). These settings give you the flexibility to place your articles and
+pages anywhere you want.
 
 .. note::
     If you specify a ``datetime`` directive, it will be substituted using the
@@ -235,30 +236,12 @@ Example usage:
 
 * ``ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'``
 * ``ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'``
+* ``PAGE_URL = 'pages/{slug}/'``
+* ``PAGE_SAVE_AS = 'pages/{slug}/index.html'``
 
-This would save your articles in something like ``/posts/2011/Aug/07/sample-post/index.html``,
-and the URL to this would be ``/posts/2011/Aug/07/sample-post/``.
-
-Pelican can optionally create per-year, per-month, and per-day archives of your
-posts. These secondary archives are disabled by default but are automatically
-enabled if you supply format strings for their respective ``_SAVE_AS`` settings.
-Period archives fit intuitively with the hierarchical model of web URLs and can
-make it easier for readers to navigate through the posts you've written over time.
-
-Example usage:
-
-* ``YEAR_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/index.html'``
-* ``MONTH_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/index.html'``
-
-With these settings, Pelican will create an archive of all your posts for the
-year at (for instance) ``posts/2011/index.html`` and an archive of all your
-posts for the month at ``posts/2011/Aug/index.html``.
-
-.. note::
-    Period archives work best when the final path segment is ``index.html``.
-    This way a reader can remove a portion of your URL and automatically
-    arrive at an appropriate archive of posts, without having to specify
-    a page name.
+This would save your articles into something like ``/posts/2011/Aug/07/sample-post/index.html``,
+pages into ``/pages/about/index.html``, and make them available on URLs ``/posts/2011/Aug/07/sample-post/``
+and ``/pages/about/``.
 
 ======================================================  ========================================================
 Setting name (followed by default value, if any)        What does it do?
@@ -289,9 +272,6 @@ Setting name (followed by default value, if any)        What does it do?
 ``TAG_SAVE_AS = 'tag/{slug}.html'``                     The location to save the tag page.
 ``AUTHOR_URL = 'author/{slug}.html'``                   The URL to use for an author.
 ``AUTHOR_SAVE_AS = 'author/{slug}.html'``               The location to save an author.
-``YEAR_ARCHIVE_SAVE_AS = ''``                           The location to save per-year archives of your posts.
-``MONTH_ARCHIVE_SAVE_AS = ''``                          The location to save per-month archives of your posts.
-``DAY_ARCHIVE_SAVE_AS = ''``                            The location to save per-day archives of your posts.
 ``SLUG_SUBSTITUTIONS` = ()``                            Substitutions to make prior to stripping out
                                                         non-alphanumerics when generating slugs. Specified
                                                         as a list of 2-tuples of ``(from, to)`` which are
@@ -305,21 +285,47 @@ Setting name (followed by default value, if any)        What does it do?
     set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
     relevant page from being generated.
 
+Pelican can optionally create per-year, per-month, and per-day archives of your
+posts. These secondary archives are disabled by default but are automatically
+enabled if you supply format strings for their respective ``_SAVE_AS`` settings.
+Period archives fit intuitively with the hierarchical model of web URLs and can
+make it easier for readers to navigate through the posts you've written over time.
+
+Example usage:
+
+* ``YEAR_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/index.html'``
+* ``MONTH_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/index.html'``
+
+With these settings, Pelican will create an archive of all your posts for the
+year at (for instance) ``posts/2011/index.html`` and an archive of all your
+posts for the month at ``posts/2011/Aug/index.html``.
+
+.. note::
+    Period archives work best when the final path segment is ``index.html``.
+    This way a reader can remove a portion of your URL and automatically
+    arrive at an appropriate archive of posts, without having to specify
+    a page name.
+
 ``DIRECT_TEMPLATES``, which are ``('index', 'tags', 'categories', 'archives')``
 by default, work a bit differently than noted above. Only the ``_SAVE_AS``
 settings are available:
 
-=============================================  ===============================================
+=============================================  ======================================================
 Setting name (followed by default value)       What does it do?
-=============================================  ===============================================
+=============================================  ======================================================
 ``ARCHIVES_SAVE_AS = 'archives.html'``         The location to save the article archives page.
+``YEAR_ARCHIVE_SAVE_AS = ''``                  The location to save per-year archives of your posts.
+``MONTH_ARCHIVE_SAVE_AS = ''``                 The location to save per-month archives of your posts.
+``DAY_ARCHIVE_SAVE_AS = ''``                   The location to save per-day archives of your posts.
 ``AUTHORS_SAVE_AS = 'authors.html'``           The location to save the author list.
 ``CATEGORIES_SAVE_AS = 'categories.html'``     The location to save the category list.
 ``TAGS_SAVE_AS = 'tags.html'``                 The location to save the tag list.
-=============================================  ===============================================
+=============================================  ======================================================
 
-URLs for direct template pages are theme-dependent. Some themes hard-code them:
+URLs for direct template pages are theme-dependent. Some themes use
+corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'archives.html'``, ``'authors.html'``, ``'categories.html'``, ``'tags.html'``.
+
 
 Timezone
 --------
@@ -390,6 +396,7 @@ can get a list of available locales via the ``locale -a`` command; see manpage
 
 .. _template_pages:
 
+
 Template pages
 ==============
 
@@ -406,6 +413,7 @@ your resume, and a contact page — you could have::
 
 
 .. _path_metadata:
+
 
 Path metadata
 =============
@@ -440,15 +448,16 @@ particular file:
     # STATIC_SAVE_AS = '{path}'
     # STATIC_URL = '{path}'
     STATIC_PATHS = [
-        'extra/robots.txt',
+        'static/robots.txt',
         ]
     EXTRA_PATH_METADATA = {
-        'extra/robots.txt': {'path': 'robots.txt'},
+        'static/robots.txt': {'path': 'robots.txt'},
         }
 
 __ internal_metadata__
 .. _group name notation:
    http://docs.python.org/3/library/re.html#regular-expression-syntax
+
 
 Feed settings
 =============
@@ -492,6 +501,7 @@ If you don't want to generate some or any of these feeds, set the above variable
 
 .. [2] %s is the name of the category.
 
+
 FeedBurner
 ----------
 
@@ -510,6 +520,7 @@ There are two fields to configure in the `FeedBurner
 Address". In this example, the "Original Feed" would be
 ``http://www.example.com/thymefeeds/main.xml`` and the "Feed Address" suffix
 would be ``thymefeeds/main.xml``.
+
 
 Pagination
 ==========
@@ -534,6 +545,7 @@ Setting name (followed by default value, if any)    What does it do?
                                                     pagination output.
 ================================================    =====================================================
 
+
 Using Pagination Patterns
 -------------------------
 
@@ -555,6 +567,7 @@ second (and subsequent) pages to be ``/page/2/``, you would set
 This would cause the first page to be written to
 ``{base_name}/index.html``, and subsequent ones would be written into
 ``page/{number}`` directories.
+
 
 Tag cloud
 =========
@@ -602,6 +615,7 @@ For example::
 
     ...
 
+
 Translations
 ============
 
@@ -618,6 +632,7 @@ Setting name (followed by default value, if any)            What does it do?
 
 .. [3] %s is the language
 
+
 Ordering content
 ================
 
@@ -629,6 +644,7 @@ Setting name (followed by default value)            What does it do?
 ``REVERSE_CATEGORY_ORDER = False``                  Reverse the category order. (True: lists by reverse
                                                     alphabetical order; default lists alphabetically.)
 ================================================    =====================================================
+
 
 Themes
 ======
@@ -714,6 +730,7 @@ adding the following to your configuration::
 
     CSS_FILE = "wide.css"
 
+
 Logging
 =======
 
@@ -730,6 +747,7 @@ be filtered out.
 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 
 .. _reading_only_modified_content:
+
 
 Reading only modified content
 =============================
@@ -797,6 +815,7 @@ from the ``--checksum`` option.
 
 .. _writing_only_selected_content:
 
+
 Writing only selected content
 =============================
 
@@ -809,6 +828,7 @@ desired files as output paths in the ``WRITE_SELECTED`` list,
 on the command line using the ``--write-selected`` option, which
 accepts a comma-separated list of output file paths. By default this
 list is empty, so all output is written.
+
 
 Example settings
 ================
