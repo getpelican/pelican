@@ -9,6 +9,7 @@ import logging
 import shutil
 import fnmatch
 import calendar
+import re
 
 from codecs import open
 from collections import defaultdict
@@ -126,6 +127,7 @@ class Generator(object):
             root = os.path.join(self.path, path)
 
             if os.path.isdir(root):
+                # walk specified directory
                 for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
                     for e in exclude:
                         if e in dirs:
@@ -136,7 +138,22 @@ class Generator(object):
                         if self._include_path(fp, extensions):
                             files.append(fp)
             elif os.path.exists(root) and self._include_path(path, extensions):
-                files.append(path)  # can't walk non-directories
+                # can't walk non-directories
+                files.append(path)
+            else:
+                # walk all directories and match based on regexp
+                path_pat = re.compile(path)
+                for dirpath, dirs, temp_files in os.walk(self.path, followlinks=True):
+                    if not path_pat.match(dirpath):
+                        continue
+                    for e in exclude:
+                        if e in dirs:
+                            dirs.remove(e)
+                    reldir = os.path.relpath(dirpath, self.path)
+                    for f in temp_files:
+                        fp = os.path.join(reldir, f)
+                        if self._include_path(fp, extensions):
+                            files.append(fp)
         return files
 
     def add_source_path(self, content):
