@@ -198,14 +198,14 @@ class TestArticlesGenerator(unittest.TestCase):
 
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
-        settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        settings['ARCHIVES_SAVE_AS'] = False
         settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
-        write.assert_called_count == 0
+        self.assertEqual(write.call_count, 0)
 
     def test_per_article_template(self):
         """
