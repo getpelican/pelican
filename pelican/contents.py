@@ -261,16 +261,18 @@ class Content(object):
 
     @memoized
     def get_content(self, siteurl):
-
         if hasattr(self, '_get_content'):
             content = self._get_content()
         else:
             content = self._content
         return self._update_content(content, siteurl)
 
+    def get_siteurl(self):
+        return self._context.get('localsiteurl', '')
+
     @property
     def content(self):
-        return self.get_content(self._context.get('localsiteurl', ''))
+        return self.get_content(self.get_siteurl())
 
     def _get_summary(self):
         """Returns the summary of an article.
@@ -279,7 +281,8 @@ class Content(object):
         content.
         """
         if hasattr(self, '_summary'):
-            return self._summary
+            return self._update_content(self._summary,
+                                        self.get_siteurl())
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
@@ -287,12 +290,20 @@ class Content(object):
         return truncate_html_words(self.content,
                                    self.settings['SUMMARY_MAX_LENGTH'])
 
-    def _set_summary(self, summary):
+    @memoized
+    def get_summary(self, siteurl):
+        """uses siteurl to be memoizable"""
+        return self._get_summary()
+
+    @property
+    def summary(self):
+        return self.get_summary(self.get_siteurl())
+
+    @summary.setter
+    def summary(self, value):
         """Dummy function"""
         pass
 
-    summary = property(_get_summary, _set_summary, "Summary of the article."
-                       "Based on the content. Can't be set")
     url = property(functools.partial(get_url_setting, key='url'))
     save_as = property(functools.partial(get_url_setting, key='save_as'))
 
