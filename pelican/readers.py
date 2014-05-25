@@ -145,6 +145,7 @@ class RstReader(BaseReader):
                 elif element.tagname == 'authors':  # author list
                     name = element.tagname
                     value = [element.astext() for element in element.children]
+                    value = ','.join(value) # METADATA_PROCESSORS expects a string
                 else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()
