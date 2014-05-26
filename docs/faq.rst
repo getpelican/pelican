@@ -6,16 +6,7 @@ Here are some frequently asked questions about Pelican.
 What's the best way to communicate a problem, question, or suggestion?
 ======================================================================
 
-If you have a problem, question, or suggestion, please start by striking up a
-conversation on `#pelican on Freenode <irc://irc.freenode.net/pelican>`_.
-Those who don't have an IRC client handy can jump in immediately via
-`IRC webchat <http://webchat.freenode.net/?channels=pelican&uio=d4>`_. Because
-of differing time zones, you may not get an immediate response to your
-question, but please be patient and stay logged into IRC — someone will almost
-always respond if you wait long enough (it may take a few hours).
-
-If you're unable to resolve your issue or if you have a feature request, please
-refer to the `issue tracker <https://github.com/getpelican/pelican/issues>`_.
+Please read our :doc:`feedback guidelines <contribute>`.
 
 How can I help?
 ================

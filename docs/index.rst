@@ -47,20 +47,10 @@ Source code
 
 You can access the source code at: https://github.com/getpelican/pelican
 
-Feedback / Contact us
----------------------
+How to get help, contribute, or provide feedback
+------------------------------------------------
 
-If you want to see new features in Pelican, don't hesitate to offer suggestions,
-clone the repository, etc. There are many ways to :doc:`contribute<contribute>`.
-That's open source, dude!
-
-Send a message to "authors at getpelican dot com" with any requests/feedback.
-For a more immediate response, you can also join the team via IRC at
-`#pelican on Freenode`_ — if you don't have an IRC client handy, use the
-webchat_ for quick feedback. If you ask a question via IRC and don't get an
-immediate response, don't leave the channel! It may take a few hours because
-of time zone differences, but if you are patient and remain in the channel,
-someone will almost always respond to your inquiry.
+See our :doc:`feedback and contribution submission guidelines <contribute>`.
 
 Documentation
 -------------
@@ -93,5 +83,3 @@ Documentation
 .. _`Pelican documentation`: http://docs.getpelican.com/latest/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
 .. _`Pelican plugins`: https://github.com/getpelican/pelican-plugins
-.. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
-.. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
