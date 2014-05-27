@@ -114,6 +114,7 @@ class TestArticlesGenerator(unittest.TestCase):
             ['This is an article with category !', 'published', 'yeah',
              'article'],
             ['This is an article with multiple authors!', 'published', 'Default', 'article'],
+            ['This is an article with multiple authors!', 'published', 'Default', 'article'],
             ['This is an article without category !', 'published', 'Default',
              'article'],
             ['This is an article without category !', 'published',
