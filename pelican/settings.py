@@ -70,7 +70,7 @@ DEFAULT_CONFIG = {
     'DRAFT_LANG_SAVE_AS': os.path.join('drafts', '{slug}-{lang}.html'),
     'PAGE_URL': 'pages/{slug}.html',
     'PAGE_SAVE_AS': os.path.join('pages', '{slug}.html'),
-    'PAGE_ORDER_BY': 'filename',
+    'PAGE_ORDER_BY': 'basename',
     'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
     'PAGE_LANG_SAVE_AS': os.path.join('pages', '{slug}-{lang}.html'),
     'STATIC_URL': '{path}',

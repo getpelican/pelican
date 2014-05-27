@@ -473,7 +473,12 @@ def process_translations(content_list, order_by=None):
         elif order_by == 'basename':
             index.sort(key=lambda x: os.path.basename(x.source_path or ''))
         elif order_by != 'slug':
-            index.sort(key=attrgetter(order_by))
+            try:
+                index.sort(key=attrgetter(order_by))
+            except AttributeError:
+                error_msg = ('There is no "{}" attribute in the item metadata.'
+                             'Defaulting to slug order.')
+                logger.warning(error_msg.format(order_by))
 
     return index, translations
 
