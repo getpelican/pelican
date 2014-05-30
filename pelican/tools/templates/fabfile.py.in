@@ -1,9 +1,15 @@
-from fabric.api import *
-import fabric.contrib.project as project
+import functools
 import os
 import sys
 import SimpleHTTPServer
 import SocketServer
+
+from fabric.api import env
+from fabric.api import hosts
+from fabric.api import lcd
+from fabric.api import local
+from fabric.api import task
+from fabric.contrib import project
 
 # Local path configuration (can be absolute or relative to fabfile)
 env.deploy_path = 'output'
@@ -19,41 +25,82 @@ env.cloudfiles_api_key = '$cloudfiles_api_key'
 env.cloudfiles_container = '$cloudfiles_container'
 
 
+def fab_root(func):
+    fab_root_dir = os.path.dirname(os.path.realpath(__file__))
+
+    @functools.wraps(func)
+    def cd_to_fab_root(*args, **kwargs):
+        with lcd(fab_root_dir):
+            return func(*args, **kwargs)
+    return cd_to_fab_root
+
+
+@task
+@fab_root
 def clean():
+    '''Clear the output folder'''
     if os.path.isdir(DEPLOY_PATH):
         local('rm -rf {deploy_path}'.format(**env))
         local('mkdir {deploy_path}'.format(**env))
 
+
+@task(alias='preview')
+@fab_root
 def build():
+    '''Generate the static output'''
     local('pelican -s pelicanconf.py')
 
+
+@task
+@fab_root
 def rebuild():
+    '''Rebuild the static output'''
     clean()
     build()
 
+
+@task
+@fab_root
 def regenerate():
+    '''Relaunch pelican each time a modification occurs'''
     local('pelican -r -s pelicanconf.py')
 
-def serve():
+
+@task
+@fab_root
+def serve(port=8000):
+    '''
+    Serve output locally at localhost:8000
+    '''
     os.chdir(env.deploy_path)
 
-    PORT = 8000
+    PORT = int(port)
+
     class AddressReuseTCPServer(SocketServer.TCPServer):
         allow_reuse_address = True
 
-    server = AddressReuseTCPServer(('', PORT), SimpleHTTPServer.SimpleHTTPRequestHandler)
+    server = AddressReuseTCPServer(
+        ('', PORT), SimpleHTTPServer.SimpleHTTPRequestHandler
+    )
 
     sys.stderr.write('Serving on port {0} ...\n'.format(PORT))
     server.serve_forever()
 
+
+@task
+@fab_root
 def reserve():
+    '''Build the static output and serve them'''
     build()
     serve()
 
-def preview():
-    local('pelican -s publishconf.py')
 
+@task
+@fab_root
 def cf_upload():
+    '''
+    Publish output to cloudfiles
+    '''
     rebuild()
     local('cd {deploy_path} && '
           'swift -v -A https://auth.api.rackspacecloud.com/v1.0 '
@@ -61,8 +108,14 @@ def cf_upload():
           '-K {cloudfiles_api_key} '
           'upload -c {cloudfiles_container} .'.format(**env))
 
+
+@task
 @hosts(production)
+@fab_root
 def publish():
+    '''
+    Publish output to server using rsync
+    '''
     local('pelican -s publishconf.py')
     project.rsync_project(
         remote_dir=dest_path,
