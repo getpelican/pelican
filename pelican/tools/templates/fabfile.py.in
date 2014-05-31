@@ -44,7 +44,7 @@ def clean():
         local('mkdir {deploy_path}'.format(**env))
 
 
-@task(alias='preview')
+@task
 @fab_root
 def build():
     '''Generate the static output'''
@@ -93,6 +93,12 @@ def reserve():
     '''Build the static output and serve them'''
     build()
     serve()
+
+
+@task
+@fab_root
+def preview():
+    local('pelican -s publishconf.py')
 
 
 @task
