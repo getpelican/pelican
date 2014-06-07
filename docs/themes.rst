@@ -119,17 +119,25 @@ This is the home page of your blog, generated at output/index.html.
 
 If pagination is active, subsequent pages will reside in output/index`n`.html.
 
-===================     ===================================================
+======================  ===================================================
 Variable                Description
-===================     ===================================================
+======================  ===================================================
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
+articles_previous_page  The previous page of articles (``None`` if page does
+                        not exist)
+articles_next_page      The next page of articles (``None`` if page does
+                        not exist)
 dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
+dates_previous_page     The previous page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
+dates_next_page         The next page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
 page_name               'index' -- useful for pagination links
-===================     ===================================================
+======================  ===================================================
 
 author.html
 -------------
@@ -140,22 +148,30 @@ output generated at output/author/`author_name`.html.
 If pagination is active, subsequent pages will reside as defined by setting
 AUTHOR_SAVE_AS (`Default:` output/author/`author_name'n'`.html).
 
-===================     ===================================================
+======================  ===================================================
 Variable                Description
-===================     ===================================================
+======================  ===================================================
 author                  The name of the author being processed
 articles                Articles by this author
 dates                   Articles by this author, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
+articles_previous_page  The previous page of articles (``None`` if page does
+                        not exist)
+articles_next_page      The next page of articles (``None`` if page does
+                        not exist)
 dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
                         ascending.
+dates_previous_page     The previous page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
+dates_next_page         The next page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
 page_name               AUTHOR_URL where everything after `{slug}` is
                         removed -- useful for pagination links
-===================     ===================================================
+======================  ===================================================
 
 category.html
 -------------
@@ -166,22 +182,30 @@ output generated at output/category/`category_name`.html.
 If pagination is active, subsequent pages will reside as defined by setting
 CATEGORY_SAVE_AS (`Default:` output/category/`category_name'n'`.html).
 
-===================     ===================================================
+======================  ===================================================
 Variable                Description
-===================     ===================================================
+======================  ===================================================
 category                The name of the category being processed
 articles                Articles for this category
 dates                   Articles for this category, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
+articles_previous_page  The previous page of articles (``None`` if page does
+                        not exist)
+articles_next_page      The next page of articles (``None`` if page does
+                        not exist)
 dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
+dates_previous_page     The previous page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
+dates_next_page         The next page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
 page_name               CATEGORY_URL where everything after `{slug}` is
                         removed -- useful for pagination links
-===================     ===================================================
+======================  ===================================================
 
 article.html
 -------------
@@ -244,22 +268,30 @@ saved as output/tag/`tag_name`.html.
 If pagination is active, subsequent pages will reside as defined in setting
 TAG_SAVE_AS (`Default:` output/tag/`tag_name'n'`.html).
 
-===================     ===================================================
+======================  ===================================================
 Variable                Description
-===================     ===================================================
+======================  ===================================================
 tag                     The name of the tag being processed
 articles                Articles related to this tag
 dates                   Articles related to this tag, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
+articles_previous_page  The previous page of articles (``None`` if page does
+                        not exist)
+articles_next_page      The next page of articles (``None`` if page does
+                        not exist)
 dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
+dates_previous_page     The previous page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
+dates_next_page         The next page of articles, ordered by date,
+                        ascending (``None`` if page does not exist)
 page_name               TAG_URL where everything after `{slug}` is removed
                         -- useful for pagination links
-===================     ===================================================
+======================  ===================================================
 
 period_archives.html
 --------------------
