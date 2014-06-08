@@ -76,9 +76,9 @@ Setting name (followed by default value, if any)                                
                                                                                  generating new files. This can be useful in preventing older,
                                                                                  unnecessary files from persisting in your output. However, **this is
                                                                                  a destructive setting and should be handled with extreme care.**
-``OUTPUT_RETENTION = ()``                                                        A tuple of filenames that should be retained and not deleted from the
+``OUTPUT_RETENTION = []``                                                        A list of filenames that should be retained and not deleted from the
                                                                                  output directory. One use case would be the preservation of version
-                                                                                 control data. For example: ``(".hg", ".git", ".bzr")``
+                                                                                 control data. For example: ``[".hg", ".git", ".bzr"]``
 ``JINJA_EXTENSIONS = []``                                                        A list of any Jinja2 extensions you want to use.
 ``JINJA_FILTERS = {}``                                                           A list of custom Jinja2 filters you want to use.
                                                                                  The dictionary should map the filtername to the filter function.
