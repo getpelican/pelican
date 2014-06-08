@@ -577,7 +577,7 @@ class FileDataCacher(object):
                     'run). Proceeding with empty cache.\n{}').format(
                         self._cache_path, err))
                 self._cache = {}
-            except pickle.UnpicklingError as err:
+            except Exception as err:
                 logger.warning(('Cannot unpickle cache {}, cache may be using '
                     'an incompatible protocol (see pelican caching docs). '
                     'Proceeding with empty cache.\n{}').format(
