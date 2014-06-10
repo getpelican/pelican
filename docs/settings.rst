@@ -162,8 +162,6 @@ Setting name (followed by default value, if any)                                
                                                                                  Can be used to separate templates from the theme.
                                                                                  Example: projects, resume, profile ...
                                                                                  These templates need to use ``DIRECT_TEMPLATES`` setting.
-``ASCIIDOC_OPTIONS = []``                                                        A list of options to pass to AsciiDoc. See the `manpage
-                                                                                 <http://www.methods.co.nz/asciidoc/manpage.html>`_.
 ``WITH_FUTURE_DATES = True``                                                     If disabled, content with dates in the future will get a default
                                                                                  status of ``draft``. See :ref:`reading_only_modified_content`
                                                                                  for caveats.

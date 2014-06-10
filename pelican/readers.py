@@ -18,11 +18,6 @@ try:
 except ImportError:
     Markdown = False  # NOQA
 try:
-    from asciidocapi import AsciiDocAPI
-    asciidoc = True
-except ImportError:
-    asciidoc = False
-try:
     from html import escape
 except ImportError:
     from cgi import escape
@@ -347,40 +342,6 @@ class HTMLReader(BaseReader):
         for k in parser.metadata:
             metadata[k] = self.process_metadata(k, parser.metadata[k])
         return parser.body, metadata
-
-
-class AsciiDocReader(BaseReader):
-    """Reader for AsciiDoc files"""
-
-    enabled = bool(asciidoc)
-    file_extensions = ['asc', 'adoc', 'asciidoc']
-    default_options = ["--no-header-footer", "-a newline=\\n"]
-
-    def read(self, source_path):
-        """Parse content and metadata of asciidoc files"""
-        from cStringIO import StringIO
-        with pelican_open(source_path) as source:
-            text = StringIO(source)
-        content = StringIO()
-        ad = AsciiDocAPI()
-
-        options = self.settings['ASCIIDOC_OPTIONS']
-        if isinstance(options, (str, unicode)):
-            options = [m.strip() for m in options.split(',')]
-        options = self.default_options + options
-        for o in options:
-            ad.options(*o.split())
-
-        ad.execute(text, content, backend="html4")
-        content = content.getvalue()
-
-        metadata = {}
-        for name, value in ad.asciidoc.document.attributes.items():
-            name = name.lower()
-            metadata[name] = self.process_metadata(name, value)
-        if 'doctitle' in metadata:
-            metadata['title'] = metadata['doctitle']
-        return content, metadata
 
 
 class Readers(FileStampDataCacher):
