@@ -333,42 +333,6 @@ class MdReaderTest(ReaderTest):
             self.assertEqual(value, page.metadata[key], key)
 
 
-class AdReaderTest(ReaderTest):
-
-    @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
-    def test_article_with_asc_extension(self):
-        # Ensure the asc extension is being processed by the correct reader
-        page = self.read_file(
-            path='article_with_asc_extension.asc')
-        expected = ('<hr>\n<h2><a name="_used_for_pelican_test">'
-                    '</a>Used for pelican test</h2>\n'
-                    '<p>The quick brown fox jumped over'
-                    ' the lazy dog&#8217;s back.</p>\n')
-        self.assertEqual(page.content, expected)
-        expected = {
-            'category': 'Blog',
-            'author': 'Author O. Article',
-            'title': 'Test AsciiDoc File Header',
-            'date': datetime.datetime(2011, 9, 15, 9, 5),
-            'tags': ['Linux', 'Python', 'Pelican'],
-        }
-
-        for key, value in expected.items():
-            self.assertEqual(value, page.metadata[key], key)
-
-    @unittest.skipUnless(readers.asciidoc, "asciidoc isn't installed")
-    def test_article_with_asc_options(self):
-        # test to ensure the ASCIIDOC_OPTIONS is being used
-        reader = readers.AsciiDocReader(
-            dict(ASCIIDOC_OPTIONS=["-a revision=1.0.42"]))
-        content, metadata = reader.read(_path('article_with_asc_options.asc'))
-        expected = ('<hr>\n<h2><a name="_used_for_pelican_test"></a>Used for'
-                    ' pelican test</h2>\n<p>version 1.0.42</p>\n'
-                    '<p>The quick brown fox jumped over the lazy'
-                    ' dog&#8217;s back.</p>\n')
-        self.assertEqual(content, expected)
-
-
 class HTMLReaderTest(ReaderTest):
     def test_article_with_comments(self):
         page = self.read_file(path='article_with_comments.html')

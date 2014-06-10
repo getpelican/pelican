@@ -52,10 +52,6 @@ installed::
 
     pip install typogrify
 
-If you want to use AsciiDoc_ you need to install it from `source
-<http://www.methods.co.nz/asciidoc/INSTALL.html>`_ or use your operating
-system's package manager.
-
 Dependencies
 ------------
 
@@ -119,4 +115,3 @@ The next step is to begin to adding content to the *content* folder that has
 been created for you.
 
 .. _virtualenv: http://www.virtualenv.org/
-.. _AsciiDoc: http://www.methods.co.nz/asciidoc/
