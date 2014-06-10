@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import six
-from six.moves.urllib.parse import unquote
+from six.moves.urllib.parse import (unquote, urlparse, urlunparse)
 
 import copy
 import locale
@@ -11,13 +11,7 @@ import os
 import re
 import sys
 
-try:
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import urlparse, urlunparse
-
 from datetime import datetime
-
 
 from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
