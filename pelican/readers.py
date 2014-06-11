@@ -20,10 +20,7 @@ try:
     from html import escape
 except ImportError:
     from cgi import escape
-try:
-    from html.parser import HTMLParser
-except ImportError:
-    from HTMLParser import HTMLParser
+from six.moves.html_parser import HTMLParser
 
 from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
@@ -41,7 +38,6 @@ METADATA_PROCESSORS = {
 }
 
 logger = logging.getLogger(__name__)
-
 
 class BaseReader(object):
     """Base class to read files.
@@ -230,7 +226,11 @@ class HTMLReader(BaseReader):
 
     class _HTMLParser(HTMLParser):
         def __init__(self, settings, filename):
-            HTMLParser.__init__(self)
+            try:
+                # Python 3.4+
+                HTMLParser.__init__(self, convert_charrefs=False)
+            except TypeError:
+                HTMLParser.__init__(self)
             self.body = ''
             self.metadata = {}
             self.settings = settings
