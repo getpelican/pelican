@@ -4,11 +4,10 @@
 from __future__ import unicode_literals, print_function
 import argparse
 try:
-    # py3k import
-    from html.parser import HTMLParser
+    from html import unescape  # py3.4+
 except ImportError:
-    # py2 import
-    from HTMLParser import HTMLParser  # NOQA
+    from six.moves.html_parser import HTMLParser
+    unescape = HTMLParser().unescape
 import os
 import re
 import subprocess
@@ -129,7 +128,7 @@ def wp2fields(xml, wp_custpost=False):
 
             try:
                 # Use HTMLParser due to issues with BeautifulSoup 3
-                title = HTMLParser().unescape(item.title.contents[0])
+                title = unescape(item.title.contents[0])
             except IndexError:
                 title = 'No title [%s]' % item.find('post_name').string
                 logger.warning('Post "%s" is lacking a proper title' % title)
