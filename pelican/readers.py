@@ -9,6 +9,7 @@ import docutils
 import docutils.core
 import docutils.io
 from docutils.writers.html4css1 import HTMLTranslator
+import six
 
 # import the directives to have pygments support
 from pelican import rstdirectives  # NOQA
@@ -117,6 +118,19 @@ class RstReader(BaseReader):
     enabled = bool(docutils)
     file_extensions = ['rst']
 
+    class FileInput(docutils.io.FileInput):
+        """Patch docutils.io.FileInput to remove "U" mode in py3.
+
+        Universal newlines is enabled by default and "U" mode is deprecated
+        in py3.
+
+        """
+
+        def __init__(self, *args, **kwargs):
+            if six.PY3:
+                kwargs['mode'] = kwargs.get('mode', 'r').replace('U', '')
+            docutils.io.FileInput.__init__(self, *args, **kwargs)
+
     def __init__(self, *args, **kwargs):
         super(RstReader, self).__init__(*args, **kwargs)
 
@@ -148,12 +162,14 @@ class RstReader(BaseReader):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8',
-                        'exit_status_level': 2}
+                        'exit_status_level': 2,
+                        'embed_stylesheet': False}
         user_params = self.settings.get('DOCUTILS_SETTINGS')
         if user_params:
             extra_params.update(user_params)
 
         pub = docutils.core.Publisher(
+            source_class=self.FileInput,
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.writer.translator_class = PelicanHTMLTranslator
