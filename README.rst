@@ -1,9 +1,5 @@
-Pelican
-=======
-
-.. image:: https://secure.travis-ci.org/getpelican/pelican.png?branch=master
-   :target: http://travis-ci.org/getpelican/pelican
-   :alt: Travis-ci: continuous integration status.
+Pelican |build-status| |coverage-status|
+========================================
 
 Pelican is a static site generator, written in Python_.
 
@@ -58,3 +54,11 @@ See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
 .. _Jinja2: http://jinja.pocoo.org/
 .. _`Pelican documentation`: http://docs.getpelican.com/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
+
+.. |build-status| image:: https://travis-ci.org/getpelican/pelican.svg?branch=master
+   :target: https://travis-ci.org/getpelican/pelican
+   :alt: Travis CI: continuous integration status
+.. |coverage-status| image:: https://img.shields.io/coveralls/getpelican/pelican.svg
+   :target: https://coveralls.io/r/getpelican/pelican
+   :alt: Coveralls: code coverage status
+
