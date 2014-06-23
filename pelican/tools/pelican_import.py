@@ -6,15 +6,9 @@ import argparse
 try:
     # py3k import
     from html.parser import HTMLParser
-    from urllib.request import urlretrieve
-    from urllib.parse import urlparse
-    from urllib.error import URLError
 except ImportError:
     # py2 import
     from HTMLParser import HTMLParser  # NOQA
-    from urllib import urlretrieve
-    from urlparse import urlparse
-    from urllib2 import URLError
 import os
 import re
 import subprocess
@@ -23,6 +17,9 @@ import time
 import logging
 
 from codecs import open
+from six.moves.urllib.error import URLError
+from six.moves.urllib.parse import urlparse
+from six.moves.urllib.request import urlretrieve
 
 from pelican.utils import slugify
 from pelican.log import init
