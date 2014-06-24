@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 import os
+import imp
 import math
 import random
 import logging
@@ -65,6 +66,15 @@ class Generator(object):
             ]),
             extensions=self.settings['JINJA_EXTENSIONS'],
         )
+        try:
+            theme_functions = imp.load_source('theme_functions',
+                    os.path.join(self.theme, '/functions.py'))
+        except IOError:
+            theme_functions = None
+
+        if theme_functions and hasattr(theme_functions, '__export__'):
+            for func_name in theme_functions.__export__:
+                self.env.globals[func_name] = getattr(theme_functions, func_name)
 
         logger.debug('template list: {0}'.format(self.env.list_templates()))
 
