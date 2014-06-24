@@ -13,7 +13,7 @@ Overall structure
 =================
 
 What Pelican does is take a list of files and process them into some sort of
-output. Usually, the input files are reStructuredText, Markdown and AsciiDoc
+output. Usually, the input files are reStructuredText and Markdown
 files, and the output is a blog, but both input and output can be anything you
 want.
 
@@ -23,7 +23,7 @@ The logic is separated into different classes and concepts:
   on. Since those operations are commonly used, the object is created once and
   then passed to the generators.
 
-* **Readers** are used to read from various formats (AsciiDoc, HTML, Markdown and
+* **Readers** are used to read from various formats (HTML, Markdown and
   reStructuredText for now, but the system is extensible). Given a file, they
   return metadata (author, tags, category, etc.) and content (HTML-formatted).
 

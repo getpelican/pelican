@@ -57,8 +57,8 @@ pattern::
 
     This is the content of my super blog post.
 
-Conventions for AsciiDoc_ posts, which should have an ``.asc`` extension, can
-be found on the AsciiDoc_ site.
+Readers for additional formats (such as AsciiDoc_) are available via plugins.
+Refer to `pelican-plugins`_ repository for those.
 
 Pelican can also process HTML files ending in ``.html`` and ``.htm``. Pelican
 interprets the HTML in a very straightforward manner, reading metadata from
@@ -369,3 +369,4 @@ listed on the index page nor on any category or tag page.
 
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
+.. _pelican-plugins: http://github.com/getpelican/pelican-plugins
