@@ -29,10 +29,10 @@ DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
-    'ARTICLE_DIR': '',
-    'ARTICLE_EXCLUDES': ('pages',),
-    'PAGE_DIR': 'pages',
-    'PAGE_EXCLUDES': (),
+    'ARTICLE_PATHS': [''],
+    'ARTICLE_EXCLUDES': [],
+    'PAGE_PATHS': ['pages'],
+    'PAGE_EXCLUDES': [],
     'THEME': DEFAULT_THEME,
     'OUTPUT_PATH': 'output',
     'READERS': {},
@@ -113,7 +113,7 @@ DEFAULT_CONFIG = {
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
     'SUMMARY_MAX_LENGTH': 50,
-    'PLUGIN_PATH': [],
+    'PLUGIN_PATHS': [],
     'PLUGINS': [],
     'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
@@ -146,13 +146,17 @@ def read_settings(path=None, override=None):
                 if p not in ('THEME') or os.path.exists(absp):
                     local_settings[p] = absp
 
-        if isinstance(local_settings['PLUGIN_PATH'], six.string_types):
-            logger.warning("Defining %s setting as string has been deprecated (should be a list)" % 'PLUGIN_PATH')
-            local_settings['PLUGIN_PATH'] = [local_settings['PLUGIN_PATH']]
-        else:
-            if 'PLUGIN_PATH' in local_settings and local_settings['PLUGIN_PATH'] is not None:
-                local_settings['PLUGIN_PATH'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
-                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATH']]
+        if 'PLUGIN_PATH' in local_settings:
+            logger.warning('PLUGIN_PATH setting has been replaced by '
+                           'PLUGIN_PATHS, moving it to the new setting name.')
+            local_settings['PLUGIN_PATHS'] = local_settings['PLUGIN_PATH']
+            del local_settings['PLUGIN_PATH']
+        if isinstance(local_settings['PLUGIN_PATHS'], six.string_types):
+            logger.warning("Defining %s setting as string has been deprecated (should be a list)" % 'PLUGIN_PATHS')
+            local_settings['PLUGIN_PATHS'] = [local_settings['PLUGIN_PATHS']]
+        elif local_settings['PLUGIN_PATHS'] is not None:
+                local_settings['PLUGIN_PATHS'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
+                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATHS']]
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
@@ -310,6 +314,16 @@ def configure_settings(settings):
         key=lambda r: r[0],
     )
 
+    # move {ARTICLE,PAGE}_DIR -> {ARTICLE,PAGE}_PATHS
+    for key in ['ARTICLE', 'PAGE']:
+        old_key = key + '_DIR'
+        new_key = key + '_PATHS'
+        if old_key in settings:
+            logger.warning('Deprecated setting {}, moving it to {} list'.format(
+                old_key, new_key))
+            settings[new_key] = [settings[old_key]]   # also make a list
+            del settings[old_key]
+
     # Save people from accidentally setting a string rather than a list
     path_keys = (
         'ARTICLE_EXCLUDES',
@@ -323,13 +337,27 @@ def configure_settings(settings):
         'PLUGINS',
         'STATIC_PATHS',
         'THEME_STATIC_PATHS',
+        'ARTICLE_PATHS',
+        'PAGE_PATHS',
     )
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
-            if isinstance(settings[PATH_KEY], six.string_types):
-                logger.warning("Detected misconfiguration with %s setting "
-                               "(must be a list), falling back to the default"
-                               % PATH_KEY)
-                settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
+        if isinstance(settings[PATH_KEY], six.string_types):
+            logger.warning("Detected misconfiguration with %s setting "
+                           "(must be a list), falling back to the default"
+                           % PATH_KEY)
+            settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
+
+    # Add {PAGE,ARTICLE}_PATHS to {ARTICLE,PAGE}_EXCLUDES
+    mutually_exclusive = ('ARTICLE', 'PAGE')
+    for type_1, type_2 in [mutually_exclusive, mutually_exclusive[::-1]]:
+        try:
+            includes = settings[type_1 + '_PATHS']
+            excludes = settings[type_2 + '_EXCLUDES']
+            for path in includes:
+                if path not in excludes:
+                    excludes.append(path)
+        except KeyError:
+            continue            # setting not specified, nothing to do
 
     for old, new, doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),

@@ -111,10 +111,12 @@ Setting name (followed by default value, if any)                                
 ``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
                                                                                  and content path is not specified via an argument to the ``pelican``
                                                                                  command, Pelican will use the current working directory.
-``PAGE_DIR = 'pages'``                                                           Directory to look at for pages, relative to ``PATH``.
-``PAGE_EXCLUDES = ()``                                                           A list of directories to exclude when looking for pages.
-``ARTICLE_DIR = ''``                                                             Directory to look at for articles, relative to ``PATH``.
-``ARTICLE_EXCLUDES = ('pages',)``                                                A list of directories to exclude when looking for articles.
+``PAGE_PATHS = ['pages']``                                                       A list of directories to look at for pages, relative to ``PATH``.
+``PAGE_EXCLUDES = []``                                                           A list of directories to exclude when looking for pages in addition
+                                                                                 to ``ARTICLE_PATHS``.
+``ARTICLE_PATHS = ['']``                                                         A list of directories to look at for articles, relative to ``PATH``.
+``ARTICLE_EXCLUDES = []``                                                        A list of directories to exclude when looking for articles in addition
+                                                                                 to ``PAGE_PATHS``.
 ``OUTPUT_SOURCES = False``                                                       Set to True if you want to copy the articles and pages in their
                                                                                  original format (e.g. Markdown or reStructuredText) to the
                                                                                  specified ``OUTPUT_PATH``.
@@ -125,6 +127,7 @@ Setting name (followed by default value, if any)                                
                                                                                  not. Only set this to ``True`` when developing/testing and only
                                                                                  if you fully understand the effect it can have on links/feeds.
 ``PLUGINS = []``                                                                 The list of plugins to load. See :ref:`plugins`.
+``PLUGIN_PATHS = []``                                                            A list of directories where to look for plugins. See :ref:`plugins`.
 ``SITENAME = 'A Pelican Blog'``                                                  Your site name
 ``SITEURL``                                                                      Base URL of your website. Not defined by default,
                                                                                  so it is best to specify your SITEURL; if you do not, feeds
