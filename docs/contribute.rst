@@ -91,7 +91,7 @@ functional tests. To do so, you can use the following two commands::
     $ LC_ALL=en_US.utf8 pelican -o pelican/tests/output/custom/ \
         -s samples/pelican.conf.py samples/content/
     $ LC_ALL=fr_FR.utf8 pelican -o pelican/tests/output/custom_locale/ \
-        -s samples/pelican_FR.conf.py samples/content/
+        -s samples/pelican.conf_FR.py samples/content/
     $ LC_ALL=en_US.utf8 pelican -o pelican/tests/output/basic/ \
         samples/content/
 
