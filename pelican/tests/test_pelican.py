@@ -20,7 +20,7 @@ OUTPUT_PATH = os.path.abspath(os.path.join(CURRENT_DIR, 'output'))
 
 INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
 SAMPLE_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf.py")
-SAMPLE_FR_CONFIG = os.path.join(SAMPLES_PATH, "pelican_FR.conf.py")
+SAMPLE_FR_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf_FR.py")
 
 
 def recursiveDiff(dcmp):

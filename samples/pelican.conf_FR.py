@@ -16,6 +16,7 @@ REVERSE_CATEGORY_ORDER = True
 LOCALE = "fr_FR.UTF-8"
 DEFAULT_PAGINATION = 4
 DEFAULT_DATE = (2012, 3, 2, 14, 1, 1)
+DEFAULT_DATE_FORMAT = '%d %B %Y'
 
 ARTICLE_URL = 'posts/{date:%Y}/{date:%B}/{date:%d}/{slug}/'
 ARTICLE_SAVE_AS = ARTICLE_URL + 'index.html'
