@@ -21,7 +21,7 @@ from six.moves.urllib.error import URLError
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.request import urlretrieve
 
-from pelican.utils import slugify
+from pelican.utils import slugify, SafeDatetime
 from pelican.log import init
 
 logger = logging.getLogger(__name__)
@@ -303,7 +303,7 @@ def dc2fields(file):
 def posterous2fields(api_token, email, password):
     """Imports posterous posts"""
     import base64
-    from datetime import datetime, timedelta
+    from datetime import timedelta
     try:
         # py3k import
         import json
@@ -340,7 +340,7 @@ def posterous2fields(api_token, email, password):
                 slug = slugify(post.get('title'))
             tags = [tag.get('name') for tag in post.get('tags')]
             raw_date = post.get('display_date')
-            date_object = datetime.strptime(raw_date[:-6], "%Y/%m/%d %H:%M:%S")
+            date_object = SafeDatetime.strptime(raw_date[:-6], "%Y/%m/%d %H:%M:%S")
             offset = int(raw_date[-5:])
             delta = timedelta(hours = offset / 100)
             date_object -= delta

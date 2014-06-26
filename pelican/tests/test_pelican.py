@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 import os
+import sys
 from tempfile import mkdtemp
 from shutil import rmtree
 import locale
@@ -10,7 +11,7 @@ import subprocess
 
 from pelican import Pelican
 from pelican.settings import read_settings
-from pelican.tests.support import LoggedTestCase, mute
+from pelican.tests.support import LoggedTestCase, mute, locale_available, unittest
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(
@@ -19,6 +20,7 @@ OUTPUT_PATH = os.path.abspath(os.path.join(CURRENT_DIR, 'output'))
 
 INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
 SAMPLE_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf.py")
+SAMPLE_FR_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf_FR.py")
 
 
 def recursiveDiff(dcmp):
@@ -101,6 +103,27 @@ class TestPelican(LoggedTestCase):
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
         self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
+
+    @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
+                         locale_available('French'), 'French locale needed')
+    def test_custom_locale_generation_works(self):
+        '''Test that generation with fr_FR.UTF-8 locale works'''
+        old_locale = locale.setlocale(locale.LC_TIME)
+
+        if sys.platform == 'win32':
+            our_locale = str('French')
+        else:
+            our_locale = str('fr_FR.UTF-8')
+
+        settings = read_settings(path=SAMPLE_FR_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'CACHE_PATH': self.temp_cache,
+            'LOCALE': our_locale,
+            })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+        self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'custom_locale'))
 
     def test_theme_static_paths_copy(self):
         # the same thing with a specified set of settings should work

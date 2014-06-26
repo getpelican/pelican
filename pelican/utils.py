@@ -14,6 +14,7 @@ import shutil
 import traceback
 import pickle
 import hashlib
+import datetime
 
 from collections import Hashable
 from contextlib import contextmanager
@@ -56,7 +57,10 @@ def strftime(date, date_format):
     for candidate in candidates:
         # test for valid C89 directives only
         if candidate[1] in 'aAbBcdfHIjmMpSUwWxXyYzZ%':
-            formatted = date.strftime(candidate)
+            if isinstance(date, SafeDatetime):
+                formatted = date.strftime(candidate, safe=False)
+            else:
+                formatted = date.strftime(candidate)
             # convert Py2 result to unicode
             if not six.PY3 and enc is not None:
                 formatted = formatted.decode(enc)
@@ -66,6 +70,17 @@ def strftime(date, date_format):
 
     # put formatted candidates back and return
     return template % tuple(formatted_candidates)
+
+
+class SafeDatetime(datetime.datetime):
+    '''Subclass of datetime that works with utf-8 format strings on PY2'''
+
+    def strftime(self, fmt, safe=True):
+        '''Uses our custom strftime if supposed to be *safe*'''
+        if safe:
+            return strftime(self, fmt)
+        else:
+            return super(SafeDatetime, self).strftime(fmt)
 
 
 class DateFormatter(object):
@@ -79,12 +94,18 @@ class DateFormatter(object):
         self.locale = locale.setlocale(locale.LC_TIME)
 
     def __call__(self, date, date_format):
-        old_locale = locale.setlocale(locale.LC_TIME)
+        old_lc_time = locale.setlocale(locale.LC_TIME)
+        old_lc_ctype = locale.setlocale(locale.LC_CTYPE)
+
         locale.setlocale(locale.LC_TIME, self.locale)
+        # on OSX, encoding from LC_CTYPE determines the unicode output in PY3
+        # make sure it's same as LC_TIME
+        locale.setlocale(locale.LC_CTYPE, self.locale)
 
         formatted = strftime(date, date_format)
 
-        locale.setlocale(locale.LC_TIME, old_locale)
+        locale.setlocale(locale.LC_TIME, old_lc_time)
+        locale.setlocale(locale.LC_CTYPE, old_lc_ctype)
         return formatted
 
 
@@ -183,8 +204,10 @@ def get_date(string):
     If no format matches the given date, raise a ValueError.
     """
     string = re.sub(' +', ' ', string)
+    default = SafeDatetime.now().replace(hour=0, minute=0,
+                                        second=0, microsecond=0)
     try:
-        return dateutil.parser.parse(string)
+        return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
         raise ValueError('{0!r} is not a valid date'.format(string))
 
