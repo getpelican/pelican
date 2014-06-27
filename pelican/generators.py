@@ -119,6 +119,8 @@ class Generator(object):
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
+        if isinstance(paths, six.string_types):
+            paths = [paths] # backward compatibility for older generators
         files = []
         for path in paths:
             root = os.path.join(self.path, path)
