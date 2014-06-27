@@ -122,6 +122,8 @@ class Generator(object):
         if isinstance(paths, six.string_types):
             paths = [paths] # backward compatibility for older generators
         files = []
+        if type(paths) == type(''):
+            paths = [paths]
         for path in paths:
             root = os.path.join(self.path, path)
 
