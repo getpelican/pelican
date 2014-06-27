@@ -120,6 +120,8 @@ class Generator(object):
             extensions are allowed)
         """
         files = []
+        if type(paths) == type(''):
+            paths = [paths]
         for path in paths:
             root = os.path.join(self.path, path)
 
