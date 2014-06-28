@@ -214,7 +214,7 @@ def symlink(path, v=False):
             if v:
                 print("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path))
             try:
-                os.symlink(path, theme_path)
+                os.symlink(os.path.abspath(path), theme_path)
             except Exception as e:
                 err("Cannot link `{p}' to `{t}':\n{e}".format(p=path, t=theme_path, e=str(e)))
 
