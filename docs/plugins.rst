@@ -57,6 +57,12 @@ which you map the signals to your plugin logic. Let's take a simple example::
     def register():
         signals.initialized.connect(test)
 
+.. note::
+
+    Signal receivers are weakly-referenced and thus must not be defined within
+    your ``register`` callable or they will be garbage-collected before the
+    signal is emitted.
+
 List of signals
 ===============
 
