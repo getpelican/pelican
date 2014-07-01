@@ -1,8 +1,8 @@
 Release history
 ###############
 
-Next release
-============
+3.4.0 (2014-07-01)
+==================
 
 * Speed up content generation via new caching mechanism
 * Add selective post generation (instead of always building entire site)
