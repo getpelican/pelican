@@ -22,7 +22,7 @@ CHANGELOG = open('docs/changelog.rst').read()
 
 setup(
     name="pelican",
-    version=__version__,
+    version=str(__version__),
     url='http://getpelican.com/',
     author='Alexis Metaireau',
     author_email='authors@getpelican.com',
