@@ -197,7 +197,7 @@ Setting name (followed by default value, if any)                                
 
 
 URL settings
-------------
+==============
 
 The first thing to understand is that there are currently two supported methods
 for URL formation: *relative* and *absolute*. Relative URLs are useful
