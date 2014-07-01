@@ -5,7 +5,7 @@ clean =
     python setup.py clean
     rm -rf *egg-info build dist
 tests = python -m unittest discover
-publish = python setup.py sdist register upload
+publish = python setup.py sdist bdist_wheel register upload
 files = README.rst
 
 [bump]
