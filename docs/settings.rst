@@ -173,9 +173,9 @@ Setting name (followed by default value, if any)                                
 ``PYGMENTS_RST_OPTIONS = []``                                                    A list of default Pygments settings for your reStructuredText
                                                                                  code blocks. See :ref:`internal_pygments_options` for a list of
                                                                                  supported options.
-``SLUGIFY_SOURCE = 'input'``                                                     Specifies where you want the slug to be automatically generated
+``SLUGIFY_SOURCE = 'title'``                                                     Specifies where you want the slug to be automatically generated
                                                                                  from. Can be set to ``title`` to use the 'Title:' metadata tag or
-                                                                                 ``basename`` to use the article's basename when creating the slug.
+                                                                                 ``basename`` to use the article's file name when creating the slug.
 ``CACHE_CONTENT = True``                                                         If ``True``, save content in a cache file.
                                                                                  See :ref:`reading_only_modified_content` for details about caching.
 ``CONTENT_CACHING_LAYER = 'reader'``                                             If set to ``'reader'``, save only the raw content and metadata
