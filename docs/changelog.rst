@@ -5,7 +5,8 @@ Next release
 ============
 
 * Speed up content generation via new caching mechanism
-* Switch Pelican docs to prettier RtD theme
+* Add selective post generation (instead of always building entire site)
+* Many documentation improvements, including switching to prettier RtD theme
 * Add support for multiple content and plugin paths
 * Add ``:modified:`` metadata field to complement ``:date:``.
   Used to specify the last date and time an article was updated independently
@@ -22,6 +23,8 @@ Next release
 * Produce inline links instead of reference-style links when importing content
 * Improve handling of ``IGNORE_FILES`` setting behavior
 * Properly escape symbol characters in tag names (e.g., ``C++``)
+* Minor tweaks for Python 3.4 compatibility
+* Add several new signals
 
 3.3.0 (2013-09-24)
 ==================
