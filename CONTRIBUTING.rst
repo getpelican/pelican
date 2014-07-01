@@ -2,7 +2,8 @@ Filing issues
 -------------
 
 * Before you file an issue, try `asking for help`_ first.
-* If determined to file an issue, first check for `existing issues`_, including closed issues.
+* If determined to file an issue, first check for `existing issues`_, including
+  closed issues.
 
 .. _`asking for help`: `How to get help`_
 .. _`existing issues`: https://github.com/getpelican/pelican/issues
@@ -25,9 +26,19 @@ Before you ask for help, please make sure you do the following:
 * latest releases of libraries used by Pelican
 * no plugins or only those related to the issue
 
+**NOTE:** The most common sources of problems are anomalies in (1) themes,
+(2) settings files, and (3) ``make``/``fab`` automation wrappers. If you can't
+reproduce your problem when using the following steps to generate your site,
+then the problem is almost certainly with your chosen theme and/or settings
+file (and not Pelican itself)::
+
+    cd ~/projects/your-site
+    git clone https://github.com/getpelican/pelican ~/projects/pelican
+    pelican content -s ~/projects/pelican/samples/pelican.conf.py -t ~/projects/pelican/pelican/themes/notmyidea
+
 If despite the above efforts you still cannot resolve your problem, be sure to
-include in your inquiry the following, preferably in the form of links to
-content uploaded to a `paste service`_, GitHub repository, or other
+include in your inquiry the following information, preferably in the form of
+links to content uploaded to a `paste service`_, GitHub repository, or other
 publicly-accessible location:
 
 * Describe what version of Pelican you are running (output of ``pelican --version``
@@ -35,7 +46,8 @@ publicly-accessible location:
   it (the full command you used, e.g. ``pip install pelican``).
 * If you are looking for a way to get some end result, prepare a detailed
   description of what the end result should look like (preferably in the form of
-  an image or a mock-up page) and explain in detail what you have done so far to achieve it.
+  an image or a mock-up page) and explain in detail what you have done so far to
+  achieve it.
 * If you are trying to solve some issue, prepare a detailed description of how
   to reproduce the problem. If the issue cannot be easily reproduced, it cannot
   be debugged by developers or volunteers. Describe only the **minimum steps**

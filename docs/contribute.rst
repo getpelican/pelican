@@ -1,4 +1,4 @@
-Contributing and Feedback Guidelines
+Contributing and feedback guidelines
 ####################################
 
 There are many ways to contribute to Pelican. You can improve the
