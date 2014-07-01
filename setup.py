@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from setuptools import setup
+from pelican import __version__
 
 requires = ['feedgenerator >= 1.6', 'jinja2 >= 2.7', 'pygments', 'docutils',
             'pytz >= 0a', 'blinker', 'unidecode', 'six >= 1.4',
@@ -21,7 +22,7 @@ CHANGELOG = open('docs/changelog.rst').read()
 
 setup(
     name="pelican",
-    version="3.3",
+    version=__version__,
     url='http://getpelican.com/',
     author='Alexis Metaireau',
     author_email='authors@getpelican.com',
@@ -41,6 +42,7 @@ setup(
          'Programming Language :: Python :: 2.7',
          'Programming Language :: Python :: 3',
          'Programming Language :: Python :: 3.3',
+         'Programming Language :: Python :: 3.4',
          'Topic :: Internet :: WWW/HTTP',
          'Topic :: Software Development :: Libraries :: Python Modules',
     ],
