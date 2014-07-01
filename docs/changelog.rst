@@ -4,10 +4,24 @@ Release history
 Next release
 ============
 
-* Added the `:modified:` metadata field to complement `:date:`.
-  Used to specify the last date and time an article was updated independently from the date and time it was published.
-* Produce inline links instead of reference-style links when importing content.
-* Multiple authors support added via new `:authors:` metadata field.
+* Speed up content generation via new caching mechanism
+* Switch Pelican docs to prettier RtD theme
+* Add support for multiple content and plugin paths
+* Add ``:modified:`` metadata field to complement ``:date:``.
+  Used to specify the last date and time an article was updated independently
+  from the date and time it was published.
+* Add support for multiple authors via new ``:authors:`` metadata field
+* Watch for changes in static directories when in auto-regeneration mode
+* Add filters to limit log output when desired
+* Add language support to drafts
+* Add ``SLUGIFY_SOURCE`` setting to control how post slugs are generated
+* Fix many issues relating to locale and encoding
+* Apply Typogrify filter to post summary
+* Preserve file metadata (e.g. time stamps) when copying static files to output
+* Move AsciiDoc support from Pelican core into separate plugin
+* Produce inline links instead of reference-style links when importing content
+* Improve handling of ``IGNORE_FILES`` setting behavior
+* Properly escape symbol characters in tag names (e.g., ``C++``)
 
 3.3.0 (2013-09-24)
 ==================
