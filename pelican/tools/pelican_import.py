@@ -699,9 +699,9 @@ def fields2pelican(fields, out_markup, output_path,
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, WordPress, Tumblr, Dotclear, or Posterous "
-                    "files into reST (rst) or Markdown (md) files. Be sure to "
-                    "have pandoc installed.",
+        description="Transform feed, WordPress, Tumblr, Dotclear, Posterous, "
+                    "or Blogger files into reST (rst) or Markdown (md) files. "
+                    "Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='input', help='The input file to read')
@@ -715,6 +715,8 @@ def main():
         help='Tumblr export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
+    parser.add_argument('--blogger', action='store_true', dest='blogger',
+        help='Blogger export')
     parser.add_argument('-o', '--output', dest='output', default='output',
         help='Output path')
     parser.add_argument('-m', '--markup', dest='markup', default='rst',
@@ -767,8 +769,10 @@ def main():
         input_type = 'tumblr'
     elif args.feed:
         input_type = 'feed'
+    elif args.blogger:
+        input_type = 'blogger'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr or --feed options"
+        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr, --feed or --blogger options"
         exit(error)
 
     if not os.path.exists(args.output):
@@ -791,6 +795,8 @@ def main():
     elif input_type == 'tumblr':
         fields = tumblr2fields(args.input, args.blogname)
     elif input_type == 'feed':
+        fields = feed2fields(args.input)
+    elif input_type == 'blogger':
         fields = feed2fields(args.input)
 
     if args.wp_attach:
