@@ -445,6 +445,46 @@ def feed2fields(file):
         yield (entry.title, entry.description, slug, date, author, [], tags,
                kind, "html")
 
+
+def blogger2fields(file):
+    """Read a feed and yield pelican fields"""
+    KIND_SCHEME = "http://schemas.google.com/g/2005#kind"
+    KINDS = {
+        'http://schemas.google.com/blogger/2008/kind#post': 'article',
+        'http://schemas.google.com/blogger/2008/kind#page': 'page',
+        'http://schemas.google.com/blogger/2008/kind#settings': 'settings',
+        'http://schemas.google.com/blogger/2008/kind#template': 'template',
+        'http://schemas.google.com/blogger/2008/kind#comment': 'comment',
+    }
+
+    import feedparser
+    d = feedparser.parse(file)
+    for entry in d.entries:
+        date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
+            if hasattr(entry, "updated_parsed") else None)
+        author = entry.author if hasattr(entry, "author") else None
+
+        if hasattr(entry, "tags"):
+            tags = []
+            for e in entry.tags:
+                # Assume there's only one tag with the 'kind' schema.
+                if e['scheme'] == KIND_SCHEME:
+                    kind = KINDS.get(e['term'])
+                else:
+                    tags.append(e['term'])
+        else:
+            tags = None
+            kind = 'article'
+
+        if kind == 'article':
+            slug = os.path.splitext(os.path.split(entry.link)[1])[0]
+        else:
+            slug = slugify(entry.title)
+
+        yield (entry.title, entry.description, slug, date, author, [], tags,
+               kind, "html")
+
+
 def build_header(title, date, author, categories, tags, slug, attachments=None):
     from docutils.utils import column_width
 
@@ -797,7 +837,7 @@ def main():
     elif input_type == 'feed':
         fields = feed2fields(args.input)
     elif input_type == 'blogger':
-        fields = feed2fields(args.input)
+        fields = blogger2fields(args.input)
 
     if args.wp_attach:
         attachments = get_attachments(args.input)
