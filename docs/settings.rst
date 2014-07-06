@@ -293,7 +293,7 @@ Setting name (followed by default value, if any)        What does it do?
 ``YEAR_ARCHIVE_SAVE_AS = ''``                           The location to save per-year archives of your posts.
 ``MONTH_ARCHIVE_SAVE_AS = ''``                          The location to save per-month archives of your posts.
 ``DAY_ARCHIVE_SAVE_AS = ''``                            The location to save per-day archives of your posts.
-``SLUG_SUBSTITUTIONS` = ()``                            Substitutions to make prior to stripping out
+``SLUG_SUBSTITUTIONS = ()``                             Substitutions to make prior to stripping out
                                                         non-alphanumerics when generating slugs. Specified
                                                         as a list of 2-tuples of ``(from, to)`` which are
                                                         applied in order.
