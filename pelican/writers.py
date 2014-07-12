@@ -93,39 +93,36 @@ class Writer(object):
         """
         if not is_selected_for_writing(self.settings, path):
             return
-        old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, str('C'))
-        try:
-            self.site_url = context.get(
-                'SITEURL', path_to_url(get_relative_path(path)))
 
-            self.feed_domain = context.get('FEED_DOMAIN')
-            self.feed_url = '{}/{}'.format(self.feed_domain, path)
+        self.site_url = context.get(
+            'SITEURL', path_to_url(get_relative_path(path)))
 
-            feed = self._create_new_feed(feed_type, context)
+        self.feed_domain = context.get('FEED_DOMAIN')
+        self.feed_url = '{}/{}'.format(self.feed_domain, path)
 
-            max_items = len(elements)
-            if self.settings['FEED_MAX_ITEMS']:
-                max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
-            for i in range(max_items):
-                self._add_item_to_the_feed(feed, elements[i])
+        feed = self._create_new_feed(feed_type, context)
 
-            if path:
-                complete_path = os.path.join(self.output_path, path)
-                try:
-                    os.makedirs(os.path.dirname(complete_path))
-                except Exception:
-                    pass
+        max_items = len(elements)
+        if self.settings['FEED_MAX_ITEMS']:
+            max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
+        for i in range(max_items):
+            self._add_item_to_the_feed(feed, elements[i])
 
-                encoding = 'utf-8' if six.PY3 else None
-                with self._open_w(complete_path, encoding) as fp:
-                    feed.write(fp, 'utf-8')
-                    logger.info('Writing %s', complete_path)
+        if path:
+            complete_path = os.path.join(self.output_path, path)
+            try:
+                os.makedirs(os.path.dirname(complete_path))
+            except Exception:
+                pass
 
-                signals.feed_written.send(complete_path, context=context, feed=feed)
-            return feed
-        finally:
-            locale.setlocale(locale.LC_ALL, old_locale)
+            encoding = 'utf-8' if six.PY3 else None
+            with self._open_w(complete_path, encoding) as fp:
+                feed.write(fp, 'utf-8')
+                logger.info('Writing %s', complete_path)
+
+            signals.feed_written.send(complete_path, context=context, feed=feed)
+        return feed
+
 
     def write_file(self, name, template, context, relative_urls=False,
                    paginated=None, override_output=False, **kwargs):
