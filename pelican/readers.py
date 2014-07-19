@@ -456,11 +456,20 @@ class Readers(FileStampDataCacher):
         # eventually filter the content with typogrify if asked so
         if self.settings['TYPOGRIFY']:
             from typogrify.filters import typogrify
+
+            def typogrify_wrapper(text):
+                """Ensures ignore_tags feature is backward compatible"""
+                try:
+                    return typogrify(text, self.settings['TYPOGRIFY_IGNORE_TAGS'])
+                except TypeError:
+                    return typogrify(text)
+
             if content:
-                content = typogrify(content)
-                metadata['title'] = typogrify(metadata['title'])
+                content = typogrify_wrapper(content)
+                metadata['title'] = typogrify_wrapper(metadata['title'])
+
             if 'summary' in metadata:
-                metadata['summary'] = typogrify(metadata['summary'])
+                metadata['summary'] = typogrify_wrapper(metadata['summary'])
 
         if context_signal:
             logger.debug('signal {}.send({}, <metadata>)'.format(
