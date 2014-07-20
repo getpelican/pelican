@@ -44,3 +44,4 @@ content_object_init = signal('content_object_init')
 
 # Writers signals
 content_written = signal('content_written')
+feed_written = signal('feed_written')
