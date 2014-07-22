@@ -68,11 +68,11 @@ class Writer(object):
                 raise RuntimeError('File %s is set to be overridden twice'
                                    % filename)
             else:
-                logger.info('skipping %s' % filename)
+                logger.info('Skipping %s', filename)
                 filename = os.devnull
         elif filename in self._written_files:
             if override:
-                logger.info('overwriting %s' % filename)
+                logger.info('Overwriting %s', filename)
             else:
                 raise RuntimeError('File %s is to be overwritten' % filename)
         if override:
@@ -120,7 +120,7 @@ class Writer(object):
                 encoding = 'utf-8' if six.PY3 else None
                 with self._open_w(complete_path, encoding) as fp:
                     feed.write(fp, 'utf-8')
-                    logger.info('writing %s' % complete_path)
+                    logger.info('Writing %s', complete_path)
             return feed
         finally:
             locale.setlocale(locale.LC_ALL, old_locale)
@@ -160,7 +160,7 @@ class Writer(object):
 
             with self._open_w(path, 'utf-8', override=override) as f:
                 f.write(output)
-            logger.info('writing {}'.format(path))
+            logger.info('Writing %s', path)
 
             # Send a signal to say we're writing a file with some specific
             # local context.

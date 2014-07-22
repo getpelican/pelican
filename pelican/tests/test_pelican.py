@@ -182,5 +182,5 @@ class TestPelican(LoggedTestCase):
         logger.setLevel(orig_level)
         self.assertLogCountEqual(
             count=2,
-            msg="writing .*",
+            msg="Writing .*",
             level=logging.INFO)

@@ -22,13 +22,14 @@ from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
 from pelican.utils import (copy, process_translations, mkdir_p, DateFormatter,
-                           FileStampDataCacher)
+                           FileStampDataCacher, python_2_unicode_compatible)
 from pelican import signals
 
 
 logger = logging.getLogger(__name__)
 
 
+@python_2_unicode_compatible
 class Generator(object):
     """Baseclass generator"""
 
@@ -67,7 +68,7 @@ class Generator(object):
             extensions=self.settings['JINJA_EXTENSIONS'],
         )
 
-        logger.debug('template list: {0}'.format(self.env.list_templates()))
+        logger.debug('Template list: %s', self.env.list_templates())
 
         # provide utils.strftime as a jinja filter
         self.env.filters.update({'strftime': DateFormatter()})
@@ -152,6 +153,10 @@ class Generator(object):
             if hasattr(value, 'items'):
                 value = list(value.items())  # py3k safeguard for iterators
             self.context[item] = value
+
+    def __str__(self):
+        # return the name of the class for logging purposes
+        return self.__class__.__name__
 
 
 class CachingGenerator(Generator, FileStampDataCacher):
@@ -470,7 +475,8 @@ class ArticlesGenerator(CachingGenerator):
                         context_signal=signals.article_generator_context,
                         context_sender=self)
                 except Exception as e:
-                    logger.warning('Could not process {}\n{}'.format(f, e))
+                    logger.error('Could not process %s\n%s', f, e,
+                        exc_info=self.settings.get('DEBUG', False))
                     continue
 
                 if not is_valid_content(article, f):
@@ -492,9 +498,8 @@ class ArticlesGenerator(CachingGenerator):
                     context_sender=self)
                 all_drafts.append(draft)
             else:
-                logger.warning("Unknown status %s for file %s, skipping it." %
-                               (repr(article.status),
-                                repr(f)))
+                logger.error("Unknown status '%s' for file %s, skipping it.",
+                               article.status, f)
 
         self.articles, self.translations = process_translations(all_articles)
         self.drafts, self.drafts_translations = \
@@ -594,7 +599,8 @@ class PagesGenerator(CachingGenerator):
                         context_signal=signals.page_generator_context,
                         context_sender=self)
                 except Exception as e:
-                    logger.warning('Could not process {}\n{}'.format(f, e))
+                    logger.error('Could not process %s\n%s', f, e,
+                        exc_info=self.settings.get('DEBUG', False))
                     continue
 
                 if not is_valid_content(page, f):
@@ -609,9 +615,8 @@ class PagesGenerator(CachingGenerator):
             elif page.status == "hidden":
                 hidden_pages.append(page)
             else:
-                logger.warning("Unknown status %s for file %s, skipping it." %
-                               (repr(page.status),
-                                repr(f)))
+                logger.error("Unknown status '%s' for file %s, skipping it.",
+                               page.status, f)
 
         self.pages, self.translations = process_translations(all_pages)
         self.hidden_pages, self.hidden_translations = (
@@ -679,7 +684,7 @@ class StaticGenerator(Generator):
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
             shutil.copy2(source_path, save_as)
-            logger.info('copying {} to {}'.format(sc.source_path, sc.save_as))
+            logger.info('Copying %s to %s', sc.source_path, sc.save_as)
 
 
 class SourceFileGenerator(Generator):
@@ -694,7 +699,7 @@ class SourceFileGenerator(Generator):
         copy(obj.source_path, dest)
 
     def generate_output(self, writer=None):
-        logger.info(' Generating source files...')
+        logger.info('Generating source files...')
         for obj in chain(self.context['articles'], self.context['pages']):
             self._create_source(obj)
             for obj_trans in obj.translations:

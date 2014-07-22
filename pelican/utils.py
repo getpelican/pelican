@@ -293,46 +293,46 @@ def copy(source, destination):
         if not os.path.exists(dest_dir):
             os.makedirs(dest_dir)
         shutil.copy2(source_, destination_)
-        logger.info('copying %s to %s' % (source_, destination_))
+        logger.info('Copying %s to %s', source_, destination_)
     else:
-        logger.warning('skipped copy %s to %s' % (source_, destination_))
+        logger.warning('Skipped copy %s to %s', source_, destination_)
 
 
 def clean_output_dir(path, retention):
     """Remove all files from output directory except those in retention list"""
 
     if not os.path.exists(path):
-        logger.debug("Directory already removed: %s" % path)
+        logger.debug("Directory already removed: %s", path)
         return
 
     if not os.path.isdir(path):
         try:
             os.remove(path)
         except Exception as e:
-            logger.error("Unable to delete file %s; %s" % (path, str(e)))
+            logger.error("Unable to delete file %s; %s", path, e)
         return
 
     # remove existing content from output folder unless in retention list
     for filename in os.listdir(path):
         file = os.path.join(path, filename)
         if any(filename == retain for retain in retention):
-            logger.debug("Skipping deletion; %s is on retention list: %s" \
-                         % (filename, file))
+            logger.debug("Skipping deletion; %s is on retention list: %s",
+                         filename, file)
         elif os.path.isdir(file):
             try:
                 shutil.rmtree(file)
-                logger.debug("Deleted directory %s" % file)
+                logger.debug("Deleted directory %s", file)
             except Exception as e:
-                logger.error("Unable to delete directory %s; %s" % (
-                        file, str(e)))
+                logger.error("Unable to delete directory %s; %s", 
+                        file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
-                logger.debug("Deleted file/link %s" % file)
+                logger.debug("Deleted file/link %s", file)
             except Exception as e:
-                logger.error("Unable to delete file %s; %s" % (file, str(e)))
+                logger.error("Unable to delete file %s; %s", file, e)
         else:
-            logger.error("Unable to delete %s, file type unknown" % file)
+            logger.error("Unable to delete %s, file type unknown", file)
 
 
 def get_relative_path(path):
@@ -455,10 +455,10 @@ def process_translations(content_list):
             lang_items = list(lang_items)
             len_ = len(lang_items)
             if len_ > 1:
-                logger.warning('There are %s variants of "%s" with lang %s' \
-                        % (len_, slug, lang))
+                logger.warning('There are %s variants of "%s" with lang %s',
+                    len_, slug, lang)
                 for x in lang_items:
-                    logger.warning('    %s' % x.source_path)
+                    logger.warning('\t%s', x.source_path)
 
         # find items with default language
         default_lang_items = list(filter(attrgetter('in_default_lang'),
@@ -469,11 +469,11 @@ def process_translations(content_list):
             default_lang_items = items[:1]
 
         if not slug:
-            logger.warning((
-                    'empty slug for {!r}. '
+            logger.warning(
+                    'empty slug for %s. '
                     'You can fix this by adding a title or a slug to your '
-                    'content'
-                    ).format(default_lang_items[0].source_path))
+                    'content',
+                    default_lang_items[0].source_path)
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -499,7 +499,7 @@ def folder_watcher(path, extensions, ignores=[]):
                     try:
                         yield os.stat(os.path.join(root, f)).st_mtime
                     except OSError as e:
-                        logger.warning('Caught Exception: {}'.format(e))
+                        logger.warning('Caught Exception: %s', e)
 
     LAST_MTIME = 0
     while True:
@@ -522,7 +522,7 @@ def file_watcher(path):
             try:
                 mtime = os.stat(path).st_mtime
             except OSError as e:
-                logger.warning('Caught Exception: {}'.format(e))
+                logger.warning('Caught Exception: %s', e)
                 continue
 
             if mtime > LAST_MTIME:
@@ -596,15 +596,15 @@ class FileDataCacher(object):
                 with self._cache_open(self._cache_path, 'rb') as fhandle:
                     self._cache = pickle.load(fhandle)
             except (IOError, OSError) as err:
-                logger.debug(('Cannot load cache {} (this is normal on first '
-                    'run). Proceeding with empty cache.\n{}').format(
-                        self._cache_path, err))
+                logger.debug('Cannot load cache %s (this is normal on first '
+                    'run). Proceeding with empty cache.\n%s',
+                        self._cache_path, err)
                 self._cache = {}
             except Exception as err:
-                logger.warning(('Cannot unpickle cache {}, cache may be using '
+                logger.warning(('Cannot unpickle cache %s, cache may be using '
                     'an incompatible protocol (see pelican caching docs). '
-                    'Proceeding with empty cache.\n{}').format(
-                        self._cache_path, err))
+                    'Proceeding with empty cache.\n%s'),
+                        self._cache_path, err)
                 self._cache = {}
         else:
             self._cache = {}
@@ -629,8 +629,8 @@ class FileDataCacher(object):
                 with self._cache_open(self._cache_path, 'wb') as fhandle:
                     pickle.dump(self._cache, fhandle)
             except (IOError, OSError, pickle.PicklingError) as err:
-                logger.warning('Could not save cache {}\n{}'.format(
-                    self._cache_path, err))
+                logger.warning('Could not save cache %s\n ... %s',
+                    self._cache_path, err)
 
 
 class FileStampDataCacher(FileDataCacher):
@@ -656,8 +656,7 @@ class FileStampDataCacher(FileDataCacher):
                         return hash_func(fhandle.read()).digest()
                 self._filestamp_func = filestamp_func
             except AttributeError as err:
-                logger.warning('Could not get hashing function\n{}'.format(
-                    err))
+                logger.warning('Could not get hashing function\n\t%s', err)
                 self._filestamp_func = None
 
     def cache_data(self, filename, data):
@@ -677,8 +676,8 @@ class FileStampDataCacher(FileDataCacher):
         try:
             return self._filestamp_func(filename)
         except (IOError, OSError, TypeError) as err:
-            logger.warning('Cannot get modification stamp for {}\n{}'.format(
-                filename, err))
+            logger.warning('Cannot get modification stamp for %s\n\t%s',
+                filename, err)
             return b''
 
     def get_cached_data(self, filename, default=None):

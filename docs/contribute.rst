@@ -142,34 +142,65 @@ Logging tips
 
 Try to use logging with appropriate levels.
 
-For logging messages that are not repeated, use the usual Python way:
+For logging messages that are not repeated, use the usual Python way::
 
     # at top of file
     import logging
     logger = logging.getLogger(__name__)
 
     # when needed
-    logger.warning("A warning that would usually occur only once")
+    logger.warning("A warning with %s formatting", arg_to_be_formatted)
 
-However, if you want to log messages that may occur several times, instead of
-a string, give a tuple to the logging method, with two arguments:
+Do not format log messages yourself. Use ``%s`` formatting in messages and pass
+arguments to logger. This is important, because Pelican logger will preprocess
+some arguments (like Exceptions) for Py2/Py3 compatibility.
 
- 1. The message to log for the initial execution
- 2. A generic message that will appear if the previous one would occur too many
-    times.
+Limiting extraneous log messages
+--------------------------------
 
-For example, if you want to log missing resources, use the following code:
+If the log message can occur several times, you may want to limit the log to
+prevent flooding. In order to do that, use the ``extra`` keyword argument for
+the logging message in the following format::
+
+    logger.warning("A warning with %s formatting", arg_to_be_formatted,
+        extra={'limit_msg': 'A generic message for too many warnings'})
+
+Optionally, you can also set ``'limit_args'`` as a tuple of arguments in
+``extra`` dict if your generic message needs formatting.
+
+Limit is set to ``5``, i.e, first four logs with the same ``'limit_msg'`` are
+outputted normally but the fifth one will be logged using
+``'limit_msg'`` (and ``'limit_args'`` if present). After the fifth,
+corresponding log messages will be ignored.
+
+For example, if you want to log missing resources, use the following code::
 
     for resource in resources:
         if resource.is_missing:
-            logger.warning((
-                'The resource {r} is missing'.format(r=resource.name),
-                'Other resources were missing'))
+            logger.warning(
+                'The resource %s is missing', resource.name,
+                extra={'limit_msg': 'Other resources were missing'})
 
-The log messages will be displayed as follows:
+The log messages will be displayed as follows::
 
     WARNING: The resource prettiest_cat.jpg is missing
     WARNING: The resource best_cat_ever.jpg is missing
     WARNING: The resource cutest_cat.jpg is missing
     WARNING: The resource lolcat.jpg is missing
     WARNING: Other resources were missing
+
+
+Outputting traceback in the logs
+--------------------------------
+
+If you're logging inside an ``except`` block, you may want to provide the
+traceback information as well. You can do that by setting ``exc_info`` keyword
+argument to ``True`` during logging. However, doing so by default can be
+undesired because tracebacks are long and can be confusing to regular users.
+Try to limit them to ``--debug`` mode like the following::
+
+    try:
+        some_action()
+    except Exception as e:
+        logger.error('Exception occured: %s', e,
+            exc_info=settings.get('DEBUG', False))
