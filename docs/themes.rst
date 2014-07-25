@@ -14,7 +14,7 @@ then modified), you can specify that theme via the ``-t`` flag::
     pelican content -s pelicanconf.py -t /projects/your-site/themes/your-theme
 
 If you'd rather not specify the theme on every invocation, you can define
->`THEME`` in your settings to point to the location of your preferred theme.
+``THEME`` in your settings to point to the location of your preferred theme.
 
 
 Structure
@@ -33,7 +33,7 @@ To make your own theme, you must follow the following structure::
         ├── authors.html          // must list all the authors
         ├── categories.html       // must list all the categories
         ├── category.html         // processed for each category
-        ├── index.html            // the home page (list all the articles)
+        ├── index.html            // the index (list all the articles)
         ├── page.html             // processed for each page
         ├── tag.html              // processed for each tag
         └── tags.html             // must list all the tags. Can be a tag cloud.
@@ -120,7 +120,7 @@ to the locale given in your settings::
 index.html
 ----------
 
-This is the home page of your blog, generated at ``index.html``.
+This is the home page or index of your blog, generated at ``index.html``.
 
 If pagination is active, subsequent pages will reside in ``index{number}.html``.
 
@@ -149,9 +149,9 @@ author.html
 -------------
 
 This template will be processed for each of the existing authors, with
-output generated according to setting ``AUTHOR_SAVE_AS`` (`Default:`
+output generated according to the ``AUTHOR_SAVE_AS`` setting (`Default:`
 ``author/{author_name}.html``). If pagination is active, subsequent pages will by
-default reside on ``author/{author_name}{number}.html``.
+default reside at ``author/{author_name}{number}.html``.
 
 ======================  ===================================================
 Variable                Description
@@ -183,9 +183,9 @@ category.html
 -------------
 
 This template will be processed for each of the existing categories, with
-output generated according to setting ``CATEGORY_SAVE_AS`` (`Default:`
+output generated according to the ``CATEGORY_SAVE_AS`` setting (`Default:`
 ``category/{category_name}.html``). If pagination is active, subsequent pages will by
-default reside on ``category/{category_name}{number}.html``.
+default reside at ``category/{category_name}{number}.html``.
 
 ======================  ===================================================
 Variable                Description
@@ -217,7 +217,7 @@ article.html
 -------------
 
 This template will be processed for each article, with
-output generated according to setting ``ARTICLE_SAVE_AS`` (`Default:`
+output generated according to the ``ARTICLE_SAVE_AS`` setting (`Default:`
 ``{article_name}.html``). The following variables are available when
 rendering.
 
@@ -258,7 +258,7 @@ page.html
 ---------
 
 This template will be processed for each page, with
-output generated according to setting ``PAGE_SAVE_AS`` (`Default:`
+output generated according to the ``PAGE_SAVE_AS`` setting (`Default:`
 ``pages/{page_name}.html``). The following variables are available when
 rendering.
 
@@ -274,9 +274,9 @@ tag.html
 --------
 
 This template will be processed for each tag, with
-output generated according to setting ``TAG_SAVE_AS`` (`Default:`
+output generated according to the ``TAG_SAVE_AS`` setting (`Default:`
 ``tag/{tag_name}.html``). If pagination is active, subsequent pages will by
-default reside on ``tag/{tag_name}{number}.html``.
+default reside at ``tag/{tag_name}{number}.html``.
 
 ======================  ===================================================
 Variable                Description
