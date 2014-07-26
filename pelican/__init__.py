@@ -377,7 +377,6 @@ def main():
                     if modified['settings']:
                         pelican, settings = get_instance(args)
                         original_load_cache = settings['LOAD_CONTENT_CACHE']
-                        print(pelican.settings['AUTORELOAD_IGNORE_CACHE'])
                         _ignore_cache(pelican)
 
                     if any(modified.values()):
