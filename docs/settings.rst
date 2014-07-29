@@ -31,9 +31,9 @@ Here is a list of settings for Pelican:
 Basic settings
 ==============
 
-===============================================================================  =====================================================================
+===============================================================================  ==============================================================================
 Setting name (followed by default value, if any)                                 What does it do?
-===============================================================================  =====================================================================
+===============================================================================  ==============================================================================
 ``AUTHOR``                                                                       Default author (put your name)
 ``DATE_FORMATS = {}``                                                            If you manage multiple languages, you can set the date formatting
                                                                                  here. See the "Date format and locale" section below for details.
@@ -107,6 +107,10 @@ Setting name (followed by default value, if any)                                
                                                                                  to the default values for this setting, you'll need to
                                                                                  include them explicitly and enumerate the full list of
                                                                                  desired Markdown extensions.)
+``MD_OUTPUT_FORMAT = 'xhtml1'``                                                  The output format that the Markdown processor will use.  Refer to the
+                                                                                 Python Markdown documentation's
+                                                                                 `Library Reference section <http://pythonhosted.org/Markdown/reference.html>`_
+                                                                                 for a complete list of supported formats.
 ``OUTPUT_PATH = 'output/'``                                                      Where to output the generated files.
 ``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
                                                                                  and content path is not specified via an argument to the ``pelican``
@@ -191,7 +195,7 @@ Setting name (followed by default value, if any)                                
                                                                                  in this list are written. Paths should be either absolute or relative
                                                                                  to the current Pelican working directory. For possible use cases see
                                                                                  :ref:`writing_only_selected_content`.
-===============================================================================  =====================================================================
+===============================================================================  ==============================================================================
 
 .. [#] Default is the system locale.
 
