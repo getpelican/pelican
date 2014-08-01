@@ -58,6 +58,10 @@ Setting name (followed by default value, if any)                                
                                                                                  ``datetime.datetime`` constructor.
 ``DEFAULT_METADATA = ()``                                                        The default metadata you want to use for all articles
                                                                                  and pages.
+``DOCUTILS_SETTINGS = {}``                                                       Extra configuration settings for the docutils publisher
+                                                                                 (applicable only to reStructuredText). See `Docutils 
+                                                                                 Configuration`_ settings for more details.
+                                            
 ``FILENAME_METADATA =`` ``'(?P<date>\d{4}-\d{2}-\d{2}).*'``                      The regexp that will be used to extract any metadata
                                                                                  from the filename. All named groups that are matched
                                                                                  will be set in the metadata object.
@@ -819,3 +823,4 @@ Example settings
 
 
 .. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
+.. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html
