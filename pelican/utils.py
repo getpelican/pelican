@@ -538,7 +538,9 @@ def set_date_tzinfo(d, tz_name=None):
     """Set the timezone for dates that don't have tzinfo"""
     if tz_name and not d.tzinfo:
         tz = pytz.timezone(tz_name)
-        return tz.localize(d)
+        d = tz.localize(d)
+        return SafeDatetime(d.year, d.month, d.day, d.hour, d.minute, d.second,
+                            d.microsecond, d.tzinfo)
     return d
 
 

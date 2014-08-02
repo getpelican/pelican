@@ -263,6 +263,9 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(utils.strftime(d, '%d/%m/%y'), '29/08/12')
         self.assertEqual(utils.strftime(d, '%d/%m/%Y'), '29/08/2012')
 
+        # RFC 3339
+        self.assertEqual(utils.strftime(d, '%Y-%m-%dT%H:%M:%SZ'),'2012-08-29T00:00:00Z')
+
         # % escaped
         self.assertEqual(utils.strftime(d, '%d%%%m%%%y'), '29%08%12')
         self.assertEqual(utils.strftime(d, '%d %% %m %% %y'), '29 % 08 % 12')
