@@ -16,7 +16,7 @@ Create a project
 ----------------
 
 First, choose a name for your project, create an appropriately-named directory
-for your it, and switch to that directory::
+for your site, and switch to that directory::
 
     mkdir -p ~/projects/yoursite
     cd ~/projects/yoursite
