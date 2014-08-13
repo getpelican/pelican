@@ -70,16 +70,16 @@ class Pelican(object):
         for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
             if isinstance(plugin, six.string_types):
-                logger.debug("Loading plugin `{0}`".format(plugin))
+                logger.debug("Loading plugin `%s`", plugin)
                 try:
                     plugin = __import__(plugin, globals(), locals(),
                                         str('module'))
                 except ImportError as e:
                     logger.error(
-                        "Can't find plugin `{0}`: {1}".format(plugin, e))
+                        "Cannot load plugin `%s`\n%s", plugin, e)
                     continue
 
-            logger.debug("Registering plugin `{0}`".format(plugin.__name__))
+            logger.debug("Registering plugin `%s`", plugin.__name__)
             plugin.register()
             self.plugins.append(plugin)
         logger.debug('Restoring system path')
@@ -99,7 +99,7 @@ class Pelican(object):
 
             for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
                             'PAGE_LANG_URL'):
-                logger.warning("%s = '%s'" % (setting, self.settings[setting]))
+                logger.warning("%s = '%s'", setting, self.settings[setting])
 
         if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
             logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
@@ -124,7 +124,7 @@ class Pelican(object):
                             'PAGE_SAVE_AS', 'PAGE_LANG_SAVE_AS'):
                 self.settings[setting] = os.path.join(structure,
                                                       self.settings[setting])
-                logger.warning("%s = '%s'" % (setting, self.settings[setting]))
+                logger.warning("%s = '%s'", setting, self.settings[setting])
 
         for new, old in [('FEED', 'FEED_ATOM'), ('TAG_FEED', 'TAG_FEED_ATOM'),
                          ('CATEGORY_FEED', 'CATEGORY_FEED_ATOM'),
@@ -203,7 +203,7 @@ class Pelican(object):
 
             for v in value:
                 if isinstance(v, type):
-                    logger.debug('Found generator: {0}'.format(v))
+                    logger.debug('Found generator: %s', v)
                     generators.append(v)
 
         return generators
@@ -217,11 +217,11 @@ class Pelican(object):
         else:
             writer = writers[0]
             if writers_found == 1:
-                logger.debug('Found writer: {}'.format(writer))
+                logger.debug('Found writer: %s', writer)
             else:
                 logger.warning(
-                    '{} writers found, using only first one: {}'.format(
-                    writers_found, writer))
+                    '%s writers found, using only first one: %s', 
+                    writers_found, writer)
             return writer(self.output_path, settings=self.settings)
 
 
@@ -308,6 +308,7 @@ def get_config(args):
         config['CACHE_PATH'] = args.cache_path
     if args.selected_paths:
         config['WRITE_SELECTED'] = args.selected_paths.split(',')
+    config['DEBUG'] = args.verbosity == logging.DEBUG
 
     # argparse returns bytes in Py2. There is no definite answer as to which
     # encoding argparse (or sys.argv) uses.
@@ -403,7 +404,7 @@ def main():
                         logger.critical(e.args)
                         raise
                     logger.warning(
-                        'Caught exception "{0}". Reloading.'.format(e))
+                        'Caught exception "%s". Reloading.', e)
 
                 finally:
                     time.sleep(.5)  # sleep to avoid cpu load
@@ -418,13 +419,7 @@ def main():
             pelican.run()
 
     except Exception as e:
-        # localized systems have errors in native language if locale is set
-        # so convert the message to unicode with the correct encoding
-        msg = str(e)
-        if not six.PY3:
-            msg = msg.decode(locale.getpreferredencoding())
-
-        logger.critical(msg)
+        logger.critical('%s', e)
 
         if args.verbosity == logging.DEBUG:
             raise

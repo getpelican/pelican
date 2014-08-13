@@ -131,7 +131,7 @@ class Page(object):
         prop_value = getattr(rule, key)
 
         if not isinstance(prop_value, six.string_types):
-            logger.warning('%s is set to %s' % (key, prop_value))
+            logger.warning('%s is set to %s', key, prop_value)
             return prop_value
 
         # URL or SAVE_AS is a string, format it with a controlled context

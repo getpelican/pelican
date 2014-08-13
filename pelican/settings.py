@@ -152,7 +152,8 @@ def read_settings(path=None, override=None):
             local_settings['PLUGIN_PATHS'] = local_settings['PLUGIN_PATH']
             del local_settings['PLUGIN_PATH']
         if isinstance(local_settings['PLUGIN_PATHS'], six.string_types):
-            logger.warning("Defining %s setting as string has been deprecated (should be a list)" % 'PLUGIN_PATHS')
+            logger.warning("Defining PLUGIN_PATHS setting as string "
+                           "has been deprecated (should be a list)")
             local_settings['PLUGIN_PATHS'] = [local_settings['PLUGIN_PATHS']]
         elif local_settings['PLUGIN_PATHS'] is not None:
                 local_settings['PLUGIN_PATHS'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
@@ -201,7 +202,7 @@ def configure_settings(settings):
                         ' (see pelican --help for more information)')
 
     # specify the log messages to be ignored
-    LimitFilter.ignore.update(set(settings.get('LOG_FILTER',
+    LimitFilter._ignore.update(set(settings.get('LOG_FILTER',
                                                DEFAULT_CONFIG['LOG_FILTER'])))
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
@@ -243,10 +244,9 @@ def configure_settings(settings):
             ]:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
-            logger.warn(
-                'Detected misconfigured {} ({}), '
-                'falling back to the default ({})'.format(
-                    key, value, DEFAULT_CONFIG[key]))
+            logger.warn('Detected misconfigured %s (%s), '
+                        'falling back to the default (%s)',
+                    key, value, DEFAULT_CONFIG[key])
 
     # try to set the different locales, fallback on the default.
     locales = settings.get('LOCALE', DEFAULT_CONFIG['LOCALE'])
@@ -319,8 +319,8 @@ def configure_settings(settings):
         old_key = key + '_DIR'
         new_key = key + '_PATHS'
         if old_key in settings:
-            logger.warning('Deprecated setting {}, moving it to {} list'.format(
-                old_key, new_key))
+            logger.warning('Deprecated setting %s, moving it to %s list',
+                old_key, new_key)
             settings[new_key] = [settings[old_key]]   # also make a list
             del settings[old_key]
 
@@ -343,8 +343,8 @@ def configure_settings(settings):
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
         if isinstance(settings[PATH_KEY], six.string_types):
             logger.warning("Detected misconfiguration with %s setting "
-                           "(must be a list), falling back to the default"
-                           % PATH_KEY)
+                           "(must be a list), falling back to the default",
+                           PATH_KEY)
             settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
 
     # Add {PAGE,ARTICLE}_PATHS to {ARTICLE,PAGE}_EXCLUDES

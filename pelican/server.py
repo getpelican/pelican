@@ -30,9 +30,9 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
                 logging.info("Found: %s" % self.path)
                 found = True
                 break
-            logging.info("Tried to find file %s, but it doesn't exist. " % self.path)
+            logging.info("Tried to find file %s, but it doesn't exist. ", self.path)
         if not found:
-            logging.warning("Unable to find file %s or variations." % self.path)
+            logging.warning("Unable to find file %s or variations.", self.path)
 
 Handler = ComplexHTTPRequestHandler
 
@@ -40,13 +40,13 @@ socketserver.TCPServer.allow_reuse_address = True
 try:
     httpd = socketserver.TCPServer(("", PORT), Handler)
 except OSError as e:
-    logging.error("Could not listen on port %s" % PORT)
+    logging.error("Could not listen on port %s", PORT)
     sys.exit(getattr(e, 'exitcode', 1))
 
 
-logging.info("serving at port %s" % PORT)
+logging.info("Serving at port %s", PORT)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt as e:
-    logging.info("shutting down server")
+    logging.info("Shutting down server")
     httpd.socket.close()

@@ -239,10 +239,11 @@ class Content(object):
                              self._context['filenames'][path].url))
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
-                    logger.warning(("Unable to find {fn}, skipping url"
-                                    " replacement".format(fn=value),
-                                    "Other resources were not found"
-                                    " and their urls not replaced"))
+                    logger.warning(
+                        "Unable to find `%s`, skipping url replacement.",
+                        value.geturl(), extra = {
+                            'limit_msg': ("Other resources were not found "
+                                          "and their urls not replaced")})
             elif what == 'category':
                 origin = Category(path, self.settings).url
             elif what == 'tag':
@@ -365,6 +366,5 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError as e:
-        logger.error("Skipping %s: could not find information about "
-                     "'%s'" % (f, e))
+        logger.error("Skipping %s: could not find information about '%s'", f, e)
         return False

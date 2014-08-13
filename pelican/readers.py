@@ -325,18 +325,22 @@ class HTMLReader(BaseReader):
             name = self._attr_value(attrs, 'name')
             if name is None:
                 attr_serialized = ', '.join(['{}="{}"'.format(k, v) for k, v in attrs])
-                logger.warning("Meta tag in file %s does not have a 'name' attribute, skipping. Attributes: %s", self._filename, attr_serialized)
+                logger.warning("Meta tag in file %s does not have a 'name' "
+                               "attribute, skipping. Attributes: %s", 
+                               self._filename, attr_serialized)
                 return
             name = name.lower()
             contents = self._attr_value(attrs, 'content', '')
             if not contents:
                 contents = self._attr_value(attrs, 'contents', '')
                 if contents:
-                    logger.warning((
-                        "Meta tag attribute 'contents' used in file {}, should"
-                        " be changed to 'content'".format(self._filename),
-                        "Other files have meta tag attribute 'contents' that"
-                        " should be changed to 'content'"))
+                    logger.warning(
+                        "Meta tag attribute 'contents' used in file %s, should"
+                        " be changed to 'content'",
+                        self._filename,
+                        extra={'limit_msg': ("Other files have meta tag "
+                                             "attribute 'contents' that should "
+                                             "be changed to 'content'")})
 
             if name == 'keywords':
                 name = 'tags'
@@ -376,8 +380,8 @@ class Readers(FileStampDataCacher):
 
         for cls in [BaseReader] + BaseReader.__subclasses__():
             if not cls.enabled:
-                logger.debug('Missing dependencies for {}'
-                             .format(', '.join(cls.file_extensions)))
+                logger.debug('Missing dependencies for %s',
+                             ', '.join(cls.file_extensions))
                 continue
 
             for ext in cls.file_extensions:
@@ -414,8 +418,8 @@ class Readers(FileStampDataCacher):
 
         path = os.path.abspath(os.path.join(base_path, path))
         source_path = os.path.relpath(path, base_path)
-        logger.debug('read file {} -> {}'.format(
-            source_path, content_class.__name__))
+        logger.debug('Read file %s -> %s',
+            source_path, content_class.__name__)
 
         if not fmt:
             _, ext = os.path.splitext(os.path.basename(path))
@@ -423,11 +427,11 @@ class Readers(FileStampDataCacher):
 
         if fmt not in self.readers:
             raise TypeError(
-                'Pelican does not know how to parse {}'.format(path))
+                'Pelican does not know how to parse %s', path)
 
         if preread_signal:
-            logger.debug('signal {}.send({})'.format(
-                preread_signal, preread_sender))
+            logger.debug('Signal %s.send(%s)',
+                preread_signal.name, preread_sender)
             preread_signal.send(preread_sender)
 
         reader = self.readers[fmt]
@@ -463,8 +467,8 @@ class Readers(FileStampDataCacher):
                 metadata['summary'] = typogrify(metadata['summary'])
 
         if context_signal:
-            logger.debug('signal {}.send({}, <metadata>)'.format(
-                context_signal, context_sender))
+            logger.debug('Signal %s.send(%s, <metadata>)',
+                context_signal.name, context_sender)
             context_signal.send(context_sender, metadata=metadata)
 
         return content_class(content=content, metadata=metadata,
@@ -497,9 +501,10 @@ def find_empty_alt(content, path):
         )
         """, re.X)
     for match in re.findall(imgs, content):
-        logger.warning(('Empty alt attribute for image {} in {}'.format(
-            os.path.basename(match[1] + match[5]), path),
-            'Other images have empty alt attributes'))
+        logger.warning(
+            'Empty alt attribute for image %s in %s',
+            os.path.basename(match[1] + match[5]), path,
+            extra={'limit_msg': 'Other images have empty alt attributes'})
 
 
 def default_metadata(settings=None, process=None):
