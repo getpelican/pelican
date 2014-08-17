@@ -112,6 +112,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_STATUS': 'published',
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
+    'TYPOGRIFY_IGNORE_TAGS': [],
     'SUMMARY_MAX_LENGTH': 50,
     'PLUGIN_PATHS': [],
     'PLUGINS': [],

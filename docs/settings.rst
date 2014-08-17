@@ -147,6 +147,9 @@ Setting name (followed by default value, if any)                                
                                                                                  incorporated into the generated HTML via the `Typogrify
                                                                                  <https://pypi.python.org/pypi/typogrify>`_ library,
                                                                                  which can be installed via: ``pip install typogrify``
+``TYPOGRIFY_IGNORE_TAGS = []``                                                   A list of tags for Typogrify to ignore. By default
+                                                                                 Typogrify will ignore ``pre`` and ``code`` tags. This
+                                                                                 requires that Typogrify version 2.0.4 or later is installed
 ``DIRECT_TEMPLATES =`` ``('index', 'categories', 'authors', 'archives')``        List of templates that are used directly to render
                                                                                  content. Typically direct templates are used to generate
                                                                                  index pages for collections of content (e.g., tags and

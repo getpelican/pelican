@@ -114,6 +114,8 @@ class TestArticlesGenerator(unittest.TestCase):
              'article'],
             ['This is an article without category !', 'published',
              'TestCategory', 'article'],
+            ['An Article With Code Block To Test Typogrify Ignore',
+              'published', 'Default', 'article'],
             ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定', 'published',
              '指導書', 'article'],
         ]

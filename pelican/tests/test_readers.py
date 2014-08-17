@@ -153,6 +153,52 @@ class RstReaderTest(ReaderTest):
         except ImportError:
             return unittest.skip('need the typogrify distribution')
 
+    def test_typogrify_ignore_tags(self):
+        try:
+            # typogrify should be able to ignore user specified tags,
+            # but tries to be clever with widont extension
+            page = self.read_file(path='article.rst', TYPOGRIFY=True,
+                                  TYPOGRIFY_IGNORE_TAGS = ['p'])
+            expected = ('<p>THIS is some content. With some stuff to&nbsp;'
+                        '&quot;typogrify&quot;...</p>\n<p>Now with added '
+                        'support for <abbr title="three letter acronym">'
+                        'TLA</abbr>.</p>\n')
+
+            self.assertEqual(page.content, expected)
+
+            # typogrify should ignore code blocks by default because
+            # code blocks are composed inside the pre tag
+            page = self.read_file(path='article_with_code_block.rst',
+                                 TYPOGRIFY=True)
+
+            expected = ('<p>An article with some&nbsp;code</p>\n'
+                        '<div class="highlight"><pre><span class="n">x</span>'
+                        ' <span class="o">&amp;</span>'
+                        ' <span class="n">y</span>\n</pre></div>\n'
+                        '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
+                        '<span class="amp">&amp;</span> y</blockquote>\n'
+                        '<p>Normal:\nx <span class="amp">&amp;</span>&nbsp;y</p>\n')
+
+            self.assertEqual(page.content, expected)
+
+            # instruct typogrify to also ignore blockquotes
+            page = self.read_file(path='article_with_code_block.rst',
+                                 TYPOGRIFY=True, TYPOGRIFY_IGNORE_TAGS = ['blockquote'])
+
+            expected = ('<p>An article with some&nbsp;code</p>\n'
+                        '<div class="highlight"><pre><span class="n">x</span>'
+                        ' <span class="o">&amp;</span>'
+                        ' <span class="n">y</span>\n</pre></div>\n'
+                        '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
+                        '&amp; y</blockquote>\n'
+                        '<p>Normal:\nx <span class="amp">&amp;</span>&nbsp;y</p>\n')
+
+            self.assertEqual(page.content, expected)
+        except ImportError:
+            return unittest.skip('need the typogrify distribution')
+        except TypeError:
+            return unittest.skip('need typogrify version 2.0.4 or later')
+
     def test_article_with_multiple_authors(self):
         page = self.read_file(path='article_with_multiple_authors.rst')
         expected = {
