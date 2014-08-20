@@ -84,7 +84,8 @@ ol {
 	margin: 0em 0 0 1.5em;
 }
 
-li { margin-top: 0.5em;}
+li { margin-top: 0.5em;
+     margin-bottom: 1em; }
 
 .post-info {
     float:right;
