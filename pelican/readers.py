@@ -201,6 +201,7 @@ class MarkdownReader(BaseReader):
         self.extensions = list(self.settings['MD_EXTENSIONS'])
         if 'meta' not in self.extensions:
             self.extensions.append('meta')
+        self._source_path = None
 
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
@@ -215,6 +216,11 @@ class MarkdownReader(BaseReader):
                 self._md.reset()
                 summary = self._md.convert(summary_values)
                 output[name] = self.process_metadata(name, summary)
+            elif name in METADATA_PROCESSORS:
+                if len(value) > 1:
+                    logger.warning('Duplicate definition of `%s` '
+                        'for %s. Using first one.', name, self._source_path)
+                output[name] = self.process_metadata(name, value[0])
             elif len(value) > 1:
                 # handle list metadata as list of string
                 output[name] = self.process_metadata(name, value)
@@ -226,6 +232,7 @@ class MarkdownReader(BaseReader):
     def read(self, source_path):
         """Parse content and metadata of markdown files"""
 
+        self._source_path = source_path
         self._md = Markdown(extensions=self.extensions)
         with pelican_open(source_path) as text:
             content = self._md.convert(text)
