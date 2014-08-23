@@ -66,7 +66,7 @@ Setting name (followed by default value, if any)                                
                                                                                  For example, if you would like to extract both the
                                                                                  date and the slug, you could set something like:
                                                                                  ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
-                                                                                 See :ref:`path_metadata`.
+                                                                                 See :ref:`path_metadata` and ``SLUGIFY_SOURCE``.
 ``PATH_METADATA = ''``                                                           Like ``FILENAME_METADATA``, but parsed from a page's
                                                                                  full path relative to the content source directory.
                                                                                  See :ref:`path_metadata`.
