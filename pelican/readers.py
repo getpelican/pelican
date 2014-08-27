@@ -333,7 +333,7 @@ class HTMLReader(BaseReader):
             if name is None:
                 attr_serialized = ', '.join(['{}="{}"'.format(k, v) for k, v in attrs])
                 logger.warning("Meta tag in file %s does not have a 'name' "
-                               "attribute, skipping. Attributes: %s", 
+                               "attribute, skipping. Attributes: %s",
                                self._filename, attr_serialized)
                 return
             name = name.lower()
@@ -544,6 +544,8 @@ def path_metadata(full_path, source_path, settings=None):
                 os.stat(full_path).st_ctime)
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
             source_path, {}))
+    metadata['mdate'] = SafeDatetime.fromtimestamp(
+        os.stat(full_path).st_mtime)
     return metadata
 
 
