@@ -121,6 +121,8 @@ class Writer(object):
                 with self._open_w(complete_path, encoding) as fp:
                     feed.write(fp, 'utf-8')
                     logger.info('Writing %s', complete_path)
+
+                signals.feed_written.send(complete_path, context=context, feed=feed)
             return feed
         finally:
             locale.setlocale(locale.LC_ALL, old_locale)

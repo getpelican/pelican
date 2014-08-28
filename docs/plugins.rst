@@ -101,6 +101,7 @@ static_generator_init               static_generator               invoked in th
 static_generator_finalized          static_generator               invoked at the end of StaticGenerator.generate_context
 content_object_init                 content_object                 invoked at the end of Content.__init__ (see note below)
 content_written                     path, context                  invoked each time a content file is written.
+feed_written                        path, context, feed            invoked each time a feed file is written.
 =================================   ============================   ===========================================================================
 
 The list is currently small, so don't hesitate to add signals and make a pull
