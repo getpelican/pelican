@@ -283,6 +283,13 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(utils.strftime(d, '%d/%m/%Y Øl trinken beim Besäufnis'),
                          '29/08/2012 Øl trinken beim Besäufnis')
 
+        # alternative formatting options
+        self.assertEqual(utils.strftime(d, '%-d/%-m/%y'), '29/8/12')
+        self.assertEqual(utils.strftime(d, '%-H:%-M:%-S'), '0:0:0')
+
+        d = utils.SafeDatetime(2012, 8, 9)
+        self.assertEqual(utils.strftime(d, '%-d/%-m/%y'), '9/8/12')
+
 
     # test the output of utils.strftime in a different locale
     # Turkish locale

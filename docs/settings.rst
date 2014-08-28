@@ -345,8 +345,12 @@ Date format and locale
 If no ``DATE_FORMATS`` are set, Pelican will fall back to
 ``DEFAULT_DATE_FORMAT``. If you need to maintain multiple languages with
 different date formats, you can set the ``DATE_FORMATS`` dictionary using the
-language name (``lang`` metadata in your post content) as the key. Regarding
-available format codes, see `strftime document of python`_ :
+language name (``lang`` metadata in your post content) as the key. 
+
+In addition to the standard C89 strftime format codes that are listed in
+`Python strftime documentation`_, you can use ``-`` character between ``%`` and
+the format character to remove any leading zeros. For example, ``%d/%m/%Y`` will
+output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will result in ``1/1/2014``.
 
 .. parsed-literal::
 
@@ -385,7 +389,7 @@ can get a list of available locales via the ``locale -a`` command; see manpage
 `locale(1)`_ for more information.
 
 
-.. _strftime document of python: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
+.. _Python strftime documentation: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
 
 .. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
 

@@ -42,8 +42,11 @@ def strftime(date, date_format):
     replacing formatted output back.
     '''
 
+    c89_directives = 'aAbBcdfHIjmMpSUwWxXyYzZ%'
+    strip_zeros = lambda x: x.lstrip('0') or '0'
+
     # grab candidate format options
-    format_options = '%.'
+    format_options = '%[-]?.'
     candidates = re.findall(format_options, date_format)
 
     # replace candidates with placeholders for later % formatting
@@ -56,14 +59,28 @@ def strftime(date, date_format):
     formatted_candidates = []
     for candidate in candidates:
         # test for valid C89 directives only
-        if candidate[1] in 'aAbBcdfHIjmMpSUwWxXyYzZ%':
+        if candidate[-1] in c89_directives:
+            # check for '-' prefix
+            if len(candidate) == 3:
+                # '-' prefix
+                candidate = '%{}'.format(candidate[-1])
+                conversion = strip_zeros
+            else:
+                conversion = None
+
+            # format date
             if isinstance(date, SafeDatetime):
                 formatted = date.strftime(candidate, safe=False)
             else:
                 formatted = date.strftime(candidate)
+
             # convert Py2 result to unicode
             if not six.PY3 and enc is not None:
                 formatted = formatted.decode(enc)
+
+            # strip zeros if '-' prefix is used
+            if conversion:
+                formatted = conversion(formatted)
         else:
             formatted = candidate
         formatted_candidates.append(formatted)
