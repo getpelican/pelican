@@ -130,6 +130,7 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': True,
     'AUTORELOAD_IGNORE_CACHE': False,
     'WRITE_SELECTED': [],
+    'TAGS_FOR_FEED': [],
     }
 
 PYGMENTS_RST_OPTIONS = None
@@ -287,7 +288,7 @@ def configure_settings(settings):
         'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
         'AUTHOR_FEED_ATOM', 'AUTHOR_FEED_RSS',
         'TAG_FEED_ATOM', 'TAG_FEED_RSS',
-        'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
+        'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS', 'TAGS_FOR_FEED'
     ]
 
     if any(settings.get(k) for k in feed_keys):

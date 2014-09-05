@@ -288,7 +288,11 @@ class ArticlesGenerator(CachingGenerator):
 
         if (self.settings.get('TAG_FEED_ATOM')
                 or self.settings.get('TAG_FEED_RSS')):
+            tags_filter = self.settings.get('TAGS_FOR_FEED')
             for tag, arts in self.tags.items():
+                if tags_filter and tag.slug not in tags_filter:
+                    continue
+
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
