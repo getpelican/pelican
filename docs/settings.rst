@@ -494,6 +494,9 @@ Setting name (followed by default value, if any)    What does it do?
 ``TAG_FEED_RSS = None``, i.e. no RSS tag feed       Relative URL to output the tag RSS feed
 ``FEED_MAX_ITEMS``                                  Maximum number of items allowed in a feed. Feed item
                                                     quantity is unrestricted by default.
+``TAGS_FOR_FEED = []``, i.e. generate feed for      Use this to filter Tag feed generation only for some
+                                                    tags. Applicable only if ``TAG_FEED_ATOM`` or
+                                                    ``TAG_FEED_RSS`` is set.
 =================================================   =====================================================
 
 If you don't want to generate some or any of these feeds, set the above variables to ``None``.
