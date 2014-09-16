@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Alexis' log</title><link>http://blog.notmyidea.org/</link><description></description><atom:link href="http://blog.notmyidea.org/feeds/bar.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 20 Oct 2010 10:14:00 +0200</lastBuildDate><item><title>Oh yeah !</title><link>http://blog.notmyidea.org/oh-yeah.html</link><description>&lt;div class="section" id="why-not"&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Alexis' log - bar</title><link>http://blog.notmyidea.org/</link><description></description><atom:link href="http://blog.notmyidea.org/feeds/bar.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 20 Oct 2010 10:14:00 +0200</lastBuildDate><item><title>Oh yeah !</title><link>http://blog.notmyidea.org/oh-yeah.html</link><description>&lt;div class="section" id="why-not"&gt;
 &lt;h2&gt;Why not ?&lt;/h2&gt;
 &lt;p&gt;After all, why not ? It's pretty simple to do it, and it will allow me to write my blogposts in rst !
 YEAH !&lt;/p&gt;

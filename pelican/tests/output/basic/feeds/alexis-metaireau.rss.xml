@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>A Pelican Blog</title><link>/</link><description></description><atom:link href="/feeds/alexis-metaireau.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 17 Nov 2013 23:29:00 +0000</lastBuildDate><item><title>This is a super article !</title><link>/this-is-a-super-article.html</link><description>&lt;p&gt;Some content here !&lt;/p&gt;
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>A Pelican Blog - Alexis Métaireau</title><link>/</link><description></description><atom:link href="/feeds/alexis-metaireau.rss.xml" rel="self"></atom:link><lastBuildDate>Sun, 17 Nov 2013 23:29:00 +0000</lastBuildDate><item><title>This is a super article !</title><link>/this-is-a-super-article.html</link><description>&lt;p&gt;Some content here !&lt;/p&gt;
 &lt;div class="section" id="this-is-a-simple-title"&gt;
 &lt;h2&gt;This is a simple title&lt;/h2&gt;
 &lt;p&gt;And here comes the cool &lt;a class="reference external" href="http://books.couchdb.org/relax/design-documents/views"&gt;stuff&lt;/a&gt;.&lt;/p&gt;
