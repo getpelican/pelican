@@ -74,7 +74,7 @@ def mute(returns_output=False):
     If "returns_output" is True, the function will return a generator
     yielding the printed lines instead of the return values.
 
-    The decorator litterally hijack sys.stdout during each function
+    The decorator literally hijack sys.stdout during each function
     execution, so be careful with what you apply it to.
 
     >>> def numbers():

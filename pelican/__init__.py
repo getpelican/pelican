@@ -157,7 +157,7 @@ class Pelican(object):
         ]
 
         # erase the directory if it is not the source and if that's
-        # explicitely asked
+        # explicitly asked
         if (self.delete_outputdir and not
                 os.path.realpath(self.path).startswith(self.output_path)):
             clean_output_dir(self.output_path, self.output_retention)

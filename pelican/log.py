@@ -33,7 +33,7 @@ class BaseFormatter(logging.Formatter):
         s = super(BaseFormatter, self).formatException(ei)
         # fancy format traceback
         s = str('\n').join(str('  | ') + line for line in s.splitlines())
-        # seperate the traceback from the preceding lines
+        # separate the traceback from the preceding lines
         s = str('  |___\n{}').format(s)
         return s
 
