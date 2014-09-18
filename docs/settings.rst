@@ -264,11 +264,19 @@ posts for the month at ``posts/2011/Aug/index.html``.
     arrive at an appropriate archive of posts, without having to specify
     a page name.
 
-======================================================  ========================================================
+======================================================  ==============================================================
 Setting name (followed by default value, if any)        What does it do?
-======================================================  ========================================================
+======================================================  ==============================================================
 ``ARTICLE_URL = '{slug}.html'``                         The URL to refer to an article.
 ``ARTICLE_SAVE_AS = '{slug}.html'``                     The place where we will save an article.
+``ARTICLE_ORDER_BY = 'slug'``                           The metadata attribute used to sort articles. By default,
+                                                        the ``articles_page.object_list`` template variable is
+                                                        ordered by slug. If you modify this, make sure all
+                                                        articles contain the attribute you specify. You can also
+                                                        specify a "sorting" function of one argument that is used
+                                                        to extract a comparison key from each article. For example,
+                                                        sorting by title without using the built-in functionality
+                                                        would use the function ``operator.attrgetter('title')``.
 ``ARTICLE_LANG_URL = '{slug}-{lang}.html'``             The URL to refer to an article which doesn't use the
                                                         default language.
 ``ARTICLE_LANG_SAVE_AS = '{slug}-{lang}.html'``         The place where we will save an article which
@@ -283,6 +291,17 @@ Setting name (followed by default value, if any)        What does it do?
 ``PAGE_SAVE_AS = 'pages/{slug}.html'``                  The location we will save the page. This value has to be
                                                         the same as PAGE_URL or you need to use a rewrite in
                                                         your server config.
+
+``PAGE_ORDER_BY = 'basename'``                          The metadata attribute used to sort pages. By default
+                                                        the ``PAGES`` template variable is ordered by basename
+                                                        (i.e., path not included). Note that the option ``'basename'``
+                                                        is a special option supported in the source code. If
+                                                        you modify this setting, make sure all pages contain
+                                                        the attribute you specify. You can also specify a "sorting"
+                                                        function of one argument that is used to extract a comparison
+                                                        key from each page. For example, the basename function looks
+                                                        similar to
+                                                        ``lambda x: os.path.basename(getattr(x, 'source_path', ''))``.
 ``PAGE_LANG_URL = 'pages/{slug}-{lang}.html'``          The URL we will use to link to a page which doesn't
                                                         use the default language.
 ``PAGE_LANG_SAVE_AS = 'pages/{slug}-{lang}.html'``      The location we will save the page which doesn't
@@ -300,7 +319,7 @@ Setting name (followed by default value, if any)        What does it do?
                                                         non-alphanumerics when generating slugs. Specified
                                                         as a list of 2-tuples of ``(from, to)`` which are
                                                         applied in order.
-======================================================  ========================================================
+======================================================  ==============================================================
 
 .. note::
 

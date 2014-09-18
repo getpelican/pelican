@@ -7,6 +7,7 @@ try:
     from unittest.mock import MagicMock
 except ImportError:
     from mock import MagicMock
+from operator import itemgetter
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -55,14 +56,18 @@ class TestArticlesGenerator(unittest.TestCase):
             context=settings.copy(), settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         cls.generator.generate_context()
-        cls.articles = [[page.title, page.status, page.category.name,
-                         page.template] for page in cls.generator.articles]
+        cls.articles = cls.distill_articles(cls.generator.articles)
 
     def setUp(self):
         self.temp_cache = mkdtemp(prefix='pelican_cache.')
 
     def tearDown(self):
         rmtree(self.temp_cache)
+
+    @staticmethod
+    def distill_articles(articles):
+        return [[article.title, article.status, article.category.name,
+                 article.template] for article in articles]
 
     def test_generate_feeds(self):
         settings = get_settings()
@@ -390,7 +395,8 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a test page', 'published', 'page'],
             ['This is a markdown test page', 'published', 'page'],
             ['This is a test page with a preset template', 'published',
-             'custom']
+             'custom'],
+            ['A Page (Test) for sorting', 'published', 'page'],
         ]
         hidden_pages_expected = [
             ['This is a test hidden page', 'hidden', 'page'],
@@ -467,6 +473,42 @@ class TestPageGenerator(unittest.TestCase):
         generator.readers.read_file = MagicMock()
         generator.generate_context()
         generator.readers.read_file.assert_called_count == orig_call_count
+
+    def test_generate_sorted(self):
+        settings = get_settings(filenames={})
+        settings['PAGE_DIR'] = 'TestPages'  # relative to CUR_DIR
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+
+        # default sort (filename)
+        pages_expected_sorted_by_filename = [
+            ['This is a test page', 'published', 'page'],
+            ['This is a markdown test page', 'published', 'page'],
+            ['A Page (Test) for sorting', 'published', 'page'],
+            ['This is a test page with a preset template', 'published',
+             'custom'],
+        ]
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        pages = self.distill_pages(generator.pages)
+        self.assertEqual(pages_expected_sorted_by_filename, pages)
+
+        # sort by title
+        pages_expected_sorted_by_title = [
+            ['A Page (Test) for sorting', 'published', 'page'],
+            ['This is a markdown test page', 'published', 'page'],
+            ['This is a test page', 'published', 'page'],
+            ['This is a test page with a preset template', 'published',
+             'custom'],
+        ]
+        settings['PAGE_ORDER_BY'] = 'title'
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        pages = self.distill_pages(generator.pages)
+        self.assertEqual(pages_expected_sorted_by_title, pages)
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):

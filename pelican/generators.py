@@ -501,7 +501,8 @@ class ArticlesGenerator(CachingGenerator):
                 logger.error("Unknown status '%s' for file %s, skipping it.",
                                article.status, f)
 
-        self.articles, self.translations = process_translations(all_articles)
+        self.articles, self.translations = process_translations(all_articles,
+                order_by=self.settings['ARTICLE_ORDER_BY'])
         self.drafts, self.drafts_translations = \
             process_translations(all_drafts)
 
@@ -618,7 +619,8 @@ class PagesGenerator(CachingGenerator):
                 logger.error("Unknown status '%s' for file %s, skipping it.",
                                page.status, f)
 
-        self.pages, self.translations = process_translations(all_pages)
+        self.pages, self.translations = process_translations(all_pages,
+                order_by=self.settings['PAGE_ORDER_BY'])
         self.hidden_pages, self.hidden_translations = (
             process_translations(hidden_pages))
 
