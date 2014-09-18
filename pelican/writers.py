@@ -153,6 +153,9 @@ class Writer(object):
 
         def _write_file(template, localcontext, output_path, name, override):
             """Render the template write the file."""
+            # set localsiteurl for context so that Contents can adjust links
+            if localcontext['localsiteurl']:
+                context['localsiteurl'] = localcontext['localsiteurl']
             output = template.render(localcontext)
             path = os.path.join(output_path, name)
             try:
@@ -168,14 +171,16 @@ class Writer(object):
             # local context.
             signals.content_written.send(path, context=localcontext)
 
-        localcontext = context.copy()
-        if relative_urls:
-            relative_url = path_to_url(get_relative_path(name))
-            context['localsiteurl'] = relative_url
-            localcontext['SITEURL'] = relative_url
-
-        localcontext['output_file'] = name
-        localcontext.update(kwargs)
+        def _get_localcontext(context, name, kwargs, relative_urls):
+            localcontext = context.copy()
+            localcontext['localsiteurl'] = localcontext.get('localsiteurl', None)
+            if relative_urls:
+                relative_url = path_to_url(get_relative_path(name))
+                localcontext['SITEURL'] = relative_url
+                localcontext['localsiteurl'] = relative_url
+            localcontext['output_file'] = name
+            localcontext.update(kwargs)
+            return localcontext
 
         # pagination
         if paginated:
@@ -186,7 +191,7 @@ class Writer(object):
 
             # generated pages, and write
             for page_num in range(list(paginators.values())[0].num_pages):
-                paginated_localcontext = localcontext.copy()
+                paginated_kwargs = kwargs.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]
                     previous_page = paginator.page(page_num) \
@@ -194,15 +199,17 @@ class Writer(object):
                     page = paginator.page(page_num + 1)
                     next_page = paginator.page(page_num + 2) \
                         if page_num + 1 < paginator.num_pages else None
-                    paginated_localcontext.update(
+                    paginated_kwargs.update(
                         {'%s_paginator' % key: paginator,
                          '%s_page' % key: page,
                          '%s_previous_page' % key: previous_page,
                          '%s_next_page' % key: next_page})
 
-                _write_file(template, paginated_localcontext, self.output_path,
+                localcontext = _get_localcontext(context, page.save_as, paginated_kwargs, relative_urls)
+                _write_file(template, localcontext, self.output_path,
                             page.save_as, override_output)
         else:
             # no pagination
+            localcontext = _get_localcontext(context, name, kwargs, relative_urls)
             _write_file(template, localcontext, self.output_path, name,
                         override_output)
