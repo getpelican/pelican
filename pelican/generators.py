@@ -637,6 +637,7 @@ class PagesGenerator(CachingGenerator):
                 self.context, page=page,
                 relative_urls=self.settings['RELATIVE_URLS'],
                 override_output=hasattr(page, 'override_save_as'))
+        signals.page_writer_finalized.send(self, writer=writer)
 
 
 class StaticGenerator(Generator):
