@@ -74,7 +74,9 @@ Setting name (followed by default value, if any)                                
 ``PATH_METADATA = ''``                                                           Like ``FILENAME_METADATA``, but parsed from a page's
                                                                                  full path relative to the content source directory.
                                                                                  See :ref:`path_metadata`.
-``EXTRA_PATH_METADATA = {}``                                                     Extra metadata dictionaries keyed by relative path.
+``EXTRA_PATH_METADATA = {}``                                                     Extra metadata dictionaries keyed by relative path. Relative paths
+                                                                                 require correct OS-specific directory separators (i.e. / in UNIX and
+                                                                                 \\ in Windows) unlike some other Pelican file settings.
                                                                                  See :ref:`path_metadata`.
 ``DELETE_OUTPUT_DIRECTORY = False``                                              Delete the output directory, and **all** of its contents, before
                                                                                  generating new files. This can be useful in preventing older,
