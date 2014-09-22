@@ -145,6 +145,8 @@ disable all feed generation, you only need to specify the following settings::
     FEED_ALL_ATOM = None
     CATEGORY_FEED_ATOM = None
     TRANSLATION_FEED_ATOM = None
+    AUTHOR_FEED_ATOM = None
+    AUTHOR_FEED_RSS = None
 
 The word ``None`` should not be surrounded by quotes. Please note that ``None``
 and ``''`` are not the same thing. 
