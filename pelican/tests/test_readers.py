@@ -208,6 +208,14 @@ class RstReaderTest(ReaderTest):
         for key, value in expected.items():
             self.assertEqual(value, page.metadata[key], key)
 
+    def test_default_date_formats(self):
+        tuple_date = self.read_file(path='article.rst',
+                                   DEFAULT_DATE=(2012, 5, 1))
+        string_date = self.read_file(path='article.rst',
+                                    DEFAULT_DATE='2012-05-01')
+
+        self.assertEqual(tuple_date.metadata['date'], string_date.metadata['date'])
+
 
 class MdReaderTest(ReaderTest):
 

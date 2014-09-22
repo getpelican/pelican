@@ -532,7 +532,10 @@ def default_metadata(settings=None, process=None):
                 value = process('category', value)
             metadata['category'] = value
         if settings.get('DEFAULT_DATE', None) and settings['DEFAULT_DATE'] != 'fs':
-            metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
+            if isinstance(settings['DEFAULT_DATE'], basestring):
+                metadata['date'] = get_date(settings['DEFAULT_DATE'])
+            else:
+                metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
     return metadata
 
 
