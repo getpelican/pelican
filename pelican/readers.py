@@ -460,6 +460,10 @@ class Readers(FileStampDataCacher):
             self.cache_data(path, (content, reader_metadata))
         metadata.update(reader_metadata)
 
+        # remove any empty metadata
+        metadata = {key: value for key, value in metadata.items()
+            if value or isinstance(value, (int, bool, float))}
+
         if content:
             # find images with empty alt
             find_empty_alt(content, path)
