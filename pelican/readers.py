@@ -28,14 +28,20 @@ from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime
 
 
+def strip_split(text, sep=','):
+    """Return a list of stripped, non-empty substrings, delimited by sep."""
+    items = [x.strip() for x in text.split(sep)]
+    return [x for x in items if x]
+
+
 METADATA_PROCESSORS = {
-    'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
+    'tags': lambda x, y: [Tag(tag, y) for tag in strip_split(x)],
     'date': lambda x, y: get_date(x),
     'modified': lambda x, y: get_date(x),
     'status': lambda x, y: x.strip(),
     'category': Category,
     'author': Author,
-    'authors': lambda x, y: [Author(author.strip(), y) for author in x.split(',')],
+    'authors': lambda x, y: [Author(author, y) for author in strip_split(x)],
 }
 
 logger = logging.getLogger(__name__)
