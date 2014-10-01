@@ -67,7 +67,7 @@ Signal                              Arguments                       Description
 =================================   ============================   ===========================================================================
 initialized                         pelican object
 finalized                           pelican object                 invoked after all the generators are executed and just before pelican exits
-                                                                   usefull for custom post processing actions, such as:
+                                                                   useful for custom post processing actions, such as:
                                                                    - minifying js/css assets.
                                                                    - notify/ping search engines with an updated sitemap.
 generator_init                      generator                      invoked in the Generator.__init__
