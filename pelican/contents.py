@@ -221,11 +221,11 @@ class Content(object):
             # XXX Put this in a different location.
             if what == 'filename':
                 if path.startswith('/'):
-                    path = path[1:]
+                    path = os.path.join(*path[1:].split('/'))
                 else:
                     # relative to the source path of this content
                     path = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, path)
+                        os.path.join(self.relative_dir, os.path.join(*path.split('/')))
                     )
 
                 if path not in self._context['filenames']:
