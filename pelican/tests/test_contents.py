@@ -388,7 +388,7 @@ class TestArticle(TestPage):
 
     def test_slugify_category_author(self):
         settings = get_settings()
-        settings['SLUG_SUBSTITUTIONS'] = [ ('C#', 'csharp') ]
+        settings['SLUG_SUBSTITUTIONS'] = (('C#', 'csharp'),)
         settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
         article_kwargs = self._copy_page_kwargs()

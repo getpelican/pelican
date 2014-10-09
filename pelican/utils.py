@@ -239,7 +239,7 @@ def pelican_open(filename):
         content = content[1:]
     yield content
 
-
+@memoized
 def slugify(value, substitutions=()):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,

@@ -41,6 +41,8 @@ class URLWrapper(object):
         return self.slug
 
     def _normalize_key(self, key):
+        if hasattr(key, 'name'):
+            key = key.name
         subs = self.settings.get('SLUG_SUBSTITUTIONS', ())
         return six.text_type(slugify(key, subs))
 
