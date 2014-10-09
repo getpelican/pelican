@@ -811,6 +811,13 @@ on the command line using the ``--write-selected`` option, which
 accepts a comma-separated list of output file paths. By default this
 list is empty, so all output is written.
 
+An example of doing this might be:
+
+    pelican --write-selected output/posts/2014/10/08/in-re-nsl/index.html
+
+You can use the output of the ``--debug`` flag to determine the correct file
+names to provide to the ``--write-selected`` flag.
+
 Example settings
 ================
 
