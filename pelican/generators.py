@@ -267,24 +267,26 @@ class ArticlesGenerator(CachingGenerator):
             if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_ATOM']
-                                  % cat.slug)
+                                  % cat.slug, feed_title=cat.name)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_RSS']
-                                  % cat.slug, feed_type='rss')
+                                  % cat.slug, feed_title=cat.name,
+                                  feed_type='rss')
 
         for auth, arts in self.authors:
             arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('AUTHOR_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
                                   self.settings['AUTHOR_FEED_ATOM']
-                                  % auth.slug)
+                                  % auth.slug, feed_title=auth.name)
 
             if self.settings.get('AUTHOR_FEED_RSS'):
                 writer.write_feed(arts, self.context,
                                   self.settings['AUTHOR_FEED_RSS']
-                                  % auth.slug, feed_type='rss')
+                                  % auth.slug, feed_title=auth.name,
+                                  feed_type='rss')
 
         if (self.settings.get('TAG_FEED_ATOM')
                 or self.settings.get('TAG_FEED_RSS')):
@@ -293,12 +295,12 @@ class ArticlesGenerator(CachingGenerator):
                 if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
                                       self.settings['TAG_FEED_ATOM']
-                                      % tag.slug)
+                                      % tag.slug, feed_title=tag.name)
 
                 if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,
                                       self.settings['TAG_FEED_RSS'] % tag.slug,
-                                      feed_type='rss')
+                                      feed_title=tag.name, feed_type='rss')
 
         if (self.settings.get('TRANSLATION_FEED_ATOM')
                 or self.settings.get('TRANSLATION_FEED_RSS')):
