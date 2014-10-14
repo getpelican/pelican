@@ -57,7 +57,8 @@ warning related to feeds, but that is normal when developing locally and can be
 ignored for now.)
 
 To quickly iterate a single file while working on it, you can generate only a
-single file. See: :ref:`writing_only_selected_content`.
+single file. See: :ref:`writing_only_selected_content` and
+:ref:`site_generation`
 
 Preview your site
 -----------------

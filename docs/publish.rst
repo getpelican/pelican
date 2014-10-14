@@ -1,6 +1,9 @@
 Publish your site
 #################
 
+
+.. _site_generation:
+
 Site generation
 ===============
 
@@ -15,6 +18,17 @@ The above command will generate your site and save it in the ``output/``
 folder, using the default theme to produce a simple site. The default theme
 consists of very simple HTML without styling and is provided so folks may use
 it as a basis for creating their own themes.
+
+It's also possible to only generate a single file while working on a single
+page. To do this, use the ``--write-selected`` argument, like so:
+
+    pelican --write-selected output/posts/2014/10/08/my-blog-title/index.html
+
+Note that this uses the path to the generated file. To determine that path, use
+the output of the ``--debug`` flag to determine the correct file name.
+``--write-selected`` can take a comma-separated list of paths, if desired, or
+can be configured as a setting. See: :ref:`writing_only_selected_content` for
+more details.
 
 You can also tell Pelican to watch for your modifications, instead of
 manually re-running it every time you want to see your changes. To enable this,
