@@ -1212,7 +1212,8 @@ desired files as output paths in the ``WRITE_SELECTED`` list,
 **only** those files will be written. This list can be also specified
 on the command line using the ``--write-selected`` option, which
 accepts a comma-separated list of output file paths. By default this
-list is empty, so all output is written.
+list is empty, so all output is written. See :ref:`site_generation` for
+more details.
 
 
 Example settings
