@@ -234,7 +234,7 @@ class Content(object):
                     if unquoted_path in self._context['filenames']:
                         path = unquoted_path
 
-                if path in self._context['filenames']:
+                if self._context['filenames'].get(path):
                     origin = '/'.join((siteurl,
                              self._context['filenames'][path].url))
                     origin = origin.replace('\\', '/')  # for Windows paths.

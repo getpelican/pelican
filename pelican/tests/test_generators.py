@@ -12,7 +12,7 @@ from shutil import rmtree
 from tempfile import mkdtemp
 
 from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
-                                TemplatePagesGenerator)
+                                StaticGenerator, TemplatePagesGenerator)
 from pelican.writers import Writer
 from pelican.tests.support import unittest, get_settings
 import locale
@@ -558,3 +558,69 @@ class TestTemplatePagesGenerator(unittest.TestCase):
         # output content is correct
         with open(output_path, 'r') as output_file:
             self.assertEqual(output_file.read(), 'foo: bar')
+
+
+class TestStaticGenerator(unittest.TestCase):
+
+    def setUp(self):
+        self.content_path = os.path.join(CUR_DIR, 'mixed_content')
+
+    def test_static_excludes(self):
+        """Test that StaticGenerator respects STATIC_EXCLUDES.
+        """
+        settings = get_settings(STATIC_EXCLUDES=['subdir'],
+            PATH=self.content_path, STATIC_PATHS=[''])
+        context = settings.copy()
+        context['filenames'] = {}
+
+        StaticGenerator(context=context, settings=settings,
+            path=settings['PATH'], output_path=None,
+            theme=settings['THEME']).generate_context()
+
+        staticnames = [os.path.basename(c.source_path)
+            for c in context['staticfiles']]
+
+        self.assertNotIn('subdir_fake_image.jpg', staticnames,
+            "StaticGenerator processed a file in a STATIC_EXCLUDES directory")
+        self.assertIn('fake_image.jpg', staticnames,
+            "StaticGenerator skipped a file that it should have included")
+
+    def test_static_exclude_sources(self):
+        """Test that StaticGenerator respects STATIC_EXCLUDE_SOURCES.
+        """
+        # Test STATIC_EXCLUDE_SOURCES=True
+
+        settings = get_settings(STATIC_EXCLUDE_SOURCES=True,
+            PATH=self.content_path, PAGE_PATHS=[''], STATIC_PATHS=[''],
+            CACHE_CONTENT=False)
+        context = settings.copy()
+        context['filenames'] = {}
+
+        for generator_class in (PagesGenerator, StaticGenerator):
+            generator_class(context=context, settings=settings,
+                path=settings['PATH'], output_path=None,
+                theme=settings['THEME']).generate_context()
+
+        staticnames = [os.path.basename(c.source_path)
+            for c in context['staticfiles']]
+
+        self.assertFalse(any(name.endswith(".md") for name in staticnames),
+            "STATIC_EXCLUDE_SOURCES=True failed to exclude a markdown file")
+
+        # Test STATIC_EXCLUDE_SOURCES=False
+
+        settings.update(STATIC_EXCLUDE_SOURCES=False)
+        context = settings.copy()
+        context['filenames'] = {}
+
+        for generator_class in (PagesGenerator, StaticGenerator):
+            generator_class(context=context, settings=settings,
+                path=settings['PATH'], output_path=None,
+                theme=settings['THEME']).generate_context()
+
+        staticnames = [os.path.basename(c.source_path)
+            for c in context['staticfiles']]
+
+        self.assertTrue(any(name.endswith(".md") for name in staticnames),
+            "STATIC_EXCLUDE_SOURCES=False failed to include a markdown file")
+

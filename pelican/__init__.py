@@ -144,8 +144,10 @@ class Pelican(object):
         start_time = time.time()
 
         context = self.settings.copy()
-        context['filenames'] = {}  # share the dict between all the generators
-        context['localsiteurl'] = self.settings['SITEURL']  # share
+        # Share these among all the generators and content objects:
+        context['filenames'] = {}  # maps source path to Content object or None
+        context['localsiteurl'] = self.settings['SITEURL'] 
+
         generators = [
             cls(
                 context=context,
@@ -188,7 +190,7 @@ class Pelican(object):
             time.time() - start_time))
 
     def get_generator_classes(self):
-        generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
+        generators = [ArticlesGenerator, PagesGenerator]
 
         if self.settings['TEMPLATE_PAGES']:
             generators.append(TemplatePagesGenerator)
@@ -206,6 +208,8 @@ class Pelican(object):
                     logger.debug('Found generator: %s', v)
                     generators.append(v)
 
+        # StaticGenerator runs last so it can see which files the others handle
+        generators.append(StaticGenerator)
         return generators
 
     def get_writer(self):

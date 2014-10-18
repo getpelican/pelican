@@ -10,6 +10,7 @@ import logging
 import subprocess
 
 from pelican import Pelican
+from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
 from pelican.tests.support import LoggedTestCase, mute, locale_available, unittest
 
@@ -74,6 +75,16 @@ class TestPelican(LoggedTestCase):
             stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
         assert not out, out
         assert not err, err
+
+    def test_order_of_generators(self):
+        # StaticGenerator must run last, so it can find files that were
+        # skipped by the other generators.
+
+        pelican = Pelican(settings=read_settings(path=None))
+        generator_classes = pelican.get_generator_classes()
+
+        self.assertTrue(generator_classes[-1] is StaticGenerator,
+            "StaticGenerator must be the last generator, but it isn't!")
 
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
