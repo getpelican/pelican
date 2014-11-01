@@ -142,10 +142,15 @@ Setting name (followed by default value, if any)                                
                                                                                  slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
 ``TEMPLATE_PAGES = None``                                                        A mapping containing template pages that will be rendered with
                                                                                  the blog entries. See :ref:`template_pages`.
-``STATIC_PATHS = ['images']``                                                    The static paths you want to have accessible
-                                                                                 on the output path "static". By default,
-                                                                                 Pelican will copy the "images" folder to the
-                                                                                 output folder.
+``STATIC_PATHS = ['images']``                                                    A list of directories (relative to ``PATH``) in which to look for
+                                                                                 static files. Such files will be copied to the output directory
+                                                                                 without modification. Articles, pages, and other content source
+                                                                                 files will normally be skipped, so it is safe for a directory to
+                                                                                 appear both here and in ``PAGE_PATHS`` or ``ARTICLE_PATHS``.
+                                                                                 Pelican's default settings include the "images" directory here.
+``STATIC_EXCLUDES = []``                                                         A list of directories to exclude when looking for static files.
+``STATIC_EXCLUDE_SOURCES = True``                                                If set to False, content source files will not be skipped when
+                                                                                 copying files found in ``STATIC_PATHS``.
 ``TIMEZONE``                                                                     The timezone used in the date information, to
                                                                                  generate Atom and RSS feeds. See the *Timezone*
                                                                                  section below for more info.
