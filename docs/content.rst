@@ -151,24 +151,25 @@ Linking to internal content
 
 From Pelican 3.1 onwards, it is now possible to specify intra-site links to
 files in the *source content* hierarchy instead of files in the *generated*
-hierarchy. This makes it easier to link from the current post to other posts
-and images that may be sitting alongside the current post (instead of having
-to determine where those resources will be placed after site generation).
+hierarchy. This makes it easier to link from the current post to other content
+that may be sitting alongside that post (instead of having to determine where
+the other content will be placed after site generation).
 
 To link to internal content (files in the ``content`` directory), use the
-following syntax: ``{filename}path/to/file``::
+following syntax for the link target: ``{filename}path/to/file``
 
+For example, a Pelican project might be structured like this::
 
     website/
     ├── content
-    │   ├── article1.rst
-    │   ├── cat/
-    │   │   └── article2.md
+    │   ├── category/
+    │   │   └── article1.rst
+    │   ├── article2.md
     │   └── pages
     │       └── about.md
     └── pelican.conf.py
 
-In this example, ``article1.rst`` could look like::
+In this example, ``article1.rst`` could look like this::
 
     The first article
     #################
@@ -177,8 +178,8 @@ In this example, ``article1.rst`` could look like::
 
     See below intra-site link examples in reStructuredText format.
 
-    `a link relative to content root <{filename}/cat/article2.rst>`_
-    `a link relative to current file <{filename}cat/article2.rst>`_
+    `a link relative to the current file <{filename}../article2.md>`_
+    `a link relative to the content root <{filename}/article2.md>`_
 
 and ``article2.md``::
 
@@ -187,43 +188,154 @@ and ``article2.md``::
 
     See below intra-site link examples in Markdown format.
 
-    [a link relative to content root]({filename}/article1.md)
-    [a link relative to current file]({filename}../article1.md)
+    [a link relative to the current file]({filename}category/article1.rst)
+    [a link relative to the content root]({filename}/category/article1.rst)
 
-Embedding non-article or non-page content is slightly different in that the
-directories need to be specified in ``pelicanconf.py`` file. The ``images``
-directory is configured for this by default but others will need to be added
-manually::
+Linking to static files
+-----------------------
+
+Linking to non-article or non-page content uses the same ``{filename}`` syntax
+as described above. It is important to remember that those files will not be
+copied to the output directory unless the source directories containing them
+are included in the ``STATIC_PATHS`` setting of the project's ``pelicanconf.py``
+file. Pelican's default configuration includes the ``images`` directory for
+this, but others must be added manually. Forgetting to do so will result in
+broken links.
+
+For example, a project's content directory might be structured like this::
 
     content
     ├── images
     │   └── han.jpg
-    └── misc
-        └── image-test.md
+    ├── pdfs
+    │   └── menu.pdf
+    └── pages
+        └── test.md
 
-And ``image-test.md`` would include::
+``test.md`` would include::
 
     ![Alt Text]({filename}/images/han.jpg)
+    [Our Menu]({filename}/pdfs/menu.pdf)
 
-Any content can be linked in this way. What happens is that the ``images``
-directory gets copied to ``output/`` during site generation because Pelican
-includes ``images`` in the ``STATIC_PATHS`` setting's list by default. If
-you want to have another directory, say ``pdfs``, copied from your content to
-your output during site generation, you would need to add the following to
-your settings file::
+``pelicanconf.py`` would include::
 
     STATIC_PATHS = ['images', 'pdfs']
 
-After the above line has been added, subsequent site generation should copy the
-``content/pdfs/`` directory to ``output/pdfs/``.
+Site generation would then copy ``han.jpg`` to ``output/images/han.jpg``,
+``menu.pdf`` to ``output/pdfs/menu.pdf``, and write the appropriate links
+in ``test.md``.
 
-You can also link to categories or tags, using the ``{tag}tagname`` and
+Mixed content in the same directory
+-----------------------------------
+
+Starting with Pelican 3.5, static files can safely share a source directory with
+page source files, without exposing the page sources in the generated site.
+Any such directory must be added to both ``STATIC_PATHS`` and ``PAGE_PATHS``
+(or ``STATIC_PATHS`` and ``ARTICLE_PATHS``). Pelican will identify and process
+the page source files normally, and copy the remaining files as if they lived
+in a separate directory reserved for static files.
+
+Note: Placing static and content source files together in the same source
+directory does not guarantee that they will end up in the same place in the
+generated site. The easiest way to do this is by using the ``{attach}`` link
+syntax (described below). Alternatively, the ``STATIC_SAVE_AS``,
+``PAGE_SAVE_AS``, and ``ARTICLE_SAVE_AS`` settings (and the corresponding
+``*_URL`` settings) can be configured to place files of different types
+together, just as they could in earlier versions of Pelican.
+
+Attaching static files
+----------------------
+
+Starting with Pelican 3.5, static files can be "attached" to a page or article
+using this syntax for the link target: ``{attach}path/to/file`` This works
+like the ``{filename}`` syntax, but also relocates the static file into the
+linking document's output directory. If the static file originates from a
+subdirectory beneath the linking document's source, that relationship will be
+preserved on output. Otherwise, it will become a sibling of the linking
+document.
+
+This only works for linking to static files, and only when they originate from
+a directory included in the ``STATIC_PATHS`` setting.
+
+For example, a project's content directory might be structured like this::
+
+    content
+    ├── blog
+    │   ├── icons
+    │   │   └── icon.png
+    │   ├── photo.jpg
+    │   └── testpost.md
+    └── downloads
+        └── archive.zip
+
+``pelicanconf.py`` would include::
+
+    PATH = 'content'
+    STATIC_PATHS = ['blog', 'downloads']
+    ARTICLE_PATHS = ['blog']
+    ARTICLE_SAVE_AS = '{date:%Y}/{slug}.html'
+    ARTICLE_URL = '{date:%Y}/{slug}.html'
+
+``testpost.md`` would include::
+
+    Title: Test Post
+    Category: test
+    Date: 2014-10-31
+
+    ![Icon]({attach}icons/icon.png)
+    ![Photo]({attach}photo.jpg)
+    [Downloadable File]({attach}/downloads/archive.zip)
+
+Site generation would then produce an output directory structured like this::
+
+    output
+    └── 2014
+        ├── archive.zip
+        ├── icons
+        │   └── icon.png
+        ├── photo.jpg
+        └── test-post.html
+
+Notice that all the files linked using ``{attach}`` ended up in or beneath
+the article's output directory.
+
+If a static file is linked multiple times, the relocating feature of
+``{attach}`` will only work in the first of those links to be processed.
+After the first link, Pelican will treat ``{attach}`` like ``{filename}``.
+This avoids breaking the already-processed links.
+
+**Be careful when linking to a file from multiple documents:**
+Since the first link to a file finalizes its location and Pelican does
+not define the order in which documents are processed, using ``{attach}`` on a
+file linked by multiple documents can cause its location to change from one
+site build to the next. (Whether this happens in practice will depend on the
+operating system, file system, version of Pelican, and documents being added,
+modified, or removed from the project.) Any external sites linking to the
+file's old location might then find their links broken. **It is therefore
+advisable to use {attach} only if you use it in all links to a file, and only
+if the linking documents share a single directory.** Under these conditions,
+the file's output location will not change in future builds. In cases where
+these precautions are not possible, consider using ``{filename}`` links instead
+of ``{attach}``, and letting the file's location be determined by the project's
+``STATIC_SAVE_AS`` and ``STATIC_URL`` settings. (Per-file ``save_as`` and
+``url`` overrides can still be set in ``EXTRA_PATH_METADATA``.)
+
+Linking to tags and categories
+------------------------------
+
+You can link to tags and categories using the ``{tag}tagname`` and
 ``{category}foobar`` syntax.
 
-For backward compatibility, Pelican also supports bars (``||``) in addition to
-curly braces (``{}``). For example: ``|filename|an_article.rst``,
-``|tag|tagname``, ``|category|foobar``. The syntax was changed from ``||`` to
-``{}`` to avoid collision with Markdown extensions or reST directives.
+Deprecated internal link syntax
+-------------------------------
+
+To remain compatible with earlier versions, Pelican still supports vertical bars
+(``||``) in addition to curly braces (``{}``) for internal links. For example:
+``|filename|an_article.rst``, ``|tag|tagname``, ``|category|foobar``.
+The syntax was changed from ``||`` to ``{}`` to avoid collision with Markdown
+extensions or reST directives. Support for the old syntax may eventually be
+removed.
+
 
 Importing an existing site
 ==========================
