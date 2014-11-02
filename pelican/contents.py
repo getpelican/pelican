@@ -279,7 +279,8 @@ class Content(object):
         content.
         """
         if hasattr(self, '_summary'):
-            return self._summary
+            return self._update_content(self._summary,
+                                        self._context.get('localsiteurl', ''))
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
