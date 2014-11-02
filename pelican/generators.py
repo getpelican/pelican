@@ -122,13 +122,21 @@ class Generator(object):
         """
         if isinstance(paths, six.string_types):
             paths = [paths] # backward compatibility for older generators
+
+        # group the exclude dir names by parent path, for use with os.walk()
+        exclusions_by_dirpath = {}
+        for e in exclude:
+            parent_path, subdir = os.path.split(os.path.join(self.path, e))
+            exclusions_by_dirpath.setdefault(parent_path, set()).add(subdir)
+
         files = []
         for path in paths:
-            root = os.path.join(self.path, path)
+            # careful: os.path.join() will add a slash when path == ''.
+            root = os.path.join(self.path, path) if path else self.path
 
             if os.path.isdir(root):
                 for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
-                    for e in exclude:
+                    for e in exclusions_by_dirpath.get(dirpath, ()):
                         if e in dirs:
                             dirs.remove(e)
                     reldir = os.path.relpath(dirpath, self.path)

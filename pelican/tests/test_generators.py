@@ -41,6 +41,38 @@ class TestGenerator(unittest.TestCase):
         self.assertTrue(include_path(filename, extensions=('rst',)))
         self.assertFalse(include_path(filename, extensions=('md',)))
 
+    def test_get_files_exclude(self):
+        """Test that Generator.get_files() properly excludes directories.
+        """
+        # We use our own Generator so we can give it our own content path
+        generator = Generator(context=self.settings.copy(),
+            settings=self.settings,
+            path=os.path.join(CUR_DIR, 'nested_content'),
+            theme=self.settings['THEME'], output_path=None)
+
+        filepaths = generator.get_files(paths=['maindir'])
+        found_files = {os.path.basename(f) for f in filepaths}
+        expected_files = {'maindir.md', 'subdir.md'}
+        self.assertFalse(expected_files - found_files,
+            "get_files() failed to find one or more files")
+
+        filepaths = generator.get_files(paths=[''], exclude=['maindir'])
+        found_files = {os.path.basename(f) for f in filepaths}
+        self.assertNotIn('maindir.md', found_files,
+            "get_files() failed to exclude a top-level directory")
+        self.assertNotIn('subdir.md', found_files,
+            "get_files() failed to exclude a subdir of an excluded directory")
+
+        filepaths = generator.get_files(paths=[''],
+            exclude=[os.path.join('maindir', 'subdir')])
+        found_files = {os.path.basename(f) for f in filepaths}
+        self.assertNotIn('subdir.md', found_files,
+            "get_files() failed to exclude a subdirectory")
+
+        filepaths = generator.get_files(paths=[''], exclude=['subdir'])
+        found_files = {os.path.basename(f) for f in filepaths}
+        self.assertIn('subdir.md', found_files,
+            "get_files() excluded a subdirectory by name, ignoring its path")
 
 class TestArticlesGenerator(unittest.TestCase):
 
