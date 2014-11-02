@@ -43,8 +43,13 @@ Pelican implements an extension to reStructuredText to enable support for the
 You can also use Markdown syntax (with a file ending in ``.md``,
 ``.markdown``, ``.mkd``, or ``.mdown``). Markdown generation requires that you
 first explicitly install the ``Markdown`` package, which can be done via ``pip
-install Markdown``. Metadata syntax for Markdown posts should follow this
-pattern::
+install Markdown``.
+
+Pelican also supports `Markdown Extensions`_, which might have to be installed
+separately if they are not included in the default ``Markdown`` package and can
+be configured and loaded via the ``MD_EXTENSIONS`` setting.
+
+Metadata syntax for Markdown posts should follow this pattern::
 
     Title: My super title
     Date: 2010-12-03 10:20
@@ -370,3 +375,4 @@ listed on the index page nor on any category or tag page.
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: http://github.com/getpelican/pelican-plugins
+.. _Markdown Extensions: http://pythonhosted.org/Markdown/extensions/
