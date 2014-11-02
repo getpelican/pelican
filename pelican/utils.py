@@ -681,7 +681,7 @@ class FileStampDataCacher(FileDataCacher):
     '''Subclass that also caches the stamp of the file'''
 
     def __init__(self, settings, cache_name, caching_policy, load_policy):
-        '''This sublcass additionaly sets filestamp function
+        '''This sublcass additionally sets filestamp function
         and base path for filestamping operations
         '''
         super(FileStampDataCacher, self).__init__(settings, cache_name,
