@@ -9,6 +9,13 @@ the command line::
 (If you used the ``pelican-quickstart`` command, your primary settings file will
 be named ``pelicanconf.py`` by default.)
 
+.. note::
+
+   When experimenting with different settings (especially the metadata
+   ones) caching may interfere and the changes may not be visible. In
+   such cases disable caching with ``LOAD_CONTENT_CACHE = False`` or
+   use the ``--ignore-cache`` command-line switch.
+
 Settings are configured in the form of a Python module (a file). There is an
 `example settings file
 <https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_

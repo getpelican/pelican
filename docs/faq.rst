@@ -32,6 +32,14 @@ Configuration files are optional and are just an easy way to configure Pelican.
 For basic operations, it's possible to specify options while invoking Pelican
 via the command line. See ``pelican --help`` for more information.
 
+Changes to the setting file take no effect
+==========================================
+
+When experimenting with different settings (especially the metadata
+ones) caching may interfere and the changes may not be visible. In
+such cases disable caching with ``LOAD_CONTENT_CACHE = False`` or
+use the ``--ignore-cache`` command-line switch.
+
 I'm creating my own theme. How do I use Pygments for syntax highlighting?
 =========================================================================
 
