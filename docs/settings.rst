@@ -345,7 +345,7 @@ posts for the month at ``posts/2011/Aug/index.html``.
 
 ``DIRECT_TEMPLATES``, which are ``('index', 'tags', 'categories', 'archives')``
 by default, work a bit differently than noted above. Only the ``_SAVE_AS``
-settings are available:
+settings are available, but it is available for any direct template.
 
 =============================================  ======================================================
 Setting name (followed by default value)       What does it do?
@@ -357,6 +357,7 @@ Setting name (followed by default value)       What does it do?
 ``AUTHORS_SAVE_AS = 'authors.html'``           The location to save the author list.
 ``CATEGORIES_SAVE_AS = 'categories.html'``     The location to save the category list.
 ``TAGS_SAVE_AS = 'tags.html'``                 The location to save the tag list.
+``INDEX_SAVE_AS = 'index.html'``               The location to save the list of all articles.
 =============================================  ======================================================
 
 URLs for direct template pages are theme-dependent. Some themes use
