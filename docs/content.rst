@@ -95,6 +95,13 @@ not be a good category name, you can set the setting ``USE_FOLDER_AS_CATEGORY``
 to ``False``.  When parsing dates given in the page metadata, Pelican supports
 the W3C's `suggested subset ISO 8601`__.
 
+.. warning::
+
+   When experimenting with different settings (especially the metadata
+   ones) caching may interfere and the changes may not be visible. In
+   such cases disable caching with ``LOAD_CONTENT_CACHE = False`` or
+   use the ``--ignore-cache`` command-line switch.
+
 __ `W3C ISO 8601`_
 
 ``modified`` should be last time you updated the article, and defaults to ``date`` if not specified.

@@ -20,6 +20,14 @@ Alternatively, another method is to import them and add them to the list::
     from package import myplugin
     PLUGINS = [myplugin,]
 
+.. warning::
+
+   When experimenting with different plugins (especially the ones that
+   deal with metadata and content) caching may interfere and the
+   changes may not be visible. In such cases disable caching with
+   ``LOAD_CONTENT_CACHE = False`` or use the ``--ignore-cache``
+   command-line switch.
+
 If your plugins are not in an importable path, you can specify a list of paths
 via the ``PLUGIN_PATHS`` setting. As shown in the following example, paths in
 the ``PLUGIN_PATHS`` list can be absolute or relative to the settings file::
