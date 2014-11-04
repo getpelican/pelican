@@ -7,7 +7,6 @@ try:
     from unittest.mock import MagicMock
 except ImportError:
     from mock import MagicMock
-from operator import itemgetter
 from shutil import rmtree
 from tempfile import mkdtemp
 

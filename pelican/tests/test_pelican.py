@@ -123,8 +123,6 @@ class TestPelican(LoggedTestCase):
                          locale_available('French'), 'French locale needed')
     def test_custom_locale_generation_works(self):
         '''Test that generation with fr_FR.UTF-8 locale works'''
-        old_locale = locale.setlocale(locale.LC_TIME)
-
         if sys.platform == 'win32':
             our_locale = str('French')
         else:

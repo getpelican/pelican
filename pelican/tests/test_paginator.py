@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
-import six
 import locale
 
 from pelican.tests.support import unittest, get_settings

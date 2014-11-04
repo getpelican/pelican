@@ -5,7 +5,7 @@ import shutil
 import os
 import time
 import locale
-from sys import platform, version_info
+from sys import platform
 from tempfile import mkdtemp
 
 import pytz
