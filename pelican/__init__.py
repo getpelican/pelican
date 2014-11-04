@@ -208,7 +208,9 @@ class Pelican(object):
                     logger.debug('Found generator: %s', v)
                     generators.append(v)
 
-        # StaticGenerator runs last so it can see which files the others handle
+        # StaticGenerator must run last, so it can identify files that
+        # were skipped by the other generators, and so static files can
+        # have their output paths overridden by the {attach} link syntax.
         generators.append(StaticGenerator)
         return generators
 

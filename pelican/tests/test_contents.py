@@ -4,12 +4,13 @@ from __future__ import unicode_literals, absolute_import
 import six
 from sys import platform
 import locale
+import os.path
 
 from pelican.tests.support import unittest, get_settings
 
-from pelican.contents import Page, Article, URLWrapper
+from pelican.contents import Page, Article, Static, URLWrapper
 from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import truncate_html_words, SafeDatetime
+from pelican.utils import path_to_url, truncate_html_words, SafeDatetime
 from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
 
@@ -399,6 +400,148 @@ class TestArticle(TestPage):
         article = Article(**article_kwargs)
         self.assertEqual(article.url, 'obrien/csharp-stuff/fnord/')
         self.assertEqual(article.save_as, 'obrien/csharp-stuff/fnord/index.html')
+
+
+class TestStatic(unittest.TestCase):
+
+    def setUp(self):
+
+        self.settings = get_settings(
+            STATIC_SAVE_AS='{path}',
+            STATIC_URL='{path}',
+            PAGE_SAVE_AS=os.path.join('outpages', '{slug}.html'),
+            PAGE_URL='outpages/{slug}.html')
+        self.context = self.settings.copy()
+
+        self.static = Static(content=None, metadata={}, settings=self.settings,
+            source_path=os.path.join('dir', 'foo.jpg'), context=self.context)
+
+        self.context['filenames'] = {self.static.source_path: self.static}
+
+    def tearDown(self):
+        pass
+
+    def test_attach_to_same_dir(self):
+        """attach_to() overrides a static file's save_as and url.
+        """
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        expected_save_as = os.path.join('outpages', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+    def test_attach_to_parent_dir(self):
+        """attach_to() preserves dirs inside the linking document dir.
+        """
+        page = Page(content="fake page", metadata={'title': 'fakepage'},
+            settings=self.settings, source_path='fakepage.md')
+        self.static.attach_to(page)
+
+        expected_save_as = os.path.join('outpages', 'dir', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+    def test_attach_to_other_dir(self):
+        """attach_to() ignores dirs outside the linking document dir.
+        """
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        expected_save_as = os.path.join('outpages', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+    def test_attach_to_ignores_subsequent_calls(self):
+        """attach_to() does nothing when called a second time.
+        """
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+
+        self.static.attach_to(page)
+
+        otherdir_settings = self.settings.copy()
+        otherdir_settings.update(dict(
+            PAGE_SAVE_AS=os.path.join('otherpages', '{slug}.html'),
+            PAGE_URL='otherpages/{slug}.html'))
+        otherdir_page = Page(content="other page",
+            metadata={'title': 'otherpage'}, settings=otherdir_settings,
+            source_path=os.path.join('dir', 'otherpage.md'))
+
+        self.static.attach_to(otherdir_page)
+
+        otherdir_save_as = os.path.join('otherpages', 'foo.jpg')
+        self.assertNotEqual(self.static.save_as, otherdir_save_as)
+        self.assertNotEqual(self.static.url, path_to_url(otherdir_save_as))
+
+    def test_attach_to_does_nothing_after_save_as_referenced(self):
+        """attach_to() does nothing if the save_as was already referenced.
+        (For example, by a {filename} link an a document processed earlier.)
+        """
+        original_save_as = self.static.save_as
+
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        self.assertEqual(self.static.save_as, original_save_as)
+        self.assertEqual(self.static.url, path_to_url(original_save_as))
+
+    def test_attach_to_does_nothing_after_url_referenced(self):
+        """attach_to() does nothing if the url was already referenced.
+        (For example, by a {filename} link an a document processed earlier.)
+        """
+        original_url = self.static.url
+
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        self.assertEqual(self.static.save_as, self.static.source_path)
+        self.assertEqual(self.static.url, original_url)
+
+    def test_attach_to_does_not_override_an_override(self):
+        """attach_to() does not override paths that were overridden elsewhere.
+        (For example, by the user with EXTRA_PATH_METADATA)
+        """
+        customstatic = Static(content=None,
+            metadata=dict(save_as='customfoo.jpg', url='customfoo.jpg'),
+            settings=self.settings,
+            source_path=os.path.join('dir', 'foo.jpg'),
+            context=self.settings.copy())
+
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+
+        customstatic.attach_to(page)
+
+        self.assertEqual(customstatic.save_as, 'customfoo.jpg')
+        self.assertEqual(customstatic.url, 'customfoo.jpg')
+
+    def test_attach_link_syntax(self):
+        """{attach} link syntax triggers output path override & url replacement.
+        """
+        html = '<a href="{attach}../foo.jpg">link</a>'
+        page = Page(content=html,
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+            context=self.context)
+        content = page.get_content('')
+
+        self.assertNotEqual(content, html,
+            "{attach} link syntax did not trigger URL replacement.")
+
+        expected_save_as = os.path.join('outpages', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
 
 
 class TestURLWrapper(unittest.TestCase):

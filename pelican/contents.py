@@ -219,7 +219,7 @@ class Content(object):
             origin = m.group('path')
 
             # XXX Put this in a different location.
-            if what == 'filename':
+            if what in {'filename', 'attach'}:
                 if path.startswith('/'):
                     path = path[1:]
                 else:
@@ -234,9 +234,16 @@ class Content(object):
                     if unquoted_path in self._context['filenames']:
                         path = unquoted_path
 
-                if self._context['filenames'].get(path):
-                    origin = '/'.join((siteurl,
-                             self._context['filenames'][path].url))
+                linked_content = self._context['filenames'].get(path)
+                if linked_content:
+                    if what == 'attach':
+                        if isinstance(linked_content, Static):
+                            linked_content.attach_to(self)
+                        else:
+                            logger.warning("%s used {attach} link syntax on a "
+                                "non-static file. Use {filename} instead.",
+                                self.get_relative_source_path())
+                    origin = '/'.join((siteurl, linked_content.url))
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
                     logger.warning(
@@ -359,6 +366,10 @@ class Quote(Page):
 
 @python_2_unicode_compatible
 class Static(Page):
+    def __init__(self, *args, **kwargs):
+        super(Static, self).__init__(*args, **kwargs)
+        self._output_location_referenced = False
+
     @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
     def filepath():
         return None
@@ -370,6 +381,65 @@ class Static(Page):
     @deprecated_attribute(old='dst', new='save_as', since=(3, 2, 0))
     def dst():
         return None
+
+    @property
+    def url(self):
+        # Note when url has been referenced, so we can avoid overriding it.
+        self._output_location_referenced = True
+        return super(Static, self).url
+
+    @property
+    def save_as(self):
+        # Note when save_as has been referenced, so we can avoid overriding it.
+        self._output_location_referenced = True
+        return super(Static, self).save_as
+
+    def attach_to(self, content):
+        """Override our output directory with that of the given content object.
+        """
+        # Determine our file's new output path relative to the linking document.
+        # If it currently lives beneath the linking document's source directory,
+        # preserve that relationship on output. Otherwise, make it a sibling.
+        linking_source_dir = os.path.dirname(content.source_path)
+        tail_path = os.path.relpath(self.source_path, linking_source_dir)
+        if tail_path.startswith(os.pardir + os.sep):
+            tail_path = os.path.basename(tail_path)
+        new_save_as = os.path.join(
+            os.path.dirname(content.save_as), tail_path)
+
+        # We do not build our new url by joining tail_path with the linking
+        # document's url, because we cannot know just by looking at the latter
+        # whether it points to the document itself or to its parent directory.
+        # (An url like 'some/content' might mean a directory named 'some'
+        # with a file named 'content', or it might mean a directory named
+        # 'some/content' with a file named 'index.html'.) Rather than trying
+        # to figure it out by comparing the linking document's url and save_as
+        # path, we simply build our new url from our new save_as path.
+        new_url = path_to_url(new_save_as)
+
+        def _log_reason(reason):
+            logger.warning("The {attach} link in %s cannot relocate %s "
+                "because %s. Falling back to {filename} link behavior instead.",
+                content.get_relative_source_path(),
+                self.get_relative_source_path(), reason,
+                extra={'limit_msg': "More {attach} warnings silenced."})
+
+        # We never override an override, because we don't want to interfere
+        # with user-defined overrides that might be in EXTRA_PATH_METADATA.
+        if hasattr(self, 'override_save_as') or hasattr(self, 'override_url'):
+            if new_save_as != self.save_as or new_url != self.url:
+                _log_reason("its output location was already overridden")
+            return
+
+        # We never change an output path that has already been referenced,
+        # because we don't want to break links that depend on that path.
+        if self._output_location_referenced:
+            if new_save_as != self.save_as or new_url != self.url:
+                _log_reason("another link already referenced its location")
+            return
+
+        self.override_save_as = new_save_as
+        self.override_url = new_url
 
 
 def is_valid_content(content, f):
