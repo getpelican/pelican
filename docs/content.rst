@@ -240,6 +240,13 @@ English [en] by default). With those settings in place, only articles with the
 default language will be listed, and each article will be accompanied by a list
 of available translations for that article.
 
+.. note::
+
+   This core Pelican functionality does not create sub-sites
+   (e.g. ``example.com/de``) with translated templates for each
+   language. For such advanced functionality the `i18n_subsites
+   plugin`_ can be used.
+
 Pelican uses the article's URL "slug" to determine if two or more articles are
 translations of one another. The slug can be set manually in the file's
 metadata; if not set explicitly, Pelican will auto-generate the slug from the
@@ -383,3 +390,4 @@ listed on the index page nor on any category or tag page.
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: http://github.com/getpelican/pelican-plugins
 .. _Markdown Extensions: http://pythonhosted.org/Markdown/extensions/
+.. _i18n_subsites plugin: http://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
