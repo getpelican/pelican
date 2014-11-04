@@ -232,3 +232,12 @@ When only several specific output files are of interest (e.g. when
 working on some specific page or the theme templates), the
 `WRITE_SELECTED` option may help, see
 :ref:`writing_only_selected_content`.
+
+How to process only a subset of all articles?
+=============================================
+
+It is often useful to process only e.g. 10 articles for debugging
+purposes. This can be achieved by explicitly specifying only the
+filenames of those articles in ``ARTICLE_PATHS``. A list of such
+filenames could be found using a command similar to ``cd content;
+find -name '*.md' | head -n 10``.
