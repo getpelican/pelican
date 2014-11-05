@@ -346,44 +346,49 @@ Here is a complete list of the feed variables::
     TRANSLATION_FEED_ATOM
     TRANSLATION_FEED_RSS
 
+.. _theme_inheritance:
 
-Inheritance
-===========
+Theme inheritance
+=================
 
-Since version 3.4, Pelican supports inheritance from the ``simple`` theme, as well
-as any themes specified in the ``THEMES`` setting. You can re-use
-their theme templates in your own themes.
+Since version 3.6, Pelican supports both implicit and explicit
+inheritance from any theme specified in the ``THEMES`` setting. By
+default the special ``simple`` theme is inherited both implicitly and
+explicitly, so you can re-use its theme templates in your own themes.
 
 Implicit Inheritance
 --------------------
 
-If one of the mandatory files in the ``templates/`` directory of your theme is
-missing, it will be replaced by the matching template from the ``simple`` theme.
-So if the HTML structure of a template in the ``simple`` theme is right for you,
+If one of the mandatory files in the ``templates/`` directory of your
+theme is missing, it will be replaced by a matching template from any
+of the implicitly inherited themes.  So if the HTML structure of a
+template in the by default inherited ``simple`` theme is right for you,
 you don't have to write a new template from scratch.
 
 Explicit Inheritance
 --------------------
 
-You explicitly extend templates from the ``simple`` themes in your own themes by
-using the ``{% extends %}`` directive as in the following example:
+You explicitly extend templates from explicitly inherited themes in
+your own themes by using the ``{% extends %}`` directive as in the
+following example:
+
+With the following ``THEMES`` setting which is the default plus an
+extra explicitly inherited theme
+
+.. code-block:: python
+
+    THEMES = ('simple', ('!simple', 'simple'), ('!foo', 'foo'))
+
+You can extend parent (inherited) or sibling (your own theme) templates
 
 .. code-block:: html+jinja
 
     {% extends "!simple/index.html" %}   <!-- extends the ``index.html`` template from the ``simple`` theme -->
 
-    {% extends "index.html" %}   <!-- "regular" extending -->
-
-You can extend from a user created theme by adding that theme to the ``THEMES``
-setting.
-
-.. code-block:: python
-
-    THEMES = {'!foo': 'foo'}
-
-.. code-block:: html+jinja
-
     {% extends "!foo/index.html" %}   <!-- extends the ``index.html`` template from the ``foo`` theme -->
+
+    {% extends "index.html" %}   <!-- "regular" extending, either finds a sibling template or one in an implicitly inherited theme -->
+
 
 Example
 -------

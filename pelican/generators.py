@@ -54,24 +54,28 @@ class Generator(object):
             os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
 
-        theme_path = os.path.dirname(os.path.abspath(__file__))
+        pelican_theme_path = os.path.dirname(os.path.abspath(__file__))
+        simple_theme_path = os.path.join(pelican_theme_path,
+                                         "themes", "simple", "templates")
 
-        simple_loader = FileSystemLoader(os.path.join(theme_path,
-                                         "themes", "simple", "templates"))
-
-        themes = {}
+        explicit_themes = {}
+        themes = [FileSystemLoader(self._templates_path)]
         for theme in self.themes:
-            templates_path = os.path.join(self.themes[theme], "templates")
-            logger.debug('Template path for theme %s: %s', theme,
+            if isinstance(theme, tuple): # explicit inheritance
+                prefix, theme_path = theme
+                if prefix == '!simple':
+                    theme_path = simple_theme_path
+                templates_path = os.path.join(theme_path, "templates")
+                logger.debug('Template path for prefix %s: %s', prefix,
                          templates_path)
-            themes[theme] = FileSystemLoader(templates_path)
+                explicit_themes[prefix] = FileSystemLoader(templates_path)
+            else:               # implicit inheritance
+                if theme == 'simple':
+                    theme = simple_theme_path
+                themes.append(FileSystemLoader(theme))
 
-        loader=ChoiceLoader([
-                FileSystemLoader(self._templates_path),
-                simple_loader,  # implicit inheritance
-                PrefixLoader({'!simple':simple_loader}),
-                PrefixLoader(themes)  # explicit one
-            ])
+        themes.append(PrefixLoader(explicit_themes))
+        loader=ChoiceLoader(themes)
 
         self.env = Environment(
             trim_blocks=True,
@@ -731,7 +735,8 @@ class StaticGenerator(Generator):
                          os.curdir)
 
         for theme in self.themes:
-            self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.themes[theme],
+            theme = theme[1] if isinstance(theme, tuple) else theme
+            self._copy_paths(self.settings['THEME_STATIC_PATHS'], theme,
                          self.settings['THEME_STATIC_DIR'], self.output_path,
                          os.curdir)
 

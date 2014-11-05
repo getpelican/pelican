@@ -34,7 +34,7 @@ DEFAULT_CONFIG = {
     'PAGE_PATHS': ['pages'],
     'PAGE_EXCLUDES': [],
     'THEME': DEFAULT_THEME,
-    'THEMES': {},
+    'THEMES': ('simple', ('!simple', 'simple')),
     'OUTPUT_PATH': 'output',
     'READERS': {},
     'STATIC_PATHS': ['images'],
