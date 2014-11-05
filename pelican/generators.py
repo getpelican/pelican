@@ -54,27 +54,18 @@ class Generator(object):
             os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
 
-        pelican_theme_path = os.path.dirname(os.path.abspath(__file__))
-        simple_theme_path = os.path.join(pelican_theme_path,
-                                         "themes", "simple", "templates")
-
         explicit_themes = {}
         themes = [FileSystemLoader(self._templates_path)]
         for theme in self.themes:
-            if isinstance(theme, tuple): # explicit inheritance
+            if isinstance(theme, list): # explicit inheritance
                 prefix, theme_path = theme
-                if prefix == '!simple':
-                    theme_path = simple_theme_path
                 templates_path = os.path.join(theme_path, "templates")
                 logger.debug('Template path for prefix %s: %s', prefix,
                          templates_path)
                 explicit_themes[prefix] = FileSystemLoader(templates_path)
             else:               # implicit inheritance
-                if theme == 'simple':
-                    templates_path = simple_theme_path
-                else:
-                    templates_path = os.path.join(theme, "templates")
-                    logger.debug('Implicit template path: %s', templates_path)
+                templates_path = os.path.join(theme, "templates")
+                logger.debug('Implicit template path: %s', templates_path)
                 themes.append(FileSystemLoader(templates_path))
 
         themes.append(PrefixLoader(explicit_themes))
@@ -738,7 +729,7 @@ class StaticGenerator(Generator):
                          os.curdir)
 
         for theme in self.themes:
-            theme = theme[1] if isinstance(theme, tuple) else theme
+            theme = theme[1] if isinstance(theme, list) else theme
             self._copy_paths(self.settings['THEME_STATIC_PATHS'], theme,
                          self.settings['THEME_STATIC_DIR'], self.output_path,
                          os.curdir)

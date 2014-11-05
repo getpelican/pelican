@@ -27,6 +27,11 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
+
+
+SIMPLE_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             'themes', 'simple')
+
 DEFAULT_CONFIG = {
     'PATH': os.curdir,
     'ARTICLE_PATHS': [''],
@@ -34,7 +39,7 @@ DEFAULT_CONFIG = {
     'PAGE_PATHS': ['pages'],
     'PAGE_EXCLUDES': [],
     'THEME': DEFAULT_THEME,
-    'THEMES': [DEFAULT_THEME, ('!simple', DEFAULT_THEME)],
+    'THEMES': [SIMPLE_THEME, ['!simple', SIMPLE_THEME]],
     'OUTPUT_PATH': 'output',
     'READERS': {},
     'STATIC_PATHS': ['images'],
@@ -168,7 +173,7 @@ def read_settings(path=None, override=None):
 
         if 'THEMES' in local_settings and local_settings['THEMES']:
             for i, p in enumerate(local_settings['THEMES']):
-                explicit = isinstance(p, tuple)
+                explicit = isinstance(p, list)
                 p = p[1] if explicit else p
                 if not isabs(p):
                      absp = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), p)))
@@ -237,13 +242,17 @@ def configure_settings(settings):
                             % settings['THEME'])
 
     for i, theme in enumerate(settings['THEMES']):
-        theme = theme[1] if isinstance(theme, tuple) else theme
+        explicit = isinstance(theme, list)
+        theme = theme[1] if explicit else theme
         if not os.path.isdir(theme):
             theme_path = os.path.join(
                 os.path.dirname(os.path.abspath(__file__)),
                 'themes', theme)
             if os.path.exists(theme_path):
-                settings['THEMES'][i] = theme_path
+                if explicit:
+                    settings['THEMES'][i][1] = theme_path
+                else:
+                    settings['THEMES'][i] = theme_path
             else:
                 raise Exception("Could not find the theme %s"
                                 % theme)
