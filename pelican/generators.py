@@ -71,8 +71,11 @@ class Generator(object):
                 explicit_themes[prefix] = FileSystemLoader(templates_path)
             else:               # implicit inheritance
                 if theme == 'simple':
-                    theme = simple_theme_path
-                themes.append(FileSystemLoader(theme))
+                    templates_path = simple_theme_path
+                else:
+                    templates_path = os.path.join(theme, "templates")
+                    logger.debug('Implicit template path: %s', templates_path)
+                themes.append(FileSystemLoader(templates_path))
 
         themes.append(PrefixLoader(explicit_themes))
         loader=ChoiceLoader(themes)

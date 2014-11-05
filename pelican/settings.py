@@ -34,7 +34,7 @@ DEFAULT_CONFIG = {
     'PAGE_PATHS': ['pages'],
     'PAGE_EXCLUDES': [],
     'THEME': DEFAULT_THEME,
-    'THEMES': ('simple', ('!simple', 'simple')),
+    'THEMES': ['simple', ('!simple', 'simple')],
     'OUTPUT_PATH': 'output',
     'READERS': {},
     'STATIC_PATHS': ['images'],
@@ -167,11 +167,16 @@ def read_settings(path=None, override=None):
                                     if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATHS']]
 
         if 'THEMES' in local_settings and local_settings['THEMES']:
-            for p in local_settings['THEMES']:
-                if not isabs(local_settings['THEMES'][p]):
-                     absp = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), local_settings['THEMES'][p])))
+            for i, p in enumerate(local_settings['THEMES']):
+                explicit = isinstance(p, tuple)
+                p = p[1] if explicit else p
+                if not isabs(p):
+                     absp = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), p)))
                      if os.path.exists(absp):
-                         local_settings['THEMES'][p] = absp
+                         if explicit:
+                             local_settings['THEMES'][i][1] = absp
+                         else:
+                             local_settings['THEMES'][i] = absp
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
@@ -231,14 +236,14 @@ def configure_settings(settings):
             raise Exception("Could not find the theme %s"
                             % settings['THEME'])
 
-    for theme in settings['THEMES']:
-        if not os.path.isdir(settings['THEMES'][theme]):
+    for i, theme in enumerate(settings['THEMES']):
+        theme = theme[1] if isinstance(theme, tuple) else theme
+        if not os.path.isdir(theme):
             theme_path = os.path.join(
                 os.path.dirname(os.path.abspath(__file__)),
-                'themes',
-                settings['THEMES'][theme])
+                'themes', theme)
             if os.path.exists(theme_path):
-                settings['THEMES'][theme] = theme_path
+                settings['THEMES'][i] = theme_path
             else:
                 raise Exception("Could not find the theme %s"
                                 % theme)

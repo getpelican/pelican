@@ -367,7 +367,8 @@ def main():
         watchers[static_path] = folder_watcher(static_path, [''], pelican.ignore_files)
 
     for theme in pelican.themes:
-        watchers[theme] = folder_watcher(pelican.themes[theme], [''], pelican.ignore_files)
+        theme = theme[1] if isinstance(theme, tuple) else theme
+        watchers[theme] = folder_watcher(theme, [''], pelican.ignore_files)
 
     try:
         if args.autoreload:

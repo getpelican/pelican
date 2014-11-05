@@ -377,7 +377,7 @@ extra explicitly inherited theme
 
 .. code-block:: python
 
-    THEMES = ('simple', ('!simple', 'simple'), ('!foo', 'foo'))
+    THEMES = ['simple', ('!simple', 'simple'), ('!foo', 'foo')]
 
 You can extend parent (inherited) or sibling (your own theme) templates
 

@@ -720,7 +720,7 @@ Setting name (followed by default value, if any)    What does it do?
                                                     the paths defined in this settings, they will be
                                                     progressively overwritten.
 ``CSS_FILE = 'main.css'``                           Specify the CSS file you want to load.
-``THEMES = ('simple', ('!simple', 'simple'))``      Extra themes that can be inherited from, either
+``THEMES = ['simple', ('!simple', 'simple')]``      Extra themes that can be inherited from, either
                                                     implicitly (just a path to the theme) or explicitly
                                                     using a prefix marker (tuple of prefix and path to
                                                     theme). They can also inherit from each other,
