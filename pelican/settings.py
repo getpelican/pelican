@@ -170,8 +170,8 @@ def read_settings(path=None, override=None):
             for p in local_settings['THEMES']:
                 if not isabs(local_settings['THEMES'][p]):
                      absp = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), local_settings['THEMES'][p])))
-                if os.path.exists(absp):
-                    local_settings['THEMES'][p] = absp
+                     if os.path.exists(absp):
+                         local_settings['THEMES'][p] = absp
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
