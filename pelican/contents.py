@@ -11,6 +11,7 @@ import os
 import re
 import sys
 
+import pytz
 
 from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
@@ -132,8 +133,12 @@ class Content(object):
         # manage status
         if not hasattr(self, 'status'):
             self.status = settings['DEFAULT_STATUS']
-            if not settings['WITH_FUTURE_DATES']:
-                if hasattr(self, 'date') and self.date > SafeDatetime.now():
+            if not settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
+                if self.date.tzinfo is None:
+                    now = SafeDatetime.now()
+                else:
+                    now = SafeDatetime.utcnow().replace(tzinfo=pytz.utc)
+                if self.date > now:
                     self.status = 'draft'
 
         # store the summary metadata if it is set
