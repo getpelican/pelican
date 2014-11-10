@@ -12,6 +12,11 @@ Pages <https://help.github.com/articles/user-organization-and-project-pages>`_:
 *Project Pages* and *User Pages*. Pelican sites can be published as both
 Project Pages and User Pages.
 
+.. note::
+    
+    ``RELATIVE_URLS`` must be set to ``True`` when you deploy on GitHub Pages.
+    Otherwise the links to the static files are wrong.
+
 Project Pages
 -------------
 
