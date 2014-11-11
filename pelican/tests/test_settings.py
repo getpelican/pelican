@@ -112,3 +112,22 @@ class TestSettingsConfiguration(unittest.TestCase):
 
         configure_settings(self.settings)
         self.assertEqual(locale.getlocale(), locale.getdefaultlocale())
+
+    def test_invalid_settings_throw_exception(self):
+        # Test that the path name is valid
+
+        # test that 'PATH' is set
+        settings = {
+        }
+
+        self.assertRaises(Exception, configure_settings, settings)
+
+        # Test that 'PATH' is valid
+        settings['PATH'] = ''
+        self.assertRaises(Exception, configure_settings, settings)
+
+        # Test nonexistent THEME 
+        settings['PATH'] = os.curdir
+        settings['THEME'] = 'foo'
+
+        self.assertRaises(Exception, configure_settings, settings)
