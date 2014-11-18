@@ -498,6 +498,13 @@ publishing, for example), you can add a ``Status: draft`` attribute to its
 metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category or tag page.
 
+If your articles should be automatically published as a draft (to not accidentally
+publish an article before it is finished) include the status in the ``DEFAULT_METADATA``::
+
+    DEFAULT_METADATA = {
+	    'status': 'draft',
+	}
+	
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: http://github.com/getpelican/pelican-plugins
