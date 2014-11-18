@@ -15,6 +15,7 @@ import traceback
 import pickle
 import hashlib
 import datetime
+import socket
 
 from collections import Hashable
 from contextlib import contextmanager
@@ -340,7 +341,7 @@ def clean_output_dir(path, retention):
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
             except Exception as e:
-                logger.error("Unable to delete directory %s; %s", 
+                logger.error("Unable to delete directory %s; %s",
                         file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
@@ -750,4 +751,17 @@ def is_selected_for_writing(settings, path):
         return path in settings['WRITE_SELECTED']
     else:
         return True
-        
+
+
+def send_browser_reload_req(port):
+    logger.info("sending browser-reload request port=%d", port)
+    s = None
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("", port))
+        s.send(b"PELICAN-RELOAD-REQUEST: true\r\n\r\n")
+    except IOError:
+        logger.warning("sending browser-reload request failed")
+    finally:
+        if s:
+            s.close()

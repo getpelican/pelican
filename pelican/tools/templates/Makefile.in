@@ -42,6 +42,8 @@ help:
 	@echo '   make serve [PORT=8000]           serve site at http://localhost:8000'
 	@echo '   make devserver [PORT=8000]       start/restart develop_server.sh    '
 	@echo '   make stopserver                  stop local server                  '
+	@echo '   make devserver2_start [PORT=8000,PORT2=9000] start livereload server'
+	@echo '   make devserver2_stop             stop livereload server             '
 	@echo '   make ssh_upload                  upload the web site via SSH        '
 	@echo '   make rsync_upload                upload the web site via rsync+ssh  '
 	@echo '   make dropbox_upload              upload the web site via Dropbox    '
@@ -80,6 +82,12 @@ stopserver:
 	kill -9 `cat pelican.pid`
 	kill -9 `cat srv.pid`
 	@echo 'Stopped Pelican and SimpleHTTPServer processes running in background.'
+
+devserver2_start:
+	$(PY) -m pelican.dev_server2 restart $(PORT) $(PORT2)
+
+devserver2_stop:
+	$(PY) -m pelican.dev_server2 stop
 
 publish:
 	$$(PELICAN) $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(PUBLISHCONF) $$(PELICANOPTS)

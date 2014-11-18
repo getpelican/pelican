@@ -22,7 +22,7 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 TemplatePagesGenerator)
 from pelican.readers import Readers
 from pelican.settings import read_settings
-from pelican.utils import clean_output_dir, folder_watcher, file_watcher
+from pelican.utils import clean_output_dir, folder_watcher, file_watcher, send_browser_reload_req
 from pelican.writers import Writer
 
 __version__ = "3.5.0"
@@ -146,7 +146,7 @@ class Pelican(object):
         context = self.settings.copy()
         # Share these among all the generators and content objects:
         context['filenames'] = {}  # maps source path to Content object or None
-        context['localsiteurl'] = self.settings['SITEURL'] 
+        context['localsiteurl'] = self.settings['SITEURL']
 
         generators = [
             cls(
@@ -226,7 +226,7 @@ class Pelican(object):
                 logger.debug('Found writer: %s', writer)
             else:
                 logger.warning(
-                    '%s writers found, using only first one: %s', 
+                    '%s writers found, using only first one: %s',
                     writers_found, writer)
             return writer(self.output_path, settings=self.settings)
 
@@ -292,6 +292,11 @@ def parse_arguments():
     parser.add_argument('-w', '--write-selected', type=str,
                         dest='selected_paths', default=None,
                         help='Comma separated list of selected paths to write')
+
+    parser.add_argument('--browser-reload', nargs='?', type=int,
+                        dest='browser_reload',
+                        help='Relaunch pelican and reload browser '
+                        'each time a modification occurs')
 
     return parser.parse_args()
 
@@ -400,6 +405,9 @@ def main():
                         pelican.run()
                         # restore original caching policy
                         pelican.settings['LOAD_CONTENT_CACHE'] = original_load_cache
+
+                        if args.browser_reload:
+                            send_browser_reload_req(args.browser_reload)
 
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
