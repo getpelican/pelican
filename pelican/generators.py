@@ -86,9 +86,9 @@ class Generator(object):
         """
         if name not in self._templates:
             try:
-                self._templates[name] = self.env.get_template(name + '.html')
+                self._templates[name] = self.env.get_template(name)
             except TemplateNotFound:
-                raise Exception('[templates] unable to load %s.html from %s'
+                raise Exception('[templates] unable to load %s from %s'
                                 % (name, self._templates_path))
         return self._templates[name]
 
