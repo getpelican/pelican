@@ -47,10 +47,11 @@ Usage
 
 Positional arguments
 --------------------
-
-  input                 The input file to read
-  api_token             [Posterous only] api_token can be obtained from http://posterous.com/api/
-  api_key               [Tumblr only] api_key can be obtained from http://www.tumblr.com/oauth/apps
+  =============         ============================================================================
+  ``input``             The input file to read
+  ``api_token``         (Posterous only) api_token can be obtained from http://posterous.com/api/
+  ``api_key``           (Tumblr only) api_key can be obtained from http://www.tumblr.com/oauth/apps
+  =============         ============================================================================
 
 Optional arguments
 ------------------
