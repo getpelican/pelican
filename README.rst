@@ -61,3 +61,4 @@ See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
 .. |coverage-status| image:: https://img.shields.io/coveralls/getpelican/pelican.svg
    :target: https://coveralls.io/r/getpelican/pelican
    :alt: Coveralls: code coverage status
+
