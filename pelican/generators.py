@@ -572,7 +572,8 @@ class ArticlesGenerator(CachingGenerator):
             (
                 tag,
                 int(math.floor(steps - (steps - 1) * math.log(count)
-                    / (math.log(max_count)or 1)))
+                    / (math.log(max_count)or 1))),
+                count
             )
             for tag, count in tag_cloud
         ]
