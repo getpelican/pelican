@@ -1,31 +1,41 @@
-Pelican
-=======
+Pelican |release|
+=================
 
-Pelican is a static site generator, written in Python_.
 
-* Write your weblog entries directly with your editor of choice (vim!)
-  in reStructuredText_ or Markdown_
-* Includes a simple CLI tool to (re)generate the weblog
-* Easy to interface with DVCSes and web hooks
+.. ifconfig:: release.endswith('.dev')
+
+    .. warning::
+
+        This documentation is for the version of Pelican currently under development.
+        Were you looking for version |last_stable| documentation?
+
+
+Pelican is a static site generator, written in Python_. Highlights include:
+
+* Write your content directly with your editor of choice
+  in reStructuredText_ or Markdown_ formats
+* Includes a simple CLI tool to (re)generate your site
+* Easy to interface with distributed version control systems and web hooks
 * Completely static output is easy to host anywhere
+
+Ready to get started? Check out the :doc:`Quickstart<quickstart>` guide.
 
 Features
 --------
 
-Pelican currently supports:
+Pelican |version| currently supports:
 
-* Blog articles and pages
-* Comments, via an external service (Disqus). (Please note that while
-  useful, Disqus is an external service, and thus the comment data will be
-  somewhat outside of your control and potentially subject to data loss.)
+* Articles (e.g., blog posts) and pages (e.g., "About", "Projects", "Contact")
+* Comments, via an external service (Disqus). If you prefer to have more
+  control over your comment data, self-hosted comments are another option.
+  Check out the `Pelican Plugins`_ repository for more details.
 * Theming support (themes are created using Jinja2_ templates)
-* PDF generation of the articles/pages (optional)
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
-* Compilation of `LESS CSS`_ (optional)
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
+* Fast rebuild times thanks to content caching and selective output writing
 
 Why the name "Pelican"?
 -----------------------
@@ -37,35 +47,30 @@ Source code
 
 You can access the source code at: https://github.com/getpelican/pelican
 
-Feedback / Contact us
----------------------
+How to get help, contribute, or provide feedback
+------------------------------------------------
 
-If you want to see new features in Pelican, don't hesitate to offer suggestions,
-clone the repository, etc. There are many ways to :doc:`contribute<contribute>`.
-That's open source, dude!
-
-Send a message to "authors at getpelican dot com" with any requests/feedback! You
-can also join the team at `#pelican on Freenode`_ (or if you don't have an IRC
-client handy, use the webchat_ for quick feedback.
+See our :doc:`feedback and contribution submission guidelines <contribute>`.
 
 Documentation
 -------------
 
-A French version of the documentation is available at :doc:`fr/index`.
-
 .. toctree::
    :maxdepth: 2
 
-   getting_started
+   quickstart
+   install
+   content
+   publish
    settings
    themes
    plugins
-   internals
    pelican-themes
    importer
    faq
    tips
    contribute
+   internals
    report
    changelog
 
@@ -75,8 +80,6 @@ A French version of the documentation is available at :doc:`fr/index`.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Markdown: http://daringfireball.net/projects/markdown/
 .. _Jinja2: http://jinja.pocoo.org/
-.. _`LESS CSS`: http://lesscss.org/
 .. _`Pelican documentation`: http://docs.getpelican.com/latest/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
-.. _`#pelican on Freenode`: irc://irc.freenode.net/pelican
-.. _webchat: http://webchat.freenode.net/?channels=pelican&uio=d4
+.. _`Pelican plugins`: https://github.com/getpelican/pelican-plugins

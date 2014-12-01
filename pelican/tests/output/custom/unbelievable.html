@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Unbelievable !</title>
+        <link rel="stylesheet" href="./theme/css/main.css" />
+        <link href="http://blog.notmyidea.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Alexis' log Atom Feed" />
+        <link href="http://blog.notmyidea.org/feeds/all.rss.xml" type="application/rss+xml" rel="alternate" title="Alexis' log RSS Feed" />
+
+        <!--[if IE]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="http://github.com/ametaireau/">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="./">Alexis' log </a></h1>
+                <nav><ul>
+                    <li><a href="./tag/oh.html">Oh Oh Oh</a></li>
+                    <li><a href="./override/">Override url/save_as</a></li>
+                    <li><a href="./pages/this-is-a-test-page.html">This is a test page</a></li>
+                    <li><a href="./category/yeah.html">yeah</a></li>
+                    <li class="active"><a href="./category/misc.html">misc</a></li>
+                    <li><a href="./category/cat1.html">cat1</a></li>
+                    <li><a href="./category/bar.html">bar</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="./unbelievable.html" rel="bookmark"
+           title="Permalink to Unbelievable !">Unbelievable !</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2010-10-15T20:30:00+02:00">
+                Published: Fri 15 October 2010
+        </abbr>
+
+        <address class="vcard author">
+                By <a class="url fn" href="./author/alexis-metaireau.html">Alexis Métaireau</a>
+        </address>
+<p>In <a href="./category/misc.html">misc</a>. </p>
+
+</footer><!-- /.post-info -->      <p>Or completely awesome. Depends the needs.</p>
+<p><a class="reference external" href="./a-markdown-powered-article.html">a root-relative link to markdown-article</a>
+<a class="reference external" href="./a-markdown-powered-article.html">a file-relative link to markdown-article</a></p>
+<div class="section" id="testing-sourcecode-directive">
+<h2>Testing sourcecode directive</h2>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</td></tr></table></div>
+<div class="section" id="testing-another-case">
+<h2>Testing another case</h2>
+<p>This will now have a line number in 'custom' since it's the default in
+pelican.conf, it will have nothing in default.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+</td></tr></table><p>Lovely.</p>
+</div>
+<div class="section" id="testing-more-sourcecode-directives">
+<h2>Testing more sourcecode directives</h2>
+<div class="highlight"><pre><span id="foo-8"><a name="foo-8"></a><span class="lineno special"> 8</span> <span class="testingk">def</span> <span class="testingnf">run</span><span class="testingp">(</span><span class="testingbp">self</span><span class="testingp">):</span><br></span><span id="foo-9"><a name="foo-9"></a><span class="lineno">  </span>     <span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">assert_has_content</span><span class="testingp">()</span><br></span><span id="foo-10"><a name="foo-10"></a><span class="lineno special">10</span>     <span class="testingk">try</span><span class="testingp">:</span><br></span><span id="foo-11"><a name="foo-11"></a><span class="lineno">  </span>         <span class="testingn">lexer</span> <span class="testingo">=</span> <span class="testingn">get_lexer_by_name</span><span class="testingp">(</span><span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">arguments</span><span class="testingp">[</span><span class="testingmi">0</span><span class="testingp">])</span><br></span><span id="foo-12"><a name="foo-12"></a><span class="lineno special">12</span>     <span class="testingk">except</span> <span class="testingne">ValueError</span><span class="testingp">:</span><br></span><span id="foo-13"><a name="foo-13"></a><span class="lineno">  </span>         <span class="testingc"># no lexer found - use the text one instead of an exception</span><br></span><span id="foo-14"><a name="foo-14"></a><span class="lineno special">14</span>         <span class="testingn">lexer</span> <span class="testingo">=</span> <span class="testingn">TextLexer</span><span class="testingp">()</span><br></span><span id="foo-15"><a name="foo-15"></a><span class="lineno">  </span> <br></span><span id="foo-16"><a name="foo-16"></a><span class="lineno special">16</span>     <span class="testingk">if</span> <span class="testingp">(</span><span class="testings">&#39;linenos&#39;</span> <span class="testingow">in</span> <span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">options</span> <span class="testingow">and</span><br></span><span id="foo-17"><a name="foo-17"></a><span class="lineno">  </span>             <span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">options</span><span class="testingp">[</span><span class="testings">&#39;linenos&#39;</span><span class="testingp">]</span> <span class="testingow">not</span> <span class="testingow">in</span> <span class="testingp">(</span><span class="testings">&#39;table&#39;</span><span class="testingp">,</span> <span class="testings">&#39;inline&#39;</span><span class="testingp">)):</span><br></span><span id="foo-18"><a name="foo-18"></a><span class="lineno special">18</span>         <span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">options</span><span class="testingp">[</span><span class="testings">&#39;linenos&#39;</span><span class="testingp">]</span> <span class="testingo">=</span> <span class="testings">&#39;table&#39;</span><br></span><span id="foo-19"><a name="foo-19"></a><span class="lineno">  </span> <br></span><span id="foo-20"><a name="foo-20"></a><span class="lineno special">20</span>     <span class="testingk">for</span> <span class="testingn">flag</span> <span class="testingow">in</span> <span class="testingp">(</span><span class="testings">&#39;nowrap&#39;</span><span class="testingp">,</span> <span class="testings">&#39;nobackground&#39;</span><span class="testingp">,</span> <span class="testings">&#39;anchorlinenos&#39;</span><span class="testingp">):</span><br></span><span id="foo-21"><a name="foo-21"></a><span class="lineno">  </span>         <span class="testingk">if</span> <span class="testingn">flag</span> <span class="testingow">in</span> <span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">options</span><span class="testingp">:</span><br></span><span id="foo-22"><a name="foo-22"></a><span class="lineno special">22</span>             <span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">options</span><span class="testingp">[</span><span class="testingn">flag</span><span class="testingp">]</span> <span class="testingo">=</span> <span class="testingbp">True</span><br></span><span id="foo-23"><a name="foo-23"></a><span class="lineno">  </span> <br></span><span id="foo-24"><a name="foo-24"></a><span class="lineno special">24</span>     <span class="testingc"># noclasses should already default to False, but just in case...</span><br></span><span id="foo-25"><a name="foo-25"></a><span class="lineno">  </span>     <span class="testingn">formatter</span> <span class="testingo">=</span> <span class="testingn">HtmlFormatter</span><span class="testingp">(</span><span class="testingn">noclasses</span><span class="testingo">=</span><span class="testingbp">False</span><span class="testingp">,</span> <span class="testingo">**</span><span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">options</span><span class="testingp">)</span><br></span><span id="foo-26"><a name="foo-26"></a><span class="lineno special">26</span>     <span class="testingn">parsed</span> <span class="testingo">=</span> <span class="testingn">highlight</span><span class="testingp">(</span><span class="testings">&#39;</span><span class="testingse">\n</span><span class="testings">&#39;</span><span class="testingo">.</span><span class="testingn">join</span><span class="testingp">(</span><span class="testingbp">self</span><span class="testingo">.</span><span class="testingn">content</span><span class="testingp">),</span> <span class="testingn">lexer</span><span class="testingp">,</span> <span class="testingn">formatter</span><span class="testingp">)</span><br></span><span id="foo-27"><a name="foo-27"></a><span class="lineno">  </span>     <span class="testingk">return</span> <span class="testingp">[</span><span class="testingn">nodes</span><span class="testingo">.</span><span class="testingn">raw</span><span class="testingp">(</span><span class="testings">&#39;&#39;</span><span class="testingp">,</span> <span class="testingn">parsed</span><span class="testingp">,</span> <span class="testingn">format</span><span class="testingo">=</span><span class="testings">&#39;html&#39;</span><span class="testingp">)]</span><br></span></pre></div>
+<p>Lovely.</p>
+</div>
+<div class="section" id="testing-even-more-sourcecode-directives">
+<h2>Testing even more sourcecode directives</h2>
+<span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+<p>Lovely.</p>
+</div>
+<div class="section" id="testing-overriding-config-defaults">
+<h2>Testing overriding config defaults</h2>
+<p>Even if the default is line numbers, we can override it here</p>
+<div class="highlight"><pre><span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="ow">and</span> <span class="n">VARIANTS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span>
+</pre></div>
+<p>Lovely.</p>
+</div>
+
+    </div><!-- /.entry-content -->
+    <div class="comments">
+      <h2>Comments !</h2>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        var disqus_shortname = 'blog-notmyidea';
+        var disqus_identifier = 'unbelievable.html';
+        var disqus_url = './unbelievable.html';
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//blog-notmyidea.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments.</noscript>
+    </div>
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="http://biologeek.org">Biologeek</a></li>
+                            <li><a href="http://filyb.info/">Filyb</a></li>
+                            <li><a href="http://www.libert-fr.com">Libert-fr</a></li>
+                            <li><a href="http://prendreuncafe.com/blog/">N1k0</a></li>
+                            <li><a href="http://ziade.org/blog">Tarek Ziadé</a></li>
+                            <li><a href="http://zubin71.wordpress.com/">Zubin Mithra</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="http://blog.notmyidea.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            <li><a href="http://blog.notmyidea.org/feeds/all.rss.xml" type="application/rss+xml" rel="alternate">rss feed</a></li>
+
+                            <li><a href="http://twitter.com/ametaireau">twitter</a></li>
+                            <li><a href="http://lastfm.com/user/akounet">lastfm</a></li>
+                            <li><a href="http://github.com/ametaireau">github</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+<script type="text/javascript">
+    var disqus_shortname = 'blog-notmyidea';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>

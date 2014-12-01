@@ -1,9 +1,5 @@
-Pelican
-=======
-
-.. image:: https://secure.travis-ci.org/getpelican/pelican.png?branch=master
-   :target: http://travis-ci.org/#!/getpelican/pelican
-   :alt: Travis-ci: continuous integration status.
+Pelican |build-status| |coverage-status|
+========================================
 
 Pelican is a static site generator, written in Python_.
 
@@ -27,9 +23,9 @@ Pelican currently supports:
 * Publication of articles in multiple languages
 * Atom/RSS feeds
 * Code syntax highlighting
-* Compilation of `LESS CSS`_ (optional)
 * Import from WordPress, Dotclear, or RSS feeds
 * Integration with external tools: Twitter, Google Analytics, etc. (optional)
+* Fast rebuild times thanks to content caching and selective output writing.
 
 Have a look at the `Pelican documentation`_ for more information.
 
@@ -45,16 +41,23 @@ You can access the source code at: https://github.com/getpelican/pelican
 
 If you feel hackish, have a look at the explanation of `Pelican's internals`_.
 
-Feedback / Contact us
----------------------
+How to get help, contribute, or provide feedback
+------------------------------------------------
 
-If you want to see new features in Pelican, don't hesitate to offer
-suggestions, clone the repository, etc. There are many ways to contribute_.
-That's open source, dude!
+See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
 
-Contact me at "alexis at notmyidea dot org" for any request/feedback! You can
-also join the team at `#pelican on irc.freenode.org 
-<irc://irc.freenode.net/pelican>`_ 
-(or if you don't have any IRC client, use `the webchat
-<http://webchat.freenode.net/?channels=pelican&uio=d4>`_)
-for quick feedback.
+.. Links
+
+.. _Python: http://www.python.org/
+.. _reStructuredText: http://docutils.sourceforge.net/rst.html
+.. _Markdown: http://daringfireball.net/projects/markdown/
+.. _Jinja2: http://jinja.pocoo.org/
+.. _`Pelican documentation`: http://docs.getpelican.com/
+.. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
+
+.. |build-status| image:: https://travis-ci.org/getpelican/pelican.svg?branch=master
+   :target: https://travis-ci.org/getpelican/pelican
+   :alt: Travis CI: continuous integration status
+.. |coverage-status| image:: https://img.shields.io/coveralls/getpelican/pelican.svg
+   :target: https://coveralls.io/r/getpelican/pelican
+   :alt: Coveralls: code coverage status

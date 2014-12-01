@@ -1,8 +1,15 @@
 # Tests
-unittest2
 mock
+
 # Optional Packages
 Markdown
-BeautifulSoup
+BeautifulSoup4
+lxml
 typogrify
-webassets
+
+# To perform release
+bumpr==0.2.0
+wheel
+
+# For docs theme
+sphinx_rtd_theme

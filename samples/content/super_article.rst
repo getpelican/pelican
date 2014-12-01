@@ -3,6 +3,7 @@ This is a super article !
 
 :tags: foo, bar, foobar
 :date: 2010-12-02 10:14
+:modified: 2013-11-17 23:29
 :category: yeah
 :author: Alexis Métaireau
 :summary:
@@ -16,12 +17,12 @@ This is a simple title
 
 And here comes the cool stuff_.
 
-.. image:: pictures/Sushi.jpg
+.. image:: |filename|/pictures/Sushi.jpg
    :height: 450 px
    :width: 600 px
    :alt: alternate text
 
-.. image:: pictures/Sushi_Macro.jpg
+.. image:: |filename|/pictures/Sushi_Macro.jpg
    :height: 450 px
    :width: 600 px
    :alt: alternate text

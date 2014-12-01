@@ -1,19 +1,158 @@
-Some people have helped to improve pelican by contributing features, reporting
-bugs or giving ideas. Thanks to them !
+Pelican is a project originally created by Alexis Métaireau
+<http://notmyidea.org/>, but there are a large number of people that have
+contributed or implemented key features over time. We do our best to keep this
+list up-to-date, but you can also have a look at the nice contributor graphs
+produced by GitHub: https://github.com/getpelican/pelican/graphs/contributors
 
-- Dan Jacka
-- solsTiCe on linuxfr for reporting bugs
-- Guillaume B (Gui13)
-- Ronny Pfannschmidt
-- Jérome Renard
-- Nicolas Martin
-- David Kulak
-- Arnaud Bos
-- nblock (Florian)
-- Bruno Bord
-- Laureline Guérin
-- Samuel Martin
-- Marcus Fredriksson
-- Günter Kolousek
-- Simon Liedtke
-- Manuel F. Viera
+If you want to contribute, check the documentation section about how to do so:
+<http://docs.getpelican.com/en/latest/contribute.html>
+
+Aaron Kavlie
+Abhishek L
+Albrecht Mühlenschulte
+Aldiantoro Nugroho
+Alen Mujezinovic
+Alessandro Martin
+Alexander Artemenko
+Alexandre RODIERE
+Alexis Daboville
+Alexis Métaireau
+Allan Whatmough
+Andrea Crotti
+Andrew Laski
+Andrew Spiers
+Arnaud BOS
+asselinpaul
+Axel Haustant
+Benoît HERVIER
+Borgar
+Brandon W Maister
+Brendan Wholihan
+Brian C. Lane
+Brian Hsu
+Brian St. Pierre
+Bruno Binet
+BunnyMan
+Chenguang Wang
+Chris Elston
+Chris McDonald (Wraithan)
+Chris Streeter
+Christophe Chauvet
+Clint Howarth
+Colin Dunklau
+Dafydd Crosby
+Dana Woodman
+Dave King
+Dave Mankoff
+David Beitey
+David Marble
+Deniz Turgut (Avaris)
+derdon
+Dirkjan Ochtman
+Dirk Makowski
+draftcode
+Edward Delaporte
+Emily Strickland
+epatters
+Eric Case
+Erik Hetzner
+FELD Boris
+Feth Arezki
+Florian Jacob
+Florian Preinstorfer
+Félix Delval
+Freeculture
+George V. Reilly
+Guillaume
+Guillaume B
+Guillermo López
+guillermooo
+Ian Cordasco
+Igor Kalnitsky
+Irfan Ahmad
+Iuri de Silvio
+Ivan Dyedov
+James King
+James Rowe
+jawher
+Jered Boxman
+Jerome
+Jiachen Yang
+Jochen Breuer
+joe di castro
+John Kristensen
+John Mastro
+Jökull Sólberg Auðunsson
+Jomel Imperio
+Joseph Reagle
+Joshua Adelman
+Julian Berman
+Justin Mayer
+Kevin Deldycke
+Kyle Fuller
+Laureline Guerin
+Leonard Huang
+Leroy Jiang
+Marcel Hellkamp
+Marco Milanesi
+Marcus Fredriksson
+Mario Rodas
+Mark Caudill
+Martin Brochhaus
+Massimo Santini
+Matt Bowcock
+Matt Layman
+Meir Kriheli
+Michael Guntsche
+Michael Reneer
+Michael Yanovich
+Mike Yumatov
+Mikhail Korobov
+m-r-r
+mviera
+Nico Di Rocco
+Nicolas Duhamel
+Nicolas Perriault
+Nicolas Steinmetz
+Paul Asselin
+Pavel Puchkin
+Perry Roper
+Peter Desmet
+Philippe Pepiot
+Rachid Belaid
+Randall Degges
+Ranjhith Kalisamy
+Remi Rampin
+Rémy HUBSCHER
+renhbo
+Richard Duivenvoorde
+Rogdham
+Roman Skvazh
+Ronny Pfannschmidt
+Rory McCann
+Rıdvan Örsvuran
+saghul
+sam
+Samrat Man Singh
+Simon Conseil
+Simon Liedtke
+Skami18
+solsTiCe d'Hiver
+Steve Schwarz
+Stéphane Bunel
+Stéphane Raimbault
+Stuart Colville
+Talha Mansoor
+Tarek Ziade
+Thanos Lefteris
+Thomas Thurman
+Tobias
+Tomi Pieviläinen
+Trae Blain
+Tshepang Lekhonkhobe
+Valentin-Costel Hăloiu
+Vlad Niculae
+William Light
+Wladislaw Merezhko
+W. Trevor King
+Zoresvit

@@ -1,0 +1,571 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals, absolute_import
+
+import six
+from sys import platform
+import locale
+import os.path
+
+from pelican.tests.support import unittest, get_settings
+
+from pelican.contents import Page, Article, Static, URLWrapper
+from pelican.settings import DEFAULT_CONFIG
+from pelican.utils import path_to_url, truncate_html_words, SafeDatetime
+from pelican.signals import content_object_init
+from jinja2.utils import generate_lorem_ipsum
+
+# generate one paragraph, enclosed with <p>
+TEST_CONTENT = str(generate_lorem_ipsum(n=1))
+TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
+
+
+class TestPage(unittest.TestCase):
+
+    def setUp(self):
+        super(TestPage, self).setUp()
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
+        self.page_kwargs = {
+            'content': TEST_CONTENT,
+            'context': {
+                'localsiteurl': '',
+            },
+            'metadata': {
+                'summary': TEST_SUMMARY,
+                'title': 'foo bar',
+                'author': 'Blogger',
+            },
+            'source_path': '/path/to/file/foo.ext'
+        }
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
+
+    def test_use_args(self):
+        # Creating a page with arguments passed to the constructor should use
+        # them to initialise object's attributes.
+        metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
+        page = Page(TEST_CONTENT, metadata=metadata,
+                context={'localsiteurl': ''})
+        for key, value in metadata.items():
+            self.assertTrue(hasattr(page, key))
+            self.assertEqual(value, getattr(page, key))
+        self.assertEqual(page.content, TEST_CONTENT)
+
+    def test_mandatory_properties(self):
+        # If the title is not set, must throw an exception.
+        page = Page('content')
+        with self.assertRaises(NameError):
+            page.check_properties()
+
+        page = Page('content', metadata={'title': 'foobar'})
+        page.check_properties()
+
+    def test_summary_from_metadata(self):
+        # If a :summary: metadata is given, it should be used
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.summary, TEST_SUMMARY)
+
+    def test_summary_max_length(self):
+        # If a :SUMMARY_MAX_LENGTH: is set, and there is no other summary,
+        # generated summary should not exceed the given length.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs['settings'] = settings
+        del page_kwargs['metadata']['summary']
+        settings['SUMMARY_MAX_LENGTH'] = None
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, TEST_CONTENT)
+        settings['SUMMARY_MAX_LENGTH'] = 10
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10))
+        settings['SUMMARY_MAX_LENGTH'] = 0
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, '')
+
+    def test_slug(self):
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs['settings'] = settings
+        settings['SLUGIFY_SOURCE'] = "title"
+        page = Page(**page_kwargs)
+        self.assertEqual(page.slug, 'foo-bar')
+        settings['SLUGIFY_SOURCE'] = "basename"
+        page = Page(**page_kwargs)
+        self.assertEqual(page.slug, 'foo')
+
+    def test_defaultlang(self):
+        # If no lang is given, default to the default one.
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.lang, DEFAULT_CONFIG['DEFAULT_LANG'])
+
+        # it is possible to specify the lang in the metadata infos
+        self.page_kwargs['metadata'].update({'lang': 'fr', })
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.lang, 'fr')
+
+    def test_save_as(self):
+        # If a lang is not the default lang, save_as should be set
+        # accordingly.
+
+        # if a title is defined, save_as should be set
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.save_as, "pages/foo-bar.html")
+
+        # if a language is defined, save_as should include it accordingly
+        self.page_kwargs['metadata'].update({'lang': 'fr', })
+        page = Page(**self.page_kwargs)
+        self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
+
+    def test_metadata_url_format(self):
+        # Arbitrary metadata should be passed through url_format()
+        page = Page(**self.page_kwargs)
+        self.assertIn('summary', page.url_format.keys())
+        page.metadata['directory'] = 'test-dir'
+        page.settings = get_settings(PAGE_SAVE_AS='{directory}/{slug}')
+        self.assertEqual(page.save_as, 'test-dir/foo-bar')
+
+    def test_datetime(self):
+        # If DATETIME is set to a tuple, it should be used to override LOCALE
+        dt = SafeDatetime(2015, 9, 13)
+
+        page_kwargs = self._copy_page_kwargs()
+
+        # set its date to dt
+        page_kwargs['metadata']['date'] = dt
+        page = Page(**page_kwargs)
+
+        # page.locale_date is a unicode string in both python2 and python3
+        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']) 
+        # dt_date is a byte string in python2, and a unicode string in python3
+        # Let's make sure it is a unicode string (relies on python 3.3 supporting the u prefix)
+        if type(dt_date) != type(u''):
+            # python2:
+            dt_date = unicode(dt_date, 'utf8')
+
+        self.assertEqual(page.locale_date, dt_date )
+        page_kwargs['settings'] = get_settings()
+
+        # I doubt this can work on all platforms ...
+        if platform == "win32":
+            locale = 'jpn'
+        else:
+            locale = 'ja_JP.utf8'
+        page_kwargs['settings']['DATE_FORMATS'] = {'jp': (locale,
+                                                          '%Y-%m-%d(%a)')}
+        page_kwargs['metadata']['lang'] = 'jp'
+
+        import locale as locale_module
+        try:
+            page = Page(**page_kwargs)
+            self.assertEqual(page.locale_date, '2015-09-13(\u65e5)')
+        except locale_module.Error:
+            # The constructor of ``Page`` will try to set the locale to
+            # ``ja_JP.utf8``. But this attempt will failed when there is no
+            # such locale in the system. You can see which locales there are
+            # in your system with ``locale -a`` command.
+            #
+            # Until we find some other method to test this functionality, we
+            # will simply skip this test.
+            unittest.skip("There is no locale %s in this system." % locale)
+
+    def test_template(self):
+        # Pages default to page, metadata overwrites
+        default_page = Page(**self.page_kwargs)
+        self.assertEqual('page', default_page.template)
+        page_kwargs = self._copy_page_kwargs()
+        page_kwargs['metadata']['template'] = 'custom'
+        custom_page = Page(**page_kwargs)
+        self.assertEqual('custom', custom_page.template)
+
+    def _copy_page_kwargs(self):
+        # make a deep copy of page_kwargs
+        page_kwargs = dict([(key, self.page_kwargs[key]) for key in
+                            self.page_kwargs])
+        for key in page_kwargs:
+            if not isinstance(page_kwargs[key], dict):
+                break
+            page_kwargs[key] = dict([(subkey, page_kwargs[key][subkey])
+                                     for subkey in page_kwargs[key]])
+
+        return page_kwargs
+
+    def test_signal(self):
+        # If a title is given, it should be used to generate the slug.
+
+        def receiver_test_function(sender, instance):
+            pass
+
+        content_object_init.connect(receiver_test_function, sender=Page)
+        Page(**self.page_kwargs)
+        self.assertTrue(content_object_init.has_receivers_for(Page))
+
+    def test_get_content(self):
+        # Test that the content is updated with the relative links to
+        # filenames, tags and categories.
+        settings = get_settings()
+        args = self.page_kwargs.copy()
+        args['settings'] = settings
+
+        # Tag
+        args['content'] = ('A simple test, with a '
+                           '<a href="|tag|tagname">link</a>')
+        page = Page(**args)
+        content = page.get_content('http://notmyidea.org')
+        self.assertEqual(content, ('A simple test, with a '
+                                   '<a href="tag/tagname.html">link</a>'))
+
+        # Category
+        args['content'] = ('A simple test, with a '
+                           '<a href="|category|category">link</a>')
+        page = Page(**args)
+        content = page.get_content('http://notmyidea.org')
+        self.assertEqual(content,
+                         ('A simple test, with a '
+                          '<a href="category/category.html">link</a>'))
+
+    def test_intrasite_link(self):
+        # type does not take unicode in PY2 and bytes in PY3, which in
+        # combination with unicode literals leads to following insane line:
+        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        article = type(cls_name, (object,), {'url': 'article.html'})
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {'article.rst': article}
+
+        # Classic intrasite link via filename
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html">link</a>'
+        )
+
+        # fragment
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst#section-2">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html#section-2">link</a>'
+        )
+
+        # query
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst'
+            '?utm_whatever=234&highlight=word">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html'
+            '?utm_whatever=234&highlight=word">link</a>'
+        )
+
+        # combination
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst'
+            '?utm_whatever=234&highlight=word#section-2">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article.html'
+            '?utm_whatever=234&highlight=word#section-2">link</a>'
+        )
+
+    def test_intrasite_link_more(self):
+        # type does not take unicode in PY2 and bytes in PY3, which in
+        # combination with unicode literals leads to following insane line:
+        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {
+            'images/poster.jpg': type(cls_name, (object,), {'url': 'images/poster.jpg'}),
+            'assets/video.mp4': type(cls_name, (object,), {'url': 'assets/video.mp4'}),
+            'images/graph.svg': type(cls_name, (object,), {'url': 'images/graph.svg'}),
+            'reference.rst': type(cls_name, (object,), {'url': 'reference.html'}),
+        }
+
+        # video.poster
+        args['content'] = (
+            'There is a video with poster '
+            '<video controls poster="{filename}/images/poster.jpg">'
+            '<source src="|filename|/assets/video.mp4" type="video/mp4">'
+            '</video>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a video with poster '
+            '<video controls poster="http://notmyidea.org/images/poster.jpg">'
+            '<source src="http://notmyidea.org/assets/video.mp4" type="video/mp4">'
+            '</video>'
+        )
+
+        # object.data
+        args['content'] = (
+            'There is a svg object '
+            '<object data="{filename}/images/graph.svg" type="image/svg+xml"></object>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a svg object '
+            '<object data="http://notmyidea.org/images/graph.svg" type="image/svg+xml"></object>'
+        )
+
+        # blockquote.cite
+        args['content'] = (
+            'There is a blockquote with cite attribute '
+            '<blockquote cite="{filename}reference.rst">blah blah</blockquote>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a blockquote with cite attribute '
+            '<blockquote cite="http://notmyidea.org/reference.html">blah blah</blockquote>'
+        )
+
+    def test_intrasite_link_markdown_spaces(self):
+        # Markdown introduces %20 instead of spaces, this tests that
+        # we support markdown doing this.
+        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        article = type(cls_name, (object,), {'url': 'article-spaces.html'})
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {'article spaces.rst': article}
+
+        # An intrasite link via filename with %20 as a space
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article%20spaces.rst">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/article-spaces.html">link</a>'
+        )
+
+    def test_multiple_authors(self):
+        """Test article with multiple authors."""
+        args = self.page_kwargs.copy()
+        content = Page(**args)
+        assert content.authors == [content.author]
+        args['metadata'].pop('author')
+        args['metadata']['authors'] = ['First Author', 'Second Author']
+        content = Page(**args)
+        assert content.authors
+        assert content.author == content.authors[0]
+
+
+class TestArticle(TestPage):
+    def test_template(self):
+        # Articles default to article, metadata overwrites
+        default_article = Article(**self.page_kwargs)
+        self.assertEqual('article', default_article.template)
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['template'] = 'custom'
+        custom_article = Article(**article_kwargs)
+        self.assertEqual('custom', custom_article.template)
+
+    def test_slugify_category_author(self):
+        settings = get_settings()
+        settings['SLUG_SUBSTITUTIONS'] = [ ('C#', 'csharp') ]
+        settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
+        settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['author'] = "O'Brien"
+        article_kwargs['metadata']['category'] = 'C# & stuff'
+        article_kwargs['metadata']['title'] = 'fnord'
+        article_kwargs['settings'] = settings
+        article = Article(**article_kwargs)
+        self.assertEqual(article.url, 'obrien/csharp-stuff/fnord/')
+        self.assertEqual(article.save_as, 'obrien/csharp-stuff/fnord/index.html')
+
+
+class TestStatic(unittest.TestCase):
+
+    def setUp(self):
+
+        self.settings = get_settings(
+            STATIC_SAVE_AS='{path}',
+            STATIC_URL='{path}',
+            PAGE_SAVE_AS=os.path.join('outpages', '{slug}.html'),
+            PAGE_URL='outpages/{slug}.html')
+        self.context = self.settings.copy()
+
+        self.static = Static(content=None, metadata={}, settings=self.settings,
+            source_path=os.path.join('dir', 'foo.jpg'), context=self.context)
+
+        self.context['filenames'] = {self.static.source_path: self.static}
+
+    def tearDown(self):
+        pass
+
+    def test_attach_to_same_dir(self):
+        """attach_to() overrides a static file's save_as and url.
+        """
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        expected_save_as = os.path.join('outpages', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+    def test_attach_to_parent_dir(self):
+        """attach_to() preserves dirs inside the linking document dir.
+        """
+        page = Page(content="fake page", metadata={'title': 'fakepage'},
+            settings=self.settings, source_path='fakepage.md')
+        self.static.attach_to(page)
+
+        expected_save_as = os.path.join('outpages', 'dir', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+    def test_attach_to_other_dir(self):
+        """attach_to() ignores dirs outside the linking document dir.
+        """
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        expected_save_as = os.path.join('outpages', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+    def test_attach_to_ignores_subsequent_calls(self):
+        """attach_to() does nothing when called a second time.
+        """
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+
+        self.static.attach_to(page)
+
+        otherdir_settings = self.settings.copy()
+        otherdir_settings.update(dict(
+            PAGE_SAVE_AS=os.path.join('otherpages', '{slug}.html'),
+            PAGE_URL='otherpages/{slug}.html'))
+        otherdir_page = Page(content="other page",
+            metadata={'title': 'otherpage'}, settings=otherdir_settings,
+            source_path=os.path.join('dir', 'otherpage.md'))
+
+        self.static.attach_to(otherdir_page)
+
+        otherdir_save_as = os.path.join('otherpages', 'foo.jpg')
+        self.assertNotEqual(self.static.save_as, otherdir_save_as)
+        self.assertNotEqual(self.static.url, path_to_url(otherdir_save_as))
+
+    def test_attach_to_does_nothing_after_save_as_referenced(self):
+        """attach_to() does nothing if the save_as was already referenced.
+        (For example, by a {filename} link an a document processed earlier.)
+        """
+        original_save_as = self.static.save_as
+
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        self.assertEqual(self.static.save_as, original_save_as)
+        self.assertEqual(self.static.url, path_to_url(original_save_as))
+
+    def test_attach_to_does_nothing_after_url_referenced(self):
+        """attach_to() does nothing if the url was already referenced.
+        (For example, by a {filename} link an a document processed earlier.)
+        """
+        original_url = self.static.url
+
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+        self.static.attach_to(page)
+
+        self.assertEqual(self.static.save_as, self.static.source_path)
+        self.assertEqual(self.static.url, original_url)
+
+    def test_attach_to_does_not_override_an_override(self):
+        """attach_to() does not override paths that were overridden elsewhere.
+        (For example, by the user with EXTRA_PATH_METADATA)
+        """
+        customstatic = Static(content=None,
+            metadata=dict(save_as='customfoo.jpg', url='customfoo.jpg'),
+            settings=self.settings,
+            source_path=os.path.join('dir', 'foo.jpg'),
+            context=self.settings.copy())
+
+        page = Page(content="fake page",
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'fakepage.md'))
+
+        customstatic.attach_to(page)
+
+        self.assertEqual(customstatic.save_as, 'customfoo.jpg')
+        self.assertEqual(customstatic.url, 'customfoo.jpg')
+
+    def test_attach_link_syntax(self):
+        """{attach} link syntax triggers output path override & url replacement.
+        """
+        html = '<a href="{attach}../foo.jpg">link</a>'
+        page = Page(content=html,
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+            context=self.context)
+        content = page.get_content('')
+
+        self.assertNotEqual(content, html,
+            "{attach} link syntax did not trigger URL replacement.")
+
+        expected_save_as = os.path.join('outpages', 'foo.jpg')
+        self.assertEqual(self.static.save_as, expected_save_as)
+        self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+
+class TestURLWrapper(unittest.TestCase):
+    def test_comparisons(self):
+        # URLWrappers are sorted by name
+        wrapper_a = URLWrapper(name='first', settings={})
+        wrapper_b = URLWrapper(name='last', settings={})
+        self.assertFalse(wrapper_a > wrapper_b)
+        self.assertFalse(wrapper_a >= wrapper_b)
+        self.assertFalse(wrapper_a == wrapper_b)
+        self.assertTrue(wrapper_a != wrapper_b)
+        self.assertTrue(wrapper_a <= wrapper_b)
+        self.assertTrue(wrapper_a < wrapper_b)
+        wrapper_b.name = 'first'
+        self.assertFalse(wrapper_a > wrapper_b)
+        self.assertTrue(wrapper_a >= wrapper_b)
+        self.assertTrue(wrapper_a == wrapper_b)
+        self.assertFalse(wrapper_a != wrapper_b)
+        self.assertTrue(wrapper_a <= wrapper_b)
+        self.assertFalse(wrapper_a < wrapper_b)
+        wrapper_a.name = 'last'
+        self.assertTrue(wrapper_a > wrapper_b)
+        self.assertTrue(wrapper_a >= wrapper_b)
+        self.assertFalse(wrapper_a == wrapper_b)
+        self.assertTrue(wrapper_a != wrapper_b)
+        self.assertFalse(wrapper_a <= wrapper_b)
+        self.assertFalse(wrapper_a < wrapper_b)

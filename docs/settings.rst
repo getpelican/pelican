@@ -1,14 +1,25 @@
 Settings
 ########
 
-Pelican is configurable thanks to a configuration file you can pass to
+Pelican is configurable thanks to a settings file you can pass to
 the command line::
 
-    $ pelican -s path/to/your/settingsfile.py path
+    pelican content -s path/to/your/pelicanconf.py
 
-Settings are configured in the form of a Python module (a file). You can see an
-example by looking at `/samples/pelican.conf.py
+(If you used the ``pelican-quickstart`` command, your primary settings file will
+be named ``pelicanconf.py`` by default.)
+
+.. note::
+
+   When experimenting with different settings (especially the metadata
+   ones) caching may interfere and the changes may not be visible. In
+   such cases disable caching with ``LOAD_CONTENT_CACHE = False`` or
+   use the ``--ignore-cache`` command-line switch.
+
+Settings are configured in the form of a Python module (a file). There is an
+`example settings file
 <https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_
+available for reference.
 
 All the setting identifiers must be set in all-caps, otherwise they will not be
 processed. Setting values that are numbers (5, 20, etc.), booleans (True,
@@ -16,137 +27,226 @@ False, None, etc.), dictionaries, or tuples should *not* be enclosed in
 quotation marks. All other values (i.e., strings) *must* be enclosed in
 quotation marks.
 
-Unless otherwise specified, settings that refer to paths can be either absolute or relative to the
-configuration file.
+Unless otherwise specified, settings that refer to paths can be either absolute
+or relative to the configuration file.
 
 The settings you define in the configuration file will be passed to the
 templates, which allows you to use your settings to add site-wide content.
 
 Here is a list of settings for Pelican:
 
+
 Basic settings
 ==============
 
-=====================================================================   =====================================================================
-Setting name (default value)                                            What does it do?
-=====================================================================   =====================================================================
-`AUTHOR`                                                                Default author (put your name)
-`DATE_FORMATS` (``{}``)                                                 If you do manage multiple languages, you can
-                                                                        set the date formatting here. See "Date format and locales"
-                                                                        section below for details.
-`DEFAULT_CATEGORY` (``'misc'``)                                         The default category to fall back on.
-`DEFAULT_DATE_FORMAT` (``'%a %d %B %Y'``)                               The default date format you want to use.
-`DISPLAY_PAGES_ON_MENU` (``True``)                                      Whether to display pages on the menu of the
-                                                                        template. Templates may or not honor this
-                                                                        setting.
-`DEFAULT_DATE` (``fs``)                                                 The default date you want to use.
-                                                                        If 'fs', Pelican will use the file system
-                                                                        timestamp information (mtime) if it can't get
-                                                                        date information from the metadata.
-                                                                        If tuple object, it will instead generate the
-                                                                        default datetime object by passing the tuple to
-                                                                        the datetime.datetime constructor.
-`JINJA_EXTENSIONS` (``[]``)                                             A list of any Jinja2 extensions you want to use.
-`DELETE_OUTPUT_DIRECTORY` (``False``)                                   Delete the content of the output directory before
-                                                                        generating new files.
-`LOCALE` (''[#]_)                                                       Change the locale. A list of locales can be provided
-                                                                        here or a single string representing one locale.
-                                                                        When providing a list, all the locales will be tried
-                                                                        until one works.
-`MARKUP` (``('rst', 'md')``)                                            A list of available markup languages you want
-                                                                        to use. For the moment, the only available values
-                                                                        are `rst` and `md`.
-`MD_EXTENSIONS` (``['codehilite','extra']``)                            A list of the extensions that the Markdown processor
-                                                                        will use. Refer to the extensions chapter in the
-                                                                        Python-Markdown documentation for a complete list of
-                                                                        supported extensions.
-`OUTPUT_PATH` (``'output/'``)                                           Where to output the generated files.
-`PATH` (``None``)                                                       Path to content directory to be processed by Pelican.
-`PAGE_DIR` (``'pages'``)                                                Directory to look at for pages, relative to `PATH`.
-`PAGE_EXCLUDES` (``()``)                                                A list of directories to exclude when looking for pages.
-`ARTICLE_DIR` (``''``)                                                  Directory to look at for articles, relative to `PATH`.
-`ARTICLE_EXCLUDES`: (``('pages',)``)                                    A list of directories to exclude when looking for articles.
-`PDF_GENERATOR` (``False``)                                             Set to True if you want to have PDF versions
-                                                                        of your documents. You will need to install
-                                                                        `rst2pdf`.
-`OUTPUT_SOURCES` (``False``)                                            Set to True if you want to copy the articles and pages in their
-                                                                        original format (e.g. Markdown or ReStructeredText) to the
-                                                                        specified OUTPUT_PATH.
-`OUTPUT_SOURCES_EXTENSION` (``.text``)                                  Controls the extension that will be used by the SourcesGenerator.
-                                                                        Defaults to ``.text``. If not a valid string the default value
-                                                                        will be used.
-`RELATIVE_URLS` (``True``)                                              Defines whether Pelican should use document-relative URLs or
-                                                                        not. If set to ``False``, Pelican will use the SITEURL
-                                                                        setting to construct absolute URLs.
-`PLUGINS` (``[]``)                                                      The list of plugins to load. See :ref:`plugins`.
-`SITENAME` (``'A Pelican Blog'``)                                       Your site name
-`SITEURL`                                                               Base URL of your website. Not defined by default,
-                                                                        so it is best to specify your SITEURL; if you do not, feeds
-                                                                        will not be generated with properly-formed URLs. You should
-                                                                        include ``http://`` and your domain, with no trailing
-                                                                        slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
-`STATIC_PATHS` (``['images']``)                                         The static paths you want to have accessible
-                                                                        on the output path "static". By default,
-                                                                        Pelican will copy the 'images' folder to the
-                                                                        output folder.
-`TIMEZONE`                                                              The timezone used in the date information, to
-                                                                        generate Atom and RSS feeds. See the "timezone"
-                                                                        section below for more info.
-`TYPOGRIFY` (``False``)                                                 If set to True, several typographical improvements will be
-                                                                        incorporated into the generated HTML via the `Typogrify
-                                                                        <http://static.mintchaos.com/projects/typogrify/>`_
-                                                                        library, which can be installed via: ``pip install typogrify``
-`LESS_GENERATOR` (``FALSE``)                                            Set to True or complete path to `lessc` (if not
-                                                                        found in system PATH) to enable compiling less
-                                                                        css files. Requires installation of `less css`_.
-`DIRECT_TEMPLATES` (``('index', 'tags', 'categories', 'archives')``)    List of templates that are used directly to render
-                                                                        content. Typically direct templates are used to generate
-                                                                        index pages for collections of content e.g. tags and
-                                                                        category index pages.
-`PAGINATED_DIRECT_TEMPLATES` (``('index',)``)                           Provides the direct templates that should be paginated.
-`SUMMARY_MAX_LENGTH` (``50``)                                           When creating a short summary of an article, this will
-                                                                        be the default length in words of the text created.
-                                                                        This only applies if your content does not otherwise
-                                                                        specify a summary. Setting to None will cause the summary
-                                                                        to be a copy of the original content.
-`EXTRA_TEMPLATES_PATHS` (``[]``)                                        A list of paths you want Jinja2 to look for the templates.
-                                                                        Can be used to separate templates from the theme.
-                                                                        Example: projects, resume, profile ...
-                                                                        This templates need to use ``DIRECT_TEMPLATES`` setting
-
-`MARKDOWN_EXTENSIONS` (``['toc',]``)                                    A list of any Markdown extensions you want to use.
-=====================================================================   =====================================================================
+===============================================================================  =====================================================================
+Setting name (followed by default value, if any)                                 What does it do?
+===============================================================================  =====================================================================
+``AUTHOR``                                                                       Default author (put your name)
+``DATE_FORMATS = {}``                                                            If you manage multiple languages, you can set the date formatting
+                                                                                 here. See the "Date format and locale" section below for details.
+``USE_FOLDER_AS_CATEGORY = True``                                                When you don't specify a category in your post metadata, set this
+                                                                                 setting to ``True``, and organize your articles in subfolders, the
+                                                                                 subfolder will become the category of your post. If set to ``False``,
+                                                                                 ``DEFAULT_CATEGORY`` will be used as a fallback.
+``DEFAULT_CATEGORY = 'misc'``                                                    The default category to fall back on.
+``DEFAULT_DATE_FORMAT = '%a %d %B %Y'``                                          The default date format you want to use.
+``DISPLAY_PAGES_ON_MENU = True``                                                 Whether to display pages on the menu of the
+                                                                                 template. Templates may or may not honor this
+                                                                                 setting.
+``DISPLAY_CATEGORIES_ON_MENU = True``                                            Whether to display categories on the menu of the
+                                                                                 template. Templates may or not honor this
+                                                                                 setting.
+``DEFAULT_DATE = None``                                                          The default date you want to use.
+                                                                                 If ``fs``, Pelican will use the file system
+                                                                                 timestamp information (mtime) if it can't get
+                                                                                 date information from the metadata.
+                                                                                 If set to a tuple object, the default datetime object will instead
+                                                                                 be generated by passing the tuple to the
+                                                                                 ``datetime.datetime`` constructor.
+``DEFAULT_METADATA = ()``                                                        The default metadata you want to use for all articles
+                                                                                 and pages.
+``DOCUTILS_SETTINGS = {}``                                                       Extra configuration settings for the docutils publisher
+                                                                                 (applicable only to reStructuredText). See `Docutils 
+                                                                                 Configuration`_ settings for more details.
+                                            
+``FILENAME_METADATA =`` ``'(?P<date>\d{4}-\d{2}-\d{2}).*'``                      The regexp that will be used to extract any metadata
+                                                                                 from the filename. All named groups that are matched
+                                                                                 will be set in the metadata object.
+                                                                                 The default value will only extract the date from
+                                                                                 the filename.
+                                                                                 For example, if you would like to extract both the
+                                                                                 date and the slug, you could set something like:
+                                                                                 ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``.
+                                                                                 See :ref:`path_metadata` and ``SLUGIFY_SOURCE``.
+``PATH_METADATA = ''``                                                           Like ``FILENAME_METADATA``, but parsed from a page's
+                                                                                 full path relative to the content source directory.
+                                                                                 See :ref:`path_metadata`.
+``EXTRA_PATH_METADATA = {}``                                                     Extra metadata dictionaries keyed by relative path. Relative paths
+                                                                                 require correct OS-specific directory separators (i.e. / in UNIX and
+                                                                                 \\ in Windows) unlike some other Pelican file settings.
+                                                                                 See :ref:`path_metadata`.
+``DELETE_OUTPUT_DIRECTORY = False``                                              Delete the output directory, and **all** of its contents, before
+                                                                                 generating new files. This can be useful in preventing older,
+                                                                                 unnecessary files from persisting in your output. However, **this is
+                                                                                 a destructive setting and should be handled with extreme care.**
+``OUTPUT_RETENTION = ()``                                                        A tuple of filenames that should be retained and not deleted from the
+                                                                                 output directory. One use case would be the preservation of version
+                                                                                 control data. For example: ``(".hg", ".git", ".bzr")``
+``JINJA_EXTENSIONS = []``                                                        A list of any Jinja2 extensions you want to use.
+``JINJA_FILTERS = {}``                                                           A list of custom Jinja2 filters you want to use.
+                                                                                 The dictionary should map the filtername to the filter function.
+                                                                                 For example: ``{'urlencode': urlencode_filter}``
+                                                                                 See `Jinja custom filters documentation`_.
+``LOCALE`` [#]_                                                                  Change the locale. A list of locales can be provided
+                                                                                 here or a single string representing one locale.
+                                                                                 When providing a list, all the locales will be tried
+                                                                                 until one works.
+``LOG_FILTER = []``                                                              A list of tuples containing the logging level (up to ``warning``)
+                                                                                 and the message to be ignored.
+                                                                                 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
+``READERS = {}``                                                                 A dictionary of file extensions / Reader classes for Pelican to
+                                                                                 process or ignore. For example, to avoid processing .html files,
+                                                                                 set: ``READERS = {'html': None}``. To add a custom reader for the
+                                                                                 ``foo`` extension, set: ``READERS = {'foo': FooReader}``
+``IGNORE_FILES = ['.#*']``                                                       A list of file globbing patterns to match against the
+                                                                                 source files to be ignored by the processor. For example,
+                                                                                 the default ``['.#*']`` will ignore emacs lock files.
+``MD_EXTENSIONS =`` ``['codehilite(css_class=highlight)','extra']``              A list of the extensions that the Markdown processor
+                                                                                 will use. Refer to the Python Markdown documentation's
+                                                                                 `Extensions section <http://pythonhosted.org/Markdown/extensions/>`_
+                                                                                 for a complete list of supported extensions. (Note that
+                                                                                 defining this in your settings file will override and
+                                                                                 replace the default values. If your goal is to *add*
+                                                                                 to the default values for this setting, you'll need to
+                                                                                 include them explicitly and enumerate the full list of
+                                                                                 desired Markdown extensions.)
+``OUTPUT_PATH = 'output/'``                                                      Where to output the generated files.
+``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
+                                                                                 and content path is not specified via an argument to the ``pelican``
+                                                                                 command, Pelican will use the current working directory.
+``PAGE_PATHS = ['pages']``                                                       A list of directories and files to look at for pages,
+                                                                                 relative to ``PATH``.
+``PAGE_EXCLUDES = []``                                                           A list of directories to exclude when looking for pages in addition
+                                                                                 to ``ARTICLE_PATHS``.
+``ARTICLE_PATHS = ['']``                                                         A list of directories and files to look at for articles,
+                                                                                 relative to ``PATH``.
+``ARTICLE_EXCLUDES = []``                                                        A list of directories to exclude when looking for articles in addition
+                                                                                 to ``PAGE_PATHS``.
+``OUTPUT_SOURCES = False``                                                       Set to True if you want to copy the articles and pages in their
+                                                                                 original format (e.g. Markdown or reStructuredText) to the
+                                                                                 specified ``OUTPUT_PATH``.
+``OUTPUT_SOURCES_EXTENSION = '.text'``                                           Controls the extension that will be used by the SourcesGenerator.
+                                                                                 Defaults to ``.text``. If not a valid string the default value
+                                                                                 will be used.
+``RELATIVE_URLS = False``                                                        Defines whether Pelican should use document-relative URLs or
+                                                                                 not. Only set this to ``True`` when developing/testing and only
+                                                                                 if you fully understand the effect it can have on links/feeds.
+``PLUGINS = []``                                                                 The list of plugins to load. See :ref:`plugins`.
+``PLUGIN_PATHS = []``                                                            A list of directories where to look for plugins. See :ref:`plugins`.
+``SITENAME = 'A Pelican Blog'``                                                  Your site name
+``SITEURL``                                                                      Base URL of your website. Not defined by default,
+                                                                                 so it is best to specify your SITEURL; if you do not, feeds
+                                                                                 will not be generated with properly-formed URLs. You should
+                                                                                 include ``http://`` and your domain, with no trailing
+                                                                                 slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
+``TEMPLATE_PAGES = None``                                                        A mapping containing template pages that will be rendered with
+                                                                                 the blog entries. See :ref:`template_pages`.
+``STATIC_PATHS = ['images']``                                                    A list of directories (relative to ``PATH``) in which to look for
+                                                                                 static files. Such files will be copied to the output directory
+                                                                                 without modification. Articles, pages, and other content source
+                                                                                 files will normally be skipped, so it is safe for a directory to
+                                                                                 appear both here and in ``PAGE_PATHS`` or ``ARTICLE_PATHS``.
+                                                                                 Pelican's default settings include the "images" directory here.
+``STATIC_EXCLUDES = []``                                                         A list of directories to exclude when looking for static files.
+``STATIC_EXCLUDE_SOURCES = True``                                                If set to False, content source files will not be skipped when
+                                                                                 copying files found in ``STATIC_PATHS``.
+``TIMEZONE``                                                                     The timezone used in the date information, to
+                                                                                 generate Atom and RSS feeds. See the *Timezone*
+                                                                                 section below for more info.
+``TYPOGRIFY = False``                                                            If set to True, several typographical improvements will be
+                                                                                 incorporated into the generated HTML via the `Typogrify
+                                                                                 <https://pypi.python.org/pypi/typogrify>`_ library,
+                                                                                 which can be installed via: ``pip install typogrify``
+``TYPOGRIFY_IGNORE_TAGS = []``                                                   A list of tags for Typogrify to ignore. By default
+                                                                                 Typogrify will ignore ``pre`` and ``code`` tags. This
+                                                                                 requires that Typogrify version 2.0.4 or later is installed
+``DIRECT_TEMPLATES =`` ``('index', 'categories', 'authors', 'archives')``        List of templates that are used directly to render
+                                                                                 content. Typically direct templates are used to generate
+                                                                                 index pages for collections of content (e.g., tags and
+                                                                                 category index pages). If the tag and category collections
+                                                                                 are not needed, set ``DIRECT_TEMPLATES = ('index', 'archives')``
+``PAGINATED_DIRECT_TEMPLATES = ('index',)``                                      Provides the direct templates that should be paginated.
+``SUMMARY_MAX_LENGTH = 50``                                                      When creating a short summary of an article, this will
+                                                                                 be the default length (measured in words) of the text created.
+                                                                                 This only applies if your content does not otherwise
+                                                                                 specify a summary. Setting to ``None`` will cause the summary
+                                                                                 to be a copy of the original content.
+``EXTRA_TEMPLATES_PATHS = []``                                                   A list of paths you want Jinja2 to search for templates.
+                                                                                 Can be used to separate templates from the theme.
+                                                                                 Example: projects, resume, profile ...
+                                                                                 These templates need to use ``DIRECT_TEMPLATES`` setting.
+``WITH_FUTURE_DATES = True``                                                     If disabled, content with dates in the future will get a default
+                                                                                 status of ``draft``. See :ref:`reading_only_modified_content`
+                                                                                 for caveats.
+``INTRASITE_LINK_REGEX = '[{|](?P<what>.*?)[|}]'``                               Regular expression that is used to parse internal links. Default
+                                                                                 syntax when linking to internal files, tags, etc., is to enclose
+                                                                                 the identifier, say ``filename``, in ``{}`` or ``||``. Identifier
+                                                                                 between ``{`` and ``}`` goes into the ``what`` capturing group.
+                                                                                 For details see :ref:`ref-linking-to-internal-content`.
+``PYGMENTS_RST_OPTIONS = []``                                                    A list of default Pygments settings for your reStructuredText
+                                                                                 code blocks. See :ref:`internal_pygments_options` for a list of
+                                                                                 supported options.
+``SLUGIFY_SOURCE = 'title'``                                                     Specifies where you want the slug to be automatically generated
+                                                                                 from. Can be set to ``title`` to use the 'Title:' metadata tag or
+                                                                                 ``basename`` to use the article's file name when creating the slug.
+``CACHE_CONTENT = True``                                                         If ``True``, save content in a cache file.
+                                                                                 See :ref:`reading_only_modified_content` for details about caching.
+``CONTENT_CACHING_LAYER = 'reader'``                                             If set to ``'reader'``, save only the raw content and metadata
+                                                                                 returned by readers. If set to ``'generator'``, save processed
+                                                                                 content objects.
+``CACHE_PATH = 'cache'``                                                         Directory in which to store cache files.
+``GZIP_CACHE = True``                                                            If ``True``, use gzip to (de)compress the cache files.
+``CHECK_MODIFIED_METHOD = 'mtime'``                                              Controls how files are checked for modifications.
+``LOAD_CONTENT_CACHE = True``                                                    If ``True``, load unmodified content from cache.
+``AUTORELOAD_IGNORE_CACHE = False``                                              If ``True``, do not load content cache in autoreload mode
+                                                                                 when the settings file changes.
+``WRITE_SELECTED = []``                                                          If this list is not empty, **only** output files with their paths
+                                                                                 in this list are written. Paths should be either absolute or relative
+                                                                                 to the current Pelican working directory. For possible use cases see
+                                                                                 :ref:`writing_only_selected_content`.
+===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
 
-.. _less css: http://lesscss.org/
-
 
 URL settings
-------------
+============
 
 The first thing to understand is that there are currently two supported methods
-for URL formation: *relative* and *absolute*. Document-relative URLs are useful
+for URL formation: *relative* and *absolute*. Relative URLs are useful
 when testing locally, and absolute URLs are reliable and most useful when
 publishing. One method of supporting both is to have one Pelican configuration
 file for local development and another for publishing. To see an example of this
-type of setup, use the ``pelican-quickstart`` script as described at the top of
-the :doc:`Getting Started<getting_started>` page, which will produce two separate
+type of setup, use the ``pelican-quickstart`` script as described in the
+:doc:`Installation <install>` section, which will produce two separate
 configuration files for local development and publishing, respectively.
 
-You can customize the URLs and locations where files will be saved. The URLs and
-SAVE_AS variables use Python's format strings. These variables allow you to place
-your articles in a location such as '{slug}/index.html' and link to them as
-'{slug}' for clean URLs. These settings give you the flexibility to place your
-articles and pages anywhere you want.
+You can customize the URLs and locations where files will be saved. The
+``*_URL`` and ``*_SAVE_AS`` variables use Python's format strings. These
+variables allow you to place your articles in a location such as
+``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see
+example below). These settings give you the flexibility to place your articles
+and pages anywhere you want.
 
 .. note::
-    If you specify a datetime directive, it will be substituted using the
+    If you specify a ``datetime`` directive, it will be substituted using the
     input files' date metadata attribute. If the date is not specified for a
-    particular file, Pelican will rely on the file's mtime timestamp.
+    particular file, Pelican will rely on the file's ``mtime`` timestamp.
+    Check the `Python datetime documentation`_ for more information.
 
-Check the Python datetime documentation at http://bit.ly/cNcJUC for more
-information.
+.. _Python datetime documentation:
+    http://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
 
 Also, you can use other file metadata attributes as well:
 
@@ -158,41 +258,121 @@ Also, you can use other file metadata attributes as well:
 
 Example usage:
 
-* ARTICLE_URL = ``'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'``
-* ARTICLE_SAVE_AS = ``'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'``
+* ``ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'``
+* ``ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'``
+* ``PAGE_URL = 'pages/{slug}/'``
+* ``PAGE_SAVE_AS = 'pages/{slug}/index.html'``
 
-This would save your articles in something like '/posts/2011/Aug/07/sample-post/index.html',
-and the URL to this would be '/posts/2011/Aug/07/sample-post/'.
+This would save your articles into something like ``/posts/2011/Aug/07/sample-post/index.html``,
+save your pages into ``/pages/about/index.html``, and render them available at
+URLs of ``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively.
 
-====================================================    =====================================================
-Setting name (default value)                            What does it do?
-====================================================    =====================================================
-`ARTICLE_URL` (``'{slug}.html'``)                       The URL to refer to an ARTICLE.
-`ARTICLE_SAVE_AS` (``'{slug}.html'``)                   The place where we will save an article.
-`ARTICLE_LANG_URL` (``'{slug}-{lang}.html'``)           The URL to refer to an ARTICLE which doesn't use the
+======================================================  ==============================================================
+Setting name (followed by default value, if any)        What does it do?
+======================================================  ==============================================================
+``ARTICLE_URL = '{slug}.html'``                         The URL to refer to an article.
+``ARTICLE_SAVE_AS = '{slug}.html'``                     The place where we will save an article.
+``ARTICLE_ORDER_BY = 'slug'``                           The metadata attribute used to sort articles. By default,
+                                                        the ``articles_page.object_list`` template variable is
+                                                        ordered by slug. If you modify this, make sure all
+                                                        articles contain the attribute you specify. You can also
+                                                        specify a "sorting" function of one argument that is used
+                                                        to extract a comparison key from each article. For example,
+                                                        sorting by title without using the built-in functionality
+                                                        would use the function ``operator.attrgetter('title')``.
+``ARTICLE_LANG_URL = '{slug}-{lang}.html'``             The URL to refer to an article which doesn't use the
                                                         default language.
-`ARTICLE_LANG_SAVE_AS` (``'{slug}-{lang}.html'``)       The place where we will save an article which
+``ARTICLE_LANG_SAVE_AS = '{slug}-{lang}.html'``         The place where we will save an article which
                                                         doesn't use the default language.
-`PAGE_URL` (``'pages/{slug}.html'``)                    The URL we will use to link to a page.
-`PAGE_SAVE_AS` (``'pages/{slug}.html'``)                The location we will save the page.
-`PAGE_LANG_URL` (``'pages/{slug}-{lang}.html'``)        The URL we will use to link to a page which doesn't
+``DRAFT_URL = 'drafts/{slug}.html'``                    The URL to refer to an article draft.
+``DRAFT_SAVE_AS = 'drafts/{slug}.html'``                The place where we will save an article draft.
+``DRAFT_LANG_URL = 'drafts/{slug}-{lang}.html'``        The URL to refer to an article draft which doesn't
                                                         use the default language.
-`PAGE_LANG_SAVE_AS` (``'pages/{slug}-{lang}.html'``)    The location we will save the page which doesn't
+``DRAFT_LANG_SAVE_AS = 'drafts/{slug}-{lang}.html'``    The place where we will save an article draft which
+                                                        doesn't use the default language.
+``PAGE_URL = 'pages/{slug}.html'``                      The URL we will use to link to a page.
+``PAGE_SAVE_AS = 'pages/{slug}.html'``                  The location we will save the page. This value has to be
+                                                        the same as PAGE_URL or you need to use a rewrite in
+                                                        your server config.
+
+``PAGE_ORDER_BY = 'basename'``                          The metadata attribute used to sort pages. By default
+                                                        the ``PAGES`` template variable is ordered by basename
+                                                        (i.e., path not included). Note that the option ``'basename'``
+                                                        is a special option supported in the source code. If
+                                                        you modify this setting, make sure all pages contain
+                                                        the attribute you specify. You can also specify a "sorting"
+                                                        function of one argument that is used to extract a comparison
+                                                        key from each page. For example, the basename function looks
+                                                        similar to
+                                                        ``lambda x: os.path.basename(getattr(x, 'source_path', ''))``.
+``PAGE_LANG_URL = 'pages/{slug}-{lang}.html'``          The URL we will use to link to a page which doesn't
                                                         use the default language.
-`AUTHOR_URL` (``'author/{name}.html'``)                 The URL to use for an author.
-`AUTHOR_SAVE_AS` (``'author/{name}.html'``)             The location to save an author.
-`CATEGORY_URL` (``'category/{name}.html'``)             The URL to use for a category.
-`CATEGORY_SAVE_AS` (``'category/{name}.html'``)         The location to save a category.
-`TAG_URL` (``'tag/{name}.html'``)                       The URL to use for a tag.
-`TAG_SAVE_AS` (``'tag/{name}.html'``)                   The location to save the tag page.
-`<DIRECT_TEMPLATE_NAME>_SAVE_AS`                        The location to save content generated from direct
-                                                        templates. Where <DIRECT_TEMPLATE_NAME> is the
-                                                        upper case template name.
-====================================================    =====================================================
+``PAGE_LANG_SAVE_AS = 'pages/{slug}-{lang}.html'``      The location we will save the page which doesn't
+                                                        use the default language.
+``CATEGORY_URL = 'category/{slug}.html'``               The URL to use for a category.
+``CATEGORY_SAVE_AS = 'category/{slug}.html'``           The location to save a category.
+``TAG_URL = 'tag/{slug}.html'``                         The URL to use for a tag.
+``TAG_SAVE_AS = 'tag/{slug}.html'``                     The location to save the tag page.
+``AUTHOR_URL = 'author/{slug}.html'``                   The URL to use for an author.
+``AUTHOR_SAVE_AS = 'author/{slug}.html'``               The location to save an author.
+``YEAR_ARCHIVE_SAVE_AS = ''``                           The location to save per-year archives of your posts.
+``MONTH_ARCHIVE_SAVE_AS = ''``                          The location to save per-month archives of your posts.
+``DAY_ARCHIVE_SAVE_AS = ''``                            The location to save per-day archives of your posts.
+``SLUG_SUBSTITUTIONS = ()``                             Substitutions to make prior to stripping out
+                                                        non-alphanumerics when generating slugs. Specified
+                                                        as a list of 2-tuples of ``(from, to)`` which are
+                                                        applied in order.
+======================================================  ==============================================================
 
 .. note::
 
-    When any of `*_SAVE_AS` is set to False, files will not be created.
+    If you do not want one or more of the default pages to be created (e.g.,
+    you are the only author on your site and thus do not need an Authors page),
+    set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
+    relevant page from being generated.
+
+Pelican can optionally create per-year, per-month, and per-day archives of your
+posts. These secondary archives are disabled by default but are automatically
+enabled if you supply format strings for their respective ``_SAVE_AS`` settings.
+Period archives fit intuitively with the hierarchical model of web URLs and can
+make it easier for readers to navigate through the posts you've written over time.
+
+Example usage:
+
+* ``YEAR_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/index.html'``
+* ``MONTH_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/index.html'``
+
+With these settings, Pelican will create an archive of all your posts for the
+year at (for instance) ``posts/2011/index.html`` and an archive of all your
+posts for the month at ``posts/2011/Aug/index.html``.
+
+.. note::
+    Period archives work best when the final path segment is ``index.html``.
+    This way a reader can remove a portion of your URL and automatically
+    arrive at an appropriate archive of posts, without having to specify
+    a page name.
+
+``DIRECT_TEMPLATES``, which are ``('index', 'tags', 'categories', 'archives')``
+by default, work a bit differently than noted above. Only the ``_SAVE_AS``
+settings are available, but it is available for any direct template.
+
+=============================================  ======================================================
+Setting name (followed by default value)       What does it do?
+=============================================  ======================================================
+``ARCHIVES_SAVE_AS = 'archives.html'``         The location to save the article archives page.
+``YEAR_ARCHIVE_SAVE_AS = ''``                  The location to save per-year archives of your posts.
+``MONTH_ARCHIVE_SAVE_AS = ''``                 The location to save per-month archives of your posts.
+``DAY_ARCHIVE_SAVE_AS = ''``                   The location to save per-day archives of your posts.
+``AUTHORS_SAVE_AS = 'authors.html'``           The location to save the author list.
+``CATEGORIES_SAVE_AS = 'categories.html'``     The location to save the category list.
+``TAGS_SAVE_AS = 'tags.html'``                 The location to save the tag list.
+``INDEX_SAVE_AS = 'index.html'``               The location to save the list of all articles.
+=============================================  ======================================================
+
+URLs for direct template pages are theme-dependent. Some themes use
+corresponding ``*_URL`` setting as string, while others hard-code them:
+``'archives.html'``, ``'authors.html'``, ``'categories.html'``, ``'tags.html'``.
+
 
 Timezone
 --------
@@ -211,10 +391,15 @@ Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 Date format and locale
 ----------------------
 
-If no DATE_FORMATS is set, fall back to DEFAULT_DATE_FORMAT. If you need to
-maintain multiple languages with different date formats, you can set this dict
-using language name (``lang`` in your posts) as key. Regarding available format
-codes, see `strftime document of python`_ :
+If no ``DATE_FORMATS`` are set, Pelican will fall back to
+``DEFAULT_DATE_FORMAT``. If you need to maintain multiple languages with
+different date formats, you can set the ``DATE_FORMATS`` dictionary using the
+language name (``lang`` metadata in your post content) as the key. 
+
+In addition to the standard C89 strftime format codes that are listed in
+`Python strftime documentation`_, you can use ``-`` character between ``%`` and
+the format character to remove any leading zeros. For example, ``%d/%m/%Y`` will
+output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will result in ``1/1/2014``.
 
 .. parsed-literal::
 
@@ -232,8 +417,8 @@ You can set locale to further control date format:
         )
 
 Also, it is possible to set different locale settings for each language. If you
-put (locale, format) tuples in the dict, this will override the LOCALE setting
-above:
+put (locale, format) tuples in the dict, this will override the ``LOCALE``
+setting above:
 
 .. parsed-literal::
     # On Unix/Linux
@@ -253,11 +438,77 @@ can get a list of available locales via the ``locale -a`` command; see manpage
 `locale(1)`_ for more information.
 
 
-.. _strftime document of python: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
+.. _Python strftime documentation: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
 
 .. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
 
 .. _locale(1): http://linux.die.net/man/1/locale
+
+
+.. _template_pages:
+
+
+Template pages
+==============
+
+If you want to generate custom pages besides your blog entries, you can point
+any Jinja2 template file with a path pointing to the file and the destination
+path for the generated file.
+
+For instance, if you have a blog with three static pages — a list of books,
+your resume, and a contact page — you could have::
+
+    TEMPLATE_PAGES = {'src/books.html': 'dest/books.html',
+                      'src/resume.html': 'dest/resume.html',
+                      'src/contact.html': 'dest/contact.html'}
+
+
+.. _path_metadata:
+
+
+Path metadata
+=============
+
+Not all metadata needs to be `embedded in source file itself`__.  For
+example, blog posts are often named following a ``YYYY-MM-DD-SLUG.rst``
+pattern, or nested into ``YYYY/MM/DD-SLUG`` directories.  To extract
+metadata from the filename or path, set ``FILENAME_METADATA`` or
+``PATH_METADATA`` to regular expressions that use Python's `group name
+notation`_ ``(?P<name>…)``.  If you want to attach additional metadata
+but don't want to encode it in the path, you can set
+``EXTRA_PATH_METADATA``:
+
+.. parsed-literal::
+
+    EXTRA_PATH_METADATA = {
+        'relative/path/to/file-1': {
+            'key-1a': 'value-1a',
+            'key-1b': 'value-1b',
+            },
+        'relative/path/to/file-2': {
+            'key-2': 'value-2',
+            },
+        }
+
+This can be a convenient way to shift the installed location of a
+particular file:
+
+.. parsed-literal::
+
+    # Take advantage of the following defaults
+    # STATIC_SAVE_AS = '{path}'
+    # STATIC_URL = '{path}'
+    STATIC_PATHS = [
+        'static/robots.txt',
+        ]
+    EXTRA_PATH_METADATA = {
+        'static/robots.txt': {'path': 'robots.txt'},
+        }
+
+__ internal_metadata__
+.. _group name notation:
+   http://docs.python.org/3/library/re.html#regular-expression-syntax
+
 
 Feed settings
 =============
@@ -269,31 +520,38 @@ Pelican generates category feeds as well as feeds for all your articles. It does
 not generate feeds for tags by default, but it is possible to do so using
 the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
-================================================    =====================================================
-Setting name (default value)                        What does it do?
-================================================    =====================================================
-`FEED_DOMAIN` (``None``, i.e. base URL is "/")      The domain prepended to feed URLs. Since feed URLs
+=================================================   =====================================================
+Setting name (followed by default value, if any)    What does it do?
+=================================================   =====================================================
+``FEED_DOMAIN = None``, i.e. base URL is "/"        The domain prepended to feed URLs. Since feed URLs
                                                     should always be absolute, it is highly recommended
                                                     to define this (e.g., "http://feeds.example.com"). If
                                                     you have already explicitly defined SITEURL (see
                                                     above) and want to use the same domain for your
-                                                    feeds, you can just set:  `FEED_DOMAIN = SITEURL`
-`FEED_ATOM` (``'feeds/all.atom.xml'``)              Relative URL to output the Atom feed.
-`FEED_RSS` (``None``, i.e. no RSS)                  Relative URL to output the RSS feed.
-`CATEGORY_FEED_ATOM` ('feeds/%s.atom.xml'[2]_)      Where to put the category Atom feeds.
-`CATEGORY_FEED_RSS` (``None``, i.e. no RSS)         Where to put the category RSS feeds.
-`TAG_FEED_ATOM` (``None``, i.e. no tag feed)        Relative URL to output the tag Atom feed. It should
+                                                    feeds, you can just set:  ``FEED_DOMAIN = SITEURL``.
+``FEED_ATOM = None``, i.e. no Atom feed             Relative URL to output the Atom feed.
+``FEED_RSS = None``, i.e. no RSS                    Relative URL to output the RSS feed.
+``FEED_ALL_ATOM = 'feeds/all.atom.xml'``            Relative URL to output the all-posts Atom feed:
+                                                    this feed will contain all posts regardless of their
+                                                    language.
+``FEED_ALL_RSS = None``, i.e. no all-posts RSS      Relative URL to output the all-posts RSS feed:
+                                                    this feed will contain all posts regardless of their
+                                                    language.
+``CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'`` [2]_   Where to put the category Atom feeds.
+``CATEGORY_FEED_RSS = None``, i.e. no RSS           Where to put the category RSS feeds.
+``AUTHOR_FEED_ATOM = 'feeds/%s.atom.xml'`` [2]_     Where to put the author Atom feeds.
+``AUTHOR_FEED_RSS = 'feeds/%s.rss.xml'`` [2]_       Where to put the author RSS feeds.
+``TAG_FEED_ATOM = None``, i.e. no tag feed          Relative URL to output the tag Atom feed. It should
                                                     be defined using a "%s" match in the tag name.
-`TAG_FEED_RSS` (``None``, ie no RSS tag feed)       Relative URL to output the tag RSS feed
-`FEED_MAX_ITEMS`                                    Maximum number of items allowed in a feed. Feed item
+``TAG_FEED_RSS = None``, i.e. no RSS tag feed       Relative URL to output the tag RSS feed
+``FEED_MAX_ITEMS``                                  Maximum number of items allowed in a feed. Feed item
                                                     quantity is unrestricted by default.
-================================================    =====================================================
+=================================================   =====================================================
 
-If you don't want to generate some of these feeds, set ``None`` to the
-variables above. If you don't want to generate any feeds set both ``FEED_ATOM``
-and ``FEED_RSS`` to none.
+If you don't want to generate some or any of these feeds, set the above variables to ``None``.
 
 .. [2] %s is the name of the category.
+
 
 FeedBurner
 ----------
@@ -302,38 +560,65 @@ If you want to use FeedBurner for your feed, you will likely need to decide
 upon a unique identifier. For example, if your site were called "Thyme" and
 hosted on the www.example.com domain, you might use "thymefeeds" as your
 unique identifier, which we'll use throughout this section for illustrative
-purposes. In your Pelican settings, set the `FEED_ATOM` attribute to
-"thymefeeds/main.xml" to create an Atom feed with an original address of
-`http://www.example.com/thymefeeds/main.xml`. Set the `FEED_DOMAIN` attribute
-to `http://feeds.feedburner.com`, or `http://feeds.example.com` if you are
-using a CNAME on your own domain (i.e., FeedBurner's "MyBrand" feature).
+purposes. In your Pelican settings, set the ``FEED_ATOM`` attribute to
+``thymefeeds/main.xml`` to create an Atom feed with an original address of
+``http://www.example.com/thymefeeds/main.xml``. Set the ``FEED_DOMAIN``
+attribute to ``http://feeds.feedburner.com``, or ``http://feeds.example.com`` if
+you are using a CNAME on your own domain (i.e., FeedBurner's "MyBrand" feature).
 
 There are two fields to configure in the `FeedBurner
 <http://feedburner.google.com>`_ interface: "Original Feed" and "Feed
 Address". In this example, the "Original Feed" would be
-`http://www.example.com/thymefeeds/main.xml` and the "Feed Address" suffix
-would be `thymefeeds/main.xml`.
+``http://www.example.com/thymefeeds/main.xml`` and the "Feed Address" suffix
+would be ``thymefeeds/main.xml``.
+
 
 Pagination
 ==========
 
 The default behaviour of Pelican is to list all the article titles along
-with a short description on the index page. While it works pretty well
-for small-to-medium blogs, for sites with large quantity of articles it would
-be convenient to have a way to paginate the list.
+with a short description on the index page. While this works well for
+small-to-medium sites, sites with a large quantity of articles will probably
+benefit from paginating this list.
 
 You can use the following settings to configure the pagination.
 
 ================================================    =====================================================
-Setting name (default value)                        What does it do?
+Setting name (followed by default value, if any)    What does it do?
 ================================================    =====================================================
-`DEFAULT_ORPHANS` (``0``)                           The minimum number of articles allowed on the
-                                                    last page. Use this when you don't want to
-                                                    have a last page with very few articles.
-`DEFAULT_PAGINATION` (``False``)                    The maximum number of articles to include on a
+``DEFAULT_ORPHANS = 0``                             The minimum number of articles allowed on the
+                                                    last page. Use this when you don't want the last page
+                                                    to only contain a handful of articles.
+``DEFAULT_PAGINATION = False``                      The maximum number of articles to include on a
                                                     page, not including orphans. False to disable
                                                     pagination.
+``PAGINATION_PATTERNS``                             A set of patterns that are used to determine advanced
+                                                    pagination output.
 ================================================    =====================================================
+
+
+Using Pagination Patterns
+-------------------------
+
+The ``PAGINATION_PATTERNS`` setting can be used to configure where
+subsequent pages are created. The setting is a sequence of three
+element tuples, where each tuple consists of::
+
+  (minimum page, URL setting, SAVE_AS setting,)
+
+For example, if you wanted the first page to just be ``/``, and the
+second (and subsequent) pages to be ``/page/2/``, you would set
+``PAGINATION_PATTERNS`` as follows::
+
+  PAGINATION_PATTERNS = (
+      (1, '{base_name}/', '{base_name}/index.html'),
+      (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
+  )
+
+This would cause the first page to be written to
+``{base_name}/index.html``, and subsequent ones would be written into
+``page/{number}`` directories.
+
 
 Tag cloud
 =========
@@ -342,50 +627,75 @@ If you want to generate a tag cloud with all your tags, you can do so using the
 following settings.
 
 ================================================    =====================================================
-Setting name (default value)                        What does it do?
+Setting name (followed by default value)            What does it do?
 ================================================    =====================================================
-`TAG_CLOUD_STEPS` (``4``)                           Count of different font sizes in the tag
+``TAG_CLOUD_STEPS = 4``                             Count of different font sizes in the tag
                                                     cloud.
-`TAG_CLOUD_MAX_ITEMS` (``100``)                     Maximum number of tags in the cloud.
+``TAG_CLOUD_MAX_ITEMS = 100``                       Maximum number of tags in the cloud.
 ================================================    =====================================================
 
-The default theme does not support tag clouds, but it is pretty easy to add::
+The default theme does not include a tag cloud, but it is pretty easy to add one::
 
-    <ul>
+    <ul class="tagcloud">
         {% for tag in tag_cloud %}
-            <li class="tag-{{ tag.1 }}"><a href="/tag/{{ tag.0 }}/">{{ tag.0 }}</a></li>
+            <li class="tag-{{ tag.1 }}"><a href="{{ SITEURL }}/{{ tag.0.url }}">{{ tag.0 }}</a></li>
         {% endfor %}
     </ul>
 
-You should then also define a CSS style with the appropriate classes (tag-0 to tag-N, where
-N matches `TAG_CLOUD_STEPS` -1).
+You should then also define CSS styles with appropriate classes (tag-1 to tag-N,
+where N matches ``TAG_CLOUD_STEPS``), tag-1 being the most frequent, and
+define a ``ul.tagcloud`` class with appropriate list-style to create the cloud.
+For example::
+
+    ul.tagcloud {
+      list-style: none;
+        padding: 0;
+    }
+
+    ul.tagcloud li {
+        display: inline-block;
+    }
+
+    li.tag-1 {
+        font-size: 150%;
+    }
+
+    li.tag-2 {
+        font-size: 120%;
+    }
+
+    ...
+
 
 Translations
 ============
 
-Pelican offers a way to translate articles. See the Getting Started section for
+Pelican offers a way to translate articles. See the :doc:`Content <content>` section for
 more information.
 
-================================================    =====================================================
-Setting name (default value)                        What does it do?
-================================================    =====================================================
-`DEFAULT_LANG` (``'en'``)                           The default language to use.
-`TRANSLATION_FEED` ('feeds/all-%s.atom.xml'[3]_)    Where to put the feed for translations.
-================================================    =====================================================
+========================================================    =====================================================
+Setting name (followed by default value, if any)            What does it do?
+========================================================    =====================================================
+``DEFAULT_LANG = 'en'``                                     The default language to use.
+``TRANSLATION_FEED_ATOM = 'feeds/all-%s.atom.xml'`` [3]_    Where to put the Atom feed for translations.
+``TRANSLATION_FEED_RSS = None``, i.e. no RSS                Where to put the RSS feed for translations.
+========================================================    =====================================================
 
 .. [3] %s is the language
 
+
 Ordering content
-=================
+================
 
 ================================================    =====================================================
-Setting name (default value)                        What does it do?
+Setting name (followed by default value)            What does it do?
 ================================================    =====================================================
-`NEWEST_FIRST_ARCHIVES` (``True``)                  Order archives by newest first by date. (False:
+``NEWEST_FIRST_ARCHIVES = True``                    Order archives by newest first by date. (False:
                                                     orders by date with older articles first.)
-`REVERSE_CATEGORY_ORDER` (``False``)                Reverse the category order. (True: lists by reverse
+``REVERSE_CATEGORY_ORDER = False``                  Reverse the category order. (True: lists by reverse
                                                     alphabetical order; default lists alphabetically.)
 ================================================    =====================================================
+
 
 Themes
 ======
@@ -394,27 +704,32 @@ Creating Pelican themes is addressed in a dedicated section (see :ref:`theming-p
 However, here are the settings that are related to themes.
 
 ================================================    =====================================================
-Setting name (default value)                        What does it do?
+Setting name (followed by default value, if any)    What does it do?
 ================================================    =====================================================
-`THEME`                                             Theme to use to produce the output. Can be a relative
+``THEME``                                           Theme to use to produce the output. Can be a relative
                                                     or absolute path to a theme folder, or the name of a
                                                     default theme or a theme installed via
                                                     ``pelican-themes`` (see below).
-`THEME_STATIC_PATHS` (``['static']``)               Static theme paths you want to copy. Default
+``THEME_STATIC_DIR = 'theme'``                      Destination directory in the output path where
+                                                    Pelican will place the files collected from
+                                                    `THEME_STATIC_PATHS`. Default is `theme`.
+``THEME_STATIC_PATHS = ['static']``                 Static theme paths you want to copy. Default
                                                     value is `static`, but if your theme has
-                                                    other static paths, you can put them here.
-`CSS_FILE` (``'main.css'``)                         Specify the CSS file you want to load.
-`WEBASSETS` (``False``)                             Asset management with `webassets` (see below)
+                                                    other static paths, you can put them here. If files
+                                                    or directories with the same names are included in
+                                                    the paths defined in this settings, they will be
+                                                    progressively overwritten.
+``CSS_FILE = 'main.css'``                           Specify the CSS file you want to load.
 ================================================    =====================================================
 
 
-By default, two themes are available. You can specify them using the `THEME` setting or by passing the
-``-t`` option to the ``pelican`` command:
+By default, two themes are available. You can specify them using the ``THEME``
+setting or by passing the ``-t`` option to the ``pelican`` command:
 
 * notmyidea
 * simple (a synonym for "plain text" :)
 
-There are a number of other themes available at http://github.com/getpelican/pelican-themes.
+There are a number of other themes available at https://github.com/getpelican/pelican-themes.
 Pelican comes with :doc:`pelican-themes`, a small script for managing themes.
 
 You can define your own theme, either by starting from scratch or by duplicating
@@ -429,113 +744,149 @@ Following are example ways to specify your preferred theme::
     # Specify a customized theme, via path relative to the settings file
     THEME = "themes/mycustomtheme"
     # Specify a customized theme, via absolute path
-    THEME = "~/projects/mysite/themes/mycustomtheme"
+    THEME = "/home/myuser/projects/mysite/themes/mycustomtheme"
 
-The built-in `notmyidea` theme can make good use of the following settings. Feel
+The built-in ``notmyidea`` theme can make good use of the following settings. Feel
 free to use them in your themes as well.
 
 =======================   =======================================================
-Setting name              What does it do ?
+Setting name              What does it do?
 =======================   =======================================================
-`DISQUS_SITENAME`         Pelican can handle Disqus comments. Specify the
+``SITESUBTITLE``          A subtitle to appear in the header.
+``DISQUS_SITENAME``       Pelican can handle Disqus comments. Specify the
                           Disqus sitename identifier here.
-`GITHUB_URL`              Your GitHub URL (if you have one). It will then
+``GITHUB_URL``            Your GitHub URL (if you have one). It will then
                           use this information to create a GitHub ribbon.
-`GOOGLE_ANALYTICS`        'UA-XXXX-YYYY' to activate Google Analytics.
-`GOSQUARED_SITENAME`      'XXX-YYYYYY-X' to activate GoSquared.
-`MENUITEMS`               A list of tuples (Title, URL) for additional menu
+``GOOGLE_ANALYTICS``      Set to 'UA-XXXX-YYYY' to activate Google Analytics.
+``GOSQUARED_SITENAME``    Set to 'XXX-YYYYYY-X' to activate GoSquared.
+``MENUITEMS``             A list of tuples (Title, URL) for additional menu
                           items to appear at the beginning of the main menu.
-`PIWIK_URL`               URL to your Piwik server - without 'http://' at the
+``PIWIK_URL``             URL to your Piwik server - without 'http://' at the
                           beginning.
-`PIWIK_SSL_URL`           If the SSL-URL differs from the normal Piwik-URL
+``PIWIK_SSL_URL``         If the SSL-URL differs from the normal Piwik-URL
                           you have to include this setting too. (optional)
-`PIWIK_SITE_ID`           ID for the monitored website. You can find the ID
-                          in the Piwik admin interface > settings > websites.
-`LINKS`                   A list of tuples (Title, URL) for links to appear on
+``PIWIK_SITE_ID``         ID for the monitored website. You can find the ID
+                          in the Piwik admin interface > Settings > Websites.
+``LINKS``                 A list of tuples (Title, URL) for links to appear on
                           the header.
-`SOCIAL`                  A list of tuples (Title, URL) to appear in the
+``SOCIAL``                A list of tuples (Title, URL) to appear in the
                           "social" section.
-`TWITTER_USERNAME`        Allows for adding a button to articles to encourage
+``TWITTER_USERNAME``      Allows for adding a button to articles to encourage
                           others to tweet about them. Add your Twitter username
                           if you want this button to appear.
 =======================   =======================================================
 
-In addition, you can use the "wide" version of the `notmyidea` theme by
+In addition, you can use the "wide" version of the ``notmyidea`` theme by
 adding the following to your configuration::
 
     CSS_FILE = "wide.css"
 
-Asset management
-----------------
 
-The `WEBASSETS` setting allows you to use the `webassets`_ module to manage
-assets such as CSS and JS files. The module must first be installed::
+Logging
+=======
 
-    pip install webassets
+Sometimes, a long list of warnings may appear during site generation. Finding
+the **meaningful** error message in the middle of tons of annoying log output
+can be quite tricky. In order to filter out redundant log messages, Pelican
+comes with the ``LOG_FILTER`` setting.
 
-The `webassets` module allows you to perform a number of useful asset management
-functions, including:
+``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them being
+composed of the logging level (up to ``warning``) and the message to be ignored.
+Simply populate the list with the log messages you want to hide, and they will
+be filtered out.
 
-* CSS minifier (`cssmin`, `yuicompressor`, ...)
-* CSS compiler (`less`, `sass`, ...)
-* JS minifier (`uglifyjs`, `yuicompressor`, `closure`, ...)
+For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 
-Others filters include gzip compression, integration of images in CSS via data
-URIs, and more. `webassets` can also append a version identifier to your asset
-URL to convince browsers to download new versions of your assets when you use
-far-future expires headers. Please refer to the `webassets documentation`_ for
-more information.
+.. _reading_only_modified_content:
 
-When using with Pelican, `webassets` is configured to process assets in the
-``OUTPUT_PATH/theme`` directory. You can use `webassets` in your templates by
-including one or more template tags. For example...
 
-.. code-block:: jinja
+Reading only modified content
+=============================
 
-    {% assets filters="cssmin", output="css/style.min.css", "css/inuit.css", "css/pygment-monokai.css", "css/main.css" %}
-        <link rel="stylesheet" href="{{ ASSET_URL }}">
-    {% endassets %}
+To speed up the build process, Pelican can optionally read only articles
+and pages with modified content.
 
-... will produce a minified css file with a version identifier:
+When Pelican is about to read some content source file:
 
-.. code-block:: html
+1. The hash or modification time information for the file from a
+   previous build are loaded from a cache file if ``LOAD_CONTENT_CACHE``
+   is ``True``. These files are stored in the ``CACHE_PATH``
+   directory.  If the file has no record in the cache file, it is read
+   as usual.
+2. The file is checked according to ``CHECK_MODIFIED_METHOD``:
 
-    <link href="http://{SITEURL}/theme/css/style.min.css?b3a7c807" rel="stylesheet">
+    - If set to ``'mtime'``, the modification time of the file is
+      checked.
+    - If set to a name of a function provided by the ``hashlib``
+      module, e.g. ``'md5'``, the file hash is checked.
+    - If set to anything else or the necessary information about the
+      file cannot be found in the cache file, the content is read as
+      usual.
 
-These filters can be combined. Here is an example that uses the SASS compiler
-and minifies the output:
+3. If the file is considered unchanged, the content data saved in a
+   previous build corresponding to the file is loaded from the cache,
+   and the file is not read.
+4. If the file is considered changed, the file is read and the new
+   modification information and the content data are saved to the
+   cache if ``CACHE_CONTENT`` is ``True``.
 
-.. code-block:: jinja
+If ``CONTENT_CACHING_LAYER`` is set to ``'reader'`` (the default),
+the raw content and metadata returned by a reader are cached. If this
+setting is instead set to ``'generator'``, the processed content
+object is cached. Caching the processed content object may conflict
+with plugins (as some reading related signals may be skipped) and the
+``WITH_FUTURE_DATES`` functionality (as the ``draft`` status of the
+cached content objects would not change automatically over time).
 
-    {% assets filters="sass,cssmin", output="css/style.min.css", "css/style.scss" %}
-        <link rel="stylesheet" href="{{ ASSET_URL }}">
-    {% endassets %}
+Checking modification times is faster than comparing file hashes,
+but it is not as reliable because ``mtime`` information can be lost,
+e.g., when copying content source files using the ``cp`` or ``rsync``
+commands without the ``mtime`` preservation mode (which for ``rsync``
+can be invoked by passing the ``--archive`` flag).
 
-Another example for Javascript:
+The cache files are Python pickles, so they may not be readable by
+different versions of Python as the pickle format often changes. If
+such an error is encountered, the cache files have to be rebuilt by
+removing them and re-running Pelican, or by using the Pelican
+command-line option ``--ignore-cache``. The cache files also have to
+be rebuilt when changing the ``GZIP_CACHE`` setting for cache file
+reading to work properly.
 
-.. code-block:: jinja
+The ``--ignore-cache`` command-line option is also useful when the
+whole cache needs to be regenerated, such as when making modifications
+to the settings file that will affect the cached content, or just for
+debugging purposes. When Pelican runs in autoreload mode, modification
+of the settings file will make it ignore the cache automatically if
+``AUTORELOAD_IGNORE_CACHE`` is ``True``.
 
-    {% assets filters="uglifyjs,gzip", output="js/packed.js", "js/jquery.js", "js/base.js", "js/widgets.js" %}
-        <script src="{{ ASSET_URL }}"></script>
-    {% endassets %}
+Note that even when using cached content, all output is always
+written, so the modification times of the generated ``*.html`` files
+will always change. Therefore, ``rsync``-based uploading may benefit
+from the ``--checksum`` option.
 
-The above will produce a minified and gzipped JS file:
+.. _writing_only_selected_content:
 
-.. code-block:: html
 
-    <script src="http://{SITEURL}/theme/js/packed.js?00703b9d"></script>
+Writing only selected content
+=============================
 
-Pelican's debug mode is propagated to `webassets` to disable asset packaging
-and instead work with the uncompressed assets. However, this also means that
-the LESS and SASS files are not compiled. This should be fixed in a future
-version of `webassets` (cf. the related `bug report
-<https://github.com/getpelican/pelican/issues/481>`_).
+When only working on a single article or page, or making tweaks to
+your theme, it is often desirable to generate and review your work
+as quickly as possible. In such cases, generating and writing the
+entire site output is often unnecessary. By specifying only the
+desired files as output paths in the ``WRITE_SELECTED`` list,
+**only** those files will be written. This list can be also specified
+on the command line using the ``--write-selected`` option, which
+accepts a comma-separated list of output file paths. By default this
+list is empty, so all output is written.
 
-.. _webassets: https://github.com/miracle2k/webassets
-.. _webassets documentation: http://webassets.readthedocs.org/en/latest/builtin_filters.html
 
 Example settings
 ================
 
 .. literalinclude:: ../samples/pelican.conf.py
     :language: python
+
+
+.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
+.. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html

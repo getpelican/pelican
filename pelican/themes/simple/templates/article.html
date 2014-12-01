@@ -1,18 +1,43 @@
 {% extends "base.html" %}
+{% block head %}
+  {{ super() }}
+  {% for keyword in article.keywords %}
+    <meta name="keywords" contents="{{keyword}}" />
+  {% endfor %}
+
+  {% for description in article.description %}
+    <meta name="description" contents="{{description}}" />
+  {% endfor %}
+
+  {% for tag in article.tags %}
+    <meta name="tags" contents="{{tag}}" />
+  {% endfor %}
+
+{% endblock %}
+
 {% block content %}
 <section id="content" class="body">
   <header>
     <h2 class="entry-title">
-      <a href="{{ article.url }}" rel="bookmark"
+      <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
          title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
+ {% import 'translations.html' as translations with context %}
+ {{ translations.translations_for(article) }}
   </header>
   <footer class="post-info">
     <abbr class="published" title="{{ article.date.isoformat() }}">
       {{ article.locale_date }}
     </abbr>
-    {% if article.author %}
+	{% if article.modified %}
+    <abbr class="modified" title="{{ article.modified.isoformat() }}">
+      {{ article.locale_modified }}
+    </abbr>
+	{% endif %}
+    {% if article.authors %}
     <address class="vcard author">
-      By <a class="url fn" href="{{ SITEURL }}/{{ article.author.url }}">{{ article.author }}</a>
+      By {% for author in article.authors %}
+          <a class="url fn" href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
+        {% endfor %}
     </address>
     {% endif %}
   </footer><!-- /.post-info -->
