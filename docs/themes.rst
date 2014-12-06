@@ -341,6 +341,8 @@ Here is a complete list of the feed variables::
     FEED_ALL_RSS
     CATEGORY_FEED_ATOM
     CATEGORY_FEED_RSS
+    AUTHOR_FEED_ATOM
+    AUTHOR_FEED_RSS
     TAG_FEED_ATOM
     TAG_FEED_RSS
     TRANSLATION_FEED_ATOM
