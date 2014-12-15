@@ -13,6 +13,9 @@ except ImportError:
 from six.moves import SimpleHTTPServer as srvmod
 from six.moves import socketserver
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
     SUFFIXES = ['', '.html', '/index.html']
@@ -28,14 +31,14 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
 
             if os.path.exists(path):
                 srvmod.SimpleHTTPRequestHandler.do_GET(self)
-                logging.info("Found `%s`." % self.path)
+                logger.info("Found `%s`." % self.path)
                 break
 
-            logging.info("Tried to find `%s`, but it doesn't exist.",
+            logger.info("Tried to find `%s`, but it doesn't exist.",
                          self.path)
         else:
             # Fallback if there were no matches
-            logging.warning("Unable to find `%s` or variations.",
+            logger.warning("Unable to find `%s` or variations.",
                             self.original_path)
 
     def guess_type(self, path):
@@ -59,12 +62,12 @@ if __name__ == '__main__':
         httpd = socketserver.TCPServer(
             (SERVER, PORT), ComplexHTTPRequestHandler)
     except OSError as e:
-        logging.error("Could not listen on port %s, server %s.", PORT, SERVER)
+        logger.error("Could not listen on port %s, server %s.", PORT, SERVER)
         sys.exit(getattr(e, 'exitcode', 1))
 
-    logging.info("Serving at port %s, server %s.", PORT, SERVER)
+    logger.info("Serving at port %s, server %s.", PORT, SERVER)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt as e:
-        logging.info("Shutting down server.")
+        logger.info("Shutting down server.")
         httpd.socket.close()
