@@ -9,6 +9,7 @@ import string
 import argparse
 import sys
 import codecs
+import pytz
 
 from pelican import __version__
 
@@ -39,8 +40,12 @@ CONF = {
     'github_pages_branch': _GITHUB_PAGES_BRANCHES['project'],
     'default_pagination': 10,
     'siteurl': '',
-    'lang': 'en'
+    'lang': 'en',
+    'timezone': 'Europe/Paris'
 }
+
+#url for list of valid timezones
+_TZ_URL = 'http://en.wikipedia.org/wiki/List_of_tz_database_time_zones'
 
 def _input_compat(prompt):
     if six.PY3:
@@ -155,6 +160,20 @@ def ask(question, answer=str_compat, default=None, l=None):
         raise NotImplemented('Argument `answer` must be str_compat, bool, or integer')
 
 
+def ask_timezone(question, default, tzurl):
+    """Prompt for time zone and validate input"""
+    lower_tz = map(str.lower, pytz.all_timezones)
+    while True:
+        r = ask(question, str_compat, default)
+        r = r.strip().replace(' ', '_').lower()
+        if r in lower_tz:
+            r = pytz.all_timezones[lower_tz.index(r)]
+            break
+        else:
+            print('Please enter a valid time zone:\n (check [{0}])'.format(tzurl))
+    return r
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="A kickstarter for Pelican",
@@ -202,6 +221,8 @@ needed by Pelican.
         CONF['default_pagination'] = ask('How many articles per page do you want?', int, CONF['default_pagination'])
     else:
         CONF['default_pagination'] = False
+
+    CONF['timezone'] = ask_timezone('What is your time zone?', CONF['timezone'], _TZ_URL)
 
     automation = ask('Do you want to generate a Fabfile/Makefile to automate generation and publishing?', bool, True)
     develop = ask('Do you want an auto-reload & simpleHTTP script to assist with theme and site development?', bool, True)
