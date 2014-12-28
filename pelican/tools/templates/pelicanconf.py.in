@@ -8,7 +8,7 @@ SITEURL = ''
 
 PATH = 'content'
 
-TIMEZONE = 'Europe/Paris'
+TIMEZONE = $timezone
 
 DEFAULT_LANG = $lang
 
