@@ -90,7 +90,7 @@ class Content(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, generate slug according to 
+        # create the slug if not existing, generate slug according to
         # setting of SLUG_ATTRIBUTE
         if not hasattr(self, 'slug'):
             if settings['SLUGIFY_SOURCE'] == 'title' and hasattr(self, 'title'):
@@ -225,12 +225,18 @@ class Content(object):
 
             # XXX Put this in a different location.
             if what in {'filename', 'attach'}:
-                if path.startswith('/'):
-                    path = os.path.join(*path[1:].split('/'))
+                # On Windows the path separator (os.sep) is '\\', whereas on other platforms the path # separator is '/'.
+                # Source files can have either character as the path separator on {filename} links.
+                # In order to make everything work in a platform-independent way, let's accept both characters
+                # as valid path separators for {filename} links, and rebuild the correct path internally by
+                # using os.path.join, so that the resulting path will have the correct separator for this platform.
+                if re.match(path, r'[\\/]'):
+                    # Path begins with the separator character, so it is relative to the root of the website
+                    path = os.path.join(*re.split(r'[\\/]', path[1:]))
                 else:
                     # relative to the source path of this content
                     path = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, os.path.join(*path.split('/')))
+                        os.path.join(self.relative_dir, os.path.join(*re.split(r'[\\/]', path)))
                     )
 
                 if path not in self._context['filenames']:
