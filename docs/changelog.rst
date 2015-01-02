@@ -1,6 +1,34 @@
 Release history
 ###############
 
+3.5.0 (2014-11-04)
+==================
+
+* Introduce ``ARTICLE_ORDER_BY`` and ``PAGE_ORDER_BY`` settings to control the
+  order of articles and pages.
+* Include time zone information in dates rendered in templates.
+* Expose the reader name in the metadata for articles and pages.
+* Add the ability to store static files along with content in the same
+  directory as articles and pages using ``{attach}`` in the path.
+* Prevent Pelican from raising an exception when there are duplicate pieces of
+  metadata in a Markdown file.
+* Introduce the ``TYPOGRIFY_IGNORE_TAGS`` setting to add HTML tags to be ignored
+  by Typogrify.
+* Add the ability to use ``-`` in date formats to strip leading zeros. For
+  example, ``%-d/%-m/%y`` will now result in the date ``9/8/12``.
+* Ensure feed generation is correctly disabled during quickstart configuration.
+* Fix ``PAGE_EXCLUDES`` and ``ARTICLE_EXCLUDES`` from incorrectly matching
+  sub-directories.
+* Introduce ``STATIC_EXCLUDE`` setting to add static file excludes.
+* Fix an issue when using ``PAGINATION_PATTERNS`` while ``RELATIVE_URLS``
+  is enabled.
+* Fix feed generation causing links to use the wrong language for month
+  names when using other locales.
+* Fix an issue where the authors list in the simple template wasn't correctly
+  formatted.
+* Fix an issue when parsing non-string URLs from settings.
+* Improve consistency of debug and warning messages.
+
 3.4.0 (2014-07-01)
 ==================
 

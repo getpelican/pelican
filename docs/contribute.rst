@@ -202,5 +202,5 @@ Try to limit them to ``--debug`` mode like the following::
     try:
         some_action()
     except Exception as e:
-        logger.error('Exception occured: %s', e,
+        logger.error('Exception occurred: %s', e,
             exc_info=settings.get('DEBUG', False))

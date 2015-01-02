@@ -20,6 +20,14 @@ Alternatively, another method is to import them and add them to the list::
     from package import myplugin
     PLUGINS = [myplugin,]
 
+.. note::
+
+   When experimenting with different plugins (especially the ones that
+   deal with metadata and content) caching may interfere and the
+   changes may not be visible. In such cases disable caching with
+   ``LOAD_CONTENT_CACHE = False`` or use the ``--ignore-cache``
+   command-line switch.
+
 If your plugins are not in an importable path, you can specify a list of paths
 via the ``PLUGIN_PATHS`` setting. As shown in the following example, paths in
 the ``PLUGIN_PATHS`` list can be absolute or relative to the settings file::
@@ -57,6 +65,12 @@ which you map the signals to your plugin logic. Let's take a simple example::
     def register():
         signals.initialized.connect(test)
 
+.. note::
+
+    Signal receivers are weakly-referenced and thus must not be defined within
+    your ``register`` callable or they will be garbage-collected before the
+    signal is emitted.
+
 List of signals
 ===============
 
@@ -67,7 +81,7 @@ Signal                              Arguments                       Description
 =================================   ============================   ===========================================================================
 initialized                         pelican object
 finalized                           pelican object                 invoked after all the generators are executed and just before pelican exits
-                                                                   usefull for custom post processing actions, such as:
+                                                                   useful for custom post processing actions, such as:
                                                                    - minifying js/css assets.
                                                                    - notify/ping search engines with an updated sitemap.
 generator_init                      generator                      invoked in the Generator.__init__

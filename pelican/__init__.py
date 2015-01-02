@@ -25,7 +25,7 @@ from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, folder_watcher, file_watcher
 from pelican.writers import Writer
 
-__version__ = "3.5.dev"
+__version__ = "3.5.0"
 
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 
@@ -144,8 +144,10 @@ class Pelican(object):
         start_time = time.time()
 
         context = self.settings.copy()
-        context['filenames'] = {}  # share the dict between all the generators
-        context['localsiteurl'] = self.settings['SITEURL']  # share
+        # Share these among all the generators and content objects:
+        context['filenames'] = {}  # maps source path to Content object or None
+        context['localsiteurl'] = self.settings['SITEURL'] 
+
         generators = [
             cls(
                 context=context,
@@ -157,7 +159,7 @@ class Pelican(object):
         ]
 
         # erase the directory if it is not the source and if that's
-        # explicitely asked
+        # explicitly asked
         if (self.delete_outputdir and not
                 os.path.realpath(self.path).startswith(self.output_path)):
             clean_output_dir(self.output_path, self.output_retention)
@@ -188,7 +190,7 @@ class Pelican(object):
             time.time() - start_time))
 
     def get_generator_classes(self):
-        generators = [StaticGenerator, ArticlesGenerator, PagesGenerator]
+        generators = [ArticlesGenerator, PagesGenerator]
 
         if self.settings['TEMPLATE_PAGES']:
             generators.append(TemplatePagesGenerator)
@@ -206,6 +208,10 @@ class Pelican(object):
                     logger.debug('Found generator: %s', v)
                     generators.append(v)
 
+        # StaticGenerator must run last, so it can identify files that
+        # were skipped by the other generators, and so static files can
+        # have their output paths overridden by the {attach} link syntax.
+        generators.append(StaticGenerator)
         return generators
 
     def get_writer(self):

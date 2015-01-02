@@ -122,13 +122,21 @@ class Generator(object):
         """
         if isinstance(paths, six.string_types):
             paths = [paths] # backward compatibility for older generators
+
+        # group the exclude dir names by parent path, for use with os.walk()
+        exclusions_by_dirpath = {}
+        for e in exclude:
+            parent_path, subdir = os.path.split(os.path.join(self.path, e))
+            exclusions_by_dirpath.setdefault(parent_path, set()).add(subdir)
+
         files = []
         for path in paths:
-            root = os.path.join(self.path, path)
+            # careful: os.path.join() will add a slash when path == ''.
+            root = os.path.join(self.path, path) if path else self.path
 
             if os.path.isdir(root):
                 for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
-                    for e in exclude:
+                    for e in exclusions_by_dirpath.get(dirpath, ()):
                         if e in dirs:
                             dirs.remove(e)
                     reldir = os.path.relpath(dirpath, self.path)
@@ -141,8 +149,26 @@ class Generator(object):
         return files
 
     def add_source_path(self, content):
+        """Record a source file path that a Generator found and processed.
+        Store a reference to its Content object, for url lookups later.
+        """
         location = content.get_relative_source_path()
         self.context['filenames'][location] = content
+
+    def _add_failed_source_path(self, path):
+        """Record a source file path that a Generator failed to process.
+        (For example, one that was missing mandatory metadata.)
+        The path argument is expected to be relative to self.path.
+        """
+        self.context['filenames'][os.path.normpath(path)] = None
+
+    def _is_potential_source_path(self, path):
+        """Return True if path was supposed to be used as a source file.
+        (This includes all source files that have been found by generators
+        before this method is called, even if they failed to process.)
+        The path argument is expected to be relative to self.path.
+        """
+        return os.path.normpath(path) in self.context['filenames']
 
     def _update_context(self, items):
         """Update the context with the given items from the currrent
@@ -477,9 +503,11 @@ class ArticlesGenerator(CachingGenerator):
                 except Exception as e:
                     logger.error('Could not process %s\n%s', f, e,
                         exc_info=self.settings.get('DEBUG', False))
+                    self._add_failed_source_path(f)
                     continue
 
                 if not is_valid_content(article, f):
+                    self._add_failed_source_path(f)
                     continue
 
                 self.cache_data(f, article)
@@ -602,9 +630,11 @@ class PagesGenerator(CachingGenerator):
                 except Exception as e:
                     logger.error('Could not process %s\n%s', f, e,
                         exc_info=self.settings.get('DEBUG', False))
+                    self._add_failed_source_path(f)
                     continue
 
                 if not is_valid_content(page, f):
+                    self._add_failed_source_path(f)
                     continue
 
                 self.cache_data(f, page)
@@ -663,7 +693,14 @@ class StaticGenerator(Generator):
     def generate_context(self):
         self.staticfiles = []
         for f in self.get_files(self.settings['STATIC_PATHS'],
+                                exclude=self.settings['STATIC_EXCLUDES'],
                                 extensions=False):
+
+            # skip content source files unless the user explicitly wants them
+            if self.settings['STATIC_EXCLUDE_SOURCES']:
+                if self._is_potential_source_path(f):
+                    continue
+
             static = self.readers.read_file(
                 base_path=self.path, path=f, content_class=Static,
                 fmt='static', context=self.context,

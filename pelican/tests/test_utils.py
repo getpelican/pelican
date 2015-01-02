@@ -471,7 +471,7 @@ class TestDateFormatter(unittest.TestCase):
                          locale_available('French'),
                          'French locale needed')
     def test_french_strftime(self):
-        # This test tries to reproduce an issue that occured with python3.3 under macos10 only
+        # This test tries to reproduce an issue that occurred with python3.3 under macos10 only
         locale.setlocale(locale.LC_ALL, str('fr_FR.UTF-8'))
         date = utils.SafeDatetime(2014,8,14)
         # we compare the lower() dates since macos10 returns "Jeudi" for %A whereas linux reports "jeudi"

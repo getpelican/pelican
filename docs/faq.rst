@@ -32,6 +32,14 @@ Configuration files are optional and are just an easy way to configure Pelican.
 For basic operations, it's possible to specify options while invoking Pelican
 via the command line. See ``pelican --help`` for more information.
 
+Changes to the setting file take no effect
+==========================================
+
+When experimenting with different settings (especially the metadata
+ones) caching may interfere and the changes may not be visible. In
+such cases disable caching with ``LOAD_CONTENT_CACHE = False`` or
+use the ``--ignore-cache`` command-line switch.
+
 I'm creating my own theme. How do I use Pygments for syntax highlighting?
 =========================================================================
 
@@ -135,6 +143,10 @@ your home page. The following Markdown example could be stored in
 
     Thank you for visiting. Welcome!
 
+If the original blog index is still wanted, it can then be saved in a
+different location by setting ``INDEX_SAVE_AS = 'blog_index.html`` for
+the ``''index'`` direct template.
+
 What if I want to disable feed generation?
 ==========================================
 
@@ -220,3 +232,12 @@ When only several specific output files are of interest (e.g. when
 working on some specific page or the theme templates), the
 `WRITE_SELECTED` option may help, see
 :ref:`writing_only_selected_content`.
+
+How to process only a subset of all articles?
+=============================================
+
+It is often useful to process only e.g. 10 articles for debugging
+purposes. This can be achieved by explicitly specifying only the
+filenames of those articles in ``ARTICLE_PATHS``. A list of such
+filenames could be found using a command similar to ``cd content;
+find -name '*.md' | head -n 10``.

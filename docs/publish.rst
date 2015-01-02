@@ -36,12 +36,19 @@ HTML files directly::
 
 Because the above method may have trouble locating your CSS and other linked
 assets, running a simple web server using Python will often provide a more
-reliable previewing experience::
+reliable previewing experience. 
+
+For Python 2, run::
 
     cd output
     python -m SimpleHTTPServer
 
-Once the ``SimpleHTTPServer`` has been started, you can preview your site at
+For Python 3, run::
+
+    cd output
+    python -m http.server
+
+Once the basic server has been started, you can preview your site at
 http://localhost:8000/
 
 Deployment
