@@ -428,6 +428,7 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a markdown test page', 'published', 'page'],
             ['This is a test page with a preset template', 'published',
              'custom'],
+            ['Page with a bunch of links', 'published', 'page'],
             ['A Page (Test) for sorting', 'published', 'page'],
         ]
         hidden_pages_expected = [
@@ -517,6 +518,7 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a test page', 'published', 'page'],
             ['This is a markdown test page', 'published', 'page'],
             ['A Page (Test) for sorting', 'published', 'page'],
+            ['Page with a bunch of links', 'published', 'page'],
             ['This is a test page with a preset template', 'published',
              'custom'],
         ]
@@ -530,6 +532,7 @@ class TestPageGenerator(unittest.TestCase):
         # sort by title
         pages_expected_sorted_by_title = [
             ['A Page (Test) for sorting', 'published', 'page'],
+            ['Page with a bunch of links', 'published', 'page'],
             ['This is a markdown test page', 'published', 'page'],
             ['This is a test page', 'published', 'page'],
             ['This is a test page with a preset template', 'published',
@@ -542,6 +545,26 @@ class TestPageGenerator(unittest.TestCase):
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         self.assertEqual(pages_expected_sorted_by_title, pages)
+
+    def test_tag_and_category_links_on_generated_pages(self):
+        """
+        Test to ensure links of the form {tag}tagname and {category}catname
+        are generated correctly on pages
+        """
+        settings = get_settings(filenames={})
+        settings['PAGE_PATHS'] = ['TestPages'] # relative to CUR_DIR
+        settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        pages_by_title = {p.title: p.content for p in generator.pages}
+
+        test_content = pages_by_title['Page with a bunch of links']
+        self.assertIn('<a href="/category/yeah.html">', test_content)
+        self.assertIn('<a href="/tag/matsuku.html">', test_content)
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):

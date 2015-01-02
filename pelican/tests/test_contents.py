@@ -212,17 +212,20 @@ class TestPage(unittest.TestCase):
                            '<a href="|tag|tagname">link</a>')
         page = Page(**args)
         content = page.get_content('http://notmyidea.org')
-        self.assertEqual(content, ('A simple test, with a '
-                                   '<a href="tag/tagname.html">link</a>'))
+        self.assertEqual(
+            content,
+            ('A simple test, with a '
+             '<a href="http://notmyidea.org/tag/tagname.html">link</a>'))
 
         # Category
         args['content'] = ('A simple test, with a '
                            '<a href="|category|category">link</a>')
         page = Page(**args)
         content = page.get_content('http://notmyidea.org')
-        self.assertEqual(content,
-                         ('A simple test, with a '
-                          '<a href="category/category.html">link</a>'))
+        self.assertEqual(
+            content,
+            ('A simple test, with a '
+             '<a href="http://notmyidea.org/category/category.html">link</a>'))
 
     def test_intrasite_link(self):
         # type does not take unicode in PY2 and bytes in PY3, which in
@@ -542,6 +545,31 @@ class TestStatic(unittest.TestCase):
         expected_save_as = os.path.join('outpages', 'foo.jpg')
         self.assertEqual(self.static.save_as, expected_save_as)
         self.assertEqual(self.static.url, path_to_url(expected_save_as))
+
+    def test_tag_link_syntax(self):
+        "{tag} link syntax triggers url replacement."
+
+        html = '<a href="{tag}foo">link</a>'
+        page = Page(
+            content=html,
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+            context=self.context)
+        content = page.get_content('')
+
+        self.assertNotEqual(content, html)
+
+    def test_category_link_syntax(self):
+        "{category} link syntax triggers url replacement."
+
+        html = '<a href="{category}foo">link</a>'
+        page = Page(content=html,
+            metadata={'title': 'fakepage'}, settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+            context=self.context)
+        content = page.get_content('')
+
+        self.assertNotEqual(content, html)
 
 
 class TestURLWrapper(unittest.TestCase):
