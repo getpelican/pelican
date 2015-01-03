@@ -11,6 +11,7 @@ import os
 import pytz
 import re
 import shutil
+import sys
 import traceback
 import pickle
 import hashlib
@@ -23,6 +24,7 @@ from functools import partial
 from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
+from posixpath import join as posix_join
 
 logger = logging.getLogger(__name__)
 
@@ -230,13 +232,15 @@ def get_date(string):
 
 
 @contextmanager
-def pelican_open(filename):
+def pelican_open(filename, mode='rb', strip_crs=(sys.platform == 'win32')):
     """Open a file and return its content"""
 
-    with codecs.open(filename, encoding='utf-8') as infile:
+    with codecs.open(filename, mode, encoding='utf-8') as infile:
         content = infile.read()
     if content[0] == codecs.BOM_UTF8.decode('utf8'):
         content = content[1:]
+    if strip_crs:
+        content = content.replace('\r\n', '\n')
     yield content
 
 
@@ -368,6 +372,13 @@ def path_to_url(path):
         return path
     else:
         return '/'.join(split_all(path))
+
+
+def posixize_path(rel_path):
+    """Use '/' as path separator, so that source references,
+    like '{filename}/foo/bar.jpg' or 'extras/favicon.ico',
+    will work on Windows as well as on Mac and Linux."""
+    return rel_path.replace(os.sep, '/')
 
 
 def truncate_html_words(s, num, end_text='...'):
@@ -750,4 +761,9 @@ def is_selected_for_writing(settings, path):
         return path in settings['WRITE_SELECTED']
     else:
         return True
-        
+
+
+def path_to_file_url(path):
+    '''Convert file-system path to file:// URL'''
+    return six.moves.urllib_parse.urljoin(
+        "file://", six.moves.urllib.request.pathname2url(path))

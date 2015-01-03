@@ -36,9 +36,15 @@ already exist). The ``git push origin gh-pages`` command updates the remote
 ``gh-pages`` branch, effectively publishing the Pelican site.
 
 .. note::
+    The ``github`` target of the Makefile (and the ``gh_pages`` task of the Fabfile)
+    created by the ``pelican-quickstart`` command
+    publishes the Pelican site as Project Pages, as described above.
 
-    The ``github`` target of the Makefile created by the ``pelican-quickstart``
-    command publishes the Pelican site as Project Pages, as described above.
+.. note:: ghp-import on Windows
+
+    Until `ghp-import Pull Request #25 <https://github.com/davisp/ghp-import/pull/25>`_
+    is accepted, you will need to install a custom build of ghp-import:
+    ``pip install https://github.com/chevah/ghp-import/archive/win-support.zip``
 
 User Pages
 ----------
@@ -85,6 +91,12 @@ output directory. For example::
 
     STATIC_PATHS = ['images', 'extra/CNAME']
     EXTRA_PATH_METADATA = {'extra/CNAME': {'path': 'CNAME'},}
+
+Note: use forward slashes, ``/``, even on Windows.
+
+.. hint::
+    You can also use the ``EXTRA_PATH_METADATA`` mechanism
+    to place a ``favicon.ico`` or ``robots.txt`` at the root of any site.
 
 How to add YouTube or Vimeo Videos
 ==================================

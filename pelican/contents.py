@@ -17,7 +17,7 @@ from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import (slugify, truncate_html_words, memoized, strftime,
                            python_2_unicode_compatible, deprecated_attribute,
-                           path_to_url, set_date_tzinfo, SafeDatetime)
+                           path_to_url, posixize_path, set_date_tzinfo, SafeDatetime)
 
 # Import these so that they're avalaible when you import from pelican.contents.
 from pelican.urlwrappers import (URLWrapper, Author, Category, Tag)  # NOQA
@@ -337,17 +337,19 @@ class Content(object):
         if source_path is None:
             return None
 
-        return os.path.relpath(
-            os.path.abspath(os.path.join(self.settings['PATH'], source_path)),
-            os.path.abspath(self.settings['PATH'])
-        )
+        return posixize_path(
+            os.path.relpath(
+                os.path.abspath(os.path.join(self.settings['PATH'], source_path)),
+                os.path.abspath(self.settings['PATH'])
+            ))
 
     @property
     def relative_dir(self):
-        return os.path.dirname(os.path.relpath(
-            os.path.abspath(self.source_path),
-            os.path.abspath(self.settings['PATH']))
-        )
+        return posixize_path(
+            os.path.dirname(
+                os.path.relpath(
+                    os.path.abspath(self.source_path),
+                    os.path.abspath(self.settings['PATH']))))
 
 
 class Page(Content):

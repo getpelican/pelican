@@ -588,7 +588,8 @@ def download_attachments(output_path, urls):
         filename = path.pop(-1)
         localpath = ''
         for item in path:
-            localpath = os.path.join(localpath, item)
+            if sys.platform != 'win32' or ':' not in item:
+                localpath = os.path.join(localpath, item)
         full_path = os.path.join(output_path, localpath)
         if not os.path.exists(full_path):
             os.makedirs(full_path)

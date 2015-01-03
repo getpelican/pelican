@@ -100,6 +100,18 @@ separately. Use the following command to install Fabric, prefixing with
 
     pip install Fabric
 
+.. note:: Installing PyCrypto on Windows
+
+    Fabric depends upon PyCrypto_, which is tricky to install
+    if your system doesn't have a C compiler.
+    For Windows users, before installing Fabric, use
+    ``easy_install http://www.voidspace.org.uk/downloads/pycrypto26/pycrypto-2.6.win32-py2.7.exe``
+    per this `StackOverflow suggestion <http://stackoverflow.com/a/11405769/6364>`_
+    You're more likely to have success
+    with the Win32 versions of Python 2.7 and PyCrypto,
+    than with the Win64—\
+    even if your operating system is a 64-bit version of Windows.
+
 Take a moment to open the ``fabfile.py`` file that was generated in your
 project root. You will see a number of commands, any one of which can be
 renamed, removed, and/or customized to your liking. Using the out-of-the-box
@@ -179,3 +191,4 @@ executables, such as ``python3``, you can set the ``PY`` and ``PELICAN``
 environment variables, respectively, to override the default executable names.)
 
 .. _Fabric: http://fabfile.org/
+.. _PyCrypto: http://pycrypto.org

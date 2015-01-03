@@ -58,22 +58,22 @@ class TestPelican(LoggedTestCase):
         locale.setlocale(locale.LC_ALL, self.old_locale)
         super(TestPelican, self).tearDown()
 
-    def assertFilesEqual(self, diff):
-        msg = ("some generated files differ from the expected functional "
-               "tests output.\n"
-               "This is probably because the HTML generated files "
-               "changed. If these changes are normal, please refer "
-               "to docs/contribute.rst to update the expected "
-               "output of the functional tests.")
-
-        self.assertEqual(diff['left_only'], [], msg=msg)
-        self.assertEqual(diff['right_only'], [], msg=msg)
-        self.assertEqual(diff['diff_files'], [], msg=msg)
-
     def assertDirsEqual(self, left_path, right_path):
         out, err = subprocess.Popen(
-            ['git', 'diff', '--no-ext-diff', '--exit-code', '-w', left_path, right_path], env={'PAGER': ''},
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+            ['git', 'diff', '--no-ext-diff', '--exit-code', '-w', left_path, right_path],
+            env={b'PAGER': b''}, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        ).communicate()
+        def ignorable_git_crlf_errors(line):
+            # Work around for running tests on Windows
+            for msg in [
+                    "LF will be replaced by CRLF",
+                    "The file will have its original line endings"]:
+                if msg in line:
+                    return True
+            return False
+        if err:
+            err = '\n'.join([l for l in err.decode('utf8').splitlines()
+                             if not ignorable_git_crlf_errors(l)])
         assert not out, out
         assert not err, err
 

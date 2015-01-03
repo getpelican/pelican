@@ -3,6 +3,7 @@ from __future__ import unicode_literals, print_function
 import copy
 import os
 import locale
+from sys import platform
 from os.path import dirname, abspath, join
 
 from pelican.settings import (read_settings, configure_settings,
@@ -107,6 +108,8 @@ class TestSettingsConfiguration(unittest.TestCase):
         # locale is not specified in the settings
 
         #reset locale to python default
+        if platform == 'win32':
+            return unittest.skip("Doesn't work on Windows")
         locale.setlocale(locale.LC_ALL, str('C'))
         self.assertEqual(self.settings['LOCALE'], DEFAULT_CONFIG['LOCALE'])
 
