@@ -230,7 +230,7 @@ class Content(object):
                 # In order to make everything work in a platform-independent way, let's accept both characters
                 # as valid path separators for {filename} links, and rebuild the correct path internally by
                 # using os.path.join, so that the resulting path will have the correct separator for this platform.
-                if re.match(path, r'[\\/]'):
+                if re.match(r'[\\/]', path):
                     # Path begins with the separator character, so it is relative to the root of the website
                     path = os.path.join(*re.split(r'[\\/]', path[1:]))
                 else:
