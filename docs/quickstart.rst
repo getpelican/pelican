@@ -64,7 +64,7 @@ Open a new terminal session and run the following commands to switch to your
 ``output`` directory and launch Python's built-in web server::
 
     cd ~/projects/yoursite/output
-    python -m SimpleHTTPServer
+    python -m SimpleHTTPServer # -m http.server if you use python3
 
 Preview your site by navigating to http://localhost:8000/ in your browser.
 
