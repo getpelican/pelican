@@ -502,9 +502,9 @@ If your articles should be automatically published as a draft (to not accidental
 publish an article before it is finished) include the status in the ``DEFAULT_METADATA``::
 
     DEFAULT_METADATA = {
-	    'status': 'draft',
-	}
-	
+        'status': 'draft',
+    }
+
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: http://github.com/getpelican/pelican-plugins
