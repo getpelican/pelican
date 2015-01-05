@@ -325,6 +325,7 @@ period                  A tuple of the form (`year`, `month`, `day`) that
 ===================     ===================================================
 
 You can see an example of how to use `period` in the `"simple" theme
+period_archives.html template
 <https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_.
 
 
