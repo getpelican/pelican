@@ -334,20 +334,34 @@ Feeds
 
 The feed variables changed in 3.0. Each variable now explicitly lists ATOM or
 RSS in the name. ATOM is still the default. Old themes will need to be updated.
+If you use URL rewriting on your webserver slugs can be setup for feeds.
 Here is a complete list of the feed variables::
 
-    FEED_ATOM
-    FEED_RSS
-    FEED_ALL_ATOM
-    FEED_ALL_RSS
-    CATEGORY_FEED_ATOM
-    CATEGORY_FEED_RSS
-    AUTHOR_FEED_ATOM
-    AUTHOR_FEED_RSS
-    TAG_FEED_ATOM
-    TAG_FEED_RSS
-    TRANSLATION_FEED_ATOM
-    TRANSLATION_FEED_RSS
+    FEED_ATOM_SAVE_AS
+    FEED_RSS_SAVE_AS
+    FEED_ALL_ATOM_SAVE_AS
+    FEED_ALL_RSS_SAVE_AS
+    CATEGORY_FEED_ATOM_SAVE_AS
+    CATEGORY_FEED_RSS_SAVE_AS
+    AUTHOR_FEED_ATOM_SAVE_AS
+    AUTHOR_FEED_RSS_SAVE_AS
+    TAG_FEED_ATOM_SAVE_AS
+    TAG_FEED_RSS_SAVE_AS
+    TRANSLATION_FEED_ATOM_SAVE_AS
+    TRANSLATION_FEED_RSS_SAVE_AS
+    FEED_ATOM_URL
+    FEED_RSS_URL
+    FEED_ALL_ATOM_URL
+    FEED_ALL_RSS_URL
+    CATEGORY_FEED_ATOM_URL
+    CATEGORY_FEED_RSS_URL
+    AUTHOR_FEED_ATOM_URL
+    AUTHOR_FEED_RSS_URL
+    TAG_FEED_ATOM_URL
+    TAG_FEED_RSS_URL
+    TRANSLATION_FEED_ATOM_URL
+    TRANSLATION_FEED_RSS_URL
+
 
 
 Inheritance

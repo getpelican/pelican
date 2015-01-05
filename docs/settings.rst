@@ -518,39 +518,50 @@ feeds if you prefer.
 
 Pelican generates category feeds as well as feeds for all your articles. It does
 not generate feeds for tags by default, but it is possible to do so using
-the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
+the ``TAG_FEED_ATOM_SAVE_AS`` and ``TAG_FEED_RSS_SAVE_AS`` settings:
 
-=================================================   =====================================================
-Setting name (followed by default value, if any)    What does it do?
-=================================================   =====================================================
-``FEED_DOMAIN = None``, i.e. base URL is "/"        The domain prepended to feed URLs. Since feed URLs
-                                                    should always be absolute, it is highly recommended
-                                                    to define this (e.g., "http://feeds.example.com"). If
-                                                    you have already explicitly defined SITEURL (see
-                                                    above) and want to use the same domain for your
-                                                    feeds, you can just set:  ``FEED_DOMAIN = SITEURL``.
-``FEED_ATOM = None``, i.e. no Atom feed             Relative URL to output the Atom feed.
-``FEED_RSS = None``, i.e. no RSS                    Relative URL to output the RSS feed.
-``FEED_ALL_ATOM = 'feeds/all.atom.xml'``            Relative URL to output the all-posts Atom feed:
-                                                    this feed will contain all posts regardless of their
-                                                    language.
-``FEED_ALL_RSS = None``, i.e. no all-posts RSS      Relative URL to output the all-posts RSS feed:
-                                                    this feed will contain all posts regardless of their
-                                                    language.
-``CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'`` [2]_   Where to put the category Atom feeds.
-``CATEGORY_FEED_RSS = None``, i.e. no RSS           Where to put the category RSS feeds.
-``AUTHOR_FEED_ATOM = 'feeds/%s.atom.xml'`` [2]_     Where to put the author Atom feeds.
-``AUTHOR_FEED_RSS = 'feeds/%s.rss.xml'`` [2]_       Where to put the author RSS feeds.
-``TAG_FEED_ATOM = None``, i.e. no tag feed          Relative URL to output the tag Atom feed. It should
-                                                    be defined using a "%s" match in the tag name.
-``TAG_FEED_RSS = None``, i.e. no RSS tag feed       Relative URL to output the tag RSS feed
-``FEED_MAX_ITEMS``                                  Maximum number of items allowed in a feed. Feed item
-                                                    quantity is unrestricted by default.
-=================================================   =====================================================
+=========================================================   =====================================================
+Setting name (followed by default value, if any)            What does it do?
+=========================================================   =====================================================
+``FEED_DOMAIN = None``, i.e. base URL is "/"                The domain prepended to feed URLs. Since feed URLs
+                                                            should always be absolute, it is highly recommended
+                                                            to define this (e.g., "http://feeds.example.com"). If
+                                                            you have already explicitly defined SITEURL (see
+                                                            above) and want to use the same domain for your
+                                                            feeds, you can just set:  ``FEED_DOMAIN = SITEURL``.
+``FEED_ATOM_SAVE_AS = None``, i.e. no Atom feed             Path to output the Atom feed.
+``FEED_ATOM_URL = None``, i.e. no Atom Slug                 Relative URL (Slug) for the Atom feed.
+``FEED_RSS_SAVE_AS = None``, i.e. no RSS                    Path to output the RSS feed.
+``FEED_RSS_URL = None``, i.e. no RSS Slug                   Relative URL (Slug) for the RSS feed.
+``FEED_ALL_ATOM_SAVE_AS = 'feeds/all.atom.xml'``            Path to output the all-posts Atom feed:
+                                                            this feed will contain all posts regardless of their
+                                                            language.
+``FEED_ALL_ATOM_URL = None``, i.e. no all Atom Slug         Relative URL to  the all-posts Atom feed.
+``FEED_ALL_RSS_SAVE_AS = None``, i.e. no all-posts RSS      Relative URL to output the all-posts RSS feed:
+                                                            this feed will contain all posts regardless of their
+                                                            language.
+``FEED_ALL_RSS_URL = None``, i.e. no all RSS Slug           Relative URL to the all-posts RSS feed.
+``CATEGORY_FEED_ATOM_SAVE_AS = 'feeds/%s.atom.xml'`` [2]_   Path to put the category Atom feeds.
+``CATEGORY_FEED_ATOM_URL = None``                           Relative URL to the category Atom feed. [4]_
+``CATEGORY_FEED_RSS_SAVE_AS = None``, i.e. no RSS           Path to put the category RSS feeds.
+``CATEGORY_FEED_RSS_URL = None``                            Relative URL for the category RSS feeds. [4]_
+``AUTHOR_FEED_ATOM_SAVE_AS = 'feeds/%s.atom.xml'`` [2]_     Path to put the author Atom feeds.
+``AUTHOR_FEED_ATOM_URL = None``                             Relative URL for the authoor atom feeds. [4]_
+``AUTHOR_FEED_RSS_SAVE_AS = 'feeds/%s.rss.xml'`` [2]_       Path to put the author RSS feeds.
+``AUTHOR_FEED_RSS_URL = None``                              Relative URL for the author RSS feeds. [4]_
+``TAG_FEED_ATOM_SAVE_AS = None``, i.e. no tag feed          Path to output the tag Atom feed. It should
+                                                            be defined using a "%s" match in the tag name.
+``TAG_FEED_ATOM_URL = None``                                Relative URL for the tag atom feeds. [4]_
+``TAG_FEED_RSS_SAVE_AS = None``, i.e. no RSS tag feed       Path to output the tag RSS feed
+``TAG_FEED_RSS_URL = None``                                 Relative URL for the tag RSS feeds. [4]_
+``FEED_MAX_ITEMS``                                          Maximum number of items allowed in a feed. Feed item
+                                                            quantity is unrestricted by default.
+=========================================================   =====================================================
 
 If you don't want to generate some or any of these feeds, set the above variables to ``None``.
 
 .. [2] %s is the name of the category.
+.. [4] %s should be used for substitution, e.g. "feeds/atom/category/%s"
 
 
 FeedBurner

@@ -4,11 +4,11 @@
         <meta charset="utf-8" />
         <title>{% block title %}{{ SITENAME }}{%endblock%}</title>
         <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/{{ CSS_FILE }}" />
-        {% if FEED_ALL_ATOM %}
-        <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
+        {% if FEED_ALL_ATOM_SAVE_AS %}
+        <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM_SAVE_AS }}" type="application/atom+xml" rel="alternate" title="{{ SITENAME }} Atom Feed" />
         {% endif %}
-        {% if FEED_ALL_RSS %}
-        <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
+        {% if FEED_ALL_RSS_SAVE_AS %}
+        <link href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS_SAVE_AS }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
         {% endif %}
 
         <!--[if IE]>
@@ -49,15 +49,15 @@
                         </ul>
                 </div><!-- /.blogroll -->
         {% endif %}
-        {% if SOCIAL or FEED_ALL_ATOM or FEED_ALL_RSS %}
+        {% if SOCIAL or FEED_ALL_ATOM_SAVE_AS or FEED_ALL_RSS_SAVE_AS %}
                 <div class="social">
                         <h2>social</h2>
                         <ul>
-                            {% if FEED_ALL_ATOM %}
-                            <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM }}" type="application/atom+xml" rel="alternate">atom feed</a></li>
+                            {% if FEED_ALL_ATOM_SAVE_AS %}
+                            <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_ATOM_SAVE_AS }}" type="application/atom+xml" rel="alternate">atom feed</a></li>
                             {% endif %}
-                            {% if FEED_ALL_RSS %}
-                            <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS }}" type="application/rss+xml" rel="alternate">rss feed</a></li>
+                            {% if FEED_ALL_RSS_SAVE_AS %}
+                            <li><a href="{{ FEED_DOMAIN }}/{{ FEED_ALL_RSS_SAVE_AS }}" type="application/rss+xml" rel="alternate">rss feed</a></li>
                             {% endif %}
 
                         {% for name, link in SOCIAL %}

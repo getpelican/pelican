@@ -80,7 +80,7 @@ class Writer(object):
         self._written_files.add(filename)
         return open(filename, 'w', encoding=encoding)
 
-    def write_feed(self, elements, context, path=None, feed_type='atom'):
+    def write_feed(self, elements, context, path=None, feed_type='atom', feed_slug=None):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no path or output_path is specified, just
@@ -98,7 +98,7 @@ class Writer(object):
             'SITEURL', path_to_url(get_relative_path(path)))
 
         self.feed_domain = context.get('FEED_DOMAIN')
-        self.feed_url = '{}/{}'.format(self.feed_domain, path)
+        self.feed_url = self.feed_domain + '/' + feed_slug
 
         feed = self._create_new_feed(feed_type, context)
 

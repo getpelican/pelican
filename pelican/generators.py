@@ -264,85 +264,123 @@ class ArticlesGenerator(CachingGenerator):
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
 
-        if self.settings.get('FEED_ATOM'):
-            writer.write_feed(self.articles, self.context,
-                              self.settings['FEED_ATOM'])
+        if self.settings.get('FEED_ATOM_SAVE_AS'):
+            if not self.settings.get('FEED_ATOM_URL'):
+                self.settings['FEED_ATOM_URL'] = self.settings.get('FEED_ATOM_SAVE_AS')
 
-        if self.settings.get('FEED_RSS'):
             writer.write_feed(self.articles, self.context,
-                              self.settings['FEED_RSS'], feed_type='rss')
+                              path=self.settings['FEED_ATOM_SAVE_AS'], feed_slug=self.settings['FEED_ATOM_URL'])
 
-        if (self.settings.get('FEED_ALL_ATOM')
-                or self.settings.get('FEED_ALL_RSS')):
+        if self.settings.get('FEED_RSS_SAVE_AS'):
+            if not self.settings.get('FEED_RSS_URL'):
+                self.settings['FEED_RSS_URL'] = self.settings.get('FEED_RSS_SAVE_AS')
+
+            writer.write_feed(self.articles, self.context,
+                              self.settings['FEED_RSS_SAVE_AS'], feed_type='rss', feed_slug=self.settings['FEED_RSS_URL'])
+
+        if (self.settings.get('FEED_ALL_ATOM_SAVE_AS')
+                or self.settings.get('FEED_ALL_RSS_SAVE_AS')):
             all_articles = list(self.articles)
             for article in self.articles:
                 all_articles.extend(article.translations)
             all_articles.sort(key=attrgetter('date'), reverse=True)
 
-            if self.settings.get('FEED_ALL_ATOM'):
-                writer.write_feed(all_articles, self.context,
-                                  self.settings['FEED_ALL_ATOM'])
+            if self.settings.get('FEED_ALL_ATOM_SAVE_AS'):
+                if not self.settings.get('FEED_ALL_ATOM_URL'):
+                    self.settings['FEED_ALL_ATOM_URL'] = self.settings.get('FEED_ALL_ATOM_SAVE_AS')
 
-            if self.settings.get('FEED_ALL_RSS'):
                 writer.write_feed(all_articles, self.context,
-                                  self.settings['FEED_ALL_RSS'],
-                                  feed_type='rss')
+                                  self.settings['FEED_ALL_ATOM_SAVE_AS'], feed_slug=self.settings['FEED_ALL_ATOM_URL'])
+
+            if self.settings.get('FEED_ALL_RSS_SAVE_AS'):
+                if not self.settings.get('FEED_ALL_RSS_URL'):
+                    self.settings['FEED_ALL_RSS_URL'] = self.settings.get('FEED_ALL_RSS_SAVE_AS')
+
+                writer.write_feed(all_articles, self.context,
+                                  self.settings['FEED_ALL_RSS_SAVE_AS'],
+                                  feed_type='rss', feed_slug=self.settings['FEED_ALL_RSS_URL'])
 
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
-            if self.settings.get('CATEGORY_FEED_ATOM'):
-                writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_ATOM']
-                                  % cat.slug)
+            if self.settings.get('CATEGORY_FEED_ATOM_SAVE_AS'):
+                if not self.settings.get('CATEGORY_FEED_ATOM_URL'):
+                    self.settings['CATEGORY_FEED_ATOM_URL'] = self.settings.get('CATEGORY_FEED_ATOM_SAVE_AS')
 
-            if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_RSS']
-                                  % cat.slug, feed_type='rss')
+                                  self.settings['CATEGORY_FEED_ATOM_SAVE_AS']
+                                  % cat.slug, feed_slug=self.settings['CATEGORY_FEED_ATOM_URL'] % cat.slug)
+
+            if self.settings.get('CATEGORY_FEED_RSS_SAVE_AS'):
+                if not self.settings.get('CATEGORY_FEED_RSS_URL'):
+                    self.settings['CATEGORY_FEED_RSS_URL'] = self.settings.get('CATEGORY_FEED_RSS_SAVE_AS')
+
+                writer.write_feed(arts, self.context,
+                                  self.settings['CATEGORY_FEED_RSS_SAVE_AS']
+                                  % cat.slug, feed_type='rss', feed_slug=self.settings['CATEGORY_FEED_RSS_URL'] % cat.slug)
 
         for auth, arts in self.authors:
             arts.sort(key=attrgetter('date'), reverse=True)
-            if self.settings.get('AUTHOR_FEED_ATOM'):
-                writer.write_feed(arts, self.context,
-                                  self.settings['AUTHOR_FEED_ATOM']
-                                  % auth.slug)
+            if self.settings.get('AUTHOR_FEED_ATOM_SAVE_AS'):
 
-            if self.settings.get('AUTHOR_FEED_RSS'):
-                writer.write_feed(arts, self.context,
-                                  self.settings['AUTHOR_FEED_RSS']
-                                  % auth.slug, feed_type='rss')
+                if not self.settings.get('AUTHOR_FEED_ATOM_URL'):
+                    self.settings['AUTHOR_FEED_ATOM_URL'] = self.settings.get('AUTHOR_FEED_ATOM_SAVE_AS')
 
-        if (self.settings.get('TAG_FEED_ATOM')
-                or self.settings.get('TAG_FEED_RSS')):
+                writer.write_feed(arts, self.context,
+                                  self.settings['AUTHOR_FEED_ATOM_SAVE_AS']
+                                  % auth.slug, feed_slug=self.settings['AUTHOR_FEED_ATOM_URL']  % auth.slug)
+
+            if self.settings.get('AUTHOR_FEED_RSS_SAVE_AS'):
+                if not self.settings.get('AUTHOR_FEED_RSS_URL'):
+                    self.settings['AUTHOR_FEED_RSS_URL'] = self.settings.get('AUTHOR_FEED_RSS_SAVE_AS')
+
+                writer.write_feed(arts, self.context,
+                                  self.settings['AUTHOR_FEED_RSS_SAVE_AS']
+                                  % auth.slug, feed_type='rss', feed_slug=self.settings['AUTHOR_FEED_RSS_URL']  % auth.slug)
+
+        if (self.settings.get('TAG_FEED_ATOM_SAVE_AS')
+                or self.settings.get('TAG_FEED_RSS_SAVE_AS')):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
-                if self.settings.get('TAG_FEED_ATOM'):
-                    writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_ATOM']
-                                      % tag.slug)
+                if self.settings.get('TAG_FEED_ATOM_SAVE_AS'):
+                    if not self.settings.get('TAG_FEED_ATOM_URL'):
+                        self.settings['TAG_FEED_ATOM_URL'] = self.settings.get('TAG_FEED_ATOM_SAVE_AS')
 
-                if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_RSS'] % tag.slug,
-                                      feed_type='rss')
+                                      self.settings['TAG_FEED_ATOM_SAVE_AS']
+                                      % tag.slug, feed_slug=self.settings['TAG_FEED_ATOM_URL'] % tag.slug)
 
-        if (self.settings.get('TRANSLATION_FEED_ATOM')
-                or self.settings.get('TRANSLATION_FEED_RSS')):
+                if self.settings.get('TAG_FEED_RSS_SAVE_AS'):
+                    if not self.settings.get('TAG_FEED_RSS_URL'):
+                        self.settings['TAG_FEED_RSS_URL'] = self.settings.get('TAG_FEED_RSS_SAVE_AS')
+
+                    writer.write_feed(arts, self.context,
+                                      self.settings['TAG_FEED_RSS_SAVE_AS'] % tag.slug,
+                                      feed_type='rss', feed_slug=self.settings['TAG_FEED_RSS_URL'] % tag.slug)
+
+        if (self.settings.get('TRANSLATION_FEED_ATOM_SAVE_AS')
+                or self.settings.get('TRANSLATION_FEED_RSS_SAVE_AS')):
             translations_feeds = defaultdict(list)
             for article in chain(self.articles, self.translations):
                 translations_feeds[article.lang].append(article)
 
             for lang, items in translations_feeds.items():
                 items.sort(key=attrgetter('date'), reverse=True)
-                if self.settings.get('TRANSLATION_FEED_ATOM'):
+                if self.settings.get('TRANSLATION_FEED_ATOM_SAVE_AS'):
+                    if not self.settings.get('TRANSLATION_FEED_ATOM_URL'):
+                        self.settings['TRANSLATION_FEED_ATOM_URL'] = self.settings.get('TRANSLATION_FEED_ATOM_SAVE_AS')
+
                     writer.write_feed(
                         items, self.context,
-                        self.settings['TRANSLATION_FEED_ATOM'] % lang)
-                if self.settings.get('TRANSLATION_FEED_RSS'):
+                        self.settings['TRANSLATION_FEED_ATOM_SAVE_AS'] % lang, feed_slug=self.settings['TRANSLATION_FEED_ATOM_URL'] % lang)
+
+                if self.settings.get('TRANSLATION_FEED_RSS_SAVE_AS'):
+                    if not self.settings.get('TRANSLATION_FEED_RSS_URL'):
+                        self.settings['TRANSLATION_FEED_RSS_URL'] = self.settings.get('TRANSLATION_FEED_RSS_SAVE_AS')
+
                     writer.write_feed(
                         items, self.context,
-                        self.settings['TRANSLATION_FEED_RSS'] % lang,
-                        feed_type='rss')
+                        self.settings['TRANSLATION_FEED_RSS_SAVE_AS'] % lang,
+                        feed_type='rss', feed_slug=self.settings['TRANSLATION_FEED_RSS_URL'] % lang)
 
     def generate_articles(self, write):
         """Generate the articles."""

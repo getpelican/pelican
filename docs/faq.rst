@@ -154,11 +154,11 @@ To disable feed generation, all feed settings should be set to ``None``.
 All but three feed settings already default to ``None``, so if you want to
 disable all feed generation, you only need to specify the following settings::
 
-    FEED_ALL_ATOM = None
-    CATEGORY_FEED_ATOM = None
-    TRANSLATION_FEED_ATOM = None
-    AUTHOR_FEED_ATOM = None
-    AUTHOR_FEED_RSS = None
+    FEED_ALL_ATOM_SAVE_AS = None
+    CATEGORY_FEED_ATOM_SAVE_AS = None
+    TRANSLATION_FEED_ATOM_SAVE_AS = None
+    AUTHOR_FEED_ATOM_SAVE_AS = None
+    AUTHOR_FEED_RSS_SAVE_AS = None
 
 The word ``None`` should not be surrounded by quotes. Please note that ``None``
 and ``''`` are not the same thing. 
@@ -191,6 +191,24 @@ generates ``'feeds/all.atom.xml'`` by default and ``FEED_ATOM`` now defaults to
 ``None``. The following feed setting has also been renamed::
 
     TRANSLATION_FEED -> TRANSLATION_FEED_ATOM
+
+Starting in 3.5, the feed variables have been split into two. FEED_ATOM
+has now become FEED_ATOM_SAVE_AS allowing FEED_ATOM_URL to be introduced; FEED_ATOM_URL
+allows you to assign URL Slugs to feeds such as /feed/atom. (URL rewriting will still
+be required on the web server). Here is an exact list of the renamed settings::
+
+    FEED_ATOM -> FEED_ATOM_SAVE_AS
+    FEED_RSS -> FEED_RSS_SAVE_AS
+    FEED_ALL_ATOM -> FEED_ALL_ATOM_SAVE_AS
+    FEED_ALL_RSS -> FEED_ALL_RSS_SAVE_AS
+    CATEGORY_FEED_ATOM -> CATEGORY_FEED_ATOM_SAVE_AS
+    CATEGORY_FEED_RSS -> CATEGORY_FEED_RSS_SAVE_AS
+    AUTHOR_FEED_ATOM -> AUTHOR_FEED_ATOM_SAVE_AS
+    AUTHOR_FEED_RSS -> AUTHOR_FEED_RSS_SAVE_AS
+    TAG_FEED_ATOM -> TAG_FEED_ATOM_SAVE_AS
+    TAG_FEED_RSS -> TAG_FEED_RSS_SAVE_AS
+
+To use the new URLs see :doc:`feed settings <settings>`.
 
 Older themes that referenced the old setting names may not link properly.
 In order to rectify this, please update your theme for compatibility by changing

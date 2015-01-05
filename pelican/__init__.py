@@ -128,7 +128,19 @@ class Pelican(object):
 
         for new, old in [('FEED', 'FEED_ATOM'), ('TAG_FEED', 'TAG_FEED_ATOM'),
                          ('CATEGORY_FEED', 'CATEGORY_FEED_ATOM'),
-                         ('TRANSLATION_FEED', 'TRANSLATION_FEED_ATOM')]:
+                         ('TRANSLATION_FEED', 'TRANSLATION_FEED_ATOM'),
+                         ('FEED_ATOM', 'FEED_ATOM_SAVE_AS'),
+                         ('FEED_RSS', 'FEED_RSS_SAVE_AS'),
+                         ('FEED_ALL_ATOM', 'FEED_ALL_ATOM_SAVE_AS'),
+                         ('FEED_ALL_RSS', 'FEED_ALL_RSS_SAVE_AS'),
+                         ('CATEGORY_FEED_ATOM', 'CATEGORY_FEED_ATOM_SAVE_AS'),
+                         ('CATEGORY_FEED_RSS', 'CATEGORY_FEED_RSS_SAVE_AS'),
+                         ('AUTHOR_FEED_ATOM', 'AUTHOR_FEED_ATOM_SAVE_AS'),
+                         ('AUTHOR_FEED_RSS', 'AUTHOR_FEED_RSS_SAVE_AS'),
+                         ('TAG_FEED_ATOM', 'TAG_FEED_ATOM_SAVE_AS'),
+                         ('TAG_FEED_RSS', 'TAG_FEED_RSS_SAVE_AS'),
+                         ('TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_ATOM_SAVE_AS'),
+                         ('TRANSLATION_FEED_RSS', 'TRANSLATION_FEED_RSS_SAVE_AS')]:
             if self.settings.get(new, False):
                 logger.warning(
                     'Found deprecated `%(new)s` in settings. Modify %(new)s '
@@ -146,7 +158,7 @@ class Pelican(object):
         context = self.settings.copy()
         # Share these among all the generators and content objects:
         context['filenames'] = {}  # maps source path to Content object or None
-        context['localsiteurl'] = self.settings['SITEURL'] 
+        context['localsiteurl'] = self.settings['SITEURL']
 
         generators = [
             cls(
@@ -228,7 +240,7 @@ class Pelican(object):
                 logger.debug('Found writer: %s', writer)
             else:
                 logger.warning(
-                    '%s writers found, using only first one: %s', 
+                    '%s writers found, using only first one: %s',
                     writers_found, writer)
             return writer(self.output_path, settings=self.settings)
 
