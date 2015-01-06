@@ -95,11 +95,13 @@ class Content(object):
         if not hasattr(self, 'slug'):
             if settings['SLUGIFY_SOURCE'] == 'title' and hasattr(self, 'title'):
                 self.slug = slugify(self.title,
-                                settings.get('SLUG_SUBSTITUTIONS', ()))
+                                settings.get('SLUG_SUBSTITUTIONS', ()),
+                                settings['ALLOW_NON_ASCII_IN_SLUG'])
             elif settings['SLUGIFY_SOURCE'] == 'basename' and source_path != None:
                 basename = os.path.basename(os.path.splitext(source_path)[0])
                 self.slug = slugify(basename,
-                                settings.get('SLUG_SUBSTITUTIONS', ()))
+                                settings.get('SLUG_SUBSTITUTIONS', ()),
+                                settings['ALLOW_NON_ASCII_IN_SLUG'])
 
         self.source_path = source_path
 
@@ -175,11 +177,13 @@ class Content(object):
             'date': getattr(self, 'date', SafeDatetime.now()),
             'author': slugify(
                 getattr(self, 'author', ''),
-                slug_substitutions
+                slug_substitutions,
+                self.settings['ALLOW_NON_ASCII_IN_SLUG']
             ),
             'category': slugify(
                 getattr(self, 'category', default_category),
-                slug_substitutions
+                slug_substitutions,
+                self.settings['ALLOW_NON_ASCII_IN_SLUG']
             )
         })
         return metadata
