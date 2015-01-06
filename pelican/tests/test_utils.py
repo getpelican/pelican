@@ -118,6 +118,8 @@ class TestUtils(LoggedTestCase):
 
         for value, expected in samples:
             self.assertEqual(utils.slugify(value), expected)
+            # nothing will be changed if allow_non_ascii is True.
+            self.assertEqual(utils.slugify(value, allow_non_ascii=True), value)
 
     def test_slugify_substitute(self):
 
