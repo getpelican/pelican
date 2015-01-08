@@ -1,5 +1,5 @@
 Filing issues
--------------
+=============
 
 * Before you file an issue, try `asking for help`_ first.
 * If determined to file an issue, first check for `existing issues`_, including
@@ -9,7 +9,7 @@ Filing issues
 .. _`existing issues`: https://github.com/getpelican/pelican/issues
 
 How to get help
----------------
+===============
 
 Before you ask for help, please make sure you do the following:
 
@@ -66,7 +66,7 @@ Once the above preparation is ready, you can contact people willing to help via
 Remember to include all the information you prepared.
 
 The #pelican IRC channel
-........................
+------------------------
 
 * Because of differing time zones, you may not get an immediate response to your
   question, but please be patient and stay logged into IRC — someone will almost
@@ -81,7 +81,7 @@ The #pelican IRC channel
 
 
 Contributing code
------------------
+=================
 
 Before you submit a contribution, please ask whether it is desired so that you
 don't spend a lot of time working on something that would be rejected for a
@@ -89,7 +89,7 @@ known reason. Consider also whether your new feature might be better suited as
 a plugin_ — you can `ask for help`_  to make that determination.
 
 Using Git and GitHub
-....................
+--------------------
 
 * `Create a new git branch`_ specific to your change (as opposed to making
   your commits in the master branch).
@@ -116,7 +116,7 @@ Using Git and GitHub
   turn your GitHub issue into a pull request containing your code.
 
 Contribution quality standards
-..............................
+------------------------------
 
 * Adhere to `PEP8 coding standards`_ whenever possible. This can be eased via
   the `pep8 <http://pypi.python.org/pypi/pep8>`_ or `flake8
