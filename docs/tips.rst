@@ -62,6 +62,17 @@ by the ``ghp-import`` command) to the ``elemoine.github.io`` repository's
     To publish your Pelican site as User Pages, feel free to adjust the
     ``github`` target of the Makefile.
 
+Custom 404 pages 
+----------------
+
+Github has a way to display a predefined custom 404 page when people try to 
+access nonexistent pages on your site. You can find more information about it 
+`here <https://help.github.com/articles/custom-404-pages/>`_. 
+
+The way to achieve this with Pelican would be to save a page as either ``404.md`` 
+or ``404.html``. The latter can be done by setting the ``save_as`` metadata. In 
+addition you can set ``status`` to ``hidden`` as well. 
+
 Extra Tips
 ----------
 
@@ -99,3 +110,4 @@ Moreover, markup languages like reST and Markdown have plugins that let you
 embed videos in the markup. You can use `reST video directive
 <https://gist.github.com/dbrgn/2922648>`_ for reST or `mdx_video plugin
 <https://github.com/italomaia/mdx-video>`_ for Markdown.
+
