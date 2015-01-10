@@ -65,7 +65,7 @@ by the ``ghp-import`` command) to the ``elemoine.github.io`` repository's
 Custom 404 pages 
 ----------------
 
-Github has a way to display a predefined custom 404 page when people try to 
+GitHub Pages has a way to display a predefined custom 404 page when people try to 
 access nonexistent pages on your site. You can find more information about it 
 `here <https://help.github.com/articles/custom-404-pages/>`_. 
 
