@@ -71,7 +71,7 @@ access nonexistent pages on your site. You can find more information about it
 
 The way to achieve this with Pelican would be to save a page as either ``404.md`` 
 or ``404.html``. The latter can be done by setting the ``save_as`` metadata. In 
-addition you can set ``status`` to ``hidden`` as well. 
+addition you should set ``status`` to ``hidden`` as well. 
 
 Extra Tips
 ----------
