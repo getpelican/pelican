@@ -12,7 +12,8 @@ try:
 except ImportError:
     import socketserver  # NOQA
 
-PORT = len(sys.argv) == 2 and int(sys.argv[1]) or 8000
+PORT = len(sys.argv) in (2, 3) and int(sys.argv[1]) or 8000
+SERVER = len(sys.argv) == 3 and sys.argv[2] or ""
 SUFFIXES = ['', '.html', '/index.html']
 
 
@@ -38,13 +39,13 @@ Handler = ComplexHTTPRequestHandler
 
 socketserver.TCPServer.allow_reuse_address = True
 try:
-    httpd = socketserver.TCPServer(("", PORT), Handler)
+    httpd = socketserver.TCPServer((SERVER, PORT), Handler)
 except OSError as e:
-    logging.error("Could not listen on port %s", PORT)
+    logging.error("Could not listen on port %s, server %s", PORT, SERVER)
     sys.exit(getattr(e, 'exitcode', 1))
 
 
-logging.info("Serving at port %s", PORT)
+logging.info("Serving at port %s, server %s", PORT, SERVER)
 try:
     httpd.serve_forever()
 except KeyboardInterrupt as e:
