@@ -102,7 +102,13 @@ dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
 
-pre{background-color:  rgb(238, 238, 238); padding: 10px; margin: 10px; overflow: auto;}
+pre {
+  display: block;
+  padding: 0.5em;
+  background: #002b36;
+  color: #D9E9EB;
+  margin-bottom: 1em;
+}
 
 /* Quotes */
 blockquote {
@@ -300,25 +306,39 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 
 #extras a:hover, #extras a:active {color: #fff;}
 
-	/* Blogroll */
-	#extras .blogroll {
-		float: left;
-		width: 615px;
+	/* Tags */
+	#extras .tags {
+		width: 800px;
 	}
 	
-	#extras .blogroll li {float: left; margin: 0 20px 0 0; width: 185px;}
+	#extras .tags li {float: left; margin: 0 20px 0 0; width: 90px;}
+
+	/* Blogroll */
+	#extras .blogroll {
+		width: 550px;
+    margin-top: 2em;
+    float: left;
+	}
+	
+	#extras .blogroll li {float: left; margin: 0 20px 0 0; width: 90px;}
+
 	
 	/* Social */
 	#extras .social {
-		float: right;
-		width: 175px;
+		width: 150px;
+    margin-top: 2em;
+    float: left;
 	}
-	
+
 	#extras div[class='social'] a {
 		background-repeat: no-repeat;
 		background-position: 3px 6px;
 		padding-left: 25px;
 	}
+
+  #extras .social li {
+    margin-top: 0;
+  }
 	
 		/* Icons */
 		.social a[href*='about.me'] {background-image: url('../images/icons/aboutme.png');}
