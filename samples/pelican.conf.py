@@ -32,7 +32,7 @@ SOCIAL = (('twitter', 'http://twitter.com/ametaireau'),
           ('github', 'http://github.com/ametaireau'),)
 
 # global metadata to all the contents
-DEFAULT_METADATA = (('yeah', 'it is'),)
+DEFAULT_METADATA = {'yeah': 'it is'}
 
 # path-specific metadata
 EXTRA_PATH_METADATA = {
