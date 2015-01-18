@@ -71,7 +71,10 @@ class Pygments(Directive):
             if flag in self.options:
                 self.options[flag] = True
 
-        self.options['linespans'] += next(code_block_id)
+        if '<id>' in self.options['linespans']:
+            self.options['linespans'] = str(self.options['linespans']).replace(
+                '<id>', next(code_block_id)
+            )
 
         # noclasses should already default to False, but just in case...
         formatter = HtmlFormatter(noclasses=False, **self.options)
