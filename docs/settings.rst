@@ -58,7 +58,7 @@ Setting name (followed by default value, if any)                                
                                                                                  template. Templates may or not honor this
                                                                                  setting.
 ``DEFAULT_DATE = None``                                                          The default date you want to use.
-                                                                                 If ``fs``, Pelican will use the file system
+                                                                                 If ``'fs'``, Pelican will use the file system
                                                                                  timestamp information (mtime) if it can't get
                                                                                  date information from the metadata.
                                                                                  If set to a tuple object, the default datetime object will instead
