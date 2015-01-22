@@ -632,6 +632,9 @@ Setting name (followed by default value)            What does it do?
 ``TAG_CLOUD_STEPS = 4``                             Count of different font sizes in the tag
                                                     cloud.
 ``TAG_CLOUD_MAX_ITEMS = 100``                       Maximum number of tags in the cloud.
+``TAG_CLOUD_SORTING = 'random'``                    The tag cloud ordering scheme.  Valid values:
+                                                    random, alphabetically, alphabetically-rev, size and
+                                                    size-rev
 ================================================    =====================================================
 
 The default theme does not include a tag cloud, but it is pretty easy to add one::
@@ -666,6 +669,7 @@ For example::
 
     ...
 
+By default the tags in the cloud are sorted randomly, but if you prefers to have it alphabetically use the `alphabetically` (ascending) and `alphabetically-rev` (descending). Also is possible to sort the tags by it's size (number of articles with this specific tag) using the values `size` (ascending) and `size-rev` (descending).
 
 Translations
 ============

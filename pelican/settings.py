@@ -97,6 +97,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_LANG': 'en',
     'TAG_CLOUD_STEPS': 4,
     'TAG_CLOUD_MAX_ITEMS': 100,
+    'TAG_CLOUD_SORTING': 'random',
     'DIRECT_TEMPLATES': ('index', 'tags', 'categories', 'authors', 'archives'),
     'EXTRA_TEMPLATES_PATHS': [],
     'PAGINATED_DIRECT_TEMPLATES': ('index', ),
