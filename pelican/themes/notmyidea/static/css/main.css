@@ -115,6 +115,7 @@ pre {
   color: #DBDBD8;
   margin-bottom: 1em;
   font-family: monospace, Arial, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  overflow-x: auto;
 }
 
 /* Quotes */
