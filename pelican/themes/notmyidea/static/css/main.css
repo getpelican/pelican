@@ -70,7 +70,10 @@ p { margin-top: 1em;
     margin-bottom: 1em;}
 
 strong, b {font-weight: bold;}
-em, i {font-style: italic;}
+em, i {
+  font-style: italic;
+  background-color: yellow;
+}
 
 /* Lists */
 ul {
