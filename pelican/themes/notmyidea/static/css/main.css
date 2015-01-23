@@ -117,10 +117,6 @@ pre {
   font-family: monospace, Arial, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 
-pre * {
-  color: #DBDBD8 !important;
-}
-
 /* Quotes */
 blockquote {
   background: #f9f9f9;
