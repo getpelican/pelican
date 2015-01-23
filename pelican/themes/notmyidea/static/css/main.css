@@ -118,6 +118,10 @@ pre {
   overflow-x: auto;
 }
 
+.highlight {
+  overflow: auto;
+}
+
 /* Quotes */
 blockquote {
   background: #f9f9f9;
