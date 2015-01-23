@@ -103,11 +103,19 @@ dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
 
 pre {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
   display: block;
   padding: 0.5em;
   background: #002b36;
-  color: #D9E9EB;
+  color: #DBDBD8;
   margin-bottom: 1em;
+  font-family: monospace, Arial, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
+pre * {
+  color: #DBDBD8 !important;
 }
 
 /* Quotes */
