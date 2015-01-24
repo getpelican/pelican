@@ -154,23 +154,42 @@ div.note {
    max-width: 300px;
 }
 
-/* Tables */
-table {margin: .5em auto 1.5em auto; width: 98%;}
-	
-	/* Thead */
-	thead th {padding: .5em .4em; text-align: left;}
-	thead td {}
-
-	/* Tbody */
-	tbody td {padding: .5em .4em;}
-	tbody th {}
-	
-	tbody .alt td {}
-	tbody .alt th {}
-	
-	/* Tfoot */
-	tfoot th {}
-	tfoot td {}
+table {
+  background: white;
+  margin-bottom: 1.25rem;
+  border: solid 2px #ecf0f1;
+}
+table thead,
+table tfoot {
+  background: whitesmoke;
+}
+table thead tr th,
+table thead tr td,
+table tfoot tr th,
+table tfoot tr td {
+  padding: 0.5rem 0.625rem 0.625rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: left;
+}
+table tr th,
+table tr td {
+  padding: 0.5625rem 0.625rem;
+  font-size: 0.875rem;
+  color: #34495e;
+}
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+  background: #f9f9f9;
+}
+table thead tr th,
+table tfoot tr th,
+table tbody tr td,
+table tr td,
+table tfoot tr td {
+  display: table-cell;
+  line-height: 1.125rem;
+}
 	
 /* HTML5 tags */
 header, section, footer,
