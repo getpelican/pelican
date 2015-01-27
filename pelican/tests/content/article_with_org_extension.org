@@ -1,0 +1,143 @@
+#+Title: test org in md reader
+#+Date: 2014-01-26
+#+Author: Joth
+#+Category: pelican
+#+Tags: pelican readers, pypandoc
+#+Slug: test-org-md-reader
+#+Summary: Testing org reader
+#+OPTIONS: H:2
+#+OPTIONS: toc:2
+#+TOC: headlines 2
+
+* Org Metadata
+
+The following metadata are exporting properly
+
+#+begin_src 
+#+Title: test org in md reader
+#+Date: 2014-01-26
+#+Author: Joth
+#+Category: pelican
+#+end_src
+
+These metadata are not exporting properly. It may be in the
+pandoc template. It may be in the pandoc convert call.
+
+#+begin_src 
+#+Tags: pelican readers, pypandoc
+#+Slug: test-org-md-reader
+#+Summary: Testing org reader
+#+OPTIONS: toc:2
+#+TOC: headlines 2
+#+end_src
+
+
+* Markup
+
+Quotes
+#+BEGIN_QUOTE
+Everything should be made as simple as possible,
+but not any simpler -- Albert Einstein
+#+END_QUOTE
+
+are included with
+#+begin_src 
+#+BEGIN_QUOTE
+...
+#+END_QUOTE
+#+end_src
+
+Centred text and verse are not working in markdown export.
+
+#+begin_src 
+#+BEGIN_CENTER
+...
+#+END_CENTER
+#+end_src
+
+
+* Fonts
+
+*bold* =*bold*=
+
+/italic/ =/italic/=
+
+_underlined_ =_underlined_=
+
+=verbatim= ~=verbatim=~
+
+ ~code~ =~code~=
+
++strike-through+ =+strike-through+=
+
+
+* Code
+
+#+begin_src python :noeval
+class BaseReader(object):
+    """Base class to read files.
+
+    This class is used to process static files, and it can be inherited for
+    other types of file. A Reader class must have the following attributes:
+
+    - enabled: (boolean) tell if the Reader class is enabled. It
+      generally depends on the import of some dependency.
+    - file_extensions: a list of file extensions that the Reader will process.
+    - extensions: a list of extensions to use in the reader (typical use is
+      Markdown).
+
+    """
+    enabled = True
+    file_extensions = ['static']
+    extensions = None
+
+    def __init__(self, settings):
+        self.settings = settings
+
+    def process_metadata(self, name, value):
+        if name in METADATA_PROCESSORS:
+            return METADATA_PROCESSORS[name](value, self.settings)
+        return value
+
+    def read(self, source_path):
+        "No-op parser"
+        content = None
+        metadata = {}
+        return content, metadata
+#+end_src
+
+
+* Tables
+
+Not working nicely. They work with pandoc to rst.
+
+| header 1 | header 2 |
+|----------+----------|
+| and      | with     |
+| a        | two      |
+| table    | columns  |
+
+
+* Misc
+
+Five or more dashes make a line 
+
+------
+
+ # lines with whitespace infront of '# ' will be treated as comments
+
+#+begin_src sh
+ # lines with whitespace infront of '# ' will be treated as comments
+#+end_src
+
+
+* Alternatives and TODOs
+  - implement as plugin?
+    - org is amazin markup language, i like it native...
+  - do the org text to html with pandoc instead of markdown
+  - use Rst/html classes
+  - dedicated org class
+  - specify in SETTINGS which reader subclass to use for org files
+  - fix tables
+  - images example
+  - tests
