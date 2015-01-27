@@ -4,6 +4,7 @@ from __future__ import unicode_literals, print_function
 import logging
 import os
 import re
+import pkg_resources
 
 import docutils
 import docutils.core
@@ -21,6 +22,10 @@ try:
     from html import escape
 except ImportError:
     from cgi import escape
+try:
+    import pypandoc
+except ImportError:
+    pandoc = False  # NOQA
 from six.moves.html_parser import HTMLParser
 
 from pelican import signals
@@ -195,6 +200,10 @@ class MarkdownReader(BaseReader):
 
     enabled = bool(Markdown)
     file_extensions = ['md', 'markdown', 'mkd', 'mdown']
+    enable_pypandoc = bool(pypandoc)
+    if enable_pypandoc is True:
+        file_extensions.append('org')
+        logger.info('Using pandoc to convert org to markdown')
 
     def __init__(self, *args, **kwargs):
         super(MarkdownReader, self).__init__(*args, **kwargs)
@@ -235,6 +244,12 @@ class MarkdownReader(BaseReader):
         self._source_path = source_path
         self._md = Markdown(extensions=self.extensions)
         with pelican_open(source_path) as text:
+            if self._source_path[-4:] == '.org' and \
+               self.enable_pypandoc is True:
+                pandoc_data_dir = '='.join(['--data-dir', pkg_resources.resource_filename('pelican', 'pandoc_templates')])
+                text = pypandoc.convert(text, 'markdown', \
+                                        format='org',\
+                                        extra_args=['--template=md_org_template.markdown', pandoc_data_dir])
             content = self._md.convert(text)
 
         metadata = self._parse_metadata(self._md.Meta)

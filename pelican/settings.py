@@ -135,6 +135,7 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': True,
     'AUTORELOAD_IGNORE_CACHE': False,
     'WRITE_SELECTED': [],
+    'PANDOC_TEMPLATES_PATH': ['pandoc_templates'],
     }
 
 PYGMENTS_RST_OPTIONS = None
