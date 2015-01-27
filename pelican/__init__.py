@@ -359,8 +359,13 @@ def main():
                                         pelican.ignore_files),
                 'settings': file_watcher(args.settings)}
 
-    for static_path in settings.get("STATIC_PATHS", []):
-        watchers[static_path] = folder_watcher(static_path, [''], pelican.ignore_files)
+    old_static = settings.get("STATIC_PATHS", [])
+    for static_path in old_static:
+        # use a prefix to avoid possible overriding of standard watchers above
+        watchers['[static]%s' % static_path] = folder_watcher(
+            os.path.join(pelican.path, static_path),
+            [''],
+            pelican.ignore_files)
 
     try:
         if args.autoreload:
@@ -385,6 +390,29 @@ def main():
                         pelican, settings = get_instance(args)
                         original_load_cache = settings['LOAD_CONTENT_CACHE']
                         _ignore_cache(pelican)
+
+                        # Adjust static watchers if there are any changes
+                        new_static = settings.get("STATIC_PATHS", [])
+
+                        # Added static paths
+                        # Add new watchers and set them as modified
+                        for static_path in set(new_static).difference(old_static):
+                            static_key = '[static]%s' % static_path
+                            watchers[static_key] = folder_watcher(
+                                os.path.join(pelican.path, static_path),
+                                [''],
+                                pelican.ignore_files)
+                            modified[static_key] = next(watchers[static_key])
+
+                        # Removed static paths
+                        # Remove watchers and modified values
+                        for static_path in set(old_static).difference(new_static):
+                            static_key = '[static]%s' % static_path
+                            watchers.pop(static_key)
+                            modified.pop(static_key)
+
+                        # Replace old_static with the new one
+                        old_static = new_static
 
                     if any(modified.values()):
                         print('\n-> Modified: {}. re-generating...'.format(
