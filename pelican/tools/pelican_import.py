@@ -447,6 +447,46 @@ def feed2fields(file):
         yield (entry.title, entry.description, slug, date, author, [], tags,
                kind, "html")
 
+
+def blogger2fields(file):
+    """Read a feed and yield pelican fields"""
+    KIND_SCHEME = "http://schemas.google.com/g/2005#kind"
+    KINDS = {
+        'http://schemas.google.com/blogger/2008/kind#post': 'article',
+        'http://schemas.google.com/blogger/2008/kind#page': 'page',
+        'http://schemas.google.com/blogger/2008/kind#settings': 'settings',
+        'http://schemas.google.com/blogger/2008/kind#template': 'template',
+        'http://schemas.google.com/blogger/2008/kind#comment': 'comment',
+    }
+
+    import feedparser
+    d = feedparser.parse(file)
+    for entry in d.entries:
+        date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
+            if hasattr(entry, "updated_parsed") else None)
+        author = entry.author if hasattr(entry, "author") else None
+
+        if hasattr(entry, "tags"):
+            tags = []
+            for e in entry.tags:
+                # Assume there's only one tag with the 'kind' schema.
+                if e['scheme'] == KIND_SCHEME:
+                    kind = KINDS.get(e['term'])
+                else:
+                    tags.append(e['term'])
+        else:
+            tags = None
+            kind = 'article'
+
+        if kind == 'article':
+            slug = os.path.splitext(os.path.split(entry.link)[1])[0]
+        else:
+            slug = slugify(entry.title)
+
+        yield (entry.title, entry.description, slug, date, author, [], tags,
+               kind, "html")
+
+
 def build_header(title, date, author, categories, tags, slug, attachments=None):
     from docutils.utils import column_width
 
@@ -686,9 +726,9 @@ def fields2pelican(fields, out_markup, output_path,
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, WordPress, Tumblr, Dotclear, or Posterous "
-                    "files into reST (rst) or Markdown (md) files. Be sure to "
-                    "have pandoc installed.",
+        description="Transform feed, WordPress, Tumblr, Dotclear, Posterous, "
+                    "or Blogger files into reST (rst) or Markdown (md) files. "
+                    "Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(dest='input', help='The input file to read')
@@ -702,6 +742,8 @@ def main():
         help='Tumblr export')
     parser.add_argument('--feed', action='store_true', dest='feed',
         help='Feed to parse')
+    parser.add_argument('--blogger', action='store_true', dest='blogger',
+        help='Blogger export')
     parser.add_argument('-o', '--output', dest='output', default='output',
         help='Output path')
     parser.add_argument('-m', '--markup', dest='markup', default='rst',
@@ -754,8 +796,10 @@ def main():
         input_type = 'tumblr'
     elif args.feed:
         input_type = 'feed'
+    elif args.blogger:
+        input_type = 'blogger'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr or --feed options"
+        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr, --feed or --blogger options"
         exit(error)
 
     if not os.path.exists(args.output):
@@ -779,6 +823,8 @@ def main():
         fields = tumblr2fields(args.input, args.blogname)
     elif input_type == 'feed':
         fields = feed2fields(args.input)
+    elif input_type == 'blogger':
+        fields = blogger2fields(args.input)
 
     if args.wp_attach:
         attachments = get_attachments(args.input)
