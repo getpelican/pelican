@@ -168,6 +168,8 @@ class Pelican(object):
             if hasattr(p, 'generate_context'):
                 p.generate_context()
 
+        signals.all_generators_finalized.send(generators)
+
         writer = self.get_writer()
 
         for p in generators:
