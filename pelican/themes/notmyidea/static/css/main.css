@@ -10,7 +10,9 @@
 
 /* Imports */
 @import url("reset.css");
+/*
 @import url("pygment.css");
+*/
 @import url("typogrify.css");
 
 /***** Global *****/
@@ -99,7 +101,8 @@ li { margin-top: 0.5em;}
     margin-bottom: 1px;
 }
 
-.readmore { float: right }
+.readmore { 
+}
 
 dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
@@ -111,8 +114,8 @@ pre {
   -webkit-border-radius: 5px;
   display: block;
   padding: 0.5em;
-  background: #4dd6f9;
-  color: #0f0f0e;
+  background: #001f3f;
+  color: hsla(210, 100%, 75%, 1.0);
   margin-bottom: 1em;
   font-family: monospace, Arial, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
   overflow-x: auto;
