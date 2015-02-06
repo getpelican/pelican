@@ -144,8 +144,8 @@ your home page. The following Markdown example could be stored in
     Thank you for visiting. Welcome!
 
 If the original blog index is still wanted, it can then be saved in a
-different location by setting ``INDEX_SAVE_AS = 'blog_index.html`` for
-the ``''index'`` direct template.
+different location by setting ``INDEX_SAVE_AS = 'blog_index.html'`` for
+the ``'index'`` direct template.
 
 What if I want to disable feed generation?
 ==========================================
