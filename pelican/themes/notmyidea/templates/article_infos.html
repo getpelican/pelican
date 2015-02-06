@@ -1,17 +1,17 @@
 <footer class="post-info">
         <abbr class="published" title="{{ article.date.isoformat() }}">
-                Published: {{ article.locale_date }}
+                发布于: {{ article.locale_date }}
         </abbr>
         {% if article.modified %}
 		<br />
         <abbr class="modified" title="{{ article.modified.isoformat() }}">
-                Updated: {{ article.locale_modified }}
+                更新于: {{ article.locale_modified }}
         </abbr>
         {% endif %}
 
         {% if article.authors %}
         <address class="vcard author">
-                By {% for author in article.authors %}
+                作者: {% for author in article.authors %}
                         <a class="url fn" href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
                 {% endfor %}
         </address>

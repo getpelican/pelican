@@ -10,9 +10,10 @@
 
 /* Imports */
 @import url("reset.css");
+/*
 @import url("pygment.css");
+*/
 @import url("typogrify.css");
-@import url(//fonts.googleapis.com/css?family=Yanone+Kaffeesatz&subset=latin);
 
 /***** Global *****/
 /* Body */
@@ -20,7 +21,7 @@ body {
     background: #F5F4EF;
     color: #000305;
     font-size: 87.5%; /* Base font size: 14px */
-    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
     line-height: 1.429;
     margin: 0;
     padding: 0;
@@ -39,7 +40,7 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: 400;
 	line-height: 1.1;
 	margin-bottom: .8em;
-    font-family: 'Yanone Kaffeesatz', arial, serif;
+    font-family: 'Yanone Kaffeesatz', arial, KaiTi, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 
 h3, h4, h5, h6 { margin-top: .8em; }
@@ -71,17 +72,20 @@ p { margin-top: 1em;
     margin-bottom: 1em;}
 
 strong, b {font-weight: bold;}
-em, i {font-style: italic;}
+em, i {
+  font-style: italic;
+  background-color: yellow;
+}
 
 /* Lists */
 ul {
 	list-style: outside disc;
-	margin: 0em 0 0 1.5em;
+	margin: 0em 0 1em 1.5em;
 }
 
 ol {
 	list-style: outside decimal;
-	margin: 0em 0 0 1.5em;
+	margin: 0em 0 1em 1.5em;
 }
 
 li { margin-top: 0.5em;
@@ -98,19 +102,52 @@ li { margin-top: 0.5em;
     margin-bottom: 1px;
 }
 
-.readmore { float: right }
+.readmore { 
+}
 
 dl {margin: 0 0 1.5em 0;}
 dt {font-weight: bold;}
 dd {margin-left: 1.5em;}
 
-pre{background-color:  rgb(238, 238, 238); padding: 10px; margin: 10px; overflow: auto;}
+pre {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  display: block;
+  padding: 0.5em;
+  background: #001f3f;
+  color: hsla(210, 100%, 75%, 1.0);
+  margin-bottom: 1em;
+  font-family: monospace, Arial, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  overflow-x: auto;
+}
+
+.highlight {
+  overflow: auto;
+}
 
 /* Quotes */
 blockquote {
-    margin: 20px;
-    font-style: italic;
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+  overflow-x: auto;
+  overflow-y: hidden;
 }
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+
 cite {}
 
 q {}
@@ -122,23 +159,42 @@ div.note {
    max-width: 300px;
 }
 
-/* Tables */
-table {margin: .5em auto 1.5em auto; width: 98%;}
-	
-	/* Thead */
-	thead th {padding: .5em .4em; text-align: left;}
-	thead td {}
-
-	/* Tbody */
-	tbody td {padding: .5em .4em;}
-	tbody th {}
-	
-	tbody .alt td {}
-	tbody .alt th {}
-	
-	/* Tfoot */
-	tfoot th {}
-	tfoot td {}
+table {
+  background: white;
+  margin-bottom: 1.25rem;
+  border: solid 2px #ecf0f1;
+}
+table thead,
+table tfoot {
+  background: whitesmoke;
+}
+table thead tr th,
+table thead tr td,
+table tfoot tr th,
+table tfoot tr td {
+  padding: 0.5rem 0.625rem 0.625rem;
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: left;
+}
+table tr th,
+table tr td {
+  padding: 0.5625rem 0.625rem;
+  font-size: 0.875rem;
+  color: #34495e;
+}
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+  background: #f9f9f9;
+}
+table thead tr th,
+table tfoot tr th,
+table tbody tr td,
+table tr td,
+table tfoot tr td {
+  display: table-cell;
+  line-height: 1.125rem;
+}
 	
 /* HTML5 tags */
 header, section, footer,
@@ -287,25 +343,39 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 
 #extras a:hover, #extras a:active {color: #fff;}
 
-	/* Blogroll */
-	#extras .blogroll {
-		float: left;
-		width: 615px;
+	/* Tags */
+	#extras .tags {
+		width: 800px;
 	}
 	
-	#extras .blogroll li {float: left; margin: 0 20px 0 0; width: 185px;}
+	#extras .tags li {float: left; margin: 0 20px 0 0; width: 90px;}
+
+	/* Blogroll */
+	#extras .blogroll {
+		width: 550px;
+    margin-top: 2em;
+    float: left;
+	}
+	
+	#extras .blogroll li {float: left; margin: 0 20px 0 0; width: 90px;}
+
 	
 	/* Social */
 	#extras .social {
-		float: right;
-		width: 175px;
+		width: 150px;
+    margin-top: 2em;
+    float: left;
 	}
-	
+
 	#extras div[class='social'] a {
 		background-repeat: no-repeat;
 		background-position: 3px 6px;
 		padding-left: 25px;
 	}
+
+  #extras .social li {
+    margin-top: 0;
+  }
 	
 		/* Icons */
 		.social a[href*='about.me'] {background-image: url('../images/icons/aboutme.png');}
@@ -372,6 +442,9 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	clear: both;
 	border-bottom: 1px solid #eee;
 	padding: 1.5em 0;
+}
+article img {
+  box-shadow: 10px 10px 5px #888888;
 }
 li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 #content > .hentry {padding: 1em 0;}
