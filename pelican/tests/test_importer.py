@@ -254,13 +254,13 @@ class TestBuildHeader(unittest.TestCase):
 
     def test_galleries_added_to_header(self):
         header = build_header('test', None, None, None, None,
-                None, ['output/test1', 'output/test2'])
+                None, attachments=['output/test1', 'output/test2'])
         self.assertEqual(header, 'test\n####\n' + ':attachments: output/test1, '
                 + 'output/test2\n\n')
 
     def test_galleries_added_to_markdown_header(self):
         header = build_markdown_header('test', None, None, None, None, None,
-            ['output/test1', 'output/test2'])
+            attachments=['output/test1', 'output/test2'])
         self.assertEqual(header, 'Title: test\n' + 'Attachments: output/test1, '
                 + 'output/test2\n\n')
 

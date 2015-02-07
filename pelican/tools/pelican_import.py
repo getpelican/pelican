@@ -126,7 +126,7 @@ def wp2fields(xml, wp_custpost=False):
     items = get_items(xml)
     for item in items:
 
-        if item.find('status').string == "publish":
+        if item.find('status').string in ["publish", "draft"]:
 
             try:
                 # Use HTMLParser due to issues with BeautifulSoup 3
@@ -149,6 +149,8 @@ def wp2fields(xml, wp_custpost=False):
             # caturl = [cat['nicename'] for cat in item.find(domain='category')]
 
             tags = [tag.string for tag in item.findAll('category', {'domain' : 'post_tag'})]
+            # To publish a post the status should be 'published'
+            status = 'published' if item.find('status').string == "publish" else item.find('status').string
 
             kind = 'article'
             post_type = item.find('post_type').string
@@ -165,7 +167,7 @@ def wp2fields(xml, wp_custpost=False):
                     pass
                 else:
                     kind = post_type
-            yield (title, content, filename, date, author, categories, tags,
+            yield (title, content, filename, date, author, categories, tags, status,
                    kind, "wp-html")
 
 def dc2fields(file):
@@ -296,9 +298,10 @@ def dc2fields(file):
             post_format = "html"
 
         kind = 'article'  # TODO: Recognise pages
+        status = 'published'  # TODO: Find a way for draft posts
 
         yield (post_title, content, slugify(post_title), post_creadt, author,
-               categories, tags, kind, post_format)
+               categories, tags, status, kind, post_format)
 
 
 def posterous2fields(api_token, email, password):
@@ -347,9 +350,10 @@ def posterous2fields(api_token, email, password):
             date_object -= delta
             date = date_object.strftime("%Y-%m-%d %H:%M")
             kind = 'article'  # TODO: Recognise pages
+            status = 'published'  # TODO: Find a way for draft posts
 
             yield (post.get('title'), post.get('body_cleaned'), slug, date,
-                post.get('user').get('display_name'), [], tags, kind, "html")
+                post.get('user').get('display_name'), [], tags, status, kind, "html")
 
 
 def tumblr2fields(api_key, blogname):
@@ -426,8 +430,10 @@ def tumblr2fields(api_key, blogname):
 
             content = content.rstrip() + '\n'
             kind = 'article'
+            status = 'published'  # TODO: Find a way for draft posts
+
             yield (title, content, slug, date, post.get('blog_name'), [type],
-                   tags, kind, format)
+                   tags, status, kind, format)
 
         offset += len(posts)
         posts = get_tumblr_posts(api_key, blogname, offset)
@@ -444,10 +450,10 @@ def feed2fields(file):
 
         slug = slugify(entry.title)
         kind = 'article'
-        yield (entry.title, entry.description, slug, date, author, [], tags,
+        yield (entry.title, entry.description, slug, date, author, [], tags, None,
                kind, "html")
 
-def build_header(title, date, author, categories, tags, slug, attachments=None):
+def build_header(title, date, author, categories, tags, slug, status=None, attachments=None):
     from docutils.utils import column_width
 
     """Build a header from a list of fields"""
@@ -462,13 +468,15 @@ def build_header(title, date, author, categories, tags, slug, attachments=None):
         header += ':tags: %s\n' % ', '.join(tags)
     if slug:
         header += ':slug: %s\n' % slug
+    if status:
+        header += ':status: %s\n' % status
     if attachments:
         header += ':attachments: %s\n' % ', '.join(attachments)
     header += '\n'
     return header
 
-def build_markdown_header(title, date, author, categories, tags, slug,
-        attachments=None):
+def build_markdown_header(title, date, author, categories, tags, slug, status=None,
+    attachments=None):
     """Build a header from a list of fields"""
     header = 'Title: %s\n' % title
     if date:
@@ -481,6 +489,8 @@ def build_markdown_header(title, date, author, categories, tags, slug,
         header += 'Tags: %s\n' % ', '.join(tags)
     if slug:
         header += 'Slug: %s\n' % slug
+    if status:
+        header += 'Status: %s\n' % status
     if attachments:
         header += 'Attachments: %s\n' % ', '.join(attachments)
     header += '\n'
@@ -606,7 +616,7 @@ def fields2pelican(fields, out_markup, output_path,
         dircat=False, strip_raw=False, disable_slugs=False,
         dirpage=False, filename_template=None, filter_author=None,
         wp_custpost=False, wp_attach=False, attachments=None):
-    for (title, content, filename, date, author, categories, tags,
+    for (title, content, filename, date, author, categories, tags, status,
             kind, in_markup) in fields:
         if filter_author and filter_author != author:
             continue
@@ -624,11 +634,11 @@ def fields2pelican(fields, out_markup, output_path,
         ext = get_ext(out_markup, in_markup)
         if ext == '.md':
             header = build_markdown_header(title, date, author, categories,
-                    tags, slug, attached_files)
+                    tags, slug, status, attached_files)
         else:
             out_markup = "rst"
             header = build_header(title, date, author, categories,
-                    tags, slug, attached_files)
+                    tags, slug, status, attached_files)
 
         out_filename = get_out_filename(output_path, filename, ext,
                 kind, dirpage, dircat, categories, wp_custpost)
