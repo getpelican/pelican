@@ -346,7 +346,7 @@ class ArticlesGenerator(CachingGenerator):
 
     def generate_articles(self, write):
         """Generate the articles."""
-        for article in chain(self.translations, self.articles):
+        for article in chain(self.translations, self.articles, self.article_subparts):
             signals.article_generator_write_article.send(self, content=article)
             write(article.save_as, self.get_template(article.template),
                   self.context, article=article, category=article.category,
@@ -536,6 +536,30 @@ class ArticlesGenerator(CachingGenerator):
 
         signals.article_generator_pretaxonomy.send(self)
 
+        slugs= {}
+        for article in self.articles:
+            slugs[article.slug]= article
+        self.article_subparts= []
+        articles_main= []
+        for article in self.articles:
+            if '--' in article.slug:
+                (pslug, _)= article.slug.split('--', 1)
+                if pslug in slugs:
+                    parent= slugs[pslug]
+                    if not hasattr(parent, 'subparts'):
+                        parent.subparts= []
+                    parent.subparts.append(article)
+                    article.subpart_of= parent
+                    self.article_subparts.append(article)
+                    article.subtitle= article.title
+                    article.title= article.title + ", " + parent.title
+                else:
+                    logger.error('No parent for {}'.format(pslug))
+                    articles_main.append(article)
+            else:
+                articles_main.append(article)
+        self.articles= articles_main
+
         for article in self.articles:
             # only main articles are listed in categories and tags
             # not translations
@@ -547,6 +571,13 @@ class ArticlesGenerator(CachingGenerator):
             for author in getattr(article, 'authors', []):
                 if author.name != '':
                     self.authors[author].append(article)
+
+        for article in self.article_subparts:
+            # But parts should also show in tags
+            if hasattr(article, 'tags'):
+                for tag in article.tags:
+                    self.tags[tag].append(article)
+
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)
@@ -590,7 +621,8 @@ class ArticlesGenerator(CachingGenerator):
         self.authors.sort()
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
-                              'tag_cloud', 'authors', 'related_posts'))
+                              'tag_cloud', 'authors', 'related_posts',
+                              'article_subparts'))
         self.save_cache()
         self.readers.save_cache()
         signals.article_generator_finalized.send(self)
