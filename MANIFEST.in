@@ -1,5 +1,5 @@
 graft pelican/themes 
-graft pelican/tests
+graft pelican_tests
 graft pelican/tools/templates
 graft docs
 graft samples
