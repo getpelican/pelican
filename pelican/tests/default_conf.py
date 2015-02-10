@@ -39,6 +39,9 @@ STATIC_PATHS = [
     'extra/robots.txt',
     ]
 
+FORMATTED_FIELDS = ['summary', 'custom_formatted_field']
+
 # foobar will not be used, because it's not in caps. All configuration keys
 # have to be in caps
 foobar = "barbaz"
+

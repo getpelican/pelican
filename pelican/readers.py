@@ -136,13 +136,15 @@ class RstReader(BaseReader):
 
     def _parse_metadata(self, document):
         """Return the dict containing document metadata"""
+        formatted_fields = self.settings['FORMATTED_FIELDS']
+
         output = {}
         for docinfo in document.traverse(docutils.nodes.docinfo):
             for element in docinfo.children:
                 if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
-                    if name == 'summary':
+                    if name in formatted_fields:
                         value = render_node_to_html(document, body_elem)
                     else:
                         value = body_elem.astext()
@@ -205,10 +207,12 @@ class MarkdownReader(BaseReader):
 
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
+        formatted_fields = self.settings['FORMATTED_FIELDS']
+
         output = {}
         for name, value in meta.items():
             name = name.lower()
-            if name == "summary":
+            if name in formatted_fields:
                 # handle summary metadata as markdown
                 # summary metadata is special case and join all list values
                 summary_values = "\n".join(value)
@@ -333,7 +337,7 @@ class HTMLReader(BaseReader):
             if name is None:
                 attr_serialized = ', '.join(['{}="{}"'.format(k, v) for k, v in attrs])
                 logger.warning("Meta tag in file %s does not have a 'name' "
-                               "attribute, skipping. Attributes: %s", 
+                               "attribute, skipping. Attributes: %s",
                                self._filename, attr_serialized)
                 return
             name = name.lower()
