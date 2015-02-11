@@ -576,8 +576,20 @@ class ArticlesGenerator(CachingGenerator):
             )
             for tag, count in tag_cloud
         ]
-        # put words in chaos
-        random.shuffle(self.tag_cloud)
+
+        sorting = self.settings.get('TAG_CLOUD_SORTING')
+
+        if sorting == 'alphabetically':
+            self.tag_cloud.sort(key=lambda elem: elem[0].name)
+        elif sorting == 'alphabetically-rev':
+            self.tag_cloud.sort(key=lambda elem: elem[0].name, reverse=True)
+        elif sorting == 'size':
+            self.tag_cloud.sort(key=lambda elem: elem[1])
+        elif sorting == 'size-rev':
+            self.tag_cloud.sort(key=lambda elem: elem[1], reverse=True)
+        else:
+            # put words in chaos
+            random.shuffle(self.tag_cloud)
 
         # and generate the output :)
 
