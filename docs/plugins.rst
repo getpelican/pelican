@@ -85,6 +85,7 @@ finalized                           pelican object                 invoked after
                                                                    - minifying js/css assets.
                                                                    - notify/ping search engines with an updated sitemap.
 generator_init                      generator                      invoked in the Generator.__init__
+all_generators_finalized            generators                     invoked after all the generators are executed and before writing output
 readers_init                        readers                        invoked in the Readers.__init__
 article_generator_context           article_generator, metadata
 article_generator_preread           article_generator              invoked before a article is read in ArticlesGenerator.generate_context;
@@ -137,6 +138,15 @@ request if you need them!
 
        def register():
                signals.content_object_init.connect(test, sender=contents.Article)
+
+.. warning::
+
+   Avoid ``content_object_init`` signal if you intend to read ``summary``
+   or ``content`` properties of the content object. That combination can
+   result in unresolved links when :ref:`ref-linking-to-internal-content`
+   (see `pelican-plugins bug #314`_). Use ``_summary`` and ``_content``
+   properties instead, or, alternatively, run your plugin at a later
+   stage (e.g. ``all_generators_finalized``).
 
 .. note::
 
@@ -222,3 +232,5 @@ Adding a new generator is also really easy. You might want to have a look at
         return MyGenerator
 
     signals.get_generators.connect(get_generators)
+
+.. _pelican-plugins bug #314: https://github.com/getpelican/pelican-plugins/issues/314
