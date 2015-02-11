@@ -466,21 +466,16 @@ class Readers(FileStampDataCacher):
 
         # eventually filter the content with typogrify if asked so
         if self.settings['TYPOGRIFY']:
-            from typogrify.filters import typogrify
-
-            def typogrify_wrapper(text):
-                """Ensures ignore_tags feature is backward compatible"""
-                try:
-                    return typogrify(text, self.settings['TYPOGRIFY_IGNORE_TAGS'])
-                except TypeError:
-                    return typogrify(text)
+            from pelican.typogrify import Typogrify
+            typogrify = Typogrify()
+            typogrify.ignores = self.settings['TYPOGRIFY_IGNORE_TAGS']
 
             if content:
-                content = typogrify_wrapper(content)
-                metadata['title'] = typogrify_wrapper(metadata['title'])
+                content = typogrify.filter(content)
+                metadata['title'] = typogrify.filter(metadata['title'])
 
             if 'summary' in metadata:
-                metadata['summary'] = typogrify_wrapper(metadata['summary'])
+                metadata['summary'] = typogrify.filter(metadata['summary'])
 
         if context_signal:
             logger.debug('Signal %s.send(%s, <metadata>)',
