@@ -5,6 +5,7 @@ import os
 import re
 
 import locale
+from codecs import open
 from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content, build_header, build_markdown_header, get_attachments, download_attachments
 from pelican.tests.support import (unittest, temporary_folder, mute,
                                    skipIfNoExecutable)
@@ -41,7 +42,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
-        for title, content, fname, date, author, categ, tags, kind, format in self.posts:
+        for title, content, fname, date, author, categ, tags, status, kind, format in self.posts:
             self.assertTrue(title.strip())
 
     def test_recognise_page_kind(self):
@@ -49,7 +50,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         self.assertTrue(self.posts)
         # Collect (title, filename, kind) of non-empty posts recognised as page
         pages_data = []
-        for title, content, fname, date, author, categ, tags, kind, format in self.posts:
+        for title, content, fname, date, author, categ, tags, status, kind, format in self.posts:
             if kind == 'page':
                 pages_data.append((title, fname))
         self.assertEqual(2, len(pages_data))
@@ -85,7 +86,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
     def test_unless_custom_post_all_items_should_be_pages_or_posts(self):
         self.assertTrue(self.posts)
         pages_data = []
-        for title, content, fname, date, author, categ, tags, kind, format in self.posts:
+        for title, content, fname, date, author, categ, tags, status, kind, format in self.posts:
             if kind == 'page' or kind == 'article':
                 pass
             else:
@@ -95,7 +96,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
     def test_recognise_custom_post_type(self):
         self.assertTrue(self.custposts)
         cust_data = []
-        for title, content, fname, date, author, categ, tags, kind, format in self.custposts:
+        for title, content, fname, date, author, categ, tags, status, kind, format in self.custposts:
             if kind == 'article' or kind == 'page':
                 pass
             else:
@@ -110,7 +111,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         test_posts = []
         for post in self.custposts:
             # check post kind
-            if post[7] == 'article' or post[7] == 'page':
+            if post[8] == 'article' or post[8] == 'page':
                 pass
             else:
                 test_posts.append(post)
@@ -119,7 +120,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         index = 0
         for post in test_posts:
             name = post[2]
-            kind = post[7]
+            kind = post[8]
             name += '.md'
             filename = os.path.join(kind, name)
             out_name = fnames[index]
@@ -131,7 +132,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         test_posts = []
         for post in self.custposts:
             # check post kind
-            if post[7] == 'article' or post[7] == 'page':
+            if post[8] == 'article' or post[8] == 'page':
                 pass
             else:
                 test_posts.append(post)
@@ -141,7 +142,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         index = 0
         for post in test_posts:
             name = post[2]
-            kind = post[7]
+            kind = post[8]
             category = slugify(post[5][0])
             name += '.md'
             filename = os.path.join(kind, category, name)
@@ -155,7 +156,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         test_posts = []
         for post in self.custposts:
             # check post kind
-            if post[7] == 'page':
+            if post[8] == 'page':
                 test_posts.append(post)
         with temporary_folder() as temp:
             fnames = list(silent_f2p(test_posts, 'markdown', temp,
@@ -171,7 +172,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_can_toggle_raw_html_code_parsing(self):
         def r(f):
-            with open(f) as infile:
+            with open(f, encoding='utf-8') as infile:
                 return infile.read()
         silent_f2p = mute(True)(fields2pelican)
 
@@ -213,7 +214,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_preserve_verbatim_formatting(self):
         def r(f):
-            with open(f) as infile:
+            with open(f, encoding='utf-8') as infile:
                 return infile.read()
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Code in List"), self.posts)
@@ -228,7 +229,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_code_in_list(self):
         def r(f):
-            with open(f) as infile:
+            with open(f, encoding='utf-8') as infile:
                 return infile.read()
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Code in List"), self.posts)
