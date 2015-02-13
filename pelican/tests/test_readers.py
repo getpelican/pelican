@@ -121,7 +121,7 @@ class RstReaderTest(ReaderTest):
             page = self.read_file(path='article.rst', TYPOGRIFY=True)
             expected = (
                 '<p><span class="caps">THIS</span> is some content. '
-                'With some stuff to&nbsp;&quot;typogrify&quot;&#8230;</p>\n'
+                'With some stuff to&nbsp;&#8220;typogrify&#8221;&#8230;</p>\n'
                 '<p>Now with added support for <abbr title="three letter '
                 'acronym"><span class="caps">TLA</span></abbr>.</p>\n')
 
@@ -146,8 +146,8 @@ class RstReaderTest(ReaderTest):
                                   TYPOGRIFY=True)
             expected = ('<p class="first last">Multi-line metadata should be'
                         ' supported\nas well as <strong>inline'
-                        ' markup</strong> and stuff to&nbsp;&quot;typogrify'
-                        '&quot;&#8230;</p>\n')
+                        ' markup</strong> and stuff to&nbsp;&#8220;typogrify'
+                        '&#8221;&#8230;</p>\n')
 
             self.assertEqual(page.metadata['summary'], expected)
         except ImportError:
