@@ -467,6 +467,13 @@ class Readers(FileStampDataCacher):
         # eventually filter the content with typogrify if asked so
         if self.settings['TYPOGRIFY']:
             from typogrify.filters import typogrify
+            import smartypants
+
+            # Tell `smartypants` to also replace &quot; HTML entities with
+            # smart quotes. This is necessary because Docutils has already
+            # replaced double quotes with said entities by the time we run
+            # this filter.
+            smartypants.Attr.default |= smartypants.Attr.w
 
             def typogrify_wrapper(text):
                 """Ensures ignore_tags feature is backward compatible"""
