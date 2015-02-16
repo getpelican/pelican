@@ -641,9 +641,9 @@ class PagesGenerator(CachingGenerator):
 
             self.add_source_path(page)
 
-            if page.status == "published":
+            if page.status.lower() == "published":
                 all_pages.append(page)
-            elif page.status == "hidden":
+            elif page.status.lower() == "hidden":
                 hidden_pages.append(page)
             else:
                 logger.error("Unknown status '%s' for file %s, skipping it.",
