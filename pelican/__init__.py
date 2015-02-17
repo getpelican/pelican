@@ -283,6 +283,11 @@ def parse_arguments():
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
 
+    parser.add_argument('--relative-urls', dest='relative_paths',
+                        action='store_true',
+                        help='Use relative urls in output, '
+                             'useful for site development')
+
     parser.add_argument('--cache-path', dest='cache_path',
                         help=('Directory in which to store cache files. '
                               'If not specified, defaults to "cache".'))
@@ -316,6 +321,7 @@ def get_config(args):
         config['CACHE_PATH'] = args.cache_path
     if args.selected_paths:
         config['WRITE_SELECTED'] = args.selected_paths.split(',')
+    config['RELATIVE_URLS'] = args.relative_paths
     config['DEBUG'] = args.verbosity == logging.DEBUG
 
     # argparse returns bytes in Py2. There is no definite answer as to which
