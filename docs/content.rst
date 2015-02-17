@@ -91,7 +91,7 @@ via the ``keywords`` metadata, as is standard in HTML. The two can be used
 interchangeably.
 
 Note that, aside from the title, none of this article metadata is mandatory:
-if the date is not specified and ``DEFAULT_DATE`` is set to ``fs``, Pelican
+if the date is not specified and ``DEFAULT_DATE`` is set to ``'fs'``, Pelican
 will rely on the file's "mtime" timestamp, and the category can be determined
 by the directory in which the file resides. For example, a file located at
 ``python/foobar/myfoobar.rst`` will have a category of ``foobar``. If you would
