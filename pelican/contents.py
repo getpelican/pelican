@@ -53,7 +53,7 @@ class Content(object):
         self._context = context
         self.translations = []
 
-        local_metadata = dict(settings['DEFAULT_METADATA'])
+        local_metadata = dict()
         local_metadata.update(metadata)
 
         # set metadata as attributes
@@ -166,21 +166,13 @@ class Content(object):
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
         path = self.metadata.get('path', self.get_relative_source_path())
-        default_category = self.settings['DEFAULT_CATEGORY']
-        slug_substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
         metadata.update({
             'path': path_to_url(path),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', SafeDatetime.now()),
-            'author': slugify(
-                getattr(self, 'author', ''),
-                slug_substitutions
-            ),
-            'category': slugify(
-                getattr(self, 'category', default_category),
-                slug_substitutions
-            )
+            'author': self.author.slug if hasattr(self, 'author') else '',
+            'category': self.category.slug if hasattr(self, 'category') else ''
         })
         return metadata
 

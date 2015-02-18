@@ -537,6 +537,10 @@ def find_empty_alt(content, path):
 def default_metadata(settings=None, process=None):
     metadata = {}
     if settings:
+        for name, value in dict(settings.get('DEFAULT_METADATA', {})).items():
+            if process:
+                value = process(name, value)
+            metadata[name] = value
         if 'DEFAULT_CATEGORY' in settings:
             value = settings['DEFAULT_CATEGORY']
             if process:

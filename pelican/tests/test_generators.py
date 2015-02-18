@@ -413,6 +413,38 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_context()
         generator.readers.read_file.assert_called_count == orig_call_count
 
+    def test_standard_metadata_in_default_metadata(self):
+        settings = get_settings(filenames={})
+        settings['CACHE_CONTENT'] = False
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['DEFAULT_METADATA'] = (('author', 'Blogger'),
+                                        # category will be ignored in favor of
+                                        # DEFAULT_CATEGORY
+                                        ('category', 'Random'),
+                                        ('tags', 'general, untagged'))
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+
+        authors = sorted([author.name for author, _ in generator.authors])
+        authors_expected = sorted(['Alexis Métaireau', 'Blogger',
+                                   'First Author', 'Second Author'])
+        self.assertEqual(authors, authors_expected)
+
+        categories = sorted([category.name
+                             for category, _ in generator.categories])
+        categories_expected = [
+            sorted(['Default', 'TestCategory', 'yeah', 'test', '指導書']),
+            sorted(['Default', 'TestCategory', 'Yeah', 'test', '指導書'])]
+        self.assertIn(categories, categories_expected)
+
+        tags = sorted([tag.name for tag in generator.tags])
+        tags_expected = sorted(['bar', 'foo', 'foobar', 'general', 'untagged',
+                                'パイソン', 'マック'])
+        self.assertEqual(tags, tags_expected)
+
 
 class TestPageGenerator(unittest.TestCase):
     # Note: Every time you want to test for a new field; Make sure the test
