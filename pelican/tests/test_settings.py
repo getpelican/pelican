@@ -103,13 +103,12 @@ class TestSettingsConfiguration(unittest.TestCase):
         configure_settings(settings)
         self.assertEqual(settings['FEED_DOMAIN'], 'http://feeds.example.com')
 
+    @unittest.skipIf(platform == 'win32', "Doesn't work on Windows")
     def test_default_encoding(self):
         # test that the default locale is set if
         # locale is not specified in the settings
 
         #reset locale to python default
-        if platform == 'win32':
-            return unittest.skip("Doesn't work on Windows")
         locale.setlocale(locale.LC_ALL, str('C'))
         self.assertEqual(self.settings['LOCALE'], DEFAULT_CONFIG['LOCALE'])
 
