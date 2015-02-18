@@ -2,7 +2,7 @@
 from __future__ import unicode_literals, absolute_import
 import locale
 
-from pelican.tests.support import unittest, get_settings
+from pelican_tests.support import unittest, get_settings
 
 from pelican.paginator import Paginator
 from pelican.contents import Article

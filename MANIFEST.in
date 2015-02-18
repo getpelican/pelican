@@ -1,3 +1,17 @@
-include *.rst
-recursive-include pelican *.html *.css *png *.in *.rst *.md *.mkd *.xml *.py
-include LICENSE THANKS docs/changelog.rst
+graft pelican/themes 
+graft pelican_tests
+graft pelican/tools/templates
+graft docs
+graft samples
+
+include tox.ini
+include dev_requirements.txt
+include bumpr.rc
+include THANKS
+include README.rst
+include LICENSE
+include CONTRIBUTING.rst
+include .travis.yml
+include .coveragerc
+include .mailmap
+exclude .gitattributes
