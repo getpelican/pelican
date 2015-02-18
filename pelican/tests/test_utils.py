@@ -298,12 +298,12 @@ class TestUtils(LoggedTestCase):
                          'Turkish locale needed')
     def test_strftime_locale_dependent_turkish(self):
         # store current locale
-        old_locale = locale.setlocale(locale.LC_TIME)
+        old_locale = locale.setlocale(locale.LC_ALL)
 
         if platform == 'win32':
-            return unittest.skip("Doesn't work on Windows")
+            locale.setlocale(locale.LC_ALL, str('Turkish'))
         else:
-            locale.setlocale(locale.LC_TIME, str('tr_TR.UTF-8'))
+            locale.setlocale(locale.LC_ALL, str('tr_TR.UTF-8'))
 
         d = utils.SafeDatetime(2012, 8, 29)
 
@@ -321,7 +321,7 @@ class TestUtils(LoggedTestCase):
             '2012 yılında %üretim artışı')
 
         # restore locale back
-        locale.setlocale(locale.LC_TIME, old_locale)
+        locale.setlocale(locale.LC_ALL, old_locale)
 
 
     # test the output of utils.strftime in a different locale
@@ -331,12 +331,12 @@ class TestUtils(LoggedTestCase):
                          'French locale needed')
     def test_strftime_locale_dependent_french(self):
         # store current locale
-        old_locale = locale.setlocale(locale.LC_TIME)
+        old_locale = locale.setlocale(locale.LC_ALL)
 
         if platform == 'win32':
-            locale.setlocale(locale.LC_TIME, str('French'))
+            locale.setlocale(locale.LC_ALL, str('French'))
         else:
-            locale.setlocale(locale.LC_TIME, str('fr_FR.UTF-8'))
+            locale.setlocale(locale.LC_ALL, str('fr_FR.UTF-8'))
 
         d = utils.SafeDatetime(2012, 8, 29)
 
@@ -355,7 +355,7 @@ class TestUtils(LoggedTestCase):
             '%écrits en 2012')
 
         # restore locale back
-        locale.setlocale(locale.LC_TIME, old_locale)
+        locale.setlocale(locale.LC_ALL, old_locale)
 
 
 class TestCopy(unittest.TestCase):
@@ -471,10 +471,11 @@ class TestDateFormatter(unittest.TestCase):
                          locale_available('French'),
                          'French locale needed')
     def test_french_strftime(self):
-        if platform == 'win32':
-            return unittest.skip("Doesn't work on Windows")
         # This test tries to reproduce an issue that occurred with python3.3 under macos10 only
-        locale.setlocale(locale.LC_ALL, str('fr_FR.UTF-8'))
+        if platform == 'win32':
+            locale.setlocale(locale.LC_ALL, str('French'))
+        else:
+            locale.setlocale(locale.LC_ALL, str('fr_FR.UTF-8'))
         date = utils.SafeDatetime(2014,8,14)
         # we compare the lower() dates since macos10 returns "Jeudi" for %A whereas linux reports "jeudi"
         self.assertEqual( u'jeudi, 14 août 2014', utils.strftime(date, date_format="%A, %d %B %Y").lower() )
@@ -492,9 +493,13 @@ class TestDateFormatter(unittest.TestCase):
                          locale_available('French'),
                          'French locale needed')
     def test_french_locale(self):
+        if platform == 'win32':
+            locale_string = 'French'
+        else:
+            locale_string = 'fr_FR.UTF-8'
         settings = read_settings(
-            override={'LOCALE': locale.normalize('fr_FR.UTF-8'),
-                      'TEMPLATE_PAGES': {'template/source.html':
+            override = {'LOCALE': locale_string,
+                        'TEMPLATE_PAGES': {'template/source.html':
                                          'generated/file.html'}})
 
         generator = TemplatePagesGenerator(
@@ -521,8 +526,12 @@ class TestDateFormatter(unittest.TestCase):
                          locale_available('Turkish'),
                          'Turkish locale needed')
     def test_turkish_locale(self):
+        if platform == 'win32':
+            locale_string = 'Turkish'
+        else:
+            locale_string = 'tr_TR.UTF-8'
         settings = read_settings(
-            override = {'LOCALE': locale.normalize('tr_TR.UTF-8'),
+            override = {'LOCALE': locale_string,
                         'TEMPLATE_PAGES': {'template/source.html':
                                            'generated/file.html'}})
 
