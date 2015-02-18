@@ -41,7 +41,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.assertNotIn('foobar', self.settings)
 
     def test_read_empty_settings(self):
-        # Providing no file should return the default values.
+        # Ensure an empty settings file results in default settings.
         settings = read_settings(None)
         expected = copy.deepcopy(DEFAULT_CONFIG)
         # Added by configure settings
@@ -67,8 +67,8 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['SITENAME'] = 'Not a Pelican Blog'
         self.assertNotEqual(settings['SITENAME'], DEFAULT_CONFIG['SITENAME'])
 
-    def test_path_settings_safety(self):
-        """Don't let people setting the static path listings to strs"""
+    def test_static_path_settings_safety(self):
+        # Disallow static paths from being strings
         settings = {'STATIC_PATHS': 'foo/bar',
                 'THEME_STATIC_PATHS': 'bar/baz',
                 # These 4 settings are required to run configure_settings
@@ -84,8 +84,7 @@ class TestSettingsConfiguration(unittest.TestCase):
                 DEFAULT_CONFIG['THEME_STATIC_PATHS'])
 
     def test_configure_settings(self):
-        #Manipulations to settings should be applied correctly.
-
+        # Manipulations to settings should be applied correctly.
         settings = {
                 'SITEURL': 'http://blog.notmyidea.org/',
                 'LOCALE': '',
@@ -93,6 +92,7 @@ class TestSettingsConfiguration(unittest.TestCase):
                 'THEME': DEFAULT_THEME,
                 }
         configure_settings(settings)
+
         # SITEURL should not have a trailing slash
         self.assertEqual(settings['SITEURL'], 'http://blog.notmyidea.org')
 
@@ -103,12 +103,38 @@ class TestSettingsConfiguration(unittest.TestCase):
         configure_settings(settings)
         self.assertEqual(settings['FEED_DOMAIN'], 'http://feeds.example.com')
 
+    def test_theme_settings_exceptions(self):
+        settings = self.settings
+
+        # Check that theme lookup in "pelican/themes" functions as expected
+        settings['THEME'] = os.path.split(settings['THEME'])[1]
+        configure_settings(settings)
+        self.assertEqual(settings['THEME'], DEFAULT_THEME)
+
+        # Check that non-existent theme raises exception
+        settings['THEME'] = 'foo'
+        self.assertRaises(Exception, configure_settings, settings)
+
+    def test_deprecated_dir_setting(self):
+        settings = self.settings
+
+        settings['ARTICLE_DIR'] = 'foo'
+        settings['PAGE_DIR'] = 'bar'
+
+        configure_settings(settings)
+
+        self.assertEqual(settings['ARTICLE_PATHS'], ['foo'])
+        self.assertEqual(settings['PAGE_PATHS'], ['bar'])
+
+        with self.assertRaises(KeyError):
+            settings['ARTICLE_DIR']
+            settings['PAGE_DIR']
+
     @unittest.skipIf(platform == 'win32', "Doesn't work on Windows")
     def test_default_encoding(self):
-        # test that the default locale is set if
-        # locale is not specified in the settings
+        # Test that the default locale is set if not specified in settings
 
-        #reset locale to python default
+        # Reset locale to Python's default locale
         locale.setlocale(locale.LC_ALL, str('C'))
         self.assertEqual(self.settings['LOCALE'], DEFAULT_CONFIG['LOCALE'])
 

@@ -7,7 +7,6 @@ try:
     from unittest.mock import MagicMock
 except ImportError:
     from mock import MagicMock
-from operator import itemgetter
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -35,11 +34,16 @@ class TestGenerator(unittest.TestCase):
 
 
     def test_include_path(self):
+        self.settings['IGNORE_FILES'] = {'ignored1.rst', 'ignored2.rst'}
+
         filename = os.path.join(CUR_DIR, 'content', 'article.rst')
         include_path = self.generator._include_path
         self.assertTrue(include_path(filename))
         self.assertTrue(include_path(filename, extensions=('rst',)))
         self.assertFalse(include_path(filename, extensions=('md',)))
+
+        ignored_file = os.path.join(CUR_DIR, 'content', 'ignored1.rst')
+        self.assertFalse(include_path(ignored_file))
 
     def test_get_files_exclude(self):
         """Test that Generator.get_files() properly excludes directories.
@@ -51,6 +55,13 @@ class TestGenerator(unittest.TestCase):
             theme=self.settings['THEME'], output_path=None)
 
         filepaths = generator.get_files(paths=['maindir'])
+        found_files = {os.path.basename(f) for f in filepaths}
+        expected_files = {'maindir.md', 'subdir.md'}
+        self.assertFalse(expected_files - found_files,
+            "get_files() failed to find one or more files")
+
+        # Test string as `paths` argument rather than list
+        filepaths = generator.get_files(paths='maindir')
         found_files = {os.path.basename(f) for f in filepaths}
         expected_files = {'maindir.md', 'subdir.md'}
         self.assertFalse(expected_files - found_files,
@@ -317,6 +328,14 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  settings,
                                  blog=True, dates=dates)
+
+    def test_nonexistent_template(self):
+        """Attempt to load a non-existent template"""
+        settings = get_settings(filenames={})
+        generator = ArticlesGenerator(
+            context=settings, settings=settings,
+            path=None, theme=settings['THEME'], output_path=None)
+        self.assertRaises(Exception, generator.get_template, "not_a_template")
 
     def test_generate_authors(self):
         """Check authors generation."""

@@ -245,6 +245,41 @@ class TestBuildHeader(unittest.TestCase):
         header = build_header('test', None, None, None, None, None)
         self.assertEqual(header, 'test\n####\n\n')
 
+    def test_build_header_with_fields(self):
+        header_data = [
+            'Test Post',
+            '2014-11-04',
+            'Alexis Métaireau',
+            ['Programming'],
+            ['Pelican', 'Python'],
+            'test-post',
+        ]
+
+        expected_docutils = '\n'.join([
+            'Test Post',
+            '#########',
+            ':date: 2014-11-04',
+            ':author: Alexis Métaireau',
+            ':category: Programming',
+            ':tags: Pelican, Python',
+            ':slug: test-post',
+            '\n',
+        ])
+
+        expected_md = '\n'.join([
+            'Title: Test Post',
+            'Date: 2014-11-04',
+            'Author: Alexis Métaireau',
+            'Category: Programming',
+            'Tags: Pelican, Python',
+            'Slug: test-post',
+            '\n',
+        ])
+
+        self.assertEqual(build_header(*header_data), expected_docutils)
+        self.assertEqual(build_markdown_header(*header_data), expected_md)
+
+
     def test_build_header_with_east_asian_characters(self):
         header = build_header('これは広い幅の文字だけで構成されたタイトルです',
                 None, None, None, None, None)
@@ -264,6 +299,7 @@ class TestBuildHeader(unittest.TestCase):
             attachments=['output/test1', 'output/test2'])
         self.assertEqual(header, 'Title: test\n' + 'Attachments: output/test1, '
                 + 'output/test2\n\n')
+
 
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
 class TestWordpressXMLAttachements(unittest.TestCase):
