@@ -13,7 +13,7 @@ import subprocess
 from pelican import Pelican
 from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
-from pelican.tests.support import LoggedTestCase, mute, locale_available, unittest
+from pelican_tests.support import LoggedTestCase, mute, locale_available, unittest
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(

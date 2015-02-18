@@ -7,7 +7,7 @@ import re
 import locale
 from codecs import open
 from pelican.tools.pelican_import import wp2fields, fields2pelican, decode_wp_content, build_header, build_markdown_header, get_attachments, download_attachments
-from pelican.tests.support import (unittest, temporary_folder, mute,
+from pelican_tests.support import (unittest, temporary_folder, mute,
                                    skipIfNoExecutable)
 
 from pelican.utils import slugify, path_to_file_url

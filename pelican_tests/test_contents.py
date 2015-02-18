@@ -6,7 +6,7 @@ from sys import platform
 import locale
 import os.path
 
-from pelican.tests.support import unittest, get_settings
+from pelican_tests.support import unittest, get_settings
 
 from pelican.contents import Page, Article, Static, URLWrapper
 from pelican.settings import DEFAULT_CONFIG
