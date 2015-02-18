@@ -25,7 +25,7 @@ from six.moves.html_parser import HTMLParser
 
 from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime
+from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime, posixize_path
 
 
 METADATA_PROCESSORS = {
@@ -424,7 +424,7 @@ class Readers(FileStampDataCacher):
         """Return a content object parsed with the given format."""
 
         path = os.path.abspath(os.path.join(base_path, path))
-        source_path = os.path.relpath(path, base_path)
+        source_path = posixize_path(os.path.relpath(path, base_path))
         logger.debug('Read file %s -> %s',
             source_path, content_class.__name__)
 

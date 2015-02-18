@@ -136,7 +136,7 @@ class Page(object):
 
         # URL or SAVE_AS is a string, format it with a controlled context
         context = {
-            'name': self.name,
+            'name': self.name.replace(os.sep, '/'),
             'object_list': self.object_list,
             'number': self.number,
             'paginator': self.paginator,

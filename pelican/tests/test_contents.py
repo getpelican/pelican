@@ -10,7 +10,7 @@ from pelican.tests.support import unittest, get_settings
 
 from pelican.contents import Page, Article, Static, URLWrapper
 from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import path_to_url, truncate_html_words, SafeDatetime
+from pelican.utils import path_to_url, truncate_html_words, SafeDatetime, posix_join
 from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
 
@@ -417,7 +417,7 @@ class TestStatic(unittest.TestCase):
         self.context = self.settings.copy()
 
         self.static = Static(content=None, metadata={}, settings=self.settings,
-            source_path=os.path.join('dir', 'foo.jpg'), context=self.context)
+            source_path=posix_join('dir', 'foo.jpg'), context=self.context)
 
         self.context['filenames'] = {self.static.source_path: self.static}
 

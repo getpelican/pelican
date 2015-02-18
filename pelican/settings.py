@@ -18,6 +18,7 @@ except ImportError:
     load_source = imp.load_source
 
 from os.path import isabs
+from pelican.utils import posix_join
 
 from pelican.log import LimitFilter
 
@@ -41,11 +42,11 @@ DEFAULT_CONFIG = {
     'STATIC_EXCLUDE_SOURCES': True,
     'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
-    'FEED_ALL_ATOM': os.path.join('feeds', 'all.atom.xml'),
-    'CATEGORY_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
-    'AUTHOR_FEED_ATOM': os.path.join('feeds', '%s.atom.xml'),
-    'AUTHOR_FEED_RSS': os.path.join('feeds', '%s.rss.xml'),
-    'TRANSLATION_FEED_ATOM': os.path.join('feeds', 'all-%s.atom.xml'),
+    'FEED_ALL_ATOM': posix_join('feeds', 'all.atom.xml'),
+    'CATEGORY_FEED_ATOM': posix_join('feeds', '%s.atom.xml'),
+    'AUTHOR_FEED_ATOM': posix_join('feeds', '%s.atom.xml'),
+    'AUTHOR_FEED_RSS': posix_join('feeds', '%s.rss.xml'),
+    'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-%s.atom.xml'),
     'FEED_MAX_ITEMS': '',
     'SITEURL': '',
     'SITENAME': 'A Pelican Blog',
@@ -68,22 +69,22 @@ DEFAULT_CONFIG = {
     'ARTICLE_LANG_URL': '{slug}-{lang}.html',
     'ARTICLE_LANG_SAVE_AS': '{slug}-{lang}.html',
     'DRAFT_URL': 'drafts/{slug}.html',
-    'DRAFT_SAVE_AS': os.path.join('drafts', '{slug}.html'),
+    'DRAFT_SAVE_AS': posix_join('drafts', '{slug}.html'),
     'DRAFT_LANG_URL': 'drafts/{slug}-{lang}.html',
-    'DRAFT_LANG_SAVE_AS': os.path.join('drafts', '{slug}-{lang}.html'),
+    'DRAFT_LANG_SAVE_AS': posix_join('drafts', '{slug}-{lang}.html'),
     'PAGE_URL': 'pages/{slug}.html',
-    'PAGE_SAVE_AS': os.path.join('pages', '{slug}.html'),
+    'PAGE_SAVE_AS': posix_join('pages', '{slug}.html'),
     'PAGE_ORDER_BY': 'basename',
     'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
-    'PAGE_LANG_SAVE_AS': os.path.join('pages', '{slug}-{lang}.html'),
+    'PAGE_LANG_SAVE_AS': posix_join('pages', '{slug}-{lang}.html'),
     'STATIC_URL': '{path}',
     'STATIC_SAVE_AS': '{path}',
     'CATEGORY_URL': 'category/{slug}.html',
-    'CATEGORY_SAVE_AS': os.path.join('category', '{slug}.html'),
+    'CATEGORY_SAVE_AS': posix_join('category', '{slug}.html'),
     'TAG_URL': 'tag/{slug}.html',
-    'TAG_SAVE_AS': os.path.join('tag', '{slug}.html'),
+    'TAG_SAVE_AS': posix_join('tag', '{slug}.html'),
     'AUTHOR_URL': 'author/{slug}.html',
-    'AUTHOR_SAVE_AS': os.path.join('author', '{slug}.html'),
+    'AUTHOR_SAVE_AS': posix_join('author', '{slug}.html'),
     'PAGINATION_PATTERNS': [
         (0, '{name}{number}{extension}', '{name}{number}{extension}'),
     ],
