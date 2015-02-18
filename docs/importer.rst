@@ -112,4 +112,4 @@ Tests
 To test the module, one can use sample files:
 
 - for WordPress: http://wpcandy.com/made/the-sample-post-collection
-- for Dotclear: http://themes.dotaddict.org/files/public/downloads/lorem-backup.txt
+- for Dotclear: http://media.dotaddict.org/tda/downloads/lorem-backup.txt
