@@ -17,7 +17,7 @@ from pelican_tests.support import LoggedTestCase, mute, locale_available, unitte
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(
-        CURRENT_DIR, os.pardir, os.pardir, 'samples'))
+        CURRENT_DIR, os.pardir, 'samples'))
 OUTPUT_PATH = os.path.abspath(os.path.join(CURRENT_DIR, 'output'))
 
 INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
