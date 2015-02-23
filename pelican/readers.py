@@ -30,7 +30,9 @@ from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatet
 
 def strip_split(text, sep=','):
     """Return a list of stripped, non-empty substrings, delimited by sep."""
-    items = [x.strip() for x in text.split(sep)]
+    if not isinstance(text, list):
+        text = text.split(sep)
+    items = [x.strip() for x in text]
     return [x for x in items if x]
 
 
@@ -90,6 +92,8 @@ class BaseReader(object):
 
     def process_metadata(self, name, value):
         if name in METADATA_PROCESSORS:
+            if isinstance(value, list) and len(value) == 1:
+                value = value[0]
             return METADATA_PROCESSORS[name](value, self.settings)
         return value
 
@@ -249,16 +253,13 @@ class MarkdownReader(BaseReader):
                 summary = self._md.convert(summary_values)
                 output[name] = self.process_metadata(name, summary)
             elif name in METADATA_PROCESSORS:
-                if len(value) > 1:
-                    logger.warning('Duplicate definition of `%s` '
-                        'for %s. Using first one.', name, self._source_path)
-                output[name] = self.process_metadata(name, value[0])
-            elif len(value) > 1:
-                # handle list metadata as list of string
                 output[name] = self.process_metadata(name, value)
-            else:
-                # otherwise, handle metadata as single string
+            elif isinstance(value, list) and len(value) == 1:
+                # handle metadata as a single string
                 output[name] = self.process_metadata(name, value[0])
+            else:
+                # otherwise, handle metadata as single item
+                output[name] = self.process_metadata(name, value)
         return output
 
     def read(self, source_path):
