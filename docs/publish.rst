@@ -65,7 +65,7 @@ The steps for deploying your site will depend on where it will be hosted.
 If you have SSH access to a server running Nginx or Apache, you might use the
 ``rsync`` tool to transmit your site files::
 
-    rsync --avc --delete output/ host.example.com:/var/www/your-site/
+    rsync -avc --delete output/ host.example.com:/var/www/your-site/
 
 There are many other deployment options, some of which can be configured when
 first setting up your site via the ``pelican-quickstart`` command. See the
