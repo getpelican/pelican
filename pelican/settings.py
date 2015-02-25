@@ -133,6 +133,7 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': True,
     'AUTORELOAD_IGNORE_CACHE': False,
     'WRITE_SELECTED': [],
+    'FORMATTED_FIELDS': ['summary'],
     }
 
 PYGMENTS_RST_OPTIONS = None

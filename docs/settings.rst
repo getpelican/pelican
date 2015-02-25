@@ -214,6 +214,7 @@ Setting name (followed by default value, if any)                                
                                                                                  in this list are written. Paths should be either absolute or relative
                                                                                  to the current Pelican working directory. For possible use cases see
                                                                                  :ref:`writing_only_selected_content`.
+``FORMATTED_FIELDS = ['summary']``                                               A list of metadata fields to be parsed and translated to HTML.
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
