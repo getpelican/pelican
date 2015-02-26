@@ -16,7 +16,7 @@
                 {% endfor %}
         </address>
         {% endif %}
-<p>In <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>. {% if PDF_PROCESSOR %}<a href="{{ SITEURL }}/pdf/{{ article.slug }}.pdf">get the pdf</a>{% endif %}</p>
+<p>In <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>.</p>
 {% include 'taglist.html' %}
 {% import 'translations.html' as translations with context %}
 {{ translations.translations_for(article) }}
