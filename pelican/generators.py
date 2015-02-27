@@ -350,7 +350,8 @@ class ArticlesGenerator(CachingGenerator):
             signals.article_generator_write_article.send(self, content=article)
             write(article.save_as, self.get_template(article.template),
                   self.context, article=article, category=article.category,
-                  override_output=hasattr(article, 'override_save_as'))
+                  override_output=hasattr(article, 'override_save_as'),
+                  blog=True)
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -432,7 +433,7 @@ class ArticlesGenerator(CachingGenerator):
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
                   articles=articles, dates=dates,
-                  paginated={'articles': articles, 'dates': dates},
+                  paginated={'articles': articles, 'dates': dates}, blog=True,
                   page_name=tag.page_name, all_articles=self.articles)
 
     def generate_categories(self, write):
@@ -443,7 +444,7 @@ class ArticlesGenerator(CachingGenerator):
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
                   category=cat, articles=articles, dates=dates,
-                  paginated={'articles': articles, 'dates': dates},
+                  paginated={'articles': articles, 'dates': dates}, blog=True,
                   page_name=cat.page_name, all_articles=self.articles)
 
     def generate_authors(self, write):
@@ -454,7 +455,7 @@ class ArticlesGenerator(CachingGenerator):
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
                   author=aut, articles=articles, dates=dates,
-                  paginated={'articles': articles, 'dates': dates},
+                  paginated={'articles': articles, 'dates': dates}, blog=True,
                   page_name=aut.page_name, all_articles=self.articles)
 
     def generate_drafts(self, write):
@@ -463,7 +464,7 @@ class ArticlesGenerator(CachingGenerator):
             write(draft.save_as, self.get_template(draft.template),
                 self.context, article=draft, category=draft.category,
                 override_output=hasattr(draft, 'override_save_as'),
-                all_articles=self.articles)
+                blog=True, all_articles=self.articles)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
