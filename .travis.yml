@@ -1,7 +1,9 @@
 language: python
+env:
+  - TESTENV=py27
+  - TESTENV=py33
+  - TESTENV=py34
 python:
-    - "2.7"
-    - "3.3"
     - "3.4"
 addons:
   apt_packages:
@@ -10,10 +12,12 @@ before_install:
  - sudo apt-get update -qq
  - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
-    - pip install .
-    - pip install -r dev_requirements.txt
-    - pip install nose-cov
-script: nosetests -sv --with-coverage --cover-package=pelican pelican
+    - pip install python-coveralls
+    - pip install -U virtualenv py
+    - pip install -e . -r dev_requirements.txt tox
+script:
+  - tox
+  - py.test --cov=pelican --cov-report=term-missing tests
 after_success:
   # Report coverage results to coveralls.io
   - pip install coveralls

@@ -10,6 +10,8 @@ dist
 tags
 .tox
 .coverage
+/.env
+/.cache
 htmlcov
 six-*.egg/
 *.orig

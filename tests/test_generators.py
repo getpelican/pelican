@@ -13,7 +13,7 @@ from tempfile import mkdtemp
 from pelican.generators import (Generator, ArticlesGenerator, PagesGenerator,
                                 StaticGenerator, TemplatePagesGenerator)
 from pelican.writers import Writer
-from pelican.tests.support import unittest, get_settings
+from tests.support import unittest, get_settings
 import locale
 
 CUR_DIR = os.path.dirname(__file__)

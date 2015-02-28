@@ -2,7 +2,7 @@
 from __future__ import unicode_literals, print_function
 
 from mock import Mock
-from pelican.tests.support import unittest
+from tests.support import unittest
 
 class Test_abbr_role(unittest.TestCase):
     def call_it(self, text):
