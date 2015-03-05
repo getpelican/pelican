@@ -3,10 +3,10 @@ Pelican |build-status| |coverage-status|
 
 Pelican is a static site generator, written in Python_.
 
-* Write content in reStructuredText_ or Markdown_ using your editor of choice.
-* Includes a simple command line tool to (re)generate site files.
-* Easy to interface with version control systems and web hooks.
-* Completely static output is simple to host anywhere.
+* Write content in reStructuredText_ or Markdown_ using your editor of choice
+* Includes a simple command line tool to (re)generate site files
+* Easy to interface with version control systems and web hooks
+* Completely static output is simple to host anywhere
 
 
 Features
@@ -14,13 +14,13 @@ Features
 
 Pelican currently supports:
 
-* Blog articles and static pages
-* Integration with external services (ex. Google Analytics and Disqus)
+* Chronological content (e.g., articles, blog posts) as well as static pages
+* Integration with external services (e.g., Google Analytics and Disqus)
 * Site themes (created using Jinja2_ templates)
 * Publication of articles in multiple languages
 * Generation of Atom and RSS feeds
 * Syntax highlighting via Pygments_
-* Importing existing content from WordPress, Dotclear, and more services
+* Importing existing content from WordPress, Dotclear, and other services
 * Fast rebuild times due to content caching and selective output writing
 
 Check out `Pelican's documentation`_ for further information.
@@ -35,7 +35,7 @@ See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
 Source code
 -----------
 
-Pelican's source code is `hosted on GitHub`_. If you're feeling hackish,
+Pelican's source code is `hosted on GitHub`_. If you feel like hacking,
 take a look at `Pelican's internals`_.
 
 
