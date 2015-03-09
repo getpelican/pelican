@@ -164,13 +164,13 @@ on all operating systems, including Windows.
 For example, a Pelican project might be structured like this::
 
     website/
-    ├── content
-    │   ├── category/
-    │   │   └── article1.rst
-    │   ├── article2.md
-    │   └── pages
-    │       └── about.md
-    └── pelican.conf.py
+    |-- content
+    |   |-- category/
+    |   |   `-- article1.rst
+    |   |-- article2.md
+    |   `-- pages
+    |       `-- about.md
+    `-- pelican.conf.py
 
 In this example, ``article1.rst`` could look like this::
 
@@ -208,12 +208,12 @@ broken links.
 For example, a project's content directory might be structured like this::
 
     content
-    ├── images
-    │   └── han.jpg
-    ├── pdfs
-    │   └── menu.pdf
-    └── pages
-        └── test.md
+    |-- images
+    |   `-- han.jpg
+    |-- pdfs
+    |   `-- menu.pdf
+    `-- pages
+        `-- test.md
 
 ``test.md`` would include::
 
@@ -263,13 +263,13 @@ a directory included in the ``STATIC_PATHS`` setting.
 For example, a project's content directory might be structured like this::
 
     content
-    ├── blog
-    │   ├── icons
-    │   │   └── icon.png
-    │   ├── photo.jpg
-    │   └── testpost.md
-    └── downloads
-        └── archive.zip
+    |-- blog
+    |   |-- icons
+    |   |   `-- icon.png
+    |   |-- photo.jpg
+    |   `-- testpost.md
+    `-- downloads
+        `-- archive.zip
 
 ``pelicanconf.py`` would include::
 
@@ -292,12 +292,12 @@ For example, a project's content directory might be structured like this::
 Site generation would then produce an output directory structured like this::
 
     output
-    └── 2014
-        ├── archive.zip
-        ├── icons
-        │   └── icon.png
-        ├── photo.jpg
-        └── test-post.html
+    `-- 2014
+        |-- archive.zip
+        |-- icons
+        |   `-- icon.png
+        |-- photo.jpg
+        `-- test-post.html
 
 Notice that all the files linked using ``{attach}`` ended up in or beneath
 the article's output directory.
