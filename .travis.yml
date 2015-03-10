@@ -1,25 +1,24 @@
 language: python
 python:
-    - "2.7"
-    - "3.3"
-    - "3.4"
+  - "2.7"
+  - "3.3"
+  - "3.4"
 addons:
   apt_packages:
     - pandoc
 before_install:
- - sudo apt-get update -qq
- - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
+  - sudo apt-get update -qq
+  - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
-    - pip install .
-    - pip install -r dev_requirements.txt
-    - pip install nose-cov
+  - pip install .
+  - pip install -r dev_requirements.txt
+  - pip install nose-cov
 script: nosetests -sv --with-coverage --cover-package=pelican pelican
 after_success:
-  # Report coverage results to coveralls.io
   - pip install coveralls
   - coveralls
 notifications:
-    irc:
-        channels:
-            - "irc.freenode.org#pelican"
-        on_success: change
+  irc:
+    channels:
+      - "irc.freenode.org#pelican"
+    on_success: change
