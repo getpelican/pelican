@@ -8,7 +8,7 @@ import os.path
 
 from pelican.tests.support import unittest, get_settings
 
-from pelican.contents import Page, Article, Static, URLWrapper
+from pelican.contents import Page, Article, Static, URLWrapper, Author, Category
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import path_to_url, truncate_html_words, SafeDatetime, posix_join
 from pelican.signals import content_object_init
@@ -33,7 +33,7 @@ class TestPage(unittest.TestCase):
             'metadata': {
                 'summary': TEST_SUMMARY,
                 'title': 'foo bar',
-                'author': 'Blogger',
+                'author': Author('Blogger', DEFAULT_CONFIG),
             },
             'source_path': '/path/to/file/foo.ext'
         }
@@ -374,7 +374,8 @@ class TestPage(unittest.TestCase):
         content = Page(**args)
         assert content.authors == [content.author]
         args['metadata'].pop('author')
-        args['metadata']['authors'] = ['First Author', 'Second Author']
+        args['metadata']['authors'] = [Author('First Author', DEFAULT_CONFIG),
+                                       Author('Second Author', DEFAULT_CONFIG)]
         content = Page(**args)
         assert content.authors
         assert content.author == content.authors[0]
@@ -396,8 +397,8 @@ class TestArticle(TestPage):
         settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
         article_kwargs = self._copy_page_kwargs()
-        article_kwargs['metadata']['author'] = "O'Brien"
-        article_kwargs['metadata']['category'] = 'C# & stuff'
+        article_kwargs['metadata']['author'] = Author("O'Brien", settings)
+        article_kwargs['metadata']['category'] = Category('C# & stuff', settings)
         article_kwargs['metadata']['title'] = 'fnord'
         article_kwargs['settings'] = settings
         article = Article(**article_kwargs)
