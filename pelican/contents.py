@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import six
-from six.moves.urllib.parse import (unquote, urlparse, urlunparse)
+from six.moves.urllib.parse import urlparse, urlunparse
 
 import copy
 import locale
