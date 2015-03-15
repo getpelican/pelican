@@ -321,7 +321,8 @@ def get_config(args):
         config['CACHE_PATH'] = args.cache_path
     if args.selected_paths:
         config['WRITE_SELECTED'] = args.selected_paths.split(',')
-    config['RELATIVE_URLS'] = args.relative_paths
+    if args.relative_paths:
+        config['RELATIVE_URLS'] = args.relative_paths
     config['DEBUG'] = args.verbosity == logging.DEBUG
 
     # argparse returns bytes in Py2. There is no definite answer as to which
