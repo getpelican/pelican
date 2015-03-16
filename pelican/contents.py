@@ -90,7 +90,7 @@ class Content(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, generate slug according to 
+        # create the slug if not existing, generate slug according to
         # setting of SLUG_ATTRIBUTE
         if not hasattr(self, 'slug'):
             if settings['SLUGIFY_SOURCE'] == 'title' and hasattr(self, 'title'):
@@ -308,8 +308,13 @@ class Content(object):
         """Dummy function"""
         pass
 
-    url = property(functools.partial(get_url_setting, key='url'))
-    save_as = property(functools.partial(get_url_setting, key='save_as'))
+    @property
+    def url(self):
+        return self.get_url_setting('url')
+
+    @property
+    def save_as(self):
+        return self.get_url_setting('save_as')
 
     def _get_template(self):
         if hasattr(self, 'template') and self.template is not None:
