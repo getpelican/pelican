@@ -23,7 +23,7 @@
             {% endif %}
         {# other items #}
         {% else %}
-            {% if loop.first and articles_page.has_previous %}
+            {% if loop.first %}
                 <section id="content" class="body">
                     <ol id="posts-list" class="hfeed" start="{{ articles_paginator.per_page -1 }}">
             {% endif %}
