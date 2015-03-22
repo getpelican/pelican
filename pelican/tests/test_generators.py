@@ -162,6 +162,8 @@ class TestArticlesGenerator(unittest.TestCase):
              'article'],
             ['This is an article with multiple authors!', 'published', 'Default', 'article'],
             ['This is an article with multiple authors!', 'published', 'Default', 'article'],
+            ['This is an article with multiple authors in list format!', 'published', 'Default', 'article'],
+            ['This is an article with multiple authors in lastname, firstname format!', 'published', 'Default', 'article'],
             ['This is an article without category !', 'published', 'Default',
              'article'],
             ['This is an article without category !', 'published',
@@ -348,11 +350,11 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_generate_authors(self):
         """Check authors generation."""
         authors = [author.name for author, _ in self.generator.authors]
-        authors_expected = sorted(['Alexis Métaireau', 'First Author', 'Second Author'])
+        authors_expected = sorted(['Alexis Métaireau', 'Author, First', 'Author, Second', 'First Author', 'Second Author'])
         self.assertEqual(sorted(authors), authors_expected)
         # test for slug
         authors = [author.slug for author, _ in self.generator.authors]
-        authors_expected = ['alexis-metaireau', 'first-author', 'second-author']
+        authors_expected = ['alexis-metaireau', 'author-first', 'author-second', 'first-author', 'second-author']
         self.assertEqual(sorted(authors), sorted(authors_expected))
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
@@ -441,6 +443,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
         authors = sorted([author.name for author, _ in generator.authors])
         authors_expected = sorted(['Alexis Métaireau', 'Blogger',
+                                   'Author, First', 'Author, Second',
                                    'First Author', 'Second Author'])
         self.assertEqual(authors, authors_expected)
 

@@ -35,6 +35,12 @@ this metadata in text files via the following syntax (give your file the
     :authors: Alexis Metaireau, Conan Doyle
     :summary: Short version for index and feeds
 
+Author and tag lists may be semicolon-separated instead, which allows
+you to write authors and tags containing commas::
+
+    :tags: pelican, publishing tool; pelican, bird
+    :authors: Metaireau, Alexis; Doyle, Conan
+
 Pelican implements an extension to reStructuredText to enable support for the
 ``abbr`` HTML tag. To use it, write something like this in your post::
 

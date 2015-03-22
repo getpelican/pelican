@@ -27,11 +27,25 @@ from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime, posixize_path
 
+def ensure_metadata_list(text):
+    """Canonicalize the format of a list of authors or tags.  This works
+       the same way as Docutils' "authors" field: if it's already a list,
+       those boundaries are preserved; otherwise, it must be a string;
+       if the string contains semicolons, it is split on semicolons;
+       otherwise, it is split on commas.  This allows you to write
+       author lists in either "Jane Doe, John Doe" or "Doe, Jane; Doe, John"
+       format.
 
-def strip_split(text, sep=','):
-    """Return a list of stripped, non-empty substrings, delimited by sep."""
-    items = [x.strip() for x in text.split(sep)]
-    return [x for x in items if x]
+       Regardless, all list items undergo .strip() before returning, and
+       empty items are discarded.
+    """
+    if isinstance(text, six.text_type):
+        if ';' in text:
+            text = text.split(';')
+        else:
+            text = text.split(',')
+
+    return [v for v in (w.strip() for w in text) if v]
 
 
 # Metadata processors have no way to discard an unwanted value, so we have
@@ -50,13 +64,16 @@ def _process_if_nonempty(processor, name, settings):
 
 
 METADATA_PROCESSORS = {
-    'tags': lambda x, y: [Tag(tag, y) for tag in strip_split(x)] or _DISCARD,
+    'tags': lambda x, y: ([Tag(tag, y) for tag in ensure_metadata_list(x)]
+                          or _DISCARD),
     'date': lambda x, y: get_date(x.replace('_', ' ')),
     'modified': lambda x, y: get_date(x),
     'status': lambda x, y: x.strip() or _DISCARD,
     'category': lambda x, y: _process_if_nonempty(Category, x, y),
     'author': lambda x, y: _process_if_nonempty(Author, x, y),
-    'authors': lambda x, y: [Author(a, y) for a in strip_split(x)] or _DISCARD,
+    'authors': lambda x, y: ([Author(author, y)
+                              for author in ensure_metadata_list(x)]
+                             or _DISCARD),
     'slug': lambda x, y: x.strip() or _DISCARD,
 }
 
@@ -179,7 +196,6 @@ class RstReader(BaseReader):
                 elif element.tagname == 'authors':  # author list
                     name = element.tagname
                     value = [element.astext() for element in element.children]
-                    value = ','.join(value) # METADATA_PROCESSORS expects a string
                 else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()
