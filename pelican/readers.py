@@ -25,7 +25,7 @@ except ImportError:
 try:
     import pypandoc
 except ImportError:
-    pandoc = False  # NOQA
+    pypandoc = False  # NOQA
 from six.moves.html_parser import HTMLParser
 
 from pelican import signals
@@ -91,7 +91,7 @@ class _FieldBodyTranslator(HTMLTranslator):
 
     def depart_field_body(self, node):
         pass
-
+    
 
 def render_node_to_html(document, node):
     visitor = _FieldBodyTranslator(document)
@@ -246,10 +246,15 @@ class MarkdownReader(BaseReader):
         with pelican_open(source_path) as text:
             if self._source_path[-4:] == '.org' and \
                self.enable_pypandoc is True:
-                pandoc_data_dir = '='.join(['--data-dir', pkg_resources.resource_filename('pelican', 'pandoc_templates')])
+                pandoc_data_dir = '='.join(['--data-dir',
+                                            pkg_resources.resource_filename(
+                                                'pelican', 'pandoc_templates')])
+                logger.info('Using %s as pandoc_data_dir',
+                            pandoc_data_dir)
                 text = pypandoc.convert(text, 'markdown', \
                                         format='org',\
-                                        extra_args=['--template=md_org_template.markdown', pandoc_data_dir])
+                                        extra_args=['--template=md_org_template.markdown',
+                                                    pandoc_data_dir])
             content = self._md.convert(text)
 
         metadata = self._parse_metadata(self._md.Meta)
