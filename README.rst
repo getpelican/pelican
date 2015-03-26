@@ -3,48 +3,47 @@ Pelican |build-status| |coverage-status|
 
 Pelican is a static site generator, written in Python_.
 
-* Write your weblog entries directly with your editor of choice (vim!)
-  in reStructuredText_ or Markdown_
-* Includes a simple CLI tool to (re)generate the weblog
-* Easy to interface with DVCSes and web hooks
-* Completely static output is easy to host anywhere
+* Write content in reStructuredText_ or Markdown_ using your editor of choice
+* Includes a simple command line tool to (re)generate site files
+* Easy to interface with version control systems and web hooks
+* Completely static output is simple to host anywhere
+
 
 Features
 --------
 
 Pelican currently supports:
 
-* Blog articles and pages
-* Comments, via an external service (Disqus). (Please note that while
-  useful, Disqus is an external service, and thus the comment data will be
-  somewhat outside of your control and potentially subject to data loss.)
-* Theming support (themes are created using Jinja2_ templates)
-* PDF generation of the articles/pages (optional)
+* Chronological content (e.g., articles, blog posts) as well as static pages
+* Integration with external services (e.g., Google Analytics and Disqus)
+* Site themes (created using Jinja2_ templates)
 * Publication of articles in multiple languages
-* Atom/RSS feeds
-* Code syntax highlighting
-* Import from WordPress, Dotclear, or RSS feeds
-* Integration with external tools: Twitter, Google Analytics, etc. (optional)
-* Fast rebuild times thanks to content caching and selective output writing.
+* Generation of Atom and RSS feeds
+* Syntax highlighting via Pygments_
+* Importing existing content from WordPress, Dotclear, and other services
+* Fast rebuild times due to content caching and selective output writing
 
-Have a look at the `Pelican documentation`_ for more information.
+Check out `Pelican's documentation`_ for further information.
 
-Why the name "Pelican"?
------------------------
-
-"Pelican" is an anagram for *calepin*, which means "notebook" in French. ;)
-
-Source code
------------
-
-You can access the source code at: https://github.com/getpelican/pelican
-
-If you feel hackish, have a look at the explanation of `Pelican's internals`_.
 
 How to get help, contribute, or provide feedback
 ------------------------------------------------
 
 See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
+
+
+Source code
+-----------
+
+Pelican's source code is `hosted on GitHub`_. If you feel like hacking,
+take a look at `Pelican's internals`_.
+
+
+Why the name "Pelican"?
+-----------------------
+
+"Pelican" is an anagram of *calepin*, which means "notebook" in French.
+
 
 .. Links
 
@@ -52,8 +51,10 @@ See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Markdown: http://daringfireball.net/projects/markdown/
 .. _Jinja2: http://jinja.pocoo.org/
-.. _`Pelican documentation`: http://docs.getpelican.com/
+.. _Pygments: http://pygments.org/
+.. _`Pelican's documentation`: http://docs.getpelican.com/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
+.. _`hosted on GitHub`: https://github.com/getpelican/pelican
 
 .. |build-status| image:: https://img.shields.io/travis/getpelican/pelican/master.svg
    :target: https://travis-ci.org/getpelican/pelican

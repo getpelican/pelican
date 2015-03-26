@@ -9,21 +9,17 @@ addons:
   apt_packages:
     - pandoc
 before_install:
- - sudo apt-get update -qq
- - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
+  - sudo apt-get update -qq
+  - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
-    - pip install python-coveralls
-    - pip install -U virtualenv py
-    - pip install -e . -r dev_requirements.txt tox
+    - pip install coveralls -U virtualenv py -e . -r dev_requirements.txt tox
 script:
-  - tox
-  - py.test --cov=pelican --cov-report=term-missing tests
+  - tox -e $TESTENV --sitepackages
 after_success:
-  # Report coverage results to coveralls.io
-  - pip install coveralls
+  - py.test --cov=pelican --cov-report=term-missing tests
   - coveralls
 notifications:
-    irc:
-        channels:
-            - "irc.freenode.org#pelican"
-        on_success: change
+  irc:
+    channels:
+      - "irc.freenode.org#pelican"
+    on_success: change

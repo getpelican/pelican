@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, print_function
 import six
-from six.moves.urllib.parse import (unquote, urlparse, urlunparse)
+from six.moves.urllib.parse import urlparse, urlunparse
 
 import copy
 import locale
@@ -53,7 +53,7 @@ class Content(object):
         self._context = context
         self.translations = []
 
-        local_metadata = dict(settings['DEFAULT_METADATA'])
+        local_metadata = dict()
         local_metadata.update(metadata)
 
         # set metadata as attributes
@@ -90,7 +90,7 @@ class Content(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
-        # create the slug if not existing, generate slug according to 
+        # create the slug if not existing, generate slug according to
         # setting of SLUG_ATTRIBUTE
         if not hasattr(self, 'slug'):
             if settings['SLUGIFY_SOURCE'] == 'title' and hasattr(self, 'title'):
@@ -166,21 +166,13 @@ class Content(object):
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
         path = self.metadata.get('path', self.get_relative_source_path())
-        default_category = self.settings['DEFAULT_CATEGORY']
-        slug_substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
         metadata.update({
             'path': path_to_url(path),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', SafeDatetime.now()),
-            'author': slugify(
-                getattr(self, 'author', ''),
-                slug_substitutions
-            ),
-            'category': slugify(
-                getattr(self, 'category', default_category),
-                slug_substitutions
-            )
+            'author': self.author.slug if hasattr(self, 'author') else '',
+            'category': self.category.slug if hasattr(self, 'category') else ''
         })
         return metadata
 
@@ -316,8 +308,13 @@ class Content(object):
         """Dummy function"""
         pass
 
-    url = property(functools.partial(get_url_setting, key='url'))
-    save_as = property(functools.partial(get_url_setting, key='save_as'))
+    @property
+    def url(self):
+        return self.get_url_setting('url')
+
+    @property
+    def save_as(self):
+        return self.get_url_setting('save_as')
 
     def _get_template(self):
         if hasattr(self, 'template') and self.template is not None:

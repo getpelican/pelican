@@ -329,6 +329,108 @@ period_archives.html template
 <https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_.
 
 
+Objects
+=======
+
+Detail objects attributes that are available and useful in templates. Not all
+attributes are listed here, this is a selection of attributes considered useful
+in a template.
+
+.. _object-article:
+
+Article
+-------
+
+The string representation of an Article is the `source_path` attribute.
+
+===================     ===================================================
+Attribute               Description
+===================     ===================================================
+author                  The :ref:`Author <object-author_cat_tag>` of
+                        this article.
+authors                 A list of :ref:`Authors <object-author_cat_tag>`
+                        of this article.
+category                The :ref:`Category <object-author_cat_tag>`
+                        of this article.
+content                 The rendered content of the article.
+date                    Datetime object representing the article date.
+date_format             Either default date format or locale date format.
+default_template        Default template name.
+in_default_lang         Boolean representing if the article is written
+                        in the default language.
+lang                    Language of the article.
+locale_date             Date formated by the `date_format`.
+metadata                Article header metadata `dict`.
+save_as                 Location to save the article page.
+slug                    Page slug.
+source_path             Full system path of the article source file.
+status                  The article status, can be any of 'published' or
+                        'draft'.
+summary                 Rendered summary content.
+tags                    List of :ref:`Tag <object-author_cat_tab>`
+                        objects.
+template                Template name to use for rendering.
+title                   Title of the article.
+translations            List of translations
+                        :ref:`Article <object-article>` objects.
+url                     URL to the article page.
+===================     ===================================================
+
+.. _object-author_cat_tag:
+
+Author / Category / Tag
+-----------------------
+
+The string representation of those objects is the `name` attribute.
+
+===================     ===================================================
+Attribute               Description
+===================     ===================================================
+name                    Name of this object [1]_.
+page_name               Author page name.
+save_as                 Location to save the author page.
+slug                    Page slug.
+url                     URL to the author page.
+===================     ===================================================
+
+.. [1] for Author object, coming from `:authors:` or `AUTHOR`.
+
+.. _object-page:
+
+Page
+----
+
+The string representation of a Page is the `source_path` attribute.
+
+===================     ===================================================
+Attribute               Description
+===================     ===================================================
+author                  The :ref:`Author <object-author_cat_tag>` of
+                        this page.
+content                 The rendered content of the page.
+date                    Datetime object representing the page date.
+date_format             Either default date format or locale date format.
+default_template        Default template name.
+in_default_lang         Boolean representing if the article is written
+                        in the default language.
+lang                    Language of the article.
+locale_date             Date formated by the `date_format`.
+metadata                Page header metadata `dict`.
+save_as                 Location to save the page.
+slug                    Page slug.
+source_path             Full system path of the page source file.
+status                  The page status, can be any of 'published' or
+                        'draft'.
+summary                 Rendered summary content.
+tags                    List of :ref:`Tag <object-author_cat_tab>`
+                        objects.
+template                Template name to use for rendering.
+title                   Title of the page.
+translations            List of translations
+                        :ref:`Article <object-article>` objects.
+url                     URL to the page.
+===================     ===================================================
+
 Feeds
 =====
 

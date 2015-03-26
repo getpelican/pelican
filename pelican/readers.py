@@ -28,15 +28,43 @@ from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime, posixize_path
 
 
+def strip_split(text, sep=','):
+    """Return a list of stripped, non-empty substrings, delimited by sep."""
+    items = [x.strip() for x in text.split(sep)]
+    return [x for x in items if x]
+
+
+# Metadata processors have no way to discard an unwanted value, so we have
+# them return this value instead to signal that it should be discarded later.
+# This means that _filter_discardable_metadata() must be called on processed
+# metadata dicts before use, to remove the items with the special value.
+_DISCARD = object()
+
+
+def _process_if_nonempty(processor, name, settings):
+    """Removes extra whitespace from name and applies a metadata processor.
+    If name is empty or all whitespace, returns _DISCARD instead.
+    """
+    name = name.strip()
+    return processor(name, settings) if name else _DISCARD
+
+
 METADATA_PROCESSORS = {
-    'tags': lambda x, y: [Tag(tag, y) for tag in x.split(',')],
+    'tags': lambda x, y: [Tag(tag, y) for tag in strip_split(x)] or _DISCARD,
     'date': lambda x, y: get_date(x.replace('_', ' ')),
     'modified': lambda x, y: get_date(x),
-    'status': lambda x, y: x.strip(),
-    'category': Category,
-    'author': Author,
-    'authors': lambda x, y: [Author(author.strip(), y) for author in x.split(',')],
+    'status': lambda x, y: x.strip() or _DISCARD,
+    'category': lambda x, y: _process_if_nonempty(Category, x, y),
+    'author': lambda x, y: _process_if_nonempty(Author, x, y),
+    'authors': lambda x, y: [Author(a, y) for a in strip_split(x)] or _DISCARD,
+    'slug': lambda x, y: x.strip() or _DISCARD,
 }
+
+
+def _filter_discardable_metadata(metadata):
+    """Return a copy of a dict, minus any items marked as discardable."""
+    return {name: val for name, val in metadata.items() if val is not _DISCARD}
+
 
 logger = logging.getLogger(__name__)
 
@@ -447,14 +475,14 @@ class Readers(FileStampDataCacher):
 
         reader = self.readers[fmt]
 
-        metadata = default_metadata(
-            settings=self.settings, process=reader.process_metadata)
+        metadata = _filter_discardable_metadata(default_metadata(
+            settings=self.settings, process=reader.process_metadata))
         metadata.update(path_metadata(
             full_path=path, source_path=source_path,
             settings=self.settings))
-        metadata.update(parse_path_metadata(
+        metadata.update(_filter_discardable_metadata(parse_path_metadata(
             source_path=source_path, settings=self.settings,
-            process=reader.process_metadata))
+            process=reader.process_metadata)))
         reader_name = reader.__class__.__name__
         metadata['reader'] = reader_name.replace('Reader', '').lower()
 
@@ -462,7 +490,7 @@ class Readers(FileStampDataCacher):
         if content is None:
             content, reader_metadata = reader.read(path)
             self.cache_data(path, (content, reader_metadata))
-        metadata.update(reader_metadata)
+        metadata.update(_filter_discardable_metadata(reader_metadata))
 
         if content:
             # find images with empty alt
@@ -537,6 +565,10 @@ def find_empty_alt(content, path):
 def default_metadata(settings=None, process=None):
     metadata = {}
     if settings:
+        for name, value in dict(settings.get('DEFAULT_METADATA', {})).items():
+            if process:
+                value = process(name, value)
+            metadata[name] = value
         if 'DEFAULT_CATEGORY' in settings:
             value = settings['DEFAULT_CATEGORY']
             if process:

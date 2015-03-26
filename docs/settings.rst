@@ -847,13 +847,11 @@ can be invoked by passing the ``--archive`` flag).
 
 The cache files are Python pickles, so they may not be readable by
 different versions of Python as the pickle format often changes. If
-such an error is encountered, the cache files have to be rebuilt by
-removing them and re-running Pelican, or by using the Pelican
-command-line option ``--ignore-cache``. The cache files also have to
-be rebuilt when changing the ``GZIP_CACHE`` setting for cache file
-reading to work properly.
+such an error is encountered, it is caught and the cache file is 
+rebuilt automatically in the new format. The cache files will also be 
+rebuilt after the ``GZIP_CACHE`` setting has been changed.
 
-The ``--ignore-cache`` command-line option is also useful when the
+The ``--ignore-cache`` command-line option is useful when the
 whole cache needs to be regenerated, such as when making modifications
 to the settings file that will affect the cached content, or just for
 debugging purposes. When Pelican runs in autoreload mode, modification

@@ -544,10 +544,8 @@ class ArticlesGenerator(CachingGenerator):
             if hasattr(article, 'tags'):
                 for tag in article.tags:
                     self.tags[tag].append(article)
-            # ignore blank authors as well as undefined
             for author in getattr(article, 'authors', []):
-                if author.name != '':
-                    self.authors[author].append(article)
+                self.authors[author].append(article)
         # sort the articles by date
         self.articles.sort(key=attrgetter('date'), reverse=True)
         self.dates = list(self.articles)

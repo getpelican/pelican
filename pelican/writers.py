@@ -3,7 +3,6 @@ from __future__ import with_statement, unicode_literals, print_function
 import six
 
 import os
-import locale
 import logging
 
 if not six.PY3:
