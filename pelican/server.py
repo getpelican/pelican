@@ -12,6 +12,11 @@ try:
 except ImportError:
     import socketserver  # NOQA
 
+try:
+    from magic import from_file as magic_from_file
+except ImportError:
+    magic_from_file = None
+
 PORT = len(sys.argv) in (2, 3) and int(sys.argv[1]) or 8000
 SERVER = len(sys.argv) == 3 and sys.argv[2] or ""
 SUFFIXES = ['', '.html', '/index.html']
@@ -38,6 +43,18 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
             # Fallback if there were no matches
             logging.warning("Unable to find `%s` or variations.",
                             self.original_path)
+
+    def guess_type(self, path):
+        """Guess at the mime type for the specified file.
+        """
+        mimetype = srvmod.SimpleHTTPRequestHandler.guess_type(self, path)
+
+        # If the default guess is too generic, try the python-magic library
+        if mimetype == 'application/octet-stream' and magic_from_file:
+            mimetype = magic_from_file(path, mime=True)
+
+        return mimetype
+
 
 Handler = ComplexHTTPRequestHandler
 
