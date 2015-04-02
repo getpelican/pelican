@@ -139,6 +139,11 @@ class Generator(object):
                     for e in exclusions_by_dirpath.get(dirpath, ()):
                         if e in dirs:
                             dirs.remove(e)
+                    for dir in dirs:
+                        #check IGNORE_SUBDIRS
+                        ignores = self.settings['IGNORE_SUBDIRS']
+                        if any(fnmatch.fnmatch(dir, ignore) for ignore in ignores):
+                            dirs.remove(dir)
                     reldir = os.path.relpath(dirpath, self.path)
                     for f in temp_files:
                         fp = os.path.join(reldir, f)
