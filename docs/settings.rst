@@ -470,14 +470,14 @@ your resume, and a contact page — you could have::
 Path metadata
 =============
 
-Not all metadata needs to be `embedded in source file itself`__.  For
-example, blog posts are often named following a ``YYYY-MM-DD-SLUG.rst``
-pattern, or nested into ``YYYY/MM/DD-SLUG`` directories.  To extract
-metadata from the filename or path, set ``FILENAME_METADATA`` or
-``PATH_METADATA`` to regular expressions that use Python's `group name
-notation`_ ``(?P<name>…)``.  If you want to attach additional metadata
-but don't want to encode it in the path, you can set
-``EXTRA_PATH_METADATA``:
+Not all metadata needs to be :ref:`embedded in source file itself
+<internal_metadata>`. For example, blog posts are often named
+following a ``YYYY-MM-DD-SLUG.rst`` pattern, or nested into
+``YYYY/MM/DD-SLUG`` directories. To extract metadata from the
+filename or path, set ``FILENAME_METADATA`` or ``PATH_METADATA`` to
+regular expressions that use Python's `group name notation`_ ``(?P<name>…)``.
+If you want to attach additional metadata but don't want to encode
+it in the path, you can set ``EXTRA_PATH_METADATA``:
 
 .. parsed-literal::
 
@@ -506,7 +506,6 @@ particular file:
         'static/robots.txt': {'path': 'robots.txt'},
         }
 
-__ internal_metadata__
 .. _group name notation:
    http://docs.python.org/3/library/re.html#regular-expression-syntax
 
