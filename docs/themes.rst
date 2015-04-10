@@ -367,7 +367,7 @@ source_path             Full system path of the article source file.
 status                  The article status, can be any of 'published' or
                         'draft'.
 summary                 Rendered summary content.
-tags                    List of :ref:`Tag <object-author_cat_tab>`
+tags                    List of :ref:`Tag <object-author_cat_tag>`
                         objects.
 template                Template name to use for rendering.
 title                   Title of the article.
@@ -422,7 +422,7 @@ source_path             Full system path of the page source file.
 status                  The page status, can be any of 'published' or
                         'draft'.
 summary                 Rendered summary content.
-tags                    List of :ref:`Tag <object-author_cat_tab>`
+tags                    List of :ref:`Tag <object-author_cat_tag>`
                         objects.
 template                Template name to use for rendering.
 title                   Title of the page.
