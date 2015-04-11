@@ -26,6 +26,12 @@ try:
 except ImportError:
     BeautifulSoup = False  # NOQA
 
+try:
+    import bs4.builder._lxml as LXML
+except ImportError:
+    LXML = False
+
+
 
 @skipIfNoExecutable(['pandoc', '--version'])
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
@@ -302,6 +308,7 @@ class TestBuildHeader(unittest.TestCase):
 
 
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+@unittest.skipUnless(LXML, 'Needs lxml module')
 class TestWordpressXMLAttachements(unittest.TestCase):
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
