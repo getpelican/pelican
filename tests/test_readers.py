@@ -5,7 +5,7 @@ import os
 
 from pelican import readers
 from pelican.utils import SafeDatetime
-from pelican.tests.support import unittest, get_settings
+from tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_PATH = os.path.join(CUR_DIR, 'content')

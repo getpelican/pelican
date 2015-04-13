@@ -1,5 +1,8 @@
 # Tests
 mock
+pytest
+pytest-cache
+pytest-cov
 
 # Optional Packages
 Markdown

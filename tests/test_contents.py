@@ -6,7 +6,7 @@ from sys import platform
 import locale
 import os.path
 
-from pelican.tests.support import unittest, get_settings
+from tests.support import unittest, get_settings
 
 from pelican.contents import Page, Article, Static, URLWrapper, Author, Category
 from pelican.settings import DEFAULT_CONFIG
@@ -136,7 +136,7 @@ class TestPage(unittest.TestCase):
         page = Page(**page_kwargs)
 
         # page.locale_date is a unicode string in both python2 and python3
-        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']) 
+        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT'])
         # dt_date is a byte string in python2, and a unicode string in python3
         # Let's make sure it is a unicode string (relies on python 3.3 supporting the u prefix)
         if type(dt_date) != type(u''):

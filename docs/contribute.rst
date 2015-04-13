@@ -66,10 +66,13 @@ Each time you add a feature, there are two things to do regarding tests:
 check that the existing tests pass, and add tests for the new feature
 or bugfix.
 
-The tests live in ``pelican/tests`` and you can run them using the
-"discover" feature of ``unittest``::
+The tests live in ``tests`` and you can run them using the ``pytest``runner::
 
-    $ python -m unittest discover
+    $ py.test tests
+
+For full multipython testing, use ``tox``::
+
+    $ tox
 
 After making your changes and running the tests, you may see a test failure
 mentioning that "some generated files differ from the expected functional tests
@@ -78,11 +81,11 @@ Pelican, and the changes to that output are expected and deemed correct given
 the nature of your changes, then you should update the output used by the
 functional tests. To do so, you can use the following two commands::
 
-    $ LC_ALL=en_US.utf8 pelican -o pelican/tests/output/custom/ \
+    $ LC_ALL=en_US.utf8 pelican -o tests/output/custom/ \
         -s samples/pelican.conf.py samples/content/
-    $ LC_ALL=fr_FR.utf8 pelican -o pelican/tests/output/custom_locale/ \
+    $ LC_ALL=fr_FR.utf8 pelican -o tests/output/custom_locale/ \
         -s samples/pelican.conf_FR.py samples/content/
-    $ LC_ALL=en_US.utf8 pelican -o pelican/tests/output/basic/ \
+    $ LC_ALL=en_US.utf8 pelican -o tests/output/basic/ \
         samples/content/
 
 Testing on Python 2 and 3
