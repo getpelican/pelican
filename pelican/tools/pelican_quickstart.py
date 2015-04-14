@@ -162,7 +162,7 @@ def ask(question, answer=str_compat, default=None, l=None):
 
 def ask_timezone(question, default, tzurl):
     """Prompt for time zone and validate input"""
-    lower_tz = map(str.lower, pytz.all_timezones)
+    lower_tz = [tz.lower() for tz in pytz.all_timezones]
     while True:
         r = ask(question, str_compat, default)
         r = r.strip().replace(' ', '_').lower()
