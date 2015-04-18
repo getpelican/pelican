@@ -49,7 +49,7 @@ Given that this example article is in Markdown format, save it as
 Generate your site
 ------------------
 
-From your project directory, run the ``pelican`` command to generate your site::
+From your site directory, run the ``pelican`` command to generate your site::
 
     pelican content
 
