@@ -13,12 +13,10 @@ logger = logging.getLogger(__name__)
 @functools.total_ordering
 class URLWrapper(object):
     def __init__(self, name, settings):
-        # next 2 lines are redundant with the setter of the name property
-        # but are here for clarity
         self.settings = settings
         self._name = name
-        self.slug = slugify(name, self.settings.get('SLUG_SUBSTITUTIONS', ()))
-        self.name = name
+        self._slug = None
+        self._slug_from_name = True
 
     @property
     def name(self):
@@ -27,11 +25,28 @@ class URLWrapper(object):
     @name.setter
     def name(self, name):
         self._name = name
-        self.slug = slugify(name, self.settings.get('SLUG_SUBSTITUTIONS', ()))
+        # if slug wasn't explicitly set, it needs to be regenerated from name
+        # so, changing name should reset slug for slugification
+        if self._slug_from_name:
+            self._slug = None
+
+    @property
+    def slug(self):
+        if self._slug is None:
+            self._slug = slugify(self.name,
+                                 self.settings.get('SLUG_SUBSTITUTIONS', ()))
+        return self._slug
+
+    @slug.setter
+    def slug(self, slug):
+        # if slug is expliticly set, changing name won't alter slug
+        self._slug_from_name = False
+        self._slug = slug
 
     def as_dict(self):
         d = self.__dict__
         d['name'] = self.name
+        d['slug'] = self.slug
         return d
 
     def __hash__(self):
