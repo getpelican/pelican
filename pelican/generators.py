@@ -22,7 +22,8 @@ from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
 from pelican.utils import (copy, process_translations, mkdir_p, DateFormatter,
-                           FileStampDataCacher, python_2_unicode_compatible)
+                           FileStampDataCacher, python_2_unicode_compatible,
+                           posixize_path)
 from pelican import signals
 
 
@@ -160,7 +161,7 @@ class Generator(object):
         (For example, one that was missing mandatory metadata.)
         The path argument is expected to be relative to self.path.
         """
-        self.context['filenames'][os.path.normpath(path)] = None
+        self.context['filenames'][posixize_path(os.path.normpath(path))] = None
 
     def _is_potential_source_path(self, path):
         """Return True if path was supposed to be used as a source file.
@@ -168,7 +169,7 @@ class Generator(object):
         before this method is called, even if they failed to process.)
         The path argument is expected to be relative to self.path.
         """
-        return os.path.normpath(path) in self.context['filenames']
+        return posixize_path(os.path.normpath(path)) in self.context['filenames']
 
     def _update_context(self, items):
         """Update the context with the given items from the currrent
