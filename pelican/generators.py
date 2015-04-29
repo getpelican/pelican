@@ -525,6 +525,7 @@ class ArticlesGenerator(CachingGenerator):
                     preread_sender=self,
                     context_signal=signals.article_generator_context,
                     context_sender=self)
+                self.add_source_path(draft)
                 all_drafts.append(draft)
             else:
                 logger.error("Unknown status '%s' for file %s, skipping it.",
