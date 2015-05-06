@@ -108,6 +108,8 @@ page_generator_preread              page_generator                 invoked befor
                                                                    use if code needs to do something before every page is parsed.
 page_generator_init                 page_generator                 invoked in the PagesGenerator.__init__
 page_generator_finalized            page_generator                 invoked at the end of PagesGenerator.generate_context
+page_writer_finalized               page_generator, writer         invoked after all pages have been written, but before the page generator
+                                                                   is closed.
 static_generator_context            static_generator, metadata
 static_generator_preread            static_generator               invoked before a static file is read in StaticGenerator.generate_context;
                                                                    use if code needs to do something before every static file is added to the
