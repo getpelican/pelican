@@ -159,7 +159,12 @@ Setting name (followed by default value, if any)                                
                                                                                  Pelican's default settings include the "images" directory here.
 ``STATIC_EXCLUDES = []``                                                         A list of directories to exclude when looking for static files.
 ``STATIC_EXCLUDE_SOURCES = True``                                                If set to False, content source files will not be skipped when
-                                                                                 copying files found in ``STATIC_PATHS``.
+                                                                                 copying files found in ``STATIC_PATHS``. This setting is for
+                                                                                 backward compatibility with Pelican releases before version 3.5.
+                                                                                 It has no effect unless ``STATIC_PATHS`` contains a directory that
+                                                                                 is also in ``ARTICLE_PATHS`` or ``PAGE_PATHS``. If you are trying
+                                                                                 to publish your site's source files, consider using the
+                                                                                 ``OUTPUT_SOURCES` setting instead.
 ``TIMEZONE``                                                                     The timezone used in the date information, to
                                                                                  generate Atom and RSS feeds. See the *Timezone*
                                                                                  section below for more info.
