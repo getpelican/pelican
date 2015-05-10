@@ -164,7 +164,7 @@ Setting name (followed by default value, if any)                                
                                                                                  It has no effect unless ``STATIC_PATHS`` contains a directory that
                                                                                  is also in ``ARTICLE_PATHS`` or ``PAGE_PATHS``. If you are trying
                                                                                  to publish your site's source files, consider using the
-                                                                                 ``OUTPUT_SOURCES` setting instead.
+                                                                                 ``OUTPUT_SOURCES`` setting instead.
 ``TIMEZONE``                                                                     The timezone used in the date information, to
                                                                                  generate Atom and RSS feeds. See the *Timezone*
                                                                                  section below for more info.
