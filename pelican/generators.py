@@ -3,8 +3,6 @@ from __future__ import unicode_literals, print_function
 
 import os
 import six
-import math
-import random
 import logging
 import shutil
 import fnmatch
@@ -14,7 +12,7 @@ from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
-from operator import attrgetter, itemgetter
+from operator import attrgetter
 
 from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
                     BaseLoader, TemplateNotFound)
@@ -554,32 +552,6 @@ class ArticlesGenerator(CachingGenerator):
         self.dates.sort(key=attrgetter('date'),
                         reverse=self.context['NEWEST_FIRST_ARCHIVES'])
 
-        # create tag cloud
-        tag_cloud = defaultdict(int)
-        for article in self.articles:
-            for tag in getattr(article, 'tags', []):
-                tag_cloud[tag] += 1
-
-        tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
-        tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
-
-        tags = list(map(itemgetter(1), tag_cloud))
-        if tags:
-            max_count = max(tags)
-        steps = self.settings.get('TAG_CLOUD_STEPS')
-
-        # calculate word sizes
-        self.tag_cloud = [
-            (
-                tag,
-                int(math.floor(steps - (steps - 1) * math.log(count)
-                    / (math.log(max_count)or 1)))
-            )
-            for tag, count in tag_cloud
-        ]
-        # put words in chaos
-        random.shuffle(self.tag_cloud)
-
         # and generate the output :)
 
         # order the categories per name
@@ -591,7 +563,7 @@ class ArticlesGenerator(CachingGenerator):
         self.authors.sort()
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
-                              'tag_cloud', 'authors', 'related_posts'))
+                              'authors', 'related_posts'))
         self.save_cache()
         self.readers.save_cache()
         signals.article_generator_finalized.send(self)
