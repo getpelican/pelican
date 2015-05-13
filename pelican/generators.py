@@ -554,31 +554,7 @@ class ArticlesGenerator(CachingGenerator):
         self.dates.sort(key=attrgetter('date'),
                         reverse=self.context['NEWEST_FIRST_ARCHIVES'])
 
-        # create tag cloud
-        tag_cloud = defaultdict(int)
-        for article in self.articles:
-            for tag in getattr(article, 'tags', []):
-                tag_cloud[tag] += 1
-
-        tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
-        tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
-
-        tags = list(map(itemgetter(1), tag_cloud))
-        if tags:
-            max_count = max(tags)
-        steps = self.settings.get('TAG_CLOUD_STEPS')
-
-        # calculate word sizes
-        self.tag_cloud = [
-            (
-                tag,
-                int(math.floor(steps - (steps - 1) * math.log(count)
-                    / (math.log(max_count)or 1)))
-            )
-            for tag, count in tag_cloud
-        ]
-        # put words in chaos
-        random.shuffle(self.tag_cloud)
+        self.tag_cloud = self._tag_cloud_from_articles(self.articles)
 
         # and generate the output :)
 
@@ -600,6 +576,35 @@ class ArticlesGenerator(CachingGenerator):
         self.generate_feeds(writer)
         self.generate_pages(writer)
         signals.article_writer_finalized.send(self, writer=writer)
+
+
+    def _tag_cloud_from_articles(self, articles):
+        tag_cloud = defaultdict(int)
+        for article in articles:
+            for tag in getattr(article, 'tags', []):
+                tag_cloud[tag] += 1
+
+        tag_cloud = sorted(tag_cloud.items(), key=itemgetter(1), reverse=True)
+        tag_cloud = tag_cloud[:self.settings.get('TAG_CLOUD_MAX_ITEMS')]
+
+        tags = list(map(itemgetter(1), tag_cloud))
+        if tags:
+            max_count = max(tags)
+        steps = self.settings.get('TAG_CLOUD_STEPS')
+
+        # calculate word sizes
+        tag_cloud = [
+            (
+                tag,
+                int(math.floor(steps - (steps - 1) * math.log(count)
+                    / (math.log(max_count) or 1)))
+            )
+            for tag, count in tag_cloud
+        ]
+        # put words in chaos
+        random.shuffle(tag_cloud)
+
+        return tag_cloud
 
 
 class PagesGenerator(CachingGenerator):
