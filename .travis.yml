@@ -1,8 +1,11 @@
 language: python
 python:
   - "2.7"
-  - "3.3"
-  - "3.4"
+env:
+  - TOX_ENV=docs
+  - TOX_ENV=py27
+  - TOX_ENV=py33
+  - TOX_ENV=py34
 addons:
   apt_packages:
     - pandoc
@@ -10,13 +13,8 @@ before_install:
   - sudo apt-get update -qq
   - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
-  - pip install .
-  - pip install -r dev_requirements.txt
-  - pip install nose-cov
-script: nosetests -sv --with-coverage --cover-package=pelican pelican
-after_success:
-  - pip install coveralls
-  - coveralls
+  - pip install tox
+script: tox -e $TOX_ENV
 notifications:
   irc:
     channels:
