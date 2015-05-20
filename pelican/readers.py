@@ -50,7 +50,7 @@ def _process_if_nonempty(processor, name, settings):
 
 
 METADATA_PROCESSORS = {
-    'tags': lambda x, y: [Tag(tag, y) for tag in strip_split(x)] or _DISCARD,
+    'tags': lambda x, y: set(Tag(tag, y) for tag in strip_split(x) if tag) or _DISCARD,
     'date': lambda x, y: get_date(x.replace('_', ' ')),
     'modified': lambda x, y: get_date(x),
     'status': lambda x, y: x.strip() or _DISCARD,
