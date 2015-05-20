@@ -26,12 +26,12 @@ from six.moves.html_parser import HTMLParser
 from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime, posixize_path
-
+from collections import OrderedDict
 
 def strip_split(text, sep=','):
     """Return a list of stripped, non-empty substrings, delimited by sep."""
     items = [x.strip() for x in text.split(sep)]
-    return list(set([x for x in items if x]))
+    return list(OrderedDict.fromkeys([x for x in items if x]))
 
 
 # Metadata processors have no way to discard an unwanted value, so we have
