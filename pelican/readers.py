@@ -25,13 +25,15 @@ from six.moves.html_parser import HTMLParser
 
 from pelican import signals
 from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime, posixize_path
+from pelican.utils import (get_date, pelican_open, FileStampDataCacher,
+                           SafeDatetime, posixize_path)
+from collections import OrderedDict
 
 
 def strip_split(text, sep=','):
     """Return a list of stripped, non-empty substrings, delimited by sep."""
     items = [x.strip() for x in text.split(sep)]
-    return [x for x in items if x]
+    return list(OrderedDict.fromkeys([x for x in items if x]))
 
 
 # Metadata processors have no way to discard an unwanted value, so we have
@@ -67,6 +69,7 @@ def _filter_discardable_metadata(metadata):
 
 
 logger = logging.getLogger(__name__)
+
 
 class BaseReader(object):
     """Base class to read files.
@@ -179,7 +182,7 @@ class RstReader(BaseReader):
                 elif element.tagname == 'authors':  # author list
                     name = element.tagname
                     value = [element.astext() for element in element.children]
-                    value = ','.join(value) # METADATA_PROCESSORS expects a string
+                    value = ','.join(value)  # METADATA_PROCESSORS expects str
                 else:  # standard fields (e.g. address)
                     name = element.tagname
                     value = element.astext()
@@ -251,7 +254,8 @@ class MarkdownReader(BaseReader):
             elif name in METADATA_PROCESSORS:
                 if len(value) > 1:
                     logger.warning('Duplicate definition of `%s` '
-                        'for %s. Using first one.', name, self._source_path)
+                                   'for %s. Using first one.',
+                                   name, self._source_path)
                 output[name] = self.process_metadata(name, value[0])
             elif len(value) > 1:
                 # handle list metadata as list of string
@@ -363,7 +367,8 @@ class HTMLReader(BaseReader):
         def _handle_meta_tag(self, attrs):
             name = self._attr_value(attrs, 'name')
             if name is None:
-                attr_serialized = ', '.join(['{}="{}"'.format(k, v) for k, v in attrs])
+                attr_serialized = ', '.join(['{}="{}"'.format(k, v)
+                                             for k, v in attrs])
                 logger.warning("Meta tag in file %s does not have a 'name' "
                                "attribute, skipping. Attributes: %s",
                                self._filename, attr_serialized)
@@ -378,8 +383,8 @@ class HTMLReader(BaseReader):
                         " be changed to 'content'",
                         self._filename,
                         extra={'limit_msg': ("Other files have meta tag "
-                                             "attribute 'contents' that should "
-                                             "be changed to 'content'")})
+                                             "attribute 'contents' that should"
+                                             " be changed to 'content'")})
 
             if name == 'keywords':
                 name = 'tags'
@@ -458,7 +463,7 @@ class Readers(FileStampDataCacher):
         path = os.path.abspath(os.path.join(base_path, path))
         source_path = posixize_path(os.path.relpath(path, base_path))
         logger.debug('Read file %s -> %s',
-            source_path, content_class.__name__)
+                     source_path, content_class.__name__)
 
         if not fmt:
             _, ext = os.path.splitext(os.path.basename(path))
@@ -470,7 +475,7 @@ class Readers(FileStampDataCacher):
 
         if preread_signal:
             logger.debug('Signal %s.send(%s)',
-                preread_signal.name, preread_sender)
+                         preread_signal.name, preread_sender)
             preread_signal.send(preread_sender)
 
         reader = self.readers[fmt]
@@ -510,7 +515,8 @@ class Readers(FileStampDataCacher):
             def typogrify_wrapper(text):
                 """Ensures ignore_tags feature is backward compatible"""
                 try:
-                    return typogrify(text, self.settings['TYPOGRIFY_IGNORE_TAGS'])
+                    return typogrify(text,
+                                     self.settings['TYPOGRIFY_IGNORE_TAGS'])
                 except TypeError:
                     return typogrify(text)
 
@@ -523,7 +529,7 @@ class Readers(FileStampDataCacher):
 
         if context_signal:
             logger.debug('Signal %s.send(%s, <metadata>)',
-                context_signal.name, context_sender)
+                         context_signal.name, context_sender)
             context_signal.send(context_sender, metadata=metadata)
 
         return content_class(content=content, metadata=metadata,
@@ -574,7 +580,8 @@ def default_metadata(settings=None, process=None):
             if process:
                 value = process('category', value)
             metadata['category'] = value
-        if settings.get('DEFAULT_DATE', None) and settings['DEFAULT_DATE'] != 'fs':
+        if settings.get('DEFAULT_DATE',
+                        None) and settings['DEFAULT_DATE'] != 'fs':
             metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
     return metadata
 
