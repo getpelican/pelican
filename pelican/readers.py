@@ -31,7 +31,7 @@ from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatet
 def strip_split(text, sep=','):
     """Return a list of stripped, non-empty substrings, delimited by sep."""
     items = [x.strip() for x in text.split(sep)]
-    return [x for x in items if x]
+    return list(set([x for x in items if x]))
 
 
 # Metadata processors have no way to discard an unwanted value, so we have
@@ -50,7 +50,7 @@ def _process_if_nonempty(processor, name, settings):
 
 
 METADATA_PROCESSORS = {
-    'tags': lambda x, y: set(Tag(tag, y) for tag in strip_split(x) if tag) or _DISCARD,
+    'tags': lambda x, y: [Tag(tag, y) for tag in strip_split(x)] or _DISCARD,
     'date': lambda x, y: get_date(x.replace('_', ' ')),
     'modified': lambda x, y: get_date(x),
     'status': lambda x, y: x.strip() or _DISCARD,
