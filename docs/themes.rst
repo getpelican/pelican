@@ -359,7 +359,7 @@ default_template        Default template name.
 in_default_lang         Boolean representing if the article is written
                         in the default language.
 lang                    Language of the article.
-locale_date             Date formated by the `date_format`.
+locale_date             Date formatted by the `date_format`.
 metadata                Article header metadata `dict`.
 save_as                 Location to save the article page.
 slug                    Page slug.
@@ -414,7 +414,7 @@ default_template        Default template name.
 in_default_lang         Boolean representing if the article is written
                         in the default language.
 lang                    Language of the article.
-locale_date             Date formated by the `date_format`.
+locale_date             Date formatted by the `date_format`.
 metadata                Page header metadata `dict`.
 save_as                 Location to save the page.
 slug                    Page slug.
