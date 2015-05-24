@@ -101,12 +101,12 @@ def decode_wp_content(content, br=True):
     return content
 
 def get_items(xml):
-    """Opens a wordpress xml file and returns a list of items"""
+    """Opens a WordPress xml file and returns a list of items"""
     try:
         from bs4 import BeautifulSoup
     except ImportError:
         error = ('Missing dependency '
-                 '"BeautifulSoup4" and "lxml" required to import Wordpress XML files.')
+                 '"BeautifulSoup4" and "lxml" required to import WordPress XML files.')
         sys.exit(error)
     with open(xml, encoding='utf-8') as infile:
         xmlfile = infile.read()
@@ -586,7 +586,7 @@ def get_attachments(xml):
     return attachedposts
 
 def download_attachments(output_path, urls):
-    """Downloads wordpress attachments and returns a list of paths to
+    """Downloads WordPress attachments and returns a list of paths to
     attachments that can be associated with a post (relative path to output
     directory). Files that fail to download, will not be added to posts"""
     locations = []
