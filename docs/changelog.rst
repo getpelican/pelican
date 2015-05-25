@@ -205,7 +205,7 @@ Release history
 2.5 (2010-11-20)
 ==================
 
-* Import from Wordpress
+* Import from WordPress
 * Added some new themes (martyalchin / wide-notmyidea)
 * First bug report!
 * Linkedin support
