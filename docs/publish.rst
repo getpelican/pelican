@@ -160,9 +160,15 @@ and thus doesn't require installing anything else in order to use it. The
 downside is that non-POSIX systems (e.g., Windows) do not include ``make``,
 and installing it on those systems can be a non-trivial task.
 
-If you want to use ``make`` to generate your site, run::
+If you want to use ``make`` to generate your site using the settings in
+``pelicanconf.py``, run::
 
     make html
+
+To generate the site for production, using the settings in ``publishconf.py``,
+run::
+
+    make publish
 
 If you'd prefer to have Pelican automatically regenerate your site every time a
 change is detected (which is handy when testing locally), use the following
