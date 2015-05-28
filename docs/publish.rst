@@ -61,6 +61,15 @@ feeds, etc.) that you may have defined::
 
     pelican content -s publishconf.py
 
+To base your publish configuration on top of your ``pelicanconf.py``, you
+can import your ``pelicanconf`` settings by including the following line in
+your ``publishconf.py``::
+
+    from pelicanconf import *
+
+If you have generated a ``publishconf.py`` using ``pelican-quickstart``,
+this line is included by default.
+
 The steps for deploying your site will depend on where it will be hosted.
 If you have SSH access to a server running Nginx or Apache, you might use the
 ``rsync`` tool to transmit your site files::
