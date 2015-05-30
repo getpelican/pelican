@@ -28,6 +28,9 @@ from pelican import signals
 logger = logging.getLogger(__name__)
 
 
+class PelicanTemplateNotFound(Exception):
+    pass
+
 @python_2_unicode_compatible
 class Generator(object):
     """Baseclass generator"""
@@ -87,7 +90,7 @@ class Generator(object):
             try:
                 self._templates[name] = self.env.get_template(name + '.html')
             except TemplateNotFound:
-                raise Exception('[templates] unable to load %s.html from %s'
+                raise PelicanTemplateNotFound('[templates] unable to load %s.html from %s'
                                 % (name, self._templates_path))
         return self._templates[name]
 
@@ -356,7 +359,7 @@ class ArticlesGenerator(CachingGenerator):
         """Generate per-year, per-month, and per-day archives."""
         try:
             template = self.get_template('period_archives')
-        except Exception:
+        except PelicanTemplateNotFound:
             template = self.get_template('archives')
 
         period_save_as = {
