@@ -22,7 +22,8 @@ from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 TemplatePagesGenerator)
 from pelican.readers import Readers
 from pelican.settings import read_settings
-from pelican.utils import clean_output_dir, folder_watcher, file_watcher
+from pelican.utils import (clean_output_dir, folder_watcher,
+                           file_watcher, maybe_pluralize)
 from pelican.writers import Writer
 
 __version__ = "3.5.0"
@@ -183,12 +184,32 @@ class Pelican(object):
         pages_generator = next(g for g in generators
                                if isinstance(g, PagesGenerator))
 
-        print('Done: Processed {} article(s), {} draft(s) and {} page(s) in ' \
-              '{:.2f} seconds.'.format(
-            len(articles_generator.articles) + len(articles_generator.translations),
-            len(articles_generator.drafts) + \
-            len(articles_generator.drafts_translations),
-            len(pages_generator.pages) + len(pages_generator.translations),
+        pluralized_articles = maybe_pluralize(
+            len(articles_generator.articles) +
+                len(articles_generator.translations),
+            'article',
+            'articles')
+        pluralized_drafts = maybe_pluralize(
+            len(articles_generator.drafts) +
+                len(articles_generator.drafts_translations),
+            'draft',
+            'drafts')
+        pluralized_pages = maybe_pluralize(
+            len(pages_generator.pages) +
+                len(pages_generator.translations),
+            'page',
+            'pages')
+        pluralized_hidden_pages = maybe_pluralize(
+            len(pages_generator.hidden_pages) +
+                len(pages_generator.hidden_translations),
+            'hidden page',
+            'hidden pages')
+
+        print('Done: Processed {}, {}, {} and {} in {:.2f} seconds.'.format(
+            pluralized_articles,
+            pluralized_drafts,
+            pluralized_pages,
+            pluralized_hidden_pages,
             time.time() - start_time))
 
     def get_generator_classes(self):

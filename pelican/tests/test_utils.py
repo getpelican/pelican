@@ -358,6 +358,12 @@ class TestUtils(LoggedTestCase):
         locale.setlocale(locale.LC_ALL, old_locale)
 
 
+    def test_maybe_pluralize(self):
+        self.assertEqual(utils.maybe_pluralize(0, 'Article', 'Articles'), '0 Articles')
+        self.assertEqual(utils.maybe_pluralize(1, 'Article', 'Articles'), '1 Article')
+        self.assertEqual(utils.maybe_pluralize(2, 'Article', 'Articles'), '2 Articles')
+
+
 class TestCopy(unittest.TestCase):
     '''Tests the copy utility'''
 
