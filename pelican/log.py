@@ -149,7 +149,7 @@ class SafeLogger(logging.Logger):
         so convert the message to unicode with the correct encoding
         '''
         if isinstance(arg, Exception):
-            text = str(arg)
+            text = '%s: %s' % (arg.__class__.__name__, arg)
             if six.PY2:
                 text = text.decode(self._exc_encoding)
             return text
