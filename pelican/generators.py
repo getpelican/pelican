@@ -670,10 +670,12 @@ class StaticGenerator(Generator):
         for path in paths:
             if final_path:
                 copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, final_path))
+                     os.path.join(output_path, destination, final_path),
+                     self.settings['IGNORE_FILES'])
             else:
                 copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, path))
+                     os.path.join(output_path, destination, path),
+                     self.settings['IGNORE_FILES'])
 
     def generate_context(self):
         self.staticfiles = []
