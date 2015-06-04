@@ -61,6 +61,15 @@ feeds, etc.) that you may have defined::
 
     pelican content -s publishconf.py
 
+To base your publish configuration on top of your ``pelicanconf.py``, you
+can import your ``pelicanconf`` settings by including the following line in
+your ``publishconf.py``::
+
+    from pelicanconf import *
+
+If you have generated a ``publishconf.py`` using ``pelican-quickstart``,
+this line is included by default.
+
 The steps for deploying your site will depend on where it will be hosted.
 If you have SSH access to a server running Nginx or Apache, you might use the
 ``rsync`` tool to transmit your site files::
@@ -151,9 +160,15 @@ and thus doesn't require installing anything else in order to use it. The
 downside is that non-POSIX systems (e.g., Windows) do not include ``make``,
 and installing it on those systems can be a non-trivial task.
 
-If you want to use ``make`` to generate your site, run::
+If you want to use ``make`` to generate your site using the settings in
+``pelicanconf.py``, run::
 
     make html
+
+To generate the site for production, using the settings in ``publishconf.py``,
+run::
+
+    make publish
 
 If you'd prefer to have Pelican automatically regenerate your site every time a
 change is detected (which is handy when testing locally), use the following
