@@ -222,9 +222,16 @@ def get_date(string):
 
     If no format matches the given date, raise a ValueError.
     """
-    string = re.sub(' +', ' ', string)
     default = SafeDatetime.now().replace(hour=0, minute=0,
                                         second=0, microsecond=0)
+    if isinstance(string, datetime.datetime):
+        # Return datetime object as SafeDatetime
+        return default.replace(year=string.year, month=string.month,
+                               day=string.day, hour=string.hour,
+                               minute=string.minute, second=string.second,
+                               microsecond=string.microsecond,
+                               tzinfo=string.tzinfo)
+    string = re.sub('[ _]+', ' ', string)
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
