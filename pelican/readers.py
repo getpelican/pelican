@@ -24,8 +24,9 @@ except ImportError:
 from six.moves.html_parser import HTMLParser
 
 from pelican import signals
+from pelican.cache import FileStampDataCacher
 from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open, FileStampDataCacher, SafeDatetime, posixize_path
+from pelican.utils import get_date, pelican_open, SafeDatetime, posixize_path
 
 
 def strip_split(text, sep=','):
