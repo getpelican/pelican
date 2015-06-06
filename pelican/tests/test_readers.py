@@ -324,6 +324,23 @@ class RstReaderTest(ReaderTest):
 
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_article_with_multiple_authors_semicolon(self):
+        page = self.read_file(
+            path='article_with_multiple_authors_semicolon.rst')
+        expected = {
+            'authors': ['Author, First', 'Author, Second']
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_article_with_multiple_authors_list(self):
+        page = self.read_file(path='article_with_multiple_authors_list.rst')
+        expected = {
+            'authors': ['Author, First', 'Author, Second']
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
 @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
 class MdReaderTest(ReaderTest):
 
