@@ -101,6 +101,11 @@ class Pelican(object):
                             'PAGE_LANG_URL'):
                 logger.warning("%s = '%s'", setting, self.settings[setting])
 
+        if self.settings.get('AUTORELOAD_IGNORE_CACHE'):
+            logger.warning('Found deprecated `AUTORELOAD_IGNORE_CACHE` in '
+                           'settings. Use --ignore-cache instead.')
+            self.settings.pop('AUTORELOAD_IGNORE_CACHE')
+
         if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
             logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
                            ' settings.  Modifying the following settings for'
@@ -381,10 +386,6 @@ def main():
             print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
                   ' `settings` for changes. ---')
 
-            def _ignore_cache(pelican_obj):
-                if pelican_obj.settings['AUTORELOAD_IGNORE_CACHE']:
-                    pelican_obj.settings['LOAD_CONTENT_CACHE'] = False
-
             while True:
                 try:
                     # Check source dir for changed files ending with the given
@@ -393,12 +394,9 @@ def main():
                     # have changed, no matter what extension the filenames
                     # have.
                     modified = {k: next(v) for k, v in watchers.items()}
-                    original_load_cache = settings['LOAD_CONTENT_CACHE']
 
                     if modified['settings']:
                         pelican, settings = get_instance(args)
-                        original_load_cache = settings['LOAD_CONTENT_CACHE']
-                        _ignore_cache(pelican)
 
                         # Adjust static watchers if there are any changes
                         new_static = settings.get("STATIC_PATHS", [])
@@ -435,8 +433,6 @@ def main():
                                            'theme.')
 
                         pelican.run()
-                        # restore original caching policy
-                        pelican.settings['LOAD_CONTENT_CACHE'] = original_load_cache
 
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")

@@ -28,11 +28,18 @@ class TestCache(unittest.TestCase):
     def tearDown(self):
         rmtree(self.temp_cache)
 
+    def _get_cache_enabled_settings(self):
+        settings = get_settings(filenames={})
+        settings['CACHE_CONTENT'] = True
+        settings['LOAD_CONTENT_CACHE'] = True
+        settings['CACHE_PATH'] = self.temp_cache
+        return settings
+
+
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_object_caching(self):
         """Test Article objects caching at the generator level"""
-        settings = get_settings(filenames={})
-        settings['CACHE_PATH'] = self.temp_cache
+        settings = self._get_cache_enabled_settings()
         settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
@@ -60,8 +67,7 @@ class TestCache(unittest.TestCase):
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_reader_content_caching(self):
         """Test raw article content caching at the reader level"""
-        settings = get_settings(filenames={})
-        settings['CACHE_PATH'] = self.temp_cache
+        settings = self._get_cache_enabled_settings()
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
@@ -85,8 +91,7 @@ class TestCache(unittest.TestCase):
         """Test that all the articles are read again when not loading cache
 
         used in --ignore-cache or autoreload mode"""
-        settings = get_settings(filenames={})
-        settings['CACHE_PATH'] = self.temp_cache
+        settings = self._get_cache_enabled_settings()
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
@@ -108,10 +113,9 @@ class TestCache(unittest.TestCase):
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_object_caching(self):
         """Test Page objects caching at the generator level"""
-        settings = get_settings(filenames={})
-        settings['CACHE_PATH'] = self.temp_cache
-        settings['PAGE_PATHS'] = ['TestPages']
+        settings = self._get_cache_enabled_settings()
         settings['CONTENT_CACHING_LAYER'] = 'generator'
+        settings['PAGE_PATHS'] = ['TestPages']
         settings['READERS'] = {'asc': None}
 
         generator = PagesGenerator(
@@ -134,8 +138,7 @@ class TestCache(unittest.TestCase):
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_reader_content_caching(self):
         """Test raw page content caching at the reader level"""
-        settings = get_settings(filenames={})
-        settings['CACHE_PATH'] = self.temp_cache
+        settings = self._get_cache_enabled_settings()
         settings['PAGE_PATHS'] = ['TestPages']
         settings['READERS'] = {'asc': None}
 
@@ -160,8 +163,7 @@ class TestCache(unittest.TestCase):
         """Test that all the pages are read again when not loading cache
 
         used in --ignore_cache or autoreload mode"""
-        settings = get_settings(filenames={})
-        settings['CACHE_PATH'] = self.temp_cache
+        settings = self._get_cache_enabled_settings()
         settings['PAGE_PATHS'] = ['TestPages']
         settings['READERS'] = {'asc': None}
 

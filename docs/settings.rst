@@ -204,7 +204,7 @@ Setting name (followed by default value, if any)                                
 ``SLUGIFY_SOURCE = 'title'``                                                     Specifies where you want the slug to be automatically generated
                                                                                  from. Can be set to ``title`` to use the 'Title:' metadata tag or
                                                                                  ``basename`` to use the article's file name when creating the slug.
-``CACHE_CONTENT = True``                                                         If ``True``, save content in a cache file.
+``CACHE_CONTENT = False``                                                        If ``True``, saves content in caches.
                                                                                  See :ref:`reading_only_modified_content` for details about caching.
 ``CONTENT_CACHING_LAYER = 'reader'``                                             If set to ``'reader'``, save only the raw content and metadata
                                                                                  returned by readers. If set to ``'generator'``, save processed
@@ -212,9 +212,7 @@ Setting name (followed by default value, if any)                                
 ``CACHE_PATH = 'cache'``                                                         Directory in which to store cache files.
 ``GZIP_CACHE = True``                                                            If ``True``, use gzip to (de)compress the cache files.
 ``CHECK_MODIFIED_METHOD = 'mtime'``                                              Controls how files are checked for modifications.
-``LOAD_CONTENT_CACHE = True``                                                    If ``True``, load unmodified content from cache.
-``AUTORELOAD_IGNORE_CACHE = False``                                              If ``True``, do not load content cache in autoreload mode
-                                                                                 when the settings file changes.
+``LOAD_CONTENT_CACHE = False``                                                   If ``True``, load unmodified content from caches.
 ``WRITE_SELECTED = []``                                                          If this list is not empty, **only** output files with their paths
                                                                                  in this list are written. Paths should be either absolute or relative
                                                                                  to the current Pelican working directory. For possible use cases see
