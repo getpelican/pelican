@@ -444,7 +444,6 @@ def main():
 
                 except Exception as e:
                     if (args.verbosity == logging.DEBUG):
-                        logger.critical('Internal failure: %r', e, exc_info=True)
                         raise
                     logger.warning(
                         'Caught exception "%s". Reloading.', e)
