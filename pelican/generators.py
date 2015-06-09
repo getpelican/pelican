@@ -17,11 +17,11 @@ from operator import attrgetter
 from jinja2 import (Environment, FileSystemLoader, PrefixLoader, ChoiceLoader,
                     BaseLoader, TemplateNotFound)
 
+from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
 from pelican.utils import (copy, process_translations, mkdir_p, DateFormatter,
-                           FileStampDataCacher, python_2_unicode_compatible,
-                           posixize_path)
+                           python_2_unicode_compatible, posixize_path)
 from pelican import signals
 
 
@@ -493,10 +493,11 @@ class ArticlesGenerator(CachingGenerator):
         for f in self.get_files(
                 self.settings['ARTICLE_PATHS'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
-            article = self.get_cached_data(f, None)
-            if article is None:
+            article_or_draft = self.get_cached_data(f, None)
+            if article_or_draft is None:
+            #TODO needs overhaul, maybe nomad for read_file solution, unified behaviour
                 try:
-                    article = self.readers.read_file(
+                    article_or_draft = self.readers.read_file(
                         base_path=self.path, path=f, content_class=Article,
                         context=self.context,
                         preread_signal=signals.article_generator_preread,
@@ -509,29 +510,32 @@ class ArticlesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
-                if not is_valid_content(article, f):
+                if not is_valid_content(article_or_draft, f):
                     self._add_failed_source_path(f)
                     continue
 
-                self.cache_data(f, article)
+                if article_or_draft.status.lower() == "published":
+                    all_articles.append(article_or_draft)
+                elif article_or_draft.status.lower() == "draft":
+                    article_or_draft = self.readers.read_file(
+                        base_path=self.path, path=f, content_class=Draft,
+                        context=self.context,
+                        preread_signal=signals.article_generator_preread,
+                        preread_sender=self,
+                        context_signal=signals.article_generator_context,
+                        context_sender=self)
+                    self.add_source_path(article_or_draft)
+                    all_drafts.append(article_or_draft)
+                else:
+                    logger.error("Unknown status '%s' for file %s, skipping it.",
+                                   article_or_draft.status, f)
+                    self._add_failed_source_path(f)
+                    continue
 
-            self.add_source_path(article)
+                self.cache_data(f, article_or_draft)
 
-            if article.status.lower() == "published":
-                all_articles.append(article)
-            elif article.status.lower() == "draft":
-                draft = self.readers.read_file(
-                    base_path=self.path, path=f, content_class=Draft,
-                    context=self.context,
-                    preread_signal=signals.article_generator_preread,
-                    preread_sender=self,
-                    context_signal=signals.article_generator_context,
-                    context_sender=self)
-                self.add_source_path(draft)
-                all_drafts.append(draft)
-            else:
-                logger.error("Unknown status '%s' for file %s, skipping it.",
-                               article.status, f)
+            self.add_source_path(article_or_draft)
+
 
         self.articles, self.translations = process_translations(all_articles,
                 order_by=self.settings['ARTICLE_ORDER_BY'])
@@ -613,17 +617,19 @@ class PagesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
+                if page.status.lower() == "published":
+                    all_pages.append(page)
+                elif page.status.lower() == "hidden":
+                    hidden_pages.append(page)
+                else:
+                    logger.error("Unknown status '%s' for file %s, skipping it.",
+                                   page.status, f)
+                    self._add_failed_source_path(f)
+                    continue
+
                 self.cache_data(f, page)
 
             self.add_source_path(page)
-
-            if page.status.lower() == "published":
-                all_pages.append(page)
-            elif page.status.lower() == "hidden":
-                hidden_pages.append(page)
-            else:
-                logger.error("Unknown status '%s' for file %s, skipping it.",
-                               page.status, f)
 
         self.pages, self.translations = process_translations(all_pages,
                 order_by=self.settings['PAGE_ORDER_BY'])
