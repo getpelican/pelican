@@ -189,6 +189,7 @@ class TestCache(unittest.TestCase):
         generator.readers.read_file = MagicMock(
             side_effect=generator.readers.read_file)
         generator.generate_context()
+
         orig_call_count = generator.readers.read_file.call_count
 
         # cache should prevent calls from valid input
@@ -219,6 +220,70 @@ class TestCache(unittest.TestCase):
             'Expected new call_count {} to be equal to orig_call_count {}'
                 .format(generator.readers.read_file.call_count, orig_call_count)
             )
+
+    def test_article_reader_cache_speed(self):
+        """Test that reader caching actually is providing a speed increase
+
+        while this number is not a real benchmark, it should provide a headsup
+        if something during caching is not providing benefits
+        """
+        import time
+        settings = self._get_cache_enabled_settings()
+        settings['READERS'] = {'asc': None}
+
+        uncached_start = time.time()
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        uncached_end = time.time()
+        uncached_time = uncached_end - uncached_start
+
+        cached_start = time.time()
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        cached_end = time.time()
+        cached_time = cached_end - cached_start
+
+        self.assertTrue(
+            cached_time < uncached_time,
+            'cached time {} is higher then uncached time {}'
+            .format(cached_time, uncached_time))
+
+    def test_article_generator_cache_speed(self):
+        """Test that generator caching actually is providing a speed increase
+
+        while this number is not a real benchmark, it should provide a headsup
+        if something during caching is not providing benefits
+        """
+        import time
+        settings = self._get_cache_enabled_settings()
+        settings['CONTENT_CACHING_LAYER'] = 'generator'
+        settings['READERS'] = {'asc': None}
+
+        uncached_start = time.time()
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        uncached_end = time.time()
+        uncached_time = uncached_end - uncached_start
+
+        cached_start = time.time()
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        cached_end = time.time()
+        cached_time = cached_end - cached_start
+
+        self.assertTrue(
+            cached_time < uncached_time,
+            'cached time {} is higher then uncached time {}'
+            .format(cached_time, uncached_time))
+
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_object_caching(self):
