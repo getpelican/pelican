@@ -108,9 +108,10 @@ Setting name (followed by default value, if any)                                
                                                                                  process or ignore. For example, to avoid processing .html files,
                                                                                  set: ``READERS = {'html': None}``. To add a custom reader for the
                                                                                  ``foo`` extension, set: ``READERS = {'foo': FooReader}``
-``IGNORE_FILES = ['.#*']``                                                       A list of file globbing patterns to match against the
-                                                                                 source files to be ignored by the processor. For example,
-                                                                                 the default ``['.#*']`` will ignore emacs lock files.
+``IGNORE_FILES = ['.#*']``                                                       A list of glob patterns.  Files and directories matching any
+                                                                                 of these patterns will be ignored by the processor. For example,
+                                                                                 the default ``['.#*']`` will ignore emacs lock files, and
+                                                                                 ``['__pycache__']`` would ignore Python 3's bytecode caches.
 ``MD_EXTENSIONS =`` ``['codehilite(css_class=highlight)','extra']``              A list of the extensions that the Markdown processor
                                                                                  will use. Refer to the Python Markdown documentation's
                                                                                  `Extensions section <http://pythonhosted.org/Markdown/extensions/>`_

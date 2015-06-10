@@ -132,15 +132,23 @@ class Generator(object):
             exclusions_by_dirpath.setdefault(parent_path, set()).add(subdir)
 
         files = []
+        ignores = self.settings['IGNORE_FILES']
         for path in paths:
             # careful: os.path.join() will add a slash when path == ''.
             root = os.path.join(self.path, path) if path else self.path
 
             if os.path.isdir(root):
                 for dirpath, dirs, temp_files in os.walk(root, followlinks=True):
-                    for e in exclusions_by_dirpath.get(dirpath, ()):
-                        if e in dirs:
-                            dirs.remove(e)
+                    drop = []
+                    excl = exclusions_by_dirpath.get(dirpath, ())
+                    for d in dirs:
+                        if (d in excl or
+                            any(fnmatch.fnmatch(d, ignore)
+                                for ignore in ignores)):
+                            drop.append(d)
+                    for d in drop:
+                        dirs.remove(d)
+
                     reldir = os.path.relpath(dirpath, self.path)
                     for f in temp_files:
                         fp = os.path.join(reldir, f)
@@ -668,10 +676,12 @@ class StaticGenerator(Generator):
         for path in paths:
             if final_path:
                 copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, final_path))
+                     os.path.join(output_path, destination, final_path),
+                     self.settings['IGNORE_FILES'])
             else:
                 copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, path))
+                     os.path.join(output_path, destination, path),
+                     self.settings['IGNORE_FILES'])
 
     def generate_context(self):
         self.staticfiles = []

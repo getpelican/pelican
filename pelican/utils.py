@@ -272,51 +272,73 @@ def slugify(value, substitutions=()):
     return value.decode('ascii')
 
 
-def copy(source, destination):
+def copy(source, destination, ignores=None):
     """Recursively copy source into destination.
 
     If source is a file, destination has to be a file as well.
-
     The function is able to copy either files or directories.
 
     :param source: the source file or directory
     :param destination: the destination file or directory
+    :param ignores: either None, or a list of glob patterns;
+        files matching those patterns will _not_ be copied.
     """
+
+    def walk_error(err):
+        logger.warning("While copying %s: %s: %s",
+                       source_, err.filename, err.strerror)
 
     source_ = os.path.abspath(os.path.expanduser(source))
     destination_ = os.path.abspath(os.path.expanduser(destination))
 
-    if not os.path.exists(destination_) and not os.path.isfile(source_):
-        os.makedirs(destination_)
+    if ignores is None:
+        ignores = []
 
-    def recurse(source, destination):
-        for entry in os.listdir(source):
-            entry_path = os.path.join(source, entry)
-            if os.path.isdir(entry_path):
-                entry_dest = os.path.join(destination, entry)
-                if os.path.exists(entry_dest):
-                    if not os.path.isdir(entry_dest):
-                        raise IOError('Failed to copy {0} a directory.'
-                                      .format(entry_dest))
-                    recurse(entry_path, entry_dest)
-                else:
-                    shutil.copytree(entry_path, entry_dest)
-            else:
-                shutil.copy2(entry_path, destination)
+    if any(fnmatch.fnmatch(os.path.basename(source), ignore)
+           for ignore in ignores):
+        logger.info('Not copying %s due to ignores', source_)
+        return
 
-
-    if os.path.isdir(source_):
-        recurse(source_, destination_)
-
-    elif os.path.isfile(source_):
-        dest_dir = os.path.dirname(destination_)
-        if not os.path.exists(dest_dir):
-            os.makedirs(dest_dir)
-        shutil.copy2(source_, destination_)
+    if os.path.isfile(source_):
+        dst_dir = os.path.dirname(destination_)
+        if not os.path.exists(dst_dir):
+            logger.info('Creating directory %s', dst_dir)
+            os.makedirs(dst_dir)
         logger.info('Copying %s to %s', source_, destination_)
-    else:
-        logger.warning('Skipped copy %s to %s', source_, destination_)
+        shutil.copy2(source_, destination_)
 
+    elif os.path.isdir(source_):
+        if not os.path.exists(destination_):
+            logger.info('Creating directory %s', destination_)
+            os.makedirs(destination_)
+        if not os.path.isdir(destination_):
+            logger.warning('Cannot copy %s (a directory) to %s (a file)',
+                           source_, destination_)
+            return
+
+        for src_dir, subdirs, others in os.walk(source_):
+            dst_dir = os.path.join(destination_,
+                                    os.path.relpath(src_dir, source_))
+
+            subdirs[:] = (s for s in subdirs if not any(fnmatch.fnmatch(s, i)
+                                                        for i in ignores))
+            others[:] =  (o for o in others  if not any(fnmatch.fnmatch(o, i)
+                                                        for i in ignores))
+
+            if not os.path.isdir(dst_dir):
+                logger.info('Creating directory %s', dst_dir)
+                # Parent directories are known to exist, so 'mkdir' suffices.
+                os.mkdir(dst_dir)
+
+            for o in others:
+                src_path = os.path.join(src_dir, o)
+                dst_path = os.path.join(dst_dir, o)
+                if os.path.isfile(src_path):
+                    logger.info('Copying %s to %s', src_path, dst_path)
+                    shutil.copy2(src_path, dst_path)
+                else:
+                    logger.warning('Skipped copy %s (not a file or directory) to %s',
+                                   src_path, dst_path)
 
 def clean_output_dir(path, retention):
     """Remove all files from output directory except those in retention list"""
