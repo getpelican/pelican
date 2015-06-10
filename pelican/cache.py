@@ -8,6 +8,9 @@ try:
 except:
     import pickle
 
+#TODO don't load pelican module, maybe have to move version definition
+import pelican
+from pelican.settings import settings_check_equal
 from pelican.utils import mkdir_p
 
 
@@ -25,6 +28,7 @@ class FileDataCacher(object):
         Sets caching policy according to *caching_policy*.
         """
         self.settings = settings
+        self._cache = {}
         self._cache_path = os.path.join(self.settings['CACHE_PATH'],
                                         cache_name)
         self._cache_data_policy = caching_policy
@@ -35,22 +39,31 @@ class FileDataCacher(object):
             self._cache_open = open
         if load_policy:
             try:
-                with self._cache_open(self._cache_path, 'rb') as fhandle:
-                    self._cache = pickle.load(fhandle)
+                self._load_cache()
             except (IOError, OSError) as err:
                 logger.debug('Cannot load cache %s (this is normal on first '
-                             'run). Proceeding with empty cache.\n%s',
-                             self._cache_path, err)
-                self._cache = {}
+                    'run). Proceeding with empty cache.\n%s',
+                        self._cache_path, err)
             except pickle.PickleError as err:
-                logger.warning('Cannot unpickle cache %s, cache may be using '
-                               'an incompatible protocol (see pelican '
-                               'caching docs). '
-                               'Proceeding with empty cache.\n%s',
-                               self._cache_path, err)
-                self._cache = {}
-        else:
-            self._cache = {}
+                logger.warning(('Cannot unpickle cache %s, cache may be using '
+                    'an incompatible protocol (see pelican caching docs). '
+                    'Proceeding with empty cache.\n%s'),
+                        self._cache_path, err)
+
+    def _load_cache(self):
+        '''tries loading the cache'''
+        with self._cache_open(self._cache_path, 'rb') as fhandle:
+            cache = pickle.load(fhandle)
+            if not cache.get('__version__') == pelican.__version__:
+                logger.debug('Pelican version changed. Proceeding with empty cache')
+                return
+            if not settings_check_equal(cache.get('__settings__'), self.settings):
+                logger.debug('Settings changed. Proceeding with empty cache')
+                return
+
+            logger.debug('cache accepted')
+            self._cache = cache
+            return
 
     def cache_data(self, filename, data):
         """Cache data for given file"""
@@ -64,9 +77,14 @@ class FileDataCacher(object):
         """
         return self._cache.get(filename, default)
 
+    def _add_validation_data(self):
+        self._cache['__version__'] = pelican.__version__
+        self._cache['__settings__'] = self.settings
+
     def save_cache(self):
         """Save the updated cache"""
         if self._cache_data_policy:
+            self._add_validation_data()
             try:
                 mkdir_p(self.settings['CACHE_PATH'])
                 with self._cache_open(self._cache_path, 'wb') as fhandle:
@@ -121,8 +139,9 @@ class FileStampDataCacher(FileDataCacher):
         try:
             return self._filestamp_func(filename)
         except (IOError, OSError, TypeError) as err:
-            logger.warning('Cannot get modification stamp for %s\n\t%s',
-                           filename, err)
+            logger.warning(
+                'Cannot get modification stamp for %s\n\t%s',
+                filename, err)
             return ''
 
     def get_cached_data(self, filename, default=None):

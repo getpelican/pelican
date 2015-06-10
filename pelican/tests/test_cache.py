@@ -44,17 +44,19 @@ class TestCache(unittest.TestCase):
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
 
-
+        # populate cache
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         self.assertTrue(hasattr(generator, '_cache'))
 
+        # regenerate, with cache
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
-        generator.readers.read_file = MagicMock()
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
         generator.generate_context()
         """
         3 Files don't get cached because they were not valid
@@ -68,20 +70,24 @@ class TestCache(unittest.TestCase):
     def test_article_reader_content_caching(self):
         """Test raw article content caching at the reader level"""
         settings = self._get_cache_enabled_settings()
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
 
+        # populate cache
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         self.assertTrue(hasattr(generator.readers, '_cache'))
 
+        # regenerate, with cache
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         readers = generator.readers.readers
         for reader in readers.values():
-            reader.read = MagicMock()
+            reader.read = MagicMock(
+                side_effect=reader.read)
         generator.generate_context()
         for reader in readers.values():
             self.assertEqual(reader.read.call_count, 0)
@@ -92,12 +98,14 @@ class TestCache(unittest.TestCase):
 
         used in --ignore-cache or autoreload mode"""
         settings = self._get_cache_enabled_settings()
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
 
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
-        generator.readers.read_file = MagicMock()
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
         generator.generate_context()
         self.assertTrue(hasattr(generator, '_cache_open'))
         orig_call_count = generator.readers.read_file.call_count
@@ -106,9 +114,111 @@ class TestCache(unittest.TestCase):
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
-        generator.readers.read_file = MagicMock()
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
         generator.generate_context()
-        self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
+        self.assertEqual(
+                generator.readers.read_file.call_count,
+                orig_call_count
+            )
+
+    @unittest.skipUnless(MagicMock, 'Needs Mock module')
+    def test_article_ignore_cache_when_version_missmatch(self):
+        """
+        Test regenerate iff version change
+        """
+
+        import pelican
+
+        settings = self._get_cache_enabled_settings()
+        settings['CONTENT_CACHING_LAYER'] = 'generator'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['READERS'] = {'asc': None}
+
+        # popluate cache
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
+        generator.generate_context()
+        orig_call_count = generator.readers.read_file.call_count
+
+        # cache should prevent calls from valid input
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
+        generator.generate_context()
+        self.assertTrue(hasattr(generator, '_cache_open'))
+        cached_call_count = generator.readers.read_file.call_count
+        self.assertTrue(cached_call_count < orig_call_count,
+            'Expected cached_call_count {} is not less then orig_call_count {}'
+                .format(cached_call_count, orig_call_count))
+
+        # every file should be reloaded because we use another version
+        pelican.__version__='0.0.0'
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
+        generator.generate_context()
+        self.assertEqual(
+            generator.readers.read_file.call_count, orig_call_count,
+            'Expected new call_count {} to be equal to orig_call_count {}'
+                .format(generator.readers.read_file.call_count, orig_call_count)
+            )
+
+    @unittest.skipUnless(MagicMock, 'Needs Mock module')
+    def test_article_ignore_cache_when_settings_missmatch(self):
+        """
+        Test regenerate iff settings differ
+        """
+
+        settings = self._get_cache_enabled_settings()
+        settings['CONTENT_CACHING_LAYER'] = 'generator'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['READERS'] = {'asc': None}
+
+        # popluate cache
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
+        generator.generate_context()
+        orig_call_count = generator.readers.read_file.call_count
+
+        # cache should prevent calls from valid input
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
+        generator.generate_context()
+        self.assertTrue(hasattr(generator, '_cache_open'))
+        cached_call_count = generator.readers.read_file.call_count
+        self.assertTrue(cached_call_count < orig_call_count,
+            'Expected cached_call_count {} is not less then orig_call_count {}'
+                .format(cached_call_count, orig_call_count))
+
+        # every file should be reloaded because we use other settings
+        import copy
+        settings_dif = copy.deepcopy(settings)
+        settings_dif['DEFAULT_DATE'] = (1971, 1, 1)
+        generator = ArticlesGenerator(
+            context=settings_dif.copy(), settings=settings_dif,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
+        generator.generate_context()
+        self.assertEqual(
+            generator.readers.read_file.call_count, orig_call_count,
+            'Expected new call_count {} to be equal to orig_call_count {}'
+                .format(generator.readers.read_file.call_count, orig_call_count)
+            )
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_object_caching(self):
@@ -127,7 +237,8 @@ class TestCache(unittest.TestCase):
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
-        generator.readers.read_file = MagicMock()
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
         generator.generate_context()
         """
         1 File doesn't get cached because it was not valid
@@ -153,7 +264,7 @@ class TestCache(unittest.TestCase):
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         readers = generator.readers.readers
         for reader in readers.values():
-            reader.read = MagicMock()
+            reader.read = MagicMock(side_effect=reader.read)
         generator.generate_context()
         for reader in readers.values():
             self.assertEqual(reader.read.call_count, 0)
@@ -170,7 +281,8 @@ class TestCache(unittest.TestCase):
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
-        generator.readers.read_file = MagicMock()
+        generator.readers.read_file = MagicMock(
+            side_effect=generator.readers.read_file)
         generator.generate_context()
         self.assertTrue(hasattr(generator, '_cache_open'))
         orig_call_count = generator.readers.read_file.call_count
@@ -182,4 +294,3 @@ class TestCache(unittest.TestCase):
         generator.readers.read_file = MagicMock()
         generator.generate_context()
         self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
-
