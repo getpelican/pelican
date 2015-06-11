@@ -665,3 +665,19 @@ def path_to_file_url(path):
     '''Convert file-system path to file:// URL'''
     return six.moves.urllib_parse.urljoin(
         "file://", six.moves.urllib.request.pathname2url(path))
+
+
+def maybe_pluralize(count, singular, plural):
+    '''
+    Returns a formatted string containing count and plural if count is not 1
+    Returns count and singular if count is 1
+
+    maybe_pluralize(0, 'Article', 'Articles') -> '0 Articles'
+    maybe_pluralize(1, 'Article', 'Articles') -> '1 Article'
+    maybe_pluralize(2, 'Article', 'Articles') -> '2 Articles'
+
+    '''
+    selection = plural
+    if count == 1:
+        selection = singular
+    return '{} {}'.format(count, selection)
