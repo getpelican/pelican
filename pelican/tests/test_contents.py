@@ -1,18 +1,20 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
-import six
-from sys import platform
 import locale
 import os.path
+import six
 
-from pelican.tests.support import unittest, get_settings
-
-from pelican.contents import Page, Article, Static, URLWrapper, Author, Category
-from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import path_to_url, truncate_html_words, SafeDatetime, posix_join
-from pelican.signals import content_object_init
 from jinja2.utils import generate_lorem_ipsum
+from sys import platform
+
+from pelican.contents import (Page, Article, Static, URLWrapper,
+                              Author, Category)
+from pelican.settings import DEFAULT_CONFIG
+from pelican.signals import content_object_init
+from pelican.tests.support import unittest, get_settings
+from pelican.utils import (path_to_url, truncate_html_words, SafeDatetime,
+                           posix_join)
+
 
 # generate one paragraph, enclosed with <p>
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
@@ -191,14 +193,19 @@ class TestPage(unittest.TestCase):
         return page_kwargs
 
     def test_signal(self):
-        # If a title is given, it should be used to generate the slug.
-
-        def receiver_test_function(sender, instance):
+        def receiver_test_function(sender):
+            receiver_test_function.has_been_called = True
             pass
+        receiver_test_function.has_been_called = False
 
-        content_object_init.connect(receiver_test_function, sender=Page)
+        content_object_init.connect(receiver_test_function)
+        self.assertIn(
+            receiver_test_function,
+            content_object_init.receivers_for(Page))
+
+        self.assertFalse(receiver_test_function.has_been_called)
         Page(**self.page_kwargs)
-        self.assertTrue(content_object_init.has_receivers_for(Page))
+        self.assertTrue(receiver_test_function.has_been_called)
 
     def test_get_content(self):
         # Test that the content is updated with the relative links to
