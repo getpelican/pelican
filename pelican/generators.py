@@ -561,8 +561,7 @@ class ArticlesGenerator(CachingGenerator):
                     self.tags[tag].append(article)
             for author in getattr(article, 'authors', []):
                 self.authors[author].append(article)
-        # sort the articles by date
-        self.articles.sort(key=attrgetter('date'), reverse=True)
+
         self.dates = list(self.articles)
         self.dates.sort(key=attrgetter('date'),
                         reverse=self.context['NEWEST_FIRST_ARCHIVES'])

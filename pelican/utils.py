@@ -541,16 +541,28 @@ def process_translations(content_list, order_by=None):
             try:
                 index.sort(key=order_by)
             except Exception:
-                logger.error('Error sorting with function {}'.format(order_by))
-        elif order_by == 'basename':
-            index.sort(key=lambda x: os.path.basename(x.source_path or ''))
-        elif order_by != 'slug':
-            try:
-                index.sort(key=attrgetter(order_by))
-            except AttributeError:
-                error_msg = ('There is no "{}" attribute in the item metadata.'
-                             'Defaulting to slug order.')
-                logger.warning(error_msg.format(order_by))
+                logger.error('Error sorting with function %s', order_by)
+        elif isinstance(order_by, six.string_types):
+            if order_by.startswith('reversed-'):
+                order_reversed = True
+                order_by = order_by.replace('reversed-', '', 1)
+            else:
+                order_reversed = False
+
+            if order_by == 'basename':
+                index.sort(key=lambda x: os.path.basename(x.source_path or ''),
+                           reverse=order_reversed)
+            # already sorted by slug, no need to sort again
+            elif not (order_by == 'slug' and not order_reversed):
+                try:
+                    index.sort(key=attrgetter(order_by),
+                               reverse=order_reversed)
+                except AttributeError:
+                    logger.warning('There is no "%s" attribute in the item '
+                        'metadata. Defaulting to slug order.', order_by)
+        else:
+            logger.warning('Invalid *_ORDER_BY setting (%s).'
+                'Valid options are strings and functions.', order_by)
 
     return index, translations
 
