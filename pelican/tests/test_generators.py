@@ -387,6 +387,65 @@ class TestArticlesGenerator(unittest.TestCase):
                                 'パイソン', 'マック'])
         self.assertEqual(tags, tags_expected)
 
+    def test_article_order_by(self):
+        settings = get_settings(filenames={})
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['CACHE_CONTENT'] = False   # cache not needed for this logic tests
+        settings['ARTICLE_ORDER_BY'] = 'title'
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+
+        expected = [
+            'An Article With Code Block To Test Typogrify Ignore',
+            'Article title',
+            'Article with Nonconformant HTML meta tags',
+            'Article with markdown and summary metadata multi',
+            'Article with markdown and summary metadata single',
+            'Article with markdown containing footnotes',
+            'Article with template',
+            'Rst with filename metadata',
+            'Test Markdown extensions',
+            'Test markdown File',
+            'Test md File',
+            'Test mdown File',
+            'Test mkd File',
+            'This is a super article !',
+            'This is a super article !',
+            'This is a super article !',
+            'This is a super article !',
+            'This is a super article !',
+            'This is a super article !',
+            'This is an article with category !',
+            'This is an article with multiple authors in lastname, firstname format!',
+            'This is an article with multiple authors in list format!',
+            'This is an article with multiple authors!',
+            'This is an article with multiple authors!',
+            'This is an article without category !',
+            'This is an article without category !',
+            'マックOS X 10.8でパイソンとVirtualenvをインストールと設定']
+
+        articles = [article.title for article in generator.articles]
+        self.assertEqual(articles, expected)
+
+        # reversed title
+        settings = get_settings(filenames={})
+        settings['DEFAULT_CATEGORY'] = 'Default'
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['CACHE_CONTENT'] = False   # cache not needed for this logic tests
+        settings['ARTICLE_ORDER_BY'] = 'reversed-title'
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+
+        articles = [article.title for article in generator.articles]
+        self.assertEqual(articles, list(reversed(expected)))
+
 
 class TestPageGenerator(unittest.TestCase):
     # Note: Every time you want to test for a new field; Make sure the test
@@ -466,6 +525,23 @@ class TestPageGenerator(unittest.TestCase):
              'custom'],
         ]
         settings['PAGE_ORDER_BY'] = 'title'
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        pages = self.distill_pages(generator.pages)
+        self.assertEqual(pages_expected_sorted_by_title, pages)
+
+        # sort by title reversed
+        pages_expected_sorted_by_title = [
+            ['This is a test page with a preset template', 'published',
+             'custom'],
+            ['This is a test page', 'published', 'page'],
+            ['This is a markdown test page', 'published', 'page'],
+            ['Page with a bunch of links', 'published', 'page'],
+            ['A Page (Test) for sorting', 'published', 'page'],
+        ]
+        settings['PAGE_ORDER_BY'] = 'reversed-title'
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)

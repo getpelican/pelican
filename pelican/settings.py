@@ -65,7 +65,7 @@ DEFAULT_CONFIG = {
     'OUTPUT_RETENTION': [],
     'ARTICLE_URL': '{slug}.html',
     'ARTICLE_SAVE_AS': '{slug}.html',
-    'ARTICLE_ORDER_BY': 'slug',
+    'ARTICLE_ORDER_BY': 'reversed-date',
     'ARTICLE_LANG_URL': '{slug}-{lang}.html',
     'ARTICLE_LANG_SAVE_AS': '{slug}-{lang}.html',
     'DRAFT_URL': 'drafts/{slug}.html',
