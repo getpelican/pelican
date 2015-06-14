@@ -375,3 +375,22 @@ def configure_settings(settings):
             logger.warning(message)
 
     return settings
+
+def settings_check_equal(s1, s2, ignored_keys=set(['filenames'])):
+    '''
+    checks if two configurations are equal
+
+    used to determine if cache needs to be invalidated
+    '''
+    s1_keys = set(s1.keys()) - ignored_keys
+    s2_keys = set(s2.keys()) - ignored_keys
+    intersect_keys = s1_keys.intersection(s2_keys)
+
+    if not s1_keys == s2_keys:
+        return False
+
+    for o in intersect_keys:
+        if not s1[o] == s2[o]:
+            return False
+
+    return True
