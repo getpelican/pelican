@@ -6,7 +6,9 @@ clean =
     rm -rf *egg-info build dist
 tests = python -m unittest discover
 publish = python setup.py sdist bdist_wheel register upload
-files = README.rst
+files =
+    README.rst
+    setup.py
 
 [bump]
 unsuffix = true
