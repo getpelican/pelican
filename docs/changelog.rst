@@ -1,8 +1,8 @@
 Release history
 ###############
 
-Next release
-============
+3.6.0 (2015-06-15)
+==================
 
 * Disable caching by default in order to prevent potential confusion
 * Improve caching behavior, replacing ``pickle`` with ``cpickle``
