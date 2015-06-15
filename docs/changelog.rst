@@ -1,6 +1,24 @@
 Release history
 ###############
 
+Next release
+============
+
+* Improve caching behavior and disable by default
+* Allow Markdown or reST content in metadata fields other than "summary"
+* Support semicolon-separated author/tag lists
+* Improve flexibility of article sorting
+* Add ``--relative-urls`` argument
+* Support listening on addresses other than localhost
+* Unify HTTP server handlers to ``pelican.server`` throughout
+* Handle intra-site links to draft posts
+* Move ``tag_cloud`` from core to plugin
+* Load all external resources via HTTPS
+* Import drafts from WordPress XML
+* Improve support for Windows users
+* Enhance logging and test suite
+* New signals: ``all_generators_finalized`` and ``page_writer_finalized``
+
 3.5.0 (2014-11-04)
 ==================
 
