@@ -79,9 +79,8 @@ automatically installed without any action on your part:
 Upgrading
 ---------
 
-If you installed a stable Pelican release via ``pip`` or ``easy_install`` and
-wish to upgrade to the latest stable release, you can do so by adding
-``--upgrade`` to the relevant command. For pip, that would be::
+If you installed a stable Pelican release via ``pip`` and wish to upgrade to
+the latest stable release, you can do so by adding ``--upgrade``::
 
     pip install --upgrade pelican
 
