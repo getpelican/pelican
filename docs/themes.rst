@@ -77,11 +77,13 @@ articles        The list of articles, ordered descending by date.
                 in the `all_articles` variable.
 dates           The same list of articles, but ordered by date,
                 ascending.
+drafts          The list of draft articles
 tags            A list of (tag, articles) tuples, containing all
                 the tags.
 categories      A list of (category, articles) tuples, containing
                 all the categories and corresponding articles (values)
 pages           The list of pages
+hidden_pages    The list of hidden pages
 =============   ===================================================
 
 
