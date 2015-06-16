@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function, absolute_import
-import logging
-import shutil
-import os
-import time
+from __future__ import absolute_import, print_function, unicode_literals
+
 import locale
+import logging
+import os
+import shutil
+import time
 from sys import platform
 from tempfile import mkdtemp
 
 import pytz
 
-from pelican.generators import TemplatePagesGenerator
-from pelican.writers import Writer
-from pelican.settings import read_settings
 from pelican import utils
-from pelican.tests.support import get_article, LoggedTestCase, locale_available, unittest
+from pelican.generators import TemplatePagesGenerator
+from pelican.settings import read_settings
+from pelican.tests.support import (LoggedTestCase, get_article,
+                                   locale_available, unittest)
+from pelican.writers import Writer
 
 
 class TestUtils(LoggedTestCase):
@@ -72,7 +74,7 @@ class TestUtils(LoggedTestCase):
             '2012-11-22T22:11:10Z': date_hour_sec_z,
             '2012-11-22T22:11:10-0500': date_hour_sec_est,
             '2012-11-22T22:11:10.123Z': date_hour_sec_frac_z,
-            }
+        }
 
         # examples from http://www.w3.org/TR/NOTE-datetime
         iso_8601_date = utils.SafeDatetime(year=1997, month=7, day=16)
@@ -94,7 +96,6 @@ class TestUtils(LoggedTestCase):
 
         # invalid ones
         invalid_dates = ['2010-110-12', 'yay']
-
 
         for value, expected in dates.items():
             self.assertEqual(utils.get_date(value), expected, value)
@@ -290,7 +291,9 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(utils.strftime(d, '%d/%m/%Y'), '29/08/2012')
 
         # RFC 3339
-        self.assertEqual(utils.strftime(d, '%Y-%m-%dT%H:%M:%SZ'),'2012-08-29T00:00:00Z')
+        self.assertEqual(
+            utils.strftime(d, '%Y-%m-%dT%H:%M:%SZ'),
+            '2012-08-29T00:00:00Z')
 
         # % escaped
         self.assertEqual(utils.strftime(d, '%d%%%m%%%y'), '29%08%12')
@@ -306,8 +309,9 @@ class TestUtils(LoggedTestCase):
                          'Published in 29-08-2012')
 
         # with non-ascii text
-        self.assertEqual(utils.strftime(d, '%d/%m/%Y Øl trinken beim Besäufnis'),
-                         '29/08/2012 Øl trinken beim Besäufnis')
+        self.assertEqual(
+            utils.strftime(d, '%d/%m/%Y Øl trinken beim Besäufnis'),
+            '29/08/2012 Øl trinken beim Besäufnis')
 
         # alternative formatting options
         self.assertEqual(utils.strftime(d, '%-d/%-m/%y'), '29/8/12')
@@ -315,7 +319,6 @@ class TestUtils(LoggedTestCase):
 
         d = utils.SafeDatetime(2012, 8, 9)
         self.assertEqual(utils.strftime(d, '%-d/%-m/%y'), '9/8/12')
-
 
     # test the output of utils.strftime in a different locale
     # Turkish locale
@@ -339,16 +342,17 @@ class TestUtils(LoggedTestCase):
                          'Çarşamba, 29 Ağustos 2012')
 
         # with text
-        self.assertEqual(utils.strftime(d, 'Yayınlanma tarihi: %A, %d %B %Y'),
+        self.assertEqual(
+            utils.strftime(d, 'Yayınlanma tarihi: %A, %d %B %Y'),
             'Yayınlanma tarihi: Çarşamba, 29 Ağustos 2012')
 
         # non-ascii format candidate (someone might pass it... for some reason)
-        self.assertEqual(utils.strftime(d, '%Y yılında %üretim artışı'),
+        self.assertEqual(
+            utils.strftime(d, '%Y yılında %üretim artışı'),
             '2012 yılında %üretim artışı')
 
         # restore locale back
         locale.setlocale(locale.LC_ALL, old_locale)
-
 
     # test the output of utils.strftime in a different locale
     # French locale
@@ -373,21 +377,28 @@ class TestUtils(LoggedTestCase):
         self.assertTrue(utils.strftime(d, '%A') in ('mercredi', 'Mercredi'))
 
         # with text
-        self.assertEqual(utils.strftime(d, 'Écrit le %d %B %Y'),
+        self.assertEqual(
+            utils.strftime(d, 'Écrit le %d %B %Y'),
             'Écrit le 29 août 2012')
 
         # non-ascii format candidate (someone might pass it... for some reason)
-        self.assertEqual(utils.strftime(d, '%écrits en %Y'),
+        self.assertEqual(
+            utils.strftime(d, '%écrits en %Y'),
             '%écrits en 2012')
 
         # restore locale back
         locale.setlocale(locale.LC_ALL, old_locale)
 
-
     def test_maybe_pluralize(self):
-        self.assertEqual(utils.maybe_pluralize(0, 'Article', 'Articles'), '0 Articles')
-        self.assertEqual(utils.maybe_pluralize(1, 'Article', 'Articles'), '1 Article')
-        self.assertEqual(utils.maybe_pluralize(2, 'Article', 'Articles'), '2 Articles')
+        self.assertEqual(
+            utils.maybe_pluralize(0, 'Article', 'Articles'),
+            '0 Articles')
+        self.assertEqual(
+            utils.maybe_pluralize(1, 'Article', 'Articles'),
+            '1 Article')
+        self.assertEqual(
+            utils.maybe_pluralize(2, 'Article', 'Articles'),
+            '2 Articles')
 
 
 class TestCopy(unittest.TestCase):
@@ -435,8 +446,9 @@ class TestCopy(unittest.TestCase):
 
     def test_copy_file_create_dirs(self):
         self._create_file('a.txt')
-        utils.copy(os.path.join(self.root_dir, 'a.txt'),
-                   os.path.join(self.root_dir, 'b0', 'b1', 'b2', 'b3', 'b.txt'))
+        utils.copy(
+            os.path.join(self.root_dir, 'a.txt'),
+            os.path.join(self.root_dir, 'b0', 'b1', 'b2', 'b3', 'b.txt'))
         self._exist_dir('b0')
         self._exist_dir('b0', 'b1')
         self._exist_dir('b0', 'b1', 'b2')
@@ -491,35 +503,39 @@ class TestDateFormatter(unittest.TestCase):
             template_file.write('date = {{ date|strftime("%A, %d %B %Y") }}')
         self.date = utils.SafeDatetime(2012, 8, 29)
 
-
     def tearDown(self):
         shutil.rmtree(self.temp_content)
         shutil.rmtree(self.temp_output)
         # reset locale to default
         locale.setlocale(locale.LC_ALL, '')
 
-
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'),
                          'French locale needed')
     def test_french_strftime(self):
-        # This test tries to reproduce an issue that occurred with python3.3 under macos10 only
+        # This test tries to reproduce an issue that
+        # occurred with python3.3 under macos10 only
         if platform == 'win32':
             locale.setlocale(locale.LC_ALL, str('French'))
         else:
             locale.setlocale(locale.LC_ALL, str('fr_FR.UTF-8'))
-        date = utils.SafeDatetime(2014,8,14)
-        # we compare the lower() dates since macos10 returns "Jeudi" for %A whereas linux reports "jeudi"
-        self.assertEqual( u'jeudi, 14 août 2014', utils.strftime(date, date_format="%A, %d %B %Y").lower() )
+        date = utils.SafeDatetime(2014, 8, 14)
+        # we compare the lower() dates since macos10 returns
+        # "Jeudi" for %A whereas linux reports "jeudi"
+        self.assertEqual(
+            u'jeudi, 14 août 2014',
+            utils.strftime(date, date_format="%A, %d %B %Y").lower())
         df = utils.DateFormatter()
-        self.assertEqual( u'jeudi, 14 août 2014', df(date, date_format="%A, %d %B %Y").lower() )
+        self.assertEqual(
+            u'jeudi, 14 août 2014',
+            df(date, date_format="%A, %d %B %Y").lower())
         # Let us now set the global locale to C:
         locale.setlocale(locale.LC_ALL, str('C'))
-        # DateFormatter should still work as expected since it is the whole point of DateFormatter
+        # DateFormatter should still work as expected
+        # since it is the whole point of DateFormatter
         # (This is where pre-2014/4/15 code fails on macos10)
         df_date = df(date, date_format="%A, %d %B %Y").lower()
-        self.assertEqual( u'jeudi, 14 août 2014', df_date )
-
+        self.assertEqual(u'jeudi, 14 août 2014', df_date)
 
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'),
@@ -530,9 +546,12 @@ class TestDateFormatter(unittest.TestCase):
         else:
             locale_string = 'fr_FR.UTF-8'
         settings = read_settings(
-            override = {'LOCALE': locale_string,
-                        'TEMPLATE_PAGES': {'template/source.html':
-                                         'generated/file.html'}})
+            override={
+                'LOCALE': locale_string,
+                'TEMPLATE_PAGES': {
+                    'template/source.html': 'generated/file.html'
+                }
+            })
 
         generator = TemplatePagesGenerator(
             {'date': self.date}, settings,
@@ -543,7 +562,7 @@ class TestDateFormatter(unittest.TestCase):
         generator.generate_output(writer)
 
         output_path = os.path.join(
-                self.temp_output, 'generated', 'file.html')
+            self.temp_output, 'generated', 'file.html')
 
         # output file has been generated
         self.assertTrue(os.path.exists(output_path))
@@ -552,7 +571,6 @@ class TestDateFormatter(unittest.TestCase):
         with utils.pelican_open(output_path) as output_file:
             self.assertEqual(output_file,
                              utils.strftime(self.date, 'date = %A, %d %B %Y'))
-
 
     @unittest.skipUnless(locale_available('tr_TR.UTF-8') or
                          locale_available('Turkish'),
@@ -563,9 +581,12 @@ class TestDateFormatter(unittest.TestCase):
         else:
             locale_string = 'tr_TR.UTF-8'
         settings = read_settings(
-            override = {'LOCALE': locale_string,
-                        'TEMPLATE_PAGES': {'template/source.html':
-                                           'generated/file.html'}})
+            override={
+                'LOCALE': locale_string,
+                'TEMPLATE_PAGES': {
+                    'template/source.html': 'generated/file.html'
+                }
+            })
 
         generator = TemplatePagesGenerator(
             {'date': self.date}, settings,
@@ -576,7 +597,7 @@ class TestDateFormatter(unittest.TestCase):
         generator.generate_output(writer)
 
         output_path = os.path.join(
-                self.temp_output, 'generated', 'file.html')
+            self.temp_output, 'generated', 'file.html')
 
         # output file has been generated
         self.assertTrue(os.path.exists(output_path))

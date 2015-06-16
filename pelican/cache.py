@@ -1,15 +1,13 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import hashlib
 import logging
 import os
-try:
-    import cPickle as pickle
-except:
-    import pickle
+
+from six.moves import cPickle as pickle
 
 from pelican.utils import mkdir_p
-
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +81,7 @@ class FileStampDataCacher(FileDataCacher):
         """This sublcass additionally sets filestamp function
         and base path for filestamping operations
         """
+
         super(FileStampDataCacher, self).__init__(settings, cache_name,
                                                   caching_policy,
                                                   load_policy)
@@ -118,6 +117,7 @@ class FileStampDataCacher(FileDataCacher):
         a hash for a function name in the hashlib module
         or an empty bytes string otherwise
         """
+
         try:
             return self._filestamp_func(filename)
         except (IOError, OSError, TypeError) as err:
@@ -133,6 +133,7 @@ class FileStampDataCacher(FileDataCacher):
         Modification is checked by comparing the cached
         and current file stamp.
         """
+
         stamp, data = super(FileStampDataCacher, self).get_cached_data(
             filename, (None, default))
         if stamp != self._get_file_stamp(filename):

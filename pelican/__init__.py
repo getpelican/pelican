@@ -1,45 +1,41 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-import six
+from __future__ import print_function, unicode_literals
 
+import argparse
+import collections
+import locale
+import logging
 import os
 import re
 import sys
 import time
-import logging
-import argparse
-import locale
-import collections
+
+import six
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import init
-
+from pelican.log import init  # noqa
 from pelican import signals
-
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
-                                StaticGenerator, SourceFileGenerator,
+                                SourceFileGenerator, StaticGenerator,
                                 TemplatePagesGenerator)
 from pelican.readers import Readers
 from pelican.settings import read_settings
-from pelican.utils import (clean_output_dir, folder_watcher,
-                           file_watcher, maybe_pluralize)
+from pelican.utils import (clean_output_dir, file_watcher,
+                           folder_watcher, maybe_pluralize)
 from pelican.writers import Writer
 
 __version__ = "3.6.4.dev0"
-
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
-
-
 logger = logging.getLogger(__name__)
 
 
 class Pelican(object):
 
     def __init__(self, settings):
-        """
-        Pelican initialisation, performs some checks on the environment before
-        doing anything else.
+        """Pelican initialisation
+
+        Performs some checks on the environment before doing anything else.
         """
 
         # define the default settings
@@ -152,7 +148,7 @@ class Pelican(object):
         context = self.settings.copy()
         # Share these among all the generators and content objects:
         context['filenames'] = {}  # maps source path to Content object or None
-        context['localsiteurl'] = self.settings['SITEURL'] 
+        context['localsiteurl'] = self.settings['SITEURL']
 
         generators = [
             cls(
@@ -190,23 +186,23 @@ class Pelican(object):
                                if isinstance(g, PagesGenerator))
 
         pluralized_articles = maybe_pluralize(
-            len(articles_generator.articles) +
-                len(articles_generator.translations),
+            (len(articles_generator.articles) +
+             len(articles_generator.translations)),
             'article',
             'articles')
         pluralized_drafts = maybe_pluralize(
-            len(articles_generator.drafts) +
-                len(articles_generator.drafts_translations),
+            (len(articles_generator.drafts) +
+             len(articles_generator.drafts_translations)),
             'draft',
             'drafts')
         pluralized_pages = maybe_pluralize(
-            len(pages_generator.pages) +
-                len(pages_generator.translations),
+            (len(pages_generator.pages) +
+             len(pages_generator.translations)),
             'page',
             'pages')
         pluralized_hidden_pages = maybe_pluralize(
-            len(pages_generator.hidden_pages) +
-                len(pages_generator.hidden_translations),
+            (len(pages_generator.hidden_pages) +
+             len(pages_generator.hidden_translations)),
             'hidden page',
             'hidden pages')
 
@@ -243,8 +239,8 @@ class Pelican(object):
         return generators
 
     def get_writer(self):
-        writers = [ w for (_, w) in signals.get_writer.send(self)
-                    if isinstance(w, type) ]
+        writers = [w for (_, w) in signals.get_writer.send(self)
+                   if isinstance(w, type)]
         writers_found = len(writers)
         if writers_found == 0:
             return Writer(self.output_path, settings=self.settings)
@@ -254,15 +250,15 @@ class Pelican(object):
                 logger.debug('Found writer: %s', writer)
             else:
                 logger.warning(
-                    '%s writers found, using only first one: %s', 
+                    '%s writers found, using only first one: %s',
                     writers_found, writer)
             return writer(self.output_path, settings=self.settings)
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description="""A tool to generate a static blog,
-        with restructured text input files.""",
+        description='A tool to generate a static blog, '
+                    ' with restructured text input files.',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
 
@@ -354,7 +350,7 @@ def get_config(args):
     # argparse returns bytes in Py2. There is no definite answer as to which
     # encoding argparse (or sys.argv) uses.
     # "Best" option seems to be locale.getpreferredencoding()
-    # ref: http://mail.python.org/pipermail/python-list/2006-October/405766.html
+    # http://mail.python.org/pipermail/python-list/2006-October/405766.html
     if not six.PY3:
         enc = locale.getpreferredencoding()
         for key in config:
@@ -424,7 +420,8 @@ def main():
 
                         # Added static paths
                         # Add new watchers and set them as modified
-                        for static_path in set(new_static).difference(old_static):
+                        new_watchers = set(new_static).difference(old_static)
+                        for static_path in new_watchers:
                             static_key = '[static]%s' % static_path
                             watchers[static_key] = folder_watcher(
                                 os.path.join(pelican.path, static_path),
@@ -434,7 +431,8 @@ def main():
 
                         # Removed static paths
                         # Remove watchers and modified values
-                        for static_path in set(old_static).difference(new_static):
+                        old_watchers = set(old_static).difference(new_static)
+                        for static_path in old_watchers:
                             static_key = '[static]%s' % static_path
                             watchers.pop(static_key)
                             modified.pop(static_key)

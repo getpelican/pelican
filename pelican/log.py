@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
+import locale
+import logging
+import os
+import sys
+from collections import Mapping, defaultdict
+
+import six
 
 __all__ = [
     'init'
 ]
 
-import os
-import sys
-import logging
-import locale
-
-from collections import defaultdict, Mapping
-
-import six
 
 class BaseFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None):
@@ -20,7 +20,8 @@ class BaseFormatter(logging.Formatter):
         super(BaseFormatter, self).__init__(fmt=FORMAT, datefmt=datefmt)
 
     def format(self, record):
-        record.__dict__['customlevelname'] = self._get_levelname(record.levelname)
+        customlevel = self._get_levelname(record.levelname)
+        record.__dict__['customlevelname'] = customlevel
         # format multiline messages 'nicely' to make it clear they are together
         record.msg = record.msg.replace('\n', '\n  | ')
         return super(BaseFormatter, self).format(record)
@@ -132,13 +133,13 @@ class SafeLogger(logging.Logger):
     def _log(self, level, msg, args, exc_info=None, extra=None):
         # if the only argument is a Mapping, Logger uses that for formatting
         # format values for that case
-        if args and len(args)==1 and isinstance(args[0], Mapping):
+        if args and len(args) == 1 and isinstance(args[0], Mapping):
             args = ({k: self._decode_arg(v) for k, v in args[0].items()},)
         # otherwise, format each arg
         else:
             args = tuple(self._decode_arg(arg) for arg in args)
-        super(SafeLogger, self)._log(level, msg, args,
-            exc_info=exc_info, extra=extra)
+        super(SafeLogger, self)._log(
+            level, msg, args, exc_info=exc_info, extra=extra)
 
     def _decode_arg(self, arg):
         '''
@@ -175,8 +176,7 @@ def init(level=None, handler=logging.StreamHandler()):
 
     logger = logging.getLogger()
 
-    if (os.isatty(sys.stdout.fileno())
-            and not sys.platform.startswith('win')):
+    if os.isatty(sys.stdout.fileno()) and not sys.platform.startswith('win'):
         fmt = ANSIFormatter()
     else:
         fmt = TextFormatter()

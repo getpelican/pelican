@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
+from pelican.tests.support import unittest
+
 try:
     from unittest.mock import Mock
 except ImportError:
@@ -7,7 +10,7 @@ except ImportError:
         from mock import Mock
     except ImportError:
         Mock = False
-from pelican.tests.support import unittest
+
 
 @unittest.skipUnless(Mock, 'Needs Mock module')
 class Test_abbr_role(unittest.TestCase):

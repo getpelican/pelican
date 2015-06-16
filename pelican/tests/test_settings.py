@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-import copy
-import os
-import locale
-from sys import platform
-from os.path import dirname, abspath, join
+from __future__ import print_function, unicode_literals
 
-from pelican.settings import (read_settings, configure_settings,
-                              DEFAULT_CONFIG, DEFAULT_THEME)
+import copy
+import locale
+import os
+from os.path import abspath, dirname, join
+from sys import platform
+
+
+from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
+                              configure_settings, read_settings)
 from pelican.tests.support import unittest
 
 
@@ -28,12 +30,14 @@ class TestSettingsConfiguration(unittest.TestCase):
 
     def test_overwrite_existing_settings(self):
         self.assertEqual(self.settings.get('SITENAME'), "Alexis' log")
-        self.assertEqual(self.settings.get('SITEURL'),
-                'http://blog.notmyidea.org')
+        self.assertEqual(
+            self.settings.get('SITEURL'),
+            'http://blog.notmyidea.org')
 
     def test_keep_default_settings(self):
         # Keep default settings if not defined.
-        self.assertEqual(self.settings.get('DEFAULT_CATEGORY'),
+        self.assertEqual(
+            self.settings.get('DEFAULT_CATEGORY'),
             DEFAULT_CONFIG['DEFAULT_CATEGORY'])
 
     def test_dont_copy_small_keys(self):
@@ -69,28 +73,31 @@ class TestSettingsConfiguration(unittest.TestCase):
 
     def test_static_path_settings_safety(self):
         # Disallow static paths from being strings
-        settings = {'STATIC_PATHS': 'foo/bar',
-                'THEME_STATIC_PATHS': 'bar/baz',
-                # These 4 settings are required to run configure_settings
-                'PATH': '.',
-                'THEME': DEFAULT_THEME,
-                'SITEURL': 'http://blog.notmyidea.org/',
-                'LOCALE': '',
-                }
+        settings = {
+            'STATIC_PATHS': 'foo/bar',
+            'THEME_STATIC_PATHS': 'bar/baz',
+            # These 4 settings are required to run configure_settings
+            'PATH': '.',
+            'THEME': DEFAULT_THEME,
+            'SITEURL': 'http://blog.notmyidea.org/',
+            'LOCALE': '',
+        }
         configure_settings(settings)
-        self.assertEqual(settings['STATIC_PATHS'],
-                DEFAULT_CONFIG['STATIC_PATHS'])
-        self.assertEqual(settings['THEME_STATIC_PATHS'],
-                DEFAULT_CONFIG['THEME_STATIC_PATHS'])
+        self.assertEqual(
+            settings['STATIC_PATHS'],
+            DEFAULT_CONFIG['STATIC_PATHS'])
+        self.assertEqual(
+            settings['THEME_STATIC_PATHS'],
+            DEFAULT_CONFIG['THEME_STATIC_PATHS'])
 
     def test_configure_settings(self):
         # Manipulations to settings should be applied correctly.
         settings = {
-                'SITEURL': 'http://blog.notmyidea.org/',
-                'LOCALE': '',
-                'PATH': os.curdir,
-                'THEME': DEFAULT_THEME,
-                }
+            'SITEURL': 'http://blog.notmyidea.org/',
+            'LOCALE': '',
+            'PATH': os.curdir,
+            'THEME': DEFAULT_THEME,
+        }
         configure_settings(settings)
 
         # SITEURL should not have a trailing slash
@@ -154,7 +161,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['PATH'] = ''
         self.assertRaises(Exception, configure_settings, settings)
 
-        # Test nonexistent THEME 
+        # Test nonexistent THEME
         settings['PATH'] = os.curdir
         settings['THEME'] = 'foo'
 

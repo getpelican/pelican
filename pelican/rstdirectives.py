@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
+import re
 
 from docutils import nodes, utils
-from docutils.parsers.rst import directives, roles, Directive
-from pygments.formatters import HtmlFormatter
+from docutils.parsers.rst import Directive, directives, roles
+
 from pygments import highlight
-from pygments.lexers import get_lexer_by_name, TextLexer
-import re
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import TextLexer, get_lexer_by_name
+
 import six
+
 import pelican.settings as pys
 
 

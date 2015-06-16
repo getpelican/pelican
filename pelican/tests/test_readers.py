@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 import os
 
 from pelican import readers
+from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
-from pelican.tests.support import unittest, get_settings
+
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_PATH = os.path.join(CUR_DIR, 'content')
@@ -29,22 +30,26 @@ class ReaderTest(unittest.TestCase):
                 self.assertEqual(
                     value,
                     real_value,
-                    'Expected %s to have value %s, but was %s' % (key, value, real_value))
+                    'Expected %s to have value %s, but was %s' %
+                    (key, value, real_value))
             else:
                 self.fail(
-                   'Expected %s to have value %s, but was not in Dict' % (key, value))
+                    'Expected %s to have value %s, but was not in Dict' %
+                    (key, value))
+
 
 class TestAssertDictHasSubset(ReaderTest):
     def setUp(self):
         self.dictionary = {
-        'key-a' : 'val-a',
-        'key-b' : 'val-b'}
+            'key-a': 'val-a',
+            'key-b': 'val-b'
+        }
 
     def tearDown(self):
         self.dictionary = None
 
     def test_subset(self):
-        self.assertDictHasSubset(self.dictionary, {'key-a':'val-a'})
+        self.assertDictHasSubset(self.dictionary, {'key-a': 'val-a'})
 
     def test_equal(self):
         self.assertDictHasSubset(self.dictionary, self.dictionary)
@@ -54,18 +59,17 @@ class TestAssertDictHasSubset(ReaderTest):
             AssertionError,
             'Expected.*key-c.*to have value.*val-c.*but was not in Dict',
             self.assertDictHasSubset,
-                self.dictionary,
-                {'key-c':'val-c'}
-            )
+            self.dictionary,
+            {'key-c': 'val-c'})
 
     def test_fail_wrong_val(self):
         self.assertRaisesRegexp(
             AssertionError,
             'Expected .*key-a.* to have value .*val-b.* but was .*val-a.*',
             self.assertDictHasSubset,
-                self.dictionary,
-                {'key-a':'val-b'}
-            )
+            self.dictionary,
+            {'key-a': 'val-b'})
+
 
 class DefaultReaderTest(ReaderTest):
 
@@ -153,17 +157,17 @@ class RstReaderTest(ReaderTest):
                 '(?P<date>\d{4}-\d{2}-\d{2})'
                 '_(?P<Slug>.*)'
                 '#(?P<MyMeta>.*)-(?P<author>.*)'
-                ),
+            ),
             EXTRA_PATH_METADATA={
                 input_with_metadata: {
                     'key-1a': 'value-1a',
                     'key-1b': 'value-1b'
-                    }
                 }
-            )
+            }
+        )
         expected_metadata = {
             'category': 'yeah',
-            'author' : 'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
             'date': SafeDatetime(2012, 11, 29),
             'slug': 'rst_w_filename_meta',
@@ -179,38 +183,41 @@ class RstReaderTest(ReaderTest):
             path=input_file_path_without_metadata,
             EXTRA_PATH_METADATA={
                 input_file_path_without_metadata: {
-                    'author': 'Charlès Overwrite'}
+                    'author': 'Charlès Overwrite'
                 }
-            )
+            }
+        )
         expected_without_metadata = {
-            'category' : 'misc',
-            'author'   : 'Charlès Overwrite',
-            'title'    : 'Article title',
-            'reader'   : 'rst',
+            'category': 'misc',
+            'author': 'Charlès Overwrite',
+            'title': 'Article title',
+            'reader': 'rst',
         }
         self.assertDictHasSubset(
             page_without_metadata.metadata,
             expected_without_metadata)
 
     def test_article_extra_path_metadata_dont_overwrite(self):
-        #EXTRA_PATH_METADATA['author'] should get ignored
-        #since we don't overwrite already set values
+        # EXTRA_PATH_METADATA['author'] should get ignored
+        # since we don't overwrite already set values
         input_file_path = '2012-11-29_rst_w_filename_meta#foo-bar.rst'
         page = self.read_file(
             path=input_file_path,
             FILENAME_METADATA=(
                 '(?P<date>\d{4}-\d{2}-\d{2})'
                 '_(?P<Slug>.*)'
-                '#(?P<MyMeta>.*)-(?P<orginalauthor>.*)'),
+                '#(?P<MyMeta>.*)-(?P<orginalauthor>.*)'
+            ),
             EXTRA_PATH_METADATA={
                 input_file_path: {
                     'author': 'Charlès Overwrite',
-                    'key-1b': 'value-1b'}
+                    'key-1b': 'value-1b'
                 }
-            )
+            }
+        )
         expected = {
             'category': 'yeah',
-            'author' : 'Alexis Métaireau',
+            'author': 'Alexis Métaireau',
             'title': 'Rst with filename metadata',
             'date': SafeDatetime(2012, 11, 29),
             'slug': 'rst_w_filename_meta',
@@ -273,7 +280,7 @@ class RstReaderTest(ReaderTest):
             # typogrify should be able to ignore user specified tags,
             # but tries to be clever with widont extension
             page = self.read_file(path='article.rst', TYPOGRIFY=True,
-                                  TYPOGRIFY_IGNORE_TAGS = ['p'])
+                                  TYPOGRIFY_IGNORE_TAGS=['p'])
             expected = ('<p>THIS is some content. With some stuff to&nbsp;'
                         '&quot;typogrify&quot;...</p>\n<p>Now with added '
                         'support for <abbr title="three letter acronym">'
@@ -284,7 +291,7 @@ class RstReaderTest(ReaderTest):
             # typogrify should ignore code blocks by default because
             # code blocks are composed inside the pre tag
             page = self.read_file(path='article_with_code_block.rst',
-                                 TYPOGRIFY=True)
+                                  TYPOGRIFY=True)
 
             expected = ('<p>An article with some&nbsp;code</p>\n'
                         '<div class="highlight"><pre><span class="n">x</span>'
@@ -292,13 +299,17 @@ class RstReaderTest(ReaderTest):
                         ' <span class="n">y</span>\n</pre></div>\n'
                         '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
                         '<span class="amp">&amp;</span> y</blockquote>\n'
-                        '<p>Normal:\nx <span class="amp">&amp;</span>&nbsp;y</p>\n')
+                        '<p>Normal:\nx'
+                        ' <span class="amp">&amp;</span>'
+                        '&nbsp;y'
+                        '</p>\n')
 
             self.assertEqual(page.content, expected)
 
             # instruct typogrify to also ignore blockquotes
             page = self.read_file(path='article_with_code_block.rst',
-                                 TYPOGRIFY=True, TYPOGRIFY_IGNORE_TAGS = ['blockquote'])
+                                  TYPOGRIFY=True,
+                                  TYPOGRIFY_IGNORE_TAGS=['blockquote'])
 
             expected = ('<p>An article with some&nbsp;code</p>\n'
                         '<div class="highlight"><pre><span class="n">x</span>'
@@ -306,7 +317,10 @@ class RstReaderTest(ReaderTest):
                         ' <span class="n">y</span>\n</pre></div>\n'
                         '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
                         '&amp; y</blockquote>\n'
-                        '<p>Normal:\nx <span class="amp">&amp;</span>&nbsp;y</p>\n')
+                        '<p>Normal:\nx'
+                        ' <span class="amp">&amp;</span>'
+                        '&nbsp;y'
+                        '</p>\n')
 
             self.assertEqual(page.content, expected)
         except ImportError:
@@ -338,6 +352,7 @@ class RstReaderTest(ReaderTest):
         }
 
         self.assertDictHasSubset(page.metadata, expected)
+
 
 @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
 class MdReaderTest(ReaderTest):
@@ -400,7 +415,8 @@ class MdReaderTest(ReaderTest):
             'modified': SafeDatetime(2012, 11, 1),
             'multiline': [
                 'Line Metadata should be handle properly.',
-                'See syntax of Meta-Data extension of Python Markdown package:',
+                'See syntax of Meta-Data extension of '
+                'Python Markdown package:',
                 'If a line is indented by 4 or more spaces,',
                 'that line is assumed to be an additional line of the value',
                 'for the previous keyword.',

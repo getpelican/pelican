@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from pelican.urlwrappers import URLWrapper, Tag, Category
 from pelican.tests.support import unittest
+from pelican.urlwrappers import Category, Tag, URLWrapper
+
 
 class TestURLWrapper(unittest.TestCase):
     def test_ordering(self):

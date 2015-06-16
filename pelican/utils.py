@@ -1,29 +1,30 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-import six
+from __future__ import print_function, unicode_literals
 
 import codecs
+import datetime
 import errno
 import fnmatch
 import locale
 import logging
 import os
-import pytz
 import re
 import shutil
 import sys
 import traceback
-import pickle
-import datetime
-
 from collections import Hashable
 from contextlib import contextmanager
-import dateutil.parser
 from functools import partial
 from itertools import groupby
-from jinja2 import Markup
 from operator import attrgetter
-from posixpath import join as posix_join
+
+import dateutil.parser
+
+from jinja2 import Markup
+
+import pytz
+
+import six
 from six.moves.html_parser import HTMLParser
 
 logger = logging.getLogger(__name__)
@@ -43,9 +44,9 @@ def strftime(date, date_format):
     formatting them with the date, (if necessary) decoding the output and
     replacing formatted output back.
     '''
-
+    def strip_zeros(x):
+        return x.lstrip('0') or '0'
     c89_directives = 'aAbBcdfHIjmMpSUwWxXyYzZ%'
-    strip_zeros = lambda x: x.lstrip('0') or '0'
 
     # grab candidate format options
     format_options = '%[-]?.'
@@ -200,8 +201,8 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
                 ' and will be removed by version {}'.format(version))
         message.append('.  Use {} instead.'.format(new))
         logger.warning(''.join(message))
-        logger.debug(''.join(
-                six.text_type(x) for x in traceback.format_stack()))
+        logger.debug(''.join(six.text_type(x) for x
+                             in traceback.format_stack()))
 
     def fget(self):
         _warn()
@@ -224,7 +225,7 @@ def get_date(string):
     """
     string = re.sub(' +', ' ', string)
     default = SafeDatetime.now().replace(hour=0, minute=0,
-                                        second=0, microsecond=0)
+                                         second=0, microsecond=0)
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
@@ -319,12 +320,12 @@ def copy(source, destination, ignores=None):
 
         for src_dir, subdirs, others in os.walk(source_):
             dst_dir = os.path.join(destination_,
-                                    os.path.relpath(src_dir, source_))
+                                   os.path.relpath(src_dir, source_))
 
             subdirs[:] = (s for s in subdirs if not any(fnmatch.fnmatch(s, i)
                                                         for i in ignores))
-            others[:] =  (o for o in others  if not any(fnmatch.fnmatch(o, i)
-                                                        for i in ignores))
+            others[:] = (o for o in others if not any(fnmatch.fnmatch(o, i)
+                                                      for i in ignores))
 
             if not os.path.isdir(dst_dir):
                 logger.info('Creating directory %s', dst_dir)
@@ -338,8 +339,10 @@ def copy(source, destination, ignores=None):
                     logger.info('Copying %s to %s', src_path, dst_path)
                     shutil.copy2(src_path, dst_path)
                 else:
-                    logger.warning('Skipped copy %s (not a file or directory) to %s',
+                    logger.warning('Skipped copy %s (not a file or '
+                                   'directory) to %s',
                                    src_path, dst_path)
+
 
 def clean_output_dir(path, retention):
     """Remove all files from output directory except those in retention list"""
@@ -366,8 +369,8 @@ def clean_output_dir(path, retention):
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
             except Exception as e:
-                logger.error("Unable to delete directory %s; %s", 
-                        file, e)
+                logger.error("Unable to delete directory %s; %s",
+                             file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
@@ -507,12 +510,12 @@ def process_translations(content_list, order_by=None):
 
     for slug, items in grouped_by_slugs:
         items = list(items)
-        # items with `translation` metadata will be used as translations…
+        # items with `translation` metadata will be used as translations...
         default_lang_items = list(filter(
-                lambda i: i.metadata.get('translation', 'false').lower()
-                        == 'false',
-                items))
-        # …unless all items with that slug are translations
+            lambda i:
+                i.metadata.get('translation', 'false').lower() == 'false',
+            items))
+        # ...unless all items with that slug are translations
         if not default_lang_items:
             default_lang_items = items
 
@@ -522,13 +525,14 @@ def process_translations(content_list, order_by=None):
             len_ = len(lang_items)
             if len_ > 1:
                 logger.warning('There are %s variants of "%s" with lang %s',
-                    len_, slug, lang)
+                               len_, slug, lang)
                 for x in lang_items:
                     logger.warning('\t%s', x.source_path)
 
         # find items with default language
-        default_lang_items = list(filter(attrgetter('in_default_lang'),
-                default_lang_items))
+        default_lang_items = list(filter(
+            attrgetter('in_default_lang'),
+            default_lang_items))
 
         # if there is no article with default language, take an other one
         if not default_lang_items:
@@ -536,10 +540,9 @@ def process_translations(content_list, order_by=None):
 
         if not slug:
             logger.warning(
-                    'empty slug for %s. '
-                    'You can fix this by adding a title or a slug to your '
-                    'content',
-                    default_lang_items[0].source_path)
+                'Empty slug for %s. You can fix this by '
+                'adding a title or a slug to your content',
+                default_lang_items[0].source_path)
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -567,10 +570,12 @@ def process_translations(content_list, order_by=None):
                     index.sort(key=attrgetter(order_by),
                                reverse=order_reversed)
                 except AttributeError:
-                    logger.warning('There is no "%s" attribute in the item '
+                    logger.warning(
+                        'There is no "%s" attribute in the item '
                         'metadata. Defaulting to slug order.', order_by)
         else:
-            logger.warning('Invalid *_ORDER_BY setting (%s).'
+            logger.warning(
+                'Invalid *_ORDER_BY setting (%s).'
                 'Valid options are strings and functions.', order_by)
 
     return index, translations
@@ -589,12 +594,12 @@ def folder_watcher(path, extensions, ignores=[]):
             dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
 
             for f in files:
-                if (f.endswith(tuple(extensions)) and
-                    not any(fnmatch.fnmatch(f, ignore) for ignore in ignores)):
-                    try:
-                        yield os.stat(os.path.join(root, f)).st_mtime
-                    except OSError as e:
-                        logger.warning('Caught Exception: %s', e)
+                if f.endswith(tuple(extensions)) and \
+                   not any(fnmatch.fnmatch(f, ignore) for ignore in ignores):
+                        try:
+                            yield os.stat(os.path.join(root, f)).st_mtime
+                        except OSError as e:
+                            logger.warning('Caught Exception: %s', e)
 
     LAST_MTIME = 0
     while True:
