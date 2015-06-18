@@ -47,6 +47,8 @@ To make your own theme, you must follow the following structure::
   if it helps you keep things organized while creating your theme.
 
 
+.. _templates-variables:
+
 Templates and variables
 =======================
 
