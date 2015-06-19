@@ -25,6 +25,7 @@ from pelican.urlwrappers import (URLWrapper, Author, Category, Tag)  # NOQA
 logger = logging.getLogger(__name__)
 
 
+@python_2_unicode_compatible
 class Content(object):
     """Represents a content.
 
@@ -148,12 +149,7 @@ class Content(object):
         signals.content_object_init.send(self)
 
     def __str__(self):
-        if self.source_path is None:
-            return repr(self)
-        elif six.PY3:
-            return self.source_path or repr(self)
-        else:
-            return str(self.source_path.encode('utf-8', 'replace'))
+        return self.source_path or repr(self)
 
     def check_properties(self):
         """Test mandatory properties are set."""

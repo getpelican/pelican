@@ -1,7 +1,9 @@
-import os
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import functools
 import logging
-
+import os
 import six
 
 from pelican.utils import (slugify, python_2_unicode_compatible)
@@ -52,27 +54,36 @@ class URLWrapper(object):
     def __hash__(self):
         return hash(self.slug)
 
-    def _key(self):
-        return self.slug
-
     def _normalize_key(self, key):
         subs = self.settings.get('SLUG_SUBSTITUTIONS', ())
         return six.text_type(slugify(key, subs))
 
     def __eq__(self, other):
-        return self._key() == self._normalize_key(other)
+        if isinstance(other, self.__class__):
+            return self.slug == other.slug
+        if isinstance(other, six.text_type):
+            return self.slug == self._normalize_key(other)
+        return False
 
     def __ne__(self, other):
-        return self._key() != self._normalize_key(other)
+        if isinstance(other, self.__class__):
+            return self.slug != other.slug
+        if isinstance(other, six.text_type):
+            return self.slug != self._normalize_key(other)
+        return True
 
     def __lt__(self, other):
-        return self._key() < self._normalize_key(other)
+        if isinstance(other, self.__class__):
+            return self.slug < other.slug
+        if isinstance(other, six.text_type):
+            return self.slug < self._normalize_key(other)
+        return False
 
     def __str__(self):
         return self.name
 
     def __repr__(self):
-        return '<{} {}>'.format(type(self).__name__, str(self))
+        return '<{} {}>'.format(type(self).__name__, repr(self._name))
 
     def _from_settings(self, key, get_page_name=False):
         """Returns URL information as defined in settings.
