@@ -386,7 +386,8 @@ def main():
 
 
 def prepare(args):
-    """ preapres settings received from an argparse or mocked argparse from         different application that imports pelican.
+    """ preapres settings received from an argparse or mocked argparse
+        from different application that imports pelican.
 
     	:param args: argparse.ArgumentParser or mocked argparse Class object
 	:type args: argparse.ArgumentParser or mocked argparse
