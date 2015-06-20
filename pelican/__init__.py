@@ -382,6 +382,15 @@ def get_instance(args):
 
 def main():
     args = parse_arguments()
+    prepare(args)
+
+
+def prepare(args):
+    """ preapres settings received from an argparse or mocked argparse from         different application that imports pelican.
+
+    	:param args: argparse.ArgumentParser or mocked argparse Class object
+	:type args: argparse.ArgumentParser or mocked argparse
+    """
     init(args.verbosity)
     pelican, settings = get_instance(args)
     readers = Readers(settings)
