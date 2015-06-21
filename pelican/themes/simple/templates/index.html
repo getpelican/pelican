@@ -21,6 +21,8 @@
         </article></li>
 {% endfor %}
 </ol><!-- /#posts-list -->
-{% include 'pagination.html' %}
+{% if articles_page.has_other_pages() %}
+    {% include 'pagination.html' %}
+{% endif %}
 </section><!-- /#content -->
 {% endblock content %}
