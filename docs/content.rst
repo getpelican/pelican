@@ -420,22 +420,29 @@ which posts are translations::
 Syntax highlighting
 ===================
 
-Pelican is able to provide colorized syntax highlighting for your code blocks.
-To do so, you have to use the following conventions inside your content files.
+Pelican can provide colorized syntax highlighting for your code blocks.
+To do so, you must use the following conventions inside your content files.
 
-For reStructuredText, use the code-block directive::
+For reStructuredText, use the ``code-block`` directive to specify the type
+of code to be highlighted (in these examples, we'll use ``python``)::
 
-    .. code-block:: identifier
+    .. code-block:: python
 
-       <indented code block goes here>
+       print("Pelican is a static site generator.")
 
-For Markdown, include the language identifier just above the code block,
-indenting both the identifier and code::
+For Markdown, which utilizes the `CodeHilite extension`_ to provide syntax
+highlighting, include the language identifier just above the code block,
+indenting both the identifier and the code::
 
-    A block of text.
+    There are two ways to specify the identifier:
 
-        :::identifier
-        <code goes here>
+        :::python
+        print("The triple-colon syntax will *not* show line numbers.")
+
+    To display line numbers, use a path-less shebang instead of colons:
+
+        #!python
+        print("The path-less shebang syntax *will* show line numbers.")
 
 The specified identifier (e.g. ``python``, ``ruby``) should be one that
 appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
@@ -521,4 +528,5 @@ metadata to include ``Status: published``.
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: http://github.com/getpelican/pelican-plugins
 .. _Markdown Extensions: http://pythonhosted.org/Markdown/extensions/
+.. _CodeHilite extension: http://pythonhosted.org/Markdown/extensions/code_hilite.html#syntax
 .. _i18n_subsites plugin: http://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
