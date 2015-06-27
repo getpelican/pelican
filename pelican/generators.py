@@ -577,7 +577,7 @@ class ArticlesGenerator(CachingGenerator):
         self.authors.sort()
 
         self._update_context(('articles', 'dates', 'tags', 'categories',
-                              'authors', 'related_posts'))
+                              'authors', 'related_posts', 'drafts'))
         self.save_cache()
         self.readers.save_cache()
         signals.article_generator_finalized.send(self)
@@ -643,7 +643,7 @@ class PagesGenerator(CachingGenerator):
         self.hidden_pages, self.hidden_translations = (
             process_translations(hidden_pages))
 
-        self._update_context(('pages', ))
+        self._update_context(('pages', 'hidden_pages'))
         self.context['PAGES'] = self.pages
 
         self.save_cache()

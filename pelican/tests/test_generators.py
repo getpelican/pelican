@@ -491,7 +491,13 @@ class TestPageGenerator(unittest.TestCase):
         ]
 
         self.assertEqual(sorted(pages_expected), sorted(pages))
+        self.assertEqual(
+            sorted(pages_expected),
+            sorted(self.distill_pages(generator.context['pages'])))
         self.assertEqual(sorted(hidden_pages_expected), sorted(hidden_pages))
+        self.assertEqual(
+            sorted(hidden_pages_expected),
+            sorted(self.distill_pages(generator.context['hidden_pages'])))
 
     def test_generate_sorted(self):
         settings = get_settings(filenames={})
