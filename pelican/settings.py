@@ -131,7 +131,11 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': False,
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
-    }
+    'GENERATE_TAGS': True,
+    'GENERATE_CATEGORIES': True,
+    'GENERATE_AUTHORS': True,
+    'GENERATE_ARCHIVES': True
+}
 
 PYGMENTS_RST_OPTIONS = None
 

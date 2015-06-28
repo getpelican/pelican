@@ -484,13 +484,21 @@ class ArticlesGenerator(CachingGenerator):
         # to minimize the number of relative path stuff modification
         # in writer, articles pass first
         self.generate_articles(write)
-        self.generate_period_archives(write)
+
+        if self.settings.get('GENERATE_ARCHIVES'):
+            self.generate_period_archives(write)
         self.generate_direct_templates(write)
 
         # and subfolders after that
-        self.generate_tags(write)
-        self.generate_categories(write)
-        self.generate_authors(write)
+        if self.settings.get('GENERATE_TAGS'):
+            self.generate_tags(write)
+
+        if self.settings.get('GENERATE_CATEGORIES'):
+            self.generate_categories(write)
+
+        if self.settings.get('GENERATE_AUTHORS'):
+            self.generate_authors(write)
+
         self.generate_drafts(write)
 
     def generate_context(self):
