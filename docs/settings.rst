@@ -220,6 +220,10 @@ Setting name (followed by default value, if any)                                
                                                                                  :ref:`writing_only_selected_content`.
 ``FORMATTED_FIELDS = ['summary']``                                               A list of metadata fields containing reST/Markdown content to be
                                                                                  parsed and translated to HTML.
+``GENERATE_TAGS = True``                                                         If ``False``, Tags pages won't be generated.
+``GENERATE_CATEGORIES = True``                                                   If ``False``, category pages won't be generated.
+``GENERATE_AUTHORS = True``                                                      If ``False``, Author pages won't be generated.
+``GENERATE_ARCHIVES = True``                                                     If ``False``, archive pages won't be generated.
 ===============================================================================  =====================================================================
 
 .. [#] Default is the system locale.
@@ -796,8 +800,8 @@ can be invoked by passing the ``--archive`` flag).
 
 The cache files are Python pickles, so they may not be readable by
 different versions of Python as the pickle format often changes. If
-such an error is encountered, it is caught and the cache file is 
-rebuilt automatically in the new format. The cache files will also be 
+such an error is encountered, it is caught and the cache file is
+rebuilt automatically in the new format. The cache files will also be
 rebuilt after the ``GZIP_CACHE`` setting has been changed.
 
 The ``--ignore-cache`` command-line option is useful when the
