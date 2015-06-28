@@ -578,30 +578,3 @@ class TestStatic(unittest.TestCase):
         content = page.get_content('')
 
         self.assertNotEqual(content, html)
-
-
-class TestURLWrapper(unittest.TestCase):
-    def test_comparisons(self):
-        # URLWrappers are sorted by name
-        wrapper_a = URLWrapper(name='first', settings={})
-        wrapper_b = URLWrapper(name='last', settings={})
-        self.assertFalse(wrapper_a > wrapper_b)
-        self.assertFalse(wrapper_a >= wrapper_b)
-        self.assertFalse(wrapper_a == wrapper_b)
-        self.assertTrue(wrapper_a != wrapper_b)
-        self.assertTrue(wrapper_a <= wrapper_b)
-        self.assertTrue(wrapper_a < wrapper_b)
-        wrapper_b.name = 'first'
-        self.assertFalse(wrapper_a > wrapper_b)
-        self.assertTrue(wrapper_a >= wrapper_b)
-        self.assertTrue(wrapper_a == wrapper_b)
-        self.assertFalse(wrapper_a != wrapper_b)
-        self.assertTrue(wrapper_a <= wrapper_b)
-        self.assertFalse(wrapper_a < wrapper_b)
-        wrapper_a.name = 'last'
-        self.assertTrue(wrapper_a > wrapper_b)
-        self.assertTrue(wrapper_a >= wrapper_b)
-        self.assertFalse(wrapper_a == wrapper_b)
-        self.assertTrue(wrapper_a != wrapper_b)
-        self.assertFalse(wrapper_a <= wrapper_b)
-        self.assertFalse(wrapper_a < wrapper_b)
