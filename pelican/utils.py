@@ -576,7 +576,7 @@ def folder_watcher(path, extensions, ignores=[]):
     def file_times(path):
         '''Return `mtime` for each file in path'''
 
-        for root, dirs, files in os.walk(path):
+        for root, dirs, files in os.walk(path, followlinks=True):
             dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
 
             for f in files:
