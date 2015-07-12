@@ -35,7 +35,6 @@ class TestCache(unittest.TestCase):
         settings['CACHE_PATH'] = self.temp_cache
         return settings
 
-
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_object_caching(self):
         """Test Article objects caching at the generator level"""
@@ -43,7 +42,6 @@ class TestCache(unittest.TestCase):
         settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
-
 
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
@@ -108,7 +106,8 @@ class TestCache(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
+        self.assertEqual(
+            generator.readers.read_file.call_count, orig_call_count)
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_object_caching(self):
@@ -181,5 +180,5 @@ class TestCache(unittest.TestCase):
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
-
+        self.assertEqual(
+            generator.readers.read_file.call_count, orig_call_count)

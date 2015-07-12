@@ -167,12 +167,13 @@ def get_settings(**kwargs):
     Set keyword arguments to override specific settings.
     """
     settings = DEFAULT_CONFIG.copy()
-    for key,value in kwargs.items():
+    for key, value in kwargs.items():
         settings[key] = value
     return settings
 
 
 class LogCountHandler(BufferingHandler):
+
     """Capturing and counting logged messages."""
 
     def __init__(self, capacity=1000):
@@ -180,12 +181,13 @@ class LogCountHandler(BufferingHandler):
 
     def count_logs(self, msg=None, level=None):
         return len([l for l in self.buffer
-            if (msg is None or re.match(msg, l.getMessage()))
-            and (level is None or l.levelno == level)
-            ])
+                    if (msg is None or re.match(msg, l.getMessage()))
+                    and (level is None or l.levelno == level)
+                    ])
 
 
 class LoggedTestCase(unittest.TestCase):
+
     """A test case that captures log messages."""
 
     def setUp(self):

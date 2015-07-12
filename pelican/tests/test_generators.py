@@ -24,6 +24,7 @@ CONTENT_DIR = os.path.join(CUR_DIR, 'content')
 
 
 class TestGenerator(unittest.TestCase):
+
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
@@ -34,7 +35,6 @@ class TestGenerator(unittest.TestCase):
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
-
 
     def test_include_path(self):
         self.settings['IGNORE_FILES'] = {'ignored1.rst', 'ignored2.rst'}
@@ -53,40 +53,41 @@ class TestGenerator(unittest.TestCase):
         """
         # We use our own Generator so we can give it our own content path
         generator = Generator(context=self.settings.copy(),
-            settings=self.settings,
-            path=os.path.join(CUR_DIR, 'nested_content'),
-            theme=self.settings['THEME'], output_path=None)
+                              settings=self.settings,
+                              path=os.path.join(CUR_DIR, 'nested_content'),
+                              theme=self.settings['THEME'], output_path=None)
 
         filepaths = generator.get_files(paths=['maindir'])
         found_files = {os.path.basename(f) for f in filepaths}
         expected_files = {'maindir.md', 'subdir.md'}
         self.assertFalse(expected_files - found_files,
-            "get_files() failed to find one or more files")
+                         "get_files() failed to find one or more files")
 
         # Test string as `paths` argument rather than list
         filepaths = generator.get_files(paths='maindir')
         found_files = {os.path.basename(f) for f in filepaths}
         expected_files = {'maindir.md', 'subdir.md'}
         self.assertFalse(expected_files - found_files,
-            "get_files() failed to find one or more files")
+                         "get_files() failed to find one or more files")
 
         filepaths = generator.get_files(paths=[''], exclude=['maindir'])
         found_files = {os.path.basename(f) for f in filepaths}
         self.assertNotIn('maindir.md', found_files,
-            "get_files() failed to exclude a top-level directory")
+                         "get_files() failed to exclude a top-level directory")
         self.assertNotIn('subdir.md', found_files,
-            "get_files() failed to exclude a subdir of an excluded directory")
+                         "get_files() failed to exclude a subdir of an excluded directory")
 
         filepaths = generator.get_files(paths=[''],
-            exclude=[os.path.join('maindir', 'subdir')])
+                                        exclude=[os.path.join('maindir', 'subdir')])
         found_files = {os.path.basename(f) for f in filepaths}
         self.assertNotIn('subdir.md', found_files,
-            "get_files() failed to exclude a subdirectory")
+                         "get_files() failed to exclude a subdirectory")
 
         filepaths = generator.get_files(paths=[''], exclude=['subdir'])
         found_files = {os.path.basename(f) for f in filepaths}
         self.assertIn('subdir.md', found_files,
-            "get_files() excluded a subdirectory by name, ignoring its path")
+                      "get_files() excluded a subdirectory by name, ignoring its path")
+
 
 class TestArticlesGenerator(unittest.TestCase):
 
@@ -96,7 +97,8 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
-        settings['CACHE_CONTENT'] = False   # cache not needed for this logic tests
+        # cache not needed for this logic tests
+        settings['CACHE_CONTENT'] = False
 
         cls.generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
@@ -152,23 +154,28 @@ class TestArticlesGenerator(unittest.TestCase):
             ['Test mkd File', 'published', 'test', 'article'],
             ['This is a super article !', 'published', 'Yeah', 'article'],
             ['This is a super article !', 'published', 'Yeah', 'article'],
-            ['Article with Nonconformant HTML meta tags', 'published', 'Default', 'article'],
+            ['Article with Nonconformant HTML meta tags',
+                'published', 'Default', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['This is a super article !', 'published', 'Default', 'article'],
             ['This is an article with category !', 'published', 'yeah',
              'article'],
-            ['This is an article with multiple authors!', 'published', 'Default', 'article'],
-            ['This is an article with multiple authors!', 'published', 'Default', 'article'],
-            ['This is an article with multiple authors in list format!', 'published', 'Default', 'article'],
-            ['This is an article with multiple authors in lastname, firstname format!', 'published', 'Default', 'article'],
+            ['This is an article with multiple authors!',
+                'published', 'Default', 'article'],
+            ['This is an article with multiple authors!',
+                'published', 'Default', 'article'],
+            ['This is an article with multiple authors in list format!',
+                'published', 'Default', 'article'],
+            ['This is an article with multiple authors in lastname, firstname format!',
+                'published', 'Default', 'article'],
             ['This is an article without category !', 'published', 'Default',
              'article'],
             ['This is an article without category !', 'published',
              'TestCategory', 'article'],
             ['An Article With Code Block To Test Typogrify Ignore',
-              'published', 'Default', 'article'],
+             'published', 'Default', 'article'],
             ['マックOS X 10.8でパイソンとVirtualenvをインストールと設定', 'published',
              '指導書', 'article'],
         ]
@@ -292,7 +299,7 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_period_archives(write)
         dates = [d for d in generator.dates if d.date.year == 1970]
         self.assertEqual(len(dates), 1)
-        #among other things it must have at least been called with this
+        # among other things it must have at least been called with this
         settings["period"] = (1970,)
         write.assert_called_with("posts/1970/index.html",
                                  generator.get_template("period_archives"),
@@ -300,7 +307,8 @@ class TestArticlesGenerator(unittest.TestCase):
                                  blog=True, dates=dates)
 
         del settings["period"]
-        settings['MONTH_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/index.html'
+        settings[
+            'MONTH_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -308,17 +316,18 @@ class TestArticlesGenerator(unittest.TestCase):
         write = MagicMock()
         generator.generate_period_archives(write)
         dates = [d for d in generator.dates if d.date.year == 1970
-                                            and d.date.month == 1]
+                 and d.date.month == 1]
         self.assertEqual(len(dates), 1)
         settings["period"] = (1970, "January")
-        #among other things it must have at least been called with this
+        # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/index.html",
                                  generator.get_template("period_archives"),
                                  settings,
                                  blog=True, dates=dates)
 
         del settings["period"]
-        settings['DAY_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
+        settings[
+            'DAY_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -326,11 +335,11 @@ class TestArticlesGenerator(unittest.TestCase):
         write = MagicMock()
         generator.generate_period_archives(write)
         dates = [d for d in generator.dates if d.date.year == 1970
-                                            and d.date.month == 1
-                                            and d.date.day == 1]
+                 and d.date.month == 1
+                 and d.date.day == 1]
         self.assertEqual(len(dates), 1)
         settings["period"] = (1970, "January", 1)
-        #among other things it must have at least been called with this
+        # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/01/index.html",
                                  generator.get_template("period_archives"),
                                  settings,
@@ -347,11 +356,13 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_generate_authors(self):
         """Check authors generation."""
         authors = [author.name for author, _ in self.generator.authors]
-        authors_expected = sorted(['Alexis Métaireau', 'Author, First', 'Author, Second', 'First Author', 'Second Author'])
+        authors_expected = sorted(
+            ['Alexis Métaireau', 'Author, First', 'Author, Second', 'First Author', 'Second Author'])
         self.assertEqual(sorted(authors), authors_expected)
         # test for slug
         authors = [author.slug for author, _ in self.generator.authors]
-        authors_expected = ['alexis-metaireau', 'author-first', 'author-second', 'first-author', 'second-author']
+        authors_expected = ['alexis-metaireau', 'author-first',
+                            'author-second', 'first-author', 'second-author']
         self.assertEqual(sorted(authors), sorted(authors_expected))
 
     def test_standard_metadata_in_default_metadata(self):
@@ -391,7 +402,8 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
-        settings['CACHE_CONTENT'] = False   # cache not needed for this logic tests
+        # cache not needed for this logic tests
+        settings['CACHE_CONTENT'] = False
         settings['ARTICLE_ORDER_BY'] = 'title'
 
         generator = ArticlesGenerator(
@@ -435,7 +447,8 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
-        settings['CACHE_CONTENT'] = False   # cache not needed for this logic tests
+        # cache not needed for this logic tests
+        settings['CACHE_CONTENT'] = False
         settings['ARTICLE_ORDER_BY'] = 'reversed-title'
 
         generator = ArticlesGenerator(
@@ -561,7 +574,7 @@ class TestPageGenerator(unittest.TestCase):
         are generated correctly on pages
         """
         settings = get_settings(filenames={})
-        settings['PAGE_PATHS'] = ['TestPages'] # relative to CUR_DIR
+        settings['PAGE_PATHS'] = ['TestPages']  # relative to CUR_DIR
         settings['CACHE_PATH'] = self.temp_cache
         settings['DEFAULT_DATE'] = (1970, 1, 1)
 
@@ -585,7 +598,6 @@ class TestTemplatePagesGenerator(unittest.TestCase):
         self.temp_output = mkdtemp(prefix='pelicantests.')
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
-
 
     def tearDown(self):
         rmtree(self.temp_content)
@@ -633,21 +645,21 @@ class TestStaticGenerator(unittest.TestCase):
         """Test that StaticGenerator respects STATIC_EXCLUDES.
         """
         settings = get_settings(STATIC_EXCLUDES=['subdir'],
-            PATH=self.content_path, STATIC_PATHS=[''])
+                                PATH=self.content_path, STATIC_PATHS=[''])
         context = settings.copy()
         context['filenames'] = {}
 
         StaticGenerator(context=context, settings=settings,
-            path=settings['PATH'], output_path=None,
-            theme=settings['THEME']).generate_context()
+                        path=settings['PATH'], output_path=None,
+                        theme=settings['THEME']).generate_context()
 
         staticnames = [os.path.basename(c.source_path)
-            for c in context['staticfiles']]
+                       for c in context['staticfiles']]
 
         self.assertNotIn('subdir_fake_image.jpg', staticnames,
-            "StaticGenerator processed a file in a STATIC_EXCLUDES directory")
+                         "StaticGenerator processed a file in a STATIC_EXCLUDES directory")
         self.assertIn('fake_image.jpg', staticnames,
-            "StaticGenerator skipped a file that it should have included")
+                      "StaticGenerator skipped a file that it should have included")
 
     def test_static_exclude_sources(self):
         """Test that StaticGenerator respects STATIC_EXCLUDE_SOURCES.
@@ -655,21 +667,21 @@ class TestStaticGenerator(unittest.TestCase):
         # Test STATIC_EXCLUDE_SOURCES=True
 
         settings = get_settings(STATIC_EXCLUDE_SOURCES=True,
-            PATH=self.content_path, PAGE_PATHS=[''], STATIC_PATHS=[''],
-            CACHE_CONTENT=False)
+                                PATH=self.content_path, PAGE_PATHS=[''], STATIC_PATHS=[''],
+                                CACHE_CONTENT=False)
         context = settings.copy()
         context['filenames'] = {}
 
         for generator_class in (PagesGenerator, StaticGenerator):
             generator_class(context=context, settings=settings,
-                path=settings['PATH'], output_path=None,
-                theme=settings['THEME']).generate_context()
+                            path=settings['PATH'], output_path=None,
+                            theme=settings['THEME']).generate_context()
 
         staticnames = [os.path.basename(c.source_path)
-            for c in context['staticfiles']]
+                       for c in context['staticfiles']]
 
         self.assertFalse(any(name.endswith(".md") for name in staticnames),
-            "STATIC_EXCLUDE_SOURCES=True failed to exclude a markdown file")
+                         "STATIC_EXCLUDE_SOURCES=True failed to exclude a markdown file")
 
         # Test STATIC_EXCLUDE_SOURCES=False
 
@@ -679,12 +691,11 @@ class TestStaticGenerator(unittest.TestCase):
 
         for generator_class in (PagesGenerator, StaticGenerator):
             generator_class(context=context, settings=settings,
-                path=settings['PATH'], output_path=None,
-                theme=settings['THEME']).generate_context()
+                            path=settings['PATH'], output_path=None,
+                            theme=settings['THEME']).generate_context()
 
         staticnames = [os.path.basename(c.source_path)
-            for c in context['staticfiles']]
+                       for c in context['staticfiles']]
 
         self.assertTrue(any(name.endswith(".md") for name in staticnames),
-            "STATIC_EXCLUDE_SOURCES=False failed to include a markdown file")
-
+                        "STATIC_EXCLUDE_SOURCES=False failed to include a markdown file")

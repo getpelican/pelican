@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 @python_2_unicode_compatible
 @functools.total_ordering
 class URLWrapper(object):
+
     def __init__(self, name, settings):
         self.settings = settings
         self._name = name
@@ -105,7 +106,7 @@ class URLWrapper(object):
                 return value.format(**self.as_dict())
 
     page_name = property(functools.partial(_from_settings, key='URL',
-                         get_page_name=True))
+                                           get_page_name=True))
     url = property(functools.partial(_from_settings, key='URL'))
     save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
 
@@ -115,6 +116,7 @@ class Category(URLWrapper):
 
 
 class Tag(URLWrapper):
+
     def __init__(self, name, *args, **kwargs):
         super(Tag, self).__init__(name.strip(), *args, **kwargs)
 

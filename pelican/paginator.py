@@ -20,6 +20,7 @@ PaginationRule = namedtuple(
 
 
 class Paginator(object):
+
     def __init__(self, name, object_list, settings):
         self.name = name
         self.object_list = object_list
@@ -68,6 +69,7 @@ class Paginator(object):
 
 
 class Page(object):
+
     def __init__(self, name, object_list, number, paginator, settings):
         self.name, self.extension = os.path.splitext(name)
         self.object_list = object_list

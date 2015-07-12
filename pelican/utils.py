@@ -91,6 +91,7 @@ def strftime(date, date_format):
 
 
 class SafeDatetime(datetime.datetime):
+
     '''Subclass of datetime that works with utf-8 format strings on PY2'''
 
     def strftime(self, fmt, safe=True):
@@ -102,6 +103,7 @@ class SafeDatetime(datetime.datetime):
 
 
 class DateFormatter(object):
+
     '''A date formatter object used as a jinja filter
 
     Uses the `strftime` implementation and makes sure jinja uses the locale
@@ -144,12 +146,14 @@ def python_2_unicode_compatible(klass):
 
 
 class memoized(object):
+
     """Function decorator to cache return values.
 
     If called later with the same arguments, the cached value is returned
     (not reevaluated).
 
     """
+
     def __init__(self, func):
         self.func = func
         self.cache = {}
@@ -200,7 +204,7 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
         message.append('.  Use {} instead.'.format(new))
         logger.warning(''.join(message))
         logger.debug(''.join(
-                six.text_type(x) for x in traceback.format_stack()))
+            six.text_type(x) for x in traceback.format_stack()))
 
     def fget(self):
         _warn()
@@ -223,7 +227,7 @@ def get_date(string):
     """
     string = re.sub(' +', ' ', string)
     default = SafeDatetime.now().replace(hour=0, minute=0,
-                                        second=0, microsecond=0)
+                                         second=0, microsecond=0)
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
@@ -318,12 +322,12 @@ def copy(source, destination, ignores=None):
 
         for src_dir, subdirs, others in os.walk(source_):
             dst_dir = os.path.join(destination_,
-                                    os.path.relpath(src_dir, source_))
+                                   os.path.relpath(src_dir, source_))
 
             subdirs[:] = (s for s in subdirs if not any(fnmatch.fnmatch(s, i)
                                                         for i in ignores))
-            others[:] =  (o for o in others  if not any(fnmatch.fnmatch(o, i)
-                                                        for i in ignores))
+            others[:] = (o for o in others if not any(fnmatch.fnmatch(o, i)
+                                                      for i in ignores))
 
             if not os.path.isdir(dst_dir):
                 logger.info('Creating directory %s', dst_dir)
@@ -339,6 +343,7 @@ def copy(source, destination, ignores=None):
                 else:
                     logger.warning('Skipped copy %s (not a file or directory) to %s',
                                    src_path, dst_path)
+
 
 def clean_output_dir(path, retention):
     """Remove all files from output directory except those in retention list"""
@@ -365,8 +370,8 @@ def clean_output_dir(path, retention):
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
             except Exception as e:
-                logger.error("Unable to delete directory %s; %s", 
-                        file, e)
+                logger.error("Unable to delete directory %s; %s",
+                             file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
@@ -500,9 +505,9 @@ def process_translations(content_list, order_by=None):
         items = list(items)
         # items with `translation` metadata will be used as translations…
         default_lang_items = list(filter(
-                lambda i: i.metadata.get('translation', 'false').lower()
-                        == 'false',
-                items))
+            lambda i: i.metadata.get('translation', 'false').lower()
+            == 'false',
+            items))
         # …unless all items with that slug are translations
         if not default_lang_items:
             default_lang_items = items
@@ -513,13 +518,13 @@ def process_translations(content_list, order_by=None):
             len_ = len(lang_items)
             if len_ > 1:
                 logger.warning('There are %s variants of "%s" with lang %s',
-                    len_, slug, lang)
+                               len_, slug, lang)
                 for x in lang_items:
                     logger.warning('\t%s', x.source_path)
 
         # find items with default language
         default_lang_items = list(filter(attrgetter('in_default_lang'),
-                default_lang_items))
+                                         default_lang_items))
 
         # if there is no article with default language, take an other one
         if not default_lang_items:
@@ -527,10 +532,10 @@ def process_translations(content_list, order_by=None):
 
         if not slug:
             logger.warning(
-                    'empty slug for %s. '
-                    'You can fix this by adding a title or a slug to your '
-                    'content',
-                    default_lang_items[0].source_path)
+                'empty slug for %s. '
+                'You can fix this by adding a title or a slug to your '
+                'content',
+                default_lang_items[0].source_path)
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -559,10 +564,10 @@ def process_translations(content_list, order_by=None):
                                reverse=order_reversed)
                 except AttributeError:
                     logger.warning('There is no "%s" attribute in the item '
-                        'metadata. Defaulting to slug order.', order_by)
+                                   'metadata. Defaulting to slug order.', order_by)
         else:
             logger.warning('Invalid *_ORDER_BY setting (%s).'
-                'Valid options are strings and functions.', order_by)
+                           'Valid options are strings and functions.', order_by)
 
     return index, translations
 
@@ -581,7 +586,7 @@ def folder_watcher(path, extensions, ignores=[]):
 
             for f in files:
                 if (f.endswith(tuple(extensions)) and
-                    not any(fnmatch.fnmatch(f, ignore) for ignore in ignores)):
+                        not any(fnmatch.fnmatch(f, ignore) for ignore in ignores)):
                     try:
                         yield os.stat(os.path.join(root, f)).st_mtime
                     except OSError as e:
