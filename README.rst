@@ -59,9 +59,9 @@ Why the name "Pelican"?
 .. |build-status| image:: https://img.shields.io/travis/getpelican/pelican/master.svg
    :target: https://travis-ci.org/getpelican/pelican
    :alt: Travis CI: continuous integration status
-.. |coverage-status| image:: https://img.shields.io/coveralls/getpelican/pelican.svg
-   :target: https://coveralls.io/r/getpelican/pelican
-   :alt: Coveralls: code coverage status
+.. |coverage-status| image:: https://img.shields.io/codecov/c/github/getpelican/pelican.svg
+   :target: https://codecov.io/github/getpelican/pelican
+   :alt: Codecov: code coverage status
 .. |pypi-version| image:: https://img.shields.io/pypi/v/pelican.svg
    :target: https://pypi.python.org/pypi/pelican
    :alt: PyPI: the Python Package Index
