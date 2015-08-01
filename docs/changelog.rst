@@ -4,7 +4,10 @@ Release history
 Next release
 ============
 
-- Nothing yet
+* Fix installation errors related to Unicode in tests
+* Don't show pagination in ``notmyidea`` theme if there's only one page
+* Make hidden pages available in context
+* Improve URLWrapper comparison
 
 3.6.0 (2015-06-15)
 ==================
