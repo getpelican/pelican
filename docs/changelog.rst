@@ -1,8 +1,8 @@
 Release history
 ###############
 
-Next release
-============
+3.6.2 (2015-08-01)
+==================
 
 * Fix installation errors related to Unicode in tests
 * Don't show pagination in ``notmyidea`` theme if there's only one page
