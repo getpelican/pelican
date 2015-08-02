@@ -644,7 +644,6 @@ class PagesGenerator(CachingGenerator):
             process_translations(hidden_pages))
 
         self._update_context(('pages', 'hidden_pages'))
-        self.context['PAGES'] = self.pages
 
         self.save_cache()
         self.readers.save_cache()

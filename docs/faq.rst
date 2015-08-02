@@ -250,3 +250,16 @@ moved out of the pelican core and into a separate `plugin
 <https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud>`_.
 See the :ref:`plugins` documentation further information about the
 Pelican plugin system.
+
+Since I upgraded Pelican my Pages are no longer rendered
+========================================================
+Pages were available to Themes as lowercase ``pages`` and uppercase
+``PAGES``. To bring this inline with the :ref:`templates-variables` section,
+``PAGES`` has been removed. This is quickly resolved by updating your theme
+to iterate over ``pages`` instead of ``PAGES``. Just replace::
+
+    {% for pg in PAGES %}
+
+with something like::
+
+    {% for pg in pages %}
