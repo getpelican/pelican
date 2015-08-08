@@ -248,6 +248,11 @@ class Content(object):
                 origin = '/'.join((siteurl, Category(path, self.settings).url))
             elif what == 'tag':
                 origin = '/'.join((siteurl, Tag(path, self.settings).url))
+            else:
+                logger.warning(
+                        "Replacement Indicator '%s' not recognized, "
+                        "skipping replacement",
+                        what)
 
             # keep all other parts, such as query, fragment, etc.
             parts = list(value)

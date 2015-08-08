@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, absolute_import
 
+import logging
 import locale
 import os.path
 import six
@@ -11,7 +12,7 @@ from pelican.contents import (Page, Article, Static, URLWrapper,
                               Author, Category)
 from pelican.settings import DEFAULT_CONFIG
 from pelican.signals import content_object_init
-from pelican.tests.support import unittest, get_settings
+from pelican.tests.support import LoggedTestCase, mute, unittest, get_settings
 from pelican.utils import (path_to_url, truncate_html_words, SafeDatetime,
                            posix_join)
 
@@ -413,10 +414,10 @@ class TestArticle(TestPage):
         self.assertEqual(article.save_as, 'obrien/csharp-stuff/fnord/index.html')
 
 
-class TestStatic(unittest.TestCase):
+class TestStatic(LoggedTestCase):
 
     def setUp(self):
-
+        super(TestStatic, self).setUp()
         self.settings = get_settings(
             STATIC_SAVE_AS='{path}',
             STATIC_URL='{path}',
@@ -578,3 +579,20 @@ class TestStatic(unittest.TestCase):
         content = page.get_content('')
 
         self.assertNotEqual(content, html)
+
+    def test_unknown_link_syntax(self):
+        "{unknown} link syntax should trigger warning."
+
+        html = '<a href="{unknown}foo">link</a>'
+        page = Page(content=html,
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+                    context=self.context)
+        content =  page.get_content('')
+
+        self.assertEqual(content, html)
+        self.assertLogCountEqual(
+                count=1,
+                msg="Replacement Indicator 'unknown' not recognized, "
+                    "skipping replacement",
+                level=logging.WARNING)
