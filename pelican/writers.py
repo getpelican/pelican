@@ -79,7 +79,8 @@ class Writer(object):
         self._written_files.add(filename)
         return open(filename, 'w', encoding=encoding)
 
-    def write_feed(self, elements, context, path=None, feed_type='atom'):
+    def write_feed(self, elements, context, path=None, feed_type='atom',
+                   override_output=False):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no path or output_path is specified, just
@@ -89,6 +90,9 @@ class Writer(object):
         :param context: the context to get the feed metadata.
         :param path: the path to output.
         :param feed_type: the feed type to use (atom or rss)
+        :param override_output: boolean telling if we can override previous
+            output with the same name (and if next files written with the same
+            name should be skipped to keep that one)
         """
         if not is_selected_for_writing(self.settings, path):
             return
@@ -115,7 +119,7 @@ class Writer(object):
                 pass
 
             encoding = 'utf-8' if six.PY3 else None
-            with self._open_w(complete_path, encoding) as fp:
+            with self._open_w(complete_path, encoding, override_output) as fp:
                 feed.write(fp, 'utf-8')
                 logger.info('Writing %s', complete_path)
 
