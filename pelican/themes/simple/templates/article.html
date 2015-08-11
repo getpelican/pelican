@@ -5,9 +5,9 @@
     <meta name="keywords" content="{{keyword}}" />
   {% endfor %}
 
-  {% for description in article.description %}
-    <meta name="description" content="{{description}}" />
-  {% endfor %}
+  {% if article.description %}
+    <meta name="description" content="{{article.description}}" />
+  {% endif %}
 
   {% for tag in article.tags %}
     <meta name="tags" content="{{tag}}" />
