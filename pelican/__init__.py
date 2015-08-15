@@ -26,7 +26,7 @@ from pelican.utils import (clean_output_dir, folder_watcher,
                            file_watcher, maybe_pluralize)
 from pelican.writers import Writer
 
-__version__ = "3.6.3"
+__version__ = "3.6.4.dev0"
 
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 
