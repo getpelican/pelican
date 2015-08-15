@@ -24,6 +24,7 @@ from itertools import groupby
 from jinja2 import Markup
 from operator import attrgetter
 from posixpath import join as posix_join
+from six.moves.html_parser import HTMLParser
 
 logger = logging.getLogger(__name__)
 
@@ -402,6 +403,58 @@ def posixize_path(rel_path):
     return rel_path.replace(os.sep, '/')
 
 
+class _HTMLWordTruncator(HTMLParser):
+
+    _word_regex = re.compile(r'\w[\w-]*', re.U)
+    _singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
+                 'hr', 'input')
+
+    def __init__(self, max_words):
+        # In Python 2, HTMLParser is not a new-style class,
+        # hence super() cannot be used.
+        HTMLParser.__init__(self)
+
+        self.max_words = max_words
+        self.words_found = 0
+        self.open_tags = []
+        self.truncate_at = None
+
+    def handle_starttag(self, tag, attrs):
+        if self.truncate_at is not None:
+            return
+        if tag not in self._singlets:
+            self.open_tags.insert(0, tag)
+
+    def handle_endtag(self, tag):
+        if self.truncate_at is not None:
+            return
+        try:
+            i = self.open_tags.index(tag)
+        except ValueError:
+            pass
+        else:
+            # SGML: An end tag closes, back to the matching start tag,
+            # all unclosed intervening start tags with omitted end tags
+            del self.open_tags[:i + 1]
+
+    def handle_data(self, data):
+        word_end = 0
+
+        while self.words_found < self.max_words:
+            match = self._word_regex.search(data, word_end)
+            if not match:
+                break
+            word_end = match.end(0)
+            self.words_found += 1
+
+            if self.words_found == self.max_words:
+                line_start = 0
+                lineno, line_offset = self.getpos()
+                for i in range(lineno - 1):
+                    line_start = self.rawdata.index('\n', line_start) + 1
+                self.truncate_at = line_start + line_offset + word_end
+
+
 def truncate_html_words(s, num, end_text='...'):
     """Truncates HTML to a certain number of words.
 
@@ -414,59 +467,15 @@ def truncate_html_words(s, num, end_text='...'):
     length = int(num)
     if length <= 0:
         return ''
-    html4_singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
-                      'hr', 'input')
-
-    # Set up regular expressions
-    re_words = re.compile(r'&.*?;|<.*?>|(\w[\w-]*)', re.U)
-    re_tag = re.compile(r'<(/)?([^ ]+?)(?: (/)| .*?)?>')
-    # Count non-HTML words and keep note of open tags
-    pos = 0
-    end_text_pos = 0
-    words = 0
-    open_tags = []
-    while words <= length:
-        m = re_words.search(s, pos)
-        if not m:
-            # Checked through whole string
-            break
-        pos = m.end(0)
-        if m.group(1):
-            # It's an actual non-HTML word
-            words += 1
-            if words == length:
-                end_text_pos = pos
-            continue
-        # Check for tag
-        tag = re_tag.match(m.group(0))
-        if not tag or end_text_pos:
-            # Don't worry about non tags or tags after our truncate point
-            continue
-        closing_tag, tagname, self_closing = tag.groups()
-        tagname = tagname.lower()  # Element names are always case-insensitive
-        if self_closing or tagname in html4_singlets:
-            pass
-        elif closing_tag:
-            # Check for match in open tags list
-            try:
-                i = open_tags.index(tagname)
-            except ValueError:
-                pass
-            else:
-                # SGML: An end tag closes, back to the matching start tag,
-                # all unclosed intervening start tags with omitted end tags
-                open_tags = open_tags[i + 1:]
-        else:
-            # Add it to the start of the open tags list
-            open_tags.insert(0, tagname)
-    if words <= length:
-        # Don't try to close tags if we don't need to truncate
+    truncator = _HTMLWordTruncator(length)
+    truncator.feed(s)
+    if truncator.truncate_at is None:
         return s
-    out = s[:end_text_pos]
+    out = s[:truncator.truncate_at]
     if end_text:
         out += ' ' + end_text
     # Close any tags still open
-    for tag in open_tags:
+    for tag in truncator.open_tags:
         out += '</%s>' % tag
     # Return string
     return out

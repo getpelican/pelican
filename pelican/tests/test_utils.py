@@ -144,6 +144,32 @@ class TestUtils(LoggedTestCase):
         for value, expected in samples:
             self.assertEqual(utils.get_relative_path(value), expected)
 
+    def test_truncate_html_words(self):
+        self.assertEqual(
+            utils.truncate_html_words('short string', 20),
+            'short string')
+
+        self.assertEqual(
+            utils.truncate_html_words('word ' * 100, 20),
+            'word ' * 20 + '...')
+
+        self.assertEqual(
+            utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20),
+            '<p>' + 'word ' * 20 + '...</p>')
+
+        self.assertEqual(
+            utils.truncate_html_words(
+                '<span\nstyle="\n...\n">' + 'word ' * 100 + '</span>', 20),
+            '<span\nstyle="\n...\n">' + 'word ' * 20 + '...</span>')
+
+        self.assertEqual(
+            utils.truncate_html_words('<br>' + 'word ' * 100, 20),
+            '<br>' + 'word ' * 20 + '...')
+
+        self.assertEqual(
+            utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20),
+            '<!-- comment -->' + 'word ' * 20 + '...')
+
     def test_process_translations(self):
         # create a bunch of articles
         # 1: no translation metadata
