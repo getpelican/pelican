@@ -1,10 +1,10 @@
 Release history
 ###############
 
-Next release
-============
+3.6.3 (2015-08-14)
+==================
 
-- Nothing yet
+* Fix permissions issue in release tarball
 
 3.6.2 (2015-08-01)
 ==================

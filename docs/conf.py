@@ -18,7 +18,7 @@ copyright = '2015, Alexis Metaireau and contributors'
 exclude_patterns = ['_build']
 release = __version__
 version = '.'.join(release.split('.')[:1])
-last_stable = '3.6.2'
+last_stable = '3.6.3'
 rst_prolog = '''
 .. |last_stable| replace:: :pelican-doc:`{0}`
 '''.format(last_stable)
