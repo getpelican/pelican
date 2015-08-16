@@ -260,6 +260,6 @@ to iterate over ``pages`` instead of ``PAGES``. Just replace::
 
     {% for pg in PAGES %}
 
-...with something like::
+with something like::
 
     {% for pg in pages %}
