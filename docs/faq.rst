@@ -9,7 +9,7 @@ What's the best way to communicate a problem, question, or suggestion?
 Please read our :doc:`feedback guidelines <contribute>`.
 
 How can I help?
-================
+===============
 
 There are several ways to help out. First, you can report any Pelican
 suggestions or problems you might have via IRC (preferred) or the
@@ -26,14 +26,14 @@ section for more details.
 You can also contribute by creating themes and improving the documentation.
 
 Is the Pelican settings file mandatory?
-=============================================
+=======================================
 
 Configuration files are optional and are just an easy way to configure Pelican.
 For basic operations, it's possible to specify options while invoking Pelican
 via the command line. See ``pelican --help`` for more information.
 
 Changes to the settings file take no effect
-==========================================
+===========================================
 
 When experimenting with different settings (especially the metadata
 ones) caching may interfere and the changes may not be visible. In
@@ -60,12 +60,12 @@ CSS file to your new theme::
 Don't forget to import your ``pygment.css`` file from your main CSS file.
 
 How do I create my own theme?
-==============================
+=============================
 
 Please refer to :ref:`theming-pelican`.
 
 I want to use Markdown, but I got an error.
-==========================================================================
+===========================================
 
 If you try to generate Markdown content without first installing the Markdown
 library, may see a message that says ``No valid files found in content``.
@@ -77,7 +77,7 @@ permissions require it::
     pip install markdown
 
 Can I use arbitrary metadata in my templates?
-==============================================
+=============================================
 
 Yes. For example, to include a modified date in a Markdown post, one could
 include the following at the top of the article::
