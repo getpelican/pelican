@@ -12,10 +12,10 @@ How can I help?
 ================
 
 There are several ways to help out. First, you can report any Pelican
-suggestions or problems you might have via IRC or the `issue tracker
-<https://github.com/getpelican/pelican/issues>`_. If submitting an issue
-report, please first check the existing issue list (both open and closed) in
-order to avoid submitting a duplicate issue.
+suggestions or problems you might have via IRC (preferred) or the
+`issue tracker <https://github.com/getpelican/pelican/issues>`_. If submitting
+an issue report, please first check the existing issue list (both open and
+closed) in order to avoid submitting a duplicate issue.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
@@ -25,20 +25,20 @@ section for more details.
 
 You can also contribute by creating themes and improving the documentation.
 
-Is it mandatory to have a configuration file?
+Is the Pelican settings file mandatory?
 =============================================
 
 Configuration files are optional and are just an easy way to configure Pelican.
 For basic operations, it's possible to specify options while invoking Pelican
 via the command line. See ``pelican --help`` for more information.
 
-Changes to the setting file take no effect
+Changes to the settings file take no effect
 ==========================================
 
 When experimenting with different settings (especially the metadata
 ones) caching may interfere and the changes may not be visible. In
-such cases disable caching with ``LOAD_CONTENT_CACHE = False`` or
-use the ``--ignore-cache`` command-line switch.
+such cases, ensure that caching is disabled via ``LOAD_CONTENT_CACHE = False``
+or use the ``--ignore-cache`` command-line switch.
 
 I'm creating my own theme. How do I use Pygments for syntax highlighting?
 =========================================================================
@@ -251,15 +251,15 @@ moved out of the pelican core and into a separate `plugin
 See the :ref:`plugins` documentation further information about the
 Pelican plugin system.
 
-Since I upgraded Pelican my Pages are no longer rendered
+Since I upgraded Pelican my pages are no longer rendered
 ========================================================
-Pages were available to Themes as lowercase ``pages`` and uppercase
+Pages were available to themes as lowercase ``pages`` and uppercase
 ``PAGES``. To bring this inline with the :ref:`templates-variables` section,
 ``PAGES`` has been removed. This is quickly resolved by updating your theme
 to iterate over ``pages`` instead of ``PAGES``. Just replace::
 
     {% for pg in PAGES %}
 
-with something like::
+...with something like::
 
     {% for pg in pages %}
