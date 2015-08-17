@@ -68,6 +68,10 @@ Metadata syntax for Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
+.. note::
+
+   Remember that all metadata variablenames are lowercased before they are prosessed by Pelican.
+
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
 
