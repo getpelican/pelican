@@ -500,6 +500,43 @@ class MdReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_article_with_different_output_format(self):
+        reader = readers.MarkdownReader(settings=get_settings())
+        # test the default xhtml1 output format
+        expected = ('<p>Some text<sup id="fnref:footnote"><a class="footnote-re'
+                    'f" href="#fn:footnote" rel="footnote">1</a></sup></p>\n'
+                    '<div class="footnote">\n'
+                    '<hr />\n'
+                    '<ol>\n'
+                    '<li id="fn:footnote">\n'
+                    '<p>Some footnote&#160;<a class="footnote-backref" href="#fn'
+                    'ref:footnote" rev="footnote" title="Jump back to footnote 1'
+                    ' in the text">&#8617;</a></p>\n'
+                    '</li>\n'
+                    '</ol>\n'
+                    '</div>')
+        content, metadata = reader.read(
+            _path('article_with_different_output_format.md'))
+        self.assertEqual(content, expected)
+
+        # test html5 output format
+        reader = readers.MarkdownReader(
+            settings=dict(get_settings(), MD_OUTPUT_FORMAT='html5'))
+        expected = ('<p>Some text<sup id="fnref-footnote"><a class="footnote-re'
+                    'f" href="#fn-footnote">1</a></sup></p>\n'
+                    '<div class="footnote">\n'
+                    '<hr>\n'
+                    '<ol>\n'
+                    '<li id="fn-footnote">\n'
+                    '<p>Some footnote&#160;<a class="footnote-backref" href="#fn'
+                    'ref-footnote" title="Jump back to footnote 1 in the text">'
+                    '&#8617;</a></p>\n'
+                    '</li>\n'
+                    '</ol>\n'
+                    '</div>')
+        content, metadata = reader.read(
+            _path('article_with_different_output_format.md'))
+        self.assertEqual(content, expected)
 
 class HTMLReaderTest(ReaderTest):
     def test_article_with_comments(self):
