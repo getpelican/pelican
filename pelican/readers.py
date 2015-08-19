@@ -249,6 +249,7 @@ class MarkdownReader(BaseReader):
         if 'meta' not in self.extensions:
             self.extensions.append('meta')
         self._source_path = None
+        self.output_format = self.settings['MD_OUTPUT_FORMAT']
 
     def _parse_metadata(self, meta):
         """Return the dict containing document metadata"""
@@ -282,7 +283,9 @@ class MarkdownReader(BaseReader):
         """Parse content and metadata of markdown files"""
 
         self._source_path = source_path
-        self._md = Markdown(extensions=self.extensions)
+        self._md = Markdown(
+            extensions=self.extensions,
+            output_format=self.output_format)
         with pelican_open(source_path) as text:
             content = self._md.convert(text)
 

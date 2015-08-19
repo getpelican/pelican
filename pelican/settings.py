@@ -100,6 +100,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
     'DATE_FORMATS': {},
     'MD_EXTENSIONS': ['codehilite(css_class=highlight)', 'extra'],
+    'MD_OUTPUT_FORMAT' : 'xhtml1',
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
     'LOG_FILTER': [],
