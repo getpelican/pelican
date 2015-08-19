@@ -25,6 +25,7 @@ from jinja2 import Markup
 import pytz
 
 import six
+from six.moves import html_entities
 from six.moves.html_parser import HTMLParser
 
 logger = logging.getLogger(__name__)
@@ -408,7 +409,8 @@ def posixize_path(rel_path):
 
 class _HTMLWordTruncator(HTMLParser):
 
-    _word_regex = re.compile(r'\w[\w-]*', re.U)
+    _word_regex = re.compile(r"\w[\w'-]*", re.U)
+    _word_prefix_regex = re.compile(r'\w', re.U)
     _singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
                  'hr', 'input')
 
@@ -420,17 +422,37 @@ class _HTMLWordTruncator(HTMLParser):
         self.max_words = max_words
         self.words_found = 0
         self.open_tags = []
+        self.last_word_end = None
         self.truncate_at = None
+
+    def getoffset(self):
+        line_start = 0
+        lineno, line_offset = self.getpos()
+        for i in range(lineno - 1):
+            line_start = self.rawdata.index('\n', line_start) + 1
+        return line_start + line_offset
+
+    def add_word(self, word_end):
+        self.words_found += 1
+        self.last_word_end = None
+        if self.words_found == self.max_words:
+            self.truncate_at = word_end
+
+    def add_last_word(self):
+        if self.last_word_end is not None:
+            self.add_word(self.last_word_end)
 
     def handle_starttag(self, tag, attrs):
         if self.truncate_at is not None:
             return
+        self.add_last_word()
         if tag not in self._singlets:
             self.open_tags.insert(0, tag)
 
     def handle_endtag(self, tag):
         if self.truncate_at is not None:
             return
+        self.add_last_word()
         try:
             i = self.open_tags.index(tag)
         except ValueError:
@@ -442,20 +464,49 @@ class _HTMLWordTruncator(HTMLParser):
 
     def handle_data(self, data):
         word_end = 0
+        offset = self.getoffset()
 
         while self.words_found < self.max_words:
             match = self._word_regex.search(data, word_end)
             if not match:
                 break
-            word_end = match.end(0)
-            self.words_found += 1
 
-            if self.words_found == self.max_words:
-                line_start = 0
-                lineno, line_offset = self.getpos()
-                for i in range(lineno - 1):
-                    line_start = self.rawdata.index('\n', line_start) + 1
-                self.truncate_at = line_start + line_offset + word_end
+            if match.start(0) > 0:
+                self.add_last_word()
+
+            word_end = match.end(0)
+            self.last_word_end = offset + word_end
+
+        if word_end < len(data):
+            self.add_last_word()
+
+    def handle_ref(self, char):
+        offset = self.getoffset()
+        ref_end = self.rawdata.index(';', offset) + 1
+
+        if self.last_word_end is None:
+            if self._word_prefix_regex.match(char):
+                self.last_word_end = ref_end
+        else:
+            if self._word_regex.match(char):
+                self.last_word_end = ref_end
+            else:
+                self.add_last_word()
+
+    def handle_entityref(self, name):
+        try:
+            codepoint = html_entities.name2codepoint[name]
+        except KeyError:
+            self.handle_ref('')
+        else:
+            self.handle_ref(chr(codepoint))
+
+    def handle_charref(self, name):
+        if name.startswith('x'):
+            codepoint = int(name[1:], 16)
+        else:
+            codepoint = int(name)
+        self.handle_ref(chr(codepoint))
 
 
 def truncate_html_words(s, num, end_text='...'):
