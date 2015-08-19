@@ -259,7 +259,7 @@ def dc2fields(file):
         # Get tags related to a post
         tag = post_meta.replace('{', '').replace('}', '').replace('a:1:s:3:\\"tag\\";a:', '').replace('a:0:', '')
         if len(tag) > 1:
-            if int(tag[:1]) == 1:
+            if int(len(tag[:1])) == 1:
                 newtag = tag.split('"')[1]
                 tags.append(
                     BeautifulSoup(
