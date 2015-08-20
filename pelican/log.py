@@ -14,13 +14,16 @@ from collections import defaultdict, Mapping
 
 import six
 
+
 class BaseFormatter(logging.Formatter):
+
     def __init__(self, fmt=None, datefmt=None):
         FORMAT = '%(customlevelname)s %(message)s'
         super(BaseFormatter, self).__init__(fmt=FORMAT, datefmt=datefmt)
 
     def format(self, record):
-        record.__dict__['customlevelname'] = self._get_levelname(record.levelname)
+        record.__dict__['customlevelname'] = self._get_levelname(
+            record.levelname)
         # format multiline messages 'nicely' to make it clear they are together
         record.msg = record.msg.replace('\n', '\n  | ')
         return super(BaseFormatter, self).format(record)
@@ -69,6 +72,7 @@ class ANSIFormatter(BaseFormatter):
 
 
 class TextFormatter(BaseFormatter):
+
     """
     Convert a `logging.LogRecord' object into text.
     """
@@ -81,6 +85,7 @@ class TextFormatter(BaseFormatter):
 
 
 class LimitFilter(logging.Filter):
+
     """
     Remove duplicates records, and limit the number of records in the same
     group.
@@ -124,6 +129,7 @@ class LimitFilter(logging.Filter):
 
 
 class SafeLogger(logging.Logger):
+
     """
     Base Logger which properly encodes Exceptions in Py2
     """
@@ -132,13 +138,13 @@ class SafeLogger(logging.Logger):
     def _log(self, level, msg, args, exc_info=None, extra=None):
         # if the only argument is a Mapping, Logger uses that for formatting
         # format values for that case
-        if args and len(args)==1 and isinstance(args[0], Mapping):
+        if args and len(args) == 1 and isinstance(args[0], Mapping):
             args = ({k: self._decode_arg(v) for k, v in args[0].items()},)
         # otherwise, format each arg
         else:
             args = tuple(self._decode_arg(arg) for arg in args)
         super(SafeLogger, self)._log(level, msg, args,
-            exc_info=exc_info, extra=extra)
+                                     exc_info=exc_info, extra=extra)
 
     def _decode_arg(self, arg):
         '''
@@ -158,6 +164,7 @@ class SafeLogger(logging.Logger):
 
 
 class LimitLogger(SafeLogger):
+
     """
     A logger which adds LimitFilter automatically
     """

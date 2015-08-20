@@ -28,6 +28,7 @@ from pelican.cache import FileStampDataCacher
 from pelican.contents import Page, Category, Tag, Author
 from pelican.utils import get_date, pelican_open, SafeDatetime, posixize_path
 
+
 def ensure_metadata_list(text):
     """Canonicalize the format of a list of authors or tags.  This works
        the same way as Docutils' "authors" field: if it's already a list,
@@ -86,7 +87,9 @@ def _filter_discardable_metadata(metadata):
 
 logger = logging.getLogger(__name__)
 
+
 class BaseReader(object):
+
     """Base class to read files.
 
     This class is used to process static files, and it can be inherited for
@@ -159,12 +162,14 @@ class PelicanHTMLTranslator(HTMLTranslator):
 
 
 class RstReader(BaseReader):
+
     """Reader for reStructuredText files"""
 
     enabled = bool(docutils)
     file_extensions = ['rst']
 
     class FileInput(docutils.io.FileInput):
+
         """Patch docutils.io.FileInput to remove "U" mode in py3.
 
         Universal newlines is enabled by default and "U" mode is deprecated
@@ -238,6 +243,7 @@ class RstReader(BaseReader):
 
 
 class MarkdownReader(BaseReader):
+
     """Reader for Markdown files"""
 
     enabled = bool(Markdown)
@@ -268,7 +274,7 @@ class MarkdownReader(BaseReader):
             elif name in METADATA_PROCESSORS:
                 if len(value) > 1:
                     logger.warning('Duplicate definition of `%s` '
-                        'for %s. Using first one.', name, self._source_path)
+                                   'for %s. Using first one.', name, self._source_path)
                 output[name] = self.process_metadata(name, value[0])
             elif len(value) > 1:
                 # handle list metadata as list of string
@@ -291,12 +297,14 @@ class MarkdownReader(BaseReader):
 
 
 class HTMLReader(BaseReader):
+
     """Parses HTML files as input, looking for meta, title, and body tags"""
 
     file_extensions = ['htm', 'html']
     enabled = True
 
     class _HTMLParser(HTMLParser):
+
         def __init__(self, settings, filename):
             try:
                 # Python 3.4+
@@ -380,7 +388,8 @@ class HTMLReader(BaseReader):
         def _handle_meta_tag(self, attrs):
             name = self._attr_value(attrs, 'name')
             if name is None:
-                attr_serialized = ', '.join(['{}="{}"'.format(k, v) for k, v in attrs])
+                attr_serialized = ', '.join(
+                    ['{}="{}"'.format(k, v) for k, v in attrs])
                 logger.warning("Meta tag in file %s does not have a 'name' "
                                "attribute, skipping. Attributes: %s",
                                self._filename, attr_serialized)
@@ -420,6 +429,7 @@ class HTMLReader(BaseReader):
 
 
 class Readers(FileStampDataCacher):
+
     """Interface for all readers.
 
     This class contains a mapping of file extensions / Reader classes, to know
@@ -475,7 +485,7 @@ class Readers(FileStampDataCacher):
         path = os.path.abspath(os.path.join(base_path, path))
         source_path = posixize_path(os.path.relpath(path, base_path))
         logger.debug('Read file %s -> %s',
-            source_path, content_class.__name__)
+                     source_path, content_class.__name__)
 
         if not fmt:
             _, ext = os.path.splitext(os.path.basename(path))
@@ -487,7 +497,7 @@ class Readers(FileStampDataCacher):
 
         if preread_signal:
             logger.debug('Signal %s.send(%s)',
-                preread_signal.name, preread_sender)
+                         preread_signal.name, preread_sender)
             preread_signal.send(preread_sender)
 
         reader = self.readers[fmt]
@@ -540,7 +550,7 @@ class Readers(FileStampDataCacher):
 
         if context_signal:
             logger.debug('Signal %s.send(%s, <metadata>)',
-                context_signal.name, context_sender)
+                         context_signal.name, context_sender)
             context_signal.send(context_sender, metadata=metadata)
 
         return content_class(content=content, metadata=metadata,

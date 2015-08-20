@@ -13,7 +13,9 @@ from jinja2.utils import generate_lorem_ipsum
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
+
 class TestPage(unittest.TestCase):
+
     def setUp(self):
         super(TestPage, self).setUp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
@@ -49,7 +51,8 @@ class TestPage(unittest.TestCase):
         )
 
         self.page_kwargs['metadata']['author'] = Author('Blogger', settings)
-        object_list = [Article(**self.page_kwargs), Article(**self.page_kwargs)]
+        object_list = [
+            Article(**self.page_kwargs), Article(**self.page_kwargs)]
         paginator = Paginator('foobar.foo', object_list, settings)
         page = paginator.page(1)
         self.assertEqual(page.save_as, 'foobar.foo')

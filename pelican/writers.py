@@ -119,9 +119,9 @@ class Writer(object):
                 feed.write(fp, 'utf-8')
                 logger.info('Writing %s', complete_path)
 
-            signals.feed_written.send(complete_path, context=context, feed=feed)
+            signals.feed_written.send(
+                complete_path, context=context, feed=feed)
         return feed
-
 
     def write_file(self, name, template, context, relative_urls=False,
                    paginated=None, override_output=False, **kwargs):
@@ -140,8 +140,8 @@ class Writer(object):
         """
 
         if name is False or name == "" or\
-           not is_selected_for_writing(self.settings,\
-               os.path.join(self.output_path, name)):
+           not is_selected_for_writing(self.settings,
+                                       os.path.join(self.output_path, name)):
             return
         elif not name:
             # other stuff, just return for now
@@ -169,7 +169,8 @@ class Writer(object):
 
         def _get_localcontext(context, name, kwargs, relative_urls):
             localcontext = context.copy()
-            localcontext['localsiteurl'] = localcontext.get('localsiteurl', None)
+            localcontext['localsiteurl'] = localcontext.get(
+                'localsiteurl', None)
             if relative_urls:
                 relative_url = path_to_url(get_relative_path(name))
                 localcontext['SITEURL'] = relative_url
@@ -201,11 +202,13 @@ class Writer(object):
                          '%s_previous_page' % key: previous_page,
                          '%s_next_page' % key: next_page})
 
-                localcontext = _get_localcontext(context, page.save_as, paginated_kwargs, relative_urls)
+                localcontext = _get_localcontext(
+                    context, page.save_as, paginated_kwargs, relative_urls)
                 _write_file(template, localcontext, self.output_path,
                             page.save_as, override_output)
         else:
             # no pagination
-            localcontext = _get_localcontext(context, name, kwargs, relative_urls)
+            localcontext = _get_localcontext(
+                context, name, kwargs, relative_urls)
             _write_file(template, localcontext, self.output_path, name,
                         override_output)

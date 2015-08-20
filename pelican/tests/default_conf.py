@@ -31,17 +31,16 @@ DEFAULT_METADATA = {'yeah': 'it is'}
 # path-specific metadata
 EXTRA_PATH_METADATA = {
     'extra/robots.txt': {'path': 'robots.txt'},
-    }
+}
 
 # static paths will be copied without parsing their contents
 STATIC_PATHS = [
     'pictures',
     'extra/robots.txt',
-    ]
+]
 
 FORMATTED_FIELDS = ['summary', 'custom_formatted_field']
 
 # foobar will not be used, because it's not in caps. All configuration keys
 # have to be in caps
 foobar = "barbaz"
-

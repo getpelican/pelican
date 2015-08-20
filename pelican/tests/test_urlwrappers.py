@@ -4,7 +4,9 @@ from __future__ import unicode_literals
 from pelican.urlwrappers import URLWrapper, Tag, Category
 from pelican.tests.support import unittest
 
+
 class TestURLWrapper(unittest.TestCase):
+
     def test_ordering(self):
         # URLWrappers are sorted by name
         wrapper_a = URLWrapper(name='first', settings={})

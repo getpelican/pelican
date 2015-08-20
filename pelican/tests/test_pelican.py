@@ -17,7 +17,7 @@ from pelican.tests.support import LoggedTestCase, mute, locale_available, unitte
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(
-        CURRENT_DIR, os.pardir, os.pardir, 'samples'))
+    CURRENT_DIR, os.pardir, os.pardir, 'samples'))
 OUTPUT_PATH = os.path.abspath(os.path.join(CURRENT_DIR, 'output'))
 
 INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
@@ -27,13 +27,13 @@ SAMPLE_FR_CONFIG = os.path.join(SAMPLES_PATH, "pelican.conf_FR.py")
 
 def recursiveDiff(dcmp):
     diff = {
-            'diff_files': [os.path.join(dcmp.right, f)
-                for f in dcmp.diff_files],
-            'left_only': [os.path.join(dcmp.right, f)
-                for f in dcmp.left_only],
-            'right_only': [os.path.join(dcmp.right, f)
-                for f in dcmp.right_only],
-            }
+        'diff_files': [os.path.join(dcmp.right, f)
+                       for f in dcmp.diff_files],
+        'left_only': [os.path.join(dcmp.right, f)
+                      for f in dcmp.left_only],
+        'right_only': [os.path.join(dcmp.right, f)
+                       for f in dcmp.right_only],
+    }
     for sub_dcmp in dcmp.subdirs.values():
         for k, v in recursiveDiff(sub_dcmp).items():
             diff[k] += v
@@ -60,9 +60,11 @@ class TestPelican(LoggedTestCase):
 
     def assertDirsEqual(self, left_path, right_path):
         out, err = subprocess.Popen(
-            ['git', 'diff', '--no-ext-diff', '--exit-code', '-w', left_path, right_path],
+            ['git', 'diff', '--no-ext-diff', '--exit-code',
+                '-w', left_path, right_path],
             env={str('PAGER'): str('')}, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         ).communicate()
+
         def ignorable_git_crlf_errors(line):
             # Work around for running tests on Windows
             for msg in [
@@ -86,9 +88,9 @@ class TestPelican(LoggedTestCase):
         generator_classes = pelican.get_generator_classes()
 
         self.assertTrue(generator_classes[-1] is StaticGenerator,
-            "StaticGenerator must be the last generator, but it isn't!")
+                        "StaticGenerator must be the last generator, but it isn't!")
         self.assertIsInstance(generator_classes, collections.Sequence,
-            "get_generator_classes() must return a Sequence to preserve order")
+                              "get_generator_classes() must return a Sequence to preserve order")
 
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
@@ -98,10 +100,11 @@ class TestPelican(LoggedTestCase):
             'OUTPUT_PATH': self.temp_path,
             'CACHE_PATH': self.temp_cache,
             'LOCALE': locale.normalize('en_US'),
-            })
+        })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
-        self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
+        self.assertDirsEqual(
+            self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
         self.assertLogCountEqual(
             count=3,
             msg="Unable to find.*skipping url replacement",
@@ -114,10 +117,11 @@ class TestPelican(LoggedTestCase):
             'OUTPUT_PATH': self.temp_path,
             'CACHE_PATH': self.temp_cache,
             'LOCALE': locale.normalize('en_US'),
-            })
+        })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
-        self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
+        self.assertDirsEqual(
+            self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
 
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'), 'French locale needed')
@@ -133,10 +137,11 @@ class TestPelican(LoggedTestCase):
             'OUTPUT_PATH': self.temp_path,
             'CACHE_PATH': self.temp_cache,
             'LOCALE': our_locale,
-            })
+        })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
-        self.assertDirsEqual(self.temp_path, os.path.join(OUTPUT_PATH, 'custom_locale'))
+        self.assertDirsEqual(
+            self.temp_path, os.path.join(OUTPUT_PATH, 'custom_locale'))
 
     def test_theme_static_paths_copy(self):
         # the same thing with a specified set of settings should work
@@ -147,7 +152,7 @@ class TestPelican(LoggedTestCase):
             'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'very'),
                                    os.path.join(SAMPLES_PATH, 'kinda'),
                                    os.path.join(SAMPLES_PATH, 'theme_standard')]
-            })
+        })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
         theme_output = os.path.join(self.temp_path, 'theme')
@@ -166,7 +171,7 @@ class TestPelican(LoggedTestCase):
             'OUTPUT_PATH': self.temp_path,
             'CACHE_PATH': self.temp_cache,
             'THEME_STATIC_PATHS': [os.path.join(SAMPLES_PATH, 'theme_standard')]
-            })
+        })
 
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
@@ -184,9 +189,9 @@ class TestPelican(LoggedTestCase):
             'WRITE_SELECTED': [
                 os.path.join(self.temp_path, 'oh-yeah.html'),
                 os.path.join(self.temp_path, 'categories.html'),
-                ],
+            ],
             'LOCALE': locale.normalize('en_US'),
-            })
+        })
         pelican = Pelican(settings=settings)
         logger = logging.getLogger()
         orig_level = logger.getEffectiveLevel()

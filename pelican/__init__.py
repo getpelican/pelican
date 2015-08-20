@@ -152,7 +152,7 @@ class Pelican(object):
         context = self.settings.copy()
         # Share these among all the generators and content objects:
         context['filenames'] = {}  # maps source path to Content object or None
-        context['localsiteurl'] = self.settings['SITEURL'] 
+        context['localsiteurl'] = self.settings['SITEURL']
 
         generators = [
             cls(
@@ -191,22 +191,22 @@ class Pelican(object):
 
         pluralized_articles = maybe_pluralize(
             len(articles_generator.articles) +
-                len(articles_generator.translations),
+            len(articles_generator.translations),
             'article',
             'articles')
         pluralized_drafts = maybe_pluralize(
             len(articles_generator.drafts) +
-                len(articles_generator.drafts_translations),
+            len(articles_generator.drafts_translations),
             'draft',
             'drafts')
         pluralized_pages = maybe_pluralize(
             len(pages_generator.pages) +
-                len(pages_generator.translations),
+            len(pages_generator.translations),
             'page',
             'pages')
         pluralized_hidden_pages = maybe_pluralize(
             len(pages_generator.hidden_pages) +
-                len(pages_generator.hidden_translations),
+            len(pages_generator.hidden_translations),
             'hidden page',
             'hidden pages')
 
@@ -243,8 +243,8 @@ class Pelican(object):
         return generators
 
     def get_writer(self):
-        writers = [ w for (_, w) in signals.get_writer.send(self)
-                    if isinstance(w, type) ]
+        writers = [w for (_, w) in signals.get_writer.send(self)
+                   if isinstance(w, type)]
         writers_found = len(writers)
         if writers_found == 0:
             return Writer(self.output_path, settings=self.settings)
@@ -254,7 +254,7 @@ class Pelican(object):
                 logger.debug('Found writer: %s', writer)
             else:
                 logger.warning(
-                    '%s writers found, using only first one: %s', 
+                    '%s writers found, using only first one: %s',
                     writers_found, writer)
             return writer(self.output_path, settings=self.settings)
 
@@ -354,7 +354,8 @@ def get_config(args):
     # argparse returns bytes in Py2. There is no definite answer as to which
     # encoding argparse (or sys.argv) uses.
     # "Best" option seems to be locale.getpreferredencoding()
-    # ref: http://mail.python.org/pipermail/python-list/2006-October/405766.html
+    # ref:
+    # http://mail.python.org/pipermail/python-list/2006-October/405766.html
     if not six.PY3:
         enc = locale.getpreferredencoding()
         for key in config:
@@ -367,7 +368,7 @@ def get_instance(args):
 
     config_file = args.settings
     if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
-            config_file = DEFAULT_CONFIG_NAME
+        config_file = DEFAULT_CONFIG_NAME
 
     settings = read_settings(config_file, override=get_config(args))
 

@@ -54,11 +54,11 @@ if __name__ == '__main__':
 
     socketserver.TCPServer.allow_reuse_address = True
     try:
-        httpd = socketserver.TCPServer((SERVER, PORT), ComplexHTTPRequestHandler)
+        httpd = socketserver.TCPServer(
+            (SERVER, PORT), ComplexHTTPRequestHandler)
     except OSError as e:
         logging.error("Could not listen on port %s, server %s.", PORT, SERVER)
         sys.exit(getattr(e, 'exitcode', 1))
-
 
     logging.info("Serving at port %s, server %s.", PORT, SERVER)
     try:

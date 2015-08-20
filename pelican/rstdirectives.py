@@ -12,6 +12,7 @@ import pelican.settings as pys
 
 
 class Pygments(Directive):
+
     """ Source code syntax highlighting.
     """
     required_arguments = 1

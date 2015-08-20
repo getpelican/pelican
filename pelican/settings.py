@@ -131,7 +131,7 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': False,
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
-    }
+}
 
 PYGMENTS_RST_OPTIONS = None
 
@@ -158,8 +158,8 @@ def read_settings(path=None, override=None):
                            "has been deprecated (should be a list)")
             local_settings['PLUGIN_PATHS'] = [local_settings['PLUGIN_PATHS']]
         elif local_settings['PLUGIN_PATHS'] is not None:
-                local_settings['PLUGIN_PATHS'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
-                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATHS']]
+            local_settings['PLUGIN_PATHS'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
+                                              if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATHS']]
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
@@ -205,7 +205,7 @@ def configure_settings(settings):
 
     # specify the log messages to be ignored
     LimitFilter._ignore.update(set(settings.get('LOG_FILTER',
-                                               DEFAULT_CONFIG['LOG_FILTER'])))
+                                                DEFAULT_CONFIG['LOG_FILTER'])))
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):
@@ -223,19 +223,19 @@ def configure_settings(settings):
     settings['WRITE_SELECTED'] = [
         os.path.abspath(path) for path in
         settings.get('WRITE_SELECTED', DEFAULT_CONFIG['WRITE_SELECTED'])
-        ]
+    ]
 
     # standardize strings to lowercase strings
     for key in [
             'DEFAULT_LANG',
-            ]:
+    ]:
         if key in settings:
             settings[key] = settings[key].lower()
 
     # standardize strings to lists
     for key in [
             'LOCALE',
-            ]:
+    ]:
         if key in settings and isinstance(settings[key], six.string_types):
             settings[key] = [settings[key]]
 
@@ -243,12 +243,12 @@ def configure_settings(settings):
     for key, types in [
             ('OUTPUT_SOURCES_EXTENSION', six.string_types),
             ('FILENAME_METADATA', six.string_types),
-            ]:
+    ]:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
             logger.warn('Detected misconfigured %s (%s), '
                         'falling back to the default (%s)',
-                    key, value, DEFAULT_CONFIG[key])
+                        key, value, DEFAULT_CONFIG[key])
 
     # try to set the different locales, fallback on the default.
     locales = settings.get('LOCALE', DEFAULT_CONFIG['LOCALE'])
@@ -275,11 +275,11 @@ def configure_settings(settings):
 
     # check content caching layer and warn of incompatibilities
     if (settings.get('CACHE_CONTENT', False) and
-        settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and
-        settings.get('WITH_FUTURE_DATES', DEFAULT_CONFIG['WITH_FUTURE_DATES'])):
+            settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and
+            settings.get('WITH_FUTURE_DATES', DEFAULT_CONFIG['WITH_FUTURE_DATES'])):
         logger.warning('WITH_FUTURE_DATES conflicts with '
-                        "CONTENT_CACHING_LAYER set to 'generator', "
-                        "use 'reader' layer instead")
+                       "CONTENT_CACHING_LAYER set to 'generator', "
+                       "use 'reader' layer instead")
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     feed_keys = [
@@ -322,7 +322,7 @@ def configure_settings(settings):
         new_key = key + '_PATHS'
         if old_key in settings:
             logger.warning('Deprecated setting %s, moving it to %s list',
-                old_key, new_key)
+                           old_key, new_key)
             settings[new_key] = [settings[old_key]]   # also make a list
             del settings[old_key]
 
@@ -366,7 +366,7 @@ def configure_settings(settings):
             ('LESS_GENERATOR', 'the Webassets plugin', None),
             ('FILES_TO_COPY', 'STATIC_PATHS and EXTRA_PATH_METADATA',
              'https://github.com/getpelican/pelican/blob/master/docs/settings.rst#path-metadata'),
-            ]:
+    ]:
         if old in settings:
             message = 'The {} setting has been removed in favor of {}'.format(
                 old, new)

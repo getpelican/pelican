@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 @python_2_unicode_compatible
 class Content(object):
+
     """Represents a content.
 
     :param content: the string to parse, containing the original content.
@@ -66,7 +67,7 @@ class Content(object):
         # also keep track of the metadata attributes available
         self.metadata = local_metadata
 
-        #default template if it's not defined in page
+        # default template if it's not defined in page
         self.template = self._get_template()
 
         # First, read the authors from "authors", if not, fallback to "author"
@@ -96,11 +97,11 @@ class Content(object):
         if not hasattr(self, 'slug'):
             if settings['SLUGIFY_SOURCE'] == 'title' and hasattr(self, 'title'):
                 self.slug = slugify(self.title,
-                                settings.get('SLUG_SUBSTITUTIONS', ()))
+                                    settings.get('SLUG_SUBSTITUTIONS', ()))
             elif settings['SLUGIFY_SOURCE'] == 'basename' and source_path != None:
                 basename = os.path.basename(os.path.splitext(source_path)[0])
                 self.slug = slugify(basename,
-                                settings.get('SLUG_SUBSTITUTIONS', ()))
+                                    settings.get('SLUG_SUBSTITUTIONS', ()))
 
         self.source_path = source_path
 
@@ -234,14 +235,14 @@ class Content(object):
                             linked_content.attach_to(self)
                         else:
                             logger.warning("%s used {attach} link syntax on a "
-                                "non-static file. Use {filename} instead.",
-                                self.get_relative_source_path())
+                                           "non-static file. Use {filename} instead.",
+                                           self.get_relative_source_path())
                     origin = '/'.join((siteurl, linked_content.url))
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
                     logger.warning(
                         "Unable to find `%s`, skipping url replacement.",
-                        value.geturl(), extra = {
+                        value.geturl(), extra={
                             'limit_msg': ("Other resources were not found "
                                           "and their urls not replaced")})
             elif what == 'category':
@@ -337,7 +338,8 @@ class Content(object):
 
         return posixize_path(
             os.path.relpath(
-                os.path.abspath(os.path.join(self.settings['PATH'], source_path)),
+                os.path.abspath(
+                    os.path.join(self.settings['PATH'], source_path)),
                 os.path.abspath(self.settings['PATH'])
             ))
 
@@ -371,6 +373,7 @@ class Quote(Page):
 
 @python_2_unicode_compatible
 class Static(Page):
+
     def __init__(self, *args, **kwargs):
         super(Static, self).__init__(*args, **kwargs)
         self._output_location_referenced = False
@@ -424,10 +427,10 @@ class Static(Page):
 
         def _log_reason(reason):
             logger.warning("The {attach} link in %s cannot relocate %s "
-                "because %s. Falling back to {filename} link behavior instead.",
-                content.get_relative_source_path(),
-                self.get_relative_source_path(), reason,
-                extra={'limit_msg': "More {attach} warnings silenced."})
+                           "because %s. Falling back to {filename} link behavior instead.",
+                           content.get_relative_source_path(),
+                           self.get_relative_source_path(), reason,
+                           extra={'limit_msg': "More {attach} warnings silenced."})
 
         # We never override an override, because we don't want to interfere
         # with user-defined overrides that might be in EXTRA_PATH_METADATA.
@@ -452,5 +455,6 @@ def is_valid_content(content, f):
         content.check_properties()
         return True
     except NameError as e:
-        logger.error("Skipping %s: could not find information about '%s'", f, e)
+        logger.error(
+            "Skipping %s: could not find information about '%s'", f, e)
         return False

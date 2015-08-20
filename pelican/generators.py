@@ -31,8 +31,10 @@ logger = logging.getLogger(__name__)
 class PelicanTemplateNotFound(Exception):
     pass
 
+
 @python_2_unicode_compatible
 class Generator(object):
+
     """Baseclass generator"""
 
     def __init__(self, context, settings, path, theme, output_path,
@@ -58,7 +60,7 @@ class Generator(object):
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
-                                         "themes", "simple", "templates"))
+                                                      "themes", "simple", "templates"))
         self.env = Environment(
             trim_blocks=True,
             lstrip_blocks=True,
@@ -91,7 +93,7 @@ class Generator(object):
                 self._templates[name] = self.env.get_template(name + '.html')
             except TemplateNotFound:
                 raise PelicanTemplateNotFound('[templates] unable to load %s.html from %s'
-                                % (name, self._templates_path))
+                                              % (name, self._templates_path))
         return self._templates[name]
 
     def _include_path(self, path, extensions=None):
@@ -105,7 +107,7 @@ class Generator(object):
             extensions = tuple(self.readers.extensions)
         basename = os.path.basename(path)
 
-        #check IGNORE_FILES
+        # check IGNORE_FILES
         ignores = self.settings['IGNORE_FILES']
         if any(fnmatch.fnmatch(basename, ignore) for ignore in ignores):
             return False
@@ -123,7 +125,7 @@ class Generator(object):
             extensions are allowed)
         """
         if isinstance(paths, six.string_types):
-            paths = [paths] # backward compatibility for older generators
+            paths = [paths]  # backward compatibility for older generators
 
         # group the exclude dir names by parent path, for use with os.walk()
         exclusions_by_dirpath = {}
@@ -196,6 +198,7 @@ class Generator(object):
 
 
 class CachingGenerator(Generator, FileStampDataCacher):
+
     '''Subclass of Generator and FileStampDataCacher classes
 
     enables content caching, either at the generator or reader level
@@ -211,7 +214,8 @@ class CachingGenerator(Generator, FileStampDataCacher):
                            readers_cache_name=(cls_name + '-Readers'),
                            **kwargs)
 
-        cache_this_level = self.settings['CONTENT_CACHING_LAYER'] == 'generator'
+        cache_this_level = self.settings[
+            'CONTENT_CACHING_LAYER'] == 'generator'
         caching_policy = cache_this_level and self.settings['CACHE_CONTENT']
         load_policy = cache_this_level and self.settings['LOAD_CONTENT_CACHE']
         FileStampDataCacher.__init__(self, self.settings, cls_name,
@@ -255,6 +259,7 @@ class TemplatePagesGenerator(Generator):
 
 
 class ArticlesGenerator(CachingGenerator):
+
     """Generate blog articles"""
 
     def __init__(self, *args, **kwargs):
@@ -266,7 +271,7 @@ class ArticlesGenerator(CachingGenerator):
         self.categories = defaultdict(list)
         self.related_posts = []
         self.authors = defaultdict(list)
-        self.drafts = [] # only drafts in default language
+        self.drafts = []  # only drafts in default language
         self.drafts_translations = []
         super(ArticlesGenerator, self).__init__(*args, **kwargs)
         signals.article_generator_init.send(self)
@@ -472,9 +477,9 @@ class ArticlesGenerator(CachingGenerator):
         """Generate drafts pages."""
         for draft in chain(self.drafts_translations, self.drafts):
             write(draft.save_as, self.get_template(draft.template),
-                self.context, article=draft, category=draft.category,
-                override_output=hasattr(draft, 'override_save_as'),
-                blog=True, all_articles=self.articles)
+                  self.context, article=draft, category=draft.category,
+                  override_output=hasattr(draft, 'override_save_as'),
+                  blog=True, all_articles=self.articles)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -503,7 +508,8 @@ class ArticlesGenerator(CachingGenerator):
                 exclude=self.settings['ARTICLE_EXCLUDES']):
             article_or_draft = self.get_cached_data(f, None)
             if article_or_draft is None:
-            #TODO needs overhaul, maybe nomad for read_file solution, unified behaviour
+                # TODO needs overhaul, maybe nomad for read_file solution,
+                # unified behaviour
                 try:
                     article_or_draft = self.readers.read_file(
                         base_path=self.path, path=f, content_class=Article,
@@ -514,7 +520,7 @@ class ArticlesGenerator(CachingGenerator):
                         context_sender=self)
                 except Exception as e:
                     logger.error('Could not process %s\n%s', f, e,
-                        exc_info=self.settings.get('DEBUG', False))
+                                 exc_info=self.settings.get('DEBUG', False))
                     self._add_failed_source_path(f)
                     continue
 
@@ -536,7 +542,7 @@ class ArticlesGenerator(CachingGenerator):
                     all_drafts.append(article_or_draft)
                 else:
                     logger.error("Unknown status '%s' for file %s, skipping it.",
-                                   article_or_draft.status, f)
+                                 article_or_draft.status, f)
                     self._add_failed_source_path(f)
                     continue
 
@@ -544,9 +550,8 @@ class ArticlesGenerator(CachingGenerator):
 
             self.add_source_path(article_or_draft)
 
-
         self.articles, self.translations = process_translations(all_articles,
-                order_by=self.settings['ARTICLE_ORDER_BY'])
+                                                                order_by=self.settings['ARTICLE_ORDER_BY'])
         self.drafts, self.drafts_translations = \
             process_translations(all_drafts)
 
@@ -589,6 +594,7 @@ class ArticlesGenerator(CachingGenerator):
 
 
 class PagesGenerator(CachingGenerator):
+
     """Generate pages"""
 
     def __init__(self, *args, **kwargs):
@@ -616,7 +622,7 @@ class PagesGenerator(CachingGenerator):
                         context_sender=self)
                 except Exception as e:
                     logger.error('Could not process %s\n%s', f, e,
-                        exc_info=self.settings.get('DEBUG', False))
+                                 exc_info=self.settings.get('DEBUG', False))
                     self._add_failed_source_path(f)
                     continue
 
@@ -630,7 +636,7 @@ class PagesGenerator(CachingGenerator):
                     hidden_pages.append(page)
                 else:
                     logger.error("Unknown status '%s' for file %s, skipping it.",
-                                   page.status, f)
+                                 page.status, f)
                     self._add_failed_source_path(f)
                     continue
 
@@ -639,7 +645,7 @@ class PagesGenerator(CachingGenerator):
             self.add_source_path(page)
 
         self.pages, self.translations = process_translations(all_pages,
-                order_by=self.settings['PAGE_ORDER_BY'])
+                                                             order_by=self.settings['PAGE_ORDER_BY'])
         self.hidden_pages, self.hidden_translations = (
             process_translations(hidden_pages))
 
@@ -661,6 +667,7 @@ class PagesGenerator(CachingGenerator):
 
 
 class StaticGenerator(Generator):
+
     """copy static paths (what you want to copy, like images, medias etc.
     to output"""
 

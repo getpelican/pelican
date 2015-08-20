@@ -49,7 +49,7 @@ class TestPage(unittest.TestCase):
         # them to initialise object's attributes.
         metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
         page = Page(TEST_CONTENT, metadata=metadata,
-                context={'localsiteurl': ''})
+                    context={'localsiteurl': ''})
         for key, value in metadata.items():
             self.assertTrue(hasattr(page, key))
             self.assertEqual(value, getattr(page, key))
@@ -139,14 +139,15 @@ class TestPage(unittest.TestCase):
         page = Page(**page_kwargs)
 
         # page.locale_date is a unicode string in both python2 and python3
-        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']) 
+        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT'])
         # dt_date is a byte string in python2, and a unicode string in python3
-        # Let's make sure it is a unicode string (relies on python 3.3 supporting the u prefix)
+        # Let's make sure it is a unicode string (relies on python 3.3
+        # supporting the u prefix)
         if type(dt_date) != type(u''):
             # python2:
             dt_date = unicode(dt_date, 'utf8')
 
-        self.assertEqual(page.locale_date, dt_date )
+        self.assertEqual(page.locale_date, dt_date)
         page_kwargs['settings'] = get_settings()
 
         # I doubt this can work on all platforms ...
@@ -390,6 +391,7 @@ class TestPage(unittest.TestCase):
 
 
 class TestArticle(TestPage):
+
     def test_template(self):
         # Articles default to article, metadata overwrites
         default_article = Article(**self.page_kwargs)
@@ -401,17 +403,19 @@ class TestArticle(TestPage):
 
     def test_slugify_category_author(self):
         settings = get_settings()
-        settings['SLUG_SUBSTITUTIONS'] = [ ('C#', 'csharp') ]
+        settings['SLUG_SUBSTITUTIONS'] = [('C#', 'csharp')]
         settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
         article_kwargs = self._copy_page_kwargs()
         article_kwargs['metadata']['author'] = Author("O'Brien", settings)
-        article_kwargs['metadata']['category'] = Category('C# & stuff', settings)
+        article_kwargs['metadata'][
+            'category'] = Category('C# & stuff', settings)
         article_kwargs['metadata']['title'] = 'fnord'
         article_kwargs['settings'] = settings
         article = Article(**article_kwargs)
         self.assertEqual(article.url, 'obrien/csharp-stuff/fnord/')
-        self.assertEqual(article.save_as, 'obrien/csharp-stuff/fnord/index.html')
+        self.assertEqual(
+            article.save_as, 'obrien/csharp-stuff/fnord/index.html')
 
 
 class TestStatic(LoggedTestCase):
@@ -426,7 +430,7 @@ class TestStatic(LoggedTestCase):
         self.context = self.settings.copy()
 
         self.static = Static(content=None, metadata={}, settings=self.settings,
-            source_path=posix_join('dir', 'foo.jpg'), context=self.context)
+                             source_path=posix_join('dir', 'foo.jpg'), context=self.context)
 
         self.context['filenames'] = {self.static.source_path: self.static}
 
@@ -437,8 +441,8 @@ class TestStatic(LoggedTestCase):
         """attach_to() overrides a static file's save_as and url.
         """
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'fakepage.md'))
         self.static.attach_to(page)
 
         expected_save_as = os.path.join('outpages', 'foo.jpg')
@@ -449,7 +453,7 @@ class TestStatic(LoggedTestCase):
         """attach_to() preserves dirs inside the linking document dir.
         """
         page = Page(content="fake page", metadata={'title': 'fakepage'},
-            settings=self.settings, source_path='fakepage.md')
+                    settings=self.settings, source_path='fakepage.md')
         self.static.attach_to(page)
 
         expected_save_as = os.path.join('outpages', 'dir', 'foo.jpg')
@@ -460,8 +464,8 @@ class TestStatic(LoggedTestCase):
         """attach_to() ignores dirs outside the linking document dir.
         """
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'otherdir', 'fakepage.md'))
         self.static.attach_to(page)
 
         expected_save_as = os.path.join('outpages', 'foo.jpg')
@@ -472,8 +476,8 @@ class TestStatic(LoggedTestCase):
         """attach_to() does nothing when called a second time.
         """
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'fakepage.md'))
 
         self.static.attach_to(page)
 
@@ -482,8 +486,8 @@ class TestStatic(LoggedTestCase):
             PAGE_SAVE_AS=os.path.join('otherpages', '{slug}.html'),
             PAGE_URL='otherpages/{slug}.html'))
         otherdir_page = Page(content="other page",
-            metadata={'title': 'otherpage'}, settings=otherdir_settings,
-            source_path=os.path.join('dir', 'otherpage.md'))
+                             metadata={'title': 'otherpage'}, settings=otherdir_settings,
+                             source_path=os.path.join('dir', 'otherpage.md'))
 
         self.static.attach_to(otherdir_page)
 
@@ -498,8 +502,8 @@ class TestStatic(LoggedTestCase):
         original_save_as = self.static.save_as
 
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'fakepage.md'))
         self.static.attach_to(page)
 
         self.assertEqual(self.static.save_as, original_save_as)
@@ -512,8 +516,8 @@ class TestStatic(LoggedTestCase):
         original_url = self.static.url
 
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'fakepage.md'))
         self.static.attach_to(page)
 
         self.assertEqual(self.static.save_as, self.static.source_path)
@@ -524,14 +528,15 @@ class TestStatic(LoggedTestCase):
         (For example, by the user with EXTRA_PATH_METADATA)
         """
         customstatic = Static(content=None,
-            metadata=dict(save_as='customfoo.jpg', url='customfoo.jpg'),
-            settings=self.settings,
-            source_path=os.path.join('dir', 'foo.jpg'),
-            context=self.settings.copy())
+                              metadata=dict(
+                                  save_as='customfoo.jpg', url='customfoo.jpg'),
+                              settings=self.settings,
+                              source_path=os.path.join('dir', 'foo.jpg'),
+                              context=self.settings.copy())
 
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'fakepage.md'))
 
         customstatic.attach_to(page)
 
@@ -543,13 +548,13 @@ class TestStatic(LoggedTestCase):
         """
         html = '<a href="{attach}../foo.jpg">link</a>'
         page = Page(content=html,
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
-            context=self.context)
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+                    context=self.context)
         content = page.get_content('')
 
         self.assertNotEqual(content, html,
-            "{attach} link syntax did not trigger URL replacement.")
+                            "{attach} link syntax did not trigger URL replacement.")
 
         expected_save_as = os.path.join('outpages', 'foo.jpg')
         self.assertEqual(self.static.save_as, expected_save_as)
@@ -573,9 +578,9 @@ class TestStatic(LoggedTestCase):
 
         html = '<a href="{category}foo">link</a>'
         page = Page(content=html,
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
-            context=self.context)
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+                    context=self.context)
         content = page.get_content('')
 
         self.assertNotEqual(content, html)

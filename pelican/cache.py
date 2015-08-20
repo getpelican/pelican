@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class FileDataCacher(object):
+
     """Class that can cache data contained in files"""
 
     def __init__(self, settings, cache_name, caching_policy, load_policy):
@@ -77,6 +78,7 @@ class FileDataCacher(object):
 
 
 class FileStampDataCacher(FileDataCacher):
+
     """Subclass that also caches the stamp of the file"""
 
     def __init__(self, settings, cache_name, caching_policy, load_policy):
