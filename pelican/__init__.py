@@ -5,6 +5,7 @@ import six
 import os
 import re
 import sys
+import threading
 import time
 import logging
 import argparse
@@ -15,6 +16,7 @@ import collections
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
 
+from pelican import server
 from pelican import signals
 
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
@@ -152,7 +154,7 @@ class Pelican(object):
         context = self.settings.copy()
         # Share these among all the generators and content objects:
         context['filenames'] = {}  # maps source path to Content object or None
-        context['localsiteurl'] = self.settings['SITEURL'] 
+        context['localsiteurl'] = self.settings['SITEURL']
 
         generators = [
             cls(
@@ -254,7 +256,7 @@ class Pelican(object):
                 logger.debug('Found writer: %s', writer)
             else:
                 logger.warning(
-                    '%s writers found, using only first one: %s', 
+                    '%s writers found, using only first one: %s',
                     writers_found, writer)
             return writer(self.output_path, settings=self.settings)
 
@@ -308,6 +310,14 @@ def parse_arguments():
                         action='store_true',
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
+
+    parser.add_argument('-S', '--serve', dest='serve',
+                        action='store_true',
+                        help='Serve on localhost')
+
+    parser.add_argument('-p', '--port', dest='port', type=int, default=8000,
+                        help='Port to serve on. '
+                             'Only used with the -S/--serve option')
 
     parser.add_argument('--relative-urls', dest='relative_paths',
                         action='store_true',
@@ -380,106 +390,112 @@ def get_instance(args):
     return cls(settings), settings
 
 
+class Generator(threading.Thread):
+
+    def __init__(self, args):
+        super(Generator, self).__init__()
+        self.args = args
+        self.settings = None
+        self.pelican = None
+        self.watchers = None
+        self.setup()
+
+    def setup(self):
+        config_file = self.args.settings
+        if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
+            config_file = DEFAULT_CONFIG_NAME
+
+        self.settings = read_settings(config_file,
+                                      override=get_config(self.args))
+
+        cls = self.settings['PELICAN_CLASS']
+        if isinstance(cls, six.string_types):
+            module, cls_name = cls.rsplit('.', 1)
+            module = __import__(module)
+            cls = getattr(module, cls_name)
+
+        self.pelican = cls(self.settings)
+        readers = Readers(self.settings)
+        self.watchers = {'content': folder_watcher(self.pelican.path,
+                                                   readers.extensions,
+                                                   self.pelican.ignore_files),
+                         'theme': folder_watcher(self.pelican.theme,
+                                                 [''],
+                                                 self.pelican.ignore_files),
+                         'settings': file_watcher(self.args.settings)}
+
+        for static_path in self.settings.get("STATIC_PATHS", []):
+            # use a prefix to avoid overriding standard watchers above
+            self.watchers['[static]%s' % static_path] = folder_watcher(
+                os.path.join(self.pelican.path, static_path),
+                [''],
+                self.pelican.ignore_files)
+
+        if next(self.watchers['content']) is None:
+            logger.warning('No valid files found in content.')
+
+        if next(self.watchers['theme']) is None:
+            logger.warning('Empty theme folder. Using `basic` theme.')
+
+    def generate(self):
+        list(map(next, self.watchers.values()))
+        self.pelican.run()
+
+    def run(self):
+        logger.info('  --- AutoReload Mode: Monitoring `content`, `theme` and'
+                    ' `settings` for changes. ---')
+        while True:
+            try:
+                # Check source dir for changed files ending with the given
+                # extension in the settings. In the theme dir is no such
+                # restriction; all files are recursively checked if they
+                # have changed, no matter what extension the filenames
+                # have.
+                modified = {k: next(v) for k, v in self.watchers.items()}
+
+                if modified['settings']:
+                    self.setup()
+
+                if any(modified.values()):
+                    print('\n-> Modified: {}. re-generating...'.format(
+                        ', '.join(k for k, v in modified.items() if v)))
+                    self.generate()
+
+            except Exception as e:
+                logger.warning('Caught exception "%s". Reloading.', e)
+
+            finally:
+                time.sleep(.5)  # sleep to avoid cpu load
+
+
 def main():
     args = parse_arguments()
     init(args.verbosity)
-    pelican, settings = get_instance(args)
-    readers = Readers(settings)
-
-    watchers = {'content': folder_watcher(pelican.path,
-                                          readers.extensions,
-                                          pelican.ignore_files),
-                'theme': folder_watcher(pelican.theme,
-                                        [''],
-                                        pelican.ignore_files),
-                'settings': file_watcher(args.settings)}
-
-    old_static = settings.get("STATIC_PATHS", [])
-    for static_path in old_static:
-        # use a prefix to avoid possible overriding of standard watchers above
-        watchers['[static]%s' % static_path] = folder_watcher(
-            os.path.join(pelican.path, static_path),
-            [''],
-            pelican.ignore_files)
 
     try:
+        generator = Generator(args)
+        generator.generate()
+
+        if args.serve:
+            serve = server.ServeThread(
+                generator.settings.get('OUTPUT_PATH', '.'),
+                'localhost',
+                args.port)
+            serve.daemon = True
+            serve.start()
+
         if args.autoreload:
-            print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
-                  ' `settings` for changes. ---')
+            generator.daemon = True
+            generator.start()
+            generator.join()
+        elif args.serve:
+            serve.join()
 
-            while True:
-                try:
-                    # Check source dir for changed files ending with the given
-                    # extension in the settings. In the theme dir is no such
-                    # restriction; all files are recursively checked if they
-                    # have changed, no matter what extension the filenames
-                    # have.
-                    modified = {k: next(v) for k, v in watchers.items()}
-
-                    if modified['settings']:
-                        pelican, settings = get_instance(args)
-
-                        # Adjust static watchers if there are any changes
-                        new_static = settings.get("STATIC_PATHS", [])
-
-                        # Added static paths
-                        # Add new watchers and set them as modified
-                        for static_path in set(new_static).difference(old_static):
-                            static_key = '[static]%s' % static_path
-                            watchers[static_key] = folder_watcher(
-                                os.path.join(pelican.path, static_path),
-                                [''],
-                                pelican.ignore_files)
-                            modified[static_key] = next(watchers[static_key])
-
-                        # Removed static paths
-                        # Remove watchers and modified values
-                        for static_path in set(old_static).difference(new_static):
-                            static_key = '[static]%s' % static_path
-                            watchers.pop(static_key)
-                            modified.pop(static_key)
-
-                        # Replace old_static with the new one
-                        old_static = new_static
-
-                    if any(modified.values()):
-                        print('\n-> Modified: {}. re-generating...'.format(
-                            ', '.join(k for k, v in modified.items() if v)))
-
-                        if modified['content'] is None:
-                            logger.warning('No valid files found in content.')
-
-                        if modified['theme'] is None:
-                            logger.warning('Empty theme folder. Using `basic` '
-                                           'theme.')
-
-                        pelican.run()
-
-                except KeyboardInterrupt:
-                    logger.warning("Keyboard interrupt, quitting.")
-                    break
-
-                except Exception as e:
-                    if (args.verbosity == logging.DEBUG):
-                        raise
-                    logger.warning(
-                        'Caught exception "%s". Reloading.', e)
-
-                finally:
-                    time.sleep(.5)  # sleep to avoid cpu load
-
-        else:
-            if next(watchers['content']) is None:
-                logger.warning('No valid files found in content.')
-
-            if next(watchers['theme']) is None:
-                logger.warning('Empty theme folder. Using `basic` theme.')
-
-            pelican.run()
+    except KeyboardInterrupt:
+        logger.info("Keyboard interrupt, quitting.")
 
     except Exception as e:
         logger.critical('%s', e)
-
         if args.verbosity == logging.DEBUG:
             raise
         else:
