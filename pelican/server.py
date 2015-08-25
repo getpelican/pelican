@@ -1,15 +1,17 @@
-from __future__ import print_function
+# -*- coding: utf-8 -*-
+from __future__ import print_function, unicode_literals
+
+import logging
 import os
 import sys
-import logging
-
-from six.moves import SimpleHTTPServer as srvmod
-from six.moves import socketserver
 
 try:
     from magic import from_file as magic_from_file
 except ImportError:
     magic_from_file = None
+
+from six.moves import SimpleHTTPServer as srvmod
+from six.moves import socketserver
 
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
@@ -54,11 +56,11 @@ if __name__ == '__main__':
 
     socketserver.TCPServer.allow_reuse_address = True
     try:
-        httpd = socketserver.TCPServer((SERVER, PORT), ComplexHTTPRequestHandler)
+        httpd = socketserver.TCPServer(
+            (SERVER, PORT), ComplexHTTPRequestHandler)
     except OSError as e:
         logging.error("Could not listen on port %s, server %s.", PORT, SERVER)
         sys.exit(getattr(e, 'exitcode', 1))
-
 
     logging.info("Serving at port %s, server %s.", PORT, SERVER)
     try:

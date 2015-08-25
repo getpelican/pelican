@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-import six
+from __future__ import print_function, unicode_literals
 
-# From django.core.paginator
-from collections import namedtuple
 import functools
 import logging
 import os
-
+from collections import namedtuple
 from math import ceil
 
+import six
+
 logger = logging.getLogger(__name__)
-
-
 PaginationRule = namedtuple(
     'PaginationRule',
     'min_page URL SAVE_AS',
@@ -143,7 +140,7 @@ class Page(object):
             'settings': self.settings,
             'base_name': os.path.dirname(self.name),
             'number_sep': '/',
-            'extension':  self.extension,
+            'extension': self.extension,
         }
 
         if self.number == 1:

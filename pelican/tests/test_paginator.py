@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, absolute_import
+from __future__ import absolute_import, unicode_literals
+
 import locale
 
-from pelican.tests.support import unittest, get_settings
-
-from pelican.paginator import Paginator
-from pelican.contents import Article, Author
-from pelican.settings import DEFAULT_CONFIG
 from jinja2.utils import generate_lorem_ipsum
+
+from pelican.contents import Article, Author
+from pelican.paginator import Paginator
+from pelican.settings import DEFAULT_CONFIG
+from pelican.tests.support import get_settings, unittest
+
 
 # generate one paragraph, enclosed with <p>
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
+
 
 class TestPage(unittest.TestCase):
     def setUp(self):
@@ -49,7 +52,8 @@ class TestPage(unittest.TestCase):
         )
 
         self.page_kwargs['metadata']['author'] = Author('Blogger', settings)
-        object_list = [Article(**self.page_kwargs), Article(**self.page_kwargs)]
+        object_list = [Article(**self.page_kwargs),
+                       Article(**self.page_kwargs)]
         paginator = Paginator('foobar.foo', object_list, settings)
         page = paginator.page(1)
         self.assertEqual(page.save_as, 'foobar.foo')

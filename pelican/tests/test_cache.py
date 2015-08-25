@@ -1,7 +1,14 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 import os
-from codecs import open
+
+from shutil import rmtree
+from tempfile import mkdtemp
+
+from pelican.generators import ArticlesGenerator, PagesGenerator
+from pelican.tests.support import get_settings, unittest
+
 try:
     from unittest.mock import MagicMock
 except ImportError:
@@ -9,12 +16,6 @@ except ImportError:
         from mock import MagicMock
     except ImportError:
         MagicMock = False
-
-from shutil import rmtree
-from tempfile import mkdtemp
-
-from pelican.generators import ArticlesGenerator, PagesGenerator
-from pelican.tests.support import unittest, get_settings
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, 'content')
@@ -35,7 +36,6 @@ class TestCache(unittest.TestCase):
         settings['CACHE_PATH'] = self.temp_cache
         return settings
 
-
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_object_caching(self):
         """Test Article objects caching at the generator level"""
@@ -43,7 +43,6 @@ class TestCache(unittest.TestCase):
         settings['CONTENT_CACHING_LAYER'] = 'generator'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
-
 
         generator = ArticlesGenerator(
             context=settings.copy(), settings=settings,
@@ -108,7 +107,9 @@ class TestCache(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
+        self.assertEqual(
+            generator.readers.read_file.call_count,
+            orig_call_count)
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_object_caching(self):
@@ -181,5 +182,6 @@ class TestCache(unittest.TestCase):
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.readers.read_file = MagicMock()
         generator.generate_context()
-        self.assertEqual(generator.readers.read_file.call_count, orig_call_count)
-
+        self.assertEqual(
+            generator.readers.read_file.call_count,
+            orig_call_count)

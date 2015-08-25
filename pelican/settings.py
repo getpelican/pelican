@@ -1,30 +1,31 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
-import six
+from __future__ import print_function, unicode_literals
 
 import copy
 import inspect
-import os
 import locale
 import logging
+import os
+from os.path import isabs
+from posixpath import join as posix_join
+
+import six
+
+from pelican.log import LimitFilter
 
 try:
     # SourceFileLoader is the recommended way in 3.3+
     from importlib.machinery import SourceFileLoader
-    load_source = lambda name, path: SourceFileLoader(name, path).load_module()
+
+    def load_source(name, path):
+        return SourceFileLoader(name, path).load_module()
 except ImportError:
     # but it does not exist in 3.2-, so fall back to imp
     import imp
     load_source = imp.load_source
 
-from os.path import isabs
-from pelican.utils import posix_join
-
-from pelican.log import LimitFilter
-
 
 logger = logging.getLogger(__name__)
-
 
 DEFAULT_THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              'themes', 'notmyidea')
@@ -131,7 +132,7 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': False,
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
-    }
+}
 
 PYGMENTS_RST_OPTIONS = None
 
@@ -158,8 +159,20 @@ def read_settings(path=None, override=None):
                            "has been deprecated (should be a list)")
             local_settings['PLUGIN_PATHS'] = [local_settings['PLUGIN_PATHS']]
         elif local_settings['PLUGIN_PATHS'] is not None:
-                local_settings['PLUGIN_PATHS'] = [os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(path), pluginpath)))
-                                    if not isabs(pluginpath) else pluginpath for pluginpath in local_settings['PLUGIN_PATHS']]
+            def getabs(path, pluginpath):
+                if isabs(pluginpath):
+                    return pluginpath
+                else:
+                    path_dirname = os.path.dirname(path)
+                    path_joined = os.path.join(path_dirname, pluginpath)
+                    path_normed = os.path.normpath(path_joined)
+                    path_absolute = os.path.abspath(path_normed)
+                    return path_absolute
+
+            pluginpath_list = [getabs(path, pluginpath)
+                               for pluginpath
+                               in local_settings['PLUGIN_PATHS']]
+            local_settings['PLUGIN_PATHS'] = pluginpath_list
     else:
         local_settings = copy.deepcopy(DEFAULT_CONFIG)
 
@@ -199,13 +212,13 @@ def configure_settings(settings):
     settings.
     Also, specify the log messages to be ignored.
     """
-    if not 'PATH' in settings or not os.path.isdir(settings['PATH']):
+    if 'PATH' not in settings or not os.path.isdir(settings['PATH']):
         raise Exception('You need to specify a path containing the content'
                         ' (see pelican --help for more information)')
 
     # specify the log messages to be ignored
-    LimitFilter._ignore.update(set(settings.get('LOG_FILTER',
-                                               DEFAULT_CONFIG['LOG_FILTER'])))
+    log_filter = settings.get('LOG_FILTER', DEFAULT_CONFIG['LOG_FILTER'])
+    LimitFilter._ignore.update(set(log_filter))
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):
@@ -223,19 +236,15 @@ def configure_settings(settings):
     settings['WRITE_SELECTED'] = [
         os.path.abspath(path) for path in
         settings.get('WRITE_SELECTED', DEFAULT_CONFIG['WRITE_SELECTED'])
-        ]
+    ]
 
     # standardize strings to lowercase strings
-    for key in [
-            'DEFAULT_LANG',
-            ]:
+    for key in ['DEFAULT_LANG']:
         if key in settings:
             settings[key] = settings[key].lower()
 
     # standardize strings to lists
-    for key in [
-            'LOCALE',
-            ]:
+    for key in ['LOCALE']:
         if key in settings and isinstance(settings[key], six.string_types):
             settings[key] = [settings[key]]
 
@@ -243,12 +252,13 @@ def configure_settings(settings):
     for key, types in [
             ('OUTPUT_SOURCES_EXTENSION', six.string_types),
             ('FILENAME_METADATA', six.string_types),
-            ]:
+    ]:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
-            logger.warn('Detected misconfigured %s (%s), '
-                        'falling back to the default (%s)',
-                    key, value, DEFAULT_CONFIG[key])
+            logger.warn(
+                'Detected misconfigured %s (%s), '
+                'falling back to the default (%s)',
+                key, value, DEFAULT_CONFIG[key])
 
     # try to set the different locales, fallback on the default.
     locales = settings.get('LOCALE', DEFAULT_CONFIG['LOCALE'])
@@ -270,16 +280,16 @@ def configure_settings(settings):
             logger.warning("Removed extraneous trailing slash from SITEURL.")
         # If SITEURL is defined but FEED_DOMAIN isn't,
         # set FEED_DOMAIN to SITEURL
-        if not 'FEED_DOMAIN' in settings:
+        if 'FEED_DOMAIN' not in settings:
             settings['FEED_DOMAIN'] = settings['SITEURL']
 
     # check content caching layer and warn of incompatibilities
-    if (settings.get('CACHE_CONTENT', False) and
-        settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and
-        settings.get('WITH_FUTURE_DATES', DEFAULT_CONFIG['WITH_FUTURE_DATES'])):
-        logger.warning('WITH_FUTURE_DATES conflicts with '
-                        "CONTENT_CACHING_LAYER set to 'generator', "
-                        "use 'reader' layer instead")
+    if settings.get('CACHE_CONTENT', False) and \
+       settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and \
+       settings.get('WITH_FUTURE_DATES', False):
+            logger.warning(
+                "WITH_FUTURE_DATES conflicts with CONTENT_CACHING_LAYER "
+                "set to 'generator', use 'reader' layer instead")
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     feed_keys = [
@@ -296,7 +306,7 @@ def configure_settings(settings):
             logger.warning('Feeds generated without SITEURL set properly may'
                            ' not be valid')
 
-    if not 'TIMEZONE' in settings:
+    if 'TIMEZONE' not in settings:
         logger.warning(
             'No timezone information specified in the settings. Assuming'
             ' your timezone is UTC for feed generation. Check '
@@ -321,7 +331,8 @@ def configure_settings(settings):
         old_key = key + '_DIR'
         new_key = key + '_PATHS'
         if old_key in settings:
-            logger.warning('Deprecated setting %s, moving it to %s list',
+            logger.warning(
+                'Deprecated setting %s, moving it to %s list',
                 old_key, new_key)
             settings[new_key] = [settings[old_key]]   # also make a list
             del settings[old_key]
@@ -365,8 +376,9 @@ def configure_settings(settings):
     for old, new, doc in [
             ('LESS_GENERATOR', 'the Webassets plugin', None),
             ('FILES_TO_COPY', 'STATIC_PATHS and EXTRA_PATH_METADATA',
-             'https://github.com/getpelican/pelican/blob/master/docs/settings.rst#path-metadata'),
-            ]:
+                'https://github.com/getpelican/pelican/'
+                'blob/master/docs/settings.rst#path-metadata'),
+    ]:
         if old in settings:
             message = 'The {} setting has been removed in favor of {}'.format(
                 old, new)

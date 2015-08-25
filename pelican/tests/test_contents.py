@@ -1,20 +1,21 @@
-from __future__ import unicode_literals, absolute_import
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, unicode_literals
 
-import logging
 import locale
+import logging
 import os.path
-import six
-
-from jinja2.utils import generate_lorem_ipsum
+from posixpath import join as posix_join
 from sys import platform
 
-from pelican.contents import (Page, Article, Static, URLWrapper,
-                              Author, Category)
+from jinja2.utils import generate_lorem_ipsum
+
+import six
+
+from pelican.contents import Article, Author, Category, Page, Static
 from pelican.settings import DEFAULT_CONFIG
 from pelican.signals import content_object_init
-from pelican.tests.support import LoggedTestCase, mute, unittest, get_settings
-from pelican.utils import (path_to_url, truncate_html_words, SafeDatetime,
-                           posix_join)
+from pelican.tests.support import LoggedTestCase, get_settings, unittest
+from pelican.utils import SafeDatetime, path_to_url, truncate_html_words
 
 
 # generate one paragraph, enclosed with <p>
@@ -49,7 +50,7 @@ class TestPage(unittest.TestCase):
         # them to initialise object's attributes.
         metadata = {'foo': 'bar', 'foobar': 'baz', 'title': 'foobar', }
         page = Page(TEST_CONTENT, metadata=metadata,
-                context={'localsiteurl': ''})
+                    context={'localsiteurl': ''})
         for key, value in metadata.items():
             self.assertTrue(hasattr(page, key))
             self.assertEqual(value, getattr(page, key))
@@ -139,14 +140,9 @@ class TestPage(unittest.TestCase):
         page = Page(**page_kwargs)
 
         # page.locale_date is a unicode string in both python2 and python3
-        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT']) 
-        # dt_date is a byte string in python2, and a unicode string in python3
-        # Let's make sure it is a unicode string (relies on python 3.3 supporting the u prefix)
-        if type(dt_date) != type(u''):
-            # python2:
-            dt_date = unicode(dt_date, 'utf8')
+        dt_date = dt.strftime(DEFAULT_CONFIG['DEFAULT_DATE_FORMAT'])
 
-        self.assertEqual(page.locale_date, dt_date )
+        self.assertEqual(page.locale_date, dt_date)
         page_kwargs['settings'] = get_settings()
 
         # I doubt this can work on all platforms ...
@@ -307,10 +303,14 @@ class TestPage(unittest.TestCase):
         args['settings'] = get_settings()
         args['source_path'] = 'content'
         args['context']['filenames'] = {
-            'images/poster.jpg': type(cls_name, (object,), {'url': 'images/poster.jpg'}),
-            'assets/video.mp4': type(cls_name, (object,), {'url': 'assets/video.mp4'}),
-            'images/graph.svg': type(cls_name, (object,), {'url': 'images/graph.svg'}),
-            'reference.rst': type(cls_name, (object,), {'url': 'reference.html'}),
+            'images/poster.jpg': type(
+                cls_name, (object,), {'url': 'images/poster.jpg'}),
+            'assets/video.mp4': type(
+                cls_name, (object,), {'url': 'assets/video.mp4'}),
+            'images/graph.svg': type(
+                cls_name, (object,), {'url': 'images/graph.svg'}),
+            'reference.rst': type(
+                cls_name, (object,), {'url': 'reference.html'}),
         }
 
         # video.poster
@@ -325,20 +325,25 @@ class TestPage(unittest.TestCase):
             content,
             'There is a video with poster '
             '<video controls poster="http://notmyidea.org/images/poster.jpg">'
-            '<source src="http://notmyidea.org/assets/video.mp4" type="video/mp4">'
+            '<source src="http://notmyidea.org/assets/video.mp4"'
+            ' type="video/mp4">'
             '</video>'
         )
 
         # object.data
         args['content'] = (
             'There is a svg object '
-            '<object data="{filename}/images/graph.svg" type="image/svg+xml"></object>'
+            '<object data="{filename}/images/graph.svg"'
+            ' type="image/svg+xml">'
+            '</object>'
         )
         content = Page(**args).get_content('http://notmyidea.org')
         self.assertEqual(
             content,
             'There is a svg object '
-            '<object data="http://notmyidea.org/images/graph.svg" type="image/svg+xml"></object>'
+            '<object data="http://notmyidea.org/images/graph.svg"'
+            ' type="image/svg+xml">'
+            '</object>'
         )
 
         # blockquote.cite
@@ -350,7 +355,9 @@ class TestPage(unittest.TestCase):
         self.assertEqual(
             content,
             'There is a blockquote with cite attribute '
-            '<blockquote cite="http://notmyidea.org/reference.html">blah blah</blockquote>'
+            '<blockquote cite="http://notmyidea.org/reference.html">'
+            'blah blah'
+            '</blockquote>'
         )
 
     def test_intrasite_link_markdown_spaces(self):
@@ -401,17 +408,19 @@ class TestArticle(TestPage):
 
     def test_slugify_category_author(self):
         settings = get_settings()
-        settings['SLUG_SUBSTITUTIONS'] = [ ('C#', 'csharp') ]
+        settings['SLUG_SUBSTITUTIONS'] = [('C#', 'csharp')]
         settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
         article_kwargs = self._copy_page_kwargs()
         article_kwargs['metadata']['author'] = Author("O'Brien", settings)
-        article_kwargs['metadata']['category'] = Category('C# & stuff', settings)
+        article_kwargs['metadata']['category'] = Category(
+            'C# & stuff', settings)
         article_kwargs['metadata']['title'] = 'fnord'
         article_kwargs['settings'] = settings
         article = Article(**article_kwargs)
         self.assertEqual(article.url, 'obrien/csharp-stuff/fnord/')
-        self.assertEqual(article.save_as, 'obrien/csharp-stuff/fnord/index.html')
+        self.assertEqual(
+            article.save_as, 'obrien/csharp-stuff/fnord/index.html')
 
 
 class TestStatic(LoggedTestCase):
@@ -426,7 +435,8 @@ class TestStatic(LoggedTestCase):
         self.context = self.settings.copy()
 
         self.static = Static(content=None, metadata={}, settings=self.settings,
-            source_path=posix_join('dir', 'foo.jpg'), context=self.context)
+                             source_path=posix_join('dir', 'foo.jpg'),
+                             context=self.context)
 
         self.context['filenames'] = {self.static.source_path: self.static}
 
@@ -436,8 +446,10 @@ class TestStatic(LoggedTestCase):
     def test_attach_to_same_dir(self):
         """attach_to() overrides a static file's save_as and url.
         """
-        page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
+        page = Page(
+            content="fake page",
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
             source_path=os.path.join('dir', 'fakepage.md'))
         self.static.attach_to(page)
 
@@ -449,7 +461,7 @@ class TestStatic(LoggedTestCase):
         """attach_to() preserves dirs inside the linking document dir.
         """
         page = Page(content="fake page", metadata={'title': 'fakepage'},
-            settings=self.settings, source_path='fakepage.md')
+                    settings=self.settings, source_path='fakepage.md')
         self.static.attach_to(page)
 
         expected_save_as = os.path.join('outpages', 'dir', 'foo.jpg')
@@ -460,8 +472,8 @@ class TestStatic(LoggedTestCase):
         """attach_to() ignores dirs outside the linking document dir.
         """
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'otherdir', 'fakepage.md'))
         self.static.attach_to(page)
 
         expected_save_as = os.path.join('outpages', 'foo.jpg')
@@ -472,8 +484,8 @@ class TestStatic(LoggedTestCase):
         """attach_to() does nothing when called a second time.
         """
         page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
-            source_path=os.path.join('dir', 'fakepage.md'))
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'fakepage.md'))
 
         self.static.attach_to(page)
 
@@ -481,8 +493,10 @@ class TestStatic(LoggedTestCase):
         otherdir_settings.update(dict(
             PAGE_SAVE_AS=os.path.join('otherpages', '{slug}.html'),
             PAGE_URL='otherpages/{slug}.html'))
-        otherdir_page = Page(content="other page",
-            metadata={'title': 'otherpage'}, settings=otherdir_settings,
+        otherdir_page = Page(
+            content="other page",
+            metadata={'title': 'otherpage'},
+            settings=otherdir_settings,
             source_path=os.path.join('dir', 'otherpage.md'))
 
         self.static.attach_to(otherdir_page)
@@ -497,8 +511,10 @@ class TestStatic(LoggedTestCase):
         """
         original_save_as = self.static.save_as
 
-        page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
+        page = Page(
+            content="fake page",
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
             source_path=os.path.join('dir', 'fakepage.md'))
         self.static.attach_to(page)
 
@@ -511,8 +527,10 @@ class TestStatic(LoggedTestCase):
         """
         original_url = self.static.url
 
-        page = Page(content="fake page",
-            metadata={'title': 'fakepage'}, settings=self.settings,
+        page = Page(
+            content="fake page",
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
             source_path=os.path.join('dir', 'fakepage.md'))
         self.static.attach_to(page)
 
@@ -523,13 +541,15 @@ class TestStatic(LoggedTestCase):
         """attach_to() does not override paths that were overridden elsewhere.
         (For example, by the user with EXTRA_PATH_METADATA)
         """
-        customstatic = Static(content=None,
+        customstatic = Static(
+            content=None,
             metadata=dict(save_as='customfoo.jpg', url='customfoo.jpg'),
             settings=self.settings,
             source_path=os.path.join('dir', 'foo.jpg'),
             context=self.settings.copy())
 
-        page = Page(content="fake page",
+        page = Page(
+            content="fake page",
             metadata={'title': 'fakepage'}, settings=self.settings,
             source_path=os.path.join('dir', 'fakepage.md'))
 
@@ -542,13 +562,16 @@ class TestStatic(LoggedTestCase):
         """{attach} link syntax triggers output path override & url replacement.
         """
         html = '<a href="{attach}../foo.jpg">link</a>'
-        page = Page(content=html,
-            metadata={'title': 'fakepage'}, settings=self.settings,
+        page = Page(
+            content=html,
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
             source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
             context=self.context)
         content = page.get_content('')
 
-        self.assertNotEqual(content, html,
+        self.assertNotEqual(
+            content, html,
             "{attach} link syntax did not trigger URL replacement.")
 
         expected_save_as = os.path.join('outpages', 'foo.jpg')
@@ -561,7 +584,8 @@ class TestStatic(LoggedTestCase):
         html = '<a href="{tag}foo">link</a>'
         page = Page(
             content=html,
-            metadata={'title': 'fakepage'}, settings=self.settings,
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
             source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
             context=self.context)
         content = page.get_content('')
@@ -572,8 +596,10 @@ class TestStatic(LoggedTestCase):
         "{category} link syntax triggers url replacement."
 
         html = '<a href="{category}foo">link</a>'
-        page = Page(content=html,
-            metadata={'title': 'fakepage'}, settings=self.settings,
+        page = Page(
+            content=html,
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
             source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
             context=self.context)
         content = page.get_content('')
@@ -588,11 +614,11 @@ class TestStatic(LoggedTestCase):
                     metadata={'title': 'fakepage'}, settings=self.settings,
                     source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
                     context=self.context)
-        content =  page.get_content('')
+        content = page.get_content('')
 
         self.assertEqual(content, html)
         self.assertLogCountEqual(
-                count=1,
-                msg="Replacement Indicator 'unknown' not recognized, "
-                    "skipping replacement",
-                level=logging.WARNING)
+            count=1,
+            msg="Replacement Indicator 'unknown' not recognized, "
+                "skipping replacement",
+            level=logging.WARNING)

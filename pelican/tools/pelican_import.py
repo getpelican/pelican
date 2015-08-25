@@ -1,29 +1,30 @@
 #!/usr/bin/env python
-
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
 import argparse
-try:
-    from html import unescape  # py3.4+
-except ImportError:
-    from six.moves.html_parser import HTMLParser
-    unescape = HTMLParser().unescape
+import logging
 import os
 import re
 import subprocess
 import sys
 import time
-import logging
 
 from codecs import open
+
 from six.moves.urllib.error import URLError
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.request import urlretrieve
 
-# pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
-from pelican.utils import slugify, SafeDatetime
+from pelican.utils import SafeDatetime, slugify
+
+try:
+    from html import unescape  # py3.4+
+except ImportError:
+    from six.moves.html_parser import HTMLParser
+    unescape = HTMLParser().unescape
 
 logger = logging.getLogger(__name__)
 
@@ -70,12 +71,19 @@ def decode_wp_content(content, br=True):
     content = ""
     for p in pgraphs:
         content = content + "<p>" + p.strip() + "</p>\n"
-    # under certain strange conditions it could create a P of entirely whitespace
+    # under certain strange conditions it could create
+    # a P of entirely whitespace
     content = re.sub(r'<p>\s*</p>', '', content)
-    content = re.sub(r'<p>([^<]+)</(div|address|form)>', "<p>\\1</p></\\2>", content)
+    content = re.sub(
+        r'<p>([^<]+)</(div|address|form)>',
+        "<p>\\1</p></\\2>",
+        content)
     # don't wrap tags
-    content = re.sub(r'<p>\s*(</?' + allblocks + r'[^>]*>)\s*</p>', "\\1", content)
-    #problem with nested lists
+    content = re.sub(
+        r'<p>\s*(</?' + allblocks + r'[^>]*>)\s*</p>',
+        "\\1",
+        content)
+    # problem with nested lists
     content = re.sub(r'<p>(<li.*)</p>', "\\1", content)
     content = re.sub(r'<p><blockquote([^>]*)>', "<blockquote\\1><p>", content)
     content = content.replace('</blockquote></p>', '</p></blockquote>')
@@ -84,12 +92,20 @@ def decode_wp_content(content, br=True):
     if br:
         def _preserve_newline(match):
             return match.group(0).replace("\n", "<WPPreserveNewline />")
-        content = re.sub(r'/<(script|style).*?<\/\\1>/s', _preserve_newline, content)
+        content = re.sub(
+            r'/<(script|style).*?<\/\\1>/s',
+            _preserve_newline,
+            content)
         # optionally make line breaks
         content = re.sub(r'(?<!<br />)\s*\n', "<br />\n", content)
         content = content.replace("<WPPreserveNewline />", "\n")
-    content = re.sub(r'(</?' + allblocks + r'[^>]*>)\s*<br />', "\\1", content)
-    content = re.sub(r'<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)', '\\1', content)
+    content = re.sub(
+        r'(</?' + allblocks + r'[^>]*>)\s*<br />', "\\1",
+        content)
+    content = re.sub(
+        r'<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)',
+        '\\1',
+        content)
     content = re.sub(r'\n</p>', "</p>", content)
 
     if pre_tags:
@@ -100,13 +116,14 @@ def decode_wp_content(content, br=True):
 
     return content
 
+
 def get_items(xml):
     """Opens a WordPress xml file and returns a list of items"""
     try:
         from bs4 import BeautifulSoup
     except ImportError:
-        error = ('Missing dependency '
-                 '"BeautifulSoup4" and "lxml" required to import WordPress XML files.')
+        error = ('Missing dependency "BeautifulSoup4" and "lxml" required to '
+                 'import WordPress XML files.')
         sys.exit(error)
     with open(xml, encoding='utf-8') as infile:
         xmlfile = infile.read()
@@ -114,11 +131,13 @@ def get_items(xml):
     items = soup.rss.channel.findAll('item')
     return items
 
+
 def get_filename(filename, post_id):
     if filename is not None:
         return filename
     else:
         return post_id
+
 
 def wp2fields(xml, wp_custpost=False):
     """Opens a wordpress XML file, and yield Pelican fields"""
@@ -141,16 +160,18 @@ def wp2fields(xml, wp_custpost=False):
 
             content = item.find('encoded').string
             raw_date = item.find('post_date').string
-            date_object = time.strptime(raw_date, "%Y-%m-%d %H:%M:%S")
-            date = time.strftime("%Y-%m-%d %H:%M", date_object)
+            date_object = time.strptime(raw_date, '%Y-%m-%d %H:%M:%S')
+            date = time.strftime('%Y-%m-%d %H:%M', date_object)
             author = item.find('creator').string
 
-            categories = [cat.string for cat in item.findAll('category', {'domain' : 'category'})]
-            # caturl = [cat['nicename'] for cat in item.find(domain='category')]
+            categories = [cat.string for cat
+                          in item.findAll('category', {'domain': 'category'})]
 
-            tags = [tag.string for tag in item.findAll('category', {'domain' : 'post_tag'})]
+            tags = [tag.string for tag
+                    in item.findAll('category', {'domain': 'post_tag'})]
             # To publish a post the status should be 'published'
-            status = 'published' if item.find('status').string == "publish" else item.find('status').string
+            status = 'published' if item.find('status').string == "publish" \
+                else item.find('status').string
 
             kind = 'article'
             post_type = item.find('post_type').string
@@ -159,16 +180,17 @@ def wp2fields(xml, wp_custpost=False):
             elif wp_custpost:
                 if post_type == 'post':
                     pass
-                # Old behaviour was to name everything not a page as an article.
-                # Theoretically all attachments have status == inherit so
-                # no attachments should be here. But this statement is to
+                # Old behaviour was to name everything not a page as an
+                # article.Theoretically all attachments have status == inherit
+                # so no attachments should be here. But this statement is to
                 # maintain existing behaviour in case that doesn't hold true.
                 elif post_type == 'attachment':
                     pass
                 else:
                     kind = post_type
-            yield (title, content, filename, date, author, categories, tags, status,
-                   kind, "wp-html")
+            yield (title, content, filename, date, author, categories,
+                   tags, status, kind, 'wp-html')
+
 
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
@@ -176,9 +198,9 @@ def dc2fields(file):
         from bs4 import BeautifulSoup
     except ImportError:
         error = ('Missing dependency '
-                 '"BeautifulSoup4" and "lxml" required to import Dotclear files.')
+                 '"BeautifulSoup4" and "lxml" required '
+                 'to import Dotclear files.')
         sys.exit(error)
-
 
     in_cat = False
     in_post = False
@@ -203,7 +225,7 @@ def dc2fields(file):
                     # remove 1st and last ""
                     fields[0] = fields[0][1:]
                     # fields[-1] = fields[-1][:-1]
-                    category_list[fields[0]]=fields[2]
+                    category_list[fields[0]] = fields[2]
             elif in_post:
                 if not line:
                     in_post = False
@@ -249,45 +271,50 @@ def dc2fields(file):
         # remove seconds
         post_creadt = ':'.join(post_creadt.split(':')[0:2])
 
-        author = ""
+        author = ''
         categories = []
         tags = []
 
         if cat_id:
-            categories = [category_list[id].strip() for id in cat_id.split(',')]
+            categories = [category_list[id].strip() for id
+                          in cat_id.split(',')]
 
         # Get tags related to a post
-        tag = post_meta.replace('{', '').replace('}', '').replace('a:1:s:3:\\"tag\\";a:', '').replace('a:0:', '')
+        tag = (post_meta.replace('{', '')
+                        .replace('}', '')
+                        .replace('a:1:s:3:\\"tag\\";a:', '')
+                        .replace('a:0:', ''))
         if len(tag) > 1:
             if int(len(tag[:1])) == 1:
                 newtag = tag.split('"')[1]
                 tags.append(
                     BeautifulSoup(
-                        newtag
-                        , "xml"
+                        newtag,
+                        'xml'
                     )
                     # bs4 always outputs UTF-8
                     .decode('utf-8')
                 )
             else:
-                i=1
-                j=1
+                i = 1
+                j = 1
                 while(i <= int(tag[:1])):
-                    newtag = tag.split('"')[j].replace('\\','')
+                    newtag = tag.split('"')[j].replace('\\', '')
                     tags.append(
                         BeautifulSoup(
-                            newtag
-                            , "xml"
+                            newtag,
+                            'xml'
                         )
                         # bs4 always outputs UTF-8
                         .decode('utf-8')
                     )
-                    i=i+1
-                    if j < int(tag[:1])*2:
-                        j=j+2
+                    i = i + 1
+                    if j < int(tag[:1]) * 2:
+                        j = j + 2
 
         """
-        dotclear2 does not use markdown by default unless you use the markdown plugin
+        dotclear2 does not use markdown by default unless
+        you use the markdown plugin
         Ref: http://plugins.dotaddict.org/dc2/details/formatting-markdown
         """
         if post_format == "markdown":
@@ -322,12 +349,13 @@ def posterous2fields(api_token, email, password):
         # py2 import
         import urllib2 as urllib_request
 
-
-    def get_posterous_posts(api_token, email, password, page = 1):
-        base64string = base64.encodestring(("%s:%s" % (email, password)).encode('utf-8')).replace(b'\n', b'')
-        url = "http://posterous.com/api/v2/users/me/sites/primary/posts?api_token=%s&page=%d" % (api_token, page)
+    def get_posterous_posts(api_token, email, password, page=1):
+        base64string = base64.encodestring(
+            ("%s:%s" % (email, password)).encode('utf-8')).replace('\n', '')
+        url = ("http://posterous.com/api/v2/users/me/sites/primary/"
+               "posts?api_token=%s&page=%d") % (api_token, page)
         request = urllib_request.Request(url)
-        request.add_header("Authorization", "Basic %s" % base64string.decode())
+        request.add_header('Authorization', 'Basic %s' % base64string.decode())
         handle = urllib_request.urlopen(request)
         posts = json.loads(handle.read().decode('utf-8'))
         return posts
@@ -344,16 +372,18 @@ def posterous2fields(api_token, email, password):
                 slug = slugify(post.get('title'))
             tags = [tag.get('name') for tag in post.get('tags')]
             raw_date = post.get('display_date')
-            date_object = SafeDatetime.strptime(raw_date[:-6], "%Y/%m/%d %H:%M:%S")
+            date_object = SafeDatetime.strptime(
+                raw_date[:-6], '%Y/%m/%d %H:%M:%S')
             offset = int(raw_date[-5:])
-            delta = timedelta(hours = offset / 100)
+            delta = timedelta(hours=(offset / 100))
             date_object -= delta
-            date = date_object.strftime("%Y-%m-%d %H:%M")
-            kind = 'article'  # TODO: Recognise pages
+            date = date_object.strftime('%Y-%m-%d %H:%M')
+            kind = 'article'      # TODO: Recognise pages
             status = 'published'  # TODO: Find a way for draft posts
 
-            yield (post.get('title'), post.get('body_cleaned'), slug, date,
-                post.get('user').get('display_name'), [], tags, status, kind, "html")
+            yield (post.get('title'), post.get('body_cleaned'),
+                   slug, date, post.get('user').get('display_name'),
+                   [], tags, status, kind, 'html')
 
 
 def tumblr2fields(api_key, blogname):
@@ -374,7 +404,9 @@ def tumblr2fields(api_key, blogname):
         import urllib2 as urllib_request
 
     def get_tumblr_posts(api_key, blogname, offset=0):
-        url = "http://api.tumblr.com/v2/blog/%s.tumblr.com/posts?api_key=%s&offset=%d&filter=raw" % (blogname, api_key, offset)
+        url = ("http://api.tumblr.com/v2/blog/%s.tumblr.com/"
+               "posts?api_key=%s&offset=%d&filter=raw") % (
+            blogname, api_key, offset)
         request = urllib_request.Request(url)
         handle = urllib_request.urlopen(request)
         posts = json.loads(handle.read().decode('utf-8'))
@@ -384,7 +416,10 @@ def tumblr2fields(api_key, blogname):
     posts = get_tumblr_posts(api_key, blogname, offset)
     while len(posts) > 0:
         for post in posts:
-            title = post.get('title') or post.get('source_title') or post.get('type').capitalize()
+            title = \
+                post.get('title') or \
+                post.get('source_title') or \
+                post.get('type').capitalize()
             slug = post.get('slug') or slugify(title)
             tags = post.get('tags')
             timestamp = post.get('timestamp')
@@ -398,7 +433,11 @@ def tumblr2fields(api_key, blogname):
                     fmtstr = '![%s](%s)'
                 else:
                     fmtstr = '<img alt="%s" src="%s" />'
-                content = '\n'.join(fmtstr % (photo.get('caption'), photo.get('original_size').get('url')) for photo in post.get('photos'))
+                content = ''
+                for photo in post.get('photos'):
+                    content += '\n'.join(
+                        fmtstr % (photo.get('caption'),
+                                  photo.get('original_size').get('url')))
                 content += '\n\n' + post.get('caption')
             elif type == 'quote':
                 if format == 'markdown':
@@ -417,16 +456,29 @@ def tumblr2fields(api_key, blogname):
                     fmtstr = '[via](%s)\n\n'
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
-                content = fmtstr % post.get('source_url') + post.get('caption') + post.get('player')
+                content = fmtstr % post.get('source_url') + \
+                    post.get('caption') + \
+                    post.get('player')
             elif type == 'video':
                 if format == 'markdown':
                     fmtstr = '[via](%s)\n\n'
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
-                content = fmtstr % post.get('source_url') + post.get('caption') + '\n'.join(player.get('embed_code') for player in post.get('player'))
+                source = fmtstr % post.get('source_url')
+                caption = post.get('caption')
+                players = '\n'.join(player.get('embed_code')
+                                    for player in post.get('player'))
+                content = source + caption + players
             elif type == 'answer':
                 title = post.get('question')
-                content = '<p><a href="%s" rel="external nofollow">%s</a>: %s</p>\n%s' % (post.get('asking_name'), post.get('asking_url'), post.get('question'), post.get('answer'))
+                content = ('<p>'
+                           '<a href="%s" rel="external nofollow">%s</a>'
+                           ': %s'
+                           '</p>\n'
+                           ' %s' % (post.get('asking_name'),
+                                    post.get('asking_url'),
+                                    post.get('question'),
+                                    post.get('answer')))
 
             content = content.rstrip() + '\n'
             kind = 'article'
@@ -438,25 +490,30 @@ def tumblr2fields(api_key, blogname):
         offset += len(posts)
         posts = get_tumblr_posts(api_key, blogname, offset)
 
+
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
     d = feedparser.parse(file)
     for entry in d.entries:
-        date = (time.strftime("%Y-%m-%d %H:%M", entry.updated_parsed)
-            if hasattr(entry, "updated_parsed") else None)
-        author = entry.author if hasattr(entry, "author") else None
-        tags = [e['term'] for e in entry.tags] if hasattr(entry, "tags") else None
+        date = (time.strftime('%Y-%m-%d %H:%M', entry.updated_parsed)
+                if hasattr(entry, 'updated_parsed') else None)
+        author = entry.author if hasattr(entry, 'author') else None
+        tags = ([e['term'] for e in entry.tags]
+                if hasattr(entry, 'tags') else None)
 
         slug = slugify(entry.title)
         kind = 'article'
-        yield (entry.title, entry.description, slug, date, author, [], tags, None,
-               kind, "html")
+        yield (entry.title, entry.description, slug, date,
+               author, [], tags, None, kind, 'html')
 
-def build_header(title, date, author, categories, tags, slug, status=None, attachments=None):
+
+def build_header(title, date, author, categories, tags, slug,
+                 status=None, attachments=None):
+    """Build a header from a list of fields"""
+
     from docutils.utils import column_width
 
-    """Build a header from a list of fields"""
     header = '%s\n%s\n' % (title, '#' * column_width(title))
     if date:
         header += ':date: %s\n' % date
@@ -475,8 +532,9 @@ def build_header(title, date, author, categories, tags, slug, status=None, attac
     header += '\n'
     return header
 
-def build_markdown_header(title, date, author, categories, tags, slug, status=None,
-    attachments=None):
+
+def build_markdown_header(title, date, author, categories, tags,
+                          slug, status=None, attachments=None):
     """Build a header from a list of fields"""
     header = 'Title: %s\n' % title
     if date:
@@ -496,6 +554,7 @@ def build_markdown_header(title, date, author, categories, tags, slug, status=No
     header += '\n'
     return header
 
+
 def get_ext(out_markup, in_markup='html'):
     if in_markup == 'markdown' or out_markup == 'markdown':
         ext = '.md'
@@ -503,26 +562,27 @@ def get_ext(out_markup, in_markup='html'):
         ext = '.rst'
     return ext
 
+
 def get_out_filename(output_path, filename, ext, kind,
-        dirpage, dircat, categories, wp_custpost):
+                     dirpage, dircat, categories, wp_custpost):
     filename = os.path.basename(filename)
 
     # Enforce filename restrictions for various filesystems at once; see
     # http://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     # we do not need to filter words because an extension will be appended
-    filename = re.sub(r'[<>:"/\\|?*^% ]', '-', filename) # invalid chars
-    filename = filename.lstrip('.') # should not start with a dot
+    filename = re.sub(r'[<>:"/\\|?*^% ]', '-', filename)  # invalid chars
+    filename = filename.lstrip('.')  # should not start with a dot
     if not filename:
         filename = '_'
-    filename = filename[:249] # allow for 5 extra characters
+    filename = filename[:249]  # allow for 5 extra characters
 
-    out_filename = os.path.join(output_path, filename+ext)
+    out_filename = os.path.join(output_path, filename + ext)
     # option to put page posts in pages/ subdirectory
     if dirpage and kind == 'page':
         pages_dir = os.path.join(output_path, 'pages')
         if not os.path.isdir(pages_dir):
             os.mkdir(pages_dir)
-        out_filename = os.path.join(pages_dir, filename+ext)
+        out_filename = os.path.join(pages_dir, filename + ext)
     elif not dirpage and kind == 'page':
         pass
     # option to put wp custom post types in directories with post type
@@ -539,17 +599,18 @@ def get_out_filename(output_path, filename, ext, kind,
         else:
             catname = ''
         out_filename = os.path.join(output_path, typename,
-            catname, filename+ext)
+                                    catname, filename + ext)
         if not os.path.isdir(os.path.join(output_path, typename, catname)):
             os.makedirs(os.path.join(output_path, typename, catname))
     # option to put files in directories with categories names
     elif dircat and (len(categories) > 0):
         catname = slugify(categories[0])
-        out_filename = os.path.join(output_path, catname, filename+ext)
+        out_filename = os.path.join(output_path, catname, filename + ext)
         if not os.path.isdir(os.path.join(output_path, catname)):
             os.mkdir(os.path.join(output_path, catname))
 
     return out_filename
+
 
 def get_attachments(xml):
     """returns a dictionary of posts that have attachments with a list
@@ -566,7 +627,7 @@ def get_attachments(xml):
 
         if kind == 'attachment':
             attachments.append((item.find('post_parent').string,
-                item.find('attachment_url').string))
+                                item.find('attachment_url').string))
         else:
             filename = get_filename(filename, post_id)
             names[post_id] = filename
@@ -575,7 +636,7 @@ def get_attachments(xml):
         try:
             parent_name = names[parent]
         except KeyError:
-            #attachment's parent is not a valid post
+            # attachment's parent is not a valid post
             parent_name = None
 
         try:
@@ -585,6 +646,7 @@ def get_attachments(xml):
             attachedposts[parent_name].append(url)
     return attachedposts
 
+
 def download_attachments(output_path, urls):
     """Downloads WordPress attachments and returns a list of paths to
     attachments that can be associated with a post (relative path to output
@@ -592,8 +654,8 @@ def download_attachments(output_path, urls):
     locations = []
     for url in urls:
         path = urlparse(url).path
-        #teardown path and rebuild to negate any errors with
-        #os.path.join and leading /'s
+        # teardown path and rebuild to negate any errors with
+        # os.path.join and leading /'s
         path = path.split('/')
         filename = path.pop(-1)
         localpath = ''
@@ -608,12 +670,13 @@ def download_attachments(output_path, urls):
             urlretrieve(url, os.path.join(full_path, filename))
             locations.append(os.path.join(localpath, filename))
         except (URLError, IOError) as e:
-            #Python 2.7 throws an IOError rather Than URLError
+            # Python 2.7 throws an IOError rather Than URLError
             logger.warning("No file could be downloaded from %s\n%s", url, e)
     return locations
 
 
-def fields2pelican(fields, out_markup, output_path,
+def fields2pelican(
+        fields, out_markup, output_path,
         dircat=False, strip_raw=False, disable_slugs=False,
         dirpage=False, filename_template=None, filter_author=None,
         wp_custpost=False, wp_attach=False, attachments=None):
@@ -634,24 +697,26 @@ def fields2pelican(fields, out_markup, output_path,
 
         ext = get_ext(out_markup, in_markup)
         if ext == '.md':
-            header = build_markdown_header(title, date, author, categories,
-                    tags, slug, status, attached_files)
+            header = build_markdown_header(
+                title, date, author, categories, tags, slug,
+                status, attached_files)
         else:
-            out_markup = "rst"
+            out_markup = 'rst'
             header = build_header(title, date, author, categories,
-                    tags, slug, status, attached_files)
+                                  tags, slug, status, attached_files)
 
-        out_filename = get_out_filename(output_path, filename, ext,
-                kind, dirpage, dircat, categories, wp_custpost)
+        out_filename = get_out_filename(
+            output_path, filename, ext, kind, dirpage, dircat,
+            categories, wp_custpost)
         print(out_filename)
 
-        if in_markup in ("html", "wp-html"):
-            html_filename = os.path.join(output_path, filename+'.html')
+        if in_markup in ('html', 'wp-html'):
+            html_filename = os.path.join(output_path, filename + '.html')
 
             with open(html_filename, 'w', encoding='utf-8') as fp:
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
-                if in_markup == "wp-html":
+                if in_markup == 'wp-html':
                     new_content = decode_wp_content(content)
                 else:
                     paragraphs = content.splitlines()
@@ -660,79 +725,95 @@ def fields2pelican(fields, out_markup, output_path,
 
                 fp.write(new_content)
 
-
             parse_raw = '--parse-raw' if not strip_raw else ''
             cmd = ('pandoc --normalize {0} --from=html'
-                   ' --to={1} -o "{2}" "{3}"').format(
-                    parse_raw, out_markup, out_filename, html_filename)
+                   ' --to={1} -o "{2}" "{3}"')
+            cmd = cmd.format(parse_raw, out_markup,
+                             out_filename, html_filename)
 
             try:
                 rc = subprocess.call(cmd, shell=True)
                 if rc < 0:
-                    error = "Child was terminated by signal %d" % -rc
+                    error = 'Child was terminated by signal %d' % -rc
                     exit(error)
 
                 elif rc > 0:
-                    error = "Please, check your Pandoc installation."
+                    error = 'Please, check your Pandoc installation.'
                     exit(error)
             except OSError as e:
-                error = "Pandoc execution failed: %s" % e
+                error = 'Pandoc execution failed: %s' % e
                 exit(error)
 
             os.remove(html_filename)
 
             with open(out_filename, 'r', encoding='utf-8') as fs:
                 content = fs.read()
-                if out_markup == "markdown":
-                    # In markdown, to insert a <br />, end a line with two or more spaces & then a end-of-line
-                    content = content.replace("\\\n ", "  \n")
-                    content = content.replace("\\\n", "  \n")
+                if out_markup == 'markdown':
+                    # In markdown, to insert a <br />, end a line with two
+                    # or more spaces & then a end-of-line
+                    content = content.replace('\\\n ', '  \n')
+                    content = content.replace('\\\n', '  \n')
 
         with open(out_filename, 'w', encoding='utf-8') as fs:
             fs.write(header + content)
     if wp_attach and attachments and None in attachments:
         print("downloading attachments that don't have a parent post")
         urls = attachments[None]
-        orphan_galleries = download_attachments(output_path, urls)
+        download_attachments(output_path, urls)
+
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, WordPress, Tumblr, Dotclear, or Posterous "
-                    "files into reST (rst) or Markdown (md) files. Be sure to "
-                    "have pandoc installed.",
+        description="Transform feed, WordPress, Tumblr, Dotclear, or "
+                    "Posterous files into reST (rst) or Markdown (md) files. "
+                    "Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument(dest='input', help='The input file to read')
-    parser.add_argument('--wpfile', action='store_true', dest='wpfile',
+    parser.add_argument(
+        dest='input', help='The input file to read')
+    parser.add_argument(
+        '--wpfile', action='store_true', dest='wpfile',
         help='Wordpress XML export')
-    parser.add_argument('--dotclear', action='store_true', dest='dotclear',
+    parser.add_argument(
+        '--dotclear', action='store_true', dest='dotclear',
         help='Dotclear export')
-    parser.add_argument('--posterous', action='store_true', dest='posterous',
+    parser.add_argument(
+        '--posterous', action='store_true', dest='posterous',
         help='Posterous export')
-    parser.add_argument('--tumblr', action='store_true', dest='tumblr',
+    parser.add_argument(
+        '--tumblr', action='store_true', dest='tumblr',
         help='Tumblr export')
-    parser.add_argument('--feed', action='store_true', dest='feed',
+    parser.add_argument(
+        '--feed', action='store_true', dest='feed',
         help='Feed to parse')
-    parser.add_argument('-o', '--output', dest='output', default='output',
+    parser.add_argument(
+        '-o', '--output', dest='output', default='output',
         help='Output path')
-    parser.add_argument('-m', '--markup', dest='markup', default='rst',
+    parser.add_argument(
+        '-m', '--markup', dest='markup', default='rst',
         help='Output markup format (supports rst & markdown)')
-    parser.add_argument('--dir-cat', action='store_true', dest='dircat',
+    parser.add_argument(
+        '--dir-cat', action='store_true', dest='dircat',
         help='Put files in directories with categories name')
-    parser.add_argument('--dir-page', action='store_true', dest='dirpage',
+    parser.add_argument(
+        '--dir-page', action='store_true', dest='dirpage',
         help=('Put files recognised as pages in "pages/" sub-directory'
               ' (wordpress import only)'))
-    parser.add_argument('--filter-author', dest='author',
+    parser.add_argument(
+        '--filter-author', dest='author',
         help='Import only post from the specified author')
-    parser.add_argument('--strip-raw', action='store_true', dest='strip_raw',
+    parser.add_argument(
+        '--strip-raw', action='store_true', dest='strip_raw',
         help="Strip raw HTML code that can't be converted to "
              "markup such as flash embeds or iframes (wordpress import only)")
-    parser.add_argument('--wp-custpost', action='store_true',
+    parser.add_argument(
+        '--wp-custpost', action='store_true',
         dest='wp_custpost',
         help='Put wordpress custom post types in directories. If used with '
              '--dir-cat option directories will be created as '
              '/post_type/category/ (wordpress import only)')
-    parser.add_argument('--wp-attach', action='store_true', dest='wp_attach',
+    parser.add_argument(
+        '--wp-attach', action='store_true', dest='wp_attach',
         help='(wordpress import only) Download files uploaded to wordpress as '
              'attachments. Files will be added to posts as a list in the post '
              'header. All files will be downloaded, even if '
@@ -740,16 +821,20 @@ def main():
              'with their original path inside the output directory. '
              'e.g. output/wp-uploads/date/postname/file.jpg '
              '-- Requires an internet connection --')
-    parser.add_argument('--disable-slugs', action='store_true',
+    parser.add_argument(
+        '--disable-slugs', action='store_true',
         dest='disable_slugs',
         help='Disable storing slugs from imported posts within output. '
              'With this disabled, your Pelican URLs may not be consistent '
              'with your original posts.')
-    parser.add_argument('-e', '--email', dest='email',
+    parser.add_argument(
+        '-e', '--email', dest='email',
         help="Email address (posterous import only)")
-    parser.add_argument('-p', '--password', dest='password',
+    parser.add_argument(
+        '-p', '--password', dest='password',
         help="Password (posterous import only)")
-    parser.add_argument('-b', '--blogname', dest='blogname',
+    parser.add_argument(
+        '-b', '--blogname', dest='blogname',
         help="Blog name (Tumblr import only)")
 
     args = parser.parse_args()
@@ -766,18 +851,20 @@ def main():
     elif args.feed:
         input_type = 'feed'
     else:
-        error = "You must provide either --wpfile, --dotclear, --posterous, --tumblr or --feed options"
+        error = ('You must provide either --wpfile, --dotclear, '
+                 '--posterous, --tumblr or --feed options')
         exit(error)
 
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
         except OSError:
-            error = "Unable to create the output folder: " + args.output
+            error = 'Unable to create the output folder: ' + args.output
             exit(error)
 
     if args.wp_attach and input_type != 'wordpress':
-        error = "You must be importing a wordpress xml to use the --wp-attach option"
+        error = ('You must be importing a wordpress xml '
+                 'to use the --wp-attach option')
         exit(error)
 
     if input_type == 'wordpress':
@@ -796,14 +883,14 @@ def main():
     else:
         attachments = None
 
-    init() # init logging
-
+    # init logging
+    init()
     fields2pelican(fields, args.markup, args.output,
                    dircat=args.dircat or False,
                    dirpage=args.dirpage or False,
                    strip_raw=args.strip_raw or False,
                    disable_slugs=args.disable_slugs or False,
                    filter_author=args.author,
-                   wp_custpost = args.wp_custpost or False,
-                   wp_attach = args.wp_attach or False,
-                   attachments = attachments or None)
+                   wp_custpost=args.wp_custpost or False,
+                   wp_attach=args.wp_attach or False,
+                   attachments=attachments or None)

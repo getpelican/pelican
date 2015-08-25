@@ -4,9 +4,10 @@ from __future__ import unicode_literals
 import functools
 import logging
 import os
+
 import six
 
-from pelican.utils import (slugify, python_2_unicode_compatible)
+from pelican.utils import python_2_unicode_compatible, slugify
 
 logger = logging.getLogger(__name__)
 

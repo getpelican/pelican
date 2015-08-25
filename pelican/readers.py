@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
 
 import logging
 import os
@@ -9,24 +9,50 @@ import docutils
 import docutils.core
 import docutils.io
 from docutils.writers.html4css1 import HTMLTranslator
-import six
 
-# import the directives to have pygments support
+import six
+from six.moves.html_parser import HTMLParser
+
 from pelican import rstdirectives  # NOQA
+from pelican import signals
+from pelican.cache import FileStampDataCacher
+from pelican.contents import Author, Category, Page, Tag
+from pelican.utils import SafeDatetime, get_date, pelican_open, posixize_path
+
 try:
     from markdown import Markdown
 except ImportError:
     Markdown = False  # NOQA
+
 try:
     from html import escape
 except ImportError:
     from cgi import escape
-from six.moves.html_parser import HTMLParser
 
-from pelican import signals
-from pelican.cache import FileStampDataCacher
-from pelican.contents import Page, Category, Tag, Author
-from pelican.utils import get_date, pelican_open, SafeDatetime, posixize_path
+# Metadata processors have no way to discard an unwanted value, so we have
+# them return this value instead to signal that it should be discarded later.
+# This means that _filter_discardable_metadata() must be called on processed
+# metadata dicts before use, to remove the items with the special value.
+_DISCARD = object()
+METADATA_PROCESSORS = {
+    'tags': lambda x, y: ([
+        Tag(tag, y)
+        for tag in ensure_metadata_list(x)
+    ] or _DISCARD),
+    'date': lambda x, y: get_date(x.replace('_', ' ')),
+    'modified': lambda x, y: get_date(x),
+    'status': lambda x, y: x.strip() or _DISCARD,
+    'category': lambda x, y: _process_if_nonempty(Category, x, y),
+    'author': lambda x, y: _process_if_nonempty(Author, x, y),
+    'authors': lambda x, y: ([
+        Author(author, y)
+        for author in ensure_metadata_list(x)
+    ] or _DISCARD),
+    'slug': lambda x, y: x.strip() or _DISCARD,
+}
+
+logger = logging.getLogger(__name__)
+
 
 def ensure_metadata_list(text):
     """Canonicalize the format of a list of authors or tags.  This works
@@ -49,13 +75,6 @@ def ensure_metadata_list(text):
     return [v for v in (w.strip() for w in text) if v]
 
 
-# Metadata processors have no way to discard an unwanted value, so we have
-# them return this value instead to signal that it should be discarded later.
-# This means that _filter_discardable_metadata() must be called on processed
-# metadata dicts before use, to remove the items with the special value.
-_DISCARD = object()
-
-
 def _process_if_nonempty(processor, name, settings):
     """Removes extra whitespace from name and applies a metadata processor.
     If name is empty or all whitespace, returns _DISCARD instead.
@@ -64,27 +83,10 @@ def _process_if_nonempty(processor, name, settings):
     return processor(name, settings) if name else _DISCARD
 
 
-METADATA_PROCESSORS = {
-    'tags': lambda x, y: ([Tag(tag, y) for tag in ensure_metadata_list(x)]
-                          or _DISCARD),
-    'date': lambda x, y: get_date(x.replace('_', ' ')),
-    'modified': lambda x, y: get_date(x),
-    'status': lambda x, y: x.strip() or _DISCARD,
-    'category': lambda x, y: _process_if_nonempty(Category, x, y),
-    'author': lambda x, y: _process_if_nonempty(Author, x, y),
-    'authors': lambda x, y: ([Author(author, y)
-                              for author in ensure_metadata_list(x)]
-                             or _DISCARD),
-    'slug': lambda x, y: x.strip() or _DISCARD,
-}
-
-
 def _filter_discardable_metadata(metadata):
     """Return a copy of a dict, minus any items marked as discardable."""
     return {name: val for name, val in metadata.items() if val is not _DISCARD}
 
-
-logger = logging.getLogger(__name__)
 
 class BaseReader(object):
     """Base class to read files.
@@ -267,8 +269,10 @@ class MarkdownReader(BaseReader):
                 output[name] = self.process_metadata(name, summary)
             elif name in METADATA_PROCESSORS:
                 if len(value) > 1:
-                    logger.warning('Duplicate definition of `%s` '
-                        'for %s. Using first one.', name, self._source_path)
+                    logger.warning(
+                        'Duplicate definition of `%s` '
+                        'for %s. Using first one.',
+                        name, self._source_path)
                 output[name] = self.process_metadata(name, value[0])
             elif len(value) > 1:
                 # handle list metadata as list of string
@@ -380,7 +384,8 @@ class HTMLReader(BaseReader):
         def _handle_meta_tag(self, attrs):
             name = self._attr_value(attrs, 'name')
             if name is None:
-                attr_serialized = ', '.join(['{}="{}"'.format(k, v) for k, v in attrs])
+                attr_list = ['{}="{}"'.format(k, v) for k, v in attrs]
+                attr_serialized = ', '.join(attr_list)
                 logger.warning("Meta tag in file %s does not have a 'name' "
                                "attribute, skipping. Attributes: %s",
                                self._filename, attr_serialized)
@@ -394,9 +399,9 @@ class HTMLReader(BaseReader):
                         "Meta tag attribute 'contents' used in file %s, should"
                         " be changed to 'content'",
                         self._filename,
-                        extra={'limit_msg': ("Other files have meta tag "
-                                             "attribute 'contents' that should "
-                                             "be changed to 'content'")})
+                        extra={'limit_msg': "Other files have meta tag "
+                                            "attribute 'contents' that should "
+                                            "be changed to 'content'"})
 
             if name == 'keywords':
                 name = 'tags'
@@ -474,7 +479,8 @@ class Readers(FileStampDataCacher):
 
         path = os.path.abspath(os.path.join(base_path, path))
         source_path = posixize_path(os.path.relpath(path, base_path))
-        logger.debug('Read file %s -> %s',
+        logger.debug(
+            'Read file %s -> %s',
             source_path, content_class.__name__)
 
         if not fmt:
@@ -486,7 +492,8 @@ class Readers(FileStampDataCacher):
                 'Pelican does not know how to parse %s', path)
 
         if preread_signal:
-            logger.debug('Signal %s.send(%s)',
+            logger.debug(
+                'Signal %s.send(%s)',
                 preread_signal.name, preread_sender)
             preread_signal.send(preread_sender)
 
@@ -527,7 +534,9 @@ class Readers(FileStampDataCacher):
             def typogrify_wrapper(text):
                 """Ensures ignore_tags feature is backward compatible"""
                 try:
-                    return typogrify(text, self.settings['TYPOGRIFY_IGNORE_TAGS'])
+                    return typogrify(
+                        text,
+                        self.settings['TYPOGRIFY_IGNORE_TAGS'])
                 except TypeError:
                     return typogrify(text)
 
@@ -539,8 +548,10 @@ class Readers(FileStampDataCacher):
                 metadata['summary'] = typogrify_wrapper(metadata['summary'])
 
         if context_signal:
-            logger.debug('Signal %s.send(%s, <metadata>)',
-                context_signal.name, context_sender)
+            logger.debug(
+                'Signal %s.send(%s, <metadata>)',
+                context_signal.name,
+                context_sender)
             context_signal.send(context_sender, metadata=metadata)
 
         return content_class(content=content, metadata=metadata,
@@ -591,7 +602,8 @@ def default_metadata(settings=None, process=None):
             if process:
                 value = process('category', value)
             metadata['category'] = value
-        if settings.get('DEFAULT_DATE', None) and settings['DEFAULT_DATE'] != 'fs':
+        if settings.get('DEFAULT_DATE', None) and \
+           settings['DEFAULT_DATE'] != 'fs':
             metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
     return metadata
 
