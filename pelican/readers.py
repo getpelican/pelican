@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals
 import logging
 import os
 import re
+from collections import OrderedDict
 
 import docutils
 import docutils.core
@@ -72,7 +73,9 @@ def ensure_metadata_list(text):
         else:
             text = text.split(',')
 
-    return [v for v in (w.strip() for w in text) if v]
+    return list(OrderedDict.fromkeys(
+        [v for v in (w.strip() for w in text) if v]
+    ))
 
 
 def _process_if_nonempty(processor, name, settings):
