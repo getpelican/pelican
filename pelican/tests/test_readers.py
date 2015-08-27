@@ -516,6 +516,16 @@ class MdReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_duplicate_tags_or_authors_are_removed(self):
+        reader = readers.MarkdownReader(settings=get_settings())
+        content, metadata = reader.read(
+            _path('article_with_duplicate_tags_authors.md'))
+        expected = {
+            'tags': ['foo', 'bar', 'foobar'],
+            'authors': ['Author, First', 'Author, Second'],
+        }
+        self.assertDictHasSubset(metadata, expected)
+
 
 class HTMLReaderTest(ReaderTest):
     def test_article_with_comments(self):
