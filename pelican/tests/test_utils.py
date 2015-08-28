@@ -146,30 +146,50 @@ class TestUtils(LoggedTestCase):
             self.assertEqual(utils.get_relative_path(value), expected)
 
     def test_truncate_html_words(self):
+        # Plain text.
         self.assertEqual(
             utils.truncate_html_words('short string', 20),
             'short string')
-
         self.assertEqual(
             utils.truncate_html_words('word ' * 100, 20),
             'word ' * 20 + '...')
 
+        # Words enclosed or intervaled by HTML tags.
         self.assertEqual(
             utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20),
             '<p>' + 'word ' * 20 + '...</p>')
-
         self.assertEqual(
             utils.truncate_html_words(
                 '<span\nstyle="\n...\n">' + 'word ' * 100 + '</span>', 20),
             '<span\nstyle="\n...\n">' + 'word ' * 20 + '...</span>')
-
         self.assertEqual(
             utils.truncate_html_words('<br>' + 'word ' * 100, 20),
             '<br>' + 'word ' * 20 + '...')
-
         self.assertEqual(
             utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20),
             '<!-- comment -->' + 'word ' * 20 + '...')
+
+        # Words with hypens and apostrophes.
+        self.assertEqual(
+            utils.truncate_html_words("a-b " * 100, 20),
+            "a-b " * 20 + '...')
+        self.assertEqual(
+            utils.truncate_html_words("it's " * 100, 20),
+            "it's " * 20 + '...')
+
+        # Words with HTML entity references.
+        self.assertEqual(
+            utils.truncate_html_words("&eacute; " * 100, 20),
+            "&eacute; " * 20 + '...')
+        self.assertEqual(
+            utils.truncate_html_words("caf&eacute; " * 100, 20),
+            "caf&eacute; " * 20 + '...')
+        self.assertEqual(
+            utils.truncate_html_words("&egrave;lite " * 100, 20),
+            "&egrave;lite " * 20 + '...')
+        self.assertEqual(
+            utils.truncate_html_words("cafeti&eacute;re " * 100, 20),
+            "cafeti&eacute;re " * 20 + '...')
 
     def test_process_translations(self):
         # create a bunch of articles
