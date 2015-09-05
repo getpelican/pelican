@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% block head %}
   {{ super() }}
-  {% for keyword in article.keywords %}
-    <meta name="keywords" content="{{keyword}}" />
-  {% endfor %}
-
   {% if article.description %}
     <meta name="description" content="{{article.description}}" />
   {% endif %}
