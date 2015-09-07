@@ -94,6 +94,7 @@ Setting name (followed by default value, if any)                                
                                                                                  control data. For example: ``[".hg", ".git", ".bzr"]``
 ``JINJA_EXTENSIONS = []``                                                        A list of any Jinja2 extensions you want to use.
 ``JINJA_FILTERS = {}``                                                           A dictionary of custom Jinja2 filters you want to use.
+``JINJA_TESTS = {}``                                                             A dictionary of custom Jinja2 tests you want to use
                                                                                  The dictionary should map the filtername to the filter function.
                                                                                  For example: ``{'urlencode': urlencode_filter}``
                                                                                  See `Jinja custom filters documentation`_.
