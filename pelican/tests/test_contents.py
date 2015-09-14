@@ -606,6 +606,40 @@ class TestStatic(LoggedTestCase):
 
         self.assertNotEqual(content, html)
 
+    def test_author_link_syntax(self):
+        "{author} link syntax triggers url replacement."
+
+        html = '<a href="{author}foo">link</a>'
+        page = Page(
+            content=html,
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+            context=self.context)
+        content = page.get_content('')
+
+        self.assertNotEqual(content, html)
+
+    def test_index_link_syntax(self):
+        "{index} link syntax triggers url replacement."
+
+        html = '<a href="{index}">link</a>'
+        page = Page(
+            content=html,
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+            context=self.context)
+        content = page.get_content('')
+
+        self.assertNotEqual(content, html)
+
+        expected_html = ('<a href="' +
+                         '/'.join((self.settings['SITEURL'],
+                                   self.settings['INDEX_SAVE_AS'])) +
+                         '">link</a>')
+        self.assertEqual(content, expected_html)
+
     def test_unknown_link_syntax(self):
         "{unknown} link syntax should trigger warning."
 
