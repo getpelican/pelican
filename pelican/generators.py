@@ -12,6 +12,8 @@ from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter
 
+from blinker import signal
+
 from jinja2 import (BaseLoader, ChoiceLoader, Environment, FileSystemLoader,
                     PrefixLoader, TemplateNotFound)
 
@@ -60,6 +62,7 @@ class Generator(object):
 
         simple_loader = FileSystemLoader(os.path.join(theme_path,
                                          "themes", "simple", "templates"))
+
         self.env = Environment(
             trim_blocks=True,
             lstrip_blocks=True,
@@ -600,28 +603,57 @@ class ArticlesGenerator(CachingGenerator):
 class PagesGenerator(CachingGenerator):
     """Generate pages"""
 
+    content_class = Page
+
     def __init__(self, *args, **kwargs):
         self.pages = []
         self.hidden_pages = []
         self.hidden_translations = []
+        self._init_signals()
         super(PagesGenerator, self).__init__(*args, **kwargs)
         signals.page_generator_init.send(self)
+
+    def _get_settings(self, key):
+        key = ('%s_%s' % (self.content_class.__name__, key)).upper()
+        return self.settings[key]
+
+    def _get_signal_name(self, method, key):
+        return '%s_%s_%s' % (
+            self.content_class.__name__.lower(),
+            method,
+            key
+        )
+
+    def _get_signal(self, *args, **kw):
+        signal_name = self._get_signal_name(*args, **kw)
+        return getattr(signals, signal_name)
+
+    def _init_signals(self):
+        for name in ['init', 'preread', 'context', 'finalized']:
+            signal_name = self._get_signal_name('generator', name)
+            setattr(signals, signal_name, signal(signal_name))
+
+        signal_name = self._get_signal_name('writer', 'finalized')
+        setattr(signals, signal_name, signal(signal_name))
 
     def generate_context(self):
         all_pages = []
         hidden_pages = []
         for f in self.get_files(
-                self.settings['PAGE_PATHS'],
-                exclude=self.settings['PAGE_EXCLUDES']):
+                self._get_settings('paths'),
+                exclude=self._get_settings('excludes')):
             page = self.get_cached_data(f, None)
             if page is None:
                 try:
                     page = self.readers.read_file(
-                        base_path=self.path, path=f, content_class=Page,
+                        base_path=self.path, path=f,
+                        content_class=self.content_class,
                         context=self.context,
-                        preread_signal=signals.page_generator_preread,
+                        preread_signal=self._get_signal('generator',
+                                                        'preread'),
                         preread_sender=self,
-                        context_signal=signals.page_generator_context,
+                        context_signal=self._get_signal('generator',
+                                                        'context'),
                         context_sender=self)
                 except Exception as e:
                     logger.error(
@@ -651,25 +683,31 @@ class PagesGenerator(CachingGenerator):
 
         self.pages, self.translations = process_translations(
             all_pages,
-            order_by=self.settings['PAGE_ORDER_BY'])
+            order_by=self._get_settings('order_by'))
         self.hidden_pages, self.hidden_translations = \
             process_translations(hidden_pages)
 
-        self._update_context(('pages', 'hidden_pages'))
+        plurial_name = '%ss' % self.content_class.__name__.lower()
+        # Set aliases to access to the objects in the templates
+        setattr(self, plurial_name, self.pages)
+        setattr(self, 'hidden_%s' % plurial_name, self.hidden_pages)
+        self._update_context((plurial_name, 'hidden_%s' % plurial_name))
 
         self.save_cache()
         self.readers.save_cache()
-        signals.page_generator_finalized.send(self)
+        self._get_signal('generator', 'finalized').send(self)
 
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
                           self.hidden_translations, self.hidden_pages):
             writer.write_file(
                 page.save_as, self.get_template(page.template),
-                self.context, page=page,
+                self.context,
                 relative_urls=self.settings['RELATIVE_URLS'],
-                override_output=hasattr(page, 'override_save_as'))
-        signals.page_writer_finalized.send(self, writer=writer)
+                override_output=hasattr(page, 'override_save_as'),
+                **{self.content_class.__name__.lower(): page}
+            )
+        self._get_signal('writer', 'finalized').send(self, writer=writer)
 
 
 class StaticGenerator(Generator):

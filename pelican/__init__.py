@@ -182,8 +182,17 @@ class Pelican(object):
 
         articles_generator = next(g for g in generators
                                   if isinstance(g, ArticlesGenerator))
-        pages_generator = next(g for g in generators
-                               if isinstance(g, PagesGenerator))
+
+        page_length = 0
+        translation_length = 0
+        hidden_page_length = 0
+        hidden_translation_length = 0
+        for g in generators:
+            if isinstance(g, PagesGenerator):
+                page_length += len(g.pages)
+                translation_length += len(g.translations)
+                hidden_page_length += len(g.hidden_pages)
+                hidden_translation_length += len(g.hidden_translations)
 
         pluralized_articles = maybe_pluralize(
             (len(articles_generator.articles) +
@@ -196,13 +205,11 @@ class Pelican(object):
             'draft',
             'drafts')
         pluralized_pages = maybe_pluralize(
-            (len(pages_generator.pages) +
-             len(pages_generator.translations)),
+            (page_length + translation_length),
             'page',
             'pages')
         pluralized_hidden_pages = maybe_pluralize(
-            (len(pages_generator.hidden_pages) +
-             len(pages_generator.hidden_translations)),
+            (hidden_page_length + hidden_translation_length),
             'hidden page',
             'hidden pages')
 
