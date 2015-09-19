@@ -64,6 +64,7 @@ DEFAULT_CONFIG = {
     'REVERSE_CATEGORY_ORDER': False,
     'DELETE_OUTPUT_DIRECTORY': False,
     'OUTPUT_RETENTION': [],
+    'INDEX_SAVE_AS': 'index.html',
     'ARTICLE_URL': '{slug}.html',
     'ARTICLE_SAVE_AS': '{slug}.html',
     'ARTICLE_ORDER_BY': 'reversed-date',

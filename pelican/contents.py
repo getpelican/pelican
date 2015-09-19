@@ -21,7 +21,7 @@ from pelican.utils import (SafeDatetime, deprecated_attribute, memoized,
                            slugify, strftime, truncate_html_words)
 
 # Import these so that they're avalaible when you import from pelican.contents.
-from pelican.urlwrappers import (URLWrapper, Author, Category, Tag)  # NOQA
+from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 
 logger = logging.getLogger(__name__)
 
@@ -253,6 +253,10 @@ class Content(object):
                 origin = '/'.join((siteurl, Category(path, self.settings).url))
             elif what == 'tag':
                 origin = '/'.join((siteurl, Tag(path, self.settings).url))
+            elif what == 'index':
+                origin = '/'.join((siteurl, self.settings['INDEX_SAVE_AS']))
+            elif what == 'author':
+                origin = '/'.join((siteurl, Author(path, self.settings).url))
             else:
                 logger.warning(
                     "Replacement Indicator '%s' not recognized, "

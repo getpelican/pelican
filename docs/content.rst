@@ -329,11 +329,11 @@ of ``{attach}``, and letting the file's location be determined by the project's
 ``STATIC_SAVE_AS`` and ``STATIC_URL`` settings. (Per-file ``save_as`` and
 ``url`` overrides can still be set in ``EXTRA_PATH_METADATA``.)
 
-Linking to tags and categories
-------------------------------
+Linking to authors, categories, index and tags
+----------------------------------------------
 
-You can link to tags and categories using the ``{tag}tagname`` and
-``{category}foobar`` syntax.
+You can link to authors, categories, index and tags using the ``{author}name``,
+``{category}foobar``, ``{index}`` and ``{tag}tagname`` syntax.
 
 Deprecated internal link syntax
 -------------------------------
