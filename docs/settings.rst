@@ -724,6 +724,10 @@ Setting name              What does it do?
 ``TWITTER_USERNAME``      Allows for adding a button to articles to encourage
                           others to tweet about them. Add your Twitter username
                           if you want this button to appear.
+``LINKS_WIDGET_NAME``     Allows override of the name of the links widget.
+                          If not specified, defaults to "links".
+``SOCIAL_WIDGET_NAME``    Allows override of the name of the "social" widget.
+                          If not specified, defaults to "social".
 =======================   =======================================================
 
 In addition, you can use the "wide" version of the ``notmyidea`` theme by
