@@ -499,14 +499,14 @@ class _HTMLWordTruncator(HTMLParser):
         except KeyError:
             self.handle_ref('')
         else:
-            self.handle_ref(chr(codepoint))
+            self.handle_ref(six.unichr(codepoint))
 
     def handle_charref(self, name):
         if name.startswith('x'):
             codepoint = int(name[1:], 16)
         else:
             codepoint = int(name)
-        self.handle_ref(chr(codepoint))
+        self.handle_ref(six.unichr(codepoint))
 
 
 def truncate_html_words(s, num, end_text='...'):

@@ -190,6 +190,18 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(
             utils.truncate_html_words("cafeti&eacute;re " * 100, 20),
             "cafeti&eacute;re " * 20 + '...')
+        self.assertEqual(
+            utils.truncate_html_words("&int;dx " * 100, 20),
+            "&int;dx " * 20 + '...')
+
+        # Words with HTML character references inside and outside
+        # the ASCII range.
+        self.assertEqual(
+            utils.truncate_html_words("&#xe9; " * 100, 20),
+            "&#xe9; " * 20 + '...')
+        self.assertEqual(
+            utils.truncate_html_words("&#x222b;dx " * 100, 20),
+            "&#x222b;dx " * 20 + '...')
 
     def test_process_translations(self):
         # create a bunch of articles
