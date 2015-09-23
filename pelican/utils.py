@@ -414,6 +414,13 @@ class _HTMLWordTruncator(HTMLParser):
     _singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
                  'hr', 'input')
 
+    class TruncationCompleted(Exception):
+
+        def __init__(self, truncate_at):
+            super(_HTMLWordTruncator.TruncationCompleted, self).__init__(
+                truncate_at)
+            self.truncate_at = truncate_at
+
     def __init__(self, max_words):
         # In Python 2, HTMLParser is not a new-style class,
         # hence super() cannot be used.
@@ -424,6 +431,16 @@ class _HTMLWordTruncator(HTMLParser):
         self.open_tags = []
         self.last_word_end = None
         self.truncate_at = None
+
+    def feed(self, *args, **kwargs):
+        try:
+            # With Python 2, super() cannot be used.
+            # See the comment for __init__().
+            HTMLParser.feed(self, *args, **kwargs)
+        except self.TruncationCompleted as exc:
+            self.truncate_at = exc.truncate_at
+        else:
+            self.truncate_at = None
 
     def getoffset(self):
         line_start = 0
@@ -436,22 +453,18 @@ class _HTMLWordTruncator(HTMLParser):
         self.words_found += 1
         self.last_word_end = None
         if self.words_found == self.max_words:
-            self.truncate_at = word_end
+            raise self.TruncationCompleted(word_end)
 
     def add_last_word(self):
         if self.last_word_end is not None:
             self.add_word(self.last_word_end)
 
     def handle_starttag(self, tag, attrs):
-        if self.truncate_at is not None:
-            return
         self.add_last_word()
         if tag not in self._singlets:
             self.open_tags.insert(0, tag)
 
     def handle_endtag(self, tag):
-        if self.truncate_at is not None:
-            return
         self.add_last_word()
         try:
             i = self.open_tags.index(tag)
