@@ -28,6 +28,36 @@
         {% if TAG_FEED_RSS and tag %}
         <link href="{{ FEED_DOMAIN }}/{{ TAG_FEED_RSS|format(tag.slug) }}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} Tags RSS Feed" />
         {% endif %}
+
+        {% if AUTHOR %}
+        <meta name="author" content="{{ AUTHOR }}" />
+        {% endif %}
+        {% if SITENAME %}
+        <meta property="og:title" content="{{ SITENAME }}" />        
+        <meta itemprop="name" content="{{ SITENAME }}" />
+        <meta name="twitter:title" content="{{ SITENAME }}">
+        {% endif %}
+        % if Summary %}
+        <meta name="description" content="{{ Summary }}" />
+        <meta property="og:description" content="{{ Summary }}" />
+        <meta itemprop="description" content="{{ Summary }}" />
+        <meta name="twitter:description" content="{{ Summary }}">
+        {% endif %}
+        {% if OGIMAGE %}
+        <meta property="og:image" content="{{ OGIMAGE }}" />
+        <meta itemprop="image" content="{{ OGIMAGE }}" />
+        <meta name="twitter:image" content="{{ OGIMAGE }}">
+        <meta property="og:site_name" content="{{ OGIMAGE }}" />
+        {% endif %}
+        {% if STATIC_URL %}
+        <meta name="twitter:url" content="{{ STATIC_URL }}">
+        <meta property="og:url" content="{{ STATIC_URL }}" />
+        <link rel="canonical" href="{{ STATIC_URL }}" />
+        <link href="/favicon.png" rel="icon" />
+        <meta name="twitter:site" content="{{ TWITTER_HANDLE }}">
+        <meta name="twitter:creator" content="{{ TWITTER_HANDLE }}">
+        {% endif %}
+
         {% endblock head %}
 </head>
 
