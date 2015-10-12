@@ -18,17 +18,13 @@ from pelican import rstdirectives  # NOQA
 from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Author, Category, Page, Tag
-from pelican.utils import SafeDatetime, get_date, pelican_open, posixize_path
+from pelican.utils import SafeDatetime, escape_html, get_date, pelican_open, \
+    posixize_path
 
 try:
     from markdown import Markdown
 except ImportError:
     Markdown = False  # NOQA
-
-try:
-    from html import escape
-except ImportError:
-    from cgi import escape
 
 # Metadata processors have no way to discard an unwanted value, so we have
 # them return this value instead to signal that it should be discarded later.
@@ -354,7 +350,7 @@ class HTMLReader(BaseReader):
                 self._in_body = False
                 self._in_top_level = True
             elif self._in_body:
-                self._data_buffer += '</{}>'.format(escape(tag))
+                self._data_buffer += '</{}>'.format(escape_html(tag))
 
         def handle_startendtag(self, tag, attrs):
             if tag == 'meta' and self._in_head:
@@ -375,11 +371,16 @@ class HTMLReader(BaseReader):
             self._data_buffer += '&#{};'.format(data)
 
         def build_tag(self, tag, attrs, close_tag):
-            result = '<{}'.format(escape(tag))
+            result = '<{}'.format(escape_html(tag))
             for k, v in attrs:
-                result += ' ' + escape(k)
+                result += ' ' + escape_html(k)
                 if v is not None:
-                    result += '="{}"'.format(escape(v))
+                    # If the attribute value contains a double quote, surround
+                    # with single quotes, otherwise use double quotes.
+                    if '"' in v:
+                        result += "='{}'".format(escape_html(v, quote=False))
+                    else:
+                        result += '="{}"'.format(escape_html(v, quote=False))
             if close_tag:
                 return result + ' />'
             return result + '>'
