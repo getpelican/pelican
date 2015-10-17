@@ -253,6 +253,7 @@ Pelican plugin system.
 
 Since I upgraded Pelican my pages are no longer rendered
 ========================================================
+
 Pages were available to themes as lowercase ``pages`` and uppercase
 ``PAGES``. To bring this inline with the :ref:`templates-variables` section,
 ``PAGES`` has been removed. This is quickly resolved by updating your theme
