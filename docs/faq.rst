@@ -264,3 +264,15 @@ to iterate over ``pages`` instead of ``PAGES``. Just replace::
 with something like::
 
     {% for pg in pages %}
+
+How can I stop Pelican from trying to parse my static files as content?
+=======================================================================
+
+Pelican's article and page generators run before it's static generator. That
+means if you use a setup similar to the default configuration, where a static
+source directory is defined inside a ``*_PATHS`` setting, all files that have a
+valid content file ending (``.html``, ``.rst``, ``.md``, ...) will be treated as
+articles or pages before they get treated as static files.
+
+To circumvent this issue either use the appropriate ``*_EXCLUDES`` setting or
+disable the offending reader via ``READERS`` if you don't need it.
