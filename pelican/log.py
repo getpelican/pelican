@@ -172,19 +172,29 @@ class LimitLogger(SafeLogger):
 logging.setLoggerClass(LimitLogger)
 
 
-def init(level=None, handler=logging.StreamHandler()):
-
-    logger = logging.getLogger()
-
+def get_formatter():
     if os.isatty(sys.stdout.fileno()) and not sys.platform.startswith('win'):
-        fmt = ANSIFormatter()
+        return ANSIFormatter()
     else:
-        fmt = TextFormatter()
-    handler.setFormatter(fmt)
+        return TextFormatter()
+
+
+def init(level=None, handler=logging.StreamHandler(), name=None):
+
+    logger = logging.getLogger(name)
+
+    handler.setFormatter(get_formatter())
     logger.addHandler(handler)
 
     if level:
         logger.setLevel(level)
+
+
+def log_warnings():
+    import warnings
+    logging.captureWarnings(True)
+    warnings.simplefilter("default", DeprecationWarning)
+    init(logging.DEBUG, name='py.warnings')
 
 
 if __name__ == '__main__':
