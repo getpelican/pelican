@@ -172,8 +172,26 @@ class LimitLogger(SafeLogger):
 logging.setLoggerClass(LimitLogger)
 
 
+def supports_color():
+    """
+    Returns True if the running system's terminal supports color,
+    and False otherwise.
+
+    from django.core.management.color
+    """
+    plat = sys.platform
+    supported_platform = plat != 'Pocket PC' and \
+        (plat != 'win32' or 'ANSICON' in os.environ)
+
+    # isatty is not always implemented, #6223.
+    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    if not supported_platform or not is_a_tty:
+        return False
+    return True
+
+
 def get_formatter():
-    if os.isatty(sys.stdout.fileno()) and not sys.platform.startswith('win'):
+    if supports_color():
         return ANSIFormatter()
     else:
         return TextFormatter()
