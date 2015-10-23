@@ -273,6 +273,9 @@ class Content(object):
 
         return hrefs.sub(replacer, content)
 
+    def get_siteurl(self):
+        return self._context.get('localsiteurl', '')
+
     @memoized
     def get_content(self, siteurl):
         if hasattr(self, '_get_content'):
@@ -281,22 +284,19 @@ class Content(object):
             content = self._content
         return self._update_content(content, siteurl)
 
-    def get_siteurl(self):
-        return self._context.get('localsiteurl', '')
-
     @property
     def content(self):
         return self.get_content(self.get_siteurl())
 
-    def _get_summary(self):
+    @memoized
+    def get_summary(self, siteurl):
         """Returns the summary of an article.
 
         This is based on the summary metadata if set, otherwise truncate the
         content.
         """
         if hasattr(self, '_summary'):
-            return self._update_content(self._summary,
-                                        self.get_siteurl())
+            return self._update_content(self._summary, siteurl)
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
@@ -304,14 +304,16 @@ class Content(object):
         return truncate_html_words(self.content,
                                    self.settings['SUMMARY_MAX_LENGTH'])
 
-    @memoized
-    def get_summary(self, siteurl):
-        """uses siteurl to be memoizable"""
-        return self._get_summary()
-
     @property
     def summary(self):
         return self.get_summary(self.get_siteurl())
+
+    def _get_summary(self):
+        """deprecated function to access summary"""
+
+        logger.warn('_get_summary() has been deprecated since 3.6.4. '
+                    'Use the summary decorator instead')
+        return self.summary
 
     @summary.setter
     def summary(self, value):

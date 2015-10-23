@@ -23,7 +23,7 @@ TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
 
-class TestPage(unittest.TestCase):
+class TestPage(LoggedTestCase):
 
     def setUp(self):
         super(TestPage, self).setUp()
@@ -41,9 +41,19 @@ class TestPage(unittest.TestCase):
             },
             'source_path': '/path/to/file/foo.ext'
         }
+        self._disable_limit_filter()
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
+        self._enable_limit_filter()
+
+    def _disable_limit_filter(self):
+        from pelican.contents import logger
+        logger.disable_filter()
+
+    def _enable_limit_filter(self):
+        from pelican.contents import logger
+        logger.enable_filter()
 
     def test_use_args(self):
         # Creating a page with arguments passed to the constructor should use
@@ -86,6 +96,18 @@ class TestPage(unittest.TestCase):
         settings['SUMMARY_MAX_LENGTH'] = 0
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, '')
+
+    def test_summary_get_summary_warning(self):
+        """calling ._get_summary() should issue a warning"""
+        page_kwargs = self._copy_page_kwargs()
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, TEST_SUMMARY)
+        self.assertEqual(page._get_summary(), TEST_SUMMARY)
+        self.assertLogCountEqual(
+                count=1,
+                msg="_get_summary\(\) has been deprecated since 3\.6\.4\. "
+                    "Use the summary decorator instead",
+                level=logging.WARNING)
 
     def test_slug(self):
         page_kwargs = self._copy_page_kwargs()

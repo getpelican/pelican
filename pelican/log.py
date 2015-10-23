@@ -167,6 +167,12 @@ class LimitLogger(SafeLogger):
 
     def __init__(self, *args, **kwargs):
         super(LimitLogger, self).__init__(*args, **kwargs)
+        self.enable_filter()
+
+    def disable_filter(self):
+        self.removeFilter(LimitLogger.limit_filter)
+
+    def enable_filter(self):
         self.addFilter(LimitLogger.limit_filter)
 
 logging.setLoggerClass(LimitLogger)
