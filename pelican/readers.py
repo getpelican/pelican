@@ -263,13 +263,12 @@ class MarkdownReader(BaseReader):
         for name, value in meta.items():
             name = name.lower()
             if name in formatted_fields:
-                # handle summary metadata as markdown
-                # summary metadata is special case and join all list values
-                summary_values = "\n".join(value)
+                # formatted metadata is special case and join all list values
+                formatted_values = "\n".join(value)
                 # reset the markdown instance to clear any state
                 self._md.reset()
-                summary = self._md.convert(summary_values)
-                output[name] = self.process_metadata(name, summary)
+                formatted = self._md.convert(formatted_values)
+                output[name] = self.process_metadata(name, formatted)
             elif name in METADATA_PROCESSORS:
                 if len(value) > 1:
                     logger.warning(
