@@ -61,7 +61,7 @@ class TestCache(unittest.TestCase):
         - article_with_null_attributes.html
         - 2012-11-30_md_w_filename_meta#foo-bar.md
         """
-        self.assertEqual(generator.readers.read_file.call_count, 3)
+        self.assertEqual(generator.readers.read_file.call_count, 4)
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_reader_content_caching(self):

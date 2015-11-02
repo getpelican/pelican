@@ -587,6 +587,17 @@ class HTMLReaderTest(ReaderTest):
         <input name="test" disabled style="" />
     ''', page.content)
 
+    def test_article_with_attributes_containing_double_quotes(self):
+        page = self.read_file(path='article_with_attributes_containing_' +
+                                   'double_quotes.html')
+        self.assertEqual('''
+        Ensure that if an attribute value contains a double quote, it is
+        surrounded with single quotes, otherwise with double quotes.
+        <span data-test="'single quoted string'">Span content</span>
+        <span data-test='"double quoted string"'>Span content</span>
+        <span data-test="string without quotes">Span content</span>
+    ''', page.content)
+
     def test_article_metadata_key_lowercase(self):
         # Keys of metadata should be lowercase.
         page = self.read_file(path='article_with_uppercase_metadata.html')

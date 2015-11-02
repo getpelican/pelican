@@ -28,6 +28,11 @@ import six
 from six.moves import html_entities
 from six.moves.html_parser import HTMLParser
 
+try:
+    from html import escape
+except ImportError:
+    from cgi import escape
+
 logger = logging.getLogger(__name__)
 
 
@@ -546,6 +551,14 @@ def truncate_html_words(s, num, end_text='...'):
         out += '</%s>' % tag
     # Return string
     return out
+
+
+def escape_html(text, quote=True):
+    """Escape '&', '<' and '>' to HTML-safe sequences.
+
+    In Python 2 this uses cgi.escape and in Python 3 this uses html.escape. We
+    wrap here to ensure the quote argument has an identical default."""
+    return escape(text, quote=quote)
 
 
 def process_translations(content_list, order_by=None):
