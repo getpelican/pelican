@@ -429,7 +429,11 @@ class _HTMLWordTruncator(HTMLParser):
     def __init__(self, max_words):
         # In Python 2, HTMLParser is not a new-style class,
         # hence super() cannot be used.
-        HTMLParser.__init__(self)
+        try:
+            HTMLParser.__init__(self, convert_charrefs=False)
+        except TypeError:
+            # pre Python 3.3
+            HTMLParser.__init__(self)
 
         self.max_words = max_words
         self.words_found = 0

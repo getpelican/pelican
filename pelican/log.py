@@ -178,19 +178,47 @@ class LimitLogger(SafeLogger):
 logging.setLoggerClass(LimitLogger)
 
 
-def init(level=None, handler=logging.StreamHandler()):
+def supports_color():
+    """
+    Returns True if the running system's terminal supports color,
+    and False otherwise.
 
-    logger = logging.getLogger()
+    from django.core.management.color
+    """
+    plat = sys.platform
+    supported_platform = plat != 'Pocket PC' and \
+        (plat != 'win32' or 'ANSICON' in os.environ)
 
-    if os.isatty(sys.stdout.fileno()) and not sys.platform.startswith('win'):
-        fmt = ANSIFormatter()
+    # isatty is not always implemented, #6223.
+    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    if not supported_platform or not is_a_tty:
+        return False
+    return True
+
+
+def get_formatter():
+    if supports_color():
+        return ANSIFormatter()
     else:
-        fmt = TextFormatter()
-    handler.setFormatter(fmt)
+        return TextFormatter()
+
+
+def init(level=None, handler=logging.StreamHandler(), name=None):
+
+    logger = logging.getLogger(name)
+
+    handler.setFormatter(get_formatter())
     logger.addHandler(handler)
 
     if level:
         logger.setLevel(level)
+
+
+def log_warnings():
+    import warnings
+    logging.captureWarnings(True)
+    warnings.simplefilter("default", DeprecationWarning)
+    init(logging.DEBUG, name='py.warnings')
 
 
 if __name__ == '__main__':

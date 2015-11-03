@@ -3,6 +3,8 @@ from __future__ import print_function, unicode_literals
 
 import os
 
+import six
+
 from pelican import readers
 from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
@@ -55,7 +57,8 @@ class TestAssertDictHasSubset(ReaderTest):
         self.assertDictHasSubset(self.dictionary, self.dictionary)
 
     def test_fail_not_set(self):
-        self.assertRaisesRegexp(
+        six.assertRaisesRegex(
+            self,
             AssertionError,
             'Expected.*key-c.*to have value.*val-c.*but was not in Dict',
             self.assertDictHasSubset,
@@ -63,7 +66,8 @@ class TestAssertDictHasSubset(ReaderTest):
             {'key-c': 'val-c'})
 
     def test_fail_wrong_val(self):
-        self.assertRaisesRegexp(
+        six.assertRaisesRegex(
+            self,
             AssertionError,
             'Expected .*key-a.* to have value .*val-b.* but was .*val-a.*',
             self.assertDictHasSubset,

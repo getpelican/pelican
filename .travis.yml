@@ -7,6 +7,11 @@ env:
   - TOX_ENV=py27
   - TOX_ENV=py33
   - TOX_ENV=py34
+matrix:
+  include:
+    - python: 3.5
+      env:
+      - TOX_ENV=py35
 addons:
   apt_packages:
     - pandoc
