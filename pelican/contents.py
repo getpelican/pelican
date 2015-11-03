@@ -311,8 +311,8 @@ class Content(object):
     def _get_summary(self):
         """deprecated function to access summary"""
 
-        logger.warn('_get_summary() has been deprecated since 3.6.4. '
-                    'Use the summary decorator instead')
+        logger.warning('_get_summary() has been deprecated since 3.6.4. '
+                       'Use the summary decorator instead')
         return self.summary
 
     @summary.setter
