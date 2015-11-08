@@ -21,13 +21,13 @@
  {{ translations.translations_for(article) }}
   </header>
   <footer class="post-info">
-    <abbr class="published" title="{{ article.date.isoformat() }}">
+    <time class="published" datetime="{{ article.date.isoformat() }}">
       {{ article.locale_date }}
-    </abbr>
+    </time>
 	{% if article.modified %}
-    <abbr class="modified" title="{{ article.modified.isoformat() }}">
+    <time class="modified" datetime="{{ article.modified.isoformat() }}">
       {{ article.locale_modified }}
-    </abbr>
+    </time>
 	{% endif %}
     {% if article.authors %}
     <address class="vcard author">
