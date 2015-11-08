@@ -101,7 +101,11 @@ DEFAULT_CONFIG = {
     'PELICAN_CLASS': 'pelican.Pelican',
     'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
     'DATE_FORMATS': {},
-    'MD_EXTENSIONS': ['codehilite(css_class=highlight)', 'extra'],
+    'MD_EXTENSIONS': {
+        'markdown.extensions.codehilite': {'css_class': 'highlight'},
+        'markdown.extensions.extra': {},
+        'markdown.extensions.meta': {},
+    },
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
     'LOG_FILTER': [],
@@ -361,6 +365,14 @@ def configure_settings(settings):
                            "(must be a list), falling back to the default",
                            PATH_KEY)
             settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
+
+    # Save people from declaring MD_EXTENSIONS as a list rather than a dict
+    if not isinstance(settings.get('MD_EXTENSIONS', {}), dict):
+        logger.warning('The format of the MD_EXTENSIONS setting has '
+                       'changed. It should now be a dict mapping '
+                       'fully-qualified extension names to their '
+                       'configurations. Falling back to the default.')
+        settings['MD_EXTENSIONS'] = DEFAULT_CONFIG['MD_EXTENSIONS']
 
     # Add {PAGE,ARTICLE}_PATHS to {ARTICLE,PAGE}_EXCLUDES
     mutually_exclusive = ('ARTICLE', 'PAGE')

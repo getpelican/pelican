@@ -471,7 +471,12 @@ class MdReaderTest(ReaderTest):
         # expected
         page = self.read_file(
             path='article_with_markdown_markup_extensions.md',
-            MD_EXTENSIONS=['toc', 'codehilite', 'extra'])
+            MD_EXTENSIONS={
+                'markdown.extensions.toc': {},
+                'markdown.extensions.codehilite': {},
+                'markdown.extensions.extra': {}
+            }
+        )
         expected = ('<div class="toc">\n'
                     '<ul>\n'
                     '<li><a href="#level1">Level1</a><ul>\n'
