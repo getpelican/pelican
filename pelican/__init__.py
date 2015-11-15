@@ -322,6 +322,11 @@ def parse_arguments():
                         dest='selected_paths', default=None,
                         help='Comma separated list of selected paths to write')
 
+    parser.add_argument('--fatal', metavar='errors|warnings',
+                        choices=('errors', 'warnings'),
+                        help=('Exit the program with non-zero status if any '
+                              'errors/warnings encountered.'))
+
     return parser.parse_args()
 
 
@@ -378,7 +383,7 @@ def get_instance(args):
 
 def main():
     args = parse_arguments()
-    init(args.verbosity)
+    init(args.verbosity, args.fatal)
 
     logger.debug('Pelican version: %s', __version__)
     logger.debug('Python version: %s', sys.version.split()[0])
