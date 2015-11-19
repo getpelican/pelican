@@ -324,7 +324,7 @@ def copy(source, destination, ignores=None):
                            source_, destination_)
             return
 
-        for src_dir, subdirs, others in os.walk(source_):
+        for src_dir, subdirs, others in os.walk(source_, followlinks=True):
             dst_dir = os.path.join(destination_,
                                    os.path.relpath(src_dir, source_))
 
