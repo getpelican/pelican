@@ -121,6 +121,8 @@ Setting name (followed by default value, if any)                                
                                                                                  to the default values for this setting, you'll need to
                                                                                  include them explicitly and enumerate the full list of
                                                                                  desired Markdown extensions.)
+``MD_EXTENSION_CONFIGS = {}``                                                    A configuration dictionary for the extensions the Markdown
+                                                                                 processor will use.
 ``OUTPUT_PATH = 'output/'``                                                      Where to output the generated files.
 ``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
                                                                                  and content path is not specified via an argument to the ``pelican``
