@@ -207,3 +207,19 @@ class TestPelican(LoggedTestCase):
             count=2,
             msg="Writing .*",
             level=logging.INFO)
+
+    def test_md_extensions_list_deprecation(self):
+        """Test that a warning is issued if MD_EXTENSIONS is a list"""
+        settings = read_settings(path=None, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'CACHE_PATH': self.temp_cache,
+            'MD_EXTENSIONS': ['meta'],
+        })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+        self.assertIsInstance(pelican.settings['MD_EXTENSIONS'], dict)
+        self.assertLogCountEqual(
+            count=1,
+            msg="The format of the MD_EXTENSIONS setting has changed",
+            level=logging.WARNING)

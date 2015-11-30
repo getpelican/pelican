@@ -50,7 +50,10 @@ Take a look at the Markdown reader::
         def read(self, source_path):
             """Parse content and metadata of markdown files"""
             text = pelican_open(source_path)
-            md = Markdown(extensions = ['meta', 'codehilite'])
+            md_extensions = {'markdown.extensions.meta': {},
+                             'markdown.extensions.codehilite': {}}
+            md = Markdown(extensions=md_extensions.keys(),
+                          extension_configs=md_extensions)
             content = md.convert(text)
 
             metadata = {}
