@@ -616,7 +616,7 @@ def path_metadata(full_path, source_path, settings=None):
     if settings:
         if settings.get('DEFAULT_DATE', None) == 'fs':
             metadata['date'] = SafeDatetime.fromtimestamp(
-                os.stat(full_path).st_ctime)
+                os.stat(full_path).st_mtime)
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
             source_path, {}))
     return metadata
