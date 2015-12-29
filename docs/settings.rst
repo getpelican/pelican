@@ -44,7 +44,7 @@ Setting name (followed by default value, if any)                                
 ===============================================================================  =====================================================================
 ``AUTHOR``                                                                       Default author (put your name)
 ``DATE_FORMATS = {}``                                                            If you manage multiple languages, you can set the date formatting
-                                                                                 here. See the "Date format and locale" section below for details.
+                                                                                 here. See the :ref:`date_format_and_locale` section below for details.
 ``USE_FOLDER_AS_CATEGORY = True``                                                When you don't specify a category in your post metadata, set this
                                                                                  setting to ``True``, and organize your articles in subfolders, the
                                                                                  subfolder will become the category of your post. If set to ``False``,
@@ -373,6 +373,7 @@ Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 
 .. _the wikipedia page: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
+.. _date_format_and_locale:
 
 Date format and locale
 ----------------------
