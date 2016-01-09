@@ -175,7 +175,22 @@ class LimitLogger(SafeLogger):
     def enable_filter(self):
         self.addFilter(LimitLogger.limit_filter)
 
-logging.setLoggerClass(LimitLogger)
+
+class FatalLogger(LimitLogger):
+    warnings_fatal = False
+    errors_fatal = False
+
+    def warning(self, *args, **kwargs):
+        super(FatalLogger, self).warning(*args, **kwargs)
+        if FatalLogger.warnings_fatal:
+            raise RuntimeError('Warning encountered')
+
+    def error(self, *args, **kwargs):
+        super(FatalLogger, self).error(*args, **kwargs)
+        if FatalLogger.errors_fatal:
+            raise RuntimeError('Error encountered')
+
+logging.setLoggerClass(FatalLogger)
 
 
 def supports_color():
@@ -203,7 +218,9 @@ def get_formatter():
         return TextFormatter()
 
 
-def init(level=None, handler=logging.StreamHandler(), name=None):
+def init(level=None, fatal='', handler=logging.StreamHandler(), name=None):
+    FatalLogger.warnings_fatal = fatal.startswith('warning')
+    FatalLogger.errors_fatal = bool(fatal)
 
     logger = logging.getLogger(name)
 
