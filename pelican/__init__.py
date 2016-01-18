@@ -323,7 +323,7 @@ def parse_arguments():
                         help='Comma separated list of selected paths to write')
 
     parser.add_argument('--fatal', metavar='errors|warnings',
-                        choices=('errors', 'warnings'),
+                        choices=('errors', 'warnings'), default='',
                         help=('Exit the program with non-zero status if any '
                               'errors/warnings encountered.'))
 
