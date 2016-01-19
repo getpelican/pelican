@@ -790,8 +790,9 @@ def main():
         '-o', '--output', dest='output', default='output',
         help='Output path')
     parser.add_argument('-o', '--output', dest='output', default='content',
-        help=('Where to output the generated markup files. If not specified, a '
-            'directory will be created, named "content" in the current path.'))
+        help=('Where to output the generated markup files. If not specified, '
+            'a directory will be created, named "content" in the current '
+            'path.'))
     parser.add_argument(
         '--dir-cat', action='store_true', dest='dircat',
         help='Put files in directories with categories name')
