@@ -9,6 +9,7 @@ import re
 import subprocess
 import sys
 import time
+import urllib
 
 from codecs import open
 
@@ -134,7 +135,7 @@ def get_items(xml):
 
 def get_filename(filename, post_id):
     if filename is not None:
-        return filename
+        return urllib.unquote(unicode(filename).encode("utf-8")).decode("utf-8")
     else:
         return post_id
 
