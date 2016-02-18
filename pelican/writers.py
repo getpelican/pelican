@@ -41,8 +41,10 @@ class Writer(object):
             description=context.get('SITESUBTITLE', ''))
         return feed
 
-    def _add_item_to_the_feed(self, feed, item):
-
+    def _add_item_to_the_feed(self, feed, item, template, context):
+        localcontext = context.copy()
+        localcontext.update({'feed_item' : item})
+        output = template.render(localcontext)
         title = Markup(item.title).striptags()
         link = '%s/%s' % (self.site_url, item.url)
         feed.add_item(
@@ -51,7 +53,7 @@ class Writer(object):
             unique_id='tag:%s,%s:%s' % (urlparse(link).netloc,
                                         item.date.date(),
                                         urlparse(link).path.lstrip('/')),
-            description=item.get_content(self.site_url),
+            description=output,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(
@@ -81,7 +83,7 @@ class Writer(object):
         self._written_files.add(filename)
         return open(filename, 'w', encoding=encoding)
 
-    def write_feed(self, elements, context, path=None, feed_type='atom',
+    def write_feed(self, elements, context, template, path=None, feed_type='atom',
                    override_output=False):
         """Generate a feed with the list of articles provided
 
@@ -111,7 +113,7 @@ class Writer(object):
         if self.settings['FEED_MAX_ITEMS']:
             max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
         for i in range(max_items):
-            self._add_item_to_the_feed(feed, elements[i])
+            self._add_item_to_the_feed(feed, elements[i], template, context)
 
         if path:
             complete_path = os.path.join(self.output_path, path)
