@@ -298,7 +298,7 @@ class RstReaderTest(ReaderTest):
                                   TYPOGRIFY=True)
 
             expected = ('<p>An article with some&nbsp;code</p>\n'
-                        '<div class="highlight"><pre><span class="n">x</span>'
+                        '<div class="highlight"><pre><span></span><span class="n">x</span>'
                         ' <span class="o">&amp;</span>'
                         ' <span class="n">y</span>\n</pre></div>\n'
                         '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
@@ -316,7 +316,7 @@ class RstReaderTest(ReaderTest):
                                   TYPOGRIFY_IGNORE_TAGS=['blockquote'])
 
             expected = ('<p>An article with some&nbsp;code</p>\n'
-                        '<div class="highlight"><pre><span class="n">x</span>'
+                        '<div class="highlight"><pre><span></span><span class="n">x</span>'
                         ' <span class="o">&amp;</span>'
                         ' <span class="n">y</span>\n</pre></div>\n'
                         '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
