@@ -152,56 +152,56 @@ class TestUtils(LoggedTestCase):
             'short string')
         self.assertEqual(
             utils.truncate_html_words('word ' * 100, 20),
-            'word ' * 20 + '...')
+            'word ' * 20 + '…')
 
         # Words enclosed or intervaled by HTML tags.
         self.assertEqual(
             utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20),
-            '<p>' + 'word ' * 20 + '...</p>')
+            '<p>' + 'word ' * 20 + '…</p>')
         self.assertEqual(
             utils.truncate_html_words(
-                '<span\nstyle="\n...\n">' + 'word ' * 100 + '</span>', 20),
-            '<span\nstyle="\n...\n">' + 'word ' * 20 + '...</span>')
+                '<span\nstyle="\n…\n">' + 'word ' * 100 + '</span>', 20),
+            '<span\nstyle="\n…\n">' + 'word ' * 20 + '…</span>')
         self.assertEqual(
             utils.truncate_html_words('<br>' + 'word ' * 100, 20),
-            '<br>' + 'word ' * 20 + '...')
+            '<br>' + 'word ' * 20 + '…')
         self.assertEqual(
             utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20),
-            '<!-- comment -->' + 'word ' * 20 + '...')
+            '<!-- comment -->' + 'word ' * 20 + '…')
 
         # Words with hypens and apostrophes.
         self.assertEqual(
             utils.truncate_html_words("a-b " * 100, 20),
-            "a-b " * 20 + '...')
+            "a-b " * 20 + '…')
         self.assertEqual(
             utils.truncate_html_words("it's " * 100, 20),
-            "it's " * 20 + '...')
+            "it's " * 20 + '…')
 
         # Words with HTML entity references.
         self.assertEqual(
             utils.truncate_html_words("&eacute; " * 100, 20),
-            "&eacute; " * 20 + '...')
+            "&eacute; " * 20 + '…')
         self.assertEqual(
             utils.truncate_html_words("caf&eacute; " * 100, 20),
-            "caf&eacute; " * 20 + '...')
+            "caf&eacute; " * 20 + '…')
         self.assertEqual(
             utils.truncate_html_words("&egrave;lite " * 100, 20),
-            "&egrave;lite " * 20 + '...')
+            "&egrave;lite " * 20 + '…')
         self.assertEqual(
             utils.truncate_html_words("cafeti&eacute;re " * 100, 20),
-            "cafeti&eacute;re " * 20 + '...')
+            "cafeti&eacute;re " * 20 + '…')
         self.assertEqual(
             utils.truncate_html_words("&int;dx " * 100, 20),
-            "&int;dx " * 20 + '...')
+            "&int;dx " * 20 + '…')
 
         # Words with HTML character references inside and outside
         # the ASCII range.
         self.assertEqual(
             utils.truncate_html_words("&#xe9; " * 100, 20),
-            "&#xe9; " * 20 + '...')
+            "&#xe9; " * 20 + '…')
         self.assertEqual(
             utils.truncate_html_words("&#x222b;dx " * 100, 20),
-            "&#x222b;dx " * 20 + '...')
+            "&#x222b;dx " * 20 + '…')
 
     def test_process_translations(self):
         # create a bunch of articles
@@ -378,7 +378,7 @@ class TestUtils(LoggedTestCase):
             utils.strftime(d, 'Yayınlanma tarihi: %A, %d %B %Y'),
             'Yayınlanma tarihi: Çarşamba, 29 Ağustos 2012')
 
-        # non-ascii format candidate (someone might pass it... for some reason)
+        # non-ascii format candidate (someone might pass it… for some reason)
         self.assertEqual(
             utils.strftime(d, '%Y yılında %üretim artışı'),
             '2012 yılında %üretim artışı')
@@ -413,7 +413,7 @@ class TestUtils(LoggedTestCase):
             utils.strftime(d, 'Écrit le %d %B %Y'),
             'Écrit le 29 août 2012')
 
-        # non-ascii format candidate (someone might pass it... for some reason)
+        # non-ascii format candidate (someone might pass it… for some reason)
         self.assertEqual(
             utils.strftime(d, '%écrits en %Y'),
             '%écrits en 2012')

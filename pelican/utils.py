@@ -531,12 +531,12 @@ class _HTMLWordTruncator(HTMLParser):
         self.handle_ref(six.unichr(codepoint))
 
 
-def truncate_html_words(s, num, end_text='...'):
+def truncate_html_words(s, num, end_text='…'):
     """Truncates HTML to a certain number of words.
 
     (not counting tags and comments). Closes opened tags if they were correctly
     closed in the given html. Takes an optional argument of what should be used
-    to notify that the string has been truncated, defaulting to ellipsis (...).
+    to notify that the string has been truncated, defaulting to ellipsis (…).
 
     Newlines in the HTML are preserved. (From the django framework).
     """
