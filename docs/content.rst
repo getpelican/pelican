@@ -69,7 +69,7 @@ Metadata syntax for Markdown posts should follow this pattern::
     This is the content of my super blog post.
 
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
-Refer to `pelican-plugins`_ repository for those.
+Refer to `getpelican-plugins`_ organization for those.
 
 Pelican can also process HTML files ending in ``.html`` and ``.htm``. Pelican
 interprets the HTML in a very straightforward manner, reading metadata from
@@ -526,7 +526,7 @@ metadata to include ``Status: published``.
 
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
-.. _pelican-plugins: http://github.com/getpelican/pelican-plugins
+.. _getpelican-plugins: http://github.com/getpelican-plugins
 .. _Markdown Extensions: http://pythonhosted.org/Markdown/extensions/
 .. _CodeHilite extension: http://pythonhosted.org/Markdown/extensions/code_hilite.html#syntax
-.. _i18n_subsites plugin: http://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
+.. _i18n_subsites plugin: http://github.com/getpelican-plugins/i18n_subsites

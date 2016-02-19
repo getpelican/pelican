@@ -82,4 +82,4 @@ Documentation
 .. _Jinja2: http://jinja.pocoo.org/
 .. _`Pelican documentation`: http://docs.getpelican.com/latest/
 .. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
-.. _`Pelican plugins`: https://github.com/getpelican/pelican-plugins
+.. _`Pelican plugins`: https://github.com/getpelican-plugins

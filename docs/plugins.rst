@@ -38,14 +38,16 @@ the ``PLUGIN_PATHS`` list can be absolute or relative to the settings file::
 Where to find plugins
 =====================
 
-We maintain a separate repository of plugins for people to share and use.
-Please visit the `pelican-plugins`_ repository for a list of available plugins.
+We maintain a separate GitHub organization for plugins so contributors have
+a highly visible location and an easier way to collaborate with fellow users.
+Please visit the `getpelican-plugins`_ organization to access these plugins.
 
-.. _pelican-plugins: https://github.com/getpelican/pelican-plugins
+.. _pelican-plugins: https://github.com/getpelican-plugins
 
 Please note that while we do our best to review and maintain these plugins,
 they are submitted by the Pelican community and thus may have varying levels of
-support and interoperability.
+support and interoperability.  Also note that some developers maintain their
+own plugin repositories outside of this location.
 
 How to create plugins
 =====================
