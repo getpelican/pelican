@@ -469,7 +469,8 @@ def main():
 
                 except Exception as e:
                     if (args.verbosity == logging.DEBUG):
-                        raise
+                        logger.error(
+                            'Exception occurred: %s', e, exc_info=True)
                     logger.warning(
                         'Caught exception "%s". Reloading.', e)
 
