@@ -21,7 +21,7 @@ env.cloudfiles_api_key = '$cloudfiles_api_key'
 env.cloudfiles_container = '$cloudfiles_container'
 
 # Github Pages configuration
-env.github_pages_branch = "gh-pages"
+env.github_pages_branch = "$github_pages_branch"
 
 # Port for `serve`
 PORT = 8000
