@@ -56,3 +56,18 @@ class TestURLWrapper(unittest.TestCase):
 
         cat_ascii = Category('指導書', settings={})
         self.assertEqual(cat_ascii, u'zhi-dao-shu')
+
+    def test_slugify_with_substitutions_and_dots(self):
+        tag = Tag('Tag Dot',
+                  settings={
+                        'TAG_SUBSTITUTIONS': [('Tag Dot', 'tag.dot', True)]
+                    })
+        cat = Category('Category Dot',
+                       settings={
+                        'CATEGORY_SUBSTITUTIONS': (('Category Dot',
+                                                    'cat.dot',
+                                                    True),)
+                        })
+
+        self.assertEqual(tag.slug, 'tag.dot')
+        self.assertEqual(cat.slug, 'cat.dot')

@@ -112,12 +112,27 @@ class URLWrapper(object):
 
 
 class Category(URLWrapper):
-    pass
+    @property
+    def slug(self):
+        if self._slug is None:
+            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
+            substitutions += tuple(self.settings.get('CATEGORY_SUBSTITUTIONS',
+                                                     ()))
+            self._slug = slugify(self.name, substitutions)
+        return self._slug
 
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
         super(Tag, self).__init__(name.strip(), *args, **kwargs)
+
+    @property
+    def slug(self):
+        if self._slug is None:
+            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
+            substitutions += tuple(self.settings.get('TAG_SUBSTITUTIONS', ()))
+            self._slug = slugify(self.name, substitutions)
+        return self._slug
 
 
 class Author(URLWrapper):

@@ -306,8 +306,12 @@ Setting name (followed by default value, if any)        What does it do?
 ``DAY_ARCHIVE_SAVE_AS = ''``                            The location to save per-day archives of your posts.
 ``SLUG_SUBSTITUTIONS = ()``                             Substitutions to make prior to stripping out
                                                         non-alphanumerics when generating slugs. Specified
-                                                        as a list of 2-tuples of ``(from, to)`` which are
-                                                        applied in order.
+                                                        as a list of 3-tuples of ``(from, to, skip)`` which are
+                                                        applied in order. ``skip`` is a boolean indicating whether
+                                                        or not to skip replacement of non-alphanumeric characters.
+                                                        Useful for backward compatibility with existing URLs.
+``CATEGORY_SUBSTITUTIONS = ()``                         Added to ``SLUG_SUBSTITUTIONS`` for categories.
+``TAG_SUBSTITUTIONS = ()``                              Added to ``SLUG_SUBSTITUTIONS`` for tags.
 ======================================================  ==============================================================
 
 .. note::
@@ -316,6 +320,20 @@ Setting name (followed by default value, if any)        What does it do?
     you are the only author on your site and thus do not need an Authors page),
     set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
     relevant page from being generated.
+
+.. note::
+
+    Substitutions are applied in order with the side effect that keeping
+    non-alphanum characters applies to the whole string when a replacement
+    is made. For example if you have the following setting
+    ``SLUG_SUBSTITUTIONS = (('C++', 'cpp'), ('keep dot', 'keep.dot', True))``
+    the string ``Keep Dot`` will be converted to ``keep.dot``, however
+    ``C++ will keep dot`` will be converted to ``cpp will keep.dot`` instead
+    of ``cpp-will-keep.dot``!
+    
+    If you want to keep non-alphanum characters only for tags or categories
+    but not other slugs then configure ``TAG_SUBSTITUTIONS`` and
+    ``CATEGORY_SUBSTITUTIONS`` respectively!
 
 Pelican can optionally create per-year, per-month, and per-day archives of your
 posts. These secondary archives are disabled by default but are automatically
