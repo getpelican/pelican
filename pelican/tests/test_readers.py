@@ -482,10 +482,12 @@ class MdReaderTest(ReaderTest):
         # expected
         page = self.read_file(
             path='article_with_markdown_markup_extensions.md',
-            MD_EXTENSIONS={
-                'markdown.extensions.toc': {},
-                'markdown.extensions.codehilite': {},
-                'markdown.extensions.extra': {}
+            MARKDOWN={
+                'extension_configs': {
+                    'markdown.extensions.toc': {},
+                    'markdown.extensions.codehilite': {},
+                    'markdown.extensions.extra': {}
+                }
             }
         )
         expected = ('<div class="toc">\n'
