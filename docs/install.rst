@@ -87,7 +87,7 @@ If you installed Pelican via distutils or the bleeding-edge method, simply
 perform the same step to install the most recent version.
 
 Kickstart your site
-===================
+-------------------
 
 Once Pelican has been installed, you can create a skeleton project via the
 ``pelican-quickstart`` command, which begins by asking some questions about
