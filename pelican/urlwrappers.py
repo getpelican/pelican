@@ -136,4 +136,9 @@ class Tag(URLWrapper):
 
 
 class Author(URLWrapper):
-    pass
+    @property
+    def slug(self):
+        if self._slug is None:
+            self._slug = slugify(self.name,
+                                 self.settings.get('AUTHOR_SUBSTITUTIONS', ()))
+        return self._slug

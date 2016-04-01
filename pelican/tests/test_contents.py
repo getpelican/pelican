@@ -457,6 +457,23 @@ class TestArticle(TestPage):
         self.assertEqual(
             article.save_as, 'obrien/csharp-stuff/fnord/index.html')
 
+    def test_slugify_with_author_substitutions(self):
+        settings = get_settings()
+        settings['AUTHOR_SUBSTITUTIONS'] = [
+                                    ('Alexander Todorov', 'atodorov', False),
+                                    ('Krasimir Tsonev', 'krasimir', False),
+        ]
+        settings['ARTICLE_URL'] = 'blog/{author}/{slug}/'
+        settings['ARTICLE_SAVE_AS'] = 'blog/{author}/{slug}/index.html'
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['author'] = Author('Alexander Todorov',
+                                                      settings)
+        article_kwargs['metadata']['title'] = 'fnord'
+        article_kwargs['settings'] = settings
+        article = Article(**article_kwargs)
+        self.assertEqual(article.url, 'blog/atodorov/fnord/')
+        self.assertEqual(article.save_as, 'blog/atodorov/fnord/index.html')
+
     def test_slugify_category_with_dots(self):
         settings = get_settings()
         settings['CATEGORY_SUBSTITUTIONS'] = [('Fedora QA', 'fedora.qa', True)]

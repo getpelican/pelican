@@ -71,3 +71,19 @@ class TestURLWrapper(unittest.TestCase):
 
         self.assertEqual(tag.slug, 'tag.dot')
         self.assertEqual(cat.slug, 'cat.dot')
+
+    def test_author_slug_substitutions(self):
+        settings = {
+            'AUTHOR_SUBSTITUTIONS': [
+                                    ('Alexander Todorov', 'atodorov', False),
+                                    ('Krasimir Tsonev', 'krasimir', False),
+            ]
+        }
+
+        author1 = Author('Mr. Senko', settings=settings)
+        author2 = Author('Alexander Todorov', settings=settings)
+        author3 = Author('Krasimir Tsonev', settings=settings)
+
+        self.assertEqual(author1.slug, 'mr-senko')
+        self.assertEqual(author2.slug, 'atodorov')
+        self.assertEqual(author3.slug, 'krasimir')

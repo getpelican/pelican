@@ -310,6 +310,8 @@ Setting name (followed by default value, if any)        What does it do?
                                                         applied in order. ``skip`` is a boolean indicating whether
                                                         or not to skip replacement of non-alphanumeric characters.
                                                         Useful for backward compatibility with existing URLs.
+``AUTHOR_SUBSTITUTIONS = ()``                           Substitutions for authors. ``SLUG_SUBSTITUTIONS`` is not
+                                                        taken into account here!
 ``CATEGORY_SUBSTITUTIONS = ()``                         Added to ``SLUG_SUBSTITUTIONS`` for categories.
 ``TAG_SUBSTITUTIONS = ()``                              Added to ``SLUG_SUBSTITUTIONS`` for tags.
 ======================================================  ==============================================================

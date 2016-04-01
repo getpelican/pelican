@@ -12,6 +12,9 @@ Next release
   ``TAG_SUBSTITUTIONS`` and ``CATEGORY_SUBSTITUTIONS`` settings. These also
   allow for keeping non-alphanum characters for backward compatibility with
   existing URLs.
+* Author slugs can be controlled with greater precision using the
+  ``AUTHOR_SUBSTITUTIONS`` setting. Keeping non-alphanum characters is supported
+  as well but discouraged.
 
 3.6.3 (2015-08-14)
 ==================
