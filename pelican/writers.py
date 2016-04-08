@@ -55,8 +55,10 @@ class Writer(object):
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(
-                item.modified if hasattr(item, 'modified') else item.date,
-                self.settings.get('TIMEZONE', None)))
+                item.date, self.settings.get('TIMEZONE', None)),
+            updateddate=set_date_tzinfo(
+                item.modified, self.settings.get('TIMEZONE', None)
+                ) if hasattr(item, 'modified') else None)
 
     def _open_w(self, filename, encoding, override=False):
         """Open a file to write some content to it.
