@@ -14,7 +14,7 @@ How to get help
 Before you ask for help, please make sure you do the following:
 
 1. Read the documentation_ thoroughly. If in a hurry, at least use the search
-   field that is provided at top-right on the documentation_ pages. Make sure
+   field that is provided at top-left on the documentation_ pages. Make sure
    you read the docs for the Pelican version you are using.
 2. Use a search engine (e.g., DuckDuckGo, Google) to search for a solution to
    your problem. Someone may have already found a solution, perhaps in the
