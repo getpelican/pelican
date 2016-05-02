@@ -4,7 +4,17 @@ Release history
 Next release
 ============
 
-- Nothing yet
+* ``SLUG_SUBSTITUTIONS`` now accepts 3-tuple elements, allowing to keep
+  non-alphanum characters. Existing 2-tuple configurations will continue to work
+  without change in behavior. The new 3rd parameter has side effects when there
+  are multiple substitutions defined. Plese see the docs.
+* Tag and category slugs can be controlled with greater precision using the
+  ``TAG_SUBSTITUTIONS`` and ``CATEGORY_SUBSTITUTIONS`` settings. These also
+  allow for keeping non-alphanum characters for backward compatibility with
+  existing URLs.
+* Author slugs can be controlled with greater precision using the
+  ``AUTHOR_SUBSTITUTIONS`` setting. Keeping non-alphanum characters is supported
+  as well but discouraged.
 
 3.6.3 (2015-08-14)
 ==================

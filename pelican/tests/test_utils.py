@@ -131,6 +131,18 @@ class TestUtils(LoggedTestCase):
         for value, expected in samples:
             self.assertEqual(utils.slugify(value, subs), expected)
 
+    def test_slugify_substitute_and_keeping_non_alphanum(self):
+
+        samples = (('Fedora QA', 'fedora.qa'),
+                   ('C++ is used by Fedora QA', 'cpp is used by fedora.qa'),
+                   ('C++ is based on C', 'cpp-is-based-on-c'),
+                   ('C+++ test C+ test', 'cpp-test-c-test'),)
+
+        subs = (('Fedora QA', 'fedora.qa', True),
+                ('c++', 'cpp'),)
+        for value, expected in samples:
+            self.assertEqual(utils.slugify(value, subs), expected)
+
     def test_get_relative_path(self):
 
         samples = ((os.path.join('test', 'test.html'), os.pardir),

@@ -56,3 +56,34 @@ class TestURLWrapper(unittest.TestCase):
 
         cat_ascii = Category('指導書', settings={})
         self.assertEqual(cat_ascii, u'zhi-dao-shu')
+
+    def test_slugify_with_substitutions_and_dots(self):
+        tag = Tag('Tag Dot',
+                  settings={
+                        'TAG_SUBSTITUTIONS': [('Tag Dot', 'tag.dot', True)]
+                    })
+        cat = Category('Category Dot',
+                       settings={
+                        'CATEGORY_SUBSTITUTIONS': (('Category Dot',
+                                                    'cat.dot',
+                                                    True),)
+                        })
+
+        self.assertEqual(tag.slug, 'tag.dot')
+        self.assertEqual(cat.slug, 'cat.dot')
+
+    def test_author_slug_substitutions(self):
+        settings = {
+            'AUTHOR_SUBSTITUTIONS': [
+                                    ('Alexander Todorov', 'atodorov', False),
+                                    ('Krasimir Tsonev', 'krasimir', False),
+            ]
+        }
+
+        author1 = Author('Mr. Senko', settings=settings)
+        author2 = Author('Alexander Todorov', settings=settings)
+        author3 = Author('Krasimir Tsonev', settings=settings)
+
+        self.assertEqual(author1.slug, 'mr-senko')
+        self.assertEqual(author2.slug, 'atodorov')
+        self.assertEqual(author3.slug, 'krasimir')
