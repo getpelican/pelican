@@ -12,6 +12,8 @@ import time
 
 from codecs import open
 
+import pytz
+
 from six.moves.urllib.error import URLError
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.request import urlretrieve
@@ -139,7 +141,7 @@ def get_filename(filename, post_id):
         return post_id
 
 
-def wp2fields(xml, wp_custpost=False):
+def wp2fields(xml, wp_custpost=False, timezone=None):
     """Opens a wordpress XML file, and yield Pelican fields"""
 
     items = get_items(xml)
@@ -159,9 +161,32 @@ def wp2fields(xml, wp_custpost=False):
             filename = get_filename(filename, post_id)
 
             content = item.find('encoded').string
-            raw_date = item.find('post_date').string
-            date_object = time.strptime(raw_date, '%Y-%m-%d %H:%M:%S')
-            date = time.strftime('%Y-%m-%d %H:%M', date_object)
+
+            def date_parse(zone):
+                date_fieldname = 'post_date_gmt' if zone else 'post_date'
+                raw_date = item.find(date_fieldname).string
+                date_object = SafeDatetime.strptime(raw_date,
+                                                    '%Y-%m-%d %H:%M:%S')
+                if zone:
+                    utc_date_object = date_object.replace(tzinfo=pytz.utc)
+                    local_date_object = utc_date_object.astimezone(zone)
+                    return local_date_object.strftime('%Y-%m-%d %H:%M')
+                else:
+                    return date_object.strftime('%Y-%m-%d %H:%M')
+
+            try:
+                date = date_parse(timezone)
+            except:
+                if timezone:
+                    # try again explicitly with no timezone if not parseable,
+                    # hopefully this gets us something not too far off
+                    # by simply reading post_date
+                    logger.warning('Using time from post_date because '
+                                   'post_date_gmt contains garbage')
+                    date = date_parse(None)
+                else:
+                    raise
+
             author = item.find('creator').string
 
             categories = [cat.string for cat
@@ -836,6 +861,11 @@ def main():
     parser.add_argument(
         '-b', '--blogname', dest='blogname',
         help="Blog name (Tumblr import only)")
+    parser.add_argument(
+        '--timezone', dest='timezone',
+        help='Timezone of the pelican blog, allows the script to use '
+             'the date stored in post_date_gmt instead of post_date '
+             '(Wordpress import only)')
 
     args = parser.parse_args()
 
@@ -867,8 +897,11 @@ def main():
                  'to use the --wp-attach option')
         exit(error)
 
+    timezone = pytz.timezone(args.timezone) if args.timezone else None
+
     if input_type == 'wordpress':
-        fields = wp2fields(args.input, args.wp_custpost or False)
+        fields = wp2fields(args.input, args.wp_custpost or False,
+                           timezone=timezone)
     elif input_type == 'dotclear':
         fields = dc2fields(args.input)
     elif input_type == 'posterous':
