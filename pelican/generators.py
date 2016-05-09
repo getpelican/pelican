@@ -280,12 +280,13 @@ class ArticlesGenerator(CachingGenerator):
     def generate_feeds(self, writer):
         """Generate the feeds from the current context, and output files."""
 
+        template = self.get_template('feed_item')
         if self.settings.get('FEED_ATOM'):
-            writer.write_feed(self.articles, self.context,
+            writer.write_feed(self.articles, self.context, template,
                               self.settings['FEED_ATOM'])
 
         if self.settings.get('FEED_RSS'):
-            writer.write_feed(self.articles, self.context,
+            writer.write_feed(self.articles, self.context, template,
                               self.settings['FEED_RSS'], feed_type='rss')
 
         if (self.settings.get('FEED_ALL_ATOM') or
@@ -296,35 +297,35 @@ class ArticlesGenerator(CachingGenerator):
             all_articles.sort(key=attrgetter('date'), reverse=True)
 
             if self.settings.get('FEED_ALL_ATOM'):
-                writer.write_feed(all_articles, self.context,
+                writer.write_feed(all_articles, self.context, template,
                                   self.settings['FEED_ALL_ATOM'])
 
             if self.settings.get('FEED_ALL_RSS'):
-                writer.write_feed(all_articles, self.context,
+                writer.write_feed(all_articles, self.context, template,
                                   self.settings['FEED_ALL_RSS'],
                                   feed_type='rss')
 
         for cat, arts in self.categories:
             arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('CATEGORY_FEED_ATOM'):
-                writer.write_feed(arts, self.context,
+                writer.write_feed(arts, self.context, template,
                                   self.settings['CATEGORY_FEED_ATOM']
                                   % cat.slug)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
-                writer.write_feed(arts, self.context,
+                writer.write_feed(arts, self.context, template,
                                   self.settings['CATEGORY_FEED_RSS']
                                   % cat.slug, feed_type='rss')
 
         for auth, arts in self.authors:
             arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('AUTHOR_FEED_ATOM'):
-                writer.write_feed(arts, self.context,
+                writer.write_feed(arts, self.context, template,
                                   self.settings['AUTHOR_FEED_ATOM']
                                   % auth.slug)
 
             if self.settings.get('AUTHOR_FEED_RSS'):
-                writer.write_feed(arts, self.context,
+                writer.write_feed(arts, self.context, template,
                                   self.settings['AUTHOR_FEED_RSS']
                                   % auth.slug, feed_type='rss')
 
@@ -333,12 +334,12 @@ class ArticlesGenerator(CachingGenerator):
             for tag, arts in self.tags.items():
                 arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
-                    writer.write_feed(arts, self.context,
+                    writer.write_feed(arts, self.context, template,
                                       self.settings['TAG_FEED_ATOM']
                                       % tag.slug)
 
                 if self.settings.get('TAG_FEED_RSS'):
-                    writer.write_feed(arts, self.context,
+                    writer.write_feed(arts, self.context, template,
                                       self.settings['TAG_FEED_RSS'] % tag.slug,
                                       feed_type='rss')
 
@@ -352,11 +353,11 @@ class ArticlesGenerator(CachingGenerator):
                 items.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TRANSLATION_FEED_ATOM'):
                     writer.write_feed(
-                        items, self.context,
+                        items, self.context, template,
                         self.settings['TRANSLATION_FEED_ATOM'] % lang)
                 if self.settings.get('TRANSLATION_FEED_RSS'):
                     writer.write_feed(
-                        items, self.context,
+                        items, self.context, template,
                         self.settings['TRANSLATION_FEED_RSS'] % lang,
                         feed_type='rss')
 
