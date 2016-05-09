@@ -647,7 +647,7 @@ def get_attachments(xml):
     return attachedposts
 
 
-def download_attachments(output_path, urls):
+def download_attachments(output_path, urls, successful_url_cache):
     """Downloads WordPress attachments and returns a list of paths to
     attachments that can be associated with a post (relative path to output
     directory). Files that fail to download, will not be added to posts"""
@@ -667,8 +667,12 @@ def download_attachments(output_path, urls):
             os.makedirs(full_path)
         print('downloading {}'.format(filename))
         try:
-            quote_url = quote(url, safe="%/:=&?~#+!$,;'@()*[]")
-            urlretrieve(quote_url, os.path.join(full_path, filename))
+            if(url in successful_url_cache):
+                print('already downloaded: {} ... skipping'.format(filename))
+            else:
+                quote_url = quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+                urlretrieve(quote_url, os.path.join(full_path, filename))
+                successful_url_cache.add(url)
             locations.append(os.path.join(localpath, filename))
         except (URLError, IOError) as e:
             # Python 2.7 throws an IOError rather Than URLError
@@ -681,6 +685,9 @@ def fields2pelican(
         dircat=False, strip_raw=False, disable_slugs=False,
         dirpage=False, filename_template=None, filter_author=None,
         wp_custpost=False, wp_attach=False, attachments=None):
+
+    successful_url_cache = set()
+
     for (title, content, filename, date, author, categories, tags, status,
             kind, in_markup) in fields:
         if filter_author and filter_author != author:
@@ -690,7 +697,8 @@ def fields2pelican(
         if wp_attach and attachments:
             try:
                 urls = attachments[filename]
-                attached_files = download_attachments(output_path, urls)
+                attached_files = download_attachments(output_path, urls,
+                                                      successful_url_cache)
             except KeyError:
                 attached_files = None
         else:
@@ -759,8 +767,8 @@ def fields2pelican(
             fs.write(header + content)
     if wp_attach and attachments and None in attachments:
         print("downloading attachments that don't have a parent post")
-        urls = attachments[None]
-        download_attachments(output_path, urls)
+        urls = set(attachments[None])
+        download_attachments(output_path, urls, successful_url_cache)
 
 
 def main():
