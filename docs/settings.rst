@@ -625,6 +625,25 @@ This would cause the first page to be written to
 ``{base_name}/index.html``, and subsequent ones would be written into
 ``page/{number}`` directories.
 
+Furthermore you need to add settings how tags, authors and categories will be defined,
+otherwise you will get a RuntimeError while generating your posts. See an example below 
+on how this should look::
+    
+  TAG_URL = 'tag/{slug}/'
+  TAG_SAVE_AS = 'tag/{slug}/index.html'
+  TAGS_URL = 'tags/'
+  TAGS_SAVE_AS = 'tags/index.html'
+  
+  AUTHOR_URL = 'author/{slug}/'
+  AUTHOR_SAVE_AS = 'author/{slug}/index.html'
+  AUTHORS_URL = 'authors/'
+  AUTHORS_SAVE_AS = 'authors/index.html'
+  
+  CATEGORY_URL = 'category/{slug}/'
+  CATEGORY_SAVE_AS = 'category/{slug}/index.html'
+  CATEGORYS_URL = 'categories/'
+  CATEGORYS_SAVE_AS = 'categories/index.html'
+
 
 Translations
 ============
