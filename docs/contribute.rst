@@ -37,7 +37,7 @@ To clone the Pelican source::
 To install the development dependencies::
 
     $ cd src/pelican
-    $ pip install -r dev_requirements.txt
+    $ pip install -r requirements/developer.pip
 
 To install Pelican and its dependencies::
 
