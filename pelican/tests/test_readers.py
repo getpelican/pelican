@@ -359,6 +359,15 @@ class RstReaderTest(ReaderTest):
 
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_default_date_formats(self):
+        tuple_date = self.read_file(path='article.rst',
+                                    DEFAULT_DATE=(2012, 5, 1))
+        string_date = self.read_file(path='article.rst',
+                                     DEFAULT_DATE='2012-05-01')
+
+        self.assertEqual(tuple_date.metadata['date'],
+                         string_date.metadata['date'])
+
 
 @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
 class MdReaderTest(ReaderTest):
