@@ -26,6 +26,9 @@ from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 
 logger = logging.getLogger(__name__)
 
+INCLUDE_RE = re.compile(r'(?P<indent>\n[ \t]+)?'
+                        r'[{|]include[|}](?P<path>[\w./]+)')
+
 
 @python_2_unicode_compatible
 class Content(object):
@@ -359,14 +362,8 @@ class Content(object):
             path = value.path
             if what not in {'static', 'attach'}:
                 continue
-            if path.startswith('/'):
-                path = path[1:]
-            else:
-                # relative to the source path of this content
-                path = self.get_relative_source_path(
-                    os.path.join(self.relative_dir, path)
-                )
-            path = path.replace('%20', ' ')
+            path = relativize_path(self.settings['PATH'],
+                                   self.relative_dir, path)
             static_links.add(path)
         return static_links
 
@@ -449,24 +446,11 @@ class Content(object):
         """
         if not source_path:
             source_path = self.source_path
-        if source_path is None:
-            return None
-
-        return posixize_path(
-            os.path.relpath(
-                os.path.abspath(os.path.join(
-                    self.settings['PATH'],
-                    source_path)),
-                os.path.abspath(self.settings['PATH'])
-            ))
+        return get_relative_source_path(self.settings['PATH'], source_path)
 
     @property
     def relative_dir(self):
-        return posixize_path(
-            os.path.dirname(
-                os.path.relpath(
-                    os.path.abspath(self.source_path),
-                    os.path.abspath(self.settings['PATH']))))
+        return relative_dir(self.settings['PATH'], self.source_path)
 
     def refresh_metadata_intersite_links(self):
         for key in self.settings['FORMATTED_FIELDS']:
@@ -613,3 +597,111 @@ class Static(Content):
 
         self.override_save_as = new_save_as
         self.override_url = new_url
+
+
+def get_relative_source_path(content_path, source_path):
+    if source_path is None:
+        return None
+
+    return posixize_path(
+        os.path.relpath(
+            os.path.abspath(os.path.join(
+                content_path,
+                source_path)),
+            os.path.abspath(content_path)
+        ))
+
+
+def relativize_path(content_path, relative_dir, path):
+    """
+    Update path depending on whether this is an absolute
+    or relative value.
+    """
+    if path.startswith('/'):
+        path = path[1:]
+    else:
+        path = get_relative_source_path(content_path,
+                                        os.path.join(relative_dir, path))
+
+    path = path.replace('%20', ' ')
+
+    return path
+
+
+def relative_dir(content_path, path):
+    return posixize_path(
+        os.path.dirname(
+            os.path.relpath(
+                os.path.abspath(path),
+                os.path.abspath(content_path))))
+
+
+def insert_included_content(content,
+                            source_path,
+                            content_path,
+                            exclude_exts=()):
+    '''
+    Replace {include}some.file with the
+    contents of this file.
+    '''
+    processed_paths = set()
+    # In Python 3.x we can use the `nonlocal` declaration, in `replacer()`,
+    # to tell Python we mean to assign to the `source_path` variable from
+    # `insert_included_content()`.
+    # In Python 2.x we simply can't assign to `source_path` in `replacer()`.
+    # However, we work around this by not assigning to the variable itself,
+    # but using a mutable container to keep track about the current working
+    # directory while doing the recursion.
+    source_dir = [relative_dir(content_path, source_path)]
+
+    def replacer(m):
+        path, indent = m.group('path'), m.group('indent')
+        path = relativize_path(content_path, source_dir[0], path)
+        path = posixize_path(
+                os.path.abspath(
+                    os.path.join(content_path, path)
+                )
+            )
+
+        if not os.path.isfile(path):
+            logger.warning("Unable to find `%s`, skipping include.", path)
+            return m.group()
+
+        _, ext = os.path.splitext(path)
+        # remove leading dot
+        ext = ext[1:]
+
+        if ext in exclude_exts:
+            return m.group()
+
+        with open(path) as content_file:
+            text = content_file.read()
+
+        if indent:
+            prefix = ''
+            if indent[0] == '\n':
+                prefix = '\n'
+                indent = indent[1:]
+            text = prefix + '\n'.join(indent + line
+                                      for line in text.split('\n'))
+
+        # recursion stop
+        if path in processed_paths:
+            logger.warning("Circular inclusion detected for '%s'" % path)
+            return text
+        processed_paths.add(path)
+
+        # if we recurse into another file to perform more includes
+        # _path_replacer needs to know in which directory
+        # it operates otherwise it produces wrong paths
+        source_dir[0] = posixize_path(os.path.dirname(path))
+        current_source_dir = source_dir[0]
+
+        # recursively replace other includes
+        text = INCLUDE_RE.sub(replacer, text)
+
+        # restore source dir
+        source_dir[0] = current_source_dir
+        return text
+
+    return INCLUDE_RE.sub(replacer, content)

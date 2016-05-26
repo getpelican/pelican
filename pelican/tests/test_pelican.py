@@ -207,8 +207,12 @@ class TestPelican(LoggedTestCase):
         mute(True)(pelican.run)()
         logger.setLevel(orig_level)
         self.assertLogCountEqual(
-            count=2,
-            msg="Writing .*",
+            count=1,
+            msg='Writing .+/oh-yeah.html',
+            level=logging.INFO)
+        self.assertLogCountEqual(
+            count=1,
+            msg='Writing .+/categories.html',
             level=logging.INFO)
 
     def test_cyclic_intersite_links_no_warnings(self):

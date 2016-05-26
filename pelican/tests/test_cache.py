@@ -33,6 +33,7 @@ class TestCache(unittest.TestCase):
         settings['CACHE_CONTENT'] = True
         settings['LOAD_CONTENT_CACHE'] = True
         settings['CACHE_PATH'] = self.temp_cache
+        settings['IGNORE_FILES'] = ['include']
         return settings
 
     def test_generator_caching(self):

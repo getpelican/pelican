@@ -183,6 +183,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
         settings['CACHE_CONTENT'] = False
+        settings['IGNORE_FILES'] = ['include']
         context = get_context(settings)
 
         cls.generator = ArticlesGenerator(
@@ -307,6 +308,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['CACHE_PATH'] = self.temp_cache
         settings['READERS'] = {'asc': None}
+        settings['IGNORE_FILES'] = ['include']
         context = get_context(settings)
         generator = ArticlesGenerator(
             context=context, settings=settings,
@@ -404,6 +406,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
         settings['YEAR_ARCHIVE_URL'] = 'posts/{date:%Y}/'
         settings['CACHE_PATH'] = self.temp_cache
+        settings['IGNORE_FILES'] = ['include']
         context = get_context(settings)
         generator = ArticlesGenerator(
             context=context, settings=settings,
@@ -514,6 +517,7 @@ class TestArticlesGenerator(unittest.TestCase):
                                         # DEFAULT_CATEGORY
                                         ('category', 'Random'),
                                         ('tags', 'general, untagged'))
+        settings['IGNORE_FILES'] = ['include']
         context = get_context(settings)
         generator = ArticlesGenerator(
             context=context, settings=settings,
@@ -543,6 +547,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['ARTICLE_ORDER_BY'] = 'title'
+        settings['IGNORE_FILES'] = ['include']
         context = get_context(settings)
 
         generator = ArticlesGenerator(
@@ -590,6 +595,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['ARTICLE_ORDER_BY'] = 'reversed-title'
+        settings['IGNORE_FILES'] = ['include']
         context = get_context(settings)
 
         generator = ArticlesGenerator(

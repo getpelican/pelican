@@ -5,6 +5,7 @@ import logging
 import os
 import re
 from collections import OrderedDict
+from tempfile import NamedTemporaryFile
 
 import docutils
 import docutils.core
@@ -19,7 +20,8 @@ from six.moves.html_parser import HTMLParser
 from pelican import rstdirectives  # NOQA
 from pelican import signals
 from pelican.cache import FileStampDataCacher
-from pelican.contents import Author, Category, Page, Tag
+from pelican.contents import Author, Category, Page, Tag, \
+                             insert_included_content
 from pelican.utils import SafeDatetime, escape_html, get_date, pelican_open, \
     posixize_path
 
@@ -286,9 +288,28 @@ class RstReader(BaseReader):
 
     def read(self, source_path):
         """Parses restructured text"""
-        pub = self._get_publisher(source_path)
-        parts = pub.writer.parts
-        content = parts.get('body')
+        with pelican_open(source_path) as content:
+            exclude_exts = set(Readers(self.settings).extensions)
+            exclude_exts -= set(self.file_extensions)
+            content = insert_included_content(content, source_path,
+                                              self.settings['PATH'],
+                                              exclude_exts)
+            # We have pre-processed the file content,
+            # but docutils require a file as input,
+            # so with use a temporary one:
+            with NamedTemporaryFile() as tmp_file:
+                tmp_file.write(content.encode('utf8'))
+                tmp_file.seek(0)
+                try:
+                    pub = self._get_publisher(tmp_file.name)
+                    parts = pub.writer.parts
+                    content = parts.get('body')
+                except docutils.ApplicationError as err:
+                    # We fix any potential error message
+                    # to reference the original file:
+                    msg = err.args[0].replace(tmp_file.name, source_path)
+                    err.args = (msg,)
+                    raise err
 
         metadata = self._parse_metadata(pub.document, source_path)
         metadata.setdefault('title', parts.get('title'))
@@ -349,6 +370,11 @@ class MarkdownReader(BaseReader):
         self._source_path = source_path
         self._md = Markdown(**self.settings['MARKDOWN'])
         with pelican_open(source_path) as text:
+            exclude_exts = set(Readers(self.settings).extensions)
+            exclude_exts -= set(self.file_extensions)
+            text = insert_included_content(text, source_path,
+                                           self.settings['PATH'],
+                                           exclude_exts)
             content = self._md.convert(text)
 
         if hasattr(self._md, 'Meta'):
@@ -500,7 +526,12 @@ class HTMLReader(BaseReader):
         metadata = {}
         for k in parser.metadata:
             metadata[k] = self.process_metadata(k, parser.metadata[k])
-        return parser.body, metadata
+
+        if parser.body:
+            return parser.body, metadata
+        else:
+            # in case we're parsing HTML includes
+            return content, metadata
 
 
 class Readers(FileStampDataCacher):
@@ -596,6 +627,13 @@ class Readers(FileStampDataCacher):
         metadata.update(_filter_discardable_metadata(reader_metadata))
 
         if content:
+            # We excluded file extensions already processed
+            # by the dedicated readers:
+            exclude_exts = set(MarkdownReader.file_extensions)
+            exclude_exts |= set(RstReader.file_extensions)
+            content = insert_included_content(content, path,
+                                              self.settings['PATH'],
+                                              exclude_exts)
             # find images with empty alt
             find_empty_alt(content, path)
 

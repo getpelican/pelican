@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
+import logging
 import os
 
 import six
 
+from pelican import contents
 from pelican import readers
-from pelican.tests.support import get_settings, unittest
+from pelican.tests.support import LoggedTestCase, get_settings, unittest
 from pelican.utils import SafeDatetime
 
 try:
@@ -25,7 +27,7 @@ def _path(*args):
     return os.path.join(CONTENT_PATH, *args)
 
 
-class ReaderTest(unittest.TestCase):
+class ReaderTest(LoggedTestCase):
 
     def read_file(self, path, **kwargs):
         # Isolate from future API changes to readers.read_file
@@ -84,6 +86,20 @@ class TestAssertDictHasSubset(ReaderTest):
 
 class DefaultReaderTest(ReaderTest):
 
+    maxDiff = None
+
+    def setUp(self):
+        super(DefaultReaderTest, self).setUp()
+        self._initial_contents_log_level = contents.logger.level
+        contents.logger.level = logging.INFO
+        self._initial_readers_log_level = readers.logger.level
+        readers.logger.level = logging.INFO
+
+    def tearDown(self):
+        super(DefaultReaderTest, self).tearDown()
+        contents.logger.level = self._initial_contents_log_level
+        readers.logger.level = self._initial_readers_log_level
+
     def test_readfile_unknown_extension(self):
         with self.assertRaises(TypeError):
             self.read_file(path='article_with_metadata.unknownextension')
@@ -103,6 +119,162 @@ class DefaultReaderTest(ReaderTest):
                     extra={'limit_msg':
                            'Other images have empty alt attributes'}
                 )
+
+    def test_include_markdown_from_markdown(self):
+        page = self.read_file('include/md_includer.md')
+        self.assertEqual(
+            page.get_content(''),
+            '<p><em>inline includes Markdown</em>: '
+            '<strong>this is Markdown</strong>\n'
+            'Here is a <a href="https://docs.getpelican.com">link</a>.</p>\n'
+            '<p>^Included content above^</p>'
+        )
+        self.assertNoLogs()
+
+    def test_include_html_from_markdown(self):
+        page = self.read_file('include/html_includer.md')
+        self.assertEqual(
+            page.get_content(''),
+            '<p><em>includes HTML</em>:</p>\n'
+            '<p><span>this content has been included</span>\n'
+            '</p>\n'
+            '<p>^Included content above^</p>'
+        )
+        self.assertNoLogs()
+
+    def test_include_markdown_from_html(self):
+        page = self.read_file('include/md_includer.html')
+        self.assertEqual(
+            page.get_content(''),
+            '<em>includes Markdown</em>: {include}included.md\n'
+            '^Included content above^\n'
+        )
+        self.assertNoLogs()
+
+    def test_include_rst_from_rst(self):
+        page = self.read_file('include/rst_includer.rst')
+        self.assertEqual(
+            page.get_content(''),
+            '<p>Inline includes <em>reStructuredText</em>: '
+            '<strong>this is reStructuredText</strong>\n'
+            'Here is a <a class="reference external" '
+            'href="https://docs.getpelican.com">link</a>.</p>\n'
+            '<p>^Included content above^</p>\n'
+        )
+        self.assertNoLogs()
+
+    def test_include_html_from_rst(self):
+        page = self.read_file('include/html_includer.rst')
+        self.assertEqual(
+            page.get_content(''),
+            '<p><span>this content has been included</span>\n'
+            '</p>\n'
+            '<p>^Included content above^</p>\n'
+        )
+        self.assertNoLogs()
+
+    def test_include_code_from_markdown(self):
+        page = self.read_file('include/py_includer.md')
+        self.assertEqual(
+            page.get_content(''),
+            '<div class="highlight"><pre>'
+            '<span></span>'
+            '<span class="kn">import</span> '
+            '<span class="nn">antigravity</span>\n'
+            '\n'
+            '<span class="kn">import</span> '
+            '<span class="nn">this</span>\n'
+            '\n'
+            '<span class="n">_</span> '
+            '<span class="o">=</span> '
+            '<span class="n">antigravity</span> '
+            '<span class="o">+</span> '
+            '<span class="n">this</span>\n'
+            '</pre></div>'
+        )
+
+    def test_include_code_from_rst(self):
+        page = self.read_file('include/py_includer.rst')
+        self.assertEqual(
+            page.get_content(''),
+            '<div class="highlight"><pre>'
+            '<span></span>'
+            '<span class="kn">import</span> '
+            '<span class="nn">antigravity</span>\n'
+            '\n'
+            '<span class="kn">import</span> '
+            '<span class="nn">this</span>\n'
+            '\n'
+            '<span class="n">_</span> '
+            '<span class="o">=</span> '
+            '<span class="n">antigravity</span> '
+            '<span class="o">+</span> '
+            '<span class="n">this</span>\n'
+            '</pre></div>\n'
+        )
+        self.assertNoLogs()
+
+    def test_include_nested_markdown(self):
+        page = self.read_file('include/includer_of_md_includer.md')
+        self.assertEqual(
+            page.get_content(''),
+            '<p>START</p>\n'
+            '<p><em>inline includes Markdown</em>: '
+            '<strong>this is Markdown</strong>\n'
+            'Here is a <a href="https://docs.getpelican.com">link</a>.</p>\n'
+            '<p>^Included content above^</p>\n'
+            '<p>END</p>'
+        )
+        self.assertNoLogs()
+
+    def test_include_html_with_full_path(self):
+        page = self.read_file('include/html_includer_with_full_path.md')
+        self.assertEqual(
+            page.get_content(''),
+            '<p><em>includes HTML</em>:</p>\n'
+            '<p><span>this content has been included</span>\n'
+            '</p>\n'
+            '<p>^Included content above^</p>'
+        )
+        self.assertNoLogs()
+
+    def test_include_html_in_subdirectory(self):
+        page = self.read_file('include/html_from_subdir_includer.md')
+        self.assertEqual(
+            page.get_content(''),
+            '<p><em>includes HTML</em>:</p>\n'
+            '<p>this file includes another via absolute path\n'
+            'this file includes another in a parent directory\n'
+            '<span>this content has been included</span>\n\n\n'
+            '</p>\n'
+            '<p>^Included content above^</p>'
+        )
+        self.assertNoLogs()
+
+    def test_include_non_existing_file(self):
+        page = self.read_file('include/inexisting_file_includer.md')
+        self.assertEqual(
+            page.get_content(''),
+            '<p><em>includes HTML</em>:</p>\n'
+            '<p>{include}inexisting_file.html</p>\n'
+            '<p>^Included content above^</p>'
+        )
+        self.assertLogCountEqual(
+                count=1,
+                msg='Unable to find `.*`, skipping include.',
+                level=logging.WARNING)
+
+    def test_include_with_recursion_loop(self):
+        page = self.read_file('include/include_sibling.html')
+        self.assertEqual(
+            page.get_content(''),
+            '{include}include_sibling.html\n\n\n\n'
+        )
+        self.assertLogCountEqual(
+                count=1,
+                msg="Circular inclusion detected for "
+                    "'.+/include/include_other.html'",
+                level=logging.WARNING)
 
 
 class RstReaderTest(ReaderTest):

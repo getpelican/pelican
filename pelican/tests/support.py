@@ -188,16 +188,16 @@ class LogCountHandler(BufferingHandler):
     """Capturing and counting logged messages."""
 
     def __init__(self, capacity=1000):
-        logging.handlers.BufferingHandler.__init__(self, capacity)
+        super(LogCountHandler, self).__init__(capacity)
 
-    def count_logs(self, msg=None, level=None):
-        return len([
+    def get_logs(self, msg=None, level=None):
+        return [
             l
             for l
             in self.buffer
-            if (msg is None or re.match(msg, l.getMessage())) and
-               (level is None or l.levelno == level)
-        ])
+            if ((msg is None or re.match(msg, l.getMessage())) and
+                (level is None or l.levelno == level))
+        ]
 
 
 class LoggedTestCase(unittest.TestCase):
@@ -213,8 +213,17 @@ class LoggedTestCase(unittest.TestCase):
         super(LoggedTestCase, self).tearDown()
 
     def assertLogCountEqual(self, count=None, msg=None, **kwargs):
-        actual = self._logcount_handler.count_logs(msg=msg, **kwargs)
+        actual_logs = self._logcount_handler.get_logs(msg=msg, **kwargs)
         self.assertEqual(
-            actual, count,
+            len(actual_logs), count,
             msg='expected {} occurrences of {!r}, but found {}'.format(
-                count, msg, actual))
+                count, msg, len(actual_logs)))
+
+    def assertNoLogs(self, count=None, msg=None, **kwargs):
+        'Better than .assertLogCountEqual(0) because'
+        ' it prints the generated logs, if any'
+        actual_logs = self._logcount_handler.get_logs(msg=msg, **kwargs)
+        if actual_logs:
+            self.fail('Some logs were generated:\n'
+                      + '\n'.join('{}: {}'.format(log.levelname, log.message)
+                                  for log in actual_logs))
