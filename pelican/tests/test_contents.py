@@ -22,6 +22,8 @@ from pelican.utils import SafeDatetime, path_to_url, truncate_html_words
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
+CONTENT_PATH = os.path.join(os.path.dirname(__file__), 'content')
+
 
 class TestPage(LoggedTestCase):
 
@@ -416,6 +418,142 @@ class TestPage(LoggedTestCase):
             content,
             'A simple test, with a '
             '<a href="http://notmyidea.org/article-spaces.html">link</a>'
+        )
+
+    def test_includes(self):
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = CONTENT_PATH
+        args['context']['filenames'] = {}
+        settings = get_settings()
+        settings['PATH'] = CONTENT_PATH
+        args['settings'] = settings
+
+        # test inclusion b/w files of different types
+        # HTML includes Markdown
+        args['content'] = (
+            'HTML includes Markdown '
+            '{include}include.markdown\n'
+            'Included content is above'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'HTML includes Markdown '
+            '<p><strong>this is Markdown</strong>\n'
+            'Here is a <a href="http://MrSenko.com">link</a>.</p>\n'
+            'Included content is above'
+        )
+
+        # test inclusion b/w files of different types
+        # where we don't know how to render the included type
+        args['content'] = (
+            'HTML includes Unknown '
+            '{include}include.unknown'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        # we have a warning in this case
+        self.assertLogCountEqual(
+                count=1,
+                msg="Unable to read `.*`, skipping include\.",
+                level=logging.WARNING)
+        self.assertEqual(
+            content,
+            'HTML includes Unknown '
+            '{include}include.unknown'
+        )
+
+        # one include via relative path
+        args['content'] = (
+            'There is a simple include here '
+            '{include}include1.html\n'
+            'Included content is above'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a simple include here '
+            '<span>this content has been included</span>\n\n'
+            'Included content is above'
+        )
+
+        # two nested includes via relative paths
+        args['content'] = (
+            'There is a simple include here '
+            '{include}include2.html\n'
+            'Included content is above'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a simple include here '
+            'this file includes another\n'
+            '<span>this content has been included</span>\n\n\n'
+            'Included content is above'
+        )
+
+        # include via full path
+        args['content'] = (
+            'There is a simple include here '
+            '{include}/include1.html'
+            ' Included content is above'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a simple include here '
+            '<span>this content has been included</span>\n'
+            ' Included content is above'
+        )
+
+        # 2nd include is in different directory
+        # include paths are relative to the caller directory
+        args['content'] = (
+            'There is a simple include here '
+            '{include}include/include3.html'
+            ' Included content is above'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a simple include here '
+            'this file includes another in a different directory\n'
+            '<span>this content has been included</span>\n\n'
+            ' Included content is above'
+        )
+
+        # 2nd include using absolute path in the included file
+        args['content'] = (
+            'There is a simple include here '
+            '{include}include/include4.html'
+            ' Included content is above'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a simple include here '
+            'this file includes another via absolute path\n'
+            '<span>this content has been included</span>\n\n'
+            ' Included content is above'
+        )
+
+        # include non-existing file => inclusion is skipped
+        args['content'] = (
+            'There is a simple include here '
+            '{include}missing.html'
+            ' Included content is above'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        # we have a warning in this case
+        self.assertLogCountEqual(
+                count=1,
+                msg="Unable to find `.*`, skipping include\.",
+                level=logging.WARNING)
+        self.assertEqual(
+            content,
+            'There is a simple include here '
+            '{include}missing.html'
+            ' Included content is above'
         )
 
     def test_multiple_authors(self):

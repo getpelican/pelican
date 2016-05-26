@@ -157,8 +157,11 @@ class TestCache(unittest.TestCase):
         - 2012-11-30_md_w_filename_meta#foo-bar.md
         - empty.md
         - empty_with_bom.md
+
+        There are 5 more include* files which are HTML or Markdown snippets
+        and also not valid.
         """
-        self.assertEqual(generator.readers.read_file.call_count, 6)
+        self.assertEqual(generator.readers.read_file.call_count, 11)
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_reader_content_caching(self):

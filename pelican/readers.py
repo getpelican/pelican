@@ -432,7 +432,12 @@ class HTMLReader(BaseReader):
         metadata = {}
         for k in parser.metadata:
             metadata[k] = self.process_metadata(k, parser.metadata[k])
-        return parser.body, metadata
+
+        if parser.body:
+            return parser.body, metadata
+        else:
+            # in case we're parsing HTML includes
+            return content, metadata
 
 
 class Readers(FileStampDataCacher):

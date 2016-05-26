@@ -5,6 +5,7 @@ Next release
 ============
 
 * New signal: ``feed_generated``
+* Add support for the ``{include}`` syntax
 
 3.7.1 (2017-01-10)
 ==================

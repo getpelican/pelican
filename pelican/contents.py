@@ -11,7 +11,7 @@ import sys
 import pytz
 
 import six
-from six.moves.urllib.parse import urlparse, urlunparse
+from six.moves.urllib.parse import unquote, urlparse, urlunparse
 
 from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
@@ -151,7 +151,19 @@ class Content(object):
         if 'summary' in metadata:
             self._summary = metadata['summary']
 
+        # used for rendering {includes}
+        self._readers = None
+
         signals.content_object_init.send(self)
+
+    @property
+    def readers(self):
+        if self._readers is None:
+            # import here due to circular imports
+            from pelican.readers import Readers
+            self._readers = Readers(self.settings)
+
+        return self._readers
 
     def __str__(self):
         return self.source_path or repr(self)
@@ -204,6 +216,30 @@ class Content(object):
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 
+    def _path_replacer(self, path, relative_dir=None):
+        """
+        Update path depending on whether this is an absolute
+        or relative value.
+        """
+        if not relative_dir:
+            relative_dir = self.relative_dir
+
+        if path.startswith('/'):
+            path = path[1:]
+        else:
+            # relative to the source path of this content
+            path = self.get_relative_source_path(
+                os.path.join(relative_dir, path)
+            )
+
+        if path not in self._context['filenames']:
+            unquoted_path = unquote(path)
+
+            if unquoted_path in self._context['filenames']:
+                path = unquoted_path
+
+        return path
+
     def _update_content(self, content, siteurl):
         """Update the content attribute.
 
@@ -235,19 +271,7 @@ class Content(object):
 
             # XXX Put this in a different location.
             if what in {'filename', 'attach'}:
-                if path.startswith('/'):
-                    path = path[1:]
-                else:
-                    # relative to the source path of this content
-                    path = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, path)
-                    )
-
-                if path not in self._context['filenames']:
-                    unquoted_path = path.replace('%20', ' ')
-
-                    if unquoted_path in self._context['filenames']:
-                        path = unquoted_path
+                path = self._path_replacer(path)
 
                 linked_content = self._context['filenames'].get(path)
                 if linked_content:
@@ -294,12 +318,55 @@ class Content(object):
     def get_siteurl(self):
         return self._context.get('localsiteurl', '')
 
+    def _update_includes(self, content, source_path=None):
+        """
+            Replace {include}some.file with the
+            contents of this file.
+        """
+        regex = r"""[{|]include[|}](?P<path>[\w./]+)"""
+        hrefs = re.compile(regex, re.X)
+
+        def replacer(m):
+            path = m.group('path')
+            path = self._path_replacer(path, source_path)
+            path = posixize_path(
+                    os.path.abspath(
+                        os.path.join(self.settings['PATH'], path)
+                    )
+                )
+
+            if not os.path.isfile(path):
+                logger.warning("Unable to find `%s`, skipping include.", path)
+                return ''.join(('{include}', m.group('path')))
+
+            _, ext = os.path.splitext(path)
+            # remove leading dot
+            ext = ext[1:]
+
+            if ext not in self.readers.reader_classes.keys():
+                logger.warning("Unable to read `%s`, skipping include.", path)
+                return ''.join(('{include}', m.group('path')))
+
+            reader = self.readers.reader_classes[ext](self.settings)
+            text, meta = reader.read(path)
+
+            # if we recurse into another file to perform more includes
+            # self._path_replacer needs to know in which directory
+            # it operates otherwise it produces wrong paths
+            source_dir = posixize_path(os.path.dirname(path))
+
+            text = self._update_includes(text, source_dir)
+            return text
+
+        return hrefs.sub(replacer, content)
+
     @memoized
     def get_content(self, siteurl):
         if hasattr(self, '_get_content'):
             content = self._get_content()
         else:
             content = self._content
+        content = self._update_includes(content)
         return self._update_content(content, siteurl)
 
     @property

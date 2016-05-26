@@ -337,6 +337,45 @@ Linking to authors, categories, index and tags
 You can link to authors, categories, index and tags using the ``{author}name``,
 ``{category}foobar``, ``{index}`` and ``{tag}tagname`` syntax.
 
+Including common text into your content
+---------------------------------------
+
+From Pelican 3.7.2 you can include common text snippets into your content using
+the ``{include}file.ext`` syntax. You can specify semi-absolute paths starting
+from the ``PATH`` directory, e.g. ``{include}/pages/disclaimer.html`` or use
+relative paths, e.g. ``{include}notice.html``. Relativity is
+calculated based on the location of the file containing the ``{include}``.
+For example when you have the following content layout::
+
+    content
+    └── notice2.html
+    └── pages
+        ├── page1.html
+        └── notice1.html
+
+Then the includes may look like::
+
+    <html>
+        <head>
+            <title>PAGE 1</title>
+        </head>
+        <body>
+            This is the content of page 1
+
+            {include}../notice2.html
+        </body>
+    </html>
+
+
+``notice2.html`` looks like::
+
+    {include}pages/notice1.html
+    This is the second warning about relative paths
+
+When using ``{include}`` it is best to blacklist the included files using the
+``IGNORE_FILES`` setting. Otherwise Pelican will try to render them as regular
+content and will most likely fail!
+
 Deprecated internal link syntax
 -------------------------------
 
