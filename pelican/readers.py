@@ -545,6 +545,8 @@ class Readers(FileStampDataCacher):
 
             if content:
                 content = typogrify_wrapper(content)
+
+            if 'title' in metadata:
                 metadata['title'] = typogrify_wrapper(metadata['title'])
 
             if 'summary' in metadata:
