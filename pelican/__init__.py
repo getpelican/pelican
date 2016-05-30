@@ -277,6 +277,7 @@ def parse_arguments():
                         '"output" in the current path.')
 
     parser.add_argument('-s', '--settings', dest='settings',
+                        default=DEFAULT_CONFIG_NAME,
                         help='The settings of the application, this is '
                         'automatically set to {0} if a file exists with this '
                         'name.'.format(DEFAULT_CONFIG_NAME))
