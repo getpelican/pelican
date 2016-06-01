@@ -23,6 +23,11 @@ env.cloudfiles_container = '$cloudfiles_container'
 # Github Pages configuration
 env.github_pages_branch = "$github_pages_branch"
 
+# Docker configuration
+env.docker_blog_image = '$docker_base_image-blog'
+env.docker_target_dir = '$docker_target_dir'
+env.docker_container_name = '$docker_container_name'
+
 # Port for `serve`
 PORT = 8000
 
@@ -91,3 +96,29 @@ def gh_pages():
     """Publish to GitHub Pages"""
     rebuild()
     local("ghp-import -b {github_pages_branch} {deploy_path} -p".format(**env))
+
+def docker_rebuild():
+    """Rebuild the pelican site for production and install in a docker image :
+       - Kill and remove any existing pelican_site container.
+       - Copy the site into the webserver base image, build a new pelican_site
+         container.
+       - Run our new container.
+    """
+    clean()
+    preview()  # Builds the production version of the site
+
+    if local("docker ps -a | grep %s; exit 0" %
+             env.docker_container_name, capture=True) != "":
+        local("docker rm -f  {docker_container_name}".format(**env))
+
+
+# Remove the existing blog docker image
+    if local("docker images | grep %s; exit 0" %
+            env.docker_blog_image, capture=True) != "" :
+        local("docker rmi  {docker_blog_image}".format(**env))
+        
+# Now build and run the new image
+    local("docker build -t {docker_blog_image} .".format(**env))
+
+    local("docker run -d -p 80:80 --name {docker_container_name} \
+            {docker_blog_image} ".format(**env))

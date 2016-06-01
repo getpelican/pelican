@@ -43,7 +43,10 @@ CONF = {
     'default_pagination': 10,
     'siteurl': '',
     'lang': 'en',
-    'timezone': 'Europe/Paris'
+    'timezone': 'Europe/Paris',
+    'docker_base_image': 'nginx',
+    'docker_target_dir': '/usr/share/nginx/html',
+    'docker_container_name': 'pelican_site_container'
 }
 
 # url for list of valid timezones
@@ -310,6 +313,22 @@ needed by Pelican.
                 CONF['github_pages_branch'] = \
                     _GITHUB_PAGES_BRANCHES['project']
 
+        docker = ask('Do you want to run your website using '
+                     'a Docker container?', answer=bool, default=False)
+
+        if docker:
+            CONF['docker_container_name'] = ask('What would you like to name '
+                                                'your container?', str_compat,
+                                                CONF['docker_container_name'])
+            CONF['docker_base_image'] = ask('What webserver image would you '
+                                            'like to base your container '
+                                            'on?', str_compat,
+                                            CONF['docker_base_image'])
+            CONF['docker_target_dir'] = ask('Where do you want to put your '
+                                            'web site on that server?',
+                                            str_compat,
+                                            CONF['docker_target_dir'])
+
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
     except OSError as e:
@@ -397,6 +416,20 @@ needed by Pelican.
         except OSError as e:
             print('Error: {0}'.format(e))
 
+    if docker:
+        try:
+            with codecs.open(os.path.join(CONF['basedir'], 'Dockerfile'),
+                             'w', 'utf-8') as fd:
+                conf_docker = dict()
+                for key, value in CONF.items():
+                    conf_docker[key] = repr(value)
+
+                for line in get_template('Dockerfile'):
+                    template = string.Template(line)
+                    fd.write(template.safe_substitute(conf_docker))
+                fd.close()
+        except OSError as e:
+            print('Error: {0}'.format(e))
     print('Done. Your new project is available at %s' % CONF['basedir'])
 
 if __name__ == "__main__":
