@@ -28,8 +28,9 @@ by asking some questions about your site::
     pelican-quickstart
 
 For questions that have default values denoted in brackets, feel free to use
-the Return key to accept those default values. When asked for your URL prefix,
-enter your domain name as indicated (e.g., ``http://example.com``).
+the Return key to accept those default values [#tzlocal_fn]_. When asked for
+your URL prefix, enter your domain name as indicated (e.g.,
+``http://example.com``).
 
 Create an article
 -----------------
@@ -72,3 +73,10 @@ Continue reading the other documentation sections for more detail, and check out
 the Pelican wiki's Tutorials_ page for links to community-published tutorials.
 
 .. _Tutorials: https://github.com/getpelican/pelican/wiki/Tutorials
+
+Footnotes
+---------
+
+.. [#tzlocal_fn] You can help localize default fields by installing the
+                 optional `tzlocal <https://pypi.python.org/pypi/tzlocal>`_
+                 module.
