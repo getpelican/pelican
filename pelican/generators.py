@@ -105,10 +105,13 @@ class Generator(object):
         """
         if extensions is None:
             extensions = tuple(self.readers.extensions)
-        basename = os.path.basename(path)
 
         # check IGNORE_FILES
         ignores = self.settings['IGNORE_FILES']
+        if any(fnmatch.fnmatch(path, ignore) for ignore in ignores):
+            return False
+
+        basename = os.path.basename(path)
         if any(fnmatch.fnmatch(basename, ignore) for ignore in ignores):
             return False
 
