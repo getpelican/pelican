@@ -2,6 +2,7 @@
 from __future__ import print_function, unicode_literals
 
 import calendar
+import errno
 import fnmatch
 import logging
 import os
@@ -20,9 +21,8 @@ from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
-from pelican.utils import (DateFormatter, copy, copy_file_metadata, mkdir_p,
-                           posixize_path, process_translations,
-                           python_2_unicode_compatible)
+from pelican.utils import (DateFormatter, copy, mkdir_p, posixize_path,
+                           process_translations, python_2_unicode_compatible)
 
 
 logger = logging.getLogger(__name__)
@@ -682,20 +682,8 @@ class StaticGenerator(Generator):
 
     def __init__(self, *args, **kwargs):
         super(StaticGenerator, self).__init__(*args, **kwargs)
+        self.fallback_to_symlinks = False
         signals.static_generator_init.send(self)
-
-    def _copy_paths(self, paths, source, destination, output_path,
-                    final_path=None):
-        """Copy all the paths from source to destination"""
-        for path in paths:
-            if final_path:
-                copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, final_path),
-                     self.settings['IGNORE_FILES'])
-            else:
-                copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, path),
-                     self.settings['IGNORE_FILES'])
 
     def generate_context(self):
         self.staticfiles = []
@@ -724,13 +712,88 @@ class StaticGenerator(Generator):
         self._copy_paths(self.settings['THEME_STATIC_PATHS'], self.theme,
                          self.settings['THEME_STATIC_DIR'], self.output_path,
                          os.curdir)
-        # copy all Static files
         for sc in self.context['staticfiles']:
-            source_path = os.path.join(self.path, sc.source_path)
-            save_as = os.path.join(self.output_path, sc.save_as)
-            mkdir_p(os.path.dirname(save_as))
-            logger.info('Copying %s to %s', sc.source_path, sc.save_as)
-            copy_file_metadata(source_path, save_as)
+            if self._file_update_required(sc):
+                self._link_or_copy_staticfile(sc)
+            else:
+                logger.debug('%s is up to date, not copying', sc.source_path)
+
+    def _copy_paths(self, paths, source, destination, output_path,
+                    final_path=None):
+        """Copy all the paths from source to destination"""
+        for path in paths:
+            if final_path:
+                copy(os.path.join(source, path),
+                     os.path.join(output_path, destination, final_path),
+                     self.settings['IGNORE_FILES'])
+            else:
+                copy(os.path.join(source, path),
+                     os.path.join(output_path, destination, path),
+                     self.settings['IGNORE_FILES'])
+
+    def _file_update_required(self, staticfile):
+        source_path = os.path.join(self.path, staticfile.source_path)
+        save_as = os.path.join(self.output_path, staticfile.save_as)
+        if not os.path.exists(save_as):
+            return True
+        elif (self.settings['STATIC_CREATE_LINKS'] and
+              os.path.samefile(source_path, save_as)):
+            return False
+        elif (self.settings['STATIC_CREATE_LINKS'] and
+              os.path.realpath(save_as) == source_path):
+            return False
+        elif not self.settings['STATIC_CHECK_IF_MODIFIED']:
+            return True
+        else:
+            return self._source_is_newer(staticfile)
+
+    def _source_is_newer(self, staticfile):
+        source_path = os.path.join(self.path, staticfile.source_path)
+        save_as = os.path.join(self.output_path, staticfile.save_as)
+        s_mtime = os.path.getmtime(source_path)
+        d_mtime = os.path.getmtime(save_as)
+        return s_mtime > d_mtime
+
+    def _link_or_copy_staticfile(self, sc):
+        if self.settings['STATIC_CREATE_LINKS']:
+            self._link_staticfile(sc)
+        else:
+            self._copy_staticfile(sc)
+
+    def _copy_staticfile(self, sc):
+        source_path = os.path.join(self.path, sc.source_path)
+        save_as = os.path.join(self.output_path, sc.save_as)
+        self._mkdir(os.path.dirname(save_as))
+        copy(source_path, save_as)
+        logger.info('Copying %s to %s', sc.source_path, sc.save_as)
+
+    def _link_staticfile(self, sc):
+        source_path = os.path.join(self.path, sc.source_path)
+        save_as = os.path.join(self.output_path, sc.save_as)
+        self._mkdir(os.path.dirname(save_as))
+        try:
+            if os.path.lexists(save_as):
+                os.unlink(save_as)
+            logger.info('Linking %s and %s', sc.source_path, sc.save_as)
+            if self.fallback_to_symlinks:
+                os.symlink(source_path, save_as)
+            else:
+                os.link(source_path, save_as)
+        except OSError as err:
+            if err.errno == errno.EXDEV:  # 18: Invalid cross-device link
+                logger.debug(
+                    "Cross-device links not valid. "
+                    "Creating symbolic links instead."
+                    )
+                self.fallback_to_symlinks = True
+                self._link_staticfile(sc)
+            else:
+                raise err
+
+    def _mkdir(self, path):
+        if os.path.lexists(path) and not os.path.isdir(path):
+            os.unlink(path)
+        mkdir_p(path)
 
 
 class SourceFileGenerator(Generator):

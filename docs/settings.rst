@@ -230,6 +230,20 @@ Basic settings
    ``PAGE_PATHS``. If you are trying to publish your site's source files,
    consider using the ``OUTPUT_SOURCES`` setting instead.
 
+.. data:: STATIC_CREATE_LINKS = False
+
+   Create links instead of copying files. If the content and output
+   directories are on the same device, then create hard links.  Falls
+   back to symbolic links if the output directory is on a different
+   filesystem. If symlinks are created, don't forget to add the ``-L``
+   or ``--copy-links`` option to rsync when uploading your site.
+
+.. data:: STATIC_CHECK_IF_MODIFIED = False
+
+   If set to ``True``, and ``STATIC_CREATE_LINKS`` is ``False``, compare
+   mtimes of content and output files, and only copy content files that
+   are newer than existing output files.
+
 .. data:: TYPOGRIFY = False
 
    If set to True, several typographical improvements will be incorporated into

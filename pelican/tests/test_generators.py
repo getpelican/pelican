@@ -5,7 +5,7 @@ import locale
 import os
 
 from codecs import open
-from shutil import rmtree
+from shutil import copy, rmtree
 from tempfile import mkdtemp
 
 from pelican.generators import (ArticlesGenerator, Generator, PagesGenerator,
@@ -674,6 +674,30 @@ class TestStaticGenerator(unittest.TestCase):
 
     def setUp(self):
         self.content_path = os.path.join(CUR_DIR, 'mixed_content')
+        self.temp_content = mkdtemp(prefix='testcontent.')
+        self.temp_output = mkdtemp(prefix='testoutput.')
+        self.settings = get_settings()
+        self.settings['PATH'] = self.temp_content
+        self.settings['STATIC_PATHS'] = ["static"]
+        self.settings['OUTPUT_PATH'] = self.temp_output
+        os.mkdir(os.path.join(self.temp_content, "static"))
+        self.startfile = os.path.join(self.temp_content,
+                                      "static", "staticfile")
+        self.endfile = os.path.join(self.temp_output, "static", "staticfile")
+        self.generator = StaticGenerator(
+            context={'filenames': {}},
+            settings=self.settings,
+            path=self.temp_content,
+            theme="",
+            output_path=self.temp_output,
+            )
+
+    def tearDown(self):
+        rmtree(self.temp_content)
+        rmtree(self.temp_output)
+
+    def set_ancient_mtime(self, path, timestamp=1):
+        os.utime(path, (timestamp, timestamp))
 
     def test_static_excludes(self):
         """Test that StaticGenerator respects STATIC_EXCLUDES.
@@ -687,7 +711,7 @@ class TestStaticGenerator(unittest.TestCase):
 
         StaticGenerator(
             context=context, settings=settings,
-            path=settings['PATH'], output_path=None,
+            path=settings['PATH'], output_path=self.temp_output,
             theme=settings['THEME']).generate_context()
 
         staticnames = [os.path.basename(c.source_path)
@@ -716,7 +740,7 @@ class TestStaticGenerator(unittest.TestCase):
         for generator_class in (PagesGenerator, StaticGenerator):
             generator_class(
                 context=context, settings=settings,
-                path=settings['PATH'], output_path=None,
+                path=settings['PATH'], output_path=self.temp_output,
                 theme=settings['THEME']).generate_context()
 
         staticnames = [os.path.basename(c.source_path)
@@ -733,7 +757,7 @@ class TestStaticGenerator(unittest.TestCase):
         for generator_class in (PagesGenerator, StaticGenerator):
             generator_class(
                 context=context, settings=settings,
-                path=settings['PATH'], output_path=None,
+                path=settings['PATH'], output_path=self.temp_output,
                 theme=settings['THEME']).generate_context()
 
         staticnames = [os.path.basename(c.source_path)
@@ -742,3 +766,135 @@ class TestStaticGenerator(unittest.TestCase):
         self.assertTrue(
             any(name.endswith(".md") for name in staticnames),
             "STATIC_EXCLUDE_SOURCES=False failed to include a markdown file")
+
+    def test_copy_one_file(self):
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        with open(self.endfile, "r") as f:
+            self.assertEqual(f.read(), "staticcontent")
+
+    @unittest.skipUnless(MagicMock, 'Needs Mock module')
+    def test_file_update_required_when_dest_does_not_exist(self):
+        staticfile = MagicMock()
+        staticfile.source_path = self.startfile
+        staticfile.save_as = self.endfile
+        with open(staticfile.source_path, "w") as f:
+            f.write("a")
+        update_required = self.generator._file_update_required(staticfile)
+        self.assertTrue(update_required)
+
+    @unittest.skipUnless(MagicMock, 'Needs Mock module')
+    def test_dest_and_source_mtimes_are_equal(self):
+        staticfile = MagicMock()
+        staticfile.source_path = self.startfile
+        staticfile.save_as = self.endfile
+        self.settings['STATIC_CHECK_IF_MODIFIED'] = True
+        with open(staticfile.source_path, "w") as f:
+            f.write("a")
+        os.mkdir(os.path.join(self.temp_output, "static"))
+        copy(staticfile.source_path, staticfile.save_as)
+        isnewer = self.generator._source_is_newer(staticfile)
+        self.assertFalse(isnewer)
+
+    @unittest.skipUnless(MagicMock, 'Needs Mock module')
+    def test_source_is_newer(self):
+        staticfile = MagicMock()
+        staticfile.source_path = self.startfile
+        staticfile.save_as = self.endfile
+        with open(staticfile.source_path, "w") as f:
+            f.write("a")
+        os.mkdir(os.path.join(self.temp_output, "static"))
+        copy(staticfile.source_path, staticfile.save_as)
+        self.set_ancient_mtime(staticfile.save_as)
+        isnewer = self.generator._source_is_newer(staticfile)
+        self.assertTrue(isnewer)
+
+    def test_skip_file_when_source_is_not_newer(self):
+        self.settings['STATIC_CHECK_IF_MODIFIED'] = True
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        os.mkdir(os.path.join(self.temp_output, "static"))
+        with open(self.endfile, "w") as f:
+            f.write("staticcontent")
+        expected = os.path.getmtime(self.endfile)
+        self.set_ancient_mtime(self.startfile)
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        self.assertEqual(os.path.getmtime(self.endfile), expected)
+
+    def test_dont_link_by_default(self):
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        self.assertFalse(os.path.samefile(self.startfile, self.endfile))
+
+    def test_output_file_is_linked_to_source(self):
+        self.settings['STATIC_CREATE_LINKS'] = True
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        self.assertTrue(os.path.samefile(self.startfile, self.endfile))
+
+    def test_output_file_exists_and_is_newer(self):
+        self.settings['STATIC_CREATE_LINKS'] = True
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        os.mkdir(os.path.join(self.temp_output, "static"))
+        with open(self.endfile, "w") as f:
+            f.write("othercontent")
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        self.assertTrue(os.path.samefile(self.startfile, self.endfile))
+
+    def test_can_symlink_when_hardlink_not_possible(self):
+        self.settings['STATIC_CREATE_LINKS'] = True
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        os.mkdir(os.path.join(self.temp_output, "static"))
+        self.generator.fallback_to_symlinks = True
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        self.assertTrue(os.path.islink(self.endfile))
+
+    def test_existing_symlink_is_considered_up_to_date(self):
+        self.settings['STATIC_CREATE_LINKS'] = True
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        os.mkdir(os.path.join(self.temp_output, "static"))
+        os.symlink(self.startfile, self.endfile)
+        staticfile = MagicMock()
+        staticfile.source_path = self.startfile
+        staticfile.save_as = self.endfile
+        requires_update = self.generator._file_update_required(staticfile)
+        self.assertFalse(requires_update)
+
+    def test_invalid_symlink_is_overwritten(self):
+        self.settings['STATIC_CREATE_LINKS'] = True
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        os.mkdir(os.path.join(self.temp_output, "static"))
+        os.symlink("invalid", self.endfile)
+        staticfile = MagicMock()
+        staticfile.source_path = self.startfile
+        staticfile.save_as = self.endfile
+        requires_update = self.generator._file_update_required(staticfile)
+        self.assertTrue(requires_update)
+        self.generator.fallback_to_symlinks = True
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        self.assertEqual(os.path.realpath(self.endfile), self.startfile)
+
+    def test_delete_existing_file_before_mkdir(self):
+        with open(self.startfile, "w") as f:
+            f.write("staticcontent")
+        with open(os.path.join(self.temp_output, "static"), "w") as f:
+            f.write("This file should be a directory")
+        self.generator.generate_context()
+        self.generator.generate_output(None)
+        self.assertTrue(
+            os.path.isdir(os.path.join(self.temp_output, "static")))
+        self.assertTrue(os.path.isfile(self.endfile))
