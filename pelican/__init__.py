@@ -327,6 +327,10 @@ def parse_arguments():
                         help=('Exit the program with non-zero status if any '
                               'errors/warnings encountered.'))
 
+    parser.add_argument('--dump-settings', dest='dump_settings',
+                        action='append', nargs='?', help='Read'
+                        'config file, dump final settings and exit.')
+
     return parser.parse_args()
 
 
@@ -390,6 +394,19 @@ def main():
 
     try:
         pelican, settings = get_instance(args)
+
+        if args.dump_settings:
+            from pprint import pprint
+
+            # 'pelican --dump-settings': dump_settings = [None]
+            if args.dump_settings[0] is None:
+                pprint(settings)
+
+            # 'pelican --dump-settings SETTING': dump_settings = [SETTING]
+            else:
+                pprint(settings[args.dump_settings[0]])
+            sys.exit(0)
+
         readers = Readers(settings)
 
         watchers = {'content': folder_watcher(pelican.path,
