@@ -74,6 +74,7 @@ class TestPelican(LoggedTestCase):
                 if msg in line:
                     return True
             return False
+        out = out.decode('utf8')
         if err:
             err = '\n'.join([l for l in err.decode('utf8').splitlines()
                              if not ignorable_git_crlf_errors(l)])
