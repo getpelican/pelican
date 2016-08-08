@@ -51,7 +51,8 @@ class Writer(object):
             title=title,
             link=link,
             unique_id=get_tag_uri(link, item.date),
-            description=item.get_content(self.site_url),
+            description=item.summary,
+            content=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(

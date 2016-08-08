@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Alexis' log - yeah</title><link>http://blog.notmyidea.org/</link><description></description><lastBuildDate>Sun, 17 Nov 2013 23:29:00 +0100</lastBuildDate><item><title>This is a super article !</title><link>http://blog.notmyidea.org/posts/2010/d%C3%A9cembre/02/this-is-a-super-article/</link><description>&lt;p&gt;Some content here !&lt;/p&gt;
-&lt;div class="section" id="this-is-a-simple-title"&gt;
-&lt;h2&gt;This is a simple title&lt;/h2&gt;
-&lt;p&gt;And here comes the cool &lt;a class="reference external" href="http://books.couchdb.org/relax/design-documents/views"&gt;stuff&lt;/a&gt;.&lt;/p&gt;
-&lt;img alt="alternate text" src="http://blog.notmyidea.org/pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
-&lt;img alt="alternate text" src="http://blog.notmyidea.org/pictures/Sushi_Macro.jpg" style="width: 600px; height: 450px;" /&gt;
-&lt;pre class="literal-block"&gt;
-&amp;gt;&amp;gt;&amp;gt; from ipdb import set_trace
-&amp;gt;&amp;gt;&amp;gt; set_trace()
-&lt;/pre&gt;
-&lt;p&gt;→ And now try with some utf8 hell: ééé&lt;/p&gt;
-&lt;/div&gt;
+<rss version="2.0"><channel><title>Alexis' log - yeah</title><link>http://blog.notmyidea.org/</link><description></description><lastBuildDate>Sun, 17 Nov 2013 23:29:00 +0100</lastBuildDate><item><title>This is a super article !</title><link>http://blog.notmyidea.org/posts/2010/d%C3%A9cembre/02/this-is-a-super-article/</link><description>&lt;p class="first last"&gt;Multi-line metadata should be supported
+as well as &lt;strong&gt;inline markup&lt;/strong&gt;.&lt;/p&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Alexis Métaireau</dc:creator><pubDate>Thu, 02 Dec 2010 10:14:00 +0100</pubDate><guid isPermaLink="false">tag:blog.notmyidea.org,2010-12-02:/posts/2010/décembre/02/this-is-a-super-article/</guid><category>foo</category><category>bar</category><category>foobar</category></item></channel></rss>
