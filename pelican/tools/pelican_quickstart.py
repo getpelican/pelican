@@ -44,7 +44,7 @@ CONF = {
     'siteurl': '',
     'lang': 'en',
     'timezone': 'Europe/Paris',
-    'docker_base_image': 'nginx',
+    'docker_base_image': 'nginx:alpine',
     'docker_target_dir': '/usr/share/nginx/html',
     'docker_container_name': 'pelican_site_container'
 }
