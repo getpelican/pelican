@@ -546,6 +546,22 @@ class MdReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(metadata, expected)
 
+    def test_empty_file(self):
+        reader = readers.MarkdownReader(settings=get_settings())
+        content, metadata = reader.read(
+            _path('empty.md'))
+
+        self.assertEqual(metadata, {})
+        self.assertEqual(content, '')
+
+    def test_empty_file_with_bom(self):
+        reader = readers.MarkdownReader(settings=get_settings())
+        content, metadata = reader.read(
+            _path('empty_with_bom.md'))
+
+        self.assertEqual(metadata, {})
+        self.assertEqual(content, '')
+
 
 class HTMLReaderTest(ReaderTest):
     def test_article_with_comments(self):
