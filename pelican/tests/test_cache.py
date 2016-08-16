@@ -56,7 +56,8 @@ class TestCache(unittest.TestCase):
         generator.readers.read_file = MagicMock()
         generator.generate_context()
         """
-        3 Files don't get cached because they were not valid
+        4 files don't get cached because they were not valid
+        - article_with_attributes_containing_double_quotes.html
         - article_with_comments.html
         - article_with_null_attributes.html
         - 2012-11-30_md_w_filename_meta#foo-bar.md
