@@ -455,7 +455,13 @@ Option          Valid values  Description
 =============   ============  =========================================
 anchorlinenos   N/A           If present wrap line numbers in <a> tags.
 classprefix     string        String to prepend to token class names
-hl_lines        numbers       List of lines to be highlighted.
+hl_lines        numbers       List of lines to be highlighted, where
+                              line numbers to highlight are separated
+                              by a space. This is similar to
+                              ``emphasize-lines`` in Sphinx, but it
+                              does not support a range of line numbers
+                              separated by a hyphen, or comma-separated
+                              line numbers.
 lineanchors     string        Wrap each line in an anchor using this
                               string and -linenumber.
 linenos         string        If present or set to "table" output line
