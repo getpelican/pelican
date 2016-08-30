@@ -109,6 +109,7 @@ DEFAULT_CONFIG = {
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
     'LOG_FILTER': [],
+    'LOG_FILTER_IDS': [],
     'LOCALE': [''],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
@@ -223,7 +224,10 @@ def configure_settings(settings):
 
     # specify the log messages to be ignored
     log_filter = settings.get('LOG_FILTER', DEFAULT_CONFIG['LOG_FILTER'])
+    log_filter_ids = settings.get('LOG_FILTER_IDS',
+                                  DEFAULT_CONFIG['LOG_FILTER_IDS'])
     LimitFilter._ignore.update(set(log_filter))
+    LimitFilter._ignore_ids.update(set(log_filter_ids))
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):

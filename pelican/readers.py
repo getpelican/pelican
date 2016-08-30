@@ -592,7 +592,8 @@ def find_empty_alt(content, path):
         logger.warning(
             'Empty alt attribute for image %s in %s',
             os.path.basename(match[1] + match[5]), path,
-            extra={'limit_msg': 'Other images have empty alt attributes'})
+            extra={'limit_msg': 'Other images have empty alt attributes',
+                   'id': 'warn.img.alt.empty'})
 
 
 def default_metadata(settings=None, process=None):

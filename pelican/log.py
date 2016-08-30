@@ -92,6 +92,7 @@ class LimitFilter(logging.Filter):
     """
 
     _ignore = set()
+    _ignore_ids = set()
     _threshold = 5
     _group_count = defaultdict(int)
 
@@ -99,6 +100,10 @@ class LimitFilter(logging.Filter):
         # don't limit log messages for anything above "warning"
         if record.levelno > logging.WARN:
             return True
+
+        # filter record if user ignored it by id
+        if record.__dict__.get('id') in self._ignore_ids:
+            return False
 
         # extract group
         group = record.__dict__.get('limit_msg', None)
