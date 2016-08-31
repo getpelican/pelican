@@ -241,7 +241,8 @@ class Content(object):
                             logger.warning(
                                 "%s used {attach} link syntax on a "
                                 "non-static file. Use {filename} instead.",
-                                self.get_relative_source_path())
+                                self.get_relative_source_path(), extra={
+                                    'id': 'warn.contents.non-static-attach'})
                     origin = '/'.join((siteurl, linked_content.url))
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
@@ -249,7 +250,8 @@ class Content(object):
                         "Unable to find `%s`, skipping url replacement.",
                         value.geturl(), extra={
                             'limit_msg': ("Other resources were not found "
-                                          "and their urls not replaced")})
+                                          "and their urls not replaced"),
+                            'id': 'warn.contents.unable-to-find-url'})
             elif what == 'category':
                 origin = '/'.join((siteurl, Category(path, self.settings).url))
             elif what == 'tag':
@@ -262,7 +264,8 @@ class Content(object):
                 logger.warning(
                     "Replacement Indicator '%s' not recognized, "
                     "skipping replacement",
-                    what)
+                    what, extra={
+                        'id': 'warn.contents.unknown-replacement-indicator'})
 
             # keep all other parts, such as query, fragment, etc.
             parts = list(value)
@@ -313,7 +316,8 @@ class Content(object):
         """deprecated function to access summary"""
 
         logger.warning('_get_summary() has been deprecated since 3.6.4. '
-                       'Use the summary decorator instead')
+                       'Use the summary decorator instead',
+                       extra={'id': 'warn.contents.get-summary-deprecated'})
         return self.summary
 
     @summary.setter
@@ -447,7 +451,8 @@ class Static(Page):
                 "{filename} link behavior instead.",
                 content.get_relative_source_path(),
                 self.get_relative_source_path(), reason,
-                extra={'limit_msg': "More {attach} warnings silenced."})
+                extra={'limit_msg': "More {attach} warnings silenced.",
+                       'id': 'warn.contents.link-relocation-failed'})
 
         # We never override an override, because we don't want to interfere
         # with user-defined overrides that might be in EXTRA_PATH_METADATA.

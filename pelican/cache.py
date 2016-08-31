@@ -38,14 +38,16 @@ class FileDataCacher(object):
             except (IOError, OSError) as err:
                 logger.debug('Cannot load cache %s (this is normal on first '
                              'run). Proceeding with empty cache.\n%s',
-                             self._cache_path, err)
+                             self._cache_path, err,
+                             extra={'id': 'debug.cache.load'})
                 self._cache = {}
             except pickle.PickleError as err:
                 logger.warning('Cannot unpickle cache %s, cache may be using '
                                'an incompatible protocol (see pelican '
                                'caching docs). '
                                'Proceeding with empty cache.\n%s',
-                               self._cache_path, err)
+                               self._cache_path, err,
+                               extra={'id': 'warn.cache.unpickle'})
                 self._cache = {}
         else:
             self._cache = {}
@@ -71,7 +73,8 @@ class FileDataCacher(object):
                     pickle.dump(self._cache, fhandle)
             except (IOError, OSError, pickle.PicklingError) as err:
                 logger.warning('Could not save cache %s\n ... %s',
-                               self._cache_path, err)
+                               self._cache_path, err,
+                               extra={'id': 'warn.cache.save'})
 
 
 class FileStampDataCacher(FileDataCacher):
@@ -100,7 +103,8 @@ class FileStampDataCacher(FileDataCacher):
 
                 self._filestamp_func = filestamp_func
             except AttributeError as err:
-                logger.warning('Could not get hashing function\n\t%s', err)
+                logger.warning('Could not get hashing function\n\t%s', err,
+                               extra={'id': 'warn.cache.hash'})
                 self._filestamp_func = None
 
     def cache_data(self, filename, data):
@@ -122,7 +126,8 @@ class FileStampDataCacher(FileDataCacher):
             return self._filestamp_func(filename)
         except (IOError, OSError, TypeError) as err:
             logger.warning('Cannot get modification stamp for %s\n\t%s',
-                           filename, err)
+                           filename, err,
+                           extra={'id': 'warn.cache.get-timestamp'})
             return ''
 
     def get_cached_data(self, filename, default=None):

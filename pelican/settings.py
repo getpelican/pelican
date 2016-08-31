@@ -156,13 +156,17 @@ def read_settings(path=None, override=None):
                     local_settings[p] = absp
 
         if 'PLUGIN_PATH' in local_settings:
-            logger.warning('PLUGIN_PATH setting has been replaced by '
-                           'PLUGIN_PATHS, moving it to the new setting name.')
+            logger.warning(
+                'PLUGIN_PATH setting has been replaced by '
+                'PLUGIN_PATHS, moving it to the new setting name.',
+                extra={'id': 'warn.settings.plugin-path-deprecated'})
             local_settings['PLUGIN_PATHS'] = local_settings['PLUGIN_PATH']
             del local_settings['PLUGIN_PATH']
         if isinstance(local_settings['PLUGIN_PATHS'], six.string_types):
-            logger.warning("Defining PLUGIN_PATHS setting as string "
-                           "has been deprecated (should be a list)")
+            logger.warning(
+                "Defining PLUGIN_PATHS setting as string "
+                "has been deprecated (should be a list)",
+                extra={'id': 'warn.settings.plugin-paths-is-a-string'})
             local_settings['PLUGIN_PATHS'] = [local_settings['PLUGIN_PATHS']]
         elif local_settings['PLUGIN_PATHS'] is not None:
             def getabs(path, pluginpath):
@@ -267,7 +271,8 @@ def configure_settings(settings):
             logger.warn(
                 'Detected misconfigured %s (%s), '
                 'falling back to the default (%s)',
-                key, value, DEFAULT_CONFIG[key])
+                key, value, DEFAULT_CONFIG[key],
+                extra={'id': 'warn.settings.misconfigured-setting'})
 
     # try to set the different locales, fallback on the default.
     locales = settings.get('LOCALE', DEFAULT_CONFIG['LOCALE'])
@@ -279,14 +284,17 @@ def configure_settings(settings):
         except locale.Error:
             pass
     else:
-        logger.warning("LOCALE option doesn't contain a correct value")
+        logger.warning("LOCALE option doesn't contain a correct value",
+                       extra={'id': 'warn.settings.incorrect-locale'})
 
     if ('SITEURL' in settings):
         # If SITEURL has a trailing slash, remove it and provide a warning
         siteurl = settings['SITEURL']
         if (siteurl.endswith('/')):
             settings['SITEURL'] = siteurl[:-1]
-            logger.warning("Removed extraneous trailing slash from SITEURL.")
+            logger.warning(
+                "Removed extraneous trailing slash from SITEURL.",
+                extra={'id': 'warn.settings.siteurl-trailing-slash'})
         # If SITEURL is defined but FEED_DOMAIN isn't,
         # set FEED_DOMAIN to SITEURL
         if 'FEED_DOMAIN' not in settings:
@@ -298,7 +306,8 @@ def configure_settings(settings):
        settings.get('WITH_FUTURE_DATES', False):
             logger.warning(
                 "WITH_FUTURE_DATES conflicts with CONTENT_CACHING_LAYER "
-                "set to 'generator', use 'reader' layer instead")
+                "set to 'generator', use 'reader' layer instead",
+                extra={'id': 'warn.settings.conflicting-cache-setting'})
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     feed_keys = [
@@ -313,14 +322,16 @@ def configure_settings(settings):
     if any(settings.get(k) for k in feed_keys):
         if not settings.get('SITEURL'):
             logger.warning('Feeds generated without SITEURL set properly may'
-                           ' not be valid')
+                           ' not be valid',
+                           extra={'id': 'warn.settings.not-set-siteurl'})
 
     if 'TIMEZONE' not in settings:
         logger.warning(
             'No timezone information specified in the settings. Assuming'
             ' your timezone is UTC for feed generation. Check '
             'http://docs.getpelican.com/en/latest/settings.html#timezone '
-            'for more information')
+            'for more information',
+            extra={'id': 'warn.settings.no-timezone'})
 
     # fix up pagination rules
     from pelican.paginator import PaginationRule
@@ -342,7 +353,8 @@ def configure_settings(settings):
         if old_key in settings:
             logger.warning(
                 'Deprecated setting %s, moving it to %s list',
-                old_key, new_key)
+                old_key, new_key,
+                extra={'id': 'warn.settings.dir-paths-setting-deprecated'})
             settings[new_key] = [settings[old_key]]   # also make a list
             del settings[old_key]
 
@@ -367,15 +379,18 @@ def configure_settings(settings):
         if isinstance(settings[PATH_KEY], six.string_types):
             logger.warning("Detected misconfiguration with %s setting "
                            "(must be a list), falling back to the default",
-                           PATH_KEY)
+                           PATH_KEY,
+                           extra={'id': 'warn.settings.setting-must-be-list'})
             settings[PATH_KEY] = DEFAULT_CONFIG[PATH_KEY]
 
     # Save people from declaring MD_EXTENSIONS as a list rather than a dict
     if not isinstance(settings.get('MD_EXTENSIONS', {}), dict):
-        logger.warning('The format of the MD_EXTENSIONS setting has '
-                       'changed. It should now be a dict mapping '
-                       'fully-qualified extension names to their '
-                       'configurations. Falling back to the default.')
+        logger.warning(
+            'The format of the MD_EXTENSIONS setting has '
+            'changed. It should now be a dict mapping '
+            'fully-qualified extension names to their '
+            'configurations. Falling back to the default.',
+            extra={'id': 'warn.settings.bad-format-of-md-extensions'})
         settings['MD_EXTENSIONS'] = DEFAULT_CONFIG['MD_EXTENSIONS']
 
     # Add {PAGE,ARTICLE}_PATHS to {ARTICLE,PAGE}_EXCLUDES
@@ -401,6 +416,7 @@ def configure_settings(settings):
                 old, new)
             if doc:
                 message += ', see {} for details'.format(doc)
-            logger.warning(message)
+            logger.warning(message, extra={
+                'id': 'warn.settings.setting-was-removed'})
 
     return settings

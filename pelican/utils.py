@@ -206,9 +206,11 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
             message.append(
                 ' and will be removed by version {}'.format(version))
         message.append('.  Use {} instead.'.format(new))
-        logger.warning(''.join(message))
+        logger.warning(''.join(message), extra={
+            'id': 'warn.utils.attribute-deprecated'})
         logger.debug(''.join(six.text_type(x) for x
-                             in traceback.format_stack()))
+                             in traceback.format_stack()),
+                     extra={'id': 'debug.utils.attribute-deprecated'})
 
     def fget(self):
         _warn()
@@ -318,7 +320,8 @@ def copy(source, destination, ignores=None):
 
     def walk_error(err):
         logger.warning("While copying %s: %s: %s",
-                       source_, err.filename, err.strerror)
+                       source_, err.filename, err.strerror,
+                       extra={'id': 'warn.utils.copy-walk-error'})
 
     source_ = os.path.abspath(os.path.expanduser(source))
     destination_ = os.path.abspath(os.path.expanduser(destination))
@@ -328,24 +331,29 @@ def copy(source, destination, ignores=None):
 
     if any(fnmatch.fnmatch(os.path.basename(source), ignore)
            for ignore in ignores):
-        logger.info('Not copying %s due to ignores', source_)
+        logger.info('Not copying %s due to ignores', source_,
+                    extra={'id': 'info.utils.not-copying-ignore'})
         return
 
     if os.path.isfile(source_):
         dst_dir = os.path.dirname(destination_)
         if not os.path.exists(dst_dir):
-            logger.info('Creating directory %s', dst_dir)
+            logger.info('Creating directory %s', dst_dir,
+                        extra={'id': 'info.utils.creating-directory'})
             os.makedirs(dst_dir)
-        logger.info('Copying %s to %s', source_, destination_)
+        logger.info('Copying %s to %s', source_, destination_,
+                    extra={'id': 'info.utils.copying'})
         shutil.copy2(source_, destination_)
 
     elif os.path.isdir(source_):
         if not os.path.exists(destination_):
-            logger.info('Creating directory %s', destination_)
+            logger.info('Creating directory %s', destination_,
+                        extra={'id': 'info.utils.creating-directory'})
             os.makedirs(destination_)
         if not os.path.isdir(destination_):
             logger.warning('Cannot copy %s (a directory) to %s (a file)',
-                           source_, destination_)
+                           source_, destination_,
+                           extra={'id': 'warn.utils.cannot-copy-dir-to-file'})
             return
 
         for src_dir, subdirs, others in os.walk(source_):
@@ -358,7 +366,8 @@ def copy(source, destination, ignores=None):
                                                       for i in ignores))
 
             if not os.path.isdir(dst_dir):
-                logger.info('Creating directory %s', dst_dir)
+                logger.info('Creating directory %s', dst_dir,
+                            extra={'id': 'warn.utils.creating-directory'})
                 # Parent directories are known to exist, so 'mkdir' suffices.
                 os.mkdir(dst_dir)
 
@@ -366,19 +375,22 @@ def copy(source, destination, ignores=None):
                 src_path = os.path.join(src_dir, o)
                 dst_path = os.path.join(dst_dir, o)
                 if os.path.isfile(src_path):
-                    logger.info('Copying %s to %s', src_path, dst_path)
+                    logger.info('Copying %s to %s', src_path, dst_path,
+                                extra={'id': 'info.utils.copying'})
                     shutil.copy2(src_path, dst_path)
                 else:
                     logger.warning('Skipped copy %s (not a file or '
                                    'directory) to %s',
-                                   src_path, dst_path)
+                                   src_path, dst_path,
+                                   extra={'id': 'warn.utils.skipped-copy'})
 
 
 def clean_output_dir(path, retention):
     """Remove all files from output directory except those in retention list"""
 
     if not os.path.exists(path):
-        logger.debug("Directory already removed: %s", path)
+        logger.debug("Directory already removed: %s", path,
+                     extra={'id': 'warn.utils.directory-already-removed'})
         return
 
     if not os.path.isdir(path):
@@ -393,18 +405,21 @@ def clean_output_dir(path, retention):
         file = os.path.join(path, filename)
         if any(filename == retain for retain in retention):
             logger.debug("Skipping deletion; %s is on retention list: %s",
-                         filename, file)
+                         filename, file,
+                         extra={'id': 'debug.utils.skipping-deletion'})
         elif os.path.isdir(file):
             try:
                 shutil.rmtree(file)
-                logger.debug("Deleted directory %s", file)
+                logger.debug("Deleted directory %s", file,
+                             extra={'id': 'debug.utils.deleted-directory'})
             except Exception as e:
                 logger.error("Unable to delete directory %s; %s",
                              file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
-                logger.debug("Deleted file/link %s", file)
+                logger.debug("Deleted file/link %s", file,
+                             extra={'id': 'debug.utils.deleted-file'})
             except Exception as e:
                 logger.error("Unable to delete file %s; %s", file, e)
         else:
@@ -629,10 +644,14 @@ def process_translations(content_list, order_by=None):
             lang_items = list(lang_items)
             len_ = len(lang_items)
             if len_ > 1:
-                logger.warning('There are %s variants of "%s" with lang %s',
-                               len_, slug, lang)
+                logger.warning(
+                    'There are %s variants of "%s" with lang %s',
+                    len_, slug, lang,
+                    extra={'id': 'warn.utils.many-translation-variants'})
                 for x in lang_items:
-                    logger.warning('\t%s', x.source_path)
+                    logger.warning(
+                        '\t%s', x.source_path,
+                        extra={'id': 'warn.utils.many-translation-variants'})
 
         # find items with default language
         default_lang_items = list(filter(
@@ -647,7 +666,8 @@ def process_translations(content_list, order_by=None):
             logger.warning(
                 'Empty slug for %s. You can fix this by '
                 'adding a title or a slug to your content',
-                default_lang_items[0].source_path)
+                default_lang_items[0].source_path,
+                extra={'id': 'warn.utils.empty-slug'})
         index.extend(default_lang_items)
         translations.extend([x for x in items if x not in default_lang_items])
         for a in items:
@@ -677,11 +697,13 @@ def process_translations(content_list, order_by=None):
                 except AttributeError:
                     logger.warning(
                         'There is no "%s" attribute in the item '
-                        'metadata. Defaulting to slug order.', order_by)
+                        'metadata. Defaulting to slug order.', order_by,
+                        extra={'id': 'warn.utils.translations-index-sorting'})
         else:
             logger.warning(
                 'Invalid *_ORDER_BY setting (%s).'
-                'Valid options are strings and functions.', order_by)
+                'Valid options are strings and functions.', order_by,
+                extra={'id': 'warn.utils.order-by-is-invalid'})
 
     return index, translations
 
@@ -704,7 +726,9 @@ def folder_watcher(path, extensions, ignores=[]):
                         try:
                             yield os.stat(os.path.join(root, f)).st_mtime
                         except OSError as e:
-                            logger.warning('Caught Exception: %s', e)
+                            logger.warning(
+                                'Caught Exception: %s', e,
+                                extra={'id': 'warn.utils.caugh-exception'})
 
     LAST_MTIME = 0
     while True:
@@ -727,7 +751,9 @@ def file_watcher(path):
             try:
                 mtime = os.stat(path).st_mtime
             except OSError as e:
-                logger.warning('Caught Exception: %s', e)
+                logger.warning(
+                    'Caught Exception: %s', e,
+                    extra={'id': 'warn.utils.caugh-exception'})
                 continue
 
             if mtime > LAST_MTIME:

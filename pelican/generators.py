@@ -71,7 +71,8 @@ class Generator(object):
             extensions=self.settings['JINJA_EXTENSIONS'],
         )
 
-        logger.debug('Template list: %s', self.env.list_templates())
+        logger.debug('Template list: %s', self.env.list_templates(),
+                     extra={'id': 'debug.generators.template-list'})
 
         # provide utils.strftime as a jinja filter
         self.env.filters.update({'strftime': DateFormatter()})
@@ -728,7 +729,8 @@ class StaticGenerator(Generator):
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
             shutil.copy2(source_path, save_as)
-            logger.info('Copying %s to %s', sc.source_path, sc.save_as)
+            logger.info('Copying %s to %s', sc.source_path, sc.save_as,
+                        extra={'id': 'info.generators.copying'})
 
 
 class SourceFileGenerator(Generator):
@@ -743,7 +745,8 @@ class SourceFileGenerator(Generator):
         copy(obj.source_path, dest)
 
     def generate_output(self, writer=None):
-        logger.info('Generating source files...')
+        logger.info('Generating source files...',
+                    extra={'id': 'info.generators.generating-source-files'})
         for obj in chain(self.context['articles'], self.context['pages']):
             self._create_source(obj)
             for obj_trans in obj.translations:

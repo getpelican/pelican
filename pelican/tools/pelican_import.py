@@ -152,7 +152,9 @@ def wp2fields(xml, wp_custpost=False):
                 title = unescape(item.title.contents[0])
             except IndexError:
                 title = 'No title [%s]' % item.find('post_name').string
-                logger.warning('Post "%s" is lacking a proper title', title)
+                logger.warning(
+                    'Post "%s" is lacking a proper title', title,
+                    extra={'id': 'warn.pelican-import.post-no-proper-title'})
 
             filename = item.find('post_name').string
             post_id = item.find('post_id').string
@@ -671,7 +673,9 @@ def download_attachments(output_path, urls):
             locations.append(os.path.join(localpath, filename))
         except (URLError, IOError) as e:
             # Python 2.7 throws an IOError rather Than URLError
-            logger.warning("No file could be downloaded from %s\n%s", url, e)
+            logger.warning(
+                "No file could be downloaded from %s\n%s", url, e,
+                extra={'id': 'warn.pelican-import.no-attachments-downloaded'})
     return locations
 
 

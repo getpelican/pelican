@@ -269,7 +269,8 @@ class MarkdownReader(BaseReader):
                     logger.warning(
                         'Duplicate definition of `%s` '
                         'for %s. Using first one.',
-                        name, self._source_path)
+                        name, self._source_path,
+                        extra={'id': 'warn.readers.duplicate-metadata-def'})
                 output[name] = self.process_metadata(name, value[0])
             elif len(value) > 1:
                 # handle list metadata as list of string
@@ -389,9 +390,11 @@ class HTMLReader(BaseReader):
             if name is None:
                 attr_list = ['{}="{}"'.format(k, v) for k, v in attrs]
                 attr_serialized = ', '.join(attr_list)
-                logger.warning("Meta tag in file %s does not have a 'name' "
-                               "attribute, skipping. Attributes: %s",
-                               self._filename, attr_serialized)
+                logger.warning(
+                    "Meta tag in file %s does not have a 'name' "
+                    "attribute, skipping. Attributes: %s",
+                    self._filename, attr_serialized,
+                    extra={'id': 'warn.readers.unknown-meta-tag-attribute'})
                 return
             name = name.lower()
             contents = self._attr_value(attrs, 'content', '')
@@ -404,7 +407,8 @@ class HTMLReader(BaseReader):
                         self._filename,
                         extra={'limit_msg': "Other files have meta tag "
                                             "attribute 'contents' that should "
-                                            "be changed to 'content'"})
+                                            "be changed to 'content'",
+                               'id': 'warn.readers.contents-meta-tag-used'})
 
             if name == 'keywords':
                 name = 'tags'
@@ -444,8 +448,10 @@ class Readers(FileStampDataCacher):
 
         for cls in [BaseReader] + BaseReader.__subclasses__():
             if not cls.enabled:
-                logger.debug('Missing dependencies for %s',
-                             ', '.join(cls.file_extensions))
+                logger.debug(
+                    'Missing dependencies for %s',
+                    ', '.join(cls.file_extensions),
+                    extra={'id': 'debug.readers.missing-dependencies'})
                 continue
 
             for ext in cls.file_extensions:
@@ -484,7 +490,8 @@ class Readers(FileStampDataCacher):
         source_path = posixize_path(os.path.relpath(path, base_path))
         logger.debug(
             'Read file %s -> %s',
-            source_path, content_class.__name__)
+            source_path, content_class.__name__,
+            extra={'id': 'debug.readers.read-file'})
 
         if not fmt:
             _, ext = os.path.splitext(os.path.basename(path))
@@ -497,7 +504,8 @@ class Readers(FileStampDataCacher):
         if preread_signal:
             logger.debug(
                 'Signal %s.send(%s)',
-                preread_signal.name, preread_sender)
+                preread_signal.name, preread_sender,
+                extra={'id': 'debug.readers.signal-send'})
             preread_signal.send(preread_sender)
 
         reader = self.readers[fmt]
@@ -556,7 +564,8 @@ class Readers(FileStampDataCacher):
             logger.debug(
                 'Signal %s.send(%s, <metadata>)',
                 context_signal.name,
-                context_sender)
+                context_sender,
+                extra={'id': 'debug.readers.signal-send-metadata'})
             context_signal.send(context_sender, metadata=metadata)
 
         return content_class(content=content, metadata=metadata,
@@ -593,7 +602,7 @@ def find_empty_alt(content, path):
             'Empty alt attribute for image %s in %s',
             os.path.basename(match[1] + match[5]), path,
             extra={'limit_msg': 'Other images have empty alt attributes',
-                   'id': 'warn.img.alt.empty'})
+                   'id': 'warn.readers.empty-alt-attribute'})
 
 
 def default_metadata(settings=None, process=None):

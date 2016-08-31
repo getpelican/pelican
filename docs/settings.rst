@@ -107,7 +107,7 @@ Setting name (followed by default value, if any)                                
                                                                                  and the message to be ignored.
                                                                                  For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 ``LOG_FILTER_IDS = []``                                                          A list of containing IDs of messages to be ignored.
-                                                                                 For example: ``['warn.img.alt.empty']``
+                                                                                 For example: ``['warn.readers.empty-alt-attribute']``
 ``READERS = {}``                                                                 A dictionary of file extensions / Reader classes for Pelican to
                                                                                  process or ignore. For example, to avoid processing .html files,
                                                                                  set: ``READERS = {'html': None}``. To add a custom reader for the
@@ -780,7 +780,7 @@ It's hard to ignore a group of messages containing dynamic substrings (e.g.
 paths to files). Such messages can be ignored using the ``LOG_FILTER_IDS``
 setting.
 
-For example: ``['warn.img.alt.empty']``
+For example: ``['warn.readers.empty-alt-attribute']``
 
 .. _reading_only_modified_content:
 

@@ -74,11 +74,13 @@ class Writer(object):
                 raise RuntimeError('File %s is set to be overridden twice'
                                    % filename)
             else:
-                logger.info('Skipping %s', filename)
+                logger.info('Skipping %s', filename,
+                            extra={'id': 'info.writers.skip'})
                 filename = os.devnull
         elif filename in self._written_files:
             if override:
-                logger.info('Overwriting %s', filename)
+                logger.info('Overwriting %s', filename,
+                            extra={'id': 'info.writers.overwrite'})
             else:
                 raise RuntimeError('File %s is to be overwritten' % filename)
         if override:
@@ -129,7 +131,8 @@ class Writer(object):
             encoding = 'utf-8' if six.PY3 else None
             with self._open_w(complete_path, encoding, override_output) as fp:
                 feed.write(fp, 'utf-8')
-                logger.info('Writing %s', complete_path)
+                logger.info('Writing %s', complete_path,
+                            extra={'id': 'info.writers.write-feed'})
 
             signals.feed_written.send(
                 complete_path, context=context, feed=feed)
@@ -174,7 +177,8 @@ class Writer(object):
 
             with self._open_w(path, 'utf-8', override=override) as f:
                 f.write(output)
-            logger.info('Writing %s', path)
+            logger.info('Writing %s', path,
+                        extra={'id': 'into.writers.render-template-to-file'})
 
             # Send a signal to say we're writing a file with some specific
             # local context.

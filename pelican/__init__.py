@@ -55,7 +55,8 @@ class Pelican(object):
 
     def init_path(self):
         if not any(p in sys.path for p in ['', os.curdir]):
-            logger.debug("Adding current directory to system path")
+            logger.debug("Adding current directory to system path",
+                         extra={'id': 'debug.init.adding-cwd-to-system-path'})
             sys.path.insert(0, '')
 
     def init_plugins(self):
@@ -67,7 +68,8 @@ class Pelican(object):
         for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
             if isinstance(plugin, six.string_types):
-                logger.debug("Loading plugin `%s`", plugin)
+                logger.debug("Loading plugin `%s`", plugin,
+                             extra={'id': 'debug.init.loading-plugin'})
                 try:
                     plugin = __import__(plugin, globals(), locals(),
                                         str('module'))
@@ -76,10 +78,12 @@ class Pelican(object):
                         "Cannot load plugin `%s`\n%s", plugin, e)
                     continue
 
-            logger.debug("Registering plugin `%s`", plugin.__name__)
+            logger.debug("Registering plugin `%s`", plugin.__name__,
+                         extra={'id': 'debug.init.registering-plugin'})
             plugin.register()
             self.plugins.append(plugin)
-        logger.debug('Restoring system path')
+        logger.debug('Restoring system path',
+                     extra={'id': 'debug.init.restoring-system-path'})
         sys.path = _sys_path
 
     def _handle_deprecation(self):
@@ -87,7 +91,8 @@ class Pelican(object):
         if self.settings.get('CLEAN_URLS', False):
             logger.warning('Found deprecated `CLEAN_URLS` in settings.'
                            ' Modifying the following settings for the'
-                           ' same behaviour.')
+                           ' same behaviour.',
+                           extra={'id': 'warn.init.clean-urls-deprected'})
 
             self.settings['ARTICLE_URL'] = '{slug}/'
             self.settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
@@ -96,17 +101,21 @@ class Pelican(object):
 
             for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
                             'PAGE_LANG_URL'):
-                logger.warning("%s = '%s'", setting, self.settings[setting])
+                logger.warning("%s = '%s'", setting, self.settings[setting],
+                               extra={'id': 'warn.init.clean-urls-deprected'})
 
         if self.settings.get('AUTORELOAD_IGNORE_CACHE'):
             logger.warning('Found deprecated `AUTORELOAD_IGNORE_CACHE` in '
-                           'settings. Use --ignore-cache instead.')
+                           'settings. Use --ignore-cache instead.',
+                           extra={'id': 'warn.init.autoreload-ignore-cache'})
             self.settings.pop('AUTORELOAD_IGNORE_CACHE')
 
         if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
-            logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
-                           ' settings.  Modifying the following settings for'
-                           ' the same behaviour.')
+            logger.warning(
+                'Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
+                ' settings.  Modifying the following settings for'
+                ' the same behaviour.',
+                extra={'id': 'warn.init.article-permalink-structure'})
 
             structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
 
@@ -126,7 +135,9 @@ class Pelican(object):
                             'PAGE_SAVE_AS', 'PAGE_LANG_SAVE_AS'):
                 self.settings[setting] = os.path.join(structure,
                                                       self.settings[setting])
-                logger.warning("%s = '%s'", setting, self.settings[setting])
+                logger.warning(
+                    "%s = '%s'", setting, self.settings[setting],
+                    extra={'id': 'warn.init.article-permalink-structure'})
 
         for new, old in [('FEED', 'FEED_ATOM'), ('TAG_FEED', 'TAG_FEED_ATOM'),
                          ('CATEGORY_FEED', 'CATEGORY_FEED_ATOM'),
@@ -137,7 +148,8 @@ class Pelican(object):
                     'to %(old)s in your settings and theme for the same '
                     'behavior. Temporarily setting %(old)s for backwards '
                     'compatibility.',
-                    {'new': new, 'old': old}
+                    {'new': new, 'old': old},
+                    extra={'id': 'warn.init.feed-setting-deprecated'}
                 )
                 self.settings[old] = self.settings[new]
 
@@ -229,7 +241,8 @@ class Pelican(object):
 
             for v in value:
                 if isinstance(v, type):
-                    logger.debug('Found generator: %s', v)
+                    logger.debug('Found generator: %s', v,
+                                 extra={'id': 'debug.init.found-generator'})
                     generators.append(v)
 
         # StaticGenerator must run last, so it can identify files that
@@ -247,11 +260,13 @@ class Pelican(object):
         else:
             writer = writers[0]
             if writers_found == 1:
-                logger.debug('Found writer: %s', writer)
+                logger.debug('Found writer: %s', writer,
+                             extra={'id': 'debug.init.found-writer'})
             else:
                 logger.warning(
                     '%s writers found, using only first one: %s',
-                    writers_found, writer)
+                    writers_found, writer,
+                    extra={'id': 'debug.init.many-writers-found'})
             return writer(self.output_path, settings=self.settings)
 
 
@@ -385,8 +400,10 @@ def main():
     args = parse_arguments()
     init(args.verbosity, args.fatal)
 
-    logger.debug('Pelican version: %s', __version__)
-    logger.debug('Python version: %s', sys.version.split()[0])
+    logger.debug('Pelican version: %s', __version__,
+                 extra={'id': 'debug.init.pelican-version'})
+    logger.debug('Python version: %s', sys.version.split()[0],
+                 extra={'id': 'debug.init.python-version'})
 
     try:
         pelican, settings = get_instance(args)
@@ -455,33 +472,42 @@ def main():
                             ', '.join(k for k, v in modified.items() if v)))
 
                         if modified['content'] is None:
-                            logger.warning('No valid files found in content.')
+                            logger.warning(
+                                'No valid files found in content.',
+                                extra={'id': 'warn.init.no-valid-content'})
 
                         if modified['theme'] is None:
-                            logger.warning('Empty theme folder. Using `basic` '
-                                           'theme.')
+                            logger.warning(
+                                'Empty theme folder. Using `basic` theme.',
+                                extra={'id': 'warn.init.empty-theme-folder'})
 
                         pelican.run()
 
                 except KeyboardInterrupt:
-                    logger.warning("Keyboard interrupt, quitting.")
+                    logger.warning(
+                        "Keyboard interrupt, quitting.",
+                        extra={'id': 'warn.init.keyboard-interrupt'})
                     break
 
                 except Exception as e:
                     if (args.verbosity == logging.DEBUG):
                         raise
                     logger.warning(
-                        'Caught exception "%s". Reloading.', e)
+                        'Caught exception "%s". Reloading.', e,
+                        extra={'id': 'warn.init.caught-exception'})
 
                 finally:
                     time.sleep(.5)  # sleep to avoid cpu load
 
         else:
             if next(watchers['content']) is None:
-                logger.warning('No valid files found in content.')
+                logger.warning(
+                    'No valid files found in content.',
+                    extra={'id': 'warn.init.no-valid-content-files'})
 
             if next(watchers['theme']) is None:
-                logger.warning('Empty theme folder. Using `basic` theme.')
+                logger.warning('Empty theme folder. Using `basic` theme.',
+                               extra={'id': 'warn.init.empty-theme-folder'})
 
             pelican.run()
 
