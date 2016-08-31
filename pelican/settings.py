@@ -49,6 +49,7 @@ DEFAULT_CONFIG = {
     'AUTHOR_FEED_RSS': posix_join('feeds', '%s.rss.xml'),
     'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-%s.atom.xml'),
     'FEED_MAX_ITEMS': '',
+    'FEED_USE_SUMMARY': False,
     'SITEURL': '',
     'SITENAME': 'A Pelican Blog',
     'DISPLAY_PAGES_ON_MENU': True,
@@ -304,6 +305,7 @@ def configure_settings(settings):
         'AUTHOR_FEED_ATOM', 'AUTHOR_FEED_RSS',
         'TAG_FEED_ATOM', 'TAG_FEED_RSS',
         'TRANSLATION_FEED_ATOM', 'TRANSLATION_FEED_RSS',
+        'FEED_USE_SUMMARY',
     ]
 
     if any(settings.get(k) for k in feed_keys):
