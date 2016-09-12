@@ -787,6 +787,8 @@ possible to unintentionally filter out multiple message types with the same
 template (including messages from future Pelican versions). Proceed with
 caution.
 
+Note: This option does nothing ``--debug`` is passed.
+
 .. _reading_only_modified_content:
 
 

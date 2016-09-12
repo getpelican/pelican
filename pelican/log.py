@@ -112,12 +112,12 @@ class LimitFilter(logging.Filter):
         else:
             self._raised_messages.add(message_key)
 
-        # ignore LOG_FILTER records
-        # use .msg and not .getMessage() for string formatting to allow
-        # filtering by templates
-        ignore_key = (record.levelno, record.msg)
-        if ignore_key in self._ignore:
-            return False
+        # ignore LOG_FILTER records by templates when "debug" isn't enabled
+        logger_level = logging.getLogger().getEffectiveLevel()
+        if logger_level > logging.DEBUG:
+            ignore_key = (record.levelno, record.msg)
+            if ignore_key in self._ignore:
+                return False
 
         # check if we went over threshold
         if group:
