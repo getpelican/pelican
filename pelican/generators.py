@@ -728,7 +728,12 @@ class StaticGenerator(Generator):
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
             shutil.copy2(source_path, save_as)
-            logger.info('Copying %s to %s', sc.source_path, sc.save_as)
+            try:
+                # workaround for Android python copy2 bug ([issue28141])
+                shutil.copy2(source_path, save_as)
+            except Exception as e:
+                logger.error("A problem occurred copying file %s to %s; %s",
+                             source_path, save_as, e)
 
 
 class SourceFileGenerator(Generator):

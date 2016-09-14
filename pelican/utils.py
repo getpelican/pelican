@@ -337,7 +337,12 @@ def copy(source, destination, ignores=None):
             logger.info('Creating directory %s', dst_dir)
             os.makedirs(dst_dir)
         logger.info('Copying %s to %s', source_, destination_)
-        shutil.copy2(source_, destination_)
+        try:
+            # workaround for Android python copystat bug ([issue28141])
+            shutil.copy2(source_, destination_)
+        except Exception as e:
+            logger.error("A problem occurred copying file %s to %s; %s",
+                         source_, destination_, e)
 
     elif os.path.isdir(source_):
         if not os.path.exists(destination_):
@@ -367,7 +372,12 @@ def copy(source, destination, ignores=None):
                 dst_path = os.path.join(dst_dir, o)
                 if os.path.isfile(src_path):
                     logger.info('Copying %s to %s', src_path, dst_path)
-                    shutil.copy2(src_path, dst_path)
+                    try:
+                        # workaround for Android python copystat bug ([issue28141])
+                        shutil.copy2(src_path, dst_path)
+                    except Exception as e:
+                        logger.error("A problem occurred copying file %s to %s; %s",
+                                     src_path, dst_path, e)
                 else:
                     logger.warning('Skipped copy %s (not a file or '
                                    'directory) to %s',
