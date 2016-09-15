@@ -9,8 +9,8 @@ Custom 404 Pages
 When a browser requests a resource that the web server cannot find, the web
 server usually displays a generic "File not found" (404) error page that can be
 stark and unsightly. One way to provide an error page that matches the theme
-of your site is to create a custom 404 page, such as this Markdown-formatted
-example::
+of your site is to create a custom 404 page (*not* an article), such as this
+Markdown-formatted example stored in ``content/pages/404.md``::
 
     Title: Not Found
     Status: hidden
@@ -28,8 +28,8 @@ configuration file's ``location`` block::
 For Apache::
 
     ErrorDocument 404 /404.html
-    
-For Amazon S3, first navigate to the ``Static Site Hosting`` menu in the 
+
+For Amazon S3, first navigate to the ``Static Site Hosting`` menu in the
 bucket settings on your AWS cosole. From there::
 
     Error Document: 404.html
