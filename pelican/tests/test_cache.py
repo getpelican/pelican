@@ -56,12 +56,15 @@ class TestCache(unittest.TestCase):
         generator.readers.read_file = MagicMock()
         generator.generate_context()
         """
-        3 Files don't get cached because they were not valid
+        6 files don't get cached because they were not valid
+        - article_with_attributes_containing_double_quotes.html
         - article_with_comments.html
         - article_with_null_attributes.html
         - 2012-11-30_md_w_filename_meta#foo-bar.md
+        - empty.md
+        - empty_with_bom.md
         """
-        self.assertEqual(generator.readers.read_file.call_count, 4)
+        self.assertEqual(generator.readers.read_file.call_count, 6)
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_reader_content_caching(self):

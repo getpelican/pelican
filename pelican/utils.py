@@ -244,7 +244,7 @@ def pelican_open(filename, mode='rb', strip_crs=(sys.platform == 'win32')):
 
     with codecs.open(filename, mode, encoding='utf-8') as infile:
         content = infile.read()
-    if content[0] == codecs.BOM_UTF8.decode('utf8'):
+    if content[:1] == codecs.BOM_UTF8.decode('utf8'):
         content = content[1:]
     if strip_crs:
         content = content.replace('\r\n', '\n')

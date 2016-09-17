@@ -288,7 +288,10 @@ class MarkdownReader(BaseReader):
         with pelican_open(source_path) as text:
             content = self._md.convert(text)
 
-        metadata = self._parse_metadata(self._md.Meta)
+        if hasattr(self._md, 'Meta'):
+            metadata = self._parse_metadata(self._md.Meta)
+        else:
+            metadata = {}
         return content, metadata
 
 
