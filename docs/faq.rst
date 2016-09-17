@@ -69,10 +69,12 @@ I want to use Markdown, but I got an error.
 
 If you try to generate Markdown content without first installing the Markdown
 library, may see a message that says ``No valid files found in content``.
-Markdown is not a hard dependency for Pelican, so if you have content in
+Markdown is not a required dependency for Pelican, so if you have content in
 Markdown format, you will need to explicitly install the Markdown library.
-You can do so by typing the following command, prepending ``sudo`` if
-permissions require it::
+Pelican will attempt to check this for you, so you should also see an error
+message that says ``It appears you do not have the "markdown" package
+installed``.  You can do so by typing the following command, prepending
+``sudo`` if permissions require it::
 
     pip install markdown
 

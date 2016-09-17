@@ -19,7 +19,7 @@ from pelican import signals
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 SourceFileGenerator, StaticGenerator,
                                 TemplatePagesGenerator)
-from pelican.readers import Readers
+from pelican.readers import Markdown, MarkdownReader, Readers
 from pelican.settings import read_settings
 from pelican.utils import (clean_output_dir, file_watcher,
                            folder_watcher, maybe_pluralize)
@@ -400,6 +400,21 @@ def main():
                                             [''],
                                             pelican.ignore_files),
                     'settings': file_watcher(args.settings)}
+
+        # check to see if user is attempting to process markdown without the
+        # dependency installed
+        markdown_files = folder_watcher(
+            pelican.path,
+            MarkdownReader.file_extensions,
+            pelican.ignore_files
+        )
+
+        if Markdown is False and next(markdown_files) is not None:
+            logger.warning(
+                'It appears you have Markdown content but do not have the '
+                '"markdown" package installed, which is required for '
+                'processing Markdown-based content.'
+            )
 
         old_static = settings.get("STATIC_PATHS", [])
         for static_path in old_static:
