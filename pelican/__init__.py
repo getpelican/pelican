@@ -277,7 +277,6 @@ def parse_arguments():
                         '"output" in the current path.')
 
     parser.add_argument('-s', '--settings', dest='settings',
-                        default=DEFAULT_CONFIG_NAME,
                         help='The settings of the application, this is '
                         'automatically set to {0} if a file exists with this '
                         'name.'.format(DEFAULT_CONFIG_NAME))
@@ -370,6 +369,7 @@ def get_instance(args):
     config_file = args.settings
     if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
             config_file = DEFAULT_CONFIG_NAME
+            args.settings = DEFAULT_CONFIG_NAME
 
     settings = read_settings(config_file, override=get_config(args))
 
