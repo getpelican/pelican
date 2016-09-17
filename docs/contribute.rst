@@ -69,7 +69,7 @@ or bugfix.
 The tests live in ``pelican/tests`` and you can run them using the
 "discover" feature of ``unittest``::
 
-    $ python -m unittest discover
+    $ python -Wd -m unittest discover
 
 After making your changes and running the tests, you may see a test failure
 mentioning that "some generated files differ from the expected functional tests
