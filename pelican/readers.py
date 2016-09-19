@@ -666,8 +666,8 @@ def parse_path_metadata(source_path, settings=None, process=None):
                 if match:
                     # .items() for py3k compat.
                     for k, v in match.groupdict().items():
+                        k = k.lower()  # metadata must be lowercase
                         if k not in metadata:
-                            k = k.lower()  # metadata must be lowercase
                             if process:
                                 v = process(k, v)
                             metadata[k] = v
