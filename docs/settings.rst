@@ -722,15 +722,18 @@ Following are example ways to specify your preferred theme::
 The built-in ``notmyidea`` theme can make good use of the following settings. Feel
 free to use them in your themes as well.
 
-=======================   =======================================================
+=======================   =====================================================
 Setting name              What does it do?
-=======================   =======================================================
+=======================   =====================================================
 ``SITESUBTITLE``          A subtitle to appear in the header.
 ``DISQUS_SITENAME``       Pelican can handle Disqus comments. Specify the
                           Disqus sitename identifier here.
 ``GITHUB_URL``            Your GitHub URL (if you have one). It will then
                           use this information to create a GitHub ribbon.
-``GOOGLE_ANALYTICS``      Set to 'UA-XXXX-YYYY' to activate Google Analytics.
+``GOOGLE_ANALYTICS``      Set to ``UA-XXXXX-Y`` Property's tracking ID to
+                          activate Google Analytics.
+``GA_COOKIE_DOMAIN``      Set cookie domain field of Google Analytics tracking
+                          code. Defaults to ``auto``.
 ``GOSQUARED_SITENAME``    Set to 'XXX-YYYYYY-X' to activate GoSquared.
 ``MENUITEMS``             A list of tuples (Title, URL) for additional menu
                           items to appear at the beginning of the main menu.
@@ -751,7 +754,7 @@ Setting name              What does it do?
                           If not specified, defaults to "links".
 ``SOCIAL_WIDGET_NAME``    Allows override of the name of the "social" widget.
                           If not specified, defaults to "social".
-=======================   =======================================================
+=======================   =====================================================
 
 In addition, you can use the "wide" version of the ``notmyidea`` theme by
 adding the following to your configuration::
