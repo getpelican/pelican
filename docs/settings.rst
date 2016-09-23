@@ -777,6 +777,18 @@ be filtered out.
 
 For example: ``[(logging.WARN, 'TAG_SAVE_AS is set to False')]``
 
+It is possible to filter out messages by a template. Check out source code to
+obtain a template.
+
+For example: ``[(logging.WARN, 'Empty alt attribute for image %s in %s')]``
+
+**Warning:** Silencing messages by templates is a dangerous feature. It is
+possible to unintentionally filter out multiple message types with the same
+template (including messages from future Pelican versions). Proceed with
+caution.
+
+Note: This option does nothing ``--debug`` is passed.
+
 .. _reading_only_modified_content:
 
 
