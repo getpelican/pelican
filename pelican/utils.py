@@ -337,7 +337,7 @@ def copy(source, destination, ignores=None):
             logger.info('Creating directory %s', dst_dir)
             os.makedirs(dst_dir)
         logger.info('Copying %s to %s', source_, destination_)
-        shutil.copy2(source_, destination_)
+        copy_file_metadata(source_, destination_)
 
     elif os.path.isdir(source_):
         if not os.path.exists(destination_):
@@ -367,11 +367,23 @@ def copy(source, destination, ignores=None):
                 dst_path = os.path.join(dst_dir, o)
                 if os.path.isfile(src_path):
                     logger.info('Copying %s to %s', src_path, dst_path)
-                    shutil.copy2(src_path, dst_path)
+                    copy_file_metadata(src_path, dst_path)
                 else:
                     logger.warning('Skipped copy %s (not a file or '
                                    'directory) to %s',
                                    src_path, dst_path)
+
+
+def copy_file_metadata(source, destination):
+    '''Copy a file and its metadata (perm bits, access times, ...)'''
+
+    # This function is a workaround for Android python copystat
+    # bug ([issue28141]) https://bugs.python.org/issue28141
+    try:
+        shutil.copy2(source, destination)
+    except OSError as e:
+        logger.warning("A problem occurred copying file %s to %s; %s",
+                       source, destination, e)
 
 
 def clean_output_dir(path, retention):
