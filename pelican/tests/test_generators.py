@@ -297,6 +297,8 @@ class TestArticlesGenerator(unittest.TestCase):
         Test that the context of a generated period_archive is passed
         'period' : a tuple of year, month, day according to the time period
         """
+        old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
         settings = get_settings(filenames={})
 
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
@@ -357,6 +359,7 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  settings,
                                  blog=True, dates=dates)
+        locale.setlocale(locale.LC_ALL, old_locale)
 
     def test_nonexistent_template(self):
         """Attempt to load a non-existent template"""
