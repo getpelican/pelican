@@ -114,6 +114,15 @@ Setting name (followed by default value, if any)                                
                                                                                  of these patterns will be ignored by the processor. For example,
                                                                                  the default ``['.#*']`` will ignore emacs lock files, and
                                                                                  ``['__pycache__']`` would ignore Python 3's bytecode caches.
+                                                                                 Longer patterns can be used to filter files and directories with
+                                                                                 more granularity. For example, if multiple files have the same
+                                                                                 name base name (eg. ``content/event1/event_details.rst`` and
+                                                                                 ``content/event2/event_details.rst``) each can be filtered
+                                                                                 without filtering all files with the same base name
+                                                                                 (``event_details.rst``) by passing a longer pattern. For example,
+                                                                                 ``['content/event2/event_details.rst']`` would filter the
+                                                                                 ``event_details.html`` file in the ``event2`` directory, and not
+                                                                                 the ``event_details.html`` file in the ``event1`` directory.
 ``MD_EXTENSIONS =`` ``{...}``                                                    A dict of the extensions that the Markdown processor
                                                                                  will use, with extensions' settings as the values.
                                                                                  Refer to the Python Markdown documentation's
