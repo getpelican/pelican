@@ -151,7 +151,7 @@ def read_settings(path=None, override=None):
                     and not isabs(local_settings[p]):
                 absp = os.path.abspath(os.path.normpath(os.path.join(
                     os.path.dirname(path), local_settings[p])))
-                if p not in ('THEME') or os.path.exists(absp):
+                if p != 'THEME' or os.path.exists(absp):
                     local_settings[p] = absp
 
         if 'PLUGIN_PATH' in local_settings:

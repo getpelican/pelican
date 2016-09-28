@@ -369,6 +369,7 @@ def get_instance(args):
     config_file = args.settings
     if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
             config_file = DEFAULT_CONFIG_NAME
+            args.settings = DEFAULT_CONFIG_NAME
 
     settings = read_settings(config_file, override=get_config(args))
 

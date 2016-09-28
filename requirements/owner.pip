@@ -1,0 +1,6 @@
+-r developer.pip
+
+# Release issuance
+tox
+bumpr==0.2.0
+wheel

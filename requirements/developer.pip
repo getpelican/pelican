@@ -1,0 +1,6 @@
+-r test.pip
+
+# Development
+flake8
+-e git+https://github.com/public/flake8-import-order#egg=flake8-import-order
+sphinx

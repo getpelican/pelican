@@ -288,7 +288,10 @@ class MarkdownReader(BaseReader):
         with pelican_open(source_path) as text:
             content = self._md.convert(text)
 
-        metadata = self._parse_metadata(self._md.Meta)
+        if hasattr(self._md, 'Meta'):
+            metadata = self._parse_metadata(self._md.Meta)
+        else:
+            metadata = {}
         return content, metadata
 
 
@@ -621,7 +624,7 @@ def path_metadata(full_path, source_path, settings=None):
     if settings:
         if settings.get('DEFAULT_DATE', None) == 'fs':
             metadata['date'] = SafeDatetime.fromtimestamp(
-                os.stat(full_path).st_ctime)
+                os.stat(full_path).st_mtime)
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
             source_path, {}))
     return metadata
