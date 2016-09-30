@@ -278,7 +278,8 @@ class MarkdownReader(BaseReader):
                 self._md.reset()
                 formatted = self._md.convert(formatted_values)
                 output[name] = self.process_metadata(name, formatted)
-            elif not DUPLICATES_DEFINITIONS_ALLOWED.get(name, True):
+            elif (not DUPLICATES_DEFINITIONS_ALLOWED.get(name, True) or
+                  name in METADATA_PROCESSORS):
                 if len(value) > 1:
                     logger.warning(
                         'Duplicate definition of `%s` '
