@@ -31,6 +31,20 @@ except ImportError:
 # This means that _filter_discardable_metadata() must be called on processed
 # metadata dicts before use, to remove the items with the special value.
 _DISCARD = object()
+
+DUPLICATES_DEFINITIONS_ALLOWED = {
+    'tags': False,
+    'date': False,
+    'modified': False,
+    'status': False,
+    'category': False,
+    'author': False,
+    'save_as': False,
+    'URL': False,
+    'authors': False,
+    'slug': False
+}
+
 METADATA_PROCESSORS = {
     'tags': lambda x, y: ([
         Tag(tag, y)
@@ -264,7 +278,7 @@ class MarkdownReader(BaseReader):
                 self._md.reset()
                 formatted = self._md.convert(formatted_values)
                 output[name] = self.process_metadata(name, formatted)
-            elif name in METADATA_PROCESSORS:
+            elif not DUPLICATES_DEFINITIONS_ALLOWED.get(name, True):
                 if len(value) > 1:
                     logger.warning(
                         'Duplicate definition of `%s` '
