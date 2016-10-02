@@ -14,10 +14,10 @@ from docutils.writers.html4css1 import HTMLTranslator
 import six
 from six.moves.html_parser import HTMLParser
 
-from pelican import rstdirectives  # NOQA
 from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Author, Category, Page, Tag
+from pelican.rstdirectives import register
 from pelican.utils import SafeDatetime, escape_html, get_date, pelican_open, \
     posixize_path
 
@@ -179,6 +179,7 @@ class RstReader(BaseReader):
             docutils.io.FileInput.__init__(self, *args, **kwargs)
 
     def __init__(self, *args, **kwargs):
+        register()
         super(RstReader, self).__init__(*args, **kwargs)
 
     def _parse_metadata(self, document):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
+import itertools
 import re
 
 from docutils import nodes, utils
@@ -9,6 +10,7 @@ from docutils.parsers.rst import Directive, directives, roles
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import TextLexer, get_lexer_by_name
+
 
 import six
 
@@ -65,13 +67,19 @@ class Pygments(Directive):
             if flag in self.options:
                 self.options[flag] = True
 
+        if 'lineanchors' in self.options:
+            self.options['lineanchors'] += str(next(self.code_block_id))
+
         # noclasses should already default to False, but just in case...
         formatter = HtmlFormatter(noclasses=False, **self.options)
         parsed = highlight('\n'.join(self.content), lexer, formatter)
         return [nodes.raw('', parsed, format='html')]
 
-directives.register_directive('code-block', Pygments)
-directives.register_directive('sourcecode', Pygments)
+
+def register():
+    directives.register_directive('code-block', Pygments)
+    directives.register_directive('sourcecode', Pygments)
+    Pygments.code_block_id = itertools.count(start=1)
 
 
 _abbr_re = re.compile('\((.*)\)$', re.DOTALL)
