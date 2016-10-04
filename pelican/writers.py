@@ -4,12 +4,11 @@ from __future__ import print_function, unicode_literals, with_statement
 import logging
 import os
 
-from feedgenerator import Atom1Feed, Rss201rev2Feed
+from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 
 from jinja2 import Markup
 
 import six
-from six.moves.urllib.parse import urlparse
 
 from pelican import signals
 from pelican.paginator import Paginator
@@ -51,9 +50,7 @@ class Writer(object):
         feed.add_item(
             title=title,
             link=link,
-            unique_id='tag:%s,%s:%s' % (urlparse(link).netloc,
-                                        item.date.date(),
-                                        urlparse(link).path.lstrip('/')),
+            unique_id=get_tag_uri(link, item.date),
             description=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
