@@ -18,6 +18,10 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
     SUFFIXES = ['', '.html', '/index.html']
 
     def do_GET(self):
+        # cut off a query string
+        if '?' in self.path:
+            self.path, _ = self.path.split('?', 1)
+
         # Try to detect file by applying various suffixes
         for suffix in self.SUFFIXES:
             if not hasattr(self, 'original_path'):
