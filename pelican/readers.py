@@ -674,15 +674,15 @@ def parse_path_metadata(source_path, settings=None, process=None):
                           ('PATH_METADATA', source_path)]:
             checks.append((settings.get(key, None), data))
         if settings.get('USE_FOLDER_AS_CATEGORY', None):
-            checks.insert(0, ('(?P<category>.*)', subdir))
+            checks.append(('(?P<category>.*)', subdir))
         for regexp, data in checks:
             if regexp and data:
                 match = re.match(regexp, data)
                 if match:
                     # .items() for py3k compat.
                     for k, v in match.groupdict().items():
+                        k = k.lower()  # metadata must be lowercase
                         if k not in metadata:
-                            k = k.lower()  # metadata must be lowercase
                             if process:
                                 v = process(k, v)
                             metadata[k] = v

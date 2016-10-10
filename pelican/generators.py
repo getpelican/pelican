@@ -5,7 +5,6 @@ import calendar
 import fnmatch
 import logging
 import os
-import shutil
 from codecs import open
 from collections import defaultdict
 from functools import partial
@@ -21,8 +20,9 @@ from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
-from pelican.utils import (DateFormatter, copy, mkdir_p, posixize_path,
-                           process_translations, python_2_unicode_compatible)
+from pelican.utils import (DateFormatter, copy, copy_file_metadata, mkdir_p,
+                           posixize_path, process_translations,
+                           python_2_unicode_compatible)
 
 
 logger = logging.getLogger(__name__)
@@ -727,8 +727,8 @@ class StaticGenerator(Generator):
             source_path = os.path.join(self.path, sc.source_path)
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
-            shutil.copy2(source_path, save_as)
             logger.info('Copying %s to %s', sc.source_path, sc.save_as)
+            copy_file_metadata(source_path, save_as)
 
 
 class SourceFileGenerator(Generator):
