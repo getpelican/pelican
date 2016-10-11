@@ -5,7 +5,6 @@ import calendar
 import fnmatch
 import logging
 import os
-import shutil
 from codecs import open
 from collections import defaultdict
 from functools import partial
@@ -21,8 +20,9 @@ from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Draft, Page, Static, is_valid_content
 from pelican.readers import Readers
-from pelican.utils import (DateFormatter, copy, mkdir_p, posixize_path,
-                           process_translations, python_2_unicode_compatible)
+from pelican.utils import (DateFormatter, copy, copy_file_metadata, mkdir_p,
+                           posixize_path, process_translations,
+                           python_2_unicode_compatible)
 
 
 logger = logging.getLogger(__name__)
@@ -309,24 +309,26 @@ class ArticlesGenerator(CachingGenerator):
             if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_ATOM']
-                                  % cat.slug)
+                                  % cat.slug, feed_title=cat.name)
 
             if self.settings.get('CATEGORY_FEED_RSS'):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_RSS']
-                                  % cat.slug, feed_type='rss')
+                                  % cat.slug, feed_title=cat.name,
+                                  feed_type='rss')
 
         for auth, arts in self.authors:
             arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('AUTHOR_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
                                   self.settings['AUTHOR_FEED_ATOM']
-                                  % auth.slug)
+                                  % auth.slug, feed_title=auth.name)
 
             if self.settings.get('AUTHOR_FEED_RSS'):
                 writer.write_feed(arts, self.context,
                                   self.settings['AUTHOR_FEED_RSS']
-                                  % auth.slug, feed_type='rss')
+                                  % auth.slug, feed_title=auth.name,
+                                  feed_type='rss')
 
         if (self.settings.get('TAG_FEED_ATOM') or
                 self.settings.get('TAG_FEED_RSS')):
@@ -335,12 +337,12 @@ class ArticlesGenerator(CachingGenerator):
                 if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
                                       self.settings['TAG_FEED_ATOM']
-                                      % tag.slug)
+                                      % tag.slug, feed_title=tag.name)
 
                 if self.settings.get('TAG_FEED_RSS'):
                     writer.write_feed(arts, self.context,
                                       self.settings['TAG_FEED_RSS'] % tag.slug,
-                                      feed_type='rss')
+                                      feed_title=tag.name, feed_type='rss')
 
         if (self.settings.get('TRANSLATION_FEED_ATOM') or
                 self.settings.get('TRANSLATION_FEED_RSS')):
@@ -725,8 +727,8 @@ class StaticGenerator(Generator):
             source_path = os.path.join(self.path, sc.source_path)
             save_as = os.path.join(self.output_path, sc.save_as)
             mkdir_p(os.path.dirname(save_as))
-            shutil.copy2(source_path, save_as)
             logger.info('Copying %s to %s', sc.source_path, sc.save_as)
+            copy_file_metadata(source_path, save_as)
 
 
 class SourceFileGenerator(Generator):

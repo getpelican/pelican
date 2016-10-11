@@ -323,7 +323,7 @@ def parse_arguments():
                         help='Comma separated list of selected paths to write')
 
     parser.add_argument('--fatal', metavar='errors|warnings',
-                        choices=('errors', 'warnings'),
+                        choices=('errors', 'warnings'), default='',
                         help=('Exit the program with non-zero status if any '
                               'errors/warnings encountered.'))
 
@@ -369,6 +369,7 @@ def get_instance(args):
     config_file = args.settings
     if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
             config_file = DEFAULT_CONFIG_NAME
+            args.settings = DEFAULT_CONFIG_NAME
 
     settings = read_settings(config_file, override=get_config(args))
 

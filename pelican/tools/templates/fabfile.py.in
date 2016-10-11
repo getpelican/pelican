@@ -21,7 +21,7 @@ env.cloudfiles_api_key = '$cloudfiles_api_key'
 env.cloudfiles_container = '$cloudfiles_container'
 
 # Github Pages configuration
-env.github_pages_branch = "gh-pages"
+env.github_pages_branch = "$github_pages_branch"
 
 # Port for `serve`
 PORT = 8000
@@ -90,5 +90,4 @@ def publish():
 def gh_pages():
     """Publish to GitHub Pages"""
     rebuild()
-    local("ghp-import -b {github_pages_branch} {deploy_path}".format(**env))
-    local("git push origin {github_pages_branch}".format(**env))
+    local("ghp-import -b {github_pages_branch} {deploy_path} -p".format(**env))

@@ -1,0 +1,6 @@
+-r test.pip
+
+# Development
+flake8
+flake8-import-order
+sphinx

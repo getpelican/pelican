@@ -288,7 +288,10 @@ class MarkdownReader(BaseReader):
         with pelican_open(source_path) as text:
             content = self._md.convert(text)
 
-        metadata = self._parse_metadata(self._md.Meta)
+        if hasattr(self._md, 'Meta'):
+            metadata = self._parse_metadata(self._md.Meta)
+        else:
+            metadata = {}
         return content, metadata
 
 
@@ -545,6 +548,8 @@ class Readers(FileStampDataCacher):
 
             if content:
                 content = typogrify_wrapper(content)
+
+            if 'title' in metadata:
                 metadata['title'] = typogrify_wrapper(metadata['title'])
 
             if 'summary' in metadata:
@@ -607,7 +612,10 @@ def default_metadata(settings=None, process=None):
             metadata['category'] = value
         if settings.get('DEFAULT_DATE', None) and \
            settings['DEFAULT_DATE'] != 'fs':
-            metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
+            if isinstance(settings['DEFAULT_DATE'], six.string_types):
+                metadata['date'] = get_date(settings['DEFAULT_DATE'])
+            else:
+                metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
     return metadata
 
 
@@ -616,7 +624,7 @@ def path_metadata(full_path, source_path, settings=None):
     if settings:
         if settings.get('DEFAULT_DATE', None) == 'fs':
             metadata['date'] = SafeDatetime.fromtimestamp(
-                os.stat(full_path).st_ctime)
+                os.stat(full_path).st_mtime)
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
             source_path, {}))
     return metadata
@@ -651,15 +659,15 @@ def parse_path_metadata(source_path, settings=None, process=None):
                           ('PATH_METADATA', source_path)]:
             checks.append((settings.get(key, None), data))
         if settings.get('USE_FOLDER_AS_CATEGORY', None):
-            checks.insert(0, ('(?P<category>.*)', subdir))
+            checks.append(('(?P<category>.*)', subdir))
         for regexp, data in checks:
             if regexp and data:
                 match = re.match(regexp, data)
                 if match:
                     # .items() for py3k compat.
                     for k, v in match.groupdict().items():
+                        k = k.lower()  # metadata must be lowercase
                         if k not in metadata:
-                            k = k.lower()  # metadata must be lowercase
                             if process:
                                 v = process(k, v)
                             metadata[k] = v

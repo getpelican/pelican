@@ -172,6 +172,7 @@ class Content(object):
             'lang': getattr(self, 'lang', 'en'),
             'date': getattr(self, 'date', SafeDatetime.now()),
             'author': self.author.slug if hasattr(self, 'author') else '',
+            'tag': self.tag.slug if hasattr(self, 'tag') else '',
             'category': self.category.slug if hasattr(self, 'category') else ''
         })
         return metadata

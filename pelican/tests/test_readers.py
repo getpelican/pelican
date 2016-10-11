@@ -298,7 +298,8 @@ class RstReaderTest(ReaderTest):
                                   TYPOGRIFY=True)
 
             expected = ('<p>An article with some&nbsp;code</p>\n'
-                        '<div class="highlight"><pre><span class="n">x</span>'
+                        '<div class="highlight"><pre><span></span>'
+                        '<span class="n">x</span>'
                         ' <span class="o">&amp;</span>'
                         ' <span class="n">y</span>\n</pre></div>\n'
                         '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
@@ -316,7 +317,8 @@ class RstReaderTest(ReaderTest):
                                   TYPOGRIFY_IGNORE_TAGS=['blockquote'])
 
             expected = ('<p>An article with some&nbsp;code</p>\n'
-                        '<div class="highlight"><pre><span class="n">x</span>'
+                        '<div class="highlight"><pre><span>'
+                        '</span><span class="n">x</span>'
                         ' <span class="o">&amp;</span>'
                         ' <span class="n">y</span>\n</pre></div>\n'
                         '<p>A block&nbsp;quote:</p>\n<blockquote>\nx '
@@ -356,6 +358,15 @@ class RstReaderTest(ReaderTest):
         }
 
         self.assertDictHasSubset(page.metadata, expected)
+
+    def test_default_date_formats(self):
+        tuple_date = self.read_file(path='article.rst',
+                                    DEFAULT_DATE=(2012, 5, 1))
+        string_date = self.read_file(path='article.rst',
+                                     DEFAULT_DATE='2012-05-01')
+
+        self.assertEqual(tuple_date.metadata['date'],
+                         string_date.metadata['date'])
 
 
 @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
@@ -534,6 +545,22 @@ class MdReaderTest(ReaderTest):
             'authors': ['Author, First', 'Author, Second'],
         }
         self.assertDictHasSubset(metadata, expected)
+
+    def test_empty_file(self):
+        reader = readers.MarkdownReader(settings=get_settings())
+        content, metadata = reader.read(
+            _path('empty.md'))
+
+        self.assertEqual(metadata, {})
+        self.assertEqual(content, '')
+
+    def test_empty_file_with_bom(self):
+        reader = readers.MarkdownReader(settings=get_settings())
+        content, metadata = reader.read(
+            _path('empty_with_bom.md'))
+
+        self.assertEqual(metadata, {})
+        self.assertEqual(content, '')
 
 
 class HTMLReaderTest(ReaderTest):

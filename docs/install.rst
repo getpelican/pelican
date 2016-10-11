@@ -1,9 +1,8 @@
 Installing Pelican
 ##################
 
-Pelican currently runs best on Python 2.7.x; earlier versions of Python are
-not supported. There is provisional support for Python 3.3+, although there may
-be rough edges, particularly with regards to optional 3rd-party components.
+Pelican currently runs best on Python 2.7.x and 3.3+; earlier versions of
+Python are not supported.
 
 You can install Pelican via several different methods. The simplest is via
 `pip <http://www.pip-installer.org/>`_::
@@ -23,7 +22,7 @@ session and create a new virtual environment for Pelican::
     source bin/activate
 
 Once the virtual environment has been created and activated, Pelican can be
-be installed via ``pip install pelican`` as noted above. Alternatively, if
+installed via ``pip install pelican`` as noted above. Alternatively, if
 you have the project source, you can install Pelican using the distutils
 method::
 
@@ -88,7 +87,7 @@ If you installed Pelican via distutils or the bleeding-edge method, simply
 perform the same step to install the most recent version.
 
 Kickstart your site
-===================
+-------------------
 
 Once Pelican has been installed, you can create a skeleton project via the
 ``pelican-quickstart`` command, which begins by asking some questions about
