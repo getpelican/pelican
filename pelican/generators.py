@@ -100,8 +100,8 @@ class Generator(object):
         """Inclusion logic for .get_files(), returns True/False
 
         :param path: the path which might be including
-        :param extensions: the list of allowed extensions (if False, all
-            extensions are allowed)
+        :param extensions: the list of allowed extensions, or False if all
+            extensions are allowed
         """
         if extensions is None:
             extensions = tuple(self.readers.extensions)
@@ -112,8 +112,10 @@ class Generator(object):
         if any(fnmatch.fnmatch(basename, ignore) for ignore in ignores):
             return False
 
-        if extensions is False or basename.endswith(extensions):
+        ext = os.path.splitext(basename)[1][1:]
+        if extensions is False or ext in extensions:
             return True
+
         return False
 
     def get_files(self, paths, exclude=[], extensions=None):
