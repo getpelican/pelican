@@ -395,6 +395,19 @@ class TestPage(LoggedTestCase):
             '</blockquote>'
         )
 
+        # source.srcset
+        args['content'] = (
+            'There is a picture with source alternative with srcset attribute '
+            '<source srcset="{filename}reference.rst">blah blah'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'There is a picture with source alternative with srcset attribute '
+            '<source srcset="http://notmyidea.org/reference.html">'
+            'blah blah'
+        )
+
     def test_intrasite_link_markdown_spaces(self):
         # Markdown introduces %20 instead of spaces, this tests that
         # we support markdown doing this.
