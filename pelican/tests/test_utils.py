@@ -9,6 +9,7 @@ import time
 from sys import platform
 from tempfile import mkdtemp
 
+from nose_parameterized import parameterized
 import pytz
 
 from pelican import utils
@@ -106,114 +107,84 @@ class TestUtils(LoggedTestCase):
         for item in invalid_dates:
             self.assertRaises(ValueError, utils.get_date, item)
 
-    def test_slugify(self):
+    @parameterized.expand([
+        ('this is a test', 'this-is-a-test'),
+        ('this        is a test', 'this-is-a-test'),
+        ('this → is ← a ↑ test', 'this-is-a-test'),
+        ('this--is---a test', 'this-is-a-test'),
+        ('unicode測試許功蓋，你看到了嗎？',
+         'unicodece-shi-xu-gong-gai-ni-kan-dao-liao-ma'),
+        ('大飯原発４号機、１８日夜起動へ',
+         'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),
+    ])
+    def test_slugify(self, value, expected):
+        self.assertEqual(utils.slugify(value), expected)
 
-        samples = (('this is a test', 'this-is-a-test'),
-                   ('this        is a test', 'this-is-a-test'),
-                   ('this → is ← a ↑ test', 'this-is-a-test'),
-                   ('this--is---a test', 'this-is-a-test'),
-                   ('unicode測試許功蓋，你看到了嗎？',
-                    'unicodece-shi-xu-gong-gai-ni-kan-dao-liao-ma'),
-                   ('大飯原発４号機、１８日夜起動へ',
-                    'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),)
-
-        for value, expected in samples:
-            self.assertEqual(utils.slugify(value), expected)
-
-    def test_slugify_substitute(self):
-
-        samples = (('C++ is based on C', 'cpp-is-based-on-c'),
-                   ('C+++ test C+ test', 'cpp-test-c-test'),
-                   ('c++, c#, C#, C++', 'cpp-c-sharp-c-sharp-cpp'),
-                   ('c++-streams', 'cpp-streams'),)
-
+    @parameterized.expand([
+        ('C++ is based on C', 'cpp-is-based-on-c'),
+        ('C+++ test C+ test', 'cpp-test-c-test'),
+        ('c++, c#, C#, C++', 'cpp-c-sharp-c-sharp-cpp'),
+        ('c++-streams', 'cpp-streams'),
+    ])
+    def test_slugify_substitute(self, value, expected):
         subs = (('C++', 'CPP'), ('C#', 'C-SHARP'))
-        for value, expected in samples:
-            self.assertEqual(utils.slugify(value, subs), expected)
+        self.assertEqual(utils.slugify(value, subs), expected)
 
-    def test_slugify_substitute_and_keeping_non_alphanum(self):
-
-        samples = (('Fedora QA', 'fedora.qa'),
-                   ('C++ is used by Fedora QA', 'cpp is used by fedora.qa'),
-                   ('C++ is based on C', 'cpp-is-based-on-c'),
-                   ('C+++ test C+ test', 'cpp-test-c-test'),)
-
+    @parameterized.expand([
+        ('Fedora QA', 'fedora.qa'),
+        ('C++ is used by Fedora QA', 'cpp is used by fedora.qa'),
+        ('C++ is based on C', 'cpp-is-based-on-c'),
+        ('C+++ test C+ test', 'cpp-test-c-test'),
+    ])
+    def test_slugify_substitute_keeping_non_alphanum(self, value, expected):
         subs = (('Fedora QA', 'fedora.qa', True),
                 ('c++', 'cpp'),)
-        for value, expected in samples:
-            self.assertEqual(utils.slugify(value, subs), expected)
+        self.assertEqual(utils.slugify(value, subs), expected)
 
-    def test_get_relative_path(self):
+    @parameterized.expand([
+        (os.path.join('test', 'test.html'), os.pardir),
+        (os.path.join('test', 'test', 'test.html'),
+         os.path.join(os.pardir, os.pardir)),
+        ('test.html', os.curdir),
+        (os.path.join('/test', 'test.html'), os.pardir),
+        (os.path.join('/test', 'test', 'test.html'),
+         os.path.join(os.pardir, os.pardir)),
+        ('/test.html', os.curdir),
+    ])
+    def test_get_relative_path(self, value, expected):
+        self.assertEqual(utils.get_relative_path(value), expected)
 
-        samples = ((os.path.join('test', 'test.html'), os.pardir),
-                   (os.path.join('test', 'test', 'test.html'),
-                    os.path.join(os.pardir, os.pardir)),
-                   ('test.html', os.curdir),
-                   (os.path.join('/test', 'test.html'), os.pardir),
-                   (os.path.join('/test', 'test', 'test.html'),
-                    os.path.join(os.pardir, os.pardir)),
-                   ('/test.html', os.curdir),)
+    @parameterized.expand([
+        # Plain text
+        ('short string', 'short string'),
+        ('word ' * 100,  'word ' * 20 + '…'),
 
-        for value, expected in samples:
-            self.assertEqual(utils.get_relative_path(value), expected)
-
-    def test_truncate_html_words(self):
-        # Plain text.
-        self.assertEqual(
-            utils.truncate_html_words('short string', 20),
-            'short string')
-        self.assertEqual(
-            utils.truncate_html_words('word ' * 100, 20),
-            'word ' * 20 + '…')
-
-        # Words enclosed or intervaled by HTML tags.
-        self.assertEqual(
-            utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20),
-            '<p>' + 'word ' * 20 + '…</p>')
-        self.assertEqual(
-            utils.truncate_html_words(
-                '<span\nstyle="\n…\n">' + 'word ' * 100 + '</span>', 20),
-            '<span\nstyle="\n…\n">' + 'word ' * 20 + '…</span>')
-        self.assertEqual(
-            utils.truncate_html_words('<br>' + 'word ' * 100, 20),
-            '<br>' + 'word ' * 20 + '…')
-        self.assertEqual(
-            utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20),
-            '<!-- comment -->' + 'word ' * 20 + '…')
+        # Words enclosed or intervaled by HTML tags
+        ('<p>' + 'word ' * 100 + '</p>', '<p>' + 'word ' * 20 + '…</p>'),
+        ('<span\nstyle="\n…\n">' + 'word ' * 100 + '</span>',
+         '<span\nstyle="\n…\n">' + 'word ' * 20 + '…</span>'),
+        ('<br>' + 'word ' * 100, '<br>' + 'word ' * 20 + '…'),
+        ('<!-- comment -->' + 'word ' * 100,
+         '<!-- comment -->' + 'word ' * 20 + '…'),
 
         # Words with hypens and apostrophes.
-        self.assertEqual(
-            utils.truncate_html_words("a-b " * 100, 20),
-            "a-b " * 20 + '…')
-        self.assertEqual(
-            utils.truncate_html_words("it's " * 100, 20),
-            "it's " * 20 + '…')
+        ("a-b " * 100, "a-b " * 20 + '…'),
+        ("it's " * 100, "it's " * 20 + '…'),
 
         # Words with HTML entity references.
-        self.assertEqual(
-            utils.truncate_html_words("&eacute; " * 100, 20),
-            "&eacute; " * 20 + '…')
-        self.assertEqual(
-            utils.truncate_html_words("caf&eacute; " * 100, 20),
-            "caf&eacute; " * 20 + '…')
-        self.assertEqual(
-            utils.truncate_html_words("&egrave;lite " * 100, 20),
-            "&egrave;lite " * 20 + '…')
-        self.assertEqual(
-            utils.truncate_html_words("cafeti&eacute;re " * 100, 20),
-            "cafeti&eacute;re " * 20 + '…')
-        self.assertEqual(
-            utils.truncate_html_words("&int;dx " * 100, 20),
-            "&int;dx " * 20 + '…')
+        ("&eacute; " * 100, "&eacute; " * 20 + '…'),
+        ("caf&eacute; " * 100, "caf&eacute; " * 20 + '…'),
+        ("&egrave;lite " * 100, "&egrave;lite " * 20 + '…'),
+        ("cafeti&eacute;re " * 100, "cafeti&eacute;re " * 20 + '…'),
+        ("&int;dx " * 100, "&int;dx " * 20 + '…'),
 
         # Words with HTML character references inside and outside
         # the ASCII range.
-        self.assertEqual(
-            utils.truncate_html_words("&#xe9; " * 100, 20),
-            "&#xe9; " * 20 + '…')
-        self.assertEqual(
-            utils.truncate_html_words("&#x222b;dx " * 100, 20),
-            "&#x222b;dx " * 20 + '…')
+        ("&#xe9; " * 100, "&#xe9; " * 20 + '…'),
+        ("&#x222b;dx " * 100, "&#x222b;dx " * 20 + '…'),
+    ])
+    def test_truncate_html_words(self, html_words, expected):
+        self.assertEqual(utils.truncate_html_words(html_words, 20), expected)
 
     def test_process_translations(self):
         # create a bunch of articles
@@ -327,80 +298,76 @@ class TestUtils(LoggedTestCase):
         utils.clean_output_dir(test_directory, retention)
         self.assertFalse(os.path.exists(test_directory))
 
-    def test_strftime(self):
-        d = utils.SafeDatetime(2012, 8, 29)
-
+    @parameterized.expand([
         # simple formatting
-        self.assertEqual(utils.strftime(d, '%d/%m/%y'), '29/08/12')
-        self.assertEqual(utils.strftime(d, '%d/%m/%Y'), '29/08/2012')
+        ('%d/%m/%y', '29/08/12'),
+        ('%d/%m/%Y', '29/08/2012'),
 
         # RFC 3339
-        self.assertEqual(
-            utils.strftime(d, '%Y-%m-%dT%H:%M:%SZ'),
-            '2012-08-29T00:00:00Z')
+        ('%Y-%m-%dT%H:%M:%SZ', '2012-08-29T00:00:00Z'),
 
         # % escaped
-        self.assertEqual(utils.strftime(d, '%d%%%m%%%y'), '29%08%12')
-        self.assertEqual(utils.strftime(d, '%d %% %m %% %y'), '29 % 08 % 12')
+        ('%d%%%m%%%y', '29%08%12'),
+        ('%d %% %m %% %y', '29 % 08 % 12'),
+
         # not valid % formatter
-        self.assertEqual(utils.strftime(d, '10% reduction in %Y'),
-                         '10% reduction in 2012')
-        self.assertEqual(utils.strftime(d, '%10 reduction in %Y'),
-                         '%10 reduction in 2012')
+        ('10% reduction in %Y', '10% reduction in 2012'),
+        ('%10 reduction in %Y', '%10 reduction in 2012'),
 
         # with text
-        self.assertEqual(utils.strftime(d, 'Published in %d-%m-%Y'),
-                         'Published in 29-08-2012')
+        ('Published in %d-%m-%Y', 'Published in 29-08-2012'),
 
         # with non-ascii text
-        self.assertEqual(
-            utils.strftime(d, '%d/%m/%Y Øl trinken beim Besäufnis'),
-            '29/08/2012 Øl trinken beim Besäufnis')
+        ('%d/%m/%Y Øl trinken beim Besäufnis',
+         '29/08/2012 Øl trinken beim Besäufnis'),
 
         # alternative formatting options
-        self.assertEqual(utils.strftime(d, '%-d/%-m/%y'), '29/8/12')
-        self.assertEqual(utils.strftime(d, '%-H:%-M:%-S'), '0:0:0')
+        ('%-d/%-m/%y', '29/8/12'),
+        ('%-H:%-M:%-S', '0:0:0'),
+    ])
+    def test_strftime(self, fmt_string, expected):
+        d = utils.SafeDatetime(2012, 8, 29)
+        self.assertEqual(utils.strftime(d, fmt_string), expected)
 
         d = utils.SafeDatetime(2012, 8, 9)
         self.assertEqual(utils.strftime(d, '%-d/%-m/%y'), '9/8/12')
 
-    # test the output of utils.strftime in a different locale
-    # Turkish locale
     @unittest.skipUnless(locale_available('tr_TR.UTF-8') or
                          locale_available('Turkish'),
                          'Turkish locale needed')
-    def test_strftime_locale_dependent_turkish(self):
+    @parameterized.expand([
+        # simple
+        ('%d %B %Y', '29 Ağustos 2012'),
+        ('%A, %d %B %Y', 'Çarşamba, 29 Ağustos 2012'),
+
+        # with text
+        ('Yayınlanma tarihi: %A, %d %B %Y',
+         'Yayınlanma tarihi: Çarşamba, 29 Ağustos 2012')
+
+        # non-ascii format candidate (someone might pass it… for
+        # some reason)
+        ('%Y yılında %üretim artışı', '2012 yılında %üretim artışı'),
+    ])
+    def test_strftime_locale_dependent_turkish(self, fmt_string, expected):
+        '''
+        Test the output of utils.strftime in a different locale (Turkish).
+        '''
         if platform == 'win32':
             new_locale = 'Turkish'
         else:
             new_locale = 'tr_TR.UTF-8'
 
         with utils.temporary_locale(new_locale):
-
             d = utils.SafeDatetime(2012, 8, 29)
+            self.assertEqual(utils.strftime(d, fmt_string), expected)
 
-            # simple
-            self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 Ağustos 2012')
-            self.assertEqual(utils.strftime(d, '%A, %d %B %Y'),
-                             'Çarşamba, 29 Ağustos 2012')
-
-            # with text
-            self.assertEqual(
-                utils.strftime(d, 'Yayınlanma tarihi: %A, %d %B %Y'),
-                'Yayınlanma tarihi: Çarşamba, 29 Ağustos 2012')
-
-            # non-ascii format candidate (someone might pass it… for
-            # some reason)
-            self.assertEqual(
-                utils.strftime(d, '%Y yılında %üretim artışı'),
-                '2012 yılında %üretim artışı')
-
-    # test the output of utils.strftime in a different locale
-    # French locale
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'),
                          'French locale needed')
     def test_strftime_locale_dependent_french(self):
+        '''
+        Test the output of utils.strftime in a different locale (French).
+        '''
         if platform == 'win32':
             new_locale = 'French'
         else:
@@ -427,16 +394,15 @@ class TestUtils(LoggedTestCase):
                 utils.strftime(d, '%écrits en %Y'),
                 '%écrits en 2012')
 
-    def test_maybe_pluralize(self):
+    @parameterized.expand([
+        (0, 'Article', 'Articles', '0 Articles'),
+        (1, 'Article', 'Articles', '1 Article'),
+        (2, 'Article', 'Articles', '2 Articles'),
+    ])
+    def test_maybe_pluralize(self, quantity, singular, plural, expected):
         self.assertEqual(
-            utils.maybe_pluralize(0, 'Article', 'Articles'),
-            '0 Articles')
-        self.assertEqual(
-            utils.maybe_pluralize(1, 'Article', 'Articles'),
-            '1 Article')
-        self.assertEqual(
-            utils.maybe_pluralize(2, 'Article', 'Articles'),
-            '2 Articles')
+            utils.maybe_pluralize(quantity, singular, plural),
+            expected)
 
 
 class TestCopy(unittest.TestCase):
