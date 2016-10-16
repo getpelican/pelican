@@ -700,6 +700,14 @@ Template pages
    separate templates from the theme.  Example: projects, resume, profile ...
    These templates need to use ``DIRECT_TEMPLATES`` setting.
 
+.. data:: THEME_TEMPLATE_OVERRIDES = []
+
+   A list of paths you want Jinja2 to search for templates before searching the
+   theme's ``templates/`` directory.  Allows for overriding individual theme
+   template files without having to fork an existing theme.  Jinja2 searches in
+   the following order: files in ``THEME_TEMPLATE_OVERRIDES`` first, theme's
+   ``templates/``
+
 
 Metadata
 ========
