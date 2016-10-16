@@ -120,19 +120,8 @@ class DateFormatter(object):
         self.locale = locale.setlocale(locale.LC_TIME)
 
     def __call__(self, date, date_format):
-        old_lc_time = locale.setlocale(locale.LC_TIME)
-        old_lc_ctype = locale.setlocale(locale.LC_CTYPE)
-
-        locale.setlocale(locale.LC_TIME, self.locale)
-        # on OSX, encoding from LC_CTYPE determines the unicode output in PY3
-        # make sure it's same as LC_TIME
-        locale.setlocale(locale.LC_CTYPE, self.locale)
-
-        formatted = strftime(date, date_format)
-
-        locale.setlocale(locale.LC_TIME, old_lc_time)
-        locale.setlocale(locale.LC_CTYPE, old_lc_ctype)
-        return formatted
+        with temporary_locale(self.locale):
+            return strftime(date, date_format)
 
 
 def python_2_unicode_compatible(klass):
@@ -824,3 +813,20 @@ def maybe_pluralize(count, singular, plural):
     if count == 1:
         selection = singular
     return '{} {}'.format(count, selection)
+
+
+@contextmanager
+def temporary_locale(temp_locale=None):
+    '''
+    Enable code to run in a context with a temporary locale.
+
+    Resets the locale back when context exits.  Can set a temporary
+    locale if provided.
+    '''
+    orig_locale = locale.setlocale(locale.LC_ALL)
+
+    if temp_locale is not None:
+        locale.setlocale(locale.LC_ALL, temp_locale)
+
+    yield
+    locale.setlocale(locale.LC_ALL, orig_locale)
