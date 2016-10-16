@@ -99,7 +99,7 @@ DEFAULT_CONFIG = {
     'RELATIVE_URLS': False,
     'DEFAULT_LANG': 'en',
     'DIRECT_TEMPLATES': ['index', 'tags', 'categories', 'authors', 'archives'],
-    'EXTRA_TEMPLATES_PATHS': [],
+    'THEME_TEMPLATES_OVERRIDES': [],
     'PAGINATED_DIRECT_TEMPLATES': ['index'],
     'PELICAN_CLASS': 'pelican.Pelican',
     'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
@@ -376,12 +376,26 @@ def configure_settings(settings):
             settings[new_key] = [settings[old_key]]   # also make a list
             del settings[old_key]
 
+    # Deprecated warning of EXTRA_TEMPLATES_PATHS
+    if 'EXTRA_TEMPLATES_PATHS' in settings:
+        logger.warning('EXTRA_TEMPLATES_PATHS is deprecated use '
+                       'THEME_TEMPLATES_OVERRIDES instead.')
+        if ('THEME_TEMPLATES_OVERRIDES' in settings and
+                settings['THEME_TEMPLATES_OVERRIDES']):
+            raise Exception(
+                'Setting both EXTRA_TEMPLATES_PATHS and '
+                'THEME_TEMPLATES_OVERRIDES is not permitted. Please move to '
+                'only setting THEME_TEMPLATES_OVERRIDES.')
+        settings['THEME_TEMPLATES_OVERRIDES'] = \
+            settings['EXTRA_TEMPLATES_PATHS']
+        del settings['EXTRA_TEMPLATES_PATHS']
+
     # Save people from accidentally setting a string rather than a list
     path_keys = (
         'ARTICLE_EXCLUDES',
         'DEFAULT_METADATA',
         'DIRECT_TEMPLATES',
-        'EXTRA_TEMPLATES_PATHS',
+        'THEME_TEMPLATES_OVERRIDES',
         'FILES_TO_COPY',
         'IGNORE_FILES',
         'PAGINATED_DIRECT_TEMPLATES',

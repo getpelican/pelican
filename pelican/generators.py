@@ -51,20 +51,25 @@ class Generator(object):
 
         # templates cache
         self._templates = {}
-        self._templates_path = []
-        self._templates_path.append(os.path.expanduser(
-            os.path.join(self.theme, 'templates')))
-        self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
+        self._templates_path = list(self.settings['THEME_TEMPLATES_OVERRIDES'])
 
-        theme_path = os.path.dirname(os.path.abspath(__file__))
+        theme_templates_path = os.path.expanduser(
+            os.path.join(self.theme, 'templates'))
+        self._templates_path.append(theme_templates_path)
+        theme_loader = FileSystemLoader(theme_templates_path)
 
-        simple_loader = FileSystemLoader(os.path.join(theme_path,
-                                         "themes", "simple", "templates"))
+        simple_theme_path = os.path.dirname(os.path.abspath(__file__))
+        simple_loader = FileSystemLoader(
+            os.path.join(simple_theme_path, "themes", "simple", "templates"))
+
         self.env = Environment(
             loader=ChoiceLoader([
                 FileSystemLoader(self._templates_path),
                 simple_loader,  # implicit inheritance
-                PrefixLoader({'!simple': simple_loader})  # explicit one
+                PrefixLoader({
+                    '!simple': simple_loader,
+                    '!theme': theme_loader
+                })  # explicit ones
             ]),
             **self.settings['JINJA_ENVIRONMENT']
         )
