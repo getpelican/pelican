@@ -414,7 +414,7 @@ class TestUtils(LoggedTestCase):
             self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 août 2012')
 
             # depending on OS, the first letter is m or M
-            self.assertTrue(utils.strftime(d, '%A') in ('mercredi', 'Mercredi'))
+            self.assertIn(utils.strftime(d, '%A'), ('mercredi', 'Mercredi'))
 
             # with text
             self.assertEqual(
