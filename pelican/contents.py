@@ -242,7 +242,7 @@ class Content(object):
                                 "%s used {attach} link syntax on a "
                                 "non-static file. Use {filename} instead.",
                                 self.get_relative_source_path())
-                    origin = '/'.join((siteurl, linked_content.url))
+                    origin = linked_content.url
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
                     logger.warning(
