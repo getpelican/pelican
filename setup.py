@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from os import walk
-from os.path import join, relpath, dirname
+from os.path import join, relpath
 
 from setuptools import setup
 
@@ -31,22 +31,22 @@ setup(
     long_description=README + '\n' + CHANGELOG,
     packages=['pelican', 'pelican.tools'],
     package_data={
-        # we manually collect the package data, as opposed to using include_package_data=True
-        # because we don't want the tests to be included automatically as package data
-        # (MANIFEST.in is too greedy)
-        'pelican': [
-            relpath(join(root, name), 'pelican')
-            for root, _, names in walk(join('pelican', 'themes')) for name in names
-        ],
-        'pelican.tools': [
-            relpath(join(root, name), join('pelican', 'tools'))
-            for root, _, names in walk(join('pelican', 'tools', 'templates')) for name in names
-        ],
+        # we manually collect the package data, as opposed to using,
+        # include_package_data=True because we don't want the tests to be
+        # included automatically as package data (MANIFEST.in is too greedy)
+        'pelican': [relpath(join(root, name), 'pelican')
+                    for root, _, names in walk(join('pelican', 'themes'))
+                    for name in names],
+        'pelican.tools': [relpath(join(root, name), join('pelican', 'tools'))
+                          for root, _, names in walk(join('pelican',
+                                                          'tools',
+                                                          'templates'))
+                          for name in names],
     },
     install_requires=requires,
     entry_points=entry_points,
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+         'Development Status :: 5 - Production/Stable',
          'Environment :: Console',
          'License :: OSI Approved :: GNU Affero General Public License v3',
          'Operating System :: OS Independent',
