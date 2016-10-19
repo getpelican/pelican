@@ -210,7 +210,6 @@ class RstReader(BaseReader):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8',
-                        'exit_status_level': 2,
                         'embed_stylesheet': False}
         user_params = self.settings.get('DOCUTILS_SETTINGS')
         if user_params:
@@ -223,7 +222,25 @@ class RstReader(BaseReader):
         pub.writer.translator_class = PelicanHTMLTranslator
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=source_path)
-        pub.publish(enable_exit_status=True)
+        status = user_params.get('enable_exit_status', False)
+        try:
+            pub.publish(enable_exit_status=status)
+        except SystemExit:
+            logger.error(
+                '%s "%s" %s',
+                'Error processing',
+                source_path,
+                '\nChanges have been ignored!',
+                exc_info=self.settings.get('DEBUG', False))
+            raise
+        except:
+            logger.error(
+                '%s "%s" %s',
+                'Exception while processing',
+                source_path,
+                '\nUse "--debug" to display a stack trace.',
+                exc_info=self.settings.get('DEBUG', False))
+            raise
         return pub
 
     def read(self, source_path):
