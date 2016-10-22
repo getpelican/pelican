@@ -11,6 +11,8 @@ The idea behind "pages" is that they are usually not temporal in nature and are
 used for content that does not change very often (e.g., "About" or "Contact"
 pages).
 
+You can find sample content in the repository at: ``pelican/samples/content/``
+
 .. _internal_metadata:
 
 File metadata
