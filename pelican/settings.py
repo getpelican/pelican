@@ -275,7 +275,9 @@ def configure_settings(settings):
         except locale.Error:
             pass
     else:
-        logger.warning("LOCALE option doesn't contain a correct value")
+        logger.warning(
+            "Locale could not be set. Check the LOCALE setting, ensuring it "
+            "is valid and available on your system.")
 
     if ('SITEURL' in settings):
         # If SITEURL has a trailing slash, remove it and provide a warning
