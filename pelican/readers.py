@@ -40,7 +40,7 @@ DUPLICATES_DEFINITIONS_ALLOWED = {
     'category': False,
     'author': False,
     'save_as': False,
-    'URL': False,
+    'url': False,
     'authors': False,
     'slug': False
 }
