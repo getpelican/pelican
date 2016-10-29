@@ -4,11 +4,18 @@ from __future__ import print_function, unicode_literals
 
 import argparse
 import codecs
+import locale
 import os
 import string
 import sys
 
 import pytz
+
+try:
+    import tzlocal
+    _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
+except:
+    _DEFAULT_TIMEZONE = 'Europe/Paris'
 
 import six
 
@@ -42,8 +49,8 @@ CONF = {
     'github_pages_branch': _GITHUB_PAGES_BRANCHES['project'],
     'default_pagination': 10,
     'siteurl': '',
-    'lang': 'en',
-    'timezone': 'Europe/Paris'
+    'lang': locale.getlocale()[0].split('_')[0],
+    'timezone': _DEFAULT_TIMEZONE
 }
 
 # url for list of valid timezones
