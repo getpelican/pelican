@@ -473,5 +473,6 @@ def is_valid_content(content, f):
         return True
     except NameError as e:
         logger.error(
-            "Skipping %s: could not find information about '%s'", f, e)
+            "Skipping %s: could not find information about '%s'",
+            f, six.text_type(e))
         return False
