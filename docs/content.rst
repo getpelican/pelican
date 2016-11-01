@@ -55,7 +55,7 @@ install Markdown``.
 
 Pelican also supports `Markdown Extensions`_, which might have to be installed
 separately if they are not included in the default ``Markdown`` package and can
-be configured and loaded via the ``MD_EXTENSIONS`` setting.
+be configured and loaded via the ``MARKDOWN`` setting.
 
 Metadata syntax for Markdown posts should follow this pattern::
 
