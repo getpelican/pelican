@@ -107,6 +107,7 @@ DEFAULT_CONFIG = {
             'markdown.extensions.extra': {},
             'markdown.extensions.meta': {},
         },
+        'output_format': 'html5',
     },
     'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},

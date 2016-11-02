@@ -121,9 +121,9 @@ Setting name (followed by default value, if any)                                
                                                                                  for a complete list of supported options.
                                                                                  The ``extensions`` option will be automatically computed from the 
                                                                                  ``extension_configs`` option.
-                                                                                 Default is ``'extension_configs': {'markdown.extensions.codehilite':
+                                                                                 Default is ``{'extension_configs': {'markdown.extensions.codehilite':
                                                                                  {'css_class': 'highlight'},'markdown.extensions.extra': {},
-                                                                                 'markdown.extensions.meta': {},},``.
+                                                                                 'markdown.extensions.meta': {},}, 'output_format': 'html5',}``.
 ``OUTPUT_PATH = 'output/'``                                                      Where to output the generated files.
 ``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
                                                                                  and content path is not specified via an argument to the ``pelican``
