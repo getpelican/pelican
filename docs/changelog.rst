@@ -15,6 +15,7 @@ Next release
 * Author slugs can be controlled with greater precision using the
   ``AUTHOR_SUBSTITUTIONS`` setting. Keeping non-alphanum characters is supported
   as well but discouraged.
+* Replaced ``MD_EXTENSIONS`` with ``MARKDOWN``
 
 3.6.3 (2015-08-14)
 ==================

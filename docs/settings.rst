@@ -114,15 +114,16 @@ Setting name (followed by default value, if any)                                
                                                                                  of these patterns will be ignored by the processor. For example,
                                                                                  the default ``['.#*']`` will ignore emacs lock files, and
                                                                                  ``['__pycache__']`` would ignore Python 3's bytecode caches.
-``MD_EXTENSIONS =`` ``{...}``                                                    A dict of the extensions that the Markdown processor
-                                                                                 will use, with extensions' settings as the values.
+``MARKDOWN =`` ``{...}``                                                         Extra configuration settings for the Markdown processor.
                                                                                  Refer to the Python Markdown documentation's
-                                                                                 `Extensions section <http://pythonhosted.org/Markdown/extensions/>`_
-                                                                                 for a complete list of supported extensions and their options.
-                                                                                 Default is ``{'markdown.extensions.codehilite' : {'css_class': 'highlight'},
-                                                                                 'markdown.extensions.extra': {}, 'markdown.extensions.meta': {}}``.
-                                                                                 (Note that the dictionary defined in your settings file will
-                                                                                 update this default one.)
+                                                                                 `Options section 
+                                                                                 <http://pythonhosted.org/Markdown/reference.html#markdown>`_
+                                                                                 for a complete list of supported options.
+                                                                                 The ``extensions`` option will be automatically computed from the 
+                                                                                 ``extension_configs`` option.
+                                                                                 Default is ``{'extension_configs': {'markdown.extensions.codehilite':
+                                                                                 {'css_class': 'highlight'},'markdown.extensions.extra': {},
+                                                                                 'markdown.extensions.meta': {},}, 'output_format': 'html5',}``.
 ``OUTPUT_PATH = 'output/'``                                                      Where to output the generated files.
 ``PATH``                                                                         Path to content directory to be processed by Pelican. If undefined,
                                                                                  and content path is not specified via an argument to the ``pelican``
