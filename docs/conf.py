@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import sys, os
+import os
+import sys
+
+from pelican import __version__
 
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 sys.path.append(os.path.abspath(os.pardir))
 
-from pelican import __version__
-
-# -- General configuration -----------------------------------------------------
+# -- General configuration ----------------------------------------------------
 templates_path = ['_templates']
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.ifconfig', 'sphinx.ext.extlinks']
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.ifconfig',
+              'sphinx.ext.extlinks']
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Pelican'
@@ -30,7 +33,7 @@ extlinks = {
     'pelican-doc':  ('http://docs.getpelican.com/%s/', '')
 }
 
-# -- Options for HTML output ---------------------------------------------------
+# -- Options for HTML output --------------------------------------------------
 
 html_theme = 'default'
 if not on_rtd:
@@ -63,13 +66,13 @@ def setup(app):
     app.add_stylesheet('theme_overrides.css')   # path relative to _static
 
 
-# -- Options for LaTeX output --------------------------------------------------
+# -- Options for LaTeX output -------------------------------------------------
 latex_documents = [
-    ('index', 'Pelican.tex', 'Pelican Documentation',
-   'Alexis Métaireau', 'manual'),
+    ('index', 'Pelican.tex', 'Pelican Documentation', 'Alexis Métaireau',
+     'manual'),
 ]
 
-# -- Options for manual page output --------------------------------------------
+# -- Options for manual page output -------------------------------------------
 man_pages = [
     ('index', 'pelican', 'pelican documentation',
      ['Alexis Métaireau'], 1),
