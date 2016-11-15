@@ -246,16 +246,14 @@ class MarkdownReader(BaseReader):
 
     def __init__(self, *args, **kwargs):
         super(MarkdownReader, self).__init__(*args, **kwargs)
-        # make sure 'extension_configs' exists and
-        # and either way 'markdown.extensions.meta' must be in there
         settings = self.settings['MARKDOWN']
         settings.setdefault('extension_configs', {})
-        settings['extension_configs'].setdefault(
-            'markdown.extensions.meta', {})
         settings.setdefault('extensions', [])
-        settings['extensions'].extend(
-            list(settings['extension_configs'].keys()))
-        settings['extensions'] = list(set(settings['extensions']))
+        for extension in settings['extension_configs'].keys():
+            if extension not in settings['extensions']:
+                settings['extensions'].append(extension)
+        if 'markdown.extensions.meta' not in settings['extensions']:
+            settings['extensions'].append('markdown.extensions.meta')
         self._source_path = None
 
     def _parse_metadata(self, meta):
