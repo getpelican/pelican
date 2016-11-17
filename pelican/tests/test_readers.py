@@ -9,6 +9,13 @@ from pelican import readers
 from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
 
+try:
+    from unittest.mock import patch
+except ImportError:
+    try:
+        from mock import patch
+    except ImportError:
+        patch = False
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_PATH = os.path.join(CUR_DIR, 'content')
@@ -80,6 +87,22 @@ class DefaultReaderTest(ReaderTest):
     def test_readfile_unknown_extension(self):
         with self.assertRaises(TypeError):
             self.read_file(path='article_with_metadata.unknownextension')
+
+    @unittest.skipUnless(patch, 'Needs Mock module')
+    def test_find_empty_alt(self):
+        with patch('pelican.readers.logger') as log_mock:
+            content = ['<img alt="" src="test-image.png" width="300px" />',
+                       '<img src="test-image.png"  width="300px" alt="" />']
+
+            for tag in content:
+                readers.find_empty_alt(tag, '/test/path')
+                log_mock.warning.assert_called_with(
+                    u'Empty alt attribute for image %s in %s',
+                    u'test-image.png',
+                    u'/test/path',
+                    extra={'limit_msg':
+                           'Other images have empty alt attributes'}
+                )
 
 
 class RstReaderTest(ReaderTest):

@@ -584,7 +584,7 @@ def find_empty_alt(content, path):
             # src before alt
             <img
             [^\>]*
-            src=(['"])(.*)\1
+            src=(['"])(.*?)\1
             [^\>]*
             alt=(['"])\3
         )|(?:
@@ -593,7 +593,7 @@ def find_empty_alt(content, path):
             [^\>]*
             alt=(['"])\4
             [^\>]*
-            src=(['"])(.*)\5
+            src=(['"])(.*?)\5
         )
         """, re.X)
     for match in re.findall(imgs, content):
