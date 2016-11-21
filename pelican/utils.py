@@ -625,19 +625,28 @@ def process_translations(content_list, order_by=None):
     index = []
     translations = []
 
+    def _warn_source_paths(msg, items, *extra):
+        args = [len(items)]
+        args.extend(extra)
+        args.extend((x.source_path for x in items))
+        logger.warning('{}: {}'.format(msg, '\n%s' * len(items)), *args)
+
     for slug, items in grouped_by_slugs:
         items = list(items)
+
+        # display warnings if slug is empty
+        if not slug:
+            _warn_source_paths('There are %s items with empty slug', items)
 
         # display warnings if several items have the same lang
         for lang, lang_items in groupby(items, attrgetter('lang')):
             lang_items = list(lang_items)
-            len_ = len(lang_items)
-            if len_ > 1:
-                logger.warning(
+            if len(lang_items) > 1:
+                _warn_source_paths(
                     'There are %s items with slug "%s" with lang %s',
-                    len_, slug, lang)
-                for x in lang_items:
-                    logger.warning('\t%s', x.source_path)
+                    lang_items,
+                    slug,
+                    lang)
 
         # items with `translation` metadata will be used as translations...
         candidate_items = list(filter(
@@ -660,15 +669,11 @@ def process_translations(content_list, order_by=None):
 
         # display warning if there are several original items
         if len(original_items) > 1:
-            logger.warning(
+            _warn_source_paths(
                 'There are %s original (not translated) items with slug "%s"',
-                len(original_items), slug)
+                original_items,
+                slug)
 
-        if not slug:
-            logger.warning(
-                'Empty slug for %s. You can fix this by '
-                'adding a title or a slug to your content',
-                original_items[0].source_path)
         index.extend(original_items)
         translations.extend([x for x in items if x not in original_items])
         for a in items:
