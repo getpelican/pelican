@@ -571,6 +571,19 @@ class MdReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(metadata, expected)
 
+    def test_metadata_not_parsed_for_metadata(self):
+        settings = get_settings()
+        settings['FORMATTED_FIELDS'] = ['summary']
+
+        reader = readers.MarkdownReader(settings=settings)
+        content, metadata = reader.read(
+            _path('article_with_markdown_and_nested_metadata.md'))
+        expected = {
+            'title': 'Article with markdown and nested summary metadata',
+            'summary': '<p>Test: This metadata value looks like metadata</p>',
+        }
+        self.assertDictHasSubset(metadata, expected)
+
     def test_empty_file(self):
         reader = readers.MarkdownReader(settings=get_settings())
         content, metadata = reader.read(
