@@ -315,6 +315,14 @@ If a static file is linked multiple times, the relocating feature of
 After the first link, Pelican will treat ``{attach}`` like ``{filename}``.
 This avoids breaking the already-processed links.
 
+Bare in mind that if you'd like to put Markdown, HTML or reStructuredText files
+into directories configured in ``STATIC_PATHS`` you should also add those
+directories to ``ARTICLE_EXCLUDES`` list. Otherwise Pelican's article
+generator will try to parse those files and return error::
+
+    STATIC_PATHS = ['images', 'presentations']
+    ARTICLE_EXCLUDES = ['presentations']
+
 **Be careful when linking to a file from multiple documents:**
 Since the first link to a file finalizes its location and Pelican does
 not define the order in which documents are processed, using ``{attach}`` on a
