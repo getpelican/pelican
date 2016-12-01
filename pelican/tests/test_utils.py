@@ -216,46 +216,62 @@ class TestUtils(LoggedTestCase):
             "&#x222b;dx " * 20 + '…')
 
     def test_process_translations(self):
+        fr_articles = []
+        en_articles = []
+
         # create a bunch of articles
-        # 1: no translation metadata
-        fr_article1 = get_article(lang='fr', slug='yay', title='Un titre',
-                                  content='en français')
-        en_article1 = get_article(lang='en', slug='yay', title='A title',
-                                  content='in english')
-        # 2: reverse which one is the translation thanks to metadata
-        fr_article2 = get_article(lang='fr', slug='yay2', title='Un titre',
-                                  content='en français')
-        en_article2 = get_article(lang='en', slug='yay2', title='A title',
-                                  content='in english',
-                                  extra_metadata={'translation': 'true'})
+        # 0: no translation metadata
+        fr_articles.append(get_article(lang='fr', slug='yay0', title='Titre',
+                                       content='en français'))
+        en_articles.append(get_article(lang='en', slug='yay0', title='Title',
+                                       content='in english'))
+        # 1: translation metadata on default lang
+        fr_articles.append(get_article(lang='fr', slug='yay1', title='Titre',
+                                       content='en français'))
+        en_articles.append(get_article(lang='en', slug='yay1', title='Title',
+                                       content='in english',
+                                       extra_metadata={'translation': 'true'}))
+        # 2: translation metadata not on default lang
+        fr_articles.append(get_article(lang='fr', slug='yay2', title='Titre',
+                                       content='en français',
+                                       extra_metadata={'translation': 'true'}))
+        en_articles.append(get_article(lang='en', slug='yay2', title='Title',
+                                       content='in english'))
         # 3: back to default language detection if all items have the
         #    translation metadata
-        fr_article3 = get_article(lang='fr', slug='yay3', title='Un titre',
-                                  content='en français',
-                                  extra_metadata={'translation': 'yep'})
-        en_article3 = get_article(lang='en', slug='yay3', title='A title',
-                                  content='in english',
-                                  extra_metadata={'translation': 'yes'})
+        fr_articles.append(get_article(lang='fr', slug='yay3', title='Titre',
+                                       content='en français',
+                                       extra_metadata={'translation': 'yep'}))
+        en_articles.append(get_article(lang='en', slug='yay3', title='Title',
+                                       content='in english',
+                                       extra_metadata={'translation': 'yes'}))
 
-        articles = [fr_article1, en_article1, fr_article2, en_article2,
-                    fr_article3, en_article3]
+        # try adding articles in both orders
+        for lang0_articles, lang1_articles in ((fr_articles, en_articles),
+                                               (en_articles, fr_articles)):
+            articles = lang0_articles + lang1_articles
 
-        index, trans = utils.process_translations(articles)
+            index, trans = utils.process_translations(articles)
 
-        self.assertIn(en_article1, index)
-        self.assertIn(fr_article1, trans)
-        self.assertNotIn(en_article1, trans)
-        self.assertNotIn(fr_article1, index)
+            self.assertIn(en_articles[0], index)
+            self.assertIn(fr_articles[0], trans)
+            self.assertNotIn(en_articles[0], trans)
+            self.assertNotIn(fr_articles[0], index)
 
-        self.assertIn(fr_article2, index)
-        self.assertIn(en_article2, trans)
-        self.assertNotIn(fr_article2, trans)
-        self.assertNotIn(en_article2, index)
+            self.assertIn(fr_articles[1], index)
+            self.assertIn(en_articles[1], trans)
+            self.assertNotIn(fr_articles[1], trans)
+            self.assertNotIn(en_articles[1], index)
 
-        self.assertIn(en_article3, index)
-        self.assertIn(fr_article3, trans)
-        self.assertNotIn(en_article3, trans)
-        self.assertNotIn(fr_article3, index)
+            self.assertIn(en_articles[2], index)
+            self.assertIn(fr_articles[2], trans)
+            self.assertNotIn(en_articles[2], trans)
+            self.assertNotIn(fr_articles[2], index)
+
+            self.assertIn(en_articles[3], index)
+            self.assertIn(fr_articles[3], trans)
+            self.assertNotIn(en_articles[3], trans)
+            self.assertNotIn(fr_articles[3], index)
 
     def test_watchers(self):
         # Test if file changes are correctly detected

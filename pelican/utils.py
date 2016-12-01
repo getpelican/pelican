@@ -625,43 +625,57 @@ def process_translations(content_list, order_by=None):
     index = []
     translations = []
 
+    def _warn_source_paths(msg, items, *extra):
+        args = [len(items)]
+        args.extend(extra)
+        args.extend((x.source_path for x in items))
+        logger.warning('{}: {}'.format(msg, '\n%s' * len(items)), *args)
+
     for slug, items in grouped_by_slugs:
         items = list(items)
-        # items with `translation` metadata will be used as translations...
-        default_lang_items = list(filter(
-            lambda i:
-                i.metadata.get('translation', 'false').lower() == 'false',
-            items))
-        # ...unless all items with that slug are translations
-        if not default_lang_items:
-            default_lang_items = items
+
+        # display warnings if slug is empty
+        if not slug:
+            _warn_source_paths('There are %s items with empty slug', items)
 
         # display warnings if several items have the same lang
         for lang, lang_items in groupby(items, attrgetter('lang')):
             lang_items = list(lang_items)
-            len_ = len(lang_items)
-            if len_ > 1:
-                logger.warning('There are %s variants of "%s" with lang %s',
-                               len_, slug, lang)
-                for x in lang_items:
-                    logger.warning('\t%s', x.source_path)
+            if len(lang_items) > 1:
+                _warn_source_paths(
+                    'There are %s items with slug "%s" with lang %s',
+                    lang_items,
+                    slug,
+                    lang)
+
+        # items with `translation` metadata will be used as translations...
+        candidate_items = list(filter(
+            lambda i:
+                i.metadata.get('translation', 'false').lower() == 'false',
+            items))
+        # ...unless all items with that slug are translations
+        if not candidate_items:
+            logger.warning('All items with slug "%s" are translations', slug)
+            candidate_items = items
 
         # find items with default language
-        default_lang_items = list(filter(
+        original_items = list(filter(
             attrgetter('in_default_lang'),
-            default_lang_items))
+            candidate_items))
 
-        # if there is no article with default language, take an other one
-        if not default_lang_items:
-            default_lang_items = items[:1]
+        # if there is no article with default language, go back one step
+        if not original_items:
+            original_items = candidate_items
 
-        if not slug:
-            logger.warning(
-                'Empty slug for %s. You can fix this by '
-                'adding a title or a slug to your content',
-                default_lang_items[0].source_path)
-        index.extend(default_lang_items)
-        translations.extend([x for x in items if x not in default_lang_items])
+        # display warning if there are several original items
+        if len(original_items) > 1:
+            _warn_source_paths(
+                'There are %s original (not translated) items with slug "%s"',
+                original_items,
+                slug)
+
+        index.extend(original_items)
+        translations.extend([x for x in items if x not in original_items])
         for a in items:
             a.translations = [x for x in items if x != a]
 
