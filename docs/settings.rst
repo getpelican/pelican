@@ -1121,7 +1121,9 @@ For example::
    unintentionally filter out multiple message types with the same template 
    (including messages from future Pelican versions). Proceed with caution.
 
-Note: This option does nothing ``--debug`` is passed.
+.. note::
+
+    This option does nothing if ``--debug`` is passed.
 
 .. _reading_only_modified_content:
 
