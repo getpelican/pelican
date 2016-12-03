@@ -138,7 +138,7 @@ your home page. The following Markdown example could be stored in
 ``content/pages/home.md``::
 
     Title: Welcome to My Site
-    URL: 
+    URL:
     save_as: index.html
 
     Thank you for visiting. Welcome!
@@ -161,7 +161,7 @@ disable all feed generation, you only need to specify the following settings::
     AUTHOR_FEED_RSS = None
 
 The word ``None`` should not be surrounded by quotes. Please note that ``None``
-and ``''`` are not the same thing. 
+and ``''`` are not the same thing.
 
 I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================
@@ -203,7 +203,7 @@ Is Pelican only suitable for blogs?
 No. Pelican can be easily configured to create and maintain any type of static site.
 This may require a little customization of your theme and Pelican configuration.
 For example, if you are building a launch site for your product and do not need
-tags on your site, you could remove the relevant HTML code from your theme. 
+tags on your site, you could remove the relevant HTML code from your theme.
 You can also disable generation of tag-related pages via::
 
     TAGS_SAVE_AS = ''

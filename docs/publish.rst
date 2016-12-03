@@ -50,7 +50,7 @@ HTML files directly::
 
 Because the above method may have trouble locating your CSS and other linked
 assets, running a simple web server using Python will often provide a more
-reliable previewing experience. 
+reliable previewing experience.
 
 For Python 2, run::
 
