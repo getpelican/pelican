@@ -841,6 +841,12 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    Maximum number of items allowed in a feed. Feed item quantity is
    unrestricted by default.
 
+.. data:: RSS_FEED_SUMMARY_ONLY = True
+
+   Only include item summaries in the ``description`` tag of RSS feeds. If set
+   to ``False``, the full content will be included instead. This setting
+   doesn't affect Atom feeds, only RSS ones.
+
 If you don't want to generate some or any of these feeds, set the above variables to ``None``.
 
 .. [2] %s is the name of the category.

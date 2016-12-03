@@ -47,11 +47,16 @@ class Writer(object):
 
         title = Markup(item.title).striptags()
         link = '%s/%s' % (self.site_url, item.url)
+        is_rss = isinstance(feed, Rss201rev2Feed)
+        if not is_rss or self.settings.get('RSS_FEED_SUMMARY_ONLY'):
+            description = item.summary
+        else:
+            description = item.get_content(self.site_url)
         feed.add_item(
             title=title,
             link=link,
             unique_id=get_tag_uri(link, item.date),
-            description=item.summary,
+            description=description,
             content=item.get_content(self.site_url),
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
