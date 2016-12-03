@@ -81,9 +81,11 @@ Basic settings
 
       OUTPUT_RETENTION = [".hg", ".git", ".bzr"]
 
-.. data:: JINJA_EXTENSIONS = []
+.. data:: JINJA_ENVIRONMENT = {'trim_blocks': True, 'lstrip_blocks': True}
 
-   A list of any Jinja2 extensions you want to use.
+   A dictionary of custom Jinja2 environment variables you want to use. This
+   also includes a list of extensions you may want to include.
+   See `Jinja Environment documentation`_.
 
 .. data:: JINJA_FILTERS = {}
 
@@ -1215,4 +1217,5 @@ Example settings
 
 
 .. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
+.. _Jinja Environment documentation: http://jinja.pocoo.org/docs/dev/api/#jinja2.Environment
 .. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html

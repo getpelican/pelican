@@ -109,8 +109,12 @@ DEFAULT_CONFIG = {
         },
         'output_format': 'html5',
     },
-    'JINJA_EXTENSIONS': [],
     'JINJA_FILTERS': {},
+    'JINJA_ENVIRONMENT': {
+        'trim_blocks': True,
+        'lstrip_blocks': True,
+        'extensions': [],
+    },
     'LOG_FILTER': [],
     'LOCALE': [''],  # defaults to user locale
     'DEFAULT_PAGINATION': False,
@@ -162,6 +166,12 @@ def read_settings(path=None, override=None):
                            'PLUGIN_PATHS, moving it to the new setting name.')
             local_settings['PLUGIN_PATHS'] = local_settings['PLUGIN_PATH']
             del local_settings['PLUGIN_PATH']
+        if 'JINJA_EXTENSIONS' in local_settings:
+            logger.warning('JINJA_EXTENSIONS setting has been deprecated, '
+                           'moving it to JINJA_ENVIRONMENT setting.')
+            local_settings['JINJA_ENVIRONMENT']['extensions'] = \
+                local_settings['JINJA_EXTENSIONS']
+            del local_settings['JINJA_EXTENSIONS']
         if isinstance(local_settings['PLUGIN_PATHS'], six.string_types):
             logger.warning("Defining PLUGIN_PATHS setting as string "
                            "has been deprecated (should be a list)")
@@ -215,6 +225,20 @@ def get_settings_from_file(path, default_settings=DEFAULT_CONFIG):
     return get_settings_from_module(module, default_settings=default_settings)
 
 
+def get_jinja_environment(settings):
+    """Sets the environment for Jinja"""
+
+    jinja_env = settings.setdefault('JINJA_ENVIRONMENT',
+                                    DEFAULT_CONFIG['JINJA_ENVIRONMENT'])
+
+    # Make sure we include the defaults if the user has set env variables
+    for key, value in DEFAULT_CONFIG['JINJA_ENVIRONMENT'].items():
+        if key not in jinja_env:
+            jinja_env[key] = value
+
+    return settings
+
+
 def configure_settings(settings):
     """Provide optimizations, error checking, and warnings for the given
     settings.
@@ -250,6 +274,9 @@ def configure_settings(settings):
     for key in ['DEFAULT_LANG']:
         if key in settings:
             settings[key] = settings[key].lower()
+
+    # set defaults for Jinja environment
+    settings = get_jinja_environment(settings)
 
     # standardize strings to lists
     for key in ['LOCALE']:
@@ -355,7 +382,6 @@ def configure_settings(settings):
         'EXTRA_TEMPLATES_PATHS',
         'FILES_TO_COPY',
         'IGNORE_FILES',
-        'JINJA_EXTENSIONS',
         'PAGINATED_DIRECT_TEMPLATES',
         'PLUGINS',
         'STATIC_EXCLUDES',
