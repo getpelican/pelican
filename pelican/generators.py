@@ -533,7 +533,7 @@ class ArticlesGenerator(CachingGenerator):
                     continue
 
                 if article_or_draft.status.lower() == "published":
-                    all_articles.append(article_or_draft)
+                    pass
                 elif article_or_draft.status.lower() == "draft":
                     article_or_draft = self.readers.read_file(
                         base_path=self.path, path=f, content_class=Draft,
@@ -542,8 +542,6 @@ class ArticlesGenerator(CachingGenerator):
                         preread_sender=self,
                         context_signal=signals.article_generator_context,
                         context_sender=self)
-                    self.add_source_path(article_or_draft)
-                    all_drafts.append(article_or_draft)
                 else:
                     logger.error(
                         "Unknown status '%s' for file %s, skipping it.",
@@ -553,6 +551,10 @@ class ArticlesGenerator(CachingGenerator):
 
                 self.cache_data(f, article_or_draft)
 
+            if article_or_draft.status.lower() == "published":
+                all_articles.append(article_or_draft)
+            else:
+                all_drafts.append(article_or_draft)
             self.add_source_path(article_or_draft)
 
         self.articles, self.translations = process_translations(
@@ -636,11 +638,7 @@ class PagesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
-                if page.status.lower() == "published":
-                    all_pages.append(page)
-                elif page.status.lower() == "hidden":
-                    hidden_pages.append(page)
-                else:
+                if page.status.lower() not in ("published", "hidden"):
                     logger.error(
                         "Unknown status '%s' for file %s, skipping it.",
                         page.status, f)
@@ -649,6 +647,10 @@ class PagesGenerator(CachingGenerator):
 
                 self.cache_data(f, page)
 
+            if page.status.lower() == "published":
+                all_pages.append(page)
+            elif page.status.lower() == "hidden":
+                hidden_pages.append(page)
             self.add_source_path(page)
 
         self.pages, self.translations = process_translations(
