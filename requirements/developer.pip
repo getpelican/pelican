@@ -3,4 +3,4 @@
 # Development
 flake8
 flake8-import-order
-sphinx
+sphinx==1.4.9
