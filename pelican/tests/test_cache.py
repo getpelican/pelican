@@ -36,6 +36,100 @@ class TestCache(unittest.TestCase):
         settings['CACHE_PATH'] = self.temp_cache
         return settings
 
+    def test_generator_caching(self):
+        """Test that cached and uncached content is same in generator level"""
+        settings = self._get_cache_enabled_settings()
+        settings['CONTENT_CACHING_LAYER'] = 'generator'
+        settings['PAGE_PATHS'] = ['TestPages']
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['READERS'] = {'asc': None}
+
+        def sorted_titles(items):
+            return sorted(item.title for item in items)
+
+        # Articles
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        uncached_articles = sorted_titles(generator.articles)
+        uncached_drafts = sorted_titles(generator.drafts)
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        cached_articles = sorted_titles(generator.articles)
+        cached_drafts = sorted_titles(generator.drafts)
+
+        self.assertEqual(uncached_articles, cached_articles)
+        self.assertEqual(uncached_drafts, cached_drafts)
+
+        # Pages
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        uncached_pages = sorted_titles(generator.pages)
+        uncached_hidden_pages = sorted_titles(generator.hidden_pages)
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        cached_pages = sorted_titles(generator.pages)
+        cached_hidden_pages = sorted_titles(generator.hidden_pages)
+
+        self.assertEqual(uncached_pages, cached_pages)
+        self.assertEqual(uncached_hidden_pages, cached_hidden_pages)
+
+    def test_reader_caching(self):
+        """Test that cached and uncached content is same in reader level"""
+        settings = self._get_cache_enabled_settings()
+        settings['CONTENT_CACHING_LAYER'] = 'reader'
+        settings['PAGE_PATHS'] = ['TestPages']
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        settings['READERS'] = {'asc': None}
+
+        def sorted_titles(items):
+            return sorted(item.title for item in items)
+
+        # Articles
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        uncached_articles = sorted_titles(generator.articles)
+        uncached_drafts = sorted_titles(generator.drafts)
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        cached_articles = sorted_titles(generator.articles)
+        cached_drafts = sorted_titles(generator.drafts)
+
+        self.assertEqual(uncached_articles, cached_articles)
+        self.assertEqual(uncached_drafts, cached_drafts)
+
+        # Pages
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        uncached_pages = sorted_titles(generator.pages)
+        uncached_hidden_pages = sorted_titles(generator.hidden_pages)
+
+        generator = PagesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        cached_pages = sorted_titles(generator.pages)
+        cached_hidden_pages = sorted_titles(generator.hidden_pages)
+
+        self.assertEqual(uncached_pages, cached_pages)
+        self.assertEqual(uncached_hidden_pages, cached_hidden_pages)
+
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_object_caching(self):
         """Test Article objects caching at the generator level"""
