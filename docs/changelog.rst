@@ -1,21 +1,40 @@
 Release history
 ###############
 
-Next release
-============
+3.7.0 (2016-12-12)
+==================
 
-* ``SLUG_SUBSTITUTIONS`` now accepts 3-tuple elements, allowing to keep
-  non-alphanum characters. Existing 2-tuple configurations will continue to work
-  without change in behavior. The new 3rd parameter has side effects when there
-  are multiple substitutions defined. Plese see the docs.
+* Atom feeds output ``<content>`` in addition to ``<summary>``
+* Atom feeds use ``<published>`` for the original publication date and
+  ``<updated>`` for modifications
+* Simplify Atom feed ID generation and support URL fragments
+* Produce category feeds with category-specific titles
+* RSS feeds now default to summary instead of full content —
+  set ``RSS_FEED_SUMMARY_ONLY = False`` to revert to previous behavior
+* Replace ``MD_EXTENSIONS`` with ``MARKDOWN`` setting
+* Replace ``JINJA_EXTENSIONS`` with more-robust ``JINJA_ENVIRONMENT`` setting
+* Improve summary truncation logic to handle special characters and tags that
+  span multiple lines, using HTML parser instead of regular expressions
+* Include summary when looking for intra-site link substitutions
+* Link to authors and index via ``{author}name`` and ``{index}`` syntax
+* Override widget names via ``LINKS_WIDGET_NAME`` and ``SOCIAL_WIDGET_NAME``
+* Add ``INDEX_SAVE_AS`` option to override default ``index.html`` value
+* Remove ``PAGES`` context variable for themes in favor of ``pages``
+* ``SLUG_SUBSTITUTIONS`` now accepts 3-tuple elements, allowing URL slugs to
+  contain non-alphanumeric characters
 * Tag and category slugs can be controlled with greater precision using the
-  ``TAG_SUBSTITUTIONS`` and ``CATEGORY_SUBSTITUTIONS`` settings. These also
-  allow for keeping non-alphanum characters for backward compatibility with
-  existing URLs.
+  ``TAG_SUBSTITUTIONS`` and ``CATEGORY_SUBSTITUTIONS`` settings
 * Author slugs can be controlled with greater precision using the
-  ``AUTHOR_SUBSTITUTIONS`` setting. Keeping non-alphanum characters is supported
-  as well but discouraged.
-* Replaced ``MD_EXTENSIONS`` with ``MARKDOWN``
+  ``AUTHOR_SUBSTITUTIONS`` setting
+* ``DEFAULT_DATE`` can be defined as a string
+* Use ``mtime`` instead of ``ctime`` when ``DEFAULT_DATE = 'fs'``
+* Add ``--fatal=errors|warnings`` option for use with continuous integration
+* When using generator-level caching, ensure previously-cached files are
+  processed instead of just new files.
+* Add Python and Pelican version information to debug output
+* Improve compatibility with Python 3.5
+* Comply with and enforce PEP8 guidelines
+* Replace tables in settings documentation with ``data::`` directives
 
 3.6.3 (2015-08-14)
 ==================
