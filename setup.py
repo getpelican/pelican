@@ -21,13 +21,14 @@ README = open('README.rst').read()
 CHANGELOG = open('docs/changelog.rst').read()
 
 setup(
-    name="pelican",
-    version="3.6.4.dev0",
+    name='pelican',
+    version='3.6.4.dev0',
     url='http://getpelican.com/',
     author='Alexis Metaireau',
+    maintainer='Justin Mayer',
     author_email='authors@getpelican.com',
-    description="A tool to generate a static blog from reStructuredText or "
-                "Markdown input files.",
+    description="Static site generator supporting reStructuredText and "
+                "Markdown source content.",
     long_description=README + '\n' + CHANGELOG,
     packages=['pelican', 'pelican.tools'],
     package_data={
