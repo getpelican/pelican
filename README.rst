@@ -1,5 +1,5 @@
-Pelican |build-status| |pypi-version| |pypi-downloads|
-======================================================
+Pelican |build-status| |pypi-version|
+=====================================
 
 Pelican is a static site generator, written in Python_.
 
@@ -60,8 +60,5 @@ Why the name "Pelican"?
    :target: https://travis-ci.org/getpelican/pelican
    :alt: Travis CI: continuous integration status
 .. |pypi-version| image:: https://img.shields.io/pypi/v/pelican.svg
-   :target: https://pypi.python.org/pypi/pelican
-   :alt: PyPI: the Python Package Index
-.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/pelican.svg
    :target: https://pypi.python.org/pypi/pelican
    :alt: PyPI: the Python Package Index
