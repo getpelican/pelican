@@ -25,7 +25,7 @@ from pelican.utils import (clean_output_dir, file_watcher,
                            folder_watcher, maybe_pluralize)
 from pelican.writers import Writer
 
-__version__ = "3.7.0"
+__version__ = "3.7.1.dev0"
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 logger = logging.getLogger(__name__)
 
