@@ -21,6 +21,8 @@ import six
 
 from pelican import __version__
 
+if (sys.version_info.major == 2):
+    locale.setlocale(locale.LC_ALL, '')
 
 _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               "templates")
