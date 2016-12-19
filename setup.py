@@ -17,8 +17,8 @@ entry_points = {
     ]
 }
 
-README = open('README.rst').read()
-CHANGELOG = open('docs/changelog.rst').read()
+README = open('README.rst', 'r', encoding='utf-8').read()
+CHANGELOG = open('docs/changelog.rst', 'r', encoding='utf-8').read()
 
 setup(
     name='pelican',
