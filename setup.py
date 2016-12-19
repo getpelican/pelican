@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from os import walk
 from os.path import join, relpath
+from io import open
 
 from setuptools import setup
 
