@@ -21,8 +21,12 @@ import six
 
 from pelican import __version__
 
-if (sys.version_info.major == 2):
-    locale.setlocale(locale.LC_ALL, '')
+locale.setlocale(locale.LC_ALL, '')
+_DEFAULT_LANGUAGE = locale.getlocale()[0]
+if _DEFAULT_LANGUAGE is None:
+    _DEFAULT_LANGUAGE = 'English'
+else:
+    _DEFAULT_LANGUAGE = _DEFAULT_LANGUAGE.split('_')[0]
 
 _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               "templates")
@@ -51,7 +55,7 @@ CONF = {
     'github_pages_branch': _GITHUB_PAGES_BRANCHES['project'],
     'default_pagination': 10,
     'siteurl': '',
-    'lang': locale.getlocale()[0].split('_')[0],
+    'lang': _DEFAULT_LANGUAGE,
     'timezone': _DEFAULT_TIMEZONE
 }
 
