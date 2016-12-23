@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Improve accuracy of GitHub's Linguist-powered language statistics
+samples/* linguist-vendored
