@@ -1,11 +1,36 @@
 {% if DEFAULT_PAGINATION %}
 <p class="paginator">
-    {% if articles_page.has_previous() %}
-        <a href="{{ SITEURL }}/{{ articles_previous_page.url }}">&laquo;</a>
-    {% endif %}
-    Page {{ articles_page.number }} / {{ articles_paginator.num_pages }}
-    {% if articles_page.has_next() %}
-        <a href="{{ SITEURL }}/{{ articles_next_page.url }}">&raquo;</a>
-    {% endif %}
+	    {% if articles_page.has_previous() %}
+		    <a href="{{ SITEURL }}/{{ articles_previous_page.url }}">&laquo;</a>
+	    {% endif %}
+	    {% for page in range(articles_paginator.num_pages) -%}
+		    {% if articles_page.number > 9999 %}
+		    	{% set url_for_this_page = articles_page.url[:-10] %}
+		    {% elif articles_page.number > 999 %}
+		    	{% set url_for_this_page = articles_page.url[::-9] %}
+		    {% elif articles_page.number >99 %}
+		    	{% set url_for_this_page = articles_page.url[:-8] %}
+		    {% elif articles_page.number > 9 %}
+		    	{% set url_for_this_page = articles_page.url[:-7] %}
+		    {% elif articles_page.number >1  %}
+		    	{% set url_for_this_page = articles_page.url[:-6] %}
+		    {% else %}
+		    	{% set url_for_this_page = articles_page.url[:-5] %}
+		    {% endif %}
+			{% if page+1 == articles_page.number %}
+			   	<a href="#!">{{ page+1 }}</a>
+			{% else %}
+			    {% if page+1 == 1 %}
+			    	<a href="{{ SITEURL }}/{{ url_for_this_page }}.html">{{ page+1 }}</a>
+			    {% else %}
+			    	<a href="{{ SITEURL }}/{{ url_for_this_page }}{{ page+1 }}.html">{{ page+1 }}</a>
+			    {% endif %}
+		    {% endif %}
+	    {%- endfor %}
+	    {% if articles_page.has_next() %}
+		    <a href="{{ SITEURL }}/{{ articles_next_page.url }}">&raquo;</a>
+		{% else %}
+		    <a href="#!">&raquo;</a>
+	    {% endif %}
 </p>
 {% endif %}
