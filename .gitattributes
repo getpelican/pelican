@@ -2,4 +2,6 @@
 * text=auto
 
 # Improve accuracy of GitHub's Linguist-powered language statistics
+pelican/tests/content/*
+pelican/tests/output/*
 samples/* linguist-vendored
