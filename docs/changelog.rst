@@ -14,7 +14,7 @@ Next release
   ``<updated>`` for modifications
 * Simplify Atom feed ID generation and support URL fragments
 * Produce category feeds with category-specific titles
-* RSS feeds now default to summary instead of full content —
+* RSS feeds now default to summary instead of full content;
   set ``RSS_FEED_SUMMARY_ONLY = False`` to revert to previous behavior
 * Replace ``MD_EXTENSIONS`` with ``MARKDOWN`` setting
 * Replace ``JINJA_EXTENSIONS`` with more-robust ``JINJA_ENVIRONMENT`` setting
