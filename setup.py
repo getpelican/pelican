@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from os import walk
 from os.path import join, relpath
+from io import open
 
 from setuptools import setup
 
@@ -17,8 +18,8 @@ entry_points = {
     ]
 }
 
-README = open('README.rst').read()
-CHANGELOG = open('docs/changelog.rst').read()
+README = open('README.rst', 'r', encoding='utf-8').read()
+CHANGELOG = open('docs/changelog.rst', 'r', encoding='utf-8').read()
 
 setup(
     name='pelican',
