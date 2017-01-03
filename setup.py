@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+from io import open
 from os import walk
 from os.path import join, relpath
+import sys
 
 from setuptools import setup
 
@@ -17,8 +19,12 @@ entry_points = {
     ]
 }
 
-README = open('README.rst').read()
-CHANGELOG = open('docs/changelog.rst').read()
+README = open('README.rst', encoding='utf-8').read()
+CHANGELOG = open('docs/changelog.rst', encoding='utf-8').read()
+
+description = u'\n'.join([README, CHANGELOG])
+if sys.version_info.major < 3:
+    description = description.encode('utf-8')
 
 setup(
     name='pelican',
@@ -29,7 +35,7 @@ setup(
     author_email='authors@getpelican.com',
     description="Static site generator supporting reStructuredText and "
                 "Markdown source content.",
-    long_description=README + '\n' + CHANGELOG,
+    long_description=description,
     packages=['pelican', 'pelican.tools'],
     package_data={
         # we manually collect the package data, as opposed to using,
