@@ -1,4 +1,5 @@
 from fabric.api import *
+import datetime
 import fabric.contrib.project as project
 import os
 import shutil
@@ -22,6 +23,7 @@ env.cloudfiles_container = '$cloudfiles_container'
 
 # Github Pages configuration
 env.github_pages_branch = "$github_pages_branch"
+env.commit_message = "'Publish site on {}'".format(datetime.date.today().isoformat())
 
 # Port for `serve`
 PORT = 8000
@@ -89,4 +91,6 @@ def publish():
 def gh_pages():
     """Publish to GitHub Pages"""
     rebuild()
-    local("ghp-import -b {github_pages_branch} {deploy_path} -p".format(**env))
+    local('ghp-import -b {github_pages_branch} '
+          '-m {commit_message} '
+          '{deploy_path} -p'.format(**env))
