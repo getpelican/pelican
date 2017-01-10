@@ -1,10 +1,11 @@
 Release history
 ###############
 
-Next release
-============
+3.7.1 (2017-01-10)
+==================
 
-- Nothing yet
+* Fix locale issues in Quickstart script
+* Specify encoding for README and CHANGELOG in setup.py
 
 3.7.0 (2016-12-12)
 ==================
