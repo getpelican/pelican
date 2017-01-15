@@ -86,12 +86,19 @@ class Generator(object):
         templates ready to use with Jinja2.
         """
         if name not in self._templates:
-            try:
-                self._templates[name] = self.env.get_template(name + '.html')
-            except TemplateNotFound:
+            for ext in self.settings['TEMPLATE_EXTENSIONS']:
+                try:
+                    self._templates[name] = self.env.get_template(name + ext)
+                    break
+                except TemplateNotFound:
+                    continue
+
+            if name not in self._templates:
                 raise PelicanTemplateNotFound(
-                    '[templates] unable to load {}.html from {}'.format(
-                        name, self._templates_path))
+                    '[templates] unable to load {}[{}] from {}'.format(
+                        name, ', '.join(self.settings['TEMPLATE_EXTENSIONS']),
+                        self._templates_path))
+
         return self._templates[name]
 
     def _include_path(self, path, extensions=None):

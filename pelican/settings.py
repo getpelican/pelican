@@ -134,6 +134,7 @@ DEFAULT_CONFIG = {
     'PLUGINS': [],
     'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
+    'TEMPLATE_EXTENSIONS': ['.html'],
     'IGNORE_FILES': ['.#*'],
     'SLUG_SUBSTITUTIONS': (),
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
