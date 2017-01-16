@@ -122,6 +122,7 @@ class Writer(object):
         for i in range(max_items):
             self._add_item_to_the_feed(feed, elements[i])
 
+        signals.feed_generated.send(context, feed=feed)
         if path:
             complete_path = os.path.join(self.output_path, path)
             try:

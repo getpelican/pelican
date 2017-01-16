@@ -118,6 +118,8 @@ static_generator_init               static_generator               invoked in th
 static_generator_finalized          static_generator               invoked at the end of StaticGenerator.generate_context
 content_object_init                 content_object                 invoked at the end of Content.__init__
 content_written                     path, context                  invoked each time a content file is written.
+feed_generated                      context, feed                  invoked each time a feed gets generated. Can be used to modify a feed
+                                                                   object before it gets written.
 feed_written                        path, context, feed            invoked each time a feed file is written.
 =================================   ============================   ===========================================================================
 
