@@ -246,7 +246,7 @@ class Content(object):
                     origin = origin.replace('\\', '/')  # for Windows paths.
                 else:
                     logger.warning(
-                        "Unable to find `%s`, skipping url replacement.",
+                        "Unable to find '%s', skipping url replacement.",
                         value.geturl(), extra={
                             'limit_msg': ("Other resources were not found "
                                           "and their urls not replaced")})
