@@ -70,6 +70,7 @@ def _input_compat(prompt):
         r = raw_input(prompt)
     return r
 
+
 if six.PY3:
     str_compat = str
 else:
@@ -80,6 +81,7 @@ else:
 # a path on the command-line.
 class _DEFAULT_PATH_TYPE(str_compat):
     is_default_path = True
+
 
 _DEFAULT_PATH = _DEFAULT_PATH_TYPE(os.curdir)
 
@@ -411,6 +413,7 @@ needed by Pelican.
             print('Error: {0}'.format(e))
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
+
 
 if __name__ == "__main__":
     main()
