@@ -30,7 +30,7 @@ For Apache::
     ErrorDocument 404 /404.html
 
 For Amazon S3, first navigate to the ``Static Site Hosting`` menu in the
-bucket settings on your AWS cosole. From there::
+bucket settings on your AWS console. From there::
 
     Error Document: 404.html
 
@@ -66,16 +66,12 @@ the content of the ``output`` directory (creating the branch if it doesn't
 already exist). The ``git push origin gh-pages`` command updates the remote
 ``gh-pages`` branch, effectively publishing the Pelican site.
 
-.. note::
-    The ``github`` target of the Makefile (and the ``gh_pages`` task of the Fabfile)
-    created by the ``pelican-quickstart`` command
-    publishes the Pelican site as Project Pages, as described above.
 
-.. note:: ghp-import on Windows
+**\*Note:** The ``github`` target of the Makefile (and the ``gh_pages`` task of the Fabfile) created by the ``pelican-quickstart`` command publishes the Pelican site as Project Pages, as described above.
 
-    Until `ghp-import Pull Request #25 <https://github.com/davisp/ghp-import/pull/25>`_
-    is accepted, you will need to install a custom build of ghp-import:
-    ``pip install https://github.com/chevah/ghp-import/archive/win-support.zip``
+**\*Note for ghp-import on Windows**: Until `ghp-import Pull Request #25 <https://github.com/davisp/ghp-import/pull/25>`_
+is accepted, you will need to install a custom build of ghp-import:
+``pip install https://github.com/chevah/ghp-import/archive/win-support.zip``
 
 User Pages
 ----------
@@ -94,10 +90,7 @@ The ``git push`` command pushes the local ``gh-pages`` branch (freshly updated
 by the ``ghp-import`` command) to the ``elemoine.github.io`` repository's
 ``master`` branch on GitHub.
 
-.. note::
-
-    To publish your Pelican site as User Pages, feel free to adjust the
-    ``github`` target of the Makefile.
+**\*Note:** To publish your Pelican site as User Pages, feel free to adjust the ``github`` target of the Makefile.
 
 Custom 404 Pages
 ----------------
@@ -108,7 +101,7 @@ relevant `GitHub docs <https://help.github.com/articles/custom-404-pages/>`_.
 Extra Tips
 ----------
 
-Tip #1:
+**Tip #1:**
 
 To automatically update your Pelican site on each commit, you can create
 a post-commit hook. For example, you can add the following to
@@ -116,7 +109,7 @@ a post-commit hook. For example, you can add the following to
 
     pelican content -o output -s pelicanconf.py && ghp-import output && git push origin gh-pages
 
-Tip #2:
+**Tip #2:**
 
 To use a `custom domain
 <https://help.github.com/articles/setting-up-a-custom-domain-with-pages>`_ with
