@@ -21,6 +21,18 @@ if not six.PY3:
 logger = logging.getLogger(__name__)
 
 
+def _sanitised_join(base_directory, *parts):
+    joined = os.path.abspath(os.path.join(base_directory, *parts))
+    if not joined.startswith(base_directory):
+        raise RuntimeError(
+            "attempt to break out of output directory to {}".format(
+                joined
+            )
+        )
+
+    return joined
+
+
 class Writer(object):
 
     def __init__(self, output_path, settings=None):
@@ -123,7 +135,8 @@ class Writer(object):
             self._add_item_to_the_feed(feed, elements[i])
 
         if path:
-            complete_path = os.path.join(self.output_path, path)
+            complete_path = _sanitised_join(self.output_path, path)
+
             try:
                 os.makedirs(os.path.dirname(complete_path))
             except Exception:
@@ -169,7 +182,8 @@ class Writer(object):
             if localcontext['localsiteurl']:
                 context['localsiteurl'] = localcontext['localsiteurl']
             output = template.render(localcontext)
-            path = os.path.join(output_path, name)
+            path = _sanitised_join(output_path, name)
+
             try:
                 os.makedirs(os.path.dirname(path))
             except Exception:
