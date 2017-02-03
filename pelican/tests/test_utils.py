@@ -11,6 +11,8 @@ from tempfile import mkdtemp
 
 import pytz
 
+import six
+
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
 from pelican.settings import read_settings
@@ -666,3 +668,34 @@ class TestDateFormatter(unittest.TestCase):
         with utils.pelican_open(output_path) as output_file:
             self.assertEqual(output_file,
                              utils.strftime(self.date, 'date = %A, %d %B %Y'))
+
+
+class TestSanitisedJoin(unittest.TestCase):
+    def test_detect_parent_breakout(self):
+        with six.assertRaisesRegex(
+                self,
+                RuntimeError,
+                "Attempted to break out of output directory to /foo/test"):
+            utils.sanitised_join(
+                "/foo/bar",
+                "../test"
+            )
+
+    def test_detect_root_breakout(self):
+        with six.assertRaisesRegex(
+                self,
+                RuntimeError,
+                "Attempted to break out of output directory to /test"):
+            utils.sanitised_join(
+                "/foo/bar",
+                "/test"
+            )
+
+    def test_pass_deep_subpaths(self):
+        self.assertEqual(
+            utils.sanitised_join(
+                "/foo/bar",
+                "test"
+            ),
+            os.path.join("/foo/bar", "test")
+        )

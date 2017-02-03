@@ -13,24 +13,12 @@ import six
 from pelican import signals
 from pelican.paginator import Paginator
 from pelican.utils import (get_relative_path, is_selected_for_writing,
-                           path_to_url, set_date_tzinfo)
+                           path_to_url, sanitised_join, set_date_tzinfo)
 
 if not six.PY3:
     from codecs import open
 
 logger = logging.getLogger(__name__)
-
-
-def _sanitised_join(base_directory, *parts):
-    joined = os.path.abspath(os.path.join(base_directory, *parts))
-    if not joined.startswith(base_directory):
-        raise RuntimeError(
-            "attempt to break out of output directory to {}".format(
-                joined
-            )
-        )
-
-    return joined
 
 
 class Writer(object):
@@ -135,7 +123,7 @@ class Writer(object):
             self._add_item_to_the_feed(feed, elements[i])
 
         if path:
-            complete_path = _sanitised_join(self.output_path, path)
+            complete_path = sanitised_join(self.output_path, path)
 
             try:
                 os.makedirs(os.path.dirname(complete_path))
@@ -182,7 +170,7 @@ class Writer(object):
             if localcontext['localsiteurl']:
                 context['localsiteurl'] = localcontext['localsiteurl']
             output = template.render(localcontext)
-            path = _sanitised_join(output_path, name)
+            path = sanitised_join(output_path, name)
 
             try:
                 os.makedirs(os.path.dirname(path))

@@ -497,6 +497,30 @@ class TestArticle(TestPage):
         article = Article(**article_kwargs)
         self.assertEqual(article.url, 'fedora.qa/this-week-in-fedora-qa/')
 
+    def test_valid_save_as_detects_breakout(self):
+        settings = get_settings()
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['slug'] = '../foo'
+        article_kwargs['settings'] = settings
+        article = Article(**article_kwargs)
+        self.assertFalse(article.valid_save_as())
+
+    def test_valid_save_as_detects_breakout_to_root(self):
+        settings = get_settings()
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['slug'] = '/foo'
+        article_kwargs['settings'] = settings
+        article = Article(**article_kwargs)
+        self.assertFalse(article.valid_save_as())
+
+    def test_valid_save_as_passes_valid(self):
+        settings = get_settings()
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs['metadata']['slug'] = 'foo'
+        article_kwargs['settings'] = settings
+        article = Article(**article_kwargs)
+        self.assertTrue(article.valid_save_as())
+
 
 class TestStatic(LoggedTestCase):
 
