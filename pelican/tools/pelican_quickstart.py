@@ -53,6 +53,7 @@ CONF = {
     'cloudfiles_container': 'my_cloudfiles_container',
     'dropbox_dir': '~/Dropbox/Public/',
     'github_pages_branch': _GITHUB_PAGES_BRANCHES['project'],
+    'github_user': '',
     'default_pagination': 10,
     'siteurl': '',
     'lang': _DEFAULT_LANGUAGE,
@@ -319,6 +320,7 @@ needed by Pelican.
                    answer=bool, default=False):
                 CONF['github_pages_branch'] = \
                     _GITHUB_PAGES_BRANCHES['personal']
+                CONF['github_user'] = ask("What's your github user name?", str_compat, '')
             else:
                 CONF['github_pages_branch'] = \
                     _GITHUB_PAGES_BRANCHES['project']
