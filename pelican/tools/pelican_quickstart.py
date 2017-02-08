@@ -320,7 +320,8 @@ needed by Pelican.
                    answer=bool, default=False):
                 CONF['github_pages_branch'] = \
                     _GITHUB_PAGES_BRANCHES['personal']
-                CONF['github_user'] = ask("What's your github user name?", str_compat, '')
+                CONF['github_user'] = \
+                    ask("What's your github user name?", str_compat, '')
             else:
                 CONF['github_pages_branch'] = \
                     _GITHUB_PAGES_BRANCHES['project']
