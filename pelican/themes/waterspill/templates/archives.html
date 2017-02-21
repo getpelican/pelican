@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Archives de {{ SITENAME }}{% endblock %}
+{% block content %}  
+
+<div class="blogItem">
+<dl>
+						<h2>Archives de {{ SITENAME }}</h2>
+						{% for article in dates %}
+                                                    <dt>{{ article.date.strftime('%a %d %B %Y') }}</dt>
+                                                    <dd><a href='{{ article.url }}'>{{ article.title }}</a></dd>
+                                                    
+                                                {% endfor %}
+                                                </dl>
+
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content_title %}{% endblock %}
+{% block content %} 
+                        {% if articles %}
+                        {% for article in articles %}        
+                            {% if loop.index == 1 %}
+  	
+    <div class="blogItem">
+    
+      <h2><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
+      <h3>Le {{ article.date.strftime('%a %d %B %Y') }}</h3>
+      
+      {{ article.content }}	
+
+      
+      <h3 class="blogMeta">Par <a href="#">{{ article.author }}</a>, Catégorie : <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></h3>
+	<h3 class="blogMeta">Tags : {% for tag in article.tags %}
+<span><a href="{{ SITEURL }}/tag/{{ tag }}.html">{{ tag }}</a> / </span>
+{% endfor %}</h3>
+    
+    </div><!-- end #blogItem -->
+ {% if loop.length  > 1 %}	
+        <div class="blogItem">
+                <h2>Autres articles</h2>
+        </div>
+{% endif %}
+{% else %}    
+    <div class="blogItem">
+    
+      <h2><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a></h2>
+      <h3>Le {{ article.date.strftime('%a %d %B %Y') }}</h3>
+      
+      {{ article.summary }}	
+<h3 class="blogMeta">Par <a href="#">{{ article.author }}</a>, Catégorie : <a href="{{ SITEURL }}/category/{{ article.category }}.html">{{ article.category }}</a></h3>
+	<a href="{{ SITEURL }}/{{ article.url }}">Lire la suite …</a>
+      
+      
+	
+    
+    </div><!-- end #blogItem -->
+  {% endif %}
+{% endfor %}
+{% else %}
+       
+{% endif %}
+{% endblock content %}
