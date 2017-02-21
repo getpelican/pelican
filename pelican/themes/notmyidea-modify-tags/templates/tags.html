@@ -1,0 +1,6 @@
+<div class="tagscloud">
+        <h2>Tags</h2>
+        {% for tag_name, tag_weight in tags_weight %}
+            <span {% if t == tag %}class="active"{% endif %} style="font-size: {{ tag_weight / tags_weight_max * 2 }}em;"><a href="{{ SITEURL }}/tag/{{ tag_name }}.html">{{ tag_name }}</a></span>
+        {% endfor %}
+</div>
