@@ -47,7 +47,7 @@ Or using ``pip``::
 
     $ pip install -e .
 
-To conveniently test vs multiple python versions we also provide a tox file.
+To conveniently test on multiple Python versions, we also provide a .tox file.
 
 
 Building the docs
