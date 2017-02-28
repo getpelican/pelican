@@ -105,10 +105,8 @@ Custom 404 Pages
 GitHub Pages will display the custom 404 page described above, as noted in the
 relevant `GitHub docs <https://help.github.com/articles/custom-404-pages/>`_.
 
-Extra Tips
-----------
-
-Tip #1:
+Update your site on each commit
+-------------------------------
 
 To automatically update your Pelican site on each commit, you can create
 a post-commit hook. For example, you can add the following to
@@ -116,7 +114,8 @@ a post-commit hook. For example, you can add the following to
 
     pelican content -o output -s pelicanconf.py && ghp-import output && git push origin gh-pages
 
-Tip #2:
+Copy static files to the root of your site
+------------------------------------------
 
 To use a `custom domain
 <https://help.github.com/articles/setting-up-a-custom-domain-with-pages>`_ with
@@ -131,9 +130,8 @@ output directory. For example::
 
 Note: use forward slashes, ``/``, even on Windows.
 
-.. hint::
-    You can also use the ``EXTRA_PATH_METADATA`` mechanism
-    to place a ``favicon.ico`` or ``robots.txt`` at the root of any site.
+You can also use the ``EXTRA_PATH_METADATA`` mechanism
+to place a ``favicon.ico`` or ``robots.txt`` at the root of any site.
 
 How to add YouTube or Vimeo Videos
 ==================================
