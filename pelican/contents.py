@@ -17,8 +17,9 @@ from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import (SafeDatetime, deprecated_attribute, memoized,
                            path_to_url, posixize_path,
-                           python_2_unicode_compatible, set_date_tzinfo,
-                           slugify, strftime, truncate_html_words)
+                           python_2_unicode_compatible, sanitised_join,
+                           set_date_tzinfo, slugify, strftime,
+                           truncate_html_words)
 
 # Import these so that they're avalaible when you import from pelican.contents.
 from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
@@ -160,6 +161,22 @@ class Content(object):
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
                 raise NameError(prop)
+
+    def valid_save_as(self):
+        """Return true if save_as doesn't write outside output path, false
+        otherwise."""
+        try:
+            output_path = self.settings["OUTPUT_PATH"]
+        except KeyError:
+            # we cannot check
+            return True
+
+        try:
+            sanitised_join(output_path, self.save_as)
+        except RuntimeError:  # outside output_dir
+            return False
+
+        return True
 
     @property
     def url_format(self):
@@ -470,9 +487,20 @@ class Static(Page):
 def is_valid_content(content, f):
     try:
         content.check_properties()
-        return True
     except NameError as e:
         logger.error(
             "Skipping %s: could not find information about '%s'",
             f, six.text_type(e))
         return False
+
+    if not content.valid_save_as():
+        logger.error(
+            "Skipping %s: file %r would be written outside output path",
+            f,
+            content.save_as,
+        )
+        # Note: future code might want to use a result variable instead, to
+        # allow showing multiple error messages at once.
+        return False
+
+    return True

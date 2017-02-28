@@ -36,6 +36,18 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
+def sanitised_join(base_directory, *parts):
+    joined = os.path.abspath(os.path.join(base_directory, *parts))
+    if not joined.startswith(os.path.abspath(base_directory)):
+        raise RuntimeError(
+            "Attempted to break out of output directory to {}".format(
+                joined
+            )
+        )
+
+    return joined
+
+
 def strftime(date, date_format):
     '''
     Replacement for built-in strftime
