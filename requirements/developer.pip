@@ -1,6 +1,3 @@
 -r test.pip
-
-# Development
-flake8
-flake8-import-order
-sphinx==1.4.9
+-r docs.pip
+-r style.pip

@@ -7,11 +7,12 @@ env:
   - TOX_ENV=py27
   - TOX_ENV=py33
   - TOX_ENV=py34
+  - TOX_ENV=py35
 matrix:
   include:
-    - python: 3.5
+    - python: 3.6
       env:
-      - TOX_ENV=py35
+      - TOX_ENV=py36
 addons:
   apt_packages:
     - pandoc
@@ -19,7 +20,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
-  - pip install tox==2.0.1
+  - pip install tox==2.5.0
 script: tox -e $TOX_ENV
 notifications:
   irc:

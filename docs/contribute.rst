@@ -47,13 +47,16 @@ Or using ``pip``::
 
     $ pip install -e .
 
+To conveniently test on multiple Python versions, we also provide a .tox file.
+
+
 Building the docs
 =================
 
 If you make changes to the documentation, you should preview your changes
 before committing them::
 
-    $ pip install sphinx
+    $ pip install -r requirements/docs.pip
     $ cd src/pelican/docs
     $ make html
 

@@ -14,6 +14,7 @@ def err(msg, die=None):
     if die:
         sys.exit((die if type(die) is int else 1))
 
+
 try:
     import pelican
 except:

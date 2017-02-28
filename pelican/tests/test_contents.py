@@ -731,3 +731,19 @@ class TestStatic(LoggedTestCase):
             msg="Replacement Indicator 'unknown' not recognized, "
                 "skipping replacement",
             level=logging.WARNING)
+
+    def test_link_to_unknown_file(self):
+        "{filename} link to unknown file should trigger warning."
+
+        html = '<a href="{filename}foo">link</a>'
+        page = Page(content=html,
+                    metadata={'title': 'fakepage'}, settings=self.settings,
+                    source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+                    context=self.context)
+        content = page.get_content('')
+
+        self.assertEqual(content, html)
+        self.assertLogCountEqual(
+            count=1,
+            msg="Unable to find 'foo', skipping url replacement.",
+            level=logging.WARNING)
