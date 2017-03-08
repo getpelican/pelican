@@ -771,3 +771,24 @@ class TestStatic(LoggedTestCase):
             count=1,
             msg="Unable to find 'foo', skipping url replacement.",
             level=logging.WARNING)
+
+    def test_index_link_syntax_with_spaces(self):
+        """{index} link syntax triggers url replacement
+        with spaces around the equal sign."""
+
+        html = '<a href = "{index}">link</a>'
+        page = Page(
+            content=html,
+            metadata={'title': 'fakepage'},
+            settings=self.settings,
+            source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+            context=self.context)
+        content = page.get_content('')
+
+        self.assertNotEqual(content, html)
+
+        expected_html = ('<a href = "' +
+                         '/'.join((self.settings['SITEURL'],
+                                   self.settings['INDEX_SAVE_AS'])) +
+                         '">link</a>')
+        self.assertEqual(content, expected_html)
