@@ -4,7 +4,7 @@ Release history
 Next release
 ============
 
-- Nothing yet
+* New signal: ``feed_generated``
 
 3.7.1 (2017-01-10)
 ==================
