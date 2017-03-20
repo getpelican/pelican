@@ -166,6 +166,25 @@ class RstReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_article_with_optional_filename_metadata(self):
+        page = self.read_file(
+            path='2012-11-29_rst_w_filename_meta#foo-bar.rst',
+            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+        expected = {
+            'date': SafeDatetime(2012, 11, 29),
+            'reader': 'rst',
+        }
+        self.assertDictHasSubset(page.metadata, expected)
+
+        page = self.read_file(
+            path='article.rst',
+            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+        expected = {
+            'reader': 'rst',
+        }
+        self.assertDictHasSubset(page.metadata, expected)
+        self.assertNotIn('date', page.metadata, 'Date should not be set.')
+
     def test_article_metadata_key_lowercase(self):
         # Keys of metadata should be lowercase.
         reader = readers.RstReader(settings=get_settings())
@@ -560,6 +579,25 @@ class MdReaderTest(ReaderTest):
             'mymeta': 'foo',
         }
         self.assertDictHasSubset(page.metadata, expected)
+
+    def test_article_with_optional_filename_metadata(self):
+        page = self.read_file(
+            path='2012-11-30_md_w_filename_meta#foo-bar.md',
+            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+        expected = {
+            'date': SafeDatetime(2012, 11, 30),
+            'reader': 'markdown',
+        }
+        self.assertDictHasSubset(page.metadata, expected)
+
+        page = self.read_file(
+            path='empty.md',
+            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+        expected = {
+            'reader': 'markdown',
+        }
+        self.assertDictHasSubset(page.metadata, expected)
+        self.assertNotIn('date', page.metadata, 'Date should not be set.')
 
     def test_duplicate_tags_or_authors_are_removed(self):
         reader = readers.MarkdownReader(settings=get_settings())
