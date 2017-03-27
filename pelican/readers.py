@@ -650,9 +650,9 @@ def parse_path_metadata(source_path, settings=None, process=None):
     ...     settings=settings,
     ...     process=reader.process_metadata)
     >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
-    {'category': <pelican.urlwrappers.Category object at ...>,
-     'date': SafeDatetime(2013, 1, 1, 0, 0),
-     'slug': 'my-slug'}
+    ... {'category': <pelican.urlwrappers.Category object at ...>,
+    ...  'date': SafeDatetime(2013, 1, 1, 0, 0),
+    ...  'slug': 'my-slug'}
     """
     metadata = {}
     dirname, basename = os.path.split(source_path)
