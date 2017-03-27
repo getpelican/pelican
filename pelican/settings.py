@@ -121,7 +121,7 @@ DEFAULT_CONFIG = {
     'DEFAULT_PAGINATION': False,
     'DEFAULT_ORPHANS': 0,
     'DEFAULT_METADATA': {},
-    'FILENAME_METADATA': '(?P<date>\d{4}-\d{2}-\d{2}).*',
+    'FILENAME_METADATA': r'(?P<date>\d{4}-\d{2}-\d{2}).*',
     'PATH_METADATA': '',
     'EXTRA_PATH_METADATA': {},
     'DEFAULT_STATUS': 'published',

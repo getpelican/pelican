@@ -305,8 +305,8 @@ def slugify(value, substitutions=()):
             replace = replace and not skip
 
     if replace:
-        value = re.sub('[^\w\s-]', '', value).strip()
-        value = re.sub('[-\s]+', '-', value)
+        value = re.sub(r'[^\w\s-]', '', value).strip()
+        value = re.sub(r'[-\s]+', '-', value)
     else:
         value = value.strip()
 

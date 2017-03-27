@@ -75,7 +75,7 @@ directives.register_directive('code-block', Pygments)
 directives.register_directive('sourcecode', Pygments)
 
 
-_abbr_re = re.compile('\((.*)\)$', re.DOTALL)
+_abbr_re = re.compile(r'\((.*)\)$', re.DOTALL)
 
 
 class abbreviation(nodes.Inline, nodes.TextElement):
