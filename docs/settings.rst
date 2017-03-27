@@ -94,7 +94,7 @@ Basic settings
 
    Example::
     import sys
-    sys.path.append('.')
+    sys.path.append('to/your/path')
 
     from custom_filter import urlencode_filter
     JINJA_FILTERS = {'urlencode': urlencode_filter}
