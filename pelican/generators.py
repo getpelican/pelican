@@ -19,7 +19,7 @@ import six
 
 from pelican import signals
 from pelican.cache import FileStampDataCacher
-from pelican.contents import Article, Draft, Page, Static, is_valid_content
+from pelican.contents import Article, Page, Static
 from pelican.readers import Readers
 from pelican.utils import (DateFormatter, copy, mkdir_p, posixize_path,
                            process_translations, python_2_unicode_compatible)
@@ -509,12 +509,10 @@ class ArticlesGenerator(CachingGenerator):
         for f in self.get_files(
                 self.settings['ARTICLE_PATHS'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
-            article_or_draft = self.get_cached_data(f, None)
-            if article_or_draft is None:
-                # TODO needs overhaul, maybe nomad for read_file
-                # solution, unified behaviour
+            article = self.get_cached_data(f, None)
+            if article is None:
                 try:
-                    article_or_draft = self.readers.read_file(
+                    article = self.readers.read_file(
                         base_path=self.path, path=f, content_class=Article,
                         context=self.context,
                         preread_signal=signals.article_generator_preread,
@@ -528,34 +526,17 @@ class ArticlesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
-                if not is_valid_content(article_or_draft, f):
+                if not article.valid():
                     self._add_failed_source_path(f)
                     continue
 
-                if article_or_draft.status.lower() == "published":
-                    pass
-                elif article_or_draft.status.lower() == "draft":
-                    article_or_draft = self.readers.read_file(
-                        base_path=self.path, path=f, content_class=Draft,
-                        context=self.context,
-                        preread_signal=signals.article_generator_preread,
-                        preread_sender=self,
-                        context_signal=signals.article_generator_context,
-                        context_sender=self)
-                else:
-                    logger.error(
-                        "Unknown status '%s' for file %s, skipping it.",
-                        article_or_draft.status, f)
-                    self._add_failed_source_path(f)
-                    continue
+                self.cache_data(f, article)
 
-                self.cache_data(f, article_or_draft)
-
-            if article_or_draft.status.lower() == "published":
-                all_articles.append(article_or_draft)
-            else:
-                all_drafts.append(article_or_draft)
-            self.add_source_path(article_or_draft)
+            if article.status == "published":
+                all_articles.append(article)
+            elif article.status == "draft":
+                all_drafts.append(article)
+            self.add_source_path(article)
 
         self.articles, self.translations = process_translations(
             all_articles,
@@ -634,22 +615,15 @@ class PagesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
-                if not is_valid_content(page, f):
-                    self._add_failed_source_path(f)
-                    continue
-
-                if page.status.lower() not in ("published", "hidden"):
-                    logger.error(
-                        "Unknown status '%s' for file %s, skipping it.",
-                        page.status, f)
+                if not page.valid():
                     self._add_failed_source_path(f)
                     continue
 
                 self.cache_data(f, page)
 
-            if page.status.lower() == "published":
+            if page.status == "published":
                 all_pages.append(page)
-            elif page.status.lower() == "hidden":
+            elif page.status == "hidden":
                 hidden_pages.append(page)
             self.add_source_path(page)
 
