@@ -640,9 +640,9 @@ def parse_path_metadata(source_path, settings=None, process=None):
 
     >>> import pprint
     >>> settings = {
-    ...     'FILENAME_METADATA': '(?P<slug>[^.]*).*',
+    ...     'FILENAME_METADATA': r'(?P<slug>[^.]*).*',
     ...     'PATH_METADATA':
-    ...         '(?P<category>[^/]*)/(?P<date>\d{4}-\d{2}-\d{2})/.*',
+    ...         r'(?P<category>[^/]*)/(?P<date>\d{4}-\d{2}-\d{2})/.*',
     ...     }
     >>> reader = BaseReader(settings=settings)
     >>> metadata = parse_path_metadata(

@@ -67,7 +67,7 @@ class TestAssertDictHasSubset(ReaderTest):
         six.assertRaisesRegex(
             self,
             AssertionError,
-            'Expected.*key-c.*to have value.*val-c.*but was not in Dict',
+            r'Expected.*key-c.*to have value.*val-c.*but was not in Dict',
             self.assertDictHasSubset,
             self.dictionary,
             {'key-c': 'val-c'})
@@ -76,7 +76,7 @@ class TestAssertDictHasSubset(ReaderTest):
         six.assertRaisesRegex(
             self,
             AssertionError,
-            'Expected .*key-a.* to have value .*val-b.* but was .*val-a.*',
+            r'Expected .*key-a.* to have value .*val-b.* but was .*val-a.*',
             self.assertDictHasSubset,
             self.dictionary,
             {'key-a': 'val-b'})
@@ -139,7 +139,7 @@ class RstReaderTest(ReaderTest):
 
         page = self.read_file(
             path='2012-11-29_rst_w_filename_meta#foo-bar.rst',
-            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2}).*')
+            FILENAME_METADATA=r'(?P<date>\d{4}-\d{2}-\d{2}).*')
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
@@ -152,9 +152,9 @@ class RstReaderTest(ReaderTest):
         page = self.read_file(
             path='2012-11-29_rst_w_filename_meta#foo-bar.rst',
             FILENAME_METADATA=(
-                '(?P<date>\d{4}-\d{2}-\d{2})'
-                '_(?P<Slug>.*)'
-                '#(?P<MyMeta>.*)-(?P<author>.*)'))
+                r'(?P<date>\d{4}-\d{2}-\d{2})'
+                r'_(?P<Slug>.*)'
+                r'#(?P<MyMeta>.*)-(?P<author>.*)'))
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
@@ -169,7 +169,7 @@ class RstReaderTest(ReaderTest):
     def test_article_with_optional_filename_metadata(self):
         page = self.read_file(
             path='2012-11-29_rst_w_filename_meta#foo-bar.rst',
-            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+            FILENAME_METADATA=r'(?P<date>\d{4}-\d{2}-\d{2})?')
         expected = {
             'date': SafeDatetime(2012, 11, 29),
             'reader': 'rst',
@@ -178,7 +178,7 @@ class RstReaderTest(ReaderTest):
 
         page = self.read_file(
             path='article.rst',
-            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+            FILENAME_METADATA=r'(?P<date>\d{4}-\d{2}-\d{2})?')
         expected = {
             'reader': 'rst',
         }
@@ -200,9 +200,9 @@ class RstReaderTest(ReaderTest):
         page_metadata = self.read_file(
             path=input_with_metadata,
             FILENAME_METADATA=(
-                '(?P<date>\d{4}-\d{2}-\d{2})'
-                '_(?P<Slug>.*)'
-                '#(?P<MyMeta>.*)-(?P<author>.*)'
+                r'(?P<date>\d{4}-\d{2}-\d{2})'
+                r'_(?P<Slug>.*)'
+                r'#(?P<MyMeta>.*)-(?P<author>.*)'
             ),
             EXTRA_PATH_METADATA={
                 input_with_metadata: {
@@ -250,9 +250,9 @@ class RstReaderTest(ReaderTest):
         page = self.read_file(
             path=input_file_path,
             FILENAME_METADATA=(
-                '(?P<date>\d{4}-\d{2}-\d{2})'
-                '_(?P<Slug>.*)'
-                '#(?P<MyMeta>.*)-(?P<orginalauthor>.*)'
+                r'(?P<date>\d{4}-\d{2}-\d{2})'
+                r'_(?P<Slug>.*)'
+                r'#(?P<MyMeta>.*)-(?P<orginalauthor>.*)'
             ),
             EXTRA_PATH_METADATA={
                 input_file_path: {
@@ -557,7 +557,7 @@ class MdReaderTest(ReaderTest):
 
         page = self.read_file(
             path='2012-11-30_md_w_filename_meta#foo-bar.md',
-            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2}).*')
+            FILENAME_METADATA=r'(?P<date>\d{4}-\d{2}-\d{2}).*')
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
@@ -568,9 +568,9 @@ class MdReaderTest(ReaderTest):
         page = self.read_file(
             path='2012-11-30_md_w_filename_meta#foo-bar.md',
             FILENAME_METADATA=(
-                '(?P<date>\d{4}-\d{2}-\d{2})'
-                '_(?P<Slug>.*)'
-                '#(?P<MyMeta>.*)-(?P<author>.*)'))
+                r'(?P<date>\d{4}-\d{2}-\d{2})'
+                r'_(?P<Slug>.*)'
+                r'#(?P<MyMeta>.*)-(?P<author>.*)'))
         expected = {
             'category': 'yeah',
             'author': 'Alexis Métaireau',
@@ -583,7 +583,7 @@ class MdReaderTest(ReaderTest):
     def test_article_with_optional_filename_metadata(self):
         page = self.read_file(
             path='2012-11-30_md_w_filename_meta#foo-bar.md',
-            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+            FILENAME_METADATA=r'(?P<date>\d{4}-\d{2}-\d{2})?')
         expected = {
             'date': SafeDatetime(2012, 11, 30),
             'reader': 'markdown',
@@ -592,7 +592,7 @@ class MdReaderTest(ReaderTest):
 
         page = self.read_file(
             path='empty.md',
-            FILENAME_METADATA='(?P<date>\d{4}-\d{2}-\d{2})?')
+            FILENAME_METADATA=r'(?P<date>\d{4}-\d{2}-\d{2})?')
         expected = {
             'reader': 'markdown',
         }

@@ -88,7 +88,7 @@ def decode_wp_content(content, br=True):
     content = re.sub(r'<p><blockquote([^>]*)>', "<blockquote\\1><p>", content)
     content = content.replace('</blockquote></p>', '</p></blockquote>')
     content = re.sub(r'<p>\s*(</?' + allblocks + '[^>]*>)', "\\1", content)
-    content = re.sub(r'(</?' + allblocks + '[^>]*>)\s*</p>', "\\1", content)
+    content = re.sub(r'(</?' + allblocks + r'[^>]*>)\s*</p>', "\\1", content)
     if br:
         def _preserve_newline(match):
             return match.group(0).replace("\n", "<WPPreserveNewline />")
