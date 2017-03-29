@@ -12,6 +12,11 @@ import sys
 import pytz
 
 try:
+    import readline
+except ImportError:
+    pass
+
+try:
     import tzlocal
     _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
 except:
