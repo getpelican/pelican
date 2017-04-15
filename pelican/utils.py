@@ -241,6 +241,8 @@ def get_date(string):
 
     If no format matches the given date, raise a ValueError.
     """
+    if isinstance(string, datetime):
+        return string
     string = re.sub(' +', ' ', string)
     default = SafeDatetime.now().replace(hour=0, minute=0,
                                          second=0, microsecond=0)
