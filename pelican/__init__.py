@@ -162,8 +162,16 @@ class Pelican(object):
 
         # erase the directory if it is not the source and if that's
         # explicitly asked
-        if (self.delete_outputdir and not
-                os.path.realpath(self.path).startswith(self.output_path)):
+        if (self.delete_outputdir and
+                # Compares two dirs similar to os.path.commonpath() from Py3.5+
+                # All paths at this point are already full and normalized.
+                # So, we can omit unnecessary checks
+                os.path.join(os.path.sep,
+                             *(_subdir1 for _subdir1, _subdir2 in
+                               zip(self.path.split(os.path.sep),
+                                   self.output_path.split(os.path.sep))
+                               if _subdir1 == _subdir2
+                               )) != self.output_path):
             clean_output_dir(self.output_path, self.output_retention)
 
         for p in generators:
