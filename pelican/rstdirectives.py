@@ -15,6 +15,16 @@ import six
 import pelican.settings as pys
 
 
+def integers():
+    """Infinite sequence of integers."""
+    i = 1
+    while True:
+        yield str(i)
+        i = i + 1
+
+code_block_id = integers()
+
+
 class Pygments(Directive):
     """ Source code syntax highlighting.
     """
@@ -64,6 +74,11 @@ class Pygments(Directive):
         for flag in ('nowrap', 'nobackground', 'anchorlinenos'):
             if flag in self.options:
                 self.options[flag] = True
+
+        if '<id>' in self.options['linespans']:
+            self.options['linespans'] = str(self.options['linespans']).replace(
+                '<id>', next(code_block_id)
+            )
 
         # noclasses should already default to False, but just in case...
         formatter = HtmlFormatter(noclasses=False, **self.options)
