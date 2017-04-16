@@ -472,7 +472,7 @@ def main():
                     if (args.verbosity == logging.DEBUG):
                         raise
                     logger.warning(
-                        'Caught exception "%s". Reloading.', e)
+                        'Caught exception "%s". Reloading.', e, exc_info=True)
 
                 finally:
                     time.sleep(.5)  # sleep to avoid cpu load
@@ -487,7 +487,7 @@ def main():
             pelican.run()
 
     except Exception as e:
-        logger.critical('%s', e)
+        logger.critical('Internal failure: %r', e, exc_info=True)
 
         if args.verbosity == logging.DEBUG:
             raise
