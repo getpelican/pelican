@@ -52,9 +52,9 @@ class Generator(object):
         # templates cache
         self._templates = {}
         self._templates_path = []
+        self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
         self._templates_path.append(os.path.expanduser(
             os.path.join(self.theme, 'templates')))
-        self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
 
         theme_path = os.path.dirname(os.path.abspath(__file__))
 
