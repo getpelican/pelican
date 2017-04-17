@@ -450,3 +450,8 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 	
 	#add-comment input[type='submit'] {float: right; margin: 0 .5em;}
 	#add-comment * {margin-bottom: .5em;}
+/*Fix github ribbon*/
+@media screen and (max-width: 768px){
+	img{
+		width: auto !important;
+	}
