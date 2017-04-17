@@ -31,7 +31,21 @@
       <noscript>Please enable JavaScript to view the comments.</noscript>
     </div>
     {% endif %}
-
+    <p>
+        {% if article.share_post and article.status != 'draft' %}
+        <h2> Like this post? Please share! </h2>
+        <section>
+            <p id="post-share-links">
+                Share on:
+                ❄ <a href="{{article.share_post['diaspora']}}" target="_blank" title="Share on Diaspora">Diaspora*</a>
+                ❄ <a href="{{article.share_post['twitter']}}"  target="_blank" title="Share on Twitter">Twitter</a>
+                ❄ <a href="{{article.share_post['facebook']}}" target="_blank" title="Share on Facebook">Facebook</a>
+                ❄ <a href="{{article.share_post['google-plus']}}" target="_blank" title="Share on Google Plus">Google+</a>
+                ❄ <a href="{{article.share_post['email']}}" target="_blank" title="Share via Email">Email</a>
+            </p>
+        </section>
+        {% endif %}
+    </p>
   </article>
 </section>
 {% endblock %}
