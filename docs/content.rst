@@ -199,7 +199,7 @@ and ``article2.md``::
 
     See below intra-site link examples in Markdown format.
 
-    [a link relative to the current file]({filename}category/article1.rst)
+    [a link relative to the current file]({filename}/category/article1.rst)
     [a link relative to the content root]({filename}/category/article1.rst)
 
 Linking to static files
