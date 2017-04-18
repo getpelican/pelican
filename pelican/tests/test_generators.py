@@ -118,6 +118,32 @@ class TestGenerator(unittest.TestCase):
                          generator.env.comment_end_string)
 
 
+    # def test_get_templat_with_theme_overrides(self):
+    #     override_dirs = (os.path.join(CUR_DIR, 'theme_overrides', 'level1'),
+    #                      os.path.join(CUR_DIR, 'theme_overrides', 'level2'))
+    #     self.settings['THEME_TEMPLATE_OVERRIDES'] = override_dirs
+    #     generator = Generator(
+    #         context=self.settings.copy(),
+    #         settings=self.settings,
+    #         path=CUR_DIR,
+    #         theme=self.settings['THEME'],
+    #         output_path=None)
+
+    #     filename = generator.get_template('article').filename
+    #     self.assertEqual(override_dirs[0], os.path.dirname(filename))
+    #     self.assertEqual('article.html', os.path.basename(filename))
+
+    #     filename = generator.get_template('authors').filename
+    #     self.assertEqual(override_dirs[1], os.path.dirname(filename))
+    #     self.assertEqual('authors.html', os.path.basename(filename))
+
+    #     filename = generator.get_template('taglist').filename
+    #     self.assertEqual(os.path.join(self.settings['THEME'], 'templates'),
+    #                      os.path.dirname(filename))
+    #     self.assertNotIn(os.path.dirname(filename), override_dirs)
+    #     self.assertEqual('taglist.html', os.path.basename(filename))
+
+
 class TestArticlesGenerator(unittest.TestCase):
 
     @classmethod

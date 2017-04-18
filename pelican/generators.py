@@ -52,6 +52,7 @@ class Generator(object):
         # templates cache
         self._templates = {}
         self._templates_path = []
+        self._templates_path += self.settings['THEME_TEMPLATE_OVERRIDES']
         self._templates_path.append(os.path.expanduser(
             os.path.join(self.theme, 'templates')))
         self._templates_path += self.settings['EXTRA_TEMPLATES_PATHS']
