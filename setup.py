@@ -55,6 +55,7 @@ setup(
     classifiers=[
          'Development Status :: 5 - Production/Stable',
          'Environment :: Console',
+         'Framework :: Pelican',
          'License :: OSI Approved :: GNU Affero General Public License v3',
          'Operating System :: OS Independent',
          'Programming Language :: Python :: 2',
