@@ -100,14 +100,14 @@ following hierarchy (except for *pages* — shown in parentheses below — which
 can optionally add yourself if you plan to create non-chronological content)::
 
     yourproject/
-    ├── content
-    │   └── (pages)
-    ├── output
-    ├── develop_server.sh
-    ├── fabfile.py
-    ├── Makefile
-    ├── pelicanconf.py       # Main settings file
-    └── publishconf.py       # Settings to use when ready to publish
+    |-- content
+    |   `-- (pages)
+    |-- output
+    |-- develop_server.sh
+    |-- fabfile.py
+    |-- Makefile
+    |-- pelicanconf.py       # Main settings file
+    `-- publishconf.py       # Settings to use when ready to publish
 
 The next step is to begin to adding content to the *content* folder that has
 been created for you.

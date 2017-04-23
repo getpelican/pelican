@@ -22,21 +22,21 @@ Structure
 
 To make your own theme, you must follow the following structure::
 
-    ├── static
-    │   ├── css
-    │   └── images
-    └── templates
-        ├── archives.html         // to display archives
-        ├── period_archives.html  // to display time-period archives
-        ├── article.html          // processed for each article
-        ├── author.html           // processed for each author
-        ├── authors.html          // must list all the authors
-        ├── categories.html       // must list all the categories
-        ├── category.html         // processed for each category
-        ├── index.html            // the index (list all the articles)
-        ├── page.html             // processed for each page
-        ├── tag.html              // processed for each tag
-        └── tags.html             // must list all the tags. Can be a tag cloud.
+    |-- static
+    |   |-- css
+    |   `-- images
+    `-- templates
+        |-- archives.html         // to display archives
+        |-- period_archives.html  // to display time-period archives
+        |-- article.html          // processed for each article
+        |-- author.html           // processed for each author
+        |-- authors.html          // must list all the authors
+        |-- categories.html       // must list all the categories
+        |-- category.html         // processed for each category
+        |-- index.html            // the index (list all the articles)
+        |-- page.html             // processed for each page
+        |-- tag.html              // processed for each tag
+        `-- tags.html             // must list all the tags. Can be a tag cloud.
 
 * `static` contains all the static assets, which will be copied to the output
   `theme` folder. The above filesystem layout includes CSS and image folders,
