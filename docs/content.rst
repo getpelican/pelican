@@ -73,6 +73,19 @@ Metadata syntax for Markdown posts should follow this pattern::
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
 
+The AsciiDoc equivalent would be:
+
+    = My super title
+
+    :date: 2010-10-03 10:20
+    :modified: 2010-10-04 18:40
+    :tags: thats, awesome
+    :category: yeah
+    :slug: my-super-post
+    :authors: Alexis Metaireau, Conan Doyle
+    :summary: Short version for index and feeds
+
+
 Pelican can also process HTML files ending in ``.html`` and ``.htm``. Pelican
 interprets the HTML in a very straightforward manner, reading metadata from
 ``meta`` tags, the title from the ``title`` tag, and the body out from the
