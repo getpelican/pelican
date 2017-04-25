@@ -63,7 +63,9 @@ Optional arguments
   --tumblr              Tumblr API (default: False)
   --feed                Feed to parse (default: False)
   -o OUTPUT, --output OUTPUT
-                        Output path (default: output)
+                        Where to output the generated markup files. If not
+                        specified, a directory will be created, named
+                        "content" in the current path. (default: content)
   -m MARKUP, --markup MARKUP
                         Output markup format (supports rst & markdown)
                         (default: rst)
@@ -92,19 +94,19 @@ Examples
 
 For WordPress::
 
-    $ pelican-import --wpfile -o ~/output ~/posts.xml
+    $ pelican-import --wpfile ~/posts.xml
 
 For Dotclear::
 
-    $ pelican-import --dotclear -o ~/output ~/backup.txt
+    $ pelican-import --dotclear -o ~/markup-files ~/backup.txt
 
 for Posterous::
 
-    $ pelican-import --posterous -o ~/output --email=<email_address> --password=<password> <api_token>
+    $ pelican-import --posterous -o ~/content --email=<email_address> --password=<password> <api_token>
 
 For Tumblr::
 
-    $ pelican-import --tumblr -o ~/output --blogname=<blogname> <api_token>
+    $ pelican-import --tumblr -o ~/content --blogname=<blogname> <api_token>
 
 Tests
 =====
