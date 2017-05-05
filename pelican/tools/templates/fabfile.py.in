@@ -74,6 +74,10 @@ def cf_upload():
               '-K {cloudfiles_api_key} '
               'upload -c {cloudfiles_container} .'.format(**env))
 
+def ghp():
+    local('ghp-import -b master {deploy_path} -m "site udpated"'.format(**env))
+    local('git push origin master')
+
 @hosts(production)
 def publish():
     """Publish to production via rsync"""
