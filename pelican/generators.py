@@ -109,6 +109,8 @@ class Generator(object):
         ignores = self.settings['IGNORE_FILES']
         if any(fnmatch.fnmatch(basename, ignore) for ignore in ignores):
             return False
+        if any(fnmatch.fnmatch(path, ignore) for ignore in ignores):
+            return False
 
         ext = os.path.splitext(basename)[1][1:]
         if extensions is False or ext in extensions:
