@@ -25,9 +25,10 @@ article_generator_finalized = signal('article_generator_finalized')
 article_generator_write_article = signal('article_generator_write_article')
 article_writer_finalized = signal('article_writer_finalized')
 
-page_generator_init = signal('page_generator_init')
-page_generator_finalized = signal('page_generator_finalized')
-page_writer_finalized = signal('page_writer_finalized')
+# Generated in PagesGenerator
+# page_generator_init = signal('page_generator_init')
+# page_generator_finalized = signal('page_generator_finalized')
+# page_writer_finalized = signal('page_writer_finalized')
 
 static_generator_init = signal('static_generator_init')
 static_generator_finalized = signal('static_generator_finalized')
@@ -37,8 +38,9 @@ static_generator_finalized = signal('static_generator_finalized')
 article_generator_preread = signal('article_generator_preread')
 article_generator_context = signal('article_generator_context')
 
-page_generator_preread = signal('page_generator_preread')
-page_generator_context = signal('page_generator_context')
+# Generated in PagesGenerator
+# page_generator_preread = signal('page_generator_preread')
+# page_generator_context = signal('page_generator_context')
 
 static_generator_preread = signal('static_generator_preread')
 static_generator_context = signal('static_generator_context')
