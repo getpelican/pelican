@@ -25,6 +25,7 @@ from pelican.utils import (SafeDatetime, deprecated_attribute, memoized,
 from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 
 logger = logging.getLogger(__name__)
+path_sep_regexp = re.compile(r'[\\/]')
 
 
 @python_2_unicode_compatible
@@ -235,12 +236,18 @@ class Content(object):
 
             # XXX Put this in a different location.
             if what in {'filename', 'attach'}:
-                if path.startswith('/'):
-                    path = path[1:]
+                # On Windows the path separator (os.sep) is '\\', whereas on other platforms the path # separator is '/'.
+                # Source files can have either character as the path separator on {filename} links.
+                # In order to make everything work in a platform-independent way, let's accept both characters
+                # as valid path separators for {filename} links, and rebuild the correct path internally by
+                # using os.path.join, so that the resulting path will have the correct separator for this platform.
+                if path_sep_regexp.match(path):
+                    # Path begins with the separator character, so it is relative to the root of the website
+                    path = os.path.join(*path_sep_regexp.split(path[1:]))
                 else:
                     # relative to the source path of this content
                     path = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, path)
+                        os.path.join(self.relative_dir, os.path.join(*path_sep_regexp.split(path)))
                     )
 
                 if path not in self._context['filenames']:
