@@ -47,6 +47,21 @@ text editor to create your first article with the following content::
 Given that this example article is in Markdown format, save it as
 ``~/projects/yoursite/content/keyboard-review.md``.
 
+Alternatively, here is the same article in reStructuredText format::
+
+    ###############
+    My First Review
+    ###############
+
+    :date: 2010-12-03 10:20
+    :category: Review
+    :author: your_name
+    :summary: first review on site.
+
+    Following is a review of my favorite mechanical keyboard.
+
+Save the file as ``~/projects/yoursite/content/keyboard-review.rst``.
+
 Generate your site
 ------------------
 
