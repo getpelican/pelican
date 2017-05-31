@@ -105,7 +105,7 @@ class TestPage(LoggedTestCase):
         self.assertEqual(page._get_summary(), TEST_SUMMARY)
         self.assertLogCountEqual(
                 count=1,
-                msg="_get_summary\(\) has been deprecated since 3\.6\.4\. "
+                msg=r"_get_summary\(\) has been deprecated since 3\.6\.4\. "
                     "Use the summary decorator instead",
                 level=logging.WARNING)
 

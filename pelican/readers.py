@@ -636,13 +636,13 @@ def path_metadata(full_path, source_path, settings=None):
 
 
 def parse_path_metadata(source_path, settings=None, process=None):
-    """Extract a metadata dictionary from a file's path
+    r"""Extract a metadata dictionary from a file's path
 
     >>> import pprint
     >>> settings = {
-    ...     'FILENAME_METADATA': '(?P<slug>[^.]*).*',
+    ...     'FILENAME_METADATA': r'(?P<slug>[^.]*).*',
     ...     'PATH_METADATA':
-    ...         '(?P<category>[^/]*)/(?P<date>\d{4}-\d{2}-\d{2})/.*',
+    ...         r'(?P<category>[^/]*)/(?P<date>\d{4}-\d{2}-\d{2})/.*',
     ...     }
     >>> reader = BaseReader(settings=settings)
     >>> metadata = parse_path_metadata(
@@ -650,9 +650,9 @@ def parse_path_metadata(source_path, settings=None, process=None):
     ...     settings=settings,
     ...     process=reader.process_metadata)
     >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
-    ... {'category': <pelican.urlwrappers.Category object at ...>,
-    ...  'date': SafeDatetime(2013, 1, 1, 0, 0),
-    ...  'slug': 'my-slug'}
+    {'category': <pelican.urlwrappers.Category object at ...>,
+     'date': SafeDatetime(2013, 1, 1, 0, 0),
+     'slug': 'my-slug'}
     """
     metadata = {}
     dirname, basename = os.path.split(source_path)

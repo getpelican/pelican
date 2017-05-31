@@ -111,10 +111,10 @@ class Pelican(object):
             structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
 
             # Convert %(variable) into {variable}.
-            structure = re.sub(r'%\((\w+)\)s', '{\g<1>}', structure)
+            structure = re.sub(r'%\((\w+)\)s', r'{\g<1>}', structure)
 
             # Convert %x into {date:%x} for strftime
-            structure = re.sub(r'(%[A-z])', '{date:\g<1>}', structure)
+            structure = re.sub(r'(%[A-z])', r'{date:\g<1>}', structure)
 
             # Strip a / prefix
             structure = re.sub('^/', '', structure)
