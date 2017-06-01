@@ -911,13 +911,13 @@ second (and subsequent) pages to be ``/page/2/``, you would set
 ``PAGINATION_PATTERNS`` as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{base_name}/', '{base_name}/index.html'),
-      (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
+      (1, '{name}/', '{name}/index.html'),
+      (2, '{name}/page/{number}/', '{name}/page/{number}/index.html'),
   )
 
 This would cause the first page to be written to
-``{base_name}/index.html``, and subsequent ones would be written into
-``page/{number}`` directories.
+``{name}/index.html``, and subsequent ones would be written into
+``{name}/page/{number}`` directories.
 
 
 Translations
