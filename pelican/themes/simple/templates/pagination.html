@@ -1,11 +1,11 @@
 {% if DEFAULT_PAGINATION %}
 <p class="paginator">
     {% if articles_page.has_previous() %}
-        <a href="{{ SITEURL }}/{{ articles_previous_page.url }}">&laquo;</a>
+        <a href="{{ SITEURL }}/{{ articles_previous_page.url.replace('\\','/' }}">&laquo;</a>
     {% endif %}
     Page {{ articles_page.number }} / {{ articles_paginator.num_pages }}
     {% if articles_page.has_next() %}
-        <a href="{{ SITEURL }}/{{ articles_next_page.url }}">&raquo;</a>
+        <a href="{{ SITEURL }}/{{ articles_next_page.url.replace('\\','/' }}">&raquo;</a>
     {% endif %}
 </p>
 {% endif %}
