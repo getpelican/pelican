@@ -35,7 +35,7 @@ class Paginator(object):
         "Returns a Page object for the given 1-based page number."
         bottom = (number - 1) * self.per_page
         top = bottom + self.per_page
-        if top + self.orphans >= self.count:
+        if top + self.orphans > self.count:
             top = self.count
         return Page(self.name, self.object_list[bottom:top], number, self,
                     self.settings)
@@ -50,7 +50,7 @@ class Paginator(object):
     def _get_num_pages(self):
         "Returns the total number of pages."
         if self._num_pages is None:
-            hits = max(1, self.count - self.orphans)
+            hits = max(1, self.count - self.orphans + 1)
             self._num_pages = int(ceil(hits / (float(self.per_page) or 1)))
         return self._num_pages
     num_pages = property(_get_num_pages)
