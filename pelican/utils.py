@@ -147,6 +147,40 @@ class DateFormatter(object):
         return formatted
 
 
+class LinkExpander(object):
+    """Link expander object used as a jinja filter
+
+    Expands a custom field that contains just a link to internal content. The
+    same rules as when links are expanded in article/page contents and
+    summaries apply.
+    """
+
+    def __init__(self, settings):
+        self.intrasite_link_regex = settings['INTRASITE_LINK_REGEX']
+
+    def __call__(self, content, attr):
+        link_regex = r"""^
+            (?P<markup>)(?P<quote>)
+            (?P<path>{0}(?P<value>.*))
+            $""".format(self.intrasite_link_regex)
+        links = re.compile(link_regex, re.X)
+        return links.sub(
+            lambda m: content._link_replacer(content.get_siteurl(), m),
+            getattr(content, attr))
+
+
+class HtmlLinkExpander(object):
+    """HTML link expander object used as a jinja filter
+
+    Expands links to internal contents in a custom HTML field. The same rules
+    as when links are expanded in article/page contents and summaries apply.
+    """
+
+    def __call__(self, content, attr):
+        return content._update_content(getattr(content, attr),
+                                       content.get_siteurl())
+
+
 def python_2_unicode_compatible(klass):
     """
     A decorator that defines __unicode__ and __str__ methods under Python 2.

@@ -202,6 +202,29 @@ and ``article2.md``::
     [a link relative to the current file]({filename}category/article1.rst)
     [a link relative to the content root]({filename}/category/article1.rst)
 
+The link replacing works by default on article and page contents as well as
+summaries. If you need to replace links in custom formatted fields that are
+referenced in the ``FORMATTED_FIELDS`` setting, use the ``expand_links``
+Jinja2 filter in your template, passing the field name as a parameter::
+
+    {{ article|expand_links('legal') }}
+
+If your custom field consists of just one link (for example a link to article
+cover image for a social meta tag), use the ``expand_link`` Jinja2 filter::
+
+    {{ article|expand_link('cover') }}
+
+With the above being in a template and ``FORMATTED_FIELDS`` setting containing
+the ``'legal'`` field, a RST article making use of both fields could look like
+this::
+
+    An article
+    ##########
+
+    :date: 2017-06-22
+    :legal: This article is released under `CC0 {filename}/license.rst`.
+    :cover: {filename}/img/article-cover.jpg
+
 Linking to static files
 -----------------------
 

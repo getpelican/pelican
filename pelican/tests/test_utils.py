@@ -9,11 +9,13 @@ import time
 from sys import platform
 from tempfile import mkdtemp
 
+from jinja2 import DictLoader, Environment
 import pytz
 
 import six
 
 from pelican import utils
+from pelican.contents import Article, Page, Static
 from pelican.generators import TemplatePagesGenerator
 from pelican.settings import read_settings
 from pelican.tests.support import (LoggedTestCase, get_article,
@@ -668,6 +670,46 @@ class TestDateFormatter(unittest.TestCase):
         with utils.pelican_open(output_path) as output_file:
             self.assertEqual(output_file,
                              utils.strftime(self.date, 'date = %A, %d %B %Y'))
+
+
+class TestLinkExpanders(unittest.TestCase):
+    """Tests Jinja2 expand_link() and expand_links() filters."""
+
+    def test_expand_link(self):
+        settings = read_settings()
+        env = Environment(
+            loader=DictLoader({'a.html': "{{article|expand_link('cover')}}"})
+        )
+        env.filters.update({'expand_link': utils.LinkExpander(settings)})
+
+        linked_image = Static('', source_path='image.png')
+        context = {'filenames': {'image.png': linked_image},
+                   'localsiteurl': 'https://my.cool.site'}
+        content_mock = Article('', metadata={
+            'title': 'Article',
+            'cover': "{filename}/image.png"}, context=context)
+        result = env.get_template('a.html').render(article=content_mock)
+        self.assertEqual('https://my.cool.site/image.png', result)
+
+    def test_expand_links(self):
+        env = Environment(
+            loader=DictLoader({'a.html': "{{article|expand_links('legal')}}"})
+        )
+        env.filters.update({'expand_links': utils.HtmlLinkExpander()})
+
+        linked_page = Page('', source_path='legal.rst',
+                           metadata={'slug': 'license'})
+        context = {'filenames': {'legal.rst': linked_page},
+                   'localsiteurl': 'https://my.cool.site'}
+        content_mock = Article(
+            '', metadata={
+                'title': 'Article',
+                'legal': "<a href=\"{filename}/legal.rst\">License</a>"
+            }, context=context)
+        result = env.get_template('a.html').render(article=content_mock)
+        self.assertEqual(
+            '<a href="https://my.cool.site/pages/license.html">License</a>',
+            result)
 
 
 class TestSanitisedJoin(unittest.TestCase):

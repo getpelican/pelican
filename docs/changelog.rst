@@ -5,6 +5,8 @@ Next release
 ============
 
 * New signal: ``feed_generated``
+* Introduced ``expand_link`` and ``expand_links`` Jinja2 filters to allow URL
+  replacement in user-defined metadata fields.
 
 3.7.1 (2017-01-10)
 ==================

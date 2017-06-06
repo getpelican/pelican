@@ -204,6 +204,68 @@ class Content(object):
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 
+    def _link_replacer(self, siteurl, m):
+        what = m.group('what')
+        value = urlparse(m.group('value'))
+        path = value.path
+        origin = m.group('path')
+
+        # XXX Put this in a different location.
+        if what in {'filename', 'attach'}:
+            if path.startswith('/'):
+                path = path[1:]
+            else:
+                # relative to the source path of this content
+                path = self.get_relative_source_path(
+                    os.path.join(self.relative_dir, path)
+                )
+
+            if path not in self._context['filenames']:
+                unquoted_path = path.replace('%20', ' ')
+
+                if unquoted_path in self._context['filenames']:
+                    path = unquoted_path
+
+            linked_content = self._context['filenames'].get(path)
+            if linked_content:
+                if what == 'attach':
+                    if isinstance(linked_content, Static):
+                        linked_content.attach_to(self)
+                    else:
+                        logger.warning(
+                            "%s used {attach} link syntax on a "
+                            "non-static file. Use {filename} instead.",
+                            self.get_relative_source_path())
+                origin = '/'.join((siteurl, linked_content.url))
+                origin = origin.replace('\\', '/')  # for Windows paths.
+            else:
+                logger.warning(
+                    "Unable to find '%s', skipping url replacement.",
+                    value.geturl(), extra={
+                        'limit_msg': ("Other resources were not found "
+                                      "and their urls not replaced")})
+        elif what == 'category':
+            origin = '/'.join((siteurl, Category(path, self.settings).url))
+        elif what == 'tag':
+            origin = '/'.join((siteurl, Tag(path, self.settings).url))
+        elif what == 'index':
+            origin = '/'.join((siteurl, self.settings['INDEX_SAVE_AS']))
+        elif what == 'author':
+            origin = '/'.join((siteurl, Author(path, self.settings).url))
+        else:
+            logger.warning(
+                "Replacement Indicator '%s' not recognized, "
+                "skipping replacement",
+                what)
+
+        # keep all other parts, such as query, fragment, etc.
+        parts = list(value)
+        parts[2] = origin
+        origin = urlunparse(parts)
+
+        return ''.join((m.group('markup'), m.group('quote'), origin,
+                        m.group('quote')))
+
     def _update_content(self, content, siteurl):
         """Update the content attribute.
 
@@ -227,69 +289,7 @@ class Content(object):
             \2""".format(instrasite_link_regex)
         hrefs = re.compile(regex, re.X)
 
-        def replacer(m):
-            what = m.group('what')
-            value = urlparse(m.group('value'))
-            path = value.path
-            origin = m.group('path')
-
-            # XXX Put this in a different location.
-            if what in {'filename', 'attach'}:
-                if path.startswith('/'):
-                    path = path[1:]
-                else:
-                    # relative to the source path of this content
-                    path = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, path)
-                    )
-
-                if path not in self._context['filenames']:
-                    unquoted_path = path.replace('%20', ' ')
-
-                    if unquoted_path in self._context['filenames']:
-                        path = unquoted_path
-
-                linked_content = self._context['filenames'].get(path)
-                if linked_content:
-                    if what == 'attach':
-                        if isinstance(linked_content, Static):
-                            linked_content.attach_to(self)
-                        else:
-                            logger.warning(
-                                "%s used {attach} link syntax on a "
-                                "non-static file. Use {filename} instead.",
-                                self.get_relative_source_path())
-                    origin = '/'.join((siteurl, linked_content.url))
-                    origin = origin.replace('\\', '/')  # for Windows paths.
-                else:
-                    logger.warning(
-                        "Unable to find '%s', skipping url replacement.",
-                        value.geturl(), extra={
-                            'limit_msg': ("Other resources were not found "
-                                          "and their urls not replaced")})
-            elif what == 'category':
-                origin = '/'.join((siteurl, Category(path, self.settings).url))
-            elif what == 'tag':
-                origin = '/'.join((siteurl, Tag(path, self.settings).url))
-            elif what == 'index':
-                origin = '/'.join((siteurl, self.settings['INDEX_SAVE_AS']))
-            elif what == 'author':
-                origin = '/'.join((siteurl, Author(path, self.settings).url))
-            else:
-                logger.warning(
-                    "Replacement Indicator '%s' not recognized, "
-                    "skipping replacement",
-                    what)
-
-            # keep all other parts, such as query, fragment, etc.
-            parts = list(value)
-            parts[2] = origin
-            origin = urlunparse(parts)
-
-            return ''.join((m.group('markup'), m.group('quote'), origin,
-                            m.group('quote')))
-
-        return hrefs.sub(replacer, content)
+        return hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
 
     def get_siteurl(self):
         return self._context.get('localsiteurl', '')
