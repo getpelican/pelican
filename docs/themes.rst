@@ -230,6 +230,8 @@ Variable        Description
 =============   ===================================================
 article         The article object to be displayed
 category        The name of the category for the current article
+mdate           The article modification date and time as it
+                appears in the filesystem
 =============   ===================================================
 
 Any metadata that you put in the header of the article source file

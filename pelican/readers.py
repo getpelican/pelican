@@ -632,6 +632,8 @@ def path_metadata(full_path, source_path, settings=None):
                 os.stat(full_path).st_mtime)
         metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
             source_path, {}))
+    metadata['mdate'] = SafeDatetime.fromtimestamp(
+        os.stat(full_path).st_mtime)
     return metadata
 
 
