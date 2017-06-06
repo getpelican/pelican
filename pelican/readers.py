@@ -9,7 +9,7 @@ from collections import OrderedDict
 import docutils
 import docutils.core
 import docutils.io
-from docutils.writers.html4css1 import HTMLTranslator
+from docutils.writers.html4css1 import HTMLTranslator, Writer
 
 import six
 from six.moves.html_parser import HTMLParser
@@ -135,10 +135,17 @@ class _FieldBodyTranslator(HTMLTranslator):
         pass
 
 
-def render_node_to_html(document, node):
-    visitor = _FieldBodyTranslator(document)
+def render_node_to_html(document, node, field_body_translator_class):
+    visitor = field_body_translator_class(document)
     node.walkabout(visitor)
     return visitor.astext()
+
+
+class PelicanHTMLWriter(Writer):
+
+    def __init__(self):
+        Writer.__init__(self)
+        self.translator_class = PelicanHTMLTranslator
 
 
 class PelicanHTMLTranslator(HTMLTranslator):
@@ -160,10 +167,25 @@ class PelicanHTMLTranslator(HTMLTranslator):
 
 
 class RstReader(BaseReader):
-    """Reader for reStructuredText files"""
+    """Reader for reStructuredText files
+
+    By default the output HTML is written using
+    docutils.writers.html4css1.Writer and translated using a subclass of
+    docutils.writers.html4css1.HTMLTranslator. If you want to override it with
+    your own writer/translator (e.g. a HTML5-based one), pass your classes to
+    these two attributes. Look in the source code for details.
+
+        writer_class                    Used for writing contents
+        field_body_translator_class     Used for translating metadata such
+            as article summary
+
+    """
 
     enabled = bool(docutils)
     file_extensions = ['rst']
+
+    writer_class = PelicanHTMLWriter
+    field_body_translator_class = _FieldBodyTranslator
 
     class FileInput(docutils.io.FileInput):
         """Patch docutils.io.FileInput to remove "U" mode in py3.
@@ -192,7 +214,9 @@ class RstReader(BaseReader):
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
                     if name in formatted_fields:
-                        value = render_node_to_html(document, body_elem)
+                        value = render_node_to_html(
+                            document, body_elem,
+                            self.field_body_translator_class)
                     else:
                         value = body_elem.astext()
                 elif element.tagname == 'authors':  # author list
@@ -217,10 +241,10 @@ class RstReader(BaseReader):
             extra_params.update(user_params)
 
         pub = docutils.core.Publisher(
+            writer=self.writer_class(),
             source_class=self.FileInput,
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
-        pub.writer.translator_class = PelicanHTMLTranslator
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=source_path)
         pub.publish(enable_exit_status=True)
