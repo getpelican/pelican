@@ -152,7 +152,8 @@ Basic settings
 
 .. data:: OUTPUT_PATH = 'output/'
 
-   Where to output the generated files.
+   Where to output the generated files. This should correspond to the document
+   root of the web server.
 
 .. data:: PATH
 
@@ -312,6 +313,7 @@ Basic settings
    A list of metadata fields containing reST/Markdown content to be parsed and
    translated to HTML.
 
+.. _url-settings:
 
 URL settings
 ============
@@ -329,8 +331,13 @@ You can customize the URLs and locations where files will be saved. The
 ``*_URL`` and ``*_SAVE_AS`` variables use Python's format strings. These
 variables allow you to place your articles in a location such as
 ``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see
-example below). These settings give you the flexibility to place your articles
-and pages anywhere you want.
+example below).
+
+.. note::
+    If the parent directory of a ``*_SAVE_AS`` setting doesn't match the
+    directory portion of the corresponding ``*_URL`` setting, this may cause
+    Pelican to generate incorrect URLs in a few cases, such as when using
+    ``{attach}``.
 
 .. note::
     If you specify a ``datetime`` directive, it will be substituted using the
