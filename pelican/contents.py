@@ -36,6 +36,7 @@ class Content(object):
     :param settings: the settings dictionary (optional).
     :param source_path: The location of the source of this content (if any).
     :param context: The shared context between generators.
+    :param _readers: readers.Readers() instance used for rendering includes.
 
     """
     @deprecated_attribute(old='filename', new='source_path', since=(3, 2, 0))
@@ -43,7 +44,7 @@ class Content(object):
         return None
 
     def __init__(self, content, metadata=None, settings=None,
-                 source_path=None, context=None):
+                 source_path=None, context=None, _readers=None):
         if metadata is None:
             metadata = {}
         if settings is None:
@@ -152,17 +153,12 @@ class Content(object):
             self._summary = metadata['summary']
 
         # used for rendering {includes}
-        self._readers = None
+        self._readers = _readers
 
         signals.content_object_init.send(self)
 
     @property
     def readers(self):
-        if self._readers is None:
-            # import here due to circular imports
-            from pelican.readers import Readers
-            self._readers = Readers(self.settings)
-
         return self._readers
 
     def __str__(self):

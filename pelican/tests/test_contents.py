@@ -12,6 +12,7 @@ from jinja2.utils import generate_lorem_ipsum
 import six
 
 from pelican.contents import Article, Author, Category, Page, Static, Tag
+from pelican.readers import Readers
 from pelican.settings import DEFAULT_CONFIG
 from pelican.signals import content_object_init
 from pelican.tests.support import LoggedTestCase, get_settings, unittest
@@ -428,6 +429,7 @@ class TestPage(LoggedTestCase):
         settings = get_settings()
         settings['PATH'] = CONTENT_PATH
         args['settings'] = settings
+        args['_readers'] = Readers(settings)
 
         # test inclusion b/w files of different types
         # HTML includes Markdown

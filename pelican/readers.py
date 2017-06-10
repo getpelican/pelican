@@ -574,7 +574,7 @@ class Readers(FileStampDataCacher):
 
         return content_class(content=content, metadata=metadata,
                              settings=self.settings, source_path=path,
-                             context=context)
+                             context=context, _readers=self)
 
 
 def find_empty_alt(content, path):
