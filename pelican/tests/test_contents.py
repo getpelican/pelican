@@ -558,6 +558,15 @@ class TestPage(LoggedTestCase):
             ' Included content is above'
         )
 
+        # recursion loop, include5.html includes include6.html
+        # and the other way around
+        args['content'] = (
+            'There is a simple include here '
+            '{include}include5.html'
+        )
+        with self.assertRaisesRegex(RuntimeError, 'Circular inclusion detected'):
+            Page(**args).get_content('http://notmyidea.org')
+
     def test_multiple_authors(self):
         """Test article with multiple authors."""
         args = self.page_kwargs.copy()

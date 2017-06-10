@@ -321,10 +321,19 @@ class Content(object):
         """
         regex = r"""[{|]include[|}](?P<path>[\w./]+)"""
         hrefs = re.compile(regex, re.X)
+        processed_paths = []
+        # In Python 3.x we can use the `nonlocal` declaration, in `replacer()`,
+        # to tell Python we mean to assign to the `source_path` variable from
+        # `_update_includes()`.
+        # In Python 2.x we simply can't assign to `source_path` in `replacer()`.
+        # However, we work around this by not assigning to the variable itself,
+        # but using a mutable container to keep track about the current working
+        # directory while doing the recursion.
+        source_dir = [source_path]
 
         def replacer(m):
             path = m.group('path')
-            path = self._path_replacer(path, source_path)
+            path = self._path_replacer(path, source_dir[0])
             path = posixize_path(
                     os.path.abspath(
                         os.path.join(self.settings['PATH'], path)
@@ -343,15 +352,25 @@ class Content(object):
                 logger.warning("Unable to read `%s`, skipping include.", path)
                 return ''.join(('{include}', m.group('path')))
 
+            # recursion stop
+            if path in processed_paths:
+                raise RuntimeError("Circular inclusion detected for '%s'" % path)
+            processed_paths.append(path)
+
             reader = self.readers.reader_classes[ext](self.settings)
             text, meta = reader.read(path)
 
             # if we recurse into another file to perform more includes
             # self._path_replacer needs to know in which directory
             # it operates otherwise it produces wrong paths
-            source_dir = posixize_path(os.path.dirname(path))
+            source_dir[0] = posixize_path(os.path.dirname(path))
+            current_source_dir = source_dir[0]
 
-            text = self._update_includes(text, source_dir)
+            # recursively replace other includes
+            text = hrefs.sub(replacer, text)
+
+            # restore source dir
+            source_dir[0] = current_source_dir
             return text
 
         return hrefs.sub(replacer, content)
