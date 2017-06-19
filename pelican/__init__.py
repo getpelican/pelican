@@ -488,8 +488,6 @@ def main():
             if next(watchers['theme']) is None:
                 logger.warning('Empty theme folder. Using `basic` theme.')
 
-            modified_files = [val for vals in list(modified.values())
-                              for val in vals]
             pelican.run()
 
     except Exception as e:
