@@ -141,7 +141,7 @@ class Pelican(object):
                 )
                 self.settings[old] = self.settings[new]
 
-    def run(self):
+    def run(self, modified=None):
         """Run the generators and return"""
         start_time = time.time()
 
@@ -164,11 +164,13 @@ class Pelican(object):
         # explicitly asked
         if (self.delete_outputdir and not
                 os.path.realpath(self.path).startswith(self.output_path)):
-            clean_output_dir(self.output_path, self.output_retention)
+            clean_output_dir(self.output_path,
+                             self.output_retention,
+                             files_to_clean=modified)
 
         for p in generators:
             if hasattr(p, 'generate_context'):
-                p.generate_context()
+                p.generate_context(modified=modified)
 
         signals.all_generators_finalized.send(generators)
 
@@ -462,7 +464,9 @@ def main():
                             logger.warning('Empty theme folder. Using `basic` '
                                            'theme.')
 
-                        pelican.run()
+                        modified_files = [v for vals in list(modified.values())
+                                          for v in vals]
+                        pelican.run(modified=modified_files)
 
                 except KeyboardInterrupt:
                     logger.warning("Keyboard interrupt, quitting.")
@@ -484,6 +488,8 @@ def main():
             if next(watchers['theme']) is None:
                 logger.warning('Empty theme folder. Using `basic` theme.')
 
+            modified_files = [val for vals in list(modified.values())
+                              for val in vals]
             pelican.run()
 
     except Exception as e:

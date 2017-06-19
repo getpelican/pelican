@@ -398,8 +398,11 @@ def copy_file_metadata(source, destination):
                        source, destination, e)
 
 
-def clean_output_dir(path, retention):
-    """Remove all files from output directory except those in retention list"""
+def clean_output_dir(path, retention, files_to_clean=None):
+    """Remove all files from output directory except those in retention list.
+    If files_to_clean is provided, only clean these files (but still skip over
+    the ones in retention list).
+    """
 
     if not os.path.exists(path):
         logger.debug("Directory already removed: %s", path)
@@ -414,6 +417,8 @@ def clean_output_dir(path, retention):
 
     # remove existing content from output folder unless in retention list
     for filename in os.listdir(path):
+        if files_to_clean is not None and filename not in files_to_clean:
+            continue
         file = os.path.join(path, filename)
         if any(filename == retain for retain in retention):
             logger.debug("Skipping deletion; %s is on retention list: %s",
@@ -727,11 +732,13 @@ def process_translations(content_list, order_by=None):
 def folder_watcher(path, extensions, ignores=[]):
     '''Generator for monitoring a folder for modifications.
 
-    Returns a boolean indicating if files are changed since last check.
+    Returns a list indicating the files that were changed since last check.
     Returns None if there are no matching files in the folder'''
 
-    def file_times(path):
-        '''Return `mtime` for each file in path'''
+    def file_times(path, after=0):
+        '''Return a (`mtime`, `file_path`) tuple for each file in path.
+        If `after` kwarg is provided, only return files with `mtime` > `after`.
+        '''
 
         for root, dirs, files in os.walk(path, followlinks=True):
             dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
@@ -740,21 +747,24 @@ def folder_watcher(path, extensions, ignores=[]):
                 if f.endswith(tuple(extensions)) and \
                    not any(fnmatch.fnmatch(f, ignore) for ignore in ignores):
                         try:
-                            yield os.stat(os.path.join(root, f)).st_mtime
+                            mtime = os.stat(os.path.join(root, f)).st_mtime
+                            if mtime > after:
+                                yield (mtime, os.path.join(root, f))
                         except OSError as e:
                             logger.warning('Caught Exception: %s', e)
 
     LAST_MTIME = 0
     while True:
         try:
-            mtime = max(file_times(path))
-            if mtime > LAST_MTIME:
-                LAST_MTIME = mtime
-                yield True
+            modified_files = sorted(file_times(path, after=LAST_MTIME),
+                                    reverse=True)
+            if modified_files:
+                LAST_MTIME = modified_files[0][0]
+                yield [mf[1] for mf in modified_files]
         except ValueError:
             yield None
         else:
-            yield False
+            yield []
 
 
 def file_watcher(path):
@@ -770,9 +780,9 @@ def file_watcher(path):
 
             if mtime > LAST_MTIME:
                 LAST_MTIME = mtime
-                yield True
+                yield path
             else:
-                yield False
+                yield ''
         else:
             yield None
 

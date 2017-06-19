@@ -94,6 +94,19 @@ class Generator(object):
                         name, self._templates_path))
         return self._templates[name]
 
+    def _filter_child_paths(self, ancestor_paths, child_paths):
+        """Return set of elements in child_paths which are children of at least
+        one of ancestor_paths.
+        """
+        paths = set()
+        for ancestor_path in ancestor_paths:
+            ancestor_path = os.path.join(self.path, ancestor_path)
+            paths.update(
+                filter(lambda p: os.path.realpath(p).startswith(ancestor_path),
+                       child_paths)
+            )
+        return paths
+
     def _include_path(self, path, extensions=None):
         """Inclusion logic for .get_files(), returns True/False
 
@@ -501,14 +514,17 @@ class ArticlesGenerator(CachingGenerator):
         self.generate_authors(write)
         self.generate_drafts(write)
 
-    def generate_context(self):
+    def generate_context(self, modified=None):
         """Add the articles into the shared context"""
 
         all_articles = []
         all_drafts = []
-        for f in self.get_files(
-                self.settings['ARTICLE_PATHS'],
-                exclude=self.settings['ARTICLE_EXCLUDES']):
+        files = self.get_files(
+            (self.settings['ARTICLE_PATHS'] if modified is None
+             else self._filter_child_paths(self.settings['ARTICLE_PATHS'],
+                                           modified)),
+            exclude=self.settings['ARTICLE_EXCLUDES'])
+        for f in files:
             article_or_draft = self.get_cached_data(f, None)
             if article_or_draft is None:
                 # TODO needs overhaul, maybe nomad for read_file
@@ -611,12 +627,15 @@ class PagesGenerator(CachingGenerator):
         super(PagesGenerator, self).__init__(*args, **kwargs)
         signals.page_generator_init.send(self)
 
-    def generate_context(self):
+    def generate_context(self, modified=None):
         all_pages = []
         hidden_pages = []
-        for f in self.get_files(
-                self.settings['PAGE_PATHS'],
-                exclude=self.settings['PAGE_EXCLUDES']):
+        files = self.get_files(
+            (self.settings['PAGE_PATHS'] if modified is None
+             else self._filter_child_paths(self.settings['PAGE_PATHS'],
+                                           modified)),
+            exclude=self.settings['PAGE_EXCLUDES'])
+        for f in files:
             page = self.get_cached_data(f, None)
             if page is None:
                 try:
@@ -697,11 +716,15 @@ class StaticGenerator(Generator):
                      os.path.join(output_path, destination, path),
                      self.settings['IGNORE_FILES'])
 
-    def generate_context(self):
+    def generate_context(self, modified=None):
         self.staticfiles = []
-        for f in self.get_files(self.settings['STATIC_PATHS'],
-                                exclude=self.settings['STATIC_EXCLUDES'],
-                                extensions=False):
+        files = self.get_files(
+            (self.settings['STATIC_PATHS'] if modified is None
+             else self._filter_child_paths(self.settings['STATIC_PATHS'],
+                                           modified)),
+            exclude=self.settings['STATIC_EXCLUDES'],
+            extensions=False)
+        for f in files:
 
             # skip content source files unless the user explicitly wants them
             if self.settings['STATIC_EXCLUDE_SOURCES']:
@@ -735,7 +758,8 @@ class StaticGenerator(Generator):
 
 class SourceFileGenerator(Generator):
 
-    def generate_context(self):
+    def generate_context(self, modified=None):
+        """`modified` is unused; only here for consistency."""
         self.output_extension = self.settings['OUTPUT_SOURCES_EXTENSION']
 
     def _create_source(self, obj):

@@ -286,22 +286,22 @@ class TestUtils(LoggedTestCase):
         file_watcher = utils.file_watcher(path)
 
         # first check returns True
-        self.assertEqual(next(folder_watcher), True)
-        self.assertEqual(next(file_watcher), True)
+        self.assertTrue(next(folder_watcher))
+        self.assertTrue(next(file_watcher))
 
         # next check without modification returns False
-        self.assertEqual(next(folder_watcher), False)
-        self.assertEqual(next(file_watcher), False)
+        self.assertFalse(next(folder_watcher))
+        self.assertFalse(next(file_watcher))
 
         # after modification, returns True
         t = time.time()
         os.utime(path, (t, t))
-        self.assertEqual(next(folder_watcher), True)
-        self.assertEqual(next(file_watcher), True)
+        self.assertTrue(next(folder_watcher))
+        self.assertTrue(next(file_watcher))
 
         # file watcher with None or empty path should return None
-        self.assertEqual(next(utils.file_watcher('')), None)
-        self.assertEqual(next(utils.file_watcher(None)), None)
+        self.assertIsNone(next(utils.file_watcher('')))
+        self.assertIsNone(next(utils.file_watcher(None)))
 
         empty_path = os.path.join(os.path.dirname(__file__), 'empty')
         try:
@@ -309,9 +309,9 @@ class TestUtils(LoggedTestCase):
             os.mkdir(os.path.join(empty_path, "empty_folder"))
             shutil.copy(__file__, empty_path)
 
-            # if no files of interest, returns None
+            # if no files of interest, returns empty list
             watcher = utils.folder_watcher(empty_path, ['rst'])
-            self.assertEqual(next(watcher), None)
+            self.assertEqual(next(watcher), [])
         except OSError:
             self.fail("OSError Exception in test_files_changed test")
         finally:
