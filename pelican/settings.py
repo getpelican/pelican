@@ -82,6 +82,8 @@ DEFAULT_CONFIG = {
     'PAGE_LANG_SAVE_AS': posix_join('pages', '{slug}-{lang}.html'),
     'STATIC_URL': '{path}',
     'STATIC_SAVE_AS': '{path}',
+    'STATIC_CREATE_LINKS': False,
+    'STATIC_CHECK_IF_MODIFIED': False,
     'CATEGORY_URL': 'category/{slug}.html',
     'CATEGORY_SAVE_AS': posix_join('category', '{slug}.html'),
     'TAG_URL': 'tag/{slug}.html',
