@@ -31,7 +31,7 @@ function alive() {
 }
 
 function shut_down(){
-  PID=$$(cat $$SRV_PID)
+  PID=$$(cat $$SRV_PID 2>/dev/null)
   if [[ $$? -eq 0 ]]; then
     if alive $PID; then
       echo "Stopping HTTP server"
@@ -44,7 +44,7 @@ function shut_down(){
     echo "HTTP server PIDFile not found"
   fi
 
-  PID=$$(cat $$PELICAN_PID)
+  PID=$$(cat $$PELICAN_PID 2>/dev/null)
   if [[ $$? -eq 0 ]]; then
     if alive $$PID; then
       echo "Killing Pelican"
