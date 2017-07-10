@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals
 import argparse
 import logging
 import os
+import posixpath
 import ssl
 import sys
 
@@ -12,8 +13,9 @@ try:
 except ImportError:
     magic_from_file = None
 
+from six.moves import BaseHTTPServer
 from six.moves import SimpleHTTPServer as srvmod
-from six.moves import socketserver
+from six.moves import urllib
 
 
 def parse_arguments():
@@ -33,12 +35,35 @@ def parse_arguments():
     parser.add_argument('--key', default="./key.pem", nargs="?",
                         help='Path to certificate key file. ' +
                         'Relative to current directory')
+    parser.add_argument('path', default=".",
+                        help='Path to pelican source directory to serve. ' +
+                        'Relative to current directory')
     return parser.parse_args()
 
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
     SUFFIXES = ['', '.html', '/index.html']
     RSTRIP_PATTERNS = ['', '/']
+
+    def translate_path(self, path):
+        # abandon query parameters
+        path = path.split('?', 1)[0]
+        path = path.split('#', 1)[0]
+        # Don't forget explicit trailing slash when normalizing. Issue17324
+        trailing_slash = path.rstrip().endswith('/')
+        path = urllib.parse.unquote(path)
+        path = posixpath.normpath(path)
+        words = path.split('/')
+        words = filter(None, words)
+        path = self.base_path
+        for word in words:
+            if os.path.dirname(word) or word in (os.curdir, os.pardir):
+                # Ignore components that are not a simple file/directory name
+                continue
+            path = os.path.join(path, word)
+        if trailing_slash:
+            path += '/'
+        return path
 
     def do_GET(self):
         # cut off a query string
@@ -83,11 +108,17 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
         return mimetype
 
 
+class RootedHTTPServer(BaseHTTPServer.HTTPServer):
+    def __init__(self, base_path, *args, **kwargs):
+        BaseHTTPServer.HTTPServer.__init__(self, *args, **kwargs)
+        self.RequestHandlerClass.base_path = base_path
+
+
 if __name__ == '__main__':
     args = parse_arguments()
-    socketserver.TCPServer.allow_reuse_address = True
+    RootedHTTPServer.allow_reuse_address = True
     try:
-        httpd = socketserver.TCPServer(
+        httpd = RootedHTTPServer(
             (args.server, args.port),
             ComplexHTTPRequestHandler)
         if args.ssl:
@@ -97,7 +128,6 @@ if __name__ == '__main__':
     except ssl.SSLError as e:
         logging.error("Couldn't open certificate file %s or key file %s",
                       args.cert, args.key)
-    except OSError as e:
         logging.error("Could not listen on port %s, server %s.",
                       args.port, args.server)
         sys.exit(getattr(e, 'exitcode', 1))

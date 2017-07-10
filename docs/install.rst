@@ -103,7 +103,6 @@ can optionally add yourself if you plan to create non-chronological content)::
     ├── content
     │   └── (pages)
     ├── output
-    ├── develop_server.sh
     ├── fabfile.py
     ├── Makefile
     ├── pelicanconf.py       # Main settings file
