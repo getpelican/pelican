@@ -201,10 +201,7 @@ separate terminal sessions, but you can run both at once via::
     make devserver
 
 The above command will simultaneously run Pelican in regeneration mode as well
-as serve the output at http://localhost:8000. Once you are done testing your
-changes, you should stop the development server via::
-
-    ./develop_server.sh stop
+as serve the output at http://localhost:8000.
 
 When you're ready to publish your site, you can upload it via the method(s) you
 chose during the ``pelican-quickstart`` questionnaire. For this example, we'll
