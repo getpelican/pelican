@@ -3,12 +3,6 @@ import fabric.contrib.project as project
 import os
 import shutil
 import sys
-try:
-    import socketserver
-except ImportError:
-    import SocketServer as socketserver
-
-from pelican.server import ComplexHTTPRequestHandler
 
 # Local path configuration (can be absolute or relative to fabfile)
 env.deploy_path = 'output'
@@ -55,15 +49,11 @@ def regenerate():
 
 def serve():
     """Serve site at http://localhost:8000/"""
-    os.chdir(env.deploy_path)
+    local('pelican -l -s pelicanconf.py')
 
-    class AddressReuseTCPServer(socketserver.TCPServer):
-        allow_reuse_address = True
-
-    server = AddressReuseTCPServer(('', PORT), ComplexHTTPRequestHandler)
-
-    sys.stderr.write('Serving on port {0} ...\n'.format(PORT))
-    server.serve_forever()
+def devserver():
+    """Serve site at http://localhost:8000/ and regenerate automatically"""
+    local('pelican -r -l -s pelicanconf.py')
 
 def reserve():
     """`build`, then `serve`"""
