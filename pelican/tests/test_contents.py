@@ -397,6 +397,54 @@ class TestPage(LoggedTestCase):
             '</blockquote>'
         )
 
+    def test_intrasite_link_absolute(self):
+        """Test that absolute URLs are merged properly."""
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings(
+            STATIC_URL='http://static.cool.site/{path}',
+            ARTICLE_URL='http://blog.cool.site/{slug}.html')
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {
+            'images/poster.jpg': Static('',
+                                        settings=args['settings'],
+                                        source_path='images/poster.jpg'),
+            'article.rst': Article('',
+                                   settings=args['settings'],
+                                   metadata={'slug': 'article',
+                                             'title': 'Article'})
+        }
+
+        # Article link will go to blog
+        args['content'] = (
+            '<a href="{filename}article.rst">Article</a>'
+        )
+        content = Page(**args).get_content('http://cool.site')
+        self.assertEqual(
+            content,
+            '<a href="http://blog.cool.site/article.html">Article</a>'
+        )
+
+        # Page link will go to the main site
+        args['content'] = (
+            '<a href="{index}">Index</a>'
+        )
+        content = Page(**args).get_content('http://cool.site')
+        self.assertEqual(
+            content,
+            '<a href="http://cool.site/index.html">Index</a>'
+        )
+
+        # Image link will go to static
+        args['content'] = (
+            '<img src="{filename}/images/poster.jpg"/>'
+        )
+        content = Page(**args).get_content('http://cool.site')
+        self.assertEqual(
+            content,
+            '<img src="http://static.cool.site/images/poster.jpg"/>'
+        )
+
     def test_intrasite_link_markdown_spaces(self):
         # Markdown introduces %20 instead of spaces, this tests that
         # we support markdown doing this.
