@@ -69,11 +69,13 @@ class TestPage(LoggedTestCase):
     def test_mandatory_properties(self):
         # If the title is not set, must throw an exception.
         page = Page('content')
-        with self.assertRaises(NameError):
-            page.check_properties()
-
+        self.assertFalse(page._has_valid_mandatory_properties())
+        self.assertLogCountEqual(
+                count=1,
+                msg="Skipping .*: could not find information about 'title'",
+                level=logging.ERROR)
         page = Page('content', metadata={'title': 'foobar'})
-        page.check_properties()
+        self.assertTrue(page._has_valid_mandatory_properties())
 
     def test_summary_from_metadata(self):
         # If a :summary: metadata is given, it should be used
@@ -503,7 +505,7 @@ class TestArticle(TestPage):
         article_kwargs['metadata']['slug'] = '../foo'
         article_kwargs['settings'] = settings
         article = Article(**article_kwargs)
-        self.assertFalse(article.valid_save_as())
+        self.assertFalse(article._has_valid_save_as())
 
     def test_valid_save_as_detects_breakout_to_root(self):
         settings = get_settings()
@@ -511,7 +513,7 @@ class TestArticle(TestPage):
         article_kwargs['metadata']['slug'] = '/foo'
         article_kwargs['settings'] = settings
         article = Article(**article_kwargs)
-        self.assertFalse(article.valid_save_as())
+        self.assertFalse(article._has_valid_save_as())
 
     def test_valid_save_as_passes_valid(self):
         settings = get_settings()
@@ -519,7 +521,7 @@ class TestArticle(TestPage):
         article_kwargs['metadata']['slug'] = 'foo'
         article_kwargs['settings'] = settings
         article = Article(**article_kwargs)
-        self.assertTrue(article.valid_save_as())
+        self.assertTrue(article._has_valid_save_as())
 
 
 class TestStatic(LoggedTestCase):

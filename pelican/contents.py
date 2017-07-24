@@ -138,14 +138,7 @@ class Content(object):
 
         # manage status
         if not hasattr(self, 'status'):
-            self.status = settings['DEFAULT_STATUS']
-            if not settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
-                if self.date.tzinfo is None:
-                    now = SafeDatetime.now()
-                else:
-                    now = SafeDatetime.utcnow().replace(tzinfo=pytz.utc)
-                if self.date > now:
-                    self.status = 'draft'
+            self.status = getattr(self, 'default_status', None)
 
         # store the summary metadata if it is set
         if 'summary' in metadata:
@@ -156,13 +149,17 @@ class Content(object):
     def __str__(self):
         return self.source_path or repr(self)
 
-    def check_properties(self):
+    def _has_valid_mandatory_properties(self):
         """Test mandatory properties are set."""
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
-                raise NameError(prop)
+                logger.error(
+                    "Skipping %s: could not find information about '%s'",
+                    self, prop)
+                return False
+        return True
 
-    def valid_save_as(self):
+    def _has_valid_save_as(self):
         """Return true if save_as doesn't write outside output path, false
         otherwise."""
         try:
@@ -174,9 +171,34 @@ class Content(object):
         try:
             sanitised_join(output_path, self.save_as)
         except RuntimeError:  # outside output_dir
+            logger.error(
+                "Skipping %s: file %r would be written outside output path",
+                self,
+                self.save_as,
+            )
             return False
 
         return True
+
+    def _has_valid_status(self):
+        if hasattr(self, 'allowed_statuses'):
+            if self.status not in self.allowed_statuses:
+                logger.error(
+                    "Unknown status '%s' for file %s, skipping it.",
+                    self.status,
+                    self
+                )
+                return False
+
+        # if undefined we allow all
+        return True
+
+    def is_valid(self):
+        """Validate Content"""
+        # Use all() to not short circuit and get results of all validations
+        return all([self._has_valid_mandatory_properties(),
+                    self._has_valid_save_as(),
+                    self._has_valid_status()])
 
     @property
     def url_format(self):
@@ -194,8 +216,10 @@ class Content(object):
         })
         return metadata
 
-    def _expand_settings(self, key):
-        fq_key = ('%s_%s' % (self.__class__.__name__, key)).upper()
+    def _expand_settings(self, key, klass=None):
+        if not klass:
+            klass = self.__class__.__name__
+        fq_key = ('%s_%s' % (klass, key)).upper()
         return self.settings[fq_key].format(**self.url_format)
 
     def get_url_setting(self, key):
@@ -339,6 +363,15 @@ class Content(object):
         pass
 
     @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, value):
+        # TODO maybe typecheck
+        self._status = value.lower()
+
+    @property
     def url(self):
         return self.get_url_setting('url')
 
@@ -383,21 +416,36 @@ class Content(object):
 
 class Page(Content):
     mandatory_properties = ('title',)
+    allowed_statuses = ('published', 'hidden')
+    default_status = 'published'
     default_template = 'page'
 
 
-class Article(Page):
+class Article(Content):
     mandatory_properties = ('title', 'date', 'category')
+    allowed_statuses = ('published', 'draft')
+    default_status = 'published'
     default_template = 'article'
 
+    def __init__(self, *args, **kwargs):
+        super(Article, self).__init__(*args, **kwargs)
 
-class Draft(Page):
-    mandatory_properties = ('title', 'category')
-    default_template = 'article'
+        # handle WITH_FUTURE_DATES (designate article to draft based on date)
+        if not self.settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
+            if self.date.tzinfo is None:
+                now = SafeDatetime.now()
+            else:
+                now = SafeDatetime.utcnow().replace(tzinfo=pytz.utc)
+            if self.date > now:
+                self.status = 'draft'
 
+        # if we are a draft and there is no date provided, set max datetime
+        if not hasattr(self, 'date') and self.status == 'draft':
+            self.date = SafeDatetime.max
 
-class Quote(Page):
-    base_properties = ('author', 'date')
+    def _expand_settings(self, key):
+        klass = 'article' if self.status == 'published' else 'draft'
+        return super(Article, self)._expand_settings(key, klass)
 
 
 @python_2_unicode_compatible
@@ -482,25 +530,3 @@ class Static(Page):
 
         self.override_save_as = new_save_as
         self.override_url = new_url
-
-
-def is_valid_content(content, f):
-    try:
-        content.check_properties()
-    except NameError as e:
-        logger.error(
-            "Skipping %s: could not find information about '%s'",
-            f, six.text_type(e))
-        return False
-
-    if not content.valid_save_as():
-        logger.error(
-            "Skipping %s: file %r would be written outside output path",
-            f,
-            content.save_as,
-        )
-        # Note: future code might want to use a result variable instead, to
-        # allow showing multiple error messages at once.
-        return False
-
-    return True
