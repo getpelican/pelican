@@ -149,7 +149,7 @@ class Content(object):
     def __str__(self):
         return self.source_path or repr(self)
 
-    def _valid_mandatory_properties(self):
+    def _has_valid_mandatory_properties(self):
         """Test mandatory properties are set."""
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
@@ -159,7 +159,7 @@ class Content(object):
                 return False
         return True
 
-    def _valid_save_as(self):
+    def _has_valid_save_as(self):
         """Return true if save_as doesn't write outside output path, false
         otherwise."""
         try:
@@ -180,9 +180,9 @@ class Content(object):
 
         return True
 
-    def _valid_status(self):
-        if hasattr(self, 'allowed_status'):
-            if self.status not in self.allowed_status:
+    def _has_valid_status(self):
+        if hasattr(self, 'allowed_statuses'):
+            if self.status not in self.allowed_statuses:
                 logger.error(
                     "Unknown status '%s' for file %s, skipping it.",
                     self.status,
@@ -193,12 +193,12 @@ class Content(object):
         # if undefined we allow all
         return True
 
-    def valid(self):
+    def is_valid(self):
         """Validate Content"""
         # Use all() to not short circuit and get results of all validations
-        return all([self._valid_mandatory_properties(),
-                    self._valid_save_as(),
-                    self._valid_status()])
+        return all([self._has_valid_mandatory_properties(),
+                    self._has_valid_save_as(),
+                    self._has_valid_status()])
 
     @property
     def url_format(self):
@@ -416,14 +416,14 @@ class Content(object):
 
 class Page(Content):
     mandatory_properties = ('title',)
-    allowed_status = ('published', 'hidden')
+    allowed_statuses = ('published', 'hidden')
     default_status = 'published'
     default_template = 'page'
 
 
 class Article(Content):
     mandatory_properties = ('title', 'date', 'category')
-    allowed_status = ('published', 'draft')
+    allowed_statuses = ('published', 'draft')
     default_status = 'published'
     default_template = 'article'
 

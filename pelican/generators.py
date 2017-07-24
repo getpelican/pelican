@@ -526,7 +526,7 @@ class ArticlesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
-                if not article.valid():
+                if not article.is_valid():
                     self._add_failed_source_path(f)
                     continue
 
@@ -615,7 +615,7 @@ class PagesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
-                if not page.valid():
+                if not page.is_valid():
                     self._add_failed_source_path(f)
                     continue
 
