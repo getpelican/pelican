@@ -203,10 +203,12 @@ Basic settings
 
 .. data:: SITEURL
 
-   Base URL of your website. Not defined by default, so it is best to specify
+   Base URL of your web site. Not defined by default, so it is best to specify
    your SITEURL; if you do not, feeds will not be generated with
-   properly-formed URLs. You should include ``http://`` and your domain, with
-   no trailing slash at the end. Example: ``SITEURL = 'http://mydomain.com'``
+   properly-formed URLs. If your site is available via HTTPS, this setting
+   should begin with ``https://`` — otherwise use ``http://``. Then append your
+   domain, with no trailing slash at the end.
+   Example: ``SITEURL = 'https://example.com'``
 
 .. data:: STATIC_PATHS = ['images']
 

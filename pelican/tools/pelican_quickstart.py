@@ -246,7 +246,7 @@ needed by Pelican.
     CONF['lang'] = ask('What will be the default language of this web site?',
                        str_compat, args.lang or CONF['lang'], 2)
 
-    if ask('Do you want to specify a URL prefix? e.g., http://example.com  ',
+    if ask('Do you want to specify a URL prefix? e.g., https://example.com  ',
            answer=bool, default=True):
         CONF['siteurl'] = ask('What is your URL prefix? (see '
                               'above example; no trailing slash)',
