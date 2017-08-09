@@ -88,6 +88,9 @@ Again, you can take advantage of ``ghp-import``::
 
     $ pelican content -o output -s pelicanconf.py
     $ ghp-import output
+    
+`Make sure you have a valid SSH key <https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/>`_ and then push changes to your Github Pages::
+
     $ git push git@github.com:elemoine/elemoine.github.io.git gh-pages:master
 
 The ``git push`` command pushes the local ``gh-pages`` branch (freshly updated
