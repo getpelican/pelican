@@ -12,7 +12,7 @@ import sys
 import pytz
 
 try:
-    import readline  #NOQA
+    import readline  # NOQA
 except ImportError:
     pass
 
