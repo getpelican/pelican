@@ -14,7 +14,7 @@ import six
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import init
+from pelican.log import init as init_logging
 from pelican import signals  # noqa
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 SourceFileGenerator, StaticGenerator,
@@ -327,6 +327,11 @@ def parse_arguments():
                         help=('Exit the program with non-zero status if any '
                               'errors/warnings encountered.'))
 
+    parser.add_argument('--logs-dedup-min-level', default='WARNING',
+                        choices=('DEBUG', 'INFO', 'WARNING', 'ERROR'),
+                        help=('Only enable log de-duplication for levels equal'
+                              ' to or above the specified value'))
+
     return parser.parse_args()
 
 
@@ -384,7 +389,9 @@ def get_instance(args):
 
 def main():
     args = parse_arguments()
-    init(args.verbosity, args.fatal)
+    logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
+    init_logging(args.verbosity, args.fatal,
+                 logs_dedup_min_level=logs_dedup_min_level)
 
     logger.debug('Pelican version: %s', __version__)
     logger.debug('Python version: %s', sys.version.split()[0])
