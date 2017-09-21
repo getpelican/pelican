@@ -123,7 +123,7 @@ Contribution quality standards
   <http://pypi.python.org/pypi/flake8/>`_ tools, the latter of which in
   particular will give you some useful hints about ways in which the
   code/formatting can be improved.
-* Make sure your code is compatible with Python 2.7, 3.3, and 3.4 — see our
+* Ensure your code is compatible with the latest Python 2.7 and 3.x releases — see our
   `compatibility cheatsheet`_ for more details.
 * Add docs and tests for your changes. Undocumented and untested features will
   not be accepted.
