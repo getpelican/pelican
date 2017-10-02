@@ -14,13 +14,13 @@ import six
 from pelican.log import LimitFilter
 
 try:
-    # SourceFileLoader is the recommended way in 3.3+
+    # SourceFileLoader is the recommended way in Python 3.3+
     from importlib.machinery import SourceFileLoader
 
     def load_source(name, path):
         return SourceFileLoader(name, path).load_module()
 except ImportError:
-    # but it does not exist in 3.2-, so fall back to imp
+    # but it does not exist in Python 2.7, so fall back to imp
     import imp
     load_source = imp.load_source
 
