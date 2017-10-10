@@ -132,9 +132,9 @@ def get_items(xml):
     return items
 
 
-def get_filename(filename, post_id):
-    if filename is not None:
-        return filename
+def get_filename(post_name, post_id):
+    if post_name and not post_name.isspace():
+        return post_name
     else:
         return post_id
 
@@ -154,9 +154,9 @@ def wp2fields(xml, wp_custpost=False):
                 title = 'No title [%s]' % item.find('post_name').string
                 logger.warning('Post "%s" is lacking a proper title', title)
 
-            filename = item.find('post_name').string
+            post_name = item.find('post_name').string
             post_id = item.find('post_id').string
-            filename = get_filename(filename, post_id)
+            filename = get_filename(post_name, post_id)
 
             content = item.find('encoded').string
             raw_date = item.find('post_date').string
@@ -625,14 +625,14 @@ def get_attachments(xml):
 
     for item in items:
         kind = item.find('post_type').string
-        filename = item.find('post_name').string
+        post_name = item.find('post_name').string
         post_id = item.find('post_id').string
 
         if kind == 'attachment':
             attachments.append((item.find('post_parent').string,
                                 item.find('attachment_url').string))
         else:
-            filename = get_filename(filename, post_id)
+            filename = get_filename(post_name, post_id)
             names[post_id] = filename
     attachedposts = {}
     for parent, url in attachments:
