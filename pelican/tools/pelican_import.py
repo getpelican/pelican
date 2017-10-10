@@ -160,8 +160,11 @@ def wp2fields(xml, wp_custpost=False):
 
             content = item.find('encoded').string
             raw_date = item.find('post_date').string
-            date_object = time.strptime(raw_date, '%Y-%m-%d %H:%M:%S')
-            date = time.strftime('%Y-%m-%d %H:%M', date_object)
+            if raw_date == u'0000-00-00 00:00:00':
+                date = None
+            else:
+                date_object = time.strptime(raw_date, '%Y-%m-%d %H:%M:%S')
+                date = time.strftime('%Y-%m-%d %H:%M', date_object)
             author = item.find('creator').string
 
             categories = [cat.string for cat
