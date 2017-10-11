@@ -3,6 +3,7 @@
 from __future__ import print_function, unicode_literals
 
 import argparse
+import collections
 import logging
 import os
 import re
@@ -29,10 +30,21 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def decode_wp_content(content, br=True):
+def decode_wp_content(content, attached_files=None, br=True):
     pre_tags = {}
     if content.strip() == "":
         return ""
+
+    if attached_files:
+        for path, urls in attached_files.items():
+            for url in urls:
+                content = re.sub(r'(<a\s+[^>]*href=")%s(")' % url,
+                                 r'\1/%s\2' % path,
+                                 content)
+
+                content = re.sub(r'(<img\s+[^>]*src=")%s(")' % url,
+                                 r'\1/%s\2' % path,
+                                 content)
 
     content += "\n"
     if "<pre" in content:
@@ -651,10 +663,13 @@ def get_attachments(xml):
 
 
 def download_attachments(output_path, urls):
-    """Downloads WordPress attachments and returns a list of paths to
-    attachments that can be associated with a post (relative path to output
-    directory). Files that fail to download, will not be added to posts"""
-    locations = []
+    """Downloads WordPress attachments and returns a returns a dict {url:path} of
+        attachments that can be associated with a post (relative path to output
+        directory). Files that fail to download, will not be added to posts
+
+    {relpath: {set of urls}}
+    """
+    locations = collections.defaultdict(set)
     for url in urls:
         path = urlparse(url).path
         # teardown path and rebuild to negate any errors with
@@ -671,7 +686,8 @@ def download_attachments(output_path, urls):
         print('downloading {}'.format(filename))
         try:
             urlretrieve(url, os.path.join(full_path, filename))
-            locations.append(os.path.join(localpath, filename))
+            relpath = os.path.join(localpath, filename)
+            locations[relpath].add(url)
         except (URLError, IOError) as e:
             # Python 2.7 throws an IOError rather Than URLError
             logger.warning("No file could be downloaded from %s\n%s", url, e)
@@ -720,7 +736,7 @@ def fields2pelican(
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
                 if in_markup == 'wp-html':
-                    new_content = decode_wp_content(content)
+                    new_content = decode_wp_content(content, attached_files)
                 else:
                     paragraphs = content.splitlines()
                     paragraphs = ['<p>{0}</p>'.format(p) for p in paragraphs]
