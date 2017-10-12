@@ -225,7 +225,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
 
     def test_decode_wp_content_returns_empty(self):
         """ Check that given an empty string we return an empty string."""
-        self.assertEqual(decode_wp_content(""), "")
+        self.assertEqual(decode_wp_content("", None), "")
 
     def test_decode_wp_content(self):
         """ Check that we can decode a wordpress content string."""
@@ -234,7 +234,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
             with open(WORDPRESS_DECODED_CONTENT_SAMPLE, 'r') as decoded_file:
                 decoded_content = decoded_file.read()
                 self.assertEqual(
-                    decode_wp_content(encoded_content, br=False),
+                    decode_wp_content(encoded_content, None, br=False),
                     decoded_content)
 
     def test_preserve_verbatim_formatting(self):
