@@ -30,7 +30,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def decode_wp_content(content, attached_files, br=True):
+def decode_wp_content(content, attached_files=None, br=True):
     pre_tags = {}
     if content.strip() == "":
         return ""
