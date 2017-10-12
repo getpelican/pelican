@@ -3,6 +3,7 @@
 from __future__ import print_function, unicode_literals
 
 import argparse
+import collections
 import logging
 import os
 import re
@@ -12,7 +13,6 @@ import time
 
 from codecs import open
 
-import collections
 from six.moves.urllib.error import URLError
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.request import urlretrieve
