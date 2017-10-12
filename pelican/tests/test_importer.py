@@ -235,8 +235,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
                 decoded_content = decoded_file.read()
                 self.assertEqual(
                     decode_wp_content(
-                      encoded_content, 
-                      attached_files=None, 
+                      encoded_content,
+                      attached_files=None,
                       br=False
                     ),
                     decoded_content)
