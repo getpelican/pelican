@@ -234,7 +234,11 @@ class TestWordpressXmlImporter(unittest.TestCase):
             with open(WORDPRESS_DECODED_CONTENT_SAMPLE, 'r') as decoded_file:
                 decoded_content = decoded_file.read()
                 self.assertEqual(
-                    decode_wp_content(encoded_content, attached_files=None, br=False),
+                    decode_wp_content(
+                      encoded_content, 
+                      attached_files=None, 
+                      br=False
+                    ),
                     decoded_content)
 
     def test_preserve_verbatim_formatting(self):
