@@ -39,11 +39,11 @@ def decode_wp_content(content, attached_files=None, br=True):
         for path, urls in attached_files.items():
             for url in urls:
                 content = re.sub(r'(<a\s+[^>]*href=")%s(")' % url,
-                                 r'\1%s\2' % path,
+                                 r'\1/%s\2' % path,
                                  content)
 
                 content = re.sub(r'(<img\s+[^>]*src=")%s(")' % url,
-                                 r'\1%s\2' % path,
+                                 r'\1/%s\2' % path,
                                  content)
 
     content += "\n"
