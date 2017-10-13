@@ -151,8 +151,8 @@ class Content(object):
 
 
         # store the summary metadata if it is set
-        if 'summary' in metadata:
-            self._summary = metadata['summary']
+        if 'summary' in self.metadata:
+            self._summary = self.metadata['summary']
 
         signals.content_object_init.send(self)
 
@@ -348,7 +348,7 @@ class Content(object):
         content.
         """
         if hasattr(self, '_summary'):
-            return self._update_content(self._summary, siteurl)
+            return self._summary
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
