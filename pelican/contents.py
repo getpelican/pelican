@@ -149,7 +149,6 @@ class Content(object):
                 self.metadata[key] = value
                 setattr(self, key.lower(), value)
 
-
         # store the summary metadata if it is set
         if 'summary' in self.metadata:
             self._summary = self.metadata['summary']
