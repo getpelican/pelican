@@ -140,6 +140,16 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = getattr(self, 'default_status', None)
 
+        for key in self.settings['FORMATTED_FIELDS']:
+            if key in self.metadata:
+                value = self._update_content(
+                    self.metadata[key],
+                    self.get_siteurl()
+                )
+                self.metadata[key] = value
+                setattr(self, key.lower(), value)
+
+
         # store the summary metadata if it is set
         if 'summary' in metadata:
             self._summary = metadata['summary']
