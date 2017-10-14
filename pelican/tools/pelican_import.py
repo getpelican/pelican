@@ -764,7 +764,7 @@ def fields2pelican(
                     for path, urls in attached_files.items():
                         for url in urls:
                             content = re.sub(url,
-                                             r'{filename}/%s' % path,
+                                             r'/{filename}/%s' % path,
                                              content)
 
                 if out_markup == 'markdown':
