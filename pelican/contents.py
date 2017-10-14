@@ -149,10 +149,6 @@ class Content(object):
                 self.metadata[key] = value
                 setattr(self, key.lower(), value)
 
-        # store the summary metadata if it is set
-        if 'summary' in self.metadata:
-            self._summary = self.metadata['summary']
-
         signals.content_object_init.send(self)
 
     def __str__(self):
@@ -346,8 +342,8 @@ class Content(object):
         This is based on the summary metadata if set, otherwise truncate the
         content.
         """
-        if hasattr(self, '_summary'):
-            return self._summary
+        if 'summary' in self.metadata:
+            return self.metadata['summary']
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
