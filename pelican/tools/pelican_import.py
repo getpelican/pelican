@@ -673,7 +673,7 @@ def download_attachments(output_path, urls):
         if not os.path.exists(full_path):
             os.makedirs(full_path)
         relpath = os.path.join(localpath, filename)
-        if url in locations[relpath]:
+        if relpath in locations and url in locations[relpath]:
             continue
 
         print('downloading {}'.format(filename))
