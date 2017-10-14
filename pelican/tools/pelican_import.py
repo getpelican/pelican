@@ -30,21 +30,10 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def decode_wp_content(content, attached_files=None, br=True):
+def decode_wp_content(content, br=True):
     pre_tags = {}
     if content.strip() == "":
         return ""
-
-    if attached_files:
-        for path, urls in attached_files.items():
-            for url in urls:
-                content = re.sub(r'(<a\s+[^>]*href=")%s(")' % url,
-                                 r'\1/%s\2' % path,
-                                 content)
-
-                content = re.sub(r'(<img\s+[^>]*src=")%s(")' % url,
-                                 r'\1/%s\2' % path,
-                                 content)
 
     content += "\n"
     if "<pre" in content:
@@ -144,9 +133,9 @@ def get_items(xml):
     return items
 
 
-def get_filename(filename, post_id):
-    if filename is not None:
-        return filename
+def get_filename(post_name, post_id):
+    if post_name and not post_name.isspace():
+        return post_name
     else:
         return post_id
 
@@ -166,9 +155,9 @@ def wp2fields(xml, wp_custpost=False):
                 title = 'No title [%s]' % item.find('post_name').string
                 logger.warning('Post "%s" is lacking a proper title', title)
 
-            filename = item.find('post_name').string
+            post_name = item.find('post_name').string
             post_id = item.find('post_id').string
-            filename = get_filename(filename, post_id)
+            filename = get_filename(post_name, post_id)
 
             content = item.find('encoded').string
             raw_date = item.find('post_date').string
@@ -637,14 +626,14 @@ def get_attachments(xml):
 
     for item in items:
         kind = item.find('post_type').string
-        filename = item.find('post_name').string
+        post_name = item.find('post_name').string
         post_id = item.find('post_id').string
 
         if kind == 'attachment':
             attachments.append((item.find('post_parent').string,
                                 item.find('attachment_url').string))
         else:
-            filename = get_filename(filename, post_id)
+            filename = get_filename(post_name, post_id)
             names[post_id] = filename
     attachedposts = {}
     for parent, url in attachments:
@@ -663,13 +652,10 @@ def get_attachments(xml):
 
 
 def download_attachments(output_path, urls):
-    """Downloads WordPress attachments and returns a returns a dict {url:path} of
-        attachments that can be associated with a post (relative path to output
-        directory). Files that fail to download, will not be added to posts
-
-    {relpath: {set of urls}}
-    """
-    locations = collections.defaultdict(set)
+    """Downloads WordPress attachments and returns a list of paths to
+    attachments that can be associated with a post (relative path to output
+    directory). Files that fail to download, will not be added to posts"""
+    locations = []
     for url in urls:
         path = urlparse(url).path
         # teardown path and rebuild to negate any errors with
@@ -683,10 +669,13 @@ def download_attachments(output_path, urls):
         full_path = os.path.join(output_path, localpath)
         if not os.path.exists(full_path):
             os.makedirs(full_path)
+        relpath = os.path.join(localpath, filename)
+        if relpath in locations and url in locations[relpath]:
+            continue
+
         print('downloading {}'.format(filename))
         try:
             urlretrieve(url, os.path.join(full_path, filename))
-            relpath = os.path.join(localpath, filename)
             locations[relpath].add(url)
         except (URLError, IOError) as e:
             # Python 2.7 throws an IOError rather Than URLError
@@ -736,7 +725,7 @@ def fields2pelican(
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
                 if in_markup == 'wp-html':
-                    new_content = decode_wp_content(content, attached_files)
+                    new_content = decode_wp_content(content)
                 else:
                     paragraphs = content.splitlines()
                     paragraphs = ['<p>{0}</p>'.format(p) for p in paragraphs]
@@ -767,6 +756,14 @@ def fields2pelican(
 
             with open(out_filename, 'r', encoding='utf-8') as fs:
                 content = fs.read()
+
+                if attached_files:
+                    for path, urls in attached_files.items():
+                        for url in urls:
+                            content = re.sub(url,
+                                             r'/{filename}/%s' % path,
+                                             content)
+
                 if out_markup == 'markdown':
                     # In markdown, to insert a <br />, end a line with two
                     # or more spaces & then a end-of-line

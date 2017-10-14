@@ -382,7 +382,7 @@ class TestWordpressXMLAttachements(unittest.TestCase):
         bad_url = 'http://localhost:1/not_a_file.txt'
         silent_da = mute()(download_attachments)
         with temporary_folder() as temp:
-            locations = list(silent_da(temp, [good_url, bad_url]))
+            locations = list(silent_da(temp, [good_url, bad_url]).keys())
             self.assertEqual(1, len(locations))
             directory = locations[0]
             self.assertTrue(
