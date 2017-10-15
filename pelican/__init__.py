@@ -170,6 +170,10 @@ class Pelican(object):
             if hasattr(p, 'generate_context'):
                 p.generate_context()
 
+        for p in generators:
+            if hasattr(p, 'refresh_metadata_intersite_links'):
+                p.refresh_metadata_intersite_links()
+
         signals.all_generators_finalized.send(generators)
 
         writer = self.get_writer()
