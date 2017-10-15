@@ -140,15 +140,7 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = getattr(self, 'default_status', None)
 
-        for key in self.settings['FORMATTED_FIELDS']:
-            if key in self.metadata:
-                value = self._update_content(
-                    self.metadata[key],
-                    self.get_siteurl()
-                )
-                self.metadata[key] = value
-                setattr(self, key.lower(), value)
-
+        self.refresh_metadata_intersite_links()
         signals.content_object_init.send(self)
 
     def __str__(self):
@@ -417,6 +409,16 @@ class Content(object):
                 os.path.relpath(
                     os.path.abspath(self.source_path),
                     os.path.abspath(self.settings['PATH']))))
+
+    def refresh_metadata_intersite_links(self):
+        for key in self.settings['FORMATTED_FIELDS']:
+            if key in self.metadata:
+                value = self._update_content(
+                    self.metadata[key],
+                    self.get_siteurl()
+                )
+                self.metadata[key] = value
+                setattr(self, key.lower(), value)
 
 
 class Page(Content):
