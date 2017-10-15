@@ -581,6 +581,14 @@ class ArticlesGenerator(CachingGenerator):
         self.generate_pages(writer)
         signals.article_writer_finalized.send(self, writer=writer)
 
+    def refresh_metadata_intersite_links(self):
+        for e in chain(
+            self.articles,
+            self.translations,
+            self.drafts,
+            self.drafts_translations):
+            if hasattr(e, 'refresh_metadata_intersite_links'):
+                e.refresh_metadata_intersite_links()
 
 class PagesGenerator(CachingGenerator):
     """Generate pages"""
@@ -648,6 +656,14 @@ class PagesGenerator(CachingGenerator):
                 relative_urls=self.settings['RELATIVE_URLS'],
                 override_output=hasattr(page, 'override_save_as'))
         signals.page_writer_finalized.send(self, writer=writer)
+
+    def refresh_metadata_intersite_links(self):
+        for e in chain(
+            self.pages,
+            self.hidden_pages,
+            self.hidden_translations):
+            if hasattr(e, 'refresh_metadata_intersite_links'):
+                e.refresh_metadata_intersite_links()
 
 
 class StaticGenerator(Generator):
