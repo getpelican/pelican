@@ -642,6 +642,7 @@ class PagesGenerator(CachingGenerator):
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
                           self.hidden_translations, self.hidden_pages):
+            signals.page_generator_write_page.send(self, content=page)
             writer.write_file(
                 page.save_as, self.get_template(page.template),
                 self.context, page=page,
