@@ -15,8 +15,8 @@ Setting up the development environment
 ======================================
 
 While there are many ways to set up one's development environment, following
-is a method that uses `virtualenv <http://www.virtualenv.org/>`_. If you don't
-have ``virtualenv`` installed, you can install it via::
+is a method that uses `virtualenv <https://virtualenv.pypa.io/en/stable/>`_.
+If you don't have ``virtualenv`` installed, you can install it via::
 
     $ pip install virtualenv
 
