@@ -116,8 +116,8 @@ and Python 3 at the same time:
   - Encode/decode strings if e.g. the source is a Python function that is known
     to handle this badly, e.g. strftime() in Python 2.
 
-- Use new syntax: print function, "except ... *as* e" (not comma) etc.
-- Refactor method calls like ``dict.iteritems()``, ``xrange()`` etc. in a way
+- Use new syntax: print function, "except ... *as* e" (not comma), etc.
+- Refactor method calls like ``dict.iteritems()``, ``xrange()``, etc. in a way
   that runs without code change in both Python versions.
 - Do not use magic method ``__unicode()__`` in new classes. Use only ``__str()__``
   and decorate the class with ``@python_2_unicode_compatible``.
