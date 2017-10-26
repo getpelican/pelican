@@ -55,11 +55,11 @@ def isplit(s, sep=None):
 
     """
     sep, hardsep = r'\s+' if sep is None else re.escape(sep), sep is not None
-    exp, pos, l = re.compile(sep), 0, len(s)
+    exp, pos, length = re.compile(sep), 0, len(s)
     while True:
         m = exp.search(s, pos)
         if not m:
-            if pos < l or hardsep:
+            if pos < length or hardsep:
                 #      ^ mimic "split()": ''.split() returns []
                 yield s[pos:]
             break

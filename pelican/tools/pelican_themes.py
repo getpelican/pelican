@@ -17,7 +17,7 @@ def err(msg, die=None):
 
 try:
     import pelican
-except:
+except ImportError:
     err('Cannot import pelican.\nYou must '
         'install Pelican in order to run this script.',
         -1)

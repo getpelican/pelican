@@ -14,7 +14,7 @@ import pytz
 try:
     import tzlocal
     _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
-except:
+except ImportError:
     _DEFAULT_TIMEZONE = 'Europe/Paris'
 
 import six
@@ -114,7 +114,7 @@ def get_template(name, as_encoding='utf-8'):
 
 
 @decoding_strings
-def ask(question, answer=str_compat, default=None, l=None):
+def ask(question, answer=str_compat, default=None, length=None):
     if answer == str_compat:
         r = ''
         while True:
@@ -132,8 +132,8 @@ def ask(question, answer=str_compat, default=None, l=None):
                 else:
                     print('You must enter something')
             else:
-                if l and len(r) != l:
-                    print('You must enter a {0} letters long string'.format(l))
+                if length and len(r) != length:
+                    print('Entry must be {0} characters long'.format(length))
                 else:
                     break
 
@@ -180,7 +180,7 @@ def ask(question, answer=str_compat, default=None, l=None):
             try:
                 r = int(r)
                 break
-            except:
+            except ValueError:
                 print('You must enter an integer')
         return r
     else:
