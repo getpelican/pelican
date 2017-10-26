@@ -141,7 +141,7 @@ class Writer(object):
         return feed
 
     def write_file(self, name, template, context, relative_urls=False,
-                   paginated=None, override_output=False, **kwargs):
+                   paginated=None, override_output=False, url=None, **kwargs):
         """Render the template and write the file.
 
         :param name: name of the file to output
@@ -153,6 +153,7 @@ class Writer(object):
         :param override_output: boolean telling if we can override previous
             output with the same name (and if next files written with the same
             name should be skipped to keep that one)
+        :param url: url of the file (needed by the paginator)
         :param **kwargs: additional variables to pass to the templates
         """
 
@@ -202,7 +203,7 @@ class Writer(object):
         if paginated:
 
             # pagination needed, init paginators
-            paginators = {key: Paginator(name, val, self.settings)
+            paginators = {key: Paginator(name, url, val, self.settings)
                           for key, val in paginated.items()}
 
             # generated pages, and write
