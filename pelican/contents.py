@@ -340,11 +340,24 @@ class Content(object):
         if hasattr(self, '_summary'):
             return self._update_content(self._summary, siteurl)
 
-        if self.settings['SUMMARY_MAX_LENGTH'] is None:
+        # a page specific max summary length was found
+        if hasattr(self, 'summary_max_length'):
+            summary_max_length = getattr(self, 'summary_max_length')
+            if summary_max_length.upper() == 'NONE':
+                return self.content
+            else:
+                summary_max_length = int(summary_max_length)
+                return truncate_html_words(self.content, summary_max_length)
+
+        if 'SUMMARY_MAX_LENGTH' in self.settings:
+            summary_max_length = self.settings['SUMMARY_MAX_LENGTH']
+        else:
+            summary_max_length = None
+
+        if summary_max_length is None:
             return self.content
 
-        return truncate_html_words(self.content,
-                                   self.settings['SUMMARY_MAX_LENGTH'])
+        return truncate_html_words(self.content, summary_max_length)
 
     @property
     def summary(self):
