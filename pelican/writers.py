@@ -9,6 +9,7 @@ from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 from jinja2 import Markup
 
 import six
+from six.moves.urllib.parse import urljoin
 
 from pelican import signals
 from pelican.paginator import Paginator
@@ -30,6 +31,13 @@ class Writer(object):
         self._written_files = set()
         self._overridden_files = set()
 
+        # See Content._link_replacer for details
+        if self.settings['RELATIVE_URLS']:
+            self.urljoiner = os.path.join
+        else:
+            self.urljoiner = lambda base, url: urljoin(
+                base if base.endswith('/') else base + '/', url)
+
     def _create_new_feed(self, feed_type, feed_title, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
         if feed_title:
@@ -44,9 +52,8 @@ class Writer(object):
         return feed
 
     def _add_item_to_the_feed(self, feed, item):
-
         title = Markup(item.title).striptags()
-        link = '%s/%s' % (self.site_url, item.url)
+        link = self.urljoiner(self.site_url, item.url)
         is_rss = isinstance(feed, Rss201rev2Feed)
         if not is_rss or self.settings.get('RSS_FEED_SUMMARY_ONLY'):
             description = item.summary
@@ -114,7 +121,7 @@ class Writer(object):
             'SITEURL', path_to_url(get_relative_path(path)))
 
         self.feed_domain = context.get('FEED_DOMAIN')
-        self.feed_url = '{}/{}'.format(self.feed_domain, url if url else path)
+        self.feed_url = self.urljoiner(self.feed_domain, url if url else path)
 
         feed = self._create_new_feed(feed_type, feed_title, context)
 
