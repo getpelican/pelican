@@ -89,8 +89,8 @@ class Writer(object):
         self._written_files.add(filename)
         return open(filename, 'w', encoding=encoding)
 
-    def write_feed(self, elements, context, path=None, feed_type='atom',
-                   override_output=False, feed_title=None):
+    def write_feed(self, elements, context, path=None, url=None,
+                   feed_type='atom', override_output=False, feed_title=None):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no path or output_path is specified, just
@@ -99,6 +99,8 @@ class Writer(object):
         :param elements: the articles to put on the feed.
         :param context: the context to get the feed metadata.
         :param path: the path to output.
+        :param url: the publicly visible feed URL; if None, path is used
+            instead
         :param feed_type: the feed type to use (atom or rss)
         :param override_output: boolean telling if we can override previous
             output with the same name (and if next files written with the same
@@ -112,7 +114,7 @@ class Writer(object):
             'SITEURL', path_to_url(get_relative_path(path)))
 
         self.feed_domain = context.get('FEED_DOMAIN')
-        self.feed_url = '{}/{}'.format(self.feed_domain, path)
+        self.feed_url = '{}/{}'.format(self.feed_domain, url if url else path)
 
         feed = self._create_new_feed(feed_type, feed_title, context)
 

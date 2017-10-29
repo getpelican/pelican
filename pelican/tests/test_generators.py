@@ -155,6 +155,7 @@ class TestArticlesGenerator(unittest.TestCase):
         writer = MagicMock()
         generator.generate_feeds(writer)
         writer.write_feed.assert_called_with([], settings,
+                                             'feeds/all.atom.xml',
                                              'feeds/all.atom.xml')
 
         generator = ArticlesGenerator(
@@ -163,6 +164,20 @@ class TestArticlesGenerator(unittest.TestCase):
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
+
+    @unittest.skipUnless(MagicMock, 'Needs Mock module')
+    def test_generate_feeds_override_url(self):
+        settings = get_settings()
+        settings['CACHE_PATH'] = self.temp_cache
+        settings['FEED_ALL_ATOM_URL'] = 'feeds/atom/all/'
+        generator = ArticlesGenerator(
+            context=settings, settings=settings,
+            path=None, theme=settings['THEME'], output_path=None)
+        writer = MagicMock()
+        generator.generate_feeds(writer)
+        writer.write_feed.assert_called_with([], settings,
+                                             'feeds/all.atom.xml',
+                                             'feeds/atom/all/')
 
     def test_generate_context(self):
         articles_expected = [
