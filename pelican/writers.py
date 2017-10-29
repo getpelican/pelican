@@ -40,7 +40,8 @@ class Writer(object):
             title=Markup(feed_title).striptags(),
             link=(self.site_url + '/'),
             feed_url=self.feed_url,
-            description=context.get('SITESUBTITLE', ''))
+            description=context.get('SITESUBTITLE', ''),
+            subtitle=context.get('SITESUBTITLE', None))
         return feed
 
     def _add_item_to_the_feed(self, feed, item):
