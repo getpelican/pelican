@@ -523,7 +523,7 @@ def build_header(title, date, author, categories, tags, slug,
     if author:
         header += ':author: %s\n' % author
     if categories:
-        header += ':category: %s\n' % ', '.join(categories)
+        header += ':category: %s\n' % categories[0]
     if tags:
         header += ':tags: %s\n' % ', '.join(tags)
     if slug:
@@ -545,7 +545,7 @@ def build_markdown_header(title, date, author, categories, tags,
     if author:
         header += 'Author: %s\n' % author
     if categories:
-        header += 'Category: %s\n' % ', '.join(categories)
+        header += 'Category: %s\n' % categories[0]
     if tags:
         header += 'Tags: %s\n' % ', '.join(tags)
     if slug:
