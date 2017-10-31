@@ -36,8 +36,7 @@ class URLWrapper(object):
     @property
     def slug(self):
         if self._slug is None:
-            self._slug = slugify(self.name,
-                                 self.settings.get('SLUG_SUBSTITUTIONS', ()))
+            self._slug = slugify(self.name, self._slug_substitutions())
         return self._slug
 
     @slug.setter
@@ -45,6 +44,9 @@ class URLWrapper(object):
         # if slug is expliticly set, changing name won't alter slug
         self._slug_from_name = False
         self._slug = slug
+
+    def _slug_substitutions(self):
+        return self.settings.get('SLUG_SUBSTITUTIONS', ()))
 
     def as_dict(self):
         d = self.__dict__
@@ -112,33 +114,23 @@ class URLWrapper(object):
 
 
 class Category(URLWrapper):
-    @property
-    def slug(self):
-        if self._slug is None:
-            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
-            substitutions += tuple(self.settings.get('CATEGORY_SUBSTITUTIONS',
-                                                     ()))
-            self._slug = slugify(self.name, substitutions)
-        return self._slug
+    def _slug_substitutions(self):
+        substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
+        substitutions += tuple(self.settings.get('CATEGORY_SUBSTITUTIONS', ()))
+        return substitutions
 
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
         super(Tag, self).__init__(name.strip(), *args, **kwargs)
 
-    @property
-    def slug(self):
-        if self._slug is None:
-            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
-            substitutions += tuple(self.settings.get('TAG_SUBSTITUTIONS', ()))
-            self._slug = slugify(self.name, substitutions)
-        return self._slug
+    def _slug_substitutions(self):
+        substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
+        substitutions += tuple(self.settings.get('TAG_SUBSTITUTIONS', ()))
+        return substitutions
 
 
 class Author(URLWrapper):
-    @property
-    def slug(self):
-        if self._slug is None:
-            self._slug = slugify(self.name,
-                                 self.settings.get('AUTHOR_SUBSTITUTIONS', ()))
-        return self._slug
+    def _slug_substitutions(self):
+        # ??? Should this include SLUG_SUBSTITUTIONS as well?
+        return self.settings.get('AUTHOR_SUBSTITUTIONS', ())
