@@ -60,6 +60,11 @@ Basic settings
    Whether to display categories on the menu of the template. Templates may or
    not honor this setting.
 
+.. data:: DISPLAY_TAGS_ON_MENU = False
+
+   Whether to display tags on the menu of the template. Templates may or not
+   honor this setting.
+
 .. data:: DOCUTILS_SETTINGS = {}
 
    Extra configuration settings for the docutils publisher (applicable only to

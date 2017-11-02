@@ -5,6 +5,8 @@ Next release
 ============
 
 * New signal: ``feed_generated``
+* Provide ability to show or hide tags from menu using
+  ``DISPLAY_TAGS_ON_MENU`` option
 
 3.7.1 (2017-01-10)
 ==================

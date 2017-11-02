@@ -54,6 +54,7 @@ DEFAULT_CONFIG = {
     'SITENAME': 'A Pelican Blog',
     'DISPLAY_PAGES_ON_MENU': True,
     'DISPLAY_CATEGORIES_ON_MENU': True,
+    'DISPLAY_TAGS_ON_MENU': False,
     'DOCUTILS_SETTINGS': {},
     'OUTPUT_SOURCES': False,
     'OUTPUT_SOURCES_EXTENSION': '.text',
