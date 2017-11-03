@@ -699,6 +699,53 @@ class TestStaticGenerator(unittest.TestCase):
     def set_ancient_mtime(self, path, timestamp=1):
         os.utime(path, (timestamp, timestamp))
 
+    def test_theme_static_paths_dirs(self):
+        """Test that StaticGenerator properly copies also files mentioned in
+           TEMPLATE_STATIC_PATHS, not just directories."""
+        settings = get_settings(
+            PATH=self.content_path,
+            filenames={})
+        context = settings.copy()
+        context['staticfiles'] = []
+
+        StaticGenerator(
+            context=context, settings=settings,
+            path=settings['PATH'], output_path=self.temp_output,
+            theme=settings['THEME']).generate_output(None)
+
+        # The content of dirs listed in THEME_STATIC_PATHS (defaulting to
+        # "static") is put into the output
+        self.assertTrue(os.path.isdir(os.path.join(self.temp_output,
+                                                   "theme/css/")))
+        self.assertTrue(os.path.isdir(os.path.join(self.temp_output,
+                                                   "theme/fonts/")))
+
+    def test_theme_static_paths_files(self):
+        """Test that StaticGenerator properly copies also files mentioned in
+           TEMPLATE_STATIC_PATHS, not just directories."""
+        settings = get_settings(
+            PATH=self.content_path,
+            THEME_STATIC_PATHS=['static/css/fonts.css', 'static/fonts/'],
+            filenames={})
+        context = settings.copy()
+        context['staticfiles'] = []
+
+        StaticGenerator(
+            context=context, settings=settings,
+            path=settings['PATH'], output_path=self.temp_output,
+            theme=settings['THEME']).generate_output(None)
+
+        # Only the content of dirs and files listed in THEME_STATIC_PATHS are
+        # put into the output, not everything from static/
+        self.assertFalse(os.path.isdir(os.path.join(self.temp_output,
+                                                    "theme/css/")))
+        self.assertFalse(os.path.isdir(os.path.join(self.temp_output,
+                                                    "theme/fonts/")))
+        self.assertTrue(os.path.isfile(os.path.join(self.temp_output,
+                                                    "theme/font.css")))
+        self.assertTrue(os.path.isfile(os.path.join(self.temp_output,
+                                                    "theme/fonts.css")))
+
     def test_static_excludes(self):
         """Test that StaticGenerator respects STATIC_EXCLUDES.
         """
