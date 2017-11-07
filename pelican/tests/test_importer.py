@@ -4,7 +4,6 @@ from __future__ import print_function, unicode_literals
 import locale
 import os
 import re
-
 from codecs import open
 
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,

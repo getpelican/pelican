@@ -9,7 +9,6 @@ import re
 import subprocess
 import sys
 import time
-
 from codecs import open
 
 from six.moves.urllib.error import URLError
