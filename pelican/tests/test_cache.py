@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import os
-
 from shutil import rmtree
 from tempfile import mkdtemp
 

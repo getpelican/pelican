@@ -7,7 +7,6 @@ import logging
 import os
 import subprocess
 import sys
-
 from shutil import rmtree
 from tempfile import mkdtemp
 

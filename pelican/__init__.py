@@ -14,8 +14,8 @@ import six
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import init  # noqa
-from pelican import signals
+from pelican.log import init
+from pelican import signals  # noqa
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 SourceFileGenerator, StaticGenerator,
                                 TemplatePagesGenerator)
