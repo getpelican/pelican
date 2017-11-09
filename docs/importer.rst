@@ -63,7 +63,7 @@ Optional arguments
   --tumblr              Tumblr API (default: False)
   --feed                Feed to parse (default: False)
   -o OUTPUT, --output OUTPUT
-                        Output path (default: output)
+                        Output path (default: content)
   -m MARKUP, --markup MARKUP
                         Output markup format (supports rst & markdown)
                         (default: rst)
