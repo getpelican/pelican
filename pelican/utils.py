@@ -263,7 +263,7 @@ def pelican_open(filename, mode='rb', strip_crs=(sys.platform == 'win32')):
     yield content
 
 
-def slugify(value, substitutions=()):
+def slugify(value, substitutions=(), preserve_case=False):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
@@ -281,7 +281,9 @@ def slugify(value, substitutions=()):
     if isinstance(value, six.binary_type):
         value = value.decode('ascii')
     # still unicode
-    value = unicodedata.normalize('NFKD', value).lower()
+    value = unicodedata.normalize('NFKD', value)
+    if not preserve_case:
+        value = value.lower()
 
     # backward compatible covert from 2-tuples to 3-tuples
     new_subs = []
