@@ -21,8 +21,9 @@ from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
 from pelican.readers import Readers
-from pelican.utils import (DateFormatter, copy, mkdir_p, posixize_path,
-                           process_translations, python_2_unicode_compatible)
+from pelican.utils import (DateFormatter, HtmlLinkExpander, LinkExpander, copy,
+                           mkdir_p, posixize_path, process_translations,
+                           python_2_unicode_compatible)
 
 
 logger = logging.getLogger(__name__)
@@ -73,6 +74,10 @@ class Generator(object):
 
         # provide utils.strftime as a jinja filter
         self.env.filters.update({'strftime': DateFormatter()})
+
+        # provide link expansion as a jinja filter
+        self.env.filters.update({'expand_link': LinkExpander(settings)})
+        self.env.filters.update({'expand_links': HtmlLinkExpander()})
 
         # get custom Jinja filters from user settings
         custom_filters = self.settings['JINJA_FILTERS']
