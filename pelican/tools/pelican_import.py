@@ -789,7 +789,7 @@ def main():
         '--feed', action='store_true', dest='feed',
         help='Feed to parse')
     parser.add_argument(
-        '-o', '--output', dest='output', default='output',
+        '-o', '--output', dest='output', default='content',
         help='Output path')
     parser.add_argument(
         '-m', '--markup', dest='markup', default='rst',
