@@ -146,6 +146,8 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': False,
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
+    'PORT': 8000,
+    'BIND': '',
 }
 
 PYGMENTS_RST_OPTIONS = None

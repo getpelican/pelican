@@ -267,8 +267,6 @@ needed by Pelican.
 
     automation = ask('Do you want to generate a Fabfile/Makefile '
                      'to automate generation and publishing?', bool, True)
-    develop = ask('Do you want an auto-reload & simpleHTTP script '
-                  'to assist with theme and site development?', bool, True)
 
     if automation:
         if ask('Do you want to upload your website using FTP?',
@@ -383,32 +381,6 @@ needed by Pelican.
                     template = string.Template(line)
                     fd.write(template.safe_substitute(CONF))
                 fd.close()
-        except OSError as e:
-            print('Error: {0}'.format(e))
-
-    if develop:
-        conf_shell = dict()
-        for key, value in CONF.items():
-            if isinstance(value, six.string_types) and ' ' in value:
-                value = '"' + value.replace('"', '\\"') + '"'
-            conf_shell[key] = value
-        try:
-            with codecs.open(os.path.join(CONF['basedir'],
-                                          'develop_server.sh'),
-                             'w', 'utf-8') as fd:
-                lines = list(get_template('develop_server.sh'))
-                py_v = 'PY=${PY:-python}\n'
-                if six.PY3:
-                    py_v = 'PY=${PY:-python3}\n'
-                lines = lines[:4] + [py_v] + lines[4:]
-                for line in lines:
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(conf_shell))
-                fd.close()
-
-                # mode 0o755
-                os.chmod((os.path.join(CONF['basedir'],
-                                       'develop_server.sh')), 493)
         except OSError as e:
             print('Error: {0}'.format(e))
 

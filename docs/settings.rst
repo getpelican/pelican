@@ -328,6 +328,15 @@ Basic settings
    A list of metadata fields containing reST/Markdown content to be parsed and
    translated to HTML.
 
+.. data:: PORT = 8000
+
+   The TCP port to serve content from the output folder via HTTP when pelican
+   is run with --listen
+
+.. data:: BIND = ''
+
+   The IP to which to bind the HTTP server.
+
 
 URL settings
 ============
