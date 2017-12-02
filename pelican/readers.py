@@ -440,7 +440,17 @@ class HTMLReader(BaseReader):
 
             if name == 'keywords':
                 name = 'tags'
-            self.metadata[name] = contents
+
+            if name in self.metadata:
+                # if this metadata already exists (i.e. a previous tag with the
+                # same name has already been specified then either convert to
+                # list or append to list
+                if isinstance(self.metadata[name], list):
+                    self.metadata[name].append(contents)
+                else:
+                    self.metadata[name] = [self.metadata[name], contents]
+            else:
+                self.metadata[name] = contents
 
         @classmethod
         def _attr_value(cls, attrs, name, default=None):

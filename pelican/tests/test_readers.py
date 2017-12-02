@@ -657,6 +657,14 @@ class HTMLReaderTest(ReaderTest):
 
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_article_with_multiple_similar_metadata_tags(self):
+        page = self.read_file(path='article_with_multiple_metadata_tags.html')
+        expected = {
+            'custom_field': ['http://notmyidea.org', 'http://mrsenko.com'],
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
     def test_article_with_multiple_authors(self):
         page = self.read_file(path='article_with_multiple_authors.html')
         expected = {

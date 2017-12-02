@@ -5,6 +5,7 @@ Next release
 ============
 
 * New signal: ``feed_generated``
+* Make the HTML reader parse multiple occurences of metadata tags as list
 
 3.7.1 (2017-01-10)
 ==================
