@@ -331,6 +331,21 @@ class TestPage(LoggedTestCase):
             '<a href="http://notmyidea.org/article.html">link</a>'
         )
 
+        # SITEURL with characters that should be escaped
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst'
+            '#highlight=&quot;word&quot;">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org/'
+                                           '?app=blog&path=')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/?app=blog&amp;path='
+            '/article.html#highlight=&quot;word&quot;">link</a>'
+        )
+
     def test_intrasite_link_more(self):
         # type does not take unicode in PY2 and bytes in PY3, which in
         # combination with unicode literals leads to following insane line:
