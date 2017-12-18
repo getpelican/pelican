@@ -25,8 +25,8 @@ argument, like so::
     pelican --write-selected output/posts/my-post-title.html
 
 Note that you must specify the path to the generated *output* file — not the
-source content. To determine the output file path, use the ``--debug`` flag to
-determine the correct file name and location. If desired, ``--write-selected``
+source content. To determine the output file name and location, use the
+``--debug`` flag. If desired, ``--write-selected``
 can take a comma-separated list of paths or can be configured as a setting.
 (See: :ref:`writing_only_selected_content`)
 
