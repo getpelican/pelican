@@ -147,3 +147,25 @@ embed videos in the markup. You can use `reST video directive
 <https://gist.github.com/dbrgn/2922648>`_ for reST or `mdx_video plugin
 <https://github.com/italomaia/mdx-video>`_ for Markdown.
 
+
+Develop Locally Using SSL
+==================================
+
+Here's how you can set up your local pelican server to support SSL.
+
+First, create a self-signed certificate and key using ``openssl`` (this creates ``cert.pem`` and ``key.pem``)::
+
+    $ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+
+And use this command to launch the server (the server starts within your ``output`` directory)::
+
+    python -m pelican.server 8443 --key=../key.pem --cert=../cert.pem
+
+If you are using ``develop-server.sh``,  add this to the top::
+
+    CERT="$BASEDIR/cert.pem"
+    KEY="$BASEDIR/key.pem"
+
+and modify the ``pelican.server`` line as follows::
+
+    $PY -m pelican.server $port --ssl --cert="$CERT" --key="$KEY" &

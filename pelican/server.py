@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
+import argparse
 import logging
 import os
+import ssl
 import sys
 
 try:
@@ -12,6 +14,26 @@ except ImportError:
 
 from six.moves import SimpleHTTPServer as srvmod
 from six.moves import socketserver
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='Pelican Development Server',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("port", default=8000, type=int, nargs="?",
+                        help="Port to Listen On")
+    parser.add_argument("server", default="", nargs="?",
+                        help="Interface to Listen On")
+    parser.add_argument('--ssl', action="store_true",
+                        help='Activate SSL listener')
+    parser.add_argument('--cert', default="./cert.pem", nargs="?",
+                        help='Path to certificate file. ' +
+                        'Relative to current directory')
+    parser.add_argument('--key', default="./key.pem", nargs="?",
+                        help='Path to certificate key file. ' +
+                        'Relative to current directory')
+    return parser.parse_args()
 
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
@@ -55,18 +77,26 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    PORT = len(sys.argv) in (2, 3) and int(sys.argv[1]) or 8000
-    SERVER = len(sys.argv) == 3 and sys.argv[2] or ""
-
+    args = parse_arguments()
     socketserver.TCPServer.allow_reuse_address = True
     try:
         httpd = socketserver.TCPServer(
-            (SERVER, PORT), ComplexHTTPRequestHandler)
+            (args.server, args.port),
+            ComplexHTTPRequestHandler)
+        if args.ssl:
+            httpd.socket = ssl.wrap_socket(
+                httpd.socket, keyfile=args.key,
+                certfile=args.cert, server_side=True)
+    except ssl.SSLError as e:
+        logging.error("Couldn't open certificate file %s or key file %s",
+                      args.cert, args.key)
     except OSError as e:
-        logging.error("Could not listen on port %s, server %s.", PORT, SERVER)
+        logging.error("Could not listen on port %s, server %s.",
+                      args.port, args.server)
         sys.exit(getattr(e, 'exitcode', 1))
 
-    logging.info("Serving at port %s, server %s.", PORT, SERVER)
+    logging.info("Serving at port %s, server %s.",
+                 args.port, args.server)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt as e:
