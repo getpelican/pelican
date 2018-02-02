@@ -267,7 +267,7 @@ needed by Pelican.
 
     automation = ask('Do you want to generate a Fabfile/Makefile '
                      'to automate generation and publishing?', bool, True)
-    develop = ask('Do you want an auto-reload & simple HTTP script '
+    develop = ask('Do you want an auto-reload HTTP script '
                   'to assist with theme and site development?', bool, True)
 
     if automation:
