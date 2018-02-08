@@ -14,17 +14,23 @@ from pelican.server import ComplexHTTPRequestHandler
 env.deploy_path = 'output'
 DEPLOY_PATH = env.deploy_path
 
+{% if ssh %}
 # Remote server configuration
-production = '$ssh_user@$ssh_host:$ssh_port'
-dest_path = '$ssh_target_dir'
+production = '{{ssh_user}}@{{ssh_host}}:{{ssh_port}}'
+dest_path = '{{ssh_target_dir}}'
 
+{% endif %}
+{% if cloudfiles %}
 # Rackspace Cloud Files configuration settings
-env.cloudfiles_username = '$cloudfiles_username'
-env.cloudfiles_api_key = '$cloudfiles_api_key'
-env.cloudfiles_container = '$cloudfiles_container'
+env.cloudfiles_username = '{{cloudfiles_username}}'
+env.cloudfiles_api_key = '{{cloudfiles_api_key}}'
+env.cloudfiles_container = '{{cloudfiles_container}}'
 
+{% endif %}
+{% if github %}
 # Github Pages configuration
-env.github_pages_branch = "$github_pages_branch"
+env.github_pages_branch = '{{github_pages_branch}}'
+{% endif %}
 
 # Port for `serve`
 PORT = 8000
@@ -68,6 +74,7 @@ def preview():
     """Build production version of site"""
     local('pelican -s publishconf.py')
 
+{% if cloudfiles %}
 def cf_upload():
     """Publish to Rackspace Cloud Files"""
     rebuild()
@@ -76,6 +83,7 @@ def cf_upload():
               '-U {cloudfiles_username} '
               '-K {cloudfiles_api_key} '
               'upload -c {cloudfiles_container} .'.format(**env))
+{% endif %}
 
 @hosts(production)
 def publish():
@@ -89,7 +97,9 @@ def publish():
         extra_opts='-c',
     )
 
+{% if github %}
 def gh_pages():
     """Publish to GitHub Pages"""
     rebuild()
     local("ghp-import -b {github_pages_branch} {deploy_path} -p".format(**env))
+{% endif %}
