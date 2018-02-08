@@ -154,8 +154,8 @@ author.html
 
 This template will be processed for each of the existing authors, with
 output generated according to the ``AUTHOR_SAVE_AS`` setting (`Default:`
-``author/{author_name}.html``). If pagination is active, subsequent pages will by
-default reside at ``author/{author_name}{number}.html``.
+``author/{slug}.html``). If pagination is active, subsequent pages will by
+default reside at ``author/{slug}{number}.html``.
 
 ======================  ===================================================
 Variable                Description
@@ -188,8 +188,8 @@ category.html
 
 This template will be processed for each of the existing categories, with
 output generated according to the ``CATEGORY_SAVE_AS`` setting (`Default:`
-``category/{category_name}.html``). If pagination is active, subsequent pages will by
-default reside at ``category/{category_name}{number}.html``.
+``category/{slug}.html``). If pagination is active, subsequent pages will by
+default reside at ``category/{slug}{number}.html``.
 
 ======================  ===================================================
 Variable                Description
@@ -222,7 +222,7 @@ article.html
 
 This template will be processed for each article, with
 output generated according to the ``ARTICLE_SAVE_AS`` setting (`Default:`
-``{article_name}.html``). The following variables are available when
+``{slug}.html``). The following variables are available when
 rendering.
 
 =============   ===================================================
@@ -263,7 +263,7 @@ page.html
 
 This template will be processed for each page, with
 output generated according to the ``PAGE_SAVE_AS`` setting (`Default:`
-``pages/{page_name}.html``). The following variables are available when
+``pages/{slug}.html``). The following variables are available when
 rendering.
 
 =============   ===================================================
@@ -279,8 +279,8 @@ tag.html
 
 This template will be processed for each tag, with
 output generated according to the ``TAG_SAVE_AS`` setting (`Default:`
-``tag/{tag_name}.html``). If pagination is active, subsequent pages will by
-default reside at ``tag/{tag_name}{number}.html``.
+``tag/{slug}.html``). If pagination is active, subsequent pages will by
+default reside at ``tag/{slug}{number}.html``.
 
 ======================  ===================================================
 Variable                Description
