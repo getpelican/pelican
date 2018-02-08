@@ -699,6 +699,10 @@ Template pages
                          'src/resume.html': 'dest/resume.html',
                          'src/contact.html': 'dest/contact.html'}
 
+.. data:: TEMPLATE_EXTENSION = ['.html']
+
+   The extensions to use when looking up template files from template names.
+
 .. data:: DIRECT_TEMPLATES = ['index', 'categories', 'authors', 'archives']
 
    List of templates that are used directly to render content. Typically direct
