@@ -76,8 +76,8 @@ The #pelican IRC channel
   can manually join the ``#pelican`` IRC channel on the `freenode IRC network`_.
 
 .. _webchat: https://kiwiirc.com/client/irc.freenode.net/?#pelican
-.. _`IRC link`: irc://irc.freenode.org/pelican
-.. _`freenode IRC network`: http://www.freenode.org/
+.. _`IRC link`: irc://irc.freenode.net/pelican
+.. _`freenode IRC network`: https://freenode.net/
 
 
 Contributing code
