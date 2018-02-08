@@ -571,13 +571,12 @@ class _HTMLWordTruncator(HTMLParser):
         # - `1` (the length of `&`)
         # - `len(name)` (the length of `mdash`)
         # - `1` (the length of `;`)
-        # - `1` (required to go to the start of `suffix`)
         #
         # Note that, in case of malformed HTML, the ';' character may
         # not be present.
 
         offset = self.getoffset()
-        ref_end = offset + len(name) + 1 + 1
+        ref_end = offset + len(name) + 1
 
         try:
             if self.rawdata[ref_end] == ';':
@@ -623,7 +622,7 @@ class _HTMLWordTruncator(HTMLParser):
             char = six.unichr(codepoint)
         except (ValueError, OverflowError):
             char = ''
-        self._handle_ref(name, char)
+        self._handle_ref('#' + name, char)
 
 
 def truncate_html_words(s, num, end_text='…'):

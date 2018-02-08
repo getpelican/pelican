@@ -225,11 +225,11 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(
             utils.truncate_html_words('&#xfffffffff;', 20), '&#xfffffffff;')
         self.assertEqual(
-            utils.truncate_html_words('&mdash', 20), '&mdash')
+            utils.truncate_html_words('&mdash text', 20), '&mdash text')
         self.assertEqual(
-            utils.truncate_html_words('&#1234', 20), '&#1234')
+            utils.truncate_html_words('&#1234 text', 20), '&#1234 text')
         self.assertEqual(
-            utils.truncate_html_words('&#xabc', 20), '&#xabc')
+            utils.truncate_html_words('&#xabc text', 20), '&#xabc text')
 
     def test_process_translations(self):
         fr_articles = []
