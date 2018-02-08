@@ -552,15 +552,15 @@ class _HTMLWordTruncator(HTMLParser):
 
     def _handle_ref(self, name, char):
         """
-        Called by handle_entityref() or handle_charref() when a ref like 
+        Called by handle_entityref() or handle_charref() when a ref like
         `&mdash;`, `&#8212;`, or `&#x2014` is found.
-        
+
         The arguments for this method are:
-        
+
         - `name`: the HTML entity name (such as `mdash` or `#8212` or `#x2014`)
         - `char`: the Unicode representation of the ref (such as `—`)
 
-        This method checks whether the entity is considered to be part of a 
+        This method checks whether the entity is considered to be part of a
         word or not and, if not, signals the end of a word.
         """
         # Compute the index of the character right after the ref.
