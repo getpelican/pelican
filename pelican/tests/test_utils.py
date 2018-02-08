@@ -217,6 +217,14 @@ class TestUtils(LoggedTestCase):
             utils.truncate_html_words("&#x222b;dx " * 100, 20),
             "&#x222b;dx " * 20 + '…')
 
+        # Words with invalid or broken HTML references.
+        self.assertEqual(utils.truncate_html_words('&invalid;', 20), '&invalid;')
+        self.assertEqual(utils.truncate_html_words('&#9999999999;', 20), '&#9999999999;')
+        self.assertEqual(utils.truncate_html_words('&#xfffffffff;', 20), '&#xfffffffff;')
+        self.assertEqual(utils.truncate_html_words('&mdash', 20), '&mdash')
+        self.assertEqual(utils.truncate_html_words('&#1234', 20), '&#1234')
+        self.assertEqual(utils.truncate_html_words('&#xabc', 20), '&#xabc')
+
     def test_process_translations(self):
         fr_articles = []
         en_articles = []
