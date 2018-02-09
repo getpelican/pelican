@@ -140,9 +140,8 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = getattr(self, 'default_status', None)
 
-        # store the summary metadata if it is set
-        if 'summary' in metadata:
-            self._summary = metadata['summary']
+        if len(self._context.get('filenames', [])) > 0:
+            self.refresh_metadata_intersite_links()
 
         signals.content_object_init.send(self)
 
