@@ -319,17 +319,21 @@ class TestPage(LoggedTestCase):
         )
 
         # also test for summary in metadata
-        args['metadata']['summary'] = (
+        parsed = (
             'A simple summary test, with a '
             '<a href="|filename|article.rst">link</a>'
         )
-        args['context']['localsiteurl'] = 'http://notmyidea.org'
-        p = Page(**args)
-        self.assertEqual(
-            p.summary,
+        linked = (
             'A simple summary test, with a '
             '<a href="http://notmyidea.org/article.html">link</a>'
         )
+        args['settings']['FORMATTED_FIELDS'] = ['summary', 'custom']
+        args['metadata']['summary'] = parsed
+        args['metadata']['custom'] = parsed
+        args['context']['localsiteurl'] = 'http://notmyidea.org'
+        p = Page(**args)
+        self.assertEqual(p.summary, linked)
+        self.assertEqual(p.custom, linked)
 
     def test_intrasite_link_more(self):
         # type does not take unicode in PY2 and bytes in PY3, which in
