@@ -140,9 +140,8 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = getattr(self, 'default_status', None)
 
-        # store the summary metadata if it is set
-        if 'summary' in metadata:
-            self._summary = metadata['summary']
+        if len(self._context.get('filenames', [])) > 0:
+            self.refresh_metadata_intersite_links()
 
         signals.content_object_init.send(self)
 
@@ -356,8 +355,8 @@ class Content(object):
         This is based on the summary metadata if set, otherwise truncate the
         content.
         """
-        if hasattr(self, '_summary'):
-            return self._update_content(self._summary, siteurl)
+        if 'summary' in self.metadata:
+            return self.metadata['summary']
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
@@ -431,6 +430,16 @@ class Content(object):
                 os.path.relpath(
                     os.path.abspath(self.source_path),
                     os.path.abspath(self.settings['PATH']))))
+
+    def refresh_metadata_intersite_links(self):
+        for key in self.settings['FORMATTED_FIELDS']:
+            if key in self.metadata:
+                value = self._update_content(
+                    self.metadata[key],
+                    self.get_siteurl()
+                )
+                self.metadata[key] = value
+                setattr(self, key.lower(), value)
 
 
 class Page(Content):
