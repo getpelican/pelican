@@ -413,6 +413,16 @@ class Content(object):
                     os.path.abspath(self.source_path),
                     os.path.abspath(self.settings['PATH']))))
 
+    def refresh_metadata_intersite_links(self):
+        for key in self.settings['FORMATTED_FIELDS']:
+            if key in self.metadata:
+                value = self._update_content(
+                    self.metadata[key],
+                    self.get_siteurl()
+                )
+                self.metadata[key] = value
+                setattr(self, key.lower(), value)
+
 
 class Page(Content):
     mandatory_properties = ('title',)
