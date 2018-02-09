@@ -337,8 +337,8 @@ class Content(object):
         This is based on the summary metadata if set, otherwise truncate the
         content.
         """
-        if hasattr(self, '_summary'):
-            return self._update_content(self._summary, siteurl)
+        if 'summary' in self.metadata:
+            return self.metadata['summary']
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
