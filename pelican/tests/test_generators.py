@@ -741,6 +741,17 @@ class TestStaticGenerator(unittest.TestCase):
                                                     "theme/css/")))
         self.assertFalse(os.path.isdir(os.path.join(self.temp_output,
                                                     "theme/fonts/")))
+
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.eot")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.svg")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.ttf")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.woff")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.woff2")))
         self.assertTrue(os.path.isfile(os.path.join(self.temp_output,
                                                     "theme/font.css")))
         self.assertTrue(os.path.isfile(os.path.join(self.temp_output,
