@@ -464,13 +464,28 @@ respectively.
 
    The location to save per-year archives of your posts.
 
+.. data:: YEAR_ARCHIVE_URL = ''
+
+   The URL to use for per-year archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
 .. data:: MONTH_ARCHIVE_SAVE_AS = ''
 
    The location to save per-month archives of your posts.
 
+.. data:: MONTH_ARCHIVE_URL = ''
+
+   The URL to use for per-month archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
 .. data:: DAY_ARCHIVE_SAVE_AS = ''
 
    The location to save per-day archives of your posts.
+
+.. data:: DAY_ARCHIVE_URL = ''
+
+   The URL to use for per-day archives of your posts. Used only if you have the
+   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
 
 .. data:: SLUG_SUBSTITUTIONS = ()
 

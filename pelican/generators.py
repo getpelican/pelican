@@ -262,7 +262,7 @@ class TemplatePagesGenerator(Generator):
                 template = self.env.get_template(source)
                 rurls = self.settings['RELATIVE_URLS']
                 writer.write_file(dest, template, self.context, rurls,
-                                  override_output=True)
+                                  override_output=True, url='')
             finally:
                 del self.env.loader.loaders[0]
 
@@ -376,7 +376,7 @@ class ArticlesGenerator(CachingGenerator):
             write(article.save_as, self.get_template(article.template),
                   self.context, article=article, category=article.category,
                   override_output=hasattr(article, 'override_save_as'),
-                  blog=True)
+                  url=article.url, blog=True)
 
     def generate_period_archives(self, write):
         """Generate per-year, per-month, and per-day archives."""
@@ -391,13 +391,19 @@ class ArticlesGenerator(CachingGenerator):
             'day': self.settings['DAY_ARCHIVE_SAVE_AS'],
         }
 
+        period_url = {
+            'year': self.settings['YEAR_ARCHIVE_URL'],
+            'month': self.settings['MONTH_ARCHIVE_URL'],
+            'day': self.settings['DAY_ARCHIVE_URL'],
+        }
+
         period_date_key = {
             'year': attrgetter('date.year'),
             'month': attrgetter('date.year', 'date.month'),
             'day': attrgetter('date.year', 'date.month', 'date.day')
         }
 
-        def _generate_period_archives(dates, key, save_as_fmt):
+        def _generate_period_archives(dates, key, save_as_fmt, url_fmt):
             """Generate period archives from `dates`, grouped by
             `key` and written to `save_as`.
             """
@@ -409,6 +415,7 @@ class ArticlesGenerator(CachingGenerator):
                 # period archive dates
                 date = archive[0].date
                 save_as = save_as_fmt.format(date=date)
+                url = url_fmt.format(date=date)
                 context = self.context.copy()
 
                 if key == period_date_key['year']:
@@ -426,13 +433,14 @@ class ArticlesGenerator(CachingGenerator):
                                              _period[2])
 
                 write(save_as, template, context,
-                      dates=archive, blog=True)
+                      dates=archive, blog=True, url=url)
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
+            url = period_url[period]
             if save_as:
                 key = period_date_key[period]
-                _generate_period_archives(self.dates, key, save_as)
+                _generate_period_archives(self.dates, key, save_as, url)
 
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
@@ -443,12 +451,14 @@ class ArticlesGenerator(CachingGenerator):
                 paginated = {'articles': self.articles, 'dates': self.dates}
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
                                         '%s.html' % template)
+            url = self.settings.get("%s_URL" % template.upper(),
+                                    '%s.html' % template)
             if not save_as:
                 continue
 
             write(save_as, self.get_template(template),
                   self.context, blog=True, paginated=paginated,
-                  page_name=os.path.splitext(save_as)[0])
+                  page_name=os.path.splitext(save_as)[0], url=url)
 
     def generate_tags(self, write):
         """Generate Tags pages."""
@@ -457,7 +467,7 @@ class ArticlesGenerator(CachingGenerator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
-                  articles=articles, dates=dates,
+                  url=tag.url, articles=articles, dates=dates,
                   paginated={'articles': articles, 'dates': dates}, blog=True,
                   page_name=tag.page_name, all_articles=self.articles)
 
@@ -468,7 +478,7 @@ class ArticlesGenerator(CachingGenerator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
-                  category=cat, articles=articles, dates=dates,
+                  url=cat.url, category=cat, articles=articles, dates=dates,
                   paginated={'articles': articles, 'dates': dates}, blog=True,
                   page_name=cat.page_name, all_articles=self.articles)
 
@@ -479,7 +489,7 @@ class ArticlesGenerator(CachingGenerator):
             articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
-                  author=aut, articles=articles, dates=dates,
+                  url=aut.url, author=aut, articles=articles, dates=dates,
                   paginated={'articles': articles, 'dates': dates}, blog=True,
                   page_name=aut.page_name, all_articles=self.articles)
 
@@ -489,7 +499,7 @@ class ArticlesGenerator(CachingGenerator):
             write(draft.save_as, self.get_template(draft.template),
                   self.context, article=draft, category=draft.category,
                   override_output=hasattr(draft, 'override_save_as'),
-                  blog=True, all_articles=self.articles)
+                  blog=True, all_articles=self.articles, url=draft.url)
 
     def generate_pages(self, writer):
         """Generate the pages on the disk"""
@@ -662,7 +672,8 @@ class PagesGenerator(CachingGenerator):
                 page.save_as, self.get_template(page.template),
                 self.context, page=page,
                 relative_urls=self.settings['RELATIVE_URLS'],
-                override_output=hasattr(page, 'override_save_as'))
+                override_output=hasattr(page, 'override_save_as'),
+                url=page.url)
         signals.page_writer_finalized.send(self, writer=writer)
 
     def refresh_metadata_intersite_links(self):

@@ -254,7 +254,7 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(sorted(categories), sorted(categories_expected))
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
-    def test_direct_templates_save_as_default(self):
+    def test_direct_templates_save_as_url_default(self):
 
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
@@ -265,14 +265,16 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
                                  generator.get_template("archives"), settings,
-                                 blog=True, paginated={}, page_name='archives')
+                                 blog=True, paginated={}, page_name='archives',
+                                 url="archives.html")
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
-    def test_direct_templates_save_as_modified(self):
+    def test_direct_templates_save_as_url_modified(self):
 
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        settings['ARCHIVES_URL'] = 'archives/'
         settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
@@ -282,7 +284,8 @@ class TestArticlesGenerator(unittest.TestCase):
         write.assert_called_with("archives/index.html",
                                  generator.get_template("archives"), settings,
                                  blog=True, paginated={},
-                                 page_name='archives/index')
+                                 page_name='archives/index',
+                                 url="archives/")
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_direct_templates_save_as_false(self):
@@ -320,6 +323,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
 
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
+        settings['YEAR_ARCHIVE_URL'] = 'posts/{date:%Y}/'
         settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
@@ -334,11 +338,13 @@ class TestArticlesGenerator(unittest.TestCase):
         write.assert_called_with("posts/1970/index.html",
                                  generator.get_template("period_archives"),
                                  settings,
-                                 blog=True, dates=dates)
+                                 blog=True, dates=dates, url="posts/1970/")
 
         del settings["period"]
         settings['MONTH_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/index.html'
+        settings['MONTH_ARCHIVE_URL'] = \
+            'posts/{date:%Y}/{date:%b}/'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -353,11 +359,13 @@ class TestArticlesGenerator(unittest.TestCase):
         write.assert_called_with("posts/1970/Jan/index.html",
                                  generator.get_template("period_archives"),
                                  settings,
-                                 blog=True, dates=dates)
+                                 blog=True, dates=dates, url="posts/1970/Jan/")
 
         del settings["period"]
         settings['DAY_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
+        settings['DAY_ARCHIVE_URL'] = \
+            'posts/{date:%Y}/{date:%b}/{date:%d}/'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -376,7 +384,8 @@ class TestArticlesGenerator(unittest.TestCase):
         write.assert_called_with("posts/1970/Jan/01/index.html",
                                  generator.get_template("period_archives"),
                                  settings,
-                                 blog=True, dates=dates)
+                                 blog=True, dates=dates,
+                                 url="posts/1970/Jan/01/")
         locale.setlocale(locale.LC_ALL, old_locale)
 
     def test_nonexistent_template(self):
