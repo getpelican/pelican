@@ -730,14 +730,21 @@ class StaticGenerator(Generator):
                     final_path=None):
         """Copy all the paths from source to destination"""
         for path in paths:
+            source_path = os.path.join(source, path)
+
             if final_path:
-                copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, final_path),
-                     self.settings['IGNORE_FILES'])
+                if os.path.isfile(source_path):
+                    destination_path = os.path.join(output_path, destination,
+                                                    final_path,
+                                                    os.path.basename(path))
+                else:
+                    destination_path = os.path.join(output_path, destination,
+                                                    final_path)
             else:
-                copy(os.path.join(source, path),
-                     os.path.join(output_path, destination, path),
-                     self.settings['IGNORE_FILES'])
+                destination_path = os.path.join(output_path, destination, path)
+
+            copy(source_path, destination_path,
+                 self.settings['IGNORE_FILES'])
 
     def _file_update_required(self, staticfile):
         source_path = os.path.join(self.path, staticfile.source_path)
