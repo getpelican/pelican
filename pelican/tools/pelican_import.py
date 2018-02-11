@@ -774,7 +774,7 @@ def fields2pelican(
 def is_pandoc2_installed():
     cmd = ['pandoc', '--version']
     try:
-        output = subprocess.check_output(cmd)
+        output = subprocess.check_output(cmd).decode('utf-8')
     except subprocess.CalledProcessError:
         return None
 
