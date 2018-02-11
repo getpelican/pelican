@@ -682,6 +682,9 @@ def fields2pelican(
         dircat=False, strip_raw=False, disable_slugs=False,
         dirpage=False, filename_template=None, filter_author=None,
         wp_custpost=False, wp_attach=False, attachments=None):
+
+    pandoc2 = is_pandoc2_installed()
+
     for (title, content, filename, date, author, categories, tags, status,
             kind, in_markup) in fields:
         if filter_author and filter_author != author:
@@ -727,9 +730,13 @@ def fields2pelican(
 
                 fp.write(new_content)
 
-            parse_raw = '--parse-raw' if not strip_raw else ''
-            cmd = ('pandoc --normalize {0} --from=html'
-                   ' --to={1} -o "{2}" "{3}"')
+            parse_raw = '--parse-raw' if not strip_raw and not pandoc2 else ''
+            if pandoc2:
+                cmd = ('pandoc {0} --from=html '
+                       '--to=gfm+raw_html -o "{2}" "{3}"')
+            else:
+                cmd = ('pandoc --normalize {0} --from=html'
+                       ' --to={1} -o "{2}" "{3}"')
             cmd = cmd.format(parse_raw, out_markup,
                              out_filename, html_filename)
 
@@ -762,6 +769,18 @@ def fields2pelican(
         print("downloading attachments that don't have a parent post")
         urls = attachments[None]
         download_attachments(output_path, urls)
+
+
+def is_pandoc2_installed():
+    cmd = ['pandoc', '--version']
+    try:
+        output = subprocess.check_output(cmd)
+    except subprocess.CalledProcessError:
+        return None
+
+    if re.search(r'^pandoc 2\..+$', output, re.M):
+        return True
+    return False
 
 
 def main():
