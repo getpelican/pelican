@@ -216,6 +216,7 @@ Adding a new generator is also really easy. You might want to have a look at
         # define a new generator here if you need to
         return MyGenerator
 
-    signals.get_generators.connect(get_generators)
+    def register():
+        signals.get_generators.connect(get_generators)
 
 .. _pelican-plugins bug #314: https://github.com/getpelican/pelican-plugins/issues/314
