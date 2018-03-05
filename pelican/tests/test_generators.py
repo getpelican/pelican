@@ -8,7 +8,8 @@ from shutil import copy, rmtree
 from tempfile import mkdtemp
 
 from pelican.generators import (ArticlesGenerator, Generator, PagesGenerator,
-                                StaticGenerator, TemplatePagesGenerator)
+                                PelicanTemplateNotFound, StaticGenerator,
+                                TemplatePagesGenerator)
 from pelican.tests.support import get_settings, unittest
 from pelican.writers import Writer
 
@@ -115,6 +116,62 @@ class TestGenerator(unittest.TestCase):
                          generator.env.comment_start_string)
         self.assertEqual(comment_end_string,
                          generator.env.comment_end_string)
+
+    def test_theme_overrides(self):
+        """
+            Test that the THEME_TEMPLATES_OVERRIDES configuration setting is
+            utilized correctly in the Generator.
+        """
+        override_dirs = (os.path.join(CUR_DIR, 'theme_overrides', 'level1'),
+                         os.path.join(CUR_DIR, 'theme_overrides', 'level2'))
+        self.settings['THEME_TEMPLATES_OVERRIDES'] = override_dirs
+        generator = Generator(
+            context=self.settings.copy(),
+            settings=self.settings,
+            path=CUR_DIR,
+            theme=self.settings['THEME'],
+            output_path=None)
+
+        filename = generator.get_template('article').filename
+        self.assertEqual(override_dirs[0], os.path.dirname(filename))
+        self.assertEqual('article.html', os.path.basename(filename))
+
+        filename = generator.get_template('authors').filename
+        self.assertEqual(override_dirs[1], os.path.dirname(filename))
+        self.assertEqual('authors.html', os.path.basename(filename))
+
+        filename = generator.get_template('taglist').filename
+        self.assertEqual(os.path.join(self.settings['THEME'], 'templates'),
+                         os.path.dirname(filename))
+        self.assertNotIn(os.path.dirname(filename), override_dirs)
+        self.assertEqual('taglist.html', os.path.basename(filename))
+
+    def test_simple_prefix(self):
+        """
+            Test `!simple` theme prefix.
+        """
+        filename = self.generator.get_template('!simple/authors').filename
+        expected_path = os.path.join(
+            os.path.dirname(CUR_DIR), 'themes', 'simple', 'templates')
+        self.assertEqual(expected_path, os.path.dirname(filename))
+        self.assertEqual('authors.html', os.path.basename(filename))
+
+    def test_theme_prefix(self):
+        """
+            Test `!theme` theme prefix.
+        """
+        filename = self.generator.get_template('!theme/authors').filename
+        expected_path = os.path.join(
+            os.path.dirname(CUR_DIR), 'themes', 'notmyidea', 'templates')
+        self.assertEqual(expected_path, os.path.dirname(filename))
+        self.assertEqual('authors.html', os.path.basename(filename))
+
+    def test_bad_prefix(self):
+        """
+            Test unknown/bad theme prefix throws exception.
+        """
+        self.assertRaises(PelicanTemplateNotFound, self.generator.get_template,
+                          '!UNKNOWN/authors')
 
 
 class TestArticlesGenerator(unittest.TestCase):

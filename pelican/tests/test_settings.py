@@ -166,3 +166,20 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['THEME'] = 'foo'
 
         self.assertRaises(Exception, configure_settings, settings)
+
+    def test_deprecated_extra_templates_paths(self):
+        settings = self.settings
+        settings['EXTRA_TEMPLATES_PATHS'] = ['/foo/bar', '/ha']
+
+        configure_settings(settings)
+
+        self.assertEqual(settings['THEME_TEMPLATES_OVERRIDES'],
+                         ['/foo/bar', '/ha'])
+        self.assertNotIn('EXTRA_TEMPLATES_PATHS', settings)
+
+    def test_theme_and_extra_templates_exception(self):
+        settings = self.settings
+        settings['EXTRA_TEMPLATES_PATHS'] = ['/ha']
+        settings['THEME_TEMPLATES_OVERRIDES'] = ['/foo/bar']
+
+        self.assertRaises(Exception, configure_settings, settings)

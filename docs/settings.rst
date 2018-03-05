@@ -725,15 +725,12 @@ Template pages
    tags and category index pages). If the tag and category collections are not
    needed, set ``DIRECT_TEMPLATES = ['index', 'archives']``
 
+   ``DIRECT_TEMPLATES`` are searched for over paths maintained in
+   ``THEME_TEMPLATES_OVERRIDES``.
+
 .. data:: PAGINATED_DIRECT_TEMPLATES = ['index']
 
    Provides the direct templates that should be paginated.
-
-.. data:: EXTRA_TEMPLATES_PATHS = []
-
-   A list of paths you want Jinja2 to search for templates.  Can be used to
-   separate templates from the theme.  Example: projects, resume, profile ...
-   These templates need to use ``DIRECT_TEMPLATES`` setting.
 
 
 Metadata
@@ -1029,6 +1026,21 @@ However, here are the settings that are related to themes.
    theme has other static paths, you can put them here. If files or directories
    with the same names are included in the paths defined in this settings, they
    will be progressively overwritten.
+
+.. data:: THEME_TEMPLATES_OVERRIDES = []
+
+   A list of paths you want Jinja2 to search for templates before searching the
+   theme's ``templates/`` directory.  Allows for overriding individual theme
+   template files without having to fork an existing theme.  Jinja2 searches in
+   the following order: files in ``THEME_TEMPLATES_OVERRIDES`` first, then the 
+   theme's ``templates/``.
+
+   You can also extend templates from the theme using the ``{% extends %}``
+   directive utilizing the ``!theme`` prefix as shown in the following example:
+
+   .. parsed-literal::
+
+      {% extends '!theme/article.html' %}
 
 .. data:: CSS_FILE = 'main.css'
 
