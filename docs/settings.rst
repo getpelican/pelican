@@ -131,7 +131,7 @@ Basic settings
 
    Extra configuration settings for the Markdown processor. Refer to the Python
    Markdown documentation's `Options section
-   <http://pythonhosted.org/Markdown/reference.html#markdown>`_ for a complete
+   <https://python-markdown.github.io/reference/#markdown>`_ for a complete
    list of supported options. The ``extensions`` option will be automatically
    computed from the ``extension_configs`` option.
 
@@ -1032,7 +1032,7 @@ However, here are the settings that are related to themes.
    A list of paths you want Jinja2 to search for templates before searching the
    theme's ``templates/`` directory.  Allows for overriding individual theme
    template files without having to fork an existing theme.  Jinja2 searches in
-   the following order: files in ``THEME_TEMPLATES_OVERRIDES`` first, then the 
+   the following order: files in ``THEME_TEMPLATES_OVERRIDES`` first, then the
    theme's ``templates/``.
 
    You can also extend templates from the theme using the ``{% extends %}``
