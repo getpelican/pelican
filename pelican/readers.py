@@ -234,6 +234,7 @@ class RstReader(BaseReader):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8',
+                        'language_code': self.settings.get('DEFAULT_LANG'),
                         'exit_status_level': 2,
                         'embed_stylesheet': False}
         user_params = self.settings.get('DOCUTILS_SETTINGS')
