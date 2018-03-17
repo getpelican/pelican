@@ -23,7 +23,11 @@ import six
 from pelican import __version__
 
 locale.setlocale(locale.LC_ALL, '')
-_DEFAULT_LANGUAGE = locale.getlocale()[0]
+try:
+    _DEFAULT_LANGUAGE = locale.getlocale()[0]
+except ValueError:
+    # Don't fail on macosx: "unknown locale: UTF-8"
+    _DEFAULT_LANGUAGE = None
 if _DEFAULT_LANGUAGE is None:
     _DEFAULT_LANGUAGE = 'English'
 else:
