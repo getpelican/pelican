@@ -386,8 +386,9 @@ of available translations for that article.
    language. For such advanced functionality the `i18n_subsites
    plugin`_ can be used.
 
-Pelican uses the article's URL "slug" to determine if two or more articles are
-translations of one another. The slug can be set manually in the file's
+By default, Pelican uses the article's URL "slug" to determine if two or more
+articles are translations of one another. (This can be changed with the
+``ARTICLE_TRANSLATION_ID`` setting.) The slug can be set manually in the file's
 metadata; if not set explicitly, Pelican will auto-generate the slug from the
 title of the article.
 

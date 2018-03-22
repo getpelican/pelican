@@ -255,48 +255,71 @@ class TestUtils(LoggedTestCase):
                                        content='en français'))
         en_articles.append(get_article(lang='en', slug='yay1', title='Title',
                                        content='in english',
-                                       extra_metadata={'translation': 'true'}))
+                                       translation='true'))
         # 2: translation metadata not on default lang
         fr_articles.append(get_article(lang='fr', slug='yay2', title='Titre',
                                        content='en français',
-                                       extra_metadata={'translation': 'true'}))
+                                       translation='true'))
         en_articles.append(get_article(lang='en', slug='yay2', title='Title',
                                        content='in english'))
         # 3: back to default language detection if all items have the
         #    translation metadata
         fr_articles.append(get_article(lang='fr', slug='yay3', title='Titre',
                                        content='en français',
-                                       extra_metadata={'translation': 'yep'}))
+                                       translation='yep'))
         en_articles.append(get_article(lang='en', slug='yay3', title='Title',
                                        content='in english',
-                                       extra_metadata={'translation': 'yes'}))
+                                       translation='yes'))
+        # 4-5: translation pairs with the same slug but different category
+        fr_articles.append(get_article(lang='fr', slug='yay4', title='Titre',
+                                       content='en français', category='foo'))
+        en_articles.append(get_article(lang='en', slug='yay4', title='Title',
+                                       content='in english', category='foo'))
+        fr_articles.append(get_article(lang='fr', slug='yay4', title='Titre',
+                                       content='en français', category='bar'))
+        en_articles.append(get_article(lang='en', slug='yay4', title='Title',
+                                       content='in english', category='bar'))
 
         # try adding articles in both orders
         for lang0_articles, lang1_articles in ((fr_articles, en_articles),
                                                (en_articles, fr_articles)):
             articles = lang0_articles + lang1_articles
 
-            index, trans = utils.process_translations(articles)
+            # test process_translations with falsy translation_id
+            index, trans = utils.process_translations(
+                articles, translation_id=None)
+            for i in range(6):
+                for lang_articles in [en_articles, fr_articles]:
+                    self.assertIn(lang_articles[i], index)
+                    self.assertNotIn(lang_articles[i], trans)
 
-            self.assertIn(en_articles[0], index)
-            self.assertIn(fr_articles[0], trans)
-            self.assertNotIn(en_articles[0], trans)
-            self.assertNotIn(fr_articles[0], index)
+            # test process_translations with simple and complex translation_id
+            for translation_id in ['slug', {'slug', 'category'}]:
+                index, trans = utils.process_translations(
+                    articles, translation_id=translation_id)
 
-            self.assertIn(fr_articles[1], index)
-            self.assertIn(en_articles[1], trans)
-            self.assertNotIn(fr_articles[1], trans)
-            self.assertNotIn(en_articles[1], index)
+                for a in [en_articles[0], fr_articles[1], en_articles[2],
+                          en_articles[3], en_articles[4], en_articles[5]]:
+                    self.assertIn(a, index)
+                    self.assertNotIn(a, trans)
 
-            self.assertIn(en_articles[2], index)
-            self.assertIn(fr_articles[2], trans)
-            self.assertNotIn(en_articles[2], trans)
-            self.assertNotIn(fr_articles[2], index)
+                for a in [fr_articles[0], en_articles[1], fr_articles[2],
+                          fr_articles[3], fr_articles[4], fr_articles[5]]:
+                    self.assertIn(a, trans)
+                    self.assertNotIn(a, index)
 
-            self.assertIn(en_articles[3], index)
-            self.assertIn(fr_articles[3], trans)
-            self.assertNotIn(en_articles[3], trans)
-            self.assertNotIn(fr_articles[3], index)
+                for i in range(6):
+                    self.assertIn(en_articles[i], fr_articles[i].translations)
+                    self.assertIn(fr_articles[i], en_articles[i].translations)
+
+                for a_arts in [en_articles, fr_articles]:
+                    for b_arts in [en_articles, fr_articles]:
+                        if translation_id == 'slug':
+                            self.assertIn(a_arts[4], b_arts[5].translations)
+                            self.assertIn(a_arts[5], b_arts[4].translations)
+                        elif translation_id == {'slug', 'category'}:
+                            self.assertNotIn(a_arts[4], b_arts[5].translations)
+                            self.assertNotIn(a_arts[5], b_arts[4].translations)
 
     def test_watchers(self):
         # Test if file changes are correctly detected

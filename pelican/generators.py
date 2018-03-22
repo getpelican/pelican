@@ -597,12 +597,14 @@ class ArticlesGenerator(CachingGenerator):
                 all_drafts.append(article)
             self.add_source_path(article)
 
-        self.articles, self.translations = process_translations(all_articles)
-        self.articles = order_content(
-            self.articles,
-            order_by=self.settings['ARTICLE_ORDER_BY'])
-        self.drafts, self.drafts_translations = \
-            process_translations(all_drafts)
+        def _process(arts):
+            origs, translations = process_translations(
+                arts, translation_id=self.settings['ARTICLE_TRANSLATION_ID'])
+            origs = order_content(origs, self.settings['ARTICLE_ORDER_BY'])
+            return origs, translations
+
+        self.articles, self.translations = _process(all_articles)
+        self.drafts, self.drafts_translations = _process(all_drafts)
 
         signals.article_generator_pretaxonomy.send(self)
 
@@ -701,12 +703,15 @@ class PagesGenerator(CachingGenerator):
                 draft_pages.append(page)
             self.add_source_path(page)
 
-        self.pages, self.translations = process_translations(all_pages)
-        self.pages = order_content(self.pages, self.settings['PAGE_ORDER_BY'])
-        self.hidden_pages, self.hidden_translations = \
-            process_translations(hidden_pages)
-        self.draft_pages, self.draft_translations = \
-            process_translations(draft_pages)
+        def _process(pages):
+            origs, translations = process_translations(
+                pages, translation_id=self.settings['PAGE_TRANSLATION_ID'])
+            origs = order_content(origs, self.settings['PAGE_ORDER_BY'])
+            return origs, translations
+
+        self.pages, self.translations = _process(all_pages)
+        self.hidden_pages, self.hidden_translations = _process(hidden_pages)
+        self.draft_pages, self.draft_translations = _process(draft_pages)
 
         self._update_context(('pages', 'hidden_pages', 'draft_pages'))
 

@@ -639,77 +639,94 @@ def escape_html(text, quote=True):
     return escape(text, quote=quote)
 
 
-def process_translations(content_list):
+def process_translations(content_list, translation_id=None):
     """ Finds translations and returns them.
 
-    Returns a tuple with two lists (index, translations).  Index list includes
+    For each content_list item, populates the 'translations' attribute, and
+    returns a tuple with two lists (index, translations). Index list includes
     items in default language or items which have no variant in default
     language. Items with the `translation` metadata set to something else than
-    `False` or `false` will be used as translations, unless all the items with
-    the same slug have that metadata.
+    `False` or `false` will be used as translations, unless all the items in
+    the same group have that metadata.
 
-    For each content_list item, sets the 'translations' attribute.
+    Translations and original items are determined relative to one another
+    amongst items in the same group. Items are in the same group if they
+    have the same value(s) for the metadata attribute(s) specified by the
+    'translation_id', which must be a string or a collection of strings.
+    If 'translation_id' is falsy, the identification of translations is skipped
+    and all items are returned as originals.
     """
-    content_list.sort(key=attrgetter('slug'))
-    grouped_by_slugs = groupby(content_list, attrgetter('slug'))
-    index = []
-    translations = []
 
+    if not translation_id:
+        return content_list, []
+
+    if isinstance(translation_id, six.string_types):
+        translation_id = {translation_id}
+
+    index = []
+
+    try:
+        content_list.sort(key=attrgetter(*translation_id))
+    except TypeError:
+        raise TypeError('Cannot unpack {}, \'translation_id\' must be falsy, a'
+                        'string or a collection of strings'
+                        .format(translation_id))
+    except AttributeError:
+        raise AttributeError('Cannot use {} as \'translation_id\', there'
+                             'appear to be items without these metadata'
+                             'attributes'.format(translation_id))
+
+    for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
+        items = list(items)
+        with_str = 'with' + ', '.join([' {} "{{}}"'] * len(translation_id))\
+            .format(*translation_id).format(*id_vals)
+        original_items = get_original_items(items, with_str)
+        index.extend(original_items)
+        for a in items:
+            a.translations = [x for x in items if x != a]
+
+    translations = [x for x in content_list if x not in index]
+
+    return index, translations
+
+
+def get_original_items(items, with_str):
     def _warn_source_paths(msg, items, *extra):
         args = [len(items)]
         args.extend(extra)
         args.extend((x.source_path for x in items))
         logger.warning('{}: {}'.format(msg, '\n%s' * len(items)), *args)
 
-    for slug, items in grouped_by_slugs:
-        items = list(items)
+    # warn if several items have the same lang
+    for lang, lang_items in groupby(items, attrgetter('lang')):
+        lang_items = list(lang_items)
+        if len(lang_items) > 1:
+            _warn_source_paths('There are %s items "%s" with lang %s',
+                               lang_items, with_str, lang)
 
-        # display warnings if slug is empty
-        if not slug:
-            _warn_source_paths('There are %s items with empty slug', items)
+    # items with `translation` metadata will be used as translations...
+    candidate_items = [
+        i for i in items
+        if i.metadata.get('translation', 'false').lower() == 'false']
 
-        # display warnings if several items have the same lang
-        for lang, lang_items in groupby(items, attrgetter('lang')):
-            lang_items = list(lang_items)
-            if len(lang_items) > 1:
-                _warn_source_paths(
-                    'There are %s items with slug "%s" with lang %s',
-                    lang_items,
-                    slug,
-                    lang)
+    # ...unless all items with that slug are translations
+    if not candidate_items:
+        _warn_source_paths('All items ("%s") "%s" are translations',
+                           items, with_str)
+        candidate_items = items
 
-        # items with `translation` metadata will be used as translations...
-        candidate_items = list(filter(
-            lambda i:
-                i.metadata.get('translation', 'false').lower() == 'false',
-            items))
-        # ...unless all items with that slug are translations
-        if not candidate_items:
-            logger.warning('All items with slug "%s" are translations', slug)
-            candidate_items = items
+    # find items with default language
+    original_items = [i for i in candidate_items if i.in_default_lang]
 
-        # find items with default language
-        original_items = list(filter(
-            attrgetter('in_default_lang'),
-            candidate_items))
+    # if there is no article with default language, go back one step
+    if not original_items:
+        original_items = candidate_items
 
-        # if there is no article with default language, go back one step
-        if not original_items:
-            original_items = candidate_items
-
-        # display warning if there are several original items
-        if len(original_items) > 1:
-            _warn_source_paths(
-                'There are %s original (not translated) items with slug "%s"',
-                original_items,
-                slug)
-
-        index.extend(original_items)
-        translations.extend([x for x in items if x not in original_items])
-        for a in items:
-            a.translations = [x for x in items if x != a]
-
-    return index, translations
+    # warn if there are several original items
+    if len(original_items) > 1:
+        _warn_source_paths('There are %s original (not translated) items %s',
+                           original_items, with_str)
+    return original_items
 
 
 def order_content(content_list, order_by='slug'):

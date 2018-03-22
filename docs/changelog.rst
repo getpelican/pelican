@@ -10,6 +10,10 @@ Next release
   for more finegrained control
 * ``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer strips
   ``'bar'`` from ``'foo/bar.html'`` (unless ``'bar' == 'index'``).
+* ``ARTICLE_ORDER_BY`` and ``PAGE_ORDER_BY`` now also affect 1) category, tag
+  and author pages 2) feeds 3) draft and hidden articles and pages
+* New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to specify
+  metadata attributes used to identify translations; or to disable translations
 
 3.7.1 (2017-01-10)
 ==================
