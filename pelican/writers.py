@@ -9,6 +9,7 @@ from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 from jinja2 import Markup
 
 import six
+from six.moves.urllib.parse import urljoin
 
 from pelican import signals
 from pelican.paginator import Paginator
@@ -30,6 +31,13 @@ class Writer(object):
         self._written_files = set()
         self._overridden_files = set()
 
+        # See Content._link_replacer for details
+        if self.settings['RELATIVE_URLS']:
+            self.urljoiner = os.path.join
+        else:
+            self.urljoiner = lambda base, url: urljoin(
+                base if base.endswith('/') else base + '/', url)
+
     def _create_new_feed(self, feed_type, feed_title, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
         if feed_title:
@@ -45,9 +53,8 @@ class Writer(object):
         return feed
 
     def _add_item_to_the_feed(self, feed, item):
-
         title = Markup(item.title).striptags()
-        link = '%s/%s' % (self.site_url, item.url)
+        link = self.urljoiner(self.site_url, item.url)
         is_rss = isinstance(feed, Rss201rev2Feed)
         if not is_rss or self.settings.get('RSS_FEED_SUMMARY_ONLY'):
             description = item.summary
@@ -90,8 +97,8 @@ class Writer(object):
         self._written_files.add(filename)
         return open(filename, 'w', encoding=encoding)
 
-    def write_feed(self, elements, context, path=None, feed_type='atom',
-                   override_output=False, feed_title=None):
+    def write_feed(self, elements, context, path=None, url=None,
+                   feed_type='atom', override_output=False, feed_title=None):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no path or output_path is specified, just
@@ -100,6 +107,8 @@ class Writer(object):
         :param elements: the articles to put on the feed.
         :param context: the context to get the feed metadata.
         :param path: the path to output.
+        :param url: the publicly visible feed URL; if None, path is used
+            instead
         :param feed_type: the feed type to use (atom or rss)
         :param override_output: boolean telling if we can override previous
             output with the same name (and if next files written with the same
@@ -113,7 +122,7 @@ class Writer(object):
             'SITEURL', path_to_url(get_relative_path(path)))
 
         self.feed_domain = context.get('FEED_DOMAIN')
-        self.feed_url = '{}/{}'.format(self.feed_domain, path)
+        self.feed_url = self.urljoiner(self.feed_domain, url if url else path)
 
         feed = self._create_new_feed(feed_type, feed_title, context)
 
