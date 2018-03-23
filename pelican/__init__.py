@@ -467,11 +467,13 @@ def main():
                             ', '.join(k for k, v in modified.items() if v)))
 
                         if modified['content'] is None:
-                            logger.warning('No valid files found in content for the active readers:')
-                            for k, v in readers.readers.items():
-                                if v.enabled:
-                                    logger.warning(' | %s (%s)' % (type(v).__name__, 
-                                                                   ', '.join(v.file_extensions)))
+                            reader_descs = set(['%s (%s)' % (type(r).__name__, 
+                                                             ', '.join(r.file_extensions)) 
+                                                for r in readers.readers.values()
+                                                if r.enabled])
+                            
+                            logger.warning('No valid files found in content for the active readers:\n' +
+                                           '\n'.join(reader_descs))
 
                         if modified['theme'] is None:
                             logger.warning('Empty theme folder. Using `basic` '
@@ -494,11 +496,13 @@ def main():
 
         else:
             if next(watchers['content']) is None:
-                logger.warning('No valid files found in content for the active readers:')
-                for k, v in readers.readers.items():
-                    if v.enabled:
-                        logger.warning(' | %s (%s)' % (type(v).__name__, 
-                                                       ', '.join(v.file_extensions)))
+                reader_descs = set(['%s (%s)' % (type(r).__name__, 
+                                                 ', '.join(r.file_extensions)) 
+                                    for r in readers.readers.values()
+                                    if r.enabled])
+
+                logger.warning('No valid files found in content for the active readers:\n' +
+                               '\n'.join(reader_descs))
 
             if next(watchers['theme']) is None:
                 logger.warning('Empty theme folder. Using `basic` theme.')
