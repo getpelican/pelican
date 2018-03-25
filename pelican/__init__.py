@@ -473,7 +473,7 @@ def main():
                                                 if r.enabled])
                             
                             logger.warning('No valid files found in content for the active readers:\n' +
-                                           '\n'.join(reader_descs))
+                                           '\n'.join(sorted(reader_descs)))
 
                         if modified['theme'] is None:
                             logger.warning('Empty theme folder. Using `basic` '
@@ -502,7 +502,7 @@ def main():
                                     if r.enabled])
 
                 logger.warning('No valid files found in content for the active readers:\n' +
-                               '\n'.join(reader_descs))
+                               '\n'.join(sorted(reader_descs)))
 
             if next(watchers['theme']) is None:
                 logger.warning('Empty theme folder. Using `basic` theme.')
