@@ -403,8 +403,8 @@ def main():
     try:
         pelican, settings = get_instance(args)
         readers = Readers(settings)
-        reader_descs = sorted(set(['%s (%s)' % 
-                                   (type(r).__name__, 
+        reader_descs = sorted(set(['%s (%s)' %
+                                   (type(r).__name__,
                                     ', '.join(r.file_extensions))
                                    for r in readers.readers.values()
                                    if r.enabled]))
