@@ -403,6 +403,11 @@ def main():
     try:
         pelican, settings = get_instance(args)
         readers = Readers(settings)
+        reader_descs = sorted(set(['%s (%s)' % 
+                                   (type(r).__name__, 
+                                    ', '.join(r.file_extensions))
+                                   for r in readers.readers.values()
+                                   if r.enabled]))
 
         watchers = {'content': folder_watcher(pelican.path,
                                               readers.extensions,
@@ -467,13 +472,10 @@ def main():
                             ', '.join(k for k, v in modified.items() if v)))
 
                         if modified['content'] is None:
-                            reader_descs = set(['%s (%s)' % (type(r).__name__, 
-                                                             ', '.join(r.file_extensions)) 
-                                                for r in readers.readers.values()
-                                                if r.enabled])
-                            
-                            logger.warning('No valid files found in content for the active readers:\n' +
-                                           '\n'.join(sorted(reader_descs)))
+                            logger.warning(
+                                'No valid files found in content for '
+                                + 'the active readers:\n'
+                                + '\n'.join(reader_descs))
 
                         if modified['theme'] is None:
                             logger.warning('Empty theme folder. Using `basic` '
@@ -496,13 +498,10 @@ def main():
 
         else:
             if next(watchers['content']) is None:
-                reader_descs = set(['%s (%s)' % (type(r).__name__, 
-                                                 ', '.join(r.file_extensions)) 
-                                    for r in readers.readers.values()
-                                    if r.enabled])
-
-                logger.warning('No valid files found in content for the active readers:\n' +
-                               '\n'.join(sorted(reader_descs)))
+                logger.warning(
+                    'No valid files found in content for '
+                    + 'the active readers:\n'
+                    + '\n'.join(reader_descs))
 
             if next(watchers['theme']) is None:
                 logger.warning('Empty theme folder. Using `basic` theme.')
