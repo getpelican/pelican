@@ -63,10 +63,10 @@ function start_up(){
   local port=$1
   echo "Starting up Pelican and HTTP server"
   shift
-  $PELICAN --debug --autoreload -r "$INPUT"DIR -o "$OUTPUT"DIR -s "$CONFFILE" $PELICANOPTS &
+  $PELICAN --debug --autoreload -r "$INPUT"DIR -o "$OUTPUTDIR" -s "$CONFFILE" $PELICANOPTS &
   pelican_pid=$!
   echo $pelican_pid > "$PELICAN_PID"
-  mkdir -p "$OUTPUT"DIR && cd "$OUTPUT"DIR
+  mkdir -p "$OUTPUTDIR" && cd "$OUTPUTDIR"
   $PY -m pelican.server $port &
   srv_pid=$!
   echo $srv_pid > "$SRV_PID"
