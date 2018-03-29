@@ -1058,7 +1058,7 @@ Ordering content
 
 .. data:: PAGE_ORDER_BY = 'basename'
 
-   Defines how the pages (``PAGES`` variable in the template) are sorted.
+   Defines how the pages (``pages`` variable in the template) are sorted.
    Options are same as ``ARTICLE_ORDER_BY``.  The default value, ``'basename'``
    will sort pages by their basename.
 
