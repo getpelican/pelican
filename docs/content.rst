@@ -70,6 +70,19 @@ Metadata syntax for Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
+You can also have your own metadata keys (so long as they don't conflict with reserved metadata keywords) for use in your python templates. The following is the list of reserved metadata keywords:
+
+* `Title`
+* `Tags`
+* `Date`
+* `Modified`
+* `Status`
+* `Category`
+* `Author`
+* `Authors`
+* `Slug`
+* `Summary`
+
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
 
