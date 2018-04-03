@@ -82,6 +82,9 @@ You can also have your own metadata keys (so long as they don't conflict with re
 * `Authors`
 * `Slug`
 * `Summary`
+* `Template`
+* `Save_as`
+* `Url`
 
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
