@@ -16,28 +16,35 @@ from six.moves import socketserver
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
     SUFFIXES = ['', '.html', '/index.html']
+    RSTRIP_PATTERNS = ['', '/']
 
     def do_GET(self):
         # cut off a query string
         if '?' in self.path:
             self.path, _ = self.path.split('?', 1)
 
-        # Try to detect file by applying various suffixes
-        for suffix in self.SUFFIXES:
-            if not hasattr(self, 'original_path'):
-                self.original_path = self.path
-
-            self.path = self.original_path + suffix
-            path = self.translate_path(self.path)
-
-            if os.path.exists(path):
-                srvmod.SimpleHTTPRequestHandler.do_GET(self)
-                logging.info("Found `%s`." % self.path)
+        found = False
+        # Try to detect file by applying various suffixes and stripping
+        # patterns.
+        for rstrip_pattern in self.RSTRIP_PATTERNS:
+            if found:
                 break
+            for suffix in self.SUFFIXES:
+                if not hasattr(self, 'original_path'):
+                    self.original_path = self.path
 
-            logging.info("Tried to find `%s`, but it doesn't exist.",
-                         self.path)
-        else:
+                self.path = self.original_path.rstrip(rstrip_pattern) + suffix
+                path = self.translate_path(self.path)
+
+                if os.path.exists(path):
+                    srvmod.SimpleHTTPRequestHandler.do_GET(self)
+                    logging.info("Found `%s`.", self.path)
+                    found = True
+                    break
+
+                logging.info("Tried to find `%s`, but it doesn't exist.", path)
+
+        if not found:
             # Fallback if there were no matches
             logging.warning("Unable to find `%s` or variations.",
                             self.original_path)
