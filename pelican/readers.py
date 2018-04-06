@@ -217,11 +217,18 @@ class RstReader(BaseReader):
     def __init__(self, *args, **kwargs):
         super(RstReader, self).__init__(*args, **kwargs)
 
-    def _parse_metadata(self, document):
+    def _parse_metadata(self, document, source_path):
         """Return the dict containing document metadata"""
         formatted_fields = self.settings['FORMATTED_FIELDS']
 
         output = {}
+
+        if document.first_child_matching_class(docutils.nodes.title) is None:
+            logger.warning(
+                'Document title missing in file %s: '
+                'Ensure exactly one top level section',
+                source_path)
+
         for docinfo in document.traverse(docutils.nodes.docinfo):
             for element in docinfo.children:
                 if element.tagname == 'field':  # custom fields (e.g. summary)
@@ -271,7 +278,7 @@ class RstReader(BaseReader):
         parts = pub.writer.parts
         content = parts.get('body')
 
-        metadata = self._parse_metadata(pub.document)
+        metadata = self._parse_metadata(pub.document, source_path)
         metadata.setdefault('title', parts.get('title'))
 
         return content, metadata
