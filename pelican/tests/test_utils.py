@@ -491,6 +491,9 @@ class TestCopy(unittest.TestCase):
         self.assertTrue(os.path.exists(path),
                         'Directory does not exist: %s' % path)
 
+    def _create_symlink(self, path, *name):
+        os.symlink(path, os.path.join(self.root_dir, *name))
+
     def test_copy_file_same_path(self):
         self._create_file('a.txt')
         utils.copy(os.path.join(self.root_dir, 'a.txt'),
@@ -546,6 +549,20 @@ class TestCopy(unittest.TestCase):
         self._exist_dir('b0', 'b1', 'b2', 'b3')
         self._exist_dir('b0', 'b1', 'b2', 'b3', 'b')
         self._exist_file('b0', 'b1', 'b2', 'b3', 'b', 'a.txt')
+
+    def test_copy_symlink(self):
+        self._create_dir('f')
+        self._create_dir('q')
+        self._create_dir('q', 'r')
+        self._create_file('q', 'r', 'f.txt')
+        sympathy = os.path.join(self.root_dir, 'q')
+        self._create_symlink(sympathy, 'f', 'q')
+        utils.copy(os.path.join(self.root_dir, 'f'),
+                   os.path.join(self.root_dir, 'm'))
+        self._exist_dir('m')
+        self._exist_dir('m', 'q')
+        self._exist_dir('m', 'q', 'r')
+        self._exist_file('m', 'q', 'r', 'f.txt')
 
 
 class TestDateFormatter(unittest.TestCase):
