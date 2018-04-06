@@ -613,7 +613,7 @@ def escape_html(text, quote=True):
     return escape(text, quote=quote)
 
 
-def process_translations(content_list, order_by=None):
+def process_translations(content_list):
     """ Finds translation and returns them.
 
     Returns a tuple with two lists (index, translations).  Index list includes
@@ -623,14 +623,6 @@ def process_translations(content_list, order_by=None):
     the same slug have that metadata.
 
     For each content_list item, sets the 'translations' attribute.
-
-    order_by can be a string of an attribute or sorting function. If order_by
-    is defined, content will be ordered by that attribute or sorting function.
-    By default, content is ordered by slug.
-
-    Different content types can have default order_by attributes defined
-    in settings, e.g. PAGES_ORDER_BY='sort-order', in which case `sort-order`
-    should be a defined metadata attribute in each page.
     """
     content_list.sort(key=attrgetter('slug'))
     grouped_by_slugs = groupby(content_list, attrgetter('slug'))
@@ -691,10 +683,25 @@ def process_translations(content_list, order_by=None):
         for a in items:
             a.translations = [x for x in items if x != a]
 
+    return index, translations
+
+
+def order_content(content_list, order_by='slug'):
+    """ Sorts content.
+
+    order_by can be a string of an attribute or sorting function. If order_by
+    is defined, content will be ordered by that attribute or sorting function.
+    By default, content is ordered by slug.
+
+    Different content types can have default order_by attributes defined
+    in settings, e.g. PAGES_ORDER_BY='sort-order', in which case `sort-order`
+    should be a defined metadata attribute in each page.
+    """
+
     if order_by:
         if callable(order_by):
             try:
-                index.sort(key=order_by)
+                content_list.sort(key=order_by)
             except Exception:
                 logger.error('Error sorting with function %s', order_by)
         elif isinstance(order_by, six.string_types):
@@ -705,13 +712,13 @@ def process_translations(content_list, order_by=None):
                 order_reversed = False
 
             if order_by == 'basename':
-                index.sort(key=lambda x: os.path.basename(x.source_path or ''),
-                           reverse=order_reversed)
-            # already sorted by slug, no need to sort again
-            elif not (order_by == 'slug' and not order_reversed):
+                content_list.sort(
+                    key=lambda x: os.path.basename(x.source_path or ''),
+                    reverse=order_reversed)
+            else:
                 try:
-                    index.sort(key=attrgetter(order_by),
-                               reverse=order_reversed)
+                    content_list.sort(key=attrgetter(order_by),
+                                      reverse=order_reversed)
                 except AttributeError:
                     logger.warning(
                         'There is no "%s" attribute in the item '
@@ -721,7 +728,7 @@ def process_translations(content_list, order_by=None):
                 'Invalid *_ORDER_BY setting (%s).'
                 'Valid options are strings and functions.', order_by)
 
-    return index, translations
+    return content_list
 
 
 def folder_watcher(path, extensions, ignores=[]):

@@ -21,8 +21,9 @@ from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
 from pelican.readers import Readers
-from pelican.utils import (DateFormatter, copy, mkdir_p, posixize_path,
-                           process_translations, python_2_unicode_compatible)
+from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
+                           posixize_path, process_translations,
+                           python_2_unicode_compatible)
 
 
 logger = logging.getLogger(__name__)
@@ -310,7 +311,8 @@ class ArticlesGenerator(CachingGenerator):
             all_articles = list(self.articles)
             for article in self.articles:
                 all_articles.extend(article.translations)
-            all_articles.sort(key=attrgetter('date'), reverse=True)
+            order_content(all_articles,
+                          order_by=self.settings['ARTICLE_ORDER_BY'])
 
             if self.settings.get('FEED_ALL_ATOM'):
                 writer.write_feed(all_articles, self.context,
@@ -328,7 +330,6 @@ class ArticlesGenerator(CachingGenerator):
                                   feed_type='rss')
 
         for cat, arts in self.categories:
-            arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('CATEGORY_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
                                   self.settings['CATEGORY_FEED_ATOM']
@@ -349,7 +350,6 @@ class ArticlesGenerator(CachingGenerator):
                                   feed_type='rss')
 
         for auth, arts in self.authors:
-            arts.sort(key=attrgetter('date'), reverse=True)
             if self.settings.get('AUTHOR_FEED_ATOM'):
                 writer.write_feed(arts, self.context,
                                   self.settings['AUTHOR_FEED_ATOM']
@@ -372,7 +372,6 @@ class ArticlesGenerator(CachingGenerator):
         if (self.settings.get('TAG_FEED_ATOM') or
                 self.settings.get('TAG_FEED_RSS')):
             for tag, arts in self.tags.items():
-                arts.sort(key=attrgetter('date'), reverse=True)
                 if self.settings.get('TAG_FEED_ATOM'):
                     writer.write_feed(arts, self.context,
                                       self.settings['TAG_FEED_ATOM']
@@ -398,7 +397,8 @@ class ArticlesGenerator(CachingGenerator):
                 translations_feeds[article.lang].append(article)
 
             for lang, items in translations_feeds.items():
-                items.sort(key=attrgetter('date'), reverse=True)
+                items = order_content(
+                    items, order_by=self.settings['ARTICLE_ORDER_BY'])
                 if self.settings.get('TRANSLATION_FEED_ATOM'):
                     writer.write_feed(
                         items, self.context,
@@ -510,7 +510,6 @@ class ArticlesGenerator(CachingGenerator):
         """Generate Tags pages."""
         tag_template = self.get_template('tag')
         for tag, articles in self.tags.items():
-            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
                   url=tag.url, articles=articles, dates=dates,
@@ -521,7 +520,6 @@ class ArticlesGenerator(CachingGenerator):
         """Generate category pages."""
         category_template = self.get_template('category')
         for cat, articles in self.categories:
-            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(cat.save_as, category_template, self.context,
                   url=cat.url, category=cat, articles=articles, dates=dates,
@@ -532,7 +530,6 @@ class ArticlesGenerator(CachingGenerator):
         """Generate Author pages."""
         author_template = self.get_template('author')
         for aut, articles in self.authors:
-            articles.sort(key=attrgetter('date'), reverse=True)
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
                   url=aut.url, author=aut, articles=articles, dates=dates,
@@ -601,8 +598,9 @@ class ArticlesGenerator(CachingGenerator):
                 all_drafts.append(article)
             self.add_source_path(article)
 
-        self.articles, self.translations = process_translations(
-            all_articles,
+        self.articles, self.translations = process_translations(all_articles)
+        self.articles = order_content(
+            self.articles,
             order_by=self.settings['ARTICLE_ORDER_BY'])
         self.drafts, self.drafts_translations = \
             process_translations(all_drafts)
@@ -698,9 +696,8 @@ class PagesGenerator(CachingGenerator):
                 hidden_pages.append(page)
             self.add_source_path(page)
 
-        self.pages, self.translations = process_translations(
-            all_pages,
-            order_by=self.settings['PAGE_ORDER_BY'])
+        self.pages, self.translations = process_translations(all_pages)
+        self.pages = order_content(self.pages, self.settings['PAGE_ORDER_BY'])
         self.hidden_pages, self.hidden_translations = \
             process_translations(hidden_pages)
 
