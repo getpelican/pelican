@@ -3,6 +3,7 @@ from __future__ import print_function, unicode_literals
 
 import logging
 import os
+import posixpath
 import sys
 
 try:
@@ -10,13 +11,34 @@ try:
 except ImportError:
     magic_from_file = None
 
+from six.moves import BaseHTTPServer
 from six.moves import SimpleHTTPServer as srvmod
-from six.moves import socketserver
+from six.moves import urllib
 
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
     SUFFIXES = ['', '.html', '/index.html']
     RSTRIP_PATTERNS = ['', '/']
+
+    def translate_path(self, path):
+        # abandon query parameters
+        path = path.split('?', 1)[0]
+        path = path.split('#', 1)[0]
+        # Don't forget explicit trailing slash when normalizing. Issue17324
+        trailing_slash = path.rstrip().endswith('/')
+        path = urllib.parse.unquote(path)
+        path = posixpath.normpath(path)
+        words = path.split('/')
+        words = filter(None, words)
+        path = self.base_path
+        for word in words:
+            if os.path.dirname(word) or word in (os.curdir, os.pardir):
+                # Ignore components that are not a simple file/directory name
+                continue
+            path = os.path.join(path, word)
+        if trailing_slash:
+            path += '/'
+        return path
 
     def do_GET(self):
         # cut off a query string
@@ -61,14 +83,21 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
         return mimetype
 
 
-if __name__ == '__main__':
-    PORT = len(sys.argv) in (2, 3) and int(sys.argv[1]) or 8000
-    SERVER = len(sys.argv) == 3 and sys.argv[2] or ""
+class RootedHTTPServer(BaseHTTPServer.HTTPServer):
+    def __init__(self, base_path, *args, **kwargs):
+        BaseHTTPServer.HTTPServer.__init__(self, *args, **kwargs)
+        self.RequestHandlerClass.base_path = base_path
 
-    socketserver.TCPServer.allow_reuse_address = True
+
+if __name__ == '__main__':
+    PORT = len(sys.argv) in (2, 3, 4) and int(sys.argv[1]) or 8000
+    SERVER = len(sys.argv) in (3, 4) and sys.argv[2] or ""
+    PATH = len(sys.argv) == 4 and sys.argv[3] or os.getcwd()
+
+    RootedHTTPServer.allow_reuse_address = True
     try:
-        httpd = socketserver.TCPServer(
-            (SERVER, PORT), ComplexHTTPRequestHandler)
+        httpd = RootedHTTPServer(
+            PATH, (SERVER, PORT), ComplexHTTPRequestHandler)
     except OSError as e:
         logging.error("Could not listen on port %s, server %s.", PORT, SERVER)
         sys.exit(getattr(e, 'exitcode', 1))
