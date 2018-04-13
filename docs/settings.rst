@@ -179,6 +179,12 @@ Basic settings
    A list of directories to exclude when looking for articles in addition to
    ``PAGE_PATHS``.
 
+.. data:: ARTICLE_RESTRICT_TO_TAGS = []
+
+    All articles that do not have all tags in this list will be excluded from
+    the output. This is useful, for example, for generating multiple versions
+    of a site with overlapping content--e.g. a professional and a personal one.
+
 .. data:: OUTPUT_SOURCES = False
 
    Set to True if you want to copy the articles and pages in their original
