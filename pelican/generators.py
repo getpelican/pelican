@@ -564,6 +564,9 @@ class ArticlesGenerator(CachingGenerator):
     def generate_context(self):
         """Add the articles into the shared context"""
 
+        restrict_all_articles_to_tags = set(
+                self.settings.get("ARTICLES_RESTRICT_TO_TAGS", []))
+
         all_articles = []
         all_drafts = []
         for f in self.get_files(
@@ -591,6 +594,10 @@ class ArticlesGenerator(CachingGenerator):
                     continue
 
                 self.cache_data(f, article)
+
+            if not restrict_all_articles_to_tags <= set(
+                    getattr(article, 'tags', [])):
+                continue
 
             if article.status == "published":
                 all_articles.append(article)
