@@ -299,10 +299,8 @@ def slugify(value, substitutions=()):
     for src, dst, skip in substitutions:
         orig_value = value
         value = value.replace(src.lower(), dst.lower())
-        # if replacement was made then skip non-alphanum
-        # replacement if instructed to do so
-        if value != orig_value:
-            replace = replace and not skip
+        # skip non-alphanum replacement if instructed to do so
+        replace = replace and not skip
 
     if replace:
         value = re.sub(r'[^\w\s-]', '', value).strip()
