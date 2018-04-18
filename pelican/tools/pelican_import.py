@@ -534,6 +534,29 @@ def build_header(title, date, author, categories, tags, slug,
     header += '\n'
     return header
 
+def build_asciidoc_header(title, date, author, categories, tags, slug,
+                          status=None, attachments=None):
+    """Build a header from a list of fields"""
+
+    from docutils.utils import column_width
+
+    header = '= %s\n' % title
+    if author:
+        header += '%s\n' % author
+        if date:
+            header += '%s\n' % date
+    if categories:
+        header += ':category: %s\n' % ', '.join(categories)
+    if tags:
+        header += ':tags: %s\n' % ', '.join(tags)
+    if slug:
+        header += ':slug: %s\n' % slug
+    if status:
+        header += ':status: %s\n' % status
+    if attachments:
+        header += ':attachments: %s\n' % ', '.join(attachments)
+    header += '\n'
+    return header
 
 def build_markdown_header(title, date, author, categories, tags,
                           slug, status=None, attachments=None):
@@ -558,7 +581,9 @@ def build_markdown_header(title, date, author, categories, tags,
 
 
 def get_ext(out_markup, in_markup='html'):
-    if in_markup == 'markdown' or out_markup == 'markdown':
+    if out_markup == 'asciidoc':
+        ext = '.adoc'
+    elif in_markup == 'markdown' or out_markup == 'markdown':
         ext = '.md'
     else:
         ext = '.rst'
@@ -698,7 +723,10 @@ def fields2pelican(
             attached_files = None
 
         ext = get_ext(out_markup, in_markup)
-        if ext == '.md':
+        if ext == '.adoc':
+            header = build_asciidoc_header(title, date, author, categories,
+                                           tags, slug, status, attached_files)
+        elif ext == '.md':
             header = build_markdown_header(
                 title, date, author, categories, tags, slug,
                 status, attached_files)
