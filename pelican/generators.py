@@ -26,6 +26,15 @@ from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
                            python_2_unicode_compatible)
 
 
+# Format spec: http://ctags.sourceforge.net/FORMAT
+CTAGS_TEMPLATE = '''{% for tag, articles in tags_articles %}
+{% for article in articles %}
+{{tag}}\t{{article}}\t0;"\ttag
+{% endfor %}
+{% endfor %}
+'''
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -506,6 +515,19 @@ class ArticlesGenerator(CachingGenerator):
                   self.context, blog=True, paginated=paginated,
                   page_name=os.path.splitext(save_as)[0], url=url)
 
+    def generate_ctags(self, writer):
+        """Generate CTags tags file in source content directory."""
+        if not self.settings.get('GENERATE_CTAGS'):
+            return
+        tags_file_path = os.path.join(self.path, 'tags')
+        self.settings.setdefault('WRITE_SELECTED', []).append(tags_file_path)
+        writer.output_path = self.path
+        try:
+            writer.write_file('tags', self.env.from_string(CTAGS_TEMPLATE), self.context,
+                              tags_articles=sorted(self.tags.items()))
+        finally:
+            writer.output_path = self.output_path
+
     def generate_tags(self, write):
         """Generate Tags pages."""
         tag_template = self.get_template('tag')
@@ -554,6 +576,7 @@ class ArticlesGenerator(CachingGenerator):
         self.generate_articles(write)
         self.generate_period_archives(write)
         self.generate_direct_templates(write)
+        self.generate_ctags(writer)
 
         # and subfolders after that
         self.generate_tags(write)

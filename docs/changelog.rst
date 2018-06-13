@@ -5,6 +5,7 @@ Next release
 ============
 
 * New signal: ``feed_generated``
+* New setting: ``GENERATE_CTAGS`` to generate a "tags" file following the CTags format and containing all articles tags.
 
 3.7.1 (2017-01-10)
 ==================

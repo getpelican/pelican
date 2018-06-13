@@ -328,6 +328,9 @@ Basic settings
    A list of metadata fields containing reST/Markdown content to be parsed and
    translated to HTML.
 
+.. data:: GENERATE_CTAGS = False
+
+    Whether to generate a "tags" file following the CTags format and containing all articles tags.
 
 URL settings
 ============
