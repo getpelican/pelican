@@ -150,6 +150,7 @@ DEFAULT_CONFIG = {
     'LOAD_CONTENT_CACHE': False,
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
+    'GENERATE_CTAGS': False
 }
 
 PYGMENTS_RST_OPTIONS = None

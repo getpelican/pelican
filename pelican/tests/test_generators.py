@@ -573,6 +573,34 @@ class TestArticlesGenerator(unittest.TestCase):
         articles = [article.title for article in generator.articles]
         self.assertEqual(articles, list(reversed(expected)))
 
+    def test_generate_ctags(self):
+        settings = get_settings(filenames={})
+        settings['GENERATE_CTAGS'] = True
+
+        generator = ArticlesGenerator(
+            context=settings.copy(), settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+
+        writer = Writer(None, settings=settings)
+        generator.generate_ctags(writer)
+
+        output_path = os.path.join(CONTENT_DIR, 'tags')
+        self.assertTrue(os.path.exists(output_path))
+
+        try:
+            # output content is correct
+            with open(output_path, 'r') as output_file:
+                ctags = [l.split('\t')[0] for l in output_file.readlines()]
+                self.assertEqual([
+                        'bar', 'bar', 'bar', 'bar', 'bar',
+                        'foo', 'foo', 'foo', 'foo', 'foo',
+                        'foobar', 'foobar', 'foobar', 'foobar', 'foobar',
+                        'マック', 'パイソン'
+                ], ctags)
+        finally:
+            os.remove(output_path)
+
 
 class TestPageGenerator(unittest.TestCase):
     # Note: Every time you want to test for a new field; Make sure the test
