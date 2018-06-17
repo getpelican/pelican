@@ -67,7 +67,7 @@ already exist). The ``git push origin gh-pages`` command updates the remote
 ``gh-pages`` branch, effectively publishing the Pelican site.
 
 .. note::
-    The ``github`` target of the Makefile (and the ``gh_pages`` task of the Fabfile)
+    The ``github`` target of the Makefile (and the ``gh_pages`` task of ``tasks.py``)
     created by the ``pelican-quickstart`` command
     publishes the Pelican site as Project Pages, as described above.
 
