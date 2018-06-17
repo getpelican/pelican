@@ -27,7 +27,7 @@ Before you ask for help, please make sure you do the following:
 * no plugins or only those related to the issue
 
 **NOTE:** The most common sources of problems are anomalies in (1) themes,
-(2) settings files, and (3) ``make``/``fab`` automation wrappers. If you can't
+(2) settings files, and (3) ``make``/``invoke`` automation wrappers. If you can't
 reproduce your problem when using the following steps to generate your site,
 then the problem is almost certainly with your chosen theme and/or settings
 file (and not Pelican itself)::

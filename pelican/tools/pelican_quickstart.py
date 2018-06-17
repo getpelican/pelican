@@ -261,7 +261,7 @@ needed by Pelican.
     CONF['timezone'] = ask_timezone('What is your time zone?',
                                     CONF['timezone'], _TZ_URL)
 
-    automation = ask('Do you want to generate a Fabfile/Makefile '
+    automation = ask('Do you want to generate a tasks.py/Makefile '
                      'to automate generation and publishing?', bool, True)
 
     if automation:
@@ -359,9 +359,9 @@ needed by Pelican.
 
     if automation:
         try:
-            with codecs.open(os.path.join(CONF['basedir'], 'fabfile.py'),
+            with codecs.open(os.path.join(CONF['basedir'], 'tasks.py'),
                              'w', 'utf-8') as fd:
-                _template = _jinja_env.get_template('fabfile.py.jinja2')
+                _template = _jinja_env.get_template('tasks.py.jinja2')
                 fd.write(_template.render(**CONF))
                 fd.close()
         except OSError as e:

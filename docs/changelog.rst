@@ -5,6 +5,7 @@ Next release
 ============
 
 * New signal: ``feed_generated``
+* Replace Fabric by Invoke and ``fabfile.py`` template by ``tasks.py``.
 
 3.7.1 (2017-01-10)
 ==================

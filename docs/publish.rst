@@ -101,7 +101,7 @@ While the ``pelican`` command is the canonical way to generate your site,
 automation tools can be used to streamline the generation and publication
 flow. One of the questions asked during the ``pelican-quickstart`` process
 pertains to whether you want to automate site generation and publication.
-If you answered "yes" to that question, a ``fabfile.py`` and
+If you answered "yes" to that question, a ``tasks.py`` and
 ``Makefile`` will be generated in the root of your project. These files,
 pre-populated with certain information gleaned from other answers provided
 during the ``pelican-quickstart`` process, are meant as a starting point and
@@ -113,55 +113,43 @@ files can deleted at any time and will not affect usage of the canonical
 Following are automation tools that "wrap" the ``pelican`` command and can
 simplify the process of generating, previewing, and uploading your site.
 
-Fabric
+Invoke
 ------
 
-The advantage of Fabric_ is that it is written in Python and thus can be used
+The advantage of Invoke_ is that it is written in Python and thus can be used
 in a wide range of environments. The downside is that it must be installed
-separately. Use the following command to install Fabric, prefixing with
+separately. Use the following command to install Invoke, prefixing with
 ``sudo`` if your environment requires it::
 
-    pip install Fabric
+    pip install invoke
 
-.. note:: Installing PyCrypto on Windows
-
-    Fabric depends upon PyCrypto_, which is tricky to install
-    if your system doesn't have a C compiler.
-    For Windows users, before installing Fabric, use
-    ``easy_install http://www.voidspace.org.uk/downloads/pycrypto26/pycrypto-2.6.win32-py2.7.exe``
-    per this `StackOverflow suggestion <http://stackoverflow.com/a/11405769/6364>`_
-    You're more likely to have success
-    with the Win32 versions of Python 2.7 and PyCrypto,
-    than with the Win64—\
-    even if your operating system is a 64-bit version of Windows.
-
-Take a moment to open the ``fabfile.py`` file that was generated in your
+Take a moment to open the ``tasks.py`` file that was generated in your
 project root. You will see a number of commands, any one of which can be
 renamed, removed, and/or customized to your liking. Using the out-of-the-box
 configuration, you can generate your site via::
 
-    fab build
+    invoke build
 
 If you'd prefer to have Pelican automatically regenerate your site every time a
 change is detected (which is handy when testing locally), use the following
 command instead::
 
-    fab regenerate
+    invoke regenerate
 
 To serve the generated site so it can be previewed in your browser at
 http://localhost:8000/::
 
-    fab serve
+    invoke serve
 
 If during the ``pelican-quickstart`` process you answered "yes" when asked
 whether you want to upload your site via SSH, you can use the following command
 to publish your site via rsync over SSH::
 
-    fab publish
+    invoke publish
 
 These are just a few of the commands available by default, so feel free to
-explore ``fabfile.py`` and see what other commands are available. More
-importantly, don't hesitate to customize ``fabfile.py`` to suit your specific
+explore ``tasks.py`` and see what other commands are available. More
+importantly, don't hesitate to customize ``tasks.py`` to suit your specific
 needs and preferences.
 
 Make
@@ -216,5 +204,4 @@ That's it! Your site should now be live.
 executables, such as ``python3``, you can set the ``PY`` and ``PELICAN``
 environment variables, respectively, to override the default executable names.)
 
-.. _Fabric: http://fabfile.org/
-.. _PyCrypto: http://pycrypto.org
+.. _Invoke: http://www.pyinvoke.org

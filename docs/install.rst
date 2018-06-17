@@ -101,9 +101,9 @@ can optionally add yourself if you plan to create non-chronological content)::
 
     yourproject/
     ├── content
-    │   └── (pages)
+    │   └── (pages)
     ├── output
-    ├── fabfile.py
+    ├── tasks.py
     ├── Makefile
     ├── pelicanconf.py       # Main settings file
     └── publishconf.py       # Settings to use when ready to publish
