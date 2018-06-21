@@ -14,32 +14,33 @@ When doing so, please adhere to the following guidelines.
 Setting up the development environment
 ======================================
 
-While there are many ways to set up one's development environment, following
-is a method that uses `virtualenv <https://virtualenv.pypa.io/en/stable/>`_.
-If you don't have ``virtualenv`` installed, you can install it via::
+While there are many ways to set up one's development environment, we recommend
+using `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ or `conda
+<https://conda.io/docs/index.html>`_. These allow you to set up separate
+environments for separate Python projects which are isolated from one another
+so you can use different packages (and package versions) for each.
+
+For ``virtualenv``, you can set up a Pelican environment as follows. Install
+``virtualenv``::
 
     $ pip install virtualenv
 
-Virtual environments allow you to work on Python projects which are isolated
-from one another so you can use different packages (and package versions) with
-different projects.
-
-To create and activate a virtual environment, use the following syntax::
+Create and activate a virtual environment::
 
     $ virtualenv ~/virtualenvs/pelican
     $ cd ~/virtualenvs/pelican
     $ . bin/activate
 
-To clone the Pelican source::
+Clone the Pelican source into a subfolder ``src/pelican``::
 
     $ git clone https://github.com/getpelican/pelican.git src/pelican
-
-To install the development dependencies::
-
     $ cd src/pelican
+
+Install the development dependencies::
+
     $ pip install -r requirements/developer.pip
 
-To install Pelican and its dependencies::
+Install Pelican and its dependencies::
 
     $ python setup.py develop
 
@@ -47,7 +48,8 @@ Or using ``pip``::
 
     $ pip install -e .
 
-To conveniently test on multiple Python versions, we also provide a .tox file.
+To conveniently test on multiple Python versions, we also provide a ``.tox``
+file. (``tox`` for ``conda`` is still under development.)
 
 
 Building the docs
@@ -57,7 +59,7 @@ If you make changes to the documentation, you should preview your changes
 before committing them::
 
     $ pip install -r requirements/docs.pip
-    $ cd src/pelican/docs
+    $ cd docs
     $ make html
 
 Open ``_build/html/index.html`` in your browser to preview the documentation.
@@ -89,56 +91,60 @@ functional tests. To do so, **make sure you have both ``en_EN.utf8`` and
     $ LC_ALL=en_US.utf8 pelican -o pelican/tests/output/basic/ \
         samples/content/
 
-Testing on Python 2 and 3
--------------------------
+You may also find that some tests are skipped because some dependency (e.g.
+pandoc) is not installed. This does not automatically mean that these tests
+are alright, and you should at least verify that they are not affected by your
+changes.
 
-Testing on Python 3 currently requires some extra steps: installing
-Python 3-compatible versions of dependent packages and plugins.
+You should run the test suit under each of the supported versions of Python.
+This is best done by creating a separate Python environment for each version.
+tox_ is a useful tool to automate this. It uses ``virtualenv`` environments,
+support for conda environments is still under development.
 
-Tox_ is a useful tool to run tests on both versions. It will install the
-Python 3-compatible version of dependent packages.
+.. _tox: https://tox.readthedocs.io/en/latest/
 
-.. _Tox: http://testrun.org/tox/latest/
+Python 2/3 compatibility development tips
+=========================================
 
-Python 3 development tips
-=========================
+Here are some tips that may be useful for writing code that is compatible with
+both Python 2.7 and Python 3:
 
-Here are some tips that may be useful when doing some code for both Python 2.7
-and Python 3 at the same time:
+- Use new syntax, e.g.:
 
-- Assume every string and literal is unicode (import unicode_literals):
+  - ``print .. -> print(..)``
+  - ``except .., e -> except .. as e``
 
-  - Do not use prefix ``u'``.
-  - Do not encode/decode strings in the middle of sth. Follow the code to the
-    source (or target) of a string and encode/decode at the first/last possible
-    point.
-  - In other words, write your functions to expect and to return unicode.
-  - Encode/decode strings if e.g. the source is a Python function that is known
-    to handle this badly, e.g. strftime() in Python 2.
+- Use new methods, e.g.:
 
-- Use new syntax: print function, "except ... *as* e" (not comma), etc.
-- Refactor method calls like ``dict.iteritems()``, ``xrange()``, etc. in a way
-  that runs without code change in both Python versions.
-- Do not use magic method ``__unicode()__`` in new classes. Use only ``__str()__``
-  and decorate the class with ``@python_2_unicode_compatible``.
-- Do not start int literals with a zero. This is a syntax error in Py3k.
-- Unfortunately I did not find an octal notation that is valid in both
-  Pythons. Use decimal instead.
-- use six, e.g.:
+  - ``dict.iteritems() -> dict.items()``
+  - ``xrange(..) - > list(range(..))``
+
+- Use six where necessary, e.g.:
 
   - ``isinstance(.., basestring) -> isinstance(.., six.string_types)``
   - ``isinstance(.., unicode) -> isinstance(.., six.text_type)``
 
-- ``setlocale()`` in Python 2 bails when we give the locale name as unicode,
+- Assume every string and literal is unicode:
+
+  - Use ``from __future__ import unicode_literals``
+  - Do not use the prefix ``u'`` before strings.
+  - Do not encode/decode strings in the middle of something. Follow the code to
+    the source/target of a string and encode/decode at the first/last possible
+    point.
+  - In particular, write your functions to expect and to return unicode.
+  - Encode/decode strings if e.g. the source is a Python function that is known
+    to handle this badly, e.g. strftime() in Python 2.
+  - Do not use the magic method ``__unicode()__`` in new classes. Use only
+    ``__str()__`` and decorate the class with ``@python_2_unicode_compatible``.
+
+- ``setlocale()`` in Python 2 fails when we give the locale name as unicode,
   and since we are using ``from __future__ import unicode_literals``, we do
-  that everywhere!  As a workaround, I enclosed the localename with ``str()``;
+  that everywhere!  As a workaround, enclose the locale name with ``str()``;
   in Python 2 this casts the name to a byte string, in Python 3 this should do
   nothing, because the locale name already had been unicode.
-
-- Kept range() almost everywhere as-is (2to3 suggests list(range())), just
-  changed it where I felt necessary.
-
-- Changed xrange() back to range(), so it is valid in both Python versions.
+- Do not start int literals with a zero. This is a syntax error in Python 3.
+- Unfortunately there seems to be no octal notation that is valid in both
+  Pythons. Use decimal instead.
 
 
 Logging tips
