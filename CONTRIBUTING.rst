@@ -114,15 +114,21 @@ Using Git and GitHub
   `install hub <https://github.com/github/hub/#installation>`_ and then run
   `hub pull-request <https://github.com/github/hub/#git-pull-request>`_ to
   turn your GitHub issue into a pull request containing your code.
+* After you have issued a pull request, Travis will run the test suite for all
+  supported Python versions and check for PEP8 compliance. If any of these
+  checks fail, you should fix them. (If tests fail on Travis but seem to pass
+  locally, ensure that local test runs aren't skipping any tests.)
 
 Contribution quality standards
 ------------------------------
 
-* Adhere to `PEP8 coding standards`_ whenever possible. This can be eased via
-  the `pep8 <http://pypi.python.org/pypi/pep8>`_ or `flake8
+* Adhere to `PEP8 coding standards`_. This can be eased via the `pycodestyle
+  <https://pypi.org/project/pycodestyle>`_ or `flake8
   <http://pypi.python.org/pypi/flake8/>`_ tools, the latter of which in
   particular will give you some useful hints about ways in which the
-  code/formatting can be improved.
+  code/formatting can be improved. If you are relying on your editor for PEP8
+  compliance, note that the line length specified by PEP8 is 79 (excluding the
+  line break).
 * Ensure your code is compatible with the latest Python 2.7 and 3.x releases — see our
   `compatibility cheatsheet`_ for more details.
 * Add docs and tests for your changes. Undocumented and untested features will
