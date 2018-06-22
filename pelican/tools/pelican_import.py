@@ -819,7 +819,7 @@ def main():
         help='(wordpress import only) Download files uploaded to wordpress as '
              'attachments. Files will be added to posts as a list in the post '
              'header. All files will be downloaded, even if '
-             "they aren't associated with a post. Files with be downloaded "
+             "they aren't associated with a post. Files will be downloaded "
              'with their original path inside the output directory. '
              'e.g. output/wp-uploads/date/postname/file.jpg '
              '-- Requires an internet connection --')
