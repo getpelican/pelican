@@ -1024,7 +1024,9 @@ class TestStaticGenerator(unittest.TestCase):
         self.generator.fallback_to_symlinks = True
         self.generator.generate_context()
         self.generator.generate_output(None)
-        self.assertEqual(os.path.realpath(self.endfile), self.startfile)
+        self.assertTrue(os.path.islink(self.endfile))
+        self.assertEqual(os.path.realpath(self.endfile),
+                         os.path.realpath(self.startfile))
 
     def test_delete_existing_file_before_mkdir(self):
         with open(self.startfile, "w") as f:
