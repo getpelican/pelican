@@ -674,6 +674,22 @@ def download_attachments(output_path, urls):
     return locations
 
 
+def is_pandoc_needed(fields):
+    in_markup_idx = 9
+    return filter(lambda f: f[in_markup_idx] in ('html', 'wp-html'), fields)
+
+
+def get_pandoc_version():
+    cmd = ['pandoc', '--version']
+    try:
+        output = subprocess.check_output(cmd, universal_newlines=True)
+    except (subprocess.CalledProcessError, OSError) as e:
+        logger.warning("Pandoc version unknown: %s", e)
+        return ''
+
+    return output.split()[1]
+
+
 def update_links_to_attached_files(content, attachments):
     for old_url, new_path in attachments.items():
         # url may occur both with http:// and https://
@@ -689,6 +705,14 @@ def fields2pelican(
         dircat=False, strip_raw=False, disable_slugs=False,
         dirpage=False, filename_template=None, filter_author=None,
         wp_custpost=False, wp_attach=False, attachments=None):
+
+    pandoc_version = get_pandoc_version()
+
+    if is_pandoc_needed(fields) and not pandoc_version:
+        error = ('Pandoc must be installed to complete the '
+                 'requested import action.')
+        exit(error)
+
     for (title, content, filename, date, author, categories, tags, status,
             kind, in_markup) in fields:
         if filter_author and filter_author != author:
@@ -735,11 +759,17 @@ def fields2pelican(
 
                 fp.write(new_content)
 
-            parse_raw = '--parse-raw' if not strip_raw else ''
-            cmd = ('pandoc --normalize {0} --from=html'
-                   ' --to={1} -o "{2}" "{3}"')
-            cmd = cmd.format(parse_raw, out_markup,
-                             out_filename, html_filename)
+            if pandoc_version[0] == '1':
+                parse_raw = '--parse-raw' if not strip_raw else ''
+                cmd = ('pandoc --normalize {0} --from=html'
+                       ' --to={1} -o "{2}" "{3}"')
+                cmd = cmd.format(parse_raw, out_markup,
+                                 out_filename, html_filename)
+            else:
+                from_arg = '-f html+raw_html' if not strip_raw else '-f html'
+                cmd = ('pandoc {0} --to={1}-smart -o "{2}" "{3}"')
+                cmd = cmd.format(from_arg, out_markup,
+                                 out_filename, html_filename)
 
             try:
                 rc = subprocess.call(cmd, shell=True)

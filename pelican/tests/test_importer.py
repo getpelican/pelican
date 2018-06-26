@@ -268,6 +268,19 @@ class TestWordpressXmlImporter(unittest.TestCase):
             code_line = re.search(r'\s+a = \[1, 2, 3\]', md).group(0)
             self.assertTrue(sample_line.rindex('This') < code_line.rindex('a'))
 
+    def test_dont_use_smart_quotes(self):
+        def r(f):
+            with open(f, encoding='utf-8') as infile:
+                return infile.read()
+        silent_f2p = mute(True)(fields2pelican)
+        test_post = filter(
+            lambda p: p[0].startswith("Post with raw data"),
+            self.posts)
+        with temporary_folder() as temp:
+            md = [r(f) for f in silent_f2p(test_post, 'markdown', temp)][0]
+            escaped_quotes = re.search(r'\\[\'"“”‘’]', md)
+            self.assertFalse(escaped_quotes)
+
 
 class TestBuildHeader(unittest.TestCase):
     def test_build_header(self):
