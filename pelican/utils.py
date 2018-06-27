@@ -614,7 +614,7 @@ def escape_html(text, quote=True):
 
 
 def process_translations(content_list):
-    """ Finds translation and returns them.
+    """ Finds translations and returns them.
 
     Returns a tuple with two lists (index, translations).  Index list includes
     items in default language or items which have no variant in default
