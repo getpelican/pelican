@@ -1,0 +1,14 @@
+SETLOCAL
+
+set _PY={{py_v}}
+set _PELICANOPTS={{pelicanopts}}
+
+set _BASEDIR=%cd%
+set _INPUTDIR=%_BASEDIR%/content
+set _OUTPUTDIR=%_BASEDIR%/output
+set _CONFFILE=%_BASEDIR%/pelicanconf.py
+
+start pelican --debug --autoreload -r %_INPUTDIR% -o %_OUTPUTDIR% -s %_CONFFILE% %_PELICANOPTS%
+pushd output
+%_PY% -m pelican.server
+popd

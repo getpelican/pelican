@@ -386,22 +386,34 @@ needed by Pelican.
             if isinstance(value, six.string_types) and ' ' in value:
                 value = '"' + value.replace('"', '\\"') + '"'
             conf_shell[key] = value
-        try:
-            with codecs.open(os.path.join(CONF['basedir'],
+        if sys.platform == 'win32':
+            try:
+                with codecs.open(os.path.join(CONF['basedir'],
+                                          'develop_server.bat'),
+                                'w', 'utf-8') as fd:
+                    py_v = 'python'
+                    _template = _jinja_env.get_template('develop_server.bat.jinja2')
+                    fd.write(_template.render(py_v=py_v, **conf_shell))
+                    fd.close()
+            except OSError as e:
+                print('Error: {}'.format(e))
+        else:
+            try:
+                with codecs.open(os.path.join(CONF['basedir'],
                                           'develop_server.sh'),
-                             'w', 'utf-8') as fd:
-                py_v = '${PY:-python}'
-                if six.PY3:
-                    py_v = '${PY:-python3}'
-                _template = _jinja_env.get_template('develop_server.sh.jinja2')
-                fd.write(_template.render(py_v=py_v, **conf_shell))
-                fd.close()
+                                'w', 'utf-8') as fd:
+                    py_v = '${PY:-python}'
+                    if six.PY3:
+                        py_v = '${PY:-python3}'
+                    _template = _jinja_env.get_template('develop_server.sh.jinja2')
+                    fd.write(_template.render(py_v=py_v, **conf_shell))
+                    fd.close()
 
-                # mode 0o755
-                os.chmod((os.path.join(CONF['basedir'],
+                    # mode 0o755
+                    os.chmod((os.path.join(CONF['basedir'],
                                        'develop_server.sh')), 493)
-        except OSError as e:
-            print('Error: {0}'.format(e))
+            except OSError as e:
+                print('Error: {0}'.format(e))
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
 
