@@ -80,13 +80,14 @@ function start_up(){
     return 1
   fi
   echo 'Pelican and HTTP server processes now running in background.'
+  echo "You can access the server now at http://localhost:$port with your browser."
 }
 
 ###
 #  MAIN
 ###
 [[ ($# -eq 0) || ($# -gt 2) ]] && usage
-port=''
+port='8000'
 [[ $# -eq 2 ]] && port=$2
 
 if [[ $1 == "stop" ]]; then
