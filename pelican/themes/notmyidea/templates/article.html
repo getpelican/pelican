@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block html_lang %}{{ article.lang }}{% endblock %}
 {% block title %}{{ article.title|striptags }}{% endblock %}
 {% block content %}
 <section id="content" class="body">
