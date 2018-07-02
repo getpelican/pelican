@@ -60,7 +60,7 @@ help:
 	@echo '   make publish                        generate using production settings '
 	@echo '   make serve [PORT=8000]              serve site at http://localhost:8000'
 	@echo '   make serve-global [SERVER=0.0.0.0]  serve (as root) to $(SERVER):80    '
-        @echo '   make devserver [PORT=8000]          serve and regenerate together      '
+	@echo '   make devserver [PORT=8000]          serve and regenerate together      '
 	@echo '   make ssh_upload                     upload the web site via SSH        '
 	@echo '   make rsync_upload                   upload the web site via rsync+ssh  '
 {% endif %}
@@ -95,24 +95,24 @@ regenerate:
 
 serve:
 ifdef PORT
-        $$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT)
+	$$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT)
 else
-        $$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
+	$$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 endif
 
 serve-global:
 ifdef SERVER
-        $$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT) -b $$(SERVER)
+	$$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT) -b $$(SERVER)
 else
-        $$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT) -b 0.0.0.0
+	$$(PELICAN) -l $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT) -b 0.0.0.0
 endif
 
 
 devserver:
 ifdef PORT
-        $$(PELICAN) -lr $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT)
+	$$(PELICAN) -lr $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS) -p $$(PORT)
 else
-        $$(PELICAN) -lr $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
+	$$(PELICAN) -lr $$(INPUTDIR) -o $$(OUTPUTDIR) -s $$(CONFFILE) $$(PELICANOPTS)
 endif
 
 publish:
