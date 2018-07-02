@@ -263,8 +263,6 @@ needed by Pelican.
 
     automation = ask('Do you want to generate a Fabfile/Makefile '
                      'to automate generation and publishing?', bool, True)
-    develop = ask('Do you want an auto-reload HTTP script '
-                  'to assist with theme and site development?', bool, True)
 
     if automation:
         if ask('Do you want to upload your website using FTP?',
@@ -377,29 +375,6 @@ needed by Pelican.
                 _template = _jinja_env.get_template('Makefile.jinja2')
                 fd.write(_template.render(py_v=py_v, **CONF))
                 fd.close()
-        except OSError as e:
-            print('Error: {0}'.format(e))
-
-    if develop:
-        conf_shell = dict()
-        for key, value in CONF.items():
-            if isinstance(value, six.string_types) and ' ' in value:
-                value = '"' + value.replace('"', '\\"') + '"'
-            conf_shell[key] = value
-        try:
-            with codecs.open(os.path.join(CONF['basedir'],
-                                          'develop_server.sh'),
-                             'w', 'utf-8') as fd:
-                py_v = '${PY:-python}'
-                if six.PY3:
-                    py_v = '${PY:-python3}'
-                _template = _jinja_env.get_template('develop_server.sh.jinja2')
-                fd.write(_template.render(py_v=py_v, **conf_shell))
-                fd.close()
-
-                # mode 0o755
-                os.chmod((os.path.join(CONF['basedir'],
-                                       'develop_server.sh')), 493)
         except OSError as e:
             print('Error: {0}'.format(e))
 
