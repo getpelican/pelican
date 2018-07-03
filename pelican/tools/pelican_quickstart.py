@@ -13,6 +13,11 @@ from jinja2 import Environment, FileSystemLoader
 import pytz
 
 try:
+    import readline  # NOQA
+except ImportError:
+    pass
+
+try:
     import tzlocal
     _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
 except ImportError:
