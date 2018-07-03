@@ -71,6 +71,7 @@ class TestCache(unittest.TestCase):
         generator.generate_context()
         uncached_pages = sorted_titles(generator.pages)
         uncached_hidden_pages = sorted_titles(generator.hidden_pages)
+        uncached_draft_pages = sorted_titles(generator.draft_pages)
 
         generator = PagesGenerator(
             context=settings.copy(), settings=settings,
@@ -78,9 +79,11 @@ class TestCache(unittest.TestCase):
         generator.generate_context()
         cached_pages = sorted_titles(generator.pages)
         cached_hidden_pages = sorted_titles(generator.hidden_pages)
+        cached_draft_pages = sorted_titles(generator.draft_pages)
 
         self.assertEqual(uncached_pages, cached_pages)
         self.assertEqual(uncached_hidden_pages, cached_hidden_pages)
+        self.assertEqual(uncached_draft_pages, cached_draft_pages)
 
     def test_reader_caching(self):
         """Test that cached and uncached content is same in reader level"""

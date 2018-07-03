@@ -209,13 +209,20 @@ class Pelican(object):
              len(pages_generator.hidden_translations)),
             'hidden page',
             'hidden pages')
+        pluralized_draft_pages = maybe_pluralize(
+            (len(pages_generator.draft_pages) +
+             len(pages_generator.draft_translations)),
+            'draft page',
+            'draft pages')
 
-        print('Done: Processed {}, {}, {} and {} in {:.2f} seconds.'.format(
-            pluralized_articles,
-            pluralized_drafts,
-            pluralized_pages,
-            pluralized_hidden_pages,
-            time.time() - start_time))
+        print('Done: Processed {}, {}, {}, {} and {} in {:.2f} seconds.'
+              .format(
+                    pluralized_articles,
+                    pluralized_drafts,
+                    pluralized_pages,
+                    pluralized_hidden_pages,
+                    pluralized_draft_pages,
+                    time.time() - start_time))
 
     def get_generator_classes(self):
         generators = [ArticlesGenerator, PagesGenerator]

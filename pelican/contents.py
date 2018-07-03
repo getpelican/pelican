@@ -444,9 +444,13 @@ class Content(object):
 
 class Page(Content):
     mandatory_properties = ('title',)
-    allowed_statuses = ('published', 'hidden')
+    allowed_statuses = ('published', 'hidden', 'draft')
     default_status = 'published'
     default_template = 'page'
+
+    def _expand_settings(self, key):
+        klass = 'draft_page' if self.status == 'draft' else None
+        return super(Page, self)._expand_settings(key, klass)
 
 
 class Article(Content):
@@ -472,7 +476,7 @@ class Article(Content):
             self.date = SafeDatetime.max
 
     def _expand_settings(self, key):
-        klass = 'article' if self.status == 'published' else 'draft'
+        klass = 'draft' if self.status == 'draft' else 'article'
         return super(Article, self)._expand_settings(key, klass)
 
 

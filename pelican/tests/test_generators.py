@@ -601,6 +601,7 @@ class TestPageGenerator(unittest.TestCase):
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
+        draft_pages = self.distill_pages(generator.draft_pages)
 
         pages_expected = [
             ['This is a test page', 'published', 'page'],
@@ -614,7 +615,13 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a test hidden page', 'hidden', 'page'],
             ['This is a markdown test hidden page', 'hidden', 'page'],
             ['This is a test hidden page with a custom template', 'hidden',
-             'custom']
+             'custom'],
+        ]
+        draft_pages_expected = [
+            ['This is a test draft page', 'draft', 'page'],
+            ['This is a markdown test draft page', 'draft', 'page'],
+            ['This is a test draft page with a custom template', 'draft',
+             'custom'],
         ]
 
         self.assertEqual(sorted(pages_expected), sorted(pages))
@@ -622,9 +629,13 @@ class TestPageGenerator(unittest.TestCase):
             sorted(pages_expected),
             sorted(self.distill_pages(generator.context['pages'])))
         self.assertEqual(sorted(hidden_pages_expected), sorted(hidden_pages))
+        self.assertEqual(sorted(draft_pages_expected), sorted(draft_pages))
         self.assertEqual(
             sorted(hidden_pages_expected),
             sorted(self.distill_pages(generator.context['hidden_pages'])))
+        self.assertEqual(
+            sorted(draft_pages_expected),
+            sorted(self.distill_pages(generator.context['draft_pages'])))
 
     def test_generate_sorted(self):
         settings = get_settings(filenames={})
