@@ -41,8 +41,8 @@ Usage
 ::
 
     pelican-import [-h] [--wpfile] [--dotclear] [--posterous] [--tumblr] [--feed] [-o OUTPUT]
-                   [-m MARKUP] [--dir-cat] [--dir-page] [--strip-raw] [--disable-slugs]
-                   [-e EMAIL] [-p PASSWORD] [-b BLOGNAME]
+                   [-m MARKUP] [--dir-cat] [--dir-page] [--strip-raw] [--wp-custpost]
+                   [--wp-attach] [--disable-slugs] [-e EMAIL] [-p PASSWORD] [-b BLOGNAME]
                    input|api_token|api_key
 
 Positional arguments
@@ -71,10 +71,21 @@ Optional arguments
                         (default: False)
   --dir-page            Put files recognised as pages in "pages/" sub-
                           directory (wordpress import only) (default: False)
-  --filter-author       Import only post from the specified author.
+  --filter-author       Import only post from the specified author
   --strip-raw           Strip raw HTML code that can't be converted to markup
                         such as flash embeds or iframes (wordpress import
                         only) (default: False)
+  --wp-custpost         Put wordpress custom post types in directories. If
+                        used with --dir-cat option directories will be created
+                        as "/post_type/category/" (wordpress import only)
+  --wp-attach           Download files uploaded to wordpress as attachments.
+                        Files will be added to posts as a list in the post
+                        header. All files will be downloaded, even if they
+                        aren't associated with a post. Files will be downloaded
+                        with their original path inside the output directory,
+                        e.g. "output/wp-uploads/date/postname/file.jpg"
+                        (wordpress import only) (requires an internet
+                        connection)
   --disable-slugs       Disable storing slugs from imported posts within
                         output. With this disabled, your Pelican URLs may not
                         be consistent with your original posts. (default:
@@ -111,5 +122,5 @@ Tests
 
 To test the module, one can use sample files:
 
-- for WordPress: http://wpcandy.com/made/the-sample-post-collection
+- for WordPress: http://www.wpbeginner.com/wp-themes/how-to-add-dummy-content-for-theme-development-in-wordpress/
 - for Dotclear: http://media.dotaddict.org/tda/downloads/lorem-backup.txt
