@@ -550,9 +550,40 @@ class _HTMLWordTruncator(HTMLParser):
         if word_end < len(data):
             self.add_last_word()
 
-    def handle_ref(self, char):
+    def _handle_ref(self, name, char):
+        """
+        Called by handle_entityref() or handle_charref() when a ref like
+        `&mdash;`, `&#8212;`, or `&#x2014` is found.
+
+        The arguments for this method are:
+
+        - `name`: the HTML entity name (such as `mdash` or `#8212` or `#x2014`)
+        - `char`: the Unicode representation of the ref (such as `—`)
+
+        This method checks whether the entity is considered to be part of a
+        word or not and, if not, signals the end of a word.
+        """
+        # Compute the index of the character right after the ref.
+        #
+        # In a string like 'prefix&mdash;suffix', the end is the sum of:
+        #
+        # - `self.getoffset()` (the length of `prefix`)
+        # - `1` (the length of `&`)
+        # - `len(name)` (the length of `mdash`)
+        # - `1` (the length of `;`)
+        #
+        # Note that, in case of malformed HTML, the ';' character may
+        # not be present.
+
         offset = self.getoffset()
-        ref_end = self.rawdata.index(';', offset) + 1
+        ref_end = offset + len(name) + 1
+
+        try:
+            if self.rawdata[ref_end] == ';':
+                ref_end += 1
+        except IndexError:
+            # We are at the end of the string and there's no ';'
+            pass
 
         if self.last_word_end is None:
             if self._word_prefix_regex.match(char):
@@ -564,19 +595,34 @@ class _HTMLWordTruncator(HTMLParser):
                 self.add_last_word()
 
     def handle_entityref(self, name):
+        """
+        Called when an entity ref like '&mdash;' is found
+
+        `name` is the entity ref without ampersand and semicolon (e.g. `mdash`)
+        """
         try:
             codepoint = html_entities.name2codepoint[name]
+            char = six.unichr(codepoint)
         except KeyError:
-            self.handle_ref('')
-        else:
-            self.handle_ref(six.unichr(codepoint))
+            char = ''
+        self._handle_ref(name, char)
 
     def handle_charref(self, name):
-        if name.startswith('x'):
-            codepoint = int(name[1:], 16)
-        else:
-            codepoint = int(name)
-        self.handle_ref(six.unichr(codepoint))
+        """
+        Called when a char ref like '&#8212;' or '&#x2014' is found
+
+        `name` is the char ref without ampersand and semicolon (e.g. `#8212` or
+        `#x2014`)
+        """
+        try:
+            if name.startswith('x'):
+                codepoint = int(name[1:], 16)
+            else:
+                codepoint = int(name)
+            char = six.unichr(codepoint)
+        except (ValueError, OverflowError):
+            char = ''
+        self._handle_ref('#' + name, char)
 
 
 def truncate_html_words(s, num, end_text='…'):
