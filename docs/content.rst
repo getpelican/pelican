@@ -533,9 +533,9 @@ your settings file.
 Publishing drafts
 =================
 
-If you want to publish an article as a draft (for friends to review before
-publishing, for example), you can add a ``Status: draft`` attribute to its
-metadata. That article will then be output to the ``drafts`` folder and not
+If you want to publish an article or a page as a draft (for friends to review
+before publishing, for example), you can add a ``Status: draft`` attribute to
+its metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category or tag page.
 
 If your articles should be automatically published as a draft (to not accidentally

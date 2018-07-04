@@ -86,6 +86,7 @@ categories      A list of (category, articles) tuples, containing
                 all the categories and corresponding articles (values)
 pages           The list of pages
 hidden_pages    The list of hidden pages
+draft_pages     The list of draft pages
 =============   ===================================================
 
 
@@ -423,7 +424,7 @@ metadata                Page header metadata `dict`.
 save_as                 Location to save the page.
 slug                    Page slug.
 source_path             Full system path of the page source file.
-status                  The page status, can be any of 'published' or
+status                  The page status, can be any of 'published', 'hidden' or
                         'draft'.
 summary                 Rendered summary content.
 tags                    List of :ref:`Tag <object-author_cat_tag>`

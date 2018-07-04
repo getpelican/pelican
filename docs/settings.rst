@@ -445,6 +445,24 @@ respectively.
 
    The location we will save the page which doesn't use the default language.
 
+.. data:: DRAFT_PAGE_URL = 'drafts/pages/{slug}.html'
+
+   The URL used to link to a page draft.
+
+.. data:: DRAFT_PAGE_SAVE_AS = 'drafts/pages/{slug}.html'
+
+   The actual location a page draft is saved at.
+
+.. data:: DRAFT_PAGE_LANG_URL = 'drafts/pages/{slug}-{lang}.html'
+
+   The URL used to link to a page draft which doesn't use the default
+   language.
+
+.. data:: DRAFT_PAGE_LANG_SAVE_AS = 'drafts/pages/{slug}-{lang}.html'
+
+   The actual location a page draft which doesn't use the default language is
+   saved at.
+
 .. data:: CATEGORY_URL = 'category/{slug}.html'
 
    The URL to use for a category.

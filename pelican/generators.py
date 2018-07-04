@@ -656,14 +656,18 @@ class PagesGenerator(CachingGenerator):
 
     def __init__(self, *args, **kwargs):
         self.pages = []
+        self.translations = []
         self.hidden_pages = []
         self.hidden_translations = []
+        self.draft_pages = []
+        self.draft_translations = []
         super(PagesGenerator, self).__init__(*args, **kwargs)
         signals.page_generator_init.send(self)
 
     def generate_context(self):
         all_pages = []
         hidden_pages = []
+        draft_pages = []
         for f in self.get_files(
                 self.settings['PAGE_PATHS'],
                 exclude=self.settings['PAGE_EXCLUDES']):
@@ -694,14 +698,18 @@ class PagesGenerator(CachingGenerator):
                 all_pages.append(page)
             elif page.status == "hidden":
                 hidden_pages.append(page)
+            elif page.status == "draft":
+                draft_pages.append(page)
             self.add_source_path(page)
 
         self.pages, self.translations = process_translations(all_pages)
         self.pages = order_content(self.pages, self.settings['PAGE_ORDER_BY'])
         self.hidden_pages, self.hidden_translations = \
             process_translations(hidden_pages)
+        self.draft_pages, self.draft_translations = \
+            process_translations(draft_pages)
 
-        self._update_context(('pages', 'hidden_pages'))
+        self._update_context(('pages', 'hidden_pages', 'draft_pages'))
 
         self.save_cache()
         self.readers.save_cache()
@@ -709,7 +717,8 @@ class PagesGenerator(CachingGenerator):
 
     def generate_output(self, writer):
         for page in chain(self.translations, self.pages,
-                          self.hidden_translations, self.hidden_pages):
+                          self.hidden_translations, self.hidden_pages,
+                          self.draft_translations, self.draft_pages):
             signals.page_generator_write_page.send(self, content=page)
             writer.write_file(
                 page.save_as, self.get_template(page.template),
@@ -722,7 +731,9 @@ class PagesGenerator(CachingGenerator):
     def refresh_metadata_intersite_links(self):
         for e in chain(self.pages,
                        self.hidden_pages,
-                       self.hidden_translations):
+                       self.hidden_translations,
+                       self.draft_pages,
+                       self.draft_translations):
             if hasattr(e, 'refresh_metadata_intersite_links'):
                 e.refresh_metadata_intersite_links()
 
