@@ -10,6 +10,7 @@
         {% if FEED_ALL_RSS %}
         <link href="{{ FEED_DOMAIN }}/{% if FEED_ALL_RSS_URL %}{{ FEED_ALL_RSS_URL }}{% else %}{{ FEED_ALL_RSS }}{% endif %}" type="application/rss+xml" rel="alternate" title="{{ SITENAME }} RSS Feed" />
         {% endif %}
+        {% block extra_head %}{% endblock extra_head %}
 </head>
 
 <body id="index" class="home">
