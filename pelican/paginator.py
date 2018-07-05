@@ -66,7 +66,10 @@ class Paginator(object):
 
 class Page(object):
     def __init__(self, name, url, object_list, number, paginator, settings):
+        self.full_name = name
         self.name, self.extension = os.path.splitext(name)
+        dn, fn = os.path.split(name)
+        self.base_name = dn if fn in ('index.htm', 'index.html') else self.name
         self.base_url = url
         self.object_list = object_list
         self.number = number
@@ -134,25 +137,16 @@ class Page(object):
 
         # URL or SAVE_AS is a string, format it with a controlled context
         context = {
-            'name': self.name.replace(os.sep, '/'),
+            'save_as': self.full_name,
             'url': self.base_url,
-            'object_list': self.object_list,
-            'number': self.number,
-            'paginator': self.paginator,
-            'settings': self.settings,
-            'base_name': os.path.dirname(self.name),
-            'number_sep': '/',
+            'name': self.name,
+            'base_name': self.base_name,
             'extension': self.extension,
+            'number': self.number,
         }
 
-        if self.number == 1:
-            # no page numbers on the first page
-            context['number'] = ''
-            context['number_sep'] = ''
-
         ret = prop_value.format(**context)
-        if ret[0] == '/':
-            ret = ret[1:]
+        ret = ret.lstrip('/')
         return ret
 
     url = property(functools.partial(_from_settings, key='URL'))

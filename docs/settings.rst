@@ -994,7 +994,10 @@ You can use the following settings to configure the pagination.
    The templates to use pagination with, and the number of articles to include
    on a page. If this value is ``None``, it defaults to ``DEFAULT_PAGINATION``.
 
-.. data:: PAGINATION_PATTERNS
+.. data:: PAGINATION_PATTERNS = (
+      (1, '{name}{extension}', '{name}{extension}'),
+      (2, '{name}{number}{extension}', '{name}{number}{extension}'),
+  )
 
    A set of patterns that are used to determine advanced pagination output.
 
@@ -1002,24 +1005,27 @@ You can use the following settings to configure the pagination.
 Using Pagination Patterns
 -------------------------
 
-The ``PAGINATION_PATTERNS`` setting can be used to configure where
-subsequent pages are created. The setting is a sequence of three
-element tuples, where each tuple consists of::
+By default, pages subsequent to ``.../foo.html`` are created as
+``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used to
+change this. It takes a sequence of triples, where each triple consists of::
 
-  (minimum page, URL setting, SAVE_AS setting,)
+  (minimum_page, page_url, page_save_as,)
 
-For example, if you wanted the first page to just be ``/``, and the
-second (and subsequent) pages to be ``/page/2/``, you would set
-``PAGINATION_PATTERNS`` as follows::
+For ``page_url`` and ``page_save_as``, you may use a number of variables.
+``{url}`` and ``{save_as}`` correspond respectively to the ``*_URL`` and
+``*_SAVE_AS`` values of the corresponding page type (e.g. ``ARTICLE_SAVE_AS``).
+If ``{save_as} == foo/bar.html``, then ``{name} == foo/bar`` and
+``{extension} == .html``. ``{base_name}`` equals ``{name}`` except that it
+strips trailing ``/index`` if present. ``{number}`` equals the page number.
+
+For example, if you want to leave the first page unchanged, but place
+subsequent pages at ``.../page/2/`` etc, you could set ``PAGINATION_PATTERNS``
+as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{base_name}/', '{base_name}/index.html'),
+      (1, '{url}', '{save_as}`,
       (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
   )
-
-This would cause the first page to be written to
-``{base_name}/index.html``, and subsequent ones would be written into
-``page/{number}`` directories.
 
 
 Translations

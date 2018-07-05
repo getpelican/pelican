@@ -8,6 +8,8 @@ Next release
 * Replace Fabric by Invoke and ``fabfile.py`` template by ``tasks.py``.
 * Replace ``SLUG_SUBSTITUTIONS`` (and friends) by ``SLUG_REGEX_SUBSTITUTIONS``
   for more finegrained control
+* ``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer strips
+  ``'bar'`` from ``'foo/bar.html'`` (unless ``'bar' == 'index'``).
 
 3.7.1 (2017-01-10)
 ==================

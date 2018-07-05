@@ -97,7 +97,8 @@ DEFAULT_CONFIG = {
     'AUTHOR_URL': 'author/{slug}.html',
     'AUTHOR_SAVE_AS': posix_join('author', '{slug}.html'),
     'PAGINATION_PATTERNS': [
-        (0, '{name}{number}{extension}', '{name}{number}{extension}'),
+        (1, '{name}{extension}', '{name}{extension}'),
+        (2, '{name}{number}{extension}', '{name}{number}{extension}'),
     ],
     'YEAR_ARCHIVE_URL': '',
     'YEAR_ARCHIVE_SAVE_AS': '',
