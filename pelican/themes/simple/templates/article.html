@@ -39,6 +39,7 @@
           <a class="url fn" href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
         {% endfor %}
     </address>
+    {% endif %}
     {% if article.category %}
     <div class="category">
         Category: <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
@@ -51,7 +52,6 @@
             <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
         {% endfor %}
     </div>
-    {% endif %}
     {% endif %}
   </footer><!-- /.post-info -->
   <div class="entry-content">
