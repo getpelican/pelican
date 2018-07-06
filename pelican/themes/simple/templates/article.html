@@ -4,64 +4,65 @@
 {% block title %}{{ SITENAME }} - {{ article.title }}{% endblock %}
 
 {% block head %}
-  {{ super() }}
+{{ super() }}
 
-  {% import 'translations.html' as translations with context %}
-  {% if translations.entry_hreflang(article) %}
+{% import 'translations.html' as translations with context %}
+{% if translations.entry_hreflang(article) %}
     {{ translations.entry_hreflang(article) }}
-  {% endif %}
+{% endif %}
 
-  {% if article.description %}
+{% if article.description %}
     <meta name="description" content="{{article.description}}" />
-  {% endif %}
+{% endif %}
 
-  {% for tag in article.tags %}
+{% for tag in article.tags %}
     <meta name="tags" content="{{tag}}" />
-  {% endfor %}
+{% endfor %}
 
 {% endblock %}
 
 {% block content %}
 <section id="content" class="body">
-  <header>
-    <h2 class="entry-title">
-      <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
-         title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
- {% import 'translations.html' as translations with context %}
- {{ translations.translations_for(article) }}
-  </header>
-  <footer class="post-info">
-    <time class="published" datetime="{{ article.date.isoformat() }}">
-      {{ article.locale_date }}
-    </time>
-    {% if article.modified %}
-    <time class="modified" datetime="{{ article.modified.isoformat() }}">
-      {{ article.locale_modified }}
-    </time>
-    {% endif %}
-    {% if article.authors %}
-    <address class="vcard author">
-      By {% for author in article.authors %}
-          <a class="url fn" href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
-        {% endfor %}
-    </address>
-    {% endif %}
-    {% if article.category %}
-    <div class="category">
-        Category: <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
-    </div>
-    {% endif %}
-    {% if article.tags %}
-    <div class="tags">
-        Tags:
-        {% for tag in article.tags %}
-            <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
-        {% endfor %}
-    </div>
-    {% endif %}
-  </footer><!-- /.post-info -->
-  <div class="entry-content">
-    {{ article.content }}
-  </div><!-- /.entry-content -->
+    <header>
+        <h2 class="entry-title">
+            <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
+               title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a>
+        </h2>
+        {% import 'translations.html' as translations with context %}
+        {{ translations.translations_for(article) }}
+    </header>
+    <footer class="post-info">
+        <time class="published" datetime="{{ article.date.isoformat() }}">
+            {{ article.locale_date }}
+        </time>
+        {% if article.modified %}
+            <time class="modified" datetime="{{ article.modified.isoformat() }}">
+                {{ article.locale_modified }}
+            </time>
+        {% endif %}
+        {% if article.authors %}
+            <address class="vcard author">
+                By {% for author in article.authors %}
+                <a class="url fn" href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
+                {% endfor %}
+            </address>
+        {% endif %}
+        {% if article.category %}
+            <div class="category">
+                Category: <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
+            </div>
+        {% endif %}
+        {% if article.tags %}
+            <div class="tags">
+                Tags:
+                {% for tag in article.tags %}
+                    <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </footer><!-- /.post-info -->
+    <div class="entry-content">
+        {{ article.content }}
+    </div><!-- /.entry-content -->
 </section>
 {% endblock %}
