@@ -7,11 +7,15 @@ env:
   - TOX_ENV=py27
   - TOX_ENV=py34
   - TOX_ENV=py35
+  - TOX_ENV=py27-pandoc2
+  - TOX_ENV=py34-pandoc2
+  - TOX_ENV=py35-pandoc2
 matrix:
   include:
     - python: 3.6
-      env:
-      - TOX_ENV=py36
+      env: TOX_ENV=py36
+    - python: 3.6
+      env: TOX_ENV=py36-pandoc2
 addons:
   apt_packages:
     - pandoc
@@ -20,6 +24,7 @@ before_install:
   - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
   - pip install tox==2.5.0
+  - pip install pyopenssl ndg-httpsclient pyasn1
 script: tox -e $TOX_ENV
 notifications:
   irc:
