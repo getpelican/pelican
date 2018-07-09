@@ -10,6 +10,7 @@ import subprocess
 import sys
 import time
 from codecs import open
+from collections import defaultdict
 
 from six.moves.urllib.error import URLError
 from six.moves.urllib.parse import urlparse
@@ -633,7 +634,7 @@ def get_attachments(xml):
         else:
             filename = get_filename(filename, post_id)
             names[post_id] = filename
-    attachedposts = {}
+    attachedposts = defaultdict(list)
     for parent, url in attachments:
         try:
             parent_name = names[parent]
@@ -641,11 +642,7 @@ def get_attachments(xml):
             # attachment's parent is not a valid post
             parent_name = None
 
-        try:
-            attachedposts[parent_name].append(url)
-        except KeyError:
-            attachedposts[parent_name] = []
-            attachedposts[parent_name].append(url)
+        attachedposts[parent_name].append(url)
     return attachedposts
 
 
@@ -653,7 +650,7 @@ def download_attachments(output_path, urls):
     """Downloads WordPress attachments and returns a list of paths to
     attachments that can be associated with a post (relative path to output
     directory). Files that fail to download, will not be added to posts"""
-    locations = []
+    locations = {}
     for url in urls:
         path = urlparse(url).path
         # teardown path and rebuild to negate any errors with
@@ -670,11 +667,21 @@ def download_attachments(output_path, urls):
         print('downloading {}'.format(filename))
         try:
             urlretrieve(url, os.path.join(full_path, filename))
-            locations.append(os.path.join(localpath, filename))
+            locations[url] = os.path.join(localpath, filename)
         except (URLError, IOError) as e:
             # Python 2.7 throws an IOError rather Than URLError
             logger.warning("No file could be downloaded from %s\n%s", url, e)
     return locations
+
+
+def update_links_to_attached_files(content, attachments):
+    for old_url, new_path in attachments.items():
+        # url may occur both with http:// and https://
+        http_url = old_url.replace('https://', 'http://')
+        https_url = old_url.replace('http://', 'https://')
+        for url in [http_url, https_url]:
+            content = content.replace(url, '{filename}' + new_path)
+    return content
 
 
 def fields2pelican(
@@ -691,21 +698,22 @@ def fields2pelican(
         if wp_attach and attachments:
             try:
                 urls = attachments[filename]
-                attached_files = download_attachments(output_path, urls)
+                links = download_attachments(output_path, urls)
             except KeyError:
-                attached_files = None
+                links = None
         else:
-            attached_files = None
+            links = None
 
         ext = get_ext(out_markup, in_markup)
         if ext == '.md':
             header = build_markdown_header(
                 title, date, author, categories, tags, slug,
-                status, attached_files)
+                status, links.values() if links else None)
         else:
             out_markup = 'rst'
             header = build_header(title, date, author, categories,
-                                  tags, slug, status, attached_files)
+                                  tags, slug, status, links.values()
+                                  if links else None)
 
         out_filename = get_out_filename(
             output_path, filename, ext, kind, dirpage, dircat,
@@ -755,6 +763,9 @@ def fields2pelican(
                     # or more spaces & then a end-of-line
                     content = content.replace('\\\n ', '  \n')
                     content = content.replace('\\\n', '  \n')
+
+            if wp_attach and links:
+                content = update_links_to_attached_files(content, links)
 
         with open(out_filename, 'w', encoding='utf-8') as fs:
             fs.write(header + content)

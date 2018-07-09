@@ -80,10 +80,11 @@ Optional arguments
                         as "/post_type/category/" (wordpress import only)
   --wp-attach           Download files uploaded to wordpress as attachments.
                         Files will be added to posts as a list in the post
-                        header. All files will be downloaded, even if they
+                        header and links to the files within the post will be
+                        updated. All files will be downloaded, even if they
                         aren't associated with a post. Files will be downloaded
                         with their original path inside the output directory,
-                        e.g. "output/wp-uploads/date/postname/file.jpg"
+                        e.g. "output/wp-uploads/date/postname/file.jpg".
                         (wordpress import only) (requires an internet
                         connection)
   --disable-slugs       Disable storing slugs from imported posts within
