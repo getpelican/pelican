@@ -435,7 +435,7 @@ def path_to_url(path):
 
 def posixize_path(rel_path):
     """Use '/' as path separator, so that source references,
-    like '{filename}/foo/bar.jpg' or 'extras/favicon.ico',
+    like '{static}/foo/bar.jpg' or 'extras/favicon.ico',
     will work on Windows as well as on Mac and Linux."""
     return rel_path.replace(os.sep, '/')
 

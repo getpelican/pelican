@@ -168,6 +168,34 @@ If you want to exclude any pages from being linked to or listed in the menu
 then add a ``status: hidden`` attribute to its metadata. This is useful for
 things like making error pages that fit the generated theme of your site.
 
+Static content
+==============
+
+Static files are files other than articles and pages that are copied to the
+output folder as-is, without processing. You can control which static files
+are copied over with the ``STATIC_PATHS`` setting of the project's
+``pelicanconf.py`` file. Pelican's default configuration includes the
+``images`` directory for this, but others must be added manually. In addition,
+static files that are explicitly linked to are included (see below).
+
+Mixed content in the same directory
+-----------------------------------
+
+Starting with Pelican 3.5, static files can safely share a source directory with
+page source files, without exposing the page sources in the generated site.
+Any such directory must be added to both ``STATIC_PATHS`` and ``PAGE_PATHS``
+(or ``STATIC_PATHS`` and ``ARTICLE_PATHS``). Pelican will identify and process
+the page source files normally, and copy the remaining files as if they lived
+in a separate directory reserved for static files.
+
+Note: Placing static and content source files together in the same source
+directory does not guarantee that they will end up in the same place in the
+generated site. The easiest way to do this is by using the ``{attach}`` link
+syntax (described below). Alternatively, the ``STATIC_SAVE_AS``,
+``PAGE_SAVE_AS``, and ``ARTICLE_SAVE_AS`` settings (and the corresponding
+``*_URL`` settings) can be configured to place files of different types
+together, just as they could in earlier versions of Pelican.
+
 .. _ref-linking-to-internal-content:
 
 Linking to internal content
@@ -221,13 +249,10 @@ and ``article2.md``::
 Linking to static files
 -----------------------
 
-Linking to non-article or non-page content uses the same ``{filename}`` syntax
-as described above. It is important to remember that those files will not be
-copied to the output directory unless the source directories containing them
-are included in the ``STATIC_PATHS`` setting of the project's ``pelicanconf.py``
-file. Pelican's default configuration includes the ``images`` directory for
-this, but others must be added manually. Forgetting to do so will result in
-broken links.
+You can link to static content using ``{static}path/to/file``. Files linked to
+with this syntax will automatically be copied to the output directory, even if
+the source directories containing them are not included in the ``STATIC_PATHS``
+setting of the project's ``pelicanconf.py`` file.
 
 For example, a project's content directory might be structured like this::
 
@@ -241,48 +266,28 @@ For example, a project's content directory might be structured like this::
 
 ``test.md`` would include::
 
-    ![Alt Text]({filename}/images/han.jpg)
-    [Our Menu]({filename}/pdfs/menu.pdf)
-
-``pelicanconf.py`` would include::
-
-    STATIC_PATHS = ['images', 'pdfs']
+    ![Alt Text]({static}/images/han.jpg)
+    [Our Menu]({static}/pdfs/menu.pdf)
 
 Site generation would then copy ``han.jpg`` to ``output/images/han.jpg``,
 ``menu.pdf`` to ``output/pdfs/menu.pdf``, and write the appropriate links
 in ``test.md``.
 
-Mixed content in the same directory
------------------------------------
-
-Starting with Pelican 3.5, static files can safely share a source directory with
-page source files, without exposing the page sources in the generated site.
-Any such directory must be added to both ``STATIC_PATHS`` and ``PAGE_PATHS``
-(or ``STATIC_PATHS`` and ``ARTICLE_PATHS``). Pelican will identify and process
-the page source files normally, and copy the remaining files as if they lived
-in a separate directory reserved for static files.
-
-Note: Placing static and content source files together in the same source
-directory does not guarantee that they will end up in the same place in the
-generated site. The easiest way to do this is by using the ``{attach}`` link
-syntax (described below). Alternatively, the ``STATIC_SAVE_AS``,
-``PAGE_SAVE_AS``, and ``ARTICLE_SAVE_AS`` settings (and the corresponding
-``*_URL`` settings) can be configured to place files of different types
-together, just as they could in earlier versions of Pelican.
+If you use ``{static}`` to link to an article or a page, this will be turned into
+a link to its source code.
 
 Attaching static files
 ----------------------
 
 Starting with Pelican 3.5, static files can be "attached" to a page or article
 using this syntax for the link target: ``{attach}path/to/file`` This works
-like the ``{filename}`` syntax, but also relocates the static file into the
+like the ``{static}`` syntax, but also relocates the static file into the
 linking document's output directory. If the static file originates from a
 subdirectory beneath the linking document's source, that relationship will be
 preserved on output. Otherwise, it will become a sibling of the linking
 document.
 
-This only works for linking to static files, and only when they originate from
-a directory included in the ``STATIC_PATHS`` setting.
+This only works for linking to static files.
 
 For example, a project's content directory might be structured like this::
 
@@ -298,7 +303,6 @@ For example, a project's content directory might be structured like this::
 ``pelicanconf.py`` would include::
 
     PATH = 'content'
-    STATIC_PATHS = ['blog', 'downloads']
     ARTICLE_PATHS = ['blog']
     ARTICLE_SAVE_AS = '{date:%Y}/{slug}.html'
     ARTICLE_URL = '{date:%Y}/{slug}.html'
@@ -328,7 +332,7 @@ the article's output directory.
 
 If a static file is linked multiple times, the relocating feature of
 ``{attach}`` will only work in the first of those links to be processed.
-After the first link, Pelican will treat ``{attach}`` like ``{filename}``.
+After the first link, Pelican will treat ``{attach}`` like ``{static}``.
 This avoids breaking the already-processed links.
 
 **Be careful when linking to a file from multiple documents:**
@@ -342,7 +346,7 @@ file's old location might then find their links broken. **It is therefore
 advisable to use {attach} only if you use it in all links to a file, and only
 if the linking documents share a single directory.** Under these conditions,
 the file's output location will not change in future builds. In cases where
-these precautions are not possible, consider using ``{filename}`` links instead
+these precautions are not possible, consider using ``{static}`` links instead
 of ``{attach}``, and letting the file's location be determined by the project's
 ``STATIC_SAVE_AS`` and ``STATIC_URL`` settings. (Per-file ``save_as`` and
 ``url`` overrides can still be set in ``EXTRA_PATH_METADATA``.)
@@ -360,8 +364,11 @@ To remain compatible with earlier versions, Pelican still supports vertical bars
 (``||``) in addition to curly braces (``{}``) for internal links. For example:
 ``|filename|an_article.rst``, ``|tag|tagname``, ``|category|foobar``.
 The syntax was changed from ``||`` to ``{}`` to avoid collision with Markdown
-extensions or reST directives. Support for the old syntax may eventually be
-removed.
+extensions or reST directives. Similarly, Pelican also still supports linking to
+static content with ``{filename}``. The syntax was changed to ``{static}`` to allow
+linking to both generated articles and pages and their static sources.
+
+Support for the old syntax may eventually be removed.
 
 
 Importing an existing site

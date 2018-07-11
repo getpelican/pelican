@@ -175,6 +175,15 @@ def get_settings(**kwargs):
     return settings
 
 
+def get_context(settings=None, **kwargs):
+    context = settings.copy() if settings else {}
+    context['generated_content'] = {}
+    context['static_links'] = set()
+    context['static_content'] = {}
+    context.update(kwargs)
+    return context
+
+
 class LogCountHandler(BufferingHandler):
     """Capturing and counting logged messages."""
 
