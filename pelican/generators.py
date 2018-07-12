@@ -456,6 +456,7 @@ class ArticlesGenerator(CachingGenerator):
             # `dates` is already sorted by date
             for _period, group in groupby(dates, key=key):
                 archive = list(group)
+                articles = [a for a in self.articles if a in archive]
                 # arbitrarily grab the first date so that the usual
                 # format string syntax can be used for specifying the
                 # period archive dates
@@ -478,8 +479,9 @@ class ArticlesGenerator(CachingGenerator):
                                              month_name,
                                              _period[2])
 
-                write(save_as, template, context,
-                      dates=archive, blog=True, url=url)
+                write(save_as, template, context, articles=articles,
+                      dates=archive, template_name='period_archives',
+                      blog=True, url=url)
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
@@ -490,11 +492,7 @@ class ArticlesGenerator(CachingGenerator):
 
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
-        PAGINATED_TEMPLATES = self.settings['PAGINATED_DIRECT_TEMPLATES']
         for template in self.settings['DIRECT_TEMPLATES']:
-            paginated = {}
-            if template in PAGINATED_TEMPLATES:
-                paginated = {'articles': self.articles, 'dates': self.dates}
             save_as = self.settings.get("%s_SAVE_AS" % template.upper(),
                                         '%s.html' % template)
             url = self.settings.get("%s_URL" % template.upper(),
@@ -502,8 +500,9 @@ class ArticlesGenerator(CachingGenerator):
             if not save_as:
                 continue
 
-            write(save_as, self.get_template(template),
-                  self.context, blog=True, paginated=paginated,
+            write(save_as, self.get_template(template), self.context,
+                  articles=self.articles, dates=self.dates, blog=True,
+                  template_name=template,
                   page_name=os.path.splitext(save_as)[0], url=url)
 
     def generate_tags(self, write):
@@ -513,18 +512,18 @@ class ArticlesGenerator(CachingGenerator):
             dates = [article for article in self.dates if article in articles]
             write(tag.save_as, tag_template, self.context, tag=tag,
                   url=tag.url, articles=articles, dates=dates,
-                  paginated={'articles': articles, 'dates': dates}, blog=True,
-                  page_name=tag.page_name, all_articles=self.articles)
+                  template_name='tag', blog=True, page_name=tag.page_name,
+                  all_articles=self.articles)
 
     def generate_categories(self, write):
         """Generate category pages."""
         category_template = self.get_template('category')
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            write(cat.save_as, category_template, self.context,
-                  url=cat.url, category=cat, articles=articles, dates=dates,
-                  paginated={'articles': articles, 'dates': dates}, blog=True,
-                  page_name=cat.page_name, all_articles=self.articles)
+            write(cat.save_as, category_template, self.context, url=cat.url,
+                  category=cat, articles=articles, dates=dates,
+                  template_name='category', blog=True, page_name=cat.page_name,
+                  all_articles=self.articles)
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -533,7 +532,7 @@ class ArticlesGenerator(CachingGenerator):
             dates = [article for article in self.dates if article in articles]
             write(aut.save_as, author_template, self.context,
                   url=aut.url, author=aut, articles=articles, dates=dates,
-                  paginated={'articles': articles, 'dates': dates}, blog=True,
+                  template_name='author', blog=True,
                   page_name=aut.page_name, all_articles=self.articles)
 
     def generate_drafts(self, write):
