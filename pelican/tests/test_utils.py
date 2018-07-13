@@ -685,6 +685,7 @@ class TestDateFormatter(unittest.TestCase):
 
 
 class TestSanitisedJoin(unittest.TestCase):
+    @unittest.skipIf(platform == 'win32', "requires POSIX filepaths")
     def test_detect_parent_breakout(self):
         with six.assertRaisesRegex(
                 self,
@@ -695,6 +696,7 @@ class TestSanitisedJoin(unittest.TestCase):
                 "../test"
             )
 
+    @unittest.skipIf(platform == 'win32', "requires POSIX filepaths")
     def test_detect_root_breakout(self):
         with six.assertRaisesRegex(
                 self,
@@ -705,6 +707,7 @@ class TestSanitisedJoin(unittest.TestCase):
                 "/test"
             )
 
+    @unittest.skipIf(platform == 'win32', "requires POSIX filepaths")
     def test_pass_deep_subpaths(self):
         self.assertEqual(
             utils.sanitised_join(
