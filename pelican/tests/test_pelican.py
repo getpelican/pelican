@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
-import collections
+import collections  # noqa
 import locale
 import logging
 import os
@@ -10,11 +10,20 @@ import sys
 from shutil import rmtree
 from tempfile import mkdtemp
 
+import six
+
 from pelican import Pelican
 from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
 from pelican.tests.support import (LoggedTestCase, locale_available,
                                    mute, unittest)
+
+if six.PY3:
+    from collections.abc import Sequence
+else:
+    # those raise DeprecationWarnings in Python >=3.7
+    from collections import Sequence
+
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(
@@ -91,7 +100,7 @@ class TestPelican(LoggedTestCase):
             generator_classes[-1] is StaticGenerator,
             "StaticGenerator must be the last generator, but it isn't!")
         self.assertIsInstance(
-            generator_classes, collections.Sequence,
+            generator_classes, Sequence,
             "get_generator_classes() must return a Sequence to preserve order")
 
     def test_basic_generation_works(self):

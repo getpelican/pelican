@@ -294,17 +294,21 @@ class ArticlesGenerator(CachingGenerator):
         """Generate the feeds from the current context, and output files."""
 
         if self.settings.get('FEED_ATOM'):
-            writer.write_feed(self.articles, self.context,
-                              self.settings['FEED_ATOM'],
-                              self.settings.get('FEED_ATOM_URL',
-                                                self.settings['FEED_ATOM']))
+            writer.write_feed(
+                self.articles,
+                self.context,
+                self.settings['FEED_ATOM'],
+                self.settings.get('FEED_ATOM_URL', self.settings['FEED_ATOM'])
+                )
 
         if self.settings.get('FEED_RSS'):
-            writer.write_feed(self.articles, self.context,
-                              self.settings['FEED_RSS'],
-                              self.settings.get('FEED_RSS_URL',
-                                                self.settings['FEED_RSS']),
-                              feed_type='rss')
+            writer.write_feed(
+                self.articles,
+                self.context,
+                self.settings['FEED_RSS'],
+                self.settings.get('FEED_RSS_URL', self.settings['FEED_RSS']),
+                feed_type='rss'
+                )
 
         if (self.settings.get('FEED_ALL_ATOM') or
                 self.settings.get('FEED_ALL_RSS')):
@@ -315,114 +319,109 @@ class ArticlesGenerator(CachingGenerator):
                           order_by=self.settings['ARTICLE_ORDER_BY'])
 
             if self.settings.get('FEED_ALL_ATOM'):
-                writer.write_feed(all_articles,
-                                  self.context,
-                                  self.settings['FEED_ALL_ATOM'],
-                                  self.settings.get(
-                                      'FEED_ALL_ATOM_URL',
+                writer.write_feed(
+                    all_articles,
+                    self.context,
+                    self.settings['FEED_ALL_ATOM'],
+                    self.settings.get('FEED_ALL_ATOM_URL',
                                       self.settings['FEED_ALL_ATOM'])
-                                 )
+                    )
 
             if self.settings.get('FEED_ALL_RSS'):
-                writer.write_feed(all_articles,
-                                  self.context,
-                                  self.settings['FEED_ALL_RSS'],
-                                  self.settings.get(
-                                      'FEED_ALL_RSS_URL',
+                writer.write_feed(
+                    all_articles,
+                    self.context,
+                    self.settings['FEED_ALL_RSS'],
+                    self.settings.get('FEED_ALL_RSS_URL',
                                       self.settings['FEED_ALL_RSS']),
-                                  feed_type='rss'
-                                 )
+                    feed_type='rss'
+                    )
 
         for cat, arts in self.categories:
             if self.settings.get('CATEGORY_FEED_ATOM'):
-                writer.write_feed(arts,
-                                  self.context,
-                                  self.settings['CATEGORY_FEED_ATOM'].format(
-                                      slug=cat.slug
-                                  ),
-                                  self.settings.get(
-                                      'CATEGORY_FEED_ATOM_URL',
-                                      self.settings['CATEGORY_FEED_ATOM']).format(
-                                           slug=cat.slug
-                                  ),
-                                  feed_title=cat.name
-                                 )
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['CATEGORY_FEED_ATOM'].format(slug=cat.slug),
+                    self.settings.get(
+                        'CATEGORY_FEED_ATOM_URL',
+                        self.settings['CATEGORY_FEED_ATOM']).format(
+                            slug=cat.slug
+                        ),
+                    feed_title=cat.name
+                    )
 
             if self.settings.get('CATEGORY_FEED_RSS'):
-                writer.write_feed(arts,
-                                  self.context,
-                                  self.settings['CATEGORY_FEED_RSS'].format(
-                                      slug=cat.slug
-                                  ),
-                                  self.settings.get(
-                                      'CATEGORY_FEED_RSS_URL',
-                                      self.settings['CATEGORY_FEED_RSS']).format(
-                                          slug=cat.slug
-                                  ),
-                                  feed_title=cat.name,
-                                  feed_type='rss'
-                                 )
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['CATEGORY_FEED_RSS'].format(slug=cat.slug),
+                    self.settings.get(
+                        'CATEGORY_FEED_RSS_URL',
+                        self.settings['CATEGORY_FEED_RSS']).format(
+                            slug=cat.slug
+                        ),
+                    feed_title=cat.name,
+                    feed_type='rss'
+                    )
 
         for auth, arts in self.authors:
             if self.settings.get('AUTHOR_FEED_ATOM'):
-                writer.write_feed(arts,
-                                  self.context,
-                                  self.settings['AUTHOR_FEED_ATOM'].format(
-                                      slug=auth.slug
-                                  ),
-                                  self.settings.get(
-                                      'AUTHOR_FEED_ATOM_URL',
-                                      self.settings['AUTHOR_FEED_ATOM']).format(
-                                          slug=auth.slug
-                                  ),
-                                  feed_title=auth.name
-                                 )
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['AUTHOR_FEED_ATOM'].format(slug=auth.slug),
+                    self.settings.get(
+                        'AUTHOR_FEED_ATOM_URL',
+                        self.settings['AUTHOR_FEED_ATOM']).format(
+                            slug=auth.slug
+                        ),
+                    feed_title=auth.name
+                    )
 
             if self.settings.get('AUTHOR_FEED_RSS'):
-                writer.write_feed(arts,
-                                  self.context,
-                                  self.settings['AUTHOR_FEED_RSS'].format(
-                                      slug=auth.slug
-                                  ),
-                                  self.settings.get(
-                                      'AUTHOR_FEED_RSS_URL',
-                                      self.settings['AUTHOR_FEED_RSS']).format(
-                                          slug=auth.slug
-                                  ),
-                                  feed_title=auth.name,
-                                  feed_type='rss'
-                                 )
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['AUTHOR_FEED_RSS'].format(slug=auth.slug),
+                    self.settings.get(
+                        'AUTHOR_FEED_RSS_URL',
+                        self.settings['AUTHOR_FEED_RSS']).format(
+                            slug=auth.slug
+                        ),
+                    feed_title=auth.name,
+                    feed_type='rss'
+                    )
 
         if (self.settings.get('TAG_FEED_ATOM') or
                 self.settings.get('TAG_FEED_RSS')):
             for tag, arts in self.tags.items():
                 if self.settings.get('TAG_FEED_ATOM'):
-                    writer.write_feed(arts,
-                                      self.context,
-                                      self.settings['TAG_FEED_ATOM'].format(
-                                          tag.slug
-                                      ),
-                                      self.settings.get(
-                                          'TAG_FEED_ATOM_URL',
-                                          self.settings['TAG_FEED_ATOM']).format(
-                                              tag.slug
-                                      ),
-                                      feed_title=tag.name
-                                     )
+                    writer.write_feed(
+                        arts,
+                        self.context,
+                        self.settings['TAG_FEED_ATOM'].format(tag.slug),
+                        self.settings.get(
+                            'TAG_FEED_ATOM_URL',
+                            self.settings['TAG_FEED_ATOM']).format(
+                                tag.slug
+                            ),
+                        feed_title=tag.name
+                        )
 
                 if self.settings.get('TAG_FEED_RSS'):
-                    writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_RSS'].format(
-                                          tag.slug
-                                      ),
-                                      self.settings.get(
-                                          'TAG_FEED_RSS_URL',
-                                          self.settings['TAG_FEED_RSS']).format(
-                                              tag.slug
-                                      ),
-                                      feed_title=tag.name,
-                                      feed_type='rss'
-                                     )
+                    writer.write_feed(
+                        arts,
+                        self.context,
+                        self.settings['TAG_FEED_RSS'].format(tag.slug),
+                        self.settings.get(
+                            'TAG_FEED_RSS_URL',
+                            self.settings['TAG_FEED_RSS']).format(
+                                tag.slug
+                            ),
+                        feed_title=tag.name,
+                        feed_type='rss'
+                        )
 
         if (self.settings.get('TRANSLATION_FEED_ATOM') or
                 self.settings.get('TRANSLATION_FEED_RSS')):
@@ -438,22 +437,26 @@ class ArticlesGenerator(CachingGenerator):
                         items,
                         self.context,
                         self.settings['TRANSLATION_FEED_ATOM'].format(
-                            lang=lang),
+                            lang=lang
+                            ),
                         self.settings.get(
                             'TRANSLATION_FEED_ATOM_URL',
                             self.settings['TRANSLATION_FEED_ATOM']).format(
-                                lang=lang)
+                                lang=lang
+                            )
                         )
                 if self.settings.get('TRANSLATION_FEED_RSS'):
                     writer.write_feed(
                         items,
                         self.context,
                         self.settings['TRANSLATION_FEED_RSS'].format(
-                            lang=lang),
+                            lang=lang
+                            ),
                         self.settings.get(
                             'TRANSLATION_FEED_RSS_URL',
                             self.settings['TRANSLATION_FEED_RSS']).format(
-                                lang=lang),
+                                lang=lang
+                            ),
                         feed_type='rss'
                         )
 
