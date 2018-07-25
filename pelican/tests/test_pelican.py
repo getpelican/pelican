@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
-import collections
+import collections.abc
 import locale
 import logging
 import os
@@ -91,7 +91,7 @@ class TestPelican(LoggedTestCase):
             generator_classes[-1] is StaticGenerator,
             "StaticGenerator must be the last generator, but it isn't!")
         self.assertIsInstance(
-            generator_classes, collections.Sequence,
+            generator_classes, collections.abc.Sequence,
             "get_generator_classes() must return a Sequence to preserve order")
 
     def test_basic_generation_works(self):
