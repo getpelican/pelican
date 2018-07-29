@@ -58,7 +58,7 @@ repository, and if you want to publish that Pelican site in the form of Project
 Pages to this repository, you can then use the following::
 
     $ pelican content -o output -s pelicanconf.py
-    $ ghp-import output
+    $ ghp-import output -b gh-pages
     $ git push origin gh-pages
 
 The ``ghp-import output`` command updates the local ``gh-pages`` branch with
@@ -87,7 +87,7 @@ your ``<username>.github.io`` repository on GitHub.
 Again, you can take advantage of ``ghp-import``::
 
     $ pelican content -o output -s pelicanconf.py
-    $ ghp-import output
+    $ ghp-import output -b gh-pages
     $ git push git@github.com:elemoine/elemoine.github.io.git gh-pages:master
 
 The ``git push`` command pushes the local ``gh-pages`` branch (freshly updated
