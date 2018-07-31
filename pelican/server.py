@@ -131,6 +131,11 @@ if __name__ == '__main__':
         logging.error("Could not listen on port %s, server %s.",
                       args.port, args.server)
         sys.exit(getattr(e, 'exitcode', 1))
+    except TypeError as e:
+        logging.error("'python -m pelican.server' is deprecated. The " +
+                      "Pelican development server should be run via " +
+                      "'pelican --listen'")
+        sys.exit(getattr(e, 'exitcode', 1))
 
     logging.info("Serving at port %s, server %s.",
                  args.port, args.server)
