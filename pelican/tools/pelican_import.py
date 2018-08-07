@@ -17,6 +17,7 @@ from six.moves.urllib.request import urlretrieve
 
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
+from pelican.settings import read_settings
 from pelican.utils import SafeDatetime, slugify
 
 try:
@@ -291,6 +292,8 @@ def dc2fields(file):
 
     print("%i posts read." % len(posts))
 
+    settings = read_settings()
+    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
     for post in posts:
         fields = post.split('","')
 
@@ -383,8 +386,9 @@ def dc2fields(file):
         kind = 'article'  # TODO: Recognise pages
         status = 'published'  # TODO: Find a way for draft posts
 
-        yield (post_title, content, slugify(post_title), post_creadt, author,
-               categories, tags, status, kind, post_format)
+        yield (post_title, content, slugify(post_title, regex_subs=subs),
+               post_creadt, author, categories, tags, status, kind,
+               post_format)
 
 
 def posterous2fields(api_token, email, password):
@@ -418,6 +422,8 @@ def posterous2fields(api_token, email, password):
 
     page = 1
     posts = get_posterous_posts(api_token, email, password, page)
+    settings = read_settings()
+    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
     while len(posts) > 0:
         posts = get_posterous_posts(api_token, email, password, page)
         page += 1
@@ -425,7 +431,7 @@ def posterous2fields(api_token, email, password):
         for post in posts:
             slug = post.get('slug')
             if not slug:
-                slug = slugify(post.get('title'))
+                slug = slugify(post.get('title'), regex_subs=subs)
             tags = [tag.get('name') for tag in post.get('tags')]
             raw_date = post.get('display_date')
             date_object = SafeDatetime.strptime(
@@ -469,13 +475,15 @@ def tumblr2fields(api_key, blogname):
 
     offset = 0
     posts = get_tumblr_posts(api_key, blogname, offset)
+    settings = read_settings()
+    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
     while len(posts) > 0:
         for post in posts:
             title = \
                 post.get('title') or \
                 post.get('source_title') or \
                 post.get('type').capitalize()
-            slug = post.get('slug') or slugify(title)
+            slug = post.get('slug') or slugify(title, regex_subs=subs)
             tags = post.get('tags')
             timestamp = post.get('timestamp')
             date = SafeDatetime.fromtimestamp(int(timestamp)).strftime(
@@ -552,6 +560,8 @@ def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
     d = feedparser.parse(file)
+    settings = read_settings()
+    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
     for entry in d.entries:
         date = (entry.updated_parsed.strftime('%Y-%m-%d %H:%M')
                 if hasattr(entry, 'updated_parsed') else None)
@@ -559,7 +569,7 @@ def feed2fields(file):
         tags = ([e['term'] for e in entry.tags]
                 if hasattr(entry, 'tags') else None)
 
-        slug = slugify(entry.title)
+        slug = slugify(entry.title, regex_subs=subs)
         kind = 'article'
         yield (entry.title, entry.description, slug, date,
                author, [], tags, None, kind, 'html')
@@ -621,7 +631,7 @@ def get_ext(out_markup, in_markup='html'):
 
 
 def get_out_filename(output_path, filename, ext, kind,
-                     dirpage, dircat, categories, wp_custpost):
+                     dirpage, dircat, categories, wp_custpost, slug_subs):
     filename = os.path.basename(filename)
 
     # Enforce filename restrictions for various filesystems at once; see
@@ -647,12 +657,12 @@ def get_out_filename(output_path, filename, ext, kind,
     # create subdirectories with category names
     elif kind != 'article':
         if wp_custpost:
-            typename = slugify(kind)
+            typename = slugify(kind, regex_subs=slug_subs)
         else:
             typename = ''
             kind = 'article'
         if dircat and (len(categories) > 0):
-            catname = slugify(categories[0])
+            catname = slugify(categories[0], regex_subs=slug_subs)
         else:
             catname = ''
         out_filename = os.path.join(output_path, typename,
@@ -661,7 +671,7 @@ def get_out_filename(output_path, filename, ext, kind,
             os.makedirs(os.path.join(output_path, typename, catname))
     # option to put files in directories with categories names
     elif dircat and (len(categories) > 0):
-        catname = slugify(categories[0])
+        catname = slugify(categories[0], regex_subs=slug_subs)
         out_filename = os.path.join(output_path, catname, filename + ext)
         if not os.path.isdir(os.path.join(output_path, catname)):
             os.mkdir(os.path.join(output_path, catname))
@@ -768,6 +778,9 @@ def fields2pelican(
                  'requested import action.')
         exit(error)
 
+    settings = read_settings()
+    slug_subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+
     for (title, content, filename, date, author, categories, tags, status,
             kind, in_markup) in fields:
         if filter_author and filter_author != author:
@@ -796,7 +809,7 @@ def fields2pelican(
 
         out_filename = get_out_filename(
             output_path, filename, ext, kind, dirpage, dircat,
-            categories, wp_custpost)
+            categories, wp_custpost, slug_subs)
         print(out_filename)
 
         if in_markup in ('html', 'wp-html'):

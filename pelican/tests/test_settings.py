@@ -9,7 +9,8 @@ from sys import platform
 
 
 from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
-                              configure_settings, read_settings)
+                              configure_settings, handle_deprecated_settings,
+                              read_settings)
 from pelican.tests.support import unittest
 
 
@@ -128,7 +129,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['ARTICLE_DIR'] = 'foo'
         settings['PAGE_DIR'] = 'bar'
 
-        configure_settings(settings)
+        settings = handle_deprecated_settings(settings)
 
         self.assertEqual(settings['ARTICLE_PATHS'], ['foo'])
         self.assertEqual(settings['PAGE_PATHS'], ['bar'])
@@ -171,7 +172,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings = self.settings
         settings['EXTRA_TEMPLATES_PATHS'] = ['/foo/bar', '/ha']
 
-        configure_settings(settings)
+        settings = handle_deprecated_settings(settings)
 
         self.assertEqual(settings['THEME_TEMPLATES_OVERRIDES'],
                          ['/foo/bar', '/ha'])
@@ -181,7 +182,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings = self.settings
         settings['PAGINATED_DIRECT_TEMPLATES'] = ['index', 'archives']
         settings['PAGINATED_TEMPLATES'] = {'index': 10, 'category': None}
-        settings = configure_settings(settings)
+        settings = handle_deprecated_settings(settings)
         self.assertEqual(settings['PAGINATED_TEMPLATES'],
                          {'index': 10, 'category': None, 'archives': None})
         self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
@@ -191,4 +192,82 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['EXTRA_TEMPLATES_PATHS'] = ['/ha']
         settings['THEME_TEMPLATES_OVERRIDES'] = ['/foo/bar']
 
-        self.assertRaises(Exception, configure_settings, settings)
+        self.assertRaises(Exception, handle_deprecated_settings, settings)
+
+    def test_slug_and_slug_regex_substitutions_exception(self):
+        settings = {}
+        settings['SLUG_REGEX_SUBSTITUTIONS'] = [('C++', 'cpp')]
+        settings['TAG_SUBSTITUTIONS'] = [('C#', 'csharp')]
+
+        self.assertRaises(Exception, handle_deprecated_settings, settings)
+
+    def test_deprecated_slug_substitutions(self):
+        default_slug_regex_subs = self.settings['SLUG_REGEX_SUBSTITUTIONS']
+
+        # If no deprecated setting is set, don't set new ones
+        settings = {}
+        settings = handle_deprecated_settings(settings)
+        self.assertNotIn('SLUG_REGEX_SUBSTITUTIONS', settings)
+        self.assertNotIn('TAG_REGEX_SUBSTITUTIONS', settings)
+        self.assertNotIn('CATEGORY_REGEX_SUBSTITUTIONS', settings)
+        self.assertNotIn('AUTHOR_REGEX_SUBSTITUTIONS', settings)
+
+        # If SLUG_SUBSTITUTIONS is set, set {SLUG, AUTHOR}_REGEX_SUBSTITUTIONS
+        # correctly, don't set {CATEGORY, TAG}_REGEX_SUBSTITUTIONS
+        settings = {}
+        settings['SLUG_SUBSTITUTIONS'] = [('C++', 'cpp')]
+        settings = handle_deprecated_settings(settings)
+        self.assertEqual(settings.get('SLUG_REGEX_SUBSTITUTIONS'),
+                         [(r'C\+\+', 'cpp')] + default_slug_regex_subs)
+        self.assertNotIn('TAG_REGEX_SUBSTITUTIONS', settings)
+        self.assertNotIn('CATEGORY_REGEX_SUBSTITUTIONS', settings)
+        self.assertEqual(settings.get('AUTHOR_REGEX_SUBSTITUTIONS'),
+                         default_slug_regex_subs)
+
+        # If {CATEGORY, TAG, AUTHOR}_SUBSTITUTIONS are set, set
+        # {CATEGORY, TAG, AUTHOR}_REGEX_SUBSTITUTIONS correctly, don't set
+        # SLUG_REGEX_SUBSTITUTIONS
+        settings = {}
+        settings['TAG_SUBSTITUTIONS'] = [('C#', 'csharp')]
+        settings['CATEGORY_SUBSTITUTIONS'] = [('C#', 'csharp')]
+        settings['AUTHOR_SUBSTITUTIONS'] = [('Alexander Todorov', 'atodorov')]
+        settings = handle_deprecated_settings(settings)
+        self.assertNotIn('SLUG_REGEX_SUBSTITUTIONS', settings)
+        self.assertEqual(settings['TAG_REGEX_SUBSTITUTIONS'],
+                         [(r'C\#', 'csharp')] + default_slug_regex_subs)
+        self.assertEqual(settings['CATEGORY_REGEX_SUBSTITUTIONS'],
+                         [(r'C\#', 'csharp')] + default_slug_regex_subs)
+        self.assertEqual(settings['AUTHOR_REGEX_SUBSTITUTIONS'],
+                         [(r'Alexander\ Todorov', 'atodorov')] +
+                         default_slug_regex_subs)
+
+        # If {SLUG, CATEGORY, TAG, AUTHOR}_SUBSTITUTIONS are set, set
+        # {SLUG, CATEGORY, TAG, AUTHOR}_REGEX_SUBSTITUTIONS correctly
+        settings = {}
+        settings['SLUG_SUBSTITUTIONS'] = [('C++', 'cpp')]
+        settings['TAG_SUBSTITUTIONS'] = [('C#', 'csharp')]
+        settings['CATEGORY_SUBSTITUTIONS'] = [('C#', 'csharp')]
+        settings['AUTHOR_SUBSTITUTIONS'] = [('Alexander Todorov', 'atodorov')]
+        settings = handle_deprecated_settings(settings)
+        self.assertEqual(settings['TAG_REGEX_SUBSTITUTIONS'],
+                         [(r'C\+\+', 'cpp')] + [(r'C\#', 'csharp')] +
+                         default_slug_regex_subs)
+        self.assertEqual(settings['CATEGORY_REGEX_SUBSTITUTIONS'],
+                         [(r'C\+\+', 'cpp')] + [(r'C\#', 'csharp')] +
+                         default_slug_regex_subs)
+        self.assertEqual(settings['AUTHOR_REGEX_SUBSTITUTIONS'],
+                         [(r'Alexander\ Todorov', 'atodorov')] +
+                         default_slug_regex_subs)
+
+        # Handle old 'skip' flags correctly
+        settings = {}
+        settings['SLUG_SUBSTITUTIONS'] = [('C++', 'cpp', True)]
+        settings['AUTHOR_SUBSTITUTIONS'] = [('Alexander Todorov', 'atodorov',
+                                             False)]
+        settings = handle_deprecated_settings(settings)
+        self.assertEqual(settings.get('SLUG_REGEX_SUBSTITUTIONS'),
+                         [(r'C\+\+', 'cpp')] +
+                         [(r'(?u)\A\s*', ''), (r'(?u)\s*\Z', '')])
+        self.assertEqual(settings['AUTHOR_REGEX_SUBSTITUTIONS'],
+                         [(r'Alexander\ Todorov', 'atodorov')] +
+                         default_slug_regex_subs)

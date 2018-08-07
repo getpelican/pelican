@@ -36,8 +36,9 @@ class URLWrapper(object):
     @property
     def slug(self):
         if self._slug is None:
-            self._slug = slugify(self.name,
-                                 self.settings.get('SLUG_SUBSTITUTIONS', ()))
+            self._slug = slugify(
+                self.name,
+                regex_subs=self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
         return self._slug
 
     @slug.setter
@@ -56,8 +57,8 @@ class URLWrapper(object):
         return hash(self.slug)
 
     def _normalize_key(self, key):
-        subs = self.settings.get('SLUG_SUBSTITUTIONS', ())
-        return six.text_type(slugify(key, subs))
+        subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
+        return six.text_type(slugify(key, regex_subs=subs))
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -115,10 +116,11 @@ class Category(URLWrapper):
     @property
     def slug(self):
         if self._slug is None:
-            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
-            substitutions += tuple(self.settings.get('CATEGORY_SUBSTITUTIONS',
-                                                     ()))
-            self._slug = slugify(self.name, substitutions)
+            if 'CATEGORY_REGEX_SUBSTITUTIONS' in self.settings:
+                subs = self.settings['CATEGORY_REGEX_SUBSTITUTIONS']
+            else:
+                subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
+            self._slug = slugify(self.name, regex_subs=subs)
         return self._slug
 
 
@@ -129,9 +131,11 @@ class Tag(URLWrapper):
     @property
     def slug(self):
         if self._slug is None:
-            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
-            substitutions += tuple(self.settings.get('TAG_SUBSTITUTIONS', ()))
-            self._slug = slugify(self.name, substitutions)
+            if 'TAG_REGEX_SUBSTITUTIONS' in self.settings:
+                subs = self.settings['TAG_REGEX_SUBSTITUTIONS']
+            else:
+                subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
+            self._slug = slugify(self.name, regex_subs=subs)
         return self._slug
 
 
@@ -139,6 +143,9 @@ class Author(URLWrapper):
     @property
     def slug(self):
         if self._slug is None:
-            self._slug = slugify(self.name,
-                                 self.settings.get('AUTHOR_SUBSTITUTIONS', ()))
+            if 'AUTHOR_REGEX_SUBSTITUTIONS' in self.settings:
+                subs = self.settings['AUTHOR_REGEX_SUBSTITUTIONS']
+            else:
+                subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
+            self._slug = slugify(self.name, regex_subs=subs)
         return self._slug

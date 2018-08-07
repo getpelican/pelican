@@ -519,51 +519,12 @@ respectively.
    The URL to use for per-day archives of your posts. Used only if you have the
    ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
 
-.. data:: SLUG_SUBSTITUTIONS = ()
-
-   Substitutions to make prior to stripping out non-alphanumerics when
-   generating slugs. Specified as a list of 3-tuples of ``(from, to, skip)``
-   which are applied in order. ``skip`` is a boolean indicating whether or not
-   to skip replacement of non-alphanumeric characters.  Useful for backward
-   compatibility with existing URLs.
-
-.. data:: AUTHOR_SUBSTITUTIONS = ()
-
-   Substitutions for authors. ``SLUG_SUBSTITUTIONS`` is not taken into account
-   here!
-
-.. data:: CATEGORY_SUBSTITUTIONS = ()
-
-   Added to ``SLUG_SUBSTITUTIONS`` for categories.
-
-.. data:: TAG_SUBSTITUTIONS = ()
-
-   Added to ``SLUG_SUBSTITUTIONS`` for tags.
-
 .. note::
 
     If you do not want one or more of the default pages to be created (e.g.,
     you are the only author on your site and thus do not need an Authors page),
     set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
     relevant page from being generated.
-
-.. note::
-
-    Substitutions are applied in order with the side effect that keeping
-    non-alphanum characters applies to the whole string when a replacement
-    is made.
-
-    For example if you have the following setting::
-
-       SLUG_SUBSTITUTIONS = (('C++', 'cpp'), ('keep dot', 'keep.dot', True))
-
-    the string ``Keep Dot`` will be converted to ``keep.dot``, however
-    ``C++ will keep dot`` will be converted to ``cpp will keep.dot`` instead
-    of ``cpp-will-keep.dot``!
-
-    If you want to keep non-alphanum characters only for tags or categories
-    but not other slugs then configure ``TAG_SUBSTITUTIONS`` and
-    ``CATEGORY_SUBSTITUTIONS`` respectively!
 
 Pelican can optionally create per-year, per-month, and per-day archives of your
 posts. These secondary archives are disabled by default but are automatically
@@ -625,6 +586,33 @@ template.
 URLs for direct template pages are theme-dependent. Some themes use
 corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'archives.html'``, ``'authors.html'``, ``'categories.html'``, ``'tags.html'``.
+
+.. data:: SLUG_REGEX_SUBSTITUTIONS = [
+        (r'[^\w\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
+        (r'(?u)\A\s*', ''),  # strip leading whitespace
+        (r'(?u)\s*\Z', ''),  # strip trailing whitespace
+        (r'[-\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
+    ]
+
+   Regex substitutions to make when generating slugs of articles and pages.
+   Specified as a list of pairs of ``(from, to)`` which are applied in order,
+   ignoring case. The default substitutions have the effect of removing
+   non-alphanumeric characters and converting internal whitespace to dashes.
+   Apart from these substitutions, slugs are always converted to lowercase
+   ascii characters and leading and trailing whitespace is stripped. Useful for
+   backward compatibility with existing URLs.
+
+.. data:: AUTHOR_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+
+   Regex substitutions for author slugs. Defaults to ``SLUG_REGEX_SUBSTITUTIONS``.
+
+.. data:: CATEGORY_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+
+   Regex substitutions for category slugs. Defaults to ``SLUG_REGEX_SUBSTITUTIONS``.
+
+.. data:: TAG_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+
+   Regex substitutions for tag slugs. Defaults to ``SLUG_REGEX_SUBSTITUTIONS``.
 
 Time and Date
 =============
