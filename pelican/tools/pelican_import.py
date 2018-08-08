@@ -685,9 +685,9 @@ def get_pandoc_version():
         output = subprocess.check_output(cmd, universal_newlines=True)
     except (subprocess.CalledProcessError, OSError) as e:
         logger.warning("Pandoc version unknown: %s", e)
-        return ''
+        return ()
 
-    return output.split()[1]
+    return tuple(int(i) for i in output.split()[1].split('.'))
 
 
 def update_links_to_attached_files(content, attachments):
@@ -759,15 +759,17 @@ def fields2pelican(
 
                 fp.write(new_content)
 
-            if pandoc_version[0] == '1':
+            if pandoc_version < (2,):
                 parse_raw = '--parse-raw' if not strip_raw else ''
+                wrap_none = '--wrap=none' \
+                    if pandoc_version >= (1, 16) else '--no-wrap'
                 cmd = ('pandoc --normalize {0} --from=html'
-                       ' --to={1} -o "{2}" "{3}"')
-                cmd = cmd.format(parse_raw, out_markup,
+                       ' --to={1} {2} -o "{3}" "{4}"')
+                cmd = cmd.format(parse_raw, out_markup, wrap_none,
                                  out_filename, html_filename)
             else:
                 from_arg = '-f html+raw_html' if not strip_raw else '-f html'
-                cmd = ('pandoc {0} --to={1}-smart -o "{2}" "{3}"')
+                cmd = ('pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"')
                 cmd = cmd.format(from_arg, out_markup,
                                  out_filename, html_filename)
 
