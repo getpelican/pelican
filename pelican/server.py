@@ -35,7 +35,7 @@ def parse_arguments():
     parser.add_argument('--key', default="./key.pem", nargs="?",
                         help='Path to certificate key file. ' +
                         'Relative to current directory')
-    parser.add_argument('path', default=".",
+    parser.add_argument('--path', default=".",
                         help='Path to pelican source directory to serve. ' +
                         'Relative to current directory')
     return parser.parse_args()
@@ -115,12 +115,16 @@ class RootedHTTPServer(BaseHTTPServer.HTTPServer):
 
 
 if __name__ == '__main__':
+    logging.warning("'python -m pelican.server' is deprecated. The "
+                    "Pelican development server should be run via "
+                    "'pelican --listen' or 'pelican -l' (this can be combined "
+                    "with regeneration as 'pelican -lr'). Rerun 'pelican-"
+                    "quickstart' to get new Makefile and tasks.py files.")
     args = parse_arguments()
     RootedHTTPServer.allow_reuse_address = True
     try:
         httpd = RootedHTTPServer(
-            (args.server, args.port),
-            ComplexHTTPRequestHandler)
+            args.path, (args.server, args.port), ComplexHTTPRequestHandler)
         if args.ssl:
             httpd.socket = ssl.wrap_socket(
                 httpd.socket, keyfile=args.key,
@@ -130,11 +134,6 @@ if __name__ == '__main__':
                       args.cert, args.key)
         logging.error("Could not listen on port %s, server %s.",
                       args.port, args.server)
-        sys.exit(getattr(e, 'exitcode', 1))
-    except TypeError as e:
-        logging.error("'python -m pelican.server' is deprecated. The " +
-                      "Pelican development server should be run via " +
-                      "'pelican --listen'")
         sys.exit(getattr(e, 'exitcode', 1))
 
     logging.info("Serving at port %s, server %s.",
