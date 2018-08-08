@@ -8,7 +8,6 @@ import os
 import re
 import subprocess
 import sys
-import time
 from codecs import open
 from collections import defaultdict
 
@@ -117,19 +116,18 @@ def decode_wp_content(content, br=True):
     return content
 
 
-def get_items(xml):
-    """Opens a WordPress xml file and returns a list of items"""
+def xml_to_soup(xml):
+    """Opens an xml file"""
     try:
         from bs4 import BeautifulSoup
     except ImportError:
         error = ('Missing dependency "BeautifulSoup4" and "lxml" required to '
-                 'import WordPress XML files.')
+                 'import XML files.')
         sys.exit(error)
     with open(xml, encoding='utf-8') as infile:
         xmlfile = infile.read()
     soup = BeautifulSoup(xmlfile, "xml")
-    items = soup.rss.channel.findAll('item')
-    return items
+    return soup
 
 
 def get_filename(filename, post_id):
@@ -142,7 +140,8 @@ def get_filename(filename, post_id):
 def wp2fields(xml, wp_custpost=False):
     """Opens a wordpress XML file, and yield Pelican fields"""
 
-    items = get_items(xml)
+    soup = xml_to_soup(xml)
+    items = soup.rss.channel.findAll('item')
     for item in items:
 
         if item.find('status').string in ["publish", "draft"]:
@@ -163,8 +162,9 @@ def wp2fields(xml, wp_custpost=False):
             if raw_date == u'0000-00-00 00:00:00':
                 date = None
             else:
-                date_object = time.strptime(raw_date, '%Y-%m-%d %H:%M:%S')
-                date = time.strftime('%Y-%m-%d %H:%M', date_object)
+                date_object = SafeDatetime.strptime(
+                    raw_date, '%Y-%m-%d %H:%M:%S')
+                date = date_object.strftime('%Y-%m-%d %H:%M')
             author = item.find('creator').string
 
             categories = [cat.string for cat
@@ -193,6 +193,59 @@ def wp2fields(xml, wp_custpost=False):
                     kind = post_type
             yield (title, content, filename, date, author, categories,
                    tags, status, kind, 'wp-html')
+
+
+def blogger2fields(xml):
+    """Opens a blogger XML file, and yield Pelican fields"""
+
+    soup = xml_to_soup(xml)
+    entries = soup.feed.findAll('entry')
+    for entry in entries:
+        raw_kind = entry.find(
+            'category', {'scheme': 'http://schemas.google.com/g/2005#kind'}
+        ).get('term')
+        if raw_kind == 'http://schemas.google.com/blogger/2008/kind#post':
+            kind = 'article'
+        elif raw_kind == 'http://schemas.google.com/blogger/2008/kind#comment':
+            kind = 'comment'
+        elif raw_kind == 'http://schemas.google.com/blogger/2008/kind#page':
+            kind = 'page'
+        else:
+            continue
+
+        try:
+            assert kind != 'comment'
+            filename = entry.find('link', {'rel': 'alternate'})['href']
+            filename = os.path.splitext(os.path.basename(filename))[0]
+        except (AssertionError, TypeError, KeyError):
+            filename = entry.find('id').string.split('.')[-1]
+
+        title = entry.find('title').string or ''
+
+        content = entry.find('content').string
+        raw_date = entry.find('published').string
+        if hasattr(SafeDatetime, 'fromisoformat'):
+            date_object = SafeDatetime.fromisoformat(raw_date)
+        else:
+            date_object = SafeDatetime.strptime(
+                raw_date[:23], '%Y-%m-%dT%H:%M:%S.%f')
+        date = date_object.strftime('%Y-%m-%d %H:%M')
+        author = entry.find('author').find('name').string
+
+        # blogger posts only have tags, no category
+        tags = [tag.get('term') for tag in entry.findAll(
+            'category', {'scheme': 'http://www.blogger.com/atom/ns#'})]
+
+        # Drafts have <app:control><app:draft>yes</app:draft></app:control>
+        status = 'published'
+        try:
+            if entry.find('control').find('draft').string == 'yes':
+                status = 'draft'
+        except AttributeError:
+            pass
+
+        yield (title, content, filename, date, author, None, tags, status,
+               kind, 'html')
 
 
 def dc2fields(file):
@@ -391,7 +444,6 @@ def posterous2fields(api_token, email, password):
 
 def tumblr2fields(api_key, blogname):
     """ Imports Tumblr posts (API v2)"""
-    from time import strftime, localtime
     try:
         # py3k import
         import json
@@ -426,8 +478,10 @@ def tumblr2fields(api_key, blogname):
             slug = post.get('slug') or slugify(title)
             tags = post.get('tags')
             timestamp = post.get('timestamp')
-            date = strftime("%Y-%m-%d %H:%M:%S", localtime(int(timestamp)))
-            slug = strftime("%Y-%m-%d-", localtime(int(timestamp))) + slug
+            date = SafeDatetime.fromtimestamp(int(timestamp)).strftime(
+                "%Y-%m-%d %H:%M:%S")
+            slug = SafeDatetime.fromtimestamp(int(timestamp)).strftime(
+                "%Y-%m-%d-") + slug
             format = post.get('format')
             content = post.get('body')
             type = post.get('type')
@@ -499,7 +553,7 @@ def feed2fields(file):
     import feedparser
     d = feedparser.parse(file)
     for entry in d.entries:
-        date = (time.strftime('%Y-%m-%d %H:%M', entry.updated_parsed)
+        date = (entry.updated_parsed.strftime('%Y-%m-%d %H:%M')
                 if hasattr(entry, 'updated_parsed') else None)
         author = entry.author if hasattr(entry, 'author') else None
         tags = ([e['term'] for e in entry.tags]
@@ -619,7 +673,8 @@ def get_attachments(xml):
     """returns a dictionary of posts that have attachments with a list
     of the attachment_urls
     """
-    items = get_items(xml)
+    soup = xml_to_soup(xml)
+    items = soup.rss.channel.findAll('item')
     names = {}
     attachments = []
 
@@ -809,16 +864,16 @@ def fields2pelican(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, WordPress, Tumblr, Dotclear, or "
-                    "Posterous files into reST (rst) or Markdown (md) files. "
+        description="Transform feed, Blogger, Dotclear, Posterous, Tumblr, or"
+                    "WordPress files into reST (rst) or Markdown (md) files. "
                     "Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument(
         dest='input', help='The input file to read')
     parser.add_argument(
-        '--wpfile', action='store_true', dest='wpfile',
-        help='Wordpress XML export')
+        '--blogger', action='store_true', dest='blogger',
+        help='Blogger XML export')
     parser.add_argument(
         '--dotclear', action='store_true', dest='dotclear',
         help='Dotclear export')
@@ -828,6 +883,9 @@ def main():
     parser.add_argument(
         '--tumblr', action='store_true', dest='tumblr',
         help='Tumblr export')
+    parser.add_argument(
+        '--wpfile', action='store_true', dest='wpfile',
+        help='Wordpress XML export')
     parser.add_argument(
         '--feed', action='store_true', dest='feed',
         help='Feed to parse')
@@ -843,7 +901,7 @@ def main():
     parser.add_argument(
         '--dir-page', action='store_true', dest='dirpage',
         help=('Put files recognised as pages in "pages/" sub-directory'
-              ' (wordpress import only)'))
+              ' (blogger and wordpress import only)'))
     parser.add_argument(
         '--filter-author', dest='author',
         help='Import only post from the specified author')
@@ -885,19 +943,21 @@ def main():
     args = parser.parse_args()
 
     input_type = None
-    if args.wpfile:
-        input_type = 'wordpress'
+    if args.blogger:
+        input_type = 'blogger'
     elif args.dotclear:
         input_type = 'dotclear'
     elif args.posterous:
         input_type = 'posterous'
     elif args.tumblr:
         input_type = 'tumblr'
+    elif args.wpfile:
+        input_type = 'wordpress'
     elif args.feed:
         input_type = 'feed'
     else:
-        error = ('You must provide either --wpfile, --dotclear, '
-                 '--posterous, --tumblr or --feed options')
+        error = ('You must provide either --blogger, --dotclear, '
+                 '--posterous, --tumblr, --wpfile or --feed options')
         exit(error)
 
     if not os.path.exists(args.output):
@@ -912,14 +972,16 @@ def main():
                  'to use the --wp-attach option')
         exit(error)
 
-    if input_type == 'wordpress':
-        fields = wp2fields(args.input, args.wp_custpost or False)
+    if input_type == 'blogger':
+        fields = blogger2fields(args.input)
     elif input_type == 'dotclear':
         fields = dc2fields(args.input)
     elif input_type == 'posterous':
         fields = posterous2fields(args.input, args.email, args.password)
     elif input_type == 'tumblr':
         fields = tumblr2fields(args.input, args.blogname)
+    elif input_type == 'wordpress':
+        fields = wp2fields(args.input, args.wp_custpost or False)
     elif input_type == 'feed':
         fields = feed2fields(args.input)
 

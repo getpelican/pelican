@@ -8,13 +8,15 @@ from codecs import open
 
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
                                    unittest)
-from pelican.tools.pelican_import import (build_header, build_markdown_header,
+from pelican.tools.pelican_import import (blogger2fields, build_header,
+                                          build_markdown_header,
                                           decode_wp_content,
                                           download_attachments, fields2pelican,
                                           get_attachments, wp2fields)
 from pelican.utils import path_to_file_url, slugify
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+BLOGGER_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'bloggerexport.xml')
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
 WORDPRESS_ENCODED_CONTENT_SAMPLE = os.path.join(CUR_DIR,
                                                 'content',
@@ -32,6 +34,53 @@ try:
     import bs4.builder._lxml as LXML
 except ImportError:
     LXML = False
+
+
+@skipIfNoExecutable(['pandoc', '--version'])
+@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+class TestBloggerXmlImporter(unittest.TestCase):
+
+    def setUp(self):
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
+        self.posts = list(blogger2fields(BLOGGER_XML_SAMPLE))
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
+
+    def test_recognise_kind_and_title(self):
+        """Check that importer only outputs pages, articles and comments,
+        that these are correctly identified and that titles are correct.
+        """
+        kinds = {x[8] for x in self.posts}
+        self.assertEqual({'page', 'article', 'comment'}, kinds)
+        page_titles = {x[0] for x in self.posts if x[8] == 'page'}
+        self.assertEqual({'Test page', 'Test page 2'}, page_titles)
+        article_titles = {x[0] for x in self.posts if x[8] == 'article'}
+        self.assertEqual({'Black as Egypt\'s Night', 'The Steel Windpipe'},
+                         article_titles)
+        comment_titles = {x[0] for x in self.posts if x[8] == 'comment'}
+        self.assertEqual({'Mishka, always a pleasure to read your '
+                          'adventures!...'},
+                         comment_titles)
+
+    def test_recognise_status_with_correct_filename(self):
+        """Check that importerer outputs only statuses 'published' and 'draft',
+        that these are correctly identified and that filenames are correct.
+        """
+        statuses = {x[7] for x in self.posts}
+        self.assertEqual({'published', 'draft'}, statuses)
+
+        draft_filenames = {x[2] for x in self.posts if x[7] == 'draft'}
+        # draft filenames are id-based
+        self.assertEqual({'page-4386962582497458967',
+                          'post-1276418104709695660'}, draft_filenames)
+
+        published_filenames = {x[2] for x in self.posts if x[7] == 'published'}
+        # published filenames are url-based, except comments
+        self.assertEqual({'the-steel-windpipe',
+                          'test-page',
+                          'post-5590533389087749201'}, published_filenames)
 
 
 @skipIfNoExecutable(['pandoc', '--version'])

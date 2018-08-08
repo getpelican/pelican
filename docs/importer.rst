@@ -9,10 +9,11 @@ Description
 ``pelican-import`` is a command-line tool for converting articles from other
 software to reStructuredText or Markdown. The supported import formats are:
 
-- WordPress XML export
+- Blogger XML export
 - Dotclear export
 - Posterous API
 - Tumblr API
+- WordPress XML export
 - RSS/Atom feed
 
 The conversion from HTML to reStructuredText or Markdown relies on `Pandoc`_.
@@ -40,8 +41,8 @@ Usage
 
 ::
 
-    pelican-import [-h] [--wpfile] [--dotclear] [--posterous] [--tumblr] [--feed] [-o OUTPUT]
-                   [-m MARKUP] [--dir-cat] [--dir-page] [--strip-raw] [--wp-custpost]
+    pelican-import [-h] [--blogger] [--dotclear] [--posterous] [--tumblr] [--wpfile] [--feed]
+                   [-o OUTPUT] [-m MARKUP] [--dir-cat] [--dir-page] [--strip-raw] [--wp-custpost]
                    [--wp-attach] [--disable-slugs] [-e EMAIL] [-p PASSWORD] [-b BLOGNAME]
                    input|api_token|api_key
 
@@ -57,10 +58,11 @@ Optional arguments
 ------------------
 
   -h, --help            Show this help message and exit
-  --wpfile              WordPress XML export (default: False)
+  --blogger             Blogger XML export (default: False)
   --dotclear            Dotclear export (default: False)
   --posterous           Posterous API (default: False)
   --tumblr              Tumblr API (default: False)
+  --wpfile              WordPress XML export (default: False)
   --feed                Feed to parse (default: False)
   -o OUTPUT, --output OUTPUT
                         Output path (default: content)
@@ -70,7 +72,8 @@ Optional arguments
   --dir-cat             Put files in directories with categories name
                         (default: False)
   --dir-page            Put files recognised as pages in "pages/" sub-
-                          directory (wordpress import only) (default: False)
+                          directory (blogger and wordpress import only)
+                          (default: False)
   --filter-author       Import only post from the specified author
   --strip-raw           Strip raw HTML code that can't be converted to markup
                         such as flash embeds or iframes (wordpress import
@@ -102,9 +105,9 @@ Optional arguments
 Examples
 ========
 
-For WordPress::
+For Blogger::
 
-    $ pelican-import --wpfile -o ~/output ~/posts.xml
+    $ pelican-import --blogger -o ~/output ~/posts.xml
 
 For Dotclear::
 
@@ -117,6 +120,10 @@ for Posterous::
 For Tumblr::
 
     $ pelican-import --tumblr -o ~/output --blogname=<blogname> <api_token>
+
+For WordPress::
+
+    $ pelican-import --wpfile -o ~/output ~/posts.xml
 
 Tests
 =====
