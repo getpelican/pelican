@@ -151,7 +151,8 @@ class Writer(object):
         return feed
 
     def write_file(self, name, template, context, relative_urls=False,
-                   paginated=None, override_output=False, url=None, **kwargs):
+                   paginated=None, template_name=None, override_output=False,
+                   url=None, **kwargs):
         """Render the template and write the file.
 
         :param name: name of the file to output
@@ -160,6 +161,7 @@ class Writer(object):
         :param relative_urls: use relative urls or absolutes ones
         :param paginated: dict of article list to paginate - must have the
             same length (same list in different orders)
+        :param template_name: the template name, for pagination
         :param override_output: boolean telling if we can override previous
             output with the same name (and if next files written with the same
             name should be skipped to keep that one)
@@ -209,11 +211,19 @@ class Writer(object):
             localcontext.update(kwargs)
             return localcontext
 
-        # pagination
-        if paginated:
+        if paginated is None:
+            paginated = {key: val for key, val in kwargs.items()
+                         if key in {'articles', 'dates'}}
 
-            # pagination needed, init paginators
-            paginators = {key: Paginator(name, url, val, self.settings)
+        # pagination
+        if paginated and template_name in self.settings['PAGINATED_TEMPLATES']:
+            # pagination needed
+            per_page = self.settings['PAGINATED_TEMPLATES'][template_name] \
+                or self.settings['DEFAULT_PAGINATION']
+
+            # init paginators
+            paginators = {key: Paginator(name, url, val, self.settings,
+                                         per_page)
                           for key, val in paginated.items()}
 
             # generated pages, and write

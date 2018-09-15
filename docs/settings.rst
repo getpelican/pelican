@@ -755,10 +755,6 @@ Template pages
    ``DIRECT_TEMPLATES`` are searched for over paths maintained in
    ``THEME_TEMPLATES_OVERRIDES``.
 
-.. data:: PAGINATED_DIRECT_TEMPLATES = ['index']
-
-   Provides the direct templates that should be paginated.
-
 
 Metadata
 ========
@@ -999,6 +995,11 @@ You can use the following settings to configure the pagination.
 
    The maximum number of articles to include on a page, not including orphans.
    False to disable pagination.
+
+.. data:: PAGINATED_TEMPLATES = {'index': None, 'tag': None, 'category': None, 'author': None}
+
+   The templates to use pagination with, and the number of articles to include
+   on a page. If this value is ``None``, it defaults to ``DEFAULT_PAGINATION``.
 
 .. data:: PAGINATION_PATTERNS
 

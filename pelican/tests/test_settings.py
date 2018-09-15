@@ -177,6 +177,15 @@ class TestSettingsConfiguration(unittest.TestCase):
                          ['/foo/bar', '/ha'])
         self.assertNotIn('EXTRA_TEMPLATES_PATHS', settings)
 
+    def test_deprecated_paginated_direct_templates(self):
+        settings = self.settings
+        settings['PAGINATED_DIRECT_TEMPLATES'] = ['index', 'archives']
+        settings['PAGINATED_TEMPLATES'] = {'index': 10, 'category': None}
+        settings = configure_settings(settings)
+        self.assertEqual(settings['PAGINATED_TEMPLATES'],
+                         {'index': 10, 'category': None, 'archives': None})
+        self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
+
     def test_theme_and_extra_templates_exception(self):
         settings = self.settings
         settings['EXTRA_TEMPLATES_PATHS'] = ['/ha']

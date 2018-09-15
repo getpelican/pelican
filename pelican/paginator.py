@@ -17,15 +17,14 @@ PaginationRule = namedtuple(
 
 
 class Paginator(object):
-    def __init__(self, name, url, object_list, settings):
+    def __init__(self, name, url, object_list, settings, per_page=None):
         self.name = name
         self.url = url
         self.object_list = object_list
         self.settings = settings
-
-        if settings.get('DEFAULT_PAGINATION'):
-            self.per_page = settings.get('DEFAULT_PAGINATION')
-            self.orphans = settings.get('DEFAULT_ORPHANS')
+        if per_page:
+            self.per_page = per_page
+            self.orphans = settings['DEFAULT_ORPHANS']
         else:
             self.per_page = len(object_list)
             self.orphans = 0

@@ -337,8 +337,10 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
                                  generator.get_template("archives"), settings,
-                                 blog=True, paginated={}, page_name='archives',
-                                 url="archives.html")
+                                 articles=generator.articles,
+                                 dates=generator.dates, blog=True,
+                                 template_name='archives',
+                                 page_name='archives', url="archives.html")
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_direct_templates_save_as_url_modified(self):
@@ -355,7 +357,9 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_with("archives/index.html",
                                  generator.get_template("archives"), settings,
-                                 blog=True, paginated={},
+                                 articles=generator.articles,
+                                 dates=generator.dates, blog=True,
+                                 template_name='archives',
                                  page_name='archives/index',
                                  url="archives/")
 
@@ -404,13 +408,15 @@ class TestArticlesGenerator(unittest.TestCase):
         write = MagicMock()
         generator.generate_period_archives(write)
         dates = [d for d in generator.dates if d.date.year == 1970]
+        articles = [d for d in generator.articles if d.date.year == 1970]
         self.assertEqual(len(dates), 1)
         # among other things it must have at least been called with this
         settings["period"] = (1970,)
         write.assert_called_with("posts/1970/index.html",
                                  generator.get_template("period_archives"),
-                                 settings,
-                                 blog=True, dates=dates, url="posts/1970/")
+                                 settings, blog=True, articles=articles,
+                                 dates=dates, template_name='period_archives',
+                                 url="posts/1970/")
 
         del settings["period"]
         settings['MONTH_ARCHIVE_SAVE_AS'] = \
@@ -425,13 +431,16 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_period_archives(write)
         dates = [d for d in generator.dates
                  if d.date.year == 1970 and d.date.month == 1]
+        articles = [d for d in generator.articles
+                    if d.date.year == 1970 and d.date.month == 1]
         self.assertEqual(len(dates), 1)
         settings["period"] = (1970, "January")
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/index.html",
                                  generator.get_template("period_archives"),
-                                 settings,
-                                 blog=True, dates=dates, url="posts/1970/Jan/")
+                                 settings, blog=True, articles=articles,
+                                 dates=dates, template_name='period_archives',
+                                 url="posts/1970/Jan/")
 
         del settings["period"]
         settings['DAY_ARCHIVE_SAVE_AS'] = \
@@ -450,13 +459,19 @@ class TestArticlesGenerator(unittest.TestCase):
             d.date.month == 1 and
             d.date.day == 1
         ]
+        articles = [
+            d for d in generator.articles if
+            d.date.year == 1970 and
+            d.date.month == 1 and
+            d.date.day == 1
+        ]
         self.assertEqual(len(dates), 1)
         settings["period"] = (1970, "January", 1)
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/01/index.html",
                                  generator.get_template("period_archives"),
-                                 settings,
-                                 blog=True, dates=dates,
+                                 settings, blog=True, articles=articles,
+                                 dates=dates, template_name='period_archives',
                                  url="posts/1970/Jan/01/")
         locale.setlocale(locale.LC_ALL, old_locale)
 

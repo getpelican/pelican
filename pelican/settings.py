@@ -108,7 +108,8 @@ DEFAULT_CONFIG = {
     'DEFAULT_LANG': 'en',
     'DIRECT_TEMPLATES': ['index', 'tags', 'categories', 'authors', 'archives'],
     'THEME_TEMPLATES_OVERRIDES': [],
-    'PAGINATED_DIRECT_TEMPLATES': ['index'],
+    'PAGINATED_TEMPLATES': {'index': None, 'tag': None, 'category': None,
+                            'author': None},
     'PELICAN_CLASS': 'pelican.Pelican',
     'DEFAULT_DATE_FORMAT': '%a %d %B %Y',
     'DATE_FORMATS': {},
@@ -454,5 +455,15 @@ def configure_settings(settings):
             if doc:
                 message += ', see {} for details'.format(doc)
             logger.warning(message)
+
+    if 'PAGINATED_DIRECT_TEMPLATES' in settings:
+        message = 'The {} setting has been removed in favor of {}'.format(
+            'PAGINATED_DIRECT_TEMPLATES', 'PAGINATED_TEMPLATES')
+        logger.warning(message)
+
+        for t in settings['PAGINATED_DIRECT_TEMPLATES']:
+            if t not in settings['PAGINATED_TEMPLATES']:
+                settings['PAGINATED_TEMPLATES'][t] = None
+        del settings['PAGINATED_DIRECT_TEMPLATES']
 
     return settings
