@@ -21,10 +21,7 @@ from pelican.contents import Author, Category, Page, Tag
 from pelican.utils import SafeDatetime, escape_html, get_date, pelican_open, \
     posixize_path
 
-try:
-    from markdown import Markdown
-except ImportError:
-    Markdown = False  # NOQA
+from markdown import Markdown # NOQA
 
 # Metadata processors have no way to discard an unwanted value, so we have
 # them return this value instead to signal that it should be discarded later.
