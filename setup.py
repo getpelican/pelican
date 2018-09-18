@@ -7,7 +7,7 @@ from os.path import join, relpath
 from setuptools import setup
 
 requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments', 'docutils',
-            'pytz >= 0a', 'blinker', 'unidecode', 'six >= 1.4',
+            'pytz >= 0a', 'blinker', 'unidecode', 'six >= 1.4', 'markdown',
             'python-dateutil']
 
 entry_points = {
