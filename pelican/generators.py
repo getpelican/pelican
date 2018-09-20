@@ -403,12 +403,11 @@ class ArticlesGenerator(CachingGenerator):
                         arts,
                         self.context,
                         self.settings['TAG_FEED_ATOM'].replace('%s', '{slug}')
-                                                      .format(tag.slug),
+                                                      .format(slug=tag.slug),
                         self.settings.get(
                             'TAG_FEED_ATOM_URL',
-                            self.settings['TAG_FEED_ATOM']).format(
-                                tag.slug
-                            ),
+                            self.settings['TAG_FEED_ATOM']
+                            ).replace('%s', '{slug}').format(slug=tag.slug),
                         feed_title=tag.name
                         )
 
@@ -417,11 +416,11 @@ class ArticlesGenerator(CachingGenerator):
                         arts,
                         self.context,
                         self.settings['TAG_FEED_RSS'].replace('%s', '{slug}')
-                                                     .format(tag.slug),
+                                                     .format(slug=tag.slug),
                         self.settings.get(
                             'TAG_FEED_RSS_URL',
                             self.settings['TAG_FEED_RSS']
-                            ).replace('%s', '{slug}').format(tag.slug),
+                            ).replace('%s', '{slug}').format(slug=tag.slug),
                         feed_title=tag.name,
                         feed_type='rss'
                         )
