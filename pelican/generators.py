@@ -595,6 +595,7 @@ class ArticlesGenerator(CachingGenerator):
                 all_articles.append(article)
             elif article.status == "draft":
                 all_drafts.append(article)
+            article.orig_relpath  = f;
             self.add_source_path(article)
 
         self.articles, self.translations = process_translations(all_articles)
