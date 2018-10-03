@@ -55,17 +55,35 @@ class Writer(object):
     def _add_item_to_the_feed(self, feed, item):
         title = Markup(item.title).striptags()
         link = self.urljoiner(self.site_url, item.url)
-        is_rss = isinstance(feed, Rss201rev2Feed)
-        if not is_rss or self.settings.get('RSS_FEED_SUMMARY_ONLY'):
-            description = item.summary
+
+        if isinstance(feed, Rss201rev2Feed):
+            # RSS feeds use a single tag called 'description' for both the full
+            # content and the summary
+            content = None
+            if self.settings.get('RSS_FEED_SUMMARY_ONLY'):
+                description = item.summary
+            else:
+                description = item.get_content(self.site_url)
+
         else:
-            description = item.get_content(self.site_url)
+            # Atom feeds have two different tags for full content (called
+            # 'content' by feedgenerator) and summary (called 'description' by
+            # feedgenerator).
+            #
+            # It does not make sense to have the summary be the
+            # exact same thing as the full content. If we detect that
+            # they are we just remove the summary.
+            content = item.get_content(self.site_url)
+            description = item.summary
+            if description == content:
+                description = None
+
         feed.add_item(
             title=title,
             link=link,
             unique_id=get_tag_uri(link, item.date),
             description=description,
-            content=item.get_content(self.site_url),
+            content=content,
             categories=item.tags if hasattr(item, 'tags') else None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(
