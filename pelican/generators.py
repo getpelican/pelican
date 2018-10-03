@@ -820,7 +820,7 @@ class StaticGenerator(Generator):
         save_as = os.path.join(self.output_path, staticfile.save_as)
         s_mtime = os.path.getmtime(source_path)
         d_mtime = os.path.getmtime(save_as)
-        return s_mtime > d_mtime
+        return s_mtime - d_mtime > 0.000001
 
     def _link_or_copy_staticfile(self, sc):
         if self.settings['STATIC_CREATE_LINKS']:
