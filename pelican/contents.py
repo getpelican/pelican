@@ -142,6 +142,10 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = getattr(self, 'default_status', None)
 
+        # store the summary metadata if it is set
+        if 'summary' in metadata:
+            self._summary = metadata['summary']
+
         signals.content_object_init.send(self)
 
     def __str__(self):
@@ -465,13 +469,23 @@ class Content(object):
 
     def refresh_metadata_intersite_links(self):
         for key in self.settings['FORMATTED_FIELDS']:
-            if key in self.metadata:
+            if key in self.metadata and key != 'summary':
                 value = self._update_content(
                     self.metadata[key],
                     self.get_siteurl()
                 )
                 self.metadata[key] = value
                 setattr(self, key.lower(), value)
+
+        # _summary is an internal variable that some plugins may be writing to,
+        # so ensure changes to it are picked up
+        if ('summary' in self.settings['FORMATTED_FIELDS'] and
+                'summary' in self.metadata):
+            self._summary = self._update_content(
+                self._summary,
+                self.get_siteurl()
+            )
+            self.metadata['summary'] = self._summary
 
 
 class Page(Content):
