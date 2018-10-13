@@ -185,6 +185,24 @@ def read_settings(path=None, override=None):
             local_settings['JINJA_ENVIRONMENT']['extensions'] = \
                 local_settings['JINJA_EXTENSIONS']
             del local_settings['JINJA_EXTENSIONS']
+        for key in ['TRANSLATION_FEED_ATOM',
+                    'TRANSLATION_FEED_RSS'
+                    ]:
+            if key in local_settings and '%s' in local_settings[key]:
+                logger.warning('%%s usage in %s is deprecated, use {lang} '
+                               'instead. Falling back to default.', key)
+                local_settings[key] = DEFAULT_CONFIG[key]
+        for key in ['AUTHOR_FEED_ATOM',
+                    'AUTHOR_FEED_RSS',
+                    'CATEGORY_FEED_ATOM',
+                    'CATEGORY_FEED_RSS',
+                    'TAG_FEED_ATOM',
+                    'TAG_FEED_RSS',
+                    ]:
+            if key in local_settings and '%s' in local_settings[key]:
+                logger.warning('%%s usage in %s is deprecated, use {slug} '
+                               'instead. Falling back to default.', key)
+                local_settings[key] = DEFAULT_CONFIG[key]
         if isinstance(local_settings['PLUGIN_PATHS'], six.string_types):
             logger.warning("Defining PLUGIN_PATHS setting as string "
                            "has been deprecated (should be a list)")
