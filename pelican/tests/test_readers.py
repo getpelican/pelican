@@ -447,20 +447,23 @@ class MdReaderTest(ReaderTest):
             _path('article_with_markdown_and_footnote.md'))
         expected_content = (
             '<p>This is some content'
-            '<sup id="fnref-1"><a class="footnote-ref" href="#fn-1"'
+            '<sup id="fnref:1"><a class="footnote-ref" href="#fn:1"'
+            ' rel="footnote"'
             '>1</a></sup>'
             ' with some footnotes'
-            '<sup id="fnref-footnote"><a class="footnote-ref" '
-            'href="#fn-footnote">2</a></sup></p>\n'
+            '<sup id="fnref:footnote"><a class="footnote-ref" '
+            'href="#fn:footnote" rel="footnote">2</a></sup></p>\n'
 
             '<div class="footnote">\n'
-            '<hr>\n<ol>\n<li id="fn-1">\n'
+            '<hr>\n<ol>\n<li id="fn:1">\n'
             '<p>Numbered footnote&#160;'
-            '<a class="footnote-backref" href="#fnref-1" '
+            '<a class="footnote-backref" href="#fnref:1" '
+            'rev="footnote" '
             'title="Jump back to footnote 1 in the text">&#8617;</a></p>\n'
-            '</li>\n<li id="fn-footnote">\n'
+            '</li>\n<li id="fn:footnote">\n'
             '<p>Named footnote&#160;'
-            '<a class="footnote-backref" href="#fnref-footnote"'
+            '<a class="footnote-backref" href="#fnref:footnote"'
+            ' rev="footnote"'
             ' title="Jump back to footnote 2 in the text">&#8617;</a></p>\n'
             '</li>\n</ol>\n</div>')
         expected_metadata = {
