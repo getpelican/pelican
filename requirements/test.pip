@@ -2,7 +2,7 @@
 mock
 
 # Optional Packages
-Markdown >= 3.0
+Markdown > 3.0.1
 BeautifulSoup4
 lxml
 typogrify
