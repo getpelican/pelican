@@ -11,7 +11,8 @@ Install Pelican (and optionally Markdown if you intend to use it) on Python
 2.7.x or Python 3.3+ by running the following command in your preferred
 terminal, prefixing with ``sudo`` if permissions warrant::
 
-    pip install pelican markdown
+    pip install pelican markdown wheel
+
 
 Create a project
 ----------------
