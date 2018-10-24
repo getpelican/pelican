@@ -22,8 +22,8 @@ Settings are configured in the form of a Python module (a file). There is an
 available for reference.
 
 To see a list of current settings in your environment, including both default
-and any customized values, run the following command (append a specific
-setting name as an argument to see the value for that one setting)::
+and any customized values, run the following command (append one or more
+specific setting names as arguments to see values for those settings only)::
 
     pelican --print-settings
 

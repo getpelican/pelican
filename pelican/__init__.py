@@ -320,11 +320,11 @@ def parse_arguments():
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
 
-    parser.add_argument('--print-settings', dest='print_settings',
-                        action='append', nargs='?', metavar='SETTING_NAME',
+    parser.add_argument('--print-settings', dest='print_settings', nargs='*',
+                        action='store', metavar='SETTING_NAME(S)',
                         help='Print current configuration settings and exit. '
-                        'Append a setting name as argument to see the value '
-                        'for that specific setting only.')
+                        'Append one or more setting name arguments to see the '
+                        'values for specific settings only.')
 
     parser.add_argument('--relative-urls', dest='relative_paths',
                         action='store_true',
@@ -535,18 +535,20 @@ def main():
     try:
         pelican, settings = get_instance(args)
 
-        if args.print_settings:
+        if args.print_settings != None:
             # If no argument was given to --print-settings, print all settings
-            if args.print_settings[0] is None:
+            if args.print_settings == []:
                 pprint(settings)
             # An argument was given to --print-settings, so print that setting
             else:
-                try:
-                    pprint(settings[args.print_settings[0]])
-                except KeyError:
-                    print("{} is not a recognized setting.".format(
-                          args.print_settings[0]))
-                    return 1
+                for setting in args.print_settings:
+                    try:
+                        setting_value = settings[setting]
+                        print("\n{}: ".format(setting))
+                        pprint(setting_value)
+                    except KeyError:
+                        print("\n{} is not a recognized setting.".format(setting))
+                        return 1
             return 0
 
         readers = Readers(settings)
