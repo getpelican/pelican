@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
-import collections
+try:
+    import collections.abc as collections
+except ImportError:
+    import collections
+
 import locale
 import logging
 import os
