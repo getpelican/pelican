@@ -98,6 +98,18 @@ by the ``ghp-import`` command) to the ``elemoine.github.io`` repository's
 
     To publish your Pelican site as User Pages, feel free to adjust the
     ``github`` target of the Makefile.
+    
+Another option for publishing to User Pages is to generate the output files in the root directory of the project.
+
+For example, your main project folder is ``<username>.github.io`` and you can create the Pelican project in a subdirectory called ``Pelican``. Then from inside the ``Pelican`` folder you can run::
+    
+    $ pelican content -o .. -s pelicanconf.py
+
+Now you can push the whole project ``<username>.github.io`` to the master branch of your GitHub repository::
+    
+    $ git push origin master
+    
+(assuming origin is set to your remote repository).
 
 Custom 404 Pages
 ----------------
