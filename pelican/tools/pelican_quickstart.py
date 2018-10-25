@@ -185,7 +185,7 @@ def ask(question, answer=str_compat, default=None, length=None):
                 print('You must enter an integer')
         return r
     else:
-        raise NotImplemented(
+        raise NotImplementedError(
             'Argument `answer` must be str_compat, bool, or integer')
 
 
