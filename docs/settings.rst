@@ -21,6 +21,12 @@ Settings are configured in the form of a Python module (a file). There is an
 <https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_
 available for reference.
 
+To see a list of current settings in your environment, including both default
+and any customized values, run the following command (append one or more
+specific setting names as arguments to see values for those settings only)::
+
+    pelican --print-settings
+
 All the setting identifiers must be set in all-caps, otherwise they will not be
 processed. Setting values that are numbers (5, 20, etc.), booleans (True,
 False, None, etc.), dictionaries, or tuples should *not* be enclosed in
@@ -28,10 +34,9 @@ quotation marks. All other values (i.e., strings) *must* be enclosed in
 quotation marks.
 
 Unless otherwise specified, settings that refer to paths can be either absolute
-or relative to the configuration file.
-
-The settings you define in the configuration file will be passed to the
-templates, which allows you to use your settings to add site-wide content.
+or relative to the configuration file. The settings you define in the
+configuration file will be passed to the templates, which allows you to use your
+settings to add site-wide content.
 
 Here is a list of settings for Pelican:
 

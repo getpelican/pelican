@@ -7,6 +7,7 @@ import locale
 import logging
 import multiprocessing
 import os
+import pprint
 import re
 import sys
 import time
@@ -269,6 +270,32 @@ class Pelican(object):
             return writer(self.output_path, settings=self.settings)
 
 
+class PrintSettings(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string):
+        instance, settings = get_instance(namespace)
+
+        if values:
+            # One or more arguments provided, so only print those settings
+            for setting in values:
+                if setting in settings:
+                    # Only add newline between setting name and value if dict
+                    if isinstance(settings[setting], dict):
+                        setting_format = '\n{}:\n{}'
+                    else:
+                        setting_format = '\n{}: {}'
+                    print(setting_format.format(
+                        setting,
+                        pprint.pformat(settings[setting])))
+                else:
+                    print('\n{} is not a recognized setting.'.format(setting))
+                    break
+        else:
+            # No argument was given to --print-settings, so print all settings
+            pprint.pprint(settings)
+
+        parser.exit()
+
+
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description='A tool to generate a static blog, '
@@ -318,6 +345,12 @@ def parse_arguments():
                         action='store_true',
                         help='Relaunch pelican each time a modification occurs'
                         ' on the content files.')
+
+    parser.add_argument('--print-settings', dest='print_settings', nargs='*',
+                        action=PrintSettings, metavar='SETTING_NAME',
+                        help='Print current configuration settings and exit. '
+                        'Append one or more setting name arguments to see the '
+                        'values for specific settings only.')
 
     parser.add_argument('--relative-urls', dest='relative_paths',
                         action='store_true',
@@ -527,6 +560,7 @@ def main():
 
     try:
         pelican, settings = get_instance(args)
+
         readers = Readers(settings)
         reader_descs = sorted(set(['%s (%s)' %
                                    (type(r).__name__,
