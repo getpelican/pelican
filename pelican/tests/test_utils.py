@@ -119,8 +119,11 @@ class TestUtils(LoggedTestCase):
                    ('大飯原発４号機、１８日夜起動へ',
                     'da-fan-yuan-fa-4hao-ji-18ri-ye-qi-dong-he'),)
 
+        settings = read_settings()
+        subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+
         for value, expected in samples:
-            self.assertEqual(utils.slugify(value), expected)
+            self.assertEqual(utils.slugify(value, regex_subs=subs), expected)
 
     def test_slugify_substitute(self):
 
@@ -129,21 +132,27 @@ class TestUtils(LoggedTestCase):
                    ('c++, c#, C#, C++', 'cpp-c-sharp-c-sharp-cpp'),
                    ('c++-streams', 'cpp-streams'),)
 
-        subs = (('C++', 'CPP'), ('C#', 'C-SHARP'))
+        settings = read_settings()
+        subs = [
+            (r'C\+\+', 'CPP'),
+            (r'C#', 'C-SHARP'),
+        ] + settings['SLUG_REGEX_SUBSTITUTIONS']
         for value, expected in samples:
-            self.assertEqual(utils.slugify(value, subs), expected)
+            self.assertEqual(utils.slugify(value, regex_subs=subs), expected)
 
     def test_slugify_substitute_and_keeping_non_alphanum(self):
 
         samples = (('Fedora QA', 'fedora.qa'),
                    ('C++ is used by Fedora QA', 'cpp is used by fedora.qa'),
-                   ('C++ is based on C', 'cpp-is-based-on-c'),
-                   ('C+++ test C+ test', 'cpp-test-c-test'),)
+                   ('C++ is based on C', 'cpp is based on c'),
+                   ('C+++ test C+ test', 'cpp+ test c+ test'),)
 
-        subs = (('Fedora QA', 'fedora.qa', True),
-                ('c++', 'cpp'),)
+        subs = [
+            (r'Fedora QA', 'fedora.qa'),
+            (r'c\+\+', 'cpp'),
+        ]
         for value, expected in samples:
-            self.assertEqual(utils.slugify(value, subs), expected)
+            self.assertEqual(utils.slugify(value, regex_subs=subs), expected)
 
     def test_get_relative_path(self):
 

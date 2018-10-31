@@ -6,6 +6,7 @@ import os
 import re
 from codecs import open
 
+from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
                                    unittest)
 from pelican.tools.pelican_import import (blogger2fields, build_header,
@@ -133,10 +134,11 @@ class TestWordpressXmlImporter(unittest.TestCase):
         with temporary_folder() as temp:
             fnames = list(silent_f2p(test_posts, 'markdown',
                                      temp, dircat=True))
+        subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
         index = 0
         for post in test_posts:
             name = post[2]
-            category = slugify(post[5][0])
+            category = slugify(post[5][0], regex_subs=subs)
             name += '.md'
             filename = os.path.join(category, name)
             out_name = fnames[index]
@@ -208,11 +210,12 @@ class TestWordpressXmlImporter(unittest.TestCase):
         with temporary_folder() as temp:
             fnames = list(silent_f2p(test_posts, 'markdown', temp,
                                      wp_custpost=True, dircat=True))
+        subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
         index = 0
         for post in test_posts:
             name = post[2]
             kind = post[8]
-            category = slugify(post[5][0])
+            category = slugify(post[5][0], regex_subs=subs)
             name += '.md'
             filename = os.path.join(kind, category, name)
             out_name = fnames[index]

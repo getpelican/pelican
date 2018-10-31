@@ -263,13 +263,14 @@ def pelican_open(filename, mode='rb', strip_crs=(sys.platform == 'win32')):
     yield content
 
 
-def slugify(value, substitutions=()):
+def slugify(value, regex_subs=()):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
 
     Took from Django sources.
     """
+
     # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
     # value must be unicode per se
@@ -281,37 +282,16 @@ def slugify(value, substitutions=()):
     if isinstance(value, six.binary_type):
         value = value.decode('ascii')
     # still unicode
-    value = unicodedata.normalize('NFKD', value).lower()
+    value = unicodedata.normalize('NFKD', value)
 
-    # backward compatible covert from 2-tuples to 3-tuples
-    new_subs = []
-    for tpl in substitutions:
-        try:
-            src, dst, skip = tpl
-        except ValueError:
-            src, dst = tpl
-            skip = False
-        new_subs.append((src, dst, skip))
-    substitutions = tuple(new_subs)
+    for src, dst in regex_subs:
+        value = re.sub(src, dst, value, flags=re.IGNORECASE)
 
-    # by default will replace non-alphanum characters
-    replace = True
-    for src, dst, skip in substitutions:
-        orig_value = value
-        value = value.replace(src.lower(), dst.lower())
-        # if replacement was made then skip non-alphanum
-        # replacement if instructed to do so
-        if value != orig_value:
-            replace = replace and not skip
-
-    if replace:
-        value = re.sub(r'[^\w\s-]', '', value).strip()
-        value = re.sub(r'[-\s]+', '-', value)
-    else:
-        value = value.strip()
+    # convert to lowercase
+    value = value.lower()
 
     # we want only ASCII chars
-    value = value.encode('ascii', 'ignore')
+    value = value.encode('ascii', 'ignore').strip()
     # but Pelican should generally use only unicode
     return value.decode('ascii')
 

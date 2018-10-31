@@ -497,7 +497,13 @@ class TestArticle(TestPage):
 
     def test_slugify_category_author(self):
         settings = get_settings()
-        settings['SLUG_SUBSTITUTIONS'] = [('C#', 'csharp')]
+        settings['SLUG_REGEX_SUBSTITUTIONS'] = [
+            (r'C#', 'csharp'),
+            (r'[^\w\s-]', ''),
+            (r'(?u)\A\s*', ''),
+            (r'(?u)\s*\Z', ''),
+            (r'[-\s]+', '-'),
+        ]
         settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
         article_kwargs = self._copy_page_kwargs()
@@ -513,9 +519,13 @@ class TestArticle(TestPage):
 
     def test_slugify_with_author_substitutions(self):
         settings = get_settings()
-        settings['AUTHOR_SUBSTITUTIONS'] = [
-                                    ('Alexander Todorov', 'atodorov', False),
-                                    ('Krasimir Tsonev', 'krasimir', False),
+        settings['AUTHOR_REGEX_SUBSTITUTIONS'] = [
+            ('Alexander Todorov', 'atodorov'),
+            ('Krasimir Tsonev', 'krasimir'),
+            (r'[^\w\s-]', ''),
+            (r'(?u)\A\s*', ''),
+            (r'(?u)\s*\Z', ''),
+            (r'[-\s]+', '-'),
         ]
         settings['ARTICLE_URL'] = 'blog/{author}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = 'blog/{author}/{slug}/index.html'
@@ -530,7 +540,9 @@ class TestArticle(TestPage):
 
     def test_slugify_category_with_dots(self):
         settings = get_settings()
-        settings['CATEGORY_SUBSTITUTIONS'] = [('Fedora QA', 'fedora.qa', True)]
+        settings['CATEGORY_REGEX_SUBSTITUTIONS'] = [
+            ('Fedora QA', 'fedora.qa'),
+        ]
         settings['ARTICLE_URL'] = '{category}/{slug}/'
         article_kwargs = self._copy_page_kwargs()
         article_kwargs['metadata']['category'] = Category('Fedora QA',
@@ -542,7 +554,9 @@ class TestArticle(TestPage):
 
     def test_slugify_tags_with_dots(self):
         settings = get_settings()
-        settings['TAG_SUBSTITUTIONS'] = [('Fedora QA', 'fedora.qa', True)]
+        settings['TAG_REGEX_SUBSTITUTIONS'] = [
+            ('Fedora QA', 'fedora.qa'),
+        ]
         settings['ARTICLE_URL'] = '{tag}/{slug}/'
         article_kwargs = self._copy_page_kwargs()
         article_kwargs['metadata']['tag'] = Tag('Fedora QA', settings)
