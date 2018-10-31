@@ -3,6 +3,7 @@
 import os
 import shutil
 import sys
+import datetime
 try:
     import socketserver
 except ImportError:
@@ -29,6 +30,7 @@ CONFIG = {
 {% if github %}
     # Github Pages configuration
     'github_pages_branch': '{{github_pages_branch}}',
+    'commit_message': "'Publish site on {}'".format(datetime.date.today().isoformat()),
 {% endif %}
     # Port for `serve`
     'port': 8000,
@@ -108,7 +110,8 @@ def publish(c):
 @task
 def gh_pages(c):
     """Publish to GitHub Pages"""
-    rebuild(c)
-    c.run("ghp-import -b {github_pages_branch} {deploy_path} -p".format(
-        **CONFIG))
+    preview(c)
+    c.run('ghp-import -b {github_pages_branch} '
+          '-m {commit_message} '
+          '{deploy_path} -p'.format(**CONFIG))
 {% endif %}
