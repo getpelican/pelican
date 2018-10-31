@@ -42,8 +42,7 @@ def parse_arguments():
 
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
-    SUFFIXES = ['', '.html', '/index.html']
-    RSTRIP_PATTERNS = ['', '/']
+    SUFFIXES = ['.html', '/index.html', '/', '']
 
     def translate_path(self, path):
         # abandon query parameters
@@ -67,34 +66,28 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
 
     def do_GET(self):
         # cut off a query string
-        if '?' in self.path:
-            self.path, _ = self.path.split('?', 1)
+        original_path = self.path.split('?', 1)[0]
+        # try to find file
+        self.path = self.get_path_that_exists(original_path)
 
-        found = False
-        # Try to detect file by applying various suffixes and stripping
-        # patterns.
-        for rstrip_pattern in self.RSTRIP_PATTERNS:
-            if found:
-                break
-            for suffix in self.SUFFIXES:
-                if not hasattr(self, 'original_path'):
-                    self.original_path = self.path
-
-                self.path = self.original_path.rstrip(rstrip_pattern) + suffix
-                path = self.translate_path(self.path)
-
-                if os.path.exists(path):
-                    srvmod.SimpleHTTPRequestHandler.do_GET(self)
-                    logging.info("Found `%s`.", self.path)
-                    found = True
-                    break
-
-                logging.info("Tried to find `%s`, but it doesn't exist.", path)
-
-        if not found:
-            # Fallback if there were no matches
+        if not self.path:
             logging.warning("Unable to find `%s` or variations.",
-                            self.original_path)
+                            original_path)
+            return
+
+        logging.info("Found `%s`.", self.path)
+        srvmod.SimpleHTTPRequestHandler.do_GET(self)
+
+    def get_path_that_exists(self, original_path):
+        # Try to strip trailing slash
+        original_path = original_path.rstrip('/')
+        # Try to detect file by applying various suffixes
+        for suffix in self.SUFFIXES:
+            path = original_path + suffix
+            if os.path.exists(self.translate_path(path)):
+                return path
+            logging.info("Tried to find `%s`, but it doesn't exist.", path)
+        return None
 
     def guess_type(self, path):
         """Guess at the mime type for the specified file.
