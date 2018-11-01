@@ -1038,6 +1038,18 @@ more information.
 
    The default language to use.
 
+.. data:: ARTICLE_TRANSLATION_ID = 'slug'
+
+   The metadata attribute(s) used to identify which articles are translations
+   of one another. May be a string or a collection of strings. Set to ``None``
+   or ``False`` to disable the identification of translations.
+
+.. data:: PAGE_TRANSLATION_ID = 'slug'
+
+   The metadata attribute(s) used to identify which pages are translations
+   of one another. May be a string or a collection of strings. Set to ``None``
+   or ``False`` to disable the identification of translations.
+
 .. data:: TRANSLATION_FEED_ATOM = 'feeds/all-%s.atom.xml'
 
    The location to save the Atom feed for translations. [3]_

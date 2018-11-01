@@ -108,6 +108,8 @@ DEFAULT_CONFIG = {
     'DAY_ARCHIVE_SAVE_AS': '',
     'RELATIVE_URLS': False,
     'DEFAULT_LANG': 'en',
+    'ARTICLE_TRANSLATION_ID': 'slug',
+    'PAGE_TRANSLATION_ID': 'slug',
     'DIRECT_TEMPLATES': ['index', 'tags', 'categories', 'authors', 'archives'],
     'THEME_TEMPLATES_OVERRIDES': [],
     'PAGINATED_TEMPLATES': {'index': None, 'tag': None, 'category': None,
