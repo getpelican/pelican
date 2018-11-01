@@ -11,7 +11,7 @@ import sys
 import pytz
 
 import six
-from six.moves.urllib.parse import urlparse, urlunparse
+from six.moves.urllib.parse import urljoin, urlparse, urlunparse
 
 from pelican import signals
 from pelican.settings import DEFAULT_CONFIG
@@ -98,14 +98,16 @@ class Content(object):
         if not hasattr(self, 'slug'):
             if (settings['SLUGIFY_SOURCE'] == 'title' and
                     hasattr(self, 'title')):
-                self.slug = slugify(self.title,
-                                    settings.get('SLUG_SUBSTITUTIONS', ()))
+                self.slug = slugify(
+                    self.title,
+                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
             elif (settings['SLUGIFY_SOURCE'] == 'basename' and
                     source_path is not None):
                 basename = os.path.basename(
                     os.path.splitext(source_path)[0])
                 self.slug = slugify(
-                    basename, settings.get('SLUG_SUBSTITUTIONS', ()))
+                    basename,
+                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
 
         self.source_path = source_path
 
@@ -140,9 +142,8 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = getattr(self, 'default_status', None)
 
-        # store the summary metadata if it is set
-        if 'summary' in metadata:
-            self._summary = metadata['summary']
+        if len(self._context.get('filenames', [])) > 0:
+            self.refresh_metadata_intersite_links()
 
         signals.content_object_init.send(self)
 
@@ -228,6 +229,87 @@ class Content(object):
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
 
+    def _link_replacer(self, siteurl, m):
+        what = m.group('what')
+        value = urlparse(m.group('value'))
+        path = value.path
+        origin = m.group('path')
+
+        # urllib.parse.urljoin() produces `a.html` for urljoin("..", "a.html")
+        # so if RELATIVE_URLS are enabled, we fall back to os.path.join() to
+        # properly get `../a.html`. However, os.path.join() produces
+        # `baz/http://foo/bar.html` for join("baz", "http://foo/bar.html")
+        # instead of correct "http://foo/bar.html", so one has to pick a side
+        # as there is no silver bullet.
+        if self.settings['RELATIVE_URLS']:
+            joiner = os.path.join
+        else:
+            joiner = urljoin
+
+            # However, it's not *that* simple: urljoin("blog", "index.html")
+            # produces just `index.html` instead of `blog/index.html` (unlike
+            # os.path.join()), so in order to get a correct answer one needs to
+            # append a trailing slash to siteurl in that case. This also makes
+            # the new behavior fully compatible with Pelican 3.7.1.
+            if not siteurl.endswith('/'):
+                siteurl += '/'
+
+        # XXX Put this in a different location.
+        if what in {'filename', 'attach'}:
+            if path.startswith('/'):
+                path = path[1:]
+            else:
+                # relative to the source path of this content
+                path = self.get_relative_source_path(
+                    os.path.join(self.relative_dir, path)
+                )
+
+            if path not in self._context['filenames']:
+                unquoted_path = path.replace('%20', ' ')
+
+                if unquoted_path in self._context['filenames']:
+                    path = unquoted_path
+
+            linked_content = self._context['filenames'].get(path)
+            if linked_content:
+                if what == 'attach':
+                    if isinstance(linked_content, Static):
+                        linked_content.attach_to(self)
+                    else:
+                        logger.warning(
+                            "%s used {attach} link syntax on a "
+                            "non-static file. Use {filename} instead.",
+                            self.get_relative_source_path())
+                origin = joiner(siteurl, linked_content.url)
+                origin = origin.replace('\\', '/')  # for Windows paths.
+            else:
+                logger.warning(
+                    "Unable to find '%s', skipping url replacement.",
+                    value.geturl(), extra={
+                        'limit_msg': ("Other resources were not found "
+                                      "and their urls not replaced")})
+        elif what == 'category':
+            origin = joiner(siteurl, Category(path, self.settings).url)
+        elif what == 'tag':
+            origin = joiner(siteurl, Tag(path, self.settings).url)
+        elif what == 'index':
+            origin = joiner(siteurl, self.settings['INDEX_SAVE_AS'])
+        elif what == 'author':
+            origin = joiner(siteurl, Author(path, self.settings).url)
+        else:
+            logger.warning(
+                "Replacement Indicator '%s' not recognized, "
+                "skipping replacement",
+                what)
+
+        # keep all other parts, such as query, fragment, etc.
+        parts = list(value)
+        parts[2] = origin
+        origin = urlunparse(parts)
+
+        return ''.join((m.group('markup'), m.group('quote'), origin,
+                        m.group('quote')))
+
     def _update_content(self, content, siteurl):
         """Update the content attribute.
 
@@ -251,69 +333,7 @@ class Content(object):
             \2""".format(instrasite_link_regex)
         hrefs = re.compile(regex, re.X)
 
-        def replacer(m):
-            what = m.group('what')
-            value = urlparse(m.group('value'))
-            path = value.path
-            origin = m.group('path')
-
-            # XXX Put this in a different location.
-            if what in {'filename', 'attach'}:
-                if path.startswith('/'):
-                    path = path[1:]
-                else:
-                    # relative to the source path of this content
-                    path = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, path)
-                    )
-
-                if path not in self._context['filenames']:
-                    unquoted_path = path.replace('%20', ' ')
-
-                    if unquoted_path in self._context['filenames']:
-                        path = unquoted_path
-
-                linked_content = self._context['filenames'].get(path)
-                if linked_content:
-                    if what == 'attach':
-                        if isinstance(linked_content, Static):
-                            linked_content.attach_to(self)
-                        else:
-                            logger.warning(
-                                "%s used {attach} link syntax on a "
-                                "non-static file. Use {filename} instead.",
-                                self.get_relative_source_path())
-                    origin = '/'.join((siteurl, linked_content.url))
-                    origin = origin.replace('\\', '/')  # for Windows paths.
-                else:
-                    logger.warning(
-                        "Unable to find '%s', skipping url replacement.",
-                        value.geturl(), extra={
-                            'limit_msg': ("Other resources were not found "
-                                          "and their urls not replaced")})
-            elif what == 'category':
-                origin = '/'.join((siteurl, Category(path, self.settings).url))
-            elif what == 'tag':
-                origin = '/'.join((siteurl, Tag(path, self.settings).url))
-            elif what == 'index':
-                origin = '/'.join((siteurl, self.settings['INDEX_SAVE_AS']))
-            elif what == 'author':
-                origin = '/'.join((siteurl, Author(path, self.settings).url))
-            else:
-                logger.warning(
-                    "Replacement Indicator '%s' not recognized, "
-                    "skipping replacement",
-                    what)
-
-            # keep all other parts, such as query, fragment, etc.
-            parts = list(value)
-            parts[2] = origin
-            origin = urlunparse(parts)
-
-            return ''.join((m.group('markup'), m.group('quote'), origin,
-                            m.group('quote')))
-
-        return hrefs.sub(replacer, content)
+        return hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
 
     def get_siteurl(self):
         return self._context.get('localsiteurl', '')
@@ -337,8 +357,8 @@ class Content(object):
         This is based on the summary metadata if set, otherwise truncate the
         content.
         """
-        if hasattr(self, '_summary'):
-            return self._update_content(self._summary, siteurl)
+        if 'summary' in self.metadata:
+            return self.metadata['summary']
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
@@ -413,12 +433,26 @@ class Content(object):
                     os.path.abspath(self.source_path),
                     os.path.abspath(self.settings['PATH']))))
 
+    def refresh_metadata_intersite_links(self):
+        for key in self.settings['FORMATTED_FIELDS']:
+            if key in self.metadata:
+                value = self._update_content(
+                    self.metadata[key],
+                    self.get_siteurl()
+                )
+                self.metadata[key] = value
+                setattr(self, key.lower(), value)
+
 
 class Page(Content):
     mandatory_properties = ('title',)
-    allowed_statuses = ('published', 'hidden')
+    allowed_statuses = ('published', 'hidden', 'draft')
     default_status = 'published'
     default_template = 'page'
+
+    def _expand_settings(self, key):
+        klass = 'draft_page' if self.status == 'draft' else None
+        return super(Page, self)._expand_settings(key, klass)
 
 
 class Article(Content):
@@ -444,7 +478,7 @@ class Article(Content):
             self.date = SafeDatetime.max
 
     def _expand_settings(self, key):
-        klass = 'article' if self.status == 'published' else 'draft'
+        klass = 'draft' if self.status == 'draft' else 'article'
         return super(Article, self)._expand_settings(key, klass)
 
 

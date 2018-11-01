@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
+import argparse
 import logging
 import os
+import posixpath
+import ssl
 import sys
 
 try:
@@ -10,37 +13,81 @@ try:
 except ImportError:
     magic_from_file = None
 
+from six.moves import BaseHTTPServer
 from six.moves import SimpleHTTPServer as srvmod
-from six.moves import socketserver
+from six.moves import urllib
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='Pelican Development Server',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("port", default=8000, type=int, nargs="?",
+                        help="Port to Listen On")
+    parser.add_argument("server", default="", nargs="?",
+                        help="Interface to Listen On")
+    parser.add_argument('--ssl', action="store_true",
+                        help='Activate SSL listener')
+    parser.add_argument('--cert', default="./cert.pem", nargs="?",
+                        help='Path to certificate file. ' +
+                        'Relative to current directory')
+    parser.add_argument('--key', default="./key.pem", nargs="?",
+                        help='Path to certificate key file. ' +
+                        'Relative to current directory')
+    parser.add_argument('--path', default=".",
+                        help='Path to pelican source directory to serve. ' +
+                        'Relative to current directory')
+    return parser.parse_args()
 
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
-    SUFFIXES = ['', '.html', '/index.html']
+    SUFFIXES = ['.html', '/index.html', '/', '']
+
+    def translate_path(self, path):
+        # abandon query parameters
+        path = path.split('?', 1)[0]
+        path = path.split('#', 1)[0]
+        # Don't forget explicit trailing slash when normalizing. Issue17324
+        trailing_slash = path.rstrip().endswith('/')
+        path = urllib.parse.unquote(path)
+        path = posixpath.normpath(path)
+        words = path.split('/')
+        words = filter(None, words)
+        path = self.base_path
+        for word in words:
+            if os.path.dirname(word) or word in (os.curdir, os.pardir):
+                # Ignore components that are not a simple file/directory name
+                continue
+            path = os.path.join(path, word)
+        if trailing_slash:
+            path += '/'
+        return path
 
     def do_GET(self):
         # cut off a query string
-        if '?' in self.path:
-            self.path, _ = self.path.split('?', 1)
+        original_path = self.path.split('?', 1)[0]
+        # try to find file
+        self.path = self.get_path_that_exists(original_path)
 
+        if not self.path:
+            logging.warning("Unable to find `%s` or variations.",
+                            original_path)
+            return
+
+        logging.info("Found `%s`.", self.path)
+        srvmod.SimpleHTTPRequestHandler.do_GET(self)
+
+    def get_path_that_exists(self, original_path):
+        # Try to strip trailing slash
+        original_path = original_path.rstrip('/')
         # Try to detect file by applying various suffixes
         for suffix in self.SUFFIXES:
-            if not hasattr(self, 'original_path'):
-                self.original_path = self.path
-
-            self.path = self.original_path + suffix
-            path = self.translate_path(self.path)
-
-            if os.path.exists(path):
-                srvmod.SimpleHTTPRequestHandler.do_GET(self)
-                logging.info("Found `%s`." % self.path)
-                break
-
-            logging.info("Tried to find `%s`, but it doesn't exist.",
-                         self.path)
-        else:
-            # Fallback if there were no matches
-            logging.warning("Unable to find `%s` or variations.",
-                            self.original_path)
+            path = original_path + suffix
+            if os.path.exists(self.translate_path(path)):
+                return path
+            logging.info("Tried to find `%s`, but it doesn't exist.", path)
+        return None
 
     def guess_type(self, path):
         """Guess at the mime type for the specified file.
@@ -54,19 +101,36 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
         return mimetype
 
 
-if __name__ == '__main__':
-    PORT = len(sys.argv) in (2, 3) and int(sys.argv[1]) or 8000
-    SERVER = len(sys.argv) == 3 and sys.argv[2] or ""
+class RootedHTTPServer(BaseHTTPServer.HTTPServer):
+    def __init__(self, base_path, *args, **kwargs):
+        BaseHTTPServer.HTTPServer.__init__(self, *args, **kwargs)
+        self.RequestHandlerClass.base_path = base_path
 
-    socketserver.TCPServer.allow_reuse_address = True
+
+if __name__ == '__main__':
+    logging.warning("'python -m pelican.server' is deprecated. The "
+                    "Pelican development server should be run via "
+                    "'pelican --listen' or 'pelican -l' (this can be combined "
+                    "with regeneration as 'pelican -lr'). Rerun 'pelican-"
+                    "quickstart' to get new Makefile and tasks.py files.")
+    args = parse_arguments()
+    RootedHTTPServer.allow_reuse_address = True
     try:
-        httpd = socketserver.TCPServer(
-            (SERVER, PORT), ComplexHTTPRequestHandler)
-    except OSError as e:
-        logging.error("Could not listen on port %s, server %s.", PORT, SERVER)
+        httpd = RootedHTTPServer(
+            args.path, (args.server, args.port), ComplexHTTPRequestHandler)
+        if args.ssl:
+            httpd.socket = ssl.wrap_socket(
+                httpd.socket, keyfile=args.key,
+                certfile=args.cert, server_side=True)
+    except ssl.SSLError as e:
+        logging.error("Couldn't open certificate file %s or key file %s",
+                      args.cert, args.key)
+        logging.error("Could not listen on port %s, server %s.",
+                      args.port, args.server)
         sys.exit(getattr(e, 'exitcode', 1))
 
-    logging.info("Serving at port %s, server %s.", PORT, SERVER)
+    logging.info("Serving at port %s, server %s.",
+                 args.port, args.server)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt as e:

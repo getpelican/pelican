@@ -5,7 +5,16 @@ Next release
 ============
 
 * New signal: ``feed_generated``
-* Make the HTML reader parse multiple occurences of metadata tags as list
+* Replace Fabric by Invoke and ``fabfile.py`` template by ``tasks.py``.
+* Replace ``SLUG_SUBSTITUTIONS`` (and friends) by ``SLUG_REGEX_SUBSTITUTIONS``
+  for more finegrained control
+* ``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer strips
+  ``'bar'`` from ``'foo/bar.html'`` (unless ``'bar' == 'index'``).
+* ``ARTICLE_ORDER_BY`` and ``PAGE_ORDER_BY`` now also affect 1) category, tag
+  and author pages 2) feeds 3) draft and hidden articles and pages
+* New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to specify
+  metadata attributes used to identify translations; or to disable translations
+* Make the HTML reader parse multiple occurrences of metadata tags as a list
 
 3.7.1 (2017-01-10)
 ==================

@@ -11,7 +11,7 @@ The idea behind "pages" is that they are usually not temporal in nature and are
 used for content that does not change very often (e.g., "About" or "Contact"
 pages).
 
-You can find sample content in the repository at: ``pelican/samples/content/``
+You can find sample content in the repository at ``samples/content/``.
 
 .. _internal_metadata:
 
@@ -69,6 +69,22 @@ Metadata syntax for Markdown posts should follow this pattern::
     Summary: Short version for index and feeds
 
     This is the content of my super blog post.
+
+You can also have your own metadata keys (so long as they don't conflict with reserved metadata keywords) for use in your python templates. The following is the list of reserved metadata keywords:
+
+* `Title`
+* `Tags`
+* `Date`
+* `Modified`
+* `Status`
+* `Category`
+* `Author`
+* `Authors`
+* `Slug`
+* `Summary`
+* `Template`
+* `Save_as`
+* `Url`
 
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
@@ -370,8 +386,9 @@ of available translations for that article.
    language. For such advanced functionality the `i18n_subsites
    plugin`_ can be used.
 
-Pelican uses the article's URL "slug" to determine if two or more articles are
-translations of one another. The slug can be set manually in the file's
+By default, Pelican uses the article's URL "slug" to determine if two or more
+articles are translations of one another. (This can be changed with the
+``ARTICLE_TRANSLATION_ID`` setting.) The slug can be set manually in the file's
 metadata; if not set explicitly, Pelican will auto-generate the slug from the
 title of the article.
 
@@ -517,9 +534,9 @@ your settings file.
 Publishing drafts
 =================
 
-If you want to publish an article as a draft (for friends to review before
-publishing, for example), you can add a ``Status: draft`` attribute to its
-metadata. That article will then be output to the ``drafts`` folder and not
+If you want to publish an article or a page as a draft (for friends to review
+before publishing, for example), you can add a ``Status: draft`` attribute to
+its metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category or tag page.
 
 If your articles should be automatically published as a draft (to not accidentally
@@ -535,6 +552,6 @@ metadata to include ``Status: published``.
 .. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: http://github.com/getpelican/pelican-plugins
-.. _Markdown Extensions: http://pythonhosted.org/Markdown/extensions/
-.. _CodeHilite extension: http://pythonhosted.org/Markdown/extensions/code_hilite.html#syntax
+.. _Markdown Extensions: https://python-markdown.github.io/extensions/
+.. _CodeHilite extension: https://python-markdown.github.io/extensions/code_hilite/#syntax
 .. _i18n_subsites plugin: http://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites

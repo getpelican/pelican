@@ -9,6 +9,7 @@ from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 from jinja2 import Markup
 
 import six
+from six.moves.urllib.parse import urljoin
 
 from pelican import signals
 from pelican.paginator import Paginator
@@ -30,6 +31,13 @@ class Writer(object):
         self._written_files = set()
         self._overridden_files = set()
 
+        # See Content._link_replacer for details
+        if self.settings['RELATIVE_URLS']:
+            self.urljoiner = os.path.join
+        else:
+            self.urljoiner = lambda base, url: urljoin(
+                base if base.endswith('/') else base + '/', url)
+
     def _create_new_feed(self, feed_type, feed_title, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
         if feed_title:
@@ -40,13 +48,13 @@ class Writer(object):
             title=Markup(feed_title).striptags(),
             link=(self.site_url + '/'),
             feed_url=self.feed_url,
-            description=context.get('SITESUBTITLE', ''))
+            description=context.get('SITESUBTITLE', ''),
+            subtitle=context.get('SITESUBTITLE', None))
         return feed
 
     def _add_item_to_the_feed(self, feed, item):
-
         title = Markup(item.title).striptags()
-        link = '%s/%s' % (self.site_url, item.url)
+        link = self.urljoiner(self.site_url, item.url)
         is_rss = isinstance(feed, Rss201rev2Feed)
         if not is_rss or self.settings.get('RSS_FEED_SUMMARY_ONLY'):
             description = item.summary
@@ -89,8 +97,8 @@ class Writer(object):
         self._written_files.add(filename)
         return open(filename, 'w', encoding=encoding)
 
-    def write_feed(self, elements, context, path=None, feed_type='atom',
-                   override_output=False, feed_title=None):
+    def write_feed(self, elements, context, path=None, url=None,
+                   feed_type='atom', override_output=False, feed_title=None):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no path or output_path is specified, just
@@ -99,6 +107,8 @@ class Writer(object):
         :param elements: the articles to put on the feed.
         :param context: the context to get the feed metadata.
         :param path: the path to output.
+        :param url: the publicly visible feed URL; if None, path is used
+            instead
         :param feed_type: the feed type to use (atom or rss)
         :param override_output: boolean telling if we can override previous
             output with the same name (and if next files written with the same
@@ -112,7 +122,7 @@ class Writer(object):
             'SITEURL', path_to_url(get_relative_path(path)))
 
         self.feed_domain = context.get('FEED_DOMAIN')
-        self.feed_url = '{}/{}'.format(self.feed_domain, path)
+        self.feed_url = self.urljoiner(self.feed_domain, url if url else path)
 
         feed = self._create_new_feed(feed_type, feed_title, context)
 
@@ -141,7 +151,8 @@ class Writer(object):
         return feed
 
     def write_file(self, name, template, context, relative_urls=False,
-                   paginated=None, override_output=False, **kwargs):
+                   paginated=None, template_name=None, override_output=False,
+                   url=None, **kwargs):
         """Render the template and write the file.
 
         :param name: name of the file to output
@@ -150,9 +161,11 @@ class Writer(object):
         :param relative_urls: use relative urls or absolutes ones
         :param paginated: dict of article list to paginate - must have the
             same length (same list in different orders)
+        :param template_name: the template name, for pagination
         :param override_output: boolean telling if we can override previous
             output with the same name (and if next files written with the same
             name should be skipped to keep that one)
+        :param url: url of the file (needed by the paginator)
         :param **kwargs: additional variables to pass to the templates
         """
 
@@ -198,11 +211,19 @@ class Writer(object):
             localcontext.update(kwargs)
             return localcontext
 
-        # pagination
-        if paginated:
+        if paginated is None:
+            paginated = {key: val for key, val in kwargs.items()
+                         if key in {'articles', 'dates'}}
 
-            # pagination needed, init paginators
-            paginators = {key: Paginator(name, val, self.settings)
+        # pagination
+        if paginated and template_name in self.settings['PAGINATED_TEMPLATES']:
+            # pagination needed
+            per_page = self.settings['PAGINATED_TEMPLATES'][template_name] \
+                or self.settings['DEFAULT_PAGINATION']
+
+            # init paginators
+            paginators = {key: Paginator(name, url, val, self.settings,
+                                         per_page)
                           for key, val in paginated.items()}
 
             # generated pages, and write

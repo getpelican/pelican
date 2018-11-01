@@ -27,7 +27,7 @@ Before you ask for help, please make sure you do the following:
 * no plugins or only those related to the issue
 
 **NOTE:** The most common sources of problems are anomalies in (1) themes,
-(2) settings files, and (3) ``make``/``fab`` automation wrappers. If you can't
+(2) settings files, and (3) ``make``/``invoke`` automation wrappers. If you can't
 reproduce your problem when using the following steps to generate your site,
 then the problem is almost certainly with your chosen theme and/or settings
 file (and not Pelican itself)::
@@ -76,8 +76,8 @@ The #pelican IRC channel
   can manually join the ``#pelican`` IRC channel on the `freenode IRC network`_.
 
 .. _webchat: https://kiwiirc.com/client/irc.freenode.net/?#pelican
-.. _`IRC link`: irc://irc.freenode.org/pelican
-.. _`freenode IRC network`: http://www.freenode.org/
+.. _`IRC link`: irc://irc.freenode.net/pelican
+.. _`freenode IRC network`: https://freenode.net/
 
 
 Contributing code
@@ -114,15 +114,21 @@ Using Git and GitHub
   `install hub <https://github.com/github/hub/#installation>`_ and then run
   `hub pull-request <https://github.com/github/hub/#git-pull-request>`_ to
   turn your GitHub issue into a pull request containing your code.
+* After you have issued a pull request, Travis will run the test suite for all
+  supported Python versions and check for PEP8 compliance. If any of these
+  checks fail, you should fix them. (If tests fail on Travis but seem to pass
+  locally, ensure that local test runs aren't skipping any tests.)
 
 Contribution quality standards
 ------------------------------
 
-* Adhere to `PEP8 coding standards`_ whenever possible. This can be eased via
-  the `pep8 <http://pypi.python.org/pypi/pep8>`_ or `flake8
+* Adhere to `PEP8 coding standards`_. This can be eased via the `pycodestyle
+  <https://pypi.org/project/pycodestyle>`_ or `flake8
   <http://pypi.python.org/pypi/flake8/>`_ tools, the latter of which in
   particular will give you some useful hints about ways in which the
-  code/formatting can be improved.
+  code/formatting can be improved. If you are relying on your editor for PEP8
+  compliance, note that the line length specified by PEP8 is 79 (excluding the
+  line break).
 * Ensure your code is compatible with the latest Python 2.7 and 3.x releases — see our
   `compatibility cheatsheet`_ for more details.
 * Add docs and tests for your changes. Undocumented and untested features will

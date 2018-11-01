@@ -8,7 +8,8 @@ from shutil import copy, rmtree
 from tempfile import mkdtemp
 
 from pelican.generators import (ArticlesGenerator, Generator, PagesGenerator,
-                                StaticGenerator, TemplatePagesGenerator)
+                                PelicanTemplateNotFound, StaticGenerator,
+                                TemplatePagesGenerator)
 from pelican.tests.support import get_settings, unittest
 from pelican.writers import Writer
 
@@ -116,6 +117,62 @@ class TestGenerator(unittest.TestCase):
         self.assertEqual(comment_end_string,
                          generator.env.comment_end_string)
 
+    def test_theme_overrides(self):
+        """
+            Test that the THEME_TEMPLATES_OVERRIDES configuration setting is
+            utilized correctly in the Generator.
+        """
+        override_dirs = (os.path.join(CUR_DIR, 'theme_overrides', 'level1'),
+                         os.path.join(CUR_DIR, 'theme_overrides', 'level2'))
+        self.settings['THEME_TEMPLATES_OVERRIDES'] = override_dirs
+        generator = Generator(
+            context=self.settings.copy(),
+            settings=self.settings,
+            path=CUR_DIR,
+            theme=self.settings['THEME'],
+            output_path=None)
+
+        filename = generator.get_template('article').filename
+        self.assertEqual(override_dirs[0], os.path.dirname(filename))
+        self.assertEqual('article.html', os.path.basename(filename))
+
+        filename = generator.get_template('authors').filename
+        self.assertEqual(override_dirs[1], os.path.dirname(filename))
+        self.assertEqual('authors.html', os.path.basename(filename))
+
+        filename = generator.get_template('taglist').filename
+        self.assertEqual(os.path.join(self.settings['THEME'], 'templates'),
+                         os.path.dirname(filename))
+        self.assertNotIn(os.path.dirname(filename), override_dirs)
+        self.assertEqual('taglist.html', os.path.basename(filename))
+
+    def test_simple_prefix(self):
+        """
+            Test `!simple` theme prefix.
+        """
+        filename = self.generator.get_template('!simple/authors').filename
+        expected_path = os.path.join(
+            os.path.dirname(CUR_DIR), 'themes', 'simple', 'templates')
+        self.assertEqual(expected_path, os.path.dirname(filename))
+        self.assertEqual('authors.html', os.path.basename(filename))
+
+    def test_theme_prefix(self):
+        """
+            Test `!theme` theme prefix.
+        """
+        filename = self.generator.get_template('!theme/authors').filename
+        expected_path = os.path.join(
+            os.path.dirname(CUR_DIR), 'themes', 'notmyidea', 'templates')
+        self.assertEqual(expected_path, os.path.dirname(filename))
+        self.assertEqual('authors.html', os.path.basename(filename))
+
+    def test_bad_prefix(self):
+        """
+            Test unknown/bad theme prefix throws exception.
+        """
+        self.assertRaises(PelicanTemplateNotFound, self.generator.get_template,
+                          '!UNKNOWN/authors')
+
 
 class TestArticlesGenerator(unittest.TestCase):
 
@@ -154,6 +211,7 @@ class TestArticlesGenerator(unittest.TestCase):
         writer = MagicMock()
         generator.generate_feeds(writer)
         writer.write_feed.assert_called_with([], settings,
+                                             'feeds/all.atom.xml',
                                              'feeds/all.atom.xml')
 
         generator = ArticlesGenerator(
@@ -162,6 +220,20 @@ class TestArticlesGenerator(unittest.TestCase):
         writer = MagicMock()
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
+
+    @unittest.skipUnless(MagicMock, 'Needs Mock module')
+    def test_generate_feeds_override_url(self):
+        settings = get_settings()
+        settings['CACHE_PATH'] = self.temp_cache
+        settings['FEED_ALL_ATOM_URL'] = 'feeds/atom/all/'
+        generator = ArticlesGenerator(
+            context=settings, settings=settings,
+            path=None, theme=settings['THEME'], output_path=None)
+        writer = MagicMock()
+        generator.generate_feeds(writer)
+        writer.write_feed.assert_called_with([], settings,
+                                             'feeds/all.atom.xml',
+                                             'feeds/atom/all/')
 
     def test_generate_context(self):
         articles_expected = [
@@ -255,7 +327,7 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(sorted(categories), sorted(categories_expected))
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
-    def test_direct_templates_save_as_default(self):
+    def test_direct_templates_save_as_url_default(self):
 
         settings = get_settings(filenames={})
         settings['CACHE_PATH'] = self.temp_cache
@@ -266,14 +338,18 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
                                  generator.get_template("archives"), settings,
-                                 blog=True, paginated={}, page_name='archives')
+                                 articles=generator.articles,
+                                 dates=generator.dates, blog=True,
+                                 template_name='archives',
+                                 page_name='archives', url="archives.html")
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
-    def test_direct_templates_save_as_modified(self):
+    def test_direct_templates_save_as_url_modified(self):
 
         settings = get_settings()
         settings['DIRECT_TEMPLATES'] = ['archives']
         settings['ARCHIVES_SAVE_AS'] = 'archives/index.html'
+        settings['ARCHIVES_URL'] = 'archives/'
         settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
@@ -282,8 +358,11 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_direct_templates(write)
         write.assert_called_with("archives/index.html",
                                  generator.get_template("archives"), settings,
-                                 blog=True, paginated={},
-                                 page_name='archives/index')
+                                 articles=generator.articles,
+                                 dates=generator.dates, blog=True,
+                                 template_name='archives',
+                                 page_name='archives/index',
+                                 url="archives/")
 
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_direct_templates_save_as_false(self):
@@ -321,6 +400,7 @@ class TestArticlesGenerator(unittest.TestCase):
         settings = get_settings(filenames={})
 
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
+        settings['YEAR_ARCHIVE_URL'] = 'posts/{date:%Y}/'
         settings['CACHE_PATH'] = self.temp_cache
         generator = ArticlesGenerator(
             context=settings, settings=settings,
@@ -329,17 +409,21 @@ class TestArticlesGenerator(unittest.TestCase):
         write = MagicMock()
         generator.generate_period_archives(write)
         dates = [d for d in generator.dates if d.date.year == 1970]
+        articles = [d for d in generator.articles if d.date.year == 1970]
         self.assertEqual(len(dates), 1)
         # among other things it must have at least been called with this
         settings["period"] = (1970,)
         write.assert_called_with("posts/1970/index.html",
                                  generator.get_template("period_archives"),
-                                 settings,
-                                 blog=True, dates=dates)
+                                 settings, blog=True, articles=articles,
+                                 dates=dates, template_name='period_archives',
+                                 url="posts/1970/")
 
         del settings["period"]
         settings['MONTH_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/index.html'
+        settings['MONTH_ARCHIVE_URL'] = \
+            'posts/{date:%Y}/{date:%b}/'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -348,17 +432,22 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_period_archives(write)
         dates = [d for d in generator.dates
                  if d.date.year == 1970 and d.date.month == 1]
+        articles = [d for d in generator.articles
+                    if d.date.year == 1970 and d.date.month == 1]
         self.assertEqual(len(dates), 1)
         settings["period"] = (1970, "January")
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/index.html",
                                  generator.get_template("period_archives"),
-                                 settings,
-                                 blog=True, dates=dates)
+                                 settings, blog=True, articles=articles,
+                                 dates=dates, template_name='period_archives',
+                                 url="posts/1970/Jan/")
 
         del settings["period"]
         settings['DAY_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
+        settings['DAY_ARCHIVE_URL'] = \
+            'posts/{date:%Y}/{date:%b}/{date:%d}/'
         generator = ArticlesGenerator(
             context=settings, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
@@ -371,13 +460,20 @@ class TestArticlesGenerator(unittest.TestCase):
             d.date.month == 1 and
             d.date.day == 1
         ]
+        articles = [
+            d for d in generator.articles if
+            d.date.year == 1970 and
+            d.date.month == 1 and
+            d.date.day == 1
+        ]
         self.assertEqual(len(dates), 1)
         settings["period"] = (1970, "January", 1)
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/01/index.html",
                                  generator.get_template("period_archives"),
-                                 settings,
-                                 blog=True, dates=dates)
+                                 settings, blog=True, articles=articles,
+                                 dates=dates, template_name='period_archives',
+                                 url="posts/1970/Jan/01/")
         locale.setlocale(locale.LC_ALL, old_locale)
 
     def test_nonexistent_template(self):
@@ -522,6 +618,7 @@ class TestPageGenerator(unittest.TestCase):
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
         hidden_pages = self.distill_pages(generator.hidden_pages)
+        draft_pages = self.distill_pages(generator.draft_pages)
 
         pages_expected = [
             ['This is a test page', 'published', 'page'],
@@ -535,7 +632,13 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a test hidden page', 'hidden', 'page'],
             ['This is a markdown test hidden page', 'hidden', 'page'],
             ['This is a test hidden page with a custom template', 'hidden',
-             'custom']
+             'custom'],
+        ]
+        draft_pages_expected = [
+            ['This is a test draft page', 'draft', 'page'],
+            ['This is a markdown test draft page', 'draft', 'page'],
+            ['This is a test draft page with a custom template', 'draft',
+             'custom'],
         ]
 
         self.assertEqual(sorted(pages_expected), sorted(pages))
@@ -543,9 +646,13 @@ class TestPageGenerator(unittest.TestCase):
             sorted(pages_expected),
             sorted(self.distill_pages(generator.context['pages'])))
         self.assertEqual(sorted(hidden_pages_expected), sorted(hidden_pages))
+        self.assertEqual(sorted(draft_pages_expected), sorted(draft_pages))
         self.assertEqual(
             sorted(hidden_pages_expected),
             sorted(self.distill_pages(generator.context['hidden_pages'])))
+        self.assertEqual(
+            sorted(draft_pages_expected),
+            sorted(self.distill_pages(generator.context['draft_pages'])))
 
     def test_generate_sorted(self):
         settings = get_settings(filenames={})
@@ -699,6 +806,64 @@ class TestStaticGenerator(unittest.TestCase):
 
     def set_ancient_mtime(self, path, timestamp=1):
         os.utime(path, (timestamp, timestamp))
+
+    def test_theme_static_paths_dirs(self):
+        """Test that StaticGenerator properly copies also files mentioned in
+           TEMPLATE_STATIC_PATHS, not just directories."""
+        settings = get_settings(
+            PATH=self.content_path,
+            filenames={})
+        context = settings.copy()
+        context['staticfiles'] = []
+
+        StaticGenerator(
+            context=context, settings=settings,
+            path=settings['PATH'], output_path=self.temp_output,
+            theme=settings['THEME']).generate_output(None)
+
+        # The content of dirs listed in THEME_STATIC_PATHS (defaulting to
+        # "static") is put into the output
+        self.assertTrue(os.path.isdir(os.path.join(self.temp_output,
+                                                   "theme/css/")))
+        self.assertTrue(os.path.isdir(os.path.join(self.temp_output,
+                                                   "theme/fonts/")))
+
+    def test_theme_static_paths_files(self):
+        """Test that StaticGenerator properly copies also files mentioned in
+           TEMPLATE_STATIC_PATHS, not just directories."""
+        settings = get_settings(
+            PATH=self.content_path,
+            THEME_STATIC_PATHS=['static/css/fonts.css', 'static/fonts/'],
+            filenames={})
+        context = settings.copy()
+        context['staticfiles'] = []
+
+        StaticGenerator(
+            context=context, settings=settings,
+            path=settings['PATH'], output_path=self.temp_output,
+            theme=settings['THEME']).generate_output(None)
+
+        # Only the content of dirs and files listed in THEME_STATIC_PATHS are
+        # put into the output, not everything from static/
+        self.assertFalse(os.path.isdir(os.path.join(self.temp_output,
+                                                    "theme/css/")))
+        self.assertFalse(os.path.isdir(os.path.join(self.temp_output,
+                                                    "theme/fonts/")))
+
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.eot")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.svg")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.ttf")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.woff")))
+        self.assertTrue(os.path.isfile(os.path.join(
+            self.temp_output, "theme/Yanone_Kaffeesatz_400.woff2")))
+        self.assertTrue(os.path.isfile(os.path.join(self.temp_output,
+                                                    "theme/font.css")))
+        self.assertTrue(os.path.isfile(os.path.join(self.temp_output,
+                                                    "theme/fonts.css")))
 
     def test_static_excludes(self):
         """Test that StaticGenerator respects STATIC_EXCLUDES.
@@ -887,7 +1052,9 @@ class TestStaticGenerator(unittest.TestCase):
         self.generator.fallback_to_symlinks = True
         self.generator.generate_context()
         self.generator.generate_output(None)
-        self.assertEqual(os.path.realpath(self.endfile), self.startfile)
+        self.assertTrue(os.path.islink(self.endfile))
+        self.assertEqual(os.path.realpath(self.endfile),
+                         os.path.realpath(self.startfile))
 
     def test_delete_existing_file_before_mkdir(self):
         with open(self.startfile, "w") as f:

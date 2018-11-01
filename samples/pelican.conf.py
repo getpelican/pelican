@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 AUTHOR = 'Alexis Métaireau'
 SITENAME = "Alexis' log"
+SITESUBTITLE = 'A personal blog.'
 SITEURL = 'http://blog.notmyidea.org'
 TIMEZONE = "Europe/Paris"
 

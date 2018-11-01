@@ -1,0 +1,163 @@
+PY?={{py_v}}
+PELICAN?={{pelican}}
+PELICANOPTS={{pelicanopts}}
+
+BASEDIR=$(CURDIR)
+INPUTDIR=$(BASEDIR)/content
+OUTPUTDIR=$(BASEDIR)/output
+CONFFILE=$(BASEDIR)/pelicanconf.py
+PUBLISHCONF=$(BASEDIR)/publishconf.py
+
+{% if ftp %}
+FTP_HOST={{ftp_host}}
+FTP_USER={{ftp_user}}
+FTP_TARGET_DIR={{ftp_target_dir}}
+
+{% endif %}
+{% if ssh %}
+SSH_HOST={{ssh_host}}
+SSH_PORT={{ssh_port}}
+SSH_USER={{ssh_user}}
+SSH_TARGET_DIR={{ssh_target_dir}}
+
+{% endif %}
+{% if s3 %}
+S3_BUCKET={{s3_bucket}}
+
+{% endif %}
+{% if cloudfiles %}
+CLOUDFILES_USERNAME={{cloudfiles_username}}
+CLOUDFILES_API_KEY={{cloudfiles_api_key}}
+CLOUDFILES_CONTAINER={{cloudfiles_container}}
+
+{% endif %}
+{% if dropbox %}
+DROPBOX_DIR={{dropbox_dir}}
+
+{% endif %}
+{% if github %}
+GITHUB_PAGES_BRANCH={{github_pages_branch}}
+
+{% endif %}
+
+DEBUG ?= 0
+ifeq ($(DEBUG), 1)
+	PELICANOPTS += -D
+endif
+
+RELATIVE ?= 0
+ifeq ($(RELATIVE), 1)
+	PELICANOPTS += --relative-urls
+endif
+
+help:
+	@echo 'Makefile for a pelican Web site                                           '
+	@echo '                                                                          '
+	@echo 'Usage:                                                                    '
+	@echo '   make html                           (re)generate the web site          '
+	@echo '   make clean                          remove the generated files         '
+	@echo '   make regenerate                     regenerate files upon modification '
+	@echo '   make publish                        generate using production settings '
+	@echo '   make serve [PORT=8000]              serve site at http://localhost:8000'
+	@echo '   make serve-global [SERVER=0.0.0.0]  serve (as root) to $(SERVER):80    '
+	@echo '   make devserver [PORT=8000]          serve and regenerate together      '
+	@echo '   make ssh_upload                     upload the web site via SSH        '
+	@echo '   make rsync_upload                   upload the web site via rsync+ssh  '
+{% if dropbox %}
+	@echo '   make dropbox_upload                 upload the web site via Dropbox    '
+{% endif %}
+{% if ftp %}
+	@echo '   make ftp_upload                     upload the web site via FTP        '
+{% endif %}
+{% if s3 %}
+	@echo '   make s3_upload                      upload the web site via S3         '
+{% endif %}
+{% if cloudfiles %}
+	@echo '   make cf_upload                      upload the web site via Cloud Files'
+{% endif %}
+{% if github %}
+	@echo '   make github                         upload the web site via gh-pages   '
+{% endif %}
+	@echo '                                                                          '
+	@echo 'Set the DEBUG variable to 1 to enable debugging, e.g. make DEBUG=1 html   '
+	@echo 'Set the RELATIVE variable to 1 to enable relative urls                    '
+	@echo '                                                                          '
+
+html:
+	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
+
+clean:
+	[ ! -d $(OUTPUTDIR) ] || rm -rf $(OUTPUTDIR)
+
+regenerate:
+	$(PELICAN) -r $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
+
+serve:
+ifdef PORT
+	$(PELICAN) -l $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS) -p $(PORT)
+else
+	$(PELICAN) -l $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
+endif
+
+serve-global:
+ifdef SERVER
+	$(PELICAN) -l $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS) -p $(PORT) -b $(SERVER)
+else
+	$(PELICAN) -l $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS) -p $(PORT) -b 0.0.0.0
+endif
+
+
+devserver:
+ifdef PORT
+	$(PELICAN) -lr $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS) -p $(PORT)
+else
+	$(PELICAN) -lr $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS)
+endif
+
+publish:
+	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)
+
+{% set upload = [] %}
+{% if ssh %}
+{% set upload = upload + ["ssh_upload"] %}
+ssh_upload: publish
+	scp -P $(SSH_PORT) -r $(OUTPUTDIR)/* $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+
+{%- set upload = upload + ["rsync_upload"] -%}
+rsync_upload: publish
+	rsync -e "ssh -p $(SSH_PORT)" -P -rvzc --cvs-exclude --delete $(OUTPUTDIR)/ $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+
+{% endif %}
+{% if dropbox %}
+{% set upload = upload + ["dropbox_upload"] %}
+dropbox_upload: publish
+	cp -r $(OUTPUTDIR)/* $(DROPBOX_DIR)
+
+{% endif %}
+{% if ftp %}
+{% set upload = upload + ["ftp_upload"] %}
+ftp_upload: publish
+	lftp ftp://$(FTP_USER)@$(FTP_HOST) -e "mirror -R $(OUTPUTDIR) $(FTP_TARGET_DIR) ; quit"
+
+{% endif %}
+{% if s3 %}
+{% set upload = upload + ["s3_upload"] %}
+s3_upload: publish
+	aws s3 sync $(OUTPUTDIR)/ s3://$(S3_BUCKET) --acl public-read --delete
+
+{% endif %}
+{% if cloudfiles %}
+{% set upload = upload + ["cf_upload"] %}
+cf_upload: publish
+	cd $(OUTPUTDIR) && swift -v -A https://auth.api.rackspacecloud.com/v1.0 -U $(CLOUDFILES_USERNAME) -K $(CLOUDFILES_API_KEY) upload -c $(CLOUDFILES_CONTAINER) .
+
+{% endif %}
+{% if github %}
+{% set upload = upload + ["github"] %}
+github: publish
+	ghp-import -m "Generate Pelican site" -b $(GITHUB_PAGES_BRANCH) $(OUTPUTDIR)
+	git push origin $(GITHUB_PAGES_BRANCH)
+
+{% endif %}
+
+.PHONY: html help clean regenerate serve serve-global devserver stopserver publish {{ upload|join(" ") }}

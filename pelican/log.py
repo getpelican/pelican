@@ -91,6 +91,8 @@ class LimitFilter(logging.Filter):
     E.g.: log.warning(('43 is not the answer', 'More erroneous answers'))
     """
 
+    LOGS_DEDUP_MIN_LEVEL = logging.WARNING
+
     _ignore = set()
     _raised_messages = set()
     _threshold = 5
@@ -98,7 +100,7 @@ class LimitFilter(logging.Filter):
 
     def filter(self, record):
         # don't limit log messages for anything above "warning"
-        if record.levelno > logging.WARN:
+        if record.levelno > self.LOGS_DEDUP_MIN_LEVEL:
             return True
 
         # extract group
@@ -226,7 +228,8 @@ def get_formatter():
         return TextFormatter()
 
 
-def init(level=None, fatal='', handler=logging.StreamHandler(), name=None):
+def init(level=None, fatal='', handler=logging.StreamHandler(), name=None,
+         logs_dedup_min_level=None):
     FatalLogger.warnings_fatal = fatal.startswith('warning')
     FatalLogger.errors_fatal = bool(fatal)
 
@@ -237,6 +240,8 @@ def init(level=None, fatal='', handler=logging.StreamHandler(), name=None):
 
     if level:
         logger.setLevel(level)
+    if logs_dedup_min_level:
+        LimitFilter.LOGS_DEDUP_MIN_LEVEL = logs_dedup_min_level
 
 
 def log_warnings():

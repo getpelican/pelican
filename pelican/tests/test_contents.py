@@ -319,17 +319,21 @@ class TestPage(LoggedTestCase):
         )
 
         # also test for summary in metadata
-        args['metadata']['summary'] = (
+        parsed = (
             'A simple summary test, with a '
             '<a href="|filename|article.rst">link</a>'
         )
-        args['context']['localsiteurl'] = 'http://notmyidea.org'
-        p = Page(**args)
-        self.assertEqual(
-            p.summary,
+        linked = (
             'A simple summary test, with a '
             '<a href="http://notmyidea.org/article.html">link</a>'
         )
+        args['settings']['FORMATTED_FIELDS'] = ['summary', 'custom']
+        args['metadata']['summary'] = parsed
+        args['metadata']['custom'] = parsed
+        args['context']['localsiteurl'] = 'http://notmyidea.org'
+        p = Page(**args)
+        self.assertEqual(p.summary, linked)
+        self.assertEqual(p.custom, linked)
 
     def test_intrasite_link_more(self):
         # type does not take unicode in PY2 and bytes in PY3, which in
@@ -397,6 +401,54 @@ class TestPage(LoggedTestCase):
             '</blockquote>'
         )
 
+    def test_intrasite_link_absolute(self):
+        """Test that absolute URLs are merged properly."""
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings(
+            STATIC_URL='http://static.cool.site/{path}',
+            ARTICLE_URL='http://blog.cool.site/{slug}.html')
+        args['source_path'] = 'content'
+        args['context']['filenames'] = {
+            'images/poster.jpg': Static('',
+                                        settings=args['settings'],
+                                        source_path='images/poster.jpg'),
+            'article.rst': Article('',
+                                   settings=args['settings'],
+                                   metadata={'slug': 'article',
+                                             'title': 'Article'})
+        }
+
+        # Article link will go to blog
+        args['content'] = (
+            '<a href="{filename}article.rst">Article</a>'
+        )
+        content = Page(**args).get_content('http://cool.site')
+        self.assertEqual(
+            content,
+            '<a href="http://blog.cool.site/article.html">Article</a>'
+        )
+
+        # Page link will go to the main site
+        args['content'] = (
+            '<a href="{index}">Index</a>'
+        )
+        content = Page(**args).get_content('http://cool.site')
+        self.assertEqual(
+            content,
+            '<a href="http://cool.site/index.html">Index</a>'
+        )
+
+        # Image link will go to static
+        args['content'] = (
+            '<img src="{filename}/images/poster.jpg"/>'
+        )
+        content = Page(**args).get_content('http://cool.site')
+        self.assertEqual(
+            content,
+            '<img src="http://static.cool.site/images/poster.jpg"/>'
+        )
+
     def test_intrasite_link_markdown_spaces(self):
         # Markdown introduces %20 instead of spaces, this tests that
         # we support markdown doing this.
@@ -445,7 +497,13 @@ class TestArticle(TestPage):
 
     def test_slugify_category_author(self):
         settings = get_settings()
-        settings['SLUG_SUBSTITUTIONS'] = [('C#', 'csharp')]
+        settings['SLUG_REGEX_SUBSTITUTIONS'] = [
+            (r'C#', 'csharp'),
+            (r'[^\w\s-]', ''),
+            (r'(?u)\A\s*', ''),
+            (r'(?u)\s*\Z', ''),
+            (r'[-\s]+', '-'),
+        ]
         settings['ARTICLE_URL'] = '{author}/{category}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = '{author}/{category}/{slug}/index.html'
         article_kwargs = self._copy_page_kwargs()
@@ -461,9 +519,13 @@ class TestArticle(TestPage):
 
     def test_slugify_with_author_substitutions(self):
         settings = get_settings()
-        settings['AUTHOR_SUBSTITUTIONS'] = [
-                                    ('Alexander Todorov', 'atodorov', False),
-                                    ('Krasimir Tsonev', 'krasimir', False),
+        settings['AUTHOR_REGEX_SUBSTITUTIONS'] = [
+            ('Alexander Todorov', 'atodorov'),
+            ('Krasimir Tsonev', 'krasimir'),
+            (r'[^\w\s-]', ''),
+            (r'(?u)\A\s*', ''),
+            (r'(?u)\s*\Z', ''),
+            (r'[-\s]+', '-'),
         ]
         settings['ARTICLE_URL'] = 'blog/{author}/{slug}/'
         settings['ARTICLE_SAVE_AS'] = 'blog/{author}/{slug}/index.html'
@@ -478,7 +540,9 @@ class TestArticle(TestPage):
 
     def test_slugify_category_with_dots(self):
         settings = get_settings()
-        settings['CATEGORY_SUBSTITUTIONS'] = [('Fedora QA', 'fedora.qa', True)]
+        settings['CATEGORY_REGEX_SUBSTITUTIONS'] = [
+            ('Fedora QA', 'fedora.qa'),
+        ]
         settings['ARTICLE_URL'] = '{category}/{slug}/'
         article_kwargs = self._copy_page_kwargs()
         article_kwargs['metadata']['category'] = Category('Fedora QA',
@@ -490,7 +554,9 @@ class TestArticle(TestPage):
 
     def test_slugify_tags_with_dots(self):
         settings = get_settings()
-        settings['TAG_SUBSTITUTIONS'] = [('Fedora QA', 'fedora.qa', True)]
+        settings['TAG_REGEX_SUBSTITUTIONS'] = [
+            ('Fedora QA', 'fedora.qa'),
+        ]
         settings['ARTICLE_URL'] = '{tag}/{slug}/'
         article_kwargs = self._copy_page_kwargs()
         article_kwargs['metadata']['tag'] = Tag('Fedora QA', settings)

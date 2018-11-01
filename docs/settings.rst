@@ -21,6 +21,12 @@ Settings are configured in the form of a Python module (a file). There is an
 <https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_
 available for reference.
 
+To see a list of current settings in your environment, including both default
+and any customized values, run the following command (append one or more
+specific setting names as arguments to see values for those settings only)::
+
+    pelican --print-settings
+
 All the setting identifiers must be set in all-caps, otherwise they will not be
 processed. Setting values that are numbers (5, 20, etc.), booleans (True,
 False, None, etc.), dictionaries, or tuples should *not* be enclosed in
@@ -28,10 +34,9 @@ quotation marks. All other values (i.e., strings) *must* be enclosed in
 quotation marks.
 
 Unless otherwise specified, settings that refer to paths can be either absolute
-or relative to the configuration file.
-
-The settings you define in the configuration file will be passed to the
-templates, which allows you to use your settings to add site-wide content.
+or relative to the configuration file. The settings you define in the
+configuration file will be passed to the templates, which allows you to use your
+settings to add site-wide content.
 
 Here is a list of settings for Pelican:
 
@@ -131,7 +136,7 @@ Basic settings
 
    Extra configuration settings for the Markdown processor. Refer to the Python
    Markdown documentation's `Options section
-   <http://pythonhosted.org/Markdown/reference.html#markdown>`_ for a complete
+   <https://python-markdown.github.io/reference/#markdown>`_ for a complete
    list of supported options. The ``extensions`` option will be automatically
    computed from the ``extension_configs`` option.
 
@@ -328,6 +333,15 @@ Basic settings
    A list of metadata fields containing reST/Markdown content to be parsed and
    translated to HTML.
 
+.. data:: PORT = 8000
+
+   The TCP port to serve content from the output folder via HTTP when pelican
+   is run with --listen
+
+.. data:: BIND = ''
+
+   The IP to which to bind the HTTP server.
+
 
 URL settings
 ============
@@ -436,6 +450,24 @@ respectively.
 
    The location we will save the page which doesn't use the default language.
 
+.. data:: DRAFT_PAGE_URL = 'drafts/pages/{slug}.html'
+
+   The URL used to link to a page draft.
+
+.. data:: DRAFT_PAGE_SAVE_AS = 'drafts/pages/{slug}.html'
+
+   The actual location a page draft is saved at.
+
+.. data:: DRAFT_PAGE_LANG_URL = 'drafts/pages/{slug}-{lang}.html'
+
+   The URL used to link to a page draft which doesn't use the default
+   language.
+
+.. data:: DRAFT_PAGE_LANG_SAVE_AS = 'drafts/pages/{slug}-{lang}.html'
+
+   The actual location a page draft which doesn't use the default language is
+   saved at.
+
 .. data:: CATEGORY_URL = 'category/{slug}.html'
 
    The URL to use for a category.
@@ -464,34 +496,28 @@ respectively.
 
    The location to save per-year archives of your posts.
 
+.. data:: YEAR_ARCHIVE_URL = ''
+
+   The URL to use for per-year archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
 .. data:: MONTH_ARCHIVE_SAVE_AS = ''
 
    The location to save per-month archives of your posts.
+
+.. data:: MONTH_ARCHIVE_URL = ''
+
+   The URL to use for per-month archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
 
 .. data:: DAY_ARCHIVE_SAVE_AS = ''
 
    The location to save per-day archives of your posts.
 
-.. data:: SLUG_SUBSTITUTIONS = ()
+.. data:: DAY_ARCHIVE_URL = ''
 
-   Substitutions to make prior to stripping out non-alphanumerics when
-   generating slugs. Specified as a list of 3-tuples of ``(from, to, skip)``
-   which are applied in order. ``skip`` is a boolean indicating whether or not
-   to skip replacement of non-alphanumeric characters.  Useful for backward
-   compatibility with existing URLs.
-
-.. data:: AUTHOR_SUBSTITUTIONS = ()
-
-   Substitutions for authors. ``SLUG_SUBSTITUTIONS`` is not taken into account
-   here!
-
-.. data:: CATEGORY_SUBSTITUTIONS = ()
-
-   Added to ``SLUG_SUBSTITUTIONS`` for categories.
-
-.. data:: TAG_SUBSTITUTIONS = ()
-
-   Added to ``SLUG_SUBSTITUTIONS`` for tags.
+   The URL to use for per-day archives of your posts. Used only if you have the
+   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
 
 .. note::
 
@@ -499,24 +525,6 @@ respectively.
     you are the only author on your site and thus do not need an Authors page),
     set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
     relevant page from being generated.
-
-.. note::
-
-    Substitutions are applied in order with the side effect that keeping
-    non-alphanum characters applies to the whole string when a replacement
-    is made.
-
-    For example if you have the following setting::
-
-       SLUG_SUBSTITUTIONS = (('C++', 'cpp'), ('keep dot', 'keep.dot', True))
-
-    the string ``Keep Dot`` will be converted to ``keep.dot``, however
-    ``C++ will keep dot`` will be converted to ``cpp will keep.dot`` instead
-    of ``cpp-will-keep.dot``!
-
-    If you want to keep non-alphanum characters only for tags or categories
-    but not other slugs then configure ``TAG_SUBSTITUTIONS`` and
-    ``CATEGORY_SUBSTITUTIONS`` respectively!
 
 Pelican can optionally create per-year, per-month, and per-day archives of your
 posts. These secondary archives are disabled by default but are automatically
@@ -578,6 +586,33 @@ template.
 URLs for direct template pages are theme-dependent. Some themes use
 corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'archives.html'``, ``'authors.html'``, ``'categories.html'``, ``'tags.html'``.
+
+.. data:: SLUG_REGEX_SUBSTITUTIONS = [
+        (r'[^\w\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
+        (r'(?u)\A\s*', ''),  # strip leading whitespace
+        (r'(?u)\s*\Z', ''),  # strip trailing whitespace
+        (r'[-\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
+    ]
+
+   Regex substitutions to make when generating slugs of articles and pages.
+   Specified as a list of pairs of ``(from, to)`` which are applied in order,
+   ignoring case. The default substitutions have the effect of removing
+   non-alphanumeric characters and converting internal whitespace to dashes.
+   Apart from these substitutions, slugs are always converted to lowercase
+   ascii characters and leading and trailing whitespace is stripped. Useful for
+   backward compatibility with existing URLs.
+
+.. data:: AUTHOR_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+
+   Regex substitutions for author slugs. Defaults to ``SLUG_REGEX_SUBSTITUTIONS``.
+
+.. data:: CATEGORY_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+
+   Regex substitutions for category slugs. Defaults to ``SLUG_REGEX_SUBSTITUTIONS``.
+
+.. data:: TAG_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+
+   Regex substitutions for tag slugs. Defaults to ``SLUG_REGEX_SUBSTITUTIONS``.
 
 Time and Date
 =============
@@ -699,6 +734,10 @@ Template pages
                          'src/resume.html': 'dest/resume.html',
                          'src/contact.html': 'dest/contact.html'}
 
+.. data:: TEMPLATE_EXTENSION = ['.html']
+
+   The extensions to use when looking up template files from template names.
+
 .. data:: DIRECT_TEMPLATES = ['index', 'categories', 'authors', 'archives']
 
    List of templates that are used directly to render content. Typically direct
@@ -706,15 +745,8 @@ Template pages
    tags and category index pages). If the tag and category collections are not
    needed, set ``DIRECT_TEMPLATES = ['index', 'archives']``
 
-.. data:: PAGINATED_DIRECT_TEMPLATES = ['index']
-
-   Provides the direct templates that should be paginated.
-
-.. data:: EXTRA_TEMPLATES_PATHS = []
-
-   A list of paths you want Jinja2 to search for templates.  Can be used to
-   separate templates from the theme.  Example: projects, resume, profile ...
-   These templates need to use ``DIRECT_TEMPLATES`` setting.
+   ``DIRECT_TEMPLATES`` are searched for over paths maintained in
+   ``THEME_TEMPLATES_OVERRIDES``.
 
 
 Metadata
@@ -811,46 +843,95 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
 .. data:: FEED_ATOM = None, i.e. no Atom feed
 
-   Relative URL to output the Atom feed.
+   The location to save the Atom feed.
+
+.. data:: FEED_ATOM_URL = None
+
+   Relative URL of the Atom feed. If not set, ``FEED_ATOM`` is used both for
+   save location and URL.
 
 .. data:: FEED_RSS = None, i.e. no RSS
 
-   Relative URL to output the RSS feed.
+   The location to save the RSS feed.
+
+.. data:: FEED_RSS_URL = None
+
+   Relative URL of the RSS feed. If not set, ``FEED_RSS`` is used both for save
+   location and URL.
 
 .. data:: FEED_ALL_ATOM = 'feeds/all.atom.xml'
 
-   Relative URL to output the all-posts Atom feed: this feed will contain all
+   The location to save the all-posts Atom feed: this feed will contain all
    posts regardless of their language.
+
+.. data:: FEED_ALL_ATOM_URL = None
+
+   Relative URL of the all-posts Atom feed. If not set, ``FEED_ALL_ATOM`` is
+   used both for save location and URL.
 
 .. data:: FEED_ALL_RSS = None, i.e. no all-posts RSS
 
-   Relative URL to output the all-posts RSS feed: this feed will contain all
+   The location to save the the all-posts RSS feed: this feed will contain all
    posts regardless of their language.
+
+.. data:: FEED_ALL_RSS_URL = None
+
+   Relative URL of the all-posts RSS feed. If not set, ``FEED_ALL_RSS`` is used
+   both for save location and URL.
 
 .. data:: CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
 
-   Where to put the category Atom feeds. [2]_
+   The location to save the category Atom feeds. [2]_
+
+.. data:: CATEGORY_FEED_ATOM_URL = None
+
+   Relative URL of the category Atom feeds, including the ``%s`` placeholder.
+   [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for save location and
+   URL.
 
 .. data:: CATEGORY_FEED_RSS = None, i.e. no RSS
 
-   Where to put the category RSS feeds.
+   The location to save the category RSS feeds, including the ``%s``
+   placeholder. [2]_
+
+.. data:: CATEGORY_FEED_RSS_URL = None
+
+   Relative URL of the category RSS feeds, including the ``%s`` placeholder.
+   [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save location and
+   URL.
 
 .. data:: AUTHOR_FEED_ATOM = 'feeds/%s.atom.xml'
 
-   Where to put the author Atom feeds. [2]_
+   The location to save the author Atom feeds. [2]_
+
+.. data:: AUTHOR_FEED_ATOM_URL = None
+
+   Relative URL of the author Atom feeds, including the ``%s`` placeholder.
+   [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save location and
+   URL.
 
 .. data:: AUTHOR_FEED_RSS = 'feeds/%s.rss.xml'
 
-   Where to put the author RSS feeds. [2]_
+   The location to save the author RSS feeds. [2]_
+
+.. data:: AUTHOR_FEED_RSS_URL = None
+
+   Relative URL of the author RSS feeds, including the ``%s`` placeholder. [2]_
+   If not set, ``AUTHOR_FEED_RSS`` is used both for save location and URL.
 
 .. data:: TAG_FEED_ATOM = None, i.e. no tag feed
 
-   Relative URL to output the tag Atom feed. It should be defined using a "%s"
-   match in the tag name.
+   The location to save the tag Atom feed, including the ``%s`` placeholder.
+   [2]_
+
+.. data:: TAG_FEED_ATOM_URL = None
+
+   Relative URL of the tag Atom feed, including the ``%s`` placeholder. [2]_
 
 .. data:: TAG_FEED_RSS = None, i.e. no RSS tag feed
 
-   Relative URL to output the tag RSS feed
+   Relative URL to output the tag RSS feed, including the ``%s`` placeholder.
+   If not set, ``TAG_FEED_RSS`` is used both for save location and URL.
 
 .. data:: FEED_MAX_ITEMS
 
@@ -865,7 +946,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
 If you don't want to generate some or any of these feeds, set the above variables to ``None``.
 
-.. [2] %s is the name of the category.
+.. [2] ``%s`` is replaced by name of the category / author / tag.
 
 
 FeedBurner
@@ -908,7 +989,15 @@ You can use the following settings to configure the pagination.
    The maximum number of articles to include on a page, not including orphans.
    False to disable pagination.
 
-.. data:: PAGINATION_PATTERNS
+.. data:: PAGINATED_TEMPLATES = {'index': None, 'tag': None, 'category': None, 'author': None}
+
+   The templates to use pagination with, and the number of articles to include
+   on a page. If this value is ``None``, it defaults to ``DEFAULT_PAGINATION``.
+
+.. data:: PAGINATION_PATTERNS = (
+      (1, '{name}{extension}', '{name}{extension}'),
+      (2, '{name}{number}{extension}', '{name}{number}{extension}'),
+  )
 
    A set of patterns that are used to determine advanced pagination output.
 
@@ -916,24 +1005,27 @@ You can use the following settings to configure the pagination.
 Using Pagination Patterns
 -------------------------
 
-The ``PAGINATION_PATTERNS`` setting can be used to configure where
-subsequent pages are created. The setting is a sequence of three
-element tuples, where each tuple consists of::
+By default, pages subsequent to ``.../foo.html`` are created as
+``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used to
+change this. It takes a sequence of triples, where each triple consists of::
 
-  (minimum page, URL setting, SAVE_AS setting,)
+  (minimum_page, page_url, page_save_as,)
 
-For example, if you wanted the first page to just be ``/``, and the
-second (and subsequent) pages to be ``/page/2/``, you would set
-``PAGINATION_PATTERNS`` as follows::
+For ``page_url`` and ``page_save_as``, you may use a number of variables.
+``{url}`` and ``{save_as}`` correspond respectively to the ``*_URL`` and
+``*_SAVE_AS`` values of the corresponding page type (e.g. ``ARTICLE_SAVE_AS``).
+If ``{save_as} == foo/bar.html``, then ``{name} == foo/bar`` and
+``{extension} == .html``. ``{base_name}`` equals ``{name}`` except that it
+strips trailing ``/index`` if present. ``{number}`` equals the page number.
+
+For example, if you want to leave the first page unchanged, but place
+subsequent pages at ``.../page/2/`` etc, you could set ``PAGINATION_PATTERNS``
+as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{base_name}/', '{base_name}/index.html'),
+      (1, '{url}', '{save_as}`,
       (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
   )
-
-This would cause the first page to be written to
-``{base_name}/index.html``, and subsequent ones would be written into
-``page/{number}`` directories.
 
 
 Translations
@@ -946,13 +1038,37 @@ more information.
 
    The default language to use.
 
+.. data:: ARTICLE_TRANSLATION_ID = 'slug'
+
+   The metadata attribute(s) used to identify which articles are translations
+   of one another. May be a string or a collection of strings. Set to ``None``
+   or ``False`` to disable the identification of translations.
+
+.. data:: PAGE_TRANSLATION_ID = 'slug'
+
+   The metadata attribute(s) used to identify which pages are translations
+   of one another. May be a string or a collection of strings. Set to ``None``
+   or ``False`` to disable the identification of translations.
+
 .. data:: TRANSLATION_FEED_ATOM = 'feeds/all-%s.atom.xml'
 
-   Where to put the Atom feed for translations. [3]_
+   The location to save the Atom feed for translations. [3]_
+
+.. data:: TRANSLATION_FEED_ATOM_URL = None
+
+   Relative URL of the Atom feed for translations, including the ``%s``
+   placeholder. [3]_ If not set, ``TRANSLATION_FEED_ATOM`` is used both for
+   save location and URL.
 
 .. data:: TRANSLATION_FEED_RSS = None, i.e. no RSS
 
    Where to put the RSS feed for translations.
+
+.. data:: TRANSLATION_FEED_RSS_URL = None
+
+   Relative URL of the RSS feed for translations, including the ``%s``
+   placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for save
+   location and URL.
 
 .. [3] %s is the language
 
@@ -981,7 +1097,7 @@ Ordering content
 
 .. data:: PAGE_ORDER_BY = 'basename'
 
-   Defines how the pages (``PAGES`` variable in the template) are sorted.
+   Defines how the pages (``pages`` variable in the template) are sorted.
    Options are same as ``ARTICLE_ORDER_BY``.  The default value, ``'basename'``
    will sort pages by their basename.
 
@@ -1010,6 +1126,21 @@ However, here are the settings that are related to themes.
    theme has other static paths, you can put them here. If files or directories
    with the same names are included in the paths defined in this settings, they
    will be progressively overwritten.
+
+.. data:: THEME_TEMPLATES_OVERRIDES = []
+
+   A list of paths you want Jinja2 to search for templates before searching the
+   theme's ``templates/`` directory.  Allows for overriding individual theme
+   template files without having to fork an existing theme.  Jinja2 searches in
+   the following order: files in ``THEME_TEMPLATES_OVERRIDES`` first, then the
+   theme's ``templates/``.
+
+   You can also extend templates from the theme using the ``{% extends %}``
+   directive utilizing the ``!theme`` prefix as shown in the following example:
+
+   .. parsed-literal::
+
+      {% extends '!theme/article.html' %}
 
 .. data:: CSS_FILE = 'main.css'
 
@@ -1130,15 +1261,17 @@ Simply populate the list with the log messages you want to hide, and they will
 be filtered out.
 
 For example::
-
-   [(logging.WARN, 'TAG_SAVE_AS is set to False')]
+    
+   import logging
+   LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
 
 It is possible to filter out messages by a template. Check out source code to
 obtain a template.
 
 For example::
 
-   [(logging.WARN, 'Empty alt attribute for image %s in %s')]
+   import logging
+   LOG_FILTER = [(logging.WARN, 'Empty alt attribute for image %s in %s')]
 
 .. Warning::
    Silencing messages by templates is a dangerous feature. It is possible to

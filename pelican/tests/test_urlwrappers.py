@@ -55,30 +55,29 @@ class TestURLWrapper(unittest.TestCase):
         self.assertEqual(author, author_equal)
 
         cat_ascii = Category('指導書', settings={})
-        self.assertEqual(cat_ascii, u'zhi-dao-shu')
+        self.assertEqual(cat_ascii, u'zhi dao shu')
 
     def test_slugify_with_substitutions_and_dots(self):
-        tag = Tag('Tag Dot',
-                  settings={
-                        'TAG_SUBSTITUTIONS': [('Tag Dot', 'tag.dot', True)]
-                    })
+        tag = Tag('Tag Dot', settings={'TAG_REGEX_SUBSTITUTIONS': [
+            ('Tag Dot', 'tag.dot'),
+        ]})
         cat = Category('Category Dot',
-                       settings={
-                        'CATEGORY_SUBSTITUTIONS': (('Category Dot',
-                                                    'cat.dot',
-                                                    True),)
-                        })
+                       settings={'CATEGORY_REGEX_SUBSTITUTIONS': [
+                           ('Category Dot', 'cat.dot'),
+                       ]})
 
         self.assertEqual(tag.slug, 'tag.dot')
         self.assertEqual(cat.slug, 'cat.dot')
 
     def test_author_slug_substitutions(self):
-        settings = {
-            'AUTHOR_SUBSTITUTIONS': [
-                                    ('Alexander Todorov', 'atodorov', False),
-                                    ('Krasimir Tsonev', 'krasimir', False),
-            ]
-        }
+        settings = {'AUTHOR_REGEX_SUBSTITUTIONS': [
+            ('Alexander Todorov', 'atodorov'),
+            ('Krasimir Tsonev', 'krasimir'),
+            (r'[^\w\s-]', ''),
+            (r'(?u)\A\s*', ''),
+            (r'(?u)\s*\Z', ''),
+            (r'[-\s]+', '-'),
+        ]}
 
         author1 = Author('Mr. Senko', settings=settings)
         author2 = Author('Alexander Todorov', settings=settings)

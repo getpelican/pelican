@@ -31,6 +31,20 @@ except ImportError:
 # This means that _filter_discardable_metadata() must be called on processed
 # metadata dicts before use, to remove the items with the special value.
 _DISCARD = object()
+
+DUPLICATES_DEFINITIONS_ALLOWED = {
+    'tags': False,
+    'date': False,
+    'modified': False,
+    'status': False,
+    'category': False,
+    'author': False,
+    'save_as': False,
+    'url': False,
+    'authors': False,
+    'slug': False
+}
+
 METADATA_PROCESSORS = {
     'tags': lambda x, y: ([
         Tag(tag, y)
@@ -203,11 +217,18 @@ class RstReader(BaseReader):
     def __init__(self, *args, **kwargs):
         super(RstReader, self).__init__(*args, **kwargs)
 
-    def _parse_metadata(self, document):
+    def _parse_metadata(self, document, source_path):
         """Return the dict containing document metadata"""
         formatted_fields = self.settings['FORMATTED_FIELDS']
 
         output = {}
+
+        if document.first_child_matching_class(docutils.nodes.title) is None:
+            logger.warning(
+                'Document title missing in file %s: '
+                'Ensure exactly one top level section',
+                source_path)
+
         for docinfo in document.traverse(docutils.nodes.docinfo):
             for element in docinfo.children:
                 if element.tagname == 'field':  # custom fields (e.g. summary)
@@ -234,6 +255,7 @@ class RstReader(BaseReader):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8',
+                        'language_code': self.settings.get('DEFAULT_LANG'),
                         'exit_status_level': 2,
                         'embed_stylesheet': False}
         user_params = self.settings.get('DOCUTILS_SETTINGS')
@@ -256,7 +278,7 @@ class RstReader(BaseReader):
         parts = pub.writer.parts
         content = parts.get('body')
 
-        metadata = self._parse_metadata(pub.document)
+        metadata = self._parse_metadata(pub.document, source_path)
         metadata.setdefault('title', parts.get('title'))
 
         return content, metadata
@@ -294,7 +316,7 @@ class MarkdownReader(BaseReader):
                 self._md.reset()
                 formatted = self._md.convert(formatted_values)
                 output[name] = self.process_metadata(name, formatted)
-            elif name in METADATA_PROCESSORS:
+            elif not DUPLICATES_DEFINITIONS_ALLOWED.get(name, True):
                 if len(value) > 1:
                     logger.warning(
                         'Duplicate definition of `%s` '

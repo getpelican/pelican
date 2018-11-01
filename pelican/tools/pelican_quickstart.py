@@ -6,10 +6,16 @@ import argparse
 import codecs
 import locale
 import os
-import string
 import sys
 
+from jinja2 import Environment, FileSystemLoader
+
 import pytz
+
+try:
+    import readline  # NOQA
+except ImportError:
+    pass
 
 try:
     import tzlocal
@@ -22,7 +28,11 @@ import six
 from pelican import __version__
 
 locale.setlocale(locale.LC_ALL, '')
-_DEFAULT_LANGUAGE = locale.getlocale()[0]
+try:
+    _DEFAULT_LANGUAGE = locale.getlocale()[0]
+except ValueError:
+    # Don't fail on macosx: "unknown locale: UTF-8"
+    _DEFAULT_LANGUAGE = None
 if _DEFAULT_LANGUAGE is None:
     _DEFAULT_LANGUAGE = 'English'
 else:
@@ -30,6 +40,11 @@ else:
 
 _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               "templates")
+_jinja_env = Environment(
+    loader=FileSystemLoader(_TEMPLATES_DIR),
+    trim_blocks=True,
+)
+
 
 _GITHUB_PAGES_BRANCHES = {
     'personal': 'master',
@@ -97,20 +112,6 @@ def decoding_strings(f):
                 return out.decode(sys.stdin.encoding)
         return out
     return wrapper
-
-
-def get_template(name, as_encoding='utf-8'):
-    template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
-
-    if not os.path.isfile(template):
-        raise RuntimeError("Cannot open {0}".format(template))
-
-    with codecs.open(template, 'r', as_encoding) as fd:
-        line = fd.readline()
-        while line:
-            yield line
-            line = fd.readline()
-        fd.close()
 
 
 @decoding_strings
@@ -184,7 +185,7 @@ def ask(question, answer=str_compat, default=None, length=None):
                 print('You must enter an integer')
         return r
     else:
-        raise NotImplemented(
+        raise NotImplementedError(
             'Argument `answer` must be str_compat, bool, or integer')
 
 
@@ -265,14 +266,13 @@ needed by Pelican.
     CONF['timezone'] = ask_timezone('What is your time zone?',
                                     CONF['timezone'], _TZ_URL)
 
-    automation = ask('Do you want to generate a Fabfile/Makefile '
+    automation = ask('Do you want to generate a tasks.py/Makefile '
                      'to automate generation and publishing?', bool, True)
-    develop = ask('Do you want an auto-reload & simpleHTTP script '
-                  'to assist with theme and site development?', bool, True)
 
     if automation:
         if ask('Do you want to upload your website using FTP?',
                answer=bool, default=False):
+            CONF['ftp'] = True,
             CONF['ftp_host'] = ask('What is the hostname of your FTP server?',
                                    str_compat, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on that server?',
@@ -282,6 +282,7 @@ needed by Pelican.
                                          str_compat, CONF['ftp_target_dir'])
         if ask('Do you want to upload your website using SSH?',
                answer=bool, default=False):
+            CONF['ssh'] = True,
             CONF['ssh_host'] = ask('What is the hostname of your SSH server?',
                                    str_compat, CONF['ssh_host'])
             CONF['ssh_port'] = ask('What is the port of your SSH server?',
@@ -294,16 +295,19 @@ needed by Pelican.
 
         if ask('Do you want to upload your website using Dropbox?',
                answer=bool, default=False):
+            CONF['dropbox'] = True,
             CONF['dropbox_dir'] = ask('Where is your Dropbox directory?',
                                       str_compat, CONF['dropbox_dir'])
 
         if ask('Do you want to upload your website using S3?',
                answer=bool, default=False):
+            CONF['s3'] = True,
             CONF['s3_bucket'] = ask('What is the name of your S3 bucket?',
                                     str_compat, CONF['s3_bucket'])
 
         if ask('Do you want to upload your website using '
                'Rackspace Cloud Files?', answer=bool, default=False):
+            CONF['cloudfiles'] = True,
             CONF['cloudfiles_username'] = ask('What is your Rackspace '
                                               'Cloud username?', str_compat,
                                               CONF['cloudfiles_username'])
@@ -317,6 +321,7 @@ needed by Pelican.
 
         if ask('Do you want to upload your website using GitHub Pages?',
                answer=bool, default=False):
+            CONF['github'] = True,
             if ask('Is this your personal page (username.github.io)?',
                    answer=bool, default=False):
                 CONF['github_pages_branch'] = \
@@ -342,9 +347,8 @@ needed by Pelican.
             for key, value in CONF.items():
                 conf_python[key] = repr(value)
 
-            for line in get_template('pelicanconf.py'):
-                template = string.Template(line)
-                fd.write(template.safe_substitute(conf_python))
+            _template = _jinja_env.get_template('pelicanconf.py.jinja2')
+            fd.write(_template.render(**conf_python))
             fd.close()
     except OSError as e:
         print('Error: {0}'.format(e))
@@ -352,63 +356,30 @@ needed by Pelican.
     try:
         with codecs.open(os.path.join(CONF['basedir'], 'publishconf.py'),
                          'w', 'utf-8') as fd:
-            for line in get_template('publishconf.py'):
-                template = string.Template(line)
-                fd.write(template.safe_substitute(CONF))
+            _template = _jinja_env.get_template('publishconf.py.jinja2')
+            fd.write(_template.render(**CONF))
             fd.close()
     except OSError as e:
         print('Error: {0}'.format(e))
 
     if automation:
         try:
-            with codecs.open(os.path.join(CONF['basedir'], 'fabfile.py'),
+            with codecs.open(os.path.join(CONF['basedir'], 'tasks.py'),
                              'w', 'utf-8') as fd:
-                for line in get_template('fabfile.py'):
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
+                _template = _jinja_env.get_template('tasks.py.jinja2')
+                fd.write(_template.render(**CONF))
                 fd.close()
         except OSError as e:
             print('Error: {0}'.format(e))
         try:
             with codecs.open(os.path.join(CONF['basedir'], 'Makefile'),
                              'w', 'utf-8') as fd:
-                mkfile_template_name = 'Makefile'
-                py_v = 'PY?=python'
+                py_v = 'python'
                 if six.PY3:
-                    py_v = 'PY?=python3'
-                template = string.Template(py_v)
-                fd.write(template.safe_substitute(CONF))
-                fd.write('\n')
-                for line in get_template(mkfile_template_name):
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
+                    py_v = 'python3'
+                _template = _jinja_env.get_template('Makefile.jinja2')
+                fd.write(_template.render(py_v=py_v, **CONF))
                 fd.close()
-        except OSError as e:
-            print('Error: {0}'.format(e))
-
-    if develop:
-        conf_shell = dict()
-        for key, value in CONF.items():
-            if isinstance(value, six.string_types) and ' ' in value:
-                value = '"' + value.replace('"', '\\"') + '"'
-            conf_shell[key] = value
-        try:
-            with codecs.open(os.path.join(CONF['basedir'],
-                                          'develop_server.sh'),
-                             'w', 'utf-8') as fd:
-                lines = list(get_template('develop_server.sh'))
-                py_v = 'PY=${PY:-python}\n'
-                if six.PY3:
-                    py_v = 'PY=${PY:-python3}\n'
-                lines = lines[:4] + [py_v] + lines[4:]
-                for line in lines:
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(conf_shell))
-                fd.close()
-
-                # mode 0o755
-                os.chmod((os.path.join(CONF['basedir'],
-                                       'develop_server.sh')), 493)
         except OSError as e:
             print('Error: {0}'.format(e))
 
