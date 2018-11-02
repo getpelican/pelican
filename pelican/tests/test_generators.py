@@ -10,7 +10,7 @@ from tempfile import mkdtemp
 from pelican.generators import (ArticlesGenerator, Generator, PagesGenerator,
                                 PelicanTemplateNotFound, StaticGenerator,
                                 TemplatePagesGenerator)
-from pelican.tests.support import get_settings, unittest
+from pelican.tests.support import get_context, get_settings, unittest
 from pelican.writers import Writer
 
 try:
@@ -178,14 +178,15 @@ class TestArticlesGenerator(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['READERS'] = {'asc': None}
         settings['CACHE_CONTENT'] = False
+        context = get_context(settings)
 
         cls.generator = ArticlesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         cls.generator.generate_context()
         cls.articles = cls.distill_articles(cls.generator.articles)
@@ -299,15 +300,15 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(sorted(categories), sorted(categories_expected))
 
     def test_do_not_use_folder_as_category(self):
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['USE_FOLDER_AS_CATEGORY'] = False
         settings['CACHE_PATH'] = self.temp_cache
         settings['READERS'] = {'asc': None}
-        settings['filenames'] = {}
+        context = get_context(settings)
         generator = ArticlesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         # test for name
@@ -328,15 +329,16 @@ class TestArticlesGenerator(unittest.TestCase):
     @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_direct_templates_save_as_url_default(self):
 
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['CACHE_PATH'] = self.temp_cache
+        context = get_context(settings)
         generator = ArticlesGenerator(
-            context=settings, settings=settings,
+            context=context, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
         write = MagicMock()
         generator.generate_direct_templates(write)
         write.assert_called_with("archives.html",
-                                 generator.get_template("archives"), settings,
+                                 generator.get_template("archives"), context,
                                  articles=generator.articles,
                                  dates=generator.dates, blog=True,
                                  template_name='archives',
@@ -396,13 +398,14 @@ class TestArticlesGenerator(unittest.TestCase):
         """
         old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
-        settings = get_settings(filenames={})
+        settings = get_settings()
 
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
         settings['YEAR_ARCHIVE_URL'] = 'posts/{date:%Y}/'
         settings['CACHE_PATH'] = self.temp_cache
+        context = get_context(settings)
         generator = ArticlesGenerator(
-            context=settings, settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         write = MagicMock()
@@ -411,20 +414,20 @@ class TestArticlesGenerator(unittest.TestCase):
         articles = [d for d in generator.articles if d.date.year == 1970]
         self.assertEqual(len(dates), 1)
         # among other things it must have at least been called with this
-        settings["period"] = (1970,)
+        context["period"] = (1970,)
         write.assert_called_with("posts/1970/index.html",
                                  generator.get_template("period_archives"),
-                                 settings, blog=True, articles=articles,
+                                 context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
                                  url="posts/1970/")
 
-        del settings["period"]
         settings['MONTH_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/index.html'
         settings['MONTH_ARCHIVE_URL'] = \
             'posts/{date:%Y}/{date:%b}/'
+        context = get_context(settings)
         generator = ArticlesGenerator(
-            context=settings, settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         write = MagicMock()
@@ -434,21 +437,21 @@ class TestArticlesGenerator(unittest.TestCase):
         articles = [d for d in generator.articles
                     if d.date.year == 1970 and d.date.month == 1]
         self.assertEqual(len(dates), 1)
-        settings["period"] = (1970, "January")
+        context["period"] = (1970, "January")
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/index.html",
                                  generator.get_template("period_archives"),
-                                 settings, blog=True, articles=articles,
+                                 context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
                                  url="posts/1970/Jan/")
 
-        del settings["period"]
         settings['DAY_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
         settings['DAY_ARCHIVE_URL'] = \
             'posts/{date:%Y}/{date:%b}/{date:%d}/'
+        context = get_context(settings)
         generator = ArticlesGenerator(
-            context=settings, settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         write = MagicMock()
@@ -466,20 +469,21 @@ class TestArticlesGenerator(unittest.TestCase):
             d.date.day == 1
         ]
         self.assertEqual(len(dates), 1)
-        settings["period"] = (1970, "January", 1)
+        context["period"] = (1970, "January", 1)
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/01/index.html",
                                  generator.get_template("period_archives"),
-                                 settings, blog=True, articles=articles,
+                                 context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
                                  url="posts/1970/Jan/01/")
         locale.setlocale(locale.LC_ALL, old_locale)
 
     def test_nonexistent_template(self):
         """Attempt to load a non-existent template"""
-        settings = get_settings(filenames={})
+        settings = get_settings()
+        context = get_context(settings)
         generator = ArticlesGenerator(
-            context=settings, settings=settings,
+            context=context, settings=settings,
             path=None, theme=settings['THEME'], output_path=None)
         self.assertRaises(Exception, generator.get_template, "not_a_template")
 
@@ -497,7 +501,7 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(sorted(authors), sorted(authors_expected))
 
     def test_standard_metadata_in_default_metadata(self):
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['CACHE_CONTENT'] = False
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
@@ -506,8 +510,9 @@ class TestArticlesGenerator(unittest.TestCase):
                                         # DEFAULT_CATEGORY
                                         ('category', 'Random'),
                                         ('tags', 'general, untagged'))
+        context = get_context(settings)
         generator = ArticlesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
 
@@ -530,13 +535,14 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(tags, tags_expected)
 
     def test_article_order_by(self):
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['ARTICLE_ORDER_BY'] = 'title'
+        context = get_context(settings)
 
         generator = ArticlesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
 
@@ -575,13 +581,14 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(articles, expected)
 
         # reversed title
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['DEFAULT_CATEGORY'] = 'Default'
         settings['DEFAULT_DATE'] = (1970, 1, 1)
         settings['ARTICLE_ORDER_BY'] = 'reversed-title'
+        context = get_context(settings)
 
         generator = ArticlesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
 
@@ -605,13 +612,14 @@ class TestPageGenerator(unittest.TestCase):
         return [[page.title, page.status, page.template] for page in pages]
 
     def test_generate_context(self):
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['CACHE_PATH'] = self.temp_cache
         settings['PAGE_PATHS'] = ['TestPages']  # relative to CUR_DIR
         settings['DEFAULT_DATE'] = (1970, 1, 1)
+        context = get_context(settings)
 
         generator = PagesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
@@ -624,6 +632,7 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a test page with a preset template', 'published',
              'custom'],
             ['Page with a bunch of links', 'published', 'page'],
+            ['Page with static links', 'published', 'page'],
             ['A Page (Test) for sorting', 'published', 'page'],
         ]
         hidden_pages_expected = [
@@ -653,10 +662,11 @@ class TestPageGenerator(unittest.TestCase):
             sorted(self.distill_pages(generator.context['draft_pages'])))
 
     def test_generate_sorted(self):
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['PAGE_PATHS'] = ['TestPages']  # relative to CUR_DIR
         settings['CACHE_PATH'] = self.temp_cache
         settings['DEFAULT_DATE'] = (1970, 1, 1)
+        context = get_context(settings)
 
         # default sort (filename)
         pages_expected_sorted_by_filename = [
@@ -664,11 +674,12 @@ class TestPageGenerator(unittest.TestCase):
             ['This is a markdown test page', 'published', 'page'],
             ['A Page (Test) for sorting', 'published', 'page'],
             ['Page with a bunch of links', 'published', 'page'],
+            ['Page with static links', 'published', 'page'],
             ['This is a test page with a preset template', 'published',
              'custom'],
         ]
         generator = PagesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
@@ -678,14 +689,16 @@ class TestPageGenerator(unittest.TestCase):
         pages_expected_sorted_by_title = [
             ['A Page (Test) for sorting', 'published', 'page'],
             ['Page with a bunch of links', 'published', 'page'],
+            ['Page with static links', 'published', 'page'],
             ['This is a markdown test page', 'published', 'page'],
             ['This is a test page', 'published', 'page'],
             ['This is a test page with a preset template', 'published',
              'custom'],
         ]
         settings['PAGE_ORDER_BY'] = 'title'
+        context = get_context(settings)
         generator = PagesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context.copy(), settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
@@ -697,12 +710,14 @@ class TestPageGenerator(unittest.TestCase):
              'custom'],
             ['This is a test page', 'published', 'page'],
             ['This is a markdown test page', 'published', 'page'],
+            ['Page with static links', 'published', 'page'],
             ['Page with a bunch of links', 'published', 'page'],
             ['A Page (Test) for sorting', 'published', 'page'],
         ]
         settings['PAGE_ORDER_BY'] = 'reversed-title'
+        context = get_context(settings)
         generator = PagesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         pages = self.distill_pages(generator.pages)
@@ -713,20 +728,42 @@ class TestPageGenerator(unittest.TestCase):
         Test to ensure links of the form {tag}tagname and {category}catname
         are generated correctly on pages
         """
-        settings = get_settings(filenames={})
+        settings = get_settings()
         settings['PAGE_PATHS'] = ['TestPages']    # relative to CUR_DIR
         settings['CACHE_PATH'] = self.temp_cache
         settings['DEFAULT_DATE'] = (1970, 1, 1)
+        context = get_context(settings)
 
         generator = PagesGenerator(
-            context=settings.copy(), settings=settings,
+            context=context, settings=settings,
             path=CUR_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
-        pages_by_title = {p.title: p.content for p in generator.pages}
+        pages_by_title = {p.title: p for p in generator.pages}
 
-        test_content = pages_by_title['Page with a bunch of links']
+        test_content = pages_by_title['Page with a bunch of links'].content
         self.assertIn('<a href="/category/yeah.html">', test_content)
         self.assertIn('<a href="/tag/matsuku.html">', test_content)
+
+    def test_static_and_attach_links_on_generated_pages(self):
+        """
+        Test to ensure links of the form {static}filename and {attach}filename
+        are included in context['static_links']
+        """
+        settings = get_settings()
+        settings['PAGE_PATHS'] = ['TestPages/page_with_static_links.md']
+        settings['CACHE_PATH'] = self.temp_cache
+        settings['DEFAULT_DATE'] = (1970, 1, 1)
+        context = get_context(settings)
+
+        generator = PagesGenerator(
+            context=context, settings=settings,
+            path=CUR_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+
+        self.assertIn('pelican/tests/TestPages/image0.jpg',
+                      context['static_links'])
+        self.assertIn('pelican/tests/TestPages/image1.jpg',
+                      context['static_links'])
 
 
 class TestTemplatePagesGenerator(unittest.TestCase):
@@ -791,7 +828,7 @@ class TestStaticGenerator(unittest.TestCase):
                                       "static", "staticfile")
         self.endfile = os.path.join(self.temp_output, "static", "staticfile")
         self.generator = StaticGenerator(
-            context={'filenames': {}},
+            context=get_context(),
             settings=self.settings,
             path=self.temp_content,
             theme="",
@@ -808,11 +845,8 @@ class TestStaticGenerator(unittest.TestCase):
     def test_theme_static_paths_dirs(self):
         """Test that StaticGenerator properly copies also files mentioned in
            TEMPLATE_STATIC_PATHS, not just directories."""
-        settings = get_settings(
-            PATH=self.content_path,
-            filenames={})
-        context = settings.copy()
-        context['staticfiles'] = []
+        settings = get_settings(PATH=self.content_path)
+        context = get_context(settings, staticfiles=[])
 
         StaticGenerator(
             context=context, settings=settings,
@@ -831,10 +865,8 @@ class TestStaticGenerator(unittest.TestCase):
            TEMPLATE_STATIC_PATHS, not just directories."""
         settings = get_settings(
             PATH=self.content_path,
-            THEME_STATIC_PATHS=['static/css/fonts.css', 'static/fonts/'],
-            filenames={})
-        context = settings.copy()
-        context['staticfiles'] = []
+            THEME_STATIC_PATHS=['static/css/fonts.css', 'static/fonts/'],)
+        context = get_context(settings, staticfiles=[])
 
         StaticGenerator(
             context=context, settings=settings,
@@ -869,9 +901,8 @@ class TestStaticGenerator(unittest.TestCase):
         settings = get_settings(
             STATIC_EXCLUDES=['subdir'],
             PATH=self.content_path,
-            STATIC_PATHS=[''],
-            filenames={})
-        context = settings.copy()
+            STATIC_PATHS=[''],)
+        context = get_context(settings)
 
         StaticGenerator(
             context=context, settings=settings,
@@ -897,9 +928,8 @@ class TestStaticGenerator(unittest.TestCase):
             PATH=self.content_path,
             PAGE_PATHS=[''],
             STATIC_PATHS=[''],
-            CACHE_CONTENT=False,
-            filenames={})
-        context = settings.copy()
+            CACHE_CONTENT=False,)
+        context = get_context(settings)
 
         for generator_class in (PagesGenerator, StaticGenerator):
             generator_class(
@@ -915,8 +945,7 @@ class TestStaticGenerator(unittest.TestCase):
             "STATIC_EXCLUDE_SOURCES=True failed to exclude a markdown file")
 
         settings.update(STATIC_EXCLUDE_SOURCES=False)
-        context = settings.copy()
-        context['filenames'] = {}
+        context = get_context(settings)
 
         for generator_class in (PagesGenerator, StaticGenerator):
             generator_class(
@@ -930,6 +959,40 @@ class TestStaticGenerator(unittest.TestCase):
         self.assertTrue(
             any(name.endswith(".md") for name in staticnames),
             "STATIC_EXCLUDE_SOURCES=False failed to include a markdown file")
+
+    def test_static_links(self):
+        """Test that StaticGenerator uses files in static_links
+        """
+        settings = get_settings(
+            STATIC_EXCLUDES=['subdir'],
+            PATH=self.content_path,
+            STATIC_PATHS=[],)
+        context = get_context(settings)
+        context['static_links'] |= {'short_page.md', 'subdir_fake_image.jpg'}
+
+        StaticGenerator(
+            context=context, settings=settings,
+            path=settings['PATH'], output_path=self.temp_output,
+            theme=settings['THEME']).generate_context()
+
+        staticfiles_names = [
+            os.path.basename(c.source_path) for c in context['staticfiles']]
+
+        static_content_names = [
+            os.path.basename(c) for c in context['static_content']]
+
+        self.assertIn(
+            'short_page.md', staticfiles_names,
+            "StaticGenerator skipped a file that it should have included")
+        self.assertIn(
+            'short_page.md', static_content_names,
+            "StaticGenerator skipped a file that it should have included")
+        self.assertIn(
+            'subdir_fake_image.jpg', staticfiles_names,
+            "StaticGenerator skipped a file that it should have included")
+        self.assertIn(
+            'subdir_fake_image.jpg', static_content_names,
+            "StaticGenerator skipped a file that it should have included")
 
     def test_copy_one_file(self):
         with open(self.startfile, "w") as f:

@@ -14,6 +14,9 @@ Next release
   and author pages 2) feeds 3) draft and hidden articles and pages
 * New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to specify
   metadata attributes used to identify translations; or to disable translations
+* New ``{static}`` syntax to link to static content; content linked to by
+  ``{static}`` and ``{attach}`` is automatically copied over even if not in
+  ``STATIC_PATHS``
 
 3.7.1 (2017-01-10)
 ==================
