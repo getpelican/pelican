@@ -1,37 +1,40 @@
+language: sh
 matrix:
-  - os: linux
-      language: python
-      python:
-        - 3.5
-          env:
-            - TOX_ENV=docs
-            - TOX_ENV=flake8
-            - TOX_ENV=py27
-            - TOX_ENV=py34
-            - TOX_ENV=py35
-        - 3.6
-          env:
-            - TOX_ENV=py36
-      addons:
-        apt_packages:
-          - pandoc
-      before_install:
-        - sudo apt-get update -qq
-        - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
-      install:
-        - pip install tox==2.5.0
+  include:
+  - os: windows
+    env: TOX_ENV=py27
+    before_install:
+      - choco install pandoc
+      - choco install python --version 2.7.11
+      - export PATH="/c/tools/Python:/c/tools/python/Scripts:$PATH"
+      - python --version
+      - python -m pip install --upgrade pip wheel
+      - python -m pip install -r requirements/test.pip
+      - python -m pip install nose nose-cov coveralls pygments==2.1.3
+    install:
+      - python -m pip install .
+    script:
+      - nosetests -sv --with-coverage --cover-package=pelican pelican
+      - coveralls
 
   - os: windows
-      langauge: sh  # python isn't yet "officially" supported on Windows
-      env:
-        - TOX_ENV=py27
-        - TOX_ENV=py37
-      before_install:
-        - choco install pandoc
-        - pip install tox==2.5.0
+    env: TOX_ENV=py37
+    before_install:
+      - choco install pandoc
+      - choco install python --version 3.7.1
+      - export PATH="/c/Python37:/c/Python37/Scripts:$PATH"
+      - python --version
+      - python -m pip install --upgrade pip wheel
+      - python -m pip install -r requirements/test.pip
+      - python -m pip install nose nose-cov coveralls pygments==2.1.3
+    install:
+      - python -m pip install .
+    script:
+      - nosetests -sv --with-coverage --cover-package=pelican pelican
+      - coveralls
 
-  - allow_failures:
-    - os: windows
+  allow_failures:
+  - os: windows
 
 script: tox -e $TOX_ENV
 
