@@ -6,7 +6,9 @@ matrix:
     env: TOX_ENV=docs
     before_install:
       - sudo apt-get install python3.5
-      - python -m pip install virtualenv --user
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python3.5 get-pip.py --user
+      - python3.5 -m pip install virtualenv --user
       - virtualenv venv
       - source venv/bin/activate
       - python -m pip install --upgrade pip wheel
@@ -19,7 +21,9 @@ matrix:
     env: TOX_ENV=flake8
     before_install:
       - sudo apt-get install python3.5
-      - python -m pip install virtualenv --user
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python3.5 get-pip.py --user
+      - python3.5 -m pip install virtualenv --user
       - virtualenv venv
       - source venv/bin/activate
       - python -m pip install --upgrade pip wheel
@@ -45,7 +49,9 @@ matrix:
     env: TOX_ENV=py34
     before_install:
       - sudo apt-get install python3.4
-      - python -m pip install virtualenv --user
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python3.4 get-pip.py --user
+      - python3.4 -m pip install virtualenv --user
       - virtualenv venv
       - source venv/bin/activate
       - python -m pip install --upgrade pip wheel
@@ -58,7 +64,9 @@ matrix:
     env: TOX_ENV=py35
     before_install:
       - sudo apt-get install python3.5
-      - python -m pip install virtualenv --user
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python3.5 get-pip.py --user
+      - python3.5 -m pip install virtualenv --user
       - virtualenv venv
       - source venv/bin/activate
       - python -m pip install --upgrade pip wheel
@@ -73,7 +81,9 @@ matrix:
       - sudo add-apt-repository ppa:deadsnakes/ppa -y
       - sudo apt-get update
       - sudo apt-get install python3.6
-      - python -m pip install virtualenv --user
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python3.6 get-pip.py --user
+      - python3.6 -m pip install virtualenv --user
       - virtualenv venv
       - source venv/bin/activate
       - python -m pip install --upgrade pip wheel
@@ -84,12 +94,14 @@ matrix:
   - os: linux
     python: 3.7
     env: TOX_ENV=py37
-    distro: xenial
+    dist: xenial  # required for the SSL library needed to download pip
     before_install:
       - sudo add-apt-repository ppa:deadsnakes/ppa -y
       - sudo apt-get update
       - sudo apt-get install python3.7
-      - python -m pip install virtualenv --user
+      - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      - python3.7 get-pip.py --user
+      - python3.7 -m pip install virtualenv --user
       - virtualenv venv
       - source venv/bin/activate
       - python -m pip install --upgrade pip wheel
