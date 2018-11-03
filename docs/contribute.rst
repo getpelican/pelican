@@ -66,9 +66,8 @@ Open ``_build/html/index.html`` in your browser to preview the documentation.
 Running the test suite
 ======================
 
-Each time you add a feature, there are two things to do regarding tests:
-check that the existing tests pass, and add tests for the new feature
-or bugfix.
+Each time you add a feature, there are two things to do regarding tests: check
+that the existing tests pass, and add tests for the new feature or bugfix.
 
 The tests live in ``pelican/tests`` and you can run them using the
 "discover" feature of ``unittest``::
@@ -92,8 +91,8 @@ functional tests. To do so, **make sure you have both** ``en_EN.utf8`` **and**
 
 You may also find that some tests are skipped because some dependency (e.g.,
 Pandoc) is not installed. This does not automatically mean that these tests
-have passed; you should at least verify that any skipped tests are not
-affected by your changes.
+have passed; you should at least verify that any skipped tests are not affected
+by your changes.
 
 You should run the test suite under each of the supported versions of Python.
 This is best done by creating a separate Python environment for each version.
@@ -178,9 +177,9 @@ Optionally, you can also set ``'limit_args'`` as a tuple of arguments in
 ``extra`` dict if your generic message needs formatting.
 
 Limit is set to ``5``, i.e, first four logs with the same ``'limit_msg'`` are
-outputted normally but the fifth one will be logged using
-``'limit_msg'`` (and ``'limit_args'`` if present). After the fifth,
-corresponding log messages will be ignored.
+outputted normally but the fifth one will be logged using ``'limit_msg'`` (and
+``'limit_args'`` if present). After the fifth, corresponding log messages will
+be ignored.
 
 For example, if you want to log missing resources, use the following code::
 

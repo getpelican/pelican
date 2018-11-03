@@ -70,7 +70,9 @@ Metadata syntax for Markdown posts should follow this pattern::
 
     This is the content of my super blog post.
 
-You can also have your own metadata keys (so long as they don't conflict with reserved metadata keywords) for use in your python templates. The following is the list of reserved metadata keywords:
+You can also have your own metadata keys (so long as they don't conflict with
+reserved metadata keywords) for use in your python templates. The following is
+the list of reserved metadata keywords:
 
 * `Title`
 * `Tags`
@@ -133,12 +135,13 @@ the W3C's `suggested subset ISO 8601`__.
 
 __ `W3C ISO 8601`_
 
-``modified`` should be last time you updated the article, and defaults to ``date`` if not specified.
-Besides you can show ``modified`` in the templates, feed entries in feed readers will be updated automatically
-when you set ``modified`` to the current date after you modified your article.
+``modified`` should be last time you updated the article, and defaults to
+``date`` if not specified. Besides you can show ``modified`` in the templates,
+feed entries in feed readers will be updated automatically when you set
+``modified`` to the current date after you modified your article.
 
-``authors`` is a comma-separated list of article authors. If there's only one author you
-can use ``author`` field.
+``authors`` is a comma-separated list of article authors. If there's only one
+author you can use ``author`` field.
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the
@@ -181,12 +184,12 @@ static files that are explicitly linked to are included (see below).
 Mixed content in the same directory
 -----------------------------------
 
-Starting with Pelican 3.5, static files can safely share a source directory with
-page source files, without exposing the page sources in the generated site.
-Any such directory must be added to both ``STATIC_PATHS`` and ``PAGE_PATHS``
-(or ``STATIC_PATHS`` and ``ARTICLE_PATHS``). Pelican will identify and process
-the page source files normally, and copy the remaining files as if they lived
-in a separate directory reserved for static files.
+Starting with Pelican 3.5, static files can safely share a source directory
+with page source files, without exposing the page sources in the generated
+site. Any such directory must be added to both ``STATIC_PATHS`` and
+``PAGE_PATHS`` (or ``STATIC_PATHS`` and ``ARTICLE_PATHS``). Pelican will
+identify and process the page source files normally, and copy the remaining
+files as if they lived in a separate directory reserved for static files.
 
 Note: Placing static and content source files together in the same source
 directory does not guarantee that they will end up in the same place in the
@@ -273,8 +276,8 @@ Site generation would then copy ``han.jpg`` to ``output/images/han.jpg``,
 ``menu.pdf`` to ``output/pdfs/menu.pdf``, and write the appropriate links
 in ``test.md``.
 
-If you use ``{static}`` to link to an article or a page, this will be turned into
-a link to its source code.
+If you use ``{static}`` to link to an article or a page, this will be turned
+into a link to its source code.
 
 Attaching static files
 ----------------------
@@ -360,13 +363,13 @@ You can link to authors, categories, index and tags using the ``{author}name``,
 Deprecated internal link syntax
 -------------------------------
 
-To remain compatible with earlier versions, Pelican still supports vertical bars
-(``||``) in addition to curly braces (``{}``) for internal links. For example:
-``|filename|an_article.rst``, ``|tag|tagname``, ``|category|foobar``.
+To remain compatible with earlier versions, Pelican still supports vertical
+bars (``||``) in addition to curly braces (``{}``) for internal links. For
+example: ``|filename|an_article.rst``, ``|tag|tagname``, ``|category|foobar``.
 The syntax was changed from ``||`` to ``{}`` to avoid collision with Markdown
-extensions or reST directives. Similarly, Pelican also still supports linking to
-static content with ``{filename}``. The syntax was changed to ``{static}`` to allow
-linking to both generated articles and pages and their static sources.
+extensions or reST directives. Similarly, Pelican also still supports linking
+to static content with ``{filename}``. The syntax was changed to ``{static}``
+to allow linking to both generated articles and pages and their static sources.
 
 Support for the old syntax may eventually be removed.
 
@@ -546,8 +549,9 @@ before publishing, for example), you can add a ``Status: draft`` attribute to
 its metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category or tag page.
 
-If your articles should be automatically published as a draft (to not accidentally
-publish an article before it is finished) include the status in the ``DEFAULT_METADATA``::
+If your articles should be automatically published as a draft (to not
+accidentally publish an article before it is finished) include the status in
+the ``DEFAULT_METADATA``::
 
     DEFAULT_METADATA = {
         'status': 'draft',

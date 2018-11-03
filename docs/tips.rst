@@ -8,8 +8,8 @@ Custom 404 Pages
 
 When a browser requests a resource that the web server cannot find, the web
 server usually displays a generic "File not found" (404) error page that can be
-stark and unsightly. One way to provide an error page that matches the theme
-of your site is to create a custom 404 page (*not* an article), such as this
+stark and unsightly. One way to provide an error page that matches the theme of
+your site is to create a custom 404 page (*not* an article), such as this
 Markdown-formatted example stored in ``content/pages/404.md``::
 
     Title: Not Found
@@ -29,8 +29,8 @@ For Apache::
 
     ErrorDocument 404 /404.html
 
-For Amazon S3, first navigate to the ``Static Site Hosting`` menu in the
-bucket settings on your AWS cosole. From there::
+For Amazon S3, first navigate to the ``Static Site Hosting`` menu in the bucket
+settings on your AWS cosole. From there::
 
     Error Document: 404.html
 
@@ -67,15 +67,17 @@ already exist). The ``git push origin gh-pages`` command updates the remote
 ``gh-pages`` branch, effectively publishing the Pelican site.
 
 .. note::
-    The ``github`` target of the Makefile (and the ``gh_pages`` task of ``tasks.py``)
-    created by the ``pelican-quickstart`` command
-    publishes the Pelican site as Project Pages, as described above.
+
+    The ``github`` target of the Makefile (and the ``gh_pages`` task of
+    ``tasks.py``) created by the ``pelican-quickstart`` command publishes the
+    Pelican site as Project Pages, as described above.
 
 .. note:: ghp-import on Windows
 
-    Until `ghp-import Pull Request #25 <https://github.com/davisp/ghp-import/pull/25>`_
-    is accepted, you will need to install a custom build of ghp-import:
-    ``pip install https://github.com/chevah/ghp-import/archive/win-support.zip``
+    Until `ghp-import Pull Request #25
+    <https://github.com/davisp/ghp-import/pull/25>`_ is accepted, you will need
+    to install a custom build of ghp-import: ``pip install
+    https://github.com/chevah/ghp-import/archive/win-support.zip``
 
 User Pages
 ----------
@@ -99,13 +101,17 @@ by the ``ghp-import`` command) to the ``elemoine.github.io`` repository's
     To publish your Pelican site as User Pages, feel free to adjust the
     ``github`` target of the Makefile.
     
-Another option for publishing to User Pages is to generate the output files in the root directory of the project.
+Another option for publishing to User Pages is to generate the output files in
+the root directory of the project.
 
-For example, your main project folder is ``<username>.github.io`` and you can create the Pelican project in a subdirectory called ``Pelican``. Then from inside the ``Pelican`` folder you can run::
+For example, your main project folder is ``<username>.github.io`` and you can
+create the Pelican project in a subdirectory called ``Pelican``. Then from
+inside the ``Pelican`` folder you can run::
     
     $ pelican content -o .. -s pelicanconf.py
 
-Now you can push the whole project ``<username>.github.io`` to the master branch of your GitHub repository::
+Now you can push the whole project ``<username>.github.io`` to the master
+branch of your GitHub repository::
     
     $ git push origin master
     
@@ -120,8 +126,8 @@ relevant `GitHub docs <https://help.github.com/articles/custom-404-pages/>`_.
 Update your site on each commit
 -------------------------------
 
-To automatically update your Pelican site on each commit, you can create
-a post-commit hook. For example, you can add the following to
+To automatically update your Pelican site on each commit, you can create a
+post-commit hook. For example, you can add the following to
 ``.git/hooks/post-commit``::
 
     pelican content -o output -s pelicanconf.py && ghp-import output && git push origin gh-pages
@@ -142,8 +148,8 @@ output directory. For example::
 
 Note: use forward slashes, ``/``, even on Windows.
 
-You can also use the ``EXTRA_PATH_METADATA`` mechanism
-to place a ``favicon.ico`` or ``robots.txt`` at the root of any site.
+You can also use the ``EXTRA_PATH_METADATA`` mechanism to place a
+``favicon.ico`` or ``robots.txt`` at the root of any site.
 
 How to add YouTube or Vimeo Videos
 ==================================

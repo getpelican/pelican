@@ -44,7 +44,8 @@ Examples
 Listing the installed themes
 """"""""""""""""""""""""""""
 
-With ``pelican-themes``, you can see the available themes by using the ``-l`` or ``--list`` option:
+With ``pelican-themes``, you can see the available themes by using the ``-l``
+or ``--list`` option:
 
 .. code-block:: console
 
@@ -57,11 +58,15 @@ With ``pelican-themes``, you can see the available themes by using the ``-l`` or
     two-column@
     simple
 
-In this example, we can see there are three themes available: ``notmyidea``, ``simple``, and ``two-column``.
+In this example, we can see there are three themes available: ``notmyidea``,
+``simple``, and ``two-column``.
 
-``two-column`` is prefixed with an ``@`` because this theme is not copied to the Pelican theme path, but is instead just linked to it (see `Creating symbolic links`_ for details about creating symbolic links).
+``two-column`` is prefixed with an ``@`` because this theme is not copied to
+the Pelican theme path, but is instead just linked to it (see `Creating
+symbolic links`_ for details about creating symbolic links).
 
-Note that you can combine the ``--list`` option with the ``-v`` or ``--verbose`` option to get more verbose output, like this:
+Note that you can combine the ``--list`` option with the ``-v`` or
+``--verbose`` option to get more verbose output, like this:
 
 .. code-block:: console
 
@@ -75,7 +80,8 @@ Installing themes
 """""""""""""""""
 
 You can install one or more themes using the ``-i`` or ``--install`` option.
-This option takes as argument the path(s) of the theme(s) you want to install, and can be combined with the verbose option:
+This option takes as argument the path(s) of the theme(s) you want to install,
+and can be combined with the verbose option:
 
 .. code-block:: console
 
@@ -95,8 +101,9 @@ This option takes as argument the path(s) of the theme(s) you want to install, a
 Removing themes
 """""""""""""""
 
-The ``pelican-themes`` command can also remove themes from the Pelican themes path.
-The ``-r`` or ``--remove`` option takes as argument the name(s) of the theme(s) you want to remove, and can be combined with the ``--verbose`` option.
+The ``pelican-themes`` command can also remove themes from the Pelican themes
+path. The ``-r`` or ``--remove`` option takes as argument the name(s) of the
+theme(s) you want to remove, and can be combined with the ``--verbose`` option.
 
 .. code-block:: console
 
@@ -113,15 +120,19 @@ The ``-r`` or ``--remove`` option takes as argument the name(s) of the theme(s) 
 Creating symbolic links
 """""""""""""""""""""""
 
-``pelican-themes`` can also install themes by creating symbolic links instead of copying entire themes into the Pelican themes path.
+``pelican-themes`` can also install themes by creating symbolic links instead
+of copying entire themes into the Pelican themes path.
 
-To symbolically link a theme, you can use the ``-s`` or ``--symlink``, which works exactly as the ``--install`` option:
+To symbolically link a theme, you can use the ``-s`` or ``--symlink``, which
+works exactly as the ``--install`` option:
 
 .. code-block:: console
 
     # pelican-themes --symlink ~/Dev/Python/pelican-themes/two-column
 
-In this example, the ``two-column`` theme is now symbolically linked to the Pelican themes path, so we can use it, but we can also modify it without having to reinstall it after each modification.
+In this example, the ``two-column`` theme is now symbolically linked to the
+Pelican themes path, so we can use it, but we can also modify it without having
+to reinstall it after each modification.
 
 This is useful for theme development:
 
@@ -142,7 +153,9 @@ This is useful for theme development:
 Doing several things at once
 """"""""""""""""""""""""""""
 
-The ``--install``, ``--remove`` and ``--symlink`` option are not mutually exclusive, so you can combine them in the same command line to do more than one operation at time, like this:
+The ``--install``, ``--remove`` and ``--symlink`` option are not mutually
+exclusive, so you can combine them in the same command line to do more than one
+operation at time, like this:
 
 
 .. code-block:: console
@@ -152,4 +165,5 @@ The ``--install``, ``--remove`` and ``--symlink`` option are not mutually exclus
                      --symlink ~/Dev/Python/pelican-themes/two-column \
                      --verbose
 
-In this example, the theme ``notmyidea-cms`` is replaced by the theme ``notmyidea-cms-fr``
+In this example, the theme ``notmyidea-cms`` is replaced by the theme
+``notmyidea-cms-fr``
