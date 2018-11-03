@@ -389,10 +389,10 @@ def handle_deprecated_settings(settings):
         for key in ['TRANSLATION_FEED_ATOM',
                     'TRANSLATION_FEED_RSS'
                     ]:
-            if key in local_settings and '%s' in local_settings[key]:
+            if key in settings and '%s' in settings[key]:
                 logger.warning('%%s usage in %s is deprecated, use {lang} '
                                'instead. Falling back to default.', key)
-                local_settings[key] = DEFAULT_CONFIG[key]
+                settings[key] = DEFAULT_CONFIG[key]
         for key in ['AUTHOR_FEED_ATOM',
                     'AUTHOR_FEED_RSS',
                     'CATEGORY_FEED_ATOM',
@@ -400,11 +400,11 @@ def handle_deprecated_settings(settings):
                     'TAG_FEED_ATOM',
                     'TAG_FEED_RSS',
                     ]:
-            if key in local_settings and '%s' in local_settings[key]:
+            if key in settings and '%s' in settings[key]:
                 logger.warning('%%s usage in %s is deprecated, use {slug} '
                                'instead. Falling back to default.', key)
-                local_settings[key] = DEFAULT_CONFIG[key]
-    
+                settings[key] = DEFAULT_CONFIG[key]
+
     return settings
 
 
