@@ -881,59 +881,61 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    Relative URL of the all-posts RSS feed. If not set, ``FEED_ALL_RSS`` is used
    both for save location and URL.
 
-.. data:: CATEGORY_FEED_ATOM = 'feeds/%s.atom.xml'
+.. data:: CATEGORY_FEED_ATOM = 'feeds/{slug}.atom.xml'
 
    The location to save the category Atom feeds. [2]_
 
 .. data:: CATEGORY_FEED_ATOM_URL = None
 
-   Relative URL of the category Atom feeds, including the ``%s`` placeholder.
-   [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for save location and
-   URL.
+   Relative URL of the category Atom feeds, including the ``{slug}``
+   placeholder. [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for save
+   location and URL.
 
 .. data:: CATEGORY_FEED_RSS = None, i.e. no RSS
 
-   The location to save the category RSS feeds, including the ``%s``
+   The location to save the category RSS feeds, including the ``{slug}``
    placeholder. [2]_
 
 .. data:: CATEGORY_FEED_RSS_URL = None
 
-   Relative URL of the category RSS feeds, including the ``%s`` placeholder.
-   [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save location and
-   URL.
+   Relative URL of the category RSS feeds, including the ``{slug}``
+   placeholder. [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save
+   location and URL.
 
-.. data:: AUTHOR_FEED_ATOM = 'feeds/%s.atom.xml'
+.. data:: AUTHOR_FEED_ATOM = 'feeds/{slug}.atom.xml'
 
    The location to save the author Atom feeds. [2]_
 
 .. data:: AUTHOR_FEED_ATOM_URL = None
 
-   Relative URL of the author Atom feeds, including the ``%s`` placeholder.
+   Relative URL of the author Atom feeds, including the ``{slug}`` placeholder.
    [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save location and
    URL.
 
-.. data:: AUTHOR_FEED_RSS = 'feeds/%s.rss.xml'
+.. data:: AUTHOR_FEED_RSS = 'feeds/{slug}.rss.xml'
 
    The location to save the author RSS feeds. [2]_
 
 .. data:: AUTHOR_FEED_RSS_URL = None
 
-   Relative URL of the author RSS feeds, including the ``%s`` placeholder. [2]_
-   If not set, ``AUTHOR_FEED_RSS`` is used both for save location and URL.
+   Relative URL of the author RSS feeds, including the ``{slug}`` placeholder.
+   [2]_ If not set, ``AUTHOR_FEED_RSS`` is used both for save location and URL.
 
 .. data:: TAG_FEED_ATOM = None, i.e. no tag feed
 
-   The location to save the tag Atom feed, including the ``%s`` placeholder.
-   [2]_
+   The location to save the tag Atom feed, including the ``{slug}``
+   placeholder. [2]_
 
 .. data:: TAG_FEED_ATOM_URL = None
 
-   Relative URL of the tag Atom feed, including the ``%s`` placeholder. [2]_
+   Relative URL of the tag Atom feed, including the ``{slug}`` placeholder.
+   [2]_
 
 .. data:: TAG_FEED_RSS = None, i.e. no RSS tag feed
 
-   Relative URL to output the tag RSS feed, including the ``%s`` placeholder.
-   If not set, ``TAG_FEED_RSS`` is used both for save location and URL.
+   Relative URL to output the tag RSS feed, including the ``{slug}``
+   placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location and
+   URL.
 
 .. data:: FEED_MAX_ITEMS
 
@@ -949,7 +951,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 If you don't want to generate some or any of these feeds, set the above
 variables to ``None``.
 
-.. [2] ``%s`` is replaced by name of the category / author / tag.
+.. [2] ``{slug}`` is replaced by name of the category / author / tag.
 
 
 FeedBurner
@@ -1054,13 +1056,13 @@ section for more information.
    one another. May be a string or a collection of strings. Set to ``None`` or
    ``False`` to disable the identification of translations.
 
-.. data:: TRANSLATION_FEED_ATOM = 'feeds/all-%s.atom.xml'
+.. data:: TRANSLATION_FEED_ATOM = 'feeds/all-{lang}.atom.xml'
 
    The location to save the Atom feed for translations. [3]_
 
 .. data:: TRANSLATION_FEED_ATOM_URL = None
 
-   Relative URL of the Atom feed for translations, including the ``%s``
+   Relative URL of the Atom feed for translations, including the ``{lang}``
    placeholder. [3]_ If not set, ``TRANSLATION_FEED_ATOM`` is used both for
    save location and URL.
 
@@ -1070,11 +1072,11 @@ section for more information.
 
 .. data:: TRANSLATION_FEED_RSS_URL = None
 
-   Relative URL of the RSS feed for translations, including the ``%s``
+   Relative URL of the RSS feed for translations, including the ``{lang}``
    placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for save
    location and URL.
 
-.. [3] %s is the language
+.. [3] {lang} is the language code
 
 
 Ordering content

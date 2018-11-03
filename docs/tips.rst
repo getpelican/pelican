@@ -72,13 +72,6 @@ already exist). The ``git push origin gh-pages`` command updates the remote
     ``tasks.py``) created by the ``pelican-quickstart`` command publishes the
     Pelican site as Project Pages, as described above.
 
-.. note:: ghp-import on Windows
-
-    Until `ghp-import Pull Request #25
-    <https://github.com/davisp/ghp-import/pull/25>`_ is accepted, you will need
-    to install a custom build of ghp-import: ``pip install
-    https://github.com/chevah/ghp-import/archive/win-support.zip``
-
 User Pages
 ----------
 

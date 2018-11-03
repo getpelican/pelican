@@ -59,7 +59,7 @@ which you map the signals to your plugin logic. Let's take a simple example::
     from pelican import signals
 
     def test(sender):
-        print "%s initialized !!" % sender
+        print("{} initialized !!".format(sender))
 
     def register():
         signals.initialized.connect(test)

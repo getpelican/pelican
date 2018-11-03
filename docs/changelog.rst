@@ -4,6 +4,9 @@ Release history
 Next release
 ============
 
+* All settings for slugs now use ``{slug}`` and/or ``{lang}`` rather than
+  ``%s``. If ``%s``-style settings are encountered, Pelican will emit a warning
+  and fallback to the default setting.
 * New signal: ``feed_generated``
 * Replace Fabric by Invoke and ``fabfile.py`` template by ``tasks.py``.
 * Replace ``SLUG_SUBSTITUTIONS`` (and friends) by ``SLUG_REGEX_SUBSTITUTIONS``

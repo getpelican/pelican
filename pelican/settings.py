@@ -45,10 +45,10 @@ DEFAULT_CONFIG = {
     'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': posix_join('feeds', 'all.atom.xml'),
-    'CATEGORY_FEED_ATOM': posix_join('feeds', '%s.atom.xml'),
-    'AUTHOR_FEED_ATOM': posix_join('feeds', '%s.atom.xml'),
-    'AUTHOR_FEED_RSS': posix_join('feeds', '%s.rss.xml'),
-    'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-%s.atom.xml'),
+    'CATEGORY_FEED_ATOM': posix_join('feeds', '{slug}.atom.xml'),
+    'AUTHOR_FEED_ATOM': posix_join('feeds', '{slug}.atom.xml'),
+    'AUTHOR_FEED_RSS': posix_join('feeds', '{slug}.rss.xml'),
+    'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-{lang}.atom.xml'),
     'FEED_MAX_ITEMS': '',
     'RSS_FEED_SUMMARY_ONLY': True,
     'SITEURL': '',
@@ -384,6 +384,26 @@ def handle_deprecated_settings(settings):
                     ]
                 settings[f + '_REGEX_SUBSTITUTIONS'] = regex_subs
             settings.pop(f + '_SUBSTITUTIONS', None)
+
+    # `%s` -> '{slug}` or `{lang}` in FEED settings
+        for key in ['TRANSLATION_FEED_ATOM',
+                    'TRANSLATION_FEED_RSS'
+                    ]:
+            if key in settings and '%s' in settings[key]:
+                logger.warning('%%s usage in %s is deprecated, use {lang} '
+                               'instead. Falling back to default.', key)
+                settings[key] = DEFAULT_CONFIG[key]
+        for key in ['AUTHOR_FEED_ATOM',
+                    'AUTHOR_FEED_RSS',
+                    'CATEGORY_FEED_ATOM',
+                    'CATEGORY_FEED_RSS',
+                    'TAG_FEED_ATOM',
+                    'TAG_FEED_RSS',
+                    ]:
+            if key in settings and '%s' in settings[key]:
+                logger.warning('%%s usage in %s is deprecated, use {slug} '
+                               'instead. Falling back to default.', key)
+                settings[key] = DEFAULT_CONFIG[key]
 
     return settings
 
