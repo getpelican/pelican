@@ -22,7 +22,7 @@ ARTICLE_URL = 'posts/{date:%Y}/{date:%B}/{date:%d}/{slug}/'
 ARTICLE_SAVE_AS = ARTICLE_URL + 'index.html'
 
 FEED_ALL_RSS = 'feeds/all.rss.xml'
-CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
+CATEGORY_FEED_RSS = 'feeds/{slug}.rss.xml'
 
 LINKS = (('Biologeek', 'http://biologeek.org'),
          ('Filyb', "http://filyb.info/"),
