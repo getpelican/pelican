@@ -264,6 +264,16 @@ Basic settings
    ``pre`` and ``code`` tags. This requires that Typogrify version 2.0.4 or
    later is installed
 
+.. data:: TYPOGRIFY_DASHES = 'default'
+
+   How should Typogrify set up the smartypants filter to interpret multiple
+   hyphen-minus characters? A single ASCII hyphen-minus characters is always
+   rendered as a hyphen. By ``default`` only em-dashes would be generated, by
+   typing double hyphens. The ``oldschool``-style would cause both en-dashes
+   and em-dashes to be rendered, by typing 2 and 3 hyphen-minus characters,
+   respectively. The ``oldschool_inverted`` setting causes them to be
+   interpreted the other way around.
+
 .. data:: SUMMARY_MAX_LENGTH = 50
 
    When creating a short summary of an article, this will be the default length
