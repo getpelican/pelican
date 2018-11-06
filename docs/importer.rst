@@ -20,6 +20,12 @@ The conversion from HTML to reStructuredText or Markdown relies on `Pandoc`_.
 For Dotclear, if the source posts are written with Markdown syntax, they will
 not be converted (as Pelican also supports Markdown).
 
+.. note::
+
+   Unlike Pelican, Wordpress supports multiple categories per article. These
+   are imported as a comma-separated string. You have to resolve these
+   manually, or use a plugin that enables multiple categories per article
+   (like `more_categories`_).
 
 Dependencies
 ============
@@ -133,3 +139,5 @@ To test the module, one can use sample files:
 
 - for WordPress: http://www.wpbeginner.com/wp-themes/how-to-add-dummy-content-for-theme-development-in-wordpress/
 - for Dotclear: http://media.dotaddict.org/tda/downloads/lorem-backup.txt
+
+.. _more_categories: http://github.com/getpelican/pelican-plugins/tree/master/more_categories
