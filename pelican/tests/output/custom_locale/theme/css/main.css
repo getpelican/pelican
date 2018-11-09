@@ -147,7 +147,8 @@ aside, nav, article, figure {
 }
 
 /***** Layout *****/
-.body {clear: both; margin: 0 auto; width: 800px;}
+.body {clear: both; margin: 0 auto; max-width: 800px; width: 100%;}
+img {max-width: 100%;}
 img.right, figure.right {float: right; margin: 0 0 2em 2em;}
 img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 
@@ -185,14 +186,15 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 		margin: 0 auto 2em auto;
 		padding: 0;
 		text-align: center;
-		width: 800px;
+		max-width: 800px;
+		width: 100%;
 
 		border-radius: 5px;
 		-moz-border-radius: 5px;
 		-webkit-border-radius: 5px;
 	}
 
-	#banner nav ul {list-style: none; margin: 0 auto; width: 800px;}
+	#banner nav ul {list-style: none; margin: 0 auto; max-width: 800px; width: 100%;}
 	#banner nav li {float: left; display: inline; margin: 0;}
 
 	#banner nav a:link, #banner nav a:visited {
@@ -227,7 +229,8 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	margin-bottom: 2em;
 	overflow: hidden;
 	padding: 20px;
-	width: 760px;
+	max-width: 760px;
+	width: 95%;
 
 	border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -238,7 +241,8 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	border: 2px solid #eee;
 	float: right;
 	margin: 0.786em 2em 0 5em;
-	width: 248px;
+	max-width: 248px;
+	width: 30%;
 }
 #featured figure img {display: block; float: right;}
 
@@ -256,7 +260,8 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	margin-bottom: 2em;
 	overflow: hidden;
 	padding: 20px 20px;
-	width: 760px;
+	max-width: 760px;
+	width: 95%;
 
 	border-radius: 10px;
 	-moz-border-radius: 10px;
@@ -290,15 +295,22 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	/* Blogroll */
 	#extras .blogroll {
 		float: left;
-		width: 615px;
+		max-width: 615px;
+		width: 75%;
 	}
 
-	#extras .blogroll li {float: left; margin: 0 20px 0 0; width: 185px;}
+	#extras .blogroll li {
+		float: left;
+		margin: 0 20px 0 0;
+		max-width: 185px;
+		width: 25%;
+	}
 
 	/* Social */
 	#extras .social {
 		float: right;
-		width: 175px;
+		max-width: 175px;
+		width: 20%;
 	}
 
 	#extras div[class='social'] a {
@@ -345,14 +357,15 @@ img.left, figure.left {float: left; margin: 0 2em 2em 0;}
 	overflow: hidden;
 	padding: 20px;
 	text-align: left;
-	width: 760px;
+	max-width: 760px;
+	width: 95%;
 
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 }
 
-#about .primary {float: left; width: 165px;}
+#about .primary {float: left; max-width: 165px; width: 20%;}
 #about .primary strong {color: #C64350; display: block; font-size: 1.286em;}
 #about .photo {float: left; margin: 5px 20px;}
 
@@ -396,7 +409,8 @@ li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
 		position: relative;
         float: left;
 		top: 0.5em;
-		width: 190px;
+		max-width: 190px;
+		width: 25%;
 	}
 
 	/* About the Author */
