@@ -410,6 +410,12 @@ class RstReaderTest(ReaderTest):
         self.assertEqual(tuple_date.metadata['date'],
                          string_date.metadata['date'])
 
+    def test_parse_error(self):
+        # Verify that it raises an Exception, not nothing and not SystemExit or
+        # some such
+        with six.assertRaisesRegex(self, Exception, "underline too short"):
+            self.read_file(path='../parse_error/parse_error.rst')
+
 
 @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
 class MdReaderTest(ReaderTest):
