@@ -187,6 +187,20 @@ class TestSettingsConfiguration(unittest.TestCase):
                          {'index': 10, 'category': None, 'archives': None})
         self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
 
+    def test_deprecated_paginated_direct_templates_from_file(self):
+        # This is equivalent to reading a settings file that has
+        # PAGINATED_DIRECT_TEMPLATES defined but no PAGINATED_TEMPLATES.
+        settings = read_settings(None, override={
+            'PAGINATED_DIRECT_TEMPLATES': ['index', 'archives']
+        })
+        self.assertEqual(settings['PAGINATED_TEMPLATES'], {
+            'archives': None,
+            'author': None,
+            'index': None,
+            'category': None,
+            'tag': None})
+        self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
+
     def test_theme_and_extra_templates_exception(self):
         settings = self.settings
         settings['EXTRA_TEMPLATES_PATHS'] = ['/ha']
