@@ -12,6 +12,7 @@ import docutils.io
 from docutils.writers.html4css1 import HTMLTranslator, Writer
 
 import six
+from six import StringIO
 from six.moves.html_parser import HTMLParser
 
 from pelican import rstdirectives  # NOQA
@@ -256,7 +257,9 @@ class RstReader(BaseReader):
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8',
                         'language_code': self.settings.get('DEFAULT_LANG'),
-                        'exit_status_level': 2,
+                        'halt_level': 2,
+                        'traceback': True,
+                        'warning_stream': StringIO(),
                         'embed_stylesheet': False}
         user_params = self.settings.get('DOCUTILS_SETTINGS')
         if user_params:
@@ -269,7 +272,7 @@ class RstReader(BaseReader):
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=source_path)
-        pub.publish(enable_exit_status=True)
+        pub.publish()
         return pub
 
     def read(self, source_path):
