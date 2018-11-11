@@ -9,6 +9,9 @@ Next release
   and fallback to the default setting.
 * New signal: ``feed_generated``
 * Replace Fabric by Invoke and ``fabfile.py`` template by ``tasks.py``.
+* Replace ``PAGINATED_DIRECT_TEMPLATES`` by ``PAGINATED_TEMPLATES``, extending
+  control over pagination to all templates and making page size variable
+* Allow pages to have ``draft`` status
 * Replace ``SLUG_SUBSTITUTIONS`` (and friends) by ``SLUG_REGEX_SUBSTITUTIONS``
   for more finegrained control
 * ``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer strips
@@ -21,6 +24,13 @@ Next release
   ``{static}`` and ``{attach}`` is automatically copied over even if not in
   ``STATIC_PATHS``
 * Make the HTML reader parse multiple occurrences of metadata tags as a list
+* New Blogger XML backup importer
+* Wordpress importer now updates file links to point to local copies if the
+  files were downloaded with ``--wp-attach``.
+* Importer no longer inserts extra newlines, to prevent breaking of HTML
+  attributes.
+* Pelican server now prioritises ``foo.html`` and ``foo/index.html`` over
+  ``foo/`` when resolving ``foo``.
 
 3.7.1 (2017-01-10)
 ==================
