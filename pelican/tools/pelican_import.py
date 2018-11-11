@@ -761,7 +761,7 @@ def update_links_to_attached_files(content, attachments):
         http_url = old_url.replace('https://', 'http://')
         https_url = old_url.replace('http://', 'https://')
         for url in [http_url, https_url]:
-            content = content.replace(url, '{filename}' + new_path)
+            content = content.replace(url, '{static}' + new_path)
     return content
 
 

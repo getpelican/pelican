@@ -147,7 +147,7 @@ class Generator(object):
             parent_path, subdir = os.path.split(os.path.join(self.path, e))
             exclusions_by_dirpath.setdefault(parent_path, set()).add(subdir)
 
-        files = []
+        files = set()
         ignores = self.settings['IGNORE_FILES']
         for path in paths:
             # careful: os.path.join() will add a slash when path == ''.
@@ -170,33 +170,41 @@ class Generator(object):
                     for f in temp_files:
                         fp = os.path.join(reldir, f)
                         if self._include_path(fp, extensions):
-                            files.append(fp)
+                            files.add(fp)
             elif os.path.exists(root) and self._include_path(path, extensions):
-                files.append(path)  # can't walk non-directories
+                files.add(path)  # can't walk non-directories
         return files
 
-    def add_source_path(self, content):
+    def add_source_path(self, content, static=False):
         """Record a source file path that a Generator found and processed.
         Store a reference to its Content object, for url lookups later.
         """
         location = content.get_relative_source_path()
-        self.context['filenames'][location] = content
+        key = 'static_content' if static else 'generated_content'
+        self.context[key][location] = content
 
-    def _add_failed_source_path(self, path):
+    def _add_failed_source_path(self, path, static=False):
         """Record a source file path that a Generator failed to process.
         (For example, one that was missing mandatory metadata.)
         The path argument is expected to be relative to self.path.
         """
-        self.context['filenames'][posixize_path(os.path.normpath(path))] = None
+        key = 'static_content' if static else 'generated_content'
+        self.context[key][posixize_path(os.path.normpath(path))] = None
 
-    def _is_potential_source_path(self, path):
+    def _is_potential_source_path(self, path, static=False):
         """Return True if path was supposed to be used as a source file.
         (This includes all source files that have been found by generators
         before this method is called, even if they failed to process.)
         The path argument is expected to be relative to self.path.
         """
-        return (posixize_path(os.path.normpath(path))
-                in self.context['filenames'])
+        key = 'static_content' if static else 'generated_content'
+        return (posixize_path(os.path.normpath(path)) in self.context[key])
+
+    def add_static_links(self, content):
+        """Add file links in content to context to be processed as Static
+        content.
+        """
+        self.context['static_links'] |= content.get_static_links()
 
     def _update_context(self, items):
         """Update the context with the given items from the currrent
@@ -294,17 +302,21 @@ class ArticlesGenerator(CachingGenerator):
         """Generate the feeds from the current context, and output files."""
 
         if self.settings.get('FEED_ATOM'):
-            writer.write_feed(self.articles, self.context,
-                              self.settings['FEED_ATOM'],
-                              self.settings.get('FEED_ATOM_URL',
-                                                self.settings['FEED_ATOM']))
+            writer.write_feed(
+                self.articles,
+                self.context,
+                self.settings['FEED_ATOM'],
+                self.settings.get('FEED_ATOM_URL', self.settings['FEED_ATOM'])
+                )
 
         if self.settings.get('FEED_RSS'):
-            writer.write_feed(self.articles, self.context,
-                              self.settings['FEED_RSS'],
-                              self.settings.get('FEED_RSS_URL',
-                                                self.settings['FEED_RSS']),
-                              feed_type='rss')
+            writer.write_feed(
+                self.articles,
+                self.context,
+                self.settings['FEED_RSS'],
+                self.settings.get('FEED_RSS_URL', self.settings['FEED_RSS']),
+                feed_type='rss'
+                )
 
         if (self.settings.get('FEED_ALL_ATOM') or
                 self.settings.get('FEED_ALL_RSS')):
@@ -315,80 +327,105 @@ class ArticlesGenerator(CachingGenerator):
                           order_by=self.settings['ARTICLE_ORDER_BY'])
 
             if self.settings.get('FEED_ALL_ATOM'):
-                writer.write_feed(all_articles, self.context,
-                                  self.settings['FEED_ALL_ATOM'],
-                                  self.settings.get(
-                                      'FEED_ALL_ATOM_URL',
-                                      self.settings['FEED_ALL_ATOM']))
+                writer.write_feed(
+                    all_articles,
+                    self.context,
+                    self.settings['FEED_ALL_ATOM'],
+                    self.settings.get('FEED_ALL_ATOM_URL',
+                                      self.settings['FEED_ALL_ATOM'])
+                    )
 
             if self.settings.get('FEED_ALL_RSS'):
-                writer.write_feed(all_articles, self.context,
-                                  self.settings['FEED_ALL_RSS'],
-                                  self.settings.get(
-                                      'FEED_ALL_RSS_URL',
+                writer.write_feed(
+                    all_articles,
+                    self.context,
+                    self.settings['FEED_ALL_RSS'],
+                    self.settings.get('FEED_ALL_RSS_URL',
                                       self.settings['FEED_ALL_RSS']),
-                                  feed_type='rss')
+                    feed_type='rss'
+                    )
 
         for cat, arts in self.categories:
             if self.settings.get('CATEGORY_FEED_ATOM'):
-                writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_ATOM']
-                                  % cat.slug,
-                                  self.settings.get(
-                                      'CATEGORY_FEED_ATOM_URL',
-                                      self.settings['CATEGORY_FEED_ATOM'])
-                                  % cat.slug, feed_title=cat.name)
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['CATEGORY_FEED_ATOM'].format(slug=cat.slug),
+                    self.settings.get(
+                        'CATEGORY_FEED_ATOM_URL',
+                        self.settings['CATEGORY_FEED_ATOM']).format(
+                            slug=cat.slug
+                        ),
+                    feed_title=cat.name
+                    )
 
             if self.settings.get('CATEGORY_FEED_RSS'):
-                writer.write_feed(arts, self.context,
-                                  self.settings['CATEGORY_FEED_RSS']
-                                  % cat.slug,
-                                  self.settings.get(
-                                      'CATEGORY_FEED_RSS_URL',
-                                      self.settings['CATEGORY_FEED_RSS'])
-                                  % cat.slug, feed_title=cat.name,
-                                  feed_type='rss')
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['CATEGORY_FEED_RSS'].format(slug=cat.slug),
+                    self.settings.get(
+                        'CATEGORY_FEED_RSS_URL',
+                        self.settings['CATEGORY_FEED_RSS']).format(
+                            slug=cat.slug
+                        ),
+                    feed_title=cat.name,
+                    feed_type='rss'
+                    )
 
         for auth, arts in self.authors:
             if self.settings.get('AUTHOR_FEED_ATOM'):
-                writer.write_feed(arts, self.context,
-                                  self.settings['AUTHOR_FEED_ATOM']
-                                  % auth.slug,
-                                  self.settings.get(
-                                      'AUTHOR_FEED_ATOM_URL',
-                                      self.settings['AUTHOR_FEED_ATOM'])
-                                  % auth.slug, feed_title=auth.name)
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['AUTHOR_FEED_ATOM'].format(slug=auth.slug),
+                    self.settings.get(
+                        'AUTHOR_FEED_ATOM_URL',
+                        self.settings['AUTHOR_FEED_ATOM']
+                        ).format(slug=auth.slug),
+                    feed_title=auth.name
+                    )
 
             if self.settings.get('AUTHOR_FEED_RSS'):
-                writer.write_feed(arts, self.context,
-                                  self.settings['AUTHOR_FEED_RSS']
-                                  % auth.slug,
-                                  self.settings.get(
-                                      'AUTHOR_FEED_RSS_URL',
-                                      self.settings['AUTHOR_FEED_RSS'])
-                                  % auth.slug, feed_title=auth.name,
-                                  feed_type='rss')
+                writer.write_feed(
+                    arts,
+                    self.context,
+                    self.settings['AUTHOR_FEED_RSS'].format(slug=auth.slug),
+                    self.settings.get(
+                        'AUTHOR_FEED_RSS_URL',
+                        self.settings['AUTHOR_FEED_RSS']
+                        ).format(slug=auth.slug),
+                    feed_title=auth.name,
+                    feed_type='rss'
+                    )
 
         if (self.settings.get('TAG_FEED_ATOM') or
                 self.settings.get('TAG_FEED_RSS')):
             for tag, arts in self.tags.items():
                 if self.settings.get('TAG_FEED_ATOM'):
-                    writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_ATOM']
-                                      % tag.slug,
-                                      self.settings.get(
-                                          'TAG_FEED_ATOM_URL',
-                                          self.settings['TAG_FEED_ATOM'])
-                                      % tag.slug, feed_title=tag.name)
+                    writer.write_feed(
+                        arts,
+                        self.context,
+                        self.settings['TAG_FEED_ATOM'].format(slug=tag.slug),
+                        self.settings.get(
+                            'TAG_FEED_ATOM_URL',
+                            self.settings['TAG_FEED_ATOM']
+                            ).format(slug=tag.slug),
+                        feed_title=tag.name
+                        )
 
                 if self.settings.get('TAG_FEED_RSS'):
-                    writer.write_feed(arts, self.context,
-                                      self.settings['TAG_FEED_RSS'] % tag.slug,
-                                      self.settings.get(
-                                          'TAG_FEED_RSS_URL',
-                                          self.settings['TAG_FEED_RSS'])
-                                      % tag.slug, feed_title=tag.name,
-                                      feed_type='rss')
+                    writer.write_feed(
+                        arts,
+                        self.context,
+                        self.settings['TAG_FEED_RSS'].format(slug=tag.slug),
+                        self.settings.get(
+                            'TAG_FEED_RSS_URL',
+                            self.settings['TAG_FEED_RSS']
+                            ).format(slug=tag.slug),
+                        feed_title=tag.name,
+                        feed_type='rss'
+                        )
 
         if (self.settings.get('TRANSLATION_FEED_ATOM') or
                 self.settings.get('TRANSLATION_FEED_RSS')):
@@ -401,19 +438,27 @@ class ArticlesGenerator(CachingGenerator):
                     items, order_by=self.settings['ARTICLE_ORDER_BY'])
                 if self.settings.get('TRANSLATION_FEED_ATOM'):
                     writer.write_feed(
-                        items, self.context,
-                        self.settings['TRANSLATION_FEED_ATOM'] % lang,
+                        items,
+                        self.context,
+                        self.settings['TRANSLATION_FEED_ATOM']
+                            .format(lang=lang),
                         self.settings.get(
                             'TRANSLATION_FEED_ATOM_URL',
-                            self.settings['TRANSLATION_FEED_ATOM']) % lang)
+                            self.settings['TRANSLATION_FEED_ATOM']
+                            ).format(lang=lang),
+                        )
                 if self.settings.get('TRANSLATION_FEED_RSS'):
                     writer.write_feed(
-                        items, self.context,
-                        self.settings['TRANSLATION_FEED_RSS'] % lang,
+                        items,
+                        self.context,
+                        self.settings['TRANSLATION_FEED_RSS']
+                            .format(lang=lang),
                         self.settings.get(
                             'TRANSLATION_FEED_RSS_URL',
-                            self.settings['TRANSLATION_FEED_RSS']) % lang,
-                        feed_type='rss')
+                            self.settings['TRANSLATION_FEED_RSS']
+                            ).format(lang=lang),
+                        feed_type='rss'
+                        )
 
     def generate_articles(self, write):
         """Generate the articles."""
@@ -596,6 +641,7 @@ class ArticlesGenerator(CachingGenerator):
             elif article.status == "draft":
                 all_drafts.append(article)
             self.add_source_path(article)
+            self.add_static_links(article)
 
         def _process(arts):
             origs, translations = process_translations(
@@ -702,6 +748,7 @@ class PagesGenerator(CachingGenerator):
             elif page.status == "draft":
                 draft_pages.append(page)
             self.add_source_path(page)
+            self.add_static_links(page)
 
         def _process(pages):
             origs, translations = process_translations(
@@ -753,9 +800,12 @@ class StaticGenerator(Generator):
 
     def generate_context(self):
         self.staticfiles = []
-        for f in self.get_files(self.settings['STATIC_PATHS'],
-                                exclude=self.settings['STATIC_EXCLUDES'],
-                                extensions=False):
+        linked_files = {os.path.join(self.path, path)
+                        for path in self.context['static_links']}
+        found_files = self.get_files(self.settings['STATIC_PATHS'],
+                                     exclude=self.settings['STATIC_EXCLUDES'],
+                                     extensions=False)
+        for f in linked_files | found_files:
 
             # skip content source files unless the user explicitly wants them
             if self.settings['STATIC_EXCLUDE_SOURCES']:
@@ -770,7 +820,7 @@ class StaticGenerator(Generator):
                 context_signal=signals.static_generator_context,
                 context_sender=self)
             self.staticfiles.append(static)
-            self.add_source_path(static)
+            self.add_source_path(static, static=True)
         self._update_context(('staticfiles',))
         signals.static_generator_finalized.send(self)
 

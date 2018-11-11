@@ -14,7 +14,7 @@ Why not ?
 After all, why not ? It's pretty simple to do it, and it will allow me to write my blogposts in rst !
 YEAH !
 
-.. image:: |filename|/pictures/Sushi.jpg
+.. image:: |static|/pictures/Sushi.jpg
    :height: 450 px
    :width: 600 px
    :alt: alternate text

@@ -150,8 +150,11 @@ class Pelican(object):
         start_time = time.time()
 
         context = self.settings.copy()
-        # Share these among all the generators and content objects:
-        context['filenames'] = {}  # maps source path to Content object or None
+        # Share these among all the generators and content objects
+        # They map source paths to Content objects or None
+        context['generated_content'] = {}
+        context['static_links'] = set()
+        context['static_content'] = {}
         context['localsiteurl'] = self.settings['SITEURL']
 
         generators = [

@@ -14,7 +14,8 @@ import six
 from pelican.contents import Article, Author, Category, Page, Static, Tag
 from pelican.settings import DEFAULT_CONFIG
 from pelican.signals import content_object_init
-from pelican.tests.support import LoggedTestCase, get_settings, unittest
+from pelican.tests.support import LoggedTestCase, get_context, get_settings,\
+    unittest
 from pelican.utils import SafeDatetime, path_to_url, truncate_html_words
 
 
@@ -264,7 +265,7 @@ class TestPage(LoggedTestCase):
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
         args['source_path'] = 'content'
-        args['context']['filenames'] = {'article.rst': article}
+        args['context']['generated_content'] = {'article.rst': article}
 
         # Classic intrasite link via filename
         args['content'] = (
@@ -343,22 +344,24 @@ class TestPage(LoggedTestCase):
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
         args['source_path'] = 'content'
-        args['context']['filenames'] = {
-            'images/poster.jpg': type(
-                cls_name, (object,), {'url': 'images/poster.jpg'}),
-            'assets/video.mp4': type(
-                cls_name, (object,), {'url': 'assets/video.mp4'}),
-            'images/graph.svg': type(
-                cls_name, (object,), {'url': 'images/graph.svg'}),
-            'reference.rst': type(
-                cls_name, (object,), {'url': 'reference.html'}),
+        args['context']['static_content'] = {
+            'images/poster.jpg':
+                type(cls_name, (object,), {'url': 'images/poster.jpg'}),
+            'assets/video.mp4':
+                type(cls_name, (object,), {'url': 'assets/video.mp4'}),
+            'images/graph.svg':
+                type(cls_name, (object,), {'url': 'images/graph.svg'}),
+        }
+        args['context']['generated_content'] = {
+            'reference.rst':
+                type(cls_name, (object,), {'url': 'reference.html'}),
         }
 
         # video.poster
         args['content'] = (
             'There is a video with poster '
-            '<video controls poster="{filename}/images/poster.jpg">'
-            '<source src="|filename|/assets/video.mp4" type="video/mp4">'
+            '<video controls poster="{static}/images/poster.jpg">'
+            '<source src="|static|/assets/video.mp4" type="video/mp4">'
             '</video>'
         )
         content = Page(**args).get_content('http://notmyidea.org')
@@ -374,7 +377,7 @@ class TestPage(LoggedTestCase):
         # object.data
         args['content'] = (
             'There is a svg object '
-            '<object data="{filename}/images/graph.svg"'
+            '<object data="{static}/images/graph.svg"'
             ' type="image/svg+xml">'
             '</object>'
         )
@@ -409,14 +412,15 @@ class TestPage(LoggedTestCase):
             STATIC_URL='http://static.cool.site/{path}',
             ARTICLE_URL='http://blog.cool.site/{slug}.html')
         args['source_path'] = 'content'
-        args['context']['filenames'] = {
-            'images/poster.jpg': Static('',
-                                        settings=args['settings'],
-                                        source_path='images/poster.jpg'),
-            'article.rst': Article('',
-                                   settings=args['settings'],
-                                   metadata={'slug': 'article',
-                                             'title': 'Article'})
+        args['context']['static_content'] = {
+            'images/poster.jpg':
+                Static('', settings=args['settings'],
+                       source_path='images/poster.jpg'),
+        }
+        args['context']['generated_content'] = {
+            'article.rst':
+                Article('', settings=args['settings'], metadata={
+                    'slug': 'article', 'title': 'Article'})
         }
 
         # Article link will go to blog
@@ -441,7 +445,7 @@ class TestPage(LoggedTestCase):
 
         # Image link will go to static
         args['content'] = (
-            '<img src="{filename}/images/poster.jpg"/>'
+            '<img src="{static}/images/poster.jpg"/>'
         )
         content = Page(**args).get_content('http://cool.site')
         self.assertEqual(
@@ -458,7 +462,7 @@ class TestPage(LoggedTestCase):
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
         args['source_path'] = 'content'
-        args['context']['filenames'] = {'article spaces.rst': article}
+        args['context']['generated_content'] = {'article spaces.rst': article}
 
         # An intrasite link via filename with %20 as a space
         args['content'] = (
@@ -470,6 +474,55 @@ class TestPage(LoggedTestCase):
             content,
             'A simple test, with a '
             '<a href="http://notmyidea.org/article-spaces.html">link</a>'
+        )
+
+    def test_intrasite_link_source_and_generated(self):
+        """Test linking both to the source and the generated article
+        """
+        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['generated_content'] = {
+            'article.rst': type(cls_name, (object,), {'url': 'article.html'})}
+        args['context']['static_content'] = {
+            'article.rst': type(cls_name, (object,), {'url': 'article.rst'})}
+
+        args['content'] = (
+            'A simple test, with a link to an'
+            '<a href="{filename}article.rst">article</a> and its'
+            '<a href="{static}article.rst">source</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a link to an'
+            '<a href="http://notmyidea.org/article.html">article</a> and its'
+            '<a href="http://notmyidea.org/article.rst">source</a>'
+        )
+
+    def test_intrasite_link_to_static_content_with_filename(self):
+        """Test linking to a static resource with deprecated {filename}
+        """
+        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['static_content'] = {
+            'poster.jpg':
+                type(cls_name, (object,), {'url': 'images/poster.jpg'})}
+
+        args['content'] = (
+            'A simple test, with a link to a'
+            '<a href="{filename}poster.jpg">poster</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(
+            content,
+            'A simple test, with a link to a'
+            '<a href="http://notmyidea.org/images/poster.jpg">poster</a>'
         )
 
     def test_multiple_authors(self):
@@ -599,13 +652,13 @@ class TestStatic(LoggedTestCase):
             STATIC_URL='{path}',
             PAGE_SAVE_AS=os.path.join('outpages', '{slug}.html'),
             PAGE_URL='outpages/{slug}.html')
-        self.context = self.settings.copy()
+        self.context = get_context(self.settings)
 
         self.static = Static(content=None, metadata={}, settings=self.settings,
                              source_path=posix_join('dir', 'foo.jpg'),
                              context=self.context)
 
-        self.context['filenames'] = {self.static.source_path: self.static}
+        self.context['static_content'][self.static.source_path] = self.static
 
     def tearDown(self):
         pass
@@ -674,7 +727,7 @@ class TestStatic(LoggedTestCase):
 
     def test_attach_to_does_nothing_after_save_as_referenced(self):
         """attach_to() does nothing if the save_as was already referenced.
-        (For example, by a {filename} link an a document processed earlier.)
+        (For example, by a {static} link an a document processed earlier.)
         """
         original_save_as = self.static.save_as
 
@@ -690,7 +743,7 @@ class TestStatic(LoggedTestCase):
 
     def test_attach_to_does_nothing_after_url_referenced(self):
         """attach_to() does nothing if the url was already referenced.
-        (For example, by a {filename} link an a document processed earlier.)
+        (For example, by a {static} link an a document processed earlier.)
         """
         original_url = self.static.url
 

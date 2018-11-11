@@ -12,8 +12,8 @@ You can install Pelican via several different methods. The simplest is via
 (Keep in mind that operating systems will often require you to prefix the above
 command with ``sudo`` in order to install Pelican system-wide.)
 
-While the above is the simplest method, the recommended approach is to create
-a virtual environment for Pelican via virtualenv_ before installing Pelican.
+While the above is the simplest method, the recommended approach is to create a
+virtual environment for Pelican via virtualenv_ before installing Pelican.
 Assuming you have virtualenv_ installed, you can then open a new terminal
 session and create a new virtual environment for Pelican::
 
@@ -22,9 +22,8 @@ session and create a new virtual environment for Pelican::
     source bin/activate
 
 Once the virtual environment has been created and activated, Pelican can be
-installed via ``pip install pelican`` as noted above. Alternatively, if
-you have the project source, you can install Pelican using the distutils
-method::
+installed via ``pip install pelican`` as noted above. Alternatively, if you
+have the project source, you can install Pelican using the distutils method::
 
     cd path-to-Pelican-source
     python setup.py install
@@ -96,8 +95,9 @@ your site::
     pelican-quickstart
 
 Once you finish answering all the questions, your project will consist of the
-following hierarchy (except for *pages* — shown in parentheses below — which you
-can optionally add yourself if you plan to create non-chronological content)::
+following hierarchy (except for *pages* — shown in parentheses below — which
+you can optionally add yourself if you plan to create non-chronological
+content)::
 
     yourproject/
     ├── content

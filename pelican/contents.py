@@ -142,7 +142,8 @@ class Content(object):
         if not hasattr(self, 'status'):
             self.status = getattr(self, 'default_status', None)
 
-        if len(self._context.get('filenames', [])) > 0:
+        if (len(self._context.get('generated_content', [])) > 0 or
+                len(self._context.get('static_content', [])) > 0):
             self.refresh_metadata_intersite_links()
 
         signals.content_object_init.send(self)
@@ -255,7 +256,7 @@ class Content(object):
                 siteurl += '/'
 
         # XXX Put this in a different location.
-        if what in {'filename', 'attach'}:
+        if what in {'filename', 'static', 'attach'}:
             if path.startswith('/'):
                 path = path[1:]
             else:
@@ -264,22 +265,33 @@ class Content(object):
                     os.path.join(self.relative_dir, path)
                 )
 
-            if path not in self._context['filenames']:
-                unquoted_path = path.replace('%20', ' ')
+            key = 'static_content' if what in ('static', 'attach')\
+                else 'generated_content'
 
-                if unquoted_path in self._context['filenames']:
-                    path = unquoted_path
+            def _get_linked_content(key, path):
+                try:
+                    return self._context[key][path]
+                except KeyError:
+                    try:
+                        # Markdown escapes spaces, try unescaping
+                        return self._context[key][path.replace('%20', ' ')]
+                    except KeyError:
+                        if what == 'filename' and key == 'generated_content':
+                            key = 'static_content'
+                            linked_content = _get_linked_content(key, path)
+                            if linked_content:
+                                logger.warning(
+                                    '{filename} used for linking to static'
+                                    'content %s in %s. Use {static} instead',
+                                    path,
+                                    self.get_relative_source_path())
+                                return linked_content
+                        return None
 
-            linked_content = self._context['filenames'].get(path)
+            linked_content = _get_linked_content(key, path)
             if linked_content:
                 if what == 'attach':
-                    if isinstance(linked_content, Static):
-                        linked_content.attach_to(self)
-                    else:
-                        logger.warning(
-                            "%s used {attach} link syntax on a "
-                            "non-static file. Use {filename} instead.",
-                            self.get_relative_source_path())
+                    linked_content.attach_to(self)
                 origin = joiner(siteurl, linked_content.url)
                 origin = origin.replace('\\', '/')  # for Windows paths.
             else:
@@ -310,6 +322,17 @@ class Content(object):
         return ''.join((m.group('markup'), m.group('quote'), origin,
                         m.group('quote')))
 
+    def _get_intrasite_link_regex(self):
+        intrasite_link_regex = self.settings['INTRASITE_LINK_REGEX']
+        regex = r"""
+            (?P<markup><[^\>]+  # match tag with all url-value attributes
+                (?:href|src|poster|data|cite|formaction|action)\s*=\s*)
+
+            (?P<quote>["\'])      # require value to be quoted
+            (?P<path>{0}(?P<value>.*?))  # the url value
+            \2""".format(intrasite_link_regex)
+        return re.compile(regex, re.X)
+
     def _update_content(self, content, siteurl):
         """Update the content attribute.
 
@@ -323,17 +346,28 @@ class Content(object):
         if not content:
             return content
 
-        instrasite_link_regex = self.settings['INTRASITE_LINK_REGEX']
-        regex = r"""
-            (?P<markup><[^\>]+  # match tag with all url-value attributes
-                (?:href|src|poster|data|cite|formaction|action)\s*=\s*)
-
-            (?P<quote>["\'])      # require value to be quoted
-            (?P<path>{0}(?P<value>.*?))  # the url value
-            \2""".format(instrasite_link_regex)
-        hrefs = re.compile(regex, re.X)
-
+        hrefs = self._get_intrasite_link_regex()
         return hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
+
+    def get_static_links(self):
+        static_links = set()
+        hrefs = self._get_intrasite_link_regex()
+        for m in hrefs.finditer(self._content):
+            what = m.group('what')
+            value = urlparse(m.group('value'))
+            path = value.path
+            if what not in {'static', 'attach'}:
+                continue
+            if path.startswith('/'):
+                path = path[1:]
+            else:
+                # relative to the source path of this content
+                path = self.get_relative_source_path(
+                    os.path.join(self.relative_dir, path)
+                )
+            path = path.replace('%20', ' ')
+            static_links.add(path)
+        return static_links
 
     def get_siteurl(self):
         return self._context.get('localsiteurl', '')
