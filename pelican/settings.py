@@ -386,24 +386,24 @@ def handle_deprecated_settings(settings):
             settings.pop(f + '_SUBSTITUTIONS', None)
 
     # `%s` -> '{slug}` or `{lang}` in FEED settings
-        for key in ['TRANSLATION_FEED_ATOM',
-                    'TRANSLATION_FEED_RSS'
-                    ]:
-            if key in settings and '%s' in settings[key]:
-                logger.warning('%%s usage in %s is deprecated, use {lang} '
-                               'instead. Falling back to default.', key)
-                settings[key] = DEFAULT_CONFIG[key]
-        for key in ['AUTHOR_FEED_ATOM',
-                    'AUTHOR_FEED_RSS',
-                    'CATEGORY_FEED_ATOM',
-                    'CATEGORY_FEED_RSS',
-                    'TAG_FEED_ATOM',
-                    'TAG_FEED_RSS',
-                    ]:
-            if key in settings and '%s' in settings[key]:
-                logger.warning('%%s usage in %s is deprecated, use {slug} '
-                               'instead. Falling back to default.', key)
-                settings[key] = DEFAULT_CONFIG[key]
+    for key in ['TRANSLATION_FEED_ATOM',
+                'TRANSLATION_FEED_RSS'
+                ]:
+        if key in settings and '%s' in settings[key]:
+            logger.warning('%%s usage in %s is deprecated, use {lang} '
+                           'instead. Falling back to default.', key)
+            settings[key] = DEFAULT_CONFIG[key]
+    for key in ['AUTHOR_FEED_ATOM',
+                'AUTHOR_FEED_RSS',
+                'CATEGORY_FEED_ATOM',
+                'CATEGORY_FEED_RSS',
+                'TAG_FEED_ATOM',
+                'TAG_FEED_RSS',
+                ]:
+        if key in settings and '%s' in settings[key]:
+            logger.warning('%%s usage in %s is deprecated, use {slug} '
+                           'instead. Falling back to default.', key)
+            settings[key] = DEFAULT_CONFIG[key]
 
     return settings
 
