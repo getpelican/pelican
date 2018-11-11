@@ -391,7 +391,7 @@ def handle_deprecated_settings(settings):
                 ]:
         if key in settings and '%s' in settings[key]:
             logger.warning('%%s usage in %s is deprecated, use {lang} '
-                            'instead. Falling back to default.', key)
+                           'instead. Falling back to default.', key)
             settings[key] = DEFAULT_CONFIG[key]
     for key in ['AUTHOR_FEED_ATOM',
                 'AUTHOR_FEED_RSS',
@@ -402,7 +402,7 @@ def handle_deprecated_settings(settings):
                 ]:
         if key in settings and '%s' in settings[key]:
             logger.warning('%%s usage in %s is deprecated, use {slug} '
-                            'instead. Falling back to default.', key)
+                           'instead. Falling back to default.', key)
             settings[key] = DEFAULT_CONFIG[key]
 
     return settings
