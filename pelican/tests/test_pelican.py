@@ -211,6 +211,29 @@ class TestPelican(LoggedTestCase):
             msg="Writing .*",
             level=logging.INFO)
 
+    def test_cyclic_intersite_links_no_warnings(self):
+        settings = read_settings(path=None, override={
+            'PATH': os.path.join(CURRENT_DIR, 'cyclic_intersite_links'),
+            'OUTPUT_PATH': self.temp_path,
+            'CACHE_PATH': self.temp_cache,
+        })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+        # There are four different intersite links:
+        # - one pointing to the second article from first and third
+        # - one pointing to the first article from second and third
+        # - one pointing to the third article from first and second
+        # - one pointing to a nonexistent from each
+        # If everything goes well, only the warning about the nonexistent
+        # article should be printed. Only two articles are not sufficient,
+        # since the first will always have _context['generated_content'] empty
+        # (thus skipping the link resolving) and the second will always have it
+        # non-empty, containing the first, thus always succeeding.
+        self.assertLogCountEqual(
+            count=1,
+            msg="Unable to find '.*\\.rst', skipping url replacement.",
+            level=logging.WARNING)
+
     def test_md_extensions_deprecation(self):
         """Test that a warning is issued if MD_EXTENSIONS is used"""
         settings = read_settings(path=None, override={

@@ -333,6 +333,10 @@ class TestPage(LoggedTestCase):
         args['metadata']['custom'] = parsed
         args['context']['localsiteurl'] = 'http://notmyidea.org'
         p = Page(**args)
+        # This is called implicitly from all generators and Pelican.run() once
+        # all files are processed. Here we process just one page so it needs
+        # to be called explicitly.
+        p.refresh_metadata_intersite_links()
         self.assertEqual(p.summary, linked)
         self.assertEqual(p.custom, linked)
 
