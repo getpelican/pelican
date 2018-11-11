@@ -9,6 +9,7 @@ from sys import platform
 
 
 from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
+                              _printf_s_to_format_field,
                               configure_settings, handle_deprecated_settings,
                               read_settings)
 from pelican.tests.support import unittest
@@ -167,6 +168,14 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['THEME'] = 'foo'
 
         self.assertRaises(Exception, configure_settings, settings)
+
+    def test__printf_s_to_format_field(self):
+        for s in ('%s', '{%s}', '{%s'):
+            option = 'foo/{}/bar.baz'.format(s)
+            result = _printf_s_to_format_field(option, 'slug')
+            expected = option % 'qux'
+            found = result.format(slug='qux')
+            self.assertEqual(expected, found)
 
     def test_deprecated_extra_templates_paths(self):
         settings = self.settings

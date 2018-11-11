@@ -245,6 +245,22 @@ def get_jinja_environment(settings):
     return settings
 
 
+def _printf_s_to_format_field(printf_string, format_field):
+    """Tries to replace %s with {format_field} in the provided printf_string.
+    Raises ValueError in case of failure.
+    """
+    TEST_STRING = 'PELICAN_PRINTF_S_DEPRECATION'
+    expected = printf_string % TEST_STRING
+
+    result = printf_string.replace('{', '{{').replace('}', '}}') \
+        % '{{{}}}'.format(format_field)
+    if result.format(**{format_field: TEST_STRING}) != expected:
+        raise ValueError('Failed to safely replace %s with {{{}}}'.format(
+            format_field))
+
+    return result
+
+
 def handle_deprecated_settings(settings):
     """Converts deprecated settings and issues warnings. Issues an exception
     if both old and new setting is specified.
@@ -394,10 +410,16 @@ def handle_deprecated_settings(settings):
     for key in ['TRANSLATION_FEED_ATOM',
                 'TRANSLATION_FEED_RSS'
                 ]:
-        if key in settings and '%s' in settings[key]:
+        if settings.get(key) and '%s' in settings[key]:
             logger.warning('%%s usage in %s is deprecated, use {lang} '
-                           'instead. Falling back to default.', key)
-            settings[key] = DEFAULT_CONFIG[key]
+                           'instead.', key)
+            try:
+                settings[key] = _printf_s_to_format_field(
+                    settings[key], 'lang')
+            except ValueError:
+                logger.warning('Failed to convert %%s to {lang} for %s. '
+                               'Falling back to default.', key)
+                settings[key] = DEFAULT_CONFIG[key]
     for key in ['AUTHOR_FEED_ATOM',
                 'AUTHOR_FEED_RSS',
                 'CATEGORY_FEED_ATOM',
@@ -405,10 +427,16 @@ def handle_deprecated_settings(settings):
                 'TAG_FEED_ATOM',
                 'TAG_FEED_RSS',
                 ]:
-        if key in settings and '%s' in settings[key]:
+        if settings.get(key) and '%s' in settings[key]:
             logger.warning('%%s usage in %s is deprecated, use {slug} '
-                           'instead. Falling back to default.', key)
-            settings[key] = DEFAULT_CONFIG[key]
+                           'instead.', key)
+            try:
+                settings[key] = _printf_s_to_format_field(
+                    settings[key], 'slug')
+            except ValueError:
+                logger.warning('Failed to convert %%s to {slug} for %s. '
+                               'Falling back to default.', key)
+                settings[key] = DEFAULT_CONFIG[key]
 
     return settings
 
