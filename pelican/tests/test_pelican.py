@@ -225,3 +225,18 @@ class TestPelican(LoggedTestCase):
             count=1,
             msg="MD_EXTENSIONS is deprecated use MARKDOWN instead.",
             level=logging.WARNING)
+
+    def test_parse_errors(self):
+        # Verify that just an error is printed and the application doesn't
+        # abort, exit or something.
+        settings = read_settings(path=None, override={
+            'PATH': os.path.abspath(os.path.join(CURRENT_DIR, 'parse_error')),
+            'OUTPUT_PATH': self.temp_path,
+            'CACHE_PATH': self.temp_cache,
+        })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+        self.assertLogCountEqual(
+            count=1,
+            msg="Could not process .*parse_error.rst",
+            level=logging.ERROR)

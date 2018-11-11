@@ -24,6 +24,9 @@ class BaseFormatter(logging.Formatter):
         record.__dict__['customlevelname'] = customlevel
         # format multiline messages 'nicely' to make it clear they are together
         record.msg = record.msg.replace('\n', '\n  | ')
+        record.args = tuple(arg.replace('\n', '\n  | ') if
+                            isinstance(arg, six.string_types) else
+                            arg for arg in record.args)
         return super(BaseFormatter, self).format(record)
 
     def formatException(self, ei):
