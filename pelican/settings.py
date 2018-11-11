@@ -323,6 +323,11 @@ def handle_deprecated_settings(settings):
             'PAGINATED_DIRECT_TEMPLATES', 'PAGINATED_TEMPLATES')
         logger.warning(message)
 
+        # set PAGINATED_TEMPLATES
+        if 'PAGINATED_TEMPLATES' not in settings:
+            settings['PAGINATED_TEMPLATES'] = {
+                'tag': None, 'category': None, 'author': None}
+
         for t in settings['PAGINATED_DIRECT_TEMPLATES']:
             if t not in settings['PAGINATED_TEMPLATES']:
                 settings['PAGINATED_TEMPLATES'][t] = None

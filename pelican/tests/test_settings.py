@@ -187,6 +187,20 @@ class TestSettingsConfiguration(unittest.TestCase):
                          {'index': 10, 'category': None, 'archives': None})
         self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
 
+    def test_deprecated_paginated_direct_templates_from_file(self):
+        # This is equivalent to reading a settings file that has
+        # PAGINATED_DIRECT_TEMPLATES defined but no PAGINATED_TEMPLATES.
+        settings = read_settings(None, override={
+            'PAGINATED_DIRECT_TEMPLATES': ['index', 'archives']
+        })
+        self.assertEqual(settings['PAGINATED_TEMPLATES'], {
+            'archives': None,
+            'author': None,
+            'index': None,
+            'category': None,
+            'tag': None})
+        self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
+
     def test_theme_and_extra_templates_exception(self):
         settings = self.settings
         settings['EXTRA_TEMPLATES_PATHS'] = ['/ha']
@@ -271,3 +285,14 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.assertEqual(settings['AUTHOR_REGEX_SUBSTITUTIONS'],
                          [(r'Alexander\ Todorov', 'atodorov')] +
                          default_slug_regex_subs)
+
+    def test_deprecated_slug_substitutions_from_file(self):
+        # This is equivalent to reading a settings file that has
+        # SLUG_SUBSTITUTIONS defined but no SLUG_REGEX_SUBSTITUTIONS.
+        settings = read_settings(None, override={
+            'SLUG_SUBSTITUTIONS': [('C++', 'cpp')]
+        })
+        self.assertEqual(settings['SLUG_REGEX_SUBSTITUTIONS'],
+                         [(r'C\+\+', 'cpp')] +
+                         self.settings['SLUG_REGEX_SUBSTITUTIONS'])
+        self.assertNotIn('SLUG_SUBSTITUTIONS', settings)
