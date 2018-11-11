@@ -666,7 +666,7 @@ class HTMLReaderTest(ReaderTest):
     def test_article_with_multiple_similar_metadata_tags(self):
         page = self.read_file(path='article_with_multiple_metadata_tags.html')
         expected = {
-            'custom_field': ['http://notmyidea.org', 'http://mrsenko.com'],
+            'custom_field': ['https://getpelican.com', 'https://www.eff.org'],
         }
 
         self.assertDictHasSubset(page.metadata, expected)
