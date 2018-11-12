@@ -5,6 +5,12 @@
 
 {% block head %}
   {{ super() }}
+
+  {% import 'translations.html' as translations with context %}
+  {% if translations.entry_hreflang(article) %}
+    {{ translations.entry_hreflang(article) }}
+  {% endif %}
+
   {% if article.description %}
     <meta name="description" content="{{article.description}}" />
   {% endif %}
