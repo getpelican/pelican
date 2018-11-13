@@ -1,8 +1,8 @@
 Release history
 ###############
 
-Next release
-============
+4.0.0 (2018-11-13)
+==================
 
 * Replace ``develop_server.sh`` script with ``pelican --listen``
 * Improved copy/link behavior for large static files (e.g., videos)
