@@ -4,14 +4,20 @@ Release history
 Next release
 ============
 
+* Replace ``develop_server.sh`` script with ``pelican --listen``
+* Improved copy/link behavior for large static files (e.g., videos)
+* New ``{static}`` syntax to link to static content; content linked to by
+  ``{static}`` and ``{attach}`` is automatically copied over even if not in
+  ``STATIC_PATHS``
+* Pages can now have ``draft`` status
+* Show current settings via new ``--print-settings`` flag
 * All settings for slugs now use ``{slug}`` and/or ``{lang}`` rather than
   ``%s``. If ``%s``-style settings are encountered, Pelican will emit a warning
   and fallback to the default setting.
-* New signal: ``feed_generated``
-* Replace Fabric by Invoke and ``fabfile.py`` template by ``tasks.py``.
+* New signals: ``feed_generated`` and ``page_generated_write_page``
+* Replace Fabric with Invoke and ``fabfile.py`` template with ``tasks.py``
 * Replace ``PAGINATED_DIRECT_TEMPLATES`` by ``PAGINATED_TEMPLATES``, extending
   control over pagination to all templates and making page size variable
-* Allow pages to have ``draft`` status
 * Replace ``SLUG_SUBSTITUTIONS`` (and friends) by ``SLUG_REGEX_SUBSTITUTIONS``
   for more finegrained control
 * ``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer strips
@@ -20,9 +26,6 @@ Next release
   and author pages 2) feeds 3) draft and hidden articles and pages
 * New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to
   specify metadata attributes used to identify/disable translations
-* New ``{static}`` syntax to link to static content; content linked to by
-  ``{static}`` and ``{attach}`` is automatically copied over even if not in
-  ``STATIC_PATHS``
 * Make the HTML reader parse multiple occurrences of metadata tags as a list
 * New Blogger XML backup importer
 * Wordpress importer now updates file links to point to local copies if the
