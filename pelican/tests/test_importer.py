@@ -91,8 +91,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
-        self.posts = list(wp2fields(WORDPRESS_XML_SAMPLE))
-        self.custposts = list(wp2fields(WORDPRESS_XML_SAMPLE, True))
+        self.posts = wp2fields(WORDPRESS_XML_SAMPLE)
+        self.custposts = wp2fields(WORDPRESS_XML_SAMPLE, True)
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
@@ -242,6 +242,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
             self.assertFalse(out_name.endswith(filename))
 
     def test_can_toggle_raw_html_code_parsing(self):
+        test_posts = list(self.posts)
+        
         def r(f):
             with open(f, encoding='utf-8') as infile:
                 return infile.read()
@@ -250,16 +252,16 @@ class TestWordpressXmlImporter(unittest.TestCase):
         with temporary_folder() as temp:
 
             rst_files = (r(f) for f
-                         in silent_f2p(self.posts, 'markdown', temp))
+                         in silent_f2p(test_posts, 'markdown', temp))
             self.assertTrue(any('<iframe' in rst for rst in rst_files))
             rst_files = (r(f) for f
-                         in silent_f2p(self.posts, 'markdown',
+                         in silent_f2p(test_posts, 'markdown',
                                        temp, strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
             # no effect in rst
-            rst_files = (r(f) for f in silent_f2p(self.posts, 'rst', temp))
+            rst_files = (r(f) for f in silent_f2p(test_posts, 'rst', temp))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
-            rst_files = (r(f) for f in silent_f2p(self.posts, 'rst', temp,
+            rst_files = (r(f) for f in silent_f2p(test_posts, 'rst', temp,
                          strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
 
