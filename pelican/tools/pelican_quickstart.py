@@ -10,6 +10,8 @@ import sys
 
 from jinja2 import Environment, FileSystemLoader
 
+import pkg_resources
+
 import pytz
 
 try:
@@ -44,7 +46,6 @@ _jinja_env = Environment(
     loader=FileSystemLoader(_TEMPLATES_DIR),
     trim_blocks=True,
 )
-
 
 _GITHUB_PAGES_BRANCHES = {
     'personal': 'master',
@@ -111,6 +112,7 @@ def decoding_strings(f):
             else:
                 return out.decode(sys.stdin.encoding)
         return out
+
     return wrapper
 
 
@@ -187,6 +189,14 @@ def ask(question, answer=str_compat, default=None, length=None):
     else:
         raise NotImplementedError(
             'Argument `answer` must be str_compat, bool, or integer')
+
+
+def write_requirements_txt():
+    distribution = pkg_resources.working_set.by_key['pelican']
+    with open(os.path.join(CONF['basedir'], 'requirements.txt'), 'w') as f:
+        f.write('{}\n'.format(distribution.as_requirement()))
+        for dependency in sorted(distribution.requires()):
+            f.write('{}\n'.format(dependency))
 
 
 def ask_timezone(question, default, tzurl):
@@ -361,6 +371,8 @@ needed by Pelican.
             fd.close()
     except OSError as e:
         print('Error: {0}'.format(e))
+
+    write_requirements_txt()
 
     if automation:
         try:
