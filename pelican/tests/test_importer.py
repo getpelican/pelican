@@ -417,20 +417,22 @@ class TestWordpressXMLAttachements(unittest.TestCase):
         self.assertTrue(self.attachments)
         for post in self.attachments.keys():
             if post is None:
-                expected = ('https://upload.wikimedia.org/wikipedia/commons/'
-                            'thumb/2/2c/Pelican_lakes_entrance02.jpg/'
-                            '240px-Pelican_lakes_entrance02.jpg')
-                self.assertEqual(self.attachments[post][0], expected)
+                expected = {
+                    ('https://upload.wikimedia.org/wikipedia/commons/'
+                     'thumb/2/2c/Pelican_lakes_entrance02.jpg/'
+                     '240px-Pelican_lakes_entrance02.jpg')
+                }
+                self.assertEqual(self.attachments[post], expected)
             elif post == 'with-excerpt':
                 expected_invalid = ('http://thisurlisinvalid.notarealdomain/'
                                     'not_an_image.jpg')
                 expected_pelikan = ('http://en.wikipedia.org/wiki/'
                                     'File:Pelikan_Walvis_Bay.jpg')
-                self.assertEqual(self.attachments[post][0], expected_invalid)
-                self.assertEqual(self.attachments[post][1], expected_pelikan)
+                self.assertEqual(self.attachments[post],
+                                 {expected_invalid, expected_pelikan})
             elif post == 'with-tags':
                 expected_invalid = ('http://thisurlisinvalid.notarealdomain')
-                self.assertEqual(self.attachments[post][0], expected_invalid)
+                self.assertEqual(self.attachments[post], {expected_invalid})
             else:
                 self.fail('all attachments should match to a '
                           'filename or None, {}'

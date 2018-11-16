@@ -699,7 +699,7 @@ def get_attachments(xml):
         else:
             filename = get_filename(filename, post_id)
             names[post_id] = filename
-    attachedposts = defaultdict(list)
+    attachedposts = defaultdict(set)
     for parent, url in attachments:
         try:
             parent_name = names[parent]
@@ -707,7 +707,7 @@ def get_attachments(xml):
             # attachment's parent is not a valid post
             parent_name = None
 
-        attachedposts[parent_name].append(url)
+        attachedposts[parent_name].add(url)
     return attachedposts
 
 
