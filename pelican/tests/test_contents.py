@@ -917,3 +917,18 @@ class TestStatic(LoggedTestCase):
                                    self.settings['INDEX_SAVE_AS'])) +
                          '">link</a>')
         self.assertEqual(content, expected_html)
+
+    def test_not_save_as_draft(self):
+        """Static.save_as is not affected by draft status."""
+
+        static = Static(
+            content=None,
+            metadata=dict(status='draft',),
+            settings=self.settings,
+            source_path=os.path.join('dir', 'foo.jpg'),
+            context=self.settings.copy())
+
+        expected_save_as = os.path.join('dir', 'foo.jpg')
+        self.assertEqual(static.status, 'draft')
+        self.assertEqual(static.save_as, expected_save_as)
+        self.assertEqual(static.url, path_to_url(expected_save_as))

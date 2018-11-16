@@ -527,7 +527,11 @@ class Article(Content):
 
 
 @python_2_unicode_compatible
-class Static(Page):
+class Static(Content):
+    mandatory_properties = ('title',)
+    default_status = 'published'
+    default_template = None
+
     def __init__(self, *args, **kwargs):
         super(Static, self).__init__(*args, **kwargs)
         self._output_location_referenced = False
