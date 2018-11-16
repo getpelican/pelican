@@ -42,8 +42,6 @@ def parse_arguments():
 
 
 class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
-    SUFFIXES = ['.html', '/index.html', '/', '']
-
     def translate_path(self, path):
         # abandon query parameters
         path = path.split('?', 1)[0]
@@ -82,11 +80,15 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
         # Try to strip trailing slash
         original_path = original_path.rstrip('/')
         # Try to detect file by applying various suffixes
-        for suffix in self.SUFFIXES:
+        if os.path.isdir(original_path):
+            suffixes = ['.html', '/index.html', '/']
+        else:
+            suffixes = ['', '.html']
+        for suffix in suffixes:
             path = original_path + suffix
             if os.path.exists(self.translate_path(path)):
                 return path
-            logging.info("Tried to find `%s`, but it doesn't exist.", path)
+            logging.debug("Tried to find `%s`, but it doesn't exist.", path)
         return None
 
     def guess_type(self, path):
