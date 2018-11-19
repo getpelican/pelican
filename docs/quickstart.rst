@@ -12,6 +12,10 @@ Install Pelican (and optionally Markdown if you intend to use it) on Python
 terminal, prefixing with ``sudo`` if permissions warrant::
 
     pip install pelican markdown
+    
+Save a list of packages::
+
+    pip freeze > requirements.txt
 
 Create a project
 ----------------
