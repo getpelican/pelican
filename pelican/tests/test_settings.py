@@ -9,6 +9,7 @@ from sys import platform
 
 
 from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
+                              _printf_s_to_format_field,
                               configure_settings, handle_deprecated_settings,
                               read_settings)
 from pelican.tests.support import unittest
@@ -168,6 +169,14 @@ class TestSettingsConfiguration(unittest.TestCase):
 
         self.assertRaises(Exception, configure_settings, settings)
 
+    def test__printf_s_to_format_field(self):
+        for s in ('%s', '{%s}', '{%s'):
+            option = 'foo/{}/bar.baz'.format(s)
+            result = _printf_s_to_format_field(option, 'slug')
+            expected = option % 'qux'
+            found = result.format(slug='qux')
+            self.assertEqual(expected, found)
+
     def test_deprecated_extra_templates_paths(self):
         settings = self.settings
         settings['EXTRA_TEMPLATES_PATHS'] = ['/foo/bar', '/ha']
@@ -185,6 +194,20 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings = handle_deprecated_settings(settings)
         self.assertEqual(settings['PAGINATED_TEMPLATES'],
                          {'index': 10, 'category': None, 'archives': None})
+        self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
+
+    def test_deprecated_paginated_direct_templates_from_file(self):
+        # This is equivalent to reading a settings file that has
+        # PAGINATED_DIRECT_TEMPLATES defined but no PAGINATED_TEMPLATES.
+        settings = read_settings(None, override={
+            'PAGINATED_DIRECT_TEMPLATES': ['index', 'archives']
+        })
+        self.assertEqual(settings['PAGINATED_TEMPLATES'], {
+            'archives': None,
+            'author': None,
+            'index': None,
+            'category': None,
+            'tag': None})
         self.assertNotIn('PAGINATED_DIRECT_TEMPLATES', settings)
 
     def test_theme_and_extra_templates_exception(self):
@@ -271,3 +294,14 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.assertEqual(settings['AUTHOR_REGEX_SUBSTITUTIONS'],
                          [(r'Alexander\ Todorov', 'atodorov')] +
                          default_slug_regex_subs)
+
+    def test_deprecated_slug_substitutions_from_file(self):
+        # This is equivalent to reading a settings file that has
+        # SLUG_SUBSTITUTIONS defined but no SLUG_REGEX_SUBSTITUTIONS.
+        settings = read_settings(None, override={
+            'SLUG_SUBSTITUTIONS': [('C++', 'cpp')]
+        })
+        self.assertEqual(settings['SLUG_REGEX_SUBSTITUTIONS'],
+                         [(r'C\+\+', 'cpp')] +
+                         self.settings['SLUG_REGEX_SUBSTITUTIONS'])
+        self.assertNotIn('SLUG_SUBSTITUTIONS', settings)

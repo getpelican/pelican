@@ -12,10 +12,10 @@ How can I help?
 ===============
 
 There are several ways to help out. First, you can report any Pelican
-suggestions or problems you might have via IRC (preferred) or the
-`issue tracker <https://github.com/getpelican/pelican/issues>`_. If submitting
-an issue report, please first check the existing issue list (both open and
-closed) in order to avoid submitting a duplicate issue.
+suggestions or problems you might have via IRC (preferred) or the `issue
+tracker <https://github.com/getpelican/pelican/issues>`_. If submitting an
+issue report, please first check the existing issue list (both open and closed)
+in order to avoid submitting a duplicate issue.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
@@ -35,10 +35,10 @@ via the command line. See ``pelican --help`` for more information.
 Changes to the settings file take no effect
 ===========================================
 
-When experimenting with different settings (especially the metadata
-ones) caching may interfere and the changes may not be visible. In
-such cases, ensure that caching is disabled via ``LOAD_CONTENT_CACHE = False``
-or use the ``--ignore-cache`` command-line switch.
+When experimenting with different settings (especially the metadata ones)
+caching may interfere and the changes may not be visible. In such cases, ensure
+that caching is disabled via ``LOAD_CONTENT_CACHE = False`` or use the
+``--ignore-cache`` command-line switch.
 
 I'm creating my own theme. How do I use Pygments for syntax highlighting?
 =========================================================================
@@ -70,9 +70,9 @@ I want to use Markdown, but I got an error.
 If you try to generate Markdown content without first installing the Markdown
 library, may see a message that says ``No valid files found in content``.
 Markdown is not a hard dependency for Pelican, so if you have content in
-Markdown format, you will need to explicitly install the Markdown library.
-You can do so by typing the following command, prepending ``sudo`` if
-permissions require it::
+Markdown format, you will need to explicitly install the Markdown library. You
+can do so by typing the following command, prepending ``sudo`` if permissions
+require it::
 
     pip install markdown
 
@@ -150,9 +150,9 @@ the ``'index'`` direct template.
 What if I want to disable feed generation?
 ==========================================
 
-To disable feed generation, all feed settings should be set to ``None``.
-All but three feed settings already default to ``None``, so if you want to
-disable all feed generation, you only need to specify the following settings::
+To disable feed generation, all feed settings should be set to ``None``. All
+but three feed settings already default to ``None``, so if you want to disable
+all feed generation, you only need to specify the following settings::
 
     FEED_ALL_ATOM = None
     CATEGORY_FEED_ATOM = None
@@ -167,9 +167,9 @@ I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================
 
 `RSS and Atom feeds require all URL links to be absolute
-<http://validator.w3.org/feed/docs/rss2.html#comments>`_.
-In order to properly generate links in Pelican you will need to set ``SITEURL``
-to the full path of your site.
+<http://validator.w3.org/feed/docs/rss2.html#comments>`_. In order to properly
+generate links in Pelican you will need to set ``SITEURL`` to the full path of
+your site.
 
 Feeds are still generated when this warning is displayed, but links within may
 be malformed and thus the feed may not validate.
@@ -185,26 +185,26 @@ setting names). Here is an exact list of the renamed settings::
     TAG_FEED -> TAG_FEED_ATOM
     CATEGORY_FEED -> CATEGORY_FEED_ATOM
 
-Starting in 3.1, the new feed ``FEED_ALL_ATOM`` has been introduced: this
-feed will aggregate all posts regardless of their language. This setting
-generates ``'feeds/all.atom.xml'`` by default and ``FEED_ATOM`` now defaults to
-``None``. The following feed setting has also been renamed::
+Starting in 3.1, the new feed ``FEED_ALL_ATOM`` has been introduced: this feed
+will aggregate all posts regardless of their language. This setting generates
+``'feeds/all.atom.xml'`` by default and ``FEED_ATOM`` now defaults to ``None``.
+The following feed setting has also been renamed::
 
     TRANSLATION_FEED -> TRANSLATION_FEED_ATOM
 
-Older themes that referenced the old setting names may not link properly.
-In order to rectify this, please update your theme for compatibility by changing
+Older themes that referenced the old setting names may not link properly. In
+order to rectify this, please update your theme for compatibility by changing
 the relevant values in your template files. For an example of complete feed
 headers and usage please check out the ``simple`` theme.
 
 Is Pelican only suitable for blogs?
 ===================================
 
-No. Pelican can be easily configured to create and maintain any type of static site.
-This may require a little customization of your theme and Pelican configuration.
-For example, if you are building a launch site for your product and do not need
-tags on your site, you could remove the relevant HTML code from your theme.
-You can also disable generation of tag-related pages via::
+No. Pelican can be easily configured to create and maintain any type of static
+site. This may require a little customization of your theme and Pelican
+configuration. For example, if you are building a launch site for your product
+and do not need tags on your site, you could remove the relevant HTML code from
+your theme. You can also disable generation of tag-related pages via::
 
     TAGS_SAVE_AS = ''
     TAG_SAVE_AS = ''
@@ -212,52 +212,49 @@ You can also disable generation of tag-related pages via::
 Why does Pelican always write all HTML files even with content caching enabled?
 ===============================================================================
 
-In order to reliably determine whether the HTML output is different
-before writing it, a large part of the generation environment
-including the template contexts, imported plugins, etc. would have to
-be saved and compared, at least in the form of a hash (which would
-require special handling of unhashable types), because of all the
-possible combinations of plugins, pagination, etc. which may change in
-many different ways. This would require a lot more processing time
-and memory and storage space. Simply writing the files each time is a
-lot faster and a lot more reliable.
+In order to reliably determine whether the HTML output is different before
+writing it, a large part of the generation environment including the template
+contexts, imported plugins, etc. would have to be saved and compared, at least
+in the form of a hash (which would require special handling of unhashable
+types), because of all the possible combinations of plugins, pagination, etc.
+which may change in many different ways. This would require a lot more
+processing time and memory and storage space. Simply writing the files each
+time is a lot faster and a lot more reliable.
 
-However, this means that the modification time of the files changes
-every time, so a ``rsync`` based upload will transfer them even if
-their content hasn't changed. A simple solution is to make ``rsync``
-use the ``--checksum`` option, which will make it compare the file
-checksums in a much faster way than Pelican would.
+However, this means that the modification time of the files changes every time,
+so a ``rsync`` based upload will transfer them even if their content hasn't
+changed. A simple solution is to make ``rsync`` use the ``--checksum`` option,
+which will make it compare the file checksums in a much faster way than Pelican
+would.
 
-When only several specific output files are of interest (e.g. when
-working on some specific page or the theme templates), the
-`WRITE_SELECTED` option may help, see
-:ref:`writing_only_selected_content`.
+When only several specific output files are of interest (e.g. when working on
+some specific page or the theme templates), the `WRITE_SELECTED` option may
+help, see :ref:`writing_only_selected_content`.
 
 How to process only a subset of all articles?
 =============================================
 
-It is often useful to process only e.g. 10 articles for debugging
-purposes. This can be achieved by explicitly specifying only the
-filenames of those articles in ``ARTICLE_PATHS``. A list of such
-filenames could be found using a command similar to ``cd content;
-find -name '*.md' | head -n 10``.
+It is often useful to process only e.g. 10 articles for debugging purposes.
+This can be achieved by explicitly specifying only the filenames of those
+articles in ``ARTICLE_PATHS``. A list of such filenames could be found using a
+command similar to ``cd content; find -name '*.md' | head -n 10``.
 
 My tag-cloud is missing/broken since I upgraded Pelican
 =======================================================
 
 In an ongoing effort to steamline Pelican, `tag_cloud` generation has been
 moved out of the pelican core and into a separate `plugin
-<https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud>`_.
-See the :ref:`plugins` documentation further information about the
-Pelican plugin system.
+<https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud>`_. See
+the :ref:`plugins` documentation further information about the Pelican plugin
+system.
 
 Since I upgraded Pelican my pages are no longer rendered
 ========================================================
 
-Pages were available to themes as lowercase ``pages`` and uppercase
-``PAGES``. To bring this inline with the :ref:`templates-variables` section,
-``PAGES`` has been removed. This is quickly resolved by updating your theme
-to iterate over ``pages`` instead of ``PAGES``. Just replace::
+Pages were available to themes as lowercase ``pages`` and uppercase ``PAGES``.
+To bring this inline with the :ref:`templates-variables` section, ``PAGES`` has
+been removed. This is quickly resolved by updating your theme to iterate over
+``pages`` instead of ``PAGES``. Just replace::
 
     {% for pg in PAGES %}
 
@@ -271,8 +268,8 @@ How can I stop Pelican from trying to parse my static files as content?
 Pelican's article and page generators run before it's static generator. That
 means if you use a setup similar to the default configuration, where a static
 source directory is defined inside a ``*_PATHS`` setting, all files that have a
-valid content file ending (``.html``, ``.rst``, ``.md``, ...) will be treated as
-articles or pages before they get treated as static files.
+valid content file ending (``.html``, ``.rst``, ``.md``, ...) will be treated
+as articles or pages before they get treated as static files.
 
 To circumvent this issue either use the appropriate ``*_EXCLUDES`` setting or
 disable the offending reader via ``READERS`` if you don't need it.

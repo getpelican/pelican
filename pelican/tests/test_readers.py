@@ -410,6 +410,12 @@ class RstReaderTest(ReaderTest):
         self.assertEqual(tuple_date.metadata['date'],
                          string_date.metadata['date'])
 
+    def test_parse_error(self):
+        # Verify that it raises an Exception, not nothing and not SystemExit or
+        # some such
+        with six.assertRaisesRegex(self, Exception, "underline too short"):
+            self.read_file(path='../parse_error/parse_error.rst')
+
 
 @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
 class MdReaderTest(ReaderTest):
@@ -653,6 +659,14 @@ class HTMLReaderTest(ReaderTest):
             'date': SafeDatetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_article_with_multiple_similar_metadata_tags(self):
+        page = self.read_file(path='article_with_multiple_metadata_tags.html')
+        expected = {
+            'custom_field': ['https://getpelican.com', 'https://www.eff.org'],
         }
 
         self.assertDictHasSubset(page.metadata, expected)

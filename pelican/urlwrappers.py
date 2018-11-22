@@ -36,9 +36,17 @@ class URLWrapper(object):
     @property
     def slug(self):
         if self._slug is None:
-            self._slug = slugify(
-                self.name,
-                regex_subs=self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
+            class_key = '{}_REGEX_SUBSTITUTIONS'.format(
+                self.__class__.__name__.upper())
+            if class_key in self.settings:
+                self._slug = slugify(
+                    self.name,
+                    regex_subs=self.settings[class_key])
+            else:
+                self._slug = slugify(
+                    self.name,
+                    regex_subs=self.settings.get(
+                        'SLUG_REGEX_SUBSTITUTIONS', []))
         return self._slug
 
     @slug.setter
@@ -113,39 +121,13 @@ class URLWrapper(object):
 
 
 class Category(URLWrapper):
-    @property
-    def slug(self):
-        if self._slug is None:
-            if 'CATEGORY_REGEX_SUBSTITUTIONS' in self.settings:
-                subs = self.settings['CATEGORY_REGEX_SUBSTITUTIONS']
-            else:
-                subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
-            self._slug = slugify(self.name, regex_subs=subs)
-        return self._slug
+    pass
 
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
         super(Tag, self).__init__(name.strip(), *args, **kwargs)
 
-    @property
-    def slug(self):
-        if self._slug is None:
-            if 'TAG_REGEX_SUBSTITUTIONS' in self.settings:
-                subs = self.settings['TAG_REGEX_SUBSTITUTIONS']
-            else:
-                subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
-            self._slug = slugify(self.name, regex_subs=subs)
-        return self._slug
-
 
 class Author(URLWrapper):
-    @property
-    def slug(self):
-        if self._slug is None:
-            if 'AUTHOR_REGEX_SUBSTITUTIONS' in self.settings:
-                subs = self.settings['AUTHOR_REGEX_SUBSTITUTIONS']
-            else:
-                subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
-            self._slug = slugify(self.name, regex_subs=subs)
-        return self._slug
+    pass

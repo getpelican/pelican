@@ -6,14 +6,14 @@ Pelican |release|
 
     .. warning::
 
-        This documentation is for the version of Pelican currently under development.
-        Were you looking for version |last_stable| documentation?
+        This documentation is for the version of Pelican currently under
+        development. Were you looking for version |last_stable| documentation?
 
 
 Pelican is a static site generator, written in Python_. Highlights include:
 
-* Write your content directly with your editor of choice
-  in reStructuredText_ or Markdown_ formats
+* Write your content directly with your editor of choice in reStructuredText_
+  or Markdown_ formats
 * Includes a simple CLI tool to (re)generate your site
 * Easy to interface with distributed version control systems and web hooks
 * Completely static output is easy to host anywhere

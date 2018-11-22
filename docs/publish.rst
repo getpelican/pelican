@@ -26,13 +26,13 @@ argument, like so::
 
 Note that you must specify the path to the generated *output* file — not the
 source content. To determine the output file name and location, use the
-``--debug`` flag. If desired, ``--write-selected``
-can take a comma-separated list of paths or can be configured as a setting.
-(See: :ref:`writing_only_selected_content`)
+``--debug`` flag. If desired, ``--write-selected`` can take a comma-separated
+list of paths or can be configured as a setting. (See:
+:ref:`writing_only_selected_content`)
 
-You can also tell Pelican to watch for your modifications, instead of
-manually re-running it every time you want to see your changes. To enable this,
-run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
+You can also tell Pelican to watch for your modifications, instead of manually
+re-running it every time you want to see your changes. To enable this, run the
+``pelican`` command with the ``-r`` or ``--autoreload`` option.
 
 Pelican has other command-line switches available. Have a look at the help to
 see all the options you can use::
@@ -75,17 +75,17 @@ feeds, etc.) that you may have defined::
 
     pelican content -s publishconf.py
 
-To base your publish configuration on top of your ``pelicanconf.py``, you
-can import your ``pelicanconf`` settings by including the following line in
-your ``publishconf.py``::
+To base your publish configuration on top of your ``pelicanconf.py``, you can
+import your ``pelicanconf`` settings by including the following line in your
+``publishconf.py``::
 
     from pelicanconf import *
 
-If you have generated a ``publishconf.py`` using ``pelican-quickstart``,
-this line is included by default.
+If you have generated a ``publishconf.py`` using ``pelican-quickstart``, this
+line is included by default.
 
-The steps for deploying your site will depend on where it will be hosted.
-If you have SSH access to a server running Nginx or Apache, you might use the
+The steps for deploying your site will depend on where it will be hosted. If
+you have SSH access to a server running Nginx or Apache, you might use the
 ``rsync`` tool to transmit your site files::
 
     rsync -avc --delete output/ host.example.com:/var/www/your-site/
@@ -98,17 +98,17 @@ Automation
 ==========
 
 While the ``pelican`` command is the canonical way to generate your site,
-automation tools can be used to streamline the generation and publication
-flow. One of the questions asked during the ``pelican-quickstart`` process
-pertains to whether you want to automate site generation and publication.
-If you answered "yes" to that question, a ``tasks.py`` and
-``Makefile`` will be generated in the root of your project. These files,
-pre-populated with certain information gleaned from other answers provided
-during the ``pelican-quickstart`` process, are meant as a starting point and
-should be customized to fit your particular needs and usage patterns. If you
-find one or both of these automation tools to be of limited utility, these
-files can deleted at any time and will not affect usage of the canonical
-``pelican`` command.
+automation tools can be used to streamline the generation and publication flow.
+One of the questions asked during the ``pelican-quickstart`` process pertains
+to whether you want to automate site generation and publication. If you
+answered "yes" to that question, a ``tasks.py`` and ``Makefile`` will be
+generated in the root of your project. These files, pre-populated with certain
+information gleaned from other answers provided during the
+``pelican-quickstart`` process, are meant as a starting point and should be
+customized to fit your particular needs and usage patterns. If you find one or
+both of these automation tools to be of limited utility, these files can
+deleted at any time and will not affect usage of the canonical ``pelican``
+command.
 
 Following are automation tools that "wrap" the ``pelican`` command and can
 simplify the process of generating, previewing, and uploading your site.
@@ -123,9 +123,9 @@ separately. Use the following command to install Invoke, prefixing with
 
     pip install invoke
 
-Take a moment to open the ``tasks.py`` file that was generated in your
-project root. You will see a number of commands, any one of which can be
-renamed, removed, and/or customized to your liking. Using the out-of-the-box
+Take a moment to open the ``tasks.py`` file that was generated in your project
+root. You will see a number of commands, any one of which can be renamed,
+removed, and/or customized to your liking. Using the out-of-the-box
 configuration, you can generate your site via::
 
     invoke build
@@ -155,12 +155,12 @@ needs and preferences.
 Make
 ----
 
-A ``Makefile`` is also automatically created for you when you say "yes" to
-the relevant question during the ``pelican-quickstart`` process. The advantage
-of this method is that the ``make`` command is built into most POSIX systems
-and thus doesn't require installing anything else in order to use it. The
-downside is that non-POSIX systems (e.g., Windows) do not include ``make``,
-and installing it on those systems can be a non-trivial task.
+A ``Makefile`` is also automatically created for you when you say "yes" to the
+relevant question during the ``pelican-quickstart`` process. The advantage of
+this method is that the ``make`` command is built into most POSIX systems and
+thus doesn't require installing anything else in order to use it. The downside
+is that non-POSIX systems (e.g., Windows) do not include ``make``, and
+installing it on those systems can be a non-trivial task.
 
 If you want to use ``make`` to generate your site using the settings in
 ``pelicanconf.py``, run::

@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block html_lang %}{{ article.lang }}{% endblock %}
 {% block title %}{{ article.title|striptags }}{% endblock %}
+
+{% block extra_head %}
+{% import 'translations.html' as translations with context %}
+{% if translations.entry_hreflang(article) %}
+  {{ translations.entry_hreflang(article) }}
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <section id="content" class="body">
   <article>

@@ -1,22 +1,39 @@
 Release history
 ###############
 
-Next release
-============
+4.0.0 (2018-11-13)
+==================
 
-* New signal: ``feed_generated``
-* Replace Fabric by Invoke and ``fabfile.py`` template by ``tasks.py``.
+* Replace ``develop_server.sh`` script with ``pelican --listen``
+* Improved copy/link behavior for large static files (e.g., videos)
+* New ``{static}`` syntax to link to static content; content linked to by
+  ``{static}`` and ``{attach}`` is automatically copied over even if not in
+  ``STATIC_PATHS``
+* Pages can now have ``draft`` status
+* Show current settings via new ``--print-settings`` flag
+* All settings for slugs now use ``{slug}`` and/or ``{lang}`` rather than
+  ``%s``. If ``%s``-style settings are encountered, Pelican will emit a warning
+  and fallback to the default setting.
+* New signals: ``feed_generated`` and ``page_generated_write_page``
+* Replace Fabric with Invoke and ``fabfile.py`` template with ``tasks.py``
+* Replace ``PAGINATED_DIRECT_TEMPLATES`` by ``PAGINATED_TEMPLATES``, extending
+  control over pagination to all templates and making page size variable
 * Replace ``SLUG_SUBSTITUTIONS`` (and friends) by ``SLUG_REGEX_SUBSTITUTIONS``
   for more finegrained control
 * ``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer strips
   ``'bar'`` from ``'foo/bar.html'`` (unless ``'bar' == 'index'``).
 * ``ARTICLE_ORDER_BY`` and ``PAGE_ORDER_BY`` now also affect 1) category, tag
   and author pages 2) feeds 3) draft and hidden articles and pages
-* New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to specify
-  metadata attributes used to identify translations; or to disable translations
-* New ``{static}`` syntax to link to static content; content linked to by
-  ``{static}`` and ``{attach}`` is automatically copied over even if not in
-  ``STATIC_PATHS``
+* New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to
+  specify metadata attributes used to identify/disable translations
+* Make the HTML reader parse multiple occurrences of metadata tags as a list
+* New Blogger XML backup importer
+* Wordpress importer now updates file links to point to local copies if the
+  files were downloaded with ``--wp-attach``.
+* Importer no longer inserts extra newlines, to prevent breaking of HTML
+  attributes.
+* Pelican server now prioritises ``foo.html`` and ``foo/index.html`` over
+  ``foo/`` when resolving ``foo``.
 
 3.7.1 (2017-01-10)
 ==================
@@ -103,8 +120,8 @@ Next release
   directory as articles and pages using ``{attach}`` in the path.
 * Prevent Pelican from raising an exception when there are duplicate pieces of
   metadata in a Markdown file.
-* Introduce the ``TYPOGRIFY_IGNORE_TAGS`` setting to add HTML tags to be ignored
-  by Typogrify.
+* Introduce the ``TYPOGRIFY_IGNORE_TAGS`` setting to add HTML tags to be
+  ignored by Typogrify.
 * Add the ability to use ``-`` in date formats to strip leading zeros. For
   example, ``%-d/%-m/%y`` will now result in the date ``9/8/12``.
 * Ensure feed generation is correctly disabled during quickstart configuration.
@@ -207,8 +224,10 @@ Next release
 * Improve appearance of LinkedIn icon in default theme
 * Add GitHub and Google+ social icons support in default theme
 * Optimize social icons
-* Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing all posts regardless of their language
-* Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and ``TRANSLATION_FEED_RSS``
+* Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing all
+  posts regardless of their language
+* Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and
+  ``TRANSLATION_FEED_RSS``
 * Different feeds can now be enabled/disabled individually
 * Allow for blank author: if ``AUTHOR`` setting is not set, author won't
   default to ``${USER}`` anymore, and a post won't contain any author
@@ -216,7 +235,8 @@ Next release
 * Move LESS and Webassets support from Pelican core to plugin
 * The ``DEFAULT_DATE`` setting now defaults to ``None``, which means that
   articles won't be generated unless date metadata is specified
-* Add ``FILENAME_METADATA`` setting to support metadata extraction from filename
+* Add ``FILENAME_METADATA`` setting to support metadata extraction from
+  filename
 * Add ``gzip_cache`` plugin to compress common text files into a ``.gz``
   file within the same directory as the original file, preventing the server
   (e.g. Nginx) from having to compress files during an HTTP call
@@ -287,7 +307,8 @@ Next release
 * Added translations
 * Added a way to use cleaner URLs with a rewrite url module (or equivalent)
 * Added a tag cloud
-* Added an autoreloading feature: the blog is automatically regenerated each time a modification is detected
+* Added an autoreloading feature: the blog is automatically regenerated each
+  time a modification is detected
 * Translate the documentation into French
 * Import a blog from an RSS feed
 * Pagination support

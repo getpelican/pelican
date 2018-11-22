@@ -45,10 +45,10 @@ DEFAULT_CONFIG = {
     'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
     'FEED_ALL_ATOM': posix_join('feeds', 'all.atom.xml'),
-    'CATEGORY_FEED_ATOM': posix_join('feeds', '%s.atom.xml'),
-    'AUTHOR_FEED_ATOM': posix_join('feeds', '%s.atom.xml'),
-    'AUTHOR_FEED_RSS': posix_join('feeds', '%s.rss.xml'),
-    'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-%s.atom.xml'),
+    'CATEGORY_FEED_ATOM': posix_join('feeds', '{slug}.atom.xml'),
+    'AUTHOR_FEED_ATOM': posix_join('feeds', '{slug}.atom.xml'),
+    'AUTHOR_FEED_RSS': posix_join('feeds', '{slug}.rss.xml'),
+    'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-{lang}.atom.xml'),
     'FEED_MAX_ITEMS': '',
     'RSS_FEED_SUMMARY_ONLY': True,
     'SITEURL': '',
@@ -245,6 +245,22 @@ def get_jinja_environment(settings):
     return settings
 
 
+def _printf_s_to_format_field(printf_string, format_field):
+    """Tries to replace %s with {format_field} in the provided printf_string.
+    Raises ValueError in case of failure.
+    """
+    TEST_STRING = 'PELICAN_PRINTF_S_DEPRECATION'
+    expected = printf_string % TEST_STRING
+
+    result = printf_string.replace('{', '{{').replace('}', '}}') \
+        % '{{{}}}'.format(format_field)
+    if result.format(**{format_field: TEST_STRING}) != expected:
+        raise ValueError('Failed to safely replace %s with {{{}}}'.format(
+            format_field))
+
+    return result
+
+
 def handle_deprecated_settings(settings):
     """Converts deprecated settings and issues warnings. Issues an exception
     if both old and new setting is specified.
@@ -323,6 +339,11 @@ def handle_deprecated_settings(settings):
             'PAGINATED_DIRECT_TEMPLATES', 'PAGINATED_TEMPLATES')
         logger.warning(message)
 
+        # set PAGINATED_TEMPLATES
+        if 'PAGINATED_TEMPLATES' not in settings:
+            settings['PAGINATED_TEMPLATES'] = {
+                'tag': None, 'category': None, 'author': None}
+
         for t in settings['PAGINATED_DIRECT_TEMPLATES']:
             if t not in settings['PAGINATED_TEMPLATES']:
                 settings['PAGINATED_TEMPLATES'][t] = None
@@ -384,6 +405,38 @@ def handle_deprecated_settings(settings):
                     ]
                 settings[f + '_REGEX_SUBSTITUTIONS'] = regex_subs
             settings.pop(f + '_SUBSTITUTIONS', None)
+
+    # `%s` -> '{slug}` or `{lang}` in FEED settings
+    for key in ['TRANSLATION_FEED_ATOM',
+                'TRANSLATION_FEED_RSS'
+                ]:
+        if settings.get(key) and '%s' in settings[key]:
+            logger.warning('%%s usage in %s is deprecated, use {lang} '
+                           'instead.', key)
+            try:
+                settings[key] = _printf_s_to_format_field(
+                    settings[key], 'lang')
+            except ValueError:
+                logger.warning('Failed to convert %%s to {lang} for %s. '
+                               'Falling back to default.', key)
+                settings[key] = DEFAULT_CONFIG[key]
+    for key in ['AUTHOR_FEED_ATOM',
+                'AUTHOR_FEED_RSS',
+                'CATEGORY_FEED_ATOM',
+                'CATEGORY_FEED_RSS',
+                'TAG_FEED_ATOM',
+                'TAG_FEED_RSS',
+                ]:
+        if settings.get(key) and '%s' in settings[key]:
+            logger.warning('%%s usage in %s is deprecated, use {slug} '
+                           'instead.', key)
+            try:
+                settings[key] = _printf_s_to_format_field(
+                    settings[key], 'slug')
+            except ValueError:
+                logger.warning('Failed to convert %%s to {slug} for %s. '
+                               'Falling back to default.', key)
+                settings[key] = DEFAULT_CONFIG[key]
 
     return settings
 
