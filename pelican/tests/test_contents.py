@@ -11,7 +11,7 @@ from jinja2.utils import generate_lorem_ipsum
 
 import six
 
-from pelican.contents import Article, Author, Category, Page, Static, Tag
+from pelican.contents import Article, Author, Category, Page, Static
 from pelican.settings import DEFAULT_CONFIG
 from pelican.signals import content_object_init
 from pelican.tests.support import LoggedTestCase, get_context, get_settings,\
@@ -604,19 +604,6 @@ class TestArticle(TestPage):
         article_kwargs = self._copy_page_kwargs()
         article_kwargs['metadata']['category'] = Category('Fedora QA',
                                                           settings)
-        article_kwargs['metadata']['title'] = 'This Week in Fedora QA'
-        article_kwargs['settings'] = settings
-        article = Article(**article_kwargs)
-        self.assertEqual(article.url, 'fedora.qa/this-week-in-fedora-qa/')
-
-    def test_slugify_tags_with_dots(self):
-        settings = get_settings()
-        settings['TAG_REGEX_SUBSTITUTIONS'] = [
-            ('Fedora QA', 'fedora.qa'),
-        ]
-        settings['ARTICLE_URL'] = '{tag}/{slug}/'
-        article_kwargs = self._copy_page_kwargs()
-        article_kwargs['metadata']['tag'] = Tag('Fedora QA', settings)
         article_kwargs['metadata']['title'] = 'This Week in Fedora QA'
         article_kwargs['settings'] = settings
         article = Article(**article_kwargs)
