@@ -9,6 +9,7 @@ from collections import OrderedDict
 import docutils
 import docutils.core
 import docutils.io
+from docutils.parsers.rst.languages import get_language as get_docutils_lang
 from docutils.writers.html4css1 import HTMLTranslator, Writer
 
 import six
@@ -218,6 +219,14 @@ class RstReader(BaseReader):
     def __init__(self, *args, **kwargs):
         super(RstReader, self).__init__(*args, **kwargs)
 
+        lang_code = self.settings.get('DEFAULT_LANG', 'en')
+        if get_docutils_lang(lang_code):
+            self._language_code = lang_code
+        else:
+            logger.warning("Docutils has no localization for '%s'."
+                           " Using 'en' instead.", lang_code)
+            self._language_code = 'en'
+
     def _parse_metadata(self, document, source_path):
         """Return the dict containing document metadata"""
         formatted_fields = self.settings['FORMATTED_FIELDS']
@@ -256,7 +265,7 @@ class RstReader(BaseReader):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8',
-                        'language_code': self.settings.get('DEFAULT_LANG'),
+                        'language_code': self._language_code,
                         'halt_level': 2,
                         'traceback': True,
                         'warning_stream': StringIO(),
