@@ -44,7 +44,7 @@ class TestBloggerXmlImporter(unittest.TestCase):
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
-        self.posts = list(blogger2fields(BLOGGER_XML_SAMPLE))
+        self.posts = blogger2fields(BLOGGER_XML_SAMPLE)
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
@@ -53,14 +53,15 @@ class TestBloggerXmlImporter(unittest.TestCase):
         """Check that importer only outputs pages, articles and comments,
         that these are correctly identified and that titles are correct.
         """
-        kinds = {x[8] for x in self.posts}
+        test_posts = list(self.posts)
+        kinds = {x[8] for x in test_posts}
         self.assertEqual({'page', 'article', 'comment'}, kinds)
-        page_titles = {x[0] for x in self.posts if x[8] == 'page'}
+        page_titles = {x[0] for x in test_posts if x[8] == 'page'}
         self.assertEqual({'Test page', 'Test page 2'}, page_titles)
-        article_titles = {x[0] for x in self.posts if x[8] == 'article'}
+        article_titles = {x[0] for x in test_posts if x[8] == 'article'}
         self.assertEqual({'Black as Egypt\'s Night', 'The Steel Windpipe'},
                          article_titles)
-        comment_titles = {x[0] for x in self.posts if x[8] == 'comment'}
+        comment_titles = {x[0] for x in test_posts if x[8] == 'comment'}
         self.assertEqual({'Mishka, always a pleasure to read your '
                           'adventures!...'},
                          comment_titles)
@@ -69,15 +70,16 @@ class TestBloggerXmlImporter(unittest.TestCase):
         """Check that importerer outputs only statuses 'published' and 'draft',
         that these are correctly identified and that filenames are correct.
         """
-        statuses = {x[7] for x in self.posts}
+        test_posts = list(self.posts)
+        statuses = {x[7] for x in test_posts}
         self.assertEqual({'published', 'draft'}, statuses)
 
-        draft_filenames = {x[2] for x in self.posts if x[7] == 'draft'}
+        draft_filenames = {x[2] for x in test_posts if x[7] == 'draft'}
         # draft filenames are id-based
         self.assertEqual({'page-4386962582497458967',
                           'post-1276418104709695660'}, draft_filenames)
 
-        published_filenames = {x[2] for x in self.posts if x[7] == 'published'}
+        published_filenames = {x[2] for x in test_posts if x[7] == 'published'}
         # published filenames are url-based, except comments
         self.assertEqual({'the-steel-windpipe',
                           'test-page',
@@ -91,8 +93,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
-        self.posts = list(wp2fields(WORDPRESS_XML_SAMPLE))
-        self.custposts = list(wp2fields(WORDPRESS_XML_SAMPLE, True))
+        self.posts = wp2fields(WORDPRESS_XML_SAMPLE)
+        self.custposts = wp2fields(WORDPRESS_XML_SAMPLE, True)
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
@@ -242,6 +244,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
             self.assertFalse(out_name.endswith(filename))
 
     def test_can_toggle_raw_html_code_parsing(self):
+        test_posts = list(self.posts)
+
         def r(f):
             with open(f, encoding='utf-8') as infile:
                 return infile.read()
@@ -250,16 +254,16 @@ class TestWordpressXmlImporter(unittest.TestCase):
         with temporary_folder() as temp:
 
             rst_files = (r(f) for f
-                         in silent_f2p(self.posts, 'markdown', temp))
+                         in silent_f2p(test_posts, 'markdown', temp))
             self.assertTrue(any('<iframe' in rst for rst in rst_files))
             rst_files = (r(f) for f
-                         in silent_f2p(self.posts, 'markdown',
+                         in silent_f2p(test_posts, 'markdown',
                                        temp, strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
             # no effect in rst
-            rst_files = (r(f) for f in silent_f2p(self.posts, 'rst', temp))
+            rst_files = (r(f) for f in silent_f2p(test_posts, 'rst', temp))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
-            rst_files = (r(f) for f in silent_f2p(self.posts, 'rst', temp,
+            rst_files = (r(f) for f in silent_f2p(test_posts, 'rst', temp,
                          strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
 

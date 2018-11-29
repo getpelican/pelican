@@ -739,9 +739,8 @@ def download_attachments(output_path, urls):
     return locations
 
 
-def is_pandoc_needed(fields):
-    in_markup_idx = 9
-    return filter(lambda f: f[in_markup_idx] in ('html', 'wp-html'), fields)
+def is_pandoc_needed(in_markup):
+    return in_markup in ('html', 'wp-html')
 
 
 def get_pandoc_version():
@@ -772,11 +771,7 @@ def fields2pelican(
         wp_custpost=False, wp_attach=False, attachments=None):
 
     pandoc_version = get_pandoc_version()
-
-    if is_pandoc_needed(fields) and not pandoc_version:
-        error = ('Pandoc must be installed to complete the '
-                 'requested import action.')
-        exit(error)
+    posts_require_pandoc = []
 
     settings = read_settings()
     slug_subs = settings['SLUG_REGEX_SUBSTITUTIONS']
@@ -785,6 +780,9 @@ def fields2pelican(
             kind, in_markup) in fields:
         if filter_author and filter_author != author:
             continue
+        if is_pandoc_needed(in_markup) and not pandoc_version:
+            posts_require_pandoc.append(filename)
+
         slug = not disable_slugs and filename or None
 
         if wp_attach and attachments:
@@ -869,6 +867,11 @@ def fields2pelican(
 
         with open(out_filename, 'w', encoding='utf-8') as fs:
             fs.write(header + content)
+
+    if posts_require_pandoc:
+        logger.error("Pandoc must be installed to import the following posts:"
+                     "\n  {}".format("\n  ".join(posts_require_pandoc)))
+
     if wp_attach and attachments and None in attachments:
         print("downloading attachments that don't have a parent post")
         urls = attachments[None]
