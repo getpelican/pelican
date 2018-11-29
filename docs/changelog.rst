@@ -1,6 +1,13 @@
 Release history
 ###############
 
+4.0.1 (2018-11-30)
+==================
+
+* Refactor ``pelican.server`` logging
+* Fix bug in which all static files were processed as "draft"
+* Bug fixes for Invoke/Makefile automation, Importer, and other miscellanea
+
 4.0.0 (2018-11-13)
 ==================
 
