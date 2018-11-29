@@ -17,6 +17,9 @@ from six.moves import BaseHTTPServer
 from six.moves import SimpleHTTPServer as srvmod
 from six.moves import urllib
 
+from pelican.log import init as init_logging
+logger = logging.getLogger(__name__)
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
@@ -71,22 +74,23 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
         self.path = self.get_path_that_exists(original_path)
 
         if not self.path:
-            logging.warning("Unable to find `%s` or variations.",
-                            original_path)
             return
 
-        logging.info("Found `%s`.", self.path)
         srvmod.SimpleHTTPRequestHandler.do_GET(self)
 
     def get_path_that_exists(self, original_path):
         # Try to strip trailing slash
         original_path = original_path.rstrip('/')
         # Try to detect file by applying various suffixes
+        tries = []
         for suffix in self.SUFFIXES:
             path = original_path + suffix
             if os.path.exists(self.translate_path(path)):
                 return path
-            logging.info("Tried to find `%s`, but it doesn't exist.", path)
+            tries.append(path)
+        logger.warning("Unable to find `%s` or variations:\n%s",
+                       original_path,
+                       '\n'.join(tries))
         return None
 
     def guess_type(self, path):
@@ -108,11 +112,12 @@ class RootedHTTPServer(BaseHTTPServer.HTTPServer):
 
 
 if __name__ == '__main__':
-    logging.warning("'python -m pelican.server' is deprecated. The "
-                    "Pelican development server should be run via "
-                    "'pelican --listen' or 'pelican -l' (this can be combined "
-                    "with regeneration as 'pelican -lr'). Rerun 'pelican-"
-                    "quickstart' to get new Makefile and tasks.py files.")
+    init_logging(level=logging.INFO)
+    logger.warning("'python -m pelican.server' is deprecated.\nThe "
+                   "Pelican development server should be run via "
+                   "'pelican --listen' or 'pelican -l'.\nThis can be combined "
+                   "with regeneration as 'pelican -lr'.\nRerun 'pelican-"
+                   "quickstart' to get new Makefile and tasks.py files.")
     args = parse_arguments()
     RootedHTTPServer.allow_reuse_address = True
     try:
@@ -123,16 +128,16 @@ if __name__ == '__main__':
                 httpd.socket, keyfile=args.key,
                 certfile=args.cert, server_side=True)
     except ssl.SSLError as e:
-        logging.error("Couldn't open certificate file %s or key file %s",
-                      args.cert, args.key)
-        logging.error("Could not listen on port %s, server %s.",
-                      args.port, args.server)
+        logger.error("Couldn't open certificate file %s or key file %s",
+                     args.cert, args.key)
+        logger.error("Could not listen on port %s, server %s.",
+                     args.port, args.server)
         sys.exit(getattr(e, 'exitcode', 1))
 
-    logging.info("Serving at port %s, server %s.",
-                 args.port, args.server)
+    logger.info("Serving at port %s, server %s.",
+                args.port, args.server)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt as e:
-        logging.info("Shutting down server.")
+        logger.info("Shutting down server.")
         httpd.socket.close()
