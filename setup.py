@@ -28,7 +28,7 @@ if sys.version_info.major < 3:
 
 setup(
     name='pelican',
-    version='4.0.1',
+    version='4.0.2.dev0',
     url='https://getpelican.com/',
     author='Alexis Metaireau',
     maintainer='Justin Mayer',
