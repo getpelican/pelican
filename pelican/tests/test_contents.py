@@ -146,6 +146,34 @@ class TestPage(LoggedTestCase):
         page = Page(**self.page_kwargs)
         self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
 
+    def test_relative_source_path(self):
+        # 'relative_source_path' should be the relative path
+        # from 'PATH' to 'source_path'
+        page_kwargs = self._copy_page_kwargs()
+
+        # If 'source_path' is None, 'relative_source_path' should
+        # also return None
+        page_kwargs['source_path'] = None
+        page = Page(**page_kwargs)
+        self.assertIsNone(page.relative_source_path)
+
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        full_path = page_kwargs['source_path']
+
+        settings['PATH'] = os.path.dirname(full_path)
+        page_kwargs['settings'] = settings
+        page = Page(**page_kwargs)
+
+        # if 'source_path' is set, 'relative_source_path' should
+        # return the relative path from 'PATH' to 'source_path'
+        self.assertEqual(
+            page.relative_source_path,
+            os.path.relpath(
+                full_path,
+                os.path.dirname(full_path)
+            ))
+
     def test_metadata_url_format(self):
         # Arbitrary metadata should be passed through url_format()
         page = Page(**self.page_kwargs)
