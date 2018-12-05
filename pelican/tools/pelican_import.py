@@ -720,9 +720,12 @@ def get_attachments(xml, resolve_by_id=False):
 
     attachedposts = defaultdict(set)
     for parent, url in attachments:
-        if parent in post_names:  # check parent post is valid
+        try:
             parent_name = post_names[parent]
-            attachedposts[parent_name].add(url)
+        except KeyError:
+            # attachment's parent is not a valid post
+            parent_name = None
+        attachedposts[parent_name].add(url)
 
     attachment_links = defaultdict(set)
     if resolve_by_id and attachments_by_id:
