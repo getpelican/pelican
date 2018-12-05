@@ -678,35 +678,57 @@ def get_out_filename(output_path, filename, ext, kind,
 
 
 def get_attachments(xml):
+    """
+
+    :param xml:
+    :return:  attachment_urls
+    """
     """returns a dictionary of posts that have attachments with a list
     of the attachment_urls
     """
     soup = xml_to_soup(xml)
+    server = soup.rss.channel.link.string
     items = soup.rss.channel.findAll('item')
     names = {}
     attachments = []
+    attachments_by_id = defaultdict(set)
+    attachment_ids = {}
 
     for item in items:
         kind = item.find('post_type').string
         post_name = item.find('post_name').string
         post_id = item.find('post_id').string
 
+        if kind not in ['attachment', 'post']:
+            continue
+
+        filename = get_filename(post_name, post_id)
+        names[post_id] = filename
+
         if kind == 'attachment':
             attachments.append((item.find('post_parent').string,
                                 item.find('attachment_url').string))
-        else:
-            filename = get_filename(post_name, post_id)
-            names[post_id] = filename
+            attachment_ids[post_id] = item.find('attachment_url').string
+        elif kind == 'post':
+            content = item.find('encoded').string
+            find_attachment = re.compile(r'({}/\?attachment_id=(\d+))'.format(server))
+            for url, attachment_id in find_attachment.findall(content):
+                attachments_by_id[filename].add((url, attachment_id))
+
     attachedposts = defaultdict(set)
     for parent, url in attachments:
-        try:
+        if parent in names:  # check parent post is valid
             parent_name = names[parent]
-        except KeyError:
-            # attachment's parent is not a valid post
-            parent_name = None
+            attachedposts[parent_name].add(url)
 
-        attachedposts[parent_name].add(url)
-    return attachedposts
+    attachment_links = defaultdict(set)
+    if attachments_by_id:
+        for filename, links in attachments_by_id.items():
+            for url, attachment_id in links:
+                destination = attachment_ids[attachment_id]
+                attachment_links[filename].add((url, destination))
+
+    return dict(attachedposts), dict(attachment_links)
 
 
 def download_attachments(output_path, urls):
@@ -744,6 +766,15 @@ def download_attachments(output_path, urls):
     return locations
 
 
+def resolve_attachments(urls):
+    attachment_links = {}
+    for src, dst in urls:
+        dst = urlparse(dst).path
+        attachment_links[src] = dst
+
+    return attachment_links
+
+
 def is_pandoc_needed(in_markup):
     return in_markup in ('html', 'wp-html')
 
@@ -773,7 +804,8 @@ def fields2pelican(
         fields, out_markup, output_path,
         dircat=False, strip_raw=False, disable_slugs=False,
         dirpage=False, filename_template=None, filter_author=None,
-        wp_custpost=False, wp_attach=False, attachments=None):
+        wp_custpost=False, wp_attach=False, wp_resolve=False,
+        attachments=None, attachment_links=None):
 
     pandoc_version = get_pandoc_version()
     posts_require_pandoc = []
@@ -790,14 +822,18 @@ def fields2pelican(
 
         slug = not disable_slugs and filename or None
 
+        links = {}
         if wp_attach and attachments:
             try:
                 urls = attachments[filename]
                 links = download_attachments(output_path, urls)
             except KeyError:
-                links = None
-        else:
-            links = None
+                pass
+
+        if wp_resolve and attachment_links:
+            urls = attachment_links.get(filename)
+            if urls:
+                links.update(resolve_attachments(urls))
 
         ext = get_ext(out_markup, in_markup)
         if ext == '.adoc':
@@ -949,6 +985,12 @@ def main():
              'e.g. output/wp-uploads/date/postname/file.jpg '
              '-- Requires an internet connection --')
     parser.add_argument(
+        '--wp-resolve', action='store_true', dest='wp_resolve',
+        help='(wordpress import only) Attempt to resolve links in content that '
+             'refer to attachments ids. '
+             'Replace links in content of the form https://servername?id=23 '
+             'with links of the form https://servername/post-slug-name ')
+    parser.add_argument(
         '--disable-slugs', action='store_true',
         dest='disable_slugs',
         help='Disable storing slugs from imported posts within output. '
@@ -1010,9 +1052,9 @@ def main():
         fields = feed2fields(args.input)
 
     if args.wp_attach:
-        attachments = get_attachments(args.input)
+        attachments, attachment_links = get_attachments(args.input)
     else:
-        attachments = None
+        attachments, attachment_links = None, None
 
     # init logging
     init()
@@ -1024,4 +1066,6 @@ def main():
                    filter_author=args.author,
                    wp_custpost=args.wp_custpost or False,
                    wp_attach=args.wp_attach or False,
-                   attachments=attachments or None)
+                   wp_resolve=args.wp_resolve or False,
+                   attachments=attachments or None,
+                   attachment_links=attachment_links or None)
