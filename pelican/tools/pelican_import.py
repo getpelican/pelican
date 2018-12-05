@@ -690,10 +690,11 @@ def get_attachments(xml, resolve_by_id=False):
     soup = xml_to_soup(xml)
     server = soup.rss.channel.link.string
     items = soup.rss.channel.findAll('item')
-    names = {}
+    post_names = {}
+    attachment_urls = {}
+
     attachments = []
     attachments_by_id = defaultdict(set)
-    attachment_ids = {}
 
     for item in items:
         kind = item.find('post_type').string
@@ -704,13 +705,13 @@ def get_attachments(xml, resolve_by_id=False):
             continue
 
         filename = get_filename(post_name, post_id)
-        names[post_id] = filename
+        post_names[post_id] = filename
 
         if kind == 'attachment':
             attachments.append((item.find('post_parent').string,
                                 item.find('attachment_url').string))
             if resolve_by_id:
-                attachment_ids[post_id] = item.find('attachment_url').string
+                attachment_urls[post_id] = item.find('attachment_url').string
         elif resolve_by_id and kind == 'post':
             content = item.find('encoded').string
             find_attachment = re.compile(r'({}/\?attachment_id=(\d+))'.format(server))
@@ -719,15 +720,15 @@ def get_attachments(xml, resolve_by_id=False):
 
     attachedposts = defaultdict(set)
     for parent, url in attachments:
-        if parent in names:  # check parent post is valid
-            parent_name = names[parent]
+        if parent in post_names:  # check parent post is valid
+            parent_name = post_names[parent]
             attachedposts[parent_name].add(url)
 
     attachment_links = defaultdict(set)
     if resolve_by_id and attachments_by_id:
         for filename, links in attachments_by_id.items():
             for url, attachment_id in links:
-                destination = attachment_ids[attachment_id]
+                destination = attachment_urls[attachment_id]
                 attachment_links[filename].add((url, destination))
 
     return dict(attachedposts), dict(attachment_links)
