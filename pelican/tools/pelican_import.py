@@ -677,9 +677,10 @@ def get_out_filename(output_path, filename, ext, kind,
     return out_filename
 
 
-def get_attachments(xml):
+def get_attachments(xml, resolve_by_id=False):
     """
 
+    :param resolve_by_id:  Lookup posts by id
     :param xml:
     :return:  attachment_urls
     """
@@ -708,8 +709,9 @@ def get_attachments(xml):
         if kind == 'attachment':
             attachments.append((item.find('post_parent').string,
                                 item.find('attachment_url').string))
-            attachment_ids[post_id] = item.find('attachment_url').string
-        elif kind == 'post':
+            if resolve_by_id:
+                attachment_ids[post_id] = item.find('attachment_url').string
+        elif resolve_by_id and kind == 'post':
             content = item.find('encoded').string
             find_attachment = re.compile(r'({}/\?attachment_id=(\d+))'.format(server))
             for url, attachment_id in find_attachment.findall(content):
@@ -722,7 +724,7 @@ def get_attachments(xml):
             attachedposts[parent_name].add(url)
 
     attachment_links = defaultdict(set)
-    if attachments_by_id:
+    if resolve_by_id and attachments_by_id:
         for filename, links in attachments_by_id.items():
             for url, attachment_id in links:
                 destination = attachment_ids[attachment_id]
@@ -1052,7 +1054,7 @@ def main():
         fields = feed2fields(args.input)
 
     if args.wp_attach:
-        attachments, attachment_links = get_attachments(args.input)
+        attachments, attachment_links = get_attachments(args.input, args.wp_resolve)
     else:
         attachments, attachment_links = None, None
 
