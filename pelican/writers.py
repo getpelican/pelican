@@ -178,13 +178,62 @@ class Writer(object):
             # other stuff, just return for now
             return
 
+        def _old_theme_fix(template, localcontext, path):
+            """
+            To give themes time to update, change atom/feed variables
+            back to using %s and try again. If it fails again return None
+            """
+            for tag in ['AUTHOR_FEED_ATOM', 'AUTHOR_FEED_RSS',
+                        'CATEGORY_FEED_ATOM', 'CATEGORY_FEED_RSS',
+                        'TAG_FEED_ATOM', 'TAG_FEED_RSS']:
+                tmp = localcontext.get(tag, None)
+                if tmp is None:
+                    continue
+                localcontext[tag] = tmp.replace('{slug}', '%s')
+
+            try:  # try with the old feed settings
+                output = template.render(localcontext)
+            except Exception:
+
+                # that didn't work. ¯\_(ツ)_/¯
+                logger.error(
+                    'Failed to Write %s', path,
+                    exc_info=True,
+                    extra={
+                        'limit_msg': "More files failed to write."
+                    }
+                )
+                return  # return nothing to let _write_file know we failed
+
+            logger.warning(
+                'The "%s" template is using a deprecated way of generating'
+                ' atom/rss urls, and could stop working very soon.\n Check'
+                ' "http://docs.getpelican.com/en/stable/settings.html'
+                '#feed-settings" to learn more.',
+                template.name,
+                extra={
+                    'limit_msg': 'There are more deprecation warnings'
+                    ' about this theme.'
+                }
+            )
+
+            # give the generated content back to _write_file so it can
+            # save it back to disk.
+            return output
+
         def _write_file(template, localcontext, output_path, name, override):
             """Render the template write the file."""
             # set localsiteurl for context so that Contents can adjust links
             if localcontext['localsiteurl']:
                 context['localsiteurl'] = localcontext['localsiteurl']
-            output = template.render(localcontext)
             path = sanitised_join(output_path, name)
+
+            try:  # maybe this is an older theme
+                output = template.render(localcontext)
+            except TypeError:
+                output = _old_theme_fix(template, localcontext, path)
+                if output is None:
+                    return  # we failed to fix the older theme
 
             try:
                 os.makedirs(os.path.dirname(path))
