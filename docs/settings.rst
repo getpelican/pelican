@@ -588,10 +588,10 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'tags.html'``.
 
 .. data:: SLUG_REGEX_SUBSTITUTIONS = [
-        (r'[^\w\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
-        (r'(?u)\A\s*', ''),  # strip leading whitespace
-        (r'(?u)\s*\Z', ''),  # strip trailing whitespace
-        (r'[-\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
+        (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
+        (r'(?u)\\A\\s*', ''),  # strip leading whitespace
+        (r'(?u)\\s*\\Z', ''),  # strip trailing whitespace
+        (r'[-\\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
     ]
 
    Regex substitutions to make when generating slugs of articles and pages.
