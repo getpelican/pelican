@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from codecs import open
 from collections import defaultdict
 
@@ -563,7 +564,7 @@ def feed2fields(file):
     settings = read_settings()
     subs = settings['SLUG_REGEX_SUBSTITUTIONS']
     for entry in d.entries:
-        date = (entry.updated_parsed.strftime('%Y-%m-%d %H:%M')
+        date = (time.strftime('%Y-%m-%d %H:%M', entry.updated_parsed)
                 if hasattr(entry, 'updated_parsed') else None)
         author = entry.author if hasattr(entry, 'author') else None
         tags = ([e['term'] for e in entry.tags]
