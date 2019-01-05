@@ -18,7 +18,7 @@ settings are encountered, Pelican will emit a warning and fall back to the
 default setting. Some user-submitted themes might try to format setting values
 but fail upon site build with a ``TypeError``. In such cases, the theme needs
 to be updated. For example, instead of ``TAG_FEED_ATOM|format(tag.slug)``, use
-``TAG_FEED_ATOM|format(slug=tag.slug)``
+``TAG_FEED_ATOM.format(slug=tag.slug)``
 
 4.0.0 (2018-11-13)
 ==================
