@@ -379,6 +379,8 @@ title                   Title of the article.
 translations            List of translations
                         :ref:`Article <object-article>` objects.
 url                     URL to the article page.
+lang_atom_feed_url      URL to the language's ATOM feed
+land_rss_feed_url       URL to the language's RSS feed
 ======================  ===================================================
 
 .. _PATH: settings.html#PATH
@@ -399,6 +401,8 @@ page_name               Author page name.
 save_as                 Location to save the author page.
 slug                    Page slug.
 url                     URL to the author page.
+atom_feed_url           URL to the ATOM feed for the author.
+rss_feed_url            URL to the RSS feed for the author.
 ===================     ===================================================
 
 .. [1] for Author object, coming from `:authors:` or `AUTHOR`.
@@ -438,6 +442,8 @@ title                  Title of the page.
 translations           List of translations
                        :ref:`Article <object-article>` objects.
 url                    URL to the page.
+lang_atom_feed_url     URL to the language's ATOM feed.
+land_rss_feed_url      URL to the language's RSS feed.
 =====================  ===================================================
 
 .. _PATH: settings.html#PATH

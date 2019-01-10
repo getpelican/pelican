@@ -93,6 +93,10 @@ class Content(object):
 
             self.in_default_lang = (self.lang == default_lang)
 
+        # build feed urls
+        self._build_rss_feed_url()
+        self._build_atom_feed_url()
+
         # create the slug if not existing, generate slug according to
         # setting of SLUG_ATTRIBUTE
         if not hasattr(self, 'slug'):
@@ -148,6 +152,24 @@ class Content(object):
             self._summary = metadata['summary']
 
         signals.content_object_init.send(self)
+
+    def _build_atom_feed_url(self):
+        atom_url = self.settings.get('TRANSLATION_FEED_ATOM', None)
+        if atom_url is None or getattr(self, 'lang', None) is None:
+            self.lang_atom_feed_url = None
+        else:
+            self.lang_atom_feed_url = atom_url.format(
+                lang=self.lang
+            )
+
+    def _build_rss_feed_url(self):
+        rss_url = self.settings.get('TRANSLATION_FEED_RSS', None)
+        if rss_url is None or getattr(self, 'lang', None) is None:
+            self.lang_rss_feed_url = None
+        else:
+            self.lang_rss_feed_url = rss_url.format(
+                lang=self.lang
+            )
 
     def __str__(self):
         return self.source_path or repr(self)

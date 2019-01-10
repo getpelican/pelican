@@ -55,6 +55,22 @@ class URLWrapper(object):
         self._slug_from_name = False
         self._slug = slug
 
+    @property
+    def atom_feed_url(self):
+        feed_key = '{}_FEED_ATOM'.format(
+            self.__class__.__name__.upper())
+        feed_url = self.settings.get(feed_key, None)
+        if feed_url is not None:
+            return feed_url.format(slug=self.slug)
+
+    @property
+    def rss_feed_url(self):
+        feed_key = '{}_FEED_RSS'.format(
+            self.__class__.__name__.upper())
+        feed_url = self.settings.get(feed_key, None)
+        if feed_url is not None:
+            return feed_url.format(slug=self.slug)
+
     def as_dict(self):
         d = self.__dict__
         d['name'] = self.name

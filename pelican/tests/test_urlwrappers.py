@@ -86,3 +86,61 @@ class TestURLWrapper(unittest.TestCase):
         self.assertEqual(author1.slug, 'mr-senko')
         self.assertEqual(author2.slug, 'atodorov')
         self.assertEqual(author3.slug, 'krasimir')
+
+    def test_atom_feed_url(self):
+        settings = {
+            'URLWRAPPER_FEED_ATOM': None
+        }
+        wrapper = URLWrapper("A Smart Person", settings=settings)
+
+        # if '{}_FEED_ATOM' is None, then 'atom_feed_url' should
+        # also be None
+        self.assertIsNone(wrapper.atom_feed_url)
+
+        url = '/feed/{slug}.atom.xml'
+        settings['URLWRAPPER_FEED_ATOM'] = url
+        wrapper = URLWrapper("A Smart Person", settings=settings)
+
+        # if '{}_FEED_ATOM is set, then 'atom_feed_url' should
+        # return the url of the atom feed.
+        self.assertEqual(
+            wrapper.atom_feed_url,
+            url.format(slug='a smart person')
+        )
+
+        # if we update 'URLWrapper.slug', 'atom_feed_url'
+        # should also update.
+        wrapper.slug = 'not-a-smart-person'
+        self.assertEqual(
+            wrapper.atom_feed_url,
+            url.format(slug='not-a-smart-person')
+        )
+
+    def test_rss_feed_url(self):
+        settings = {
+            'URLWRAPPER_FEED_RSS': None
+        }
+        wrapper = URLWrapper("A Smart Person", settings=settings)
+
+        # if '{}_FEED_ATOM' is None, then 'atom_feed_url' should
+        # also be None
+        self.assertIsNone(wrapper.atom_feed_url)
+
+        url = '/feed/{slug}.rss.xml'
+        settings['URLWRAPPER_FEED_RSS'] = url
+        wrapper = URLWrapper("A Smart Person", settings=settings)
+
+        # if '{}_FEED_ATOM is set, then 'atom_feed_url' should
+        # return the url of the atom feed.
+        self.assertEqual(
+            wrapper.rss_feed_url,
+            url.format(slug='a smart person')
+        )
+
+        # if we update 'URLWrapper.slug', 'atom_feed_url'
+        # should also update.
+        wrapper.slug = 'not-a-smart-person'
+        self.assertEqual(
+            wrapper.rss_feed_url,
+            url.format(slug='not-a-smart-person')
+        )

@@ -133,6 +133,52 @@ class TestPage(LoggedTestCase):
         page = Page(**self.page_kwargs)
         self.assertEqual(page.lang, 'fr')
 
+    def test_lang_feed_urls(self):
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+
+        if 'TRANSLATION_FEED_RSS' in settings:
+            del settings['TRANSLATION_FEED_RSS']
+        if 'TRANSLATION_FEED_ATOM' in settings:
+            del settings['TRANSLATION_FEED_ATOM']
+        page_kwargs['settings'] = settings
+
+        # if atom and rss translations settings are not set
+        # 'lang_rss_feed_url' and 'lang_atom_feed_url' should
+        # return None
+        page = Page(**page_kwargs)
+        self.assertIsNone(page.lang_atom_feed_url)
+        self.assertIsNone(page.lang_rss_feed_url)
+
+        settings['TRANSLATION_FEED_RSS'] = None
+        settings['TRANSLATION_FEED_ATOM'] = None
+        page_kwargs['settings'] = settings
+
+        # if atom and rss translations settings are None
+        # 'lang_rss_feed_url' and 'lang_atom_feed_url' should
+        # return None
+        page = Page(**page_kwargs)
+        self.assertIsNone(page.lang_atom_feed_url)
+        self.assertIsNone(page.lang_rss_feed_url)
+
+        rss_path = '/we/speak/{lang}.rss.xml'
+        atom_path = '/we/speak/{lang}.atom.xml'
+        settings['TRANSLATION_FEED_RSS'] = rss_path
+        settings['TRANSLATION_FEED_ATOM'] = atom_path
+        page_kwargs['settings'] = settings
+
+        # if the language for the page is set 'lang_rss_feed_url'
+        # and 'lang_atom_feed_url' should return the formated path
+        page = Page(**page_kwargs)
+        self.assertEqual(
+            page.lang_atom_feed_url,
+            atom_path.format(lang=DEFAULT_CONFIG['DEFAULT_LANG'])
+        )
+        self.assertEqual(
+            page.lang_rss_feed_url,
+            rss_path.format(lang=DEFAULT_CONFIG['DEFAULT_LANG'])
+        )
+
     def test_save_as(self):
         # If a lang is not the default lang, save_as should be set
         # accordingly.
