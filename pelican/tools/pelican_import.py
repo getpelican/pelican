@@ -12,7 +12,7 @@ from codecs import open
 from collections import defaultdict
 
 from six.moves.urllib.error import URLError
-from six.moves.urllib.parse import urlparse
+from six.moves.urllib.parse import urlparse, urlsplit, urlunsplit, quote
 from six.moves.urllib.request import urlretrieve
 
 # because logging.setLoggerClass has to be called before logging.getLogger
@@ -729,6 +729,12 @@ def download_attachments(output_path, urls):
         full_path = os.path.join(output_path, localpath)
         if not os.path.exists(full_path):
             os.makedirs(full_path)
+
+        # Generate percent-encoded URL
+        scheme, netloc, path, query, fragment = urlsplit(url)
+        path = quote(path)
+        url = urlunsplit((scheme, netloc, path, query, fragment))
+
         print('downloading {}'.format(filename))
         try:
             urlretrieve(url, os.path.join(full_path, filename))
