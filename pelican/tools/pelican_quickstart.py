@@ -34,7 +34,7 @@ except ValueError:
     # Don't fail on macosx: "unknown locale: UTF-8"
     _DEFAULT_LANGUAGE = None
 if _DEFAULT_LANGUAGE is None:
-    _DEFAULT_LANGUAGE = 'English'
+    _DEFAULT_LANGUAGE = 'en'
 else:
     _DEFAULT_LANGUAGE = _DEFAULT_LANGUAGE.split('_')[0]
 
