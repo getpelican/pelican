@@ -77,19 +77,8 @@ CONF = {
 # url for list of valid timezones
 _TZ_URL = 'http://en.wikipedia.org/wiki/List_of_tz_database_time_zones'
 
-
-def _input_compat(prompt):
-    if six.PY3:
-        r = input(prompt)
-    else:
-        r = raw_input(prompt)
-    return r
-
-
-if six.PY3:
-    str_compat = str
-else:
-    str_compat = unicode
+_input_compat = six.moves.input
+str_compat = six.text_type
 
 
 # Create a 'marked' default path, to determine if someone has supplied
