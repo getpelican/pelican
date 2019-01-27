@@ -146,7 +146,17 @@ class Page(object):
         }
 
         ret = prop_value.format(**context)
-        ret = ret.lstrip('/')
+        # Remove a single leading slash, if any. This is done for backwards
+        # compatibility reasons. If a leading slash is needed (for URLs
+        # relative to server root or absolute URLs without the scheme such as
+        # //blog.my.site/), it can be worked around by prefixing the pagination
+        # pattern by an additional slash (which then gets removed, preserving
+        # the other slashes). This also means the following code *can't* be
+        # changed to lstrip() because that would remove all leading slashes and
+        # thus make the workaround impossible. See
+        # test_custom_pagination_pattern() for a verification of this.
+        if ret[0] == '/':
+            ret = ret[1:]
         return ret
 
     url = property(functools.partial(_from_settings, key='URL'))
