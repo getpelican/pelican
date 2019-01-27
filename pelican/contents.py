@@ -110,6 +110,7 @@ class Content(object):
                     regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
 
         self.source_path = source_path
+        self.relative_source_path = self.get_relative_source_path()
 
         # manage the date format
         if not hasattr(self, 'date_format'):

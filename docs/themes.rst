@@ -347,9 +347,9 @@ Article
 
 The string representation of an Article is the `source_path` attribute.
 
-===================     ===================================================
+======================  ===================================================
 Attribute               Description
-===================     ===================================================
+======================  ===================================================
 author                  The :ref:`Author <object-author_cat_tag>` of
                         this article.
 authors                 A list of :ref:`Authors <object-author_cat_tag>`
@@ -368,6 +368,7 @@ metadata                Article header metadata `dict`.
 save_as                 Location to save the article page.
 slug                    Page slug.
 source_path             Full system path of the article source file.
+relative_source_path    Relative path from PATH_ to the article source file.
 status                  The article status, can be any of 'published' or
                         'draft'.
 summary                 Rendered summary content.
@@ -378,7 +379,10 @@ title                   Title of the article.
 translations            List of translations
                         :ref:`Article <object-article>` objects.
 url                     URL to the article page.
-===================     ===================================================
+======================  ===================================================
+
+.. _PATH: settings.html#PATH
+
 
 .. _object-author_cat_tag:
 
@@ -406,34 +410,38 @@ Page
 
 The string representation of a Page is the `source_path` attribute.
 
-===================     ===================================================
-Attribute               Description
-===================     ===================================================
-author                  The :ref:`Author <object-author_cat_tag>` of
-                        this page.
-content                 The rendered content of the page.
-date                    Datetime object representing the page date.
-date_format             Either default date format or locale date format.
-default_template        Default template name.
-in_default_lang         Boolean representing if the article is written
-                        in the default language.
-lang                    Language of the article.
-locale_date             Date formatted by the `date_format`.
-metadata                Page header metadata `dict`.
-save_as                 Location to save the page.
-slug                    Page slug.
-source_path             Full system path of the page source file.
-status                  The page status, can be any of 'published', 'hidden' or
-                        'draft'.
-summary                 Rendered summary content.
-tags                    List of :ref:`Tag <object-author_cat_tag>`
-                        objects.
-template                Template name to use for rendering.
-title                   Title of the page.
-translations            List of translations
-                        :ref:`Article <object-article>` objects.
-url                     URL to the page.
-===================     ===================================================
+=====================  ===================================================
+Attribute              Description
+=====================  ===================================================
+author                 The :ref:`Author <object-author_cat_tag>` of
+                       this page.
+content                The rendered content of the page.
+date                   Datetime object representing the page date.
+date_format            Either default date format or locale date format.
+default_template       Default template name.
+in_default_lang        Boolean representing if the article is written
+                       in the default language.
+lang                   Language of the article.
+locale_date            Date formatted by the `date_format`.
+metadata               Page header metadata `dict`.
+save_as                Location to save the page.
+slug                   Page slug.
+source_path            Full system path of the page source file.
+relative_source_path   Relative path from PATH_ to the page source file.
+status                 The page status, can be any of 'published', 'hidden' or
+                       'draft'.
+summary                Rendered summary content.
+tags                   List of :ref:`Tag <object-author_cat_tag>`
+                       objects.
+template               Template name to use for rendering.
+title                  Title of the page.
+translations           List of translations
+                       :ref:`Article <object-article>` objects.
+url                    URL to the page.
+=====================  ===================================================
+
+.. _PATH: settings.html#PATH
+
 
 Feeds
 =====
