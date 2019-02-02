@@ -8,7 +8,7 @@ from setuptools import setup
 
 requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments', 'docutils',
             'pytz >= 0a', 'blinker', 'unidecode', 'six >= 1.4',
-            'python-dateutil']
+            'python-dateutil', 'livereload']
 
 entry_points = {
     'console_scripts': [
