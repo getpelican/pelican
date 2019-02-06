@@ -787,12 +787,15 @@ def folder_watcher(path, extensions, ignores=[]):
             dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
 
             for f in files:
-                if f.endswith(tuple(extensions)) and \
-                   not any(fnmatch.fnmatch(f, ignore) for ignore in ignores):
-                        try:
-                            yield os.stat(os.path.join(root, f)).st_mtime
-                        except OSError as e:
-                            logger.warning('Caught Exception: %s', e)
+                valid_extension = f.endswith(tuple(extensions))
+                file_ignored = any(
+                    fnmatch.fnmatch(f, ignore) for ignore in ignores
+                )
+                if valid_extension and not file_ignored:
+                    try:
+                        yield os.stat(os.path.join(root, f)).st_mtime
+                    except OSError as e:
+                        logger.warning('Caught Exception: %s', e)
 
     LAST_MTIME = 0
     while True:

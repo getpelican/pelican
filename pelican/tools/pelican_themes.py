@@ -81,9 +81,9 @@ def main():
     to_sym = args.to_symlink or args.clean
 
     if args.action:
-        if args.action is 'list':
+        if args.action == 'list':
             list_themes(args.verbose)
-        elif args.action is 'path':
+        elif args.action == 'path':
             print(_THEMES_PATH)
     elif to_install or args.to_remove or to_sym:
         if args.to_remove:
