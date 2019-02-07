@@ -318,6 +318,9 @@ class MarkdownReader(BaseReader):
         """Return the dict containing document metadata"""
         formatted_fields = self.settings['FORMATTED_FIELDS']
 
+        # unload meta extension to avoid parsing field values again
+        del self._md.preprocessors['meta']
+
         output = {}
         for name, value in meta.items():
             name = name.lower()
