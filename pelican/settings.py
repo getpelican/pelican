@@ -524,11 +524,11 @@ def configure_settings(settings):
 
     # check content caching layer and warn of incompatibilities
     if settings.get('CACHE_CONTENT', False) and \
-       settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and \
-       settings.get('WITH_FUTURE_DATES', False):
-            logger.warning(
-                "WITH_FUTURE_DATES conflicts with CONTENT_CACHING_LAYER "
-                "set to 'generator', use 'reader' layer instead")
+            settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and \
+            settings.get('WITH_FUTURE_DATES', False):
+        logger.warning(
+            "WITH_FUTURE_DATES conflicts with CONTENT_CACHING_LAYER "
+            "set to 'generator', use 'reader' layer instead")
 
     # Warn if feeds are generated with both SITEURL & FEED_DOMAIN undefined
     feed_keys = [

@@ -367,7 +367,7 @@ class HTMLReader(BaseReader):
     class _HTMLParser(HTMLParser):
         def __init__(self, settings, filename):
             try:
-                # Python 3.4+
+                # Python 3.5+
                 HTMLParser.__init__(self, convert_charrefs=False)
             except TypeError:
                 HTMLParser.__init__(self)

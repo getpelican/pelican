@@ -102,8 +102,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
         for (title, content, fname, date, author,
-             categ, tags, status, kind, format) in self.posts:
-                self.assertTrue(title.strip())
+                categ, tags, status, kind, format) in self.posts:
+            self.assertTrue(title.strip())
 
     def test_recognise_page_kind(self):
         """ Check that we recognise pages in wordpress, as opposed to posts """
@@ -111,9 +111,9 @@ class TestWordpressXmlImporter(unittest.TestCase):
         # Collect (title, filename, kind) of non-empty posts recognised as page
         pages_data = []
         for (title, content, fname, date, author,
-             categ, tags, status, kind, format) in self.posts:
-                if kind == 'page':
-                    pages_data.append((title, fname))
+                categ, tags, status, kind, format) in self.posts:
+            if kind == 'page':
+                pages_data.append((title, fname))
         self.assertEqual(2, len(pages_data))
         self.assertEqual(('Page', 'contact'), pages_data[0])
         self.assertEqual(('Empty Page', 'empty'), pages_data[1])
@@ -151,22 +151,22 @@ class TestWordpressXmlImporter(unittest.TestCase):
         self.assertTrue(self.posts)
         pages_data = []
         for (title, content, fname, date, author, categ,
-             tags, status, kind, format) in self.posts:
-                if kind == 'page' or kind == 'article':
-                    pass
-                else:
-                    pages_data.append((title, fname))
+                tags, status, kind, format) in self.posts:
+            if kind == 'page' or kind == 'article':
+                pass
+            else:
+                pages_data.append((title, fname))
         self.assertEqual(0, len(pages_data))
 
     def test_recognise_custom_post_type(self):
         self.assertTrue(self.custposts)
         cust_data = []
         for (title, content, fname, date, author, categ,
-             tags, status, kind, format) in self.custposts:
-                if kind == 'article' or kind == 'page':
-                    pass
-                else:
-                    cust_data.append((title, kind))
+                tags, status, kind, format) in self.custposts:
+            if kind == 'article' or kind == 'page':
+                pass
+            else:
+                cust_data.append((title, kind))
         self.assertEqual(3, len(cust_data))
         self.assertEqual(
             ('A custom post in category 4', 'custom1'),
