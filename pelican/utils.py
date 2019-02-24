@@ -677,9 +677,12 @@ def process_translations(content_list, translation_id=None):
                              'attributes'.format(translation_id))
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
-        items = list(items)
+        # prepare warning string
+        id_vals = (id_vals,) if len(translation_id) == 1 else id_vals
         with_str = 'with' + ', '.join([' {} "{{}}"'] * len(translation_id))\
             .format(*translation_id).format(*id_vals)
+
+        items = list(items)
         original_items = get_original_items(items, with_str)
         index.extend(original_items)
         for a in items:
