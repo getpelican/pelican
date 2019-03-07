@@ -783,7 +783,8 @@ Metadata
 
    Extra metadata dictionaries keyed by relative path. Relative paths require
    correct OS-specific directory separators (i.e. / in UNIX and \\ in Windows)
-   unlike some other Pelican file settings.
+   unlike some other Pelican file settings. Paths to a directory apply to all
+   files under it. The most-specific path wins conflicts.
 
 Not all metadata needs to be :ref:`embedded in source file itself
 <internal_metadata>`. For example, blog posts are often named following a
