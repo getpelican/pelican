@@ -736,7 +736,7 @@ Template pages
                          'src/resume.html': 'dest/resume.html',
                          'src/contact.html': 'dest/contact.html'}
 
-.. data:: TEMPLATE_EXTENSION = ['.html']
+.. data:: TEMPLATE_EXTENSIONS = ['.html']
 
    The extensions to use when looking up template files from template names.
 
