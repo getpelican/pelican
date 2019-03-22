@@ -50,10 +50,16 @@
     {% endfor %}
 {% else %}
 <section id="content" class="body">
-<h2>Pages</h2>
+    {% if pages %}
+    <h2>Pages</h2>
+    <ul>
     {% for page in pages %}
         <li><a href="{{ SITEURL }}/{{ page.url }}">{{ page.title }}</a></li>
     {% endfor %}
+    </ul>
+    {% else %}
+    <p>This site currently has no content.</p>
+    {% endif %}
 </section>
 {% endif %}
 {% endblock content %}
