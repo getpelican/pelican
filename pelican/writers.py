@@ -262,8 +262,9 @@ class Writer(object):
 
                 localcontext = _get_localcontext(
                     context, page.save_as, paginated_kwargs, relative_urls)
-                _write_file(template, localcontext, self.output_path,
-                            page.save_as, override_output)
+                if page.save_as:
+                    _write_file(template, localcontext, self.output_path,
+                                page.save_as, override_output)
         else:
             # no pagination
             localcontext = _get_localcontext(
