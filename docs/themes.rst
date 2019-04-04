@@ -82,11 +82,11 @@ dates           The same list of articles, but ordered by date,
                 ascending.
 drafts          The list of draft articles
 authors         A list of (author, articles) tuples, containing all
-                the authors.
+                the authors and corresponding articles (values)
 categories      A list of (category, articles) tuples, containing
                 all the categories and corresponding articles (values)
 tags            A list of (tag, articles) tuples, containing all
-                the tags.
+                the tags and corresponding articles (values)
 pages           The list of pages
 hidden_pages    The list of hidden pages
 draft_pages     The list of draft pages

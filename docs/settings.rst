@@ -728,12 +728,12 @@ Template pages
 
    The extensions to use when looking up template files from template names.
 
-.. data:: DIRECT_TEMPLATES = ['index', 'tags', 'categories', 'authors', 'archives']
+.. data:: DIRECT_TEMPLATES = ['index', 'authors', 'categories', 'tags', 'archives']
 
    List of templates that are used directly to render content. Typically direct
    templates are used to generate index pages for collections of content (e.g.,
-   tags and category index pages). If the tag and category collections are not
-   needed, set ``DIRECT_TEMPLATES = ['index', 'authors', 'archives']``
+   category and tag index pages). If the author, category and tag collections are not
+   needed, set ``DIRECT_TEMPLATES = ['index', 'archives']``
 
    ``DIRECT_TEMPLATES`` are searched for over paths maintained in
    ``THEME_TEMPLATES_OVERRIDES``.
