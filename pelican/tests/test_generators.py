@@ -420,7 +420,8 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
-                                 url="posts/1970/")
+                                 url="posts/1970/",
+                                 all_articles=generator.articles)
 
         settings['MONTH_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/index.html'
@@ -444,7 +445,8 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
-                                 url="posts/1970/Jan/")
+                                 url="posts/1970/Jan/",
+                                 all_articles=generator.articles)
 
         settings['DAY_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
@@ -476,7 +478,8 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
-                                 url="posts/1970/Jan/01/")
+                                 url="posts/1970/Jan/01/",
+                                 all_articles=generator.articles)
         locale.setlocale(locale.LC_ALL, old_locale)
 
     def test_nonexistent_template(self):
