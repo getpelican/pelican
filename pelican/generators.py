@@ -526,7 +526,7 @@ class ArticlesGenerator(CachingGenerator):
 
                 write(save_as, template, context, articles=articles,
                       dates=archive, template_name='period_archives',
-                      blog=True, url=url)
+                      blog=True, url=url, all_articles=self.articles)
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
