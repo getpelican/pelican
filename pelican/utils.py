@@ -12,7 +12,10 @@ import re
 import shutil
 import sys
 import traceback
-from collections import Hashable
+try:
+    from collections.abc import Hashable
+except ImportError:
+    from collections import Hashable
 from contextlib import contextmanager
 from functools import partial
 from itertools import groupby

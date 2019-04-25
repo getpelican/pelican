@@ -2,7 +2,10 @@
 from __future__ import print_function, unicode_literals
 
 import argparse
-import collections
+try:
+    import collections.abc as collections
+except ImportError:
+    import collections
 import locale
 import logging
 import multiprocessing

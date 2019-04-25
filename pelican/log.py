@@ -5,7 +5,11 @@ import locale
 import logging
 import os
 import sys
-from collections import Mapping, defaultdict
+from collections import defaultdict
+try:
+    from collections.abc import Mapping
+except ImportError:
+    from collections import Mapping
 
 import six
 
