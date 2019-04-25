@@ -467,6 +467,14 @@ This would save your articles into something like
    The actual location a page draft which doesn't use the default language is
    saved at.
 
+.. data:: AUTHOR_URL = 'author/{slug}.html'
+
+   The URL to use for an author.
+
+.. data:: AUTHOR_SAVE_AS = 'author/{slug}.html'
+
+   The location to save an author.
+
 .. data:: CATEGORY_URL = 'category/{slug}.html'
 
    The URL to use for a category.
@@ -482,41 +490,6 @@ This would save your articles into something like
 .. data:: TAG_SAVE_AS = 'tag/{slug}.html'
 
    The location to save the tag page.
-
-.. data:: AUTHOR_URL = 'author/{slug}.html'
-
-   The URL to use for an author.
-
-.. data:: AUTHOR_SAVE_AS = 'author/{slug}.html'
-
-   The location to save an author.
-
-.. data:: YEAR_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-year archives of your posts.
-
-.. data:: YEAR_ARCHIVE_URL = ''
-
-   The URL to use for per-year archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
-
-.. data:: MONTH_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-month archives of your posts.
-
-.. data:: MONTH_ARCHIVE_URL = ''
-
-   The URL to use for per-month archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
-
-.. data:: DAY_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-day archives of your posts.
-
-.. data:: DAY_ARCHIVE_URL = ''
-
-   The URL to use for per-day archives of your posts. Used only if you have the
-   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
 
 .. note::
 
@@ -546,6 +519,33 @@ posts for the month at ``posts/2011/Aug/index.html``.
     This way a reader can remove a portion of your URL and automatically arrive
     at an appropriate archive of posts, without having to specify a page name.
 
+.. data:: YEAR_ARCHIVE_URL = ''
+
+   The URL to use for per-year archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
+.. data:: YEAR_ARCHIVE_SAVE_AS = ''
+
+   The location to save per-year archives of your posts.
+
+.. data:: MONTH_ARCHIVE_URL = ''
+
+   The URL to use for per-month archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
+.. data:: MONTH_ARCHIVE_SAVE_AS = ''
+
+   The location to save per-month archives of your posts.
+
+.. data:: DAY_ARCHIVE_URL = ''
+
+   The URL to use for per-day archives of your posts. Used only if you have the
+   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
+.. data:: DAY_ARCHIVE_SAVE_AS = ''
+
+   The location to save per-day archives of your posts.
+
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
 template.
@@ -553,18 +553,6 @@ template.
 .. data:: ARCHIVES_SAVE_AS = 'archives.html'
 
    The location to save the article archives page.
-
-.. data:: YEAR_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-year archives of your posts.
-
-.. data:: MONTH_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-month archives of your posts.
-
-.. data:: DAY_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-day archives of your posts.
 
 .. data:: AUTHORS_SAVE_AS = 'authors.html'
 
@@ -740,11 +728,11 @@ Template pages
 
    The extensions to use when looking up template files from template names.
 
-.. data:: DIRECT_TEMPLATES = ['index', 'categories', 'authors', 'archives']
+.. data:: DIRECT_TEMPLATES = ['index', 'authors', 'categories', 'tags', 'archives']
 
    List of templates that are used directly to render content. Typically direct
    templates are used to generate index pages for collections of content (e.g.,
-   tags and category index pages). If the tag and category collections are not
+   category and tag index pages). If the author, category and tag collections are not
    needed, set ``DIRECT_TEMPLATES = ['index', 'archives']``
 
    ``DIRECT_TEMPLATES`` are searched for over paths maintained in
