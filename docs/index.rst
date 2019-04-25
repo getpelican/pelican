@@ -76,10 +76,10 @@ Documentation
 
 .. Links
 
-.. _Python: http://www.python.org/
+.. _Python: https://www.python.org/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
-.. _Markdown: http://daringfireball.net/projects/markdown/
+.. _Markdown: https://daringfireball.net/projects/markdown/
 .. _Jinja2: http://jinja.pocoo.org/
-.. _`Pelican documentation`: http://docs.getpelican.com/latest/
-.. _`Pelican's internals`: http://docs.getpelican.com/en/latest/internals.html
+.. _`Pelican documentation`: https://docs.getpelican.com/latest/
+.. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
 .. _`Pelican plugins`: https://github.com/getpelican/pelican-plugins

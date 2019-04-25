@@ -31,7 +31,7 @@ rst_prolog = '''
 pygments_style = 'sphinx'
 
 extlinks = {
-    'pelican-doc':  ('http://docs.getpelican.com/%s/', '')
+    'pelican-doc':  ('https://docs.getpelican.com/%s/', '')
 }
 
 # -- Options for HTML output --------------------------------------------------

@@ -560,9 +560,9 @@ the ``DEFAULT_METADATA``::
 To publish a post when the default status is ``draft``, update the post's
 metadata to include ``Status: published``.
 
-.. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
+.. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: http://www.methods.co.nz/asciidoc/
-.. _pelican-plugins: http://github.com/getpelican/pelican-plugins
+.. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 .. _Markdown Extensions: https://python-markdown.github.io/extensions/
 .. _CodeHilite extension: https://python-markdown.github.io/extensions/code_hilite/#syntax
-.. _i18n_subsites plugin: http://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
+.. _i18n_subsites plugin: https://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites

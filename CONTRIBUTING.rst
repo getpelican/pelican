@@ -58,7 +58,7 @@ publicly-accessible location:
 * Upload detailed and **complete** output logs and backtraces (remember to add
   the ``--debug`` flag: ``pelican --debug content [...]``)
 
-.. _documentation: http://docs.getpelican.com/
+.. _documentation: https://docs.getpelican.com/
 .. _`paste service`: https://dpaste.de/
 
 Once the above preparation is ready, you can contact people willing to help via
@@ -124,7 +124,7 @@ Contribution quality standards
 
 * Adhere to `PEP8 coding standards`_. This can be eased via the `pycodestyle
   <https://pypi.org/project/pycodestyle>`_ or `flake8
-  <http://pypi.python.org/pypi/flake8/>`_ tools, the latter of which in
+  <https://pypi.org/project/flake8/>`_ tools, the latter of which in
   particular will give you some useful hints about ways in which the
   code/formatting can be improved. If you are relying on your editor for PEP8
   compliance, note that the line length specified by PEP8 is 79 (excluding the
@@ -139,12 +139,12 @@ Contribution quality standards
 Check out our `Git Tips`_ page or `ask for help`_ if you
 need assistance or have any questions about these guidelines.
 
-.. _`plugin`: http://docs.getpelican.com/en/latest/plugins.html
-.. _`#pelican IRC channel`: http://webchat.freenode.net/?channels=pelican&uio=d4
+.. _`plugin`: https://docs.getpelican.com/en/latest/plugins.html
+.. _`#pelican IRC channel`: https://webchat.freenode.net/?channels=pelican&uio=d4
 .. _`Create a new git branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
 .. _`Squash your commits`: https://github.com/getpelican/pelican/wiki/Git-Tips#squashing-commits
-.. _`Run all the tests`: http://docs.getpelican.com/en/latest/contribute.html#running-the-test-suite
+.. _`Run all the tests`: https://docs.getpelican.com/en/latest/contribute.html#running-the-test-suite
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
-.. _`PEP8 coding standards`: http://www.python.org/dev/peps/pep-0008/
+.. _`PEP8 coding standards`: https://www.python.org/dev/peps/pep-0008/
 .. _`ask for help`: `How to get help`_
-.. _`compatibility cheatsheet`: http://docs.getpelican.com/en/latest/contribute.html#python-3-development-tips
+.. _`compatibility cheatsheet`: https://docs.getpelican.com/en/latest/contribute.html#python-3-development-tips

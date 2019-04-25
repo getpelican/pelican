@@ -120,8 +120,8 @@ your date according to the locale given in your settings::
 
     {{ article.date|strftime('%d %B %Y') }}
 
-.. _datetime: http://docs.python.org/2/library/datetime.html#datetime-objects
-.. _strftime: http://docs.python.org/2/library/datetime.html#strftime-strptime-behavior
+.. _datetime: https://docs.python.org/2/library/datetime.html#datetime-objects
+.. _strftime: https://docs.python.org/2/library/datetime.html#strftime-strptime-behavior
 
 
 index.html

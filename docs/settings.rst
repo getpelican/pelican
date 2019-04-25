@@ -369,7 +369,7 @@ and pages anywhere you want.
     the `Python datetime documentation`_ for more information.
 
 .. _Python datetime documentation:
-    http://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+    https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
 
 Also, you can use other file metadata attributes as well:
 
@@ -620,7 +620,7 @@ Time and Date
 
    Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 
-.. _the wikipedia page: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+.. _the wikipedia page: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 .. data:: DEFAULT_DATE = None
 
@@ -696,11 +696,11 @@ Time and Date
 
 .. [#] Default is the system locale.
 
-.. _Python strftime documentation: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
+.. _Python strftime documentation: https://docs.python.org/library/datetime.html#strftime-strptime-behavior
 
 .. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
 
-.. _locale(1): http://linux.die.net/man/1/locale
+.. _locale(1): https://linux.die.net/man/1/locale
 
 
 .. _template_pages:
@@ -811,7 +811,7 @@ file:
         }
 
 .. _group name notation:
-   http://docs.python.org/3/library/re.html#regular-expression-syntax
+   https://docs.python.org/3/library/re.html#regular-expression-syntax
 
 
 Feed settings
@@ -828,7 +828,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
    The domain prepended to feed URLs. Since feed URLs should always be
    absolute, it is highly recommended to define this (e.g.,
-   "http://feeds.example.com"). If you have already explicitly defined SITEURL
+   "https://feeds.example.com"). If you have already explicitly defined SITEURL
    (see above) and want to use the same domain for your feeds, you can just
    set:  ``FEED_DOMAIN = SITEURL``.
 
