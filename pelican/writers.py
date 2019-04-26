@@ -78,13 +78,19 @@ class Writer(object):
             if description == content:
                 description = None
 
+        categories = list()
+        if hasattr(item, 'category'):
+            categories.append(item.category)
+        if hasattr(item, 'tags'):
+            categories.extend(item.tags)
+
         feed.add_item(
             title=title,
             link=link,
             unique_id=get_tag_uri(link, item.date),
             description=description,
             content=content,
-            categories=item.tags if hasattr(item, 'tags') else None,
+            categories=categories if categories else None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(
                 item.date, self.settings.get('TIMEZONE', None)),
