@@ -138,6 +138,6 @@ if __name__ == '__main__':
                 args.port, args.server)
     try:
         httpd.serve_forever()
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         logger.info("Shutting down server.")
         httpd.socket.close()
