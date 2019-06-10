@@ -480,7 +480,11 @@ class MdReaderTest(ReaderTest):
         self.assertDictHasSubset(metadata, expected)
 
     def test_article_with_footnote(self):
-        reader = readers.MarkdownReader(settings=get_settings())
+        settings = get_settings()
+        from markdown.extensions.footnotes import FootnoteExtension
+        ec = settings['MARKDOWN']['extension_configs']
+        ec['markdown.extensions.footnotes'] = {'SEPARATOR': '-'}
+        reader = readers.MarkdownReader(settings)
         content, metadata = reader.read(
             _path('article_with_markdown_and_footnote.md'))
         expected_content = (
