@@ -12,7 +12,7 @@ requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments', 'docutils',
 
 entry_points = {
     'console_scripts': [
-        'pelican = pelican:main',
+        'pelican = pelican.__main__:main',
         'pelican-import = pelican.tools.pelican_import:main',
         'pelican-quickstart = pelican.tools.pelican_quickstart:main',
         'pelican-themes = pelican.tools.pelican_themes:main'
