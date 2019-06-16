@@ -61,8 +61,8 @@ be ignored for now.)
 Preview your site
 -----------------
 
-Open a new terminal session, navigate to your site directory and run the
-following command to launch Pelican's web server::
+Open a new terminal session, navigate to your generated output directory and
+run the following command to launch Pelican's web server::
 
     pelican --listen
 
