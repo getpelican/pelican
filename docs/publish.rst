@@ -32,7 +32,12 @@ list of paths or can be configured as a setting. (See:
 
 You can also tell Pelican to watch for your modifications, instead of manually
 re-running it every time you want to see your changes. To enable this, run the
-``pelican`` command with the ``-r`` or ``--autoreload`` option.
+``pelican`` command with the ``-r`` or ``--autoreload`` option. On non-Windows
+environments, this option can also be combined with the ``-l`` or ``--listen``
+option to simultaneously both auto-regenerate *and* serve the output at
+http://localhost:8000::
+
+    pelican --autoreload --listen
 
 Pelican has other command-line switches available. Have a look at the help to
 see all the options you can use::
