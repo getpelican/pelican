@@ -152,7 +152,7 @@ Basic settings
         }
 
    .. Note::
-      The dictionary defined in your settings file will update this default
+      The dictionary defined in your settings file will replace this default
       one.
 
 .. data:: OUTPUT_PATH = 'output/'
