@@ -282,7 +282,7 @@ class Content(object):
                             if linked_content:
                                 logger.warning(
                                     '{filename} used for linking to static'
-                                    'content %s in %s. Use {static} instead',
+                                    ' content %s in %s. Use {static} instead',
                                     path,
                                     self.get_relative_source_path())
                                 return linked_content
