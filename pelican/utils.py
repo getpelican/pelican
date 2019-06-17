@@ -769,9 +769,19 @@ def order_content(content_list, order_by='slug'):
                     content_list.sort(key=attrgetter(order_by),
                                       reverse=order_reversed)
                 except AttributeError:
-                    logger.warning(
-                        'There is no "%s" attribute in the item '
-                        'metadata. Defaulting to slug order.', order_by)
+                    for content in content_list:
+                        try:
+                            getattr(content, order_by)
+                        except AttributeError:
+                            logger.warning(
+                                'There is no "%s" attribute in "%s". '
+                                'Defaulting to slug order.',
+                                order_by,
+                                content.get_relative_source_path(),
+                                extra={
+                                    'limit_msg': ('More files are missing '
+                                                  'the needed attribute.')
+                                })
         else:
             logger.warning(
                 'Invalid *_ORDER_BY setting (%s).'
