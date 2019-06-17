@@ -263,3 +263,10 @@ class TestPelican(LoggedTestCase):
             count=1,
             msg="Could not process .*parse_error.rst",
             level=logging.ERROR)
+
+    def test_module_load(self):
+        """Test loading via python -m pelican --help displays the help"""
+        output = subprocess.check_output([
+            sys.executable, '-m', 'pelican', '--help'
+        ]).decode('ascii', 'replace')
+        assert 'usage:' in output
