@@ -146,6 +146,12 @@ http://localhost:8000/::
 
     invoke serve
 
+To serve the generated site with automatic browser reloading every time a
+change is detected, first ``pip install livereload``, then use the
+following command::
+
+    invoke livereload
+
 If during the ``pelican-quickstart`` process you answered "yes" when asked
 whether you want to upload your site via SSH, you can use the following command
 to publish your site via rsync over SSH::
