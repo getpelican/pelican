@@ -16,8 +16,8 @@ LOCAL_SETTINGS = get_settings_from_file('pelicanconf.py')
 SETTINGS.update(LOCAL_SETTINGS)
 
 CONFIG = {
-    # Local path configuration (can be absolute or relative to tasks.py)
-    'deploy_path': 'output',
+    # Output path. Can be absolute or relative to tasks.py. Default: 'output'
+    'deploy_path': SETTINGS['OUTPUT_PATH'],
 {% if ssh %}
     # Remote server configuration
     'production': '{{ssh_user}}@{{ssh_host}}:{{ssh_port}}',
