@@ -100,7 +100,8 @@ def livereload(c):
     for extension in content_file_extensions:
         content_blob = '{0}/**/*{1}'.format(SETTINGS['PATH'], extension)
         server.watch(content_blob, lambda: build(c))
-    server.serve(root=CONFIG['deploy_path'])
+    # Serve output path on configured port
+    server.serve(port=CONFIG['port'], root=CONFIG['deploy_path'])
 
 {% if cloudfiles %}
 @task
