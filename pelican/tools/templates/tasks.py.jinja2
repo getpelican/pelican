@@ -95,6 +95,8 @@ def livereload(c):
     from livereload import Server
     build(c)
     server = Server()
+    # Watch the base settings file
+    server.watch(CONFIG['settings_base'], lambda: build(c))
     # Watch content source files
     content_file_extensions = ['.md', '.rst']
     for extension in content_file_extensions:
