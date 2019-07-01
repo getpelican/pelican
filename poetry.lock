@@ -437,7 +437,7 @@ description = "tox is a generic virtualenv management and test command line tool
 name = "tox"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "3.13.1"
+version = "3.13.2"
 
 [package.dependencies]
 filelock = ">=3.0.0,<4"
@@ -493,8 +493,11 @@ optional = false
 python-versions = ">=2.7"
 version = "0.5.1"
 
+[extras]
+markdown = ["markdown"]
+
 [metadata]
-content-hash = "fe931042341d072acdb02907e16b4cd34947b8edbac5222f2521d961147280d7"
+content-hash = "d22ff0db3331186ab2f809313de1f9efef1f9c708cc354eaa1638a5111404612"
 python-versions = "~2.7 || ^3.5"
 
 [metadata.hashes]
@@ -539,7 +542,7 @@ soupsieve = ["72b5f1aea9101cf720a36bb2327ede866fd6f1a07b1e87c92a1cc18113cbc946",
 sphinx = ["82cd2728c906be96e307b81352d3fd9fb731869234c6b835cc25e9a3dfb4b7e4", "b83f430200f546bfd5088c653f0c5516af708da36066dfde08d08bedb1b33a4b"]
 sphinx-rtd-theme = ["00cf895504a7895ee433807c62094cf1e95f065843bf3acd17037c3e9a2becd4", "728607e34d60456d736cc7991fd236afb828b21b82f956c5ea75f94c8414040a"]
 toml = ["229f81c57791a41d65e399fc06bf0848bab550a9dfd5ed66df18ce5f05e73d5c", "235682dd292d5899d361a811df37e04a8828a5b1da3115886b73cf81ebc9100e", "f1db651f9657708513243e61e6cc67d101a39bad662eaa9b5546f789338e07a3"]
-tox = ["45a265e953368fb372cca3eac33b69fdb1b1453e5b114be231c84fc3dfadceed", "f5cb0b5b8d14f2100982b0981c750d840228180a348e6bad355aa38e949fbc3f"]
+tox = ["dab0b0160dd187b654fc33d690ee1d7bf328bd5b8dc6ef3bb3cc468969c659ba", "ee35ffce74933a6c6ac10c9a0182e41763140a5a5070e21b114feca56eaccdcd"]
 typing = ["38566c558a0a94d6531012c8e917b1b8518a41e418f7f15f00e129cc80162ad3", "53765ec4f83a2b720214727e319607879fec4acde22c4fbb54fa2604e79e44ce", "84698954b4e6719e912ef9a42a2431407fe3755590831699debda6fba92aac55"]
 typogrify = ["8be4668cda434163ce229d87ca273a11922cb1614cb359970b7dc96eed13cb38"]
 unidecode = ["1d7a042116536098d05d599ef2b8616759f02985c85b4fef50c78a5aaf10822a", "2b6aab710c2a1647e928e36d69c21e76b453cd455f4e2621000e54b2a9b8cce8"]
