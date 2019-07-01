@@ -1,4 +1,5 @@
 import os
+import sys
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -17,6 +18,7 @@ class MockServer(object):
     pass
 
 
+@unittest.skipUnless(sys.platform.startswith("linux"), "requires Linux")
 class TestServer(unittest.TestCase):
 
     def setUp(self):
