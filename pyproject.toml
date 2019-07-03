@@ -1,0 +1,61 @@
+[tool.poetry]
+name = "pelican"
+version = "4.0.1"
+description = "Static site generator supporting Markdown and reStructuredText"
+authors = ["Justin Mayer <entrop@gmail.com>"]
+license = "AGPLv3"
+readme = "README.rst"
+keywords = ["static site generator", "static sites", "ssg"]
+
+homepage = "https://getpelican.com"
+repository = "https://github.com/getpelican/pelican"
+documentation = "https://docs.getpelican.com"
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Framework :: Pelican",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = "~2.7 || ^3.5"
+feedgenerator = "^1.9"
+jinja2 = "~2.10.1"
+pygments = "^2.4"
+pytz = "^2019.1"
+blinker = "^1.4"
+unidecode = "^1.1"
+python-dateutil = "^2.8"
+docutils = "^0.14"
+markdown = {version = "~3.1.1", optional = true}
+six = "^1.4"
+
+[tool.poetry.dev-dependencies]
+BeautifulSoup4 = "^4.7"
+lxml = "^4.3"
+markdown = "~3.1.1"
+typogrify = "^2.0"
+mock = "^3.0"
+sphinx = "=1.4.9"
+sphinx_rtd_theme = "^0.4.3"
+tox = "^3.13"
+flake8 = "^3.7"
+flake8-import-order = "^0.18.1"
+
+[tool.poetry.extras]
+markdown = ["markdown"]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
