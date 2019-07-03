@@ -1,10 +1,28 @@
 #!/usr/bin/env python
+import re
 import sys
 from io import open
 from os import walk
 from os.path import join, relpath
 
 from setuptools import setup
+
+
+def get_version():
+    VERSION_REGEX = re.compile(
+        r"^version\s*=\s*\"(?P<version>.*)\"$"
+    )
+    with open("pyproject.toml") as f:
+        for line in f:
+            match = VERSION_REGEX.match(line)
+
+            if match:
+                return match.group("version")
+
+    return None
+
+
+version = get_version()
 
 requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments', 'docutils',
             'pytz >= 0a', 'blinker', 'unidecode', 'six >= 1.4',
@@ -28,7 +46,7 @@ if sys.version_info.major < 3:
 
 setup(
     name='pelican',
-    version='4.0.2.dev0',
+    version=version,
     url='https://getpelican.com/',
     author='Alexis Metaireau',
     maintainer='Justin Mayer',

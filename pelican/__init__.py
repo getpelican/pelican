@@ -32,7 +32,12 @@ from pelican.utils import (clean_output_dir, file_watcher,
                            folder_watcher, maybe_pluralize)
 from pelican.writers import Writer
 
-__version__ = "4.0.2.dev0"
+try:
+    __version__ = __import__('pkg_resources') \
+        .get_distribution('pelican').version
+except Exception:
+    __version__ = "unknown"
+
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 logger = logging.getLogger(__name__)
 
