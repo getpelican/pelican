@@ -800,8 +800,7 @@ class StaticGenerator(Generator):
 
     def generate_context(self):
         self.staticfiles = []
-        linked_files = {os.path.join(self.path, path)
-                        for path in self.context['static_links']}
+        linked_files = set(self.context['static_links'])
         found_files = self.get_files(self.settings['STATIC_PATHS'],
                                      exclude=self.settings['STATIC_EXCLUDES'],
                                      extensions=False)
