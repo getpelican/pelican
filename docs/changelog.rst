@@ -1,9 +1,18 @@
 Release history
 ###############
 
-Next Release
+4.1.0 - 2019-07-14
 ==================
 
+* Live browser reload upon changed files (provided via Invoke task)
+* Add ``pyproject.toml``, managed by Poetry
+* Support for invoking ``python -m pelican``
+* Add relative source path attribute to content
+* Allow directories in ``EXTRA_PATH_METADATA``
+* Add ``all_articles`` variable to period pages (for recent posts functionality)
+* Improve debug mode output
+* Remove blank or duplicate summaries from Atom feed
+* Fix bugs in pagination, pelican-import, pelican-quickstart, and feed importer
 
 4.0.1 (2018-11-30)
 ==================
