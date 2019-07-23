@@ -148,8 +148,23 @@ aside, nav, article, figure {
 
 /***** Layout *****/
 .body {clear: both; margin: 0 auto; width: 800px;}
-img.right, figure.right {float: right; margin: 0 0 2em 2em;}
-img.left, figure.left {float: left; margin: 0 2em 2em 0;}
+img.right, figure.right, div.figure.align-right {
+    float: right;
+    margin: 0 0 2em 2em;
+}
+img.left, figure.left, div.figure.align-left {
+    float: left;
+    margin: 0 2em 2em 0;
+}
+
+/* .rst support */
+div.figure img, figure img {  /* to fill figure exactly */
+    width: 100%;
+}
+div.figure p.caption, figure p.caption { /* margin provided by figure */
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 /*
 	Header
