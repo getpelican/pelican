@@ -59,5 +59,12 @@ markdown = ["markdown"]
 [tool.poetry.scripts]
 pelican = "pelican.__main__:main"
 
+[tool.autopub]
+project-name = "Pelican"
+git-username = "botpub"
+git-email = "botpub@autopub.rocks"
+version-strings = ["setup.py"]
+build-system = "setuptools"
+
 [build-system]
 requires = ["setuptools >= 40.6.0", "wheel"]
