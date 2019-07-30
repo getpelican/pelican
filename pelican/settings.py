@@ -50,6 +50,7 @@ DEFAULT_CONFIG = {
     'AUTHOR_FEED_RSS': posix_join('feeds', '{slug}.rss.xml'),
     'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-{lang}.atom.xml'),
     'FEED_MAX_ITEMS': '',
+    'FEED_START_DATE': '',
     'RSS_FEED_SUMMARY_ONLY': True,
     'SITEURL': '',
     'SITENAME': 'A Pelican Blog',

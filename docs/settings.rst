@@ -931,6 +931,14 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    Maximum number of items allowed in a feed. Feed item quantity is
    unrestricted by default.
 
+.. data:: FEED_START_DATE
+
+   Date from the first entry expected in the new generated feed. Date format
+   is defined as "%Y-%m-%d" i.e. "2019-07-31".
+   This setting is specially useful to migrated blogs that used to have an
+   original feed and do not want every single post been parsed again, or
+   set a cut date for feed start to be generated.
+
 .. data:: RSS_FEED_SUMMARY_ONLY = True
 
    Only include item summaries in the ``description`` tag of RSS feeds. If set
@@ -1238,7 +1246,7 @@ ignored. Simply populate the list with the log messages you want to hide, and
 they will be filtered out.
 
 For example::
-    
+
    import logging
    LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
 

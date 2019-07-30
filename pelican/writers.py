@@ -3,10 +3,13 @@ from __future__ import print_function, unicode_literals, with_statement
 
 import logging
 import os
+from datetime import datetime
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 
 from jinja2 import Markup
+
+import pytz
 
 import six
 from six.moves.urllib.parse import urljoin
@@ -147,7 +150,15 @@ class Writer(object):
         max_items = len(elements)
         if self.settings['FEED_MAX_ITEMS']:
             max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
+
+        feed_start_date = None
+        if self.settings['FEED_START_DATE']:
+            feed_start_date = \
+                datetime.strptime(self.settings['FEED_START_DATE'], "%Y-%m-%d")
+            feed_start_date = pytz.utc.localize(feed_start_date)
         for i in range(max_items):
+            if feed_start_date and elements[i].date < feed_start_date:
+                continue
             self._add_item_to_the_feed(feed, elements[i])
 
         signals.feed_generated.send(context, feed=feed)
