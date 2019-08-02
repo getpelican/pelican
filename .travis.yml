@@ -2,11 +2,18 @@ language: python
 python:
   - "3.6"
 env:
-  - TOX_ENV=docs
-  - TOX_ENV=flake8
-  - TOX_ENV=py27
-  - TOX_ENV=py35
-  - TOX_ENV=py36
+  global:
+    - PYPI_USERNAME=autopub
+    - secure: "h5V/+YL+CrqvfAesNkSb824Ngk5x+f0eFzj/LBbmnzjvArKAmc6R6WGyx8SDD7WF/PlaTf0M1fH3a7pjIS8Ee+TS1Rb0Lt1HPqUs1yntg1+Js2ZQp3p20wfsDc+bZ4/2g8xLsSMv1EJ4np7/GJ5fXqpSxjr/Xs5LYA7ZLwNNwDw="
+    - secure: "GiDFfmjH7uzYNnkjQMV/mIkbRdmgkGmtbFPeaj9taBNA5tPp3IBt3GOOS6UL/zm9xiwu9Xo6sxZWkGzY19Hsdv28YPH34N3abo0QSnz4IGiHs152Hi7Qi6Tb0QkT5D3OxuSIm8LmFL7+su89Q7vBFowrT6HL1Mn8CDDWSj3eqbo="
+    - TWINE_USERNAME=$PYPI_USERNAME
+    - TWINE_PASSWORD=$PYPI_PASSWORD
+  matrix:
+    - TOX_ENV=docs
+    - TOX_ENV=flake8
+    - TOX_ENV=py27
+    - TOX_ENV=py35
+    - TOX_ENV=py36
 matrix:
   include:
     - python: 3.7
@@ -44,10 +51,3 @@ notifications:
     channels:
       - "irc.freenode.org#pelican"
     on_success: change
-env:
-  global:
-    - PYPI_USERNAME=autopub
-    - secure: "h5V/+YL+CrqvfAesNkSb824Ngk5x+f0eFzj/LBbmnzjvArKAmc6R6WGyx8SDD7WF/PlaTf0M1fH3a7pjIS8Ee+TS1Rb0Lt1HPqUs1yntg1+Js2ZQp3p20wfsDc+bZ4/2g8xLsSMv1EJ4np7/GJ5fXqpSxjr/Xs5LYA7ZLwNNwDw="
-    - secure: "GiDFfmjH7uzYNnkjQMV/mIkbRdmgkGmtbFPeaj9taBNA5tPp3IBt3GOOS6UL/zm9xiwu9Xo6sxZWkGzY19Hsdv28YPH34N3abo0QSnz4IGiHs152Hi7Qi6Tb0QkT5D3OxuSIm8LmFL7+su89Q7vBFowrT6HL1Mn8CDDWSj3eqbo="
-    - TWINE_USERNAME=$PYPI_USERNAME
-    - TWINE_PASSWORD=$PYPI_PASSWORD
