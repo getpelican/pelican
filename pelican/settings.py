@@ -166,7 +166,7 @@ DEFAULT_CONFIG = {
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
     'PORT': 8000,
-    'BIND': '',
+    'BIND': '127.0.0.1',
 }
 
 PYGMENTS_RST_OPTIONS = None
