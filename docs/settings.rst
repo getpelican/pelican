@@ -997,7 +997,7 @@ subsequent pages at ``.../page/2/`` etc, you could set ``PAGINATION_PATTERNS``
 as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{url}', '{save_as}`,
+      (1, '{url}', '{save_as}'),
       (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
   )
 
