@@ -63,6 +63,9 @@ pelican = "pelican.__main__:main"
 project-name = "Pelican"
 git-username = "botpub"
 git-email = "botpub@autopub.rocks"
+changelog-file = "docs/changelog.rst"
+changelog-header = "###############"
+version-header = "="
 version-strings = ["setup.py"]
 build-system = "setuptools"
 
