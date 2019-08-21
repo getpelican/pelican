@@ -1089,7 +1089,12 @@ class TestStaticGenerator(unittest.TestCase):
         os.mkdir(os.path.join(self.temp_output, "static"))
         self.generator.fallback_to_symlinks = True
         self.generator.generate_context()
-        self.generator.generate_output(None)
+        try:
+            self.generator.generate_output(None)
+        except OSError as e:
+            # On Windows, possibly others, due to not holding symbolic link
+            # privilege
+            self.skipTest(e)
         self.assertTrue(os.path.islink(self.endfile))
 
     def test_existing_symlink_is_considered_up_to_date(self):
@@ -1097,7 +1102,11 @@ class TestStaticGenerator(unittest.TestCase):
         with open(self.startfile, "w") as f:
             f.write("staticcontent")
         os.mkdir(os.path.join(self.temp_output, "static"))
-        os.symlink(self.startfile, self.endfile)
+        try:
+            os.symlink(self.startfile, self.endfile)
+        except OSError as e:
+            # On Windows, possibly others
+            self.skipTest(e)
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
         staticfile.save_as = self.endfile
@@ -1109,7 +1118,11 @@ class TestStaticGenerator(unittest.TestCase):
         with open(self.startfile, "w") as f:
             f.write("staticcontent")
         os.mkdir(os.path.join(self.temp_output, "static"))
-        os.symlink("invalid", self.endfile)
+        try:
+            os.symlink("invalid", self.endfile)
+        except OSError as e:
+            # On Windows, possibly others
+            self.skipTest(e)
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
         staticfile.save_as = self.endfile
