@@ -307,7 +307,7 @@ class PrintSettings(argparse.Action):
         parser.exit()
 
 
-def parse_arguments():
+def parse_arguments(argv=None):
     parser = argparse.ArgumentParser(
         description='A tool to generate a static blog, '
                     ' with restructured text input files.',
@@ -400,7 +400,7 @@ def parse_arguments():
                         help='IP to bind to when serving files via HTTP '
                         '(default: 127.0.0.1)')
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.port is not None and not args.listen:
         logger.warning('--port without --listen has no effect')
@@ -560,8 +560,8 @@ def listen(server, port, output, excqueue=None):
         return
 
 
-def main():
-    args = parse_arguments()
+def main(argv=None):
+    args = parse_arguments(argv)
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
     init_logging(args.verbosity, args.fatal,
                  logs_dedup_min_level=logs_dedup_min_level)
