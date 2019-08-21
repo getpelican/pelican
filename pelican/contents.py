@@ -141,7 +141,9 @@ class Content(object):
 
         # manage status
         if not hasattr(self, 'status'):
-            self.status = getattr(self, 'default_status', None)
+            # using None as the default here breaks comment plugins (and
+            # probably others)
+            self.status = getattr(self, 'default_status', '')
 
         # store the summary metadata if it is set
         if 'summary' in metadata:
