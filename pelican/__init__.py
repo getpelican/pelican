@@ -75,7 +75,7 @@ class Pelican(object):
         logger.debug('Temporarily adding PLUGIN_PATHS to system path')
         _sys_path = sys.path[:]
         for pluginpath in self.settings['PLUGIN_PATHS']:
-            sys.path.insert(0, pluginpath)
+            sys.path.append(pluginpath)
         for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
             if isinstance(plugin, six.string_types):
