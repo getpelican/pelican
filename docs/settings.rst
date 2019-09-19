@@ -997,7 +997,7 @@ subsequent pages at ``.../page/2/`` etc, you could set ``PAGINATION_PATTERNS``
 as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{url}', '{save_as}`,
+      (1, '{url}', '{save_as}'),
       (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
   )
 
@@ -1238,7 +1238,7 @@ ignored. Simply populate the list with the log messages you want to hide, and
 they will be filtered out.
 
 For example::
-    
+
    import logging
    LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
 
