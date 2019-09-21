@@ -71,22 +71,31 @@ Metadata syntax for Markdown posts should follow this pattern::
     This is the content of my super blog post.
 
 You can also have your own metadata keys (so long as they don't conflict with
-reserved metadata keywords) for use in your python templates. The following is
+reserved metadata keywords) for use in your templates. Following is
 the list of reserved metadata keywords:
 
-* `Title`
-* `Tags`
-* `Date`
-* `Modified`
-* `Status`
-* `Category`
-* `Author`
-* `Authors`
-* `Slug`
-* `Summary`
-* `Template`
-* `Save_as`
-* `Url`
+================= ================ ============================================
+reStructuredText      Markdown                     Description
+================= ================ ============================================
+``:title:``       ``Title:``       Title of the article or page
+``:date:``        ``Date:``        Publication date (``YYYY-MM-DD HH:SS``)
+``:modified:``    ``Modified:``    Modification date (``YYYY-MM-DD HH:SS``)
+``:tags:``        ``Tags:``        Content tags, separated by commas
+``:keywords:``    ``Keywords:``    Content keywords, separated by commas
+``:category:``    ``Category:``    Content category (one only — not multiple)
+``:slug:``        ``Slug:``        Identifier used in URLs and translations
+``:author:``      ``Author:``      Content author, when there is only one
+``:authors:``     ``Authors:``     Content authors, when there are multiple
+``:summary:``     ``Summary:``     Brief description of content for index pages
+``:lang:``        ``Lang:``        Content language ID (``en``, ``fr``, etc.)
+``:translation:`` ``Translation:`` Is article is a translation of another
+                                   (``true`` or ``false``)
+``:status:``      ``Status:``      Content status:
+                                   ``draft``, ``hidden``, or ``published``
+``:template:``    ``Template:``    Name of template to use to generate content
+``:save_us:``     ``Save_us:``     Save content to this relative file path
+``:url:``         ``Url:``         URL to use for this article/page
+================= ================ ============================================
 
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
