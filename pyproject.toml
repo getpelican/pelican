@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pelican"
-version = "4.1.1"
+version = "4.1.2"
 description = "Static site generator supporting Markdown and reStructuredText"
 authors = ["Justin Mayer <entrop@gmail.com>"]
 license = "AGPLv3"

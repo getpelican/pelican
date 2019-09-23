@@ -1,6 +1,11 @@
 Release history
 ###############
 
+4.1.2 - 2019-09-23
+==================
+
+Fix pelican.settings.load_source to avoid caching issues - PR #2621
+
 4.1.1 - 2019-08-23
 ==================
 
