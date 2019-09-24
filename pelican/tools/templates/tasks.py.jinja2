@@ -23,7 +23,8 @@ CONFIG = {
     'deploy_path': SETTINGS['OUTPUT_PATH'],
 {% if ssh %}
     # Remote server configuration
-    'production': '{{ssh_user}}@{{ssh_host}}:{{ssh_port}}',
+    'production': '{{ssh_user}}@{{ssh_host}}',
+    'production_port': {{ssh_port}},
     'dest_path': '{{ssh_target_dir}}',
 {% endif %}
 {% if cloudfiles %}
@@ -130,6 +131,7 @@ def publish(c):
     c.run('pelican -s {settings_publish}'.format(**CONFIG))
     c.run(
         'rsync --delete --exclude ".DS_Store" -pthrvz -c '
+        '-e "ssh -p {production_port}" '
         '{} {production}:{dest_path}'.format(
             CONFIG['deploy_path'].rstrip('/') + '/',
             **CONFIG))
