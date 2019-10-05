@@ -442,6 +442,67 @@ def handle_deprecated_settings(settings):
                                'Falling back to default.', key)
                 settings[key] = DEFAULT_CONFIG[key]
 
+    # CLEAN_URLS
+    if settings.get('CLEAN_URLS', False):
+        logger.warning('Found deprecated `CLEAN_URLS` in settings.'
+                       ' Modifying the following settings for the'
+                       ' same behaviour.')
+
+        settings['ARTICLE_URL'] = '{slug}/'
+        settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
+        settings['PAGE_URL'] = 'pages/{slug}/'
+        settings['PAGE_LANG_URL'] = 'pages/{slug}-{lang}/'
+
+        for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                        'PAGE_LANG_URL'):
+            logger.warning("%s = '%s'", setting, settings[setting])
+
+    # AUTORELOAD_IGNORE_CACHE -> --ignore-cache
+    if settings.get('AUTORELOAD_IGNORE_CACHE'):
+        logger.warning('Found deprecated `AUTORELOAD_IGNORE_CACHE` in '
+                       'settings. Use --ignore-cache instead.')
+        settings.pop('AUTORELOAD_IGNORE_CACHE')
+
+    # ARTICLE_PERMALINK_STRUCTURE
+    if settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
+        logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
+                       ' settings.  Modifying the following settings for'
+                       ' the same behaviour.')
+
+        structure = settings['ARTICLE_PERMALINK_STRUCTURE']
+
+        # Convert %(variable) into {variable}.
+        structure = re.sub(r'%\((\w+)\)s', r'{\g<1>}', structure)
+
+        # Convert %x into {date:%x} for strftime
+        structure = re.sub(r'(%[A-z])', r'{date:\g<1>}', structure)
+
+        # Strip a / prefix
+        structure = re.sub('^/', '', structure)
+
+        for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                        'PAGE_LANG_URL', 'DRAFT_URL', 'DRAFT_LANG_URL',
+                        'ARTICLE_SAVE_AS', 'ARTICLE_LANG_SAVE_AS',
+                        'DRAFT_SAVE_AS', 'DRAFT_LANG_SAVE_AS',
+                        'PAGE_SAVE_AS', 'PAGE_LANG_SAVE_AS'):
+            settings[setting] = os.path.join(structure,
+                                             settings[setting])
+            logger.warning("%s = '%s'", setting, settings[setting])
+
+    # {,TAG,CATEGORY,TRANSLATION}_FEED -> {,TAG,CATEGORY,TRANSLATION}_FEED_ATOM
+    for new, old in [('FEED', 'FEED_ATOM'), ('TAG_FEED', 'TAG_FEED_ATOM'),
+                     ('CATEGORY_FEED', 'CATEGORY_FEED_ATOM'),
+                     ('TRANSLATION_FEED', 'TRANSLATION_FEED_ATOM')]:
+        if settings.get(new, False):
+            logger.warning(
+                'Found deprecated `%(new)s` in settings. Modify %(new)s '
+                'to %(old)s in your settings and theme for the same '
+                'behavior. Temporarily setting %(old)s for backwards '
+                'compatibility.',
+                {'new': new, 'old': old}
+            )
+            settings[old] = settings[new]
+
     return settings
 
 
