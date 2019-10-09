@@ -14,9 +14,10 @@ import six
 from pelican.contents import Article, Author, Category, Page, Static
 from pelican.settings import DEFAULT_CONFIG
 from pelican.signals import content_object_init
-from pelican.tests.support import LoggedTestCase, get_context, get_settings,\
-    unittest
-from pelican.utils import SafeDatetime, path_to_url, truncate_html_words
+from pelican.tests.support import (LoggedTestCase, get_context, get_settings,
+                                   unittest)
+from pelican.utils import (SafeDatetime, path_to_url, posixize_path,
+                           truncate_html_words)
 
 
 # generate one paragraph, enclosed with <p>
@@ -943,7 +944,7 @@ class TestStatic(LoggedTestCase):
             source_path=os.path.join('dir', 'foo.jpg'),
             context=self.settings.copy())
 
-        expected_save_as = os.path.join('dir', 'foo.jpg')
+        expected_save_as = posixize_path(os.path.join('dir', 'foo.jpg'))
         self.assertEqual(static.status, 'draft')
         self.assertEqual(static.save_as, expected_save_as)
         self.assertEqual(static.url, path_to_url(expected_save_as))
