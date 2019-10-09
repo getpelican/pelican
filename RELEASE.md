@@ -1,4 +1,9 @@
 Release type: patch
 
-Skip some tests (on Windows) that are un-able to pass on Windows due to the
-difference in Windows vs Linux filesystems.
+* Fix quick-start docs regarding `pelican --listen`
+* Set default listen address to 127.0.0.1
+* Add extra/optional Markdown dependency to setup.py
+* Use correct SSH port syntax for rsync in tasks.py
+* Place all deprecated settings handling together
+* Add related project URLs for display on PyPI
+* Skip some tests on Windows that can't pass due to filesystem differences
