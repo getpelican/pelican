@@ -61,6 +61,9 @@ setup(
                           for name in names],
     },
     install_requires=requires,
+    extras_require={
+        'Markdown': ['markdown~=3.1.1']
+    },
     entry_points=entry_points,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
