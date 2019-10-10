@@ -764,3 +764,10 @@ class HTMLReaderTest(ReaderTest):
         }
 
         self.assertDictHasSubset(page.metadata, expected)
+
+    def test_article_with_inline_svg(self):
+        page = self.read_file(path='article_with_inline_svg.html')
+        expected = {
+            'title': 'Article with an inline SVG',
+        }
+        self.assertDictHasSubset(page.metadata, expected)

@@ -407,7 +407,7 @@ class HTMLReader(BaseReader):
                 if self._in_head:
                     self._in_head = False
                     self._in_top_level = True
-            elif tag == 'title':
+            elif self._in_head and tag == 'title':
                 self._in_title = False
                 self.metadata['title'] = self._data_buffer
             elif tag == 'body':
