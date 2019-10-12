@@ -11,7 +11,6 @@ import logging
 import multiprocessing
 import os
 import pprint
-import re
 import sys
 import time
 import traceback
@@ -52,7 +51,6 @@ class Pelican(object):
 
         # define the default settings
         self.settings = settings
-        self._handle_deprecation()
 
         self.path = settings['PATH']
         self.theme = settings['THEME']
@@ -93,65 +91,6 @@ class Pelican(object):
             self.plugins.append(plugin)
         logger.debug('Restoring system path')
         sys.path = _sys_path
-
-    def _handle_deprecation(self):
-
-        if self.settings.get('CLEAN_URLS', False):
-            logger.warning('Found deprecated `CLEAN_URLS` in settings.'
-                           ' Modifying the following settings for the'
-                           ' same behaviour.')
-
-            self.settings['ARTICLE_URL'] = '{slug}/'
-            self.settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
-            self.settings['PAGE_URL'] = 'pages/{slug}/'
-            self.settings['PAGE_LANG_URL'] = 'pages/{slug}-{lang}/'
-
-            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
-                            'PAGE_LANG_URL'):
-                logger.warning("%s = '%s'", setting, self.settings[setting])
-
-        if self.settings.get('AUTORELOAD_IGNORE_CACHE'):
-            logger.warning('Found deprecated `AUTORELOAD_IGNORE_CACHE` in '
-                           'settings. Use --ignore-cache instead.')
-            self.settings.pop('AUTORELOAD_IGNORE_CACHE')
-
-        if self.settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
-            logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
-                           ' settings.  Modifying the following settings for'
-                           ' the same behaviour.')
-
-            structure = self.settings['ARTICLE_PERMALINK_STRUCTURE']
-
-            # Convert %(variable) into {variable}.
-            structure = re.sub(r'%\((\w+)\)s', r'{\g<1>}', structure)
-
-            # Convert %x into {date:%x} for strftime
-            structure = re.sub(r'(%[A-z])', r'{date:\g<1>}', structure)
-
-            # Strip a / prefix
-            structure = re.sub('^/', '', structure)
-
-            for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
-                            'PAGE_LANG_URL', 'DRAFT_URL', 'DRAFT_LANG_URL',
-                            'ARTICLE_SAVE_AS', 'ARTICLE_LANG_SAVE_AS',
-                            'DRAFT_SAVE_AS', 'DRAFT_LANG_SAVE_AS',
-                            'PAGE_SAVE_AS', 'PAGE_LANG_SAVE_AS'):
-                self.settings[setting] = os.path.join(structure,
-                                                      self.settings[setting])
-                logger.warning("%s = '%s'", setting, self.settings[setting])
-
-        for new, old in [('FEED', 'FEED_ATOM'), ('TAG_FEED', 'TAG_FEED_ATOM'),
-                         ('CATEGORY_FEED', 'CATEGORY_FEED_ATOM'),
-                         ('TRANSLATION_FEED', 'TRANSLATION_FEED_ATOM')]:
-            if self.settings.get(new, False):
-                logger.warning(
-                    'Found deprecated `%(new)s` in settings. Modify %(new)s '
-                    'to %(old)s in your settings and theme for the same '
-                    'behavior. Temporarily setting %(old)s for backwards '
-                    'compatibility.',
-                    {'new': new, 'old': old}
-                )
-                self.settings[old] = self.settings[new]
 
     def run(self):
         """Run the generators and return"""
@@ -307,7 +246,7 @@ class PrintSettings(argparse.Action):
         parser.exit()
 
 
-def parse_arguments():
+def parse_arguments(argv=None):
     parser = argparse.ArgumentParser(
         description='A tool to generate a static blog, '
                     ' with restructured text input files.',
@@ -400,7 +339,7 @@ def parse_arguments():
                         help='IP to bind to when serving files via HTTP '
                         '(default: 127.0.0.1)')
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if args.port is not None and not args.listen:
         logger.warning('--port without --listen has no effect')
@@ -560,8 +499,8 @@ def listen(server, port, output, excqueue=None):
         return
 
 
-def main():
-    args = parse_arguments()
+def main(argv=None):
+    args = parse_arguments(argv)
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
     init_logging(args.verbosity, args.fatal,
                  logs_dedup_min_level=logs_dedup_min_level)

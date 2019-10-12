@@ -75,7 +75,7 @@ output_file     The name of the file currently being generated. For
 articles        The list of articles, ordered descending by date.
                 All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
-                etc.). Sometimes this is shadowed (for instance in
+                etc.). Sometimes this is shadowed (for instance, in
                 the tags page). You will then find info about it
                 in the `all_articles` variable.
 dates           The same list of articles, but ordered by date,

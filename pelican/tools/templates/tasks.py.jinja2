@@ -23,8 +23,10 @@ CONFIG = {
     'deploy_path': SETTINGS['OUTPUT_PATH'],
 {% if ssh %}
     # Remote server configuration
-    'production': '{{ssh_user}}@{{ssh_host}}:{{ssh_port}}',
-    'dest_path': '{{ssh_target_dir}}',
+    'ssh_user': '{{ssh_user}}',
+    'ssh_host': '{{ssh_host}}',
+    'ssh_port': '{{ssh_port}}',
+    'ssh_path': '{{ssh_target_dir}}',
 {% endif %}
 {% if cloudfiles %}
     # Rackspace Cloud Files configuration settings
@@ -130,7 +132,8 @@ def publish(c):
     c.run('pelican -s {settings_publish}'.format(**CONFIG))
     c.run(
         'rsync --delete --exclude ".DS_Store" -pthrvz -c '
-        '{} {production}:{dest_path}'.format(
+        '-e "ssh -p {ssh_port}" '
+        '{} {ssh_user}@{ssh_host}:{ssh_path}'.format(
             CONFIG['deploy_path'].rstrip('/') + '/',
             **CONFIG))
 

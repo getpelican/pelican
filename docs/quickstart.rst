@@ -8,10 +8,10 @@ Installation
 ------------
 
 Install Pelican (and optionally Markdown if you intend to use it) on Python
-2.7.x or Python 3.3+ by running the following command in your preferred
+2.7.x or Python 3.5+ by running the following command in your preferred
 terminal, prefixing with ``sudo`` if permissions warrant::
 
-    pip install pelican markdown
+    pip install pelican[Markdown]
 
 Create a project
 ----------------
@@ -50,18 +50,18 @@ Given that this example article is in Markdown format, save it as
 Generate your site
 ------------------
 
-From your site directory, run the ``pelican`` command to generate your site::
+From your project root directory, run the ``pelican`` command to generate your site::
 
     pelican content
 
-Your site has now been generated inside the ``output`` directory. (You may see
+Your site has now been generated inside the ``output/`` directory. (You may see
 a warning related to feeds, but that is normal when developing locally and can
 be ignored for now.)
 
 Preview your site
 -----------------
 
-Open a new terminal session, navigate to your generated output directory and
+Open a new terminal session, navigate to your project root directory, and
 run the following command to launch Pelican's web server::
 
     pelican --listen

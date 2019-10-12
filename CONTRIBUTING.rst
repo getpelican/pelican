@@ -97,6 +97,14 @@ Using Git and GitHub
   For example, if you're hacking on a new feature and find a bugfix that
   doesn't *require* your new feature, **make a new distinct branch and pull
   request** for the bugfix.
+* Add a ``RELEASE.md`` file in the root of the project that contains the
+  release type (major, minor, patch) and a summary of the changes that will be
+  used as the release changelog entry. For example::
+
+       Release type: minor
+
+       Reload browser window upon changes to content, settings, or theme
+
 * Check for unnecessary whitespace via ``git diff --check`` before committing.
 * First line of your commit message should start with present-tense verb, be 50
   characters or less, and include the relevant issue number(s) if applicable.

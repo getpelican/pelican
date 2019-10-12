@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pelican"
-version = "4.1.0"
+version = "4.1.3"
 description = "Static site generator supporting Markdown and reStructuredText"
 authors = ["Justin Mayer <entrop@gmail.com>"]
 license = "AGPLv3"
@@ -59,6 +59,15 @@ markdown = ["markdown"]
 [tool.poetry.scripts]
 pelican = "pelican.__main__:main"
 
+[tool.autopub]
+project-name = "Pelican"
+git-username = "botpub"
+git-email = "botpub@autopub.rocks"
+changelog-file = "docs/changelog.rst"
+changelog-header = "###############"
+version-header = "="
+version-strings = ["setup.py"]
+build-system = "setuptools"
+
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["setuptools >= 40.6.0", "wheel"]

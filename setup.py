@@ -7,7 +7,7 @@ from os.path import join, relpath
 from setuptools import setup
 
 
-version = "4.1.0"
+version = "4.1.3"
 
 requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments', 'docutils',
             'pytz >= 0a', 'blinker', 'unidecode', 'six >= 1.4',
@@ -33,11 +33,17 @@ setup(
     name='pelican',
     version=version,
     url='https://getpelican.com/',
-    author='Alexis Metaireau',
-    maintainer='Justin Mayer',
+    author='Justin Mayer',
     author_email='authors@getpelican.com',
     description="Static site generator supporting reStructuredText and "
                 "Markdown source content.",
+    project_urls={
+        'Documentation': 'https://docs.getpelican.com/',
+        'Funding': 'https://donate.getpelican.com/',
+        'Source': 'https://github.com/getpelican/pelican',
+        'Tracker': 'https://github.com/getpelican/pelican/issues',
+    },
+    keywords='static web site generator SSG reStructuredText Markdown',
     license='AGPLv3',
     long_description=description,
     packages=['pelican', 'pelican.tools'],
@@ -55,6 +61,9 @@ setup(
                           for name in names],
     },
     install_requires=requires,
+    extras_require={
+        'Markdown': ['markdown~=3.1.1']
+    },
     entry_points=entry_points,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
