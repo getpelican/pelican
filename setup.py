@@ -48,6 +48,13 @@ setup(
     long_description=description,
     packages=find_packages(),
     include_package_data=True,  # includes all in MANIFEST.in if in package
+    # NOTE : This will collect any files that happen to be in the themes
+    # directory, even though they may not be checked into version control.
+    package_data={  # pelican/themes is not a package, so include manually
+        'pelican': [relpath(join(root, name), 'pelican')
+                    for root, _, names in walk(join('pelican', 'themes'))
+                    for name in names],
+    },
     install_requires=requires,
     extras_require={
         'Markdown': ['markdown~=3.1.1']
