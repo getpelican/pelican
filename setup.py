@@ -4,7 +4,7 @@ from io import open
 from os import walk
 from os.path import join, relpath
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 version = "4.1.3"
@@ -46,7 +46,7 @@ setup(
     keywords='static web site generator SSG reStructuredText Markdown',
     license='AGPLv3',
     long_description=description,
-    packages=['pelican', 'pelican.tools'],
+    packages=find_packages(),
     package_data={
         # we manually collect the package data, as opposed to using,
         # include_package_data=True because we don't want the tests to be
