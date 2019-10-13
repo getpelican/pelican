@@ -47,19 +47,7 @@ setup(
     license='AGPLv3',
     long_description=description,
     packages=find_packages(),
-    package_data={
-        # we manually collect the package data, as opposed to using,
-        # include_package_data=True because we don't want the tests to be
-        # included automatically as package data (MANIFEST.in is too greedy)
-        'pelican': [relpath(join(root, name), 'pelican')
-                    for root, _, names in walk(join('pelican', 'themes'))
-                    for name in names],
-        'pelican.tools': [relpath(join(root, name), join('pelican', 'tools'))
-                          for root, _, names in walk(join('pelican',
-                                                          'tools',
-                                                          'templates'))
-                          for name in names],
-    },
+    include_package_data=True,  # includes all in MANIFEST.in if in package
     install_requires=requires,
     extras_require={
         'Markdown': ['markdown~=3.1.1']
