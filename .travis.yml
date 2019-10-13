@@ -34,7 +34,6 @@ script:
   # testing installing with pip
   - pip install -e .
   - python -c "import pelican; import pelican.tools; import pelican.tests"
-  - pip uninstall pelican
 before_deploy:
   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then travis_terminate 0; fi'
   - pip install githubrelease
