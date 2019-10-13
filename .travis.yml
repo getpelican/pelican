@@ -29,7 +29,12 @@ before_install:
   - sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
 install:
   - pip install tox==2.5.0
-script: tox -e $TOX_ENV
+script:
+  - tox -e $TOX_ENV
+  # testing installing with pip
+  - pip install -e .
+  - python -c "import pelican; import pelican.tools; import pelican.tests"
+  - pip uninstall pelican
 before_deploy:
   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then travis_terminate 0; fi'
   - pip install githubrelease
