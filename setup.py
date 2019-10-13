@@ -3,7 +3,7 @@
 from os import walk
 from os.path import join, relpath
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 version = "4.2.0"
@@ -44,19 +44,14 @@ setup(
     keywords='static web site generator SSG reStructuredText Markdown',
     license='AGPLv3',
     long_description=description,
-    packages=['pelican', 'pelican.tools', 'pelican.plugins'],
-    package_data={
-        # we manually collect the package data, as opposed to using,
-        # include_package_data=True because we don't want the tests to be
-        # included automatically as package data (MANIFEST.in is too greedy)
+    packages=find_packages(),
+    include_package_data=True,  # includes all in MANIFEST.in if in package
+    # NOTE : This will collect any files that happen to be in the themes
+    # directory, even though they may not be checked into version control.
+    package_data={  # pelican/themes is not a package, so include manually
         'pelican': [relpath(join(root, name), 'pelican')
                     for root, _, names in walk(join('pelican', 'themes'))
                     for name in names],
-        'pelican.tools': [relpath(join(root, name), join('pelican', 'tools'))
-                          for root, _, names in walk(join('pelican',
-                                                          'tools',
-                                                          'templates'))
-                          for name in names],
     },
     install_requires=requires,
     extras_require={
