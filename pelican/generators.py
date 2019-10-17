@@ -155,16 +155,15 @@ class Generator(object):
 
             if os.path.isdir(root):
                 for dirpath, dirs, temp_files in os.walk(
-                        root, followlinks=True):
-                    drop = []
+                        root, topdown=True, followlinks=True):
                     excl = exclusions_by_dirpath.get(dirpath, ())
-                    for d in dirs:
+                    # We copy the `dirs` list as we will modify it in the loop:
+                    for d in list(dirs):
                         if (d in excl or
                             any(fnmatch.fnmatch(d, ignore)
                                 for ignore in ignores)):
-                            drop.append(d)
-                    for d in drop:
-                        dirs.remove(d)
+                            if d in dirs:
+                                dirs.remove(d)
 
                     reldir = os.path.relpath(dirpath, self.path)
                     for f in temp_files:

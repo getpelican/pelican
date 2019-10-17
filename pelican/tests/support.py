@@ -188,7 +188,7 @@ class LogCountHandler(BufferingHandler):
     """Capturing and counting logged messages."""
 
     def __init__(self, capacity=1000):
-        logging.handlers.BufferingHandler.__init__(self, capacity)
+        super(LogCountHandler, self).__init__(capacity)
 
     def count_logs(self, msg=None, level=None):
         return len([
