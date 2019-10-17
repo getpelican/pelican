@@ -1,6 +1,14 @@
 Release history
 ###############
 
+4.2.0 - 2019-10-17
+==================
+
+* Support inline SVGs; don't treat titles in SVGs as HTML titles
+* Add category to feeds (in addition to tags)
+* Improve content metadata field docs
+* Add docs for including other Markdown/reST files in content
+
 4.1.3 - 2019-10-09
 ==================
 
