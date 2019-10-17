@@ -382,6 +382,40 @@ to allow linking to both generated articles and pages and their static sources.
 
 Support for the old syntax may eventually be removed.
 
+Including other files
+---------------------
+Both Markdown and reStructuredText syntaxes provide mechanisms for this.
+
+Following below are some examples for **reStructuredText** using `the include directive`_:
+
+    .. code-block:: rst
+
+        .. include:: file.rst
+
+Include a fragment of a file delimited by two identifiers, highlighted as C++ (slicing based on line numbers is also possible):
+
+    .. code-block:: rst
+
+        .. include:: main.cpp
+            :code: c++
+            :start-after: // begin
+            :end-before: // end
+
+Include a raw HTML file (or an inline SVG) and put it directly into the output without any processing:
+
+    .. code-block:: rst
+
+        .. raw:: html
+            :file: table.html
+
+For **Markdown**, one must rely on an extension. For example, using the `mdx_include plugin`_:
+
+    .. code-block:: none
+
+        ```html
+        {! template.html !}
+        ```
+
 
 Importing an existing site
 ==========================
@@ -575,3 +609,5 @@ metadata to include ``Status: published``.
 .. _Markdown Extensions: https://python-markdown.github.io/extensions/
 .. _CodeHilite extension: https://python-markdown.github.io/extensions/code_hilite/#syntax
 .. _i18n_subsites plugin: https://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
+.. _the include directive: http://docutils.sourceforge.net/docs/ref/rst/directives.html#include
+.. _mdx_include plugin: https://github.com/neurobin/mdx_include
