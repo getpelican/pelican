@@ -18,7 +18,8 @@ entry_points = {
         'pelican = pelican.__main__:main',
         'pelican-import = pelican.tools.pelican_import:main',
         'pelican-quickstart = pelican.tools.pelican_quickstart:main',
-        'pelican-themes = pelican.tools.pelican_themes:main'
+        'pelican-themes = pelican.tools.pelican_themes:main',
+        'pelican-plugins = pelican.plugins._utils:list_plugins'
     ]
 }
 
@@ -44,7 +45,7 @@ setup(
     keywords='static web site generator SSG reStructuredText Markdown',
     license='AGPLv3',
     long_description=description,
-    packages=['pelican', 'pelican.tools'],
+    packages=['pelican', 'pelican.tools', 'pelican.plugins'],
     package_data={
         # we manually collect the package data, as opposed to using,
         # include_package_data=True because we don't want the tests to be

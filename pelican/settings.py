@@ -138,7 +138,7 @@ DEFAULT_CONFIG = {
     'TYPOGRIFY_IGNORE_TAGS': [],
     'SUMMARY_MAX_LENGTH': 50,
     'PLUGIN_PATHS': [],
-    'PLUGINS': [],
+    'PLUGINS': None,
     'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
     'TEMPLATE_EXTENSIONS': ['.html'],

@@ -9,6 +9,11 @@ import sys
 import time
 import traceback
 from collections.abc import Iterable
+# Combines all paths to `pelican` package accessible from `sys.path`
+# Makes it possible to install `pelican` and namespace plugins into different
+# locations in the file system (e.g. pip with `-e` or `--user`)
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
@@ -17,6 +22,7 @@ from pelican import signals  # noqa
 from pelican.generators import (ArticlesGenerator, PagesGenerator,
                                 SourceFileGenerator, StaticGenerator,
                                 TemplatePagesGenerator)
+from pelican.plugins._utils import load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import read_settings
@@ -62,27 +68,14 @@ class Pelican(object):
             sys.path.insert(0, '')
 
     def init_plugins(self):
-        self.plugins = []
-        logger.debug('Temporarily adding PLUGIN_PATHS to system path')
-        _sys_path = sys.path[:]
-        for pluginpath in self.settings['PLUGIN_PATHS']:
-            sys.path.insert(0, pluginpath)
-        for plugin in self.settings['PLUGINS']:
-            # if it's a string, then import it
-            if isinstance(plugin, str):
-                logger.debug("Loading plugin `%s`", plugin)
-                try:
-                    plugin = __import__(plugin, globals(), locals(), 'module')
-                except ImportError as e:
-                    logger.error(
-                        "Cannot load plugin `%s`\n%s", plugin, e)
-                    continue
-
-            logger.debug("Registering plugin `%s`", plugin.__name__)
-            plugin.register()
-            self.plugins.append(plugin)
-        logger.debug('Restoring system path')
-        sys.path = _sys_path
+        self.plugins = load_plugins(self.settings)
+        for plugin in self.plugins:
+            logger.debug('Registering plugin `%s`', plugin.__name__)
+            try:
+                plugin.register()
+            except Exception as e:
+                logger.error('Cannot register plugin `%s`\n%s',
+                             plugin.__name__, e)
 
     def run(self):
         """Run the generators and return"""
