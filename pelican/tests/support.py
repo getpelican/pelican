@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import locale
 import logging
@@ -10,11 +9,10 @@ import sys
 import unittest
 from contextlib import contextmanager
 from functools import wraps
+from io import StringIO
 from logging.handlers import BufferingHandler
 from shutil import rmtree
 from tempfile import mkdtemp
-
-from six import StringIO
 
 from pelican.contents import Article
 from pelican.readers import default_metadata

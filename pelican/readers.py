@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
+import datetime
 import logging
 import os
 import re
 from collections import OrderedDict
+from html.parser import HTMLParser
+from io import StringIO
 
 import docutils
 import docutils.core
@@ -12,16 +14,11 @@ import docutils.io
 from docutils.parsers.rst.languages import get_language as get_docutils_lang
 from docutils.writers.html4css1 import HTMLTranslator, Writer
 
-import six
-from six import StringIO
-from six.moves.html_parser import HTMLParser
-
 from pelican import rstdirectives  # NOQA
 from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Author, Category, Page, Tag
-from pelican.utils import SafeDatetime, escape_html, get_date, pelican_open, \
-    posixize_path
+from pelican.utils import escape_html, get_date, pelican_open, posixize_path
 
 try:
     from markdown import Markdown
@@ -79,7 +76,7 @@ def ensure_metadata_list(text):
        Regardless, all list items undergo .strip() before returning, and
        empty items are discarded.
     """
-    if isinstance(text, six.text_type):
+    if isinstance(text, str):
         if ';' in text:
             text = text.split(';')
         else:
@@ -212,8 +209,7 @@ class RstReader(BaseReader):
         """
 
         def __init__(self, *args, **kwargs):
-            if six.PY3:
-                kwargs['mode'] = kwargs.get('mode', 'r').replace('U', '')
+            kwargs['mode'] = kwargs.get('mode', 'r').replace('U', '')
             docutils.io.FileInput.__init__(self, *args, **kwargs)
 
     def __init__(self, *args, **kwargs):
@@ -685,10 +681,10 @@ def default_metadata(settings=None, process=None):
             metadata['category'] = value
         if settings.get('DEFAULT_DATE', None) and \
            settings['DEFAULT_DATE'] != 'fs':
-            if isinstance(settings['DEFAULT_DATE'], six.string_types):
+            if isinstance(settings['DEFAULT_DATE'], str):
                 metadata['date'] = get_date(settings['DEFAULT_DATE'])
             else:
-                metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
+                metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
     return metadata
 
 
@@ -696,7 +692,7 @@ def path_metadata(full_path, source_path, settings=None):
     metadata = {}
     if settings:
         if settings.get('DEFAULT_DATE', None) == 'fs':
-            metadata['date'] = SafeDatetime.fromtimestamp(
+            metadata['date'] = datetime.datetime.fromtimestamp(
                 os.stat(full_path).st_mtime)
 
         # Apply EXTRA_PATH_METADATA for the source path and the paths of any
@@ -731,7 +727,7 @@ def parse_path_metadata(source_path, settings=None, process=None):
     ...     process=reader.process_metadata)
     >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
     {'category': <pelican.urlwrappers.Category object at ...>,
-     'date': SafeDatetime(2013, 1, 1, 0, 0),
+     'date': datetime.datetime(2013, 1, 1, 0, 0),
      'slug': 'my-slug'}
     """
     metadata = {}

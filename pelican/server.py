@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import argparse
 import logging
@@ -7,15 +6,13 @@ import os
 import posixpath
 import ssl
 import sys
+import urllib
+from http import server
 
 try:
     from magic import from_file as magic_from_file
 except ImportError:
     magic_from_file = None
-
-from six.moves import BaseHTTPServer
-from six.moves import SimpleHTTPServer as srvmod
-from six.moves import urllib
 
 from pelican.log import init as init_logging
 logger = logging.getLogger(__name__)
@@ -44,7 +41,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
+class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
     SUFFIXES = ['.html', '/index.html', '/', '']
 
     def translate_path(self, path):
@@ -76,7 +73,7 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
         if not self.path:
             return
 
-        srvmod.SimpleHTTPRequestHandler.do_GET(self)
+        server.SimpleHTTPRequestHandler.do_GET(self)
 
     def get_path_that_exists(self, original_path):
         # Try to strip trailing slash
@@ -96,7 +93,7 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
     def guess_type(self, path):
         """Guess at the mime type for the specified file.
         """
-        mimetype = srvmod.SimpleHTTPRequestHandler.guess_type(self, path)
+        mimetype = server.SimpleHTTPRequestHandler.guess_type(self, path)
 
         # If the default guess is too generic, try the python-magic library
         if mimetype == 'application/octet-stream' and magic_from_file:
@@ -105,9 +102,9 @@ class ComplexHTTPRequestHandler(srvmod.SimpleHTTPRequestHandler):
         return mimetype
 
 
-class RootedHTTPServer(BaseHTTPServer.HTTPServer):
+class RootedHTTPServer(server.HTTPServer):
     def __init__(self, base_path, *args, **kwargs):
-        BaseHTTPServer.HTTPServer.__init__(self, *args, **kwargs)
+        server.HTTPServer.__init__(self, *args, **kwargs)
         self.RequestHandlerClass.base_path = base_path
 
 

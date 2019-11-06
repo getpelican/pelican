@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import codecs
 import datetime
@@ -12,12 +11,15 @@ import re
 import shutil
 import sys
 import traceback
+import urllib
 try:
     from collections.abc import Hashable
 except ImportError:
     from collections import Hashable
 from contextlib import contextmanager
 from functools import partial
+from html import entities
+from html.parser import HTMLParser
 from itertools import groupby
 from operator import attrgetter
 
@@ -26,10 +28,6 @@ import dateutil.parser
 from jinja2 import Markup
 
 import pytz
-
-import six
-from six.moves import html_entities
-from six.moves.html_parser import HTMLParser
 
 try:
     from html import escape
@@ -98,10 +96,6 @@ def strftime(date, date_format):
             else:
                 formatted = date.strftime(candidate)
 
-            # convert Py2 result to unicode
-            if not six.PY3 and enc is not None:
-                formatted = formatted.decode(enc)
-
             # strip zeros if '-' prefix is used
             if conversion:
                 formatted = conversion(formatted)
@@ -148,22 +142,6 @@ class DateFormatter(object):
         locale.setlocale(locale.LC_TIME, old_lc_time)
         locale.setlocale(locale.LC_CTYPE, old_lc_ctype)
         return formatted
-
-
-def python_2_unicode_compatible(klass):
-    """
-    A decorator that defines __unicode__ and __str__ methods under Python 2.
-    Under Python 3 it does nothing.
-
-    To support Python 2 and 3 with a single code base, define a __str__ method
-    returning text and apply this decorator to the class.
-
-    From django.utils.encoding.
-    """
-    if not six.PY3:
-        klass.__unicode__ = klass.__str__
-        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
-    return klass
 
 
 class memoized(object):
@@ -214,15 +192,15 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
     content of the dummy method is ignored.
     """
     def _warn():
-        version = '.'.join(six.text_type(x) for x in since)
+        version = '.'.join(str(x) for x in since)
         message = ['{} has been deprecated since {}'.format(old, version)]
         if remove:
-            version = '.'.join(six.text_type(x) for x in remove)
+            version = '.'.join(str(x) for x in remove)
             message.append(
                 ' and will be removed by version {}'.format(version))
         message.append('.  Use {} instead.'.format(new))
         logger.warning(''.join(message))
-        logger.debug(''.join(six.text_type(x) for x
+        logger.debug(''.join(str(x) for x
                              in traceback.format_stack()))
 
     def fget(self):
@@ -279,10 +257,8 @@ def slugify(value, regex_subs=()):
     # value must be unicode per se
     import unicodedata
     from unidecode import unidecode
-    # unidecode returns str in Py2 and 3, so in Py2 we have to make
-    # it unicode again
     value = unidecode(value)
-    if isinstance(value, six.binary_type):
+    if isinstance(value, bytes):
         value = value.decode('ascii')
     # still unicode
     value = unicodedata.normalize('NFKD', value)
@@ -584,8 +560,8 @@ class _HTMLWordTruncator(HTMLParser):
         `name` is the entity ref without ampersand and semicolon (e.g. `mdash`)
         """
         try:
-            codepoint = html_entities.name2codepoint[name]
-            char = six.unichr(codepoint)
+            codepoint = entities.name2codepoint[name]
+            char = chr(codepoint)
         except KeyError:
             char = ''
         self._handle_ref(name, char)
@@ -602,7 +578,7 @@ class _HTMLWordTruncator(HTMLParser):
                 codepoint = int(name[1:], 16)
             else:
                 codepoint = int(name)
-            char = six.unichr(codepoint)
+            char = chr(codepoint)
         except (ValueError, OverflowError):
             char = ''
         self._handle_ref('#' + name, char)
@@ -663,7 +639,7 @@ def process_translations(content_list, translation_id=None):
     if not translation_id:
         return content_list, []
 
-    if isinstance(translation_id, six.string_types):
+    if isinstance(translation_id, str):
         translation_id = {translation_id}
 
     index = []
@@ -753,7 +729,7 @@ def order_content(content_list, order_by='slug'):
                 content_list.sort(key=order_by)
             except Exception:
                 logger.error('Error sorting with function %s', order_by)
-        elif isinstance(order_by, six.string_types):
+        elif isinstance(order_by, str):
             if order_by.startswith('reversed-'):
                 order_reversed = True
                 order_by = order_by.replace('reversed-', '', 1)
@@ -901,8 +877,7 @@ def is_selected_for_writing(settings, path):
 
 def path_to_file_url(path):
     '''Convert file-system path to file:// URL'''
-    return six.moves.urllib_parse.urljoin(
-        "file://", six.moves.urllib.request.pathname2url(path))
+    return urllib.parse.urljoin("file://", urllib.request.pathname2url(path))
 
 
 def maybe_pluralize(count, singular, plural):

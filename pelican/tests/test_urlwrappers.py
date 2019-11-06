@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from pelican.tests.support import unittest
 from pelican.urlwrappers import Author, Category, Tag, URLWrapper

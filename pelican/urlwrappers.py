@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import functools
 import logging
 import os
 
-import six
-
-from pelican.utils import python_2_unicode_compatible, slugify
+from pelican.utils import slugify
 
 logger = logging.getLogger(__name__)
 
 
-@python_2_unicode_compatible
 @functools.total_ordering
 class URLWrapper(object):
     def __init__(self, name, settings):
@@ -66,26 +62,26 @@ class URLWrapper(object):
 
     def _normalize_key(self, key):
         subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
-        return six.text_type(slugify(key, regex_subs=subs))
+        return str(slugify(key, regex_subs=subs))
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.slug == other.slug
-        if isinstance(other, six.text_type):
+        if isinstance(other, str):
             return self.slug == self._normalize_key(other)
         return False
 
     def __ne__(self, other):
         if isinstance(other, self.__class__):
             return self.slug != other.slug
-        if isinstance(other, six.text_type):
+        if isinstance(other, str):
             return self.slug != self._normalize_key(other)
         return True
 
     def __lt__(self, other):
         if isinstance(other, self.__class__):
             return self.slug < other.slug
-        if isinstance(other, six.text_type):
+        if isinstance(other, str):
             return self.slug < self._normalize_key(other)
         return False
 
@@ -105,7 +101,7 @@ class URLWrapper(object):
         """
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             logger.warning('%s is set to %s', setting, value)
             return value
         else:

@@ -37,7 +37,6 @@ unidecode = "^1.1"
 python-dateutil = "^2.8"
 docutils = "^0.14"
 markdown = {version = "~3.1.1", optional = true}
-six = "^1.4"
 
 [tool.poetry.dev-dependencies]
 BeautifulSoup4 = "^4.7"

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
 
+import datetime
 import locale
 import logging
 import os.path
@@ -9,15 +9,12 @@ from sys import platform
 
 from jinja2.utils import generate_lorem_ipsum
 
-import six
-
 from pelican.contents import Article, Author, Category, Page, Static
 from pelican.settings import DEFAULT_CONFIG
 from pelican.signals import content_object_init
 from pelican.tests.support import (LoggedTestCase, get_context, get_settings,
                                    unittest)
-from pelican.utils import (SafeDatetime, path_to_url, posixize_path,
-                           truncate_html_words)
+from pelican.utils import (path_to_url, posixize_path, truncate_html_words)
 
 
 # generate one paragraph, enclosed with <p>
@@ -185,7 +182,7 @@ class TestPage(LoggedTestCase):
 
     def test_datetime(self):
         # If DATETIME is set to a tuple, it should be used to override LOCALE
-        dt = SafeDatetime(2015, 9, 13)
+        dt = datetime.datetime(2015, 9, 13)
 
         page_kwargs = self._copy_page_kwargs()
 
@@ -286,9 +283,7 @@ class TestPage(LoggedTestCase):
              '<a href="http://notmyidea.org/category/category.html">link</a>'))
 
     def test_intrasite_link(self):
-        # type does not take unicode in PY2 and bytes in PY3, which in
-        # combination with unicode literals leads to following insane line:
-        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        cls_name = '_DummyArticle'
         article = type(cls_name, (object,), {'url': 'article.html'})
 
         args = self.page_kwargs.copy()
@@ -370,9 +365,7 @@ class TestPage(LoggedTestCase):
         self.assertEqual(p.custom, linked)
 
     def test_intrasite_link_more(self):
-        # type does not take unicode in PY2 and bytes in PY3, which in
-        # combination with unicode literals leads to following insane line:
-        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+        cls_name = '_DummyAsset'
 
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
@@ -487,9 +480,7 @@ class TestPage(LoggedTestCase):
         )
 
     def test_intrasite_link_markdown_spaces(self):
-        # Markdown introduces %20 instead of spaces, this tests that
-        # we support markdown doing this.
-        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        cls_name = '_DummyArticle'
         article = type(cls_name, (object,), {'url': 'article-spaces.html'})
 
         args = self.page_kwargs.copy()
@@ -512,7 +503,7 @@ class TestPage(LoggedTestCase):
     def test_intrasite_link_source_and_generated(self):
         """Test linking both to the source and the generated article
         """
-        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+        cls_name = '_DummyAsset'
 
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
@@ -538,7 +529,7 @@ class TestPage(LoggedTestCase):
     def test_intrasite_link_to_static_content_with_filename(self):
         """Test linking to a static resource with deprecated {filename}
         """
-        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+        cls_name = '_DummyAsset'
 
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()

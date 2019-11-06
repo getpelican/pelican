@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import calendar
 import errno
@@ -15,15 +14,12 @@ from operator import attrgetter
 from jinja2 import (BaseLoader, ChoiceLoader, Environment, FileSystemLoader,
                     PrefixLoader, TemplateNotFound)
 
-import six
-
 from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
 from pelican.readers import Readers
 from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
-                           posixize_path, process_translations,
-                           python_2_unicode_compatible)
+                           posixize_path, process_translations)
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +29,6 @@ class PelicanTemplateNotFound(Exception):
     pass
 
 
-@python_2_unicode_compatible
 class Generator(object):
     """Baseclass generator"""
 
@@ -138,7 +133,7 @@ class Generator(object):
             extensions are allowed)
         """
         # backward compatibility for older generators
-        if isinstance(paths, six.string_types):
+        if isinstance(paths, str):
             paths = [paths]
 
         # group the exclude dir names by parent path, for use with os.walk()
@@ -513,8 +508,6 @@ class ArticlesGenerator(CachingGenerator):
                     context["period"] = (_period,)
                 else:
                     month_name = calendar.month_name[_period[1]]
-                    if not six.PY3:
-                        month_name = month_name.decode('utf-8')
                     if key == period_date_key['month']:
                         context["period"] = (_period[0],
                                              month_name)

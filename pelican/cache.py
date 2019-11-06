@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import hashlib
 import logging
 import os
-
-from six.moves import cPickle as pickle
+import pickle
 
 from pelican.utils import mkdir_p
 

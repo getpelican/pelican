@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
 
 import locale
 import logging
@@ -10,8 +9,6 @@ from sys import platform
 from tempfile import mkdtemp
 
 import pytz
-
-import six
 
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
@@ -720,8 +717,7 @@ class TestSanitisedJoin(unittest.TestCase):
     @unittest.skipIf(platform == 'win32',
                      "Different filesystem root on Windows")
     def test_detect_parent_breakout(self):
-        with six.assertRaisesRegex(
-                self,
+        with self.assertRaisesRegex(
                 RuntimeError,
                 "Attempted to break out of output directory to /foo/test"):
             utils.sanitised_join(
@@ -732,8 +728,7 @@ class TestSanitisedJoin(unittest.TestCase):
     @unittest.skipIf(platform == 'win32',
                      "Different filesystem root on Windows")
     def test_detect_root_breakout(self):
-        with six.assertRaisesRegex(
-                self,
+        with self.assertRaisesRegex(
                 RuntimeError,
                 "Attempted to break out of output directory to /test"):
             utils.sanitised_join(
