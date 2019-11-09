@@ -52,6 +52,7 @@ sphinx_rtd_theme = "^0.4.3"
 tox = "^3.13"
 flake8 = "^3.7"
 flake8-import-order = "^0.18.1"
+invoke = "^1.3"
 
 [tool.poetry.extras]
 markdown = ["markdown"]
