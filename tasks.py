@@ -21,7 +21,7 @@ PRECOMMIT = (
 @task
 def tests(c):
     """Run the test suite"""
-    c.run(f"{VENV}/bin/python -Wd -m unittest discover", pty=True)
+    c.run(f"{VENV}/bin/pytest", pty=True)
 
 
 @task
