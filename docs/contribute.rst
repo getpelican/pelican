@@ -57,7 +57,7 @@ Development
 ===========
 
 Once Pelican has been set up for local development, create a topic branch for
-your bug fix or feature:
+your bug fix or feature::
 
     git checkout -b name-of-your-bugfix-or-feature
 
