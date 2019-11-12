@@ -6,6 +6,7 @@ from invoke import task
 
 PKG_NAME = "pelican"
 PKG_PATH = Path("pelican")
+DOCS_PORT = os.environ.get("DOCS_PORT", 8000)
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
 VENV_HOME = Path(os.environ.get("WORKON_HOME", "~/virtualenvs"))
 VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME / PKG_NAME)
@@ -16,6 +17,24 @@ POETRY = which("poetry") if which("poetry") else (VENV / Path("bin") / "poetry")
 PRECOMMIT = (
     which("pre-commit") if which("pre-commit") else (VENV / Path("bin") / "pre-commit")
 )
+
+
+@task
+def docbuild(c):
+    """Build documentation"""
+    c.run(f"{VENV}/bin/sphinx-build docs docs/_build")
+
+
+@task(docbuild)
+def docserve(c):
+    """Serve docs at http://localhost:$DOCS_PORT/ (default port is 8000)"""
+    from livereload import Server
+
+    server = Server()
+    server.watch("docs/conf.py", lambda: docbuild(c))
+    server.watch("CONTRIBUTING.rst", lambda: docbuild(c))
+    server.watch("docs/*.rst", lambda: docbuild(c))
+    server.serve(port=DOCS_PORT, root="docs/_build")
 
 
 @task

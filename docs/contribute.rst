@@ -105,13 +105,15 @@ environments.
 Building the docs
 -----------------
 
-If you make changes to the documentation, you should preview your changes
-before committing them::
+If you make changes to the documentation, you should build and inspect your
+changes before committing them::
 
-    cd docs
-    make html
+    invoke docserve
 
-Open ``_build/html/index.html`` in your browser to preview the documentation.
+Open http://localhost:8000 in your browser to review the documentation. While
+the above task is running, any changes you make and save to the documentation
+should automatically appear in the browser, as it live-reloads when it detects
+changes to the documentation source files.
 
 Plugin development
 ------------------
