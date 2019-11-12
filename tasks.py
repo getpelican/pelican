@@ -79,3 +79,17 @@ def setup(c):
     tools(c)
     c.run(f"{POETRY} install")
     precommit(c)
+
+
+@task
+def update_functional_tests(c):
+    """Update the generated functional test output"""
+    c.run(
+        f"bash -c 'LC_ALL=en_US.utf8 pelican -o {PKG_PATH}/tests/output/custom/ -s samples/pelican.conf.py samples/content/'"
+    )
+    c.run(
+        f"bash -c 'LC_ALL=fr_FR.utf8 pelican -o {PKG_PATH}/tests/output/custom_locale/ -s samples/pelican.conf_FR.py samples/content/'"
+    )
+    c.run(
+        f"bash -c 'LC_ALL=en_US.utf8 pelican -o {PKG_PATH}/tests/output/basic/ samples/content/'"
+    )
