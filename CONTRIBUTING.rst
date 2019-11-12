@@ -120,12 +120,13 @@ Using Git and GitHub
   GitHub's web UI to submit the pull request. This isn't an absolute
   requirement, but makes the maintainers' lives much easier! Specifically:
   `install hub <https://github.com/github/hub/#installation>`_ and then run
-  `hub pull-request <https://github.com/github/hub/#git-pull-request>`_ to
-  turn your GitHub issue into a pull request containing your code.
-* After you have issued a pull request, Travis will run the test suite for all
-  supported Python versions and check for PEP8 compliance. If any of these
-  checks fail, you should fix them. (If tests fail on Travis but seem to pass
-  locally, ensure that local test runs aren't skipping any tests.)
+  `hub pull-request -i [ISSUE] <https://hub.github.com/hub-pull-request.1.html>`_
+  to turn your GitHub issue into a pull request containing your code.
+* After you have issued a pull request, the continuous integration (CI) system
+  will run the test suite for all supported Python versions and check for PEP8
+  compliance. If any of these checks fail, you should fix them. (If tests fail
+  on the CI system but seem to pass locally, ensure that local test runs aren't
+  skipping any tests.)
 
 Contribution quality standards
 ------------------------------
