@@ -22,7 +22,7 @@ Before you ask for help, please make sure you do the following:
 
 3. Try reproducing the issue in a clean environment, ensuring you are using:
 
-* latest Pelican release (or an up-to-date git clone of Pelican master)
+* latest Pelican release (or an up-to-date Git clone of Pelican master)
 * latest releases of libraries used by Pelican
 * no plugins or only those related to the issue
 
@@ -71,7 +71,7 @@ The #pelican IRC channel
 * Because of differing time zones, you may not get an immediate response to your
   question, but please be patient and stay logged into IRC — someone will almost
   always respond if you wait long enough (it may take a few hours).
-* If you don't have an IRC client handy, use the webchat_ for quick feedback.
+* If you don't have an IRC client handy, use the webchat_.
 * You can direct your IRC client to the channel using this `IRC link`_ or you
   can manually join the ``#pelican`` IRC channel on the `freenode IRC network`_.
 
@@ -94,7 +94,7 @@ Using Git and GitHub
 * `Create a new git branch`_ specific to your change (as opposed to making
   your commits in the master branch).
 * **Don't put multiple unrelated fixes/features in the same branch / pull request.**
-  For example, if you're hacking on a new feature and find a bugfix that
+  For example, if you're working on a new feature and find a bugfix that
   doesn't *require* your new feature, **make a new distinct branch and pull
   request** for the bugfix.
 * Add a ``RELEASE.md`` file in the root of the project that contains the
