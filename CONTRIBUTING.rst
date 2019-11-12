@@ -137,8 +137,7 @@ Contribution quality standards
   code/formatting can be improved. If you are relying on your editor for PEP8
   compliance, note that the line length specified by PEP8 is 79 (excluding the
   line break).
-* Ensure your code is compatible with the latest Python 2.7 and 3.x releases — see our
-  `compatibility cheatsheet`_ for more details.
+* Ensure your code is compatible with the `officially-supported Python releases`_.
 * Add docs and tests for your changes. Undocumented and untested features will
   not be accepted.
 * `Run all the tests`_ **on all versions of Python supported by Pelican** to
@@ -155,4 +154,4 @@ need assistance or have any questions about these guidelines.
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
 .. _`PEP8 coding standards`: https://www.python.org/dev/peps/pep-0008/
 .. _`ask for help`: `How to get help`_
-.. _`compatibility cheatsheet`: https://docs.getpelican.com/en/latest/contribute.html#python-3-development-tips
+.. _`officially-supported Python releases`: https://devguide.python.org/#status-of-python-branches
