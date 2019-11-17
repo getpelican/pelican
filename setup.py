@@ -9,8 +9,9 @@ from setuptools import setup
 
 version = "4.2.0"
 
-requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments', 'docutils',
-            'pytz >= 0a', 'blinker', 'unidecode', 'python-dateutil']
+requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
+            'docutils>=0.15', 'pytz >= 0a', 'blinker', 'unidecode',
+            'python-dateutil']
 
 entry_points = {
     'console_scripts': [

@@ -201,18 +201,6 @@ class RstReader(BaseReader):
     writer_class = PelicanHTMLWriter
     field_body_translator_class = _FieldBodyTranslator
 
-    class FileInput(docutils.io.FileInput):
-        """Patch docutils.io.FileInput to remove "U" mode in py3.
-
-        Universal newlines is enabled by default and "U" mode is deprecated
-        in py3.
-
-        """
-
-        def __init__(self, *args, **kwargs):
-            kwargs['mode'] = kwargs.get('mode', 'r').replace('U', '')
-            docutils.io.FileInput.__init__(self, *args, **kwargs)
-
     def __init__(self, *args, **kwargs):
         super(RstReader, self).__init__(*args, **kwargs)
 
@@ -273,7 +261,6 @@ class RstReader(BaseReader):
 
         pub = docutils.core.Publisher(
             writer=self.writer_class(),
-            source_class=self.FileInput,
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
         pub.process_programmatic_settings(None, extra_params, None)
