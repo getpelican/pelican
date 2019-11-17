@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-try:
-    import collections.abc as collections
-except ImportError:
-    import collections
 import logging
 import multiprocessing
 import os
@@ -12,6 +8,7 @@ import pprint
 import sys
 import time
 import traceback
+from collections.abc import Iterable
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
@@ -184,7 +181,7 @@ class Pelican(object):
         for pair in signals.get_generators.send(self):
             (funct, value) = pair
 
-            if not isinstance(value, collections.Iterable):
+            if not isinstance(value, Iterable):
                 value = (value, )
 
             for v in value:

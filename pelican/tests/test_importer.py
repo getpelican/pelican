@@ -3,7 +3,6 @@
 import locale
 import os
 import re
-from codecs import open
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,

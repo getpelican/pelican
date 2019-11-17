@@ -5,7 +5,6 @@ import errno
 import fnmatch
 import logging
 import os
-from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import codecs
 import locale
 import os
 
@@ -309,8 +308,8 @@ needed by Pelican.
         print('Error: {0}'.format(e))
 
     try:
-        with codecs.open(os.path.join(CONF['basedir'], 'pelicanconf.py'),
-                         'w', 'utf-8') as fd:
+        with open(os.path.join(CONF['basedir'], 'pelicanconf.py'),
+                  'w', 'utf-8') as fd:
             conf_python = dict()
             for key, value in CONF.items():
                 conf_python[key] = repr(value)
@@ -322,8 +321,8 @@ needed by Pelican.
         print('Error: {0}'.format(e))
 
     try:
-        with codecs.open(os.path.join(CONF['basedir'], 'publishconf.py'),
-                         'w', 'utf-8') as fd:
+        with open(os.path.join(CONF['basedir'], 'publishconf.py'),
+                  'w', 'utf-8') as fd:
             _template = _jinja_env.get_template('publishconf.py.jinja2')
             fd.write(_template.render(**CONF))
             fd.close()
@@ -332,16 +331,16 @@ needed by Pelican.
 
     if automation:
         try:
-            with codecs.open(os.path.join(CONF['basedir'], 'tasks.py'),
-                             'w', 'utf-8') as fd:
+            with open(os.path.join(CONF['basedir'], 'tasks.py'),
+                      'w', 'utf-8') as fd:
                 _template = _jinja_env.get_template('tasks.py.jinja2')
                 fd.write(_template.render(**CONF))
                 fd.close()
         except OSError as e:
             print('Error: {0}'.format(e))
         try:
-            with codecs.open(os.path.join(CONF['basedir'], 'Makefile'),
-                             'w', 'utf-8') as fd:
+            with open(os.path.join(CONF['basedir'], 'Makefile'),
+                      'w', 'utf-8') as fd:
                 py_v = 'python3'
                 _template = _jinja_env.get_template('Makefile.jinja2')
                 fd.write(_template.render(py_v=py_v, **CONF))

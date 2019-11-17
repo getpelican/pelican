@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import codecs
 import datetime
-import errno
 import fnmatch
 import locale
 import logging
@@ -12,10 +10,7 @@ import shutil
 import sys
 import traceback
 import urllib
-try:
-    from collections.abc import Hashable
-except ImportError:
-    from collections import Hashable
+from collections.abc import Hashable
 from contextlib import contextmanager
 from functools import partial
 from html import entities
@@ -29,10 +24,6 @@ from jinja2 import Markup
 
 import pytz
 
-try:
-    from html import escape
-except ImportError:
-    from cgi import escape
 
 logger = logging.getLogger(__name__)
 
@@ -51,17 +42,11 @@ def sanitised_join(base_directory, *parts):
 
 def strftime(date, date_format):
     '''
-    Replacement for built-in strftime
-
-    This is necessary because of the way Py2 handles date format strings.
-    Specifically, Py2 strftime takes a bytestring. In the case of text output
-    (e.g. %b, %a, etc), the output is encoded with an encoding defined by
-    locale.LC_TIME. Things get messy if the formatting string has chars that
-    are not valid in LC_TIME defined encoding.
+    Enhanced replacement for built-in strftime with zero stripping
 
     This works by 'grabbing' possible format strings (those starting with %),
-    formatting them with the date, (if necessary) decoding the output and
-    replacing formatted output back.
+    formatting them with the date, stripping any leading zeros if - prefix is
+    used and replacing formatted output back.
     '''
     def strip_zeros(x):
         return x.lstrip('0') or '0'
@@ -73,10 +58,6 @@ def strftime(date, date_format):
 
     # replace candidates with placeholders for later % formatting
     template = re.sub(format_options, '%s', date_format)
-
-    # we need to convert formatted dates back to unicode in Py2
-    # LC_TIME determines the encoding for built-in strftime outputs
-    lang_code, enc = locale.getlocale(locale.LC_TIME)
 
     formatted_candidates = []
     for candidate in candidates:
@@ -232,15 +213,12 @@ def get_date(string):
 
 
 @contextmanager
-def pelican_open(filename, mode='rb', strip_crs=(sys.platform == 'win32')):
+def pelican_open(filename, mode='r', strip_crs=(sys.platform == 'win32')):
     """Open a file and return its content"""
 
-    with codecs.open(filename, mode, encoding='utf-8') as infile:
+    # utf-8-sig will clear any BOM if present
+    with open(filename, mode, encoding='utf-8-sig') as infile:
         content = infile.read()
-    if content[:1] == codecs.BOM_UTF8.decode('utf8'):
-        content = content[1:]
-    if strip_crs:
-        content = content.replace('\r\n', '\n')
     yield content
 
 
@@ -610,14 +588,6 @@ def truncate_html_words(s, num, end_text='…'):
     return out
 
 
-def escape_html(text, quote=True):
-    """Escape '&', '<' and '>' to HTML-safe sequences.
-
-    In Python 2 this uses cgi.escape and in Python 3 this uses html.escape. We
-    wrap here to ensure the quote argument has an identical default."""
-    return escape(text, quote=quote)
-
-
 def process_translations(content_list, translation_id=None):
     """ Finds translations and returns them.
 
@@ -833,11 +803,7 @@ def set_date_tzinfo(d, tz_name=None):
 
 
 def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as e:
-        if e.errno != errno.EEXIST or not os.path.isdir(path):
-            raise
+    os.makedirs(path, exist_ok=True)
 
 
 def split_all(path):

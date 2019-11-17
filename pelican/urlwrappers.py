@@ -62,7 +62,7 @@ class URLWrapper(object):
 
     def _normalize_key(self, key):
         subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
-        return str(slugify(key, regex_subs=subs))
+        return slugify(key, regex_subs=subs)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

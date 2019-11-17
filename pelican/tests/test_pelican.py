@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
-try:
-    import collections.abc as collections
-except ImportError:
-    import collections
-
 import locale
 import logging
 import os
 import subprocess
 import sys
+from collections.abc import Sequence
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -94,7 +90,7 @@ class TestPelican(LoggedTestCase):
             generator_classes[-1] is StaticGenerator,
             "StaticGenerator must be the last generator, but it isn't!")
         self.assertIsInstance(
-            generator_classes, collections.Sequence,
+            generator_classes, Sequence,
             "get_generator_classes() must return a Sequence to preserve order")
 
     def test_basic_generation_works(self):

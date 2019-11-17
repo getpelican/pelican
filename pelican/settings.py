@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import importlib.util
 import inspect
 import locale
 import logging
@@ -12,19 +13,11 @@ from posixpath import join as posix_join
 from pelican.log import LimitFilter
 
 
-try:
-    # spec_from_file_location is the recommended way in Python 3.5+
-    import importlib.util
-
-    def load_source(name, path):
-        spec = importlib.util.spec_from_file_location(name, path)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        return mod
-except ImportError:
-    # but it does not exist in Python 2.7, so fall back to imp
-    import imp
-    load_source = imp.load_source
+def load_source(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 logger = logging.getLogger(__name__)

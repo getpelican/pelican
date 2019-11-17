@@ -5,6 +5,7 @@ import logging
 import os
 import re
 from collections import OrderedDict
+from html import escape
 from html.parser import HTMLParser
 from io import StringIO
 
@@ -18,7 +19,7 @@ from pelican import rstdirectives  # NOQA
 from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Author, Category, Page, Tag
-from pelican.utils import escape_html, get_date, pelican_open, posixize_path
+from pelican.utils import get_date, pelican_open, posixize_path
 
 try:
     from markdown import Markdown
@@ -411,7 +412,7 @@ class HTMLReader(BaseReader):
                 self._in_body = False
                 self._in_top_level = True
             elif self._in_body:
-                self._data_buffer += '</{}>'.format(escape_html(tag))
+                self._data_buffer += '</{}>'.format(escape(tag))
 
         def handle_startendtag(self, tag, attrs):
             if tag == 'meta' and self._in_head:
@@ -432,16 +433,16 @@ class HTMLReader(BaseReader):
             self._data_buffer += '&#{};'.format(data)
 
         def build_tag(self, tag, attrs, close_tag):
-            result = '<{}'.format(escape_html(tag))
+            result = '<{}'.format(escape(tag))
             for k, v in attrs:
-                result += ' ' + escape_html(k)
+                result += ' ' + escape(k)
                 if v is not None:
                     # If the attribute value contains a double quote, surround
                     # with single quotes, otherwise use double quotes.
                     if '"' in v:
-                        result += "='{}'".format(escape_html(v, quote=False))
+                        result += "='{}'".format(escape(v, quote=False))
                     else:
-                        result += '="{}"'.format(escape_html(v, quote=False))
+                        result += '="{}"'.format(escape(v, quote=False))
             if close_tag:
                 return result + ' />'
             return result + '>'
