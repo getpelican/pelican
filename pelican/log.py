@@ -13,7 +13,7 @@ __all__ = [
 class BaseFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None):
         FORMAT = '%(customlevelname)s %(message)s'
-        super(BaseFormatter, self).__init__(fmt=FORMAT, datefmt=datefmt)
+        super().__init__(fmt=FORMAT, datefmt=datefmt)
 
     def format(self, record):
         customlevel = self._get_levelname(record.levelname)
@@ -23,11 +23,11 @@ class BaseFormatter(logging.Formatter):
         record.args = tuple(arg.replace('\n', '\n  | ') if
                             isinstance(arg, str) else
                             arg for arg in record.args)
-        return super(BaseFormatter, self).format(record)
+        return super().format(record)
 
     def formatException(self, ei):
         ''' prefix traceback info for better representation '''
-        s = super(BaseFormatter, self).formatException(ei)
+        s = super().formatException(ei)
         # fancy format traceback
         s = '\n'.join('  | ' + line for line in s.splitlines())
         # separate the traceback from the preceding lines
@@ -137,7 +137,7 @@ class LimitLogger(logging.Logger):
     limit_filter = LimitFilter()
 
     def __init__(self, *args, **kwargs):
-        super(LimitLogger, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.enable_filter()
 
     def disable_filter(self):
@@ -152,12 +152,12 @@ class FatalLogger(LimitLogger):
     errors_fatal = False
 
     def warning(self, *args, **kwargs):
-        super(FatalLogger, self).warning(*args, **kwargs)
+        super().warning(*args, **kwargs)
         if FatalLogger.warnings_fatal:
             raise RuntimeError('Warning encountered')
 
     def error(self, *args, **kwargs):
-        super(FatalLogger, self).error(*args, **kwargs)
+        super().error(*args, **kwargs)
         if FatalLogger.errors_fatal:
             raise RuntimeError('Error encountered')
 

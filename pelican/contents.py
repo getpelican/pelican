@@ -488,7 +488,7 @@ class Page(Content):
 
     def _expand_settings(self, key):
         klass = 'draft_page' if self.status == 'draft' else None
-        return super(Page, self)._expand_settings(key, klass)
+        return super()._expand_settings(key, klass)
 
 
 class Article(Content):
@@ -498,7 +498,7 @@ class Article(Content):
     default_template = 'article'
 
     def __init__(self, *args, **kwargs):
-        super(Article, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # handle WITH_FUTURE_DATES (designate article to draft based on date)
         if not self.settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
@@ -515,7 +515,7 @@ class Article(Content):
 
     def _expand_settings(self, key):
         klass = 'draft' if self.status == 'draft' else 'article'
-        return super(Article, self)._expand_settings(key, klass)
+        return super()._expand_settings(key, klass)
 
 
 class Static(Content):
@@ -524,7 +524,7 @@ class Static(Content):
     default_template = None
 
     def __init__(self, *args, **kwargs):
-        super(Static, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._output_location_referenced = False
 
     @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
@@ -543,13 +543,13 @@ class Static(Content):
     def url(self):
         # Note when url has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
-        return super(Static, self).url
+        return super().url
 
     @property
     def save_as(self):
         # Note when save_as has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
-        return super(Static, self).save_as
+        return super().save_as
 
     def attach_to(self, content):
         """Override our output directory with that of the given content object.

@@ -96,7 +96,7 @@ class SafeDatetime(datetime.datetime):
         if safe:
             return strftime(self, fmt)
         else:
-            return super(SafeDatetime, self).strftime(fmt)
+            return super().strftime(fmt)
 
 
 class DateFormatter(object):
@@ -407,18 +407,11 @@ class _HTMLWordTruncator(HTMLParser):
     class TruncationCompleted(Exception):
 
         def __init__(self, truncate_at):
-            super(_HTMLWordTruncator.TruncationCompleted, self).__init__(
-                truncate_at)
+            super().__init__(truncate_at)
             self.truncate_at = truncate_at
 
     def __init__(self, max_words):
-        # In Python 2, HTMLParser is not a new-style class,
-        # hence super() cannot be used.
-        try:
-            HTMLParser.__init__(self, convert_charrefs=False)
-        except TypeError:
-            # pre Python 3.3
-            HTMLParser.__init__(self)
+        super().__init__(convert_charrefs=False)
 
         self.max_words = max_words
         self.words_found = 0
@@ -428,9 +421,7 @@ class _HTMLWordTruncator(HTMLParser):
 
     def feed(self, *args, **kwargs):
         try:
-            # With Python 2, super() cannot be used.
-            # See the comment for __init__().
-            HTMLParser.feed(self, *args, **kwargs)
+            super().feed(*args, **kwargs)
         except self.TruncationCompleted as exc:
             self.truncate_at = exc.truncate_at
         else:

@@ -241,7 +241,7 @@ class CachingGenerator(Generator, FileStampDataCacher):
     def _get_file_stamp(self, filename):
         '''Get filestamp for path relative to generator.path'''
         filename = os.path.join(self.path, filename)
-        return super(CachingGenerator, self)._get_file_stamp(filename)
+        return super()._get_file_stamp(filename)
 
 
 class _FileLoader(BaseLoader):
@@ -288,7 +288,7 @@ class ArticlesGenerator(CachingGenerator):
         self.authors = defaultdict(list)
         self.drafts = []                   # only drafts in default language
         self.drafts_translations = []
-        super(ArticlesGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         signals.article_generator_init.send(self)
 
     def generate_feeds(self, writer):
@@ -699,7 +699,7 @@ class PagesGenerator(CachingGenerator):
         self.hidden_translations = []
         self.draft_pages = []
         self.draft_translations = []
-        super(PagesGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         signals.page_generator_init.send(self)
 
     def generate_context(self):
@@ -785,7 +785,7 @@ class StaticGenerator(Generator):
     to output"""
 
     def __init__(self, *args, **kwargs):
-        super(StaticGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fallback_to_symlinks = False
         signals.static_generator_init.send(self)
 

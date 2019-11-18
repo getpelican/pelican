@@ -186,7 +186,7 @@ class LogCountHandler(BufferingHandler):
     """Capturing and counting logged messages."""
 
     def __init__(self, capacity=1000):
-        super(LogCountHandler, self).__init__(capacity)
+        super().__init__(capacity)
 
     def count_logs(self, msg=None, level=None):
         return len([
@@ -202,13 +202,13 @@ class LoggedTestCase(unittest.TestCase):
     """A test case that captures log messages."""
 
     def setUp(self):
-        super(LoggedTestCase, self).setUp()
+        super().setUp()
         self._logcount_handler = LogCountHandler()
         logging.getLogger().addHandler(self._logcount_handler)
 
     def tearDown(self):
         logging.getLogger().removeHandler(self._logcount_handler)
-        super(LoggedTestCase, self).tearDown()
+        super().tearDown()
 
     def assertLogCountEqual(self, count=None, msg=None, **kwargs):
         actual = self._logcount_handler.count_logs(msg=msg, **kwargs)

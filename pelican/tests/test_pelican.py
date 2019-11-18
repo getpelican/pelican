@@ -42,7 +42,7 @@ class TestPelican(LoggedTestCase):
     # to run pelican in different situations and see how it behaves
 
     def setUp(self):
-        super(TestPelican, self).setUp()
+        super().setUp()
         self.temp_path = mkdtemp(prefix='pelicantests.')
         self.temp_cache = mkdtemp(prefix='pelican_cache.')
         self.maxDiff = None
@@ -53,7 +53,7 @@ class TestPelican(LoggedTestCase):
         rmtree(self.temp_path)
         rmtree(self.temp_cache)
         locale.setlocale(locale.LC_ALL, self.old_locale)
-        super(TestPelican, self).tearDown()
+        super().tearDown()
 
     def assertDirsEqual(self, left_path, right_path):
         out, err = subprocess.Popen(

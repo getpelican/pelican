@@ -25,7 +25,7 @@ TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 class TestPage(LoggedTestCase):
 
     def setUp(self):
-        super(TestPage, self).setUp()
+        super().setUp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
         self.page_kwargs = {
@@ -657,7 +657,7 @@ class TestArticle(TestPage):
 class TestStatic(LoggedTestCase):
 
     def setUp(self):
-        super(TestStatic, self).setUp()
+        super().setUp()
         self.settings = get_settings(
             STATIC_SAVE_AS='{path}',
             STATIC_URL='{path}',

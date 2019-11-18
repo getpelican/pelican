@@ -136,7 +136,7 @@ class BaseReader(object):
 class _FieldBodyTranslator(HTMLTranslator):
 
     def __init__(self, document):
-        HTMLTranslator.__init__(self, document)
+        super().__init__(document)
         self.compact_p = None
 
     def astext(self):
@@ -158,7 +158,7 @@ def render_node_to_html(document, node, field_body_translator_class):
 class PelicanHTMLWriter(Writer):
 
     def __init__(self):
-        Writer.__init__(self)
+        super().__init__()
         self.translator_class = PelicanHTMLTranslator
 
 
@@ -202,7 +202,7 @@ class RstReader(BaseReader):
     field_body_translator_class = _FieldBodyTranslator
 
     def __init__(self, *args, **kwargs):
-        super(RstReader, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         lang_code = self.settings.get('DEFAULT_LANG', 'en')
         if get_docutils_lang(lang_code):
@@ -287,7 +287,7 @@ class MarkdownReader(BaseReader):
     file_extensions = ['md', 'markdown', 'mkd', 'mdown']
 
     def __init__(self, *args, **kwargs):
-        super(MarkdownReader, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         settings = self.settings['MARKDOWN']
         settings.setdefault('extension_configs', {})
         settings.setdefault('extensions', [])
@@ -350,11 +350,7 @@ class HTMLReader(BaseReader):
 
     class _HTMLParser(HTMLParser):
         def __init__(self, settings, filename):
-            try:
-                # Python 3.5+
-                HTMLParser.__init__(self, convert_charrefs=False)
-            except TypeError:
-                HTMLParser.__init__(self)
+            super().__init__(convert_charrefs=False)
             self.body = ''
             self.metadata = {}
             self.settings = settings
@@ -527,9 +523,7 @@ class Readers(FileStampDataCacher):
                             self.settings['CONTENT_CACHING_LAYER'] == 'reader')
         caching_policy = cache_this_level and self.settings['CACHE_CONTENT']
         load_policy = cache_this_level and self.settings['LOAD_CONTENT_CACHE']
-        super(Readers, self).__init__(settings, cache_name,
-                                      caching_policy, load_policy,
-                                      )
+        super().__init__(settings, cache_name, caching_policy, load_policy)
 
     @property
     def extensions(self):

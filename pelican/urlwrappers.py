@@ -122,7 +122,7 @@ class Category(URLWrapper):
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
-        super(Tag, self).__init__(name.strip(), *args, **kwargs)
+        super().__init__(name.strip(), *args, **kwargs)
 
 
 class Author(URLWrapper):
