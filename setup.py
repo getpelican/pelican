@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import sys
+
 from io import open
 from os import walk
 from os.path import join, relpath
@@ -9,8 +9,8 @@ from setuptools import setup
 
 version = "4.2.0"
 
-requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments', 'docutils',
-            'pytz >= 0a', 'blinker', 'unidecode', 'six >= 1.4',
+requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
+            'docutils>=0.15', 'pytz >= 0a', 'blinker', 'unidecode',
             'python-dateutil']
 
 entry_points = {
@@ -25,9 +25,7 @@ entry_points = {
 README = open('README.rst', encoding='utf-8').read()
 CHANGELOG = open('docs/changelog.rst', encoding='utf-8').read()
 
-description = u'\n'.join([README, CHANGELOG])
-if sys.version_info.major < 3:
-    description = description.encode('utf-8')
+description = '\n'.join([README, CHANGELOG])
 
 setup(
     name='pelican',
@@ -71,8 +69,6 @@ setup(
         'Framework :: Pelican',
         'License :: OSI Approved :: GNU Affero General Public License v3',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',

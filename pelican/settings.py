@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import copy
+import importlib.util
 import inspect
 import locale
 import logging
@@ -10,24 +10,14 @@ import re
 from os.path import isabs
 from posixpath import join as posix_join
 
-import six
-
 from pelican.log import LimitFilter
 
 
-try:
-    # spec_from_file_location is the recommended way in Python 3.5+
-    import importlib.util
-
-    def load_source(name, path):
-        spec = importlib.util.spec_from_file_location(name, path)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        return mod
-except ImportError:
-    # but it does not exist in Python 2.7, so fall back to imp
-    import imp
-    load_source = imp.load_source
+def load_source(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 logger = logging.getLogger(__name__)
@@ -278,7 +268,7 @@ def handle_deprecated_settings(settings):
         del settings['PLUGIN_PATH']
 
     # PLUGIN_PATHS: str -> [str]
-    if isinstance(settings.get('PLUGIN_PATHS'), six.string_types):
+    if isinstance(settings.get('PLUGIN_PATHS'), str):
         logger.warning("Defining PLUGIN_PATHS setting as string "
                        "has been deprecated (should be a list)")
         settings['PLUGIN_PATHS'] = [settings['PLUGIN_PATHS']]
@@ -547,13 +537,13 @@ def configure_settings(settings):
 
     # standardize strings to lists
     for key in ['LOCALE']:
-        if key in settings and isinstance(settings[key], six.string_types):
+        if key in settings and isinstance(settings[key], str):
             settings[key] = [settings[key]]
 
     # check settings that must be a particular type
     for key, types in [
-            ('OUTPUT_SOURCES_EXTENSION', six.string_types),
-            ('FILENAME_METADATA', six.string_types),
+            ('OUTPUT_SOURCES_EXTENSION', str),
+            ('FILENAME_METADATA', str),
     ]:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
@@ -647,7 +637,7 @@ def configure_settings(settings):
         'PAGE_PATHS',
     )
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
-        if isinstance(settings[PATH_KEY], six.string_types):
+        if isinstance(settings[PATH_KEY], str):
             logger.warning("Detected misconfiguration with %s setting "
                            "(must be a list), falling back to the default",
                            PATH_KEY)

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import locale
 import os
-from codecs import open
 from shutil import copy, rmtree
 from tempfile import mkdtemp
 

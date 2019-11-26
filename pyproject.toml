@@ -17,8 +17,6 @@ classifiers = [
     "Framework :: Pelican",
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 2",
-    "Programming Language :: Python :: 2.7",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
@@ -29,7 +27,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "~2.7 || ^3.5"
+python = "^3.5"
 feedgenerator = "^1.9"
 jinja2 = "~2.10.1"
 pygments = "^2.4"
@@ -37,9 +35,8 @@ pytz = "^2019.1"
 blinker = "^1.4"
 unidecode = "^1.1"
 python-dateutil = "^2.8"
-docutils = "^0.14"
+docutils = "^0.15"
 markdown = {version = "~3.1.1", optional = true}
-six = "^1.4"
 
 [tool.poetry.dev-dependencies]
 BeautifulSoup4 = "^4.7"

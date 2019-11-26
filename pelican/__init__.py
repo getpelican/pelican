@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import argparse
-try:
-    import collections.abc as collections
-except ImportError:
-    import collections
-import locale
 import logging
 import multiprocessing
 import os
@@ -14,8 +8,7 @@ import pprint
 import sys
 import time
 import traceback
-
-import six
+from collections.abc import Iterable
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
@@ -76,11 +69,10 @@ class Pelican(object):
             sys.path.insert(0, pluginpath)
         for plugin in self.settings['PLUGINS']:
             # if it's a string, then import it
-            if isinstance(plugin, six.string_types):
+            if isinstance(plugin, str):
                 logger.debug("Loading plugin `%s`", plugin)
                 try:
-                    plugin = __import__(plugin, globals(), locals(),
-                                        str('module'))
+                    plugin = __import__(plugin, globals(), locals(), 'module')
                 except ImportError as e:
                     logger.error(
                         "Cannot load plugin `%s`\n%s", plugin, e)
@@ -189,7 +181,7 @@ class Pelican(object):
         for pair in signals.get_generators.send(self):
             (funct, value) = pair
 
-            if not isinstance(value, collections.Iterable):
+            if not isinstance(value, Iterable):
                 value = (value, )
 
             for v in value:
@@ -375,15 +367,6 @@ def get_config(args):
         config['BIND'] = args.bind
     config['DEBUG'] = args.verbosity == logging.DEBUG
 
-    # argparse returns bytes in Py2. There is no definite answer as to which
-    # encoding argparse (or sys.argv) uses.
-    # "Best" option seems to be locale.getpreferredencoding()
-    # http://mail.python.org/pipermail/python-list/2006-October/405766.html
-    if not six.PY3:
-        enc = locale.getpreferredencoding()
-        for key in config:
-            if key in ('PATH', 'OUTPUT_PATH', 'THEME'):
-                config[key] = config[key].decode(enc)
     return config
 
 
@@ -397,7 +380,7 @@ def get_instance(args):
     settings = read_settings(config_file, override=get_config(args))
 
     cls = settings['PELICAN_CLASS']
-    if isinstance(cls, six.string_types):
+    if isinstance(cls, str):
         module, cls_name = cls.rsplit('.', 1)
         module = __import__(module)
         cls = getattr(module, cls_name)

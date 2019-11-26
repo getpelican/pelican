@@ -1,8 +1,7 @@
 import os
+from io import BytesIO
 from shutil import rmtree
 from tempfile import mkdtemp
-
-from six import BytesIO
 
 from pelican.server import ComplexHTTPRequestHandler
 from pelican.tests.support import unittest
