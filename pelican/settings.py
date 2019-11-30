@@ -144,7 +144,9 @@ DEFAULT_CONFIG = {
     'TEMPLATE_EXTENSIONS': ['.html'],
     'IGNORE_FILES': ['.#*'],
     'SLUG_REGEX_SUBSTITUTIONS': [
-        (r'[^\w\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
+        # remove all characters except alphanumeric, whitespace,
+        # '_', '-', '+', '#' characters
+        (r'[^\w\s\-#\+]', ''),
         (r'(?u)\A\s*', ''),  # strip leading whitespace
         (r'(?u)\s*\Z', ''),  # strip trailing whitespace
         (r'[-\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
@@ -387,7 +389,7 @@ def handle_deprecated_settings(settings):
 
                 if replace:
                     regex_subs += [
-                        (r'[^\w\s-]', ''),
+                        (r'[^\w\s\-#\+]', ''),
                         (r'(?u)\A\s*', ''),
                         (r'(?u)\s*\Z', ''),
                         (r'[-\s]+', '-'),

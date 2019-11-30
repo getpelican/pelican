@@ -125,7 +125,7 @@ class TestUtils(LoggedTestCase):
     def test_slugify_substitute(self):
 
         samples = (('C++ is based on C', 'cpp-is-based-on-c'),
-                   ('C+++ test C+ test', 'cpp-test-c-test'),
+                   ('C+++ test C+ test', 'cpp+-test-c+-test'),
                    ('c++, c#, C#, C++', 'cpp-c-sharp-c-sharp-cpp'),
                    ('c++-streams', 'cpp-streams'),)
 
