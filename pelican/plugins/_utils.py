@@ -1,9 +1,8 @@
 import importlib
+import importlib.machinery
+import importlib.util
 import logging
 import pkgutil
-import sys
-
-import six
 
 
 logger = logging.getLogger(__name__)
@@ -39,6 +38,20 @@ def list_plugins(ns_pkg=None):
         logger.info('No plugins are installed')
 
 
+def load_legacy_plugin(plugin, plugin_paths):
+    # Try to find plugin in PLUGIN_PATHS
+    spec = importlib.machinery.PathFinder.find_spec(plugin, plugin_paths)
+    if spec is None:
+        # If failed, try to find it in normal importable locations
+        spec = importlib.util.find_spec(plugin)
+    if spec is None:
+        raise ImportError('Cannot import plugin `{}`'.format(plugin))
+    else:
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+
 def load_plugins(settings):
     logger.debug('Finding namespace plugins')
     namespace_plugins = get_namespace_plugins()
@@ -47,13 +60,8 @@ def load_plugins(settings):
                      '\n'.join(namespace_plugins))
     plugins = []
     if settings.get('PLUGINS') is not None:
-        _sys_path = sys.path[:]
-
-        for path in settings.get('PLUGIN_PATHS', []):
-            sys.path.insert(0, path)
-
         for plugin in settings['PLUGINS']:
-            if isinstance(plugin, six.string_types):
+            if isinstance(plugin, str):
                 logger.debug('Loading plugin `%s`', plugin)
                 # try to find in namespace plugins
                 if plugin in namespace_plugins:
@@ -64,13 +72,13 @@ def load_plugins(settings):
                 # try to import it
                 else:
                     try:
-                        plugin = __import__(plugin, globals(), locals(),
-                                            str('module'))
+                        plugin = load_legacy_plugin(
+                            plugin,
+                            settings.get('PLUGIN_PATHS', []))
                     except ImportError as e:
                         logger.error('Cannot load plugin `%s`\n%s', plugin, e)
                         continue
             plugins.append(plugin)
-        sys.path = _sys_path
     else:
         plugins = list(namespace_plugins.values())
 
