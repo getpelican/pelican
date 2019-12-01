@@ -9,7 +9,7 @@ features to Pelican without having to directly modify the Pelican core.
 How to use plugins
 ==================
 
-Starting with version 4.3, Pelican moved to a new plugin structure utilizing
+Starting with version 5.0, Pelican moved to a new plugin structure utilizing
 namespace packages. Plugins supporting this structure will install under the
 namespace package ``pelican.plugins`` and can be automatically discovered
 by Pelican.
@@ -21,8 +21,8 @@ be disabled and only listed plugins will be registered and you will have to
 explicitly list the namespace plugins as well.
 
 If you are using ``PLUGINS`` setting, you can specify plugins in two ways.
-First method is using strings to the plugins. Namespace plugins can be
-specified either by their full names (``pelican.plugins.myplugin``) or by
+The first method specifies plugins as a list of strings. Namespace plugins can
+be specified either by their full names (``pelican.plugins.myplugin``) or by
 their short names (``myplugin``)::
 
     PLUGINS = ['package.myplugin',
@@ -53,7 +53,8 @@ Where to find plugins
 =====================
 Namespace plugins can be found in the `pelican-plugins organization`_ as
 individual repositories. Legacy plugins are collected in the `pelican-plugins
-repository`_ and they will be slowly phased out to the namespace versions.
+repository`_ and they will be slowly phased out in favor of the namespace
+versions.
 
 .. _pelican-plugins organization: https://github.com/pelican-plugins
 .. _pelican-plugins repository: https://github.com/getpelican/pelican-plugins
@@ -86,11 +87,11 @@ which you map the signals to your plugin logic. Let's take a simple example::
     your ``register`` callable or they will be garbage-collected before the
     signal is emitted.
 
-Namespace Plugin structure
+Namespace plugin structure
 --------------------------
 
 Namespace plugins must adhere to a certain structure in order to function
-properly. They need to installable (i.e. contain ``setup.py`` or equivalent)
+properly. They need to be installable (i.e. contain ``setup.py`` or equivalent)
 and have a folder structure as follows::
 
     myplugin
@@ -102,11 +103,11 @@ and have a folder structure as follows::
     ├── ...
     └── setup.py
 
-It is crucial that ``pelican`` or ``pelican/plugins`` folder **should not**
+It is crucial that ``pelican`` or ``pelican/plugins`` folder **not**
 contain an ``__init__.py`` file. In fact, it is best to have those folders
-empty besides the listed folders in the above structure and contain your
-plugin related files solely in the ``pelican/plugins/myplugin`` folder to
-avoid any issues.
+empty besides the listed folders in the above structure and keep your
+plugin related files contained solely in the ``pelican/plugins/myplugin``
+folder to avoid any issues.
 
 For easily setting up the proper structure, a `cookiecutter template for
 plugins`_ is provided. Refer to the README in the link for how to use it.
