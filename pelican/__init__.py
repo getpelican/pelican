@@ -18,10 +18,10 @@ __path__ = extend_path(__path__, __name__)
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init as init_logging
-from pelican import signals  # noqa
-from pelican.generators import (ArticlesGenerator, PagesGenerator,
-                                SourceFileGenerator, StaticGenerator,
-                                TemplatePagesGenerator)
+from pelican.generators import (ArticlesGenerator,  # noqa: I100
+                                PagesGenerator, SourceFileGenerator,
+                                StaticGenerator, TemplatePagesGenerator)
+from pelican.plugins import signals
 from pelican.plugins._utils import load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer

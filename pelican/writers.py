@@ -8,8 +8,8 @@ from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 
 from jinja2 import Markup
 
-from pelican import signals
 from pelican.paginator import Paginator
+from pelican.plugins import signals
 from pelican.utils import (get_relative_path, is_selected_for_writing,
                            path_to_url, sanitised_join, set_date_tzinfo)
 

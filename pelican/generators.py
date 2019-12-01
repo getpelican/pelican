@@ -13,9 +13,9 @@ from operator import attrgetter
 from jinja2 import (BaseLoader, ChoiceLoader, Environment, FileSystemLoader,
                     PrefixLoader, TemplateNotFound)
 
-from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
+from pelican.plugins import signals
 from pelican.readers import Readers
 from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
                            posixize_path, process_translations)

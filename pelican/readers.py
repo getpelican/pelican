@@ -16,9 +16,9 @@ from docutils.parsers.rst.languages import get_language as get_docutils_lang
 from docutils.writers.html4css1 import HTMLTranslator, Writer
 
 from pelican import rstdirectives  # NOQA
-from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Author, Category, Page, Tag
+from pelican.plugins import signals
 from pelican.utils import get_date, pelican_open, posixize_path
 
 try:
