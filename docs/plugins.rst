@@ -9,16 +9,31 @@ features to Pelican without having to directly modify the Pelican core.
 How to use plugins
 ==================
 
-To load plugins, you have to specify them in your settings file. There are two
-ways to do so. The first method is to specify strings with the path to the
-callables::
+Starting with version 4.3, Pelican moved to a new plugin structure utilizing
+namespace packages. Plugins supporting this structure will install under the
+namespace package ``pelican.plugins`` and can be automatically discovered
+by Pelican.
 
-    PLUGINS = ['package.myplugin',]
+If you leave the ``PLUGINS`` setting as default (``None``), Pelican will then
+collect the namespace plugins and register them. If on the other hand you
+specify a ``PLUGINS`` settings as a list of plugins, this autodiscovery will
+be disabled and only listed plugins will be registered and you will have to
+explicitly list the namespace plugins as well.
 
-Alternatively, another method is to import them and add them to the list::
+If you are using ``PLUGINS`` setting, you can specify plugins in two ways.
+First method is using strings to the plugins. Namespace plugins can be
+specified either by their full names (``pelican.plugins.myplugin``) or by
+their short names (``myplugin``)::
+
+    PLUGINS = ['package.myplugin',
+               'namespace_plugin1',
+               'pelican.plugins.namespace_plugin2']
+
+Alternatively, you can import them in your settings file and pass the modules::
 
     from package import myplugin
-    PLUGINS = [myplugin,]
+    from pelican.plugins import namespace_plugin1, namespace_plugin2
+    PLUGINS = [myplugin, namespace_plugin1, namespace_plugin2]
 
 .. note::
 
@@ -36,11 +51,12 @@ the ``PLUGIN_PATHS`` list can be absolute or relative to the settings file::
 
 Where to find plugins
 =====================
+Namespace plugins can be found in the `pelican-plugins organization`_ as
+individual repositories. Legacy plugins are collected in the `pelican-plugins
+repository`_ and they will be slowly phased out to the namespace versions.
 
-We maintain a separate repository of plugins for people to share and use.
-Please visit the `pelican-plugins`_ repository for a list of available plugins.
-
-.. _pelican-plugins: https://github.com/getpelican/pelican-plugins
+.. _pelican-plugins organization: https://github.com/pelican-plugins
+.. _pelican-plugins repository: https://github.com/getpelican/pelican-plugins
 
 Please note that while we do our best to review and maintain these plugins,
 they are submitted by the Pelican community and thus may have varying levels of
@@ -69,6 +85,33 @@ which you map the signals to your plugin logic. Let's take a simple example::
     Signal receivers are weakly-referenced and thus must not be defined within
     your ``register`` callable or they will be garbage-collected before the
     signal is emitted.
+
+Namespace Plugin structure
+--------------------------
+
+Namespace plugins must adhere to a certain structure in order to function
+properly. They need to installable (i.e. contain ``setup.py`` or equivalent)
+and have a folder structure as follows::
+
+    myplugin
+    ├── pelican
+    │   └── plugins
+    │       └── myplugin
+    │           ├── __init__.py
+    │           └── ...
+    ├── ...
+    └── setup.py
+
+It is crucial that ``pelican`` or ``pelican/plugins`` folder **should not**
+contain an ``__init__.py`` file. In fact, it is best to have those folders
+empty besides the listed folders in the above structure and contain your
+plugin related files solely in the ``pelican/plugins/myplugin`` folder to
+avoid any issues.
+
+For easily setting up the proper structure, a `cookiecutter template for
+plugins`_ is provided. Refer to the README in the link for how to use it.
+
+.. _cookiecutter template for plugins: https://github.com/getpelican/cookiecutter-pelican-plugin
 
 List of signals
 ===============

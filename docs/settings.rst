@@ -194,7 +194,7 @@ Basic settings
    Controls the extension that will be used by the SourcesGenerator.  Defaults
    to ``.text``. If not a valid string the default value will be used.
 
-.. data:: PLUGINS = []
+.. data:: PLUGINS = None
 
    The list of plugins to load. See :ref:`plugins`.
 
