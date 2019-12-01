@@ -10,7 +10,7 @@ from urllib.parse import urljoin, urlparse, urlunparse
 
 import pytz
 
-from pelican import signals
+from pelican.plugins import signals
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import (deprecated_attribute, memoized, path_to_url,
                            posixize_path, sanitised_join, set_date_tzinfo,
