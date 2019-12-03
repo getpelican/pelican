@@ -409,9 +409,9 @@ needed by Pelican.
         except OSError as e:
             print('Error: {0}'.format(e))
         try:
-            with open(os.path.join(CONF['basedir'], 'excludes.txt'),
+            with open(os.path.join(CONF['basedir'], 'rsync_excludes.txt'),
                       'w', 'utf-8') as fd:
-                _template = _jinja_env.get_template('excludes.txt.jinja2')
+                _template = _jinja_env.get_template('rsync_excludes.txt.jinja2')
                 fd.write(_template.render(**CONF))
                 fd.close()
         except OSError as e:
