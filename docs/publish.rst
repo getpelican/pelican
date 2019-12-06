@@ -207,4 +207,4 @@ That's it! Your site should now be live.
 executables, such as ``python3``, you can set the ``PY`` and ``PELICAN``
 environment variables, respectively, to override the default executable names.)
 
-.. _Invoke: http://www.pyinvoke.org
+.. _Invoke: https://www.pyinvoke.org/

@@ -68,6 +68,7 @@ class TestPelican(LoggedTestCase):
             # Work around for running tests on Windows
             for msg in [
                     "LF will be replaced by CRLF",
+                    "CRLF will be replaced by LF",
                     "The file will have its original line endings"]:
                 if msg in line:
                     return True
@@ -117,7 +118,7 @@ class TestPelican(LoggedTestCase):
             'PATH': INPUT_PATH,
             'OUTPUT_PATH': self.temp_path,
             'CACHE_PATH': self.temp_cache,
-            'LOCALE': locale.normalize('en_US'),
+            'LOCALE': locale.normalize('en_US.UTF-8'),
         })
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
