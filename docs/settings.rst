@@ -1076,6 +1076,7 @@ Ordering content
    will sort pages by their basename.
 
 
+.. _settings/themes:
 
 Themes
 ======
@@ -1088,7 +1089,7 @@ themes.
 
    Theme to use to produce the output. Can be a relative or absolute path to a
    theme folder, or the name of a default theme or a theme installed via
-   ``pelican-themes`` (see below).
+   :doc:`pelican-themes` (see below).
 
 .. data:: THEME_STATIC_DIR = 'theme'
 
