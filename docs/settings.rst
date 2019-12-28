@@ -369,7 +369,7 @@ and pages anywhere you want.
     the `Python datetime documentation`_ for more information.
 
 .. _Python datetime documentation:
-    https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 
 Also, you can use other file metadata attributes as well:
 
