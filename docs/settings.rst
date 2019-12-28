@@ -362,7 +362,15 @@ variables allow you to place your articles in a location such as
 example below). These settings give you the flexibility to place your articles
 and pages anywhere you want.
 
-Also, you can use other file metadata attributes as well:
+If you don't want that flexibility and instead prefer that your generated
+output paths mirror your source content's filesystem path hierarchy, try the
+following settings::
+
+    PATH_METADATA = '(?P<path_no_ext>.*)\..*'
+    ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = '{path_no_ext}.html'
+
+Otherwise, you can use a variety of file metadata attributes within URL-related
+settings:
 
 * slug
 * date
