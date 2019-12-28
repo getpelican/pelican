@@ -645,7 +645,7 @@ Time and Date
    the language name (``lang`` metadata in your post content) as the key.
 
    In addition to the standard C89 strftime format codes that are listed in
-   `Python strftime documentation`_, you can use the ``-`` character between
+   `Python datetime documentation`_, you can use the ``-`` character between
    ``%`` and the format character to remove any leading zeros. For example,
    ``%d/%m/%Y`` will output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will result
    in ``1/1/2014``.
@@ -695,8 +695,6 @@ Time and Date
 
 
 .. [#] Default is the system locale.
-
-.. _Python strftime documentation: https://docs.python.org/library/datetime.html#strftime-strptime-behavior
 
 .. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
 
