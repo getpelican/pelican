@@ -362,15 +362,6 @@ variables allow you to place your articles in a location such as
 example below). These settings give you the flexibility to place your articles
 and pages anywhere you want.
 
-.. note::
-    If you specify a ``datetime`` directive, it will be substituted using the
-    input files' date metadata attribute. If the date is not specified for a
-    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
-    the `Python datetime documentation`_ for more information.
-
-.. _Python datetime documentation:
-    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
-
 Also, you can use other file metadata attributes as well:
 
 * slug
@@ -390,6 +381,15 @@ This would save your articles into something like
 ``/posts/2011/Aug/07/sample-post/index.html``, save your pages into
 ``/pages/about/index.html``, and render them available at URLs of
 ``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively.
+
+.. note::
+    If you specify a ``datetime`` directive, it will be substituted using the
+    input files' date metadata attribute. If the date is not specified for a
+    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
+    the `Python datetime documentation`_ for more information.
+
+.. _Python datetime documentation:
+    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 
 .. data:: RELATIVE_URLS = False
 
