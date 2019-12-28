@@ -102,6 +102,10 @@ your site::
 
     pelican-quickstart
 
+If it is running inside a virtual environment it will try to detect the path
+associated to it and save the project there. A custom path can be configured
+using the ``--path`` flag.
+
 Once you finish answering all the questions, your project will consist of the
 following hierarchy (except for *pages* — shown in parentheses below — which
 you can optionally add yourself if you plan to create non-chronological

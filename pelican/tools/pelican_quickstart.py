@@ -200,7 +200,7 @@ needed by Pelican.
     no_path_was_specified = hasattr(args.path, 'is_default_path')
     if os.path.isfile(project) and no_path_was_specified:
         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
-        print('Using project associated with current virtual environment.'
+        print('Using project associated with current virtual environment. '
               'Will save to:\n%s\n' % CONF['basedir'])
     else:
         CONF['basedir'] = os.path.abspath(os.path.expanduser(
