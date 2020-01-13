@@ -102,7 +102,7 @@ class URLWrapper(object):
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
         if not isinstance(value, str):
-            logger.warning('%s is set to %s', setting, value)
+            logger.warning('%s is set to %s' % (setting, value))
             return value
         else:
             if get_page_name:

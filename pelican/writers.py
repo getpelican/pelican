@@ -188,6 +188,7 @@ class Writer(object):
 
         if name is False or \
            name == "" or \
+           name is None or \
            not is_selected_for_writing(self.settings,
                                        os.path.join(self.output_path, name)):
             return

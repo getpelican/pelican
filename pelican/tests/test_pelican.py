@@ -265,3 +265,21 @@ class TestPelican(LoggedTestCase):
             sys.executable, '-m', 'pelican', '--help'
         ]).decode('ascii', 'replace')
         assert 'usage:' in output
+
+    def test_log_filter(self):
+        settings = read_settings(path=SAMPLE_CONFIG, override={
+            'PATH': INPUT_PATH,
+            'OUTPUT_PATH': self.temp_path,
+            'LOCALE': locale.normalize('en_US'),
+            'LOG_FILTER': [
+                (logging.WARN, 'CATEGORY_SAVE_AS is set to False'),
+                (logging.WARN, 'AUTHOR_SAVE_AS is set to None'),
+            ],
+            'CATEGORY_SAVE_AS': False,
+            'AUTHOR_SAVE_AS': None,
+        })
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+        self.assertLogCountEqual(
+            count=0,  # LOG_FILTER should filter out the log messages
+            level=logging.WARNING)
