@@ -475,6 +475,10 @@ def listen(server, port, output, excqueue=None):
             excqueue.put(traceback.format_exception_only(type(e), e)[-1])
         return
 
+    except KeyboardInterrupt:
+        print("\nKeyboard interrupt received. Shutting down server.")
+        httpd.socket.close()
+
 
 def main(argv=None):
     args = parse_arguments(argv)
