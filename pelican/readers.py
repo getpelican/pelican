@@ -609,6 +609,8 @@ class Readers(FileStampDataCacher):
                 smartypants.Attr.default = smartypants.Attr.set2
             elif typogrify_dashes == 'oldschool_inverted':
                 smartypants.Attr.default = smartypants.Attr.set3
+            else:
+                smartypants.Attr.default = smartypants.Attr.set1
 
             # Tell `smartypants` to also replace &quot; HTML entities with
             # smart quotes. This is necessary because Docutils has already
