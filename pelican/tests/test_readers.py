@@ -419,9 +419,9 @@ class RstReaderTest(ReaderTest):
     def test_typogrify_dashes_config(self):
         # Test default config
         page = self.read_file(
-            path = 'article_with_typogrify_dashes.rst',
-            TYPOGRIFY = True,
-            TYPOGRIFY_DASHES = 'default')
+            path='article_with_typogrify_dashes.rst',
+            TYPOGRIFY=True,
+            TYPOGRIFY_DASHES='default')
         expected = "<p>One: -; Two: &#8212;; Three:&nbsp;&#8212;-</p>\n"
         expected_title = "One -, two &#8212;, three &#8212;-&nbsp;dashes!"
 
@@ -430,9 +430,9 @@ class RstReaderTest(ReaderTest):
 
         # Test 'oldschool' variant
         page = self.read_file(
-            path = 'article_with_typogrify_dashes.rst',
-            TYPOGRIFY = True,
-            TYPOGRIFY_DASHES = 'oldschool')
+            path='article_with_typogrify_dashes.rst',
+            TYPOGRIFY=True,
+            TYPOGRIFY_DASHES='oldschool')
         expected = "<p>One: -; Two: &#8211;; Three:&nbsp;&#8212;</p>\n"
         expected_title = "One -, two &#8211;, three &#8212;&nbsp;dashes!"
 
@@ -441,9 +441,9 @@ class RstReaderTest(ReaderTest):
 
         # Test 'oldschool_inverted' variant
         page = self.read_file(
-            path = 'article_with_typogrify_dashes.rst',
-            TYPOGRIFY = True,
-            TYPOGRIFY_DASHES = 'oldschool_inverted')
+            path='article_with_typogrify_dashes.rst',
+            TYPOGRIFY=True,
+            TYPOGRIFY_DASHES='oldschool_inverted')
         expected = "<p>One: -; Two: &#8212;; Three:&nbsp;&#8211;</p>\n"
         expected_title = "One -, two &#8212;, three &#8211;&nbsp;dashes!"
 
@@ -668,9 +668,9 @@ class MdReaderTest(ReaderTest):
     def test_typogrify_dashes_config(self):
         # Test default config
         page = self.read_file(
-            path = 'article_with_typogrify_dashes.md',
-            TYPOGRIFY = True,
-            TYPOGRIFY_DASHES = 'default')
+            path='article_with_typogrify_dashes.md',
+            TYPOGRIFY=True,
+            TYPOGRIFY_DASHES='default')
         expected = "<p>One: -; Two: &#8212;; Three:&nbsp;&#8212;-</p>"
         expected_title = "One -, two &#8212;, three &#8212;-&nbsp;dashes!"
 
@@ -679,9 +679,9 @@ class MdReaderTest(ReaderTest):
 
         # Test 'oldschool' variant
         page = self.read_file(
-            path = 'article_with_typogrify_dashes.md',
-            TYPOGRIFY = True,
-            TYPOGRIFY_DASHES = 'oldschool')
+            path='article_with_typogrify_dashes.md',
+            TYPOGRIFY=True,
+            TYPOGRIFY_DASHES='oldschool')
         expected = "<p>One: -; Two: &#8211;; Three:&nbsp;&#8212;</p>"
         expected_title = "One -, two &#8211;, three &#8212;&nbsp;dashes!"
 
@@ -690,9 +690,9 @@ class MdReaderTest(ReaderTest):
 
         # Test 'oldschool_inverted' variant
         page = self.read_file(
-            path = 'article_with_typogrify_dashes.md',
-            TYPOGRIFY = True,
-            TYPOGRIFY_DASHES = 'oldschool_inverted')
+            path='article_with_typogrify_dashes.md',
+            TYPOGRIFY=True,
+            TYPOGRIFY_DASHES='oldschool_inverted')
         expected = "<p>One: -; Two: &#8212;; Three:&nbsp;&#8211;</p>"
         expected_title = "One -, two &#8212;, three &#8211;&nbsp;dashes!"
 
