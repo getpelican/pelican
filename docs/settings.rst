@@ -362,16 +362,15 @@ variables allow you to place your articles in a location such as
 example below). These settings give you the flexibility to place your articles
 and pages anywhere you want.
 
-.. note::
-    If you specify a ``datetime`` directive, it will be substituted using the
-    input files' date metadata attribute. If the date is not specified for a
-    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
-    the `Python datetime documentation`_ for more information.
+If you don't want that flexibility and instead prefer that your generated
+output paths mirror your source content's filesystem path hierarchy, try the
+following settings::
 
-.. _Python datetime documentation:
-    https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+    PATH_METADATA = '(?P<path_no_ext>.*)\..*'
+    ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = '{path_no_ext}.html'
 
-Also, you can use other file metadata attributes as well:
+Otherwise, you can use a variety of file metadata attributes within URL-related
+settings:
 
 * slug
 * date
@@ -390,6 +389,15 @@ This would save your articles into something like
 ``/posts/2011/Aug/07/sample-post/index.html``, save your pages into
 ``/pages/about/index.html``, and render them available at URLs of
 ``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively.
+
+.. note::
+    If you specify a ``datetime`` directive, it will be substituted using the
+    input files' date metadata attribute. If the date is not specified for a
+    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
+    the `Python datetime documentation`_ for more information.
+
+.. _Python datetime documentation:
+    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 
 .. data:: RELATIVE_URLS = False
 
@@ -645,7 +653,7 @@ Time and Date
    the language name (``lang`` metadata in your post content) as the key.
 
    In addition to the standard C89 strftime format codes that are listed in
-   `Python strftime documentation`_, you can use the ``-`` character between
+   `Python datetime documentation`_, you can use the ``-`` character between
    ``%`` and the format character to remove any leading zeros. For example,
    ``%d/%m/%Y`` will output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will result
    in ``1/1/2014``.
@@ -695,8 +703,6 @@ Time and Date
 
 
 .. [#] Default is the system locale.
-
-.. _Python strftime documentation: https://docs.python.org/library/datetime.html#strftime-strptime-behavior
 
 .. _locales on Windows: https://www.microsoft.com/en-us/download/details.aspx?id=55979
 

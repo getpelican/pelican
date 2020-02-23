@@ -140,6 +140,10 @@ Install the needed dependencies and set up the project::
 
     invoke setup
 
+Create a topic branch for your plugin bug fix or feature::
+
+    git checkout -b name-of-your-bugfix-or-feature
+
 After writing new tests for your plugin changes, run the plugin test suite::
 
     invoke tests
