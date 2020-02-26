@@ -102,6 +102,13 @@ your site::
 
     pelican-quickstart
 
+If run inside an activated virtual environment, ``pelican-quickstart`` will
+look for an associated project path inside ``$VIRTUAL_ENV/.project``. If that
+file exists and contains a valid directory path, the new Pelican project will
+be saved at that location. Otherwise, the default is the current working
+directory. To set the new project path on initial invocation, use:
+``pelican-quickstart --path /your/desired/directory``
+
 Once you finish answering all the questions, your project will consist of the
 following hierarchy (except for *pages* — shown in parentheses below — which
 you can optionally add yourself if you plan to create non-chronological
