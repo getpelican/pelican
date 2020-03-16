@@ -42,7 +42,8 @@ DUPLICATES_DEFINITIONS_ALLOWED = {
     'save_as': False,
     'url': False,
     'authors': False,
-    'slug': False
+    'slug': False,
+    'image': False
 }
 
 METADATA_PROCESSORS = {
@@ -60,6 +61,7 @@ METADATA_PROCESSORS = {
         for author in ensure_metadata_list(x)
     ] or _DISCARD),
     'slug': lambda x, y: x.strip() or _DISCARD,
+    'image': lambda x, y: x.strip() or _DISCARD
 }
 
 logger = logging.getLogger(__name__)

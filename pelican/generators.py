@@ -286,6 +286,7 @@ class ArticlesGenerator(CachingGenerator):
         self.categories = defaultdict(list)
         self.related_posts = []
         self.authors = defaultdict(list)
+        self.images = defaultdict(list)
         self.drafts = []                   # only drafts in default language
         self.drafts_translations = []
         super().__init__(*args, **kwargs)

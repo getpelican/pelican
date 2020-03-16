@@ -81,6 +81,7 @@ class Writer(object):
         feed.add_item(
             title=title,
             link=link,
+            image=item.image,
             unique_id=get_tag_uri(link, item.date),
             description=description,
             content=content,

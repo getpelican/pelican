@@ -30,6 +30,9 @@
  {% import 'translations.html' as translations with context %}
  {{ translations.translations_for(article) }}
   </header>
+  {% if article.image %}
+    <img src="{{ article.image }}"/>
+  {% endif %}
   <footer class="post-info">
     <time class="published" datetime="{{ article.date.isoformat() }}">
       {{ article.locale_date }}
