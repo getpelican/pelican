@@ -110,6 +110,7 @@ class TestPage(LoggedTestCase):
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10,
                                                            'test_marker'))
+        self.assertIn('test_marker', page.summary)
 
     def test_summary_get_summary_warning(self):
         """calling ._get_summary() should issue a warning"""
