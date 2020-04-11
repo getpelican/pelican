@@ -271,6 +271,11 @@ Basic settings
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to be a copy of the original content.
 
+.. data:: SUMMARY_END_MARKER = '…'
+
+   When creating a short summary of an article and the result was truncated to
+   match the required word length, this will be used as the truncation marker.
+
 .. data:: WITH_FUTURE_DATES = True
 
    If disabled, content with dates in the future will get a default status of
