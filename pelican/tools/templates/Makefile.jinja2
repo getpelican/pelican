@@ -108,7 +108,11 @@ else
 endif
 
 serve-global:
+ifdef PORT
+	$(PELICAN) -l $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS) -p $(PORT) -b $(SERVER)
+else
 	$(PELICAN) -l $(INPUTDIR) -o $(OUTPUTDIR) -s $(CONFFILE) $(PELICANOPTS) -b $(SERVER)
+endif
 
 devserver:
 ifdef PORT
