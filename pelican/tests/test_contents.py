@@ -98,6 +98,20 @@ class TestPage(LoggedTestCase):
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, '')
 
+    def test_summary_end_marker(self):
+        # If a :SUMMARY_END_MARKER: is set, and there is no other summary,
+        # generated summary should contain the specified marker at the end.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs['settings'] = settings
+        del page_kwargs['metadata']['summary']
+        settings['SUMMARY_END_MARKER'] = 'test_marker'
+        settings['SUMMARY_MAX_LENGTH'] = 10
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10,
+                                                           'test_marker'))
+        self.assertIn('test_marker', page.summary)
+
     def test_summary_get_summary_warning(self):
         """calling ._get_summary() should issue a warning"""
         page_kwargs = self._copy_page_kwargs()
