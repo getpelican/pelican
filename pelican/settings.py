@@ -120,6 +120,8 @@ DEFAULT_CONFIG = {
         'output_format': 'html5',
     },
     'JINJA_FILTERS': {},
+    'JINJA_GLOBALS': {},
+    'JINJA_TESTS': {},
     'JINJA_ENVIRONMENT': {
         'trim_blocks': True,
         'lstrip_blocks': True,
