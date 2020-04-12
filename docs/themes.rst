@@ -4,7 +4,7 @@ Creating themes
 ###############
 
 To generate its HTML output, Pelican uses the `Jinja
-<http://jinja.pocoo.org/>`_ templating engine due to its flexibility and
+<https://palletsprojects.com/p/jinja/>`_ templating engine due to its flexibility and
 straightforward syntax. If you want to create your own theme, feel free to take
 inspiration from the `"simple" theme
 <https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_.
@@ -104,7 +104,7 @@ that allow them to be easily sorted by name::
 If you want to sort based on different criteria, `Jinja's sort command`__ has a
 number of options.
 
-__ http://jinja.pocoo.org/docs/templates/#sort
+__ https://jinja.palletsprojects.com/en/master/templates/#sort
 
 
 Date Formatting

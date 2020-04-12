@@ -1,6 +1,7 @@
 # Tests
 mock
-pytest
+pytest==5.3.5
+pytest-cov
 
 # Optional Packages
 Markdown >= 3.1
