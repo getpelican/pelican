@@ -303,7 +303,7 @@ class MarkdownReader(BaseReader):
         formatted_fields = self.settings['FORMATTED_FIELDS']
 
         # prevent metadata extraction in fields
-        self._md.preprocessors.pop('meta', None)
+        self._md.preprocessors.deregister('meta')
 
         output = {}
         for name, value in meta.items():
