@@ -1145,3 +1145,80 @@ class TestStaticGenerator(unittest.TestCase):
         self.assertTrue(
             os.path.isdir(os.path.join(self.temp_output, "static")))
         self.assertTrue(os.path.isfile(self.endfile))
+
+
+class TestJinja2Environment(unittest.TestCase):
+
+    def setUp(self):
+        self.temp_content = mkdtemp(prefix='pelicantests.')
+        self.temp_output = mkdtemp(prefix='pelicantests.')
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
+
+    def tearDown(self):
+        rmtree(self.temp_content)
+        rmtree(self.temp_output)
+        locale.setlocale(locale.LC_ALL, self.old_locale)
+
+    def _test_jinja2_helper(self, additional_settings, content, expected):
+        settings = get_settings()
+        settings['STATIC_PATHS'] = ['static']
+        settings['TEMPLATE_PAGES'] = {
+            'template/source.html': 'generated/file.html'
+        }
+        settings.update(additional_settings)
+
+        generator = TemplatePagesGenerator(
+            context={'foo': 'foo', 'bar': 'bar'}, settings=settings,
+            path=self.temp_content, theme='', output_path=self.temp_output)
+
+        # create a dummy template file
+        template_dir = os.path.join(self.temp_content, 'template')
+        template_path = os.path.join(template_dir, 'source.html')
+        os.makedirs(template_dir)
+        with open(template_path, 'w') as template_file:
+            template_file.write(content)
+
+        writer = Writer(self.temp_output, settings=settings)
+        generator.generate_output(writer)
+
+        output_path = os.path.join(self.temp_output, 'generated', 'file.html')
+
+        # output file has been generated
+        self.assertTrue(os.path.exists(output_path))
+
+        # output content is correct
+        with open(output_path, 'r') as output_file:
+            self.assertEqual(output_file.read(), expected)
+
+    def test_jinja2_filter(self):
+        """JINJA_FILTERS adds custom filters to Jinja2 environment"""
+        content = 'foo: {{ foo|custom_filter }}, bar: {{ bar|custom_filter }}'
+        settings = {'JINJA_FILTERS': {'custom_filter': lambda x: x.upper()}}
+        expected = 'foo: FOO, bar: BAR'
+
+        self._test_jinja2_helper(settings, content, expected)
+
+    def test_jinja2_test(self):
+        """JINJA_TESTS adds custom tests to Jinja2 environment"""
+        content = 'foo {{ foo is custom_test }}, bar {{ bar is custom_test }}'
+        settings = {'JINJA_TESTS': {'custom_test': lambda x: x == 'bar'}}
+        expected = 'foo False, bar True'
+
+        self._test_jinja2_helper(settings, content, expected)
+
+    def test_jinja2_global(self):
+        """JINJA_GLOBALS adds custom globals to Jinja2 environment"""
+        content = '{{ custom_global }}'
+        settings = {'JINJA_GLOBALS': {'custom_global': 'foobar'}}
+        expected = 'foobar'
+
+        self._test_jinja2_helper(settings, content, expected)
+
+    def test_jinja2_extension(self):
+        """JINJA_ENVIRONMENT adds extensions to Jinja2 environment"""
+        content = '{% set stuff = [] %}{% do stuff.append(1) %}{{ stuff }}'
+        settings = {'JINJA_ENVIRONMENT': {'extensions': ['jinja2.ext.do']}}
+        expected = '[1]'
+
+        self._test_jinja2_helper(settings, content, expected)

@@ -101,7 +101,18 @@ Basic settings
 
     JINJA_FILTERS = {'urlencode': urlencode_filter}
 
-   See `Jinja custom filters documentation`_.
+   See: `Jinja custom filters documentation`_.
+
+.. data:: JINJA_GLOBALS = {}
+
+   A dictionary of custom objects to map into the Jinja2 global environment
+   namespace. The dictionary should map the global name to the global
+   variable/function. See: `Jinja global namespace documentation`_.
+
+.. data:: JINJA_TESTS = {}
+
+   A dictionary of custom Jinja2 tests you want to use. The dictionary should
+   map test names to test functions. See: `Jinja custom tests documentation`_.
 
 .. data:: LOG_FILTER = []
 
@@ -708,6 +719,10 @@ Time and Date
 
 
 .. [#] Default is the system locale.
+
+.. _Jinja custom filters documentation: https://jinja.palletsprojects.com/en/master/api/#custom-filters
+.. _Jinja global namespace documentation: https://jinja.palletsprojects.com/en/master/api/#the-global-namespace
+.. _Jinja custom tests documentation: https://jinja.palletsprojects.com/en/master/api/#custom-tests
 
 .. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
 
@@ -1357,6 +1372,5 @@ Example settings
     :language: python
 
 
-.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
 .. _Jinja Environment documentation: http://jinja.pocoo.org/docs/dev/api/#jinja2.Environment
 .. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html
