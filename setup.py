@@ -9,7 +9,7 @@ from setuptools import setup
 
 version = "4.2.0"
 
-requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
+requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.11', 'pygments',
             'docutils>=0.15', 'pytz >= 0a', 'blinker', 'unidecode',
             'python-dateutil']
 
