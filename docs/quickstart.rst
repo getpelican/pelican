@@ -30,7 +30,7 @@ by asking some questions about your site::
 For questions that have default values denoted in brackets, feel free to use
 the Return key to accept those default values [#tzlocal_fn]_. When asked for
 your URL prefix, enter your domain name as indicated (e.g.,
-``http://example.com``).
+``https://example.com``).
 
 Create an article
 -----------------
@@ -78,5 +78,5 @@ Footnotes
 ---------
 
 .. [#tzlocal_fn] You can help localize default fields by installing the
-                 optional `tzlocal <https://pypi.python.org/pypi/tzlocal>`_
+                 optional `tzlocal <https://pypi.org/project/tzlocal/>`_
                  module.

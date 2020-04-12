@@ -709,7 +709,7 @@ Time and Date
 
 .. [#] Default is the system locale.
 
-.. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
+.. _locales on Windows: https://www.microsoft.com/en-us/download/details.aspx?id=55979
 
 .. _locale(1): https://linux.die.net/man/1/locale
 
@@ -1357,6 +1357,6 @@ Example settings
     :language: python
 
 
-.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
-.. _Jinja Environment documentation: http://jinja.pocoo.org/docs/dev/api/#jinja2.Environment
+.. _Jinja custom filters documentation: https://jinja.palletsprojects.com/en/master/api/#custom-filters
+.. _Jinja Environment documentation: https://jinja.palletsprojects.com/en/master/api/#jinja2.Environment
 .. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html

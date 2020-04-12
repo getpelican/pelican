@@ -50,8 +50,8 @@ Why the name "Pelican"?
 .. _Python: https://www.python.org/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
 .. _Markdown: https://daringfireball.net/projects/markdown/
-.. _Jinja2: http://jinja.pocoo.org/
-.. _Pygments: http://pygments.org/
+.. _Jinja2: https://palletsprojects.com/p/jinja/
+.. _Pygments: https://pygments.org/
 .. _`Pelican's documentation`: https://docs.getpelican.com/
 .. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
 .. _`hosted on GitHub`: https://github.com/getpelican/pelican
