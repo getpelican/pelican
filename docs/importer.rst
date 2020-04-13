@@ -39,8 +39,8 @@ Dependencies
 - *Pandoc*, see the `Pandoc site`_ for installation instructions on your
   operating system.
 
-.. _Pandoc: http://johnmacfarlane.net/pandoc/
-.. _Pandoc site: http://johnmacfarlane.net/pandoc/installing.html
+.. _Pandoc: https://pandoc.org/
+.. _Pandoc site: https://pandoc.org/installing.html
 
 
 Usage
@@ -58,7 +58,7 @@ Positional arguments
   =============         ============================================================================
   ``input``             The input file to read
   ``api_token``         (Posterous only) api_token can be obtained from http://posterous.com/api/
-  ``api_key``           (Tumblr only) api_key can be obtained from http://www.tumblr.com/oauth/apps
+  ``api_key``           (Tumblr only) api_key can be obtained from https://www.tumblr.com/oauth/apps
   =============         ============================================================================
 
 Optional arguments
@@ -137,7 +137,7 @@ Tests
 
 To test the module, one can use sample files:
 
-- for WordPress: http://www.wpbeginner.com/wp-themes/how-to-add-dummy-content-for-theme-development-in-wordpress/
+- for WordPress: https://www.wpbeginner.com/wp-themes/how-to-add-dummy-content-for-theme-development-in-wordpress/
 - for Dotclear: http://media.dotaddict.org/tda/downloads/lorem-backup.txt
 
-.. _more_categories: http://github.com/getpelican/pelican-plugins/tree/master/more_categories
+.. _more_categories: https://github.com/getpelican/pelican-plugins/tree/master/more_categories

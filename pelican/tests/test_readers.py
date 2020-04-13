@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import os
-
-import six
 
 from pelican import readers
 from pelican.tests.support import get_settings, unittest
@@ -64,8 +61,7 @@ class TestAssertDictHasSubset(ReaderTest):
         self.assertDictHasSubset(self.dictionary, self.dictionary)
 
     def test_fail_not_set(self):
-        six.assertRaisesRegex(
-            self,
+        self.assertRaisesRegex(
             AssertionError,
             r'Expected.*key-c.*to have value.*val-c.*but was not in Dict',
             self.assertDictHasSubset,
@@ -73,8 +69,7 @@ class TestAssertDictHasSubset(ReaderTest):
             {'key-c': 'val-c'})
 
     def test_fail_wrong_val(self):
-        six.assertRaisesRegex(
-            self,
+        self.assertRaisesRegex(
             AssertionError,
             r'Expected .*key-a.* to have value .*val-b.* but was .*val-a.*',
             self.assertDictHasSubset,
@@ -445,7 +440,7 @@ class RstReaderTest(ReaderTest):
     def test_parse_error(self):
         # Verify that it raises an Exception, not nothing and not SystemExit or
         # some such
-        with six.assertRaisesRegex(self, Exception, "underline too short"):
+        with self.assertRaisesRegex(Exception, "underline too short"):
             self.read_file(path='../parse_error/parse_error.rst')
 
 
@@ -480,7 +475,10 @@ class MdReaderTest(ReaderTest):
         self.assertDictHasSubset(metadata, expected)
 
     def test_article_with_footnote(self):
-        reader = readers.MarkdownReader(settings=get_settings())
+        settings = get_settings()
+        ec = settings['MARKDOWN']['extension_configs']
+        ec['markdown.extensions.footnotes'] = {'SEPARATOR': '-'}
+        reader = readers.MarkdownReader(settings)
         content, metadata = reader.read(
             _path('article_with_markdown_and_footnote.md'))
         expected_content = (
@@ -647,6 +645,19 @@ class MdReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(metadata, expected)
 
+    def test_metadata_not_parsed_for_metadata(self):
+        settings = get_settings()
+        settings['FORMATTED_FIELDS'] = ['summary']
+
+        reader = readers.MarkdownReader(settings=settings)
+        content, metadata = reader.read(
+            _path('article_with_markdown_and_nested_metadata.md'))
+        expected = {
+            'title': 'Article with markdown and nested summary metadata',
+            'summary': '<p>Test: This metadata value looks like metadata</p>',
+        }
+        self.assertDictHasSubset(metadata, expected)
+
     def test_empty_file(self):
         reader = readers.MarkdownReader(settings=get_settings())
         content, metadata = reader.read(
@@ -760,4 +771,11 @@ class HTMLReaderTest(ReaderTest):
             'title': 'Article with Nonconformant HTML meta tags',
         }
 
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_article_with_inline_svg(self):
+        page = self.read_file(path='article_with_inline_svg.html')
+        expected = {
+            'title': 'Article with an inline SVG',
+        }
         self.assertDictHasSubset(page.metadata, expected)

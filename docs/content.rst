@@ -71,22 +71,29 @@ Metadata syntax for Markdown posts should follow this pattern::
     This is the content of my super blog post.
 
 You can also have your own metadata keys (so long as they don't conflict with
-reserved metadata keywords) for use in your python templates. The following is
-the list of reserved metadata keywords:
+reserved metadata keywords) for use in your templates. The following table
+contains a list of reserved metadata keywords:
 
-* `Title`
-* `Tags`
-* `Date`
-* `Modified`
-* `Status`
-* `Category`
-* `Author`
-* `Authors`
-* `Slug`
-* `Summary`
-* `Template`
-* `Save_as`
-* `Url`
+=============== ===============================================================
+    Metadata                              Description
+=============== ===============================================================
+``title``       Title of the article or page
+``date``        Publication date (e.g., ``YYYY-MM-DD HH:SS``)
+``modified``    Modification date (e.g., ``YYYY-MM-DD HH:SS``)
+``tags``        Content tags, separated by commas
+``keywords``    Content keywords, separated by commas (HTML content only)
+``category``    Content category (one only — not multiple)
+``slug``        Identifier used in URLs and translations
+``author``      Content author, when there is only one
+``authors``     Content authors, when there are multiple
+``summary``     Brief description of content for index pages
+``lang``        Content language ID (``en``, ``fr``, etc.)
+``translation`` Is content is a translation of another (``true`` or ``false``)
+``status``      Content status: ``draft``, ``hidden``, or ``published``
+``template``    Name of template to use to generate content (without extension)
+``save_as``     Save content to this relative file path
+``url``         URL to use for this article/page
+=============== ===============================================================
 
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
@@ -116,7 +123,7 @@ specified either via the ``tags`` metadata, as is standard in Pelican, or via
 the ``keywords`` metadata, as is standard in HTML. The two can be used
 interchangeably.
 
-Note that, aside from the title, none of this article metadata is mandatory:
+Note that, aside from the title, none of this content metadata is mandatory:
 if the date is not specified and ``DEFAULT_DATE`` is set to ``'fs'``, Pelican
 will rely on the file's "mtime" timestamp, and the category can be determined
 by the directory in which the file resides. For example, a file located at
@@ -125,6 +132,15 @@ like to organize your files in other ways where the name of the subfolder would
 not be a good category name, you can set the setting ``USE_FOLDER_AS_CATEGORY``
 to ``False``.  When parsing dates given in the page metadata, Pelican supports
 the W3C's `suggested subset ISO 8601`__.
+
+So the title is the only required metadata. If that bothers you, worry not.
+Instead of manually specifying a title in your metadata each time, you can use
+the source content file name as the title. For example, a Markdown source file
+named ``Publishing via Pelican.md`` would automatically be assigned a title of
+*Publishing via Pelican*. If you would prefer this behavior, add the following
+line to your settings file::
+
+    FILENAME_METADATA = '(?P<title>.*)'
 
 .. note::
 
@@ -373,6 +389,40 @@ to allow linking to both generated articles and pages and their static sources.
 
 Support for the old syntax may eventually be removed.
 
+Including other files
+---------------------
+Both Markdown and reStructuredText syntaxes provide mechanisms for this.
+
+Following below are some examples for **reStructuredText** using `the include directive`_:
+
+    .. code-block:: rst
+
+        .. include:: file.rst
+
+Include a fragment of a file delimited by two identifiers, highlighted as C++ (slicing based on line numbers is also possible):
+
+    .. code-block:: rst
+
+        .. include:: main.cpp
+            :code: c++
+            :start-after: // begin
+            :end-before: // end
+
+Include a raw HTML file (or an inline SVG) and put it directly into the output without any processing:
+
+    .. code-block:: rst
+
+        .. raw:: html
+            :file: table.html
+
+For **Markdown**, one must rely on an extension. For example, using the `mdx_include plugin`_:
+
+    .. code-block:: none
+
+        ```html
+        {! template.html !}
+        ```
+
 
 Importing an existing site
 ==========================
@@ -474,7 +524,7 @@ indenting both the identifier and the code::
         print("The path-less shebang syntax *will* show line numbers.")
 
 The specified identifier (e.g. ``python``, ``ruby``) should be one that
-appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
+appears on the `list of available lexers <https://pygments.org/docs/lexers/>`_.
 
 When using reStructuredText the following options are available in the
 code-block directive:
@@ -515,7 +565,7 @@ tagurlformat    string        format for the ctag links.
 
 Note that, depending on the version, your Pygments module might not have
 all of these options available. Refer to the *HtmlFormatter* section of the
-`Pygments documentation <http://pygments.org/docs/formatters/>`_ for more
+`Pygments documentation <https://pygments.org/docs/formatters/>`_ for more
 details on each of the options.
 
 For example, the following code block enables line numbers, starting at 153,
@@ -560,9 +610,11 @@ the ``DEFAULT_METADATA``::
 To publish a post when the default status is ``draft``, update the post's
 metadata to include ``Status: published``.
 
-.. _W3C ISO 8601: http://www.w3.org/TR/NOTE-datetime
-.. _AsciiDoc: http://www.methods.co.nz/asciidoc/
-.. _pelican-plugins: http://github.com/getpelican/pelican-plugins
+.. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
+.. _AsciiDoc: https://www.methods.co.nz/asciidoc/
+.. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 .. _Markdown Extensions: https://python-markdown.github.io/extensions/
 .. _CodeHilite extension: https://python-markdown.github.io/extensions/code_hilite/#syntax
-.. _i18n_subsites plugin: http://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
+.. _i18n_subsites plugin: https://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
+.. _the include directive: http://docutils.sourceforge.net/docs/ref/rst/directives.html#include
+.. _mdx_include plugin: https://github.com/neurobin/mdx_include

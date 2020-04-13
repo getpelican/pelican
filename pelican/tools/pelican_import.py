@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import argparse
 import logging
@@ -9,23 +8,17 @@ import re
 import subprocess
 import sys
 import time
-from codecs import open
 from collections import defaultdict
-
-from six.moves.urllib.error import URLError
-from six.moves.urllib.parse import quote, urlparse, urlsplit, urlunsplit
-from six.moves.urllib.request import urlretrieve
+from html import unescape
+from urllib.error import URLError
+from urllib.parse import quote, urlparse, urlsplit, urlunsplit
+from urllib.request import urlretrieve
 
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
 from pelican.settings import read_settings
 from pelican.utils import SafeDatetime, slugify
 
-try:
-    from html import unescape  # py3.5+
-except ImportError:
-    from six.moves.html_parser import HTMLParser
-    unescape = HTMLParser().unescape
 
 logger = logging.getLogger(__name__)
 
@@ -396,19 +389,8 @@ def posterous2fields(api_token, email, password):
     """Imports posterous posts"""
     import base64
     from datetime import timedelta
-    try:
-        # py3k import
-        import json
-    except ImportError:
-        # py2 import
-        import simplejson as json
-
-    try:
-        # py3k import
-        import urllib.request as urllib_request
-    except ImportError:
-        # py2 import
-        import urllib2 as urllib_request
+    import json
+    import urllib.request as urllib_request
 
     def get_posterous_posts(api_token, email, password, page=1):
         base64string = base64.encodestring(
@@ -451,22 +433,11 @@ def posterous2fields(api_token, email, password):
 
 def tumblr2fields(api_key, blogname):
     """ Imports Tumblr posts (API v2)"""
-    try:
-        # py3k import
-        import json
-    except ImportError:
-        # py2 import
-        import simplejson as json
-
-    try:
-        # py3k import
-        import urllib.request as urllib_request
-    except ImportError:
-        # py2 import
-        import urllib2 as urllib_request
+    import json
+    import urllib.request as urllib_request
 
     def get_tumblr_posts(api_key, blogname, offset=0):
-        url = ("http://api.tumblr.com/v2/blog/%s.tumblr.com/"
+        url = ("https://api.tumblr.com/v2/blog/%s.tumblr.com/"
                "posts?api_key=%s&offset=%d&filter=raw") % (
             blogname, api_key, offset)
         request = urllib_request.Request(url)
@@ -636,7 +607,7 @@ def get_out_filename(output_path, filename, ext, kind,
     filename = os.path.basename(filename)
 
     # Enforce filename restrictions for various filesystems at once; see
-    # http://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+    # https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     # we do not need to filter words because an extension will be appended
     filename = re.sub(r'[<>:"/\\|?*^% ]', '-', filename)  # invalid chars
     filename = filename.lstrip('.')  # should not start with a dot

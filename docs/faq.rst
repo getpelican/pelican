@@ -48,7 +48,7 @@ themes to style code syntax highlighting via CSS. Specifically, you can
 customize the appearance of your syntax highlighting via the ``.highlight pre``
 class in your theme's CSS file. To see how various styles can be used to render
 Django code, for example, use the style selector drop-down at top-right on the
-`Pygments project demo site <http://pygments.org/demo/>`_.
+`Pygments project demo site <https://pygments.org/demo/>`_.
 
 You can use the following example commands to generate a starting CSS file from
 a Pygments built-in style (in this case, "monokai") and then copy the generated
@@ -167,7 +167,7 @@ I'm getting a warning about feeds generated without SITEURL being set properly
 ==============================================================================
 
 `RSS and Atom feeds require all URL links to be absolute
-<http://validator.w3.org/feed/docs/rss2.html#comments>`_. In order to properly
+<https://validator.w3.org/feed/docs/rss2.html#comments>`_. In order to properly
 generate links in Pelican you will need to set ``SITEURL`` to the full path of
 your site.
 

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import locale
 import os
-from codecs import open
 from shutil import copy, rmtree
 from tempfile import mkdtemp
 
@@ -241,6 +239,8 @@ class TestArticlesGenerator(unittest.TestCase):
             ['Article title', 'published', 'Default', 'article'],
             ['Article with markdown and summary metadata multi', 'published',
              'Default', 'article'],
+            ['Article with markdown and nested summary metadata', 'published',
+             'Default', 'article'],
             ['Article with markdown and summary metadata single', 'published',
              'Default', 'article'],
             ['Article with markdown containing footnotes', 'published',
@@ -262,6 +262,7 @@ class TestArticlesGenerator(unittest.TestCase):
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['This is a super article !', 'published', 'yeah', 'article'],
             ['This is a super article !', 'published', 'Default', 'article'],
+            ['Article with an inline SVG', 'published', 'Default', 'article'],
             ['This is an article with category !', 'published', 'yeah',
              'article'],
             ['This is an article with multiple authors!', 'published',
@@ -420,7 +421,8 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
-                                 url="posts/1970/")
+                                 url="posts/1970/",
+                                 all_articles=generator.articles)
 
         settings['MONTH_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/index.html'
@@ -444,7 +446,8 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
-                                 url="posts/1970/Jan/")
+                                 url="posts/1970/Jan/",
+                                 all_articles=generator.articles)
 
         settings['DAY_ARCHIVE_SAVE_AS'] = \
             'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
@@ -476,7 +479,8 @@ class TestArticlesGenerator(unittest.TestCase):
                                  generator.get_template("period_archives"),
                                  context, blog=True, articles=articles,
                                  dates=dates, template_name='period_archives',
-                                 url="posts/1970/Jan/01/")
+                                 url="posts/1970/Jan/01/",
+                                 all_articles=generator.articles)
         locale.setlocale(locale.LC_ALL, old_locale)
 
     def test_nonexistent_template(self):
@@ -551,6 +555,8 @@ class TestArticlesGenerator(unittest.TestCase):
             'An Article With Code Block To Test Typogrify Ignore',
             'Article title',
             'Article with Nonconformant HTML meta tags',
+            'Article with an inline SVG',
+            'Article with markdown and nested summary metadata',
             'Article with markdown and summary metadata multi',
             'Article with markdown and summary metadata single',
             'Article with markdown containing footnotes',
@@ -1086,7 +1092,12 @@ class TestStaticGenerator(unittest.TestCase):
         os.mkdir(os.path.join(self.temp_output, "static"))
         self.generator.fallback_to_symlinks = True
         self.generator.generate_context()
-        self.generator.generate_output(None)
+        try:
+            self.generator.generate_output(None)
+        except OSError as e:
+            # On Windows, possibly others, due to not holding symbolic link
+            # privilege
+            self.skipTest(e)
         self.assertTrue(os.path.islink(self.endfile))
 
     def test_existing_symlink_is_considered_up_to_date(self):
@@ -1094,7 +1105,11 @@ class TestStaticGenerator(unittest.TestCase):
         with open(self.startfile, "w") as f:
             f.write("staticcontent")
         os.mkdir(os.path.join(self.temp_output, "static"))
-        os.symlink(self.startfile, self.endfile)
+        try:
+            os.symlink(self.startfile, self.endfile)
+        except OSError as e:
+            # On Windows, possibly others
+            self.skipTest(e)
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
         staticfile.save_as = self.endfile
@@ -1106,7 +1121,11 @@ class TestStaticGenerator(unittest.TestCase):
         with open(self.startfile, "w") as f:
             f.write("staticcontent")
         os.mkdir(os.path.join(self.temp_output, "static"))
-        os.symlink("invalid", self.endfile)
+        try:
+            os.symlink("invalid", self.endfile)
+        except OSError as e:
+            # On Windows, possibly others
+            self.skipTest(e)
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
         staticfile.save_as = self.endfile
@@ -1129,3 +1148,80 @@ class TestStaticGenerator(unittest.TestCase):
         self.assertTrue(
             os.path.isdir(os.path.join(self.temp_output, "static")))
         self.assertTrue(os.path.isfile(self.endfile))
+
+
+class TestJinja2Environment(unittest.TestCase):
+
+    def setUp(self):
+        self.temp_content = mkdtemp(prefix='pelicantests.')
+        self.temp_output = mkdtemp(prefix='pelicantests.')
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
+
+    def tearDown(self):
+        rmtree(self.temp_content)
+        rmtree(self.temp_output)
+        locale.setlocale(locale.LC_ALL, self.old_locale)
+
+    def _test_jinja2_helper(self, additional_settings, content, expected):
+        settings = get_settings()
+        settings['STATIC_PATHS'] = ['static']
+        settings['TEMPLATE_PAGES'] = {
+            'template/source.html': 'generated/file.html'
+        }
+        settings.update(additional_settings)
+
+        generator = TemplatePagesGenerator(
+            context={'foo': 'foo', 'bar': 'bar'}, settings=settings,
+            path=self.temp_content, theme='', output_path=self.temp_output)
+
+        # create a dummy template file
+        template_dir = os.path.join(self.temp_content, 'template')
+        template_path = os.path.join(template_dir, 'source.html')
+        os.makedirs(template_dir)
+        with open(template_path, 'w') as template_file:
+            template_file.write(content)
+
+        writer = Writer(self.temp_output, settings=settings)
+        generator.generate_output(writer)
+
+        output_path = os.path.join(self.temp_output, 'generated', 'file.html')
+
+        # output file has been generated
+        self.assertTrue(os.path.exists(output_path))
+
+        # output content is correct
+        with open(output_path, 'r') as output_file:
+            self.assertEqual(output_file.read(), expected)
+
+    def test_jinja2_filter(self):
+        """JINJA_FILTERS adds custom filters to Jinja2 environment"""
+        content = 'foo: {{ foo|custom_filter }}, bar: {{ bar|custom_filter }}'
+        settings = {'JINJA_FILTERS': {'custom_filter': lambda x: x.upper()}}
+        expected = 'foo: FOO, bar: BAR'
+
+        self._test_jinja2_helper(settings, content, expected)
+
+    def test_jinja2_test(self):
+        """JINJA_TESTS adds custom tests to Jinja2 environment"""
+        content = 'foo {{ foo is custom_test }}, bar {{ bar is custom_test }}'
+        settings = {'JINJA_TESTS': {'custom_test': lambda x: x == 'bar'}}
+        expected = 'foo False, bar True'
+
+        self._test_jinja2_helper(settings, content, expected)
+
+    def test_jinja2_global(self):
+        """JINJA_GLOBALS adds custom globals to Jinja2 environment"""
+        content = '{{ custom_global }}'
+        settings = {'JINJA_GLOBALS': {'custom_global': 'foobar'}}
+        expected = 'foobar'
+
+        self._test_jinja2_helper(settings, content, expected)
+
+    def test_jinja2_extension(self):
+        """JINJA_ENVIRONMENT adds extensions to Jinja2 environment"""
+        content = '{% set stuff = [] %}{% do stuff.append(1) %}{{ stuff }}'
+        settings = {'JINJA_ENVIRONMENT': {'extensions': ['jinja2.ext.do']}}
+        expected = '[1]'
+
+        self._test_jinja2_helper(settings, content, expected)

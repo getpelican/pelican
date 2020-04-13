@@ -1,8 +1,12 @@
 # Tests
+Pygments==2.6.1
 mock
+pytest==5.3.5
+pytest-cov
+pytest-xdist
 
 # Optional Packages
-Markdown < 3.0
+Markdown >= 3.1
 BeautifulSoup4
 lxml
 typogrify

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
-import codecs
 import datetime
-import errno
 import fnmatch
 import locale
 import logging
@@ -12,9 +9,12 @@ import re
 import shutil
 import sys
 import traceback
-from collections import Hashable
+import urllib
+from collections.abc import Hashable
 from contextlib import contextmanager
 from functools import partial
+from html import entities
+from html.parser import HTMLParser
 from itertools import groupby
 from operator import attrgetter
 
@@ -24,14 +24,6 @@ from jinja2 import Markup
 
 import pytz
 
-import six
-from six.moves import html_entities
-from six.moves.html_parser import HTMLParser
-
-try:
-    from html import escape
-except ImportError:
-    from cgi import escape
 
 logger = logging.getLogger(__name__)
 
@@ -50,17 +42,11 @@ def sanitised_join(base_directory, *parts):
 
 def strftime(date, date_format):
     '''
-    Replacement for built-in strftime
-
-    This is necessary because of the way Py2 handles date format strings.
-    Specifically, Py2 strftime takes a bytestring. In the case of text output
-    (e.g. %b, %a, etc), the output is encoded with an encoding defined by
-    locale.LC_TIME. Things get messy if the formatting string has chars that
-    are not valid in LC_TIME defined encoding.
+    Enhanced replacement for built-in strftime with zero stripping
 
     This works by 'grabbing' possible format strings (those starting with %),
-    formatting them with the date, (if necessary) decoding the output and
-    replacing formatted output back.
+    formatting them with the date, stripping any leading zeros if - prefix is
+    used and replacing formatted output back.
     '''
     def strip_zeros(x):
         return x.lstrip('0') or '0'
@@ -72,10 +58,6 @@ def strftime(date, date_format):
 
     # replace candidates with placeholders for later % formatting
     template = re.sub(format_options, '%s', date_format)
-
-    # we need to convert formatted dates back to unicode in Py2
-    # LC_TIME determines the encoding for built-in strftime outputs
-    lang_code, enc = locale.getlocale(locale.LC_TIME)
 
     formatted_candidates = []
     for candidate in candidates:
@@ -94,10 +76,6 @@ def strftime(date, date_format):
                 formatted = date.strftime(candidate, safe=False)
             else:
                 formatted = date.strftime(candidate)
-
-            # convert Py2 result to unicode
-            if not six.PY3 and enc is not None:
-                formatted = formatted.decode(enc)
 
             # strip zeros if '-' prefix is used
             if conversion:
@@ -118,7 +96,7 @@ class SafeDatetime(datetime.datetime):
         if safe:
             return strftime(self, fmt)
         else:
-            return super(SafeDatetime, self).strftime(fmt)
+            return super().strftime(fmt)
 
 
 class DateFormatter(object):
@@ -145,22 +123,6 @@ class DateFormatter(object):
         locale.setlocale(locale.LC_TIME, old_lc_time)
         locale.setlocale(locale.LC_CTYPE, old_lc_ctype)
         return formatted
-
-
-def python_2_unicode_compatible(klass):
-    """
-    A decorator that defines __unicode__ and __str__ methods under Python 2.
-    Under Python 3 it does nothing.
-
-    To support Python 2 and 3 with a single code base, define a __str__ method
-    returning text and apply this decorator to the class.
-
-    From django.utils.encoding.
-    """
-    if not six.PY3:
-        klass.__unicode__ = klass.__str__
-        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
-    return klass
 
 
 class memoized(object):
@@ -211,15 +173,15 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
     content of the dummy method is ignored.
     """
     def _warn():
-        version = '.'.join(six.text_type(x) for x in since)
+        version = '.'.join(str(x) for x in since)
         message = ['{} has been deprecated since {}'.format(old, version)]
         if remove:
-            version = '.'.join(six.text_type(x) for x in remove)
+            version = '.'.join(str(x) for x in remove)
             message.append(
                 ' and will be removed by version {}'.format(version))
         message.append('.  Use {} instead.'.format(new))
         logger.warning(''.join(message))
-        logger.debug(''.join(six.text_type(x) for x
+        logger.debug(''.join(str(x) for x
                              in traceback.format_stack()))
 
     def fget(self):
@@ -251,15 +213,12 @@ def get_date(string):
 
 
 @contextmanager
-def pelican_open(filename, mode='rb', strip_crs=(sys.platform == 'win32')):
+def pelican_open(filename, mode='r', strip_crs=(sys.platform == 'win32')):
     """Open a file and return its content"""
 
-    with codecs.open(filename, mode, encoding='utf-8') as infile:
+    # utf-8-sig will clear any BOM if present
+    with open(filename, mode, encoding='utf-8-sig') as infile:
         content = infile.read()
-    if content[:1] == codecs.BOM_UTF8.decode('utf8'):
-        content = content[1:]
-    if strip_crs:
-        content = content.replace('\r\n', '\n')
     yield content
 
 
@@ -276,10 +235,8 @@ def slugify(value, regex_subs=()):
     # value must be unicode per se
     import unicodedata
     from unidecode import unidecode
-    # unidecode returns str in Py2 and 3, so in Py2 we have to make
-    # it unicode again
     value = unidecode(value)
-    if isinstance(value, six.binary_type):
+    if isinstance(value, bytes):
         value = value.decode('ascii')
     # still unicode
     value = unicodedata.normalize('NFKD', value)
@@ -450,18 +407,11 @@ class _HTMLWordTruncator(HTMLParser):
     class TruncationCompleted(Exception):
 
         def __init__(self, truncate_at):
-            super(_HTMLWordTruncator.TruncationCompleted, self).__init__(
-                truncate_at)
+            super().__init__(truncate_at)
             self.truncate_at = truncate_at
 
     def __init__(self, max_words):
-        # In Python 2, HTMLParser is not a new-style class,
-        # hence super() cannot be used.
-        try:
-            HTMLParser.__init__(self, convert_charrefs=False)
-        except TypeError:
-            # pre Python 3.3
-            HTMLParser.__init__(self)
+        super().__init__(convert_charrefs=False)
 
         self.max_words = max_words
         self.words_found = 0
@@ -471,9 +421,7 @@ class _HTMLWordTruncator(HTMLParser):
 
     def feed(self, *args, **kwargs):
         try:
-            # With Python 2, super() cannot be used.
-            # See the comment for __init__().
-            HTMLParser.feed(self, *args, **kwargs)
+            super().feed(*args, **kwargs)
         except self.TruncationCompleted as exc:
             self.truncate_at = exc.truncate_at
         else:
@@ -581,8 +529,8 @@ class _HTMLWordTruncator(HTMLParser):
         `name` is the entity ref without ampersand and semicolon (e.g. `mdash`)
         """
         try:
-            codepoint = html_entities.name2codepoint[name]
-            char = six.unichr(codepoint)
+            codepoint = entities.name2codepoint[name]
+            char = chr(codepoint)
         except KeyError:
             char = ''
         self._handle_ref(name, char)
@@ -599,7 +547,7 @@ class _HTMLWordTruncator(HTMLParser):
                 codepoint = int(name[1:], 16)
             else:
                 codepoint = int(name)
-            char = six.unichr(codepoint)
+            char = chr(codepoint)
         except (ValueError, OverflowError):
             char = ''
         self._handle_ref('#' + name, char)
@@ -631,14 +579,6 @@ def truncate_html_words(s, num, end_text='…'):
     return out
 
 
-def escape_html(text, quote=True):
-    """Escape '&', '<' and '>' to HTML-safe sequences.
-
-    In Python 2 this uses cgi.escape and in Python 3 this uses html.escape. We
-    wrap here to ensure the quote argument has an identical default."""
-    return escape(text, quote=quote)
-
-
 def process_translations(content_list, translation_id=None):
     """ Finds translations and returns them.
 
@@ -660,7 +600,7 @@ def process_translations(content_list, translation_id=None):
     if not translation_id:
         return content_list, []
 
-    if isinstance(translation_id, six.string_types):
+    if isinstance(translation_id, str):
         translation_id = {translation_id}
 
     index = []
@@ -750,7 +690,7 @@ def order_content(content_list, order_by='slug'):
                 content_list.sort(key=order_by)
             except Exception:
                 logger.error('Error sorting with function %s', order_by)
-        elif isinstance(order_by, six.string_types):
+        elif isinstance(order_by, str):
             if order_by.startswith('reversed-'):
                 order_reversed = True
                 order_by = order_by.replace('reversed-', '', 1)
@@ -766,9 +706,19 @@ def order_content(content_list, order_by='slug'):
                     content_list.sort(key=attrgetter(order_by),
                                       reverse=order_reversed)
                 except AttributeError:
-                    logger.warning(
-                        'There is no "%s" attribute in the item '
-                        'metadata. Defaulting to slug order.', order_by)
+                    for content in content_list:
+                        try:
+                            getattr(content, order_by)
+                        except AttributeError:
+                            logger.warning(
+                                'There is no "%s" attribute in "%s". '
+                                'Defaulting to slug order.',
+                                order_by,
+                                content.get_relative_source_path(),
+                                extra={
+                                    'limit_msg': ('More files are missing '
+                                                  'the needed attribute.')
+                                })
         else:
             logger.warning(
                 'Invalid *_ORDER_BY setting (%s).'
@@ -844,11 +794,7 @@ def set_date_tzinfo(d, tz_name=None):
 
 
 def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as e:
-        if e.errno != errno.EEXIST or not os.path.isdir(path):
-            raise
+    os.makedirs(path, exist_ok=True)
 
 
 def split_all(path):
@@ -888,8 +834,7 @@ def is_selected_for_writing(settings, path):
 
 def path_to_file_url(path):
     '''Convert file-system path to file:// URL'''
-    return six.moves.urllib_parse.urljoin(
-        "file://", six.moves.urllib.request.pathname2url(path))
+    return urllib.parse.urljoin("file://", urllib.request.pathname2url(path))
 
 
 def maybe_pluralize(count, singular, plural):

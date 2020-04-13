@@ -32,7 +32,12 @@ list of paths or can be configured as a setting. (See:
 
 You can also tell Pelican to watch for your modifications, instead of manually
 re-running it every time you want to see your changes. To enable this, run the
-``pelican`` command with the ``-r`` or ``--autoreload`` option.
+``pelican`` command with the ``-r`` or ``--autoreload`` option. On non-Windows
+environments, this option can also be combined with the ``-l`` or ``--listen``
+option to simultaneously both auto-regenerate *and* serve the output at
+http://localhost:8000::
+
+    pelican --autoreload --listen
 
 Pelican has other command-line switches available. Have a look at the help to
 see all the options you can use::
@@ -49,20 +54,12 @@ HTML files directly::
     firefox output/index.html
 
 Because the above method may have trouble locating your CSS and other linked
-assets, running a simple web server using Python will often provide a more
-reliable previewing experience.
+assets, running Pelican's simple built-in web server will often provide a more
+reliable previewing experience::
 
-For Python 2, run::
+    pelican --listen
 
-    cd output
-    python -m SimpleHTTPServer
-
-For Python 3, run::
-
-    cd output
-    python -m http.server
-
-Once the basic server has been started, you can preview your site at
+Once the web server has been started, you can preview your site at:
 http://localhost:8000/
 
 Deployment
@@ -141,6 +138,12 @@ http://localhost:8000/::
 
     invoke serve
 
+To serve the generated site with automatic browser reloading every time a
+change is detected, first ``pip install livereload``, then use the
+following command::
+
+    invoke livereload
+
 If during the ``pelican-quickstart`` process you answered "yes" when asked
 whether you want to upload your site via SSH, you can use the following command
 to publish your site via rsync over SSH::
@@ -204,4 +207,4 @@ That's it! Your site should now be live.
 executables, such as ``python3``, you can set the ``PY`` and ``PELICAN``
 environment variables, respectively, to override the default executable names.)
 
-.. _Invoke: http://www.pyinvoke.org
+.. _Invoke: https://www.pyinvoke.org/

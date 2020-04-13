@@ -32,7 +32,7 @@ The logic is separated into different classes and concepts:
   inputs.
 
 * Pelican also uses templates, so it's easy to write your own theme. The
-  syntax is `Jinja2 <http://jinja.pocoo.org/>`_ and is very easy to learn, so
+  syntax is `Jinja2 <https://palletsprojects.com/p/jinja/>`_ and is very easy to learn, so
   don't hesitate to jump in and build your own theme.
 
 How to implement a new reader?
