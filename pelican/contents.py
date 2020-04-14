@@ -121,6 +121,7 @@ class Content(object):
         # manage timezone
         default_timezone = settings.get('TIMEZONE', 'UTC')
         timezone = getattr(self, 'timezone', default_timezone)
+        self.timezone = pytz.timezone(timezone)
 
         if hasattr(self, 'date'):
             self.date = set_date_tzinfo(self.date, timezone)
@@ -512,7 +513,7 @@ class Article(Content):
 
         # if we are a draft and there is no date provided, set max datetime
         if not hasattr(self, 'date') and self.status == 'draft':
-            self.date = datetime.datetime.max
+            self.date = datetime.datetime.max.replace(tzinfo=self.timezone)
 
     def _expand_settings(self, key):
         klass = 'draft' if self.status == 'draft' else 'article'
