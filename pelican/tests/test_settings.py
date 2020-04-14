@@ -6,11 +6,13 @@ import os
 from os.path import abspath, dirname, join
 from sys import platform
 
+
 from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
                               _printf_s_to_format_field,
                               configure_settings, handle_deprecated_settings,
                               read_settings)
 from pelican.tests.support import unittest
+
 
 class TestSettingsConfiguration(unittest.TestCase):
     """Provided a file, it should read it, replace the default values,
@@ -72,7 +74,7 @@ class TestSettingsConfiguration(unittest.TestCase):
         expected = copy.deepcopy(self.settings)
         expected['THEME'] = os.path.join(self.PATH, 'themes/custom')
         expected['CUSTOM_THEME_SETTING'] = 'test'
-        settings = read_settings(default_conf, { 'THEME': 'themes/custom' } )
+        settings = read_settings(default_conf, {'THEME': 'themes/custom'})
         self.maxDiff = None
         self.assertDictEqual(settings, expected)
 

@@ -529,16 +529,17 @@ def configure_settings(settings):
         preserved = {}
         logger.debug('Theme provides a config `%s`', theme_config)
         # preserve variables that are dynamically calculated in read_settings()
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'CACHE_PATH', 'PLUGIN_PATHS']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'CACHE_PATH',
+                  'PLUGIN_PATHS']:
             if settings.get(p) is not None:
                 preserved[p] = settings.get(p)
-        settings.pop('THEME') # avoid recursion
+        settings.pop('THEME')  # avoid recursion
         settings = read_settings(theme_config, settings)
         # restore them back to look like we did not calculate them again
-        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'CACHE_PATH', 'PLUGIN_PATHS']:
+        for p in ['PATH', 'OUTPUT_PATH', 'THEME', 'CACHE_PATH',
+                  'PLUGIN_PATHS']:
             if preserved.get(p) is not None:
                 settings[p] = preserved.pop(p)
-
 
     # make paths selected for writing absolute if necessary
     settings['WRITE_SELECTED'] = [
