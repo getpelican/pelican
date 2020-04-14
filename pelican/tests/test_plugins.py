@@ -66,35 +66,38 @@ class PluginTest(unittest.TestCase):
         self.assertEqual(pelican.__path__, old_path)
 
     def test_get_namespace_plugins(self):
-        # without plugins
-        ns_plugins = get_namespace_plugins()
-        self.assertEqual(len(ns_plugins), 0)
+        # existing namespace plugins
+        existing_ns_plugins = get_namespace_plugins()
 
         # with plugin
         with tmp_namespace_path(self._NS_PLUGIN_FOLDER):
             ns_plugins = get_namespace_plugins()
-            self.assertEqual(len(ns_plugins), 1)
+            self.assertEqual(len(ns_plugins), len(existing_ns_plugins)+1)
             self.assertIn('pelican.plugins.ns_plugin', ns_plugins)
             self.assertEqual(
                 ns_plugins['pelican.plugins.ns_plugin'].NAME,
                 'namespace plugin')
 
-        # should be back to 0 outside `with`
+        # should be back to existing namespace plugins outside `with`
         ns_plugins = get_namespace_plugins()
-        self.assertEqual(len(ns_plugins), 0)
+        self.assertEqual(ns_plugins, existing_ns_plugins)
 
     def test_load_plugins(self):
-        # no plugins
-        plugins = load_plugins({})
-        self.assertEqual(len(plugins), 0)
+        def get_plugin_names(plugins):
+            return set(
+                plugin.NAME if hasattr(plugin, 'NAME') else plugin.__name__
+                for plugin in plugins)
+
+        # existing namespace plugins
+        existing_ns_plugins = load_plugins({})
 
         with tmp_namespace_path(self._NS_PLUGIN_FOLDER):
             # with no `PLUGINS` setting, load namespace plugins
             plugins = load_plugins({})
-            self.assertEqual(len(plugins), 1, plugins)
+            self.assertEqual(len(plugins), len(existing_ns_plugins)+1, plugins)
             self.assertEqual(
-                {'namespace plugin'},
-                set(plugin.NAME for plugin in plugins))
+                {'namespace plugin'} | get_plugin_names(existing_ns_plugins),
+                get_plugin_names(plugins))
 
             # disable namespace plugins with `PLUGINS = []`
             SETTINGS = {
@@ -103,7 +106,7 @@ class PluginTest(unittest.TestCase):
             plugins = load_plugins(SETTINGS)
             self.assertEqual(len(plugins), 0, plugins)
 
-            # using `PLUGINS`
+            # with `PLUGINS`, load only specified plugins
 
             # normal plugin
             SETTINGS = {
@@ -114,7 +117,7 @@ class PluginTest(unittest.TestCase):
             self.assertEqual(len(plugins), 1, plugins)
             self.assertEqual(
                 {'normal plugin'},
-                set(plugin.NAME for plugin in plugins))
+                get_plugin_names(plugins))
 
             # namespace plugin short
             SETTINGS = {
@@ -124,7 +127,7 @@ class PluginTest(unittest.TestCase):
             self.assertEqual(len(plugins), 1, plugins)
             self.assertEqual(
                 {'namespace plugin'},
-                set(plugin.NAME for plugin in plugins))
+                get_plugin_names(plugins))
 
             # namespace plugin long
             SETTINGS = {
@@ -134,7 +137,7 @@ class PluginTest(unittest.TestCase):
             self.assertEqual(len(plugins), 1, plugins)
             self.assertEqual(
                 {'namespace plugin'},
-                set(plugin.NAME for plugin in plugins))
+                get_plugin_names(plugins))
 
             # normal and namespace plugin
             SETTINGS = {
@@ -145,4 +148,4 @@ class PluginTest(unittest.TestCase):
             self.assertEqual(len(plugins), 2, plugins)
             self.assertEqual(
                 {'normal plugin', 'namespace plugin'},
-                set(plugin.NAME for plugin in plugins))
+                get_plugin_names(plugins))
