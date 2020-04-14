@@ -2,7 +2,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
-    exclude: ^pelican/tests/output/
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -12,3 +11,4 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: trailing-whitespace
+exclude: ^pelican/tests/output/
