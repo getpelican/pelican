@@ -168,7 +168,8 @@ Basic settings
 
 .. data:: OUTPUT_PATH = 'output/'
 
-   Where to output the generated files.
+   Where to output the generated files. This should correspond to your web
+   server's virtual host root directory.
 
 .. data:: PATH
 
@@ -358,6 +359,7 @@ Basic settings
 
    The IP to which to bind the HTTP server.
 
+.. _url-settings:
 
 URL settings
 ============
@@ -377,6 +379,12 @@ variables allow you to place your articles in a location such as
 ``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see
 example below). These settings give you the flexibility to place your articles
 and pages anywhere you want.
+
+.. note::
+    If a ``*_SAVE_AS`` setting contains a parent directory that doesn't match
+    the parent directory inside the corresponding ``*_URL`` setting, this may
+    cause Pelican to generate unexpected URLs in a few cases, such as when
+    using the ``{attach}`` syntax.
 
 If you don't want that flexibility and instead prefer that your generated
 output paths mirror your source content's filesystem path hierarchy, try the

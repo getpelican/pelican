@@ -370,6 +370,10 @@ of ``{attach}``, and letting the file's location be determined by the project's
 ``STATIC_SAVE_AS`` and ``STATIC_URL`` settings. (Per-file ``save_as`` and
 ``url`` overrides can still be set in ``EXTRA_PATH_METADATA``.)
 
+.. note::
+    When using ``{attach}``, any parent directory in ``*_URL`` / ``*_SAVE_AS``
+    settings should match each other. See also: :ref:`url-settings`
+
 Linking to authors, categories, index and tags
 ----------------------------------------------
 
