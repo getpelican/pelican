@@ -377,7 +377,8 @@ You can customize the URLs and locations where files will be saved. The
 ``*_URL`` and ``*_SAVE_AS`` variables use Python's format strings. These
 variables allow you to place your articles in a location such as
 ``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see
-example below).
+example below). These settings give you the flexibility to place your articles
+and pages anywhere you want.
 
 .. note::
     If a ``*_SAVE_AS`` setting contains a parent directory that doesn't match
