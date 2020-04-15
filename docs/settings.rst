@@ -168,8 +168,8 @@ Basic settings
 
 .. data:: OUTPUT_PATH = 'output/'
 
-   Where to output the generated files. This should correspond to the document
-   root of the web server.
+   Where to output the generated files. This should correspond to your web
+   server's virtual host root directory.
 
 .. data:: PATH
 
@@ -380,10 +380,10 @@ variables allow you to place your articles in a location such as
 example below).
 
 .. note::
-    If the parent directory of a ``*_SAVE_AS`` setting doesn't match the
-    directory portion of the corresponding ``*_URL`` setting, this may cause
-    Pelican to generate incorrect URLs in a few cases, such as when using
-    ``{attach}``.
+    If a ``*_SAVE_AS`` setting contains a parent directory that doesn't match
+    the parent directory inside the corresponding ``*_URL`` setting, this may
+    cause Pelican to generate unexpected URLs in a few cases, such as when
+    using the ``{attach}`` syntax.
 
 If you don't want that flexibility and instead prefer that your generated
 output paths mirror your source content's filesystem path hierarchy, try the
