@@ -1,35 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import argparse
-import codecs
 import locale
 import os
-import string
-import sys
+
+from jinja2 import Environment, FileSystemLoader
 
 import pytz
 
 try:
+    import readline  # NOQA
+except ImportError:
+    pass
+
+try:
     import tzlocal
     _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
-except:
+except ImportError:
     _DEFAULT_TIMEZONE = 'Europe/Paris'
-
-import six
 
 from pelican import __version__
 
 locale.setlocale(locale.LC_ALL, '')
-_DEFAULT_LANGUAGE = locale.getlocale()[0]
+try:
+    _DEFAULT_LANGUAGE = locale.getlocale()[0]
+except ValueError:
+    # Don't fail on macosx: "unknown locale: UTF-8"
+    _DEFAULT_LANGUAGE = None
 if _DEFAULT_LANGUAGE is None:
-    _DEFAULT_LANGUAGE = 'English'
+    _DEFAULT_LANGUAGE = 'en'
 else:
     _DEFAULT_LANGUAGE = _DEFAULT_LANGUAGE.split('_')[0]
 
 _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                               "templates")
+_jinja_env = Environment(
+    loader=FileSystemLoader(_TEMPLATES_DIR),
+    trim_blocks=True,
+)
+
 
 _GITHUB_PAGES_BRANCHES = {
     'personal': 'master',
@@ -60,68 +70,26 @@ CONF = {
 }
 
 # url for list of valid timezones
-_TZ_URL = 'http://en.wikipedia.org/wiki/List_of_tz_database_time_zones'
-
-
-def _input_compat(prompt):
-    if six.PY3:
-        r = input(prompt)
-    else:
-        r = raw_input(prompt)
-    return r
-
-
-if six.PY3:
-    str_compat = str
-else:
-    str_compat = unicode
+_TZ_URL = 'https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'
 
 
 # Create a 'marked' default path, to determine if someone has supplied
 # a path on the command-line.
-class _DEFAULT_PATH_TYPE(str_compat):
+class _DEFAULT_PATH_TYPE(str):
     is_default_path = True
 
 
 _DEFAULT_PATH = _DEFAULT_PATH_TYPE(os.curdir)
 
 
-def decoding_strings(f):
-    def wrapper(*args, **kwargs):
-        out = f(*args, **kwargs)
-        if isinstance(out, six.string_types) and not six.PY3:
-            # todo: make encoding configurable?
-            if six.PY3:
-                return out
-            else:
-                return out.decode(sys.stdin.encoding)
-        return out
-    return wrapper
-
-
-def get_template(name, as_encoding='utf-8'):
-    template = os.path.join(_TEMPLATES_DIR, "{0}.in".format(name))
-
-    if not os.path.isfile(template):
-        raise RuntimeError("Cannot open {0}".format(template))
-
-    with codecs.open(template, 'r', as_encoding) as fd:
-        line = fd.readline()
-        while line:
-            yield line
-            line = fd.readline()
-        fd.close()
-
-
-@decoding_strings
-def ask(question, answer=str_compat, default=None, l=None):
-    if answer == str_compat:
+def ask(question, answer=str, default=None, length=None):
+    if answer == str:
         r = ''
         while True:
             if default:
-                r = _input_compat('> {0} [{1}] '.format(question, default))
+                r = input('> {0} [{1}] '.format(question, default))
             else:
-                r = _input_compat('> {0} '.format(question, default))
+                r = input('> {0} '.format(question, default))
 
             r = r.strip()
 
@@ -132,8 +100,8 @@ def ask(question, answer=str_compat, default=None, l=None):
                 else:
                     print('You must enter something')
             else:
-                if l and len(r) != l:
-                    print('You must enter a {0} letters long string'.format(l))
+                if length and len(r) != length:
+                    print('Entry must be {0} characters long'.format(length))
                 else:
                     break
 
@@ -143,11 +111,11 @@ def ask(question, answer=str_compat, default=None, l=None):
         r = None
         while True:
             if default is True:
-                r = _input_compat('> {0} (Y/n) '.format(question))
+                r = input('> {0} (Y/n) '.format(question))
             elif default is False:
-                r = _input_compat('> {0} (y/N) '.format(question))
+                r = input('> {0} (y/N) '.format(question))
             else:
-                r = _input_compat('> {0} (y/n) '.format(question))
+                r = input('> {0} (y/n) '.format(question))
 
             r = r.strip().lower()
 
@@ -167,9 +135,9 @@ def ask(question, answer=str_compat, default=None, l=None):
         r = None
         while True:
             if default:
-                r = _input_compat('> {0} [{1}] '.format(question, default))
+                r = input('> {0} [{1}] '.format(question, default))
             else:
-                r = _input_compat('> {0} '.format(question))
+                r = input('> {0} '.format(question))
 
             r = r.strip()
 
@@ -180,19 +148,19 @@ def ask(question, answer=str_compat, default=None, l=None):
             try:
                 r = int(r)
                 break
-            except:
+            except ValueError:
                 print('You must enter an integer')
         return r
     else:
-        raise NotImplemented(
-            'Argument `answer` must be str_compat, bool, or integer')
+        raise NotImplementedError(
+            'Argument `answer` must be str, bool, or integer')
 
 
 def ask_timezone(question, default, tzurl):
     """Prompt for time zone and validate input"""
     lower_tz = [tz.lower() for tz in pytz.all_timezones]
     while True:
-        r = ask(question, str_compat, default)
+        r = ask(question, str, default)
         r = r.strip().replace(' ', '_').lower()
         if r in lower_tz:
             r = pytz.all_timezones[lower_tz.index(r)]
@@ -232,25 +200,25 @@ needed by Pelican.
     no_path_was_specified = hasattr(args.path, 'is_default_path')
     if os.path.isfile(project) and no_path_was_specified:
         CONF['basedir'] = open(project, 'r').read().rstrip("\n")
-        print('Using project associated with current virtual environment.'
+        print('Using project associated with current virtual environment. '
               'Will save to:\n%s\n' % CONF['basedir'])
     else:
         CONF['basedir'] = os.path.abspath(os.path.expanduser(
             ask('Where do you want to create your new web site?',
-                answer=str_compat, default=args.path)))
+                answer=str, default=args.path)))
 
     CONF['sitename'] = ask('What will be the title of this web site?',
-                           answer=str_compat, default=args.title)
+                           answer=str, default=args.title)
     CONF['author'] = ask('Who will be the author of this web site?',
-                         answer=str_compat, default=args.author)
+                         answer=str, default=args.author)
     CONF['lang'] = ask('What will be the default language of this web site?',
-                       str_compat, args.lang or CONF['lang'], 2)
+                       str, args.lang or CONF['lang'], 2)
 
-    if ask('Do you want to specify a URL prefix? e.g., http://example.com  ',
+    if ask('Do you want to specify a URL prefix? e.g., https://example.com  ',
            answer=bool, default=True):
         CONF['siteurl'] = ask('What is your URL prefix? (see '
                               'above example; no trailing slash)',
-                              str_compat, CONF['siteurl'])
+                              str, CONF['siteurl'])
 
     CONF['with_pagination'] = ask('Do you want to enable article pagination?',
                                   bool, bool(CONF['default_pagination']))
@@ -265,58 +233,62 @@ needed by Pelican.
     CONF['timezone'] = ask_timezone('What is your time zone?',
                                     CONF['timezone'], _TZ_URL)
 
-    automation = ask('Do you want to generate a Fabfile/Makefile '
+    automation = ask('Do you want to generate a tasks.py/Makefile '
                      'to automate generation and publishing?', bool, True)
-    develop = ask('Do you want an auto-reload & simpleHTTP script '
-                  'to assist with theme and site development?', bool, True)
 
     if automation:
         if ask('Do you want to upload your website using FTP?',
                answer=bool, default=False):
+            CONF['ftp'] = True,
             CONF['ftp_host'] = ask('What is the hostname of your FTP server?',
-                                   str_compat, CONF['ftp_host'])
+                                   str, CONF['ftp_host'])
             CONF['ftp_user'] = ask('What is your username on that server?',
-                                   str_compat, CONF['ftp_user'])
+                                   str, CONF['ftp_user'])
             CONF['ftp_target_dir'] = ask('Where do you want to put your '
                                          'web site on that server?',
-                                         str_compat, CONF['ftp_target_dir'])
+                                         str, CONF['ftp_target_dir'])
         if ask('Do you want to upload your website using SSH?',
                answer=bool, default=False):
+            CONF['ssh'] = True,
             CONF['ssh_host'] = ask('What is the hostname of your SSH server?',
-                                   str_compat, CONF['ssh_host'])
+                                   str, CONF['ssh_host'])
             CONF['ssh_port'] = ask('What is the port of your SSH server?',
                                    int, CONF['ssh_port'])
             CONF['ssh_user'] = ask('What is your username on that server?',
-                                   str_compat, CONF['ssh_user'])
+                                   str, CONF['ssh_user'])
             CONF['ssh_target_dir'] = ask('Where do you want to put your '
                                          'web site on that server?',
-                                         str_compat, CONF['ssh_target_dir'])
+                                         str, CONF['ssh_target_dir'])
 
         if ask('Do you want to upload your website using Dropbox?',
                answer=bool, default=False):
+            CONF['dropbox'] = True,
             CONF['dropbox_dir'] = ask('Where is your Dropbox directory?',
-                                      str_compat, CONF['dropbox_dir'])
+                                      str, CONF['dropbox_dir'])
 
         if ask('Do you want to upload your website using S3?',
                answer=bool, default=False):
+            CONF['s3'] = True,
             CONF['s3_bucket'] = ask('What is the name of your S3 bucket?',
-                                    str_compat, CONF['s3_bucket'])
+                                    str, CONF['s3_bucket'])
 
         if ask('Do you want to upload your website using '
                'Rackspace Cloud Files?', answer=bool, default=False):
+            CONF['cloudfiles'] = True,
             CONF['cloudfiles_username'] = ask('What is your Rackspace '
-                                              'Cloud username?', str_compat,
+                                              'Cloud username?', str,
                                               CONF['cloudfiles_username'])
             CONF['cloudfiles_api_key'] = ask('What is your Rackspace '
-                                             'Cloud API key?', str_compat,
+                                             'Cloud API key?', str,
                                              CONF['cloudfiles_api_key'])
             CONF['cloudfiles_container'] = ask('What is the name of your '
                                                'Cloud Files container?',
-                                               str_compat,
+                                               str,
                                                CONF['cloudfiles_container'])
 
         if ask('Do you want to upload your website using GitHub Pages?',
                answer=bool, default=False):
+            CONF['github'] = True,
             if ask('Is this your personal page (username.github.io)?',
                    answer=bool, default=False):
                 CONF['github_pages_branch'] = \
@@ -336,79 +308,43 @@ needed by Pelican.
         print('Error: {0}'.format(e))
 
     try:
-        with codecs.open(os.path.join(CONF['basedir'], 'pelicanconf.py'),
-                         'w', 'utf-8') as fd:
+        with open(os.path.join(CONF['basedir'], 'pelicanconf.py'),
+                  'w', encoding='utf-8') as fd:
             conf_python = dict()
             for key, value in CONF.items():
                 conf_python[key] = repr(value)
 
-            for line in get_template('pelicanconf.py'):
-                template = string.Template(line)
-                fd.write(template.safe_substitute(conf_python))
+            _template = _jinja_env.get_template('pelicanconf.py.jinja2')
+            fd.write(_template.render(**conf_python))
             fd.close()
     except OSError as e:
         print('Error: {0}'.format(e))
 
     try:
-        with codecs.open(os.path.join(CONF['basedir'], 'publishconf.py'),
-                         'w', 'utf-8') as fd:
-            for line in get_template('publishconf.py'):
-                template = string.Template(line)
-                fd.write(template.safe_substitute(CONF))
+        with open(os.path.join(CONF['basedir'], 'publishconf.py'),
+                  'w', encoding='utf-8') as fd:
+            _template = _jinja_env.get_template('publishconf.py.jinja2')
+            fd.write(_template.render(**CONF))
             fd.close()
     except OSError as e:
         print('Error: {0}'.format(e))
 
     if automation:
         try:
-            with codecs.open(os.path.join(CONF['basedir'], 'fabfile.py'),
-                             'w', 'utf-8') as fd:
-                for line in get_template('fabfile.py'):
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
+            with open(os.path.join(CONF['basedir'], 'tasks.py'),
+                      'w', encoding='utf-8') as fd:
+                _template = _jinja_env.get_template('tasks.py.jinja2')
+                fd.write(_template.render(**CONF))
                 fd.close()
         except OSError as e:
             print('Error: {0}'.format(e))
         try:
-            with codecs.open(os.path.join(CONF['basedir'], 'Makefile'),
-                             'w', 'utf-8') as fd:
-                mkfile_template_name = 'Makefile'
-                py_v = 'PY?=python'
-                if six.PY3:
-                    py_v = 'PY?=python3'
-                template = string.Template(py_v)
-                fd.write(template.safe_substitute(CONF))
-                fd.write('\n')
-                for line in get_template(mkfile_template_name):
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(CONF))
+            with open(os.path.join(CONF['basedir'], 'Makefile'),
+                      'w', encoding='utf-8') as fd:
+                py_v = 'python3'
+                _template = _jinja_env.get_template('Makefile.jinja2')
+                fd.write(_template.render(py_v=py_v, **CONF))
                 fd.close()
-        except OSError as e:
-            print('Error: {0}'.format(e))
-
-    if develop:
-        conf_shell = dict()
-        for key, value in CONF.items():
-            if isinstance(value, six.string_types) and ' ' in value:
-                value = '"' + value.replace('"', '\\"') + '"'
-            conf_shell[key] = value
-        try:
-            with codecs.open(os.path.join(CONF['basedir'],
-                                          'develop_server.sh'),
-                             'w', 'utf-8') as fd:
-                lines = list(get_template('develop_server.sh'))
-                py_v = 'PY=${PY:-python}\n'
-                if six.PY3:
-                    py_v = 'PY=${PY:-python3}\n'
-                lines = lines[:4] + [py_v] + lines[4:]
-                for line in lines:
-                    template = string.Template(line)
-                    fd.write(template.safe_substitute(conf_shell))
-                fd.close()
-
-                # mode 0o755
-                os.chmod((os.path.join(CONF['basedir'],
-                                       'develop_server.sh')), 493)
         except OSError as e:
             print('Error: {0}'.format(e))
 

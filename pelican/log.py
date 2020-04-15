@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
-import locale
 import logging
 import os
 import sys
-from collections import Mapping, defaultdict
-
-import six
+from collections import defaultdict
 
 __all__ = [
     'init'
@@ -17,25 +13,25 @@ __all__ = [
 class BaseFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None):
         FORMAT = '%(customlevelname)s %(message)s'
-        super(BaseFormatter, self).__init__(fmt=FORMAT, datefmt=datefmt)
+        super().__init__(fmt=FORMAT, datefmt=datefmt)
 
     def format(self, record):
         customlevel = self._get_levelname(record.levelname)
         record.__dict__['customlevelname'] = customlevel
         # format multiline messages 'nicely' to make it clear they are together
         record.msg = record.msg.replace('\n', '\n  | ')
-        return super(BaseFormatter, self).format(record)
+        record.args = tuple(arg.replace('\n', '\n  | ') if
+                            isinstance(arg, str) else
+                            arg for arg in record.args)
+        return super().format(record)
 
     def formatException(self, ei):
         ''' prefix traceback info for better representation '''
-        # .formatException returns a bytestring in py2 and unicode in py3
-        # since .format will handle unicode conversion,
-        # str() calls are used to normalize formatting string
-        s = super(BaseFormatter, self).formatException(ei)
+        s = super().formatException(ei)
         # fancy format traceback
-        s = str('\n').join(str('  | ') + line for line in s.splitlines())
+        s = '\n'.join('  | ' + line for line in s.splitlines())
         # separate the traceback from the preceding lines
-        s = str('  |___\n{}').format(s)
+        s = '  |___\n{}'.format(s)
         return s
 
     def _get_levelname(self, name):
@@ -91,6 +87,8 @@ class LimitFilter(logging.Filter):
     E.g.: log.warning(('43 is not the answer', 'More erroneous answers'))
     """
 
+    LOGS_DEDUP_MIN_LEVEL = logging.WARNING
+
     _ignore = set()
     _raised_messages = set()
     _threshold = 5
@@ -98,7 +96,7 @@ class LimitFilter(logging.Filter):
 
     def filter(self, record):
         # don't limit log messages for anything above "warning"
-        if record.levelno > logging.WARN:
+        if record.levelno > self.LOGS_DEDUP_MIN_LEVEL:
             return True
 
         # extract group
@@ -112,11 +110,13 @@ class LimitFilter(logging.Filter):
         else:
             self._raised_messages.add(message_key)
 
-        # ignore LOG_FILTER records by templates when "debug" isn't enabled
+        # ignore LOG_FILTER records by templates or messages
+        # when "debug" isn't enabled
         logger_level = logging.getLogger().getEffectiveLevel()
         if logger_level > logging.DEBUG:
-            ignore_key = (record.levelno, record.msg)
-            if ignore_key in self._ignore:
+            template_key = (record.levelno, record.msg)
+            message_key = (record.levelno, record.getMessage())
+            if (template_key in self._ignore or message_key in self._ignore):
                 return False
 
         # check if we went over threshold
@@ -131,41 +131,7 @@ class LimitFilter(logging.Filter):
         return True
 
 
-class SafeLogger(logging.Logger):
-    """
-    Base Logger which properly encodes Exceptions in Py2
-    """
-    _exc_encoding = locale.getpreferredencoding()
-
-    def _log(self, level, msg, args, exc_info=None, extra=None):
-        # if the only argument is a Mapping, Logger uses that for formatting
-        # format values for that case
-        if args and len(args) == 1 and isinstance(args[0], Mapping):
-            args = ({k: self._decode_arg(v) for k, v in args[0].items()},)
-        # otherwise, format each arg
-        else:
-            args = tuple(self._decode_arg(arg) for arg in args)
-        super(SafeLogger, self)._log(
-            level, msg, args, exc_info=exc_info, extra=extra)
-
-    def _decode_arg(self, arg):
-        '''
-        properly decode an arg for Py2 if it's Exception
-
-
-        localized systems have errors in native language if locale is set
-        so convert the message to unicode with the correct encoding
-        '''
-        if isinstance(arg, Exception):
-            text = str('%s: %s') % (arg.__class__.__name__, arg)
-            if six.PY2:
-                text = text.decode(self._exc_encoding)
-            return text
-        else:
-            return arg
-
-
-class LimitLogger(SafeLogger):
+class LimitLogger(logging.Logger):
     """
     A logger which adds LimitFilter automatically
     """
@@ -173,7 +139,7 @@ class LimitLogger(SafeLogger):
     limit_filter = LimitFilter()
 
     def __init__(self, *args, **kwargs):
-        super(LimitLogger, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.enable_filter()
 
     def disable_filter(self):
@@ -188,12 +154,12 @@ class FatalLogger(LimitLogger):
     errors_fatal = False
 
     def warning(self, *args, **kwargs):
-        super(FatalLogger, self).warning(*args, **kwargs)
+        super().warning(*args, **kwargs)
         if FatalLogger.warnings_fatal:
             raise RuntimeError('Warning encountered')
 
     def error(self, *args, **kwargs):
-        super(FatalLogger, self).error(*args, **kwargs)
+        super().error(*args, **kwargs)
         if FatalLogger.errors_fatal:
             raise RuntimeError('Error encountered')
 
@@ -226,7 +192,8 @@ def get_formatter():
         return TextFormatter()
 
 
-def init(level=None, fatal='', handler=logging.StreamHandler(), name=None):
+def init(level=None, fatal='', handler=logging.StreamHandler(), name=None,
+         logs_dedup_min_level=None):
     FatalLogger.warnings_fatal = fatal.startswith('warning')
     FatalLogger.errors_fatal = bool(fatal)
 
@@ -237,6 +204,8 @@ def init(level=None, fatal='', handler=logging.StreamHandler(), name=None):
 
     if level:
         logger.setLevel(level)
+    if logs_dedup_min_level:
+        LimitFilter.LOGS_DEDUP_MIN_LEVEL = logs_dedup_min_level
 
 
 def log_warnings():

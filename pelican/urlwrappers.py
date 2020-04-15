@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import functools
 import logging
 import os
 
-import six
-
-from pelican.utils import python_2_unicode_compatible, slugify
+from pelican.utils import slugify
 
 logger = logging.getLogger(__name__)
 
 
-@python_2_unicode_compatible
 @functools.total_ordering
 class URLWrapper(object):
     def __init__(self, name, settings):
@@ -36,8 +32,17 @@ class URLWrapper(object):
     @property
     def slug(self):
         if self._slug is None:
-            self._slug = slugify(self.name,
-                                 self.settings.get('SLUG_SUBSTITUTIONS', ()))
+            class_key = '{}_REGEX_SUBSTITUTIONS'.format(
+                self.__class__.__name__.upper())
+            if class_key in self.settings:
+                self._slug = slugify(
+                    self.name,
+                    regex_subs=self.settings[class_key])
+            else:
+                self._slug = slugify(
+                    self.name,
+                    regex_subs=self.settings.get(
+                        'SLUG_REGEX_SUBSTITUTIONS', []))
         return self._slug
 
     @slug.setter
@@ -56,27 +61,27 @@ class URLWrapper(object):
         return hash(self.slug)
 
     def _normalize_key(self, key):
-        subs = self.settings.get('SLUG_SUBSTITUTIONS', ())
-        return six.text_type(slugify(key, subs))
+        subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
+        return slugify(key, regex_subs=subs)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.slug == other.slug
-        if isinstance(other, six.text_type):
+        if isinstance(other, str):
             return self.slug == self._normalize_key(other)
         return False
 
     def __ne__(self, other):
         if isinstance(other, self.__class__):
             return self.slug != other.slug
-        if isinstance(other, six.text_type):
+        if isinstance(other, str):
             return self.slug != self._normalize_key(other)
         return True
 
     def __lt__(self, other):
         if isinstance(other, self.__class__):
             return self.slug < other.slug
-        if isinstance(other, six.text_type):
+        if isinstance(other, str):
             return self.slug < self._normalize_key(other)
         return False
 
@@ -96,7 +101,7 @@ class URLWrapper(object):
         """
         setting = "%s_%s" % (self.__class__.__name__.upper(), key)
         value = self.settings[setting]
-        if not isinstance(value, six.string_types):
+        if not isinstance(value, str):
             logger.warning('%s is set to %s', setting, value)
             return value
         else:
@@ -112,33 +117,13 @@ class URLWrapper(object):
 
 
 class Category(URLWrapper):
-    @property
-    def slug(self):
-        if self._slug is None:
-            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
-            substitutions += tuple(self.settings.get('CATEGORY_SUBSTITUTIONS',
-                                                     ()))
-            self._slug = slugify(self.name, substitutions)
-        return self._slug
+    pass
 
 
 class Tag(URLWrapper):
     def __init__(self, name, *args, **kwargs):
-        super(Tag, self).__init__(name.strip(), *args, **kwargs)
-
-    @property
-    def slug(self):
-        if self._slug is None:
-            substitutions = self.settings.get('SLUG_SUBSTITUTIONS', ())
-            substitutions += tuple(self.settings.get('TAG_SUBSTITUTIONS', ()))
-            self._slug = slugify(self.name, substitutions)
-        return self._slug
+        super().__init__(name.strip(), *args, **kwargs)
 
 
 class Author(URLWrapper):
-    @property
-    def slug(self):
-        if self._slug is None:
-            self._slug = slugify(self.name,
-                                 self.settings.get('AUTHOR_SUBSTITUTIONS', ()))
-        return self._slug
+    pass

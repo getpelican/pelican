@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import os
-
-import six
 
 from pelican import readers
 from pelican.tests.support import get_settings, unittest
@@ -64,8 +61,7 @@ class TestAssertDictHasSubset(ReaderTest):
         self.assertDictHasSubset(self.dictionary, self.dictionary)
 
     def test_fail_not_set(self):
-        six.assertRaisesRegex(
-            self,
+        self.assertRaisesRegex(
             AssertionError,
             r'Expected.*key-c.*to have value.*val-c.*but was not in Dict',
             self.assertDictHasSubset,
@@ -73,8 +69,7 @@ class TestAssertDictHasSubset(ReaderTest):
             {'key-c': 'val-c'})
 
     def test_fail_wrong_val(self):
-        six.assertRaisesRegex(
-            self,
+        self.assertRaisesRegex(
             AssertionError,
             r'Expected .*key-a.* to have value .*val-b.* but was .*val-a.*',
             self.assertDictHasSubset,
@@ -273,6 +268,38 @@ class RstReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_article_extra_path_metadata_recurse(self):
+        parent = "TestCategory"
+        notparent = "TestCategory/article"
+        path = "TestCategory/article_without_category.rst"
+
+        epm = {
+            parent: {'epmr_inherit': parent,
+                     'epmr_override': parent, },
+            notparent: {'epmr_bogus': notparent},
+            path:   {'epmr_override': path, },
+            }
+        expected_metadata = {
+            'epmr_inherit': parent,
+            'epmr_override': path,
+            }
+
+        page = self.read_file(path=path, EXTRA_PATH_METADATA=epm)
+        self.assertDictHasSubset(page.metadata, expected_metadata)
+
+        # Make sure vars aren't getting "inherited" by mistake...
+        path = "article.rst"
+        page = self.read_file(path=path, EXTRA_PATH_METADATA=epm)
+        for k in expected_metadata.keys():
+            self.assertNotIn(k, page.metadata)
+
+        # Same, but for edge cases where one file's name is a prefix of
+        # another.
+        path = "TestCategory/article_without_category.rst"
+        page = self.read_file(path=path, EXTRA_PATH_METADATA=epm)
+        for k in epm[notparent].keys():
+            self.assertNotIn(k, page.metadata)
+
     def test_typogrify(self):
         # if nothing is specified in the settings, the content should be
         # unmodified
@@ -410,6 +437,12 @@ class RstReaderTest(ReaderTest):
         self.assertEqual(tuple_date.metadata['date'],
                          string_date.metadata['date'])
 
+    def test_parse_error(self):
+        # Verify that it raises an Exception, not nothing and not SystemExit or
+        # some such
+        with self.assertRaisesRegex(Exception, "underline too short"):
+            self.read_file(path='../parse_error/parse_error.rst')
+
 
 @unittest.skipUnless(readers.Markdown, "markdown isn't installed")
 class MdReaderTest(ReaderTest):
@@ -442,7 +475,10 @@ class MdReaderTest(ReaderTest):
         self.assertDictHasSubset(metadata, expected)
 
     def test_article_with_footnote(self):
-        reader = readers.MarkdownReader(settings=get_settings())
+        settings = get_settings()
+        ec = settings['MARKDOWN']['extension_configs']
+        ec['markdown.extensions.footnotes'] = {'SEPARATOR': '-'}
+        reader = readers.MarkdownReader(settings)
         content, metadata = reader.read(
             _path('article_with_markdown_and_footnote.md'))
         expected_content = (
@@ -609,6 +645,19 @@ class MdReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(metadata, expected)
 
+    def test_metadata_not_parsed_for_metadata(self):
+        settings = get_settings()
+        settings['FORMATTED_FIELDS'] = ['summary']
+
+        reader = readers.MarkdownReader(settings=settings)
+        content, metadata = reader.read(
+            _path('article_with_markdown_and_nested_metadata.md'))
+        expected = {
+            'title': 'Article with markdown and nested summary metadata',
+            'summary': '<p>Test: This metadata value looks like metadata</p>',
+        }
+        self.assertDictHasSubset(metadata, expected)
+
     def test_empty_file(self):
         reader = readers.MarkdownReader(settings=get_settings())
         content, metadata = reader.read(
@@ -653,6 +702,14 @@ class HTMLReaderTest(ReaderTest):
             'date': SafeDatetime(2010, 12, 2, 10, 14),
             'tags': ['foo', 'bar', 'foobar'],
             'custom_field': 'http://notmyidea.org',
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_article_with_multiple_similar_metadata_tags(self):
+        page = self.read_file(path='article_with_multiple_metadata_tags.html')
+        expected = {
+            'custom_field': ['https://getpelican.com', 'https://www.eff.org'],
         }
 
         self.assertDictHasSubset(page.metadata, expected)
@@ -714,4 +771,11 @@ class HTMLReaderTest(ReaderTest):
             'title': 'Article with Nonconformant HTML meta tags',
         }
 
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_article_with_inline_svg(self):
+        page = self.read_file(path='article_with_inline_svg.html')
+        expected = {
+            'title': 'Article with an inline SVG',
+        }
         self.assertDictHasSubset(page.metadata, expected)

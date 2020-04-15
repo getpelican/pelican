@@ -1,21 +1,21 @@
 ﻿# -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import locale
 import os
 import re
 
-from codecs import open
-
+from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
                                    unittest)
-from pelican.tools.pelican_import import (build_header, build_markdown_header,
+from pelican.tools.pelican_import import (blogger2fields, build_header,
+                                          build_markdown_header,
                                           decode_wp_content,
                                           download_attachments, fields2pelican,
                                           get_attachments, wp2fields)
 from pelican.utils import path_to_file_url, slugify
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
+BLOGGER_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'bloggerexport.xml')
 WORDPRESS_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'wordpressexport.xml')
 WORDPRESS_ENCODED_CONTENT_SAMPLE = os.path.join(CUR_DIR,
                                                 'content',
@@ -37,13 +37,62 @@ except ImportError:
 
 @skipIfNoExecutable(['pandoc', '--version'])
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+class TestBloggerXmlImporter(unittest.TestCase):
+
+    def setUp(self):
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, str('C'))
+        self.posts = blogger2fields(BLOGGER_XML_SAMPLE)
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
+
+    def test_recognise_kind_and_title(self):
+        """Check that importer only outputs pages, articles and comments,
+        that these are correctly identified and that titles are correct.
+        """
+        test_posts = list(self.posts)
+        kinds = {x[8] for x in test_posts}
+        self.assertEqual({'page', 'article', 'comment'}, kinds)
+        page_titles = {x[0] for x in test_posts if x[8] == 'page'}
+        self.assertEqual({'Test page', 'Test page 2'}, page_titles)
+        article_titles = {x[0] for x in test_posts if x[8] == 'article'}
+        self.assertEqual({'Black as Egypt\'s Night', 'The Steel Windpipe'},
+                         article_titles)
+        comment_titles = {x[0] for x in test_posts if x[8] == 'comment'}
+        self.assertEqual({'Mishka, always a pleasure to read your '
+                          'adventures!...'},
+                         comment_titles)
+
+    def test_recognise_status_with_correct_filename(self):
+        """Check that importerer outputs only statuses 'published' and 'draft',
+        that these are correctly identified and that filenames are correct.
+        """
+        test_posts = list(self.posts)
+        statuses = {x[7] for x in test_posts}
+        self.assertEqual({'published', 'draft'}, statuses)
+
+        draft_filenames = {x[2] for x in test_posts if x[7] == 'draft'}
+        # draft filenames are id-based
+        self.assertEqual({'page-4386962582497458967',
+                          'post-1276418104709695660'}, draft_filenames)
+
+        published_filenames = {x[2] for x in test_posts if x[7] == 'published'}
+        # published filenames are url-based, except comments
+        self.assertEqual({'the-steel-windpipe',
+                          'test-page',
+                          'post-5590533389087749201'}, published_filenames)
+
+
+@skipIfNoExecutable(['pandoc', '--version'])
+@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
 class TestWordpressXmlImporter(unittest.TestCase):
 
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
-        self.posts = list(wp2fields(WORDPRESS_XML_SAMPLE))
-        self.custposts = list(wp2fields(WORDPRESS_XML_SAMPLE, True))
+        self.posts = wp2fields(WORDPRESS_XML_SAMPLE)
+        self.custposts = wp2fields(WORDPRESS_XML_SAMPLE, True)
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
@@ -51,8 +100,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
         for (title, content, fname, date, author,
-             categ, tags, status, kind, format) in self.posts:
-                self.assertTrue(title.strip())
+                categ, tags, status, kind, format) in self.posts:
+            self.assertTrue(title.strip())
 
     def test_recognise_page_kind(self):
         """ Check that we recognise pages in wordpress, as opposed to posts """
@@ -60,9 +109,9 @@ class TestWordpressXmlImporter(unittest.TestCase):
         # Collect (title, filename, kind) of non-empty posts recognised as page
         pages_data = []
         for (title, content, fname, date, author,
-             categ, tags, status, kind, format) in self.posts:
-                if kind == 'page':
-                    pages_data.append((title, fname))
+                categ, tags, status, kind, format) in self.posts:
+            if kind == 'page':
+                pages_data.append((title, fname))
         self.assertEqual(2, len(pages_data))
         self.assertEqual(('Page', 'contact'), pages_data[0])
         self.assertEqual(('Empty Page', 'empty'), pages_data[1])
@@ -85,10 +134,11 @@ class TestWordpressXmlImporter(unittest.TestCase):
         with temporary_folder() as temp:
             fnames = list(silent_f2p(test_posts, 'markdown',
                                      temp, dircat=True))
+        subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
         index = 0
         for post in test_posts:
             name = post[2]
-            category = slugify(post[5][0])
+            category = slugify(post[5][0], regex_subs=subs)
             name += '.md'
             filename = os.path.join(category, name)
             out_name = fnames[index]
@@ -99,22 +149,22 @@ class TestWordpressXmlImporter(unittest.TestCase):
         self.assertTrue(self.posts)
         pages_data = []
         for (title, content, fname, date, author, categ,
-             tags, status, kind, format) in self.posts:
-                if kind == 'page' or kind == 'article':
-                    pass
-                else:
-                    pages_data.append((title, fname))
+                tags, status, kind, format) in self.posts:
+            if kind == 'page' or kind == 'article':
+                pass
+            else:
+                pages_data.append((title, fname))
         self.assertEqual(0, len(pages_data))
 
     def test_recognise_custom_post_type(self):
         self.assertTrue(self.custposts)
         cust_data = []
         for (title, content, fname, date, author, categ,
-             tags, status, kind, format) in self.custposts:
-                if kind == 'article' or kind == 'page':
-                    pass
-                else:
-                    cust_data.append((title, kind))
+                tags, status, kind, format) in self.custposts:
+            if kind == 'article' or kind == 'page':
+                pass
+            else:
+                cust_data.append((title, kind))
         self.assertEqual(3, len(cust_data))
         self.assertEqual(
             ('A custom post in category 4', 'custom1'),
@@ -160,11 +210,12 @@ class TestWordpressXmlImporter(unittest.TestCase):
         with temporary_folder() as temp:
             fnames = list(silent_f2p(test_posts, 'markdown', temp,
                                      wp_custpost=True, dircat=True))
+        subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
         index = 0
         for post in test_posts:
             name = post[2]
             kind = post[8]
-            category = slugify(post[5][0])
+            category = slugify(post[5][0], regex_subs=subs)
             name += '.md'
             filename = os.path.join(kind, category, name)
             out_name = fnames[index]
@@ -191,6 +242,8 @@ class TestWordpressXmlImporter(unittest.TestCase):
             self.assertFalse(out_name.endswith(filename))
 
     def test_can_toggle_raw_html_code_parsing(self):
+        test_posts = list(self.posts)
+
         def r(f):
             with open(f, encoding='utf-8') as infile:
                 return infile.read()
@@ -199,16 +252,16 @@ class TestWordpressXmlImporter(unittest.TestCase):
         with temporary_folder() as temp:
 
             rst_files = (r(f) for f
-                         in silent_f2p(self.posts, 'markdown', temp))
+                         in silent_f2p(test_posts, 'markdown', temp))
             self.assertTrue(any('<iframe' in rst for rst in rst_files))
             rst_files = (r(f) for f
-                         in silent_f2p(self.posts, 'markdown',
+                         in silent_f2p(test_posts, 'markdown',
                                        temp, strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
             # no effect in rst
-            rst_files = (r(f) for f in silent_f2p(self.posts, 'rst', temp))
+            rst_files = (r(f) for f in silent_f2p(test_posts, 'rst', temp))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
-            rst_files = (r(f) for f in silent_f2p(self.posts, 'rst', temp,
+            rst_files = (r(f) for f in silent_f2p(test_posts, 'rst', temp,
                          strip_raw=True))
             self.assertFalse(any('<iframe' in rst for rst in rst_files))
 
@@ -268,6 +321,19 @@ class TestWordpressXmlImporter(unittest.TestCase):
             sample_line = re.search(r'-   This is a code sample', md).group(0)
             code_line = re.search(r'\s+a = \[1, 2, 3\]', md).group(0)
             self.assertTrue(sample_line.rindex('This') < code_line.rindex('a'))
+
+    def test_dont_use_smart_quotes(self):
+        def r(f):
+            with open(f, encoding='utf-8') as infile:
+                return infile.read()
+        silent_f2p = mute(True)(fields2pelican)
+        test_post = filter(
+            lambda p: p[0].startswith("Post with raw data"),
+            self.posts)
+        with temporary_folder() as temp:
+            md = [r(f) for f in silent_f2p(test_post, 'markdown', temp)][0]
+            escaped_quotes = re.search(r'\\[\'"“”‘’]', md)
+            self.assertFalse(escaped_quotes)
 
 
 class TestBuildHeader(unittest.TestCase):
@@ -353,20 +419,22 @@ class TestWordpressXMLAttachements(unittest.TestCase):
         self.assertTrue(self.attachments)
         for post in self.attachments.keys():
             if post is None:
-                expected = ('https://upload.wikimedia.org/wikipedia/commons/'
-                            'thumb/2/2c/Pelican_lakes_entrance02.jpg/'
-                            '240px-Pelican_lakes_entrance02.jpg')
-                self.assertEqual(self.attachments[post][0], expected)
+                expected = {
+                    ('https://upload.wikimedia.org/wikipedia/commons/'
+                     'thumb/2/2c/Pelican_lakes_entrance02.jpg/'
+                     '240px-Pelican_lakes_entrance02.jpg')
+                }
+                self.assertEqual(self.attachments[post], expected)
             elif post == 'with-excerpt':
                 expected_invalid = ('http://thisurlisinvalid.notarealdomain/'
                                     'not_an_image.jpg')
                 expected_pelikan = ('http://en.wikipedia.org/wiki/'
                                     'File:Pelikan_Walvis_Bay.jpg')
-                self.assertEqual(self.attachments[post][0], expected_invalid)
-                self.assertEqual(self.attachments[post][1], expected_pelikan)
+                self.assertEqual(self.attachments[post],
+                                 {expected_invalid, expected_pelikan})
             elif post == 'with-tags':
                 expected_invalid = ('http://thisurlisinvalid.notarealdomain')
-                self.assertEqual(self.attachments[post][0], expected_invalid)
+                self.assertEqual(self.attachments[post], {expected_invalid})
             else:
                 self.fail('all attachments should match to a '
                           'filename or None, {}'

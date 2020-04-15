@@ -25,14 +25,19 @@ argument, like so::
     pelican --write-selected output/posts/my-post-title.html
 
 Note that you must specify the path to the generated *output* file — not the
-source content. To determine the output file path, use the ``--debug`` flag to
-determine the correct file name and location. If desired, ``--write-selected``
-can take a comma-separated list of paths or can be configured as a setting.
-(See: :ref:`writing_only_selected_content`)
+source content. To determine the output file name and location, use the
+``--debug`` flag. If desired, ``--write-selected`` can take a comma-separated
+list of paths or can be configured as a setting. (See:
+:ref:`writing_only_selected_content`)
 
-You can also tell Pelican to watch for your modifications, instead of
-manually re-running it every time you want to see your changes. To enable this,
-run the ``pelican`` command with the ``-r`` or ``--autoreload`` option.
+You can also tell Pelican to watch for your modifications, instead of manually
+re-running it every time you want to see your changes. To enable this, run the
+``pelican`` command with the ``-r`` or ``--autoreload`` option. On non-Windows
+environments, this option can also be combined with the ``-l`` or ``--listen``
+option to simultaneously both auto-regenerate *and* serve the output at
+http://localhost:8000::
+
+    pelican --autoreload --listen
 
 Pelican has other command-line switches available. Have a look at the help to
 see all the options you can use::
@@ -49,20 +54,12 @@ HTML files directly::
     firefox output/index.html
 
 Because the above method may have trouble locating your CSS and other linked
-assets, running a simple web server using Python will often provide a more
-reliable previewing experience.
+assets, running Pelican's simple built-in web server will often provide a more
+reliable previewing experience::
 
-For Python 2, run::
+    pelican --listen
 
-    cd output
-    python -m SimpleHTTPServer
-
-For Python 3, run::
-
-    cd output
-    python -m http.server
-
-Once the basic server has been started, you can preview your site at
+Once the web server has been started, you can preview your site at:
 http://localhost:8000/
 
 Deployment
@@ -75,17 +72,17 @@ feeds, etc.) that you may have defined::
 
     pelican content -s publishconf.py
 
-To base your publish configuration on top of your ``pelicanconf.py``, you
-can import your ``pelicanconf`` settings by including the following line in
-your ``publishconf.py``::
+To base your publish configuration on top of your ``pelicanconf.py``, you can
+import your ``pelicanconf`` settings by including the following line in your
+``publishconf.py``::
 
     from pelicanconf import *
 
-If you have generated a ``publishconf.py`` using ``pelican-quickstart``,
-this line is included by default.
+If you have generated a ``publishconf.py`` using ``pelican-quickstart``, this
+line is included by default.
 
-The steps for deploying your site will depend on where it will be hosted.
-If you have SSH access to a server running Nginx or Apache, you might use the
+The steps for deploying your site will depend on where it will be hosted. If
+you have SSH access to a server running Nginx or Apache, you might use the
 ``rsync`` tool to transmit your site files::
 
     rsync -avc --delete output/ host.example.com:/var/www/your-site/
@@ -98,81 +95,75 @@ Automation
 ==========
 
 While the ``pelican`` command is the canonical way to generate your site,
-automation tools can be used to streamline the generation and publication
-flow. One of the questions asked during the ``pelican-quickstart`` process
-pertains to whether you want to automate site generation and publication.
-If you answered "yes" to that question, a ``fabfile.py`` and
-``Makefile`` will be generated in the root of your project. These files,
-pre-populated with certain information gleaned from other answers provided
-during the ``pelican-quickstart`` process, are meant as a starting point and
-should be customized to fit your particular needs and usage patterns. If you
-find one or both of these automation tools to be of limited utility, these
-files can deleted at any time and will not affect usage of the canonical
-``pelican`` command.
+automation tools can be used to streamline the generation and publication flow.
+One of the questions asked during the ``pelican-quickstart`` process pertains
+to whether you want to automate site generation and publication. If you
+answered "yes" to that question, a ``tasks.py`` and ``Makefile`` will be
+generated in the root of your project. These files, pre-populated with certain
+information gleaned from other answers provided during the
+``pelican-quickstart`` process, are meant as a starting point and should be
+customized to fit your particular needs and usage patterns. If you find one or
+both of these automation tools to be of limited utility, these files can
+deleted at any time and will not affect usage of the canonical ``pelican``
+command.
 
 Following are automation tools that "wrap" the ``pelican`` command and can
 simplify the process of generating, previewing, and uploading your site.
 
-Fabric
+Invoke
 ------
 
-The advantage of Fabric_ is that it is written in Python and thus can be used
+The advantage of Invoke_ is that it is written in Python and thus can be used
 in a wide range of environments. The downside is that it must be installed
-separately. Use the following command to install Fabric, prefixing with
+separately. Use the following command to install Invoke, prefixing with
 ``sudo`` if your environment requires it::
 
-    pip install Fabric
+    pip install invoke
 
-.. note:: Installing PyCrypto on Windows
-
-    Fabric depends upon PyCrypto_, which is tricky to install
-    if your system doesn't have a C compiler.
-    For Windows users, before installing Fabric, use
-    ``easy_install http://www.voidspace.org.uk/downloads/pycrypto26/pycrypto-2.6.win32-py2.7.exe``
-    per this `StackOverflow suggestion <http://stackoverflow.com/a/11405769/6364>`_
-    You're more likely to have success
-    with the Win32 versions of Python 2.7 and PyCrypto,
-    than with the Win64—\
-    even if your operating system is a 64-bit version of Windows.
-
-Take a moment to open the ``fabfile.py`` file that was generated in your
-project root. You will see a number of commands, any one of which can be
-renamed, removed, and/or customized to your liking. Using the out-of-the-box
+Take a moment to open the ``tasks.py`` file that was generated in your project
+root. You will see a number of commands, any one of which can be renamed,
+removed, and/or customized to your liking. Using the out-of-the-box
 configuration, you can generate your site via::
 
-    fab build
+    invoke build
 
 If you'd prefer to have Pelican automatically regenerate your site every time a
 change is detected (which is handy when testing locally), use the following
 command instead::
 
-    fab regenerate
+    invoke regenerate
 
 To serve the generated site so it can be previewed in your browser at
 http://localhost:8000/::
 
-    fab serve
+    invoke serve
+
+To serve the generated site with automatic browser reloading every time a
+change is detected, first ``pip install livereload``, then use the
+following command::
+
+    invoke livereload
 
 If during the ``pelican-quickstart`` process you answered "yes" when asked
 whether you want to upload your site via SSH, you can use the following command
 to publish your site via rsync over SSH::
 
-    fab publish
+    invoke publish
 
 These are just a few of the commands available by default, so feel free to
-explore ``fabfile.py`` and see what other commands are available. More
-importantly, don't hesitate to customize ``fabfile.py`` to suit your specific
+explore ``tasks.py`` and see what other commands are available. More
+importantly, don't hesitate to customize ``tasks.py`` to suit your specific
 needs and preferences.
 
 Make
 ----
 
-A ``Makefile`` is also automatically created for you when you say "yes" to
-the relevant question during the ``pelican-quickstart`` process. The advantage
-of this method is that the ``make`` command is built into most POSIX systems
-and thus doesn't require installing anything else in order to use it. The
-downside is that non-POSIX systems (e.g., Windows) do not include ``make``,
-and installing it on those systems can be a non-trivial task.
+A ``Makefile`` is also automatically created for you when you say "yes" to the
+relevant question during the ``pelican-quickstart`` process. The advantage of
+this method is that the ``make`` command is built into most POSIX systems and
+thus doesn't require installing anything else in order to use it. The downside
+is that non-POSIX systems (e.g., Windows) do not include ``make``, and
+installing it on those systems can be a non-trivial task.
 
 If you want to use ``make`` to generate your site using the settings in
 ``pelicanconf.py``, run::
@@ -201,10 +192,7 @@ separate terminal sessions, but you can run both at once via::
     make devserver
 
 The above command will simultaneously run Pelican in regeneration mode as well
-as serve the output at http://localhost:8000. Once you are done testing your
-changes, you should stop the development server via::
-
-    ./develop_server.sh stop
+as serve the output at http://localhost:8000.
 
 When you're ready to publish your site, you can upload it via the method(s) you
 chose during the ``pelican-quickstart`` questionnaire. For this example, we'll
@@ -219,5 +207,4 @@ That's it! Your site should now be live.
 executables, such as ``python3``, you can set the ``PY`` and ``PELICAN``
 environment variables, respectively, to override the default executable names.)
 
-.. _Fabric: http://fabfile.org/
-.. _PyCrypto: http://pycrypto.org
+.. _Invoke: https://www.pyinvoke.org/

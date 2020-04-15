@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import argparse
 import os
@@ -17,7 +16,7 @@ def err(msg, die=None):
 
 try:
     import pelican
-except:
+except ImportError:
     err('Cannot import pelican.\nYou must '
         'install Pelican in order to run this script.',
         -1)
@@ -81,9 +80,9 @@ def main():
     to_sym = args.to_symlink or args.clean
 
     if args.action:
-        if args.action is 'list':
+        if args.action == 'list':
             list_themes(args.verbose)
-        elif args.action is 'path':
+        elif args.action == 'path':
             print(_THEMES_PATH)
     elif to_install or args.to_remove or to_sym:
         if args.to_remove:

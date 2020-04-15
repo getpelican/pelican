@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import hashlib
 import logging
 import os
-
-from six.moves import cPickle as pickle
+import pickle
 
 from pelican.utils import mkdir_p
 
@@ -82,9 +80,7 @@ class FileStampDataCacher(FileDataCacher):
         and base path for filestamping operations
         """
 
-        super(FileStampDataCacher, self).__init__(settings, cache_name,
-                                                  caching_policy,
-                                                  load_policy)
+        super().__init__(settings, cache_name, caching_policy, load_policy)
 
         method = self.settings['CHECK_MODIFIED_METHOD']
         if method == 'mtime':
@@ -106,7 +102,7 @@ class FileStampDataCacher(FileDataCacher):
     def cache_data(self, filename, data):
         """Cache stamp and data for the given file"""
         stamp = self._get_file_stamp(filename)
-        super(FileStampDataCacher, self).cache_data(filename, (stamp, data))
+        super().cache_data(filename, (stamp, data))
 
     def _get_file_stamp(self, filename):
         """Check if the given file has been modified
@@ -134,8 +130,7 @@ class FileStampDataCacher(FileDataCacher):
         and current file stamp.
         """
 
-        stamp, data = super(FileStampDataCacher, self).get_cached_data(
-            filename, (None, default))
+        stamp, data = super().get_cached_data(filename, (None, default))
         if stamp != self._get_file_stamp(filename):
             return default
         return data

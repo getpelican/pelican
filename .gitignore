@@ -11,5 +11,8 @@ tags
 .tox
 .coverage
 htmlcov
-six-*.egg/
 *.orig
+venv
+samples/output
+*.pem
+poetry.lock

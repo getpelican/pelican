@@ -1,10 +1,99 @@
 Release history
 ###############
 
-Next release
-============
+4.2.0 - 2019-10-17
+==================
 
-* New signal: ``feed_generated``
+* Support inline SVGs; don't treat titles in SVGs as HTML titles
+* Add category to feeds (in addition to tags)
+* Improve content metadata field docs
+* Add docs for including other Markdown/reST files in content
+
+4.1.3 - 2019-10-09
+==================
+
+* Fix quick-start docs regarding `pelican --listen`
+* Set default listen address to 127.0.0.1
+* Add extra/optional Markdown dependency to setup.py
+* Use correct SSH port syntax for rsync in tasks.py
+* Place all deprecated settings handling together
+* Add related project URLs for display on PyPI
+* Skip some tests on Windows that can't pass due to filesystem differences
+
+4.1.2 - 2019-09-23
+==================
+
+Fix pelican.settings.load_source to avoid caching issues - PR #2621
+
+4.1.1 - 2019-08-23
+==================
+
+* Add AutoPub to auto-publish releases on PR merge
+* Add CSS classes for reStructuredText figures
+* Pass `argv` to Pelican `main` entrypoint
+* Set default content status to a blank string rather than `None`
+
+4.1.0 - 2019-07-14
+==================
+
+* Live browser reload upon changed files (provided via Invoke task)
+* Add ``pyproject.toml``, managed by Poetry
+* Support for invoking ``python -m pelican``
+* Add relative source path attribute to content
+* Allow directories in ``EXTRA_PATH_METADATA``
+* Add ``all_articles`` variable to period pages (for recent posts functionality)
+* Improve debug mode output
+* Remove blank or duplicate summaries from Atom feed
+* Fix bugs in pagination, pelican-import, pelican-quickstart, and feed importer
+
+4.0.1 (2018-11-30)
+==================
+
+* Refactor ``pelican.server`` logging
+* Fix bug in which all static files were processed as "draft"
+* Bug fixes for Invoke/Makefile automation, Importer, and other miscellanea
+
+If upgrading from 3.7.x or earlier, please note that slug-related settings in
+4.0+ use ``{slug}`` and/or ``{lang}`` rather than ``%s``. If ``%s``-style
+settings are encountered, Pelican will emit a warning and fall back to the
+default setting. Some user-submitted themes might try to format setting values
+but fail upon site build with a ``TypeError``. In such cases, the theme needs
+to be updated. For example, instead of ``TAG_FEED_ATOM|format(tag.slug)``, use
+``TAG_FEED_ATOM.format(slug=tag.slug)``
+
+4.0.0 (2018-11-13)
+==================
+
+* Replace ``develop_server.sh`` script with ``pelican --listen``
+* Improved copy/link behavior for large static files (e.g., videos)
+* New ``{static}`` syntax to link to static content; content linked to by
+  ``{static}`` and ``{attach}`` is automatically copied over even if not in
+  ``STATIC_PATHS``
+* Pages can now have ``draft`` status
+* Show current settings via new ``--print-settings`` flag
+* All settings for slugs now use ``{slug}`` and/or ``{lang}`` rather than
+  ``%s``. If ``%s``-style settings are encountered, Pelican will emit a warning
+  and fallback to the default setting.
+* New signals: ``feed_generated`` and ``page_generated_write_page``
+* Replace Fabric with Invoke and ``fabfile.py`` template with ``tasks.py``
+* Replace ``PAGINATED_DIRECT_TEMPLATES`` by ``PAGINATED_TEMPLATES``, extending
+  control over pagination to all templates and making page size variable
+* Replace ``SLUG_SUBSTITUTIONS`` (and friends) by ``SLUG_REGEX_SUBSTITUTIONS``
+  for more finegrained control
+* ``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer strips
+  ``'bar'`` from ``'foo/bar.html'`` (unless ``'bar' == 'index'``).
+* ``ARTICLE_ORDER_BY`` and ``PAGE_ORDER_BY`` now also affect 1) category, tag
+  and author pages 2) feeds 3) draft and hidden articles and pages
+* New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to
+  specify metadata attributes used to identify/disable translations
+* Make the HTML reader parse multiple occurrences of metadata tags as a list
+* New Blogger XML backup importer
+* Wordpress importer now updates file links to point to local copies if the
+  files were downloaded with ``--wp-attach``.
+* Importer no longer inserts extra newlines, to prevent breaking of HTML
+  attributes.
+* Pelican server now prioritises ``foo.html`` and ``foo/index.html`` over
+  ``foo/`` when resolving ``foo``.
 
 3.7.1 (2017-01-10)
 ==================
@@ -91,8 +180,8 @@ Next release
   directory as articles and pages using ``{attach}`` in the path.
 * Prevent Pelican from raising an exception when there are duplicate pieces of
   metadata in a Markdown file.
-* Introduce the ``TYPOGRIFY_IGNORE_TAGS`` setting to add HTML tags to be ignored
-  by Typogrify.
+* Introduce the ``TYPOGRIFY_IGNORE_TAGS`` setting to add HTML tags to be
+  ignored by Typogrify.
 * Add the ability to use ``-`` in date formats to strip leading zeros. For
   example, ``%-d/%-m/%y`` will now result in the date ``9/8/12``.
 * Ensure feed generation is correctly disabled during quickstart configuration.
@@ -195,8 +284,10 @@ Next release
 * Improve appearance of LinkedIn icon in default theme
 * Add GitHub and Google+ social icons support in default theme
 * Optimize social icons
-* Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing all posts regardless of their language
-* Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and ``TRANSLATION_FEED_RSS``
+* Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing all
+  posts regardless of their language
+* Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and
+  ``TRANSLATION_FEED_RSS``
 * Different feeds can now be enabled/disabled individually
 * Allow for blank author: if ``AUTHOR`` setting is not set, author won't
   default to ``${USER}`` anymore, and a post won't contain any author
@@ -204,7 +295,8 @@ Next release
 * Move LESS and Webassets support from Pelican core to plugin
 * The ``DEFAULT_DATE`` setting now defaults to ``None``, which means that
   articles won't be generated unless date metadata is specified
-* Add ``FILENAME_METADATA`` setting to support metadata extraction from filename
+* Add ``FILENAME_METADATA`` setting to support metadata extraction from
+  filename
 * Add ``gzip_cache`` plugin to compress common text files into a ``.gz``
   file within the same directory as the original file, preventing the server
   (e.g. Nginx) from having to compress files during an HTTP call
@@ -275,7 +367,8 @@ Next release
 * Added translations
 * Added a way to use cleaner URLs with a rewrite url module (or equivalent)
 * Added a tag cloud
-* Added an autoreloading feature: the blog is automatically regenerated each time a modification is detected
+* Added an autoreloading feature: the blog is automatically regenerated each
+  time a modification is detected
 * Translate the documentation into French
 * Import a blog from an RSS feed
 * Pagination support

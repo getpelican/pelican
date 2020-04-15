@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
+import datetime
 import logging
 import os
 import re
 from collections import OrderedDict
+from html import escape
+from html.parser import HTMLParser
+from io import StringIO
 
 import docutils
 import docutils.core
 import docutils.io
-from docutils.writers.html4css1 import HTMLTranslator
-
-import six
-from six.moves.html_parser import HTMLParser
+from docutils.parsers.rst.languages import get_language as get_docutils_lang
+from docutils.writers.html4css1 import HTMLTranslator, Writer
 
 from pelican import rstdirectives  # NOQA
-from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Author, Category, Page, Tag
-from pelican.utils import SafeDatetime, escape_html, get_date, pelican_open, \
-    posixize_path
+from pelican.plugins import signals
+from pelican.utils import get_date, pelican_open, posixize_path
 
 try:
     from markdown import Markdown
@@ -31,6 +31,20 @@ except ImportError:
 # This means that _filter_discardable_metadata() must be called on processed
 # metadata dicts before use, to remove the items with the special value.
 _DISCARD = object()
+
+DUPLICATES_DEFINITIONS_ALLOWED = {
+    'tags': False,
+    'date': False,
+    'modified': False,
+    'status': False,
+    'category': False,
+    'author': False,
+    'save_as': False,
+    'url': False,
+    'authors': False,
+    'slug': False
+}
+
 METADATA_PROCESSORS = {
     'tags': lambda x, y: ([
         Tag(tag, y)
@@ -63,7 +77,7 @@ def ensure_metadata_list(text):
        Regardless, all list items undergo .strip() before returning, and
        empty items are discarded.
     """
-    if isinstance(text, six.text_type):
+    if isinstance(text, str):
         if ';' in text:
             text = text.split(';')
         else:
@@ -122,7 +136,7 @@ class BaseReader(object):
 class _FieldBodyTranslator(HTMLTranslator):
 
     def __init__(self, document):
-        HTMLTranslator.__init__(self, document)
+        super().__init__(document)
         self.compact_p = None
 
     def astext(self):
@@ -135,10 +149,17 @@ class _FieldBodyTranslator(HTMLTranslator):
         pass
 
 
-def render_node_to_html(document, node):
-    visitor = _FieldBodyTranslator(document)
+def render_node_to_html(document, node, field_body_translator_class):
+    visitor = field_body_translator_class(document)
     node.walkabout(visitor)
     return visitor.astext()
+
+
+class PelicanHTMLWriter(Writer):
+
+    def __init__(self):
+        super().__init__()
+        self.translator_class = PelicanHTMLTranslator
 
 
 class PelicanHTMLTranslator(HTMLTranslator):
@@ -160,39 +181,58 @@ class PelicanHTMLTranslator(HTMLTranslator):
 
 
 class RstReader(BaseReader):
-    """Reader for reStructuredText files"""
+    """Reader for reStructuredText files
+
+    By default the output HTML is written using
+    docutils.writers.html4css1.Writer and translated using a subclass of
+    docutils.writers.html4css1.HTMLTranslator. If you want to override it with
+    your own writer/translator (e.g. a HTML5-based one), pass your classes to
+    these two attributes. Look in the source code for details.
+
+        writer_class                    Used for writing contents
+        field_body_translator_class     Used for translating metadata such
+            as article summary
+
+    """
 
     enabled = bool(docutils)
     file_extensions = ['rst']
 
-    class FileInput(docutils.io.FileInput):
-        """Patch docutils.io.FileInput to remove "U" mode in py3.
-
-        Universal newlines is enabled by default and "U" mode is deprecated
-        in py3.
-
-        """
-
-        def __init__(self, *args, **kwargs):
-            if six.PY3:
-                kwargs['mode'] = kwargs.get('mode', 'r').replace('U', '')
-            docutils.io.FileInput.__init__(self, *args, **kwargs)
+    writer_class = PelicanHTMLWriter
+    field_body_translator_class = _FieldBodyTranslator
 
     def __init__(self, *args, **kwargs):
-        super(RstReader, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
-    def _parse_metadata(self, document):
+        lang_code = self.settings.get('DEFAULT_LANG', 'en')
+        if get_docutils_lang(lang_code):
+            self._language_code = lang_code
+        else:
+            logger.warning("Docutils has no localization for '%s'."
+                           " Using 'en' instead.", lang_code)
+            self._language_code = 'en'
+
+    def _parse_metadata(self, document, source_path):
         """Return the dict containing document metadata"""
         formatted_fields = self.settings['FORMATTED_FIELDS']
 
         output = {}
+
+        if document.first_child_matching_class(docutils.nodes.title) is None:
+            logger.warning(
+                'Document title missing in file %s: '
+                'Ensure exactly one top level section',
+                source_path)
+
         for docinfo in document.traverse(docutils.nodes.docinfo):
             for element in docinfo.children:
                 if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
                     if name in formatted_fields:
-                        value = render_node_to_html(document, body_elem)
+                        value = render_node_to_html(
+                            document, body_elem,
+                            self.field_body_translator_class)
                     else:
                         value = body_elem.astext()
                 elif element.tagname == 'authors':  # author list
@@ -210,20 +250,22 @@ class RstReader(BaseReader):
         extra_params = {'initial_header_level': '2',
                         'syntax_highlight': 'short',
                         'input_encoding': 'utf-8',
-                        'exit_status_level': 2,
+                        'language_code': self._language_code,
+                        'halt_level': 2,
+                        'traceback': True,
+                        'warning_stream': StringIO(),
                         'embed_stylesheet': False}
         user_params = self.settings.get('DOCUTILS_SETTINGS')
         if user_params:
             extra_params.update(user_params)
 
         pub = docutils.core.Publisher(
-            source_class=self.FileInput,
+            writer=self.writer_class(),
             destination_class=docutils.io.StringOutput)
         pub.set_components('standalone', 'restructuredtext', 'html')
-        pub.writer.translator_class = PelicanHTMLTranslator
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=source_path)
-        pub.publish(enable_exit_status=True)
+        pub.publish()
         return pub
 
     def read(self, source_path):
@@ -232,7 +274,7 @@ class RstReader(BaseReader):
         parts = pub.writer.parts
         content = parts.get('body')
 
-        metadata = self._parse_metadata(pub.document)
+        metadata = self._parse_metadata(pub.document, source_path)
         metadata.setdefault('title', parts.get('title'))
 
         return content, metadata
@@ -245,7 +287,7 @@ class MarkdownReader(BaseReader):
     file_extensions = ['md', 'markdown', 'mkd', 'mdown']
 
     def __init__(self, *args, **kwargs):
-        super(MarkdownReader, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         settings = self.settings['MARKDOWN']
         settings.setdefault('extension_configs', {})
         settings.setdefault('extensions', [])
@@ -260,6 +302,9 @@ class MarkdownReader(BaseReader):
         """Return the dict containing document metadata"""
         formatted_fields = self.settings['FORMATTED_FIELDS']
 
+        # prevent metadata extraction in fields
+        self._md.preprocessors.deregister('meta')
+
         output = {}
         for name, value in meta.items():
             name = name.lower()
@@ -270,7 +315,7 @@ class MarkdownReader(BaseReader):
                 self._md.reset()
                 formatted = self._md.convert(formatted_values)
                 output[name] = self.process_metadata(name, formatted)
-            elif name in METADATA_PROCESSORS:
+            elif not DUPLICATES_DEFINITIONS_ALLOWED.get(name, True):
                 if len(value) > 1:
                     logger.warning(
                         'Duplicate definition of `%s` '
@@ -308,11 +353,7 @@ class HTMLReader(BaseReader):
 
     class _HTMLParser(HTMLParser):
         def __init__(self, settings, filename):
-            try:
-                # Python 3.4+
-                HTMLParser.__init__(self, convert_charrefs=False)
-            except TypeError:
-                HTMLParser.__init__(self)
+            super().__init__(convert_charrefs=False)
             self.body = ''
             self.metadata = {}
             self.settings = settings
@@ -349,7 +390,7 @@ class HTMLReader(BaseReader):
                 if self._in_head:
                     self._in_head = False
                     self._in_top_level = True
-            elif tag == 'title':
+            elif self._in_head and tag == 'title':
                 self._in_title = False
                 self.metadata['title'] = self._data_buffer
             elif tag == 'body':
@@ -357,7 +398,7 @@ class HTMLReader(BaseReader):
                 self._in_body = False
                 self._in_top_level = True
             elif self._in_body:
-                self._data_buffer += '</{}>'.format(escape_html(tag))
+                self._data_buffer += '</{}>'.format(escape(tag))
 
         def handle_startendtag(self, tag, attrs):
             if tag == 'meta' and self._in_head:
@@ -378,16 +419,16 @@ class HTMLReader(BaseReader):
             self._data_buffer += '&#{};'.format(data)
 
         def build_tag(self, tag, attrs, close_tag):
-            result = '<{}'.format(escape_html(tag))
+            result = '<{}'.format(escape(tag))
             for k, v in attrs:
-                result += ' ' + escape_html(k)
+                result += ' ' + escape(k)
                 if v is not None:
                     # If the attribute value contains a double quote, surround
                     # with single quotes, otherwise use double quotes.
                     if '"' in v:
-                        result += "='{}'".format(escape_html(v, quote=False))
+                        result += "='{}'".format(escape(v, quote=False))
                     else:
-                        result += '="{}"'.format(escape_html(v, quote=False))
+                        result += '="{}"'.format(escape(v, quote=False))
             if close_tag:
                 return result + ' />'
             return result + '>'
@@ -416,7 +457,17 @@ class HTMLReader(BaseReader):
 
             if name == 'keywords':
                 name = 'tags'
-            self.metadata[name] = contents
+
+            if name in self.metadata:
+                # if this metadata already exists (i.e. a previous tag with the
+                # same name has already been specified then either convert to
+                # list or append to list
+                if isinstance(self.metadata[name], list):
+                    self.metadata[name].append(contents)
+                else:
+                    self.metadata[name] = [self.metadata[name], contents]
+            else:
+                self.metadata[name] = contents
 
         @classmethod
         def _attr_value(cls, attrs, name, default=None):
@@ -475,9 +526,7 @@ class Readers(FileStampDataCacher):
                             self.settings['CONTENT_CACHING_LAYER'] == 'reader')
         caching_policy = cache_this_level and self.settings['CACHE_CONTENT']
         load_policy = cache_this_level and self.settings['LOAD_CONTENT_CACHE']
-        super(Readers, self).__init__(settings, cache_name,
-                                      caching_policy, load_policy,
-                                      )
+        super().__init__(settings, cache_name, caching_policy, load_policy)
 
     @property
     def extensions(self):
@@ -617,10 +666,10 @@ def default_metadata(settings=None, process=None):
             metadata['category'] = value
         if settings.get('DEFAULT_DATE', None) and \
            settings['DEFAULT_DATE'] != 'fs':
-            if isinstance(settings['DEFAULT_DATE'], six.string_types):
+            if isinstance(settings['DEFAULT_DATE'], str):
                 metadata['date'] = get_date(settings['DEFAULT_DATE'])
             else:
-                metadata['date'] = SafeDatetime(*settings['DEFAULT_DATE'])
+                metadata['date'] = datetime.datetime(*settings['DEFAULT_DATE'])
     return metadata
 
 
@@ -628,10 +677,22 @@ def path_metadata(full_path, source_path, settings=None):
     metadata = {}
     if settings:
         if settings.get('DEFAULT_DATE', None) == 'fs':
-            metadata['date'] = SafeDatetime.fromtimestamp(
+            metadata['date'] = datetime.datetime.fromtimestamp(
                 os.stat(full_path).st_mtime)
-        metadata.update(settings.get('EXTRA_PATH_METADATA', {}).get(
-            source_path, {}))
+
+        # Apply EXTRA_PATH_METADATA for the source path and the paths of any
+        # parent directories. Sorting EPM first ensures that the most specific
+        # path wins conflicts.
+
+        epm = settings.get('EXTRA_PATH_METADATA', {})
+        for path, meta in sorted(epm.items()):
+            # Enforce a trailing slash when checking for parent directories.
+            # This prevents false positives when one file or directory's name
+            # is a prefix of another's.
+            dirpath = os.path.join(path, '')
+            if source_path == path or source_path.startswith(dirpath):
+                metadata.update(meta)
+
     return metadata
 
 
@@ -651,7 +712,7 @@ def parse_path_metadata(source_path, settings=None, process=None):
     ...     process=reader.process_metadata)
     >>> pprint.pprint(metadata)  # doctest: +ELLIPSIS
     {'category': <pelican.urlwrappers.Category object at ...>,
-     'date': SafeDatetime(2013, 1, 1, 0, 0),
+     'date': datetime.datetime(2013, 1, 1, 0, 0),
      'slug': 'my-slug'}
     """
     metadata = {}

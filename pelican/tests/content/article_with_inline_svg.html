@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <title>Article with an inline SVG</title>
+    </head>
+    <body>
+        Ensure that the title attribute in an inline svg is not handled as an HTML title.
+        <svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="297mm" viewBox="0 0 210 297">
+           <path fill="#b2b2ff" stroke="#000" stroke-width="2.646" d="M88.698 89.869l-8.899 15.63a38.894 38.894 0 00-16.474 31.722 38.894 38.894 0 0038.894 38.894 38.894 38.894 0 0038.894-38.894 38.894 38.894 0 00-9-24.83l-2.38-16.886-14.828 4.994a38.894 38.894 0 00-12.13-2.144z">
+              <title>A different title inside the inline SVG</title>
+           </path>
+           <ellipse cx="100.806" cy="125.285" rx="3.704" ry="10.583"/>
+           <ellipse cx="82.021" cy="125.285" rx="3.704" ry="10.583"/>
+           <ellipse cx="-111.432" cy="146.563" rx="3.704" ry="10.583" transform="rotate(-64.822)"/>
+           <ellipse cx="-118.245" cy="91.308" rx="6.18" ry="8.62" transform="matrix(.063 -.99801 .96163 .27436 0 0)"/>
+        </svg>
+    </body>
+</html>

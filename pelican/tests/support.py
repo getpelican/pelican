@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import locale
 import logging
@@ -10,13 +9,13 @@ import sys
 import unittest
 from contextlib import contextmanager
 from functools import wraps
+from io import StringIO
 from logging.handlers import BufferingHandler
 from shutil import rmtree
 from tempfile import mkdtemp
 
-from six import StringIO
-
 from pelican.contents import Article
+from pelican.readers import default_metadata
 from pelican.settings import DEFAULT_CONFIG
 
 __all__ = ['get_article', 'unittest', ]
@@ -55,11 +54,11 @@ def isplit(s, sep=None):
 
     """
     sep, hardsep = r'\s+' if sep is None else re.escape(sep), sep is not None
-    exp, pos, l = re.compile(sep), 0, len(s)
+    exp, pos, length = re.compile(sep), 0, len(s)
     while True:
         m = exp.search(s, pos)
         if not m:
-            if pos < l or hardsep:
+            if pos < length or hardsep:
                 #      ^ mimic "split()": ''.split() returns []
                 yield s[pos:]
             break
@@ -113,9 +112,10 @@ def mute(returns_output=False):
     return decorator
 
 
-def get_article(title, slug, content, lang, extra_metadata=None):
-    metadata = {'slug': slug, 'title': title, 'lang': lang}
-    if extra_metadata is not None:
+def get_article(title, content, **extra_metadata):
+    metadata = default_metadata(settings=DEFAULT_CONFIG)
+    metadata['title'] = title
+    if extra_metadata:
         metadata.update(extra_metadata)
     return Article(content, metadata=metadata)
 
@@ -173,11 +173,20 @@ def get_settings(**kwargs):
     return settings
 
 
+def get_context(settings=None, **kwargs):
+    context = settings.copy() if settings else {}
+    context['generated_content'] = {}
+    context['static_links'] = set()
+    context['static_content'] = {}
+    context.update(kwargs)
+    return context
+
+
 class LogCountHandler(BufferingHandler):
     """Capturing and counting logged messages."""
 
     def __init__(self, capacity=1000):
-        logging.handlers.BufferingHandler.__init__(self, capacity)
+        super().__init__(capacity)
 
     def count_logs(self, msg=None, level=None):
         return len([
@@ -193,13 +202,13 @@ class LoggedTestCase(unittest.TestCase):
     """A test case that captures log messages."""
 
     def setUp(self):
-        super(LoggedTestCase, self).setUp()
+        super().setUp()
         self._logcount_handler = LogCountHandler()
         logging.getLogger().addHandler(self._logcount_handler)
 
     def tearDown(self):
         logging.getLogger().removeHandler(self._logcount_handler)
-        super(LoggedTestCase, self).tearDown()
+        super().tearDown()
 
     def assertLogCountEqual(self, count=None, msg=None, **kwargs):
         actual = self._logcount_handler.count_logs(msg=msg, **kwargs)

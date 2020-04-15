@@ -1,19 +1,23 @@
 Installing Pelican
 ##################
 
-Pelican currently runs best on Python 2.7.x and 3.3+; earlier versions of
+Pelican currently runs best on Python 2.7.x and 3.5+; earlier versions of
 Python are not supported.
 
 You can install Pelican via several different methods. The simplest is via
-`pip <http://www.pip-installer.org/>`_::
+`pip <https://pip.pypa.io/en/stable/>`_::
 
     pip install pelican
+
+Or, if you plan on using Markdown::
+
+    pip install pelican[Markdown]
 
 (Keep in mind that operating systems will often require you to prefix the above
 command with ``sudo`` in order to install Pelican system-wide.)
 
-While the above is the simplest method, the recommended approach is to create
-a virtual environment for Pelican via virtualenv_ before installing Pelican.
+While the above is the simplest method, the recommended approach is to create a
+virtual environment for Pelican via virtualenv_ before installing Pelican.
 Assuming you have virtualenv_ installed, you can then open a new terminal
 session and create a new virtual environment for Pelican::
 
@@ -22,9 +26,8 @@ session and create a new virtual environment for Pelican::
     source bin/activate
 
 Once the virtual environment has been created and activated, Pelican can be
-installed via ``pip install pelican`` as noted above. Alternatively, if
-you have the project source, you can install Pelican using the distutils
-method::
+installed via ``pip install pelican`` as noted above. Alternatively, if you
+have the project source, you can install Pelican using the distutils method::
 
     cd path-to-Pelican-source
     python setup.py install
@@ -40,13 +43,17 @@ options. For more detail, refer to the :doc:`Publish<publish>` section.
 Optional packages
 -----------------
 
-If you plan on using `Markdown <http://pypi.python.org/pypi/Markdown>`_ as a
-markup format, you'll need to install the Markdown library::
+If you plan on using `Markdown <https://pypi.org/project/Markdown/>`_ as a
+markup format, you can install Pelican with Markdown support::
+
+   pip install pelican[Markdown]
+
+Or you might need to install it a posteriori::
 
     pip install Markdown
 
 Typographical enhancements can be enabled in your settings file, but first the
-requisite `Typogrify <http://pypi.python.org/pypi/typogrify>`_ library must be
+requisite `Typogrify <https://pypi.org/project/typogrify/>`_ library must be
 installed::
 
     pip install typogrify
@@ -57,22 +64,22 @@ Dependencies
 When Pelican is installed, the following dependent Python packages should be
 automatically installed without any action on your part:
 
-* `feedgenerator <http://pypi.python.org/pypi/feedgenerator>`_, to generate the
+* `feedgenerator <https://pypi.org/project/feedgenerator/>`_, to generate the
   Atom feeds
-* `jinja2 <http://pypi.python.org/pypi/Jinja2>`_, for templating support
-* `pygments <http://pypi.python.org/pypi/Pygments>`_, for syntax highlighting
-* `docutils <http://pypi.python.org/pypi/docutils>`_, for supporting
+* `jinja2 <https://pypi.org/project/Jinja2/>`_, for templating support
+* `pygments <https://pypi.org/project/Pygments/>`_, for syntax highlighting
+* `docutils <https://pypi.org/project/docutils/>`_, for supporting
   reStructuredText as an input format
-* `pytz <http://pypi.python.org/pypi/pytz>`_, for timezone definitions
-* `blinker <http://pypi.python.org/pypi/blinker>`_, an object-to-object and
+* `pytz <https://pypi.org/project/pytz/>`_, for timezone definitions
+* `blinker <https://pypi.org/project/blinker/>`_, an object-to-object and
   broadcast signaling system
-* `unidecode <http://pypi.python.org/pypi/Unidecode>`_, for ASCII
+* `unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII
   transliterations of Unicode text
-* `six <http://pypi.python.org/pypi/six>`_,  for Python 2 and 3 compatibility
+* `six <https://pypi.org/project/six/>`_,  for Python 2 and 3 compatibility
   utilities
-* `MarkupSafe <http://pypi.python.org/pypi/MarkupSafe>`_, for a markup safe
+* `MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup safe
   string implementation
-* `python-dateutil <https://pypi.python.org/pypi/python-dateutil>`_, to read
+* `python-dateutil <https://pypi.org/project/python-dateutil/>`_, to read
   the date metadata
 
 Upgrading
@@ -95,16 +102,23 @@ your site::
 
     pelican-quickstart
 
+If run inside an activated virtual environment, ``pelican-quickstart`` will
+look for an associated project path inside ``$VIRTUAL_ENV/.project``. If that
+file exists and contains a valid directory path, the new Pelican project will
+be saved at that location. Otherwise, the default is the current working
+directory. To set the new project path on initial invocation, use:
+``pelican-quickstart --path /your/desired/directory``
+
 Once you finish answering all the questions, your project will consist of the
-following hierarchy (except for *pages* — shown in parentheses below — which you
-can optionally add yourself if you plan to create non-chronological content)::
+following hierarchy (except for *pages* — shown in parentheses below — which
+you can optionally add yourself if you plan to create non-chronological
+content)::
 
     yourproject/
     ├── content
-    │   └── (pages)
+    │   └── (pages)
     ├── output
-    ├── develop_server.sh
-    ├── fabfile.py
+    ├── tasks.py
     ├── Makefile
     ├── pelicanconf.py       # Main settings file
     └── publishconf.py       # Settings to use when ready to publish
@@ -112,4 +126,4 @@ can optionally add yourself if you plan to create non-chronological content)::
 The next step is to begin to adding content to the *content* folder that has
 been created for you.
 
-.. _virtualenv: http://www.virtualenv.org/
+.. _virtualenv: https://virtualenv.pypa.io/en/latest/

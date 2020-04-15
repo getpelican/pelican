@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
-import codecs
 import datetime
-import errno
 import fnmatch
 import locale
 import logging
@@ -12,9 +9,12 @@ import re
 import shutil
 import sys
 import traceback
-from collections import Hashable
+import urllib
+from collections.abc import Hashable
 from contextlib import contextmanager
 from functools import partial
+from html import entities
+from html.parser import HTMLParser
 from itertools import groupby
 from operator import attrgetter
 
@@ -24,14 +24,6 @@ from jinja2 import Markup
 
 import pytz
 
-import six
-from six.moves import html_entities
-from six.moves.html_parser import HTMLParser
-
-try:
-    from html import escape
-except ImportError:
-    from cgi import escape
 
 logger = logging.getLogger(__name__)
 
@@ -50,17 +42,11 @@ def sanitised_join(base_directory, *parts):
 
 def strftime(date, date_format):
     '''
-    Replacement for built-in strftime
-
-    This is necessary because of the way Py2 handles date format strings.
-    Specifically, Py2 strftime takes a bytestring. In the case of text output
-    (e.g. %b, %a, etc), the output is encoded with an encoding defined by
-    locale.LC_TIME. Things get messy if the formatting string has chars that
-    are not valid in LC_TIME defined encoding.
+    Enhanced replacement for built-in strftime with zero stripping
 
     This works by 'grabbing' possible format strings (those starting with %),
-    formatting them with the date, (if necessary) decoding the output and
-    replacing formatted output back.
+    formatting them with the date, stripping any leading zeros if - prefix is
+    used and replacing formatted output back.
     '''
     def strip_zeros(x):
         return x.lstrip('0') or '0'
@@ -72,10 +58,6 @@ def strftime(date, date_format):
 
     # replace candidates with placeholders for later % formatting
     template = re.sub(format_options, '%s', date_format)
-
-    # we need to convert formatted dates back to unicode in Py2
-    # LC_TIME determines the encoding for built-in strftime outputs
-    lang_code, enc = locale.getlocale(locale.LC_TIME)
 
     formatted_candidates = []
     for candidate in candidates:
@@ -94,10 +76,6 @@ def strftime(date, date_format):
                 formatted = date.strftime(candidate, safe=False)
             else:
                 formatted = date.strftime(candidate)
-
-            # convert Py2 result to unicode
-            if not six.PY3 and enc is not None:
-                formatted = formatted.decode(enc)
 
             # strip zeros if '-' prefix is used
             if conversion:
@@ -118,7 +96,7 @@ class SafeDatetime(datetime.datetime):
         if safe:
             return strftime(self, fmt)
         else:
-            return super(SafeDatetime, self).strftime(fmt)
+            return super().strftime(fmt)
 
 
 class DateFormatter(object):
@@ -145,22 +123,6 @@ class DateFormatter(object):
         locale.setlocale(locale.LC_TIME, old_lc_time)
         locale.setlocale(locale.LC_CTYPE, old_lc_ctype)
         return formatted
-
-
-def python_2_unicode_compatible(klass):
-    """
-    A decorator that defines __unicode__ and __str__ methods under Python 2.
-    Under Python 3 it does nothing.
-
-    To support Python 2 and 3 with a single code base, define a __str__ method
-    returning text and apply this decorator to the class.
-
-    From django.utils.encoding.
-    """
-    if not six.PY3:
-        klass.__unicode__ = klass.__str__
-        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
-    return klass
 
 
 class memoized(object):
@@ -211,15 +173,15 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
     content of the dummy method is ignored.
     """
     def _warn():
-        version = '.'.join(six.text_type(x) for x in since)
+        version = '.'.join(str(x) for x in since)
         message = ['{} has been deprecated since {}'.format(old, version)]
         if remove:
-            version = '.'.join(six.text_type(x) for x in remove)
+            version = '.'.join(str(x) for x in remove)
             message.append(
                 ' and will be removed by version {}'.format(version))
         message.append('.  Use {} instead.'.format(new))
         logger.warning(''.join(message))
-        logger.debug(''.join(six.text_type(x) for x
+        logger.debug(''.join(str(x) for x
                              in traceback.format_stack()))
 
     def fget(self):
@@ -251,67 +213,42 @@ def get_date(string):
 
 
 @contextmanager
-def pelican_open(filename, mode='rb', strip_crs=(sys.platform == 'win32')):
+def pelican_open(filename, mode='r', strip_crs=(sys.platform == 'win32')):
     """Open a file and return its content"""
 
-    with codecs.open(filename, mode, encoding='utf-8') as infile:
+    # utf-8-sig will clear any BOM if present
+    with open(filename, mode, encoding='utf-8-sig') as infile:
         content = infile.read()
-    if content[:1] == codecs.BOM_UTF8.decode('utf8'):
-        content = content[1:]
-    if strip_crs:
-        content = content.replace('\r\n', '\n')
     yield content
 
 
-def slugify(value, substitutions=()):
+def slugify(value, regex_subs=()):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
 
     Took from Django sources.
     """
+
     # TODO Maybe steal again from current Django 1.5dev
     value = Markup(value).striptags()
     # value must be unicode per se
     import unicodedata
     from unidecode import unidecode
-    # unidecode returns str in Py2 and 3, so in Py2 we have to make
-    # it unicode again
     value = unidecode(value)
-    if isinstance(value, six.binary_type):
+    if isinstance(value, bytes):
         value = value.decode('ascii')
     # still unicode
-    value = unicodedata.normalize('NFKD', value).lower()
+    value = unicodedata.normalize('NFKD', value)
 
-    # backward compatible covert from 2-tuples to 3-tuples
-    new_subs = []
-    for tpl in substitutions:
-        try:
-            src, dst, skip = tpl
-        except ValueError:
-            src, dst = tpl
-            skip = False
-        new_subs.append((src, dst, skip))
-    substitutions = tuple(new_subs)
+    for src, dst in regex_subs:
+        value = re.sub(src, dst, value, flags=re.IGNORECASE)
 
-    # by default will replace non-alphanum characters
-    replace = True
-    for src, dst, skip in substitutions:
-        orig_value = value
-        value = value.replace(src.lower(), dst.lower())
-        # if replacement was made then skip non-alphanum
-        # replacement if instructed to do so
-        if value != orig_value:
-            replace = replace and not skip
-
-    if replace:
-        value = re.sub(r'[^\w\s-]', '', value).strip()
-        value = re.sub(r'[-\s]+', '-', value)
-    else:
-        value = value.strip()
+    # convert to lowercase
+    value = value.lower()
 
     # we want only ASCII chars
-    value = value.encode('ascii', 'ignore')
+    value = value.encode('ascii', 'ignore').strip()
     # but Pelican should generally use only unicode
     return value.decode('ascii')
 
@@ -360,7 +297,7 @@ def copy(source, destination, ignores=None):
                            source_, destination_)
             return
 
-        for src_dir, subdirs, others in os.walk(source_):
+        for src_dir, subdirs, others in os.walk(source_, followlinks=True):
             dst_dir = os.path.join(destination_,
                                    os.path.relpath(src_dir, source_))
 
@@ -455,7 +392,7 @@ def path_to_url(path):
 
 def posixize_path(rel_path):
     """Use '/' as path separator, so that source references,
-    like '{filename}/foo/bar.jpg' or 'extras/favicon.ico',
+    like '{static}/foo/bar.jpg' or 'extras/favicon.ico',
     will work on Windows as well as on Mac and Linux."""
     return rel_path.replace(os.sep, '/')
 
@@ -470,18 +407,11 @@ class _HTMLWordTruncator(HTMLParser):
     class TruncationCompleted(Exception):
 
         def __init__(self, truncate_at):
-            super(_HTMLWordTruncator.TruncationCompleted, self).__init__(
-                truncate_at)
+            super().__init__(truncate_at)
             self.truncate_at = truncate_at
 
     def __init__(self, max_words):
-        # In Python 2, HTMLParser is not a new-style class,
-        # hence super() cannot be used.
-        try:
-            HTMLParser.__init__(self, convert_charrefs=False)
-        except TypeError:
-            # pre Python 3.3
-            HTMLParser.__init__(self)
+        super().__init__(convert_charrefs=False)
 
         self.max_words = max_words
         self.words_found = 0
@@ -491,9 +421,7 @@ class _HTMLWordTruncator(HTMLParser):
 
     def feed(self, *args, **kwargs):
         try:
-            # With Python 2, super() cannot be used.
-            # See the comment for __init__().
-            HTMLParser.feed(self, *args, **kwargs)
+            super().feed(*args, **kwargs)
         except self.TruncationCompleted as exc:
             self.truncate_at = exc.truncate_at
         else:
@@ -550,9 +478,40 @@ class _HTMLWordTruncator(HTMLParser):
         if word_end < len(data):
             self.add_last_word()
 
-    def handle_ref(self, char):
+    def _handle_ref(self, name, char):
+        """
+        Called by handle_entityref() or handle_charref() when a ref like
+        `&mdash;`, `&#8212;`, or `&#x2014` is found.
+
+        The arguments for this method are:
+
+        - `name`: the HTML entity name (such as `mdash` or `#8212` or `#x2014`)
+        - `char`: the Unicode representation of the ref (such as `—`)
+
+        This method checks whether the entity is considered to be part of a
+        word or not and, if not, signals the end of a word.
+        """
+        # Compute the index of the character right after the ref.
+        #
+        # In a string like 'prefix&mdash;suffix', the end is the sum of:
+        #
+        # - `self.getoffset()` (the length of `prefix`)
+        # - `1` (the length of `&`)
+        # - `len(name)` (the length of `mdash`)
+        # - `1` (the length of `;`)
+        #
+        # Note that, in case of malformed HTML, the ';' character may
+        # not be present.
+
         offset = self.getoffset()
-        ref_end = self.rawdata.index(';', offset) + 1
+        ref_end = offset + len(name) + 1
+
+        try:
+            if self.rawdata[ref_end] == ';':
+                ref_end += 1
+        except IndexError:
+            # We are at the end of the string and there's no ';'
+            pass
 
         if self.last_word_end is None:
             if self._word_prefix_regex.match(char):
@@ -564,19 +523,34 @@ class _HTMLWordTruncator(HTMLParser):
                 self.add_last_word()
 
     def handle_entityref(self, name):
+        """
+        Called when an entity ref like '&mdash;' is found
+
+        `name` is the entity ref without ampersand and semicolon (e.g. `mdash`)
+        """
         try:
-            codepoint = html_entities.name2codepoint[name]
+            codepoint = entities.name2codepoint[name]
+            char = chr(codepoint)
         except KeyError:
-            self.handle_ref('')
-        else:
-            self.handle_ref(six.unichr(codepoint))
+            char = ''
+        self._handle_ref(name, char)
 
     def handle_charref(self, name):
-        if name.startswith('x'):
-            codepoint = int(name[1:], 16)
-        else:
-            codepoint = int(name)
-        self.handle_ref(six.unichr(codepoint))
+        """
+        Called when a char ref like '&#8212;' or '&#x2014' is found
+
+        `name` is the char ref without ampersand and semicolon (e.g. `#8212` or
+        `#x2014`)
+        """
+        try:
+            if name.startswith('x'):
+                codepoint = int(name[1:], 16)
+            else:
+                codepoint = int(name)
+            char = chr(codepoint)
+        except (ValueError, OverflowError):
+            char = ''
+        self._handle_ref('#' + name, char)
 
 
 def truncate_html_words(s, num, end_text='…'):
@@ -605,24 +579,101 @@ def truncate_html_words(s, num, end_text='…'):
     return out
 
 
-def escape_html(text, quote=True):
-    """Escape '&', '<' and '>' to HTML-safe sequences.
+def process_translations(content_list, translation_id=None):
+    """ Finds translations and returns them.
 
-    In Python 2 this uses cgi.escape and in Python 3 this uses html.escape. We
-    wrap here to ensure the quote argument has an identical default."""
-    return escape(text, quote=quote)
-
-
-def process_translations(content_list, order_by=None):
-    """ Finds translation and returns them.
-
-    Returns a tuple with two lists (index, translations).  Index list includes
+    For each content_list item, populates the 'translations' attribute, and
+    returns a tuple with two lists (index, translations). Index list includes
     items in default language or items which have no variant in default
     language. Items with the `translation` metadata set to something else than
-    `False` or `false` will be used as translations, unless all the items with
-    the same slug have that metadata.
+    `False` or `false` will be used as translations, unless all the items in
+    the same group have that metadata.
 
-    For each content_list item, sets the 'translations' attribute.
+    Translations and original items are determined relative to one another
+    amongst items in the same group. Items are in the same group if they
+    have the same value(s) for the metadata attribute(s) specified by the
+    'translation_id', which must be a string or a collection of strings.
+    If 'translation_id' is falsy, the identification of translations is skipped
+    and all items are returned as originals.
+    """
+
+    if not translation_id:
+        return content_list, []
+
+    if isinstance(translation_id, str):
+        translation_id = {translation_id}
+
+    index = []
+
+    try:
+        content_list.sort(key=attrgetter(*translation_id))
+    except TypeError:
+        raise TypeError('Cannot unpack {}, \'translation_id\' must be falsy, a'
+                        'string or a collection of strings'
+                        .format(translation_id))
+    except AttributeError:
+        raise AttributeError('Cannot use {} as \'translation_id\', there'
+                             'appear to be items without these metadata'
+                             'attributes'.format(translation_id))
+
+    for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
+        # prepare warning string
+        id_vals = (id_vals,) if len(translation_id) == 1 else id_vals
+        with_str = 'with' + ', '.join([' {} "{{}}"'] * len(translation_id))\
+            .format(*translation_id).format(*id_vals)
+
+        items = list(items)
+        original_items = get_original_items(items, with_str)
+        index.extend(original_items)
+        for a in items:
+            a.translations = [x for x in items if x != a]
+
+    translations = [x for x in content_list if x not in index]
+
+    return index, translations
+
+
+def get_original_items(items, with_str):
+    def _warn_source_paths(msg, items, *extra):
+        args = [len(items)]
+        args.extend(extra)
+        args.extend((x.source_path for x in items))
+        logger.warning('{}: {}'.format(msg, '\n%s' * len(items)), *args)
+
+    # warn if several items have the same lang
+    for lang, lang_items in groupby(items, attrgetter('lang')):
+        lang_items = list(lang_items)
+        if len(lang_items) > 1:
+            _warn_source_paths('There are %s items "%s" with lang %s',
+                               lang_items, with_str, lang)
+
+    # items with `translation` metadata will be used as translations...
+    candidate_items = [
+        i for i in items
+        if i.metadata.get('translation', 'false').lower() == 'false']
+
+    # ...unless all items with that slug are translations
+    if not candidate_items:
+        _warn_source_paths('All items ("%s") "%s" are translations',
+                           items, with_str)
+        candidate_items = items
+
+    # find items with default language
+    original_items = [i for i in candidate_items if i.in_default_lang]
+
+    # if there is no article with default language, go back one step
+    if not original_items:
+        original_items = candidate_items
+
+    # warn if there are several original items
+    if len(original_items) > 1:
+        _warn_source_paths('There are %s original (not translated) items %s',
+                           original_items, with_str)
+    return original_items
+
+
+def order_content(content_list, order_by='slug'):
+    """ Sorts content.
 
     order_by can be a string of an attribute or sorting function. If order_by
     is defined, content will be ordered by that attribute or sorting function.
@@ -632,72 +683,14 @@ def process_translations(content_list, order_by=None):
     in settings, e.g. PAGES_ORDER_BY='sort-order', in which case `sort-order`
     should be a defined metadata attribute in each page.
     """
-    content_list.sort(key=attrgetter('slug'))
-    grouped_by_slugs = groupby(content_list, attrgetter('slug'))
-    index = []
-    translations = []
-
-    def _warn_source_paths(msg, items, *extra):
-        args = [len(items)]
-        args.extend(extra)
-        args.extend((x.source_path for x in items))
-        logger.warning('{}: {}'.format(msg, '\n%s' * len(items)), *args)
-
-    for slug, items in grouped_by_slugs:
-        items = list(items)
-
-        # display warnings if slug is empty
-        if not slug:
-            _warn_source_paths('There are %s items with empty slug', items)
-
-        # display warnings if several items have the same lang
-        for lang, lang_items in groupby(items, attrgetter('lang')):
-            lang_items = list(lang_items)
-            if len(lang_items) > 1:
-                _warn_source_paths(
-                    'There are %s items with slug "%s" with lang %s',
-                    lang_items,
-                    slug,
-                    lang)
-
-        # items with `translation` metadata will be used as translations...
-        candidate_items = list(filter(
-            lambda i:
-                i.metadata.get('translation', 'false').lower() == 'false',
-            items))
-        # ...unless all items with that slug are translations
-        if not candidate_items:
-            logger.warning('All items with slug "%s" are translations', slug)
-            candidate_items = items
-
-        # find items with default language
-        original_items = list(filter(
-            attrgetter('in_default_lang'),
-            candidate_items))
-
-        # if there is no article with default language, go back one step
-        if not original_items:
-            original_items = candidate_items
-
-        # display warning if there are several original items
-        if len(original_items) > 1:
-            _warn_source_paths(
-                'There are %s original (not translated) items with slug "%s"',
-                original_items,
-                slug)
-
-        index.extend(original_items)
-        translations.extend([x for x in items if x not in original_items])
-        for a in items:
-            a.translations = [x for x in items if x != a]
 
     if order_by:
         if callable(order_by):
             try:
-                index.sort(key=order_by)
+                content_list.sort(key=order_by)
             except Exception:
                 logger.error('Error sorting with function %s', order_by)
-        elif isinstance(order_by, six.string_types):
+        elif isinstance(order_by, str):
             if order_by.startswith('reversed-'):
                 order_reversed = True
                 order_by = order_by.replace('reversed-', '', 1)
@@ -705,23 +698,33 @@ def process_translations(content_list, order_by=None):
                 order_reversed = False
 
             if order_by == 'basename':
-                index.sort(key=lambda x: os.path.basename(x.source_path or ''),
-                           reverse=order_reversed)
-            # already sorted by slug, no need to sort again
-            elif not (order_by == 'slug' and not order_reversed):
+                content_list.sort(
+                    key=lambda x: os.path.basename(x.source_path or ''),
+                    reverse=order_reversed)
+            else:
                 try:
-                    index.sort(key=attrgetter(order_by),
-                               reverse=order_reversed)
+                    content_list.sort(key=attrgetter(order_by),
+                                      reverse=order_reversed)
                 except AttributeError:
-                    logger.warning(
-                        'There is no "%s" attribute in the item '
-                        'metadata. Defaulting to slug order.', order_by)
+                    for content in content_list:
+                        try:
+                            getattr(content, order_by)
+                        except AttributeError:
+                            logger.warning(
+                                'There is no "%s" attribute in "%s". '
+                                'Defaulting to slug order.',
+                                order_by,
+                                content.get_relative_source_path(),
+                                extra={
+                                    'limit_msg': ('More files are missing '
+                                                  'the needed attribute.')
+                                })
         else:
             logger.warning(
                 'Invalid *_ORDER_BY setting (%s).'
                 'Valid options are strings and functions.', order_by)
 
-    return index, translations
+    return content_list
 
 
 def folder_watcher(path, extensions, ignores=[]):
@@ -737,12 +740,15 @@ def folder_watcher(path, extensions, ignores=[]):
             dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
 
             for f in files:
-                if f.endswith(tuple(extensions)) and \
-                   not any(fnmatch.fnmatch(f, ignore) for ignore in ignores):
-                        try:
-                            yield os.stat(os.path.join(root, f)).st_mtime
-                        except OSError as e:
-                            logger.warning('Caught Exception: %s', e)
+                valid_extension = f.endswith(tuple(extensions))
+                file_ignored = any(
+                    fnmatch.fnmatch(f, ignore) for ignore in ignores
+                )
+                if valid_extension and not file_ignored:
+                    try:
+                        yield os.stat(os.path.join(root, f)).st_mtime
+                    except OSError as e:
+                        logger.warning('Caught Exception: %s', e)
 
     LAST_MTIME = 0
     while True:
@@ -788,11 +794,7 @@ def set_date_tzinfo(d, tz_name=None):
 
 
 def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as e:
-        if e.errno != errno.EEXIST or not os.path.isdir(path):
-            raise
+    os.makedirs(path, exist_ok=True)
 
 
 def split_all(path):
@@ -832,8 +834,7 @@ def is_selected_for_writing(settings, path):
 
 def path_to_file_url(path):
     '''Convert file-system path to file:// URL'''
-    return six.moves.urllib_parse.urljoin(
-        "file://", six.moves.urllib.request.pathname2url(path))
+    return urllib.parse.urljoin("file://", urllib.request.pathname2url(path))
 
 
 def maybe_pluralize(count, singular, plural):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 AUTHOR = 'Alexis Métaireau'
 SITENAME = "Alexis' log"
+SITESUBTITLE = 'A personal blog.'
 SITEURL = 'http://blog.notmyidea.org'
 TIMEZONE = "Europe/Paris"
 
@@ -17,7 +17,7 @@ DEFAULT_PAGINATION = 4
 DEFAULT_DATE = (2012, 3, 2, 14, 1, 1)
 
 FEED_ALL_RSS = 'feeds/all.rss.xml'
-CATEGORY_FEED_RSS = 'feeds/%s.rss.xml'
+CATEGORY_FEED_RSS = 'feeds/{slug}.rss.xml'
 
 LINKS = (('Biologeek', 'http://biologeek.org'),
          ('Filyb', "http://filyb.info/"),
@@ -40,12 +40,15 @@ EXTRA_PATH_METADATA = {
 
 # static paths will be copied without parsing their contents
 STATIC_PATHS = [
-    'pictures',
+    'images',
     'extra/robots.txt',
     ]
 
 # custom page generated with a jinja2 template
 TEMPLATE_PAGES = {'pages/jinja2_template.html': 'jinja2_template.html'}
+
+# there is no other HTML content
+READERS = {'html': None}
 
 # code blocks with line numbers
 PYGMENTS_RST_OPTIONS = {'linenos': 'table'}

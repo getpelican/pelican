@@ -1,25 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import copy
+import datetime
 import locale
 import logging
 import os
 import re
-import sys
+from urllib.parse import urljoin, urlparse, urlunparse
 
 import pytz
 
-import six
-from six.moves.urllib.parse import urlparse, urlunparse
-
-from pelican import signals
+from pelican.plugins import signals
 from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import (SafeDatetime, deprecated_attribute, memoized,
-                           path_to_url, posixize_path,
-                           python_2_unicode_compatible, sanitised_join,
-                           set_date_tzinfo, slugify, strftime,
-                           truncate_html_words)
+from pelican.utils import (deprecated_attribute, memoized, path_to_url,
+                           posixize_path, sanitised_join, set_date_tzinfo,
+                           slugify, truncate_html_words)
 
 # Import these so that they're avalaible when you import from pelican.contents.
 from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
@@ -27,7 +22,6 @@ from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 logger = logging.getLogger(__name__)
 
 
-@python_2_unicode_compatible
 class Content(object):
     """Represents a content.
 
@@ -98,16 +92,19 @@ class Content(object):
         if not hasattr(self, 'slug'):
             if (settings['SLUGIFY_SOURCE'] == 'title' and
                     hasattr(self, 'title')):
-                self.slug = slugify(self.title,
-                                    settings.get('SLUG_SUBSTITUTIONS', ()))
+                self.slug = slugify(
+                    self.title,
+                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
             elif (settings['SLUGIFY_SOURCE'] == 'basename' and
                     source_path is not None):
                 basename = os.path.basename(
                     os.path.splitext(source_path)[0])
                 self.slug = slugify(
-                    basename, settings.get('SLUG_SUBSTITUTIONS', ()))
+                    basename,
+                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
 
         self.source_path = source_path
+        self.relative_source_path = self.get_relative_source_path()
 
         # manage the date format
         if not hasattr(self, 'date_format'):
@@ -118,34 +115,26 @@ class Content(object):
 
         if isinstance(self.date_format, tuple):
             locale_string = self.date_format[0]
-            if sys.version_info < (3, ) and isinstance(locale_string,
-                                                       six.text_type):
-                locale_string = locale_string.encode('ascii')
             locale.setlocale(locale.LC_ALL, locale_string)
             self.date_format = self.date_format[1]
 
         # manage timezone
         default_timezone = settings.get('TIMEZONE', 'UTC')
         timezone = getattr(self, 'timezone', default_timezone)
+        self.timezone = pytz.timezone(timezone)
 
         if hasattr(self, 'date'):
             self.date = set_date_tzinfo(self.date, timezone)
-            self.locale_date = strftime(self.date, self.date_format)
+            self.locale_date = self.date.strftime(self.date_format)
 
         if hasattr(self, 'modified'):
             self.modified = set_date_tzinfo(self.modified, timezone)
-            self.locale_modified = strftime(self.modified, self.date_format)
+            self.locale_modified = self.modified.strftime(self.date_format)
 
         # manage status
         if not hasattr(self, 'status'):
-            self.status = settings['DEFAULT_STATUS']
-            if not settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
-                if self.date.tzinfo is None:
-                    now = SafeDatetime.now()
-                else:
-                    now = SafeDatetime.utcnow().replace(tzinfo=pytz.utc)
-                if self.date > now:
-                    self.status = 'draft'
+            # Previous default of None broke comment plugins and perhaps others
+            self.status = getattr(self, 'default_status', '')
 
         # store the summary metadata if it is set
         if 'summary' in metadata:
@@ -156,13 +145,17 @@ class Content(object):
     def __str__(self):
         return self.source_path or repr(self)
 
-    def check_properties(self):
+    def _has_valid_mandatory_properties(self):
         """Test mandatory properties are set."""
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
-                raise NameError(prop)
+                logger.error(
+                    "Skipping %s: could not find information about '%s'",
+                    self, prop)
+                return False
+        return True
 
-    def valid_save_as(self):
+    def _has_valid_save_as(self):
         """Return true if save_as doesn't write outside output path, false
         otherwise."""
         try:
@@ -174,9 +167,34 @@ class Content(object):
         try:
             sanitised_join(output_path, self.save_as)
         except RuntimeError:  # outside output_dir
+            logger.error(
+                "Skipping %s: file %r would be written outside output path",
+                self,
+                self.save_as,
+            )
             return False
 
         return True
+
+    def _has_valid_status(self):
+        if hasattr(self, 'allowed_statuses'):
+            if self.status not in self.allowed_statuses:
+                logger.error(
+                    "Unknown status '%s' for file %s, skipping it.",
+                    self.status,
+                    self
+                )
+                return False
+
+        # if undefined we allow all
+        return True
+
+    def is_valid(self):
+        """Validate Content"""
+        # Use all() to not short circuit and get results of all validations
+        return all([self._has_valid_mandatory_properties(),
+                    self._has_valid_save_as(),
+                    self._has_valid_status()])
 
     @property
     def url_format(self):
@@ -187,15 +205,16 @@ class Content(object):
             'path': path_to_url(path),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
-            'date': getattr(self, 'date', SafeDatetime.now()),
+            'date': getattr(self, 'date', datetime.datetime.now()),
             'author': self.author.slug if hasattr(self, 'author') else '',
-            'tag': self.tag.slug if hasattr(self, 'tag') else '',
             'category': self.category.slug if hasattr(self, 'category') else ''
         })
         return metadata
 
-    def _expand_settings(self, key):
-        fq_key = ('%s_%s' % (self.__class__.__name__, key)).upper()
+    def _expand_settings(self, key, klass=None):
+        if not klass:
+            klass = self.__class__.__name__
+        fq_key = ('%s_%s' % (klass, key)).upper()
         return self.settings[fq_key].format(**self.url_format)
 
     def get_url_setting(self, key):
@@ -203,6 +222,109 @@ class Content(object):
             return getattr(self, 'override_' + key)
         key = key if self.in_default_lang else 'lang_%s' % key
         return self._expand_settings(key)
+
+    def _link_replacer(self, siteurl, m):
+        what = m.group('what')
+        value = urlparse(m.group('value'))
+        path = value.path
+        origin = m.group('path')
+
+        # urllib.parse.urljoin() produces `a.html` for urljoin("..", "a.html")
+        # so if RELATIVE_URLS are enabled, we fall back to os.path.join() to
+        # properly get `../a.html`. However, os.path.join() produces
+        # `baz/http://foo/bar.html` for join("baz", "http://foo/bar.html")
+        # instead of correct "http://foo/bar.html", so one has to pick a side
+        # as there is no silver bullet.
+        if self.settings['RELATIVE_URLS']:
+            joiner = os.path.join
+        else:
+            joiner = urljoin
+
+            # However, it's not *that* simple: urljoin("blog", "index.html")
+            # produces just `index.html` instead of `blog/index.html` (unlike
+            # os.path.join()), so in order to get a correct answer one needs to
+            # append a trailing slash to siteurl in that case. This also makes
+            # the new behavior fully compatible with Pelican 3.7.1.
+            if not siteurl.endswith('/'):
+                siteurl += '/'
+
+        # XXX Put this in a different location.
+        if what in {'filename', 'static', 'attach'}:
+            if path.startswith('/'):
+                path = path[1:]
+            else:
+                # relative to the source path of this content
+                path = self.get_relative_source_path(
+                    os.path.join(self.relative_dir, path)
+                )
+
+            key = 'static_content' if what in ('static', 'attach')\
+                else 'generated_content'
+
+            def _get_linked_content(key, path):
+                try:
+                    return self._context[key][path]
+                except KeyError:
+                    try:
+                        # Markdown escapes spaces, try unescaping
+                        return self._context[key][path.replace('%20', ' ')]
+                    except KeyError:
+                        if what == 'filename' and key == 'generated_content':
+                            key = 'static_content'
+                            linked_content = _get_linked_content(key, path)
+                            if linked_content:
+                                logger.warning(
+                                    '{filename} used for linking to static'
+                                    ' content %s in %s. Use {static} instead',
+                                    path,
+                                    self.get_relative_source_path())
+                                return linked_content
+                        return None
+
+            linked_content = _get_linked_content(key, path)
+            if linked_content:
+                if what == 'attach':
+                    linked_content.attach_to(self)
+                origin = joiner(siteurl, linked_content.url)
+                origin = origin.replace('\\', '/')  # for Windows paths.
+            else:
+                logger.warning(
+                    "Unable to find '%s', skipping url replacement.",
+                    value.geturl(), extra={
+                        'limit_msg': ("Other resources were not found "
+                                      "and their urls not replaced")})
+        elif what == 'category':
+            origin = joiner(siteurl, Category(path, self.settings).url)
+        elif what == 'tag':
+            origin = joiner(siteurl, Tag(path, self.settings).url)
+        elif what == 'index':
+            origin = joiner(siteurl, self.settings['INDEX_SAVE_AS'])
+        elif what == 'author':
+            origin = joiner(siteurl, Author(path, self.settings).url)
+        else:
+            logger.warning(
+                "Replacement Indicator '%s' not recognized, "
+                "skipping replacement",
+                what)
+
+        # keep all other parts, such as query, fragment, etc.
+        parts = list(value)
+        parts[2] = origin
+        origin = urlunparse(parts)
+
+        return ''.join((m.group('markup'), m.group('quote'), origin,
+                        m.group('quote')))
+
+    def _get_intrasite_link_regex(self):
+        intrasite_link_regex = self.settings['INTRASITE_LINK_REGEX']
+        regex = r"""
+            (?P<markup><[^\>]+  # match tag with all url-value attributes
+                (?:href|src|poster|data|cite|formaction|action)\s*=\s*)
+
+            (?P<quote>["\'])      # require value to be quoted
+            (?P<path>{0}(?P<value>.*?))  # the url value
+            \2""".format(intrasite_link_regex)
+        return re.compile(regex, re.X)
 
     def _update_content(self, content, siteurl):
         """Update the content attribute.
@@ -217,79 +339,28 @@ class Content(object):
         if not content:
             return content
 
-        instrasite_link_regex = self.settings['INTRASITE_LINK_REGEX']
-        regex = r"""
-            (?P<markup><[^\>]+  # match tag with all url-value attributes
-                (?:href|src|poster|data|cite|formaction|action)\s*=\s*)
+        hrefs = self._get_intrasite_link_regex()
+        return hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
 
-            (?P<quote>["\'])      # require value to be quoted
-            (?P<path>{0}(?P<value>.*?))  # the url value
-            \2""".format(instrasite_link_regex)
-        hrefs = re.compile(regex, re.X)
-
-        def replacer(m):
+    def get_static_links(self):
+        static_links = set()
+        hrefs = self._get_intrasite_link_regex()
+        for m in hrefs.finditer(self._content):
             what = m.group('what')
             value = urlparse(m.group('value'))
             path = value.path
-            origin = m.group('path')
-
-            # XXX Put this in a different location.
-            if what in {'filename', 'attach'}:
-                if path.startswith('/'):
-                    path = path[1:]
-                else:
-                    # relative to the source path of this content
-                    path = self.get_relative_source_path(
-                        os.path.join(self.relative_dir, path)
-                    )
-
-                if path not in self._context['filenames']:
-                    unquoted_path = path.replace('%20', ' ')
-
-                    if unquoted_path in self._context['filenames']:
-                        path = unquoted_path
-
-                linked_content = self._context['filenames'].get(path)
-                if linked_content:
-                    if what == 'attach':
-                        if isinstance(linked_content, Static):
-                            linked_content.attach_to(self)
-                        else:
-                            logger.warning(
-                                "%s used {attach} link syntax on a "
-                                "non-static file. Use {filename} instead.",
-                                self.get_relative_source_path())
-                    origin = '/'.join((siteurl, linked_content.url))
-                    origin = origin.replace('\\', '/')  # for Windows paths.
-                else:
-                    logger.warning(
-                        "Unable to find '%s', skipping url replacement.",
-                        value.geturl(), extra={
-                            'limit_msg': ("Other resources were not found "
-                                          "and their urls not replaced")})
-            elif what == 'category':
-                origin = '/'.join((siteurl, Category(path, self.settings).url))
-            elif what == 'tag':
-                origin = '/'.join((siteurl, Tag(path, self.settings).url))
-            elif what == 'index':
-                origin = '/'.join((siteurl, self.settings['INDEX_SAVE_AS']))
-            elif what == 'author':
-                origin = '/'.join((siteurl, Author(path, self.settings).url))
+            if what not in {'static', 'attach'}:
+                continue
+            if path.startswith('/'):
+                path = path[1:]
             else:
-                logger.warning(
-                    "Replacement Indicator '%s' not recognized, "
-                    "skipping replacement",
-                    what)
-
-            # keep all other parts, such as query, fragment, etc.
-            parts = list(value)
-            parts[2] = origin
-            origin = urlunparse(parts)
-
-            return ''.join((m.group('markup'), m.group('quote'), origin,
-                            m.group('quote')))
-
-        return hrefs.sub(replacer, content)
+                # relative to the source path of this content
+                path = self.get_relative_source_path(
+                    os.path.join(self.relative_dir, path)
+                )
+            path = path.replace('%20', ' ')
+            static_links.add(path)
+        return static_links
 
     def get_siteurl(self):
         return self._context.get('localsiteurl', '')
@@ -313,14 +384,15 @@ class Content(object):
         This is based on the summary metadata if set, otherwise truncate the
         content.
         """
-        if hasattr(self, '_summary'):
-            return self._update_content(self._summary, siteurl)
+        if 'summary' in self.metadata:
+            return self.metadata['summary']
 
         if self.settings['SUMMARY_MAX_LENGTH'] is None:
             return self.content
 
         return truncate_html_words(self.content,
-                                   self.settings['SUMMARY_MAX_LENGTH'])
+                                   self.settings['SUMMARY_MAX_LENGTH'],
+                                   self.settings['SUMMARY_END_MARKER'])
 
     @property
     def summary(self):
@@ -337,6 +409,15 @@ class Content(object):
     def summary(self, value):
         """Dummy function"""
         pass
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, value):
+        # TODO maybe typecheck
+        self._status = value.lower()
 
     @property
     def url(self):
@@ -380,30 +461,72 @@ class Content(object):
                     os.path.abspath(self.source_path),
                     os.path.abspath(self.settings['PATH']))))
 
+    def refresh_metadata_intersite_links(self):
+        for key in self.settings['FORMATTED_FIELDS']:
+            if key in self.metadata and key != 'summary':
+                value = self._update_content(
+                    self.metadata[key],
+                    self.get_siteurl()
+                )
+                self.metadata[key] = value
+                setattr(self, key.lower(), value)
+
+        # _summary is an internal variable that some plugins may be writing to,
+        # so ensure changes to it are picked up
+        if ('summary' in self.settings['FORMATTED_FIELDS'] and
+                'summary' in self.metadata):
+            self._summary = self._update_content(
+                self._summary,
+                self.get_siteurl()
+            )
+            self.metadata['summary'] = self._summary
+
 
 class Page(Content):
     mandatory_properties = ('title',)
+    allowed_statuses = ('published', 'hidden', 'draft')
+    default_status = 'published'
     default_template = 'page'
 
+    def _expand_settings(self, key):
+        klass = 'draft_page' if self.status == 'draft' else None
+        return super()._expand_settings(key, klass)
 
-class Article(Page):
+
+class Article(Content):
     mandatory_properties = ('title', 'date', 'category')
+    allowed_statuses = ('published', 'draft')
+    default_status = 'published'
     default_template = 'article'
 
-
-class Draft(Page):
-    mandatory_properties = ('title', 'category')
-    default_template = 'article'
-
-
-class Quote(Page):
-    base_properties = ('author', 'date')
-
-
-@python_2_unicode_compatible
-class Static(Page):
     def __init__(self, *args, **kwargs):
-        super(Static, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+        # handle WITH_FUTURE_DATES (designate article to draft based on date)
+        if not self.settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
+            if self.date.tzinfo is None:
+                now = datetime.datetime.now()
+            else:
+                now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+            if self.date > now:
+                self.status = 'draft'
+
+        # if we are a draft and there is no date provided, set max datetime
+        if not hasattr(self, 'date') and self.status == 'draft':
+            self.date = datetime.datetime.max.replace(tzinfo=self.timezone)
+
+    def _expand_settings(self, key):
+        klass = 'draft' if self.status == 'draft' else 'article'
+        return super()._expand_settings(key, klass)
+
+
+class Static(Content):
+    mandatory_properties = ('title',)
+    default_status = 'published'
+    default_template = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._output_location_referenced = False
 
     @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
@@ -422,13 +545,13 @@ class Static(Page):
     def url(self):
         # Note when url has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
-        return super(Static, self).url
+        return super().url
 
     @property
     def save_as(self):
         # Note when save_as has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
-        return super(Static, self).save_as
+        return super().save_as
 
     def attach_to(self, content):
         """Override our output directory with that of the given content object.
@@ -482,25 +605,3 @@ class Static(Page):
 
         self.override_save_as = new_save_as
         self.override_url = new_url
-
-
-def is_valid_content(content, f):
-    try:
-        content.check_properties()
-    except NameError as e:
-        logger.error(
-            "Skipping %s: could not find information about '%s'",
-            f, six.text_type(e))
-        return False
-
-    if not content.valid_save_as():
-        logger.error(
-            "Skipping %s: file %r would be written outside output path",
-            f,
-            content.save_as,
-        )
-        # Note: future code might want to use a result variable instead, to
-        # allow showing multiple error messages at once.
-        return False
-
-    return True

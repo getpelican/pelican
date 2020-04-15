@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 import os
 import sys
 
@@ -17,11 +17,11 @@ extensions = ['sphinx.ext.autodoc',
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Pelican'
-copyright = '2015, Alexis Metaireau and contributors'
+copyright = '2010 – present, Justin Mayer, Alexis Metaireau, and contributors'
 exclude_patterns = ['_build']
 release = __version__
 version = '.'.join(release.split('.')[:1])
-last_stable = '3.7.1'
+last_stable = __version__
 rst_prolog = '''
 .. |last_stable| replace:: :pelican-doc:`{0}`
 '''.format(last_stable)
@@ -30,7 +30,7 @@ rst_prolog = '''
 pygments_style = 'sphinx'
 
 extlinks = {
-    'pelican-doc':  ('http://docs.getpelican.com/%s/', '')
+    'pelican-doc':  ('https://docs.getpelican.com/%s/', '')
 }
 
 # -- Options for HTML output --------------------------------------------------
@@ -68,14 +68,14 @@ def setup(app):
 
 # -- Options for LaTeX output -------------------------------------------------
 latex_documents = [
-    ('index', 'Pelican.tex', 'Pelican Documentation', 'Alexis Métaireau',
+    ('index', 'Pelican.tex', 'Pelican Documentation', 'Justin Mayer',
      'manual'),
 ]
 
 # -- Options for manual page output -------------------------------------------
 man_pages = [
     ('index', 'pelican', 'pelican documentation',
-     ['Alexis Métaireau'], 1),
+     ['Justin Mayer'], 1),
     ('pelican-themes', 'pelican-themes', 'A theme manager for Pelican',
      ['Mickaël Raybaud'], 1),
     ('themes', 'pelican-theming', 'How to create themes for Pelican',
