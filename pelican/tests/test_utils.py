@@ -122,6 +122,12 @@ class TestUtils(LoggedTestCase):
         for value, expected in samples:
             self.assertEqual(utils.slugify(value, regex_subs=subs), expected)
 
+        self.assertEqual(utils.slugify('Cat', regex_subs=subs), 'cat')
+        self.assertEqual(
+            utils.slugify('Cat', regex_subs=subs, preserve_case=False), 'cat')
+        self.assertEqual(
+            utils.slugify('Cat', regex_subs=subs, preserve_case=True), 'Cat')
+
     def test_slugify_substitute(self):
 
         samples = (('C++ is based on C', 'cpp-is-based-on-c'),

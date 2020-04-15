@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import locale
 import os
@@ -138,7 +138,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         index = 0
         for post in test_posts:
             name = post[2]
-            category = slugify(post[5][0], regex_subs=subs)
+            category = slugify(post[5][0], regex_subs=subs, preserve_case=True)
             name += '.md'
             filename = os.path.join(category, name)
             out_name = fnames[index]
@@ -215,7 +215,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
         for post in test_posts:
             name = post[2]
             kind = post[8]
-            category = slugify(post[5][0], regex_subs=subs)
+            category = slugify(post[5][0], regex_subs=subs, preserve_case=True)
             name += '.md'
             filename = os.path.join(kind, category, name)
             out_name = fnames[index]
