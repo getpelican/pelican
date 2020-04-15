@@ -222,7 +222,7 @@ def pelican_open(filename, mode='r', strip_crs=(sys.platform == 'win32')):
     yield content
 
 
-def slugify(value, regex_subs=()):
+def slugify(value, regex_subs=(), preserve_case=False):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
@@ -245,7 +245,8 @@ def slugify(value, regex_subs=()):
         value = re.sub(src, dst, value, flags=re.IGNORECASE)
 
     # convert to lowercase
-    value = value.lower()
+    if not preserve_case:
+        value = value.lower()
 
     # we want only ASCII chars
     value = value.encode('ascii', 'ignore').strip()
