@@ -99,10 +99,11 @@ class Pelican(object):
             ) for cls in self.get_generator_classes()
         ]
 
-        # erase the directory if it is not the source and if that's
-        # explicitly asked
-        if (self.delete_outputdir and not
-                os.path.realpath(self.path).startswith(self.output_path)):
+        # Delete the output directory if (1) the appropriate setting is True
+        # and (2) that directory is not the parent of the source directory
+        if (self.delete_outputdir
+                and os.path.commonpath([self.output_path]) !=
+                os.path.commonpath([self.output_path, self.path])):
             clean_output_dir(self.output_path, self.output_retention)
 
         for p in generators:
