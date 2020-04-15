@@ -371,9 +371,8 @@ of ``{attach}``, and letting the file's location be determined by the project's
 ``url`` overrides can still be set in ``EXTRA_PATH_METADATA``.)
 
 .. note::
-    Using ``{attach}`` relies on the ``*_URL`` and ``*_SAVE_AS`` settings for
-    the document type (e.g. ``ARTICLE_URL`` and ``ARTICLE_SAVE_AS``) having the
-    same directory portion. See also :ref:`url-settings`.
+    When using ``{attach}``, any parent directory in ``*_URL`` / ``*_SAVE_AS``
+    settings should match each other. See also: :ref:`url-settings`
 
 Linking to authors, categories, index and tags
 ----------------------------------------------
