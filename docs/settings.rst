@@ -98,7 +98,10 @@ Basic settings
    should map the filtername to the filter function.
 
    Example::
+    import sys
+    sys.path.append('to/your/path')
 
+    from custom_filter import urlencode_filter
     JINJA_FILTERS = {'urlencode': urlencode_filter}
 
    See: `Jinja custom filters documentation`_.
