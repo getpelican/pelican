@@ -50,6 +50,7 @@ class TestPelican(LoggedTestCase):
         locale.setlocale(locale.LC_ALL, str('C'))
 
     def tearDown(self):
+        read_settings()  # cleanup PYGMENTS_RST_OPTIONS
         rmtree(self.temp_path)
         rmtree(self.temp_cache)
         locale.setlocale(locale.LC_ALL, self.old_locale)
