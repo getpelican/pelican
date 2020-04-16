@@ -585,6 +585,14 @@ class Readers(FileStampDataCacher):
             from typogrify.filters import typogrify
             import smartypants
 
+            typogrify_dashes = self.settings['TYPOGRIFY_DASHES']
+            if typogrify_dashes == 'oldschool':
+                smartypants.Attr.default = smartypants.Attr.set2
+            elif typogrify_dashes == 'oldschool_inverted':
+                smartypants.Attr.default = smartypants.Attr.set3
+            else:
+                smartypants.Attr.default = smartypants.Attr.set1
+
             # Tell `smartypants` to also replace &quot; HTML entities with
             # smart quotes. This is necessary because Docutils has already
             # replaced double quotes with said entities by the time we run

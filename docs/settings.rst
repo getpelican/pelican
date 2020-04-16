@@ -279,6 +279,17 @@ Basic settings
    ``pre`` and ``code`` tags. This requires that Typogrify version 2.0.4 or
    later is installed
 
+.. data:: TYPOGRIFY_DASHES = 'default'
+
+   This setting controls how Typogrify sets up the Smartypants filter to
+   interpret multiple dash/hyphen/minus characters. A single ASCII dash
+   character (``-``) is always rendered as a hyphen. The ``default`` setting
+   does not handle en-dashes and converts double-hyphens into em-dashes. The
+   ``oldschool`` setting renders both en-dashes and em-dashes when it sees two
+   (``--``) and three (``---``) hyphen characters, respectively. The
+   ``oldschool_inverted`` setting turns two hyphens into an em-dash and three
+   hyphens into an en-dash.
+
 .. data:: SUMMARY_MAX_LENGTH = 50
 
    When creating a short summary of an article, this will be the default length
