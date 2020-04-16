@@ -4,7 +4,7 @@ Creating themes
 ###############
 
 To generate its HTML output, Pelican uses the `Jinja
-<http://jinja.pocoo.org/>`_ templating engine due to its flexibility and
+<https://palletsprojects.com/p/jinja/>`_ templating engine due to its flexibility and
 straightforward syntax. If you want to create your own theme, feel free to take
 inspiration from the `"simple" theme
 <https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_.
@@ -75,16 +75,18 @@ output_file     The name of the file currently being generated. For
 articles        The list of articles, ordered descending by date.
                 All the elements are `Article` objects, so you can
                 access their attributes (e.g. title, summary, author
-                etc.). Sometimes this is shadowed (for instance in
+                etc.). Sometimes this is shadowed (for instance, in
                 the tags page). You will then find info about it
                 in the `all_articles` variable.
 dates           The same list of articles, but ordered by date,
                 ascending.
 drafts          The list of draft articles
-tags            A list of (tag, articles) tuples, containing all
-                the tags.
+authors         A list of (author, articles) tuples, containing all
+                the authors and corresponding articles (values)
 categories      A list of (category, articles) tuples, containing
                 all the categories and corresponding articles (values)
+tags            A list of (tag, articles) tuples, containing all
+                the tags and corresponding articles (values)
 pages           The list of pages
 hidden_pages    The list of hidden pages
 draft_pages     The list of draft pages
@@ -102,7 +104,7 @@ that allow them to be easily sorted by name::
 If you want to sort based on different criteria, `Jinja's sort command`__ has a
 number of options.
 
-__ http://jinja.pocoo.org/docs/templates/#sort
+__ https://jinja.palletsprojects.com/en/master/templates/#sort
 
 
 Date Formatting
@@ -118,8 +120,8 @@ your date according to the locale given in your settings::
 
     {{ article.date|strftime('%d %B %Y') }}
 
-.. _datetime: http://docs.python.org/2/library/datetime.html#datetime-objects
-.. _strftime: http://docs.python.org/2/library/datetime.html#strftime-strptime-behavior
+.. _datetime: https://docs.python.org/3/library/datetime.html#datetime-objects
+.. _strftime: https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 
 
 index.html
@@ -347,9 +349,9 @@ Article
 
 The string representation of an Article is the `source_path` attribute.
 
-===================     ===================================================
+======================  ===================================================
 Attribute               Description
-===================     ===================================================
+======================  ===================================================
 author                  The :ref:`Author <object-author_cat_tag>` of
                         this article.
 authors                 A list of :ref:`Authors <object-author_cat_tag>`
@@ -368,6 +370,7 @@ metadata                Article header metadata `dict`.
 save_as                 Location to save the article page.
 slug                    Page slug.
 source_path             Full system path of the article source file.
+relative_source_path    Relative path from PATH_ to the article source file.
 status                  The article status, can be any of 'published' or
                         'draft'.
 summary                 Rendered summary content.
@@ -378,7 +381,10 @@ title                   Title of the article.
 translations            List of translations
                         :ref:`Article <object-article>` objects.
 url                     URL to the article page.
-===================     ===================================================
+======================  ===================================================
+
+.. _PATH: settings.html#PATH
+
 
 .. _object-author_cat_tag:
 
@@ -406,34 +412,38 @@ Page
 
 The string representation of a Page is the `source_path` attribute.
 
-===================     ===================================================
-Attribute               Description
-===================     ===================================================
-author                  The :ref:`Author <object-author_cat_tag>` of
-                        this page.
-content                 The rendered content of the page.
-date                    Datetime object representing the page date.
-date_format             Either default date format or locale date format.
-default_template        Default template name.
-in_default_lang         Boolean representing if the article is written
-                        in the default language.
-lang                    Language of the article.
-locale_date             Date formatted by the `date_format`.
-metadata                Page header metadata `dict`.
-save_as                 Location to save the page.
-slug                    Page slug.
-source_path             Full system path of the page source file.
-status                  The page status, can be any of 'published', 'hidden' or
-                        'draft'.
-summary                 Rendered summary content.
-tags                    List of :ref:`Tag <object-author_cat_tag>`
-                        objects.
-template                Template name to use for rendering.
-title                   Title of the page.
-translations            List of translations
-                        :ref:`Article <object-article>` objects.
-url                     URL to the page.
-===================     ===================================================
+=====================  ===================================================
+Attribute              Description
+=====================  ===================================================
+author                 The :ref:`Author <object-author_cat_tag>` of
+                       this page.
+content                The rendered content of the page.
+date                   Datetime object representing the page date.
+date_format            Either default date format or locale date format.
+default_template       Default template name.
+in_default_lang        Boolean representing if the article is written
+                       in the default language.
+lang                   Language of the article.
+locale_date            Date formatted by the `date_format`.
+metadata               Page header metadata `dict`.
+save_as                Location to save the page.
+slug                   Page slug.
+source_path            Full system path of the page source file.
+relative_source_path   Relative path from PATH_ to the page source file.
+status                 The page status, can be any of 'published', 'hidden' or
+                       'draft'.
+summary                Rendered summary content.
+tags                   List of :ref:`Tag <object-author_cat_tag>`
+                       objects.
+template               Template name to use for rendering.
+title                  Title of the page.
+translations           List of translations
+                       :ref:`Article <object-article>` objects.
+url                    URL to the page.
+=====================  ===================================================
+
+.. _PATH: settings.html#PATH
+
 
 Feeds
 =====

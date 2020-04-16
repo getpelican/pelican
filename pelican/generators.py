@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import calendar
 import errno
 import fnmatch
 import logging
 import os
-from codecs import open
 from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
@@ -15,15 +13,12 @@ from operator import attrgetter
 from jinja2 import (BaseLoader, ChoiceLoader, Environment, FileSystemLoader,
                     PrefixLoader, TemplateNotFound)
 
-import six
-
-from pelican import signals
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
+from pelican.plugins import signals
 from pelican.readers import Readers
 from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
-                           posixize_path, process_translations,
-                           python_2_unicode_compatible)
+                           posixize_path, process_translations)
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +28,6 @@ class PelicanTemplateNotFound(Exception):
     pass
 
 
-@python_2_unicode_compatible
 class Generator(object):
     """Baseclass generator"""
 
@@ -83,6 +77,14 @@ class Generator(object):
         # get custom Jinja filters from user settings
         custom_filters = self.settings['JINJA_FILTERS']
         self.env.filters.update(custom_filters)
+
+        # get custom Jinja globals from user settings
+        custom_globals = self.settings['JINJA_GLOBALS']
+        self.env.globals.update(custom_globals)
+
+        # get custom Jinja tests from user settings
+        custom_tests = self.settings['JINJA_TESTS']
+        self.env.tests.update(custom_tests)
 
         signals.generator_init.send(self)
 
@@ -138,7 +140,7 @@ class Generator(object):
             extensions are allowed)
         """
         # backward compatibility for older generators
-        if isinstance(paths, six.string_types):
+        if isinstance(paths, str):
             paths = [paths]
 
         # group the exclude dir names by parent path, for use with os.walk()
@@ -155,16 +157,15 @@ class Generator(object):
 
             if os.path.isdir(root):
                 for dirpath, dirs, temp_files in os.walk(
-                        root, followlinks=True):
-                    drop = []
+                        root, topdown=True, followlinks=True):
                     excl = exclusions_by_dirpath.get(dirpath, ())
-                    for d in dirs:
+                    # We copy the `dirs` list as we will modify it in the loop:
+                    for d in list(dirs):
                         if (d in excl or
                             any(fnmatch.fnmatch(d, ignore)
                                 for ignore in ignores)):
-                            drop.append(d)
-                    for d in drop:
-                        dirs.remove(d)
+                            if d in dirs:
+                                dirs.remove(d)
 
                     reldir = os.path.relpath(dirpath, self.path)
                     for f in temp_files:
@@ -248,7 +249,7 @@ class CachingGenerator(Generator, FileStampDataCacher):
     def _get_file_stamp(self, filename):
         '''Get filestamp for path relative to generator.path'''
         filename = os.path.join(self.path, filename)
-        return super(CachingGenerator, self)._get_file_stamp(filename)
+        return super()._get_file_stamp(filename)
 
 
 class _FileLoader(BaseLoader):
@@ -295,7 +296,7 @@ class ArticlesGenerator(CachingGenerator):
         self.authors = defaultdict(list)
         self.drafts = []                   # only drafts in default language
         self.drafts_translations = []
-        super(ArticlesGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         signals.article_generator_init.send(self)
 
     def generate_feeds(self, writer):
@@ -514,8 +515,6 @@ class ArticlesGenerator(CachingGenerator):
                     context["period"] = (_period,)
                 else:
                     month_name = calendar.month_name[_period[1]]
-                    if not six.PY3:
-                        month_name = month_name.decode('utf-8')
                     if key == period_date_key['month']:
                         context["period"] = (_period[0],
                                              month_name)
@@ -526,7 +525,7 @@ class ArticlesGenerator(CachingGenerator):
 
                 write(save_as, template, context, articles=articles,
                       dates=archive, template_name='period_archives',
-                      blog=True, url=url)
+                      blog=True, url=url, all_articles=self.articles)
 
         for period in 'year', 'month', 'day':
             save_as = period_save_as[period]
@@ -708,7 +707,7 @@ class PagesGenerator(CachingGenerator):
         self.hidden_translations = []
         self.draft_pages = []
         self.draft_translations = []
-        super(PagesGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         signals.page_generator_init.send(self)
 
     def generate_context(self):
@@ -794,7 +793,7 @@ class StaticGenerator(Generator):
     to output"""
 
     def __init__(self, *args, **kwargs):
-        super(StaticGenerator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fallback_to_symlinks = False
         signals.static_generator_init.send(self)
 

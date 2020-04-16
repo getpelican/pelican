@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
 
 import locale
 
@@ -18,7 +17,7 @@ TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
 class TestPage(unittest.TestCase):
     def setUp(self):
-        super(TestPage, self).setUp()
+        super().setUp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
         self.page_kwargs = {
@@ -72,9 +71,10 @@ class TestPage(unittest.TestCase):
                        Article(**self.page_kwargs)]
         paginator = Paginator('blog/index.html', '//blog.my.site/',
                               object_list, settings, 1)
+        # The URL *has to* stay absolute (with // in the front), so verify that
         page1 = paginator.page(1)
         self.assertEqual(page1.save_as, 'blog/index.html')
-        self.assertEqual(page1.url, 'blog.my.site/')
+        self.assertEqual(page1.url, '//blog.my.site/')
         page2 = paginator.page(2)
         self.assertEqual(page2.save_as, 'blog/2/index.html')
-        self.assertEqual(page2.url, 'blog.my.site/2/')
+        self.assertEqual(page2.url, '//blog.my.site/2/')

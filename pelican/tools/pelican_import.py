@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import argparse
 import logging
@@ -8,23 +7,18 @@ import os
 import re
 import subprocess
 import sys
-from codecs import open
+import time
 from collections import defaultdict
-
-from six.moves.urllib.error import URLError
-from six.moves.urllib.parse import urlparse
-from six.moves.urllib.request import urlretrieve
+from html import unescape
+from urllib.error import URLError
+from urllib.parse import quote, urlparse, urlsplit, urlunsplit
+from urllib.request import urlretrieve
 
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
 from pelican.settings import read_settings
 from pelican.utils import SafeDatetime, slugify
 
-try:
-    from html import unescape  # py3.4+
-except ImportError:
-    from six.moves.html_parser import HTMLParser
-    unescape = HTMLParser().unescape
 
 logger = logging.getLogger(__name__)
 
@@ -395,19 +389,8 @@ def posterous2fields(api_token, email, password):
     """Imports posterous posts"""
     import base64
     from datetime import timedelta
-    try:
-        # py3k import
-        import json
-    except ImportError:
-        # py2 import
-        import simplejson as json
-
-    try:
-        # py3k import
-        import urllib.request as urllib_request
-    except ImportError:
-        # py2 import
-        import urllib2 as urllib_request
+    import json
+    import urllib.request as urllib_request
 
     def get_posterous_posts(api_token, email, password, page=1):
         base64string = base64.encodestring(
@@ -450,22 +433,11 @@ def posterous2fields(api_token, email, password):
 
 def tumblr2fields(api_key, blogname):
     """ Imports Tumblr posts (API v2)"""
-    try:
-        # py3k import
-        import json
-    except ImportError:
-        # py2 import
-        import simplejson as json
-
-    try:
-        # py3k import
-        import urllib.request as urllib_request
-    except ImportError:
-        # py2 import
-        import urllib2 as urllib_request
+    import json
+    import urllib.request as urllib_request
 
     def get_tumblr_posts(api_key, blogname, offset=0):
-        url = ("http://api.tumblr.com/v2/blog/%s.tumblr.com/"
+        url = ("https://api.tumblr.com/v2/blog/%s.tumblr.com/"
                "posts?api_key=%s&offset=%d&filter=raw") % (
             blogname, api_key, offset)
         request = urllib_request.Request(url)
@@ -563,7 +535,7 @@ def feed2fields(file):
     settings = read_settings()
     subs = settings['SLUG_REGEX_SUBSTITUTIONS']
     for entry in d.entries:
-        date = (entry.updated_parsed.strftime('%Y-%m-%d %H:%M')
+        date = (time.strftime('%Y-%m-%d %H:%M', entry.updated_parsed)
                 if hasattr(entry, 'updated_parsed') else None)
         author = entry.author if hasattr(entry, 'author') else None
         tags = ([e['term'] for e in entry.tags]
@@ -586,6 +558,29 @@ def build_header(title, date, author, categories, tags, slug,
         header += ':date: %s\n' % date
     if author:
         header += ':author: %s\n' % author
+    if categories:
+        header += ':category: %s\n' % ', '.join(categories)
+    if tags:
+        header += ':tags: %s\n' % ', '.join(tags)
+    if slug:
+        header += ':slug: %s\n' % slug
+    if status:
+        header += ':status: %s\n' % status
+    if attachments:
+        header += ':attachments: %s\n' % ', '.join(attachments)
+    header += '\n'
+    return header
+
+
+def build_asciidoc_header(title, date, author, categories, tags, slug,
+                          status=None, attachments=None):
+    """Build a header from a list of fields"""
+
+    header = '= %s\n' % title
+    if author:
+        header += '%s\n' % author
+        if date:
+            header += '%s\n' % date
     if categories:
         header += ':category: %s\n' % ', '.join(categories)
     if tags:
@@ -623,7 +618,9 @@ def build_markdown_header(title, date, author, categories, tags,
 
 
 def get_ext(out_markup, in_markup='html'):
-    if in_markup == 'markdown' or out_markup == 'markdown':
+    if out_markup == 'asciidoc':
+        ext = '.adoc'
+    elif in_markup == 'markdown' or out_markup == 'markdown':
         ext = '.md'
     else:
         ext = '.rst'
@@ -635,7 +632,7 @@ def get_out_filename(output_path, filename, ext, kind,
     filename = os.path.basename(filename)
 
     # Enforce filename restrictions for various filesystems at once; see
-    # http://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
+    # https://en.wikipedia.org/wiki/Filename#Reserved_characters_and_words
     # we do not need to filter words because an extension will be appended
     filename = re.sub(r'[<>:"/\\|?*^% ]', '-', filename)  # invalid chars
     filename = filename.lstrip('.')  # should not start with a dot
@@ -662,7 +659,8 @@ def get_out_filename(output_path, filename, ext, kind,
             typename = ''
             kind = 'article'
         if dircat and (len(categories) > 0):
-            catname = slugify(categories[0], regex_subs=slug_subs)
+            catname = slugify(
+                categories[0], regex_subs=slug_subs, preserve_case=True)
         else:
             catname = ''
         out_filename = os.path.join(output_path, typename,
@@ -671,7 +669,8 @@ def get_out_filename(output_path, filename, ext, kind,
             os.makedirs(os.path.join(output_path, typename, catname))
     # option to put files in directories with categories names
     elif dircat and (len(categories) > 0):
-        catname = slugify(categories[0], regex_subs=slug_subs)
+        catname = slugify(
+            categories[0], regex_subs=slug_subs, preserve_case=True)
         out_filename = os.path.join(output_path, catname, filename + ext)
         if not os.path.isdir(os.path.join(output_path, catname)):
             os.mkdir(os.path.join(output_path, catname))
@@ -727,6 +726,12 @@ def download_attachments(output_path, urls):
             if sys.platform != 'win32' or ':' not in item:
                 localpath = os.path.join(localpath, item)
         full_path = os.path.join(output_path, localpath)
+
+        # Generate percent-encoded URL
+        scheme, netloc, path, query, fragment = urlsplit(url)
+        path = quote(path)
+        url = urlunsplit((scheme, netloc, path, query, fragment))
+
         if not os.path.exists(full_path):
             os.makedirs(full_path)
         print('downloading {}'.format(filename))
@@ -795,7 +800,10 @@ def fields2pelican(
             links = None
 
         ext = get_ext(out_markup, in_markup)
-        if ext == '.md':
+        if ext == '.adoc':
+            header = build_asciidoc_header(title, date, author, categories,
+                                           tags, slug, status, attachments)
+        elif ext == '.md':
             header = build_markdown_header(
                 title, date, author, categories, tags, slug,
                 status, links.values() if links else None)

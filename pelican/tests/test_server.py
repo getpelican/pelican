@@ -1,8 +1,7 @@
 import os
+from io import BytesIO
 from shutil import rmtree
 from tempfile import mkdtemp
-
-from six import BytesIO
 
 from pelican.server import ComplexHTTPRequestHandler
 from pelican.tests.support import unittest
@@ -35,12 +34,12 @@ class TestServer(unittest.TestCase):
                                             self.server)
         handler.base_path = self.temp_output
 
-        os.mknod(os.path.join(self.temp_output, 'foo.html'))
+        open(os.path.join(self.temp_output, 'foo.html'), 'a').close()
         os.mkdir(os.path.join(self.temp_output, 'foo'))
-        os.mknod(os.path.join(self.temp_output, 'foo', 'index.html'))
+        open(os.path.join(self.temp_output, 'foo', 'index.html'), 'a').close()
 
         os.mkdir(os.path.join(self.temp_output, 'bar'))
-        os.mknod(os.path.join(self.temp_output, 'bar', 'index.html'))
+        open(os.path.join(self.temp_output, 'bar', 'index.html'), 'a').close()
 
         os.mkdir(os.path.join(self.temp_output, 'baz'))
 

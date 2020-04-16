@@ -98,10 +98,24 @@ Basic settings
    should map the filtername to the filter function.
 
    Example::
+    import sys
+    sys.path.append('to/your/path')
 
+    from custom_filter import urlencode_filter
     JINJA_FILTERS = {'urlencode': urlencode_filter}
 
-   See `Jinja custom filters documentation`_.
+   See: `Jinja custom filters documentation`_.
+
+.. data:: JINJA_GLOBALS = {}
+
+   A dictionary of custom objects to map into the Jinja2 global environment
+   namespace. The dictionary should map the global name to the global
+   variable/function. See: `Jinja global namespace documentation`_.
+
+.. data:: JINJA_TESTS = {}
+
+   A dictionary of custom Jinja2 tests you want to use. The dictionary should
+   map test names to test functions. See: `Jinja custom tests documentation`_.
 
 .. data:: LOG_FILTER = []
 
@@ -152,12 +166,13 @@ Basic settings
         }
 
    .. Note::
-      The dictionary defined in your settings file will update this default
+      The dictionary defined in your settings file will replace this default
       one.
 
 .. data:: OUTPUT_PATH = 'output/'
 
-   Where to output the generated files.
+   Where to output the generated files. This should correspond to your web
+   server's virtual host root directory.
 
 .. data:: PATH
 
@@ -194,7 +209,7 @@ Basic settings
    Controls the extension that will be used by the SourcesGenerator.  Defaults
    to ``.text``. If not a valid string the default value will be used.
 
-.. data:: PLUGINS = []
+.. data:: PLUGINS = None
 
    The list of plugins to load. See :ref:`plugins`.
 
@@ -281,6 +296,11 @@ Basic settings
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to be a copy of the original content.
 
+.. data:: SUMMARY_END_MARKER = '…'
+
+   When creating a short summary of an article and the result was truncated to
+   match the required word length, this will be used as the truncation marker.
+
 .. data:: WITH_FUTURE_DATES = True
 
    If disabled, content with dates in the future will get a default status of
@@ -352,6 +372,7 @@ Basic settings
 
    The IP to which to bind the HTTP server.
 
+.. _url-settings:
 
 URL settings
 ============
@@ -373,15 +394,20 @@ example below). These settings give you the flexibility to place your articles
 and pages anywhere you want.
 
 .. note::
-    If you specify a ``datetime`` directive, it will be substituted using the
-    input files' date metadata attribute. If the date is not specified for a
-    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
-    the `Python datetime documentation`_ for more information.
+    If a ``*_SAVE_AS`` setting contains a parent directory that doesn't match
+    the parent directory inside the corresponding ``*_URL`` setting, this may
+    cause Pelican to generate unexpected URLs in a few cases, such as when
+    using the ``{attach}`` syntax.
 
-.. _Python datetime documentation:
-    http://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+If you don't want that flexibility and instead prefer that your generated
+output paths mirror your source content's filesystem path hierarchy, try the
+following settings::
 
-Also, you can use other file metadata attributes as well:
+    PATH_METADATA = '(?P<path_no_ext>.*)\..*'
+    ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = '{path_no_ext}.html'
+
+Otherwise, you can use a variety of file metadata attributes within URL-related
+settings:
 
 * slug
 * date
@@ -400,6 +426,15 @@ This would save your articles into something like
 ``/posts/2011/Aug/07/sample-post/index.html``, save your pages into
 ``/pages/about/index.html``, and render them available at URLs of
 ``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively.
+
+.. note::
+    If you specify a ``datetime`` directive, it will be substituted using the
+    input files' date metadata attribute. If the date is not specified for a
+    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
+    the `Python datetime documentation`_ for more information.
+
+.. _Python datetime documentation:
+    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 
 .. data:: RELATIVE_URLS = False
 
@@ -477,6 +512,14 @@ This would save your articles into something like
    The actual location a page draft which doesn't use the default language is
    saved at.
 
+.. data:: AUTHOR_URL = 'author/{slug}.html'
+
+   The URL to use for an author.
+
+.. data:: AUTHOR_SAVE_AS = 'author/{slug}.html'
+
+   The location to save an author.
+
 .. data:: CATEGORY_URL = 'category/{slug}.html'
 
    The URL to use for a category.
@@ -492,41 +535,6 @@ This would save your articles into something like
 .. data:: TAG_SAVE_AS = 'tag/{slug}.html'
 
    The location to save the tag page.
-
-.. data:: AUTHOR_URL = 'author/{slug}.html'
-
-   The URL to use for an author.
-
-.. data:: AUTHOR_SAVE_AS = 'author/{slug}.html'
-
-   The location to save an author.
-
-.. data:: YEAR_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-year archives of your posts.
-
-.. data:: YEAR_ARCHIVE_URL = ''
-
-   The URL to use for per-year archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
-
-.. data:: MONTH_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-month archives of your posts.
-
-.. data:: MONTH_ARCHIVE_URL = ''
-
-   The URL to use for per-month archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
-
-.. data:: DAY_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-day archives of your posts.
-
-.. data:: DAY_ARCHIVE_URL = ''
-
-   The URL to use for per-day archives of your posts. Used only if you have the
-   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
 
 .. note::
 
@@ -556,6 +564,33 @@ posts for the month at ``posts/2011/Aug/index.html``.
     This way a reader can remove a portion of your URL and automatically arrive
     at an appropriate archive of posts, without having to specify a page name.
 
+.. data:: YEAR_ARCHIVE_URL = ''
+
+   The URL to use for per-year archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
+.. data:: YEAR_ARCHIVE_SAVE_AS = ''
+
+   The location to save per-year archives of your posts.
+
+.. data:: MONTH_ARCHIVE_URL = ''
+
+   The URL to use for per-month archives of your posts. Used only if you have
+   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
+.. data:: MONTH_ARCHIVE_SAVE_AS = ''
+
+   The location to save per-month archives of your posts.
+
+.. data:: DAY_ARCHIVE_URL = ''
+
+   The URL to use for per-day archives of your posts. Used only if you have the
+   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+
+.. data:: DAY_ARCHIVE_SAVE_AS = ''
+
+   The location to save per-day archives of your posts.
+
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
 template.
@@ -563,18 +598,6 @@ template.
 .. data:: ARCHIVES_SAVE_AS = 'archives.html'
 
    The location to save the article archives page.
-
-.. data:: YEAR_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-year archives of your posts.
-
-.. data:: MONTH_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-month archives of your posts.
-
-.. data:: DAY_ARCHIVE_SAVE_AS = ''
-
-   The location to save per-day archives of your posts.
 
 .. data:: AUTHORS_SAVE_AS = 'authors.html'
 
@@ -598,10 +621,10 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'tags.html'``.
 
 .. data:: SLUG_REGEX_SUBSTITUTIONS = [
-        (r'[^\w\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
-        (r'(?u)\A\s*', ''),  # strip leading whitespace
-        (r'(?u)\s*\Z', ''),  # strip trailing whitespace
-        (r'[-\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
+        (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
+        (r'(?u)\\A\\s*', ''),  # strip leading whitespace
+        (r'(?u)\\s*\\Z', ''),  # strip trailing whitespace
+        (r'[-\\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
     ]
 
    Regex substitutions to make when generating slugs of articles and pages.
@@ -642,7 +665,7 @@ Time and Date
 
    Have a look at `the wikipedia page`_ to get a list of valid timezone values.
 
-.. _the wikipedia page: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+.. _the wikipedia page: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 .. data:: DEFAULT_DATE = None
 
@@ -667,7 +690,7 @@ Time and Date
    the language name (``lang`` metadata in your post content) as the key.
 
    In addition to the standard C89 strftime format codes that are listed in
-   `Python strftime documentation`_, you can use the ``-`` character between
+   `Python datetime documentation`_, you can use the ``-`` character between
    ``%`` and the format character to remove any leading zeros. For example,
    ``%d/%m/%Y`` will output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will result
    in ``1/1/2014``.
@@ -718,11 +741,13 @@ Time and Date
 
 .. [#] Default is the system locale.
 
-.. _Python strftime documentation: http://docs.python.org/library/datetime.html#strftime-strptime-behavior
+.. _Jinja custom filters documentation: https://jinja.palletsprojects.com/en/master/api/#custom-filters
+.. _Jinja global namespace documentation: https://jinja.palletsprojects.com/en/master/api/#the-global-namespace
+.. _Jinja custom tests documentation: https://jinja.palletsprojects.com/en/master/api/#custom-tests
 
-.. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
+.. _locales on Windows: https://www.microsoft.com/en-us/download/details.aspx?id=55979
 
-.. _locale(1): http://linux.die.net/man/1/locale
+.. _locale(1): https://linux.die.net/man/1/locale
 
 
 .. _template_pages:
@@ -746,15 +771,15 @@ Template pages
                          'src/resume.html': 'dest/resume.html',
                          'src/contact.html': 'dest/contact.html'}
 
-.. data:: TEMPLATE_EXTENSION = ['.html']
+.. data:: TEMPLATE_EXTENSIONS = ['.html']
 
    The extensions to use when looking up template files from template names.
 
-.. data:: DIRECT_TEMPLATES = ['index', 'categories', 'authors', 'archives']
+.. data:: DIRECT_TEMPLATES = ['index', 'authors', 'categories', 'tags', 'archives']
 
    List of templates that are used directly to render content. Typically direct
    templates are used to generate index pages for collections of content (e.g.,
-   tags and category index pages). If the tag and category collections are not
+   category and tag index pages). If the author, category and tag collections are not
    needed, set ``DIRECT_TEMPLATES = ['index', 'archives']``
 
    ``DIRECT_TEMPLATES`` are searched for over paths maintained in
@@ -793,7 +818,8 @@ Metadata
 
    Extra metadata dictionaries keyed by relative path. Relative paths require
    correct OS-specific directory separators (i.e. / in UNIX and \\ in Windows)
-   unlike some other Pelican file settings.
+   unlike some other Pelican file settings. Paths to a directory apply to all
+   files under it. The most-specific path wins conflicts.
 
 Not all metadata needs to be :ref:`embedded in source file itself
 <internal_metadata>`. For example, blog posts are often named following a
@@ -832,7 +858,7 @@ file:
         }
 
 .. _group name notation:
-   http://docs.python.org/3/library/re.html#regular-expression-syntax
+   https://docs.python.org/3/library/re.html#regular-expression-syntax
 
 
 Feed settings
@@ -849,7 +875,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
    The domain prepended to feed URLs. Since feed URLs should always be
    absolute, it is highly recommended to define this (e.g.,
-   "http://feeds.example.com"). If you have already explicitly defined SITEURL
+   "https://feeds.example.com"). If you have already explicitly defined SITEURL
    (see above) and want to use the same domain for your feeds, you can just
    set:  ``FEED_DOMAIN = SITEURL``.
 
@@ -964,27 +990,6 @@ variables to ``None``.
 .. [2] ``{slug}`` is replaced by name of the category / author / tag.
 
 
-FeedBurner
-----------
-
-If you want to use FeedBurner for your feed, you will likely need to decide
-upon a unique identifier. For example, if your site were called "Thyme" and
-hosted on the www.example.com domain, you might use "thymefeeds" as your unique
-identifier, which we'll use throughout this section for illustrative purposes.
-In your Pelican settings, set the ``FEED_ATOM`` attribute to
-``thymefeeds/main.xml`` to create an Atom feed with an original address of
-``http://www.example.com/thymefeeds/main.xml``. Set the ``FEED_DOMAIN``
-attribute to ``http://feeds.feedburner.com``, or ``http://feeds.example.com``
-if you are using a CNAME on your own domain (i.e., FeedBurner's "MyBrand"
-feature).
-
-There are two fields to configure in the `FeedBurner
-<http://feedburner.google.com>`_ interface: "Original Feed" and "Feed Address".
-In this example, the "Original Feed" would be
-``http://www.example.com/thymefeeds/main.xml`` and the "Feed Address" suffix
-would be ``thymefeeds/main.xml``.
-
-
 Pagination
 ==========
 
@@ -1025,7 +1030,7 @@ By default, pages subsequent to ``.../foo.html`` are created as
 ``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used to
 change this. It takes a sequence of triples, where each triple consists of::
 
-  (minimum_page, page_url, page_save_as,)
+    (minimum_page, page_url, page_save_as,)
 
 For ``page_url`` and ``page_save_as``, you may use a number of variables.
 ``{url}`` and ``{save_as}`` correspond respectively to the ``*_URL`` and
@@ -1039,7 +1044,7 @@ subsequent pages at ``.../page/2/`` etc, you could set ``PAGINATION_PATTERNS``
 as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{url}', '{save_as}`,
+      (1, '{url}', '{save_as}'),
       (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
   )
 
@@ -1118,6 +1123,7 @@ Ordering content
    will sort pages by their basename.
 
 
+.. _settings/themes:
 
 Themes
 ======
@@ -1130,7 +1136,7 @@ themes.
 
    Theme to use to produce the output. Can be a relative or absolute path to a
    theme folder, or the name of a default theme or a theme installed via
-   ``pelican-themes`` (see below).
+   :doc:`pelican-themes` (see below).
 
 .. data:: THEME_STATIC_DIR = 'theme'
 
@@ -1223,20 +1229,6 @@ Feel free to use them in your themes as well.
    A list of tuples (Title, URL) for additional menu items to appear at the
    beginning of the main menu.
 
-.. data:: PIWIK_URL
-
-   URL to your Piwik server - without 'http://' at the beginning.
-
-.. data:: PIWIK_SSL_URL
-
-   If the SSL-URL differs from the normal Piwik-URL you have to include this
-   setting too. (optional)
-
-.. data:: PIWIK_SITE_ID
-
-   ID for the monitored website. You can find the ID in the Piwik admin
-   interface > Settings > Websites.
-
 .. data:: LINKS
 
    A list of tuples (Title, URL) for links to appear on the header.
@@ -1280,7 +1272,7 @@ ignored. Simply populate the list with the log messages you want to hide, and
 they will be filtered out.
 
 For example::
-    
+
    import logging
    LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
 
@@ -1387,6 +1379,5 @@ Example settings
     :language: python
 
 
-.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
-.. _Jinja Environment documentation: http://jinja.pocoo.org/docs/dev/api/#jinja2.Environment
+.. _Jinja Environment documentation: https://jinja.palletsprojects.com/en/master/api/#jinja2.Environment
 .. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html

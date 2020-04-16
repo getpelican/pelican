@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
 
+import datetime
 import locale
 import logging
 import os.path
@@ -9,14 +9,12 @@ from sys import platform
 
 from jinja2.utils import generate_lorem_ipsum
 
-import six
-
 from pelican.contents import Article, Author, Category, Page, Static
+from pelican.plugins.signals import content_object_init
 from pelican.settings import DEFAULT_CONFIG
-from pelican.signals import content_object_init
-from pelican.tests.support import LoggedTestCase, get_context, get_settings,\
-    unittest
-from pelican.utils import SafeDatetime, path_to_url, truncate_html_words
+from pelican.tests.support import (LoggedTestCase, get_context, get_settings,
+                                   unittest)
+from pelican.utils import (path_to_url, posixize_path, truncate_html_words)
 
 
 # generate one paragraph, enclosed with <p>
@@ -27,7 +25,7 @@ TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 class TestPage(LoggedTestCase):
 
     def setUp(self):
-        super(TestPage, self).setUp()
+        super().setUp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, str('C'))
         self.page_kwargs = {
@@ -100,6 +98,20 @@ class TestPage(LoggedTestCase):
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, '')
 
+    def test_summary_end_marker(self):
+        # If a :SUMMARY_END_MARKER: is set, and there is no other summary,
+        # generated summary should contain the specified marker at the end.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs['settings'] = settings
+        del page_kwargs['metadata']['summary']
+        settings['SUMMARY_END_MARKER'] = 'test_marker'
+        settings['SUMMARY_MAX_LENGTH'] = 10
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10,
+                                                           'test_marker'))
+        self.assertIn('test_marker', page.summary)
+
     def test_summary_get_summary_warning(self):
         """calling ._get_summary() should issue a warning"""
         page_kwargs = self._copy_page_kwargs()
@@ -146,6 +158,34 @@ class TestPage(LoggedTestCase):
         page = Page(**self.page_kwargs)
         self.assertEqual(page.save_as, "pages/foo-bar-fr.html")
 
+    def test_relative_source_path(self):
+        # 'relative_source_path' should be the relative path
+        # from 'PATH' to 'source_path'
+        page_kwargs = self._copy_page_kwargs()
+
+        # If 'source_path' is None, 'relative_source_path' should
+        # also return None
+        page_kwargs['source_path'] = None
+        page = Page(**page_kwargs)
+        self.assertIsNone(page.relative_source_path)
+
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        full_path = page_kwargs['source_path']
+
+        settings['PATH'] = os.path.dirname(full_path)
+        page_kwargs['settings'] = settings
+        page = Page(**page_kwargs)
+
+        # if 'source_path' is set, 'relative_source_path' should
+        # return the relative path from 'PATH' to 'source_path'
+        self.assertEqual(
+            page.relative_source_path,
+            os.path.relpath(
+                full_path,
+                os.path.dirname(full_path)
+            ))
+
     def test_metadata_url_format(self):
         # Arbitrary metadata should be passed through url_format()
         page = Page(**self.page_kwargs)
@@ -156,7 +196,7 @@ class TestPage(LoggedTestCase):
 
     def test_datetime(self):
         # If DATETIME is set to a tuple, it should be used to override LOCALE
-        dt = SafeDatetime(2015, 9, 13)
+        dt = datetime.datetime(2015, 9, 13)
 
         page_kwargs = self._copy_page_kwargs()
 
@@ -257,9 +297,7 @@ class TestPage(LoggedTestCase):
              '<a href="http://notmyidea.org/category/category.html">link</a>'))
 
     def test_intrasite_link(self):
-        # type does not take unicode in PY2 and bytes in PY3, which in
-        # combination with unicode literals leads to following insane line:
-        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        cls_name = '_DummyArticle'
         article = type(cls_name, (object,), {'url': 'article.html'})
 
         args = self.page_kwargs.copy()
@@ -341,9 +379,7 @@ class TestPage(LoggedTestCase):
         self.assertEqual(p.custom, linked)
 
     def test_intrasite_link_more(self):
-        # type does not take unicode in PY2 and bytes in PY3, which in
-        # combination with unicode literals leads to following insane line:
-        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+        cls_name = '_DummyAsset'
 
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
@@ -458,9 +494,7 @@ class TestPage(LoggedTestCase):
         )
 
     def test_intrasite_link_markdown_spaces(self):
-        # Markdown introduces %20 instead of spaces, this tests that
-        # we support markdown doing this.
-        cls_name = '_DummyArticle' if six.PY3 else b'_DummyArticle'
+        cls_name = '_DummyArticle'
         article = type(cls_name, (object,), {'url': 'article-spaces.html'})
 
         args = self.page_kwargs.copy()
@@ -483,7 +517,7 @@ class TestPage(LoggedTestCase):
     def test_intrasite_link_source_and_generated(self):
         """Test linking both to the source and the generated article
         """
-        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+        cls_name = '_DummyAsset'
 
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
@@ -509,7 +543,7 @@ class TestPage(LoggedTestCase):
     def test_intrasite_link_to_static_content_with_filename(self):
         """Test linking to a static resource with deprecated {filename}
         """
-        cls_name = '_DummyAsset' if six.PY3 else b'_DummyAsset'
+        cls_name = '_DummyAsset'
 
         args = self.page_kwargs.copy()
         args['settings'] = get_settings()
@@ -637,7 +671,7 @@ class TestArticle(TestPage):
 class TestStatic(LoggedTestCase):
 
     def setUp(self):
-        super(TestStatic, self).setUp()
+        super().setUp()
         self.settings = get_settings(
             STATIC_SAVE_AS='{path}',
             STATIC_URL='{path}',
@@ -915,7 +949,7 @@ class TestStatic(LoggedTestCase):
             source_path=os.path.join('dir', 'foo.jpg'),
             context=self.settings.copy())
 
-        expected_save_as = os.path.join('dir', 'foo.jpg')
+        expected_save_as = posixize_path(os.path.join('dir', 'foo.jpg'))
         self.assertEqual(static.status, 'draft')
         self.assertEqual(static.save_as, expected_save_as)
         self.assertEqual(static.url, path_to_url(expected_save_as))

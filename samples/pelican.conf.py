@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 AUTHOR = 'Alexis Métaireau'
 SITENAME = "Alexis' log"
@@ -41,12 +40,15 @@ EXTRA_PATH_METADATA = {
 
 # static paths will be copied without parsing their contents
 STATIC_PATHS = [
-    'pictures',
+    'images',
     'extra/robots.txt',
     ]
 
 # custom page generated with a jinja2 template
 TEMPLATE_PAGES = {'pages/jinja2_template.html': 'jinja2_template.html'}
+
+# there is no other HTML content
+READERS = {'html': None}
 
 # code blocks with line numbers
 PYGMENTS_RST_OPTIONS = {'linenos': 'table'}
