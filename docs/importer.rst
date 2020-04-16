@@ -74,8 +74,8 @@ Optional arguments
   -o OUTPUT, --output OUTPUT
                         Output path (default: content)
   -m MARKUP, --markup MARKUP
-                        Output markup format (supports rst & markdown)
-                        (default: rst)
+                        Output markup format: ``rst``, ``markdown``, or ``asciidoc``
+                        (default: ``rst``)
   --dir-cat             Put files in directories with categories name
                         (default: False)
   --dir-page            Put files recognised as pages in "pages/" sub-

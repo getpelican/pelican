@@ -571,11 +571,10 @@ def build_header(title, date, author, categories, tags, slug,
     header += '\n'
     return header
 
+
 def build_asciidoc_header(title, date, author, categories, tags, slug,
                           status=None, attachments=None):
     """Build a header from a list of fields"""
-
-    from docutils.utils import column_width
 
     header = '= %s\n' % title
     if author:
@@ -802,7 +801,7 @@ def fields2pelican(
         ext = get_ext(out_markup, in_markup)
         if ext == '.adoc':
             header = build_asciidoc_header(title, date, author, categories,
-                                           tags, slug, status, attached_files)
+                                           tags, slug, status, attachments)
         elif ext == '.md':
             header = build_markdown_header(
                 title, date, author, categories, tags, slug,
