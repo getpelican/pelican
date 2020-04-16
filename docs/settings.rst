@@ -281,13 +281,14 @@ Basic settings
 
 .. data:: TYPOGRIFY_DASHES = 'default'
 
-   How should Typogrify set up the smartypants filter to interpret multiple
-   hyphen-minus characters? A single ASCII hyphen-minus characters is always
-   rendered as a hyphen. By ``default`` only em-dashes would be generated, by
-   typing double hyphens. The ``oldschool``-style would cause both en-dashes
-   and em-dashes to be rendered, by typing 2 and 3 hyphen-minus characters,
-   respectively. The ``oldschool_inverted`` setting causes them to be
-   interpreted the other way around.
+   This setting controls how Typogrify sets up the Smartypants filter to
+   interpret multiple dash/hyphen/minus characters. A single ASCII dash
+   character (``-``) is always rendered as a hyphen. The ``default`` setting
+   does not handle en-dashes and converts double-hyphens into em-dashes. The
+   ``oldschool`` setting renders both en-dashes and em-dashes when it sees two
+   (``--``) and three (``---``) hyphen characters, respectively. The
+   ``oldschool_inverted`` setting turns two hyphens into an em-dash and three
+   hyphens into an en-dash.
 
 .. data:: SUMMARY_MAX_LENGTH = 50
 
