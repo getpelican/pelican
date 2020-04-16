@@ -1219,20 +1219,6 @@ Feel free to use them in your themes as well.
    A list of tuples (Title, URL) for additional menu items to appear at the
    beginning of the main menu.
 
-.. data:: PIWIK_URL
-
-   URL to your Piwik server - without 'http://' at the beginning.
-
-.. data:: PIWIK_SSL_URL
-
-   If the SSL-URL differs from the normal Piwik-URL you have to include this
-   setting too. (optional)
-
-.. data:: PIWIK_SITE_ID
-
-   ID for the monitored website. You can find the ID in the Piwik admin
-   interface > Settings > Websites.
-
 .. data:: LINKS
 
    A list of tuples (Title, URL) for links to appear on the header.
