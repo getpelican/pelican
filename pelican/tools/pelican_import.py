@@ -594,6 +594,7 @@ def build_asciidoc_header(title, date, author, categories, tags, slug,
     header += '\n'
     return header
 
+
 def build_markdown_header(title, date, author, categories, tags,
                           slug, status=None, attachments=None):
     """Build a header from a list of fields"""
