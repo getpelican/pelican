@@ -3,6 +3,7 @@ import importlib.machinery
 import importlib.util
 import logging
 import pkgutil
+import sys
 
 
 logger = logging.getLogger(__name__)
@@ -47,8 +48,23 @@ def load_legacy_plugin(plugin, plugin_paths):
     if spec is None:
         raise ImportError('Cannot import plugin `{}`'.format(plugin))
     else:
+        # create module object from spec
         mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
+        # place it into sys.modules cache
+        # necessary if module imports itself at some point (e.g. packages)
+        sys.modules[spec.name] = mod
+        try:
+            # try to execute it inside module object
+            spec.loader.exec_module(mod)
+        except Exception:  # problem with import
+            try:
+                # remove module from sys.modules since it can't be loaded
+                del sys.modules[spec.name]
+            except KeyError:
+                pass
+            raise
+
+        # if all went well, we have the plugin module
         return mod
 
 
