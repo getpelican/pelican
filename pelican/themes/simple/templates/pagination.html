@@ -9,7 +9,7 @@
     Page {{ articles_page.number }} / {{ articles_paginator.num_pages }}
     {% if articles_page.has_next() %}
         <a href="{{ SITEURL }}/{{ articles_next_page.url }}">&raquo;</a>
-	<a href="{{ SITEURL }}/{{ last_page.url }}">&#8649;</a>
+        <a href="{{ SITEURL }}/{{ last_page.url }}">&#8649;</a>
     {% endif %}
 </p>
 {% endif %}
