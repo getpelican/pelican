@@ -128,6 +128,45 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(
             utils.slugify('Cat', regex_subs=subs, preserve_case=True), 'Cat')
 
+    def test_slugify_use_unicode(self):
+
+        samples = (
+            ('this is a test', 'this-is-a-test'),
+            ('this        is a test', 'this-is-a-test'),
+            ('this → is ← a ↑ test', 'this-is-a-test'),
+            ('this--is---a test', 'this-is-a-test'),
+            ('unicode測試許功蓋，你看到了嗎？', 'unicode測試許功蓋你看到了嗎'),
+            ('Çığ', 'çığ')
+        )
+
+        settings = read_settings()
+        subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+
+        for value, expected in samples:
+            self.assertEqual(
+                utils.slugify(value, regex_subs=subs, use_unicode=True),
+                expected)
+
+        # check with preserve case
+        for value, expected in samples:
+            self.assertEqual(
+                utils.slugify('Çığ', regex_subs=subs,
+                              preserve_case=True, use_unicode=True),
+                'Çığ')
+
+        # check normalization
+        samples = (
+            ('大飯原発４号機、１８日夜起動へ', '大飯原発4号機18日夜起動へ'),
+            (
+                '\N{LATIN SMALL LETTER C}\N{COMBINING CEDILLA}',
+                '\N{LATIN SMALL LETTER C WITH CEDILLA}'
+            )
+        )
+        for value, expected in samples:
+            self.assertEqual(
+                utils.slugify(value, regex_subs=subs, use_unicode=True),
+                expected)
+
     def test_slugify_substitute(self):
 
         samples = (('C++ is based on C', 'cpp-is-based-on-c'),

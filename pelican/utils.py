@@ -222,7 +222,7 @@ def pelican_open(filename, mode='r', strip_crs=(sys.platform == 'win32')):
     yield content
 
 
-def slugify(value, regex_subs=(), preserve_case=False):
+def slugify(value, regex_subs=(), preserve_case=False, use_unicode=False):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
@@ -230,28 +230,36 @@ def slugify(value, regex_subs=(), preserve_case=False):
     Took from Django sources.
     """
 
-    # TODO Maybe steal again from current Django 1.5dev
-    value = Markup(value).striptags()
-    # value must be unicode per se
     import unicodedata
-    from unidecode import unidecode
-    value = unidecode(value)
-    if isinstance(value, bytes):
-        value = value.decode('ascii')
-    # still unicode
-    value = unicodedata.normalize('NFKD', value)
+    import unidecode
 
+    def normalize_unicode(text):
+        # normalize text by compatibility composition
+        # see: https://en.wikipedia.org/wiki/Unicode_equivalence
+        return unicodedata.normalize('NFKC', text)
+
+    # strip tags from value
+    value = Markup(value).striptags()
+
+    # normalization
+    value = normalize_unicode(value)
+
+    if not use_unicode:
+        # ASCII-fy
+        value = unidecode.unidecode(value)
+
+    # perform regex substitutions
     for src, dst in regex_subs:
-        value = re.sub(src, dst, value, flags=re.IGNORECASE)
+        value = re.sub(
+            normalize_unicode(src),
+            normalize_unicode(dst),
+            value,
+            flags=re.IGNORECASE)
 
-    # convert to lowercase
     if not preserve_case:
         value = value.lower()
 
-    # we want only ASCII chars
-    value = value.encode('ascii', 'ignore').strip()
-    # but Pelican should generally use only unicode
-    return value.decode('ascii')
+    return value.strip()
 
 
 def copy(source, destination, ignores=None):
