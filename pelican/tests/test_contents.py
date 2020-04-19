@@ -135,6 +135,17 @@ class TestPage(LoggedTestCase):
         page = Page(**page_kwargs)
         self.assertEqual(page.slug, 'foo')
 
+        # test slug from unicode title
+        # slug doesn't use unicode
+        settings['SLUGIFY_SOURCE'] = "title"
+        page_kwargs['metadata']['title'] = '指導書'
+        page = Page(**page_kwargs)
+        self.assertEqual(page.slug, 'zhi-dao-shu')
+        # slug uses unicode
+        settings['SLUGIFY_USE_UNICODE'] = True
+        page = Page(**page_kwargs)
+        self.assertEqual(page.slug, '指導書')
+
     def test_defaultlang(self):
         # If no lang is given, default to the default one.
         page = Page(**self.page_kwargs)

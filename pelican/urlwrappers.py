@@ -34,15 +34,14 @@ class URLWrapper(object):
         if self._slug is None:
             class_key = '{}_REGEX_SUBSTITUTIONS'.format(
                 self.__class__.__name__.upper())
-            if class_key in self.settings:
-                self._slug = slugify(
-                    self.name,
-                    regex_subs=self.settings[class_key])
-            else:
-                self._slug = slugify(
-                    self.name,
-                    regex_subs=self.settings.get(
-                        'SLUG_REGEX_SUBSTITUTIONS', []))
+            regex_subs = self.settings.get(
+                class_key,
+                self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
+            self._slug = slugify(
+                self.name,
+                regex_subs=regex_subs,
+                use_unicode=self.settings.get('SLUGIFY_USE_UNICODE', False)
+            )
         return self._slug
 
     @slug.setter
@@ -61,8 +60,13 @@ class URLWrapper(object):
         return hash(self.slug)
 
     def _normalize_key(self, key):
-        subs = self.settings.get('SLUG_REGEX_SUBSTITUTIONS', [])
-        return slugify(key, regex_subs=subs)
+        class_key = '{}_REGEX_SUBSTITUTIONS'.format(
+            self.__class__.__name__.upper())
+        regex_subs = self.settings.get(
+            class_key,
+            self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
+        use_unicode = self.settings.get('SLUGIFY_USE_UNICODE', False)
+        return slugify(key, regex_subs=regex_subs, use_unicode=use_unicode)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

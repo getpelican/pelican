@@ -92,16 +92,17 @@ class Content(object):
         if not hasattr(self, 'slug'):
             if (settings['SLUGIFY_SOURCE'] == 'title' and
                     hasattr(self, 'title')):
-                self.slug = slugify(
-                    self.title,
-                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
+                value = self.title
             elif (settings['SLUGIFY_SOURCE'] == 'basename' and
                     source_path is not None):
-                basename = os.path.basename(
-                    os.path.splitext(source_path)[0])
+                value = os.path.basename(os.path.splitext(source_path)[0])
+            else:
+                value = None
+            if value is not None:
                 self.slug = slugify(
-                    basename,
-                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
+                    value,
+                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []),
+                    use_unicode=settings['SLUGIFY_USE_UNICODE'])
 
         self.source_path = source_path
         self.relative_source_path = self.get_relative_source_path()
