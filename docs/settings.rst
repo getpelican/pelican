@@ -98,10 +98,24 @@ Basic settings
    should map the filtername to the filter function.
 
    Example::
+    import sys
+    sys.path.append('to/your/path')
 
+    from custom_filter import urlencode_filter
     JINJA_FILTERS = {'urlencode': urlencode_filter}
 
-   See `Jinja custom filters documentation`_.
+   See: `Jinja custom filters documentation`_.
+
+.. data:: JINJA_GLOBALS = {}
+
+   A dictionary of custom objects to map into the Jinja2 global environment
+   namespace. The dictionary should map the global name to the global
+   variable/function. See: `Jinja global namespace documentation`_.
+
+.. data:: JINJA_TESTS = {}
+
+   A dictionary of custom Jinja2 tests you want to use. The dictionary should
+   map test names to test functions. See: `Jinja custom tests documentation`_.
 
 .. data:: LOG_FILTER = []
 
@@ -157,7 +171,8 @@ Basic settings
 
 .. data:: OUTPUT_PATH = 'output/'
 
-   Where to output the generated files.
+   Where to output the generated files. This should correspond to your web
+   server's virtual host root directory.
 
 .. data:: PATH
 
@@ -194,7 +209,7 @@ Basic settings
    Controls the extension that will be used by the SourcesGenerator.  Defaults
    to ``.text``. If not a valid string the default value will be used.
 
-.. data:: PLUGINS = []
+.. data:: PLUGINS = None
 
    The list of plugins to load. See :ref:`plugins`.
 
@@ -264,12 +279,28 @@ Basic settings
    ``pre`` and ``code`` tags. This requires that Typogrify version 2.0.4 or
    later is installed
 
+.. data:: TYPOGRIFY_DASHES = 'default'
+
+   This setting controls how Typogrify sets up the Smartypants filter to
+   interpret multiple dash/hyphen/minus characters. A single ASCII dash
+   character (``-``) is always rendered as a hyphen. The ``default`` setting
+   does not handle en-dashes and converts double-hyphens into em-dashes. The
+   ``oldschool`` setting renders both en-dashes and em-dashes when it sees two
+   (``--``) and three (``---``) hyphen characters, respectively. The
+   ``oldschool_inverted`` setting turns two hyphens into an em-dash and three
+   hyphens into an en-dash.
+
 .. data:: SUMMARY_MAX_LENGTH = 50
 
    When creating a short summary of an article, this will be the default length
    (measured in words) of the text created.  This only applies if your content
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to be a copy of the original content.
+
+.. data:: SUMMARY_END_MARKER = '…'
+
+   When creating a short summary of an article and the result was truncated to
+   match the required word length, this will be used as the truncation marker.
 
 .. data:: WITH_FUTURE_DATES = True
 
@@ -342,6 +373,7 @@ Basic settings
 
    The IP to which to bind the HTTP server.
 
+.. _url-settings:
 
 URL settings
 ============
@@ -363,15 +395,20 @@ example below). These settings give you the flexibility to place your articles
 and pages anywhere you want.
 
 .. note::
-    If you specify a ``datetime`` directive, it will be substituted using the
-    input files' date metadata attribute. If the date is not specified for a
-    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
-    the `Python datetime documentation`_ for more information.
+    If a ``*_SAVE_AS`` setting contains a parent directory that doesn't match
+    the parent directory inside the corresponding ``*_URL`` setting, this may
+    cause Pelican to generate unexpected URLs in a few cases, such as when
+    using the ``{attach}`` syntax.
 
-.. _Python datetime documentation:
-    https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+If you don't want that flexibility and instead prefer that your generated
+output paths mirror your source content's filesystem path hierarchy, try the
+following settings::
 
-Also, you can use other file metadata attributes as well:
+    PATH_METADATA = '(?P<path_no_ext>.*)\..*'
+    ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = '{path_no_ext}.html'
+
+Otherwise, you can use a variety of file metadata attributes within URL-related
+settings:
 
 * slug
 * date
@@ -390,6 +427,15 @@ This would save your articles into something like
 ``/posts/2011/Aug/07/sample-post/index.html``, save your pages into
 ``/pages/about/index.html``, and render them available at URLs of
 ``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively.
+
+.. note::
+    If you specify a ``datetime`` directive, it will be substituted using the
+    input files' date metadata attribute. If the date is not specified for a
+    particular file, Pelican will rely on the file's ``mtime`` timestamp. Check
+    the `Python datetime documentation`_ for more information.
+
+.. _Python datetime documentation:
+    https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 
 .. data:: RELATIVE_URLS = False
 
@@ -645,7 +691,7 @@ Time and Date
    the language name (``lang`` metadata in your post content) as the key.
 
    In addition to the standard C89 strftime format codes that are listed in
-   `Python strftime documentation`_, you can use the ``-`` character between
+   `Python datetime documentation`_, you can use the ``-`` character between
    ``%`` and the format character to remove any leading zeros. For example,
    ``%d/%m/%Y`` will output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will result
    in ``1/1/2014``.
@@ -696,9 +742,11 @@ Time and Date
 
 .. [#] Default is the system locale.
 
-.. _Python strftime documentation: https://docs.python.org/library/datetime.html#strftime-strptime-behavior
+.. _Jinja custom filters documentation: https://jinja.palletsprojects.com/en/master/api/#custom-filters
+.. _Jinja global namespace documentation: https://jinja.palletsprojects.com/en/master/api/#the-global-namespace
+.. _Jinja custom tests documentation: https://jinja.palletsprojects.com/en/master/api/#custom-tests
 
-.. _locales on Windows: http://msdn.microsoft.com/en-us/library/cdax410z%28VS.71%29.aspx
+.. _locales on Windows: https://www.microsoft.com/en-us/download/details.aspx?id=55979
 
 .. _locale(1): https://linux.die.net/man/1/locale
 
@@ -983,7 +1031,7 @@ By default, pages subsequent to ``.../foo.html`` are created as
 ``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used to
 change this. It takes a sequence of triples, where each triple consists of::
 
-  (minimum_page, page_url, page_save_as,)
+    (minimum_page, page_url, page_save_as,)
 
 For ``page_url`` and ``page_save_as``, you may use a number of variables.
 ``{url}`` and ``{save_as}`` correspond respectively to the ``*_URL`` and
@@ -997,7 +1045,7 @@ subsequent pages at ``.../page/2/`` etc, you could set ``PAGINATION_PATTERNS``
 as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{url}', '{save_as}`,
+      (1, '{url}', '{save_as}'),
       (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
   )
 
@@ -1076,6 +1124,7 @@ Ordering content
    will sort pages by their basename.
 
 
+.. _settings/themes:
 
 Themes
 ======
@@ -1088,7 +1137,7 @@ themes.
 
    Theme to use to produce the output. Can be a relative or absolute path to a
    theme folder, or the name of a default theme or a theme installed via
-   ``pelican-themes`` (see below).
+   :doc:`pelican-themes` (see below).
 
 .. data:: THEME_STATIC_DIR = 'theme'
 
@@ -1181,20 +1230,6 @@ Feel free to use them in your themes as well.
    A list of tuples (Title, URL) for additional menu items to appear at the
    beginning of the main menu.
 
-.. data:: PIWIK_URL
-
-   URL to your Piwik server - without 'http://' at the beginning.
-
-.. data:: PIWIK_SSL_URL
-
-   If the SSL-URL differs from the normal Piwik-URL you have to include this
-   setting too. (optional)
-
-.. data:: PIWIK_SITE_ID
-
-   ID for the monitored website. You can find the ID in the Piwik admin
-   interface > Settings > Websites.
-
 .. data:: LINKS
 
    A list of tuples (Title, URL) for links to appear on the header.
@@ -1238,7 +1273,7 @@ ignored. Simply populate the list with the log messages you want to hide, and
 they will be filtered out.
 
 For example::
-    
+
    import logging
    LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
 
@@ -1345,6 +1380,5 @@ Example settings
     :language: python
 
 
-.. _Jinja custom filters documentation: http://jinja.pocoo.org/docs/api/#custom-filters
-.. _Jinja Environment documentation: http://jinja.pocoo.org/docs/dev/api/#jinja2.Environment
+.. _Jinja Environment documentation: https://jinja.palletsprojects.com/en/master/api/#jinja2.Environment
 .. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html

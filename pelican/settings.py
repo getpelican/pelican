@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import copy
+import importlib.util
 import inspect
 import locale
 import logging
@@ -10,20 +10,14 @@ import re
 from os.path import isabs
 from posixpath import join as posix_join
 
-import six
-
 from pelican.log import LimitFilter
 
-try:
-    # SourceFileLoader is the recommended way in Python 3.3+
-    from importlib.machinery import SourceFileLoader
 
-    def load_source(name, path):
-        return SourceFileLoader(name, path).load_module()
-except ImportError:
-    # but it does not exist in Python 2.7, so fall back to imp
-    import imp
-    load_source = imp.load_source
+def load_source(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 logger = logging.getLogger(__name__)
@@ -126,6 +120,8 @@ DEFAULT_CONFIG = {
         'output_format': 'html5',
     },
     'JINJA_FILTERS': {},
+    'JINJA_GLOBALS': {},
+    'JINJA_TESTS': {},
     'JINJA_ENVIRONMENT': {
         'trim_blocks': True,
         'lstrip_blocks': True,
@@ -142,9 +138,11 @@ DEFAULT_CONFIG = {
     'ARTICLE_PERMALINK_STRUCTURE': '',
     'TYPOGRIFY': False,
     'TYPOGRIFY_IGNORE_TAGS': [],
+    'TYPOGRIFY_DASHES': 'default',
+    'SUMMARY_END_MARKER': '…',
     'SUMMARY_MAX_LENGTH': 50,
     'PLUGIN_PATHS': [],
-    'PLUGINS': [],
+    'PLUGINS': None,
     'PYGMENTS_RST_OPTIONS': {},
     'TEMPLATE_PAGES': {},
     'TEMPLATE_EXTENSIONS': ['.html'],
@@ -166,7 +164,7 @@ DEFAULT_CONFIG = {
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
     'PORT': 8000,
-    'BIND': '',
+    'BIND': '127.0.0.1',
 }
 
 PYGMENTS_RST_OPTIONS = None
@@ -274,7 +272,7 @@ def handle_deprecated_settings(settings):
         del settings['PLUGIN_PATH']
 
     # PLUGIN_PATHS: str -> [str]
-    if isinstance(settings.get('PLUGIN_PATHS'), six.string_types):
+    if isinstance(settings.get('PLUGIN_PATHS'), str):
         logger.warning("Defining PLUGIN_PATHS setting as string "
                        "has been deprecated (should be a list)")
         settings['PLUGIN_PATHS'] = [settings['PLUGIN_PATHS']]
@@ -438,6 +436,67 @@ def handle_deprecated_settings(settings):
                                'Falling back to default.', key)
                 settings[key] = DEFAULT_CONFIG[key]
 
+    # CLEAN_URLS
+    if settings.get('CLEAN_URLS', False):
+        logger.warning('Found deprecated `CLEAN_URLS` in settings.'
+                       ' Modifying the following settings for the'
+                       ' same behaviour.')
+
+        settings['ARTICLE_URL'] = '{slug}/'
+        settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
+        settings['PAGE_URL'] = 'pages/{slug}/'
+        settings['PAGE_LANG_URL'] = 'pages/{slug}-{lang}/'
+
+        for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                        'PAGE_LANG_URL'):
+            logger.warning("%s = '%s'", setting, settings[setting])
+
+    # AUTORELOAD_IGNORE_CACHE -> --ignore-cache
+    if settings.get('AUTORELOAD_IGNORE_CACHE'):
+        logger.warning('Found deprecated `AUTORELOAD_IGNORE_CACHE` in '
+                       'settings. Use --ignore-cache instead.')
+        settings.pop('AUTORELOAD_IGNORE_CACHE')
+
+    # ARTICLE_PERMALINK_STRUCTURE
+    if settings.get('ARTICLE_PERMALINK_STRUCTURE', False):
+        logger.warning('Found deprecated `ARTICLE_PERMALINK_STRUCTURE` in'
+                       ' settings.  Modifying the following settings for'
+                       ' the same behaviour.')
+
+        structure = settings['ARTICLE_PERMALINK_STRUCTURE']
+
+        # Convert %(variable) into {variable}.
+        structure = re.sub(r'%\((\w+)\)s', r'{\g<1>}', structure)
+
+        # Convert %x into {date:%x} for strftime
+        structure = re.sub(r'(%[A-z])', r'{date:\g<1>}', structure)
+
+        # Strip a / prefix
+        structure = re.sub('^/', '', structure)
+
+        for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
+                        'PAGE_LANG_URL', 'DRAFT_URL', 'DRAFT_LANG_URL',
+                        'ARTICLE_SAVE_AS', 'ARTICLE_LANG_SAVE_AS',
+                        'DRAFT_SAVE_AS', 'DRAFT_LANG_SAVE_AS',
+                        'PAGE_SAVE_AS', 'PAGE_LANG_SAVE_AS'):
+            settings[setting] = os.path.join(structure,
+                                             settings[setting])
+            logger.warning("%s = '%s'", setting, settings[setting])
+
+    # {,TAG,CATEGORY,TRANSLATION}_FEED -> {,TAG,CATEGORY,TRANSLATION}_FEED_ATOM
+    for new, old in [('FEED', 'FEED_ATOM'), ('TAG_FEED', 'TAG_FEED_ATOM'),
+                     ('CATEGORY_FEED', 'CATEGORY_FEED_ATOM'),
+                     ('TRANSLATION_FEED', 'TRANSLATION_FEED_ATOM')]:
+        if settings.get(new, False):
+            logger.warning(
+                'Found deprecated `%(new)s` in settings. Modify %(new)s '
+                'to %(old)s in your settings and theme for the same '
+                'behavior. Temporarily setting %(old)s for backwards '
+                'compatibility.',
+                {'new': new, 'old': old}
+            )
+            settings[old] = settings[new]
+
     return settings
 
 
@@ -482,13 +541,13 @@ def configure_settings(settings):
 
     # standardize strings to lists
     for key in ['LOCALE']:
-        if key in settings and isinstance(settings[key], six.string_types):
+        if key in settings and isinstance(settings[key], str):
             settings[key] = [settings[key]]
 
     # check settings that must be a particular type
     for key, types in [
-            ('OUTPUT_SOURCES_EXTENSION', six.string_types),
-            ('FILENAME_METADATA', six.string_types),
+            ('OUTPUT_SOURCES_EXTENSION', str),
+            ('FILENAME_METADATA', str),
     ]:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
@@ -582,7 +641,7 @@ def configure_settings(settings):
         'PAGE_PATHS',
     )
     for PATH_KEY in filter(lambda k: k in settings, path_keys):
-        if isinstance(settings[PATH_KEY], six.string_types):
+        if isinstance(settings[PATH_KEY], str):
             logger.warning("Detected misconfiguration with %s setting "
                            "(must be a list), falling back to the default",
                            PATH_KEY)

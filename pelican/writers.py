@@ -1,23 +1,17 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals, with_statement
 
 import logging
 import os
+from urllib.parse import urljoin
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 
 from jinja2 import Markup
 
-import six
-from six.moves.urllib.parse import urljoin
-
-from pelican import signals
 from pelican.paginator import Paginator
+from pelican.plugins import signals
 from pelican.utils import (get_relative_path, is_selected_for_writing,
                            path_to_url, sanitised_join, set_date_tzinfo)
-
-if not six.PY3:
-    from codecs import open
 
 logger = logging.getLogger(__name__)
 
@@ -78,13 +72,19 @@ class Writer(object):
             if description == content:
                 description = None
 
+        categories = list()
+        if hasattr(item, 'category'):
+            categories.append(item.category)
+        if hasattr(item, 'tags'):
+            categories.extend(item.tags)
+
         feed.add_item(
             title=title,
             link=link,
             unique_id=get_tag_uri(link, item.date),
             description=description,
             content=content,
-            categories=item.tags if hasattr(item, 'tags') else None,
+            categories=categories if categories else None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(
                 item.date, self.settings.get('TIMEZONE', None)),
@@ -159,8 +159,7 @@ class Writer(object):
             except Exception:
                 pass
 
-            encoding = 'utf-8' if six.PY3 else None
-            with self._open_w(complete_path, encoding, override_output) as fp:
+            with self._open_w(complete_path, 'utf-8', override_output) as fp:
                 feed.write(fp, 'utf-8')
                 logger.info('Writing %s', complete_path)
 

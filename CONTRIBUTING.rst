@@ -22,7 +22,7 @@ Before you ask for help, please make sure you do the following:
 
 3. Try reproducing the issue in a clean environment, ensuring you are using:
 
-* latest Pelican release (or an up-to-date git clone of Pelican master)
+* latest Pelican release (or an up-to-date Git clone of Pelican master)
 * latest releases of libraries used by Pelican
 * no plugins or only those related to the issue
 
@@ -71,7 +71,7 @@ The #pelican IRC channel
 * Because of differing time zones, you may not get an immediate response to your
   question, but please be patient and stay logged into IRC — someone will almost
   always respond if you wait long enough (it may take a few hours).
-* If you don't have an IRC client handy, use the webchat_ for quick feedback.
+* If you don't have an IRC client handy, use the webchat_.
 * You can direct your IRC client to the channel using this `IRC link`_ or you
   can manually join the ``#pelican`` IRC channel on the `freenode IRC network`_.
 
@@ -94,7 +94,7 @@ Using Git and GitHub
 * `Create a new git branch`_ specific to your change (as opposed to making
   your commits in the master branch).
 * **Don't put multiple unrelated fixes/features in the same branch / pull request.**
-  For example, if you're hacking on a new feature and find a bugfix that
+  For example, if you're working on a new feature and find a bugfix that
   doesn't *require* your new feature, **make a new distinct branch and pull
   request** for the bugfix.
 * Add a ``RELEASE.md`` file in the root of the project that contains the
@@ -120,12 +120,13 @@ Using Git and GitHub
   GitHub's web UI to submit the pull request. This isn't an absolute
   requirement, but makes the maintainers' lives much easier! Specifically:
   `install hub <https://github.com/github/hub/#installation>`_ and then run
-  `hub pull-request <https://github.com/github/hub/#git-pull-request>`_ to
-  turn your GitHub issue into a pull request containing your code.
-* After you have issued a pull request, Travis will run the test suite for all
-  supported Python versions and check for PEP8 compliance. If any of these
-  checks fail, you should fix them. (If tests fail on Travis but seem to pass
-  locally, ensure that local test runs aren't skipping any tests.)
+  `hub pull-request -i [ISSUE] <https://hub.github.com/hub-pull-request.1.html>`_
+  to turn your GitHub issue into a pull request containing your code.
+* After you have issued a pull request, the continuous integration (CI) system
+  will run the test suite for all supported Python versions and check for PEP8
+  compliance. If any of these checks fail, you should fix them. (If tests fail
+  on the CI system but seem to pass locally, ensure that local test runs aren't
+  skipping any tests.)
 
 Contribution quality standards
 ------------------------------
@@ -137,8 +138,7 @@ Contribution quality standards
   code/formatting can be improved. If you are relying on your editor for PEP8
   compliance, note that the line length specified by PEP8 is 79 (excluding the
   line break).
-* Ensure your code is compatible with the latest Python 2.7 and 3.x releases — see our
-  `compatibility cheatsheet`_ for more details.
+* Ensure your code is compatible with the `officially-supported Python releases`_.
 * Add docs and tests for your changes. Undocumented and untested features will
   not be accepted.
 * `Run all the tests`_ **on all versions of Python supported by Pelican** to
@@ -155,4 +155,4 @@ need assistance or have any questions about these guidelines.
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
 .. _`PEP8 coding standards`: https://www.python.org/dev/peps/pep-0008/
 .. _`ask for help`: `How to get help`_
-.. _`compatibility cheatsheet`: https://docs.getpelican.com/en/latest/contribute.html#python-3-development-tips
+.. _`officially-supported Python releases`: https://devguide.python.org/#status-of-python-branches

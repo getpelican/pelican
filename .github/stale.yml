@@ -1,5 +1,11 @@
 # Configuration for probot-stale - https://github.com/probot/stale
 
+# Number of days of inactivity before an Issue or Pull Request becomes stale
+daysUntilStale: 60
+
+# Number of days of inactivity before an Issue or Pull Request with the stale label is closed.
+daysUntilClose: 30
+
 # Set to true to ignore issues in a project (defaults to false)
 exemptProjects: true
 
@@ -10,7 +16,7 @@ exemptMilestones: true
 exemptAssignees: true
 
 # Label to use when marking as stale
-staleLabel: retired
+staleLabel: stale
 
 # Comment to post when marking as stale. Set to `false` to disable
 markComment: >

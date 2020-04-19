@@ -1,6 +1,30 @@
 Release history
 ###############
 
+4.2.0 - 2019-10-17
+==================
+
+* Support inline SVGs; don't treat titles in SVGs as HTML titles
+* Add category to feeds (in addition to tags)
+* Improve content metadata field docs
+* Add docs for including other Markdown/reST files in content
+
+4.1.3 - 2019-10-09
+==================
+
+* Fix quick-start docs regarding `pelican --listen`
+* Set default listen address to 127.0.0.1
+* Add extra/optional Markdown dependency to setup.py
+* Use correct SSH port syntax for rsync in tasks.py
+* Place all deprecated settings handling together
+* Add related project URLs for display on PyPI
+* Skip some tests on Windows that can't pass due to filesystem differences
+
+4.1.2 - 2019-09-23
+==================
+
+Fix pelican.settings.load_source to avoid caching issues - PR #2621
+
 4.1.1 - 2019-08-23
 ==================
 

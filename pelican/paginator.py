@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import functools
 import logging
 import os
 from collections import namedtuple
 from math import ceil
-
-import six
 
 logger = logging.getLogger(__name__)
 PaginationRule = namedtuple(
@@ -131,7 +128,7 @@ class Page(object):
 
         prop_value = getattr(rule, key)
 
-        if not isinstance(prop_value, six.string_types):
+        if not isinstance(prop_value, str):
             logger.warning('%s is set to %s', key, prop_value)
             return prop_value
 

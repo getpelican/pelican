@@ -1,25 +1,20 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
 
 import copy
+import datetime
 import locale
 import logging
 import os
 import re
-import sys
+from urllib.parse import urljoin, urlparse, urlunparse
 
 import pytz
 
-import six
-from six.moves.urllib.parse import urljoin, urlparse, urlunparse
-
-from pelican import signals
+from pelican.plugins import signals
 from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import (SafeDatetime, deprecated_attribute, memoized,
-                           path_to_url, posixize_path,
-                           python_2_unicode_compatible, sanitised_join,
-                           set_date_tzinfo, slugify, strftime,
-                           truncate_html_words)
+from pelican.utils import (deprecated_attribute, memoized, path_to_url,
+                           posixize_path, sanitised_join, set_date_tzinfo,
+                           slugify, truncate_html_words)
 
 # Import these so that they're avalaible when you import from pelican.contents.
 from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
@@ -27,7 +22,6 @@ from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 logger = logging.getLogger(__name__)
 
 
-@python_2_unicode_compatible
 class Content(object):
     """Represents a content.
 
@@ -121,23 +115,21 @@ class Content(object):
 
         if isinstance(self.date_format, tuple):
             locale_string = self.date_format[0]
-            if sys.version_info < (3, ) and isinstance(locale_string,
-                                                       six.text_type):
-                locale_string = locale_string.encode('ascii')
             locale.setlocale(locale.LC_ALL, locale_string)
             self.date_format = self.date_format[1]
 
         # manage timezone
         default_timezone = settings.get('TIMEZONE', 'UTC')
         timezone = getattr(self, 'timezone', default_timezone)
+        self.timezone = pytz.timezone(timezone)
 
         if hasattr(self, 'date'):
             self.date = set_date_tzinfo(self.date, timezone)
-            self.locale_date = strftime(self.date, self.date_format)
+            self.locale_date = self.date.strftime(self.date_format)
 
         if hasattr(self, 'modified'):
             self.modified = set_date_tzinfo(self.modified, timezone)
-            self.locale_modified = strftime(self.modified, self.date_format)
+            self.locale_modified = self.modified.strftime(self.date_format)
 
         # manage status
         if not hasattr(self, 'status'):
@@ -213,7 +205,7 @@ class Content(object):
             'path': path_to_url(path),
             'slug': getattr(self, 'slug', ''),
             'lang': getattr(self, 'lang', 'en'),
-            'date': getattr(self, 'date', SafeDatetime.now()),
+            'date': getattr(self, 'date', datetime.datetime.now()),
             'author': self.author.slug if hasattr(self, 'author') else '',
             'category': self.category.slug if hasattr(self, 'category') else ''
         })
@@ -399,7 +391,8 @@ class Content(object):
             return self.content
 
         return truncate_html_words(self.content,
-                                   self.settings['SUMMARY_MAX_LENGTH'])
+                                   self.settings['SUMMARY_MAX_LENGTH'],
+                                   self.settings['SUMMARY_END_MARKER'])
 
     @property
     def summary(self):
@@ -497,7 +490,7 @@ class Page(Content):
 
     def _expand_settings(self, key):
         klass = 'draft_page' if self.status == 'draft' else None
-        return super(Page, self)._expand_settings(key, klass)
+        return super()._expand_settings(key, klass)
 
 
 class Article(Content):
@@ -507,34 +500,33 @@ class Article(Content):
     default_template = 'article'
 
     def __init__(self, *args, **kwargs):
-        super(Article, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # handle WITH_FUTURE_DATES (designate article to draft based on date)
         if not self.settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
             if self.date.tzinfo is None:
-                now = SafeDatetime.now()
+                now = datetime.datetime.now()
             else:
-                now = SafeDatetime.utcnow().replace(tzinfo=pytz.utc)
+                now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
             if self.date > now:
                 self.status = 'draft'
 
         # if we are a draft and there is no date provided, set max datetime
         if not hasattr(self, 'date') and self.status == 'draft':
-            self.date = SafeDatetime.max
+            self.date = datetime.datetime.max.replace(tzinfo=self.timezone)
 
     def _expand_settings(self, key):
         klass = 'draft' if self.status == 'draft' else 'article'
-        return super(Article, self)._expand_settings(key, klass)
+        return super()._expand_settings(key, klass)
 
 
-@python_2_unicode_compatible
 class Static(Content):
     mandatory_properties = ('title',)
     default_status = 'published'
     default_template = None
 
     def __init__(self, *args, **kwargs):
-        super(Static, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._output_location_referenced = False
 
     @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
@@ -553,13 +545,13 @@ class Static(Content):
     def url(self):
         # Note when url has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
-        return super(Static, self).url
+        return super().url
 
     @property
     def save_as(self):
         # Note when save_as has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
-        return super(Static, self).save_as
+        return super().save_as
 
     def attach_to(self, content):
         """Override our output directory with that of the given content object.

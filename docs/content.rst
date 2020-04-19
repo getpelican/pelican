@@ -71,22 +71,29 @@ Metadata syntax for Markdown posts should follow this pattern::
     This is the content of my super blog post.
 
 You can also have your own metadata keys (so long as they don't conflict with
-reserved metadata keywords) for use in your python templates. The following is
-the list of reserved metadata keywords:
+reserved metadata keywords) for use in your templates. The following table
+contains a list of reserved metadata keywords:
 
-* `Title`
-* `Tags`
-* `Date`
-* `Modified`
-* `Status`
-* `Category`
-* `Author`
-* `Authors`
-* `Slug`
-* `Summary`
-* `Template`
-* `Save_as`
-* `Url`
+=============== ===============================================================
+    Metadata                              Description
+=============== ===============================================================
+``title``       Title of the article or page
+``date``        Publication date (e.g., ``YYYY-MM-DD HH:SS``)
+``modified``    Modification date (e.g., ``YYYY-MM-DD HH:SS``)
+``tags``        Content tags, separated by commas
+``keywords``    Content keywords, separated by commas (HTML content only)
+``category``    Content category (one only — not multiple)
+``slug``        Identifier used in URLs and translations
+``author``      Content author, when there is only one
+``authors``     Content authors, when there are multiple
+``summary``     Brief description of content for index pages
+``lang``        Content language ID (``en``, ``fr``, etc.)
+``translation`` Is content is a translation of another (``true`` or ``false``)
+``status``      Content status: ``draft``, ``hidden``, or ``published``
+``template``    Name of template to use to generate content (without extension)
+``save_as``     Save content to this relative file path
+``url``         URL to use for this article/page
+=============== ===============================================================
 
 Readers for additional formats (such as AsciiDoc_) are available via plugins.
 Refer to `pelican-plugins`_ repository for those.
@@ -363,6 +370,10 @@ of ``{attach}``, and letting the file's location be determined by the project's
 ``STATIC_SAVE_AS`` and ``STATIC_URL`` settings. (Per-file ``save_as`` and
 ``url`` overrides can still be set in ``EXTRA_PATH_METADATA``.)
 
+.. note::
+    When using ``{attach}``, any parent directory in ``*_URL`` / ``*_SAVE_AS``
+    settings should match each other. See also: :ref:`url-settings`
+
 Linking to authors, categories, index and tags
 ----------------------------------------------
 
@@ -381,6 +392,40 @@ to static content with ``{filename}``. The syntax was changed to ``{static}``
 to allow linking to both generated articles and pages and their static sources.
 
 Support for the old syntax may eventually be removed.
+
+Including other files
+---------------------
+Both Markdown and reStructuredText syntaxes provide mechanisms for this.
+
+Following below are some examples for **reStructuredText** using `the include directive`_:
+
+    .. code-block:: rst
+
+        .. include:: file.rst
+
+Include a fragment of a file delimited by two identifiers, highlighted as C++ (slicing based on line numbers is also possible):
+
+    .. code-block:: rst
+
+        .. include:: main.cpp
+            :code: c++
+            :start-after: // begin
+            :end-before: // end
+
+Include a raw HTML file (or an inline SVG) and put it directly into the output without any processing:
+
+    .. code-block:: rst
+
+        .. raw:: html
+            :file: table.html
+
+For **Markdown**, one must rely on an extension. For example, using the `mdx_include plugin`_:
+
+    .. code-block:: none
+
+        ```html
+        {! template.html !}
+        ```
 
 
 Importing an existing site
@@ -483,7 +528,7 @@ indenting both the identifier and the code::
         print("The path-less shebang syntax *will* show line numbers.")
 
 The specified identifier (e.g. ``python``, ``ruby``) should be one that
-appears on the `list of available lexers <http://pygments.org/docs/lexers/>`_.
+appears on the `list of available lexers <https://pygments.org/docs/lexers/>`_.
 
 When using reStructuredText the following options are available in the
 code-block directive:
@@ -524,7 +569,7 @@ tagurlformat    string        format for the ctag links.
 
 Note that, depending on the version, your Pygments module might not have
 all of these options available. Refer to the *HtmlFormatter* section of the
-`Pygments documentation <http://pygments.org/docs/formatters/>`_ for more
+`Pygments documentation <https://pygments.org/docs/formatters/>`_ for more
 details on each of the options.
 
 For example, the following code block enables line numbers, starting at 153,
@@ -570,8 +615,10 @@ To publish a post when the default status is ``draft``, update the post's
 metadata to include ``Status: published``.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
-.. _AsciiDoc: http://www.methods.co.nz/asciidoc/
+.. _AsciiDoc: https://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 .. _Markdown Extensions: https://python-markdown.github.io/extensions/
 .. _CodeHilite extension: https://python-markdown.github.io/extensions/code_hilite/#syntax
 .. _i18n_subsites plugin: https://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
+.. _the include directive: http://docutils.sourceforge.net/docs/ref/rst/directives.html#include
+.. _mdx_include plugin: https://github.com/neurobin/mdx_include

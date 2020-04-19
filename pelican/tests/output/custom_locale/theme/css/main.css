@@ -3,8 +3,8 @@
 	Date: July 2009
 	Description: Sample layout for HTML5 and CSS3 goodness.
 	Version: 1.0
-	License: MIT <http://opensource.org/licenses/MIT>
-	Licensed by: Smashing Media GmbH <http://www.smashingmagazine.com/>
+	License: MIT <https://opensource.org/licenses/MIT>
+	Licensed by: Smashing Media GmbH <https://www.smashingmagazine.com/>
 	Original author: Enrique Ramírez <http://enrique-ramirez.com/>
 */
 
@@ -326,7 +326,6 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
 		.social a[href*='about.me'] {background-image: url('../images/icons/aboutme.png');}
 		.social a[href*='bitbucket.org'] {background-image: url('../images/icons/bitbucket.png');}
 		.social a[href*='delicious.com'] {background-image: url('../images/icons/delicious.png');}
-		.social a[href*='digg.com'] {background-image: url('../images/icons/digg.png');}
 		.social a[href*='facebook.com'] {background-image: url('../images/icons/facebook.png');}
 		.social a[href*='gitorious.org'] {background-image: url('../images/icons/gitorious.png');}
 		.social a[href*='github.com'],

@@ -54,20 +54,12 @@ HTML files directly::
     firefox output/index.html
 
 Because the above method may have trouble locating your CSS and other linked
-assets, running a simple web server using Python will often provide a more
-reliable previewing experience.
+assets, running Pelican's simple built-in web server will often provide a more
+reliable previewing experience::
 
-For Python 2, run::
+    pelican --listen
 
-    cd output
-    python -m SimpleHTTPServer
-
-For Python 3, run::
-
-    cd output
-    python -m http.server
-
-Once the basic server has been started, you can preview your site at
+Once the web server has been started, you can preview your site at:
 http://localhost:8000/
 
 Deployment
@@ -215,4 +207,4 @@ That's it! Your site should now be live.
 executables, such as ``python3``, you can set the ``PY`` and ``PELICAN``
 environment variables, respectively, to override the default executable names.)
 
-.. _Invoke: http://www.pyinvoke.org
+.. _Invoke: https://www.pyinvoke.org/
