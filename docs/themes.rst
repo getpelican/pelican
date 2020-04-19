@@ -137,24 +137,18 @@ Variable                Description
 ======================  ===================================================
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-articles_first_page     The first page of articles 
 articles_previous_page  The previous page of articles (``None`` if page does
                         not exist)
 articles_next_page      The next page of articles (``None`` if page does
                         not exist)
-articles_last_page      The first page of articles 
 dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
-                        ascending.
-dates_first_page        The first page of articles, ordered by date,
                         ascending.
 dates_previous_page     The previous page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
 dates_next_page         The next page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
-dates_last_page         The last page of articles, ordered by date,
-                        ascending.
 page_name               'index' -- useful for pagination links
 ======================  ===================================================
 
@@ -176,24 +170,18 @@ dates                   Articles by this author, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-articles_first_page     The first page of articles 
 articles_previous_page  The previous page of articles (``None`` if page does
                         not exist)
 articles_next_page      The next page of articles (``None`` if page does
                         not exist)
-articles_last_page      The first page of articles 
 dates_paginator         A paginator object for the article list, ordered by
                         date, ascending.
 dates_page              The current page of articles, ordered by date,
-                        ascending.
-dates_first_page        The first page of articles, ordered by date,
                         ascending.
 dates_previous_page     The previous page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
 dates_next_page         The next page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
-dates_last_page         The last page of articles, ordered by date,
-                        ascending.
 page_name               AUTHOR_URL where everything after `{slug}` is
                         removed -- useful for pagination links
 ======================  ===================================================
@@ -216,24 +204,18 @@ dates                   Articles for this category, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-articles_first_page     The first page of articles 
 articles_previous_page  The previous page of articles (``None`` if page does
                         not exist)
 articles_next_page      The next page of articles (``None`` if page does
                         not exist)
-articles_last_page      The first page of articles 
 dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-dates_first_page        The first page of articles, ordered by date,
-                        ascending.
 dates_previous_page     The previous page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
 dates_next_page         The next page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
-dates_last_page         The last page of articles, ordered by date,
-                        ascending.
 page_name               CATEGORY_URL where everything after `{slug}` is
                         removed -- useful for pagination links
 ======================  ===================================================
@@ -311,24 +293,18 @@ dates                   Articles related to this tag, but ordered by date,
                         ascending
 articles_paginator      A paginator object for the list of articles
 articles_page           The current page of articles
-articles_first_page     The first page of articles 
 articles_previous_page  The previous page of articles (``None`` if page does
                         not exist)
 articles_next_page      The next page of articles (``None`` if page does
                         not exist)
-articles_last_page      The first page of articles 
 dates_paginator         A paginator object for the list of articles,
                         ordered by date, ascending
 dates_page              The current page of articles, ordered by date,
                         ascending
-dates_first_page        The first page of articles, ordered by date,
-                        ascending.
 dates_previous_page     The previous page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
 dates_next_page         The next page of articles, ordered by date,
                         ascending (``None`` if page does not exist)
-dates_last_page         The last page of articles, ordered by date,
-                        ascending.
 page_name               TAG_URL where everything after `{slug}` is removed
                         -- useful for pagination links
 ======================  ===================================================

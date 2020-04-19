@@ -248,20 +248,16 @@ class Writer(object):
                 paginated_kwargs = kwargs.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]
-                    first_page = paginator.page(1)
                     previous_page = paginator.page(page_num) \
                         if page_num > 0 else None
                     page = paginator.page(page_num + 1)
                     next_page = paginator.page(page_num + 2) \
                         if page_num + 1 < paginator.num_pages else None
-                    last_page = paginator.page(paginator.num_pages)
                     paginated_kwargs.update(
                         {'%s_paginator' % key: paginator,
                          '%s_page' % key: page,
-                         '%s_first_page' % key: first_page,
                          '%s_previous_page' % key: previous_page,
-                         '%s_next_page' % key: next_page,
-                         '%s_last_page' % key: last_page})
+                         '%s_next_page' % key: next_page})
 
                 localcontext = _get_localcontext(
                     context, page.save_as, paginated_kwargs, relative_urls)
