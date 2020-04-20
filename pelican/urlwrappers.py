@@ -37,9 +37,11 @@ class URLWrapper(object):
             regex_subs = self.settings.get(
                 class_key,
                 self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
+            preserve_case = self.settings.get('SLUGIFY_PRESERVE_CASE', False)
             self._slug = slugify(
                 self.name,
                 regex_subs=regex_subs,
+                preserve_case=preserve_case,
                 use_unicode=self.settings.get('SLUGIFY_USE_UNICODE', False)
             )
         return self._slug
@@ -66,7 +68,12 @@ class URLWrapper(object):
             class_key,
             self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
         use_unicode = self.settings.get('SLUGIFY_USE_UNICODE', False)
-        return slugify(key, regex_subs=regex_subs, use_unicode=use_unicode)
+        preserve_case = self.settings.get('SLUGIFY_PRESERVE_CASE', False)
+        return slugify(
+            key,
+            regex_subs=regex_subs,
+            preserve_case=preserve_case,
+            use_unicode=use_unicode)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

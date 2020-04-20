@@ -102,7 +102,8 @@ class Content(object):
                 self.slug = slugify(
                     value,
                     regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []),
-                    use_unicode=settings['SLUGIFY_USE_UNICODE'])
+                    preserve_case=settings.get('SLUGIFY_PRESERVE_CASE', False),
+                    use_unicode=settings.get('SLUGIFY_USE_UNICODE', False))
 
         self.source_path = source_path
         self.relative_source_path = self.get_relative_source_path()

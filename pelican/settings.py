@@ -156,6 +156,7 @@ DEFAULT_CONFIG = {
     'INTRASITE_LINK_REGEX': '[{|](?P<what>.*?)[|}]',
     'SLUGIFY_SOURCE': 'title',
     'SLUGIFY_USE_UNICODE': False,
+    'SLUGIFY_PRESERVE_CASE': False,
     'CACHE_CONTENT': False,
     'CONTENT_CACHING_LAYER': 'reader',
     'CACHE_PATH': 'cache',

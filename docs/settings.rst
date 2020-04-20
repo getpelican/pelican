@@ -628,6 +628,12 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
    in auto-generated slugs. Otherwise, unicode characters will be replaced
    with ASCII equivalents.
 
+
+.. data:: SLUGIFY_PRESERVE_CASE = False
+
+   Preserve uppercase characters in the slugs. Set ``True`` to keep the
+   uppercase characters in the ``SLUGIFY_SOURCE`` as is.
+
 .. data:: SLUG_REGEX_SUBSTITUTIONS = [
         (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
         (r'(?u)\\A\\s*', ''),  # strip leading whitespace
