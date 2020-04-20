@@ -44,8 +44,9 @@ to manually create and activate a virtual environment::
 
 Install the needed dependencies and set up the project::
 
-    pip install -e ~/projects/pelican invoke
+    pip install invoke
     invoke setup
+    pip install -e ~/projects/pelican
 
 Your local environment should now be ready to go!
 
