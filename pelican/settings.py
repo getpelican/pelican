@@ -608,7 +608,7 @@ def configure_settings(settings):
         logger.warning(
             'No timezone information specified in the settings. Assuming'
             ' your timezone is UTC for feed generation. Check '
-            'http://docs.getpelican.com/en/latest/settings.html#timezone '
+            'https://docs.getpelican.com/en/latest/settings.html#TIMEZONE '
             'for more information')
 
     # fix up pagination rules
