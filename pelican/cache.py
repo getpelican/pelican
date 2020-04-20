@@ -33,7 +33,7 @@ class FileDataCacher(object):
             try:
                 with self._cache_open(self._cache_path, 'rb') as fhandle:
                     self._cache = pickle.load(fhandle)
-            except (IOError, OSError) as err:
+            except (IOError, OSError, UnicodeDecodeError) as err:
                 logger.debug('Cannot load cache %s (this is normal on first '
                              'run). Proceeding with empty cache.\n%s',
                              self._cache_path, err)
