@@ -71,6 +71,8 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings = read_settings(None)
         settings['SITENAME'] = 'Not a Pelican Blog'
         self.assertNotEqual(settings['SITENAME'], DEFAULT_CONFIG['SITENAME'])
+        settings['SITENAME'] = 'A Pelican Blog'
+        self.assertEqual(settings['SITENAME'], DEFAULT_CONFIG['SITENAME'])
 
     def test_static_path_settings_safety(self):
         # Disallow static paths from being strings
@@ -84,12 +86,25 @@ class TestSettingsConfiguration(unittest.TestCase):
             'LOCALE': '',
         }
         configure_settings(settings)
+        self.assertNotEqual(
+            settings['STATIC_PATHS'],
+            DEFAULT_CONFIG['THEME_STATIC_PATHS']
+        )
+
+        self.assertNotEqual(
+            settings['THEME_STATIC_PATHS'],
+            DEFAULT_CONFIG['STATIC_PATHS']
+        )
+
         self.assertEqual(
             settings['STATIC_PATHS'],
-            DEFAULT_CONFIG['STATIC_PATHS'])
-        self.assertEqual(
+            DEFAULT_CONFIG['STATIC_PATHS']
+        )
+
+        self.assertEquals(
             settings['THEME_STATIC_PATHS'],
-            DEFAULT_CONFIG['THEME_STATIC_PATHS'])
+            DEFAULT_CONFIG['THEME_STATIC_PATHS']
+        )
 
     def test_configure_settings(self):
         # Manipulations to settings should be applied correctly.
@@ -107,9 +122,19 @@ class TestSettingsConfiguration(unittest.TestCase):
         # FEED_DOMAIN, if undefined, should default to SITEURL
         self.assertEqual(settings['FEED_DOMAIN'], 'http://blog.notmyidea.org')
 
-        settings['FEED_DOMAIN'] = 'http://feeds.example.com'
+        settings['FEED_DOMAIN'] = 'http://com.koobecaf.www'
         configure_settings(settings)
-        self.assertEqual(settings['FEED_DOMAIN'], 'http://feeds.example.com')
+
+        # Determine if 'FEED_DOMAIN' will default to 'SITEURL' if not undefined
+        self.assertNotEqual(
+            settings['FEED_DOMAIN'],
+            'http://blog.notmyidea.org'
+        )
+
+        self.assertEqual(
+            settings['FEED_DOMAIN'],
+            'http://com.koobecaf.www'
+        )
 
     def test_theme_settings_exceptions(self):
         settings = self.settings
@@ -134,11 +159,12 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.assertEqual(settings['ARTICLE_PATHS'], ['foo'])
         self.assertEqual(settings['PAGE_PATHS'], ['bar'])
 
+        # Assert KeyError called whenever a key does not exist within a dict
         with self.assertRaises(KeyError):
-            settings['ARTICLE_DIR']
-            settings['PAGE_DIR']
+            settings['ARTICLE_DIRECTORY']
+            settings['PAGE_DIRECTORY']
 
-    @unittest.skipIf(platform == 'win32', "Doesn't work on Windows")
+    @unittest.skipIf(platform == 'win32', "Doesn't work on Windows 32-bit")
     def test_default_encoding(self):
         # Test that the default locale is set if not specified in settings
 
