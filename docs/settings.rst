@@ -320,12 +320,6 @@ Basic settings
    A list of default Pygments settings for your reStructuredText code blocks.
    See :ref:`internal_pygments_options` for a list of supported options.
 
-.. data:: SLUGIFY_SOURCE = 'title'
-
-   Specifies where you want the slug to be automatically generated from. Can be
-   set to ``title`` to use the 'Title:' metadata tag or ``basename`` to use the
-   article's file name when creating the slug.
-
 .. data:: CACHE_CONTENT = False
 
    If ``True``, saves content in caches.  See
@@ -620,6 +614,25 @@ URLs for direct template pages are theme-dependent. Some themes use
 corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'archives.html'``, ``'authors.html'``, ``'categories.html'``,
 ``'tags.html'``.
+
+
+.. data:: SLUGIFY_SOURCE = 'title'
+
+   Specifies where you want the slug to be automatically generated from. Can be
+   set to ``title`` to use the 'Title:' metadata tag or ``basename`` to use the
+   article's file name when creating the slug.
+
+.. data:: SLUGIFY_USE_UNICODE = False
+
+   Allow unicode characters in slugs. Set ``True`` to keep unicode characters
+   in auto-generated slugs. Otherwise, unicode characters will be replaced
+   with ASCII equivalents.
+
+
+.. data:: SLUGIFY_PRESERVE_CASE = False
+
+   Preserve uppercase characters in the slugs. Set ``True`` to keep the
+   uppercase characters in the ``SLUGIFY_SOURCE`` as is.
 
 .. data:: SLUG_REGEX_SUBSTITUTIONS = [
         (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
