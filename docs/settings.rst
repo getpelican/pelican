@@ -615,24 +615,22 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'archives.html'``, ``'authors.html'``, ``'categories.html'``,
 ``'tags.html'``.
 
-
 .. data:: SLUGIFY_SOURCE = 'title'
 
-   Specifies where you want the slug to be automatically generated from. Can be
-   set to ``title`` to use the 'Title:' metadata tag or ``basename`` to use the
+   Specifies from where you want the slug to be automatically generated. Can be
+   set to ``title`` to use the "Title:" metadata tag or ``basename`` to use the
    article's file name when creating the slug.
 
 .. data:: SLUGIFY_USE_UNICODE = False
 
-   Allow unicode characters in slugs. Set ``True`` to keep unicode characters
-   in auto-generated slugs. Otherwise, unicode characters will be replaced
+   Allow Unicode characters in slugs. Set ``True`` to keep Unicode characters
+   in auto-generated slugs. Otherwise, Unicode characters will be replaced
    with ASCII equivalents.
-
 
 .. data:: SLUGIFY_PRESERVE_CASE = False
 
-   Preserve uppercase characters in the slugs. Set ``True`` to keep the
-   uppercase characters in the ``SLUGIFY_SOURCE`` as is.
+   Preserve uppercase characters in slugs. Set ``True`` to keep uppercase
+   characters from ``SLUGIFY_SOURCE`` as-is.
 
 .. data:: SLUG_REGEX_SUBSTITUTIONS = [
         (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
