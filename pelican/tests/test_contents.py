@@ -22,7 +22,7 @@ TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
 
-class TestPage(LoggedTestCase):
+class TestBase(LoggedTestCase):
 
     def setUp(self):
         super().setUp()
@@ -54,6 +54,20 @@ class TestPage(LoggedTestCase):
         from pelican.contents import logger
         logger.enable_filter()
 
+    def _copy_page_kwargs(self):
+        # make a deep copy of page_kwargs
+        page_kwargs = dict([(key, self.page_kwargs[key]) for key in
+                            self.page_kwargs])
+        for key in page_kwargs:
+            if not isinstance(page_kwargs[key], dict):
+                break
+            page_kwargs[key] = dict([(subkey, page_kwargs[key][subkey])
+                                     for subkey in page_kwargs[key]])
+
+        return page_kwargs
+
+
+class TestPage(TestBase):
     def test_use_args(self):
         # Creating a page with arguments passed to the constructor should use
         # them to initialise object's attributes.
@@ -267,18 +281,6 @@ class TestPage(LoggedTestCase):
         page_kwargs['metadata']['template'] = 'custom'
         custom_page = Page(**page_kwargs)
         self.assertEqual('custom', custom_page.template)
-
-    def _copy_page_kwargs(self):
-        # make a deep copy of page_kwargs
-        page_kwargs = dict([(key, self.page_kwargs[key]) for key in
-                            self.page_kwargs])
-        for key in page_kwargs:
-            if not isinstance(page_kwargs[key], dict):
-                break
-            page_kwargs[key] = dict([(subkey, page_kwargs[key][subkey])
-                                     for subkey in page_kwargs[key]])
-
-        return page_kwargs
 
     def test_signal(self):
         def receiver_test_function(sender):
@@ -602,7 +604,7 @@ class TestPage(LoggedTestCase):
         assert content.author == content.authors[0]
 
 
-class TestArticle(TestPage):
+class TestArticle(TestBase):
     def test_template(self):
         # Articles default to article, metadata overwrites
         default_article = Article(**self.page_kwargs)
