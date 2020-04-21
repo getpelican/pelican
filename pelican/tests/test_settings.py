@@ -44,7 +44,6 @@ class TestSettingsConfiguration(unittest.TestCase):
     def test_dont_copy_small_keys(self):
         # Do not copy keys not in caps.
         self.assertNotIn('foobar', self.settings)
-        self.assertNotIn('f00Bar', self.settings)
 
     def test_read_empty_settings(self):
         # Ensure an empty settings file results in default settings.
