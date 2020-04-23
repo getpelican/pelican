@@ -18,7 +18,6 @@ from pelican.readers import Readers
 from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
                            posixize_path, process_translations)
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -322,8 +321,9 @@ class ArticlesGenerator(CachingGenerator):
             all_articles = list(self.articles)
             for article in self.articles:
                 all_articles.extend(article.translations)
-            order_content(all_articles,
-                          order_by=self.settings['ARTICLE_ORDER_BY'])
+            order_content(
+                all_articles, order_by=self.settings['ARTICLE_ORDER_BY']
+            )
 
             if self.settings.get('FEED_ALL_ATOM'):
                 writer.write_feed(
@@ -352,7 +352,7 @@ class ArticlesGenerator(CachingGenerator):
                     self.settings['CATEGORY_FEED_ATOM'].format(slug=cat.slug),
                     self.settings.get(
                         'CATEGORY_FEED_ATOM_URL',
-                        self.settings['CATEGORY_FEED_ATOM']).format(
+                        str(self.settings['CATEGORY_FEED_ATOM'])).format(
                             slug=cat.slug
                         ),
                     feed_title=cat.name
@@ -365,7 +365,7 @@ class ArticlesGenerator(CachingGenerator):
                     self.settings['CATEGORY_FEED_RSS'].format(slug=cat.slug),
                     self.settings.get(
                         'CATEGORY_FEED_RSS_URL',
-                        self.settings['CATEGORY_FEED_RSS']).format(
+                        str(self.settings['CATEGORY_FEED_RSS'])).format(
                             slug=cat.slug
                         ),
                     feed_title=cat.name,
@@ -380,8 +380,9 @@ class ArticlesGenerator(CachingGenerator):
                     self.settings['AUTHOR_FEED_ATOM'].format(slug=auth.slug),
                     self.settings.get(
                         'AUTHOR_FEED_ATOM_URL',
-                        self.settings['AUTHOR_FEED_ATOM']
-                        ).format(slug=auth.slug),
+                        str(self.settings['AUTHOR_FEED_ATOM'])).format(
+                            slug=auth.slug
+                        ),
                     feed_title=auth.name
                     )
 
@@ -392,8 +393,9 @@ class ArticlesGenerator(CachingGenerator):
                     self.settings['AUTHOR_FEED_RSS'].format(slug=auth.slug),
                     self.settings.get(
                         'AUTHOR_FEED_RSS_URL',
-                        self.settings['AUTHOR_FEED_RSS']
-                        ).format(slug=auth.slug),
+                        str(self.settings['AUTHOR_FEED_RSS'])).format(
+                            slug=auth.slug
+                        ),
                     feed_title=auth.name,
                     feed_type='rss'
                     )
@@ -408,8 +410,9 @@ class ArticlesGenerator(CachingGenerator):
                         self.settings['TAG_FEED_ATOM'].format(slug=tag.slug),
                         self.settings.get(
                             'TAG_FEED_ATOM_URL',
-                            self.settings['TAG_FEED_ATOM']
-                            ).format(slug=tag.slug),
+                            str(self.settings['TAG_FEED_ATOM'])).format(
+                                slug=tag.slug
+                            ),
                         feed_title=tag.name
                         )
 
@@ -420,8 +423,9 @@ class ArticlesGenerator(CachingGenerator):
                         self.settings['TAG_FEED_RSS'].format(slug=tag.slug),
                         self.settings.get(
                             'TAG_FEED_RSS_URL',
-                            self.settings['TAG_FEED_RSS']
-                            ).format(slug=tag.slug),
+                            str(self.settings['TAG_FEED_RSS'])).format(
+                                slug=tag.slug
+                            ),
                         feed_title=tag.name,
                         feed_type='rss'
                         )
@@ -443,7 +447,8 @@ class ArticlesGenerator(CachingGenerator):
                             .format(lang=lang),
                         self.settings.get(
                             'TRANSLATION_FEED_ATOM_URL',
-                            self.settings['TRANSLATION_FEED_ATOM']
+                            str(
+                                self.settings['TRANSLATION_FEED_ATOM'])
                             ).format(lang=lang),
                         )
                 if self.settings.get('TRANSLATION_FEED_RSS'):
@@ -454,8 +459,9 @@ class ArticlesGenerator(CachingGenerator):
                             .format(lang=lang),
                         self.settings.get(
                             'TRANSLATION_FEED_RSS_URL',
-                            self.settings['TRANSLATION_FEED_RSS']
-                            ).format(lang=lang),
+                            str(self.settings['TRANSLATION_FEED_RSS'])).format(
+                                lang=lang
+                            ),
                         feed_type='rss'
                         )
 
