@@ -12,17 +12,24 @@ VENV_HOME = Path(os.environ.get("WORKON_HOME", "~/virtualenvs"))
 VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME / PKG_NAME)
 VENV = str(VENV_PATH.expanduser())
 
+if os.name == "nt":
+    VENV_BINARIES = "Scripts"
+else:
+    VENV_BINARIES = "bin"
+
 TOOLS = ["poetry", "pre-commit"]
-POETRY = which("poetry") if which("poetry") else (VENV / Path("bin") / "poetry")
+POETRY = which("poetry") if which("poetry") else (Path(VENV) / VENV_BINARIES / "poetry")
 PRECOMMIT = (
-    which("pre-commit") if which("pre-commit") else (VENV / Path("bin") / "pre-commit")
+    which("pre-commit")
+    if which("pre-commit")
+    else (Path(VENV) / VENV_BINARIES / "pre-commit")
 )
 
 
 @task
 def docbuild(c):
     """Build documentation"""
-    c.run(f"{VENV}/bin/sphinx-build docs docs/_build")
+    c.run(f"{VENV}/{VENV_BINARIES}/sphinx-build docs docs/_build")
 
 
 @task(docbuild)
@@ -40,7 +47,7 @@ def docserve(c):
 @task
 def tests(c):
     """Run the test suite"""
-    c.run(f"{VENV}/bin/pytest", pty=True)
+    c.run(f"{VENV}/{VENV_BINARIES}/pytest", pty=(False if os.name == "nt" else True))
 
 
 @task
@@ -51,7 +58,7 @@ def black(c, check=False, diff=False):
         check_flag = "--check"
     if diff:
         diff_flag = "--diff"
-    c.run(f"{VENV}/bin/black {check_flag} {diff_flag} {PKG_PATH} tasks.py")
+    c.run(f"{VENV}/{VENV_BINARIES}/black {check_flag} {diff_flag} {PKG_PATH} tasks.py")
 
 
 @task
@@ -62,13 +69,13 @@ def isort(c, check=False, diff=False):
     if diff:
         diff_flag = "--diff"
     c.run(
-        f"{VENV}/bin/isort {check_flag} {diff_flag} --recursive {PKG_PATH}/* tasks.py"
+        f"{VENV}/{VENV_BINARIES}/isort {check_flag} {diff_flag} --recursive {PKG_PATH}/ tasks.py"
     )
 
 
 @task
 def flake8(c):
-    c.run(f"{VENV}/bin/flake8 {PKG_PATH} tasks.py")
+    c.run(f"{VENV}/{VENV_BINARIES}/flake8 {PKG_PATH} tasks.py")
 
 
 @task
@@ -83,7 +90,7 @@ def tools(c):
     """Install tools in the virtual environment if not already on PATH"""
     for tool in TOOLS:
         if not which(tool):
-            c.run(f"{VENV}/bin/pip install {tool}")
+            c.run(f"{VENV}/{VENV_BINARIES}/pip install {tool}")
 
 
 @task
@@ -94,7 +101,7 @@ def precommit(c):
 
 @task
 def setup(c):
-    c.run(f"{VENV}/bin/pip install -U pip")
+    c.run(f"{VENV}/{VENV_BINARIES}/python -m pip install -U pip")
     tools(c)
     c.run(f"{POETRY} install")
     precommit(c)
