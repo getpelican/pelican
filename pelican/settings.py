@@ -8,7 +8,7 @@ import logging
 import os
 import re
 from os.path import isabs
-from posixpath import join as posix_join
+from pathlib import Path
 
 from pelican.log import LimitFilter
 
@@ -38,11 +38,11 @@ DEFAULT_CONFIG = {
     'STATIC_EXCLUDE_SOURCES': True,
     'THEME_STATIC_DIR': 'theme',
     'THEME_STATIC_PATHS': ['static', ],
-    'FEED_ALL_ATOM': posix_join('feeds', 'all.atom.xml'),
-    'CATEGORY_FEED_ATOM': posix_join('feeds', '{slug}.atom.xml'),
-    'AUTHOR_FEED_ATOM': posix_join('feeds', '{slug}.atom.xml'),
-    'AUTHOR_FEED_RSS': posix_join('feeds', '{slug}.rss.xml'),
-    'TRANSLATION_FEED_ATOM': posix_join('feeds', 'all-{lang}.atom.xml'),
+    'FEED_ALL_ATOM': Path('feeds') / 'all.atom.xml',
+    'CATEGORY_FEED_ATOM': Path('feeds') / '{slug}.atom.xml',
+    'AUTHOR_FEED_ATOM': Path('feeds') / '{slug}.atom.xml',
+    'AUTHOR_FEED_RSS': Path('feeds',) / '{slug}.rss.xml',
+    'TRANSLATION_FEED_ATOM': Path('feeds') / 'all-{lang}.atom.xml',
     'FEED_MAX_ITEMS': '',
     'RSS_FEED_SUMMARY_ONLY': True,
     'SITEURL': '',
@@ -66,30 +66,29 @@ DEFAULT_CONFIG = {
     'ARTICLE_ORDER_BY': 'reversed-date',
     'ARTICLE_LANG_URL': '{slug}-{lang}.html',
     'ARTICLE_LANG_SAVE_AS': '{slug}-{lang}.html',
-    'DRAFT_URL': 'drafts/{slug}.html',
-    'DRAFT_SAVE_AS': posix_join('drafts', '{slug}.html'),
-    'DRAFT_LANG_URL': 'drafts/{slug}-{lang}.html',
-    'DRAFT_LANG_SAVE_AS': posix_join('drafts', '{slug}-{lang}.html'),
-    'PAGE_URL': 'pages/{slug}.html',
-    'PAGE_SAVE_AS': posix_join('pages', '{slug}.html'),
+    'DRAFT_URL': Path('drafts') / '{slug}.html',
+    'DRAFT_SAVE_AS': Path('drafts') / '{slug}.html',
+    'DRAFT_LANG_URL': Path('drafts') / '{slug}-{lang}.html',
+    'DRAFT_LANG_SAVE_AS': Path('drafts') / '{slug}-{lang}.html',
+    'PAGE_URL': Path('pages') / '{slug}.html',
+    'PAGE_SAVE_AS': Path('pages') / '{slug}.html',
     'PAGE_ORDER_BY': 'basename',
-    'PAGE_LANG_URL': 'pages/{slug}-{lang}.html',
-    'PAGE_LANG_SAVE_AS': posix_join('pages', '{slug}-{lang}.html'),
-    'DRAFT_PAGE_URL': 'drafts/pages/{slug}.html',
-    'DRAFT_PAGE_SAVE_AS': posix_join('drafts', 'pages', '{slug}.html'),
-    'DRAFT_PAGE_LANG_URL': 'drafts/pages/{slug}-{lang}.html',
-    'DRAFT_PAGE_LANG_SAVE_AS': posix_join('drafts', 'pages',
-                                          '{slug}-{lang}.html'),
+    'PAGE_LANG_URL': Path('pages') / '{slug}-{lang}.html',
+    'PAGE_LANG_SAVE_AS': Path('pages') / '{slug}-{lang}.html',
+    'DRAFT_PAGE_URL': Path('drafts') / 'pages' / '{slug}.html',
+    'DRAFT_PAGE_SAVE_AS': Path('drafts') / 'pages' / '{slug}.html',
+    'DRAFT_PAGE_LANG_URL': Path('drafts') / 'pages' / '{slug}-{lang}.html',
+    'DRAFT_PAGE_LANG_SAVE_AS': Path('drafts') / 'pages' / '{slug}-{lang}.html',
     'STATIC_URL': '{path}',
     'STATIC_SAVE_AS': '{path}',
     'STATIC_CREATE_LINKS': False,
     'STATIC_CHECK_IF_MODIFIED': False,
-    'CATEGORY_URL': 'category/{slug}.html',
-    'CATEGORY_SAVE_AS': posix_join('category', '{slug}.html'),
-    'TAG_URL': 'tag/{slug}.html',
-    'TAG_SAVE_AS': posix_join('tag', '{slug}.html'),
-    'AUTHOR_URL': 'author/{slug}.html',
-    'AUTHOR_SAVE_AS': posix_join('author', '{slug}.html'),
+    'CATEGORY_URL': Path('category') / '{slug}.html',
+    'CATEGORY_SAVE_AS': Path('category') / '{slug}.html',
+    'TAG_URL': Path('tag') / '{slug}.html',
+    'TAG_SAVE_AS': Path('tag') / '{slug}.html',
+    'AUTHOR_URL': Path('author') / '{slug}.html',
+    'AUTHOR_SAVE_AS': Path('author') / '{slug}.html',
     'PAGINATION_PATTERNS': [
         (1, '{name}{extension}', '{name}{extension}'),
         (2, '{name}{number}{extension}', '{name}{number}{extension}'),
@@ -446,8 +445,8 @@ def handle_deprecated_settings(settings):
 
         settings['ARTICLE_URL'] = '{slug}/'
         settings['ARTICLE_LANG_URL'] = '{slug}-{lang}/'
-        settings['PAGE_URL'] = 'pages/{slug}/'
-        settings['PAGE_LANG_URL'] = 'pages/{slug}-{lang}/'
+        settings['PAGE_URL'] = Path('pages') / '{slug}/'
+        settings['PAGE_LANG_URL'] = Path('pages') / '{slug}-{lang}/'
 
         for setting in ('ARTICLE_URL', 'ARTICLE_LANG_URL', 'PAGE_URL',
                         'PAGE_LANG_URL'):
