@@ -454,80 +454,80 @@ This would save your articles into something like
    The place where we will save an article which doesn't use the default
    language.
 
-.. data:: DRAFT_URL = 'drafts/{slug}.html'
+.. data:: DRAFT_URL = pathlib.Path('drafts') / '{slug}.html'
 
    The URL to refer to an article draft.
 
-.. data:: DRAFT_SAVE_AS = 'drafts/{slug}.html'
+.. data:: DRAFT_SAVE_AS = pathlib.Path('drafts') / '{slug}.html'
 
    The place where we will save an article draft.
 
-.. data:: DRAFT_LANG_URL = 'drafts/{slug}-{lang}.html'
+.. data:: DRAFT_LANG_URL = pathlib.Path('drafts') / '{slug}-{lang}.html'
 
    The URL to refer to an article draft which doesn't use the default language.
 
-.. data:: DRAFT_LANG_SAVE_AS = 'drafts/{slug}-{lang}.html'
+.. data:: DRAFT_LANG_SAVE_AS = pathlib.Path('drafts') / '{slug}-{lang}.html'
 
    The place where we will save an article draft which doesn't use the default
    language.
 
-.. data:: PAGE_URL = 'pages/{slug}.html'
+.. data:: PAGE_URL = pathlib.Path('pages') / '{slug}.html'
 
    The URL we will use to link to a page.
 
-.. data:: PAGE_SAVE_AS = 'pages/{slug}.html'
+.. data:: PAGE_SAVE_AS = pathlib.Path('pages') / '{slug}.html'
 
    The location we will save the page. This value has to be the same as
    PAGE_URL or you need to use a rewrite in your server config.
 
-.. data:: PAGE_LANG_URL = 'pages/{slug}-{lang}.html'
+.. data:: PAGE_LANG_URL = pathlib.Path('pages') / '{slug}-{lang}.html'
 
    The URL we will use to link to a page which doesn't use the default
    language.
 
-.. data:: PAGE_LANG_SAVE_AS = 'pages/{slug}-{lang}.html'
+.. data:: PAGE_LANG_SAVE_AS = pathlib.Path('pages') / '{slug}-{lang}.html'
 
    The location we will save the page which doesn't use the default language.
 
-.. data:: DRAFT_PAGE_URL = 'drafts/pages/{slug}.html'
+.. data:: DRAFT_PAGE_URL = pathlib.Path('drafts') / 'pages' / '{slug}.html'
 
    The URL used to link to a page draft.
 
-.. data:: DRAFT_PAGE_SAVE_AS = 'drafts/pages/{slug}.html'
+.. data:: DRAFT_PAGE_SAVE_AS = pathlib.Path('drafts') / 'pages' / '{slug}.html'
 
    The actual location a page draft is saved at.
 
-.. data:: DRAFT_PAGE_LANG_URL = 'drafts/pages/{slug}-{lang}.html'
+.. data:: DRAFT_PAGE_LANG_URL = pathlib.Path('drafts') / 'pages' / '{slug}-{lang}.html'
 
    The URL used to link to a page draft which doesn't use the default
    language.
 
-.. data:: DRAFT_PAGE_LANG_SAVE_AS = 'drafts/pages/{slug}-{lang}.html'
+.. data:: DRAFT_PAGE_LANG_SAVE_AS = pathlib.Path('drafts') / 'pages' / '{slug}-{lang}.html'
 
    The actual location a page draft which doesn't use the default language is
    saved at.
 
-.. data:: AUTHOR_URL = 'author/{slug}.html'
+.. data:: AUTHOR_URL = pathlib.Path('author') / '{slug}.html'
 
    The URL to use for an author.
 
-.. data:: AUTHOR_SAVE_AS = 'author/{slug}.html'
+.. data:: AUTHOR_SAVE_AS = pathlib.Path('author') / '{slug}.html'
 
    The location to save an author.
 
-.. data:: CATEGORY_URL = 'category/{slug}.html'
+.. data:: CATEGORY_URL = pathlib.Path('category') / '{slug}.html'
 
    The URL to use for a category.
 
-.. data:: CATEGORY_SAVE_AS = 'category/{slug}.html'
+.. data:: CATEGORY_SAVE_AS = pathlib.Path('category') / '{slug}.html'
 
    The location to save a category.
 
-.. data:: TAG_URL = 'tag/{slug}.html'
+.. data:: TAG_URL = pathlib.Path('tag') / '{slug}.html'
 
    The URL to use for a tag.
 
-.. data:: TAG_SAVE_AS = 'tag/{slug}.html'
+.. data:: TAG_SAVE_AS = pathlib.Path('tag') / '{slug}.html'
 
    The location to save the tag page.
 
@@ -909,7 +909,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    Relative URL of the RSS feed. If not set, ``FEED_RSS`` is used both for save
    location and URL.
 
-.. data:: FEED_ALL_ATOM = 'feeds/all.atom.xml'
+.. data:: FEED_ALL_ATOM = pathlib.Path('feeds') / 'all.atom.xml'
 
    The location to save the all-posts Atom feed: this feed will contain all
    posts regardless of their language.
@@ -929,7 +929,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    Relative URL of the all-posts RSS feed. If not set, ``FEED_ALL_RSS`` is used
    both for save location and URL.
 
-.. data:: CATEGORY_FEED_ATOM = 'feeds/{slug}.atom.xml'
+.. data:: CATEGORY_FEED_ATOM = pathlib.Path('feeds') / '{slug}.atom.xml'
 
    The location to save the category Atom feeds. [2]_
 
@@ -950,7 +950,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    placeholder. [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save
    location and URL.
 
-.. data:: AUTHOR_FEED_ATOM = 'feeds/{slug}.atom.xml'
+.. data:: AUTHOR_FEED_ATOM = pathlib.Path('feeds') / '{slug}.atom.xml'
 
    The location to save the author Atom feeds. [2]_
 
@@ -960,7 +960,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save location and
    URL.
 
-.. data:: AUTHOR_FEED_RSS = 'feeds/{slug}.rss.xml'
+.. data:: AUTHOR_FEED_RSS = pathlib.Path('feeds') / '{slug}.rss.xml'
 
    The location to save the author RSS feeds. [2]_
 
@@ -1083,7 +1083,7 @@ section for more information.
    one another. May be a string or a collection of strings. Set to ``None`` or
    ``False`` to disable the identification of translations.
 
-.. data:: TRANSLATION_FEED_ATOM = 'feeds/all-{lang}.atom.xml'
+.. data:: TRANSLATION_FEED_ATOM = pathlib.Path('feeds') / 'all-{lang}.atom.xml'
 
    The location to save the Atom feed for translations. [3]_
 
