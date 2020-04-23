@@ -30,7 +30,7 @@ class Writer(object):
             self.urljoiner = os.path.join
         else:
             self.urljoiner = lambda base, url: urljoin(
-                base if base.endswith('/') else base + '/', url)
+                base if base.endswith('/') else base + '/', str(url))
 
     def _create_new_feed(self, feed_type, feed_title, context):
         feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed

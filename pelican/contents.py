@@ -217,7 +217,7 @@ class Content(object):
         if not klass:
             klass = self.__class__.__name__
         fq_key = ('%s_%s' % (klass, key)).upper()
-        return self.settings[fq_key].format(**self.url_format)
+        return str(self.settings[fq_key]).format(**self.url_format)
 
     def get_url_setting(self, key):
         if hasattr(self, 'override_' + key):
