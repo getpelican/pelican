@@ -1,7 +1,17 @@
-pelican-themes
+Themes for Pelican
 ##############
 
 
+Where to find themes
+===========
+
+We maintain a separate repository of themes for people to share and use. Please visit the [pelican-themes repository](https://github.com/getpelican/pelican-themes) for a list of available themes.
+
+Please note that while we do our best to review and maintain these themes, they are submitted by the Pelican community and thus may have varying levels of support and interoperability.
+
+
+pelican-themes
+##############
 
 Description
 ===========
