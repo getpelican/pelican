@@ -64,8 +64,8 @@ Documentation
    publish
    settings
    themes
-   plugins
    pelican-themes
+   plugins
    importer
    faq
    tips
