@@ -1,17 +1,11 @@
 import os
 from shutil import rmtree
 from tempfile import mkdtemp
+from unittest.mock import MagicMock
 
 from pelican.generators import ArticlesGenerator, PagesGenerator
 from pelican.tests.support import get_context, get_settings, unittest
 
-try:
-    from unittest.mock import MagicMock
-except ImportError:
-    try:
-        from mock import MagicMock
-    except ImportError:
-        MagicMock = False
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, 'content')
@@ -131,7 +125,6 @@ class TestCache(unittest.TestCase):
         self.assertEqual(uncached_pages, cached_pages)
         self.assertEqual(uncached_hidden_pages, cached_hidden_pages)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_object_caching(self):
         """Test Article objects caching at the generator level"""
         settings = self._get_cache_enabled_settings()
@@ -162,7 +155,6 @@ class TestCache(unittest.TestCase):
         """
         self.assertEqual(generator.readers.read_file.call_count, 6)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_reader_content_caching(self):
         """Test raw article content caching at the reader level"""
         settings = self._get_cache_enabled_settings()
@@ -185,7 +177,6 @@ class TestCache(unittest.TestCase):
         for reader in readers.values():
             self.assertEqual(reader.read.call_count, 0)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_article_ignore_cache(self):
         """Test that all the articles are read again when not loading cache
 
@@ -212,7 +203,6 @@ class TestCache(unittest.TestCase):
             generator.readers.read_file.call_count,
             orig_call_count)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_object_caching(self):
         """Test Page objects caching at the generator level"""
         settings = self._get_cache_enabled_settings()
@@ -238,7 +228,6 @@ class TestCache(unittest.TestCase):
         """
         self.assertEqual(generator.readers.read_file.call_count, 1)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_reader_content_caching(self):
         """Test raw page content caching at the reader level"""
         settings = self._get_cache_enabled_settings()
@@ -262,7 +251,6 @@ class TestCache(unittest.TestCase):
         for reader in readers.values():
             self.assertEqual(reader.read.call_count, 0)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_page_ignore_cache(self):
         """Test that all the pages are read again when not loading cache
 

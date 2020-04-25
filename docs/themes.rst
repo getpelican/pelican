@@ -242,7 +242,7 @@ as the name of the metadata field, except in all-lowercase characters.
 For example, you could add a field called `FacebookImage` to your article
 metadata, as shown below:
 
-.. code-block:: markdown
+.. code-block:: md
 
     Title: I love Python more than music
     Date: 2013-11-06 10:06

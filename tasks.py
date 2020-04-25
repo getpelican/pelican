@@ -24,7 +24,7 @@ PRECOMMIT = (
 @task
 def docbuild(c):
     """Build documentation"""
-    c.run(f"{VENV_BIN}/sphinx-build docs docs/_build")
+    c.run(f"{VENV_BIN}/sphinx-build -W docs docs/_build")
 
 
 @task(docbuild)
