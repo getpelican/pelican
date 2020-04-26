@@ -11,15 +11,15 @@ env:
   matrix:
     - TOX_ENV=docs
     - TOX_ENV=flake8
-    - TOX_ENV=py35
-    - TOX_ENV=py36
+    - TOX_ENV=py3.5
+    - TOX_ENV=py3.6
 matrix:
   include:
     - python: 3.7
       sudo: true
       dist: xenial
       env:
-      - TOX_ENV=py37
+      - TOX_ENV=py3.7
 addons:
   apt_packages:
     - pandoc
