@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 import locale
 import logging
@@ -27,7 +25,7 @@ class TestBase(LoggedTestCase):
     def setUp(self):
         super().setUp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, str('C'))
+        locale.setlocale(locale.LC_ALL, 'C')
         self.page_kwargs = {
             'content': TEST_CONTENT,
             'context': {
@@ -56,13 +54,13 @@ class TestBase(LoggedTestCase):
 
     def _copy_page_kwargs(self):
         # make a deep copy of page_kwargs
-        page_kwargs = dict([(key, self.page_kwargs[key]) for key in
-                            self.page_kwargs])
+        page_kwargs = {key: self.page_kwargs[key] for key in self.page_kwargs}
         for key in page_kwargs:
             if not isinstance(page_kwargs[key], dict):
                 break
-            page_kwargs[key] = dict([(subkey, page_kwargs[key][subkey])
-                                     for subkey in page_kwargs[key]])
+            page_kwargs[key] = {
+                subkey: page_kwargs[key][subkey] for subkey in page_kwargs[key]
+            }
 
         return page_kwargs
 

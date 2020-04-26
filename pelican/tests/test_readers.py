@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 
 from pelican import readers
@@ -92,9 +90,9 @@ class DefaultReaderTest(ReaderTest):
             for tag in content:
                 readers.find_empty_alt(tag, '/test/path')
                 log_mock.warning.assert_called_with(
-                    u'Empty alt attribute for image %s in %s',
-                    u'test-image.png',
-                    u'/test/path',
+                    'Empty alt attribute for image %s in %s',
+                    'test-image.png',
+                    '/test/path',
                     extra={'limit_msg':
                            'Other images have empty alt attributes'}
                 )

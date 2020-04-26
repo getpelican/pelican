@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 import logging
 import os
@@ -101,7 +99,7 @@ def _filter_discardable_metadata(metadata):
     return {name: val for name, val in metadata.items() if val is not _DISCARD}
 
 
-class BaseReader(object):
+class BaseReader:
     """Base class to read files.
 
     This class is used to process static files, and it can be inherited for

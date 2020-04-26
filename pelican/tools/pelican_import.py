@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import argparse
 import logging
@@ -40,7 +39,7 @@ def decode_wp_content(content, br=True):
             if start == -1:
                 content = content + pre_part
                 continue
-            name = "<pre wp-pre-tag-{0}></pre>".format(pre_index)
+            name = "<pre wp-pre-tag-{}></pre>".format(pre_index)
             pre_tags[name] = pre_part[start:] + "</pre>"
             content = content + pre_part[0:start] + name
             pre_index += 1
@@ -154,7 +153,7 @@ def wp2fields(xml, wp_custpost=False):
 
             content = item.find('encoded').string
             raw_date = item.find('post_date').string
-            if raw_date == u'0000-00-00 00:00:00':
+            if raw_date == '0000-00-00 00:00:00':
                 date = None
             else:
                 date_object = SafeDatetime.strptime(
@@ -258,7 +257,7 @@ def dc2fields(file):
     category_list = {}
     posts = []
 
-    with open(file, 'r', encoding='utf-8') as f:
+    with open(file, encoding='utf-8') as f:
 
         for line in f:
             # remove final \n
@@ -394,7 +393,7 @@ def posterous2fields(api_token, email, password):
 
     def get_posterous_posts(api_token, email, password, page=1):
         base64string = base64.encodestring(
-            ("%s:%s" % (email, password)).encode('utf-8')).replace('\n', '')
+            ("{}:{}".format(email, password)).encode('utf-8')).replace('\n', '')
         url = ("http://posterous.com/api/v2/users/me/sites/primary/"
                "posts?api_token=%s&page=%d") % (api_token, page)
         request = urllib_request.Request(url)
@@ -553,7 +552,7 @@ def build_header(title, date, author, categories, tags, slug,
 
     from docutils.utils import column_width
 
-    header = '%s\n%s\n' % (title, '#' * column_width(title))
+    header = '{}\n{}\n'.format(title, '#' * column_width(title))
     if date:
         header += ':date: %s\n' % date
     if author:
@@ -738,7 +737,7 @@ def download_attachments(output_path, urls):
         try:
             urlretrieve(url, os.path.join(full_path, filename))
             locations[url] = os.path.join(localpath, filename)
-        except (URLError, IOError) as e:
+        except (URLError, OSError) as e:
             # Python 2.7 throws an IOError rather Than URLError
             logger.warning("No file could be downloaded from %s\n%s", url, e)
     return locations
@@ -828,7 +827,7 @@ def fields2pelican(
                     new_content = decode_wp_content(content)
                 else:
                     paragraphs = content.splitlines()
-                    paragraphs = ['<p>{0}</p>'.format(p) for p in paragraphs]
+                    paragraphs = ['<p>{}</p>'.format(p) for p in paragraphs]
                     new_content = ''.join(paragraphs)
 
                 fp.write(new_content)
@@ -862,7 +861,7 @@ def fields2pelican(
 
             os.remove(html_filename)
 
-            with open(out_filename, 'r', encoding='utf-8') as fs:
+            with open(out_filename, encoding='utf-8') as fs:
                 content = fs.read()
                 if out_markup == 'markdown':
                     # In markdown, to insert a <br />, end a line with two

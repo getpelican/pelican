@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from io import open
 from os import walk
 from os.path import join, relpath
 

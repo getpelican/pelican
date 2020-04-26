@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 from shutil import rmtree
 from tempfile import mkdtemp

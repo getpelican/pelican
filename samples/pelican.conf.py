@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 AUTHOR = 'Alexis Métaireau'
 SITENAME = "Alexis' log"
 SITESUBTITLE = 'A personal blog.'

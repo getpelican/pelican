@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import warnings
 
 from pelican.tests.support import unittest

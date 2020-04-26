@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import locale
 import logging
 import os
@@ -134,7 +132,7 @@ def skipIfNoExecutable(executable):
             res = None
 
     if res is None:
-        return unittest.skip('{0} executable not found'.format(executable))
+        return unittest.skip('{} executable not found'.format(executable))
 
     return lambda func: func
 
