@@ -135,9 +135,9 @@ Contribution quality standards
   <https://pypi.org/project/pycodestyle>`_ or `flake8
   <https://pypi.org/project/flake8/>`_ tools, the latter of which in
   particular will give you some useful hints about ways in which the
-  code/formatting can be improved. If you are relying on your editor for PEP8
-  compliance, note that the line length specified by PEP8 is 79 (excluding the
-  line break).
+  code/formatting can be improved. We try to keep line length within the
+  79-character maximum specified by PEP8. Because that can sometimes compromise
+  readability, the hard/enforced maximum is 88 characters.
 * Ensure your code is compatible with the `officially-supported Python releases`_.
 * Add docs and tests for your changes. Undocumented and untested features will
   not be accepted.
