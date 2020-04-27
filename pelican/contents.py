@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import copy
 import datetime
 import locale
@@ -22,7 +20,7 @@ from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 logger = logging.getLogger(__name__)
 
 
-class Content(object):
+class Content:
     """Represents a content.
 
     :param content: the string to parse, containing the original content.
@@ -216,7 +214,7 @@ class Content(object):
     def _expand_settings(self, key, klass=None):
         if not klass:
             klass = self.__class__.__name__
-        fq_key = ('%s_%s' % (klass, key)).upper()
+        fq_key = ('{}_{}'.format(klass, key)).upper()
         return self.settings[fq_key].format(**self.url_format)
 
     def get_url_setting(self, key):
@@ -324,7 +322,7 @@ class Content(object):
                 (?:href|src|poster|data|cite|formaction|action)\s*=\s*)
 
             (?P<quote>["\'])      # require value to be quoted
-            (?P<path>{0}(?P<value>.*?))  # the url value
+            (?P<path>{}(?P<value>.*?))  # the url value
             \2""".format(intrasite_link_regex)
         return re.compile(regex, re.X)
 

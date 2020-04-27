@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import hashlib
 import logging
 import os
@@ -10,7 +8,7 @@ from pelican.utils import mkdir_p
 logger = logging.getLogger(__name__)
 
 
-class FileDataCacher(object):
+class FileDataCacher:
     """Class that can cache data contained in files"""
 
     def __init__(self, settings, cache_name, caching_policy, load_policy):
@@ -33,7 +31,7 @@ class FileDataCacher(object):
             try:
                 with self._cache_open(self._cache_path, 'rb') as fhandle:
                     self._cache = pickle.load(fhandle)
-            except (IOError, OSError, UnicodeDecodeError) as err:
+            except (OSError, UnicodeDecodeError) as err:
                 logger.debug('Cannot load cache %s (this is normal on first '
                              'run). Proceeding with empty cache.\n%s',
                              self._cache_path, err)
@@ -67,7 +65,7 @@ class FileDataCacher(object):
                 mkdir_p(self.settings['CACHE_PATH'])
                 with self._cache_open(self._cache_path, 'wb') as fhandle:
                     pickle.dump(self._cache, fhandle)
-            except (IOError, OSError, pickle.PicklingError) as err:
+            except (OSError, pickle.PicklingError) as err:
                 logger.warning('Could not save cache %s\n ... %s',
                                self._cache_path, err)
 
@@ -116,7 +114,7 @@ class FileStampDataCacher(FileDataCacher):
 
         try:
             return self._filestamp_func(filename)
-        except (IOError, OSError, TypeError) as err:
+        except (OSError, TypeError) as err:
             logger.warning('Cannot get modification stamp for %s\n\t%s',
                            filename, err)
             return ''

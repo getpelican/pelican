@@ -7,12 +7,12 @@ from pelican.server import ComplexHTTPRequestHandler
 from pelican.tests.support import unittest
 
 
-class MockRequest(object):
+class MockRequest:
     def makefile(self, *args, **kwargs):
         return BytesIO(b"")
 
 
-class MockServer(object):
+class MockServer:
     pass
 
 

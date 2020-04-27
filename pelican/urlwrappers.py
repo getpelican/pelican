@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import functools
 import logging
 import os
@@ -10,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 @functools.total_ordering
-class URLWrapper(object):
+class URLWrapper:
     def __init__(self, name, settings):
         self.settings = settings
         self._name = name
@@ -110,7 +108,7 @@ class URLWrapper(object):
         "cat/{slug}" Useful for pagination.
 
         """
-        setting = "%s_%s" % (self.__class__.__name__.upper(), key)
+        setting = "{}_{}".format(self.__class__.__name__.upper(), key)
         value = self.settings[setting]
         if not isinstance(value, str):
             logger.warning('%s is set to %s', setting, value)

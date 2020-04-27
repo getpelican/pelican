@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import argparse
 import logging
 import multiprocessing
@@ -40,7 +38,7 @@ DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 logger = logging.getLogger(__name__)
 
 
-class Pelican(object):
+class Pelican:
 
     def __init__(self, settings):
         """Pelican initialisation
@@ -255,7 +253,7 @@ def parse_arguments(argv=None):
 
     parser.add_argument('-s', '--settings', dest='settings',
                         help='The settings of the application, this is '
-                        'automatically set to {0} if a file exists with this '
+                        'automatically set to {} if a file exists with this '
                         'name.'.format(DEFAULT_CONFIG_NAME))
 
     parser.add_argument('-d', '--delete-output-directory',
@@ -494,11 +492,13 @@ def main(argv=None):
         pelican, settings = get_instance(args)
 
         readers = Readers(settings)
-        reader_descs = sorted(set(['%s (%s)' %
-                                   (type(r).__name__,
-                                    ', '.join(r.file_extensions))
-                                   for r in readers.readers.values()
-                                   if r.enabled]))
+        reader_descs = sorted(
+            {
+                '%s (%s)' % (type(r).__name__, ', '.join(r.file_extensions))
+                for r in readers.readers.values()
+                if r.enabled
+            }
+        )
 
         watchers = {'content': folder_watcher(pelican.path,
                                               readers.extensions,

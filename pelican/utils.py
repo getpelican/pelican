@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 import fnmatch
 import locale
@@ -99,7 +97,7 @@ class SafeDatetime(datetime.datetime):
             return super().strftime(fmt)
 
 
-class DateFormatter(object):
+class DateFormatter:
     '''A date formatter object used as a jinja filter
 
     Uses the `strftime` implementation and makes sure jinja uses the locale
@@ -125,7 +123,7 @@ class DateFormatter(object):
         return formatted
 
 
-class memoized(object):
+class memoized:
     """Function decorator to cache return values.
 
     If called later with the same arguments, the cached value is returned
@@ -209,7 +207,7 @@ def get_date(string):
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
-        raise ValueError('{0!r} is not a valid date'.format(string))
+        raise ValueError('{!r} is not a valid date'.format(string))
 
 
 @contextmanager
@@ -646,7 +644,7 @@ def get_original_items(items, with_str):
     def _warn_source_paths(msg, items, *extra):
         args = [len(items)]
         args.extend(extra)
-        args.extend((x.source_path for x in items))
+        args.extend(x.source_path for x in items)
         logger.warning('{}: {}'.format(msg, '\n%s' * len(items)), *args)
 
     # warn if several items have the same lang

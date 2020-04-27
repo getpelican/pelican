@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import functools
 import logging
 import os
@@ -13,7 +11,7 @@ PaginationRule = namedtuple(
 )
 
 
-class Paginator(object):
+class Paginator:
     def __init__(self, name, url, object_list, settings, per_page=None):
         self.name = name
         self.url = url
@@ -61,7 +59,7 @@ class Paginator(object):
     page_range = property(_get_page_range)
 
 
-class Page(object):
+class Page:
     def __init__(self, name, url, object_list, number, paginator, settings):
         self.full_name = name
         self.name, self.extension = os.path.splitext(name)
@@ -74,7 +72,7 @@ class Page(object):
         self.settings = settings
 
     def __repr__(self):
-        return '<Page %s of %s>' % (self.number, self.paginator.num_pages)
+        return '<Page {} of {}>'.format(self.number, self.paginator.num_pages)
 
     def has_next(self):
         return self.number < self.paginator.num_pages

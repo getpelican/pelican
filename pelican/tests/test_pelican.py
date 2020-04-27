@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import locale
 import logging
 import os
@@ -47,7 +45,7 @@ class TestPelican(LoggedTestCase):
         self.temp_cache = mkdtemp(prefix='pelican_cache.')
         self.maxDiff = None
         self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, str('C'))
+        locale.setlocale(locale.LC_ALL, 'C')
 
     def tearDown(self):
         read_settings()  # cleanup PYGMENTS_RST_OPTIONS
@@ -60,7 +58,7 @@ class TestPelican(LoggedTestCase):
         out, err = subprocess.Popen(
             ['git', 'diff', '--no-ext-diff', '--exit-code',
              '-w', left_path, right_path],
-            env={str('PAGER'): str('')},
+            env={'PAGER': ''},
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         ).communicate()
@@ -131,9 +129,9 @@ class TestPelican(LoggedTestCase):
     def test_custom_locale_generation_works(self):
         '''Test that generation with fr_FR.UTF-8 locale works'''
         if sys.platform == 'win32':
-            our_locale = str('French')
+            our_locale = 'French'
         else:
-            our_locale = str('fr_FR.UTF-8')
+            our_locale = 'fr_FR.UTF-8'
 
         settings = read_settings(path=SAMPLE_FR_CONFIG, override={
             'PATH': INPUT_PATH,

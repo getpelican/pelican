@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import argparse
 import locale
@@ -87,9 +86,9 @@ def ask(question, answer=str, default=None, length=None):
         r = ''
         while True:
             if default:
-                r = input('> {0} [{1}] '.format(question, default))
+                r = input('> {} [{}] '.format(question, default))
             else:
-                r = input('> {0} '.format(question, default))
+                r = input('> {} '.format(question, default))
 
             r = r.strip()
 
@@ -101,7 +100,7 @@ def ask(question, answer=str, default=None, length=None):
                     print('You must enter something')
             else:
                 if length and len(r) != length:
-                    print('Entry must be {0} characters long'.format(length))
+                    print('Entry must be {} characters long'.format(length))
                 else:
                     break
 
@@ -111,11 +110,11 @@ def ask(question, answer=str, default=None, length=None):
         r = None
         while True:
             if default is True:
-                r = input('> {0} (Y/n) '.format(question))
+                r = input('> {} (Y/n) '.format(question))
             elif default is False:
-                r = input('> {0} (y/N) '.format(question))
+                r = input('> {} (y/N) '.format(question))
             else:
-                r = input('> {0} (y/n) '.format(question))
+                r = input('> {} (y/n) '.format(question))
 
             r = r.strip().lower()
 
@@ -135,9 +134,9 @@ def ask(question, answer=str, default=None, length=None):
         r = None
         while True:
             if default:
-                r = input('> {0} [{1}] '.format(question, default))
+                r = input('> {} [{}] '.format(question, default))
             else:
-                r = input('> {0} '.format(question))
+                r = input('> {} '.format(question))
 
             r = r.strip()
 
@@ -167,7 +166,7 @@ def ask_timezone(question, default, tzurl):
             break
         else:
             print('Please enter a valid time zone:\n'
-                  ' (check [{0}])'.format(tzurl))
+                  ' (check [{}])'.format(tzurl))
     return r
 
 
@@ -199,7 +198,7 @@ needed by Pelican.
         os.environ.get('VIRTUAL_ENV', os.curdir), '.project')
     no_path_was_specified = hasattr(args.path, 'is_default_path')
     if os.path.isfile(project) and no_path_was_specified:
-        CONF['basedir'] = open(project, 'r').read().rstrip("\n")
+        CONF['basedir'] = open(project).read().rstrip("\n")
         print('Using project associated with current virtual environment. '
               'Will save to:\n%s\n' % CONF['basedir'])
     else:
@@ -300,12 +299,12 @@ needed by Pelican.
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'content'))
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print('Error: {}'.format(e))
 
     try:
         os.makedirs(os.path.join(CONF['basedir'], 'output'))
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print('Error: {}'.format(e))
 
     try:
         with open(os.path.join(CONF['basedir'], 'pelicanconf.py'),
@@ -318,7 +317,7 @@ needed by Pelican.
             fd.write(_template.render(**conf_python))
             fd.close()
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print('Error: {}'.format(e))
 
     try:
         with open(os.path.join(CONF['basedir'], 'publishconf.py'),
@@ -327,7 +326,7 @@ needed by Pelican.
             fd.write(_template.render(**CONF))
             fd.close()
     except OSError as e:
-        print('Error: {0}'.format(e))
+        print('Error: {}'.format(e))
 
     if automation:
         try:
@@ -337,7 +336,7 @@ needed by Pelican.
                 fd.write(_template.render(**CONF))
                 fd.close()
         except OSError as e:
-            print('Error: {0}'.format(e))
+            print('Error: {}'.format(e))
         try:
             with open(os.path.join(CONF['basedir'], 'Makefile'),
                       'w', encoding='utf-8') as fd:
@@ -346,7 +345,7 @@ needed by Pelican.
                 fd.write(_template.render(py_v=py_v, **CONF))
                 fd.close()
         except OSError as e:
-            print('Error: {0}'.format(e))
+            print('Error: {}'.format(e))
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
 

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from pelican.tests.support import unittest
 from pelican.urlwrappers import Author, Category, Tag, URLWrapper
 
@@ -40,7 +38,7 @@ class TestURLWrapper(unittest.TestCase):
         self.assertNotEqual(tag, author)
 
         # should be equal vs text representing the same name
-        self.assertEqual(tag, u'test')
+        self.assertEqual(tag, 'test')
 
         # should not be equal vs binary
         self.assertNotEqual(tag, b'test')
@@ -54,7 +52,7 @@ class TestURLWrapper(unittest.TestCase):
         self.assertEqual(author, author_equal)
 
         cat_ascii = Category('指導書', settings={})
-        self.assertEqual(cat_ascii, u'zhi dao shu')
+        self.assertEqual(cat_ascii, 'zhi dao shu')
 
     def test_slugify_with_substitutions_and_dots(self):
         tag = Tag('Tag Dot', settings={'TAG_REGEX_SUBSTITUTIONS': [

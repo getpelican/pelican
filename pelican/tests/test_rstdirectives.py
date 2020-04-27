@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from pelican.tests.support import unittest
 
 try:

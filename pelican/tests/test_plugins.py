@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function, unicode_literals
-
 import os
 from contextlib import contextmanager
 
@@ -84,9 +81,9 @@ class PluginTest(unittest.TestCase):
 
     def test_load_plugins(self):
         def get_plugin_names(plugins):
-            return set(
+            return {
                 plugin.NAME if hasattr(plugin, 'NAME') else plugin.__name__
-                for plugin in plugins)
+                for plugin in plugins}
 
         # existing namespace plugins
         existing_ns_plugins = load_plugins({})

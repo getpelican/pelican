@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import locale
 
 from jinja2.utils import generate_lorem_ipsum
@@ -19,7 +17,7 @@ class TestPage(unittest.TestCase):
     def setUp(self):
         super().setUp()
         self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, str('C'))
+        locale.setlocale(locale.LC_ALL, 'C')
         self.page_kwargs = {
             'content': TEST_CONTENT,
             'context': {

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 AUTHOR = 'Alexis Métaireau'
 SITENAME = "Alexis' log"
 SITEURL = 'http://blog.notmyidea.org'

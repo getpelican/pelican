@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 import sys
 
@@ -23,7 +21,7 @@ release = __version__
 version = '.'.join(release.split('.')[:1])
 last_stable = __version__
 rst_prolog = '''
-.. |last_stable| replace:: :pelican-doc:`{0}`
+.. |last_stable| replace:: :pelican-doc:`{}`
 '''.format(last_stable)
 
 # The name of the Pygments (syntax highlighting) style to use.

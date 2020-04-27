@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import argparse
 import os
@@ -11,7 +10,7 @@ def err(msg, die=None):
     """Print an error message and exits if an exit code is given"""
     sys.stderr.write(msg + '\n')
     if die:
-        sys.exit((die if type(die) is int else 1))
+        sys.exit(die if type(die) is int else 1)
 
 
 try:
@@ -49,7 +48,7 @@ def main():
         help="Show the themes path and exit")
     excl.add_argument(
         '-V', '--version', action='version',
-        version='pelican-themes v{0}'.format(__version__),
+        version='pelican-themes v{}'.format(__version__),
         help='Print the version of this script')
 
     parser.add_argument(
@@ -249,12 +248,12 @@ def clean(v=False):
         if os.path.islink(path):
             if is_broken_link(path):
                 if v:
-                    print('Removing {0}'.format(path))
+                    print('Removing {}'.format(path))
                 try:
                     os.remove(path)
                 except OSError:
-                    print('Error: cannot remove {0}'.format(path))
+                    print('Error: cannot remove {}'.format(path))
                 else:
                     c += 1
 
-    print("\nRemoved {0} broken links".format(c))
+    print("\nRemoved {} broken links".format(c))
