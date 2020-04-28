@@ -160,6 +160,19 @@ def locale_available(locale_):
         return True
 
 
+def can_symlink():
+    res = True
+    try:
+        with temporary_folder() as f:
+            os.symlink(
+                f,
+                os.path.join(f, 'symlink')
+            )
+    except OSError:
+        res = False
+    return res
+
+
 def get_settings(**kwargs):
     """Provide tweaked setting dictionaries for testing
 

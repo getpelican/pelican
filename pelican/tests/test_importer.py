@@ -1,6 +1,7 @@
 import locale
 import os
 import re
+from posixpath import join as posix_join
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
@@ -448,5 +449,5 @@ class TestWordpressXMLAttachements(unittest.TestCase):
             self.assertEqual(1, len(locations))
             directory = locations[0]
             self.assertTrue(
-                directory.endswith(os.path.join('content', 'article.rst')),
+                directory.endswith(posix_join('content', 'article.rst')),
                 directory)

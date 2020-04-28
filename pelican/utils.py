@@ -27,8 +27,10 @@ logger = logging.getLogger(__name__)
 
 
 def sanitised_join(base_directory, *parts):
-    joined = os.path.abspath(os.path.join(base_directory, *parts))
-    if not joined.startswith(os.path.abspath(base_directory)):
+    joined = posixize_path(
+        os.path.abspath(os.path.join(base_directory, *parts)))
+    base = posixize_path(os.path.abspath(base_directory))
+    if not joined.startswith(base):
         raise RuntimeError(
             "Attempted to break out of output directory to {}".format(
                 joined
@@ -391,10 +393,9 @@ def get_relative_path(path):
 
 def path_to_url(path):
     """Return the URL corresponding to a given path."""
-    if os.sep == '/':
-        return path
-    else:
-        return '/'.join(split_all(path))
+    if path is not None:
+        path = posixize_path(path)
+    return path
 
 
 def posixize_path(rel_path):

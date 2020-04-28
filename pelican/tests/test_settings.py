@@ -136,6 +136,8 @@ class TestSettingsConfiguration(unittest.TestCase):
             settings['ARTICLE_DIR']
             settings['PAGE_DIR']
 
+    # locale.getdefaultlocale() is broken on Windows
+    # See: https://bugs.python.org/issue37945
     @unittest.skipIf(platform == 'win32', "Doesn't work on Windows")
     def test_default_encoding(self):
         # Test that the default locale is set if not specified in settings

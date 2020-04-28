@@ -25,11 +25,10 @@ class TestServer(unittest.TestCase):
         os.chdir(self.temp_output)
 
     def tearDown(self):
-        rmtree(self.temp_output)
         os.chdir(self.old_cwd)
+        rmtree(self.temp_output)
 
     def test_get_path_that_exists(self):
-
         handler = ComplexHTTPRequestHandler(MockRequest(), ('0.0.0.0', 8888),
                                             self.server)
         handler.base_path = self.temp_output
