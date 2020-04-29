@@ -887,7 +887,7 @@ def fields2pelican(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Transform feed, Blogger, Dotclear, Posterous, Tumblr, or"
+        description="Transform feed, Blogger, Dotclear, Posterous, Tumblr, or "
                     "WordPress files into reST (rst) or Markdown (md) files. "
                     "Be sure to have pandoc installed.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
