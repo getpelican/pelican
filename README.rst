@@ -1,4 +1,4 @@
-Pelican |build-status| |pypi-version|
+Pelican |build-status| |pypi-version| |repology|
 =====================================
 
 Pelican is a static site generator, written in Python_.
@@ -62,3 +62,6 @@ Why the name "Pelican"?
 .. |pypi-version| image:: https://img.shields.io/pypi/v/pelican.svg
    :target: https://pypi.python.org/pypi/pelican
    :alt: PyPI: the Python Package Index
+.. |repology| image:: https://repology.org/badge/tiny-repos/pelican.svg
+   :target: https://repology.org/project/pelican/versions
+   :alt: Repology: the packaging hub
