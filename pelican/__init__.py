@@ -102,7 +102,7 @@ class Pelican:
         if (self.delete_outputdir
                 and os.path.commonpath([os.path.realpath(self.output_path)]) !=
                 os.path.commonpath([os.path.realpath(self.output_path),
-                    os.path.realpath(self.path)])):
+                                    os.path.realpath(self.path)])):
             clean_output_dir(self.output_path, self.output_retention)
 
         for p in generators:
