@@ -11,12 +11,10 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: trailing-whitespace
-
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.7.9
-    hooks:
       - id: flake8
-        args: [--max-line-length=88]
-        language_version: python3.7
+        name: Flake8 on commit diff
+        description: This hook limits Flake8 checks to changed lines of code.
+        entry: bash
+        args: [-c, 'git diff HEAD | flake8 --diff --max-line-length=88']
 
 exclude: ^pelican/tests/output/
