@@ -616,11 +616,11 @@ def process_translations(content_list, translation_id=None):
         content_list.sort(key=attrgetter(*translation_id))
     except TypeError:
         raise TypeError('Cannot unpack {}, \'translation_id\' must be falsy, a'
-                        'string or a collection of strings'
+                        ' string or a collection of strings'
                         .format(translation_id))
     except AttributeError:
-        raise AttributeError('Cannot use {} as \'translation_id\', there'
-                             'appear to be items without these metadata'
+        raise AttributeError('Cannot use {} as \'translation_id\', there '
+                             'appear to be items without these metadata '
                              'attributes'.format(translation_id))
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
@@ -728,7 +728,7 @@ def order_content(content_list, order_by='slug'):
                                 })
         else:
             logger.warning(
-                'Invalid *_ORDER_BY setting (%s).'
+                'Invalid *_ORDER_BY setting (%s). '
                 'Valid options are strings and functions.', order_by)
 
     return content_list
