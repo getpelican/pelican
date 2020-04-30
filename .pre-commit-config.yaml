@@ -1,7 +1,7 @@
 # See https://pre-commit.com/hooks.html for info on hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
+    rev: v2.5.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -11,4 +11,12 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: trailing-whitespace
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.7.9
+    hooks:
+      - id: flake8
+        args: [--max-line-length=88]
+        language_version: python3.7
+
 exclude: ^pelican/tests/output/
