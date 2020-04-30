@@ -100,8 +100,9 @@ class Pelican:
         # Delete the output directory if (1) the appropriate setting is True
         # and (2) that directory is not the parent of the source directory
         if (self.delete_outputdir
-                and os.path.commonpath([self.output_path]) !=
-                os.path.commonpath([self.output_path, self.path])):
+                and os.path.commonpath([os.path.realpath(self.output_path)]) !=
+                os.path.commonpath([os.path.realpath(self.output_path),
+                    os.path.realpath(self.path)])):
             clean_output_dir(self.output_path, self.output_retention)
 
         for p in generators:
