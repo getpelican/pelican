@@ -685,6 +685,7 @@ def path_metadata(full_path, source_path, settings=None):
         if settings.get('DEFAULT_DATE', None) == 'fs':
             metadata['date'] = datetime.datetime.fromtimestamp(
                 os.stat(full_path).st_mtime)
+            metadata['modified'] = metadata['date']
 
         # Apply EXTRA_PATH_METADATA for the source path and the paths of any
         # parent directories. Sorting EPM first ensures that the most specific
