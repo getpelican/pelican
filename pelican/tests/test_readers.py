@@ -81,6 +81,50 @@ class DefaultReaderTest(ReaderTest):
         with self.assertRaises(TypeError):
             self.read_file(path='article_with_metadata.unknownextension')
 
+    def test_readfile_path_metadata_implicit_dates(self):
+        test_file = 'article_with_metadata_implicit_dates.html'
+        page = self.read_file(path=test_file, DEFAULT_DATE='fs')
+        expected = {
+            'date': SafeDatetime.fromtimestamp(
+                os.stat(_path(test_file)).st_mtime),
+            'modified': SafeDatetime.fromtimestamp(
+                os.stat(_path(test_file)).st_mtime)
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_readfile_path_metadata_explicit_dates(self):
+        test_file = 'article_with_metadata_explicit_dates.html'
+        page = self.read_file(path=test_file, DEFAULT_DATE='fs')
+        expected = {
+            'date': SafeDatetime(2010, 12, 2, 10, 14),
+            'modified': SafeDatetime(2010, 12, 31, 23, 59)
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_readfile_path_metadata_implicit_date_explicit_modified(self):
+        test_file = 'article_with_metadata_implicit_date_explicit_modified.html'
+        page = self.read_file(path=test_file, DEFAULT_DATE='fs')
+        expected = {
+            'date': SafeDatetime.fromtimestamp(
+                os.stat(_path(test_file)).st_mtime),
+            'modified': SafeDatetime(2010, 12, 2, 10, 14),
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
+    def test_readfile_path_metadata_explicit_date_implicit_modified(self):
+        test_file = 'article_with_metadata_explicit_date_implicit_modified.html'
+        page = self.read_file(path=test_file, DEFAULT_DATE='fs')
+        expected = {
+            'date': SafeDatetime(2010, 12, 2, 10, 14),
+            'modified': SafeDatetime.fromtimestamp(
+                os.stat(_path(test_file)).st_mtime)
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
     @unittest.skipUnless(patch, 'Needs Mock module')
     def test_find_empty_alt(self):
         with patch('pelican.readers.logger') as log_mock:
