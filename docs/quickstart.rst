@@ -38,14 +38,18 @@ Create an article
 You cannot run Pelican until you have created some content. Use your preferred
 text editor to create your first article with the following content::
 
-    Title: My First Review
-    Date: 2010-12-03 10:20
-    Category: Review
-
+    My First Review
+    ###############
+    
+    :date: 2010-12-03 10:20
+    :tags: reviews
+    :category: Review
+    :summary: My First Review
+    
     Following is a review of my favorite mechanical keyboard.
 
-Given that this example article is in Markdown format, save it as
-``~/projects/yoursite/content/keyboard-review.md``.
+Given that this example article is in reStructuredText format, save it as
+``~/projects/yoursite/content/keyboard-review.rst``.
 
 Generate your site
 ------------------
