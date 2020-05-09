@@ -3,6 +3,7 @@
 .*.swo
 *.pyc
 .DS_Store
+.idea
 docs/_build
 docs/fr/_build
 build

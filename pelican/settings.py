@@ -1,6 +1,7 @@
 import copy
 import importlib.util
 import inspect
+import json
 import locale
 import logging
 import os
@@ -660,3 +661,23 @@ def configure_settings(settings):
             continue            # setting not specified, nothing to do
 
     return settings
+
+
+def coerce_overrides(overrides):
+    coerced = {}
+    types_to_cast = {int, str}
+    for k, v in overrides.items():
+        if k not in overrides:
+            logger.warning('Override for unknown setting %s, ignoring', k)
+            continue
+        setting_type = type(DEFAULT_CONFIG[k])
+        if setting_type not in types_to_cast:
+            coerced[k] = json.loads(v)
+        else:
+            try:
+                coerced[k] = setting_type(v)
+            except ValueError:
+                logger.debug('ValueError for %s override with %s, try to '
+                             'load as json', k, v)
+                coerced[k] = json.loads(v)
+    return coerced
