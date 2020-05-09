@@ -12,6 +12,7 @@ class TestLog(unittest.TestCase):
         super().setUp()
         self.logger = logging.getLogger(__name__)
         self.handler = LogCountHandler()
+        self.handler.setFormatter(log.get_formatter())
         self.logger.addHandler(self.handler)
 
     def tearDown(self):
@@ -32,6 +33,54 @@ class TestLog(unittest.TestCase):
         finally:
             self._reset_limit_filter()
             self.handler.flush()
+
+    def test_log_formatter(self):
+        counter = self.handler.count_formatted_logs
+        with self.reset_logger():
+            # log simple case
+            self.logger.warning('Log %s', 'test')
+            self.assertEqual(
+                counter('Log test', logging.WARNING),
+                1)
+
+        with self.reset_logger():
+            # log multiline message
+            self.logger.warning('Log\n%s', 'test')
+            # Log
+            # | test
+            self.assertEqual(
+                counter('Log', logging.WARNING),
+                1)
+            self.assertEqual(
+                counter(' | test', logging.WARNING),
+                1)
+
+        with self.reset_logger():
+            # log multiline argument
+            self.logger.warning('Log %s', 'test1\ntest2')
+            # Log test1
+            # | test2
+            self.assertEqual(
+                counter('Log test1', logging.WARNING),
+                1)
+            self.assertEqual(
+                counter(' | test2', logging.WARNING),
+                1)
+
+        with self.reset_logger():
+            # log single list
+            self.logger.warning('Log %s', ['foo', 'bar'])
+            self.assertEqual(
+                counter(r"Log \['foo', 'bar'\]", logging.WARNING),
+                1)
+
+        with self.reset_logger():
+            # log single dict
+            self.logger.warning('Log %s', {'foo': 1, 'bar': 2})
+            self.assertEqual(
+                # dict order is not guaranteed
+                counter(r"Log {'.*': \d, '.*': \d}", logging.WARNING),
+                1)
 
     def test_log_filter(self):
         def do_logging():
