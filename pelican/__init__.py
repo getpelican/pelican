@@ -23,7 +23,7 @@ from pelican.plugins import signals
 from pelican.plugins._utils import load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
-from pelican.settings import read_settings
+from pelican.settings import coerce_overrides, read_settings
 from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
 from pelican.writers import Writer
 
@@ -230,6 +230,18 @@ class PrintSettings(argparse.Action):
         parser.exit()
 
 
+class ParseDict(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        d = {}
+        if values:
+            for item in values:
+                split_items = item.split("=", 1)
+                key = split_items[0].strip()
+                value = split_items[1].strip()
+                d[key] = value
+        setattr(namespace, self.dest, d)
+
+
 def parse_arguments(argv=None):
     parser = argparse.ArgumentParser(
         description='A tool to generate a static blog, '
@@ -323,6 +335,18 @@ def parse_arguments(argv=None):
                         help='IP to bind to when serving files via HTTP '
                         '(default: 127.0.0.1)')
 
+    parser.add_argument('-c', '--setting-overrides', dest='overrides',
+                        help='Specify one ore more SETTING=VALUE pairs '
+                             '(without spaces around =) to override '
+                             'settings files. If VALUE contains spaces, add quotes: '
+                             'SETTING="VALUE". '
+                             'Integers and strings are autoconverted, other values '
+                        'can be passed in in json notation, '
+                             'e.g. SETTING=none',
+                        nargs='*',
+                        action=ParseDict
+                        )
+
     args = parser.parse_args(argv)
 
     if args.port is not None and not args.listen:
@@ -358,6 +382,7 @@ def get_config(args):
     if args.bind is not None:
         config['BIND'] = args.bind
     config['DEBUG'] = args.verbosity == logging.DEBUG
+    config.update(coerce_overrides(args.overrides))
 
     return config
 
