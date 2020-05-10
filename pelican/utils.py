@@ -735,60 +735,167 @@ def order_content(content_list, order_by='slug'):
     return content_list
 
 
-def folder_watcher(path, extensions, ignores=[]):
-    '''Generator for monitoring a folder for modifications.
+class FileSystemWatcher:
+    def __init__(self, settings_file, reader_class, settings=None):
+        self.watchers = {
+            'settings': FileSystemWatcher.file_watcher(settings_file)
+        }
 
-    Returns a boolean indicating if files are changed since last check.
-    Returns None if there are no matching files in the folder'''
+        self.settings = None
+        self.reader_class = reader_class
+        self._extensions = None
+        self._content_path = None
+        self._theme_path = None
+        self._ignore_files = None
 
-    def file_times(path):
-        '''Return `mtime` for each file in path'''
+        if settings is not None:
+            self.update_watchers(settings)
 
-        for root, dirs, files in os.walk(path, followlinks=True):
-            dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
+    def update_watchers(self, settings):
+        new_extensions = set(self.reader_class(settings).extensions)
+        new_content_path = settings.get('PATH', '')
+        new_theme_path = settings.get('THEME', '')
+        new_ignore_files = set(settings.get('IGNORE_FILES', []))
 
-            for f in files:
-                valid_extension = f.endswith(tuple(extensions))
-                file_ignored = any(
-                    fnmatch.fnmatch(f, ignore) for ignore in ignores
-                )
-                if valid_extension and not file_ignored:
-                    try:
-                        yield os.stat(os.path.join(root, f)).st_mtime
-                    except OSError as e:
-                        logger.warning('Caught Exception: %s', e)
+        extensions_changed = new_extensions != self._extensions
+        content_changed = new_content_path != self._content_path
+        theme_changed = new_theme_path != self._theme_path
+        ignore_changed = new_ignore_files != self._ignore_files
 
-    LAST_MTIME = 0
-    while True:
-        try:
-            mtime = max(file_times(path))
-            if mtime > LAST_MTIME:
-                LAST_MTIME = mtime
-                yield True
-        except ValueError:
-            yield None
+        # Refresh content watcher if related settings changed
+        if extensions_changed or content_changed or ignore_changed:
+            self.add_watcher('content',
+                             new_content_path,
+                             new_extensions,
+                             new_ignore_files)
+
+        # Refresh theme watcher if related settings changed
+        if theme_changed or ignore_changed:
+            self.add_watcher('theme',
+                             new_theme_path,
+                             [''],
+                             new_ignore_files)
+
+        # Watch STATIC_PATHS
+        old_static_watchers = set(key
+                                  for key in self.watchers
+                                  if key.startswith('[static]'))
+
+        for path in settings.get('STATIC_PATHS', []):
+            key = '[static]{}'.format(path)
+            if ignore_changed or (key not in self.watchers):
+                self.add_watcher(
+                    key,
+                    os.path.join(new_content_path, path),
+                    [''],
+                    new_ignore_files)
+            if key in old_static_watchers:
+                old_static_watchers.remove(key)
+
+        # cleanup removed static watchers
+        for key in old_static_watchers:
+            del self.watchers[key]
+
+        # update values
+        self.settings = settings
+        self._extensions = new_extensions
+        self._content_path = new_content_path
+        self._theme_path = new_theme_path
+        self._ignore_files = new_ignore_files
+
+    def check(self):
+        '''return a key:watcher_status dict for all watchers'''
+        result = {key: next(watcher) for key, watcher in self.watchers.items()}
+
+        # Various warnings
+        if result.get('content') is None:
+            reader_descs = sorted(
+                {
+                    '%s (%s)' % (type(r).__name__, ', '.join(r.file_extensions))
+                    for r in self.reader_class(self.settings).readers.values()
+                    if r.enabled
+                }
+            )
+            logger.warning(
+                    'No valid files found in content for the active readers:\n'
+                    + '\n'.join(reader_descs))
+
+        if result.get('theme') is None:
+            logger.warning('Empty theme folder. Using `basic` theme.')
+
+        return result
+
+    def add_watcher(self, key, path, extensions=[''], ignores=[]):
+        watcher = self.get_watcher(path, extensions, ignores)
+        if watcher is not None:
+            self.watchers[key] = watcher
+
+    def get_watcher(self, path, extensions=[''], ignores=[]):
+        '''return a watcher depending on path type (file or folder)'''
+        if not os.path.exists(path):
+            logger.warning("Watched path does not exist: %s", path)
+            return None
+
+        if os.path.isdir(path):
+            return self.folder_watcher(path, extensions, ignores)
         else:
-            yield False
+            return self.file_watcher(path)
 
+    @staticmethod
+    def folder_watcher(path, extensions, ignores=[]):
+        '''Generator for monitoring a folder for modifications.
 
-def file_watcher(path):
-    '''Generator for monitoring a file for modifications'''
-    LAST_MTIME = 0
-    while True:
-        if path:
+        Returns a boolean indicating if files are changed since last check.
+        Returns None if there are no matching files in the folder'''
+
+        def file_times(path):
+            '''Return `mtime` for each file in path'''
+
+            for root, dirs, files in os.walk(path, followlinks=True):
+                dirs[:] = [x for x in dirs if not x.startswith(os.curdir)]
+
+                for f in files:
+                    valid_extension = f.endswith(tuple(extensions))
+                    file_ignored = any(
+                        fnmatch.fnmatch(f, ignore) for ignore in ignores
+                    )
+                    if valid_extension and not file_ignored:
+                        try:
+                            yield os.stat(os.path.join(root, f)).st_mtime
+                        except OSError as e:
+                            logger.warning('Caught Exception: %s', e)
+
+        LAST_MTIME = 0
+        while True:
             try:
-                mtime = os.stat(path).st_mtime
-            except OSError as e:
-                logger.warning('Caught Exception: %s', e)
-                continue
-
-            if mtime > LAST_MTIME:
-                LAST_MTIME = mtime
-                yield True
+                mtime = max(file_times(path))
+                if mtime > LAST_MTIME:
+                    LAST_MTIME = mtime
+                    yield True
+            except ValueError:
+                yield None
             else:
                 yield False
-        else:
-            yield None
+
+    @staticmethod
+    def file_watcher(path):
+        '''Generator for monitoring a file for modifications'''
+        LAST_MTIME = 0
+        while True:
+            if path:
+                try:
+                    mtime = os.stat(path).st_mtime
+                except OSError as e:
+                    logger.warning('Caught Exception: %s', e)
+                    continue
+
+                if mtime > LAST_MTIME:
+                    LAST_MTIME = mtime
+                    yield True
+                else:
+                    yield False
+            else:
+                yield None
 
 
 def set_date_tzinfo(d, tz_name=None):
