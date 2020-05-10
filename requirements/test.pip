@@ -1,6 +1,5 @@
 # Tests
 Pygments==2.6.1
-mock
 pytest==5.3.5
 pytest-cov
 pytest-xdist

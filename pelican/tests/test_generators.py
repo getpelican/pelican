@@ -1,21 +1,16 @@
 import locale
 import os
+import sys
 from shutil import copy, rmtree
 from tempfile import mkdtemp
+from unittest.mock import MagicMock
 
 from pelican.generators import (ArticlesGenerator, Generator, PagesGenerator,
                                 PelicanTemplateNotFound, StaticGenerator,
                                 TemplatePagesGenerator)
-from pelican.tests.support import get_context, get_settings, unittest
+from pelican.tests.support import (can_symlink, get_context, get_settings,
+                                   unittest)
 from pelican.writers import Writer
-
-try:
-    from unittest.mock import MagicMock
-except ImportError:
-    try:
-        from mock import MagicMock
-    except ImportError:
-        MagicMock = False
 
 
 CUR_DIR = os.path.dirname(__file__)
@@ -198,7 +193,6 @@ class TestArticlesGenerator(unittest.TestCase):
         return [[article.title, article.status, article.category.name,
                  article.template] for article in articles]
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_generate_feeds(self):
         settings = get_settings()
         settings['CACHE_PATH'] = self.temp_cache
@@ -218,7 +212,6 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_feeds(writer)
         self.assertFalse(writer.write_feed.called)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_generate_feeds_override_url(self):
         settings = get_settings()
         settings['CACHE_PATH'] = self.temp_cache
@@ -334,7 +327,6 @@ class TestArticlesGenerator(unittest.TestCase):
         categories_expected = ['default', 'yeah', 'test', 'zhi-dao-shu']
         self.assertEqual(sorted(categories), sorted(categories_expected))
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_direct_templates_save_as_url_default(self):
 
         settings = get_settings()
@@ -352,7 +344,6 @@ class TestArticlesGenerator(unittest.TestCase):
                                  template_name='archives',
                                  page_name='archives', url="archives.html")
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_direct_templates_save_as_url_modified(self):
 
         settings = get_settings()
@@ -373,7 +364,6 @@ class TestArticlesGenerator(unittest.TestCase):
                                  page_name='archives/index',
                                  url="archives/")
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_direct_templates_save_as_false(self):
 
         settings = get_settings()
@@ -398,7 +388,6 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertIn(custom_template, self.articles)
         self.assertIn(standard_template, self.articles)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_period_in_timeperiod_archive(self):
         """
         Test that the context of a generated period_archive is passed
@@ -1022,7 +1011,6 @@ class TestStaticGenerator(unittest.TestCase):
         with open(self.endfile) as f:
             self.assertEqual(f.read(), "staticcontent")
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_file_update_required_when_dest_does_not_exist(self):
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
@@ -1032,7 +1020,6 @@ class TestStaticGenerator(unittest.TestCase):
         update_required = self.generator._file_update_required(staticfile)
         self.assertTrue(update_required)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_dest_and_source_mtimes_are_equal(self):
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
@@ -1045,7 +1032,6 @@ class TestStaticGenerator(unittest.TestCase):
         isnewer = self.generator._source_is_newer(staticfile)
         self.assertFalse(isnewer)
 
-    @unittest.skipUnless(MagicMock, 'Needs Mock module')
     def test_source_is_newer(self):
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
@@ -1097,6 +1083,7 @@ class TestStaticGenerator(unittest.TestCase):
         self.generator.generate_output(None)
         self.assertTrue(os.path.samefile(self.startfile, self.endfile))
 
+    @unittest.skipUnless(can_symlink(), 'No symlink privilege')
     def test_can_symlink_when_hardlink_not_possible(self):
         self.settings['STATIC_CREATE_LINKS'] = True
         with open(self.startfile, "w") as f:
@@ -1104,40 +1091,29 @@ class TestStaticGenerator(unittest.TestCase):
         os.mkdir(os.path.join(self.temp_output, "static"))
         self.generator.fallback_to_symlinks = True
         self.generator.generate_context()
-        try:
-            self.generator.generate_output(None)
-        except OSError as e:
-            # On Windows, possibly others, due to not holding symbolic link
-            # privilege
-            self.skipTest(e)
+        self.generator.generate_output(None)
         self.assertTrue(os.path.islink(self.endfile))
 
+    @unittest.skipUnless(can_symlink(), 'No symlink privilege')
     def test_existing_symlink_is_considered_up_to_date(self):
         self.settings['STATIC_CREATE_LINKS'] = True
         with open(self.startfile, "w") as f:
             f.write("staticcontent")
         os.mkdir(os.path.join(self.temp_output, "static"))
-        try:
-            os.symlink(self.startfile, self.endfile)
-        except OSError as e:
-            # On Windows, possibly others
-            self.skipTest(e)
+        os.symlink(self.startfile, self.endfile)
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
         staticfile.save_as = self.endfile
         requires_update = self.generator._file_update_required(staticfile)
         self.assertFalse(requires_update)
 
+    @unittest.skipUnless(can_symlink(), 'No symlink privilege')
     def test_invalid_symlink_is_overwritten(self):
         self.settings['STATIC_CREATE_LINKS'] = True
         with open(self.startfile, "w") as f:
             f.write("staticcontent")
         os.mkdir(os.path.join(self.temp_output, "static"))
-        try:
-            os.symlink("invalid", self.endfile)
-        except OSError as e:
-            # On Windows, possibly others
-            self.skipTest(e)
+        os.symlink("invalid", self.endfile)
         staticfile = MagicMock()
         staticfile.source_path = self.startfile
         staticfile.save_as = self.endfile
@@ -1147,8 +1123,18 @@ class TestStaticGenerator(unittest.TestCase):
         self.generator.generate_context()
         self.generator.generate_output(None)
         self.assertTrue(os.path.islink(self.endfile))
-        self.assertEqual(os.path.realpath(self.endfile),
-                         os.path.realpath(self.startfile))
+
+        # os.path.realpath is broken on Windows before python3.8 for symlinks.
+        # This is a (ugly) workaround.
+        # see: https://bugs.python.org/issue9949
+        if os.name == 'nt' and sys.version_info < (3, 8):
+            def get_real_path(path):
+                return os.readlink(path) if os.path.islink(path) else path
+        else:
+            get_real_path = os.path.realpath
+
+        self.assertEqual(get_real_path(self.endfile),
+                         get_real_path(self.startfile))
 
     def test_delete_existing_file_before_mkdir(self):
         with open(self.startfile, "w") as f:

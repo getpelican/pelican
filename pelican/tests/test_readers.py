@@ -1,16 +1,10 @@
 import os
+from unittest.mock import patch
 
 from pelican import readers
 from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
 
-try:
-    from unittest.mock import patch
-except ImportError:
-    try:
-        from mock import patch
-    except ImportError:
-        patch = False
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_PATH = os.path.join(CUR_DIR, 'content')
@@ -125,7 +119,6 @@ class DefaultReaderTest(ReaderTest):
 
         self.assertDictHasSubset(page.metadata, expected)
 
-    @unittest.skipUnless(patch, 'Needs Mock module')
     def test_find_empty_alt(self):
         with patch('pelican.readers.logger') as log_mock:
             content = ['<img alt="" src="test-image.png" width="300px" />',

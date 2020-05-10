@@ -696,7 +696,7 @@ def path_metadata(full_path, source_path, settings=None):
             # Enforce a trailing slash when checking for parent directories.
             # This prevents false positives when one file or directory's name
             # is a prefix of another's.
-            dirpath = os.path.join(path, '')
+            dirpath = posixize_path(os.path.join(path, ''))
             if source_path == path or source_path.startswith(dirpath):
                 metadata.update(meta)
 

@@ -1,5 +1,6 @@
 import logging
 import os
+from posixpath import join as posix_join
 from urllib.parse import urljoin
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
@@ -25,7 +26,7 @@ class Writer:
 
         # See Content._link_replacer for details
         if self.settings['RELATIVE_URLS']:
-            self.urljoiner = os.path.join
+            self.urljoiner = posix_join
         else:
             self.urljoiner = lambda base, url: urljoin(
                 base if base.endswith('/') else base + '/', url)

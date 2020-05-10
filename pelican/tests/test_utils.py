@@ -757,35 +757,32 @@ class TestDateFormatter(unittest.TestCase):
 
 
 class TestSanitisedJoin(unittest.TestCase):
-    @unittest.skipIf(platform == 'win32',
-                     "Different filesystem root on Windows")
     def test_detect_parent_breakout(self):
         with self.assertRaisesRegex(
                 RuntimeError,
-                "Attempted to break out of output directory to /foo/test"):
+                "Attempted to break out of output directory to "
+                "(.*?:)?/foo/test"):  # (.*?:)? accounts for Windows root
             utils.sanitised_join(
                 "/foo/bar",
                 "../test"
             )
 
-    @unittest.skipIf(platform == 'win32',
-                     "Different filesystem root on Windows")
     def test_detect_root_breakout(self):
         with self.assertRaisesRegex(
                 RuntimeError,
-                "Attempted to break out of output directory to /test"):
+                "Attempted to break out of output directory to "
+                "(.*?:)?/test"):  # (.*?:)? accounts for Windows root
             utils.sanitised_join(
                 "/foo/bar",
                 "/test"
             )
 
-    @unittest.skipIf(platform == 'win32',
-                     "Different filesystem root on Windows")
     def test_pass_deep_subpaths(self):
         self.assertEqual(
             utils.sanitised_join(
                 "/foo/bar",
                 "test"
             ),
-            os.path.join("/foo/bar", "test")
+            utils.posixize_path(
+                os.path.abspath(os.path.join("/foo/bar", "test")))
         )

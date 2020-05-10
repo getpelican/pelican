@@ -728,8 +728,9 @@ def download_attachments(output_path, urls):
 
         # Generate percent-encoded URL
         scheme, netloc, path, query, fragment = urlsplit(url)
-        path = quote(path)
-        url = urlunsplit((scheme, netloc, path, query, fragment))
+        if scheme != 'file':
+            path = quote(path)
+            url = urlunsplit((scheme, netloc, path, query, fragment))
 
         if not os.path.exists(full_path):
             os.makedirs(full_path)
