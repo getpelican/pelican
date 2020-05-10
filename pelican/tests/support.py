@@ -208,6 +208,15 @@ class LogCountHandler(BufferingHandler):
                (level is None or l.levelno == level)
         ])
 
+    def count_formatted_logs(self, msg=None, level=None):
+        return len([
+            l
+            for l
+            in self.buffer
+            if (msg is None or re.search(msg, self.format(l))) and
+               (level is None or l.levelno == level)
+        ])
+
 
 class LoggedTestCase(unittest.TestCase):
     """A test case that captures log messages."""

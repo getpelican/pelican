@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 from collections import defaultdict
+from collections.abc import Mapping
 
 __all__ = [
     'init'
@@ -18,9 +19,10 @@ class BaseFormatter(logging.Formatter):
         record.__dict__['customlevelname'] = customlevel
         # format multiline messages 'nicely' to make it clear they are together
         record.msg = record.msg.replace('\n', '\n  | ')
-        record.args = tuple(arg.replace('\n', '\n  | ') if
-                            isinstance(arg, str) else
-                            arg for arg in record.args)
+        if not isinstance(record.args, Mapping):
+            record.args = tuple(arg.replace('\n', '\n  | ') if
+                                isinstance(arg, str) else
+                                arg for arg in record.args)
         return super().format(record)
 
     def formatException(self, ei):
