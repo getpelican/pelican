@@ -56,9 +56,9 @@ Why the name "Pelican"?
 .. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
 .. _`hosted on GitHub`: https://github.com/getpelican/pelican
 
-.. |build-status| image:: https://img.shields.io/travis/getpelican/pelican/master.svg
-   :target: https://travis-ci.org/getpelican/pelican
-   :alt: Travis CI: continuous integration status
+.. |build-status| image:: https://img.shields.io/github/workflow/status/getpelican/pelican/build
+   :target: https://github.com/getpelican/pelican/actions
+   :alt: GitHub Actions CI: continuous integration status
 .. |pypi-version| image:: https://img.shields.io/pypi/v/pelican.svg
    :target: https://pypi.python.org/pypi/pelican
    :alt: PyPI: the Python Package Index
