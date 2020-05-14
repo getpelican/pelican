@@ -201,20 +201,20 @@ class LogCountHandler(BufferingHandler):
 
     def count_logs(self, msg=None, level=None):
         return len([
-            l
-            for l
+            rec
+            for rec
             in self.buffer
-            if (msg is None or re.match(msg, l.getMessage())) and
-               (level is None or l.levelno == level)
+            if (msg is None or re.match(msg, rec.getMessage())) and
+               (level is None or rec.levelno == level)
         ])
 
     def count_formatted_logs(self, msg=None, level=None):
         return len([
-            l
-            for l
+            rec
+            for rec
             in self.buffer
-            if (msg is None or re.search(msg, self.format(l))) and
-               (level is None or l.levelno == level)
+            if (msg is None or re.search(msg, self.format(rec))) and
+               (level is None or rec.levelno == level)
         ])
 
 

@@ -88,7 +88,7 @@ def ask(question, answer=str, default=None, length=None):
             if default:
                 r = input('> {} [{}] '.format(question, default))
             else:
-                r = input('> {} '.format(question, default))
+                r = input('> {} '.format(question))
 
             r = r.strip()
 

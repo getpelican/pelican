@@ -73,8 +73,8 @@ class TestPelican(LoggedTestCase):
                     return True
             return False
         if err:
-            err = '\n'.join([l for l in err.decode('utf8').splitlines()
-                             if not ignorable_git_crlf_errors(l)])
+            err = '\n'.join([line for line in err.decode('utf8').splitlines()
+                             if not ignorable_git_crlf_errors(line)])
         assert not out, out
         assert not err, err
 
