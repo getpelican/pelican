@@ -1,0 +1,7 @@
+# Ref: https://help.github.com/en/github/building-a-strong-community/configuring-issue-templates-for-your-repository#configuring-the-template-chooser
+blank_issues_enabled: true
+contact_links:
+- name: '💬 Pelican IRC Channel on Freenode'
+  url: https://kiwiirc.com/client/irc.freenode.net/?#pelican
+  about: |
+    Chat with the community, ask questions, and learn about best practices.
