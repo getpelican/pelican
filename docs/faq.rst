@@ -273,3 +273,19 @@ as articles or pages before they get treated as static files.
 
 To circumvent this issue either use the appropriate ``*_EXCLUDES`` setting or
 disable the offending reader via ``READERS`` if you don't need it.
+
+Why is [arbitrary Markdown syntax] not supported?
+=================================================
+
+Pelican does not directly handle Markdown processing and instead delegates that
+task to the Python-Markdown_ project, the core of which purposefully follows
+the original Markdown syntax rules and not the myriad Markdown "flavors" that
+have subsequently propagated. That said, Python-Markdown_ is quite modular, and
+the syntax you are looking for may be provided by one of the many available
+`Markdown Extensions`_. Alternatively, some folks have created Pelican plugins
+that support Markdown variants, so that may be your best choice if there is a
+particular variant you want to use when writing your content.
+
+
+.. _Python-Markdown: https://github.com/Python-Markdown/markdown
+.. _Markdown Extensions: https://python-markdown.github.io/extensions/

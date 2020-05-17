@@ -48,9 +48,9 @@ Pelican implements an extension to reStructuredText to enable support for the
 
     This will be turned into :abbr:`HTML (HyperText Markup Language)`.
 
-You can also use Markdown syntax (with a file ending in ``.md``,
-``.markdown``, ``.mkd``, or ``.mdown``). Markdown generation requires that you
-first explicitly install the ``Markdown`` package, which can be done via ``pip
+You can also use Markdown syntax (with a file ending in ``.md``, ``.markdown``,
+``.mkd``, or ``.mdown``). Markdown generation requires that you first
+explicitly install the Python-Markdown_ package, which can be done via ``pip
 install Markdown``.
 
 Pelican also supports `Markdown Extensions`_, which might have to be installed
@@ -617,6 +617,7 @@ metadata to include ``Status: published``.
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: https://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
+.. _Python-Markdown: https://github.com/Python-Markdown/markdown
 .. _Markdown Extensions: https://python-markdown.github.io/extensions/
 .. _CodeHilite extension: https://python-markdown.github.io/extensions/code_hilite/#syntax
 .. _i18n_subsites plugin: https://github.com/getpelican/pelican-plugins/tree/master/i18n_subsites
