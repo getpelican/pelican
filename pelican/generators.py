@@ -462,11 +462,10 @@ class ArticlesGenerator(CachingGenerator):
                         ).format(lang=lang),
                         self.settings.get(
                             'TRANSLATION_FEED_RSS_URL',
-                            str(self.settings['TRANSLATION_FEED_RSS']).format(
+                            str(self.settings['TRANSLATION_FEED_RSS'])).format(
                                 lang=lang
                             ),
                         feed_type='rss'
-                        )
                     )
 
     def generate_articles(self, write):
