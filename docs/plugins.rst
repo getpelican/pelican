@@ -9,10 +9,12 @@ features to Pelican without having to directly modify the Pelican core.
 How to use plugins
 ==================
 
-Starting with version 5.0, Pelican moved to a new plugin structure utilizing
+Starting with version 4.5, Pelican moved to a new plugin structure utilizing
 namespace packages. Plugins supporting this structure will install under the
 namespace package ``pelican.plugins`` and can be automatically discovered
-by Pelican.
+by Pelican. To see a list of plugins that are active in your environment, run::
+
+    pelican-plugins
 
 If you leave the ``PLUGINS`` setting as default (``None``), Pelican will then
 collect the namespace plugins and register them. If on the other hand you
@@ -20,7 +22,7 @@ specify a ``PLUGINS`` settings as a list of plugins, this autodiscovery will
 be disabled and only listed plugins will be registered and you will have to
 explicitly list the namespace plugins as well.
 
-If you are using ``PLUGINS`` setting, you can specify plugins in two ways.
+If you are using the ``PLUGINS`` setting, you can specify plugins in two ways.
 The first method specifies plugins as a list of strings. Namespace plugins can
 be specified either by their full names (``pelican.plugins.myplugin``) or by
 their short names (``myplugin``)::
