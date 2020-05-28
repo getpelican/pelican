@@ -44,6 +44,7 @@ setup(
     keywords='static web site generator SSG reStructuredText Markdown',
     license='AGPLv3',
     long_description=description,
+    long_description_content_type="text/x-rst",
     packages=['pelican', 'pelican.tools', 'pelican.plugins'],
     package_data={
         # we manually collect the package data, as opposed to using,
