@@ -76,10 +76,14 @@ section.
 The only rule to follow for plugins is to define a ``register`` callable, in
 which you map the signals to your plugin logic. Let's take a simple example::
 
+    import logging
+
     from pelican import signals
 
+    log = logging.getLogger(__name__)
+
     def test(sender):
-        print("{} initialized !!".format(sender))
+        log.debug("%s initialized !!", sender)
 
     def register():
         signals.initialized.connect(test)
