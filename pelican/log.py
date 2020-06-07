@@ -165,6 +165,8 @@ class FatalLogger(LimitLogger):
 
 
 logging.setLoggerClass(FatalLogger)
+# force root logger to be of our preferred class
+logging.getLogger().__class__ = FatalLogger
 
 
 def supports_color():
