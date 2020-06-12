@@ -88,7 +88,7 @@ contains a list of reserved metadata keywords:
 ``authors``     Content authors, when there are multiple
 ``summary``     Brief description of content for index pages
 ``lang``        Content language ID (``en``, ``fr``, etc.)
-``translation`` Is content is a translation of another (``true`` or ``false``)
+``translation`` If content is a translation of another (``true`` or ``false``)
 ``status``      Content status: ``draft``, ``hidden``, or ``published``
 ``template``    Name of template to use to generate content (without extension)
 ``save_as``     Save content to this relative file path
