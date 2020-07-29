@@ -70,8 +70,8 @@ How to create plugins
 =====================
 
 Plugins are based on the concept of signals. Pelican sends signals, and plugins
-subscribe to those signals. The list of signals are defined in a subsequent
-section.
+subscribe to those signals. The list of available signals is documented in a
+subsequent section.
 
 The only rule to follow for plugins is to define a ``register`` callable, in
 which you map the signals to your plugin logic. Let's take a simple example::
@@ -93,6 +93,10 @@ which you map the signals to your plugin logic. Let's take a simple example::
     Signal receivers are weakly-referenced and thus must not be defined within
     your ``register`` callable or they will be garbage-collected before the
     signal is emitted.
+
+If multiple plugins connect to the same signal, there is no way to guarantee or
+control in which order the plugins will be executed. This is a limitation
+inherited from Blinker_, the dependency Pelican uses to implement signals.
 
 Namespace plugin structure
 --------------------------
@@ -272,3 +276,4 @@ Adding a new generator is also really easy. You might want to have a look at
 
 .. _Pip: https://pip.pypa.io/
 .. _pelican-plugins bug #314: https://github.com/getpelican/pelican-plugins/issues/314
+.. _Blinker: https://pythonhosted.org/blinker/
