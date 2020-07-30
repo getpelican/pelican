@@ -227,7 +227,7 @@ class RstReader(BaseReader):
                 if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
                     name = name_elem.astext()
-                    if name in formatted_fields:
+                    if name.lower() in formatted_fields:
                         value = render_node_to_html(
                             document, body_elem,
                             self.field_body_translator_class)
