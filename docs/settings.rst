@@ -770,7 +770,7 @@ Template pages
 .. data:: TEMPLATE_PAGES = None
 
    A mapping containing template pages that will be rendered with the blog
-   entries. See :ref:`template_pages`.
+   entries.
 
    If you want to generate custom pages besides your blog entries, you can
    point any Jinja2 template file with a path pointing to the file and the
