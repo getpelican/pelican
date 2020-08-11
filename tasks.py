@@ -64,7 +64,7 @@ def isort(c, check=False, diff=False):
     if diff:
         diff_flag = "--diff"
     c.run(
-        f"{VENV_BIN}/isort {check_flag} {diff_flag} --recursive {PKG_PATH}/* tasks.py"
+        f"{VENV_BIN}/isort {check_flag} {diff_flag} ."
     )
 
 
