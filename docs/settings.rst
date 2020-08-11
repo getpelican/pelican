@@ -9,6 +9,12 @@ line::
 If you used the ``pelican-quickstart`` command, your primary settings file will
 be named ``pelicanconf.py`` by default.
 
+You can also specify extra settings via ``-e`` / ``--extra-settings`` option
+flags, which will override default settings as well as any defined within
+settings files::
+
+    pelican content -e DELETE_OUTPUT_DIRECTORY=True
+
 .. note::
 
    When experimenting with different settings (especially the metadata ones)
