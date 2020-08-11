@@ -18,13 +18,17 @@ classifiers = [
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+
+[tool.poetry.urls]
+"Funding" = "https://donate.getpelican.com/"
+"Tracker" = "https://github.com/getpelican/pelican/issues"
 
 [tool.poetry.dependencies]
 python = "^3.6"
