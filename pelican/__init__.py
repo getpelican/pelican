@@ -335,14 +335,12 @@ def parse_arguments(argv=None):
                         help='IP to bind to when serving files via HTTP '
                         '(default: 127.0.0.1)')
 
-    parser.add_argument('-c', '--setting-overrides', dest='overrides',
-                        help='Specify one ore more SETTING=VALUE pairs '
-                             '(without spaces around =) to override '
-                             'settings files. If VALUE contains spaces, add quotes: '
-                             'SETTING="VALUE". '
-                             'Integers and strings are autoconverted, other values '
-                        'can be passed in in json notation, '
-                             'e.g. SETTING=none',
+    parser.add_argument('-e', '--extra-settings', dest='overrides',
+                        help='Specify one or more SETTING=VALUE pairs to '
+                             'override settings. If VALUE contains spaces, '
+                             'add quotes: SETTING="VALUE". Values other than '
+                             'integers and strings can be specified via JSON '
+                             'notation. (e.g., SETTING=none)',
                         nargs='*',
                         action=ParseDict
                         )
