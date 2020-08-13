@@ -662,10 +662,12 @@ def configure_settings(settings):
 
 
 def coerce_overrides(overrides):
+    if overrides is None:
+        return {}
     coerced = {}
     types_to_cast = {int, str}
     for k, v in overrides.items():
-        if k not in overrides:
+        if k not in DEFAULT_CONFIG:
             logger.warning('Override for unknown setting %s, ignoring', k)
             continue
         setting_type = type(DEFAULT_CONFIG[k])

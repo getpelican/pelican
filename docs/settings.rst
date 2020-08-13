@@ -13,7 +13,7 @@ You can also specify extra settings via ``-e`` / ``--extra-settings`` option
 flags, which will override default settings as well as any defined within
 settings files::
 
-    pelican content -e DELETE_OUTPUT_DIRECTORY=True
+    pelican content -e DELETE_OUTPUT_DIRECTORY=true
 
 .. note::
 
