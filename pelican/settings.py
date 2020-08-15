@@ -665,7 +665,7 @@ def coerce_overrides(overrides):
     if overrides is None:
         return {}
     coerced = {}
-    types_to_cast = {int, str}
+    types_to_cast = {int, str, bool}
     for k, v in overrides.items():
         if k not in DEFAULT_CONFIG:
             logger.warning('Override for unknown setting %s, ignoring', k)
