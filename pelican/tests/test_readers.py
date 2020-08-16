@@ -155,6 +155,24 @@ class RstReaderTest(ReaderTest):
 
         self.assertDictHasSubset(page.metadata, expected)
 
+    def test_article_with_capitalized_metadata(self):
+        page = self.read_file(path='article_with_capitalized_metadata.rst')
+        expected = {
+            'category': 'yeah',
+            'author': 'Alexis Métaireau',
+            'title': 'This is a super article !',
+            'summary': '<p class="first last">Multi-line metadata should be'
+                       ' supported\nas well as <strong>inline'
+                       ' markup</strong> and stuff to &quot;typogrify'
+                       '&quot;...</p>\n',
+            'date': SafeDatetime(2010, 12, 2, 10, 14),
+            'modified': SafeDatetime(2010, 12, 2, 10, 20),
+            'tags': ['foo', 'bar', 'foobar'],
+            'custom_field': 'http://notmyidea.org',
+        }
+
+        self.assertDictHasSubset(page.metadata, expected)
+
     def test_article_with_filename_metadata(self):
         page = self.read_file(
             path='2012-11-29_rst_w_filename_meta#foo-bar.rst',
