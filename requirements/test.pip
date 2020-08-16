@@ -1,6 +1,6 @@
 # Tests
 Pygments==2.6.1
-pytest==5.3.5
+pytest
 pytest-cov
 pytest-xdist
 
