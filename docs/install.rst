@@ -3,8 +3,7 @@ Installing Pelican
 
 Pelican currently runs best on 3.6+; earlier versions of Python are not supported.
 
-You can install Pelican via several different methods. The simplest is via
-`pip <https://pip.pypa.io/en/stable/>`_::
+You can install Pelican via several different methods. The simplest is via Pip_::
 
     python -m pip install pelican
 
@@ -12,7 +11,7 @@ Or, if you plan on using Markdown::
 
     python -m pip install "pelican[markdown]"
 
-(Keep in mind that operating systems will often require you to prefix the above
+(Keep in mind that some operating systems will require you to prefix the above
 command with ``sudo`` in order to install Pelican system-wide.)
 
 While the above is the simplest method, the recommended approach is to create a
@@ -47,10 +46,6 @@ markup format, you can install Pelican with Markdown support::
 
     python -m pip install "pelican[markdown]"
 
-Or you might need to install it a posteriori::
-
-    python -m pip install Markdown
-
 Typographical enhancements can be enabled in your settings file, but first the
 requisite `Typogrify <https://pypi.org/project/typogrify/>`_ library must be
 installed::
@@ -75,7 +70,7 @@ automatically installed without any action on your part:
 * `unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII
   transliterations of Unicode text
   utilities
-* `MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup safe
+* `MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup-safe
   string implementation
 * `python-dateutil <https://pypi.org/project/python-dateutil/>`_, to read
   the date metadata
@@ -83,7 +78,7 @@ automatically installed without any action on your part:
 Upgrading
 ---------
 
-If you installed a stable Pelican release via ``pip`` and wish to upgrade to
+If you installed a stable Pelican release via Pip_ and wish to upgrade to
 the latest stable release, you can do so by adding ``--upgrade``::
 
     python -m pip install --upgrade pelican
@@ -124,4 +119,5 @@ content)::
 The next step is to begin to adding content to the *content* folder that has
 been created for you.
 
+.. _Pip: https://pip.pypa.io/
 .. _virtualenv: https://virtualenv.pypa.io/en/latest/
