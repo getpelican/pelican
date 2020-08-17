@@ -11,7 +11,7 @@ You can install Pelican via several different methods. The simplest is via
 
 Or, if you plan on using Markdown::
 
-    pip install pelican[Markdown]
+    pip install "pelican[markdown]"
 
 (Keep in mind that operating systems will often require you to prefix the above
 command with ``sudo`` in order to install Pelican system-wide.)
@@ -46,7 +46,7 @@ Optional packages
 If you plan on using `Markdown <https://pypi.org/project/Markdown/>`_ as a
 markup format, you can install Pelican with Markdown support::
 
-   pip install pelican[Markdown]
+    pip install "pelican[markdown]"
 
 Or you might need to install it a posteriori::
 
