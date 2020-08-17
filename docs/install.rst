@@ -1,8 +1,7 @@
 Installing Pelican
 ##################
 
-Pelican currently runs best on Python 2.7.x and 3.5+; earlier versions of
-Python are not supported.
+Pelican currently runs best on 3.6+; earlier versions of Python are not supported.
 
 You can install Pelican via several different methods. The simplest is via
 `pip <https://pip.pypa.io/en/stable/>`_::
@@ -75,7 +74,6 @@ automatically installed without any action on your part:
   broadcast signaling system
 * `unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII
   transliterations of Unicode text
-* `six <https://pypi.org/project/six/>`_,  for Python 2 and 3 compatibility
   utilities
 * `MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup safe
   string implementation
