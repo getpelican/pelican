@@ -74,7 +74,7 @@ Markdown format, you will need to explicitly install the Markdown library. You
 can do so by typing the following command, prepending ``sudo`` if permissions
 require it::
 
-    pip install markdown
+    python -m pip install markdown
 
 Can I use arbitrary metadata in my templates?
 =============================================

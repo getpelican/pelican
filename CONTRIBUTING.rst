@@ -43,7 +43,7 @@ publicly-accessible location:
 
 * Describe what version of Pelican you are running (output of ``pelican --version``
   or the HEAD commit hash if you cloned the repo) and how exactly you installed
-  it (the full command you used, e.g. ``pip install pelican``).
+  it (the full command you used, e.g. ``python -m pip install pelican``).
 * If you are looking for a way to get some end result, prepare a detailed
   description of what the end result should look like (preferably in the form of
   an image or a mock-up page) and explain in detail what you have done so far to
