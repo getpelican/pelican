@@ -41,7 +41,7 @@ _jinja_env = Environment(
 
 
 _GITHUB_PAGES_BRANCHES = {
-    'personal': 'master',
+    'personal': 'main',
     'project': 'gh-pages'
 }
 
