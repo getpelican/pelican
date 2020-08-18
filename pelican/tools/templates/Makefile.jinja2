@@ -72,6 +72,7 @@ help:
 	@echo '   make devserver-global               regenerate and serve on 0.0.0.0    '
 {% if ssh %}
 	@echo '   make ssh_upload                     upload the web site via SSH        '
+    @echo '   make sftp_upload                    upload the web site via SFTP       '
 	@echo '   make rsync_upload                   upload the web site via rsync+ssh  '
 {% endif %}
 {% if dropbox %}
@@ -123,6 +124,9 @@ publish:
 {% set upload = upload + ["ssh_upload"] %}
 ssh_upload: publish
 	scp -P $(SSH_PORT) -r "$(OUTPUTDIR)"/* "$(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)"
+
+sftp_upload: publish
+	printf 'put -r $(OUTPUTDIR)/*' | sftp $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
 
 {% set upload = upload + ["rsync_upload"] %}
 rsync_upload: publish
