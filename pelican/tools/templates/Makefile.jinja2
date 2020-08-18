@@ -70,6 +70,7 @@ help:
 	@echo '   make serve-global [SERVER=0.0.0.0]  serve (as root) to $(SERVER):80    '
 	@echo '   make devserver [PORT=8000]          serve and regenerate together      '
 	@echo '   make ssh_upload                     upload the web site via SSH        '
+    @echo '   make sftp_upload                    upload the web site via sftp       '
 	@echo '   make rsync_upload                   upload the web site via rsync+ssh  '
 {% if dropbox %}
 	@echo '   make dropbox_upload                 upload the web site via Dropbox    '
@@ -120,6 +121,9 @@ publish:
 {% set upload = upload + ["ssh_upload"] %}
 ssh_upload: publish
 	scp -P $(SSH_PORT) -r "$(OUTPUTDIR)"/* "$(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)"
+
+sftp_upload: publish 
+	printf 'put -r $(OUTPUTDIR)/*' | sftp $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
 
 {% set upload = upload + ["rsync_upload"] %}
 rsync_upload: publish
