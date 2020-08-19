@@ -303,10 +303,10 @@ Basic settings
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to be a copy of the original content.
 
-.. data:: SUMMARY_END_MARKER = '…'
+.. data:: SUMMARY_END_SUFFIX = '…'
 
    When creating a short summary of an article and the result was truncated to
-   match the required word length, this will be used as the truncation marker.
+   match the required word length, this will be used as the truncation suffix.
 
 .. data:: WITH_FUTURE_DATES = True
 
