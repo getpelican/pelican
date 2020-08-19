@@ -110,7 +110,7 @@ class TestPage(TestBase):
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, '')
 
-    def test_summary_end_marker(self):
+    def test_summary_end_suffix(self):
         # If a :SUMMARY_END_SUFFIX: is set, and there is no other summary,
         # generated summary should contain the specified marker at the end.
         page_kwargs = self._copy_page_kwargs()
