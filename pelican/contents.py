@@ -392,7 +392,7 @@ class Content:
 
         return truncate_html_words(self.content,
                                    self.settings['SUMMARY_MAX_LENGTH'],
-                                   self.settings['SUMMARY_END_MARKER'])
+                                   self.settings['SUMMARY_END_SUFFIX'])
 
     @property
     def summary(self):

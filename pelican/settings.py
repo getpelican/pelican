@@ -136,7 +136,7 @@ DEFAULT_CONFIG = {
     'TYPOGRIFY': False,
     'TYPOGRIFY_IGNORE_TAGS': [],
     'TYPOGRIFY_DASHES': 'default',
-    'SUMMARY_END_MARKER': '…',
+    'SUMMARY_END_SUFFIX': '…',
     'SUMMARY_MAX_LENGTH': 50,
     'PLUGIN_PATHS': [],
     'PLUGINS': None,
