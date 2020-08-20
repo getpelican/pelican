@@ -1,6 +1,22 @@
 Release history
 ###############
 
+4.5.0 - 2020-08-20
+==================
+
+* Add namespace plugin support; list plugins via ``pelican-plugins`` command
+* Override settings via ``-e`` / ``--extra-settings`` CLI option flags
+* Add settings for custom Jinja globals and tests
+* Customize article summary ellipsis via ``SUMMARY_END_MARKER`` setting
+* Customize Typogrify dash handling via new ``TYPOGRIFY_DASHES`` setting
+* Support Unicode when generating slugs
+* Support Asciidoc ``.adoc`` file generation in Pelican importer
+* Improve user experience when ``pelican --listen`` web server is quit
+* Improve Invoke tasks template
+* Include tests in source distributions
+* Switch CI from Travis to GitHub Actions
+* Remove support for Python 2.7
+
 4.2.0 - 2019-10-17
 ==================
 
@@ -12,7 +28,7 @@ Release history
 4.1.3 - 2019-10-09
 ==================
 
-* Fix quick-start docs regarding `pelican --listen`
+* Fix quick-start docs regarding ``pelican --listen``
 * Set default listen address to 127.0.0.1
 * Add extra/optional Markdown dependency to setup.py
 * Use correct SSH port syntax for rsync in tasks.py
@@ -30,8 +46,8 @@ Fix pelican.settings.load_source to avoid caching issues - PR #2621
 
 * Add AutoPub to auto-publish releases on PR merge
 * Add CSS classes for reStructuredText figures
-* Pass `argv` to Pelican `main` entrypoint
-* Set default content status to a blank string rather than `None`
+* Pass ``argv`` to Pelican ``main`` entrypoint
+* Set default content status to a blank string rather than ``None``
 
 4.1.0 - 2019-07-14
 ==================
