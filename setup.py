@@ -3,7 +3,7 @@
 from os import walk
 from os.path import join, relpath
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 version = "4.5.0"
@@ -44,6 +44,7 @@ setup(
     keywords='static web site generator SSG reStructuredText Markdown',
     license='AGPLv3',
     long_description=description,
+    long_description_content_type='text/x-rst',
     packages=find_packages(),
     include_package_data=True,  # includes all in MANIFEST.in if in package
     # NOTE : This will collect any files that happen to be in the themes
@@ -68,6 +69,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries :: Python Modules',

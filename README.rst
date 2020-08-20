@@ -1,5 +1,5 @@
 Pelican |build-status| |pypi-version| |repology|
-=====================================
+================================================
 
 Pelican is a static site generator, written in Python_.
 
