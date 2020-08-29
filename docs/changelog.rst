@@ -7,7 +7,7 @@ Release history
 * Add namespace plugin support; list plugins via ``pelican-plugins`` command
 * Override settings via ``-e`` / ``--extra-settings`` CLI option flags
 * Add settings for custom Jinja globals and tests
-* Customize article summary ellipsis via ``SUMMARY_END_MARKER`` setting
+* Customize article summary ellipsis via ``SUMMARY_END_SUFFIX`` setting
 * Customize Typogrify dash handling via new ``TYPOGRIFY_DASHES`` setting
 * Support Unicode when generating slugs
 * Support Asciidoc ``.adoc`` file generation in Pelican importer
