@@ -22,6 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing :: Markup :: Markdown",
     "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Text Processing :: Markup :: reStructuredText",
 ]
 
 [tool.poetry.urls]
