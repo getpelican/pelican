@@ -40,6 +40,11 @@ def list_plugins(ns_pkg=None):
 
 
 def load_legacy_plugin(plugin, plugin_paths):
+    if '.' in plugin:
+        # it is in a package, try to resolve package first
+        package, _, _ = plugin.rpartition('.')
+        load_legacy_plugin(package, plugin_paths)
+
     # Try to find plugin in PLUGIN_PATHS
     spec = importlib.machinery.PathFinder.find_spec(plugin, plugin_paths)
     if spec is None:
