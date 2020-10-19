@@ -23,6 +23,8 @@ jobs:
             python: 3.7
           - os: ubuntu
             python: 3.8
+          - os: ubuntu
+            python: 3.9
           - os: macos
             python: 3.7
           - os: windows
@@ -31,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python ${{ matrix.config.python }}
-        uses: actions/setup-python@v1.1.1
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.config.python }}
       - name: Set pip cache (Linux)
@@ -84,7 +86,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
-        uses: actions/setup-python@v1.1.1
+        uses: actions/setup-python@v2
         with:
           python-version: 3.6
       - name: Set pip cache (Linux)
@@ -108,7 +110,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
-        uses: actions/setup-python@v1.1.1
+        uses: actions/setup-python@v2
         with:
           python-version: 3.6
       - name: Set pip cache (Linux)
@@ -134,7 +136,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
-        uses: actions/setup-python@v1.1.1
+        uses: actions/setup-python@v2
         with:
           python-version: 3.7
       - name: Check release
