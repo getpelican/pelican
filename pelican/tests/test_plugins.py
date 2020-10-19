@@ -116,6 +116,21 @@ class PluginTest(unittest.TestCase):
                 {'normal plugin'},
                 get_plugin_names(plugins))
 
+            # normal submodule/subpackage plugins
+            SETTINGS = {
+                'PLUGINS': [
+                    'normal_submodule_plugin.subplugin',
+                    'normal_submodule_plugin.subpackage.subpackage',
+                ],
+                'PLUGIN_PATHS': [self._NORMAL_PLUGIN_FOLDER]
+            }
+            plugins = load_plugins(SETTINGS)
+            self.assertEqual(len(plugins), 2, plugins)
+            self.assertEqual(
+                {'normal submodule plugin',
+                 'normal subpackage plugin'},
+                get_plugin_names(plugins))
+
             # namespace plugin short
             SETTINGS = {
                 'PLUGINS': ['ns_plugin']
