@@ -966,3 +966,17 @@ def maybe_pluralize(count, singular, plural):
     if count == 1:
         selection = singular
     return '{} {}'.format(count, selection)
+
+
+@contextmanager
+def temporary_locale(temp_locale=None):
+    '''
+    Enable code to run in a context with a temporary locale
+
+    Resets the locale back when exiting context.
+    '''
+    orig_locale = locale.setlocale(locale.LC_ALL)
+    if temp_locale is not None:
+        locale.setlocale(locale.LC_ALL, temp_locale)
+    yield
+    locale.setlocale(locale.LC_ALL, orig_locale)

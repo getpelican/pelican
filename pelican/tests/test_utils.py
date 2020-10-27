@@ -593,6 +593,14 @@ class TestUtils(LoggedTestCase):
             utils.maybe_pluralize(2, 'Article', 'Articles'),
             '2 Articles')
 
+    def test_temporary_locale(self):
+        orig_locale = locale.setlocale(locale.LC_ALL)
+
+        with utils.temporary_locale('C'):
+            self.assertEqual(locale.setlocale(locale.LC_ALL), 'C')
+
+        self.assertEqual(locale.setlocale(locale.LC_ALL), orig_locale)
+
 
 class TestCopy(unittest.TestCase):
     '''Tests the copy utility'''
