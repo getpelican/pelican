@@ -131,6 +131,17 @@ class PluginTest(unittest.TestCase):
                  'normal subpackage plugin'},
                 get_plugin_names(plugins))
 
+            # ensure normal plugins are loaded only once
+            SETTINGS = {
+                'PLUGINS': ['normal_plugin'],
+                'PLUGIN_PATHS': [self._NORMAL_PLUGIN_FOLDER],
+            }
+            plugins = load_plugins(SETTINGS)
+            for plugin in load_plugins(SETTINGS):
+                # The second load_plugins() should return the same plugin
+                # objects as the first one
+                self.assertIn(plugin, plugins)
+
             # namespace plugin short
             SETTINGS = {
                 'PLUGINS': ['ns_plugin']
