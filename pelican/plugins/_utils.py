@@ -53,6 +53,9 @@ def load_legacy_plugin(plugin, plugin_paths):
     if spec is None:
         raise ImportError('Cannot import plugin `{}`'.format(plugin))
     else:
+        # Avoid loading the same plugin twice
+        if spec.name in sys.modules:
+            return sys.modules[spec.name]
         # create module object from spec
         mod = importlib.util.module_from_spec(spec)
         # place it into sys.modules cache
