@@ -49,6 +49,7 @@ typogrify = "^2.0"
 sphinx = "^3.0"
 sphinx_rtd_theme = "^0.5"
 livereload = "^2.6"
+psutil = {version = "^5.7", optional = true}
 pytest = "^6.0"
 pytest-cov = "^2.8"
 pytest-pythonpath = "^0.7.3"

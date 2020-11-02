@@ -2,7 +2,7 @@
 Pygments==2.6.1
 pytest
 pytest-cov
-pytest-xdist
+pytest-xdist[psutil]
 
 # Optional Packages
 Markdown >= 3.1

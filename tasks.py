@@ -14,7 +14,7 @@ VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME / PKG_NAME)
 VENV = str(VENV_PATH.expanduser())
 VENV_BIN = Path(VENV) / Path(BIN_DIR)
 
-TOOLS = ["poetry", "pre-commit"]
+TOOLS = ["poetry", "pre-commit", "psutil"]
 POETRY = which("poetry") if which("poetry") else (VENV_BIN / "poetry")
 PRECOMMIT = (
     which("pre-commit") if which("pre-commit") else (VENV_BIN / "pre-commit")
