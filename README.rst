@@ -60,7 +60,7 @@ Why the name "Pelican"?
    :target: https://github.com/getpelican/pelican/actions
    :alt: GitHub Actions CI: continuous integration status
 .. |pypi-version| image:: https://img.shields.io/pypi/v/pelican.svg
-   :target: https://pypi.python.org/pypi/pelican
+   :target: https://pypi.org/project/pelican/
    :alt: PyPI: the Python Package Index
 .. |repology| image:: https://repology.org/badge/tiny-repos/pelican.svg
    :target: https://repology.org/project/pelican/versions

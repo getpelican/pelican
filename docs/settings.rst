@@ -276,7 +276,7 @@ Basic settings
 
    If set to True, several typographical improvements will be incorporated into
    the generated HTML via the `Typogrify
-   <https://pypi.python.org/pypi/typogrify>`_ library, which can be installed
+   <https://pypi.org/project/typogrify/>`_ library, which can be installed
    via: ``python -m pip install typogrify``
 
 .. data:: TYPOGRIFY_IGNORE_TAGS = []
