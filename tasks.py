@@ -70,13 +70,11 @@ def isort(c, check=False, diff=False):
 
 @task
 def flake8(c):
-    c.run(f"{VENV_BIN}/flake8 {PKG_PATH} tasks.py")
+    c.run(f"git diff HEAD | {VENV_BIN}/flake8 --diff --max-line-length=88")
 
 
 @task
 def lint(c):
-    isort(c, check=True)
-    black(c, check=True)
     flake8(c)
 
 

@@ -75,11 +75,14 @@ via::
 
     invoke tests
 
-In addition to running the test suite, the above invocation will also check code
-style and let you know whether non-conforming patterns were found. In some cases
-these linters will make the needed changes directly, while in other cases you
-may need to make additional changes until ``invoke tests`` no longer reports any
-code style violations.
+In addition to running the test suite, it is important to also ensure that any
+lines you changed conform to code style guidelines. You can check that via::
+
+    invoke lint
+
+If code style violations are found in lines you changed, correct those lines
+and re-run the above lint command until they have all been fixed. You do not
+need to address style violations, if any, for code lines you did not touch.
 
 After making your changes and running the tests, you may see a test failure
 mentioning that "some generated files differ from the expected functional tests
