@@ -148,9 +148,20 @@ Create a topic branch for your plugin bug fix or feature::
 
     git checkout -b name-of-your-bugfix-or-feature
 
-After writing new tests for your plugin changes, run the plugin test suite::
+After writing new tests for your plugin changes, run the plugin test suite and
+check for code style compliance via::
 
     invoke tests
+    invoke lint
+
+If style violations are found, many of them can be addressed automatically via::
+
+    invoke black
+    invoke isort
+
+If style violations are found even after running the above auto-formatters,
+you will need to make additional manual changes until ``invoke lint`` no longer
+reports any code style violations.
 
 .. _plugin template: https://github.com/getpelican/cookiecutter-pelican-plugin
 .. _Simple Footnotes: https://github.com/pelican-plugins/simple-footnotes
