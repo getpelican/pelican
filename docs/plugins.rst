@@ -12,8 +12,8 @@ How to use plugins
 Starting with version 4.5, Pelican moved to a new plugin structure utilizing
 namespace packages that can be easily installed via Pip_. Plugins supporting
 this structure will install under the namespace package ``pelican.plugins`` and
-can be automatically discovered by Pelican. To see a list of plugins that are
-active in your environment, run::
+can be automatically discovered by Pelican. To see a list of Pip-installed
+namespace plugins that are active in your environment, run::
 
     pelican-plugins
 
