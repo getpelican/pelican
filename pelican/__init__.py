@@ -195,13 +195,15 @@ class Pelican:
             if receiver is None:
                 origin = "internal"
             else:
-                origin = f"{receiver.__module__}"
+                origin = receiver.__module__
 
             if not isinstance(generator, type):
-                logger.error(f"Generator {generator} ({origin}) cannot be loaded")
+                logger.error("Generator {g} ({o}) cannot be loaded".format(
+                    g=generator, o=origin
+                ))
                 continue
 
-            logger.debug(f"* {generator.__name__} ({origin})")
+            logger.debug("* {g} ({o})".format(g=generator.__name__, o=origin))
             generators.append(generator)
 
         return generators
@@ -215,12 +217,12 @@ class Pelican:
 
         if num_writers > 1:
             logger.warning(
-                f"{num_writers} writers found, using only first one"
+                "{n} writers found, using only first one".format(n=num_writers)
             )
 
         writer = writers[0]
 
-        logger.debug(f"Found writer: {writer}")
+        logger.debug("Found writer: {w}".format(w=writer))
         return writer(self.output_path, settings=self.settings)
 
 
