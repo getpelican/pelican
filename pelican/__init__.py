@@ -189,8 +189,6 @@ class Pelican:
 
         generators = []
 
-        logger.debug("Loading generators:")
-
         for generator, receiver in discovered_generators:
             if receiver is None:
                 origin = "internal"
@@ -198,12 +196,10 @@ class Pelican:
                 origin = receiver.__module__
 
             if not isinstance(generator, type):
-                logger.error("Generator {g} ({o}) cannot be loaded".format(
-                    g=generator, o=origin
-                ))
+                logger.error("Generator %s (%s) cannot be loaded" % (generator, origin))
                 continue
 
-            logger.debug("* {g} ({o})".format(g=generator.__name__, o=origin))
+            logger.debug("Found generator: %s (%s)" % (generator.__name__, origin))
             generators.append(generator)
 
         return generators
@@ -216,13 +212,11 @@ class Pelican:
             return Writer(self.output_path, settings=self.settings)
 
         if num_writers > 1:
-            logger.warning(
-                "{n} writers found, using only first one".format(n=num_writers)
-            )
+            logger.warning("%s writers found, using only first one" % num_writers)
 
         writer = writers[0]
 
-        logger.debug("Found writer: {w}".format(w=writer))
+        logger.debug("Found writer: %s" % writer)
         return writer(self.output_path, settings=self.settings)
 
 
