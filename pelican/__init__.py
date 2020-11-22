@@ -93,7 +93,7 @@ class Pelican:
                 path=self.path,
                 theme=self.theme,
                 output_path=self.output_path,
-            ) for cls in self.get_generator_classes()
+            ) for cls in self._get_generator_classes()
         ]
 
         # Delete the output directory if (1) the appropriate setting is True
@@ -114,7 +114,7 @@ class Pelican:
 
         signals.all_generators_finalized.send(generators)
 
-        writer = self.get_writer()
+        writer = self._get_writer()
 
         for p in generators:
             if hasattr(p, 'generate_output'):
@@ -162,46 +162,57 @@ class Pelican:
                     pluralized_draft_pages,
                     time.time() - start_time))
 
-    def get_generator_classes(self):
-        generators = [ArticlesGenerator, PagesGenerator]
+    def _get_generator_classes(self):
+        discovered_generators = [
+            (ArticlesGenerator, "internal"),
+            (PagesGenerator, "internal")
+        ]
 
-        if self.settings['TEMPLATE_PAGES']:
-            generators.append(TemplatePagesGenerator)
-        if self.settings['OUTPUT_SOURCES']:
-            generators.append(SourceFileGenerator)
+        if self.settings["TEMPLATE_PAGES"]:
+            discovered_generators.append((TemplatePagesGenerator, "internal"))
 
-        for pair in signals.get_generators.send(self):
-            (funct, value) = pair
+        if self.settings["OUTPUT_SOURCES"]:
+            discovered_generators.append((SourceFileGenerator, "internal"))
 
-            if not isinstance(value, Iterable):
-                value = (value, )
+        for receiver, values in signals.get_generators.send(self):
+            if not isinstance(values, Iterable):
+                values = (values,)
 
-            for v in value:
-                if isinstance(v, type):
-                    logger.debug('Found generator: %s', v)
-                    generators.append(v)
+                discovered_generators.extend(
+                    [(generator, receiver.__module__) for generator in values]
+                )
 
         # StaticGenerator must run last, so it can identify files that
         # were skipped by the other generators, and so static files can
         # have their output paths overridden by the {attach} link syntax.
-        generators.append(StaticGenerator)
+        discovered_generators.append((StaticGenerator, "internal"))
+
+        generators = []
+
+        for generator, origin in discovered_generators:
+            if not isinstance(generator, type):
+                logger.error("Generator %s (%s) cannot be loaded", generator, origin)
+                continue
+
+            logger.debug("Found generator: %s (%s)", generator.__name__, origin)
+            generators.append(generator)
+
         return generators
 
-    def get_writer(self):
-        writers = [w for (_, w) in signals.get_writer.send(self)
-                   if isinstance(w, type)]
-        writers_found = len(writers)
-        if writers_found == 0:
+    def _get_writer(self):
+        writers = [w for _, w in signals.get_writer.send(self) if isinstance(w, type)]
+        num_writers = len(writers)
+
+        if num_writers == 0:
             return Writer(self.output_path, settings=self.settings)
-        else:
-            writer = writers[0]
-            if writers_found == 1:
-                logger.debug('Found writer: %s', writer)
-            else:
-                logger.warning(
-                    '%s writers found, using only first one: %s',
-                    writers_found, writer)
-            return writer(self.output_path, settings=self.settings)
+
+        if num_writers > 1:
+            logger.warning("%s writers found, using only first one", num_writers)
+
+        writer = writers[0]
+
+        logger.debug("Found writer: %s", writer)
+        return writer(self.output_path, settings=self.settings)
 
 
 class PrintSettings(argparse.Action):
