@@ -25,7 +25,7 @@ from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import coerce_overrides, read_settings
 from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
-from pelican.writers import Writer
+from pelican.writers import Writer, CollectionRSSWriter
 
 try:
     __version__ = __import__('pkg_resources') \
@@ -35,6 +35,12 @@ except Exception:
 
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 logger = logging.getLogger(__name__)
+
+
+class DataType:
+    ALL = 1
+    CONTENT = 2
+    COLLECTION = 3
 
 
 class Pelican:
@@ -116,6 +122,8 @@ class Pelican:
 
         writer = self._get_writer()
 
+        writers = self._get_writers()
+
         for p in generators:
             if hasattr(p, 'generate_output'):
                 p.generate_output(writer)
@@ -152,6 +160,24 @@ class Pelican:
              len(pages_generator.draft_translations)),
             'draft page',
             'draft pages')
+
+        generated_data = {
+            DataType.ALL: [],
+            DataType.CONTENT: [],
+            DataType.COLLECTION: [],
+        }
+
+        for p in generators:
+            if hasattr(p, "generate_data"):
+                generated_data[getattr(p, "data_type", DataType.ALL)] = (
+                    p.__name__,
+                    p.generate_data(),
+                )
+
+        for data_type, data_list in generated_data.items():
+            for w in writers[data_type]:
+                for generator, data in data_list:
+                    w.write(generator, data)
 
         print('Done: Processed {}, {}, {}, {} and {} in {:.2f} seconds.'
               .format(
@@ -213,6 +239,15 @@ class Pelican:
 
         logger.debug("Found writer: %s", writer)
         return writer(self.output_path, settings=self.settings)
+
+    def _get_writers(self):
+        return {
+            DataType.ALL: [self._get_writer()],
+            DataType.CONTENT: [],
+            DataType.COLLECTION: [
+                CollectionRSSWriter(self.output_path, settings=self.settings)
+            ],
+        }
 
 
 class PrintSettings(argparse.Action):

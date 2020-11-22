@@ -268,3 +268,7 @@ class Writer:
                 context, name, kwargs, relative_urls)
             _write_file(template, localcontext, self.output_path, name,
                         override_output)
+
+
+class CollectionRSSWriter(Writer):
+    pass
