@@ -114,7 +114,7 @@ class Pelican:
 
         signals.all_generators_finalized.send(generators)
 
-        writer = self._get_writer_class()
+        writer = self._get_writer()
 
         for p in generators:
             if hasattr(p, 'generate_output'):
@@ -164,47 +164,42 @@ class Pelican:
 
     def _get_generator_classes(self):
         discovered_generators = [
-            (ArticlesGenerator, None),
-            (PagesGenerator, None)
+            (ArticlesGenerator, "internal"),
+            (PagesGenerator, "internal")
         ]
 
         if self.settings["TEMPLATE_PAGES"]:
-            discovered_generators.append((TemplatePagesGenerator, None))
+            discovered_generators.append((TemplatePagesGenerator, "internal"))
 
         if self.settings["OUTPUT_SOURCES"]:
-            discovered_generators.append((SourceFileGenerator, None))
+            discovered_generators.append((SourceFileGenerator, "internal"))
 
         for receiver, values in signals.get_generators.send(self):
             if not isinstance(values, Iterable):
                 values = (values,)
 
                 discovered_generators.extend(
-                    [(generator, receiver) for generator in values]
+                    [(generator, receiver.__module__) for generator in values]
                 )
 
         # StaticGenerator must run last, so it can identify files that
         # were skipped by the other generators, and so static files can
         # have their output paths overridden by the {attach} link syntax.
-        discovered_generators.append((StaticGenerator, None))
+        discovered_generators.append((StaticGenerator, "internal"))
 
         generators = []
 
-        for generator, receiver in discovered_generators:
-            if receiver is None:
-                origin = "internal"
-            else:
-                origin = receiver.__module__
-
+        for generator, origin in discovered_generators:
             if not isinstance(generator, type):
-                logger.error("Generator %s (%s) cannot be loaded" % (generator, origin))
+                logger.error("Generator %s (%s) cannot be loaded", generator, origin)
                 continue
 
-            logger.debug("Found generator: %s (%s)" % (generator.__name__, origin))
+            logger.debug("Found generator: %s (%s)", generator.__name__, origin)
             generators.append(generator)
 
         return generators
 
-    def _get_writer_class(self):
+    def _get_writer(self):
         writers = [w for _, w in signals.get_writer.send(self) if isinstance(w, type)]
         num_writers = len(writers)
 
@@ -212,11 +207,11 @@ class Pelican:
             return Writer(self.output_path, settings=self.settings)
 
         if num_writers > 1:
-            logger.warning("%s writers found, using only first one" % num_writers)
+            logger.warning("%s writers found, using only first one", num_writers)
 
         writer = writers[0]
 
-        logger.debug("Found writer: %s" % writer)
+        logger.debug("Found writer: %s", writer)
         return writer(self.output_path, settings=self.settings)
 
 
