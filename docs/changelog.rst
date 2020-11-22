@@ -1,6 +1,11 @@
 Release history
 ###############
 
+4.5.2 - 2020-11-22
+==================
+
+Improve logging of generators and writer loaders
+
 4.5.1 - 2020-11-02
 ==================
 
