@@ -178,9 +178,9 @@ class Pelican:
             if not isinstance(values, Iterable):
                 values = (values,)
 
-                discovered_generators.extend(
-                    [(generator, receiver.__module__) for generator in values]
-                )
+            discovered_generators.extend(
+                [(generator, receiver.__module__) for generator in values]
+            )
 
         # StaticGenerator must run last, so it can identify files that
         # were skipped by the other generators, and so static files can
