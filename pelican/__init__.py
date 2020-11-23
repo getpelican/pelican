@@ -25,7 +25,7 @@ from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import coerce_overrides, read_settings
 from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
-from pelican.writers import Writer, CollectionRSSWriter
+from pelican.writers import CollectionRSSWriter, Writer
 
 try:
     __version__ = __import__('pkg_resources') \
