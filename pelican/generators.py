@@ -511,6 +511,7 @@ class ArticlesGenerator(CachingGenerator):
 
                 if key == period_date_key['year']:
                     context["period"] = (_period,)
+                    context["period_num"] = (_period,)
                 else:
                     month_name = calendar.month_name[_period[1]]
                     if key == period_date_key['month']:
@@ -520,6 +521,7 @@ class ArticlesGenerator(CachingGenerator):
                         context["period"] = (_period[0],
                                              month_name,
                                              _period[2])
+                    context["period_num"] = tuple(_period)
 
                 write(save_as, template, context, articles=articles,
                       dates=archive, template_name='period_archives',

@@ -413,6 +413,7 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(len(dates), 1)
         # among other things it must have at least been called with this
         context["period"] = (1970,)
+        context["period_num"] = (1970,)
         write.assert_called_with("posts/1970/index.html",
                                  generator.get_template("period_archives"),
                                  context, blog=True, articles=articles,
@@ -437,6 +438,7 @@ class TestArticlesGenerator(unittest.TestCase):
                     if d.date.year == 1970 and d.date.month == 1]
         self.assertEqual(len(dates), 1)
         context["period"] = (1970, "January")
+        context["period_num"] = (1970, 1)
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/index.html",
                                  generator.get_template("period_archives"),
@@ -470,6 +472,7 @@ class TestArticlesGenerator(unittest.TestCase):
         ]
         self.assertEqual(len(dates), 1)
         context["period"] = (1970, "January", 1)
+        context["period_num"] = (1970, 1, 1)
         # among other things it must have at least been called with this
         write.assert_called_with("posts/1970/Jan/01/index.html",
                                  generator.get_template("period_archives"),

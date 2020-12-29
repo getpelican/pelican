@@ -327,6 +327,8 @@ period                  A tuple of the form (`year`, `month`, `day`) that
                         given year. It contains both `year` and `month`
                         if the time period is over years and months and
                         so on.
+period_num              A tuple of the form (`year`, `month`, `day`), as in
+                        `period`, except all values are numbers.
 
 ===================     ===================================================
 
