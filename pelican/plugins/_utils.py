@@ -110,20 +110,21 @@ def load_plugins(settings):
     return plugins
 
 
-def stringify_plugins(plugins):
+def get_plugin_name(plugin):
     """
     Plugins can be passed as module objects, however this breaks caching as
-    module objects cannot be pickled. To work around this, we stringify all
-    plugin definitions post-initialization.
+    module objects cannot be pickled. To work around this, all plugins are
+    stringified post-initialization.
     """
-    return [_stringify_plugin(p) for p in plugins]
-
-
-def _stringify_plugin(plugin):
     if isinstance(plugin, str):
         return plugin
 
     if inspect.isclass(plugin):
         return plugin.__name__
 
-    return plugin.__class__.__qualname__
+    try:
+        return plugin.__class__.__qualname__
+    except AttributeError:
+        pass
+
+    return str(plugin)
