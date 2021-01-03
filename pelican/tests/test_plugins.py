@@ -1,8 +1,9 @@
 import os
 from contextlib import contextmanager
 
-from pelican.plugins._utils import get_namespace_plugins, load_plugins
-from pelican.tests.support import unittest
+from pelican.plugins._utils import (get_namespace_plugins, load_plugins,
+                                    stringify_plugins)
+from pelican.tests.support import NoopPlugin, unittest
 
 
 @contextmanager
@@ -172,3 +173,11 @@ class PluginTest(unittest.TestCase):
             self.assertEqual(
                 {'normal plugin', 'namespace plugin'},
                 get_plugin_names(plugins))
+
+    def test_stringify_plugins(self):
+        result = stringify_plugins(['string_plugin', NoopPlugin()])
+        # Plugins are converted to string references
+        self.assertCountEqual(
+            ['string_plugin', 'NoopPlugin'],
+            result
+        )

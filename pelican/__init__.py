@@ -20,10 +20,10 @@ from pelican.generators import (ArticlesGenerator,  # noqa: I100
                                 PagesGenerator, SourceFileGenerator,
                                 StaticGenerator, TemplatePagesGenerator)
 from pelican.plugins import signals
-from pelican.plugins._utils import load_plugins
+from pelican.plugins._utils import load_plugins, stringify_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
-from pelican.settings import coerce_overrides, read_settings, stringify_plugins
+from pelican.settings import coerce_overrides, read_settings
 from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
 from pelican.writers import Writer
 
@@ -73,7 +73,9 @@ class Pelican:
             except Exception as e:
                 logger.error('Cannot register plugin `%s`\n%s',
                              plugin.__name__, e)
-        stringify_plugins(self.settings)
+
+        if 'PLUGINS' in self.settings and self.settings['PLUGINS'] is not None:
+            self.settings['PLUGINS'] = stringify_plugins(self.settings['PLUGINS'])
 
     def run(self):
         """Run the generators and return"""

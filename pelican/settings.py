@@ -681,15 +681,3 @@ def coerce_overrides(overrides):
                              'load as json', k, v)
                 coerced[k] = json.loads(v)
     return coerced
-
-
-def stringify_plugins(settings):
-    """
-    Plugins can be passed as module objects, however this breaks caching as
-    module objects cannot be pickled. To work around this, we stringify all
-    plugin definitions post-initialization.
-    """
-    if 'PLUGINS' in settings and settings['PLUGINS'] is not None:
-        settings['PLUGINS'] = [str(p) for p in settings['PLUGINS']]
-
-    return settings

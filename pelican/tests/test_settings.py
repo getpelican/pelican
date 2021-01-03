@@ -8,9 +8,8 @@ from sys import platform
 from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
                               _printf_s_to_format_field,
                               coerce_overrides, configure_settings,
-                              handle_deprecated_settings, read_settings,
-                              stringify_plugins)
-from pelican.tests.support import NoopPlugin, unittest
+                              handle_deprecated_settings, read_settings)
+from pelican.tests.support import unittest
 
 
 class TestSettingsConfiguration(unittest.TestCase):
@@ -320,11 +319,3 @@ class TestSettingsConfiguration(unittest.TestCase):
             'THEME_STATIC_DIR': 'theme',
         }
         self.assertDictEqual(overrides, expected)
-
-    def test_stringify_plugins(self):
-        settings = {
-            'PLUGINS': ['string_plugin', NoopPlugin]
-        }
-        stringify_plugins(settings)
-        # Plugins are converted to string references
-        self.assertTrue(all(str(p) == p for p in settings['PLUGINS']))
