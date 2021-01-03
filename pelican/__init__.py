@@ -23,7 +23,7 @@ from pelican.plugins import signals
 from pelican.plugins._utils import load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
-from pelican.settings import coerce_overrides, read_settings
+from pelican.settings import coerce_overrides, read_settings, stringify_plugins
 from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
 from pelican.writers import Writer
 
@@ -73,6 +73,7 @@ class Pelican:
             except Exception as e:
                 logger.error('Cannot register plugin `%s`\n%s',
                              plugin.__name__, e)
+        stringify_plugins(self.settings)
 
     def run(self):
         """Run the generators and return"""

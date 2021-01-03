@@ -193,6 +193,11 @@ def get_context(settings=None, **kwargs):
     return context
 
 
+class NoopPlugin:
+    def register(self):
+        pass
+
+
 class LogCountHandler(BufferingHandler):
     """Capturing and counting logged messages."""
 
