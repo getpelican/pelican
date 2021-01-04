@@ -116,15 +116,10 @@ def get_plugin_name(plugin):
     module objects cannot be pickled. To work around this, all plugins are
     stringified post-initialization.
     """
-    if isinstance(plugin, str):
-        return plugin
-
     if inspect.isclass(plugin):
+        return plugin.__qualname__
+
+    if inspect.ismodule(plugin):
         return plugin.__name__
 
-    try:
-        return plugin.__class__.__qualname__
-    except AttributeError:
-        pass
-
-    return str(plugin)
+    return type(plugin).__qualname__

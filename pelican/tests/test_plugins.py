@@ -1,9 +1,10 @@
 import os
 from contextlib import contextmanager
 
+import pelican.tests.dummy_plugins.normal_plugin.normal_plugin as normal_plugin
 from pelican.plugins._utils import (get_namespace_plugins, get_plugin_name,
                                     load_plugins)
-from pelican.tests.support import NoopPlugin, unittest
+from pelican.tests.support import unittest
 
 
 @contextmanager
@@ -82,9 +83,7 @@ class PluginTest(unittest.TestCase):
 
     def test_load_plugins(self):
         def get_plugin_names(plugins):
-            return {
-                plugin.NAME if hasattr(plugin, 'NAME') else plugin.__name__
-                for plugin in plugins}
+            return {get_plugin_name(p) for p in plugins}
 
         # existing namespace plugins
         existing_ns_plugins = load_plugins({})
@@ -94,7 +93,7 @@ class PluginTest(unittest.TestCase):
             plugins = load_plugins({})
             self.assertEqual(len(plugins), len(existing_ns_plugins)+1, plugins)
             self.assertEqual(
-                {'namespace plugin'} | get_plugin_names(existing_ns_plugins),
+                {'pelican.plugins.ns_plugin'} | get_plugin_names(existing_ns_plugins),
                 get_plugin_names(plugins))
 
             # disable namespace plugins with `PLUGINS = []`
@@ -114,7 +113,7 @@ class PluginTest(unittest.TestCase):
             plugins = load_plugins(SETTINGS)
             self.assertEqual(len(plugins), 1, plugins)
             self.assertEqual(
-                {'normal plugin'},
+                {'normal_plugin'},
                 get_plugin_names(plugins))
 
             # normal submodule/subpackage plugins
@@ -128,8 +127,8 @@ class PluginTest(unittest.TestCase):
             plugins = load_plugins(SETTINGS)
             self.assertEqual(len(plugins), 2, plugins)
             self.assertEqual(
-                {'normal submodule plugin',
-                 'normal subpackage plugin'},
+                {'normal_submodule_plugin.subplugin',
+                 'normal_submodule_plugin.subpackage.subpackage'},
                 get_plugin_names(plugins))
 
             # ensure normal plugins are loaded only once
@@ -150,7 +149,7 @@ class PluginTest(unittest.TestCase):
             plugins = load_plugins(SETTINGS)
             self.assertEqual(len(plugins), 1, plugins)
             self.assertEqual(
-                {'namespace plugin'},
+                {'pelican.plugins.ns_plugin'},
                 get_plugin_names(plugins))
 
             # namespace plugin long
@@ -160,7 +159,7 @@ class PluginTest(unittest.TestCase):
             plugins = load_plugins(SETTINGS)
             self.assertEqual(len(plugins), 1, plugins)
             self.assertEqual(
-                {'namespace plugin'},
+                {'pelican.plugins.ns_plugin'},
                 get_plugin_names(plugins))
 
             # normal and namespace plugin
@@ -171,10 +170,22 @@ class PluginTest(unittest.TestCase):
             plugins = load_plugins(SETTINGS)
             self.assertEqual(len(plugins), 2, plugins)
             self.assertEqual(
-                {'normal plugin', 'namespace plugin'},
+                {'normal_plugin', 'pelican.plugins.ns_plugin'},
                 get_plugin_names(plugins))
 
     def test_get_plugin_name(self):
-        self.assertEqual(get_plugin_name('string_plugin'), 'string_plugin')
-        self.assertEqual(get_plugin_name(NoopPlugin), 'NoopPlugin')
-        self.assertEqual(get_plugin_name(NoopPlugin()), 'NoopPlugin')
+        self.assertEqual(
+            get_plugin_name(normal_plugin),
+            'pelican.tests.dummy_plugins.normal_plugin.normal_plugin',
+        )
+
+        class NoopPlugin:
+            def register(self):
+                pass
+
+        self.assertEqual(
+            get_plugin_name(NoopPlugin),
+            'PluginTest.test_get_plugin_name.<locals>.NoopPlugin')
+        self.assertEqual(
+            get_plugin_name(NoopPlugin()),
+            'PluginTest.test_get_plugin_name.<locals>.NoopPlugin')
