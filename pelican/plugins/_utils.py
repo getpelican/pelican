@@ -1,6 +1,7 @@
 import importlib
 import importlib.machinery
 import importlib.util
+import inspect
 import logging
 import pkgutil
 import sys
@@ -107,3 +108,18 @@ def load_plugins(settings):
         plugins = list(namespace_plugins.values())
 
     return plugins
+
+
+def get_plugin_name(plugin):
+    """
+    Plugins can be passed as module objects, however this breaks caching as
+    module objects cannot be pickled. To work around this, all plugins are
+    stringified post-initialization.
+    """
+    if inspect.isclass(plugin):
+        return plugin.__qualname__
+
+    if inspect.ismodule(plugin):
+        return plugin.__name__
+
+    return type(plugin).__qualname__
