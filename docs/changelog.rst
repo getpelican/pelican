@@ -1,6 +1,11 @@
 Release history
 ###############
 
+4.5.4 - 2021-01-04
+==================
+
+Replace plugin definitions in settings with string representations after registering, so they can be cached correctly (#2828).
+
 4.5.3 - 2020-12-01
 ==================
 
