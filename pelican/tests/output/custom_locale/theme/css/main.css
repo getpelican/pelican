@@ -384,10 +384,10 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
 .hentry {
 	display: block;
 	clear: both;
-	border-bottom: 1px solid #eee;
+	border-top: 1px solid #eee;
 	padding: 1.5em 0;
 }
-li:last-child .hentry, #content > .hentry {border: 0; margin: 0;}
+li:first-child .hentry, #content > .hentry {border: 0; margin: 0;}
 #content > .hentry {padding: 1em 0;}
 .hentry img{display : none ;}
 .entry-title {font-size: 3em; margin-bottom: 10px; margin-top: 0;}
