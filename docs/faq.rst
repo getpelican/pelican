@@ -232,7 +232,7 @@ command similar to ``cd content; find -name '*.md' | head -n 10``.
 My tag-cloud is missing/broken since I upgraded Pelican
 =======================================================
 
-In an ongoing effort to steamline Pelican, `tag_cloud` generation has been
+In an ongoing effort to streamline Pelican, `tag_cloud` generation has been
 moved out of the pelican core and into a separate `plugin
 <https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud>`_. See
 the :ref:`plugins` documentation further information about the Pelican plugin
