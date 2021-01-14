@@ -473,7 +473,7 @@ def listen(server, port, output, excqueue=None):
         return
 
     try:
-        print("\nServing site at: {}:{} - Tap CTRL-C to stop".format(
+        print("\nServing site at: http://{}:{} - Tap CTRL-C to stop".format(
             server, port))
         httpd.serve_forever()
     except Exception as e:
