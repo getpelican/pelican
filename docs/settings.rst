@@ -1067,6 +1067,11 @@ as follows::
   )
 
 
+If you want a pattern to apply to the last page in the list, use ``-1``
+as the ``minimum_page`` value::
+
+    (-1, '{base_name}/last/', '{base_name}/last/index.html'),
+
 Translations
 ============
 
