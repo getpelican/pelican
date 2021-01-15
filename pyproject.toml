@@ -39,12 +39,12 @@ pygments = "^2.6"
 python-dateutil = "^2.8"
 pytz = "^2020.1"
 unidecode = "^1.1"
-markdown = {version = "~3.2.2", optional = true}
+markdown = {version = "^3.2", optional = true}
 
 [tool.poetry.dev-dependencies]
 BeautifulSoup4 = "^4.9"
 lxml = "^4.3"
-markdown = "~3.2.2"
+markdown = "~3.3.3"
 typogrify = "^2.0"
 sphinx = "^3.0"
 sphinx_rtd_theme = "^0.5"
