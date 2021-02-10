@@ -14,7 +14,7 @@ from jinja2 import (BaseLoader, ChoiceLoader, Environment, FileSystemLoader,
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
 from pelican.plugins import signals
-from pelican.readers import Readers
+from pelican.readers import PelicanFileSkipped, Readers
 from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
                            posixize_path, process_translations)
 
@@ -621,9 +621,12 @@ class ArticlesGenerator(CachingGenerator):
                         context_signal=signals.article_generator_context,
                         context_sender=self)
                 except Exception as e:
-                    logger.error(
-                        'Could not process %s\n%s', f, e,
-                        exc_info=self.settings.get('DEBUG', False))
+                    if isinstance(e, PelicanFileSkipped):
+                        logger.debug('Skipping %s', f)
+                    else:
+                        logger.error(
+                            'Could not process %s\n%s', f, e,
+                            exc_info=self.settings.get('DEBUG', False))
                     self._add_failed_source_path(f)
                     continue
 
@@ -726,9 +729,12 @@ class PagesGenerator(CachingGenerator):
                         context_signal=signals.page_generator_context,
                         context_sender=self)
                 except Exception as e:
-                    logger.error(
-                        'Could not process %s\n%s', f, e,
-                        exc_info=self.settings.get('DEBUG', False))
+                    if isinstance(e, PelicanFileSkipped):
+                        logger.debug('Skipping %s', f)
+                    else:
+                        logger.error(
+                            'Could not process %s\n%s', f, e,
+                            exc_info=self.settings.get('DEBUG', False))
                     self._add_failed_source_path(f)
                     continue
 
@@ -817,9 +823,12 @@ class StaticGenerator(Generator):
                     context_signal=signals.static_generator_context,
                     context_sender=self)
             except Exception as e:
-                logger.error(
-                    'Could not process %s\n%s', f, e,
-                    exc_info=self.settings.get('DEBUG', False))
+                if isinstance(e, PelicanFileSkipped):
+                    logger.debug('Skipping %s', f)
+                else:
+                    logger.error(
+                        'Could not process %s\n%s', f, e,
+                        exc_info=self.settings.get('DEBUG', False))
                 self._add_failed_source_path(f, static=True)
                 continue
 
