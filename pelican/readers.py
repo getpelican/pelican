@@ -537,6 +537,8 @@ class Readers(FileStampDataCacher):
 
         path = os.path.abspath(os.path.join(base_path, path))
         source_path = posixize_path(os.path.relpath(path, base_path))
+        if 'READ_SELECTED' in self.settings and self.settings['READ_SELECTED'] not in source_path:
+            raise ValueError(f"Skipping {source_path}")
         logger.debug(
             'Read file %s -> %s',
             source_path, content_class.__name__)

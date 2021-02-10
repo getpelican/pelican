@@ -808,13 +808,21 @@ class StaticGenerator(Generator):
                 if self._is_potential_source_path(f):
                     continue
 
-            static = self.readers.read_file(
-                base_path=self.path, path=f, content_class=Static,
-                fmt='static', context=self.context,
-                preread_signal=signals.static_generator_preread,
-                preread_sender=self,
-                context_signal=signals.static_generator_context,
-                context_sender=self)
+            try:
+                static = self.readers.read_file(
+                    base_path=self.path, path=f, content_class=Static,
+                    fmt='static', context=self.context,
+                    preread_signal=signals.static_generator_preread,
+                    preread_sender=self,
+                    context_signal=signals.static_generator_context,
+                    context_sender=self)
+            except Exception as e:
+                logger.error(
+                    'Could not process %s\n%s', f, e,
+                    exc_info=self.settings.get('DEBUG', False))
+                self._add_failed_source_path(f, static=True)
+                continue
+
             self.staticfiles.append(static)
             self.add_source_path(static, static=True)
         self._update_context(('staticfiles',))
