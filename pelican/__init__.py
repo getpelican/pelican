@@ -181,10 +181,10 @@ class Pelican:
         for receiver, values in signals.get_generators.send(self):
             if not isinstance(values, Iterable):
                 values = (values,)
-
-            discovered_generators.extend(
-                [(generator, receiver.__module__) for generator in values]
-            )
+            for generator in values:
+                if generator is None:
+                    continue  # plugin did not return a generator
+                discovered_generators.append((generator, receiver.__module__))
 
         # StaticGenerator must run last, so it can identify files that
         # were skipped by the other generators, and so static files can
