@@ -5,7 +5,7 @@ from shutil import which
 from invoke import task
 
 PKG_NAME = "pelican"
-PKG_PATH = Path("pelican")
+PKG_PATH = Path(PKG_NAME)
 DOCS_PORT = os.environ.get("DOCS_PORT", 8000)
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
