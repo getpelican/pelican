@@ -50,7 +50,7 @@ sphinx = "^3.0"
 sphinx_rtd_theme = "^0.5"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
-pygments = "~2.7.4"
+pygments = "~2.8"
 pytest = "^6.0"
 pytest-cov = "^2.8"
 pytest-pythonpath = "^0.7.3"
