@@ -218,7 +218,7 @@ which will make it compare the file checksums in a much faster way than Pelican
 would.
 
 When only several specific output files are of interest (e.g. when working on
-some specific page or the theme templates), the `WRITE_SELECTED` option may
+some specific page or the theme templates), the ``WRITE_SELECTED`` option may
 help, see :ref:`writing_only_selected_content`.
 
 How to process only a subset of all articles?
@@ -232,11 +232,10 @@ command similar to ``cd content; find -name '*.md' | head -n 10``.
 My tag-cloud is missing/broken since I upgraded Pelican
 =======================================================
 
-In an ongoing effort to streamline Pelican, `tag_cloud` generation has been
-moved out of the pelican core and into a separate `plugin
-<https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud>`_. See
-the :ref:`plugins` documentation further information about the Pelican plugin
-system.
+In an ongoing effort to streamline Pelican, tag cloud generation has been
+moved out of Pelican core and into a separate `plugin
+<https://github.com/pelican-plugins/tag-cloud>`_. See the :ref:`plugins`
+documentation for further information about the Pelican plugin system.
 
 Since I upgraded Pelican my pages are no longer rendered
 ========================================================
