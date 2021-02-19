@@ -1134,10 +1134,11 @@ Ordering content
 
    Defines how the articles (``articles_page.object_list`` in the template) are
    sorted. Valid options are: metadata as a string (use ``reversed-`` prefix
-   the reverse the sort order), special option ``'basename'`` which will use
-   the basename of the file (without path) or a custom function to extract the
-   sorting key from articles. The default value, ``'reversed-date'``, will sort
-   articles by date in reverse order (i.e. newest article comes first).
+   to reverse the sort order), special option ``'basename'`` which will use
+   the basename of the file (without path), or a custom function to extract the
+   sorting key from articles. Using a value of ``'date'`` will sort articles in
+   chronological order, while the default value, ``'reversed-date'``, will sort
+   articles by date in reverse order (i.e., newest article comes first).
 
 .. data:: PAGE_ORDER_BY = 'basename'
 
