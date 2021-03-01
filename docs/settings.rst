@@ -364,6 +364,10 @@ Basic settings
    A list of metadata fields containing reST/Markdown content to be parsed and
    translated to HTML.
 
+.. data:: IMAGES_ALLOW_EMPTY_ALT_TEXT = False
+
+   If ``True``, warnings will not be emitted when empty ``alt`` attributes for images are found.
+
 .. data:: PORT = 8000
 
    The TCP port to serve content from the output folder via HTTP when pelican

@@ -134,6 +134,18 @@ class DefaultReaderTest(ReaderTest):
                            'Other images have empty alt attributes'}
                 )
 
+    @patch('pelican.readers.logger')
+    def test_read_file_with_images_allow_empty_alt_text_false(self, log_mock):
+        test_file = 'article_with_images.html'
+        self.read_file(path=test_file, IMAGES_ALLOW_EMPTY_ALT_TEXT=False)
+        assert 2 == log_mock.warning.call_count
+
+    @patch('pelican.readers.logger')
+    def test_read_file_with_images_allow_empty_alt_text_true(self, log_mock):
+        test_file = 'article_with_images.html'
+        self.read_file(path=test_file, IMAGES_ALLOW_EMPTY_ALT_TEXT=True)
+        log_mock.warning.assert_not_called()
+
 
 class RstReaderTest(ReaderTest):
 
