@@ -1,3 +1,3 @@
-Release type: minor
+Release type: patch
 
-Add setting to allow for empty `alt` attributes in images; it defaults to `False`, which is the current behavior. Empty `alt` text can be indicative of an accessibility oversight, but can be intentional and desired, e.g. https://webaim.org/techniques/alttext/, https://www.w3.org/WAI/tutorials/images/decorative/.
+Address an issue where `--fatal=warnings|errors` would not honor entries in the `LOG_FILTER` setting.

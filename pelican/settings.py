@@ -163,8 +163,7 @@ DEFAULT_CONFIG = {
     'WRITE_SELECTED': [],
     'FORMATTED_FIELDS': ['summary'],
     'PORT': 8000,
-    'BIND': '127.0.0.1',
-    'IMAGES_ALLOW_EMPTY_ALT_TEXT': False
+    'BIND': '127.0.0.1'
 }
 
 PYGMENTS_RST_OPTIONS = None

@@ -149,24 +149,9 @@ class LimitLogger(logging.Logger):
         self.addFilter(LimitLogger.limit_filter)
 
 
-class FatalLogger(LimitLogger):
-    warnings_fatal = False
-    errors_fatal = False
-
-    def warning(self, *args, **kwargs):
-        super().warning(*args, **kwargs)
-        if FatalLogger.warnings_fatal:
-            raise RuntimeError('Warning encountered')
-
-    def error(self, *args, **kwargs):
-        super().error(*args, **kwargs)
-        if FatalLogger.errors_fatal:
-            raise RuntimeError('Error encountered')
-
-
-logging.setLoggerClass(FatalLogger)
+logging.setLoggerClass(LimitLogger)
 # force root logger to be of our preferred class
-logging.getLogger().__class__ = FatalLogger
+logging.getLogger().__class__ = LimitLogger
 
 
 def supports_color():
@@ -194,11 +179,13 @@ def get_formatter():
         return TextFormatter()
 
 
+class FatalHandler(logging.Handler):
+    def emit(self, record):
+        sys.exit(1)
+
+
 def init(level=None, fatal='', handler=logging.StreamHandler(), name=None,
          logs_dedup_min_level=None):
-    FatalLogger.warnings_fatal = fatal.startswith('warning')
-    FatalLogger.errors_fatal = bool(fatal)
-
     logger = logging.getLogger(name)
 
     handler.setFormatter(get_formatter())
@@ -208,6 +195,11 @@ def init(level=None, fatal='', handler=logging.StreamHandler(), name=None,
         logger.setLevel(level)
     if logs_dedup_min_level:
         LimitFilter.LOGS_DEDUP_MIN_LEVEL = logs_dedup_min_level
+
+    if fatal.startswith('warning'):
+        logger.addHandler(FatalHandler(level=logging.WARNING))
+    if fatal:
+        logger.addHandler(FatalHandler(level=logging.ERROR))
 
 
 def log_warnings():

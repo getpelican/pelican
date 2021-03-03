@@ -153,7 +153,7 @@ class TestCache(unittest.TestCase):
         - empty.md
         - empty_with_bom.md
         """
-        self.assertEqual(generator.readers.read_file.call_count, 7)
+        self.assertEqual(generator.readers.read_file.call_count, 6)
 
     def test_article_reader_content_caching(self):
         """Test raw article content caching at the reader level"""
