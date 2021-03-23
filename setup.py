@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 
 version = "4.5.4"
 
-requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.11', 'pygments',
+requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
             'docutils>=0.15', 'pytz >= 0a', 'blinker', 'unidecode',
             'python-dateutil']
 

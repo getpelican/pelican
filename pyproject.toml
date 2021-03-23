@@ -31,20 +31,21 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-blinker = "^1.4"
-docutils = "^0.16"
-feedgenerator = "^1.9"
-jinja2 = "~2.11"
-pygments = "^2.6"
-python-dateutil = "^2.8"
-pytz = "^2020.1"
-unidecode = "^1.1"
-markdown = {version = "^3.2", optional = true}
+blinker = ">=1.4"
+docutils = ">=0.16"
+feedgenerator = ">=1.9"
+jinja2 = ">=2.7"
+pygments = ">=2.6"
+python-dateutil = ">=2.8"
+pytz = ">=2020.1"
+unidecode = ">=1.1"
+markdown = {version = ">=3.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 BeautifulSoup4 = "^4.9"
+jinja2 = "~2.11"
 lxml = "^4.3"
-markdown = "~3.3.3"
+markdown = "~3.3.4"
 typogrify = "^2.0"
 sphinx = "^3.0"
 sphinx_rtd_theme = "^0.5"
@@ -56,7 +57,7 @@ pytest-cov = "^2.8"
 pytest-pythonpath = "^0.7.3"
 pytest-sugar = "^0.9.4"
 pytest-xdist = "^2.0"
-tox = "^3.13"
+tox = {version = "^3.13", optional = true}
 flake8 = "^3.8"
 flake8-import-order = "^0.18.1"
 invoke = "^1.3"

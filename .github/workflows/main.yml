@@ -86,7 +86,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: "3.x"
       - name: Set pip cache (Linux)
         uses: actions/cache@v1
         if: startsWith(runner.os, 'Linux')
@@ -110,7 +110,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.6
+          python-version: "3.x"
       - name: Set pip cache (Linux)
         uses: actions/cache@v1
         if: startsWith(runner.os, 'Linux')
@@ -136,7 +136,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: "3.x"
       - name: Check release
         id: check_release
         run: |
