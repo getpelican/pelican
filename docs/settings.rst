@@ -152,6 +152,11 @@ Basic settings
    ``['.#*']`` will ignore emacs lock files, and ``['__pycache__']`` would
    ignore Python 3's bytecode caches.
 
+.. data:: 'IGNORE_SUBDIRS' = []
+
+   Subdirectories matching any of these
+   patterns will be ignored by the processor.
+
 .. data:: MARKDOWN = {...}
 
    Extra configuration settings for the Markdown processor. Refer to the Python
