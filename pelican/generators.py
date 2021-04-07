@@ -149,6 +149,7 @@ class Generator:
 
         files = set()
         ignores = self.settings['IGNORE_FILES']
+
         for path in paths:
             # careful: os.path.join() will add a slash when path == ''.
             root = os.path.join(self.path, path) if path else self.path
@@ -158,6 +159,14 @@ class Generator:
                         root, topdown=True, followlinks=True):
                     excl = exclusions_by_dirpath.get(dirpath, ())
                     # We copy the `dirs` list as we will modify it in the loop:
+                    # ----
+                    for dir in dirs:
+                        # check the IGNORE_SUBDIRS
+                        subdirignores = self.settings['IGNORE_SUBDIRS']
+
+                    if any(fnmatch.fnmatch(dir, willignore) for willignore in subdirignores):
+                        dirs.remove(dir)
+                    # ----
                     for d in list(dirs):
                         if (d in excl or
                             any(fnmatch.fnmatch(d, ignore)

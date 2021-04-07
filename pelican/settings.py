@@ -144,6 +144,7 @@ DEFAULT_CONFIG = {
     'TEMPLATE_PAGES': {},
     'TEMPLATE_EXTENSIONS': ['.html'],
     'IGNORE_FILES': ['.#*'],
+    'IGNORE_SUBDIRS': [],
     'SLUG_REGEX_SUBSTITUTIONS': [
         (r'[^\w\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
         (r'(?u)\A\s*', ''),  # strip leading whitespace
