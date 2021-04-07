@@ -31,9 +31,16 @@ class TestGenerator(unittest.TestCase):
 
     def test_include_path(self):
         self.settings['IGNORE_FILES'] = {'ignored1.rst', 'ignored2.rst'}
+        self.settings['IGNORE_SUBDIRS'] = {'/sub', '/subone'}
+
+        subdir = os.path.join(CUR_DIR, '/sub', 'atest.txt')
+        include_dir = self.generator._include_path
+        self.assertFalse(include_dir(subdir))
+
 
         filename = os.path.join(CUR_DIR, 'content', 'article.rst')
         include_path = self.generator._include_path
+
         self.assertTrue(include_path(filename))
         self.assertTrue(include_path(filename, extensions=('rst',)))
         self.assertFalse(include_path(filename, extensions=('md',)))
