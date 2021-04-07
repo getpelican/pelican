@@ -160,12 +160,12 @@ class Generator:
                         root, topdown=True, followlinks=True):
                     excl = exclusions_by_dirpath.get(dirpath, ())
                     # We copy the `dirs` list as we will modify it in the loop:
-                    # ----
 
-                    if any(fnmatch.fnmatch(dir, willignore) for willignore in subignores):
-                        dirs.remove(dir)
-                    # ----
                     for d in list(dirs):
+                        # ----
+                        if any( fnmatch.fnmatch(d, willignore) for willignore in subignores):
+                            dirs.remove(d)
+                        # ----
                         if (d in excl or
                             any(fnmatch.fnmatch(d, ignore)
                                 for ignore in ignores)):
