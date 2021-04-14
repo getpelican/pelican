@@ -235,7 +235,42 @@ needed by Pelican.
     CONF['timezone'] = ask_timezone('What is your time zone?',
                                     CONF['timezone'], _TZ_URL)
 
-#----------------------------------------------------------
+    if ask('Do you want a mailing list', answer=bool, default=True):
+
+        string = ""
+        while not string == 'q':
+            string = input("Enter an email to the mailing list or enter q to quit\n")
+            regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
+            if (re.search(regex, string)):
+                with open(os.path.join(CONF['basedir'], 'mailinglist.txt'), 'a', encoding='utf-8') as fd:
+                        fd.write(string +"\n")
+            elif (string == "q"):
+                continue
+            else:
+                print("That is not a valid email")
+
+        if ask('Do you want to send a notice to being added email?(your email must allow access to less secure apps)', answer=bool, default=True):
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.starttls()
+            emailsuccess = 0
+            while emailsuccess == 0:
+                try:
+                    usrn = input("Type in your email address\n")
+                    passn = input("Type in your password\n")
+                    server.login(usrn, passn)
+                    emailsuccess = 1
+                except:
+                    print("Either username or password is wrong. You may want to make sure your email allows access to less secure apps")
+            msg = "You have been added to a mailing list"
+            subj = "You were added!"
+            body = "Subject: {}\n\n{}".format(subj, msg)
+            mailfile = open(os.path.join(CONF['basedir'], 'mailinglist.txt'), "r")
+            for x in mailfile:
+                if (re.search(regex, usrn)):
+                    server.sendmail(usrn, x.split('\n')[0], body)
+            mailfile.close()
+            server.quit()
+
 
     automation = ask('Do you want to generate a tasks.py/Makefile '
                      'to automate generation and publishing?', bool, True)
