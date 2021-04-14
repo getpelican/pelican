@@ -3,6 +3,9 @@
 import argparse
 import locale
 import os
+import re
+import smtplib
+import getpass
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -231,6 +234,8 @@ needed by Pelican.
 
     CONF['timezone'] = ask_timezone('What is your time zone?',
                                     CONF['timezone'], _TZ_URL)
+
+#----------------------------------------------------------
 
     automation = ask('Do you want to generate a tasks.py/Makefile '
                      'to automate generation and publishing?', bool, True)
