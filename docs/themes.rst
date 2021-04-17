@@ -66,9 +66,9 @@ Common variables
 
 All of these settings will be available to all templates.
 
-=============   ===================================================
+=============== ===================================================
 Variable        Description
-=============   ===================================================
+=============== ===================================================
 output_file     The name of the file currently being generated. For
                 instance, when Pelican is rendering the home page,
                 output_file will be "index.html".
@@ -80,6 +80,7 @@ articles        The list of articles, ordered descending by date.
                 in the `all_articles` variable.
 dates           The same list of articles, but ordered by date,
                 ascending.
+hidden_articles The list of hidden articles
 drafts          The list of draft articles
 authors         A list of (author, articles) tuples, containing all
                 the authors and corresponding articles (values)
@@ -90,7 +91,7 @@ tags            A list of (tag, articles) tuples, containing all
 pages           The list of pages
 hidden_pages    The list of hidden pages
 draft_pages     The list of draft pages
-=============   ===================================================
+=============== ===================================================
 
 
 Sorting

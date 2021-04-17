@@ -181,6 +181,8 @@ class TestArticlesGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         cls.generator.generate_context()
         cls.articles = cls.distill_articles(cls.generator.articles)
+        cls.drafts = cls.distill_articles(cls.generator.drafts)
+        cls.hidden_articles = cls.distill_articles(cls.generator.hidden_articles)
 
     def setUp(self):
         self.temp_cache = mkdtemp(prefix='pelican_cache.')
@@ -283,6 +285,18 @@ class TestArticlesGenerator(unittest.TestCase):
                 'published', '指導書', 'article'],
         ]
         self.assertEqual(sorted(articles_expected), sorted(self.articles))
+
+    def test_articles_draft(self):
+        draft_articles_expected = [
+            ['Draft article', 'draft', 'Default', 'article'],
+        ]
+        self.assertEqual(sorted(draft_articles_expected), sorted(self.drafts))
+
+    def test_articles_hidden(self):
+        hidden_articles_expected = [
+            ['Hidden article', 'hidden', 'Default', 'article'],
+        ]
+        self.assertEqual(sorted(hidden_articles_expected), sorted(self.hidden_articles))
 
     def test_generate_categories(self):
         # test for name
