@@ -648,7 +648,7 @@ class ArticlesGenerator(CachingGenerator):
                 all_drafts.append(article)
             elif article.status == "hidden":
                 hidden_articles.append(article)
-                
+
             self.add_source_path(article)
             self.add_static_links(article)
 
@@ -689,7 +689,7 @@ class ArticlesGenerator(CachingGenerator):
         self.authors.sort()
 
         self._update_context((
-            'articles', 'drafts', 'hidden_articles', 
+            'articles', 'drafts', 'hidden_articles',
             'dates', 'tags', 'categories',
             'authors', 'related_posts'))
         self.save_cache()
