@@ -648,6 +648,7 @@ class ArticlesGenerator(CachingGenerator):
                 all_drafts.append(article)
             elif article.status == "hidden":
                 hidden_articles.append(article)
+                
             self.add_source_path(article)
             self.add_static_links(article)
 
@@ -665,7 +666,7 @@ class ArticlesGenerator(CachingGenerator):
 
         for article in self.articles:
             # only main articles are listed in categories and tags
-            # not translations
+            # not translations or hidden articles
             self.categories[article.category].append(article)
             if hasattr(article, 'tags'):
                 for tag in article.tags:
@@ -687,8 +688,10 @@ class ArticlesGenerator(CachingGenerator):
         self.authors = list(self.authors.items())
         self.authors.sort()
 
-        self._update_context(('articles', 'dates', 'tags', 'categories',
-                              'authors', 'related_posts', 'drafts'))
+        self._update_context((
+            'articles', 'drafts', 'hidden_articles', 
+            'dates', 'tags', 'categories',
+            'authors', 'related_posts'))
         self.save_cache()
         self.readers.save_cache()
         signals.article_generator_finalized.send(self)
@@ -702,7 +705,9 @@ class ArticlesGenerator(CachingGenerator):
         for e in chain(self.articles,
                        self.translations,
                        self.drafts,
-                       self.drafts_translations):
+                       self.drafts_translations,
+                       self.hidden_articles,
+                       self.hidden_translations):
             if hasattr(e, 'refresh_metadata_intersite_links'):
                 e.refresh_metadata_intersite_links()
 

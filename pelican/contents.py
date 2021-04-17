@@ -180,9 +180,9 @@ class Content:
         if hasattr(self, 'allowed_statuses'):
             if self.status not in self.allowed_statuses:
                 logger.error(
-                    "Unknown status '%s' for file %s, skipping it.",
+                    "Unknown status '%s' for file %s, skipping it. (Not in %s)",
                     self.status,
-                    self
+                    self, self.allowed_statuses
                 )
                 return False
 
@@ -495,7 +495,7 @@ class Page(Content):
 
 class Article(Content):
     mandatory_properties = ('title', 'date', 'category')
-    allowed_statuses = ('published', 'draft')
+    allowed_statuses = ('published', 'hidden', 'draft')
     default_status = 'published'
     default_template = 'article'
 

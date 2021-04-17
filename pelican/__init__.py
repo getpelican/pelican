@@ -137,6 +137,11 @@ class Pelican:
              len(articles_generator.drafts_translations)),
             'draft',
             'drafts')
+        pluralized_hidden_articles = maybe_pluralize(
+            (len(articles_generator.hidden_articles) +
+             len(articles_generator.hidden_translations)),
+            'hidden article',
+            'hidden articles')
         pluralized_pages = maybe_pluralize(
             (len(pages_generator.pages) +
              len(pages_generator.translations)),
@@ -153,10 +158,11 @@ class Pelican:
             'draft page',
             'draft pages')
 
-        print('Done: Processed {}, {}, {}, {} and {} in {:.2f} seconds.'
+        print('Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.'
               .format(
                     pluralized_articles,
                     pluralized_drafts,
+                    pluralized_hidden_articles,
                     pluralized_pages,
                     pluralized_hidden_pages,
                     pluralized_draft_pages,
