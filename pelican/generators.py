@@ -285,15 +285,20 @@ class ArticlesGenerator(CachingGenerator):
 
     def __init__(self, *args, **kwargs):
         """initialize properties"""
+        # Published, listed articles
         self.articles = []                 # only articles in default language
         self.translations = []
+        # Published, unlisted articles
+        self.hidden_articles = []
+        self.hidden_translations = []
+        # Draft articles
+        self.drafts = []                   # only drafts in default language
+        self.drafts_translations = []
         self.dates = {}
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
         self.related_posts = []
         self.authors = defaultdict(list)
-        self.drafts = []                   # only drafts in default language
-        self.drafts_translations = []
         super().__init__(*args, **kwargs)
         signals.article_generator_init.send(self)
 
@@ -461,7 +466,10 @@ class ArticlesGenerator(CachingGenerator):
 
     def generate_articles(self, write):
         """Generate the articles."""
-        for article in chain(self.translations, self.articles):
+        for article in chain(
+            self.translations, self.articles,
+            self.hidden_translations, self.hidden_articles
+        ):
             signals.article_generator_write_article.send(self, content=article)
             write(article.save_as, self.get_template(article.template),
                   self.context, article=article, category=article.category,
@@ -607,6 +615,7 @@ class ArticlesGenerator(CachingGenerator):
 
         all_articles = []
         all_drafts = []
+        hidden_articles = []
         for f in self.get_files(
                 self.settings['ARTICLE_PATHS'],
                 exclude=self.settings['ARTICLE_EXCLUDES']):
@@ -637,6 +646,8 @@ class ArticlesGenerator(CachingGenerator):
                 all_articles.append(article)
             elif article.status == "draft":
                 all_drafts.append(article)
+            elif article.status == "hidden":
+                hidden_articles.append(article)
             self.add_source_path(article)
             self.add_static_links(article)
 
@@ -647,6 +658,7 @@ class ArticlesGenerator(CachingGenerator):
             return origs, translations
 
         self.articles, self.translations = _process(all_articles)
+        self.hidden_articles, self.hidden_translations = _process(hidden_articles)
         self.drafts, self.drafts_translations = _process(all_drafts)
 
         signals.article_generator_pretaxonomy.send(self)
