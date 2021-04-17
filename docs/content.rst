@@ -614,6 +614,14 @@ the ``DEFAULT_METADATA``::
 To publish a post when the default status is ``draft``, update the post's
 metadata to include ``Status: published``.
 
+Hidden posts
+=================
+
+Like pages, posts can also be marked as ``hidden`` with the ``Status: hidden``
+attribute. Hidden posts will be output to the final path as expected, but
+are not included by default in tag or category indexes, nor in the main
+article feed. This has the effect of creating an "unlisted" post.
+
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: https://www.methods.co.nz/asciidoc/
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
