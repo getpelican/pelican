@@ -74,7 +74,7 @@ Markdown format, you will need to explicitly install the Markdown library. You
 can do so by typing the following command, prepending ``sudo`` if permissions
 require it::
 
-    pip install markdown
+    python -m pip install markdown
 
 Can I use arbitrary metadata in my templates?
 =============================================
@@ -174,28 +174,18 @@ your site.
 Feeds are still generated when this warning is displayed, but links within may
 be malformed and thus the feed may not validate.
 
-My feeds are broken since I upgraded to Pelican 3.x
-===================================================
+Can I force Atom feeds to show only summaries instead of article content?
+=========================================================================
 
-Starting in 3.0, some of the FEED setting names were changed to more explicitly
-refer to the Atom feeds they inherently represent (much like the FEED_RSS
-setting names). Here is an exact list of the renamed settings::
-
-    FEED -> FEED_ATOM
-    TAG_FEED -> TAG_FEED_ATOM
-    CATEGORY_FEED -> CATEGORY_FEED_ATOM
-
-Starting in 3.1, the new feed ``FEED_ALL_ATOM`` has been introduced: this feed
-will aggregate all posts regardless of their language. This setting generates
-``'feeds/all.atom.xml'`` by default and ``FEED_ATOM`` now defaults to ``None``.
-The following feed setting has also been renamed::
-
-    TRANSLATION_FEED -> TRANSLATION_FEED_ATOM
-
-Older themes that referenced the old setting names may not link properly. In
-order to rectify this, please update your theme for compatibility by changing
-the relevant values in your template files. For an example of complete feed
-headers and usage please check out the ``simple`` theme.
+Instead of having to open a separate browser window to read articles, the
+overwhelming majority of folks who use feed readers prefer to read content
+within the feed reader itself. Mainly for that reason, Pelican does not support
+restricting Atom feeds to only contain summaries. Unlike Atom feeds, the RSS
+feed specification does not include a separate ``content`` field, so by default
+Pelican publishes RSS feeds that only contain summaries (but can optionally be
+set to instead publish full content RSS feeds). So the default feed generation
+behavior provides users with a choice: subscribe to Atom feeds for full content
+or to RSS feeds for just the summaries.
 
 Is Pelican only suitable for blogs?
 ===================================
@@ -228,7 +218,7 @@ which will make it compare the file checksums in a much faster way than Pelican
 would.
 
 When only several specific output files are of interest (e.g. when working on
-some specific page or the theme templates), the `WRITE_SELECTED` option may
+some specific page or the theme templates), the ``WRITE_SELECTED`` option may
 help, see :ref:`writing_only_selected_content`.
 
 How to process only a subset of all articles?
@@ -242,11 +232,10 @@ command similar to ``cd content; find -name '*.md' | head -n 10``.
 My tag-cloud is missing/broken since I upgraded Pelican
 =======================================================
 
-In an ongoing effort to steamline Pelican, `tag_cloud` generation has been
-moved out of the pelican core and into a separate `plugin
-<https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud>`_. See
-the :ref:`plugins` documentation further information about the Pelican plugin
-system.
+In an ongoing effort to streamline Pelican, tag cloud generation has been
+moved out of Pelican core and into a separate `plugin
+<https://github.com/pelican-plugins/tag-cloud>`_. See the :ref:`plugins`
+documentation for further information about the Pelican plugin system.
 
 Since I upgraded Pelican my pages are no longer rendered
 ========================================================

@@ -5,7 +5,7 @@ from shutil import which
 from invoke import task
 
 PKG_NAME = "pelican"
-PKG_PATH = Path("pelican")
+PKG_PATH = Path(PKG_NAME)
 DOCS_PORT = os.environ.get("DOCS_PORT", 8000)
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
@@ -14,7 +14,7 @@ VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME / PKG_NAME)
 VENV = str(VENV_PATH.expanduser())
 VENV_BIN = Path(VENV) / Path(BIN_DIR)
 
-TOOLS = ["poetry", "pre-commit"]
+TOOLS = ["poetry", "pre-commit", "psutil"]
 POETRY = which("poetry") if which("poetry") else (VENV_BIN / "poetry")
 PRECOMMIT = (
     which("pre-commit") if which("pre-commit") else (VENV_BIN / "pre-commit")
@@ -42,7 +42,8 @@ def docserve(c):
 @task
 def tests(c):
     """Run the test suite"""
-    c.run(f"{VENV_BIN}/pytest", pty=True)
+    PTY = True if os.name != "nt" else False
+    c.run(f"{VENV_BIN}/pytest", pty=PTY)
 
 
 @task
@@ -64,19 +65,17 @@ def isort(c, check=False, diff=False):
     if diff:
         diff_flag = "--diff"
     c.run(
-        f"{VENV_BIN}/isort {check_flag} {diff_flag} --recursive {PKG_PATH}/* tasks.py"
+        f"{VENV_BIN}/isort {check_flag} {diff_flag} ."
     )
 
 
 @task
 def flake8(c):
-    c.run(f"{VENV_BIN}/flake8 {PKG_PATH} tasks.py")
+    c.run(f"git diff HEAD | {VENV_BIN}/flake8 --diff --max-line-length=88")
 
 
 @task
 def lint(c):
-    isort(c, check=True)
-    black(c, check=True)
     flake8(c)
 
 

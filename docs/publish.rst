@@ -118,7 +118,7 @@ in a wide range of environments. The downside is that it must be installed
 separately. Use the following command to install Invoke, prefixing with
 ``sudo`` if your environment requires it::
 
-    pip install invoke
+    python -m pip install invoke
 
 Take a moment to open the ``tasks.py`` file that was generated in your project
 root. You will see a number of commands, any one of which can be renamed,
@@ -139,7 +139,7 @@ http://localhost:8000/::
     invoke serve
 
 To serve the generated site with automatic browser reloading every time a
-change is detected, first ``pip install livereload``, then use the
+change is detected, first ``python -m pip install livereload``, then use the
 following command::
 
     invoke livereload

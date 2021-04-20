@@ -30,6 +30,9 @@ class TestBase(LoggedTestCase):
             'content': TEST_CONTENT,
             'context': {
                 'localsiteurl': '',
+                'generated_content': {},
+                'static_content': {},
+                'static_links': set()
             },
             'metadata': {
                 'summary': TEST_SUMMARY,
@@ -110,14 +113,14 @@ class TestPage(TestBase):
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, '')
 
-    def test_summary_end_marker(self):
-        # If a :SUMMARY_END_MARKER: is set, and there is no other summary,
+    def test_summary_end_suffix(self):
+        # If a :SUMMARY_END_SUFFIX: is set, and there is no other summary,
         # generated summary should contain the specified marker at the end.
         page_kwargs = self._copy_page_kwargs()
         settings = get_settings()
         page_kwargs['settings'] = settings
         del page_kwargs['metadata']['summary']
-        settings['SUMMARY_END_MARKER'] = 'test_marker'
+        settings['SUMMARY_END_SUFFIX'] = 'test_marker'
         settings['SUMMARY_MAX_LENGTH'] = 10
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10,
@@ -518,6 +521,60 @@ class TestPage(TestBase):
             content,
             '<img src="http://static.cool.site/images/poster.jpg"/>'
         )
+
+    def test_intrasite_link_escape(self):
+        article = type(
+            '_DummyArticle', (object,), {'url': 'article-spaces.html'})
+        asset = type(
+            '_DummyAsset', (object,), {'url': 'name@example.com'})
+
+        args = self.page_kwargs.copy()
+        args['settings'] = get_settings()
+        args['source_path'] = 'content'
+        args['context']['generated_content'] = {'article spaces.rst': article}
+        args['context']['static_content'] = {'name@example.com': asset}
+
+        expected_output = (
+            'A simple test with a '
+            '<a href="http://notmyidea.org/article-spaces.html#anchor">link</a> '
+            '<a href="http://notmyidea.org/name@example.com#anchor">file</a>'
+        )
+
+        # not escaped
+        args['content'] = (
+            'A simple test with a '
+            '<a href="{filename}article spaces.rst#anchor">link</a> '
+            '<a href="{static}name@example.com#anchor">file</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(content, expected_output)
+
+        # html escaped
+        args['content'] = (
+            'A simple test with a '
+            '<a href="{filename}article spaces.rst#anchor">link</a> '
+            '<a href="{static}name&#64;example.com#anchor">file</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(content, expected_output)
+
+        # url escaped
+        args['content'] = (
+            'A simple test with a '
+            '<a href="{filename}article%20spaces.rst#anchor">link</a> '
+            '<a href="{static}name%40example.com#anchor">file</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(content, expected_output)
+
+        # html and url escaped
+        args['content'] = (
+            'A simple test with a '
+            '<a href="{filename}article%20spaces.rst#anchor">link</a> '
+            '<a href="{static}name&#64;example.com#anchor">file</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org')
+        self.assertEqual(content, expected_output)
 
     def test_intrasite_link_markdown_spaces(self):
         cls_name = '_DummyArticle'

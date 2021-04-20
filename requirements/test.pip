@@ -1,11 +1,11 @@
 # Tests
-Pygments==2.6.1
-pytest==5.3.5
+Pygments==2.8.1
+pytest
 pytest-cov
-pytest-xdist
+pytest-xdist[psutil]
 
 # Optional Packages
-Markdown >= 3.1
+Markdown==3.3.4
 BeautifulSoup4
 lxml
 typogrify

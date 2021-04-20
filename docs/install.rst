@@ -1,19 +1,17 @@
 Installing Pelican
 ##################
 
-Pelican currently runs best on Python 2.7.x and 3.5+; earlier versions of
-Python are not supported.
+Pelican currently runs best on 3.6+; earlier versions of Python are not supported.
 
-You can install Pelican via several different methods. The simplest is via
-`pip <https://pip.pypa.io/en/stable/>`_::
+You can install Pelican via several different methods. The simplest is via Pip_::
 
-    pip install pelican
+    python -m pip install pelican
 
 Or, if you plan on using Markdown::
 
-    pip install pelican[Markdown]
+    python -m pip install "pelican[markdown]"
 
-(Keep in mind that operating systems will often require you to prefix the above
+(Keep in mind that some operating systems will require you to prefix the above
 command with ``sudo`` in order to install Pelican system-wide.)
 
 While the above is the simplest method, the recommended approach is to create a
@@ -26,7 +24,7 @@ session and create a new virtual environment for Pelican::
     source bin/activate
 
 Once the virtual environment has been created and activated, Pelican can be
-installed via ``pip install pelican`` as noted above. Alternatively, if you
+installed via ``python -m pip install pelican`` as noted above. Alternatively, if you
 have the project source, you can install Pelican using the distutils method::
 
     cd path-to-Pelican-source
@@ -35,7 +33,7 @@ have the project source, you can install Pelican using the distutils method::
 If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
 
-    pip install -e "git+https://github.com/getpelican/pelican.git#egg=pelican"
+    python -m pip install -e "git+https://github.com/getpelican/pelican.git#egg=pelican"
 
 Once Pelican is installed, you can run ``pelican --help`` to see basic usage
 options. For more detail, refer to the :doc:`Publish<publish>` section.
@@ -46,17 +44,13 @@ Optional packages
 If you plan on using `Markdown <https://pypi.org/project/Markdown/>`_ as a
 markup format, you can install Pelican with Markdown support::
 
-   pip install pelican[Markdown]
-
-Or you might need to install it a posteriori::
-
-    pip install Markdown
+    python -m pip install "pelican[markdown]"
 
 Typographical enhancements can be enabled in your settings file, but first the
 requisite `Typogrify <https://pypi.org/project/typogrify/>`_ library must be
 installed::
 
-    pip install typogrify
+    python -m pip install typogrify
 
 Dependencies
 ------------
@@ -75,9 +69,8 @@ automatically installed without any action on your part:
   broadcast signaling system
 * `unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII
   transliterations of Unicode text
-* `six <https://pypi.org/project/six/>`_,  for Python 2 and 3 compatibility
   utilities
-* `MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup safe
+* `MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup-safe
   string implementation
 * `python-dateutil <https://pypi.org/project/python-dateutil/>`_, to read
   the date metadata
@@ -85,10 +78,10 @@ automatically installed without any action on your part:
 Upgrading
 ---------
 
-If you installed a stable Pelican release via ``pip`` and wish to upgrade to
+If you installed a stable Pelican release via Pip_ and wish to upgrade to
 the latest stable release, you can do so by adding ``--upgrade``::
 
-    pip install --upgrade pelican
+    python -m pip install --upgrade pelican
 
 If you installed Pelican via distutils or the bleeding-edge method, simply
 perform the same step to install the most recent version.
@@ -126,4 +119,5 @@ content)::
 The next step is to begin to adding content to the *content* folder that has
 been created for you.
 
+.. _Pip: https://pip.pypa.io/
 .. _virtualenv: https://virtualenv.pypa.io/en/latest/

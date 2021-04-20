@@ -84,14 +84,14 @@ class TestPelican(LoggedTestCase):
         # have their output paths overridden by the {attach} link syntax.
 
         pelican = Pelican(settings=read_settings(path=None))
-        generator_classes = pelican.get_generator_classes()
+        generator_classes = pelican._get_generator_classes()
 
         self.assertTrue(
             generator_classes[-1] is StaticGenerator,
             "StaticGenerator must be the last generator, but it isn't!")
         self.assertIsInstance(
             generator_classes, Sequence,
-            "get_generator_classes() must return a Sequence to preserve order")
+            "_get_generator_classes() must return a Sequence to preserve order")
 
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default

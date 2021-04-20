@@ -118,8 +118,13 @@ class Page:
 
         # find the last matching pagination rule
         for p in self.settings['PAGINATION_PATTERNS']:
-            if p.min_page <= self.number:
-                rule = p
+            if p.min_page == -1:
+                if not self.has_next():
+                    rule = p
+                    break
+            else:
+                if p.min_page <= self.number:
+                    rule = p
 
         if not rule:
             return ''

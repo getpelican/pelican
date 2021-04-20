@@ -1,6 +1,52 @@
 Release history
 ###############
 
+4.6.0 - 2021-03-23
+==================
+
+* Add new URL pattern to ``PAGINATION_PATTERNS`` for the last page in the list `(#1401) <https://github.com/getpelican/pelican/issues/1401>`_
+* Speed up ``livereload`` Invoke task via caching `(#2847) <https://github.com/getpelican/pelican/pull/2847>`_
+* Ignore ``None`` return value from ``get_generators`` signal `(#2850) <https://github.com/getpelican/pelican/pull/2850>`_
+* Relax dependency minimum versions and remove upper bounds
+
+4.5.4 - 2021-01-04
+==================
+
+Replace plugin definitions in settings with string representations after registering, so they can be cached correctly `(#2828) <https://github.com/getpelican/pelican/issues/2828>`_.
+
+4.5.3 - 2020-12-01
+==================
+
+Fix a mistake made in PR #2821
+
+4.5.2 - 2020-11-22
+==================
+
+Improve logging of generators and writer loaders
+
+4.5.1 - 2020-11-02
+==================
+
+* Refactor intra-site link discovery in order to match more permissively `(#2646) <https://github.com/getpelican/pelican/issues/2646>`_
+* Fix plugins running twice in auto-reload mode `(#2817) <https://github.com/getpelican/pelican/issues/2817>`_
+* Add notice to use ``from pelican import signals`` instead of ``import pelican.signals`` `(#2805) <https://github.com/getpelican/pelican/issues/2805>`_
+
+4.5.0 - 2020-08-20
+==================
+
+* Add namespace plugin support; list plugins via ``pelican-plugins`` command
+* Override settings via ``-e`` / ``--extra-settings`` CLI option flags
+* Add settings for custom Jinja globals and tests
+* Customize article summary ellipsis via ``SUMMARY_END_SUFFIX`` setting
+* Customize Typogrify dash handling via new ``TYPOGRIFY_DASHES`` setting
+* Support Unicode when generating slugs
+* Support Asciidoc ``.adoc`` file generation in Pelican importer
+* Improve user experience when ``pelican --listen`` web server is quit
+* Improve Invoke tasks template
+* Include tests in source distributions
+* Switch CI from Travis to GitHub Actions
+* Remove support for Python 2.7
+
 4.2.0 - 2019-10-17
 ==================
 
@@ -12,7 +58,7 @@ Release history
 4.1.3 - 2019-10-09
 ==================
 
-* Fix quick-start docs regarding `pelican --listen`
+* Fix quick-start docs regarding ``pelican --listen``
 * Set default listen address to 127.0.0.1
 * Add extra/optional Markdown dependency to setup.py
 * Use correct SSH port syntax for rsync in tasks.py
@@ -30,8 +76,8 @@ Fix pelican.settings.load_source to avoid caching issues - PR #2621
 
 * Add AutoPub to auto-publish releases on PR merge
 * Add CSS classes for reStructuredText figures
-* Pass `argv` to Pelican `main` entrypoint
-* Set default content status to a blank string rather than `None`
+* Pass ``argv`` to Pelican ``main`` entrypoint
+* Set default content status to a blank string rather than ``None``
 
 4.1.0 - 2019-07-14
 ==================

@@ -20,10 +20,10 @@ from pelican.generators import (ArticlesGenerator,  # noqa: I100
                                 PagesGenerator, SourceFileGenerator,
                                 StaticGenerator, TemplatePagesGenerator)
 from pelican.plugins import signals
-from pelican.plugins._utils import load_plugins
+from pelican.plugins._utils import get_plugin_name, load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
-from pelican.settings import read_settings
+from pelican.settings import coerce_overrides, read_settings
 from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
 from pelican.writers import Writer
 
@@ -65,14 +65,18 @@ class Pelican:
             sys.path.insert(0, '')
 
     def init_plugins(self):
-        self.plugins = load_plugins(self.settings)
-        for plugin in self.plugins:
-            logger.debug('Registering plugin `%s`', plugin.__name__)
+        self.plugins = []
+        for plugin in load_plugins(self.settings):
+            name = get_plugin_name(plugin)
+            logger.debug('Registering plugin `%s`', name)
             try:
                 plugin.register()
+                self.plugins.append(plugin)
             except Exception as e:
                 logger.error('Cannot register plugin `%s`\n%s',
-                             plugin.__name__, e)
+                             name, e)
+
+        self.settings['PLUGINS'] = [get_plugin_name(p) for p in self.plugins]
 
     def run(self):
         """Run the generators and return"""
@@ -93,7 +97,7 @@ class Pelican:
                 path=self.path,
                 theme=self.theme,
                 output_path=self.output_path,
-            ) for cls in self.get_generator_classes()
+            ) for cls in self._get_generator_classes()
         ]
 
         # Delete the output directory if (1) the appropriate setting is True
@@ -114,7 +118,7 @@ class Pelican:
 
         signals.all_generators_finalized.send(generators)
 
-        writer = self.get_writer()
+        writer = self._get_writer()
 
         for p in generators:
             if hasattr(p, 'generate_output'):
@@ -168,46 +172,57 @@ class Pelican:
                     pluralized_draft_pages,
                     time.time() - start_time))
 
-    def get_generator_classes(self):
-        generators = [ArticlesGenerator, PagesGenerator]
+    def _get_generator_classes(self):
+        discovered_generators = [
+            (ArticlesGenerator, "internal"),
+            (PagesGenerator, "internal")
+        ]
 
-        if self.settings['TEMPLATE_PAGES']:
-            generators.append(TemplatePagesGenerator)
-        if self.settings['OUTPUT_SOURCES']:
-            generators.append(SourceFileGenerator)
+        if self.settings["TEMPLATE_PAGES"]:
+            discovered_generators.append((TemplatePagesGenerator, "internal"))
 
-        for pair in signals.get_generators.send(self):
-            (funct, value) = pair
+        if self.settings["OUTPUT_SOURCES"]:
+            discovered_generators.append((SourceFileGenerator, "internal"))
 
-            if not isinstance(value, Iterable):
-                value = (value, )
-
-            for v in value:
-                if isinstance(v, type):
-                    logger.debug('Found generator: %s', v)
-                    generators.append(v)
+        for receiver, values in signals.get_generators.send(self):
+            if not isinstance(values, Iterable):
+                values = (values,)
+            for generator in values:
+                if generator is None:
+                    continue  # plugin did not return a generator
+                discovered_generators.append((generator, receiver.__module__))
 
         # StaticGenerator must run last, so it can identify files that
         # were skipped by the other generators, and so static files can
         # have their output paths overridden by the {attach} link syntax.
-        generators.append(StaticGenerator)
+        discovered_generators.append((StaticGenerator, "internal"))
+
+        generators = []
+
+        for generator, origin in discovered_generators:
+            if not isinstance(generator, type):
+                logger.error("Generator %s (%s) cannot be loaded", generator, origin)
+                continue
+
+            logger.debug("Found generator: %s (%s)", generator.__name__, origin)
+            generators.append(generator)
+
         return generators
 
-    def get_writer(self):
-        writers = [w for (_, w) in signals.get_writer.send(self)
-                   if isinstance(w, type)]
-        writers_found = len(writers)
-        if writers_found == 0:
+    def _get_writer(self):
+        writers = [w for _, w in signals.get_writer.send(self) if isinstance(w, type)]
+        num_writers = len(writers)
+
+        if num_writers == 0:
             return Writer(self.output_path, settings=self.settings)
-        else:
-            writer = writers[0]
-            if writers_found == 1:
-                logger.debug('Found writer: %s', writer)
-            else:
-                logger.warning(
-                    '%s writers found, using only first one: %s',
-                    writers_found, writer)
-            return writer(self.output_path, settings=self.settings)
+
+        if num_writers > 1:
+            logger.warning("%s writers found, using only first one", num_writers)
+
+        writer = writers[0]
+
+        logger.debug("Found writer: %s", writer)
+        return writer(self.output_path, settings=self.settings)
 
 
 class PrintSettings(argparse.Action):
@@ -234,6 +249,18 @@ class PrintSettings(argparse.Action):
             pprint.pprint(settings)
 
         parser.exit()
+
+
+class ParseDict(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        d = {}
+        if values:
+            for item in values:
+                split_items = item.split("=", 1)
+                key = split_items[0].strip()
+                value = split_items[1].strip()
+                d[key] = value
+        setattr(namespace, self.dest, d)
 
 
 def parse_arguments(argv=None):
@@ -329,6 +356,16 @@ def parse_arguments(argv=None):
                         help='IP to bind to when serving files via HTTP '
                         '(default: 127.0.0.1)')
 
+    parser.add_argument('-e', '--extra-settings', dest='overrides',
+                        help='Specify one or more SETTING=VALUE pairs to '
+                             'override settings. If VALUE contains spaces, '
+                             'add quotes: SETTING="VALUE". Values other than '
+                             'integers and strings can be specified via JSON '
+                             'notation. (e.g., SETTING=none)',
+                        nargs='*',
+                        action=ParseDict
+                        )
+
     args = parser.parse_args(argv)
 
     if args.port is not None and not args.listen:
@@ -364,6 +401,7 @@ def get_config(args):
     if args.bind is not None:
         config['BIND'] = args.bind
     config['DEBUG'] = args.verbosity == logging.DEBUG
+    config.update(coerce_overrides(args.overrides))
 
     return config
 
@@ -441,7 +479,7 @@ def listen(server, port, output, excqueue=None):
         return
 
     try:
-        print("\nServing site at: {}:{} - Tap CTRL-C to stop".format(
+        print("\nServing site at: http://{}:{} - Tap CTRL-C to stop".format(
             server, port))
         httpd.serve_forever()
     except Exception as e:

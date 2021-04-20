@@ -9,6 +9,12 @@ line::
 If you used the ``pelican-quickstart`` command, your primary settings file will
 be named ``pelicanconf.py`` by default.
 
+You can also specify extra settings via ``-e`` / ``--extra-settings`` option
+flags, which will override default settings as well as any defined within
+settings files::
+
+    pelican content -e DELETE_OUTPUT_DIRECTORY=true
+
 .. note::
 
    When experimenting with different settings (especially the metadata ones)
@@ -270,8 +276,8 @@ Basic settings
 
    If set to True, several typographical improvements will be incorporated into
    the generated HTML via the `Typogrify
-   <https://pypi.python.org/pypi/typogrify>`_ library, which can be installed
-   via: ``pip install typogrify``
+   <https://pypi.org/project/typogrify/>`_ library, which can be installed
+   via: ``python -m pip install typogrify``
 
 .. data:: TYPOGRIFY_IGNORE_TAGS = []
 
@@ -297,10 +303,10 @@ Basic settings
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to be a copy of the original content.
 
-.. data:: SUMMARY_END_MARKER = '…'
+.. data:: SUMMARY_END_SUFFIX = '…'
 
    When creating a short summary of an article and the result was truncated to
-   match the required word length, this will be used as the truncation marker.
+   match the required word length, this will be used as the truncation suffix.
 
 .. data:: WITH_FUTURE_DATES = True
 
@@ -770,7 +776,7 @@ Template pages
 .. data:: TEMPLATE_PAGES = None
 
    A mapping containing template pages that will be rendered with the blog
-   entries. See :ref:`template_pages`.
+   entries.
 
    If you want to generate custom pages besides your blog entries, you can
    point any Jinja2 template file with a path pointing to the file and the
@@ -1061,6 +1067,11 @@ as follows::
   )
 
 
+If you want a pattern to apply to the last page in the list, use ``-1``
+as the ``minimum_page`` value::
+
+    (-1, '{base_name}/last/', '{base_name}/last/index.html'),
+
 Translations
 ============
 
@@ -1123,10 +1134,11 @@ Ordering content
 
    Defines how the articles (``articles_page.object_list`` in the template) are
    sorted. Valid options are: metadata as a string (use ``reversed-`` prefix
-   the reverse the sort order), special option ``'basename'`` which will use
-   the basename of the file (without path) or a custom function to extract the
-   sorting key from articles. The default value, ``'reversed-date'``, will sort
-   articles by date in reverse order (i.e. newest article comes first).
+   to reverse the sort order), special option ``'basename'`` which will use
+   the basename of the file (without path), or a custom function to extract the
+   sorting key from articles. Using a value of ``'date'`` will sort articles in
+   chronological order, while the default value, ``'reversed-date'``, will sort
+   articles by date in reverse order (i.e., newest article comes first).
 
 .. data:: PAGE_ORDER_BY = 'basename'
 

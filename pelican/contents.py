@@ -4,7 +4,8 @@ import locale
 import logging
 import os
 import re
-from urllib.parse import urljoin, urlparse, urlunparse
+from html import unescape
+from urllib.parse import unquote, urljoin, urlparse, urlunparse
 
 import pytz
 
@@ -250,38 +251,55 @@ class Content:
 
         # XXX Put this in a different location.
         if what in {'filename', 'static', 'attach'}:
-            if path.startswith('/'):
-                path = path[1:]
+            def _get_linked_content(key, url):
+                nonlocal value
+
+                def _find_path(path):
+                    if path.startswith('/'):
+                        path = path[1:]
+                    else:
+                        # relative to the source path of this content
+                        path = self.get_relative_source_path(
+                            os.path.join(self.relative_dir, path)
+                        )
+                    return self._context[key].get(path, None)
+
+                # try path
+                result = _find_path(url.path)
+                if result is not None:
+                    return result
+
+                # try unquoted path
+                result = _find_path(unquote(url.path))
+                if result is not None:
+                    return result
+
+                # try html unescaped url
+                unescaped_url = urlparse(unescape(url.geturl()))
+                result = _find_path(unescaped_url.path)
+                if result is not None:
+                    value = unescaped_url
+                    return result
+
+                # check if a static file is linked with {filename}
+                if what == 'filename' and key == 'generated_content':
+                    linked_content = _get_linked_content('static_content', value)
+                    if linked_content:
+                        logger.warning(
+                            '{filename} used for linking to static'
+                            ' content %s in %s. Use {static} instead',
+                            value.path,
+                            self.get_relative_source_path())
+                        return linked_content
+
+                return None
+
+            if what == 'filename':
+                key = 'generated_content'
             else:
-                # relative to the source path of this content
-                path = self.get_relative_source_path(
-                    os.path.join(self.relative_dir, path)
-                )
+                key = 'static_content'
 
-            key = 'static_content' if what in ('static', 'attach')\
-                else 'generated_content'
-
-            def _get_linked_content(key, path):
-                try:
-                    return self._context[key][path]
-                except KeyError:
-                    try:
-                        # Markdown escapes spaces, try unescaping
-                        return self._context[key][path.replace('%20', ' ')]
-                    except KeyError:
-                        if what == 'filename' and key == 'generated_content':
-                            key = 'static_content'
-                            linked_content = _get_linked_content(key, path)
-                            if linked_content:
-                                logger.warning(
-                                    '{filename} used for linking to static'
-                                    ' content %s in %s. Use {static} instead',
-                                    path,
-                                    self.get_relative_source_path())
-                                return linked_content
-                        return None
-
-            linked_content = _get_linked_content(key, path)
+            linked_content = _get_linked_content(key, value)
             if linked_content:
                 if what == 'attach':
                     linked_content.attach_to(self)
@@ -392,7 +410,7 @@ class Content:
 
         return truncate_html_words(self.content,
                                    self.settings['SUMMARY_MAX_LENGTH'],
-                                   self.settings['SUMMARY_END_MARKER'])
+                                   self.settings['SUMMARY_END_SUFFIX'])
 
     @property
     def summary(self):

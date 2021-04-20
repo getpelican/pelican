@@ -44,9 +44,9 @@ to manually create and activate a virtual environment::
 
 Install the needed dependencies and set up the project::
 
-    pip install invoke
+    python -m pip install invoke
     invoke setup
-    pip install -e ~/projects/pelican
+    python -m pip install -e ~/projects/pelican
 
 Your local environment should now be ready to go!
 
@@ -75,11 +75,14 @@ via::
 
     invoke tests
 
-In addition to running the test suite, the above invocation will also check code
-style and let you know whether non-conforming patterns were found. In some cases
-these linters will make the needed changes directly, while in other cases you
-may need to make additional changes until ``invoke tests`` no longer reports any
-code style violations.
+In addition to running the test suite, it is important to also ensure that any
+lines you changed conform to code style guidelines. You can check that via::
+
+    invoke lint
+
+If code style violations are found in lines you changed, correct those lines
+and re-run the above lint command until they have all been fixed. You do not
+need to address style violations, if any, for code lines you did not touch.
 
 After making your changes and running the tests, you may see a test failure
 mentioning that "some generated files differ from the expected functional tests
@@ -145,9 +148,20 @@ Create a topic branch for your plugin bug fix or feature::
 
     git checkout -b name-of-your-bugfix-or-feature
 
-After writing new tests for your plugin changes, run the plugin test suite::
+After writing new tests for your plugin changes, run the plugin test suite and
+check for code style compliance via::
 
     invoke tests
+    invoke lint
+
+If style violations are found, many of them can be addressed automatically via::
+
+    invoke black
+    invoke isort
+
+If style violations are found even after running the above auto-formatters,
+you will need to make additional manual changes until ``invoke lint`` no longer
+reports any code style violations.
 
 .. _plugin template: https://github.com/getpelican/cookiecutter-pelican-plugin
 .. _Simple Footnotes: https://github.com/pelican-plugins/simple-footnotes

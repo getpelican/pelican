@@ -1,6 +1,7 @@
 import importlib
 import importlib.machinery
 import importlib.util
+import inspect
 import logging
 import pkgutil
 import sys
@@ -40,6 +41,11 @@ def list_plugins(ns_pkg=None):
 
 
 def load_legacy_plugin(plugin, plugin_paths):
+    if '.' in plugin:
+        # it is in a package, try to resolve package first
+        package, _, _ = plugin.rpartition('.')
+        load_legacy_plugin(package, plugin_paths)
+
     # Try to find plugin in PLUGIN_PATHS
     spec = importlib.machinery.PathFinder.find_spec(plugin, plugin_paths)
     if spec is None:
@@ -48,6 +54,9 @@ def load_legacy_plugin(plugin, plugin_paths):
     if spec is None:
         raise ImportError('Cannot import plugin `{}`'.format(plugin))
     else:
+        # Avoid loading the same plugin twice
+        if spec.name in sys.modules:
+            return sys.modules[spec.name]
         # create module object from spec
         mod = importlib.util.module_from_spec(spec)
         # place it into sys.modules cache
@@ -99,3 +108,18 @@ def load_plugins(settings):
         plugins = list(namespace_plugins.values())
 
     return plugins
+
+
+def get_plugin_name(plugin):
+    """
+    Plugins can be passed as module objects, however this breaks caching as
+    module objects cannot be pickled. To work around this, all plugins are
+    stringified post-initialization.
+    """
+    if inspect.isclass(plugin):
+        return plugin.__qualname__
+
+    if inspect.ismodule(plugin):
+        return plugin.__name__
+
+    return type(plugin).__qualname__
