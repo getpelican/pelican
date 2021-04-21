@@ -23,19 +23,17 @@ Ready to get started? Check out the :doc:`Quickstart<quickstart>` guide.
 Features
 --------
 
-Pelican |version| currently supports:
+Pelican’s feature highlights include:
 
 * Articles (e.g., blog posts) and pages (e.g., "About", "Projects", "Contact")
-* Comments, via an external service (Disqus). If you prefer to have more
-  control over your comment data, self-hosted comments are another option.
-  Check out the `Pelican Plugins`_ repository for more details.
-* Theming support (themes are created using Jinja2_ templates)
+* Integration with external services
+* Site themes (created using Jinja2_ templates)
 * Publication of articles in multiple languages
-* Atom/RSS feeds
+* Generation of Atom and RSS feeds
 * Code syntax highlighting
-* Import from WordPress, Dotclear, or RSS feeds
-* Integration with external tools: Twitter, Google Analytics, etc. (optional)
+* Import existing content from WordPress, Dotclear, or RSS feeds
 * Fast rebuild times thanks to content caching and selective output writing
+* Extensible via a rich plugin ecosystem: `Pelican Plugins`_
 
 Why the name "Pelican"?
 -----------------------
@@ -82,4 +80,4 @@ Documentation
 .. _Jinja2: https://palletsprojects.com/p/jinja/
 .. _`Pelican documentation`: https://docs.getpelican.com/latest/
 .. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
-.. _`Pelican plugins`: https://github.com/getpelican/pelican-plugins
+.. _`Pelican Plugins`: https://github.com/pelican-plugins

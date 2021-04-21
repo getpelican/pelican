@@ -12,16 +12,17 @@ Pelican is a static site generator, written in Python_.
 Features
 --------
 
-Pelican currently supports:
+Pelican’s feature highlights include:
 
 * Chronological content (e.g., articles, blog posts) as well as static pages
-* Integration with external services (e.g., Google Analytics and Disqus)
+* Integration with external services
 * Site themes (created using Jinja2_ templates)
 * Publication of articles in multiple languages
 * Generation of Atom and RSS feeds
-* Syntax highlighting via Pygments_
-* Importing existing content from WordPress, Dotclear, and other services
+* Code syntax highlighting via Pygments_
+* Import existing content from WordPress, Dotclear, or RSS feeds
 * Fast rebuild times due to content caching and selective output writing
+* Extensible via a rich plugin ecosystem: `Pelican Plugins`_
 
 Check out `Pelican's documentation`_ for further information.
 
@@ -52,6 +53,7 @@ Why the name "Pelican"?
 .. _Markdown: https://daringfireball.net/projects/markdown/
 .. _Jinja2: https://palletsprojects.com/p/jinja/
 .. _Pygments: https://pygments.org/
+.. _`Pelican Plugins`: https://github.com/pelican-plugins
 .. _`Pelican's documentation`: https://docs.getpelican.com/
 .. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
 .. _`hosted on GitHub`: https://github.com/getpelican/pelican
