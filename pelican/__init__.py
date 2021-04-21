@@ -13,6 +13,8 @@ from collections.abc import Iterable
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
 
+from rich.console import Console
+
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init as init_logging
@@ -35,6 +37,7 @@ except Exception:
 
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 logger = logging.getLogger(__name__)
+console = Console()
 
 
 class Pelican:
@@ -524,7 +527,8 @@ def main(argv=None):
         else:
             watcher = FileSystemWatcher(args.settings, Readers, settings)
             watcher.check()
-            pelican.run()
+            with console.status("Generating..."):
+                pelican.run()
     except KeyboardInterrupt:
         logger.warning('Keyboard interrupt received. Exiting.')
     except Exception as e:
