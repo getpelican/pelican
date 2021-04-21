@@ -34,16 +34,16 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.config.python }}
-      - name: Set pip cache (Linux)
-        uses: actions/cache@v1
+      - name: Set up Pip cache (Linux)
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/*') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-      - name: Setup pip cache (macOS)
-        uses: actions/cache@v1
+      - name: Set up Pip cache (macOS)
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'macOS')
         with:
           path: ~/Library/Caches/pip
@@ -51,7 +51,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Setup pip cache (Windows)
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'Windows')
         with:
           path: ~\AppData\Local\pip\Cache
@@ -88,7 +88,7 @@ jobs:
         with:
           python-version: 3.7
       - name: Set pip cache (Linux)
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
@@ -112,7 +112,7 @@ jobs:
         with:
           python-version: 3.7
       - name: Set pip cache (Linux)
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
