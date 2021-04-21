@@ -24,7 +24,7 @@ Please note that Python 3.6+ is required for Pelican development.
 *(Optional)* If you prefer to install Poetry once for use with multiple projects,
 you can install it via::
 
-    curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 
 Point your web browser to the `Pelican repository`_ and tap the **Fork** button
 at top-right. Then clone the source for your fork and add the upstream project
@@ -38,9 +38,9 @@ as a Git remote::
 While Poetry can dynamically create and manage virtual environments, we're going
 to manually create and activate a virtual environment::
 
-    mkdir ~/virtualenvs
-    python3 -m venv ~/virtualenvs/pelican
-    source ~/virtualenvs/pelican/bin/activate
+    mkdir ~/virtualenvs && cd ~/virtualenvs
+    python3 -m venv pelican
+    source ~/virtualenvs/pelican/*/activate
 
 Install the needed dependencies and set up the project::
 
