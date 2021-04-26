@@ -618,7 +618,7 @@ Hidden posts
 =================
 
 Like pages, posts can also be marked as ``hidden`` with the ``Status: hidden``
-attribute. Hidden posts will be output to the final path as expected, but
+attribute. Hidden posts will be output to `ARTICLE_SAVE_AS` as expected, but
 are not included by default in tag or category indexes, nor in the main
 article feed. This has the effect of creating an "unlisted" post.
 

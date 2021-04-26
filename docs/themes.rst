@@ -80,6 +80,7 @@ articles        The list of articles, ordered descending by date.
                 in the `all_articles` variable.
 dates           The same list of articles, but ordered by date,
                 ascending.
+hidden_articles The list of hidden articles
 drafts          The list of draft articles
 authors         A list of (author, articles) tuples, containing all
                 the authors and corresponding articles (values)
