@@ -18,7 +18,7 @@ from operator import attrgetter
 
 import dateutil.parser
 
-from jinja2 import Markup
+from markupsafe import Markup
 
 import pytz
 

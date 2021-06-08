@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
 
-from jinja2 import Markup
+from markupsafe import Markup
 
 from pelican.paginator import Paginator
 from pelican.plugins import signals
