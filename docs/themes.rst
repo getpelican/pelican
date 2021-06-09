@@ -105,7 +105,7 @@ that allow them to be easily sorted by name::
 If you want to sort based on different criteria, `Jinja's sort command`__ has a
 number of options.
 
-__ https://jinja.palletsprojects.com/en/master/templates/#sort
+__ https://jinja.palletsprojects.com/en/latest/templates/#sort
 
 
 Date Formatting
