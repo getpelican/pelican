@@ -104,6 +104,7 @@ Basic settings
    should map the filtername to the filter function.
 
    Example::
+
     import sys
     sys.path.append('to/your/path')
 
