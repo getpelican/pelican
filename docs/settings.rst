@@ -759,9 +759,9 @@ Time and Date
 
 .. [#] Default is the system locale.
 
-.. _Jinja custom filters documentation: https://jinja.palletsprojects.com/en/master/api/#custom-filters
-.. _Jinja global namespace documentation: https://jinja.palletsprojects.com/en/master/api/#the-global-namespace
-.. _Jinja custom tests documentation: https://jinja.palletsprojects.com/en/master/api/#custom-tests
+.. _Jinja custom filters documentation: https://jinja.palletsprojects.com/en/latest/api/#custom-filters
+.. _Jinja global namespace documentation: https://jinja.palletsprojects.com/en/latest/api/#the-global-namespace
+.. _Jinja custom tests documentation: https://jinja.palletsprojects.com/en/latest/api/#custom-tests
 
 .. _locales on Windows: https://www.microsoft.com/en-us/download/details.aspx?id=55979
 
@@ -1403,5 +1403,5 @@ Example settings
     :language: python
 
 
-.. _Jinja Environment documentation: https://jinja.palletsprojects.com/en/master/api/#jinja2.Environment
+.. _Jinja Environment documentation: https://jinja.palletsprojects.com/en/latest/api/#jinja2.Environment
 .. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html
