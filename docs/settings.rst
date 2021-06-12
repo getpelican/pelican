@@ -815,7 +815,7 @@ Metadata
 
    The default metadata you want to use for all articles and pages.
 
-.. data:: FILENAME_METADATA = r'(?P<date>\d{4}-\d{2}-\d{2}).*'
+.. data:: FILENAME_METADATA = r'(?P<date>\\d{4}-\\d{2}-\\d{2}).*'
 
    The regexp that will be used to extract any metadata from the filename. All
    named groups that are matched will be set in the metadata object.  The
