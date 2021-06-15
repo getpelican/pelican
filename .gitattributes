@@ -1,7 +1,0 @@
-# Auto detect text files and perform LF normalization
-* text=auto
-
-# Improve accuracy of GitHub's Linguist-powered language statistics
-pelican/tests/content/* linguist-vendored
-pelican/tests/output/* linguist-vendored
-samples/* linguist-vendored
