@@ -1,5 +1,0 @@
--r developer.pip
-
-# Release issuance
-tox
-wheel
