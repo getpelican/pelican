@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>A Pelican Blog - bar</title><link href="/" rel="alternate"></link><link href="/feeds/bar.atom.xml" rel="self"></link><id>/</id><updated>2010-10-20T10:14:00+00:00</updated><entry><title>Oh yeah !</title><link href="/oh-yeah.html" rel="alternate"></link><published>2010-10-20T10:14:00+00:00</published><updated>2010-10-20T10:14:00+00:00</updated><author><name>Alexis Métaireau</name></author><id>tag:None,2010-10-20:/oh-yeah.html</id><content type="html">&lt;div class="section" id="why-not"&gt;
-&lt;h2&gt;Why not ?&lt;/h2&gt;
-&lt;p&gt;After all, why not ? It's pretty simple to do it, and it will allow me to write my blogposts in rst !
-YEAH !&lt;/p&gt;
-&lt;img alt="alternate text" src="/pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
-&lt;/div&gt;
-</content><category term="bar"></category><category term="oh"></category><category term="bar"></category><category term="yeah"></category></entry></feed>

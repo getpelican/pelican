@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Alexis' log - yeah</title><link>http://blog.notmyidea.org/</link><description>A personal blog.</description><lastBuildDate>Sun, 17 Nov 2013 23:29:00 +0100</lastBuildDate><item><title>This is a super article !</title><link>http://blog.notmyidea.org/this-is-a-super-article.html</link><description>&lt;p class="first last"&gt;Multi-line metadata should be supported
-as well as &lt;strong&gt;inline markup&lt;/strong&gt;.&lt;/p&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Alexis Métaireau</dc:creator><pubDate>Thu, 02 Dec 2010 10:14:00 +0100</pubDate><guid isPermaLink="false">tag:blog.notmyidea.org,2010-12-02:/this-is-a-super-article.html</guid><category>yeah</category><category>foo</category><category>bar</category><category>foobar</category></item></channel></rss>
