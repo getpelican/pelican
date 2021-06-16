@@ -206,7 +206,7 @@ class Generator:
         self.context['static_links'] |= content.get_static_links()
 
     def _update_context(self, items):
-        """Update the context with the given items from the currrent
+        """Update the context with the given items from the current
         processor.
         """
         for item in items:
