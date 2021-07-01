@@ -19,39 +19,47 @@ logger = logging.getLogger(__name__)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description='Pelican Development Server',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        description="Pelican Development Server",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("port", default=8000, type=int, nargs="?",
-                        help="Port to Listen On")
-    parser.add_argument("server", default="", nargs="?",
-                        help="Interface to Listen On")
-    parser.add_argument('--ssl', action="store_true",
-                        help='Activate SSL listener')
-    parser.add_argument('--cert', default="./cert.pem", nargs="?",
-                        help='Path to certificate file. ' +
-                        'Relative to current directory')
-    parser.add_argument('--key', default="./key.pem", nargs="?",
-                        help='Path to certificate key file. ' +
-                        'Relative to current directory')
-    parser.add_argument('--path', default=".",
-                        help='Path to pelican source directory to serve. ' +
-                        'Relative to current directory')
+    parser.add_argument(
+        "port", default=8000, type=int, nargs="?", help="Port to Listen On"
+    )
+    parser.add_argument("server", default="", nargs="?", help="Interface to Listen On")
+    parser.add_argument("--ssl", action="store_true", help="Activate SSL listener")
+    parser.add_argument(
+        "--cert",
+        default="./cert.pem",
+        nargs="?",
+        help="Path to certificate file. " + "Relative to current directory",
+    )
+    parser.add_argument(
+        "--key",
+        default="./key.pem",
+        nargs="?",
+        help="Path to certificate key file. " + "Relative to current directory",
+    )
+    parser.add_argument(
+        "--path",
+        default=".",
+        help="Path to pelican source directory to serve. "
+        + "Relative to current directory",
+    )
     return parser.parse_args()
 
 
 class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
-    SUFFIXES = ['.html', '/index.html', '/', '']
+    SUFFIXES = [".html", "/index.html", "/", ""]
 
     def translate_path(self, path):
         # abandon query parameters
-        path = path.split('?', 1)[0]
-        path = path.split('#', 1)[0]
+        path = path.split("?", 1)[0]
+        path = path.split("#", 1)[0]
         # Don't forget explicit trailing slash when normalizing. Issue17324
-        trailing_slash = path.rstrip().endswith('/')
+        trailing_slash = path.rstrip().endswith("/")
         path = urllib.parse.unquote(path)
         path = posixpath.normpath(path)
-        words = path.split('/')
+        words = path.split("/")
         words = filter(None, words)
         path = self.base_path
         for word in words:
@@ -60,12 +68,12 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
                 continue
             path = os.path.join(path, word)
         if trailing_slash:
-            path += '/'
+            path += "/"
         return path
 
     def do_GET(self):
         # cut off a query string
-        original_path = self.path.split('?', 1)[0]
+        original_path = self.path.split("?", 1)[0]
         # try to find file
         self.path = self.get_path_that_exists(original_path)
 
@@ -76,7 +84,7 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
 
     def get_path_that_exists(self, original_path):
         # Try to strip trailing slash
-        original_path = original_path.rstrip('/')
+        original_path = original_path.rstrip("/")
         # Try to detect file by applying various suffixes
         tries = []
         for suffix in self.SUFFIXES:
@@ -84,9 +92,9 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
             if os.path.exists(self.translate_path(path)):
                 return path
             tries.append(path)
-        logger.warning("Unable to find `%s` or variations:\n%s",
-                       original_path,
-                       '\n'.join(tries))
+        logger.warning(
+            "Unable to find `%s` or variations:\n%s", original_path, "\n".join(tries)
+        )
         return None
 
     def guess_type(self, path):
@@ -95,7 +103,7 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
         mimetype = server.SimpleHTTPRequestHandler.guess_type(self, path)
 
         # If the default guess is too generic, try the python-magic library
-        if mimetype == 'application/octet-stream' and magic_from_file:
+        if mimetype == "application/octet-stream" and magic_from_file:
             mimetype = magic_from_file(path, mime=True)
 
         return mimetype
@@ -107,31 +115,33 @@ class RootedHTTPServer(server.HTTPServer):
         self.RequestHandlerClass.base_path = base_path
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     init_logging(level=logging.INFO)
-    logger.warning("'python -m pelican.server' is deprecated.\nThe "
-                   "Pelican development server should be run via "
-                   "'pelican --listen' or 'pelican -l'.\nThis can be combined "
-                   "with regeneration as 'pelican -lr'.\nRerun 'pelican-"
-                   "quickstart' to get new Makefile and tasks.py files.")
+    logger.warning(
+        "'python -m pelican.server' is deprecated.\nThe "
+        "Pelican development server should be run via "
+        "'pelican --listen' or 'pelican -l'.\nThis can be combined "
+        "with regeneration as 'pelican -lr'.\nRerun 'pelican-"
+        "quickstart' to get new Makefile and tasks.py files."
+    )
     args = parse_arguments()
     RootedHTTPServer.allow_reuse_address = True
     try:
         httpd = RootedHTTPServer(
-            args.path, (args.server, args.port), ComplexHTTPRequestHandler)
+            args.path, (args.server, args.port), ComplexHTTPRequestHandler
+        )
         if args.ssl:
             httpd.socket = ssl.wrap_socket(
-                httpd.socket, keyfile=args.key,
-                certfile=args.cert, server_side=True)
+                httpd.socket, keyfile=args.key, certfile=args.cert, server_side=True
+            )
     except ssl.SSLError as e:
-        logger.error("Couldn't open certificate file %s or key file %s",
-                     args.cert, args.key)
-        logger.error("Could not listen on port %s, server %s.",
-                     args.port, args.server)
-        sys.exit(getattr(e, 'exitcode', 1))
+        logger.error(
+            "Couldn't open certificate file %s or key file %s", args.cert, args.key
+        )
+        logger.error("Could not listen on port %s, server %s.", args.port, args.server)
+        sys.exit(getattr(e, "exitcode", 1))
 
-    logger.info("Serving at port %s, server %s.",
-                args.port, args.server)
+    logger.info("Serving at port %s, server %s.", args.port, args.server)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

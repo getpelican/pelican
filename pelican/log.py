@@ -4,65 +4,66 @@ import logging
 import os
 import sys
 
-__all__ = [
-    'init'
-]
+__all__ = ["init"]
 
 
 class BaseFormatter(logging.Formatter):
     def __init__(self, fmt=None, datefmt=None):
-        FORMAT = '%(customlevelname)s %(message)s'
+        FORMAT = "%(customlevelname)s %(message)s"
         super().__init__(fmt=FORMAT, datefmt=datefmt)
 
     def format(self, record):
         customlevel = self._get_levelname(record.levelname)
-        record.__dict__['customlevelname'] = customlevel
+        record.__dict__["customlevelname"] = customlevel
         # format multiline messages 'nicely' to make it clear they are together
-        record.msg = record.msg.replace('\n', '\n  | ')
+        record.msg = record.msg.replace("\n", "\n  | ")
         if not isinstance(record.args, Mapping):
-            record.args = tuple(arg.replace('\n', '\n  | ') if
-                                isinstance(arg, str) else
-                                arg for arg in record.args)
+            record.args = tuple(
+                arg.replace("\n", "\n  | ") if isinstance(arg, str) else arg
+                for arg in record.args
+            )
         return super().format(record)
 
     def formatException(self, ei):
-        ''' prefix traceback info for better representation '''
+        """ prefix traceback info for better representation """
         s = super().formatException(ei)
         # fancy format traceback
-        s = '\n'.join('  | ' + line for line in s.splitlines())
+        s = "\n".join("  | " + line for line in s.splitlines())
         # separate the traceback from the preceding lines
-        s = '  |___\n{}'.format(s)
+        s = "  |___\n{}".format(s)
         return s
 
     def _get_levelname(self, name):
-        ''' NOOP: overridden by subclasses '''
+        """ NOOP: overridden by subclasses """
         return name
 
 
 class ANSIFormatter(BaseFormatter):
     ANSI_CODES = {
-        'red': '\033[1;31m',
-        'yellow': '\033[1;33m',
-        'cyan': '\033[1;36m',
-        'white': '\033[1;37m',
-        'bgred': '\033[1;41m',
-        'bggrey': '\033[1;100m',
-        'reset': '\033[0;m'}
+        "red": "\033[1;31m",
+        "yellow": "\033[1;33m",
+        "cyan": "\033[1;36m",
+        "white": "\033[1;37m",
+        "bgred": "\033[1;41m",
+        "bggrey": "\033[1;100m",
+        "reset": "\033[0;m",
+    }
 
     LEVEL_COLORS = {
-        'INFO': 'cyan',
-        'WARNING': 'yellow',
-        'ERROR': 'red',
-        'CRITICAL': 'bgred',
-        'DEBUG': 'bggrey'}
+        "INFO": "cyan",
+        "WARNING": "yellow",
+        "ERROR": "red",
+        "CRITICAL": "bgred",
+        "DEBUG": "bggrey",
+    }
 
     def _get_levelname(self, name):
-        color = self.ANSI_CODES[self.LEVEL_COLORS.get(name, 'white')]
-        if name == 'INFO':
-            fmt = '{0}->{2}'
+        color = self.ANSI_CODES[self.LEVEL_COLORS.get(name, "white")]
+        if name == "INFO":
+            fmt = "{0}->{2}"
         else:
-            fmt = '{0}{1}{2}:'
-        return fmt.format(color, name, self.ANSI_CODES['reset'])
+            fmt = "{0}{1}{2}:"
+        return fmt.format(color, name, self.ANSI_CODES["reset"])
 
 
 class TextFormatter(BaseFormatter):
@@ -71,10 +72,10 @@ class TextFormatter(BaseFormatter):
     """
 
     def _get_levelname(self, name):
-        if name == 'INFO':
-            return '->'
+        if name == "INFO":
+            return "->"
         else:
-            return name + ':'
+            return name + ":"
 
 
 class LimitFilter(logging.Filter):
@@ -100,8 +101,8 @@ class LimitFilter(logging.Filter):
             return True
 
         # extract group
-        group = record.__dict__.get('limit_msg', None)
-        group_args = record.__dict__.get('limit_args', ())
+        group = record.__dict__.get("limit_msg", None)
+        group_args = record.__dict__.get("limit_args", ())
 
         # ignore record if it was already raised
         message_key = (record.levelno, record.getMessage())
@@ -116,7 +117,7 @@ class LimitFilter(logging.Filter):
         if logger_level > logging.DEBUG:
             template_key = (record.levelno, record.msg)
             message_key = (record.levelno, record.getMessage())
-            if (template_key in self._ignore or message_key in self._ignore):
+            if template_key in self._ignore or message_key in self._ignore:
                 return False
 
         # check if we went over threshold
@@ -156,12 +157,12 @@ class FatalLogger(LimitLogger):
     def warning(self, *args, **kwargs):
         super().warning(*args, **kwargs)
         if FatalLogger.warnings_fatal:
-            raise RuntimeError('Warning encountered')
+            raise RuntimeError("Warning encountered")
 
     def error(self, *args, **kwargs):
         super().error(*args, **kwargs)
         if FatalLogger.errors_fatal:
-            raise RuntimeError('Error encountered')
+            raise RuntimeError("Error encountered")
 
 
 logging.setLoggerClass(FatalLogger)
@@ -177,11 +178,12 @@ def supports_color():
     from django.core.management.color
     """
     plat = sys.platform
-    supported_platform = plat != 'Pocket PC' and \
-        (plat != 'win32' or 'ANSICON' in os.environ)
+    supported_platform = plat != "Pocket PC" and (
+        plat != "win32" or "ANSICON" in os.environ
+    )
 
     # isatty is not always implemented, #6223.
-    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
+    is_a_tty = hasattr(sys.stdout, "isatty") and sys.stdout.isatty()
     if not supported_platform or not is_a_tty:
         return False
     return True
@@ -194,9 +196,14 @@ def get_formatter():
         return TextFormatter()
 
 
-def init(level=None, fatal='', handler=logging.StreamHandler(), name=None,
-         logs_dedup_min_level=None):
-    FatalLogger.warnings_fatal = fatal.startswith('warning')
+def init(
+    level=None,
+    fatal="",
+    handler=logging.StreamHandler(),
+    name=None,
+    logs_dedup_min_level=None,
+):
+    FatalLogger.warnings_fatal = fatal.startswith("warning")
     FatalLogger.errors_fatal = bool(fatal)
 
     logger = logging.getLogger(name)
@@ -212,17 +219,18 @@ def init(level=None, fatal='', handler=logging.StreamHandler(), name=None,
 
 def log_warnings():
     import warnings
+
     logging.captureWarnings(True)
     warnings.simplefilter("default", DeprecationWarning)
-    init(logging.DEBUG, name='py.warnings')
+    init(logging.DEBUG, name="py.warnings")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     init(level=logging.DEBUG)
 
     root_logger = logging.getLogger()
-    root_logger.debug('debug')
-    root_logger.info('info')
-    root_logger.warning('warning')
-    root_logger.error('error')
-    root_logger.critical('critical')
+    root_logger.debug("debug")
+    root_logger.info("info")
+    root_logger.warning("warning")
+    root_logger.error("error")
+    root_logger.critical("critical")

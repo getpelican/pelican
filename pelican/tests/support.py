@@ -16,7 +16,10 @@ from pelican.contents import Article
 from pelican.readers import default_metadata
 from pelican.settings import DEFAULT_CONFIG
 
-__all__ = ['get_article', 'unittest', ]
+__all__ = [
+    "get_article",
+    "unittest",
+]
 
 
 @contextmanager
@@ -51,7 +54,7 @@ def isplit(s, sep=None):
     True
 
     """
-    sep, hardsep = r'\s+' if sep is None else re.escape(sep), sep is not None
+    sep, hardsep = r"\s+" if sep is None else re.escape(sep), sep is not None
     exp, pos, length = re.compile(sep), 0, len(s)
     while True:
         m = exp.search(s, pos)
@@ -89,7 +92,6 @@ def mute(returns_output=False):
     """
 
     def decorator(func):
-
         @wraps(func)
         def wrapper(*args, **kwargs):
 
@@ -112,7 +114,7 @@ def mute(returns_output=False):
 
 def get_article(title, content, **extra_metadata):
     metadata = default_metadata(settings=DEFAULT_CONFIG)
-    metadata['title'] = title
+    metadata["title"] = title
     if extra_metadata:
         metadata.update(extra_metadata)
     return Article(content, metadata=metadata)
@@ -125,14 +127,14 @@ def skipIfNoExecutable(executable):
     and skips the tests if not found (if subprocess raises a `OSError`).
     """
 
-    with open(os.devnull, 'w') as fnull:
+    with open(os.devnull, "w") as fnull:
         try:
             res = subprocess.call(executable, stdout=fnull, stderr=fnull)
         except OSError:
             res = None
 
     if res is None:
-        return unittest.skip('{} executable not found'.format(executable))
+        return unittest.skip("{} executable not found".format(executable))
 
     return lambda func: func
 
@@ -164,10 +166,7 @@ def can_symlink():
     res = True
     try:
         with temporary_folder() as f:
-            os.symlink(
-                f,
-                os.path.join(f, 'symlink')
-            )
+            os.symlink(f, os.path.join(f, "symlink"))
     except OSError:
         res = False
     return res
@@ -186,9 +185,9 @@ def get_settings(**kwargs):
 
 def get_context(settings=None, **kwargs):
     context = settings.copy() if settings else {}
-    context['generated_content'] = {}
-    context['static_links'] = set()
-    context['static_content'] = {}
+    context["generated_content"] = {}
+    context["static_links"] = set()
+    context["static_content"] = {}
     context.update(kwargs)
     return context
 
@@ -200,22 +199,24 @@ class LogCountHandler(BufferingHandler):
         super().__init__(capacity)
 
     def count_logs(self, msg=None, level=None):
-        return len([
-            rec
-            for rec
-            in self.buffer
-            if (msg is None or re.match(msg, rec.getMessage())) and
-               (level is None or rec.levelno == level)
-        ])
+        return len(
+            [
+                rec
+                for rec in self.buffer
+                if (msg is None or re.match(msg, rec.getMessage()))
+                and (level is None or rec.levelno == level)
+            ]
+        )
 
     def count_formatted_logs(self, msg=None, level=None):
-        return len([
-            rec
-            for rec
-            in self.buffer
-            if (msg is None or re.search(msg, self.format(rec))) and
-               (level is None or rec.levelno == level)
-        ])
+        return len(
+            [
+                rec
+                for rec in self.buffer
+                if (msg is None or re.search(msg, self.format(rec)))
+                and (level is None or rec.levelno == level)
+            ]
+        )
 
 
 class LoggedTestCase(unittest.TestCase):
@@ -233,6 +234,9 @@ class LoggedTestCase(unittest.TestCase):
     def assertLogCountEqual(self, count=None, msg=None, **kwargs):
         actual = self._logcount_handler.count_logs(msg=msg, **kwargs)
         self.assertEqual(
-            actual, count,
-            msg='expected {} occurrences of {!r}, but found {}'.format(
-                count, msg, actual))
+            actual,
+            count,
+            msg="expected {} occurrences of {!r}, but found {}".format(
+                count, msg, actual
+            ),
+        )

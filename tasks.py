@@ -16,9 +16,7 @@ VENV_BIN = Path(VENV) / Path(BIN_DIR)
 
 TOOLS = ["poetry", "pre-commit", "psutil"]
 POETRY = which("poetry") if which("poetry") else (VENV_BIN / "poetry")
-PRECOMMIT = (
-    which("pre-commit") if which("pre-commit") else (VENV_BIN / "pre-commit")
-)
+PRECOMMIT = which("pre-commit") if which("pre-commit") else (VENV_BIN / "pre-commit")
 
 
 @task
@@ -64,9 +62,7 @@ def isort(c, check=False, diff=False):
         check_flag = "-c"
     if diff:
         diff_flag = "--diff"
-    c.run(
-        f"{VENV_BIN}/isort {check_flag} {diff_flag} ."
-    )
+    c.run(f"{VENV_BIN}/isort {check_flag} {diff_flag} .")
 
 
 @task
