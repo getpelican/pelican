@@ -43,7 +43,7 @@ console = Console()
 class Pelican:
 
     def __init__(self, settings):
-        """Pelican initialisation
+        """Pelican initialization
 
         Performs some checks on the environment before doing anything else.
         """
@@ -500,7 +500,7 @@ def listen(server, port, output, excqueue=None):
 def main(argv=None):
     args = parse_arguments(argv)
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
-    init_logging(args.verbosity, args.fatal,
+    init_logging(level=args.verbosity, fatal=args.fatal, name=__name__,
                  logs_dedup_min_level=logs_dedup_min_level)
 
     logger.debug('Pelican version: %s', __version__)
@@ -538,9 +538,9 @@ def main(argv=None):
     except KeyboardInterrupt:
         logger.warning('Keyboard interrupt received. Exiting.')
     except Exception as e:
-        logger.critical('%s', e)
+        logger.critical("%s: %s" % (e.__class__.__name__, e))
 
         if args.verbosity == logging.DEBUG:
-            raise
+            console.print_exception()
         else:
             sys.exit(getattr(e, 'exitcode', 1))
