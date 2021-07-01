@@ -14,6 +14,7 @@ from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
 
 from rich.console import Console
+from rich.logging import RichHandler
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
@@ -500,7 +501,8 @@ def listen(server, port, output, excqueue=None):
 def main(argv=None):
     args = parse_arguments(argv)
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
-    init_logging(level=args.verbosity, fatal=args.fatal, name=__name__,
+    init_logging(level=args.verbosity, fatal=args.fatal,
+                 handler=RichHandler(console=console), name=__name__,
                  logs_dedup_min_level=logs_dedup_min_level)
 
     logger.debug('Pelican version: %s', __version__)
