@@ -4,13 +4,17 @@ from posixpath import join as posix_join
 from urllib.parse import urljoin
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
-
 from markupsafe import Markup
 
 from pelican.paginator import Paginator
 from pelican.plugins import signals
-from pelican.utils import (get_relative_path, is_selected_for_writing,
-                           path_to_url, sanitised_join, set_date_tzinfo)
+from pelican.utils import (
+    get_relative_path,
+    is_selected_for_writing,
+    path_to_url,
+    sanitised_join,
+    set_date_tzinfo,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -1,16 +1,20 @@
 import locale
 import os
-import re
 from posixpath import join as posix_join
+import re
 
 from pelican.settings import DEFAULT_CONFIG
-from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
-                                   unittest)
-from pelican.tools.pelican_import import (blogger2fields, build_header,
-                                          build_markdown_header,
-                                          decode_wp_content,
-                                          download_attachments, fields2pelican,
-                                          get_attachments, wp2fields)
+from pelican.tests.support import mute, skipIfNoExecutable, temporary_folder, unittest
+from pelican.tools.pelican_import import (
+    blogger2fields,
+    build_header,
+    build_markdown_header,
+    decode_wp_content,
+    download_attachments,
+    fields2pelican,
+    get_attachments,
+    wp2fields,
+)
 from pelican.utils import path_to_file_url, slugify
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))

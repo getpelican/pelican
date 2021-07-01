@@ -1,32 +1,37 @@
 import argparse
+from collections.abc import Iterable
 import logging
 import multiprocessing
 import os
+from pkgutil import extend_path
 import pprint
 import sys
 import time
 import traceback
-from collections.abc import Iterable
-# Combines all paths to `pelican` package accessible from `sys.path`
-# Makes it possible to install `pelican` and namespace plugins into different
-# locations in the file system (e.g. pip with `-e` or `--user`)
-from pkgutil import extend_path
-__path__ = extend_path(__path__, __name__)
 
 from rich.console import Console
 
+# Combines all paths to `pelican` package accessible from `sys.path`
+# Makes it possible to install `pelican` and namespace plugins into different
+# locations in the file system (e.g. pip with `-e` or `--user`)
+__path__ = extend_path(__path__, __name__)
+
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import init as init_logging
-from pelican.generators import (ArticlesGenerator,  # noqa: I100
-                                PagesGenerator, SourceFileGenerator,
-                                StaticGenerator, TemplatePagesGenerator)
+from pelican.log import init as init_logging  # isort:skip
+from pelican.generators import (  # noqa: I100
+    ArticlesGenerator,
+    PagesGenerator,
+    SourceFileGenerator,
+    StaticGenerator,
+    TemplatePagesGenerator,
+)
 from pelican.plugins import signals
 from pelican.plugins._utils import get_plugin_name, load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import coerce_overrides, read_settings
-from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
+from pelican.utils import FileSystemWatcher, clean_output_dir, maybe_pluralize
 from pelican.writers import Writer
 
 try:

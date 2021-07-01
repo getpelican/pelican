@@ -10,10 +10,8 @@ from jinja2.utils import generate_lorem_ipsum
 from pelican.contents import Article, Author, Category, Page, Static
 from pelican.plugins.signals import content_object_init
 from pelican.settings import DEFAULT_CONFIG
-from pelican.tests.support import (LoggedTestCase, get_context, get_settings,
-                                   unittest)
-from pelican.utils import (path_to_url, posixize_path, truncate_html_words)
-
+from pelican.tests.support import LoggedTestCase, get_context, get_settings, unittest
+from pelican.utils import path_to_url, posixize_path, truncate_html_words
 
 # generate one paragraph, enclosed with <p>
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))

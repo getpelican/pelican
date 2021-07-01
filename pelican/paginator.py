@@ -1,8 +1,8 @@
+from collections import namedtuple
 import functools
 import logging
-import os
-from collections import namedtuple
 from math import ceil
+import os
 
 logger = logging.getLogger(__name__)
 PaginationRule = namedtuple(

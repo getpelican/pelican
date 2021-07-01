@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 import argparse
+from collections import defaultdict
+from html import unescape
 import logging
 import os
 import re
 import subprocess
 import sys
 import time
-from collections import defaultdict
-from html import unescape
 from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
@@ -17,7 +17,6 @@ from urllib.request import urlretrieve
 from pelican.log import init
 from pelican.settings import read_settings
 from pelican.utils import SafeDatetime, slugify
-
 
 logger = logging.getLogger(__name__)
 

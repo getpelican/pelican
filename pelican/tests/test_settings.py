@@ -4,11 +4,15 @@ import os
 from os.path import abspath, dirname, join
 from sys import platform
 
-
-from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
-                              _printf_s_to_format_field,
-                              coerce_overrides, configure_settings,
-                              handle_deprecated_settings, read_settings)
+from pelican.settings import (
+    DEFAULT_CONFIG,
+    DEFAULT_THEME,
+    _printf_s_to_format_field,
+    coerce_overrides,
+    configure_settings,
+    handle_deprecated_settings,
+    read_settings,
+)
 from pelican.tests.support import unittest
 
 

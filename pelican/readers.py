@@ -1,11 +1,11 @@
-import datetime
-import logging
-import os
-import re
 from collections import OrderedDict
+import datetime
 from html import escape
 from html.parser import HTMLParser
 from io import StringIO
+import logging
+import os
+import re
 
 import docutils
 import docutils.core
@@ -580,8 +580,8 @@ class Readers(FileStampDataCacher):
 
         # eventually filter the content with typogrify if asked so
         if self.settings['TYPOGRIFY']:
-            from typogrify.filters import typogrify
             import smartypants
+            from typogrify.filters import typogrify
 
             typogrify_dashes = self.settings['TYPOGRIFY_DASHES']
             if typogrify_dashes == 'oldschool':

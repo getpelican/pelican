@@ -5,7 +5,6 @@ import locale
 import os
 
 from jinja2 import Environment, FileSystemLoader
-
 import pytz
 
 try:

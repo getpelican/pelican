@@ -1,9 +1,8 @@
-import os
 from contextlib import contextmanager
+import os
 
+from pelican.plugins._utils import get_namespace_plugins, get_plugin_name, load_plugins
 import pelican.tests.dummy_plugins.normal_plugin.normal_plugin as normal_plugin
-from pelican.plugins._utils import (get_namespace_plugins, get_plugin_name,
-                                    load_plugins)
 from pelican.tests.support import unittest
 
 

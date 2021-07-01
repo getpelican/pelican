@@ -1,8 +1,8 @@
+from collections import defaultdict
+from collections.abc import Mapping
 import logging
 import os
 import sys
-from collections import defaultdict
-from collections.abc import Mapping
 
 __all__ = [
     'init'

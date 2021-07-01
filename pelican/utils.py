@@ -1,27 +1,24 @@
+from collections.abc import Hashable
+from contextlib import contextmanager
 import datetime
 import fnmatch
+from functools import partial
+from html import entities
+from html.parser import HTMLParser
+from itertools import groupby
 import locale
 import logging
+from operator import attrgetter
 import os
 import re
 import shutil
 import sys
 import traceback
 import urllib
-from collections.abc import Hashable
-from contextlib import contextmanager
-from functools import partial
-from html import entities
-from html.parser import HTMLParser
-from itertools import groupby
-from operator import attrgetter
 
 import dateutil.parser
-
 from markupsafe import Markup
-
 import pytz
-
 
 logger = logging.getLogger(__name__)
 
@@ -231,6 +228,7 @@ def slugify(value, regex_subs=(), preserve_case=False, use_unicode=False):
     """
 
     import unicodedata
+
     import unidecode
 
     def normalize_unicode(text):

@@ -1,16 +1,16 @@
-import locale
-import logging
-import os
-import re
-import subprocess
-import sys
-import unittest
 from contextlib import contextmanager
 from functools import wraps
 from io import StringIO
+import locale
+import logging
 from logging.handlers import BufferingHandler
+import os
+import re
 from shutil import rmtree
+import subprocess
+import sys
 from tempfile import mkdtemp
+import unittest
 
 from pelican.contents import Article
 from pelican.readers import default_metadata

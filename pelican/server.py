@@ -1,11 +1,11 @@
 import argparse
+from http import server
 import logging
 import os
 import posixpath
 import ssl
 import sys
 import urllib
-from http import server
 
 try:
     from magic import from_file as magic_from_file
@@ -13,6 +13,7 @@ except ImportError:
     magic_from_file = None
 
 from pelican.log import init as init_logging
+
 logger = logging.getLogger(__name__)
 
 

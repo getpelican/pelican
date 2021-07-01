@@ -1,17 +1,16 @@
+from collections.abc import Sequence
 import locale
 import logging
 import os
+from shutil import rmtree
 import subprocess
 import sys
-from collections.abc import Sequence
-from shutil import rmtree
 from tempfile import mkdtemp
 
 from pelican import Pelican
 from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
-from pelican.tests.support import (LoggedTestCase, locale_available,
-                                   mute, unittest)
+from pelican.tests.support import LoggedTestCase, locale_available, mute, unittest
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(

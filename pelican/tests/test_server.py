@@ -1,5 +1,5 @@
-import os
 from io import BytesIO
+import os
 from shutil import rmtree
 from tempfile import mkdtemp
 

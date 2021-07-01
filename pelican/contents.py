@@ -1,22 +1,29 @@
 import copy
 import datetime
+from html import unescape
 import locale
 import logging
 import os
 import re
-from html import unescape
 from urllib.parse import unquote, urljoin, urlparse, urlunparse
 
 import pytz
 
 from pelican.plugins import signals
 from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import (deprecated_attribute, memoized, path_to_url,
-                           posixize_path, sanitised_join, set_date_tzinfo,
-                           slugify, truncate_html_words)
 
 # Import these so that they're avalaible when you import from pelican.contents.
-from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
+from pelican.urlwrappers import Author, Category, Tag, URLWrapper  # NOQA
+from pelican.utils import (
+    deprecated_attribute,
+    memoized,
+    path_to_url,
+    posixize_path,
+    sanitised_join,
+    set_date_tzinfo,
+    slugify,
+    truncate_html_words,
+)
 
 logger = logging.getLogger(__name__)
 

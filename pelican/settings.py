@@ -5,8 +5,8 @@ import json
 import locale
 import logging
 import os
-import re
 from os.path import isabs
+import re
 
 from pelican.log import LimitFilter
 

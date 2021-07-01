@@ -1,23 +1,34 @@
 import calendar
+from collections import defaultdict
 import errno
 import fnmatch
-import logging
-import os
-from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
+import logging
 from operator import attrgetter
+import os
 
-from jinja2 import (BaseLoader, ChoiceLoader, Environment, FileSystemLoader,
-                    PrefixLoader, TemplateNotFound)
+from jinja2 import (
+    BaseLoader,
+    ChoiceLoader,
+    Environment,
+    FileSystemLoader,
+    PrefixLoader,
+    TemplateNotFound,
+)
 
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
 from pelican.plugins import signals
 from pelican.readers import Readers
-from pelican.utils import (DateFormatter, copy, mkdir_p, order_content,
-                           posixize_path, process_translations)
-
+from pelican.utils import (
+    DateFormatter,
+    copy,
+    mkdir_p,
+    order_content,
+    posixize_path,
+    process_translations,
+)
 
 logger = logging.getLogger(__name__)
 

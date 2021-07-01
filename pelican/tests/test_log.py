@@ -1,7 +1,7 @@
-import logging
-import unittest
 from collections import defaultdict
 from contextlib import contextmanager
+import logging
+import unittest
 
 from pelican import log
 from pelican.tests.support import LogCountHandler

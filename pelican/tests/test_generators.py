@@ -1,17 +1,20 @@
 import locale
 import os
-import sys
 from shutil import copy, rmtree
+import sys
 from tempfile import mkdtemp
 from unittest.mock import MagicMock
 
-from pelican.generators import (ArticlesGenerator, Generator, PagesGenerator,
-                                PelicanTemplateNotFound, StaticGenerator,
-                                TemplatePagesGenerator)
-from pelican.tests.support import (can_symlink, get_context, get_settings,
-                                   unittest)
+from pelican.generators import (
+    ArticlesGenerator,
+    Generator,
+    PagesGenerator,
+    PelicanTemplateNotFound,
+    StaticGenerator,
+    TemplatePagesGenerator,
+)
+from pelican.tests.support import can_symlink, get_context, get_settings, unittest
 from pelican.writers import Writer
-
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, 'content')
