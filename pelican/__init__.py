@@ -222,7 +222,7 @@ class Pelican:
 
         writer = writers[0]
 
-        logger.debug("Found writer: %s", writer)
+        logger.debug("Found writer: %s (%s)" % (writer.__name__, writer.__module__))
         return writer(self.output_path, settings=self.settings)
 
 
