@@ -213,7 +213,7 @@ class Pelican:
         return generators
 
     def _get_writer(self):
-        writers = [w for _, w in signals.get_writer.send(self) if isinstance(w, type)]
+        writers = [w for w, _ in signals.get_writer.send(self) if isinstance(w, type)]
         num_writers = len(writers)
 
         if num_writers == 0:
