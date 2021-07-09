@@ -163,15 +163,15 @@ class Pelican:
             'draft page',
             'draft pages')
 
-        print('Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.'
-              .format(
-                    pluralized_articles,
-                    pluralized_drafts,
-                    pluralized_hidden_articles,
-                    pluralized_pages,
-                    pluralized_hidden_pages,
-                    pluralized_draft_pages,
-                    time.time() - start_time))
+        console.print('Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.'
+                      .format(
+                              pluralized_articles,
+                              pluralized_drafts,
+                              pluralized_hidden_articles,
+                              pluralized_pages,
+                              pluralized_hidden_pages,
+                              pluralized_draft_pages,
+                              time.time() - start_time))
 
     def _get_generator_classes(self):
         discovered_generators = [
@@ -426,8 +426,8 @@ def get_instance(args):
 
 
 def autoreload(args, excqueue=None):
-    print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
-          ' `settings` for changes. ---')
+    console.print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
+                  ' `settings` for changes. ---')
     pelican, settings = get_instance(args)
     watcher = FileSystemWatcher(args.settings, Readers, settings)
     sleep = False
@@ -446,8 +446,8 @@ def autoreload(args, excqueue=None):
                 watcher.update_watchers(settings)
 
             if any(modified.values()):
-                print('\n-> Modified: {}. re-generating...'.format(
-                    ', '.join(k for k, v in modified.items() if v)))
+                console.print('\n-> Modified: {}. re-generating...'.format(
+                              ', '.join(k for k, v in modified.items() if v)))
                 pelican.run()
 
         except KeyboardInterrupt:
