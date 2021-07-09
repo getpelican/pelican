@@ -222,7 +222,7 @@ class Pelican:
 
         writer = writers[0]
 
-        logger.debug("Found writer: %s (%s)" % (writer.__name__, writer.__module__))
+        logger.debug("Found writer: %s (%s)", writer.__name__, writer.__module__)
         return writer(self.output_path, settings=self.settings)
 
 
@@ -536,7 +536,7 @@ def main(argv=None):
     except KeyboardInterrupt:
         logger.warning('Keyboard interrupt received. Exiting.')
     except Exception as e:
-        logger.critical("%s: %s" % (e.__class__.__name__, e))
+        logger.critical("%s: %s", e.__class__.__name__, e)
 
         if args.verbosity == logging.DEBUG:
             console.print_exception()
