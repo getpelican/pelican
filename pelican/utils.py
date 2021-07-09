@@ -811,7 +811,7 @@ class FileSystemWatcher:
         if result.get('content') is None:
             reader_descs = sorted(
                 {
-                    '%s (%s)' % (type(r).__name__, ', '.join(r.file_extensions))
+                    '  | %s (%s)' % (type(r).__name__, ', '.join(r.file_extensions))
                     for r in self.reader_class(self.settings).readers.values()
                     if r.enabled
                 }

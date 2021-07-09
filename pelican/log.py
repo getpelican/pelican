@@ -1,11 +1,14 @@
 import logging
 from collections import defaultdict
 
+from rich.console import Console
 from rich.logging import RichHandler
 
 __all__ = [
     'init'
 ]
+
+console = Console()
 
 
 class LimitFilter(logging.Filter):
@@ -100,7 +103,7 @@ logging.setLoggerClass(FatalLogger)
 logging.getLogger().__class__ = FatalLogger
 
 
-def init(level=None, fatal='', handler=RichHandler(), name=None,
+def init(level=None, fatal='', handler=RichHandler(console=console), name=None,
          logs_dedup_min_level=None):
     FatalLogger.warnings_fatal = fatal.startswith('warning')
     FatalLogger.errors_fatal = bool(fatal)
