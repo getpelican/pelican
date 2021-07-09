@@ -228,26 +228,33 @@ class Pelican:
 
 class PrintSettings(argparse.Action):
     def __call__(self, parser, namespace, values, option_string):
-        instance, settings = get_instance(namespace)
+        init_logging(name=__name__)
+
+        try:
+            instance, settings = get_instance(namespace)
+        except Exception as e:
+            logger.critical("%s: %s", e.__class__.__name__, e)
+            console.print_exception()
+            sys.exit(getattr(e, 'exitcode', 1))
 
         if values:
             # One or more arguments provided, so only print those settings
             for setting in values:
                 if setting in settings:
                     # Only add newline between setting name and value if dict
-                    if isinstance(settings[setting], dict):
+                    if isinstance(settings[setting], (dict, tuple, list)):
                         setting_format = '\n{}:\n{}'
                     else:
                         setting_format = '\n{}: {}'
-                    print(setting_format.format(
+                    console.print(setting_format.format(
                         setting,
                         pprint.pformat(settings[setting])))
                 else:
-                    print('\n{} is not a recognized setting.'.format(setting))
+                    console.print('\n{} is not a recognized setting.'.format(setting))
                     break
         else:
             # No argument was given to --print-settings, so print all settings
-            pprint.pprint(settings)
+            console.print(settings)
 
         parser.exit()
 
