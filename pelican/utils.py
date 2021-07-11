@@ -99,6 +99,7 @@ class SafeDatetime(datetime.datetime):
         else:
             return super().strftime(fmt)
 
+
 class DateFormatter:
     '''A date formatter object used as a jinja filter
 
