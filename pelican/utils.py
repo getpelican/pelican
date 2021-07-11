@@ -50,7 +50,8 @@ def strftime(date, date_format):
     '''
     def strip_zeros(x):
         return x.lstrip('0') or '0'
-    c89_directives = 'aAbBcdfHIjmMpSUwWxXyYzZ%'
+    # includes ISO date parameters added by Python 3.6
+    c89_directives = 'aAbBcdfGHIjmMpSUuVwWxXyYzZ%'
 
     # grab candidate format options
     format_options = '%[-]?.'
@@ -97,7 +98,6 @@ class SafeDatetime(datetime.datetime):
             return strftime(self, fmt)
         else:
             return super().strftime(fmt)
-
 
 class DateFormatter:
     '''A date formatter object used as a jinja filter
