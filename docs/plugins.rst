@@ -274,6 +274,33 @@ Adding a new generator is also really easy. You might want to have a look at
         signals.get_generators.connect(get_generators)
 
 
+Adding a new writer
+-------------------
+
+Adding a writer will allow you to output additional file formats to disk, or
+change how the existing formats are written to disk. Note that only one writer
+will be active at a time, so be sure to either subclass the built-in Writer, or
+completely re-implement it.
+
+Here is a basic example of how to set up your own writer::
+
+    from pelican.writers import Writer
+    from pelican import signals
+
+    class MyWriter(Writer):
+        # define new writer functionality
+        pass
+
+
+    def add_writer(pelican_object):
+        # use pelican_instance to setup stuff if needed
+        return MyWriter
+
+
+    def register():
+        signals.get_writer.connect(add_writer)
+
+
 .. _Pip: https://pip.pypa.io/
 .. _pelican-plugins bug #314: https://github.com/getpelican/pelican-plugins/issues/314
 .. _Blinker: https://pythonhosted.org/blinker/
