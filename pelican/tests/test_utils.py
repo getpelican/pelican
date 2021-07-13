@@ -513,6 +513,9 @@ class TestUtils(LoggedTestCase):
         d = utils.SafeDatetime(2012, 8, 9)
         self.assertEqual(utils.strftime(d, '%-d/%-m/%y'), '9/8/12')
 
+        d = utils.SafeDatetime(2021, 1, 8)
+        self.assertEqual(utils.strftime(d, '%G - %-V - %u'), '2021 - 1 - 5')
+
     # test the output of utils.strftime in a different locale
     # Turkish locale
     @unittest.skipUnless(locale_available('tr_TR.UTF-8') or
