@@ -65,7 +65,7 @@ class FileDataCacher:
                 mkdir_p(self.settings['CACHE_PATH'])
                 with self._cache_open(self._cache_path, 'wb') as fhandle:
                     pickle.dump(self._cache, fhandle)
-            except (OSError, pickle.PicklingError) as err:
+            except (OSError, pickle.PicklingError, TypeError) as err:
                 logger.warning('Could not save cache %s\n ... %s',
                                self._cache_path, err)
 
