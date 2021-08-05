@@ -1,7 +1,26 @@
 .. _theming-pelican:
 
+Themes
+######
+
+Where to find them?
+*******************
+Namespace themes can be found in the `pelican-themes repository`_.
+Please note that while we do our best to review and maintain these themes,
+they are submitted by the Pelican community and thus may have varying levels of
+support and interoperability.
+
+You can also search packaqges with the `Pelican::Themes Pypi classifier`_.
+
+.. _pelican-themes repository: https://github.com/getpelican/pelican-themes
+.. _Pelican::Themes Pypi classifier: https://pypi.org/search/?c=Framework+%3A%3A+Pelican+%3A%3A+Themes
+
+A Pelican contributor also built a web page inventoring many Pelican themes: 
+`<http://www.pelicanthemes.com>`_
+
+
 Creating themes
-###############
+***************
 
 To generate its HTML output, Pelican uses the `Jinja
 <https://palletsprojects.com/p/jinja/>`_ templating engine due to its flexibility and

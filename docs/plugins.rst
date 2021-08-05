@@ -59,8 +59,11 @@ individual repositories. Legacy plugins are located in the `pelican-plugins
 repository`_ and will be gradually phased out in favor of the namespace
 versions.
 
+You can also search packaqges with the `Pelican::Plugins Pypi classifier`_.
+
 .. _pelican-plugins organization: https://github.com/pelican-plugins
 .. _pelican-plugins repository: https://github.com/getpelican/pelican-plugins
+.. _Pelican::Plugins Pypi classifier: https://pypi.org/search/?c=Framework+%3A%3A+Pelican+%3A%3A+Plugins
 
 Please note that while we do our best to review and maintain these plugins,
 they are submitted by the Pelican community and thus may have varying levels of
