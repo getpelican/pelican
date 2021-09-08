@@ -8,6 +8,8 @@ from tempfile import mkdtemp
 
 import pytz
 
+from markupsafe import Markup
+
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
 from pelican.readers import Readers
@@ -232,6 +234,32 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(
             utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20),
             '<!-- comment -->' + 'word ' * 20 + '…')
+
+        # Words enclosed or intervaled by HTML tags with a custom end
+        # marker containing HTML tags.
+        self.assertEqual(
+            utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20,
+                '<span>marker</span>'),
+            '<p>' + 'word ' * 20 + '<span>marker</span></p>')
+        self.assertEqual(
+            utils.truncate_html_words(
+                '<span\nstyle="\n…\n">' + 'word ' * 100 + '</span>', 20,
+                '<span>marker</span>'),
+            '<span\nstyle="\n…\n">' + 'word ' * 20 + '<span>marker</span></span>')
+        self.assertEqual(
+            utils.truncate_html_words('<br>' + 'word ' * 100, 20,
+                '<span>marker</span>'),
+            '<br>' + 'word ' * 20 + '<span>marker</span>')
+        self.assertEqual(
+            utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20,
+                '<span>marker</span>'),
+            '<!-- comment -->' + 'word ' * 20 + '<span>marker</span>')
+
+        # Words with HTML tags and a Jinja2 generated end marker (Markup)
+        self.assertEqual(
+            utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20,
+                Markup('<span>marker</span>')),
+            '<p>' + 'word ' * 20 + '<span>marker</span></p>')
 
         # Words with hypens and apostrophes.
         self.assertEqual(

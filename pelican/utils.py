@@ -580,6 +580,9 @@ def truncate_html_words(s, num, end_text='…'):
         return s
     out = s[:truncator.truncate_at]
     if end_text:
+        # check if the passed terminator was Jinja2 generated (i.e. Markup)
+        if isinstance(end_text, Markup):
+            end_text = end_text.unescape()
         out += ' ' + end_text
     # Close any tags still open
     for tag in truncator.open_tags:
