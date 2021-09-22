@@ -301,6 +301,43 @@ Here is a basic example of how to set up your own writer::
         signals.get_writer.connect(add_writer)
 
 
+Modifying Generators to Inject Content
+---------------------------------------
+
+You can programatically inject articles or pages using plugins. This can be 
+useful if you plan to fetch articles from an API, for example. 
+
+Here is a very simple example of how we can build a plugin that injects
+custom articles, using the article `article_generator_pretaxonomy` signal::
+
+    from pelican import signals
+    from pelican.contents import Article
+    from pelican.readers import BaseReader
+    import datetime
+
+    def addArticle(articleGenerator):
+        settings = articleGenerator.settings
+
+        # Author, category, and tags are objects, not strings, so they need to
+        # be handled using BaseReader's process_metadata.
+        baseReader = BaseReader(settings) 
+
+        content = "I am the body of an injected article!"
+
+        newArticle = Article(content, {
+            "title": "Injected Article!",
+            "date": datetime.datetime.now(),
+            "category": baseReader.process_metadata('category', 'fromAPI'),
+            "tags": baseReader.process_metadata("tags", 'tagA, tagB')
+        })
+
+        articleGenerator.articles.insert(0, newArticle)
+
+    def register():
+        signals.article_generator_pretaxonomy.connect(addArticle)
+
+
+
 .. _Pip: https://pip.pypa.io/
 .. _pelican-plugins bug #314: https://github.com/getpelican/pelican-plugins/issues/314
 .. _Blinker: https://pythonhosted.org/blinker/
