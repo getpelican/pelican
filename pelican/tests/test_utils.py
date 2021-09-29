@@ -218,6 +218,16 @@ class TestUtils(LoggedTestCase):
             utils.truncate_html_words('word ' * 100, 20),
             'word ' * 20 + '…')
 
+        # Plain text with Unicode content.
+        self.assertEqual(
+            utils.truncate_html_words('我愿意这样，朋友——我独自远行，\
+            不但没有你，并且再没有别的影在黑暗里。', 12),
+            '我愿意这样，朋友——我独自远行' + ' …')
+        self.assertEqual(
+            utils.truncate_html_words(
+                'Ты мелькнула, ты предстала, Снова сердце задрожало,', 3),
+            'Ты мелькнула, ты' + ' …')
+
         # Words enclosed or intervaled by HTML tags.
         self.assertEqual(
             utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20),

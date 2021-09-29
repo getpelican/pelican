@@ -133,6 +133,7 @@ class memoized:
     (not reevaluated).
 
     """
+
     def __init__(self, func):
         self.func = func
         self.cache = {}
@@ -408,7 +409,21 @@ def posixize_path(rel_path):
 
 class _HTMLWordTruncator(HTMLParser):
 
-    _word_regex = re.compile(r"\w[\w'-]*", re.U)
+    _word_regex = re.compile(r"(({SBC})({SBC}|-|')*)|{DBC}".format(
+        # SBC means Latin-like characters. A word contains a few characters.
+        #         ASCII |Extended Latin | Cyrillic
+        SBC="[0-9a-zA-Z]|[\u00C0-\u024f]|[\u0400-\u04FF]",
+        # DBC means CJK-like characters. An character can stand for a word.
+        DBC=("([\u4E00-\u9FFF])|"          # CJK Unified Ideographs
+             "([\u3400-\u4DBF])|"          # CJK Unified Ideographs Extension A
+             "([\uF900-\uFAFF])|"          # CJK Compatibility Ideographs
+             "([\U00020000-\U0002A6DF])|"  # CJK Unified Ideographs Extension B
+             "([\U0002F800-\U0002FA1F])|"  # CJK Compatibility Ideographs Supplement
+             "([\u3040-\u30FF])|"          # Hiragana and Katakana
+             "([\u1100-\u11FF])|"          # Hangul Jamo
+             "([\uAC00-\uD7FF])|"          # Hangul Compatibility Jamo
+             "([\u3130-\u318F])"           # Hangul Syllables
+             )), re.UNICODE)
     _word_prefix_regex = re.compile(r'\w', re.U)
     _singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
                  'hr', 'input')
@@ -818,8 +833,8 @@ class FileSystemWatcher:
                 }
             )
             logger.warning(
-                    'No valid files found in content for the active readers:\n'
-                    + '\n'.join(reader_descs))
+                'No valid files found in content for the active readers:\n'
+                + '\n'.join(reader_descs))
 
         if result.get('theme') is None:
             logger.warning('Empty theme folder. Using `basic` theme.')
