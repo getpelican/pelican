@@ -13,10 +13,9 @@ from collections.abc import Iterable
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
 
-from rich.console import Console
-
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
+from pelican.log import console
 from pelican.log import init as init_logging
 from pelican.generators import (ArticlesGenerator,  # noqa: I100
                                 PagesGenerator, SourceFileGenerator,
@@ -37,13 +36,12 @@ except Exception:
 
 DEFAULT_CONFIG_NAME = 'pelicanconf.py'
 logger = logging.getLogger(__name__)
-console = Console()
 
 
 class Pelican:
 
     def __init__(self, settings):
-        """Pelican initialisation
+        """Pelican initialization
 
         Performs some checks on the environment before doing anything else.
         """
@@ -165,15 +163,15 @@ class Pelican:
             'draft page',
             'draft pages')
 
-        print('Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.'
-              .format(
-                    pluralized_articles,
-                    pluralized_drafts,
-                    pluralized_hidden_articles,
-                    pluralized_pages,
-                    pluralized_hidden_pages,
-                    pluralized_draft_pages,
-                    time.time() - start_time))
+        console.print('Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.'
+                      .format(
+                              pluralized_articles,
+                              pluralized_drafts,
+                              pluralized_hidden_articles,
+                              pluralized_pages,
+                              pluralized_hidden_pages,
+                              pluralized_draft_pages,
+                              time.time() - start_time))
 
     def _get_generator_classes(self):
         discovered_generators = [
@@ -224,32 +222,39 @@ class Pelican:
 
         writer = writers[0]
 
-        logger.debug("Found writer: %s", writer)
+        logger.debug("Found writer: %s (%s)", writer.__name__, writer.__module__)
         return writer(self.output_path, settings=self.settings)
 
 
 class PrintSettings(argparse.Action):
     def __call__(self, parser, namespace, values, option_string):
-        instance, settings = get_instance(namespace)
+        init_logging(name=__name__)
+
+        try:
+            instance, settings = get_instance(namespace)
+        except Exception as e:
+            logger.critical("%s: %s", e.__class__.__name__, e)
+            console.print_exception()
+            sys.exit(getattr(e, 'exitcode', 1))
 
         if values:
             # One or more arguments provided, so only print those settings
             for setting in values:
                 if setting in settings:
                     # Only add newline between setting name and value if dict
-                    if isinstance(settings[setting], dict):
+                    if isinstance(settings[setting], (dict, tuple, list)):
                         setting_format = '\n{}:\n{}'
                     else:
                         setting_format = '\n{}: {}'
-                    print(setting_format.format(
+                    console.print(setting_format.format(
                         setting,
                         pprint.pformat(settings[setting])))
                 else:
-                    print('\n{} is not a recognized setting.'.format(setting))
+                    console.print('\n{} is not a recognized setting.'.format(setting))
                     break
         else:
             # No argument was given to --print-settings, so print all settings
-            pprint.pprint(settings)
+            console.print(settings)
 
         parser.exit()
 
@@ -428,8 +433,8 @@ def get_instance(args):
 
 
 def autoreload(args, excqueue=None):
-    print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
-          ' `settings` for changes. ---')
+    console.print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
+                  ' `settings` for changes. ---')
     pelican, settings = get_instance(args)
     watcher = FileSystemWatcher(args.settings, Readers, settings)
     sleep = False
@@ -448,8 +453,8 @@ def autoreload(args, excqueue=None):
                 watcher.update_watchers(settings)
 
             if any(modified.values()):
-                print('\n-> Modified: {}. re-generating...'.format(
-                    ', '.join(k for k, v in modified.items() if v)))
+                console.print('\n-> Modified: {}. re-generating...'.format(
+                              ', '.join(k for k, v in modified.items() if v)))
                 pelican.run()
 
         except KeyboardInterrupt:
@@ -500,8 +505,8 @@ def listen(server, port, output, excqueue=None):
 def main(argv=None):
     args = parse_arguments(argv)
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
-    init_logging(args.verbosity, args.fatal,
-                 logs_dedup_min_level=logs_dedup_min_level)
+    init_logging(level=args.verbosity, fatal=args.fatal,
+                 name=__name__, logs_dedup_min_level=logs_dedup_min_level)
 
     logger.debug('Pelican version: %s', __version__)
     logger.debug('Python version: %s', sys.version.split()[0])
@@ -538,9 +543,8 @@ def main(argv=None):
     except KeyboardInterrupt:
         logger.warning('Keyboard interrupt received. Exiting.')
     except Exception as e:
-        logger.critical('%s', e)
+        logger.critical("%s: %s", e.__class__.__name__, e)
 
         if args.verbosity == logging.DEBUG:
-            raise
-        else:
-            sys.exit(getattr(e, 'exitcode', 1))
+            console.print_exception()
+        sys.exit(getattr(e, 'exitcode', 1))

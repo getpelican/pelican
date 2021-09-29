@@ -1,80 +1,14 @@
 import logging
-import os
-import sys
 from collections import defaultdict
-from collections.abc import Mapping
+
+from rich.console import Console
+from rich.logging import RichHandler
 
 __all__ = [
     'init'
 ]
 
-
-class BaseFormatter(logging.Formatter):
-    def __init__(self, fmt=None, datefmt=None):
-        FORMAT = '%(customlevelname)s %(message)s'
-        super().__init__(fmt=FORMAT, datefmt=datefmt)
-
-    def format(self, record):
-        customlevel = self._get_levelname(record.levelname)
-        record.__dict__['customlevelname'] = customlevel
-        # format multiline messages 'nicely' to make it clear they are together
-        record.msg = record.msg.replace('\n', '\n  | ')
-        if not isinstance(record.args, Mapping):
-            record.args = tuple(arg.replace('\n', '\n  | ') if
-                                isinstance(arg, str) else
-                                arg for arg in record.args)
-        return super().format(record)
-
-    def formatException(self, ei):
-        ''' prefix traceback info for better representation '''
-        s = super().formatException(ei)
-        # fancy format traceback
-        s = '\n'.join('  | ' + line for line in s.splitlines())
-        # separate the traceback from the preceding lines
-        s = '  |___\n{}'.format(s)
-        return s
-
-    def _get_levelname(self, name):
-        ''' NOOP: overridden by subclasses '''
-        return name
-
-
-class ANSIFormatter(BaseFormatter):
-    ANSI_CODES = {
-        'red': '\033[1;31m',
-        'yellow': '\033[1;33m',
-        'cyan': '\033[1;36m',
-        'white': '\033[1;37m',
-        'bgred': '\033[1;41m',
-        'bggrey': '\033[1;100m',
-        'reset': '\033[0;m'}
-
-    LEVEL_COLORS = {
-        'INFO': 'cyan',
-        'WARNING': 'yellow',
-        'ERROR': 'red',
-        'CRITICAL': 'bgred',
-        'DEBUG': 'bggrey'}
-
-    def _get_levelname(self, name):
-        color = self.ANSI_CODES[self.LEVEL_COLORS.get(name, 'white')]
-        if name == 'INFO':
-            fmt = '{0}->{2}'
-        else:
-            fmt = '{0}{1}{2}:'
-        return fmt.format(color, name, self.ANSI_CODES['reset'])
-
-
-class TextFormatter(BaseFormatter):
-    """
-    Convert a `logging.LogRecord' object into text.
-    """
-
-    def _get_levelname(self, name):
-        if name == 'INFO':
-            return '->'
-        else:
-            return name + ':'
+console = Console()
 
 
 class LimitFilter(logging.Filter):
@@ -169,40 +103,20 @@ logging.setLoggerClass(FatalLogger)
 logging.getLogger().__class__ = FatalLogger
 
 
-def supports_color():
-    """
-    Returns True if the running system's terminal supports color,
-    and False otherwise.
-
-    from django.core.management.color
-    """
-    plat = sys.platform
-    supported_platform = plat != 'Pocket PC' and \
-        (plat != 'win32' or 'ANSICON' in os.environ)
-
-    # isatty is not always implemented, #6223.
-    is_a_tty = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
-    if not supported_platform or not is_a_tty:
-        return False
-    return True
-
-
-def get_formatter():
-    if supports_color():
-        return ANSIFormatter()
-    else:
-        return TextFormatter()
-
-
-def init(level=None, fatal='', handler=logging.StreamHandler(), name=None,
+def init(level=None, fatal='', handler=RichHandler(console=console), name=None,
          logs_dedup_min_level=None):
     FatalLogger.warnings_fatal = fatal.startswith('warning')
     FatalLogger.errors_fatal = bool(fatal)
 
-    logger = logging.getLogger(name)
+    LOG_FORMAT = "%(message)s"
+    logging.basicConfig(
+        level=level,
+        format=LOG_FORMAT,
+        datefmt="[%H:%M:%S]",
+        handlers=[handler]
+    )
 
-    handler.setFormatter(get_formatter())
-    logger.addHandler(handler)
+    logger = logging.getLogger(name)
 
     if level:
         logger.setLevel(level)
@@ -218,9 +132,9 @@ def log_warnings():
 
 
 if __name__ == '__main__':
-    init(level=logging.DEBUG)
+    init(level=logging.DEBUG, name=__name__)
 
-    root_logger = logging.getLogger()
+    root_logger = logging.getLogger(__name__)
     root_logger.debug('debug')
     root_logger.info('info')
     root_logger.warning('warning')
