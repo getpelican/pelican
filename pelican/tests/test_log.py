@@ -2,6 +2,7 @@ import logging
 import unittest
 from collections import defaultdict
 from contextlib import contextmanager
+from unittest import mock
 
 from pelican import log
 from pelican.tests.support import LogCountHandler
@@ -130,3 +131,48 @@ class TestLog(unittest.TestCase):
             self.assertEqual(
                 self.handler.count_logs('Another log \\d', logging.WARNING),
                 0)
+
+
+@mock.patch.object(log, 'sys')
+class TestLogInit(unittest.TestCase):
+    def init(self, fatal, name):
+        logger = logging.getLogger(name)
+        log.init(fatal=fatal, name=name)
+        return logger
+
+    def test_fatal_warnings(self, sys):
+        logger = self.init('warnings', 'test_fatal_warnings')
+        logger.warning('foo')
+        logger.error('bar')
+        sys.exit.assert_called_with(1)
+
+    def test_fatal_errors(self, sys):
+        logger = self.init('errors', 'test_fatal_errors')
+        logger.warning('foo')
+        logger.error('bar')
+        sys.exit.assert_called_with(1)
+
+    def test_no_fatal(self, sys):
+        logger = self.init('', 'test_no_fatal')
+        logger.warning('foo')
+        logger.error('bar')
+        sys.exit.assert_not_called()
+
+    def test_fatal_warnings_log_filter(self, sys):
+        limit_filter = log.LimitFilter()
+        limit_filter._ignore = {(logging.WARNING, 'foo')}
+        lf = mock.PropertyMock(return_value=limit_filter)
+        with mock.patch('pelican.log.LimitLogger.limit_filter', new=lf):
+            logger = self.init('warnings', 'test_fatal_warnings_log_filter')
+            logger.warning('foo')
+            sys.exit.assert_not_called()
+
+    def test_fatal_errors_log_filter(self, sys):
+        limit_filter = log.LimitFilter()
+        limit_filter.LOGS_DEDUP_MIN_LEVEL = logging.CRITICAL
+        limit_filter._ignore = {(logging.ERROR, 'bar')}
+        lf = mock.PropertyMock(return_value=limit_filter)
+        with mock.patch('pelican.log.LimitLogger.limit_filter', new=lf):
+            logger = self.init('errors', 'test_fatal_errors_log_filter')
+            logger.error('bar')
+            sys.exit.assert_not_called()
