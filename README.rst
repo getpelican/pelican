@@ -45,6 +45,11 @@ Why the name "Pelican"?
 
 "Pelican" is an anagram of *calepin*, which means "notebook" in French.
 
+License
+-------
+
+- The source code is [licensed](LICENSE) under GPL v3.0.
+- The logo is designed by Derry Livenski and licensed under [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/).
 
 .. Links
 
