@@ -16,10 +16,18 @@ def _path(*args):
 
 class ReaderTest(unittest.TestCase):
 
-    def read_file(self, path, **kwargs):
+    def setUp(self):
+        self._reader = None
+
+    def tearDown(self):
+        self._reader = None
+
+    def read_file(self, path, cache_name='', **kwargs):
         # Isolate from future API changes to readers.read_file
-        r = readers.Readers(settings=get_settings(**kwargs))
-        return r.read_file(base_path=CONTENT_PATH, path=path)
+
+        self._reader = readers.Readers(
+            cache_name=cache_name, settings=get_settings(**kwargs))
+        return self._reader.read_file(base_path=CONTENT_PATH, path=path)
 
     def assertDictHasSubset(self, dictionary, subset):
         for key, value in subset.items():
@@ -794,6 +802,24 @@ class MdReaderTest(ReaderTest):
 
         self.assertEqual(page.content, expected)
         self.assertEqual(page.title, expected_title)
+
+    def test_metadata_has_no_discarded_data(self):
+        md_filename = 'article_with_markdown_and_empty_tags.md'
+        page = self.read_file(
+            path=md_filename,
+            cache_name='cache',
+            CACHE_CONTENT=True,
+            LOAD_CONTENT_CACHE=True)
+
+        file_path = _path(md_filename)
+        cached_metadata = self._reader._cache[file_path][1][1]
+
+        expected = {
+            'title': 'Article with markdown and empty tags'
+        }
+        self.assertEqual(cached_metadata, expected)
+        self.assertNotIn('tags', page.metadata)
+        self.assertDictHasSubset(page.metadata, expected)
 
 
 class HTMLReaderTest(ReaderTest):

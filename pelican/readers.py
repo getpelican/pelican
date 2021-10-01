@@ -571,8 +571,9 @@ class Readers(FileStampDataCacher):
         content, reader_metadata = self.get_cached_data(path, (None, None))
         if content is None:
             content, reader_metadata = reader.read(path)
+            reader_metadata = _filter_discardable_metadata(reader_metadata)
             self.cache_data(path, (content, reader_metadata))
-        metadata.update(_filter_discardable_metadata(reader_metadata))
+        metadata.update(reader_metadata)
 
         if content:
             # find images with empty alt
