@@ -3,8 +3,8 @@ Pelican |build-status| |pypi-version| |repology|
 
 Pelican is a static site generator, written in Python_.
 
-* Write content in reStructuredText_ or Markdown_ using your editor of choice
-* Includes a simple command line tool to (re)generate site files
+* Compose content in Markdown_ or reStructuredText_ using your editor of choice
+* Simple command-line tool (re)generates HTML, CSS, and JS from your source content
 * Easy to interface with version control systems and web hooks
 * Completely static output is simple to host anywhere
 
@@ -24,7 +24,7 @@ Pelican’s feature highlights include:
 * Fast rebuild times due to content caching and selective output writing
 * Extensible via a rich plugin ecosystem: `Pelican Plugins`_
 
-Check out `Pelican's documentation`_ for further information.
+Check out the `Pelican documentation`_ for further information.
 
 
 How to get help, contribute, or provide feedback
@@ -36,14 +36,14 @@ See our `contribution submission and feedback guidelines <CONTRIBUTING.rst>`_.
 Source code
 -----------
 
-Pelican's source code is `hosted on GitHub`_. If you feel like hacking,
-take a look at `Pelican's internals`_.
+Pelican’s source code is `hosted on GitHub`_. For information on how it works,
+have a look at `Pelican's internals`_.
 
 
-Why the name "Pelican"?
+Why the name “Pelican”?
 -----------------------
 
-"Pelican" is an anagram of *calepin*, which means "notebook" in French.
+“Pelican” is an anagram of *calepin*, which means “notebook” in French.
 
 
 .. Links
@@ -54,7 +54,7 @@ Why the name "Pelican"?
 .. _Jinja2: https://palletsprojects.com/p/jinja/
 .. _Pygments: https://pygments.org/
 .. _`Pelican Plugins`: https://github.com/pelican-plugins
-.. _`Pelican's documentation`: https://docs.getpelican.com/
+.. _`Pelican documentation`: https://docs.getpelican.com/
 .. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
 .. _`hosted on GitHub`: https://github.com/getpelican/pelican
 
