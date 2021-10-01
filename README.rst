@@ -48,8 +48,8 @@ Why the name "Pelican"?
 License
 -------
 
-- The source code is [licensed](LICENSE) under GPL v3.0.
-- The logo is designed by Derry Livenski and licensed under [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/).
+- The source code is licensed under GPL v3.0.
+- The logo is designed by Derry Livenski and licensed under `CC BY-SA 4.0`_.
 
 .. Links
 
@@ -62,6 +62,7 @@ License
 .. _`Pelican's documentation`: https://docs.getpelican.com/
 .. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
 .. _`hosted on GitHub`: https://github.com/getpelican/pelican
+.. _`CC BY-SA 4.0`: http://creativecommons.org/licenses/by-sa/4.0/
 
 .. |build-status| image:: https://img.shields.io/github/workflow/status/getpelican/pelican/build
    :target: https://github.com/getpelican/pelican/actions
