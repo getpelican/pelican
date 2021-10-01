@@ -6,7 +6,7 @@ from os.path import join, relpath
 from setuptools import find_packages, setup
 
 
-version = "4.6.0"
+version = "4.7.0"
 
 requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
             'docutils>=0.15', 'pytz >= 0a', 'blinker', 'unidecode',
