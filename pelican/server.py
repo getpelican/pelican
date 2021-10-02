@@ -43,6 +43,21 @@ def parse_arguments():
 class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
     SUFFIXES = ['.html', '/index.html', '/', '']
 
+    extensions_map = _encodings_map_default = {
+        # included in Python default implementation
+        '.gz': 'application/gzip',
+        '.Z': 'application/octet-stream',
+        '.bz2': 'application/x-bzip2',
+        '.xz': 'application/x-xz',
+
+        # web fonts
+        ".oft": "font/oft",
+        ".sfnt": "font/sfnt",
+        ".ttf": "font/ttf",
+        ".woff": "font/woff",
+        ".woff2": "font/woff2",
+    }
+
     def translate_path(self, path):
         # abandon query parameters
         path = path.split('?', 1)[0]
