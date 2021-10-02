@@ -43,6 +43,8 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
     SUFFIXES = ['.html', '/index.html', '/', '']
 
     def translate_path(self, path):
+        """Translate a /-separated PATH to the local filename syntax."""
+
         # abandon query parameters
         path = path.split('?', 1)[0]
         path = path.split('#', 1)[0]
@@ -52,15 +54,20 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
         path = posixpath.normpath(path)
         words = path.split('/')
         words = filter(None, words)
-        path = self.base_path
+
+        return_path = self.directory
+        # actually care about the defined output directory
+        if self.base_path:
+            return_path = os.path.join(return_path, self.base_path)
+
         for word in words:
             if os.path.dirname(word) or word in (os.curdir, os.pardir):
                 # Ignore components that are not a simple file/directory name
                 continue
-            path = os.path.join(path, word)
+            return_path = os.path.join(return_path, word)
         if trailing_slash:
-            path += '/'
-        return path
+            return_path += os.sep
+        return return_path
 
     def do_GET(self):
         # cut off a query string
