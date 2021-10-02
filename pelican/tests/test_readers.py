@@ -16,18 +16,12 @@ def _path(*args):
 
 class ReaderTest(unittest.TestCase):
 
-    def setUp(self):
-        self._reader = None
-
-    def tearDown(self):
-        self._reader = None
-
     def read_file(self, path, cache_name='', **kwargs):
         # Isolate from future API changes to readers.read_file
 
-        self._reader = readers.Readers(
+        r = readers.Readers(
             cache_name=cache_name, settings=get_settings(**kwargs))
-        return self._reader.read_file(base_path=CONTENT_PATH, path=path)
+        return r.read_file(base_path=CONTENT_PATH, path=path)
 
     def assertDictHasSubset(self, dictionary, subset):
         for key, value in subset.items():
@@ -805,14 +799,13 @@ class MdReaderTest(ReaderTest):
 
     def test_metadata_has_no_discarded_data(self):
         md_filename = 'article_with_markdown_and_empty_tags.md'
-        page = self.read_file(
-            path=md_filename,
-            cache_name='cache',
-            CACHE_CONTENT=True,
-            LOAD_CONTENT_CACHE=True)
 
-        file_path = _path(md_filename)
-        cached_metadata = self._reader._cache[file_path][1][1]
+        r = readers.Readers(cache_name='cache', settings=get_settings(
+            CACHE_CONTENT=True))
+        page = r.read_file(base_path=CONTENT_PATH, path=md_filename)
+
+        __, cached_metadata = r.get_cached_data(
+            _path(md_filename), (None, None))
 
         expected = {
             'title': 'Article with markdown and empty tags'
