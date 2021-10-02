@@ -16,11 +16,10 @@ def _path(*args):
 
 class ReaderTest(unittest.TestCase):
 
-    def read_file(self, path, cache_name='', **kwargs):
+    def read_file(self, path, **kwargs):
         # Isolate from future API changes to readers.read_file
 
-        r = readers.Readers(
-            cache_name=cache_name, settings=get_settings(**kwargs))
+        r = readers.Readers(settings=get_settings(**kwargs))
         return r.read_file(base_path=CONTENT_PATH, path=path)
 
     def assertDictHasSubset(self, dictionary, subset):
