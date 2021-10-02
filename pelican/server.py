@@ -91,7 +91,9 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
     def guess_type(self, path):
         """Guess at the mime type for the specified file.
         """
-        mimetype = server.SimpleHTTPRequestHandler.guess_type(self, path)
+        # strip trailing slash
+        path = path.rstrip().strip("/").strip(os.sep)
+        mimetype = super().guess_type(path)
 
         # If the default guess is too generic, try the python-magic library
         if mimetype == 'application/octet-stream' and magic_from_file:
