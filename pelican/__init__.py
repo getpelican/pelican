@@ -487,8 +487,8 @@ def listen(server, port, output, excqueue=None):
         return
 
     try:
-        print("\nServing site at: http://{}:{} - Tap CTRL-C to stop".format(
-            server, port))
+        console.print("Serving site at: http://{}:{} - Tap CTRL-C to stop".format(
+                      server, port))
         httpd.serve_forever()
     except Exception as e:
         if excqueue is not None:
