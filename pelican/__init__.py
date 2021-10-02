@@ -476,6 +476,10 @@ def autoreload(args, excqueue=None):
 
 
 def listen(server, port, output, excqueue=None):
+    # set logging level to at least "INFO" (so we can see the server requests)
+    if logger.level < logging.INFO:
+        logger.setLevel(logging.INFO)
+
     RootedHTTPServer.allow_reuse_address = True
     try:
         httpd = RootedHTTPServer(
