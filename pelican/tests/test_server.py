@@ -43,14 +43,18 @@ class TestServer(unittest.TestCase):
         os.mkdir(os.path.join(self.temp_output, 'baz'))
 
         for suffix in ['', '/']:
+            # foo.html has precedence over foo/index.html
             path = handler.get_path_that_exists('foo' + suffix)
             self.assertEqual(path, 'foo.html')
 
+            # folder with index.html should return folder/index.html
             path = handler.get_path_that_exists('bar' + suffix)
             self.assertEqual(path, 'bar/index.html')
 
+            # folder without index.html should return same as input
             path = handler.get_path_that_exists('baz' + suffix)
-            self.assertEqual(path, 'baz/')
+            self.assertEqual(path, 'baz' + suffix)
 
+            # not existing path should return None
             path = handler.get_path_that_exists('quux' + suffix)
             self.assertIsNone(path)
