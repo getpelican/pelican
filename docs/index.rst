@@ -61,8 +61,8 @@ Documentation
    content
    publish
    settings
-   themes
    plugins
+   themes
    pelican-themes
    importer
    faq

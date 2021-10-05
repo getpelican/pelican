@@ -1,7 +1,17 @@
 .. _theming-pelican:
 
-Creating themes
-###############
+Themes
+######
+
+There is a community-managed repository of `Pelican Themes`_ for people to share
+and use.
+
+Please note that while we do our best to review and merge theme contributions,
+they are submitted by the Pelican community and thus may have varying levels of
+support and interoperability.
+
+Creating Themes
+~~~~~~~~~~~~~~~
 
 To generate its HTML output, Pelican uses the `Jinja
 <https://palletsprojects.com/p/jinja/>`_ templating engine due to its flexibility and
@@ -50,7 +60,7 @@ To make your own theme, you must follow the following structure::
 
 .. _templates-variables:
 
-Templates and variables
+Templates and Variables
 =======================
 
 The idea is to use a simple syntax that you can embed into your HTML pages.
@@ -61,7 +71,7 @@ All templates will receive the variables defined in your settings file, as long
 as they are in all-caps. You can access them directly.
 
 
-Common variables
+Common Variables
 ----------------
 
 All of these settings will be available to all templates.
@@ -571,3 +581,8 @@ Download
 """"""""
 
 You can download this example theme :download:`here <_static/theme-basic.zip>`.
+
+
+.. Links
+
+.. _`Pelican Themes`: https://github.com/getpelican/pelican-themes
