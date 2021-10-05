@@ -301,14 +301,14 @@ Here is a basic example of how to set up your own writer::
         signals.get_writer.connect(add_writer)
 
 
-Modifying Generators to Inject Content
+Using Plugins to Inject Content
 ---------------------------------------
 
 You can programatically inject articles or pages using plugins. This can be 
 useful if you plan to fetch articles from an API, for example. 
 
-Here is a very simple example of how we can build a plugin that injects
-custom articles, using the article `article_generator_pretaxonomy` signal::
+Here is a very simple example of how we can build a plugin that injects a
+custom article, using the article `article_generator_pretaxonomy` signal::
 
     from pelican import signals
     from pelican.contents import Article
@@ -327,8 +327,8 @@ custom articles, using the article `article_generator_pretaxonomy` signal::
         newArticle = Article(content, {
             "title": "Injected Article!",
             "date": datetime.datetime.now(),
-            "category": baseReader.process_metadata('category', 'fromAPI'),
-            "tags": baseReader.process_metadata("tags", 'tagA, tagB')
+            "category": baseReader.process_metadata("category", "fromAPI"),
+            "tags": baseReader.process_metadata("tags", "tagA, tagB")
         })
 
         articleGenerator.articles.insert(0, newArticle)
