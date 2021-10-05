@@ -476,6 +476,10 @@ def autoreload(args, excqueue=None):
 
 
 def listen(server, port, output, excqueue=None):
+    # set logging level to at least "INFO" (so we can see the server requests)
+    if logger.level < logging.INFO:
+        logger.setLevel(logging.INFO)
+
     RootedHTTPServer.allow_reuse_address = True
     try:
         httpd = RootedHTTPServer(
@@ -487,8 +491,8 @@ def listen(server, port, output, excqueue=None):
         return
 
     try:
-        print("\nServing site at: http://{}:{} - Tap CTRL-C to stop".format(
-            server, port))
+        console.print("Serving site at: http://{}:{} - Tap CTRL-C to stop".format(
+                      server, port))
         httpd.serve_forever()
     except Exception as e:
         if excqueue is not None:

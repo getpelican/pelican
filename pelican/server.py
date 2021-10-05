@@ -12,6 +12,7 @@ try:
 except ImportError:
     magic_from_file = None
 
+from pelican.log import console  # noqa: F401
 from pelican.log import init as init_logging
 logger = logging.getLogger(__name__)
 
@@ -103,6 +104,9 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
             mimetype = magic_from_file(path, mime=True)
 
         return mimetype
+
+    def log_message(self, format, *args):
+        logger.info(format, *args)
 
 
 class RootedHTTPServer(server.HTTPServer):
