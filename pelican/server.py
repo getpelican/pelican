@@ -75,10 +75,15 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
 
     def get_path_that_exists(self, original_path):
         # Try to strip trailing slash
+        trailing_slash = original_path.endswith('/')
         original_path = original_path.rstrip('/')
         # Try to detect file by applying various suffixes
         tries = []
         for suffix in self.SUFFIXES:
+            if not trailing_slash and suffix == '/':
+                # if original request does not have trailing slash, skip the '/' suffix
+                # so that base class can redirect if needed
+                continue
             path = original_path + suffix
             if os.path.exists(self.translate_path(path)):
                 return path
