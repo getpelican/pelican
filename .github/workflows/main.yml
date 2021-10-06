@@ -23,6 +23,8 @@ jobs:
             python: "3.8"
           - os: ubuntu
             python: "3.9"
+          - os: ubuntu
+            python: "3.10"
           - os: macos
             python: "3.7"
           - os: windows
