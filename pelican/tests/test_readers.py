@@ -18,6 +18,7 @@ class ReaderTest(unittest.TestCase):
 
     def read_file(self, path, **kwargs):
         # Isolate from future API changes to readers.read_file
+
         r = readers.Readers(settings=get_settings(**kwargs))
         return r.read_file(base_path=CONTENT_PATH, path=path)
 
@@ -794,6 +795,23 @@ class MdReaderTest(ReaderTest):
 
         self.assertEqual(page.content, expected)
         self.assertEqual(page.title, expected_title)
+
+    def test_metadata_has_no_discarded_data(self):
+        md_filename = 'article_with_markdown_and_empty_tags.md'
+
+        r = readers.Readers(cache_name='cache', settings=get_settings(
+            CACHE_CONTENT=True))
+        page = r.read_file(base_path=CONTENT_PATH, path=md_filename)
+
+        __, cached_metadata = r.get_cached_data(
+            _path(md_filename), (None, None))
+
+        expected = {
+            'title': 'Article with markdown and empty tags'
+        }
+        self.assertEqual(cached_metadata, expected)
+        self.assertNotIn('tags', page.metadata)
+        self.assertDictHasSubset(page.metadata, expected)
 
 
 class HTMLReaderTest(ReaderTest):
