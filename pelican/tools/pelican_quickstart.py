@@ -17,7 +17,7 @@ try:
     import tzlocal
     _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
 except ImportError:
-    _DEFAULT_TIMEZONE = 'Europe/Paris'
+    _DEFAULT_TIMEZONE = 'Europe/Rome'
 
 from pelican import __version__
 
