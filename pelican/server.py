@@ -43,6 +43,18 @@ def parse_arguments():
 class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
     SUFFIXES = ['.html', '/index.html', '/', '']
 
+    extensions_map = {
+        **server.SimpleHTTPRequestHandler.extensions_map,
+        ** {
+            # web fonts
+            ".oft": "font/oft",
+            ".sfnt": "font/sfnt",
+            ".ttf": "font/ttf",
+            ".woff": "font/woff",
+            ".woff2": "font/woff2",
+        },
+    }
+
     def translate_path(self, path):
         # abandon query parameters
         path = path.split('?', 1)[0]
