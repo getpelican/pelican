@@ -56,9 +56,8 @@ class TestPelican(LoggedTestCase):
 
     def assertDirsEqual(self, left_path, right_path):
         out, err = subprocess.Popen(
-            ['git', 'diff', '--no-ext-diff', '--exit-code',
+            ['git', '--no-pager', 'diff', '--no-ext-diff', '--exit-code',
              '-w', left_path, right_path],
-            env={'PAGER': ''},
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         ).communicate()
