@@ -1,9 +1,9 @@
-Pelican is a project originally created by Alexis Métaireau
-<https://blog.notmyidea.org/> and subsequently maintained by Justin Mayer
-<https://justinmayer.com/>, but there are a large number of people that have
-contributed or implemented key features over time. We do our best to keep this
-list up-to-date, but you can also have a look at the nice contributor graphs
-produced by GitHub: https://github.com/getpelican/pelican/graphs/contributors
+Pelican is a project led by Justin Mayer <https://justinmayer.com/>
+and originally created by Alexis Métaireau <https://blog.notmyidea.org/>, but
+there are a large number of people that have contributed or implemented key
+features over time. We do our best to keep this list up-to-date, but you can
+also have a look at the nice contributor graphs produced by GitHub:
+https://github.com/getpelican/pelican/graphs/contributors
 
 If you want to contribute, check the documentation section about how to do so:
 <https://docs.getpelican.com/en/latest/contribute.html>
@@ -26,6 +26,7 @@ Arnaud BOS
 asselinpaul
 Axel Haustant
 Ben Rosser (TC01)
+Ben Sturmfels
 Benoît HERVIER
 Bernhard Scheirle
 Borgar
@@ -64,6 +65,7 @@ Feth Arezki
 Florian Jacob
 Florian Preinstorfer
 Félix Delval
+Frederik Ring
 Freeculture
 George V. Reilly
 Guillaume
@@ -77,6 +79,7 @@ Iuri de Silvio
 Ivan Dyedov
 James King
 James Rowe
+Jason K. Moore
 jawher
 Jered Boxman
 Jerome
@@ -87,6 +90,7 @@ John Kristensen
 John Mastro
 Jökull Sólberg Auðunsson
 Jomel Imperio
+Jonas Borges
 Joseph Reagle
 Joshua Adelman
 Julian Berman
@@ -96,6 +100,7 @@ Kevin Yap
 Kyle Fuller
 Laureline Guerin
 Leonard Huang
+Leonardo Giordani
 Leroy Jiang
 Lucas Cimon
 Marcel Hellkamp
@@ -113,8 +118,11 @@ Michael Reneer
 Michael Yanovich
 Mike Yumatov
 Mikhail Korobov
+Mirek Długosz
 m-r-r
 mviera
+Nam Nguyen
+NianQing Yao
 Nico Di Rocco
 Nicolas Duhamel
 Nicolas Perriault
@@ -124,6 +132,8 @@ Paul Asselin
 Pavel Puchkin
 Perry Roper
 Peter Desmet
+Peter Sabaini
+Petr Viktorin
 Philippe Pepiot
 Rachid Belaid
 Randall Degges
@@ -133,6 +143,7 @@ Rémy HUBSCHER
 renhbo
 Richard Duivenvoorde
 Rogdham
+Romain Porte
 Roman Skvazh
 Ronny Pfannschmidt
 Rory McCann
@@ -153,8 +164,10 @@ Tarek Ziade
 Thanos Lefteris
 Thomas Thurman
 Tobias
+Tom Adler
 Tomi Pieviläinen
 Trae Blain
+Tristan Miller
 Tshepang Lekhonkhobe
 Valentin-Costel Hăloiu
 Vlad Niculae
