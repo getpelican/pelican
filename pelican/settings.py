@@ -662,16 +662,21 @@ def configure_settings(settings):
 
 
 def coerce_overrides(overrides):
+    """Converts string values in the `overrides` dictionary
+    to correspoding Python types.
+    """
     if overrides is None:
         return {}
     coerced = {}
-    types_to_cast = {int, str, bool}
+    types_to_cast = {int, str}
     for k, v in overrides.items():
         if k not in DEFAULT_CONFIG:
             logger.warning('Override for unknown setting %s, ignoring', k)
             continue
         setting_type = type(DEFAULT_CONFIG[k])
-        if setting_type not in types_to_cast:
+        if setting_type is bool:
+            coerced[k] = v not in {'', '0', 'false', 'False'}
+        elif setting_type not in types_to_cast:
             coerced[k] = json.loads(v)
         else:
             try:
