@@ -319,3 +319,21 @@ class TestSettingsConfiguration(unittest.TestCase):
             'THEME_STATIC_DIR': 'theme',
         }
         self.assertDictEqual(overrides, expected)
+
+    def test_coerce_overrides_booleans_false(self):
+        false_values = {'', '0', 'false', 'False'}
+        expected = {'DISPLAY_PAGES_ON_MENU': False}
+        for value in false_values:
+            overrides = coerce_overrides(
+                {'DISPLAY_PAGES_ON_MENU': value}
+            )
+            self.assertDictEqual(overrides, expected)
+
+    def test_coerce_overrides_booleans_true(self):
+        true_values = {'1', 'true', 'True', 'any other string'}
+        expected = {'DELETE_OUTPUT_DIRECTORY': True}
+        for value in true_values:
+            overrides = coerce_overrides(
+                {'DELETE_OUTPUT_DIRECTORY': value}
+            )
+            self.assertDictEqual(overrides, expected)
