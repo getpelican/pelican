@@ -7,7 +7,7 @@ from sys import platform
 
 from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
                               _printf_s_to_format_field,
-                              coerce_overrides, configure_settings,
+                              configure_settings,
                               handle_deprecated_settings, read_settings)
 from pelican.tests.support import unittest
 
@@ -304,18 +304,3 @@ class TestSettingsConfiguration(unittest.TestCase):
                          [(r'C\+\+', 'cpp')] +
                          self.settings['SLUG_REGEX_SUBSTITUTIONS'])
         self.assertNotIn('SLUG_SUBSTITUTIONS', settings)
-
-    def test_coerce_overrides(self):
-        overrides = coerce_overrides({
-            'ARTICLE_EXCLUDES': '["testexcl"]',
-            'READERS': '{"foo": "bar"}',
-            'STATIC_EXCLUDE_SOURCES': 'true',
-            'THEME_STATIC_DIR': 'theme',
-            })
-        expected = {
-            'ARTICLE_EXCLUDES': ["testexcl"],
-            'READERS': {"foo": "bar"},
-            'STATIC_EXCLUDE_SOURCES': True,
-            'THEME_STATIC_DIR': 'theme',
-        }
-        self.assertDictEqual(overrides, expected)
