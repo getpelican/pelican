@@ -53,28 +53,27 @@ def load_legacy_plugin(plugin, plugin_paths):
         spec = importlib.util.find_spec(plugin)
     if spec is None:
         raise ImportError('Cannot import plugin `{}`'.format(plugin))
-    else:
-        # Avoid loading the same plugin twice
-        if spec.name in sys.modules:
-            return sys.modules[spec.name]
-        # create module object from spec
-        mod = importlib.util.module_from_spec(spec)
-        # place it into sys.modules cache
-        # necessary if module imports itself at some point (e.g. packages)
-        sys.modules[spec.name] = mod
+    # Avoid loading the same plugin twice
+    if spec.name in sys.modules:
+        return sys.modules[spec.name]
+    # create module object from spec
+    mod = importlib.util.module_from_spec(spec)
+    # place it into sys.modules cache
+    # necessary if module imports itself at some point (e.g. packages)
+    sys.modules[spec.name] = mod
+    try:
+        # try to execute it inside module object
+        spec.loader.exec_module(mod)
+    except Exception:  # problem with import
         try:
-            # try to execute it inside module object
-            spec.loader.exec_module(mod)
-        except Exception:  # problem with import
-            try:
-                # remove module from sys.modules since it can't be loaded
-                del sys.modules[spec.name]
-            except KeyError:
-                pass
-            raise
+            # remove module from sys.modules since it can't be loaded
+            del sys.modules[spec.name]
+        except KeyError:
+            pass
+        raise
 
-        # if all went well, we have the plugin module
-        return mod
+    # if all went well, we have the plugin module
+    return mod
 
 
 def load_plugins(settings):

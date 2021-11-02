@@ -8,7 +8,7 @@ PKG_NAME = "pelican"
 PKG_PATH = Path(PKG_NAME)
 DOCS_PORT = os.environ.get("DOCS_PORT", 8000)
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
-PTY = True if os.name != "nt" else False
+PTY = os.name != "nt"
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
 VENV_HOME = Path(os.environ.get("WORKON_HOME", "~/virtualenvs"))
 VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME / PKG_NAME)
@@ -16,8 +16,8 @@ VENV = str(VENV_PATH.expanduser())
 VENV_BIN = Path(VENV) / Path(BIN_DIR)
 
 TOOLS = ["poetry", "pre-commit", "psutil"]
-POETRY = which("poetry") if which("poetry") else (VENV_BIN / "poetry")
-PRECOMMIT = which("pre-commit") if which("pre-commit") else (VENV_BIN / "pre-commit")
+POETRY = which("poetry") or VENV_BIN / "poetry"
+PRECOMMIT = which("pre-commit") or VENV_BIN / "pre-commit"
 
 
 @task

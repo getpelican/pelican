@@ -183,7 +183,7 @@ def install(path, v=False, u=False):
         exists = os.path.exists(theme_path)
         if exists and not u:
             err(path + ' : already exists')
-        elif exists and u:
+        elif exists:
             remove(theme_name, v)
             install(path, v)
         else:
@@ -245,15 +245,14 @@ def clean(v=False):
     c = 0
     for path in os.listdir(_THEMES_PATH):
         path = os.path.join(_THEMES_PATH, path)
-        if os.path.islink(path):
-            if is_broken_link(path):
-                if v:
-                    print('Removing {}'.format(path))
-                try:
-                    os.remove(path)
-                except OSError:
-                    print('Error: cannot remove {}'.format(path))
-                else:
-                    c += 1
+        if os.path.islink(path) and is_broken_link(path):
+            if v:
+                print('Removing {}'.format(path))
+            try:
+                os.remove(path)
+            except OSError:
+                print('Error: cannot remove {}'.format(path))
+            else:
+                c += 1
 
     print("\nRemoved {} broken links".format(c))
