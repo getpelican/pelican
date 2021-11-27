@@ -315,7 +315,6 @@ needed by Pelican.
 
             _template = _jinja_env.get_template('pelicanconf.py.jinja2')
             fd.write(_template.render(**conf_python))
-            fd.close()
     except OSError as e:
         print('Error: {}'.format(e))
 
@@ -324,7 +323,6 @@ needed by Pelican.
                   'w', encoding='utf-8') as fd:
             _template = _jinja_env.get_template('publishconf.py.jinja2')
             fd.write(_template.render(**CONF))
-            fd.close()
     except OSError as e:
         print('Error: {}'.format(e))
 
@@ -334,7 +332,6 @@ needed by Pelican.
                       'w', encoding='utf-8') as fd:
                 _template = _jinja_env.get_template('tasks.py.jinja2')
                 fd.write(_template.render(**CONF))
-                fd.close()
         except OSError as e:
             print('Error: {}'.format(e))
         try:
@@ -343,7 +340,6 @@ needed by Pelican.
                 py_v = 'python3'
                 _template = _jinja_env.get_template('Makefile.jinja2')
                 fd.write(_template.render(py_v=py_v, **CONF))
-                fd.close()
         except OSError as e:
             print('Error: {}'.format(e))
 
