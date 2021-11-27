@@ -230,6 +230,9 @@ def slugify(value, regex_subs=(), preserve_case=False, use_unicode=False):
     and converts spaces to hyphens.
 
     Took from Django sources.
+
+    For a set of sensible default regex substitutions to pass to regex_subs
+    look into pelican.settings.DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS'].
     """
 
     import unicodedata
