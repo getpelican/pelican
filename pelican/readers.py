@@ -222,7 +222,14 @@ class RstReader(BaseReader):
                 'Ensure exactly one top level section',
                 source_path)
 
-        for docinfo in document.traverse(docutils.nodes.docinfo):
+        try:
+            # docutils 0.18.1+
+            nodes = document.findall(docutils.nodes.docinfo)
+        except AttributeError:
+            # docutils 0.18.0 or before
+            nodes = document.traverse(docutils.nodes.docinfo)
+
+        for docinfo in nodes:
             for element in docinfo.children:
                 if element.tagname == 'field':  # custom fields (e.g. summary)
                     name_elem, body_elem = element.children
