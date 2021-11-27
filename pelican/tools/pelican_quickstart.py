@@ -3,6 +3,7 @@
 import argparse
 import locale
 import os
+from typing import Mapping
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -170,6 +171,16 @@ def ask_timezone(question, default, tzurl):
     return r
 
 
+def render_jinja_template(tmpl_name: str, tmpl_vars: Mapping, target_path: str):
+    try:
+        with open(os.path.join(CONF['basedir'], target_path),
+                  'w', encoding='utf-8') as fd:
+            _template = _jinja_env.get_template(tmpl_name)
+            fd.write(_template.render(**tmpl_vars))
+    except OSError as e:
+        print('Error: {}'.format(e))
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="A kickstarter for Pelican",
@@ -306,42 +317,16 @@ needed by Pelican.
     except OSError as e:
         print('Error: {}'.format(e))
 
-    try:
-        with open(os.path.join(CONF['basedir'], 'pelicanconf.py'),
-                  'w', encoding='utf-8') as fd:
-            conf_python = dict()
-            for key, value in CONF.items():
-                conf_python[key] = repr(value)
+    conf_python = dict()
+    for key, value in CONF.items():
+        conf_python[key] = repr(value)
+    render_jinja_template('pelicanconf.py.jinja2', conf_python, 'pelicanconf.py')
 
-            _template = _jinja_env.get_template('pelicanconf.py.jinja2')
-            fd.write(_template.render(**conf_python))
-    except OSError as e:
-        print('Error: {}'.format(e))
-
-    try:
-        with open(os.path.join(CONF['basedir'], 'publishconf.py'),
-                  'w', encoding='utf-8') as fd:
-            _template = _jinja_env.get_template('publishconf.py.jinja2')
-            fd.write(_template.render(**CONF))
-    except OSError as e:
-        print('Error: {}'.format(e))
+    render_jinja_template('publishconf.py.jinja2', CONF, 'publishconf.py')
 
     if automation:
-        try:
-            with open(os.path.join(CONF['basedir'], 'tasks.py'),
-                      'w', encoding='utf-8') as fd:
-                _template = _jinja_env.get_template('tasks.py.jinja2')
-                fd.write(_template.render(**CONF))
-        except OSError as e:
-            print('Error: {}'.format(e))
-        try:
-            with open(os.path.join(CONF['basedir'], 'Makefile'),
-                      'w', encoding='utf-8') as fd:
-                py_v = 'python3'
-                _template = _jinja_env.get_template('Makefile.jinja2')
-                fd.write(_template.render(py_v=py_v, **CONF))
-        except OSError as e:
-            print('Error: {}'.format(e))
+        render_jinja_template('tasks.py.jinja2', CONF, 'tasks.py')
+        render_jinja_template('Makefile.jinja2', CONF, 'Makefile')
 
     print('Done. Your new project is available at %s' % CONF['basedir'])
 
