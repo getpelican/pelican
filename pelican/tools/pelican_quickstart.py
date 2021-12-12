@@ -4,10 +4,14 @@ import argparse
 import locale
 import os
 from typing import Mapping
+from zoneinfo import available_timezones
 
 from jinja2 import Environment, FileSystemLoader
 
-import pytz
+try:
+    import zoneinfo
+except ImportError:
+    from backports import zoneinfo
 
 try:
     import readline  # NOQA
@@ -158,12 +162,13 @@ def ask(question, answer=str, default=None, length=None):
 
 def ask_timezone(question, default, tzurl):
     """Prompt for time zone and validate input"""
-    lower_tz = [tz.lower() for tz in pytz.all_timezones]
+    available_timezones = list(zoneinfo.available_timezones())
+    lower_tz = [tz.lower() for tz in available_timezones]
     while True:
         r = ask(question, str, default)
         r = r.strip().replace(' ', '_').lower()
         if r in lower_tz:
-            r = pytz.all_timezones[lower_tz.index(r)]
+            r = available_timezones[lower_tz.index(r)]
             break
         else:
             print('Please enter a valid time zone:\n'

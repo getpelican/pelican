@@ -20,7 +20,10 @@ import dateutil.parser
 
 from markupsafe import Markup
 
-import pytz
+try:
+    import zoneinfo
+except ImportError:
+    from backports import zoneinfo
 
 
 logger = logging.getLogger(__name__)
@@ -920,8 +923,8 @@ class FileSystemWatcher:
 def set_date_tzinfo(d, tz_name=None):
     """Set the timezone for dates that don't have tzinfo"""
     if tz_name and not d.tzinfo:
-        tz = pytz.timezone(tz_name)
-        d = tz.localize(d)
+        tz = zoneinfo.ZoneInfo(tz_name)
+        d = d.replace(tzinfo=tz)
         return SafeDatetime(d.year, d.month, d.day, d.hour, d.minute, d.second,
                             d.microsecond, d.tzinfo)
     return d

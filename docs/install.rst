@@ -64,7 +64,7 @@ automatically installed without any action on your part:
 * `pygments <https://pypi.org/project/Pygments/>`_, for syntax highlighting
 * `docutils <https://pypi.org/project/docutils/>`_, for supporting
   reStructuredText as an input format
-* `pytz <https://pypi.org/project/pytz/>`_, for timezone definitions
+* `backports.zoneinfo` <https://pypi.org/project/backports.zoneinfo/>`_, for timezone definitions
 * `blinker <https://pypi.org/project/blinker/>`_, an object-to-object and
   broadcast signaling system
 * `unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII
