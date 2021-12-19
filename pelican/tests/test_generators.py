@@ -41,6 +41,9 @@ class TestGenerator(unittest.TestCase):
         ignored_file = os.path.join(CUR_DIR, 'content', 'ignored1.rst')
         self.assertFalse(include_path(ignored_file))
 
+        compound_file = os.path.join(CUR_DIR, 'content', 'compound.md.html')
+        self.assertTrue(include_path(compound_file, extensions=('md.html',)))
+
     def test_get_files_exclude(self):
         """Test that Generator.get_files() properly excludes directories.
         """
