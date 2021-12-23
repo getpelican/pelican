@@ -12,6 +12,8 @@ from pelican.tests.support import (can_symlink, get_context, get_settings,
                                    unittest)
 from pelican.writers import Writer
 
+from pelican.utils import temporary_locale
+
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, 'content')
@@ -410,93 +412,91 @@ class TestArticlesGenerator(unittest.TestCase):
         Test that the context of a generated period_archive is passed
         'period' : a tuple of year, month, day according to the time period
         """
-        old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
-        settings = get_settings()
+        with temporary_locale('C'):
+            settings = get_settings()
 
-        settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
-        settings['YEAR_ARCHIVE_URL'] = 'posts/{date:%Y}/'
-        settings['CACHE_PATH'] = self.temp_cache
-        context = get_context(settings)
-        generator = ArticlesGenerator(
-            context=context, settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
-        generator.generate_context()
-        write = MagicMock()
-        generator.generate_period_archives(write)
-        dates = [d for d in generator.dates if d.date.year == 1970]
-        articles = [d for d in generator.articles if d.date.year == 1970]
-        self.assertEqual(len(dates), 1)
-        # among other things it must have at least been called with this
-        context["period"] = (1970,)
-        context["period_num"] = (1970,)
-        write.assert_called_with("posts/1970/index.html",
-                                 generator.get_template("period_archives"),
-                                 context, blog=True, articles=articles,
-                                 dates=dates, template_name='period_archives',
-                                 url="posts/1970/",
-                                 all_articles=generator.articles)
+            settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
+            settings['YEAR_ARCHIVE_URL'] = 'posts/{date:%Y}/'
+            settings['CACHE_PATH'] = self.temp_cache
+            context = get_context(settings)
+            generator = ArticlesGenerator(
+                context=context, settings=settings,
+                path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            generator.generate_context()
+            write = MagicMock()
+            generator.generate_period_archives(write)
+            dates = [d for d in generator.dates if d.date.year == 1970]
+            articles = [d for d in generator.articles if d.date.year == 1970]
+            self.assertEqual(len(dates), 1)
+            # among other things it must have at least been called with this
+            context["period"] = (1970,)
+            context["period_num"] = (1970,)
+            write.assert_called_with("posts/1970/index.html",
+                                     generator.get_template("period_archives"),
+                                     context, blog=True, articles=articles,
+                                     dates=dates, template_name='period_archives',
+                                     url="posts/1970/",
+                                     all_articles=generator.articles)
 
-        settings['MONTH_ARCHIVE_SAVE_AS'] = \
-            'posts/{date:%Y}/{date:%b}/index.html'
-        settings['MONTH_ARCHIVE_URL'] = \
-            'posts/{date:%Y}/{date:%b}/'
-        context = get_context(settings)
-        generator = ArticlesGenerator(
-            context=context, settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
-        generator.generate_context()
-        write = MagicMock()
-        generator.generate_period_archives(write)
-        dates = [d for d in generator.dates
-                 if d.date.year == 1970 and d.date.month == 1]
-        articles = [d for d in generator.articles
-                    if d.date.year == 1970 and d.date.month == 1]
-        self.assertEqual(len(dates), 1)
-        context["period"] = (1970, "January")
-        context["period_num"] = (1970, 1)
-        # among other things it must have at least been called with this
-        write.assert_called_with("posts/1970/Jan/index.html",
-                                 generator.get_template("period_archives"),
-                                 context, blog=True, articles=articles,
-                                 dates=dates, template_name='period_archives',
-                                 url="posts/1970/Jan/",
-                                 all_articles=generator.articles)
+            settings['MONTH_ARCHIVE_SAVE_AS'] = \
+                'posts/{date:%Y}/{date:%b}/index.html'
+            settings['MONTH_ARCHIVE_URL'] = \
+                'posts/{date:%Y}/{date:%b}/'
+            context = get_context(settings)
+            generator = ArticlesGenerator(
+                context=context, settings=settings,
+                path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            generator.generate_context()
+            write = MagicMock()
+            generator.generate_period_archives(write)
+            dates = [d for d in generator.dates
+                     if d.date.year == 1970 and d.date.month == 1]
+            articles = [d for d in generator.articles
+                        if d.date.year == 1970 and d.date.month == 1]
+            self.assertEqual(len(dates), 1)
+            context["period"] = (1970, "January")
+            context["period_num"] = (1970, 1)
+            # among other things it must have at least been called with this
+            write.assert_called_with("posts/1970/Jan/index.html",
+                                     generator.get_template("period_archives"),
+                                     context, blog=True, articles=articles,
+                                     dates=dates, template_name='period_archives',
+                                     url="posts/1970/Jan/",
+                                     all_articles=generator.articles)
 
-        settings['DAY_ARCHIVE_SAVE_AS'] = \
-            'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
-        settings['DAY_ARCHIVE_URL'] = \
-            'posts/{date:%Y}/{date:%b}/{date:%d}/'
-        context = get_context(settings)
-        generator = ArticlesGenerator(
-            context=context, settings=settings,
-            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
-        generator.generate_context()
-        write = MagicMock()
-        generator.generate_period_archives(write)
-        dates = [
-            d for d in generator.dates if
-            d.date.year == 1970 and
-            d.date.month == 1 and
-            d.date.day == 1
-        ]
-        articles = [
-            d for d in generator.articles if
-            d.date.year == 1970 and
-            d.date.month == 1 and
-            d.date.day == 1
-        ]
-        self.assertEqual(len(dates), 1)
-        context["period"] = (1970, "January", 1)
-        context["period_num"] = (1970, 1, 1)
-        # among other things it must have at least been called with this
-        write.assert_called_with("posts/1970/Jan/01/index.html",
-                                 generator.get_template("period_archives"),
-                                 context, blog=True, articles=articles,
-                                 dates=dates, template_name='period_archives',
-                                 url="posts/1970/Jan/01/",
-                                 all_articles=generator.articles)
-        locale.setlocale(locale.LC_ALL, old_locale)
+            settings['DAY_ARCHIVE_SAVE_AS'] = \
+                'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
+            settings['DAY_ARCHIVE_URL'] = \
+                'posts/{date:%Y}/{date:%b}/{date:%d}/'
+            context = get_context(settings)
+            generator = ArticlesGenerator(
+                context=context, settings=settings,
+                path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+            generator.generate_context()
+            write = MagicMock()
+            generator.generate_period_archives(write)
+            dates = [
+                d for d in generator.dates if
+                d.date.year == 1970 and
+                d.date.month == 1 and
+                d.date.day == 1
+            ]
+            articles = [
+                d for d in generator.articles if
+                d.date.year == 1970 and
+                d.date.month == 1 and
+                d.date.day == 1
+            ]
+            self.assertEqual(len(dates), 1)
+            context["period"] = (1970, "January", 1)
+            context["period_num"] = (1970, 1, 1)
+            # among other things it must have at least been called with this
+            write.assert_called_with("posts/1970/Jan/01/index.html",
+                                     generator.get_template("period_archives"),
+                                     context, blog=True, articles=articles,
+                                     dates=dates, template_name='period_archives',
+                                     url="posts/1970/Jan/01/",
+                                     all_articles=generator.articles)
 
     def test_nonexistent_template(self):
         """Attempt to load a non-existent template"""

@@ -10,6 +10,7 @@ from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
                               coerce_overrides, configure_settings,
                               handle_deprecated_settings, read_settings)
 from pelican.tests.support import unittest
+from pelican.utils import temporary_locale
 
 
 class TestSettingsConfiguration(unittest.TestCase):
@@ -143,11 +144,11 @@ class TestSettingsConfiguration(unittest.TestCase):
         # Test that the default locale is set if not specified in settings
 
         # Reset locale to Python's default locale
-        locale.setlocale(locale.LC_ALL, 'C')
-        self.assertEqual(self.settings['LOCALE'], DEFAULT_CONFIG['LOCALE'])
+        with temporary_locale('C'):
+            self.assertEqual(self.settings['LOCALE'], DEFAULT_CONFIG['LOCALE'])
 
-        configure_settings(self.settings)
-        self.assertEqual(locale.getlocale(), locale.getdefaultlocale())
+            configure_settings(self.settings)
+            self.assertEqual(locale.getlocale(), locale.getdefaultlocale())
 
     def test_invalid_settings_throw_exception(self):
         # Test that the path name is valid

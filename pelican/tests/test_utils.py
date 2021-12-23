@@ -535,33 +535,25 @@ class TestUtils(LoggedTestCase):
                          locale_available('Turkish'),
                          'Turkish locale needed')
     def test_strftime_locale_dependent_turkish(self):
-        # store current locale
-        old_locale = locale.setlocale(locale.LC_ALL)
+        temp_locale = 'Turkish' if platform == 'win32' else 'tr_TR.UTF-8'
 
-        if platform == 'win32':
-            locale.setlocale(locale.LC_ALL, 'Turkish')
-        else:
-            locale.setlocale(locale.LC_ALL, 'tr_TR.UTF-8')
+        with utils.temporary_locale(temp_locale):
+            d = utils.SafeDatetime(2012, 8, 29)
 
-        d = utils.SafeDatetime(2012, 8, 29)
+            # simple
+            self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 Ağustos 2012')
+            self.assertEqual(utils.strftime(d, '%A, %d %B %Y'),
+                             'Çarşamba, 29 Ağustos 2012')
 
-        # simple
-        self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 Ağustos 2012')
-        self.assertEqual(utils.strftime(d, '%A, %d %B %Y'),
-                         'Çarşamba, 29 Ağustos 2012')
+            # with text
+            self.assertEqual(
+                utils.strftime(d, 'Yayınlanma tarihi: %A, %d %B %Y'),
+                'Yayınlanma tarihi: Çarşamba, 29 Ağustos 2012')
 
-        # with text
-        self.assertEqual(
-            utils.strftime(d, 'Yayınlanma tarihi: %A, %d %B %Y'),
-            'Yayınlanma tarihi: Çarşamba, 29 Ağustos 2012')
-
-        # non-ascii format candidate (someone might pass it… for some reason)
-        self.assertEqual(
-            utils.strftime(d, '%Y yılında %üretim artışı'),
-            '2012 yılında %üretim artışı')
-
-        # restore locale back
-        locale.setlocale(locale.LC_ALL, old_locale)
+            # non-ascii format candidate (someone might pass it… for some reason)
+            self.assertEqual(
+                utils.strftime(d, '%Y yılında %üretim artışı'),
+                '2012 yılında %üretim artışı')
 
     # test the output of utils.strftime in a different locale
     # French locale
@@ -569,34 +561,26 @@ class TestUtils(LoggedTestCase):
                          locale_available('French'),
                          'French locale needed')
     def test_strftime_locale_dependent_french(self):
-        # store current locale
-        old_locale = locale.setlocale(locale.LC_ALL)
+        temp_locale = 'French' if platform == 'win32' else 'fr_FR.UTF-8'
 
-        if platform == 'win32':
-            locale.setlocale(locale.LC_ALL, 'French')
-        else:
-            locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
+        with utils.temporary_locale(temp_locale):
+            d = utils.SafeDatetime(2012, 8, 29)
 
-        d = utils.SafeDatetime(2012, 8, 29)
+            # simple
+            self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 août 2012')
 
-        # simple
-        self.assertEqual(utils.strftime(d, '%d %B %Y'), '29 août 2012')
+            # depending on OS, the first letter is m or M
+            self.assertTrue(utils.strftime(d, '%A') in ('mercredi', 'Mercredi'))
 
-        # depending on OS, the first letter is m or M
-        self.assertTrue(utils.strftime(d, '%A') in ('mercredi', 'Mercredi'))
+            # with text
+            self.assertEqual(
+                utils.strftime(d, 'Écrit le %d %B %Y'),
+                'Écrit le 29 août 2012')
 
-        # with text
-        self.assertEqual(
-            utils.strftime(d, 'Écrit le %d %B %Y'),
-            'Écrit le 29 août 2012')
-
-        # non-ascii format candidate (someone might pass it… for some reason)
-        self.assertEqual(
-            utils.strftime(d, '%écrits en %Y'),
-            '%écrits en 2012')
-
-        # restore locale back
-        locale.setlocale(locale.LC_ALL, old_locale)
+            # non-ascii format candidate (someone might pass it… for some reason)
+            self.assertEqual(
+                utils.strftime(d, '%écrits en %Y'),
+                '%écrits en 2012')
 
     def test_maybe_pluralize(self):
         self.assertEqual(
@@ -608,6 +592,23 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(
             utils.maybe_pluralize(2, 'Article', 'Articles'),
             '2 Articles')
+
+    def test_temporary_locale(self):
+        # test with default LC category
+        orig_locale = locale.setlocale(locale.LC_ALL)
+
+        with utils.temporary_locale('C'):
+            self.assertEqual(locale.setlocale(locale.LC_ALL), 'C')
+
+        self.assertEqual(locale.setlocale(locale.LC_ALL), orig_locale)
+
+        # test with custom LC category
+        orig_locale = locale.setlocale(locale.LC_TIME)
+
+        with utils.temporary_locale('C', locale.LC_TIME):
+            self.assertEqual(locale.setlocale(locale.LC_TIME), 'C')
+
+        self.assertEqual(locale.setlocale(locale.LC_TIME), orig_locale)
 
 
 class TestCopy(unittest.TestCase):
@@ -724,27 +725,27 @@ class TestDateFormatter(unittest.TestCase):
     def test_french_strftime(self):
         # This test tries to reproduce an issue that
         # occurred with python3.3 under macos10 only
-        if platform == 'win32':
-            locale.setlocale(locale.LC_ALL, 'French')
-        else:
-            locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
-        date = utils.SafeDatetime(2014, 8, 14)
-        # we compare the lower() dates since macos10 returns
-        # "Jeudi" for %A whereas linux reports "jeudi"
-        self.assertEqual(
-            'jeudi, 14 août 2014',
-            utils.strftime(date, date_format="%A, %d %B %Y").lower())
-        df = utils.DateFormatter()
-        self.assertEqual(
-            'jeudi, 14 août 2014',
-            df(date, date_format="%A, %d %B %Y").lower())
+        temp_locale = 'French' if platform == 'win32' else 'fr_FR.UTF-8'
+
+        with utils.temporary_locale(temp_locale):
+            date = utils.SafeDatetime(2014, 8, 14)
+            # we compare the lower() dates since macos10 returns
+            # "Jeudi" for %A whereas linux reports "jeudi"
+            self.assertEqual(
+                'jeudi, 14 août 2014',
+                utils.strftime(date, date_format="%A, %d %B %Y").lower())
+            df = utils.DateFormatter()
+            self.assertEqual(
+                'jeudi, 14 août 2014',
+                df(date, date_format="%A, %d %B %Y").lower())
+
         # Let us now set the global locale to C:
-        locale.setlocale(locale.LC_ALL, 'C')
-        # DateFormatter should still work as expected
-        # since it is the whole point of DateFormatter
-        # (This is where pre-2014/4/15 code fails on macos10)
-        df_date = df(date, date_format="%A, %d %B %Y").lower()
-        self.assertEqual('jeudi, 14 août 2014', df_date)
+        with utils.temporary_locale('C'):
+            # DateFormatter should still work as expected
+            # since it is the whole point of DateFormatter
+            # (This is where pre-2014/4/15 code fails on macos10)
+            df_date = df(date, date_format="%A, %d %B %Y").lower()
+            self.assertEqual('jeudi, 14 août 2014', df_date)
 
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'),
