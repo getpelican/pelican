@@ -22,7 +22,7 @@ another, so you can use different packages (and package versions) for each.
 Please note that Python 3.6+ is required for Pelican development.
 
 *(Optional)* If you prefer to install Poetry once for use with multiple projects,
-you can install it via (readmore at https://python-poetry.org/docs/#installation::
+you can install it via (readmore at Poetry_Installation_)::
 
     curl -sSL https://install.python-poetry.org | python3 -
 
@@ -51,7 +51,8 @@ Install the needed dependencies and set up the project::
 Your local environment should now be ready to go!
 
 .. _Pip: https://pip.pypa.io/
-.. _Poetry: https://poetry.eustace.io/docs/#installation
+.. _Poetry: https://python-poetry.org/
+.. _Poetry_Installation: https://python-poetry.org/docs/master/#installation
 .. _Pelican repository: https://github.com/getpelican/pelican
 
 Development
