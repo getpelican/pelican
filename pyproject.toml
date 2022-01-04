@@ -49,7 +49,7 @@ lxml = "^4.3"
 markdown = "~3.3.4"
 typogrify = "^2.0"
 sphinx = "<4.4.0"
-sphinx_rtd_theme = "^0.5"
+furo = "^2022.1.2"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
 pygments = "~2.8"
