@@ -22,9 +22,9 @@ another, so you can use different packages (and package versions) for each.
 Please note that Python 3.6+ is required for Pelican development.
 
 *(Optional)* If you prefer to install Poetry once for use with multiple projects,
-you can install it via::
+you can install it via (readmore at https://python-poetry.org/docs/#installation::
 
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+    curl -sSL https://install.python-poetry.org | python3 -
 
 Point your web browser to the `Pelican repository`_ and tap the **Fork** button
 at top-right. Then clone the source for your fork and add the upstream project
