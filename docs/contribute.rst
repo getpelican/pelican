@@ -21,8 +21,8 @@ another, so you can use different packages (and package versions) for each.
 
 Please note that Python 3.6+ is required for Pelican development.
 
-*(Optional)* If you prefer to install Poetry once for use with multiple projects,
-you can install it via (readmore at `Poetry Installation <https://python-poetry.org/docs/master/#installation>`_)::
+*(Optional)* If you prefer to `install Poetry <https://python-poetry.org/docs/master/#installation>`_ once for use with multiple projects,
+you can install it via::
 
     curl -sSL https://install.python-poetry.org | python3 -
 
