@@ -79,8 +79,10 @@ class Pelican:
 
         self.settings['PLUGINS'] = [get_plugin_name(p) for p in self.plugins]
 
-    def run(self):
+    def run(self, modified=None):
         """Run the generators and return"""
+        modified = modified if modified is not None else []
+        limited_mode = self._is_limited_mode(modified=modified)
         start_time = time.time()
 
         context = self.settings.copy()
@@ -91,16 +93,26 @@ class Pelican:
         context['static_content'] = {}
         context['localsiteurl'] = self.settings['SITEURL']
 
-        generators = [
-            cls(
-                context=context,
-                settings=self.settings,
-                path=self.path,
-                theme=self.theme,
-                output_path=self.output_path,
-            ) for cls in self._get_generator_classes()
-        ]
-
+        if limited_mode:
+            generators = [
+                cls(
+                    context=context,
+                    settings=self.settings,
+                    path=self.path,
+                    theme=self.theme,
+                    output_path=self.output_path,
+                ) for cls in self._get_generator_classes_limited(modified)
+            ]
+        else:
+            generators = [
+                cls(
+                    context=context,
+                    settings=self.settings,
+                    path=self.path,
+                    theme=self.theme,
+                    output_path=self.output_path,
+                ) for cls in self._get_generator_classes()
+            ]
         # Delete the output directory if (1) the appropriate setting is True
         # and (2) that directory is not the parent of the source directory
         if (self.delete_outputdir
@@ -126,6 +138,11 @@ class Pelican:
                 p.generate_output(writer)
 
         signals.finalized.send(self)
+
+        if limited_mode:
+            console.print('Done: Processed in {:.2f} seconds.'\
+                          .format(time.time() - start_time))
+            return
 
         articles_generator = next(g for g in generators
                                   if isinstance(g, ArticlesGenerator))
@@ -209,6 +226,29 @@ class Pelican:
             generators.append(generator)
 
         return generators
+
+    def _is_limited_mode(self, modified=None):
+        """
+        only modified the template pages or static files
+        """
+        modified = modified if modified is not None else []
+        limited_set = {'template_pages', '[static]theme_static'}
+        limited_set.update(['[static]{}'.format(path)
+                            for path in self.settings.get('STATIC_PATHS',[])])
+        if modified and set(modified).issubset(limited_set):
+            return True
+        else:
+            return False
+    def _get_generator_classes_limited(self, modified=None):
+        modified = modified if modified is not None else []
+        discovered_generators = []
+        if self.settings["TEMPLATE_PAGES"]:
+            if 'template_pages' in modified:
+                discovered_generators.append(TemplatePagesGenerator)
+        # limited mode maybe not support some plugin
+        if any(m.startswith('[static]') for m in modified):
+            discovered_generators.append(StaticGenerator)
+        return discovered_generators
 
     def _get_writer(self):
         writers = [w for _, w in signals.get_writer.send(self) if isinstance(w, type)]
@@ -453,9 +493,10 @@ def autoreload(args, excqueue=None):
                 watcher.update_watchers(settings)
 
             if any(modified.values()):
+                modified_keys = [k for k, v in modified.items() if v]
                 console.print('\n-> Modified: {}. re-generating...'.format(
-                              ', '.join(k for k, v in modified.items() if v)))
-                pelican.run()
+                              ', '.join(modified_keys)))
+                pelican.run(modified=modified_keys)
 
         except KeyboardInterrupt:
             if excqueue is not None:

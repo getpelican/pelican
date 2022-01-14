@@ -765,6 +765,7 @@ class FileSystemWatcher:
         self._extensions = None
         self._content_path = None
         self._theme_path = None
+        self._template_pages_settings = None
         self._ignore_files = None
 
         if settings is not None:
@@ -774,11 +775,14 @@ class FileSystemWatcher:
         new_extensions = set(self.reader_class(settings).extensions)
         new_content_path = settings.get('PATH', '')
         new_theme_path = settings.get('THEME', '')
+        new_template_pages_settings = settings.get('TEMPLATE_PAGES', {})
         new_ignore_files = set(settings.get('IGNORE_FILES', []))
 
         extensions_changed = new_extensions != self._extensions
         content_changed = new_content_path != self._content_path
         theme_changed = new_theme_path != self._theme_path
+        template_pages_changed = new_template_pages_settings != \
+                                 self._template_pages_settings
         ignore_changed = new_ignore_files != self._ignore_files
 
         # Refresh content watcher if related settings changed
@@ -791,9 +795,18 @@ class FileSystemWatcher:
         # Refresh theme watcher if related settings changed
         if theme_changed or ignore_changed:
             self.add_watcher('theme',
-                             new_theme_path,
+                             os.path.join(new_theme_path, 'templates'),
                              [''],
                              new_ignore_files)
+
+        # Add Template_Pages to watcher
+        if template_pages_changed or ignore_changed:
+            for src in new_template_pages_settings:
+                full_src = os.path.join(new_content_path, src)
+                self.add_watcher('template_pages',
+                                 full_src,
+                                 [''],
+                                 new_ignore_files)
 
         # Watch STATIC_PATHS
         old_static_watchers = set(key
@@ -811,6 +824,16 @@ class FileSystemWatcher:
             if key in old_static_watchers:
                 old_static_watchers.remove(key)
 
+        for path in settings.get('THEME_STATIC_PATHS', []):
+            key = '[static]theme_static'
+            if ignore_changed or (key not in self.watchers):
+                self.add_watcher(key,
+                                 os.path.join(new_theme_path, path),
+                                 [''],
+                                 new_ignore_files)
+            if key in old_static_watchers:
+                old_static_watchers.remove(key)
+
         # cleanup removed static watchers
         for key in old_static_watchers:
             del self.watchers[key]
@@ -820,6 +843,7 @@ class FileSystemWatcher:
         self._extensions = new_extensions
         self._content_path = new_content_path
         self._theme_path = new_theme_path
+        self._template_pages_settings = new_template_pages_settings
         self._ignore_files = new_ignore_files
 
     def check(self):
