@@ -22,7 +22,6 @@
 {% endblock %}
 
 {% block content %}
-<section id="content" class="body">
   <header>
     <h1 class="entry-title">
       <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
@@ -60,8 +59,7 @@
     </div>
     {% endif %}
   </footer><!-- /.post-info -->
-  <div class="entry-content">
+  <article>
     {{ article.content }}
-  </div><!-- /.entry-content -->
-</section>
+  </article>
 {% endblock %}
