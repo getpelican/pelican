@@ -20,7 +20,7 @@ Before you ask for help, please make sure you do the following:
    you read the docs for the Pelican version you are using.
 2. Use a search engine (e.g., DuckDuckGo, Google) to search for a solution to
    your problem. Someone may have already found a solution, perhaps in the
-   form of a plugin_ or a specific combination of settings.
+   form of a ':pelican-doc:`plugins` or a specific combination of settings.
 
 3. Try reproducing the issue in a clean environment, ensuring you are using:
 
@@ -77,7 +77,7 @@ Contributing code
 Before you submit a contribution, please ask whether it is desired so that you
 don't spend a lot of time working on something that would be rejected for a
 known reason. Consider also whether your new feature might be better suited as
-a plugin_ — you can `ask for help`_  to make that determination.
+a ':pelican-doc:`plugins` — you can `ask for help`_  to make that determination.
 
 Using Git and GitHub
 --------------------
