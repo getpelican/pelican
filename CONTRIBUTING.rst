@@ -132,8 +132,8 @@ Contribution quality standards
 * Ensure your code is compatible with the `officially-supported Python releases`_.
 * Add docs and tests for your changes. Undocumented and untested features will
   not be accepted.
-* `Run all the tests`_ **on all versions of Python supported by Pelican** to
-  ensure nothing was accidentally broken.
+* :pelican-doc:`Run all the tests <contribute>` **on all versions of Python
+  supported by Pelican** to ensure nothing was accidentally broken.
 
 Check out our `Git Tips`_ page or `ask for help`_ if you
 need assistance or have any questions about these guidelines.
