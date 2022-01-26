@@ -141,7 +141,6 @@ need assistance or have any questions about these guidelines.
 .. _`plugin`: https://docs.getpelican.com/en/latest/plugins.html
 .. _`Create a new branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
 .. _`Squash your commits`: https://github.com/getpelican/pelican/wiki/Git-Tips#squashing-commits
-.. _`Run all the tests`: https://docs.getpelican.com/en/latest/contribute.html#running-the-test-suite
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
 .. _`PEP8 coding standards`: https://www.python.org/dev/peps/pep-0008/
 .. _`ask for help`: `How to get help`_
