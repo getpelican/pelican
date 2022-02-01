@@ -48,7 +48,7 @@ jinja2 = "~2.11"
 lxml = "^4.3"
 markdown = "~3.3.4"
 typogrify = "^2.0"
-sphinx = "^3.0"
+sphinx = "<4.4.0"
 sphinx_rtd_theme = "^0.5"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
