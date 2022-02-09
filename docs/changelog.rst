@@ -1,6 +1,11 @@
 Release history
 ###############
 
+4.7.2 - 2022-02-09
+==================
+
+Fix incorrect parsing of parameters specified via `-e` / `--extra-settings` option flags (#2938).
+
 4.7.1 - 2021-10-12
 ==================
 
