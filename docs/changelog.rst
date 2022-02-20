@@ -1,6 +1,13 @@
 Release history
 ###############
 
+4.7.2 - 2022-02-09
+==================
+
+* Fix incorrect parsing of parameters specified via `-e` / `--extra-settings` option flags `(#2938) <https://github.com/getpelican/pelican/pull/2938>`_
+* Add ``categories.html`` template to default theme `(#2973) <https://github.com/getpelican/pelican/pull/2973>`_
+* Document how to use plugins to inject content `(#2922) <https://github.com/getpelican/pelican/pull/2922>`_
+
 4.7.1 - 2021-10-12
 ==================
 

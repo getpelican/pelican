@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import multiprocessing
 import os
@@ -24,7 +25,7 @@ from pelican.plugins import signals
 from pelican.plugins._utils import get_plugin_name, load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
-from pelican.settings import coerce_overrides, read_settings
+from pelican.settings import read_settings
 from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
 from pelican.writers import Writer
 
@@ -259,16 +260,29 @@ class PrintSettings(argparse.Action):
         parser.exit()
 
 
-class ParseDict(argparse.Action):
+class ParseOverrides(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        d = {}
-        if values:
-            for item in values:
-                split_items = item.split("=", 1)
-                key = split_items[0].strip()
-                value = split_items[1].strip()
-                d[key] = value
-        setattr(namespace, self.dest, d)
+        overrides = {}
+        for item in values:
+            try:
+                k, v = item.split("=", 1)
+            except ValueError:
+                raise ValueError(
+                    'Extra settings must be specified as KEY=VALUE pairs '
+                    f'but you specified {item}'
+                )
+            try:
+                overrides[k] = json.loads(v)
+            except json.decoder.JSONDecodeError:
+                raise ValueError(
+                    f'Invalid JSON value: {v}. '
+                    'Values specified via -e / --extra-settings flags '
+                    'must be in JSON notation. '
+                    'Use -e KEY=\'"string"\' to specify a string value; '
+                    '-e KEY=null to specify None; '
+                    '-e KEY=false (or true) to specify False (or True).'
+                )
+        setattr(namespace, self.dest, overrides)
 
 
 def parse_arguments(argv=None):
@@ -366,13 +380,13 @@ def parse_arguments(argv=None):
 
     parser.add_argument('-e', '--extra-settings', dest='overrides',
                         help='Specify one or more SETTING=VALUE pairs to '
-                             'override settings. If VALUE contains spaces, '
-                             'add quotes: SETTING="VALUE". Values other than '
-                             'integers and strings can be specified via JSON '
-                             'notation. (e.g., SETTING=none)',
+                             'override settings. VALUE must be in JSON notation: '
+                             'specify string values as SETTING=\'"some string"\'; '
+                             'booleans as SETTING=true or SETTING=false; '
+                             'None as SETTING=null.',
                         nargs='*',
-                        action=ParseDict
-                        )
+                        action=ParseOverrides,
+                        default={})
 
     args = parser.parse_args(argv)
 
@@ -385,6 +399,8 @@ def parse_arguments(argv=None):
 
 
 def get_config(args):
+    """Builds a config dictionary based on supplied `args`.
+    """
     config = {}
     if args.path:
         config['PATH'] = os.path.abspath(os.path.expanduser(args.path))
@@ -409,7 +425,7 @@ def get_config(args):
     if args.bind is not None:
         config['BIND'] = args.bind
     config['DEBUG'] = args.verbosity == logging.DEBUG
-    config.update(coerce_overrides(args.overrides))
+    config.update(args.overrides)
 
     return config
 
