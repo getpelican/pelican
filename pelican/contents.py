@@ -15,7 +15,7 @@ from pelican.utils import (deprecated_attribute, memoized, path_to_url,
                            posixize_path, sanitised_join, set_date_tzinfo,
                            slugify, truncate_html_words)
 
-# Import these so that they're avalaible when you import from pelican.contents.
+# Import these so that they're available when you import from pelican.contents.
 from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 
 logger = logging.getLogger(__name__)
