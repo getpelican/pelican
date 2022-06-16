@@ -197,6 +197,13 @@ are copied over with the ``STATIC_PATHS`` setting of the project's
 ``images`` directory for this, but others must be added manually. In addition,
 static files that are explicitly linked to are included (see below).
 
+.. note::
+
+   In the default configuration, all files with a valid content file suffix
+   (``.html``, ``.rst``, ``.md``, ...) get processed by the article and page
+   generators *before* the static generator. This is avoided by altering the
+   ``*_EXCLUDE`` settings appropriately.
+
 Mixed content in the same directory
 -----------------------------------
 
