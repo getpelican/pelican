@@ -4,9 +4,9 @@ Release history
 4.8.0 - 2022-07-11
 ==================
 
-* Use JSON values for extra settings in Invoke tasks template (#2994)
-* Add content tag for links, which can help with things like Twitter social cards (#3001)
-* Improve word count behavior when generating summary (#3002)
+* Use JSON values for extra settings in Invoke tasks template `(#2994) <https://github.com/getpelican/pelican/pull/2994>`_
+* Add content tag for links, which can help with things like Twitter social cards `(#3001) <https://github.com/getpelican/pelican/pull/3001>`_
+* Improve word count behavior when generating summary `(#3002) <https://github.com/getpelican/pelican/pull/3002>`_
 
 4.7.2 - 2022-02-09
 ==================
