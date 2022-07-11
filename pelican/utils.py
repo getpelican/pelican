@@ -412,10 +412,7 @@ def posixize_path(rel_path):
 
 class _HTMLWordTruncator(HTMLParser):
 
-    _word_regex = re.compile(r"(({SBC})({SBC}|-|')*)|{DBC}".format(
-        # SBC means Latin-like characters. A word contains a few characters.
-        #         ASCII |Extended Latin | Cyrillic
-        SBC="[0-9a-zA-Z]|[\u00C0-\u024f]|[\u0400-\u04FF]",
+    _word_regex = re.compile(r"{DBC}|(\w[\w'-]*)".format(
         # DBC means CJK-like characters. An character can stand for a word.
         DBC=("([\u4E00-\u9FFF])|"          # CJK Unified Ideographs
              "([\u3400-\u4DBF])|"          # CJK Unified Ideographs Extension A

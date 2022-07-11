@@ -230,6 +230,11 @@ class TestUtils(LoggedTestCase):
                 'Ты мелькнула, ты предстала, Снова сердце задрожало,', 3
             ),
             'Ты мелькнула, ты' + ' …')
+        self.assertEqual(
+            utils.truncate_html_words(
+                'Trong đầm gì đẹp bằng sen', 4
+            ),
+            'Trong đầm gì đẹp' + ' …')
 
         # Words enclosed or intervaled by HTML tags.
         self.assertEqual(
