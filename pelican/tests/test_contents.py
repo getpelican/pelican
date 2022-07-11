@@ -522,6 +522,16 @@ class TestPage(TestBase):
             '<img src="http://static.cool.site/images/poster.jpg"/>'
         )
 
+        # Image link will go to static
+        args['content'] = (
+            '<meta content="{static}/images/poster.jpg"/>'
+        )
+        content = Page(**args).get_content('http://cool.site')
+        self.assertEqual(
+            content,
+            '<meta content="http://static.cool.site/images/poster.jpg"/>'
+        )
+
     def test_intrasite_link_escape(self):
         article = type(
             '_DummyArticle', (object,), {'url': 'article-spaces.html'})
