@@ -30,7 +30,7 @@ For Apache::
     ErrorDocument 404 /404.html
 
 For Amazon S3, first navigate to the ``Static Site Hosting`` menu in the bucket
-settings on your AWS cosole. From there::
+settings on your AWS console. From there::
 
     Error Document: 404.html
 

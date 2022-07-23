@@ -3,7 +3,7 @@ import warnings
 
 from pelican.log import log_warnings
 
-# redirect warnings modulole to use logging instead
+# redirect warnings module to use logging instead
 log_warnings()
 
 # setup warnings to log DeprecationWarning's and error on
