@@ -1,9 +1,8 @@
+import datetime
 import os
 import sys
 
 from pelican import __version__
-
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 sys.path.append(os.path.abspath(os.pardir))
 
@@ -15,7 +14,8 @@ extensions = ['sphinx.ext.autodoc',
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Pelican'
-copyright = '2010 – present, Justin Mayer, Alexis Metaireau, and contributors'
+year = datetime.datetime.now().date().year
+copyright = f'2010–{year}'
 exclude_patterns = ['_build']
 release = __version__
 version = '.'.join(release.split('.')[:1])
@@ -24,25 +24,20 @@ rst_prolog = '''
 .. |last_stable| replace:: :pelican-doc:`{}`
 '''.format(last_stable)
 
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
-
 extlinks = {
-    'pelican-doc':  ('https://docs.getpelican.com/%s/', '')
+    'pelican-doc':  ('https://docs.getpelican.com/%s/', '%s')
 }
 
 # -- Options for HTML output --------------------------------------------------
 
-html_theme = 'default'
-if not on_rtd:
-    try:
-        import sphinx_rtd_theme
-        html_theme = 'sphinx_rtd_theme'
-        html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-    except ImportError:
-        pass
-
+html_theme = 'furo'
+html_title = f'<strong>{project}</strong> <i>{release}</i>'
 html_static_path = ['_static']
+html_theme_options = {
+    'light_logo': 'pelican-logo.svg',
+    'dark_logo': 'pelican-logo.svg',
+    'navigation_with_keys': True,
+}
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Pelicandoc'

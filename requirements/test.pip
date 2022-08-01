@@ -5,7 +5,7 @@ pytest-cov
 pytest-xdist[psutil]
 
 # Optional Packages
-Markdown==3.3.4
+Markdown==3.3.7
 BeautifulSoup4
 lxml
 typogrify

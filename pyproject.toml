@@ -30,7 +30,7 @@ classifiers = [
 "Tracker" = "https://github.com/getpelican/pelican/issues"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.7,<4.0"
 blinker = ">=1.4"
 docutils = ">=0.16"
 feedgenerator = ">=1.9"
@@ -44,19 +44,18 @@ markdown = {version = ">=3.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 BeautifulSoup4 = "^4.9"
-jinja2 = "~2.11"
+jinja2 = "~3.1.2"
 lxml = "^4.3"
-markdown = "~3.3.4"
+markdown = "~3.3.7"
 typogrify = "^2.0"
-sphinx = "<4.4.0"
-sphinx_rtd_theme = "^0.5"
+sphinx = "^5.1"
+furo = "2022.06.21"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
 pygments = "~2.8"
-pytest = "^6.0"
-pytest-cov = "^2.8"
-pytest-pythonpath = "^0.7.3"
-pytest-sugar = "^0.9.4"
+pytest = "^7.1"
+pytest-cov = "^3.0"
+pytest-sugar = "^0.9.5"
 pytest-xdist = "^2.0"
 tox = {version = "^3.13", optional = true}
 flake8 = "^3.8"

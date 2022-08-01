@@ -350,7 +350,7 @@ def dc2fields(file):
             else:
                 i = 1
                 j = 1
-                while(i <= int(tag[:1])):
+                while (i <= int(tag[:1])):
                     newtag = tag.split('"')[j].replace('\\', '')
                     tags.append(
                         BeautifulSoup(
