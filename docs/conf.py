@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 
@@ -13,7 +14,8 @@ extensions = ['sphinx.ext.autodoc',
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Pelican'
-copyright = '2010 – present, Justin Mayer, Alexis Metaireau, and contributors'
+year = datetime.datetime.now().date().year
+copyright = f'2010–{year}'
 exclude_patterns = ['_build']
 release = __version__
 version = '.'.join(release.split('.')[:1])
