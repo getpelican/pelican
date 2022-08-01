@@ -30,7 +30,7 @@ classifiers = [
 "Tracker" = "https://github.com/getpelican/pelican/issues"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.7,<4.0"
 blinker = ">=1.4"
 docutils = ">=0.16"
 feedgenerator = ">=1.9"
@@ -48,8 +48,8 @@ jinja2 = "~2.11"
 lxml = "^4.3"
 markdown = "~3.3.4"
 typogrify = "^2.0"
-sphinx = "<4.4.0"
-furo = "^2022.1.2"
+sphinx = "^5.1"
+furo = "2022.06.21"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
 pygments = "~2.8"
