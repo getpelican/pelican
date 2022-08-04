@@ -350,6 +350,11 @@ Basic settings
 
    Controls how files are checked for modifications.
 
+   - If set to ``'mtime'``, the modification time of the file is
+     checked.
+   - If set to a name of a function provided by the ``hashlib``
+     module, e.g. ``'md5'``, the file hash is checked.
+
 .. data:: LOAD_CONTENT_CACHE = False
 
    If ``True``, load unmodified content from caches.
