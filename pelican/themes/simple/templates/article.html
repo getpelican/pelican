@@ -22,11 +22,10 @@
 {% endblock %}
 
 {% block content %}
-<section id="content" class="body">
   <header>
-    <h2 class="entry-title">
+    <h1 class="entry-title">
       <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
-         title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
+         title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h1>
  {% import 'translations.html' as translations with context %}
  {{ translations.translations_for(article) }}
   </header>
@@ -60,8 +59,7 @@
     </div>
     {% endif %}
   </footer><!-- /.post-info -->
-  <div class="entry-content">
+  <article>
     {{ article.content }}
-  </div><!-- /.entry-content -->
-</section>
+  </article>
 {% endblock %}
