@@ -26,15 +26,20 @@ Before you ask for help, please make sure you do the following:
 * latest releases of libraries used by Pelican
 * no plugins or only those related to the issue
 
-**NOTE:** The most common sources of problems are anomalies in (1) themes,
-(2) settings files, and (3) ``make``/``invoke`` automation wrappers. If you can't
-reproduce your problem when using the following steps to generate your site,
-then the problem is almost certainly with your chosen theme and/or settings
-file (and not Pelican itself)::
+**NOTE:** The most common sources of problems are anomalies in (1) themes, (2)
+plugins, (3) settings files, and (4) ``make``/``invoke`` automation wrappers.
+If you can't reproduce your problem when using the following steps to generate
+your site, then the problem is almost certainly with one of the above-listed
+elements (and not Pelican itself)::
 
     cd ~/projects/your-site
     git clone https://github.com/getpelican/pelican ~/projects/pelican
     pelican content -s ~/projects/pelican/samples/pelican.conf.py -t ~/projects/pelican/pelican/themes/notmyidea
+
+If you can generate your site without problems using the steps above, then your
+problem is unlikely to be caused by Pelican itself, and therefore please
+consider reaching out to the maintainers of the plugins/theme you are using
+instead of raising the topic with the Pelican core community.
 
 If despite the above efforts you still cannot resolve your problem, be sure to
 include in your inquiry the following information, preferably in the form of
