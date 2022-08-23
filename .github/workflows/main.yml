@@ -16,8 +16,6 @@ jobs:
       matrix:
         config:
           - os: ubuntu
-            python: "3.6"
-          - os: ubuntu
             python: "3.7"
           - os: ubuntu
             python: "3.8"
