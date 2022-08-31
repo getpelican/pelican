@@ -19,7 +19,7 @@ instructions will utilize Pip_ and Poetry_. These tools facilitate managing
 virtual environments for separate Python projects that are isolated from one
 another, so you can use different packages (and package versions) for each.
 
-Please note that Python 3.6+ is required for Pelican development.
+Please note that Python 3.7+ is required for Pelican development.
 
 *(Optional)* If you prefer to `install Poetry <https://python-poetry.org/docs/master/#installation>`_ once for use with multiple projects,
 you can install it via::
