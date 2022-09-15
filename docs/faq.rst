@@ -11,11 +11,11 @@ Please read our :doc:`feedback guidelines <contribute>`.
 How can I help?
 ===============
 
-There are several ways to help out. First, you can report any Pelican
-suggestions or problems you might have via IRC (preferred) or the `issue
-tracker <https://github.com/getpelican/pelican/issues>`_. If submitting an
-issue report, please first check the existing issue list (both open and closed)
-in order to avoid submitting a duplicate issue.
+There are several ways to help out. First, you can communicate any Pelican
+suggestions or problems you might have via `Pelican Discussions
+<https://github.com/getpelican/pelican/discussions>`_. Please first check the
+existing list of discussions and issues (both open and closed) in order to
+avoid submitting topics that have already been covered before.
 
 If you want to contribute, please fork `the git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
