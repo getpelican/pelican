@@ -218,6 +218,23 @@ class LogCountHandler(BufferingHandler):
         ])
 
 
+def diff_subproc(first, second):
+    """
+    Return a subprocess that runs a diff on the two paths.
+
+    Check results with::
+
+        >>> out_stream, err_stream = proc.communicate()
+        >>> didCheckFail = proc.returnCode != 0
+    """
+    return subprocess.Popen(
+        ['git', '--no-pager', 'diff', '--no-ext-diff', '--exit-code',
+         '-w', first, second],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+
+
 class LoggedTestCase(unittest.TestCase):
     """A test case that captures log messages."""
 
