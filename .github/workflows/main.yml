@@ -86,7 +86,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - name: Set pip cache (Linux)
         uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
@@ -110,7 +110,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - name: Set pip cache (Linux)
         uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
@@ -136,7 +136,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - name: Check release
         id: check_release
         run: |
