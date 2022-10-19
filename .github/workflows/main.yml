@@ -29,13 +29,13 @@ jobs:
             python: "3.7"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python ${{ matrix.config.python }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.config.python }}
       - name: Set up Pip cache (Linux)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
@@ -43,7 +43,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Set up Pip cache (macOS)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         if: startsWith(runner.os, 'macOS')
         with:
           path: ~/Library/Caches/pip
@@ -51,7 +51,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
       - name: Setup pip cache (Windows)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         if: startsWith(runner.os, 'Windows')
         with:
           path: ~\AppData\Local\pip\Cache
@@ -62,7 +62,7 @@ jobs:
         if: startsWith(runner.os, 'Linux')
         run: sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
       - name: Install pandoc
-        uses: r-lib/actions/setup-pandoc@v1
+        uses: r-lib/actions/setup-pandoc@v2
         with:
           pandoc-version: "2.9.2"
       - name: Install tox
@@ -82,13 +82,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.7"
       - name: Set pip cache (Linux)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
@@ -106,13 +106,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.7"
       - name: Set pip cache (Linux)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
@@ -132,9 +132,9 @@ jobs:
     if: ${{ github.ref=='refs/heads/master' && github.event_name!='pull_request' }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.7"
       - name: Check release
@@ -144,9 +144,10 @@ jobs:
           pip install poetry
           pip install githubrelease
           pip install --pre autopub
-          echo "##[set-output name=release;]$(autopub check)"
+          autopub check
+        continue-on-error: true
       - name: Publish
-        if: ${{ steps.check_release.outputs.release=='' }}
+        if: steps.check_release.outcome=='success'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
