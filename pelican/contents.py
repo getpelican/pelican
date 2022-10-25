@@ -341,7 +341,7 @@ class Content:
 
             (?P<quote>["\'])      # require value to be quoted
             (?P<path>{}(?P<value>.*?))  # the url value
-            \2""".format(intrasite_link_regex)
+            (?P=quote)""".format(intrasite_link_regex)
         return re.compile(regex, re.X)
 
     def _update_content(self, content, siteurl):
