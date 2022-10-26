@@ -20,6 +20,14 @@ from pelican.writers import Writer
 class TestUtils(LoggedTestCase):
     _new_attribute = 'new_value'
 
+    def setUp(self):
+        super().setUp()
+        self.temp_output = mkdtemp(prefix='pelicantests.')
+
+    def tearDown(self):
+        super().tearDown()
+        shutil.rmtree(self.temp_output)
+
     @utils.deprecated_attribute(
         old='_old_attribute', new='_new_attribute',
         since=(3, 1, 0), remove=(4, 1, 3))
@@ -468,7 +476,7 @@ class TestUtils(LoggedTestCase):
 
     def test_clean_output_dir(self):
         retention = ()
-        test_directory = os.path.join(os.path.dirname(__file__),
+        test_directory = os.path.join(self.temp_output,
                                       'clean_output')
         content = os.path.join(os.path.dirname(__file__), 'content')
         shutil.copytree(content, test_directory)
@@ -479,14 +487,14 @@ class TestUtils(LoggedTestCase):
 
     def test_clean_output_dir_not_there(self):
         retention = ()
-        test_directory = os.path.join(os.path.dirname(__file__),
+        test_directory = os.path.join(self.temp_output,
                                       'does_not_exist')
         utils.clean_output_dir(test_directory, retention)
         self.assertFalse(os.path.exists(test_directory))
 
     def test_clean_output_dir_is_file(self):
         retention = ()
-        test_directory = os.path.join(os.path.dirname(__file__),
+        test_directory = os.path.join(self.temp_output,
                                       'this_is_a_file')
         f = open(test_directory, 'w')
         f.write('')
