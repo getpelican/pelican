@@ -23,6 +23,8 @@ jobs:
             python: "3.9"
           - os: ubuntu
             python: "3.10"
+          - os: ubuntu
+            python: "3.11"
           - os: macos
             python: "3.7"
           - os: windows
@@ -34,30 +36,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.config.python }}
-      - name: Set up Pip cache (Linux)
-        uses: actions/cache@v3
-        if: startsWith(runner.os, 'Linux')
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/*') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Set up Pip cache (macOS)
-        uses: actions/cache@v3
-        if: startsWith(runner.os, 'macOS')
-        with:
-          path: ~/Library/Caches/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/*') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-      - name: Setup pip cache (Windows)
-        uses: actions/cache@v3
-        if: startsWith(runner.os, 'Windows')
-        with:
-          path: ~\AppData\Local\pip\Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements/*') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache: 'pip'
+          cache-dependency-path: '**/requirements/*'
       - name: Install locale (Linux)
         if: startsWith(runner.os, 'Linux')
         run: sudo locale-gen fr_FR.UTF-8 tr_TR.UTF-8
@@ -87,14 +67,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-      - name: Set pip cache (Linux)
-        uses: actions/cache@v3
-        if: startsWith(runner.os, 'Linux')
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements/*') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache: 'pip'
+          cache-dependency-path: '**/requirements/*'
       - name: Install tox
         run: python -m pip install -U pip tox
       - name: Check
@@ -111,14 +85,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-      - name: Set pip cache (Linux)
-        uses: actions/cache@v3
-        if: startsWith(runner.os, 'Linux')
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements/*') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache: 'pip'
+          cache-dependency-path: '**/requirements/*'
       - name: Install tox
         run: python -m pip install -U pip tox
       - name: Check
