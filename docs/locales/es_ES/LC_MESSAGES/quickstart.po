@@ -3,127 +3,158 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 17:37+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2023-01-03 21:20+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.11.0\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: ../../quickstart.rst:2
 msgid "Quickstart"
-msgstr ""
+msgstr "Comienzo rápido"
 
 #: ../../quickstart.rst:4
 msgid ""
-"Reading through all the documentation is highly recommended, but for the "
-"truly impatient, following are some quick steps to get started."
+"Reading through all the documentation is highly recommended, but for the truly "
+"impatient, following are some quick steps to get started."
 msgstr ""
+"Se recomienda encarecidamente leer toda la documentación, pero para los "
+"verdaderamente impacientes, a continuación se indican algunos pasos rápidos "
+"para empezar."
 
 #: ../../quickstart.rst:8
 msgid "Installation"
-msgstr ""
+msgstr "Instalación"
 
 #: ../../quickstart.rst:10
 msgid ""
-"Install Pelican (and optionally Markdown if you intend to use it) on "
-"Python 3.6+ by running the following command in your preferred terminal, "
-"prefixing with ``sudo`` if permissions warrant::"
+"Install Pelican (and optionally Markdown if you intend to use it) on Python "
+"3.6+ by running the following command in your preferred terminal, prefixing "
+"with ``sudo`` if permissions warrant::"
 msgstr ""
+"Instala Pelican (y opcionalmente Markdown si tienes la intención de usarlo) en "
+"Python 3.6+ ejecutando el siguiente comando en tu terminal preferida, "
+"prefijándolo con ``sudo`` si los permisos lo permiten::"
 
 #: ../../quickstart.rst:17
 msgid "Create a project"
-msgstr ""
+msgstr "Crear un proyecto"
 
 #: ../../quickstart.rst:19
 msgid ""
-"First, choose a name for your project, create an appropriately-named "
-"directory for your site, and switch to that directory::"
+"First, choose a name for your project, create an appropriately-named directory "
+"for your site, and switch to that directory::"
 msgstr ""
+"Primero escoge un nombre para tu proyecto, crea un directorio con un nombre "
+"apropiado para tu sitio y ve a ese directorio::"
 
 #: ../../quickstart.rst:25
 msgid ""
-"Create a skeleton project via the ``pelican-quickstart`` command, which "
-"begins by asking some questions about your site::"
+"Create a skeleton project via the ``pelican-quickstart`` command, which begins "
+"by asking some questions about your site::"
 msgstr ""
+"Crea un proyecto base con el comando ``pelican-quickstart``, que comienza "
+"preguntando algunas preguntas sobre tu sitio::"
 
 #: ../../quickstart.rst:30
 msgid ""
-"For questions that have default values denoted in brackets, feel free to "
-"use the Return key to accept those default values [#tzlocal_fn]_. When "
-"asked for your URL prefix, enter your domain name as indicated (e.g., "
-"``https://example.com``)."
+"For questions that have default values denoted in brackets, feel free to use "
+"the Return key to accept those default values [#tzlocal_fn]_. When asked for "
+"your URL prefix, enter your domain name as indicated (e.g., ``https://example."
+"com``)."
 msgstr ""
+"Para preguntas que tienen valores predeterminados indicados entre paréntesis, "
+"no dudes en utilizar la tecla Entrar para aceptar esos valores predeterminados "
+"[#tzlocal_fn]_. Cuando se te pregunte sobre tu prefijo de URL introduce tu "
+"nombre de dominio como se indica (p. ej., ``https://ejemplo.com``)."
 
 #: ../../quickstart.rst:36
 msgid "Create an article"
-msgstr ""
+msgstr "Crear un artículo"
 
 #: ../../quickstart.rst:38
 msgid ""
-"You cannot run Pelican until you have created some content. Use your "
-"preferred text editor to create your first article with the following "
-"content::"
+"You cannot run Pelican until you have created some content. Use your preferred "
+"text editor to create your first article with the following content::"
 msgstr ""
+"No puedes ejecutar Pelican hasta que hayas creado algún contenido. Usa tu "
+"editor de texto preferido para crear tu primer artículo con el siguiente "
+"contenido::"
 
 #: ../../quickstart.rst:47
 msgid ""
-"Given that this example article is in Markdown format, save it as "
-"``~/projects/yoursite/content/keyboard-review.md``."
+"Given that this example article is in Markdown format, save it as ``~/projects/"
+"yoursite/content/keyboard-review.md``."
 msgstr ""
+"Dado que este artículo de ejemplo está en formato Markdown, guárdalo como ``~/"
+"projects/yoursite/content/keyboard-review.md``."
 
 #: ../../quickstart.rst:51
 msgid "Generate your site"
-msgstr ""
+msgstr "Generar tu sitio web"
 
 #: ../../quickstart.rst:53
 msgid ""
-"From your project root directory, run the ``pelican`` command to generate"
-" your site::"
+"From your project root directory, run the ``pelican`` command to generate your "
+"site::"
 msgstr ""
+"Desde el directorio raíz de tu proyecto, ejecuta el comando ``pelican`` para "
+"generar tu sitio::"
 
 #: ../../quickstart.rst:57
 msgid ""
-"Your site has now been generated inside the ``output/`` directory. (You "
-"may see a warning related to feeds, but that is normal when developing "
-"locally and can be ignored for now.)"
+"Your site has now been generated inside the ``output/`` directory. (You may see "
+"a warning related to feeds, but that is normal when developing locally and can "
+"be ignored for now.)"
 msgstr ""
+"Ahora tu sitio se ha generado dentro del directorio ``output/``. (Puede que "
+"veas una advertencia relacionada con fuentes Atom o RSS, pero eso es normal "
+"cuando se desarrolla localmente y puede ignorarse por ahora.)"
 
 #: ../../quickstart.rst:62
 msgid "Preview your site"
-msgstr ""
+msgstr "Previsualizar tu sitio web"
 
 #: ../../quickstart.rst:64
 msgid ""
-"Open a new terminal session, navigate to your project root directory, and"
-" run the following command to launch Pelican's web server::"
+"Open a new terminal session, navigate to your project root directory, and run "
+"the following command to launch Pelican's web server::"
 msgstr ""
+"Abre una nueva sesión de terminal, navega al directorio raíz de tu proyecto y "
+"ejecuta el siguiente comando para iniciar el servidor web de Pelican::"
 
 #: ../../quickstart.rst:69
 msgid "Preview your site by navigating to http://localhost:8000/ in your browser."
 msgstr ""
+"Previsualiza tu sitio web navegando a http://localhost:8000/ en tu navegador."
 
 #: ../../quickstart.rst:71
 msgid ""
-"Continue reading the other documentation sections for more detail, and "
-"check out the Pelican wiki's Tutorials_ page for links to community-"
-"published tutorials."
+"Continue reading the other documentation sections for more detail, and check "
+"out the Pelican wiki's Tutorials_ page for links to community-published "
+"tutorials."
 msgstr ""
+"Sigue leyendo las demás secciones de documentación para más detalles y échale "
+"un vistazo a la página de **wiki** de Pelican Tutorials_ para ver tutoriales "
+"publicados por la comunidad."
 
 #: ../../quickstart.rst:78
 msgid "Footnotes"
-msgstr ""
+msgstr "Notas a pie de página"
 
 #: ../../quickstart.rst:80
 msgid ""
 "You can help localize default fields by installing the optional `tzlocal "
 "<https://pypi.org/project/tzlocal/>`_ module."
 msgstr ""
-
+"Puedes ayudar a localizar campos predeterminados instalando el módulo opcional "
+"`tzlocal <https://pypi.org/project/tzlocal/>`_."
