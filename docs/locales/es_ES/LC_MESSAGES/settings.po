@@ -1,0 +1,1635 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-03 17:37+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: ../../settings.rst:2
+msgid "Settings"
+msgstr ""
+
+#: ../../settings.rst:4
+msgid ""
+"Pelican is configurable thanks to a settings file you can pass to the "
+"command line::"
+msgstr ""
+
+#: ../../settings.rst:9
+msgid ""
+"If you used the ``pelican-quickstart`` command, your primary settings "
+"file will be named ``pelicanconf.py`` by default."
+msgstr ""
+
+#: ../../settings.rst:12
+msgid ""
+"You can also specify settings via ``-e`` / ``--extra-settings`` option "
+"flags. It will override default settings as well as any defined within "
+"the setting file. Note that values must follow JSON notation::"
+msgstr ""
+
+#: ../../settings.rst:21
+msgid ""
+"When experimenting with different settings (especially the metadata ones)"
+" caching may interfere and the changes may not be visible. In such cases "
+"disable caching with ``LOAD_CONTENT_CACHE = False`` or use the "
+"``--ignore-cache`` command-line switch."
+msgstr ""
+
+#: ../../settings.rst:26
+msgid ""
+"Settings are configured in the form of a Python module (a file). There is"
+" an `example settings file "
+"<https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_"
+" available for reference."
+msgstr ""
+
+#: ../../settings.rst:31
+msgid ""
+"To see a list of current settings in your environment, including both "
+"default and any customized values, run the following command (append one "
+"or more specific setting names as arguments to see values for those "
+"settings only)::"
+msgstr ""
+
+#: ../../settings.rst:37
+msgid ""
+"All the setting identifiers must be set in all-caps, otherwise they will "
+"not be processed. Setting values that are numbers (5, 20, etc.), booleans"
+" (True, False, None, etc.), dictionaries, or tuples should *not* be "
+"enclosed in quotation marks. All other values (i.e., strings) *must* be "
+"enclosed in quotation marks."
+msgstr ""
+
+#: ../../settings.rst:43
+msgid ""
+"Unless otherwise specified, settings that refer to paths can be either "
+"absolute or relative to the configuration file. The settings you define "
+"in the configuration file will be passed to the templates, which allows "
+"you to use your settings to add site-wide content."
+msgstr ""
+
+#: ../../settings.rst:48
+msgid "Here is a list of settings for Pelican:"
+msgstr ""
+
+#: ../../settings.rst:52
+msgid "Basic settings"
+msgstr ""
+
+#: ../../settings.rst:56
+msgid ""
+"When you don't specify a category in your post metadata, set this setting"
+" to ``True``, and organize your articles in subfolders, the subfolder "
+"will become the category of your post. If set to ``False``, "
+"``DEFAULT_CATEGORY`` will be used as a fallback."
+msgstr ""
+
+#: ../../settings.rst:63
+msgid "The default category to fall back on."
+msgstr ""
+
+#: ../../settings.rst:67
+msgid ""
+"Whether to display pages on the menu of the template. Templates may or "
+"may not honor this setting."
+msgstr ""
+
+#: ../../settings.rst:72
+msgid ""
+"Whether to display categories on the menu of the template. Templates may "
+"or not honor this setting."
+msgstr ""
+
+#: ../../settings.rst:77
+msgid ""
+"Extra configuration settings for the docutils publisher (applicable only "
+"to reStructuredText). See `Docutils Configuration`_ settings for more "
+"details."
+msgstr ""
+
+#: ../../settings.rst:82
+msgid ""
+"Delete the output directory, and **all** of its contents, before "
+"generating new files. This can be useful in preventing older, unnecessary"
+" files from persisting in your output. However, **this is a destructive "
+"setting and should be handled with extreme care.**"
+msgstr ""
+
+#: ../../settings.rst:89
+msgid ""
+"A list of filenames that should be retained and not deleted from the "
+"output directory. One use case would be the preservation of version "
+"control data."
+msgstr ""
+
+#: ../../settings.rst:92 ../../settings.rst:107 ../../settings.rst:133
+msgid "Example::"
+msgstr ""
+
+#: ../../settings.rst:98
+msgid ""
+"A dictionary of custom Jinja2 environment variables you want to use. This"
+" also includes a list of extensions you may want to include. See `Jinja "
+"Environment documentation`_."
+msgstr ""
+
+#: ../../settings.rst:104
+msgid ""
+"A dictionary of custom Jinja2 filters you want to use.  The dictionary "
+"should map the filtername to the filter function."
+msgstr ""
+
+#: ../../settings.rst:115
+msgid "See: `Jinja custom filters documentation`_."
+msgstr ""
+
+#: ../../settings.rst:119
+msgid ""
+"A dictionary of custom objects to map into the Jinja2 global environment "
+"namespace. The dictionary should map the global name to the global "
+"variable/function. See: `Jinja global namespace documentation`_."
+msgstr ""
+
+#: ../../settings.rst:125
+msgid ""
+"A dictionary of custom Jinja2 tests you want to use. The dictionary "
+"should map test names to test functions. See: `Jinja custom tests "
+"documentation`_."
+msgstr ""
+
+#: ../../settings.rst:130
+msgid ""
+"A list of tuples containing the logging level (up to ``warning``) and the"
+" message to be ignored."
+msgstr ""
+
+#: ../../settings.rst:139
+msgid ""
+"A dictionary of file extensions / Reader classes for Pelican to process "
+"or ignore."
+msgstr ""
+
+#: ../../settings.rst:142
+msgid "For example, to avoid processing .html files, set::"
+msgstr ""
+
+#: ../../settings.rst:146
+msgid "To add a custom reader for the ``foo`` extension, set::"
+msgstr ""
+
+#: ../../settings.rst:152
+msgid ""
+"A list of glob patterns.  Files and directories matching any of these "
+"patterns will be ignored by the processor. For example, the default "
+"``['.#*']`` will ignore emacs lock files, and ``['__pycache__']`` would "
+"ignore Python 3's bytecode caches."
+msgstr ""
+
+#: ../../settings.rst:159
+msgid ""
+"Extra configuration settings for the Markdown processor. Refer to the "
+"Python Markdown documentation's `Options section <https://python-"
+"markdown.github.io/reference/#markdown>`_ for a complete list of "
+"supported options. The ``extensions`` option will be automatically "
+"computed from the ``extension_configs`` option."
+msgstr ""
+
+#: ../../settings.rst:165
+msgid "Defaults to::"
+msgstr ""
+
+#: ../../settings.rst:177
+msgid ""
+"The dictionary defined in your settings file will replace this default "
+"one."
+msgstr ""
+
+#: ../../settings.rst:182
+msgid ""
+"Where to output the generated files. This should correspond to your web "
+"server's virtual host root directory."
+msgstr ""
+
+#: ../../settings.rst:187
+msgid ""
+"Path to content directory to be processed by Pelican. If undefined, and "
+"content path is not specified via an argument to the ``pelican`` command,"
+" Pelican will use the current working directory."
+msgstr ""
+
+#: ../../settings.rst:193
+msgid ""
+"A list of directories and files to look at for pages, relative to "
+"``PATH``."
+msgstr ""
+
+#: ../../settings.rst:197
+msgid ""
+"A list of directories to exclude when looking for pages in addition to "
+"``ARTICLE_PATHS``."
+msgstr ""
+
+#: ../../settings.rst:202
+msgid ""
+"A list of directories and files to look at for articles, relative to "
+"``PATH``."
+msgstr ""
+
+#: ../../settings.rst:207
+msgid ""
+"A list of directories to exclude when looking for articles in addition to"
+" ``PAGE_PATHS``."
+msgstr ""
+
+#: ../../settings.rst:212
+msgid ""
+"Set to True if you want to copy the articles and pages in their original "
+"format (e.g. Markdown or reStructuredText) to the specified "
+"``OUTPUT_PATH``."
+msgstr ""
+
+#: ../../settings.rst:217
+msgid ""
+"Controls the extension that will be used by the SourcesGenerator.  "
+"Defaults to ``.text``. If not a valid string the default value will be "
+"used."
+msgstr ""
+
+#: ../../settings.rst:222
+msgid "The list of plugins to load. See :ref:`plugins`."
+msgstr ""
+
+#: ../../settings.rst:226
+msgid "A list of directories where to look for plugins. See :ref:`plugins`."
+msgstr ""
+
+#: ../../settings.rst:230
+msgid "Your site name"
+msgstr ""
+
+#: ../../settings.rst:234
+msgid ""
+"Base URL of your web site. Not defined by default, so it is best to "
+"specify your SITEURL; if you do not, feeds will not be generated with "
+"properly-formed URLs. If your site is available via HTTPS, this setting "
+"should begin with ``https://`` — otherwise use ``http://``. Then append "
+"your domain, with no trailing slash at the end. Example: ``SITEURL = "
+"'https://example.com'``"
+msgstr ""
+
+#: ../../settings.rst:243
+msgid ""
+"A list of directories (relative to ``PATH``) in which to look for static "
+"files. Such files will be copied to the output directory without "
+"modification. Articles, pages, and other content source files will "
+"normally be skipped, so it is safe for a directory to appear both here "
+"and in ``PAGE_PATHS`` or ``ARTICLE_PATHS``.  Pelican's default settings "
+"include the \"images\" directory here."
+msgstr ""
+
+#: ../../settings.rst:252
+msgid "A list of directories to exclude when looking for static files."
+msgstr ""
+
+#: ../../settings.rst:256
+msgid ""
+"If set to False, content source files will not be skipped when copying "
+"files found in ``STATIC_PATHS``. This setting is for backward "
+"compatibility with Pelican releases before version 3.5.  It has no effect"
+" unless ``STATIC_PATHS`` contains a directory that is also in "
+"``ARTICLE_PATHS`` or ``PAGE_PATHS``. If you are trying to publish your "
+"site's source files, consider using the ``OUTPUT_SOURCES`` setting "
+"instead."
+msgstr ""
+
+#: ../../settings.rst:265
+msgid ""
+"Create links instead of copying files. If the content and output "
+"directories are on the same device, then create hard links.  Falls back "
+"to symbolic links if the output directory is on a different filesystem. "
+"If symlinks are created, don't forget to add the ``-L`` or ``--copy-"
+"links`` option to rsync when uploading your site."
+msgstr ""
+
+#: ../../settings.rst:273
+msgid ""
+"If set to ``True``, and ``STATIC_CREATE_LINKS`` is ``False``, compare "
+"mtimes of content and output files, and only copy content files that are "
+"newer than existing output files."
+msgstr ""
+
+#: ../../settings.rst:279
+msgid ""
+"If set to True, several typographical improvements will be incorporated "
+"into the generated HTML via the `Typogrify "
+"<https://pypi.org/project/typogrify/>`_ library, which can be installed "
+"via: ``python -m pip install typogrify``"
+msgstr ""
+
+#: ../../settings.rst:286
+msgid ""
+"A list of tags for Typogrify to ignore. By default Typogrify will ignore "
+"``pre`` and ``code`` tags. This requires that Typogrify version 2.0.4 or "
+"later is installed"
+msgstr ""
+
+#: ../../settings.rst:292
+msgid ""
+"This setting controls how Typogrify sets up the Smartypants filter to "
+"interpret multiple dash/hyphen/minus characters. A single ASCII dash "
+"character (``-``) is always rendered as a hyphen. The ``default`` setting"
+" does not handle en-dashes and converts double-hyphens into em-dashes. "
+"The ``oldschool`` setting renders both en-dashes and em-dashes when it "
+"sees two (``--``) and three (``---``) hyphen characters, respectively. "
+"The ``oldschool_inverted`` setting turns two hyphens into an em-dash and "
+"three hyphens into an en-dash."
+msgstr ""
+
+#: ../../settings.rst:303
+msgid ""
+"When creating a short summary of an article, this will be the default "
+"length (measured in words) of the text created.  This only applies if "
+"your content does not otherwise specify a summary. Setting to ``None`` "
+"will cause the summary to be a copy of the original content."
+msgstr ""
+
+#: ../../settings.rst:310
+msgid ""
+"When creating a short summary of an article and the result was truncated "
+"to match the required word length, this will be used as the truncation "
+"suffix."
+msgstr ""
+
+#: ../../settings.rst:315
+msgid ""
+"If disabled, content with dates in the future will get a default status "
+"of ``draft``. See :ref:`reading_only_modified_content` for caveats."
+msgstr ""
+
+#: ../../settings.rst:320
+msgid ""
+"Regular expression that is used to parse internal links. Default syntax "
+"when linking to internal files, tags, etc., is to enclose the identifier,"
+" say ``filename``, in ``{}`` or ``||``. Identifier between ``{`` and "
+"``}`` goes into the ``what`` capturing group.  For details see :ref:`ref-"
+"linking-to-internal-content`."
+msgstr ""
+
+#: ../../settings.rst:328
+msgid ""
+"A list of default Pygments settings for your reStructuredText code "
+"blocks. See :ref:`internal_pygments_options` for a list of supported "
+"options."
+msgstr ""
+
+#: ../../settings.rst:333
+msgid ""
+"If ``True``, saves content in caches.  See "
+":ref:`reading_only_modified_content` for details about caching."
+msgstr ""
+
+#: ../../settings.rst:338
+msgid ""
+"If set to ``'reader'``, save only the raw content and metadata returned "
+"by readers. If set to ``'generator'``, save processed content objects."
+msgstr ""
+
+#: ../../settings.rst:343
+msgid "Directory in which to store cache files."
+msgstr ""
+
+#: ../../settings.rst:347
+msgid "If ``True``, use gzip to (de)compress the cache files."
+msgstr ""
+
+#: ../../settings.rst:351
+msgid "Controls how files are checked for modifications."
+msgstr ""
+
+#: ../../settings.rst:353 ../../settings.rst:1345
+msgid "If set to ``'mtime'``, the modification time of the file is checked."
+msgstr ""
+
+#: ../../settings.rst:355 ../../settings.rst:1347
+msgid ""
+"If set to a name of a function provided by the ``hashlib`` module, e.g. "
+"``'md5'``, the file hash is checked."
+msgstr ""
+
+#: ../../settings.rst:360
+msgid "If ``True``, load unmodified content from caches."
+msgstr ""
+
+#: ../../settings.rst:364
+msgid ""
+"If this list is not empty, **only** output files with their paths in this"
+" list are written. Paths should be either absolute or relative to the "
+"current Pelican working directory. For possible use cases see "
+":ref:`writing_only_selected_content`."
+msgstr ""
+
+#: ../../settings.rst:371
+msgid ""
+"A list of metadata fields containing reST/Markdown content to be parsed "
+"and translated to HTML."
+msgstr ""
+
+#: ../../settings.rst:376
+msgid ""
+"The TCP port to serve content from the output folder via HTTP when "
+"pelican is run with --listen"
+msgstr ""
+
+#: ../../settings.rst:381
+msgid "The IP to which to bind the HTTP server."
+msgstr ""
+
+#: ../../settings.rst:386
+msgid "URL settings"
+msgstr ""
+
+#: ../../settings.rst:388
+msgid ""
+"The first thing to understand is that there are currently two supported "
+"methods for URL formation: *relative* and *absolute*. Relative URLs are "
+"useful when testing locally, and absolute URLs are reliable and most "
+"useful when publishing. One method of supporting both is to have one "
+"Pelican configuration file for local development and another for "
+"publishing. To see an example of this type of setup, use the ``pelican-"
+"quickstart`` script as described in the :doc:`Installation <install>` "
+"section, which will produce two separate configuration files for local "
+"development and publishing, respectively."
+msgstr ""
+
+#: ../../settings.rst:397
+msgid ""
+"You can customize the URLs and locations where files will be saved. The "
+"``*_URL`` and ``*_SAVE_AS`` variables use Python's format strings. These "
+"variables allow you to place your articles in a location such as "
+"``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see "
+"example below). These settings give you the flexibility to place your "
+"articles and pages anywhere you want."
+msgstr ""
+
+#: ../../settings.rst:405
+msgid ""
+"If a ``*_SAVE_AS`` setting contains a parent directory that doesn't match"
+" the parent directory inside the corresponding ``*_URL`` setting, this "
+"may cause Pelican to generate unexpected URLs in a few cases, such as "
+"when using the ``{attach}`` syntax."
+msgstr ""
+
+#: ../../settings.rst:410
+msgid ""
+"If you don't want that flexibility and instead prefer that your generated"
+" output paths mirror your source content's filesystem path hierarchy, try"
+" the following settings::"
+msgstr ""
+
+#: ../../settings.rst:417
+msgid ""
+"Otherwise, you can use a variety of file metadata attributes within URL-"
+"related settings:"
+msgstr ""
+
+#: ../../settings.rst:420
+msgid "slug"
+msgstr ""
+
+#: ../../settings.rst:421
+msgid "date"
+msgstr ""
+
+#: ../../settings.rst:422
+msgid "lang"
+msgstr ""
+
+#: ../../settings.rst:423
+msgid "author"
+msgstr ""
+
+#: ../../settings.rst:424
+msgid "category"
+msgstr ""
+
+#: ../../settings.rst:426 ../../settings.rst:561
+msgid "Example usage::"
+msgstr ""
+
+#: ../../settings.rst:433
+msgid ""
+"This would save your articles into something like ``/posts/2011/Aug/07"
+"/sample-post/index.html``, save your pages into "
+"``/pages/about/index.html``, and render them available at URLs of "
+"``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively."
+msgstr ""
+
+#: ../../settings.rst:439
+msgid ""
+"If you specify a ``datetime`` directive, it will be substituted using the"
+" input files' date metadata attribute. If the date is not specified for a"
+" particular file, Pelican will rely on the file's ``mtime`` timestamp. "
+"Check the `Python datetime documentation`_ for more information."
+msgstr ""
+
+#: ../../settings.rst:449
+msgid ""
+"Defines whether Pelican should use document-relative URLs or not. Only "
+"set this to ``True`` when developing/testing and only if you fully "
+"understand the effect it can have on links/feeds."
+msgstr ""
+
+#: ../../settings.rst:455
+msgid "The URL to refer to an article."
+msgstr ""
+
+#: ../../settings.rst:459
+msgid "The place where we will save an article."
+msgstr ""
+
+#: ../../settings.rst:463
+msgid "The URL to refer to an article which doesn't use the default language."
+msgstr ""
+
+#: ../../settings.rst:467
+msgid ""
+"The place where we will save an article which doesn't use the default "
+"language."
+msgstr ""
+
+#: ../../settings.rst:472
+msgid "The URL to refer to an article draft."
+msgstr ""
+
+#: ../../settings.rst:476
+msgid "The place where we will save an article draft."
+msgstr ""
+
+#: ../../settings.rst:480
+msgid ""
+"The URL to refer to an article draft which doesn't use the default "
+"language."
+msgstr ""
+
+#: ../../settings.rst:484
+msgid ""
+"The place where we will save an article draft which doesn't use the "
+"default language."
+msgstr ""
+
+#: ../../settings.rst:489
+msgid "The URL we will use to link to a page."
+msgstr ""
+
+#: ../../settings.rst:493
+msgid ""
+"The location we will save the page. This value has to be the same as "
+"PAGE_URL or you need to use a rewrite in your server config."
+msgstr ""
+
+#: ../../settings.rst:498
+msgid ""
+"The URL we will use to link to a page which doesn't use the default "
+"language."
+msgstr ""
+
+#: ../../settings.rst:503
+msgid "The location we will save the page which doesn't use the default language."
+msgstr ""
+
+#: ../../settings.rst:507
+msgid "The URL used to link to a page draft."
+msgstr ""
+
+#: ../../settings.rst:511
+msgid "The actual location a page draft is saved at."
+msgstr ""
+
+#: ../../settings.rst:515
+msgid ""
+"The URL used to link to a page draft which doesn't use the default "
+"language."
+msgstr ""
+
+#: ../../settings.rst:520
+msgid ""
+"The actual location a page draft which doesn't use the default language "
+"is saved at."
+msgstr ""
+
+#: ../../settings.rst:525
+msgid "The URL to use for an author."
+msgstr ""
+
+#: ../../settings.rst:529
+msgid "The location to save an author."
+msgstr ""
+
+#: ../../settings.rst:533
+msgid "The URL to use for a category."
+msgstr ""
+
+#: ../../settings.rst:537
+msgid "The location to save a category."
+msgstr ""
+
+#: ../../settings.rst:541
+msgid "The URL to use for a tag."
+msgstr ""
+
+#: ../../settings.rst:545
+msgid "The location to save the tag page."
+msgstr ""
+
+#: ../../settings.rst:549
+msgid ""
+"If you do not want one or more of the default pages to be created (e.g., "
+"you are the only author on your site and thus do not need an Authors "
+"page), set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent "
+"the relevant page from being generated."
+msgstr ""
+
+#: ../../settings.rst:554
+msgid ""
+"Pelican can optionally create per-year, per-month, and per-day archives "
+"of your posts. These secondary archives are disabled by default but are "
+"automatically enabled if you supply format strings for their respective "
+"``_SAVE_AS`` settings. Period archives fit intuitively with the "
+"hierarchical model of web URLs and can make it easier for readers to "
+"navigate through the posts you've written over time."
+msgstr ""
+
+#: ../../settings.rst:566
+msgid ""
+"With these settings, Pelican will create an archive of all your posts for"
+" the year at (for instance) ``posts/2011/index.html`` and an archive of "
+"all your posts for the month at ``posts/2011/Aug/index.html``."
+msgstr ""
+
+#: ../../settings.rst:571
+msgid ""
+"Period archives work best when the final path segment is ``index.html``. "
+"This way a reader can remove a portion of your URL and automatically "
+"arrive at an appropriate archive of posts, without having to specify a "
+"page name."
+msgstr ""
+
+#: ../../settings.rst:577
+msgid ""
+"The URL to use for per-year archives of your posts. Used only if you have"
+" the ``{url}`` placeholder in ``PAGINATION_PATTERNS``."
+msgstr ""
+
+#: ../../settings.rst:582
+msgid "The location to save per-year archives of your posts."
+msgstr ""
+
+#: ../../settings.rst:586
+msgid ""
+"The URL to use for per-month archives of your posts. Used only if you "
+"have the ``{url}`` placeholder in ``PAGINATION_PATTERNS``."
+msgstr ""
+
+#: ../../settings.rst:591
+msgid "The location to save per-month archives of your posts."
+msgstr ""
+
+#: ../../settings.rst:595
+msgid ""
+"The URL to use for per-day archives of your posts. Used only if you have "
+"the ``{url}`` placeholder in ``PAGINATION_PATTERNS``."
+msgstr ""
+
+#: ../../settings.rst:600
+msgid "The location to save per-day archives of your posts."
+msgstr ""
+
+#: ../../settings.rst:602
+msgid ""
+"``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the "
+"``_SAVE_AS`` settings are available, but it is available for any direct "
+"template."
+msgstr ""
+
+#: ../../settings.rst:608
+msgid "The location to save the article archives page."
+msgstr ""
+
+#: ../../settings.rst:612
+msgid "The location to save the author list."
+msgstr ""
+
+#: ../../settings.rst:616
+msgid "The location to save the category list."
+msgstr ""
+
+#: ../../settings.rst:620
+msgid "The location to save the tag list."
+msgstr ""
+
+#: ../../settings.rst:624
+msgid "The location to save the list of all articles."
+msgstr ""
+
+#: ../../settings.rst:626
+msgid ""
+"URLs for direct template pages are theme-dependent. Some themes use "
+"corresponding ``*_URL`` setting as string, while others hard-code them: "
+"``'archives.html'``, ``'authors.html'``, ``'categories.html'``, "
+"``'tags.html'``."
+msgstr ""
+
+#: ../../settings.rst:633
+msgid ""
+"Specifies from where you want the slug to be automatically generated. Can"
+" be set to ``title`` to use the \"Title:\" metadata tag or ``basename`` "
+"to use the article's file name when creating the slug."
+msgstr ""
+
+#: ../../settings.rst:639
+msgid ""
+"Allow Unicode characters in slugs. Set ``True`` to keep Unicode "
+"characters in auto-generated slugs. Otherwise, Unicode characters will be"
+" replaced with ASCII equivalents."
+msgstr ""
+
+#: ../../settings.rst:645
+msgid ""
+"Preserve uppercase characters in slugs. Set ``True`` to keep uppercase "
+"characters from ``SLUGIFY_SOURCE`` as-is."
+msgstr ""
+
+#: ../../settings.rst:655
+msgid ""
+"Regex substitutions to make when generating slugs of articles and pages. "
+"Specified as a list of pairs of ``(from, to)`` which are applied in "
+"order, ignoring case. The default substitutions have the effect of "
+"removing non-alphanumeric characters and converting internal whitespace "
+"to dashes. Apart from these substitutions, slugs are always converted to "
+"lowercase ascii characters and leading and trailing whitespace is "
+"stripped. Useful for backward compatibility with existing URLs."
+msgstr ""
+
+#: ../../settings.rst:665
+msgid ""
+"Regex substitutions for author slugs. Defaults to "
+"``SLUG_REGEX_SUBSTITUTIONS``."
+msgstr ""
+
+#: ../../settings.rst:670
+msgid ""
+"Regex substitutions for category slugs. Defaults to "
+"``SLUG_REGEX_SUBSTITUTIONS``."
+msgstr ""
+
+#: ../../settings.rst:675
+msgid ""
+"Regex substitutions for tag slugs. Defaults to "
+"``SLUG_REGEX_SUBSTITUTIONS``."
+msgstr ""
+
+#: ../../settings.rst:678
+msgid "Time and Date"
+msgstr ""
+
+#: ../../settings.rst:682
+msgid "The timezone used in the date information, to generate Atom and RSS feeds."
+msgstr ""
+
+#: ../../settings.rst:684
+msgid ""
+"If no timezone is defined, UTC is assumed. This means that the generated "
+"Atom and RSS feeds will contain incorrect date information if your locale"
+" is not UTC."
+msgstr ""
+
+#: ../../settings.rst:688
+msgid ""
+"Pelican issues a warning in case this setting is not defined, as it was "
+"not mandatory in previous versions."
+msgstr ""
+
+#: ../../settings.rst:691
+msgid ""
+"Have a look at `the wikipedia page`_ to get a list of valid timezone "
+"values."
+msgstr ""
+
+#: ../../settings.rst:697
+msgid ""
+"The default date you want to use.  If ``'fs'``, Pelican will use the file"
+" system timestamp information (mtime) if it can't get date information "
+"from the metadata.  If given any other string, it will be parsed by the "
+"same method as article metadata.  If set to a tuple object, the default "
+"datetime object will instead be generated by passing the tuple to the "
+"``datetime.datetime`` constructor."
+msgstr ""
+
+#: ../../settings.rst:706
+msgid "The default date format you want to use."
+msgstr ""
+
+#: ../../settings.rst:710
+msgid "If you manage multiple languages, you can set the date formatting here."
+msgstr ""
+
+#: ../../settings.rst:712
+msgid ""
+"If no ``DATE_FORMATS`` are set, Pelican will fall back to "
+"``DEFAULT_DATE_FORMAT``. If you need to maintain multiple languages with "
+"different date formats, you can set the ``DATE_FORMATS`` dictionary using"
+" the language name (``lang`` metadata in your post content) as the key."
+msgstr ""
+
+#: ../../settings.rst:717
+#, python-format
+msgid ""
+"In addition to the standard C89 strftime format codes that are listed in "
+"`Python datetime documentation`_, you can use the ``-`` character between"
+" ``%`` and the format character to remove any leading zeros. For example,"
+" ``%d/%m/%Y`` will output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will "
+"result in ``1/1/2014``."
+msgstr ""
+
+#: ../../settings.rst:730
+msgid ""
+"It is also possible to set different locale settings for each language by"
+" using a ``(locale, format)`` tuple as a dictionary value which will "
+"override the ``LOCALE`` setting:"
+msgstr ""
+
+#: ../../settings.rst:750
+msgid ""
+"Change the locale [#]_. A list of locales can be provided here or a "
+"single string representing one locale.  When providing a list, all the "
+"locales will be tried until one works."
+msgstr ""
+
+#: ../../settings.rst:754
+msgid "You can set locale to further control date format:"
+msgstr ""
+
+#: ../../settings.rst:762
+msgid ""
+"For a list of available locales refer to `locales on Windows`_  or on "
+"Unix/Linux, use the ``locale -a`` command; see manpage `locale(1)`_ for "
+"more information."
+msgstr ""
+
+#: ../../settings.rst:767
+msgid "Default is the system locale."
+msgstr ""
+
+#: ../../settings.rst:781
+msgid "Template pages"
+msgstr ""
+
+#: ../../settings.rst:785
+msgid ""
+"A mapping containing template pages that will be rendered with the blog "
+"entries."
+msgstr ""
+
+#: ../../settings.rst:788
+msgid ""
+"If you want to generate custom pages besides your blog entries, you can "
+"point any Jinja2 template file with a path pointing to the file and the "
+"destination path for the generated file."
+msgstr ""
+
+#: ../../settings.rst:792
+msgid ""
+"For instance, if you have a blog with three static pages — a list of "
+"books, your resume, and a contact page — you could have::"
+msgstr ""
+
+#: ../../settings.rst:801
+msgid "The extensions to use when looking up template files from template names."
+msgstr ""
+
+#: ../../settings.rst:805
+msgid ""
+"List of templates that are used directly to render content. Typically "
+"direct templates are used to generate index pages for collections of "
+"content (e.g., category and tag index pages). If the author, category and"
+" tag collections are not needed, set ``DIRECT_TEMPLATES = ['index', "
+"'archives']``"
+msgstr ""
+
+#: ../../settings.rst:810
+msgid ""
+"``DIRECT_TEMPLATES`` are searched for over paths maintained in "
+"``THEME_TEMPLATES_OVERRIDES``."
+msgstr ""
+
+#: ../../settings.rst:815
+msgid "Metadata"
+msgstr ""
+
+#: ../../settings.rst:819
+msgid "Default author (usually your name)."
+msgstr ""
+
+#: ../../settings.rst:823
+msgid "The default metadata you want to use for all articles and pages."
+msgstr ""
+
+#: ../../settings.rst:827
+msgid ""
+"The regexp that will be used to extract any metadata from the filename. "
+"All named groups that are matched will be set in the metadata object.  "
+"The default value will only extract the date from the filename."
+msgstr ""
+
+#: ../../settings.rst:831
+msgid "For example, to extract both the date and the slug::"
+msgstr ""
+
+#: ../../settings.rst:835
+msgid "See also ``SLUGIFY_SOURCE``."
+msgstr ""
+
+#: ../../settings.rst:839
+msgid ""
+"Like ``FILENAME_METADATA``, but parsed from a page's full path relative "
+"to the content source directory."
+msgstr ""
+
+#: ../../settings.rst:844
+msgid ""
+"Extra metadata dictionaries keyed by relative path. Relative paths "
+"require correct OS-specific directory separators (i.e. / in UNIX and \\\\"
+" in Windows) unlike some other Pelican file settings. Paths to a "
+"directory apply to all files under it. The most-specific path wins "
+"conflicts."
+msgstr ""
+
+#: ../../settings.rst:849
+msgid ""
+"Not all metadata needs to be :ref:`embedded in source file itself "
+"<internal_metadata>`. For example, blog posts are often named following a"
+" ``YYYY-MM-DD-SLUG.rst`` pattern, or nested into ``YYYY/MM/DD-SLUG`` "
+"directories. To extract metadata from the filename or path, set "
+"``FILENAME_METADATA`` or ``PATH_METADATA`` to regular expressions that "
+"use Python's `group name notation`_ ``(?P<name>…)``. If you want to "
+"attach additional metadata but don't want to encode it in the path, you "
+"can set ``EXTRA_PATH_METADATA``:"
+msgstr ""
+
+#: ../../settings.rst:870
+msgid ""
+"This can be a convenient way to shift the installed location of a "
+"particular file:"
+msgstr ""
+
+#: ../../settings.rst:890
+msgid "Feed settings"
+msgstr ""
+
+#: ../../settings.rst:892
+msgid ""
+"By default, Pelican uses Atom feeds. However, it is also possible to use "
+"RSS feeds if you prefer."
+msgstr ""
+
+#: ../../settings.rst:895
+msgid ""
+"Pelican generates category feeds as well as feeds for all your articles. "
+"It does not generate feeds for tags by default, but it is possible to do "
+"so using the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:"
+msgstr ""
+
+#: ../../settings.rst:901
+msgid ""
+"The domain prepended to feed URLs. Since feed URLs should always be "
+"absolute, it is highly recommended to define this (e.g., "
+"\"https://feeds.example.com\"). If you have already explicitly defined "
+"SITEURL (see above) and want to use the same domain for your feeds, you "
+"can just set:  ``FEED_DOMAIN = SITEURL``."
+msgstr ""
+
+#: ../../settings.rst:909
+msgid "The location to save the Atom feed."
+msgstr ""
+
+#: ../../settings.rst:913
+msgid ""
+"Relative URL of the Atom feed. If not set, ``FEED_ATOM`` is used both for"
+" save location and URL."
+msgstr ""
+
+#: ../../settings.rst:918
+msgid "The location to save the RSS feed."
+msgstr ""
+
+#: ../../settings.rst:922
+msgid ""
+"Relative URL of the RSS feed. If not set, ``FEED_RSS`` is used both for "
+"save location and URL."
+msgstr ""
+
+#: ../../settings.rst:927
+msgid ""
+"The location to save the all-posts Atom feed: this feed will contain all "
+"posts regardless of their language."
+msgstr ""
+
+#: ../../settings.rst:932
+msgid ""
+"Relative URL of the all-posts Atom feed. If not set, ``FEED_ALL_ATOM`` is"
+" used both for save location and URL."
+msgstr ""
+
+#: ../../settings.rst:937
+msgid ""
+"The location to save the the all-posts RSS feed: this feed will contain "
+"all posts regardless of their language."
+msgstr ""
+
+#: ../../settings.rst:942
+msgid ""
+"Relative URL of the all-posts RSS feed. If not set, ``FEED_ALL_RSS`` is "
+"used both for save location and URL."
+msgstr ""
+
+#: ../../settings.rst:947
+msgid "The location to save the category Atom feeds. [2]_"
+msgstr ""
+
+#: ../../settings.rst:951
+msgid ""
+"Relative URL of the category Atom feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for "
+"save location and URL."
+msgstr ""
+
+#: ../../settings.rst:957
+msgid ""
+"The location to save the category RSS feeds, including the ``{slug}`` "
+"placeholder. [2]_"
+msgstr ""
+
+#: ../../settings.rst:962
+msgid ""
+"Relative URL of the category RSS feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save"
+" location and URL."
+msgstr ""
+
+#: ../../settings.rst:968
+msgid "The location to save the author Atom feeds. [2]_"
+msgstr ""
+
+#: ../../settings.rst:972
+msgid ""
+"Relative URL of the author Atom feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save "
+"location and URL."
+msgstr ""
+
+#: ../../settings.rst:978
+msgid "The location to save the author RSS feeds. [2]_"
+msgstr ""
+
+#: ../../settings.rst:982
+msgid ""
+"Relative URL of the author RSS feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``AUTHOR_FEED_RSS`` is used both for save "
+"location and URL."
+msgstr ""
+
+#: ../../settings.rst:987
+msgid ""
+"The location to save the tag Atom feed, including the ``{slug}`` "
+"placeholder. [2]_"
+msgstr ""
+
+#: ../../settings.rst:992
+msgid ""
+"Relative URL of the tag Atom feed, including the ``{slug}`` placeholder. "
+"[2]_"
+msgstr ""
+
+#: ../../settings.rst:997
+msgid ""
+"Relative URL to output the tag RSS feed, including the ``{slug}`` "
+"placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location "
+"and URL."
+msgstr ""
+
+#: ../../settings.rst:1003
+msgid ""
+"Maximum number of items allowed in a feed. Feed item quantity is "
+"unrestricted by default."
+msgstr ""
+
+#: ../../settings.rst:1008
+msgid ""
+"Only include item summaries in the ``description`` tag of RSS feeds. If "
+"set to ``False``, the full content will be included instead. This setting"
+" doesn't affect Atom feeds, only RSS ones."
+msgstr ""
+
+#: ../../settings.rst:1012
+msgid ""
+"If you don't want to generate some or any of these feeds, set the above "
+"variables to ``None``."
+msgstr ""
+
+#: ../../settings.rst:1015
+msgid "``{slug}`` is replaced by name of the category / author / tag."
+msgstr ""
+
+#: ../../settings.rst:1019
+msgid "Pagination"
+msgstr ""
+
+#: ../../settings.rst:1021
+msgid ""
+"The default behaviour of Pelican is to list all the article titles along "
+"with a short description on the index page. While this works well for "
+"small-to-medium sites, sites with a large quantity of articles will "
+"probably benefit from paginating this list."
+msgstr ""
+
+#: ../../settings.rst:1026
+msgid "You can use the following settings to configure the pagination."
+msgstr ""
+
+#: ../../settings.rst:1030
+msgid ""
+"The minimum number of articles allowed on the last page. Use this when "
+"you don't want the last page to only contain a handful of articles."
+msgstr ""
+
+#: ../../settings.rst:1035
+msgid ""
+"The maximum number of articles to include on a page, not including "
+"orphans. False to disable pagination."
+msgstr ""
+
+#: ../../settings.rst:1040
+msgid ""
+"The templates to use pagination with, and the number of articles to "
+"include on a page. If this value is ``None``, it defaults to "
+"``DEFAULT_PAGINATION``."
+msgstr ""
+
+#: ../../settings.rst:1048
+msgid "A set of patterns that are used to determine advanced pagination output."
+msgstr ""
+
+#: ../../settings.rst:1052
+msgid "Using Pagination Patterns"
+msgstr ""
+
+#: ../../settings.rst:1054
+msgid ""
+"By default, pages subsequent to ``.../foo.html`` are created as "
+"``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used "
+"to change this. It takes a sequence of triples, where each triple "
+"consists of::"
+msgstr ""
+
+#: ../../settings.rst:1060
+msgid ""
+"For ``page_url`` and ``page_save_as``, you may use a number of variables."
+" ``{url}`` and ``{save_as}`` correspond respectively to the ``*_URL`` and"
+" ``*_SAVE_AS`` values of the corresponding page type (e.g. "
+"``ARTICLE_SAVE_AS``). If ``{save_as} == foo/bar.html``, then ``{name} == "
+"foo/bar`` and ``{extension} == .html``. ``{base_name}`` equals ``{name}``"
+" except that it strips trailing ``/index`` if present. ``{number}`` "
+"equals the page number."
+msgstr ""
+
+#: ../../settings.rst:1067
+msgid ""
+"For example, if you want to leave the first page unchanged, but place "
+"subsequent pages at ``.../page/2/`` etc, you could set "
+"``PAGINATION_PATTERNS`` as follows::"
+msgstr ""
+
+#: ../../settings.rst:1077
+msgid ""
+"If you want a pattern to apply to the last page in the list, use ``-1`` "
+"as the ``minimum_page`` value::"
+msgstr ""
+
+#: ../../settings.rst:1083
+msgid "Translations"
+msgstr ""
+
+#: ../../settings.rst:1085
+msgid ""
+"Pelican offers a way to translate articles. See the :doc:`Content "
+"<content>` section for more information."
+msgstr ""
+
+#: ../../settings.rst:1090
+msgid "The default language to use."
+msgstr ""
+
+#: ../../settings.rst:1094
+msgid ""
+"The metadata attribute(s) used to identify which articles are "
+"translations of one another. May be a string or a collection of strings. "
+"Set to ``None`` or ``False`` to disable the identification of "
+"translations."
+msgstr ""
+
+#: ../../settings.rst:1100
+msgid ""
+"The metadata attribute(s) used to identify which pages are translations "
+"of one another. May be a string or a collection of strings. Set to "
+"``None`` or ``False`` to disable the identification of translations."
+msgstr ""
+
+#: ../../settings.rst:1106
+msgid "The location to save the Atom feed for translations. [3]_"
+msgstr ""
+
+#: ../../settings.rst:1110
+msgid ""
+"Relative URL of the Atom feed for translations, including the ``{lang}`` "
+"placeholder. [3]_ If not set, ``TRANSLATION_FEED_ATOM`` is used both for "
+"save location and URL."
+msgstr ""
+
+#: ../../settings.rst:1116
+msgid "Where to put the RSS feed for translations."
+msgstr ""
+
+#: ../../settings.rst:1120
+msgid ""
+"Relative URL of the RSS feed for translations, including the ``{lang}`` "
+"placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for "
+"save location and URL."
+msgstr ""
+
+#: ../../settings.rst:1124
+msgid "{lang} is the language code"
+msgstr ""
+
+#: ../../settings.rst:1128
+msgid "Ordering content"
+msgstr ""
+
+#: ../../settings.rst:1132
+msgid ""
+"Order archives by newest first by date. (False: orders by date with older"
+" articles first.)"
+msgstr ""
+
+#: ../../settings.rst:1137
+msgid ""
+"Reverse the category order. (True: lists by reverse alphabetical order; "
+"default lists alphabetically.)"
+msgstr ""
+
+#: ../../settings.rst:1142
+msgid ""
+"Defines how the articles (``articles_page.object_list`` in the template) "
+"are sorted. Valid options are: metadata as a string (use ``reversed-`` "
+"prefix to reverse the sort order), special option ``'basename'`` which "
+"will use the basename of the file (without path), or a custom function to"
+" extract the sorting key from articles. Using a value of ``'date'`` will "
+"sort articles in chronological order, while the default value, "
+"``'reversed-date'``, will sort articles by date in reverse order (i.e., "
+"newest article comes first)."
+msgstr ""
+
+#: ../../settings.rst:1152
+msgid ""
+"Defines how the pages (``pages`` variable in the template) are sorted. "
+"Options are same as ``ARTICLE_ORDER_BY``.  The default value, "
+"``'basename'`` will sort pages by their basename."
+msgstr ""
+
+#: ../../settings.rst:1160
+msgid "Themes"
+msgstr ""
+
+#: ../../settings.rst:1162
+msgid ""
+"Creating Pelican themes is addressed in a dedicated section (see :ref"
+":`theming-pelican`). However, here are the settings that are related to "
+"themes."
+msgstr ""
+
+#: ../../settings.rst:1168
+msgid ""
+"Theme to use to produce the output. Can be a relative or absolute path to"
+" a theme folder, or the name of a default theme or a theme installed via "
+":doc:`pelican-themes` (see below)."
+msgstr ""
+
+#: ../../settings.rst:1174
+msgid ""
+"Destination directory in the output path where Pelican will place the "
+"files collected from `THEME_STATIC_PATHS`. Default is `theme`."
+msgstr ""
+
+#: ../../settings.rst:1179
+msgid ""
+"Static theme paths you want to copy. Default value is `static`, but if "
+"your theme has other static paths, you can put them here. If files or "
+"directories with the same names are included in the paths defined in this"
+" settings, they will be progressively overwritten."
+msgstr ""
+
+#: ../../settings.rst:1186
+msgid ""
+"A list of paths you want Jinja2 to search for templates before searching "
+"the theme's ``templates/`` directory.  Allows for overriding individual "
+"theme template files without having to fork an existing theme.  Jinja2 "
+"searches in the following order: files in ``THEME_TEMPLATES_OVERRIDES`` "
+"first, then the theme's ``templates/``."
+msgstr ""
+
+#: ../../settings.rst:1192
+#, python-format
+msgid ""
+"You can also extend templates from the theme using the ``{% extends %}`` "
+"directive utilizing the ``!theme`` prefix as shown in the following "
+"example:"
+msgstr ""
+
+#: ../../settings.rst:1201
+msgid "Specify the CSS file you want to load."
+msgstr ""
+
+#: ../../settings.rst:1203
+msgid ""
+"By default, two themes are available. You can specify them using the "
+"``THEME`` setting or by passing the ``-t`` option to the ``pelican`` "
+"command:"
+msgstr ""
+
+#: ../../settings.rst:1206
+msgid "notmyidea"
+msgstr ""
+
+#: ../../settings.rst:1207
+msgid "simple (a synonym for \"plain text\" :)"
+msgstr ""
+
+#: ../../settings.rst:1209
+msgid ""
+"There are a number of other themes available at "
+"https://github.com/getpelican/pelican-themes. Pelican comes with :doc"
+":`pelican-themes`, a small script for managing themes."
+msgstr ""
+
+#: ../../settings.rst:1213
+msgid ""
+"You can define your own theme, either by starting from scratch or by "
+"duplicating and modifying a pre-existing theme. Here is :doc:`a guide on "
+"how to create your theme <themes>`."
+msgstr ""
+
+#: ../../settings.rst:1217
+msgid "Following are example ways to specify your preferred theme::"
+msgstr ""
+
+#: ../../settings.rst:1228
+msgid ""
+"The built-in ``notmyidea`` theme can make good use of the following "
+"settings. Feel free to use them in your themes as well."
+msgstr ""
+
+#: ../../settings.rst:1233
+msgid "A subtitle to appear in the header."
+msgstr ""
+
+#: ../../settings.rst:1237
+msgid ""
+"Pelican can handle Disqus comments. Specify the Disqus sitename "
+"identifier here."
+msgstr ""
+
+#: ../../settings.rst:1242
+msgid ""
+"Your GitHub URL (if you have one). It will then use this information to "
+"create a GitHub ribbon."
+msgstr ""
+
+#: ../../settings.rst:1247
+msgid "Set to ``UA-XXXXX-Y`` Property's tracking ID to activate Google Analytics."
+msgstr ""
+
+#: ../../settings.rst:1251
+msgid ""
+"Set cookie domain field of Google Analytics tracking code. Defaults to "
+"``auto``."
+msgstr ""
+
+#: ../../settings.rst:1256
+msgid "Set to 'XXX-YYYYYY-X' to activate GoSquared."
+msgstr ""
+
+#: ../../settings.rst:1260
+msgid ""
+"A list of tuples (Title, URL) for additional menu items to appear at the "
+"beginning of the main menu."
+msgstr ""
+
+#: ../../settings.rst:1265
+msgid "A list of tuples (Title, URL) for links to appear on the header."
+msgstr ""
+
+#: ../../settings.rst:1269
+msgid "A list of tuples (Title, URL) to appear in the \"social\" section."
+msgstr ""
+
+#: ../../settings.rst:1273
+msgid ""
+"Allows for adding a button to articles to encourage others to tweet about"
+" them. Add your Twitter username if you want this button to appear."
+msgstr ""
+
+#: ../../settings.rst:1278
+msgid ""
+"Allows override of the name of the links widget.  If not specified, "
+"defaults to \"links\"."
+msgstr ""
+
+#: ../../settings.rst:1283
+msgid ""
+"Allows override of the name of the \"social\" widget.  If not specified, "
+"defaults to \"social\"."
+msgstr ""
+
+#: ../../settings.rst:1286
+msgid ""
+"In addition, you can use the \"wide\" version of the ``notmyidea`` theme "
+"by adding the following to your configuration::"
+msgstr ""
+
+#: ../../settings.rst:1293
+msgid "Logging"
+msgstr ""
+
+#: ../../settings.rst:1295
+msgid ""
+"Sometimes, a long list of warnings may appear during site generation. "
+"Finding the **meaningful** error message in the middle of tons of "
+"annoying log output can be quite tricky. In order to filter out redundant"
+" log messages, Pelican comes with the ``LOG_FILTER`` setting."
+msgstr ""
+
+#: ../../settings.rst:1300
+msgid ""
+"``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them "
+"being composed of the logging level (up to ``warning``) and the message "
+"to be ignored. Simply populate the list with the log messages you want to"
+" hide, and they will be filtered out."
+msgstr ""
+
+#: ../../settings.rst:1305 ../../settings.rst:1313
+msgid "For example::"
+msgstr ""
+
+#: ../../settings.rst:1310
+msgid ""
+"It is possible to filter out messages by a template. Check out source "
+"code to obtain a template."
+msgstr ""
+
+#: ../../settings.rst:1320
+msgid ""
+"Silencing messages by templates is a dangerous feature. It is possible to"
+" unintentionally filter out multiple message types with the same template"
+" (including messages from future Pelican versions). Proceed with caution."
+msgstr ""
+
+#: ../../settings.rst:1326
+msgid "This option does nothing if ``--debug`` is passed."
+msgstr ""
+
+#: ../../settings.rst:1332
+msgid "Reading only modified content"
+msgstr ""
+
+#: ../../settings.rst:1334
+msgid ""
+"To speed up the build process, Pelican can optionally read only articles "
+"and pages with modified content."
+msgstr ""
+
+#: ../../settings.rst:1337
+msgid "When Pelican is about to read some content source file:"
+msgstr ""
+
+#: ../../settings.rst:1339
+msgid ""
+"The hash or modification time information for the file from a previous "
+"build are loaded from a cache file if ``LOAD_CONTENT_CACHE`` is ``True``."
+" These files are stored in the ``CACHE_PATH`` directory.  If the file has"
+" no record in the cache file, it is read as usual."
+msgstr ""
+
+#: ../../settings.rst:1343
+msgid "The file is checked according to ``CHECK_MODIFIED_METHOD``:"
+msgstr ""
+
+#: ../../settings.rst:1349
+msgid ""
+"If set to anything else or the necessary information about the file "
+"cannot be found in the cache file, the content is read as usual."
+msgstr ""
+
+#: ../../settings.rst:1352
+msgid ""
+"If the file is considered unchanged, the content data saved in a previous"
+" build corresponding to the file is loaded from the cache, and the file "
+"is not read."
+msgstr ""
+
+#: ../../settings.rst:1355
+msgid ""
+"If the file is considered changed, the file is read and the new "
+"modification information and the content data are saved to the cache if "
+"``CACHE_CONTENT`` is ``True``."
+msgstr ""
+
+#: ../../settings.rst:1359
+msgid ""
+"If ``CONTENT_CACHING_LAYER`` is set to ``'reader'`` (the default), the "
+"raw content and metadata returned by a reader are cached. If this setting"
+" is instead set to ``'generator'``, the processed content object is "
+"cached. Caching the processed content object may conflict with plugins "
+"(as some reading related signals may be skipped) and the "
+"``WITH_FUTURE_DATES`` functionality (as the ``draft`` status of the "
+"cached content objects would not change automatically over time)."
+msgstr ""
+
+#: ../../settings.rst:1367
+msgid ""
+"Checking modification times is faster than comparing file hashes, but it "
+"is not as reliable because ``mtime`` information can be lost, e.g., when "
+"copying content source files using the ``cp`` or ``rsync`` commands "
+"without the ``mtime`` preservation mode (which for ``rsync`` can be "
+"invoked by passing the ``--archive`` flag)."
+msgstr ""
+
+#: ../../settings.rst:1373
+msgid ""
+"The cache files are Python pickles, so they may not be readable by "
+"different versions of Python as the pickle format often changes. If such "
+"an error is encountered, it is caught and the cache file is rebuilt "
+"automatically in the new format. The cache files will also be rebuilt "
+"after the ``GZIP_CACHE`` setting has been changed."
+msgstr ""
+
+#: ../../settings.rst:1379
+msgid ""
+"The ``--ignore-cache`` command-line option is useful when the whole cache"
+" needs to be regenerated, such as when making modifications to the "
+"settings file that will affect the cached content, or just for debugging "
+"purposes. When Pelican runs in autoreload mode, modification of the "
+"settings file will make it ignore the cache automatically if "
+"``AUTORELOAD_IGNORE_CACHE`` is ``True``."
+msgstr ""
+
+#: ../../settings.rst:1385
+msgid ""
+"Note that even when using cached content, all output is always written, "
+"so the modification times of the generated ``*.html`` files will always "
+"change. Therefore, ``rsync``-based uploading may benefit from the "
+"``--checksum`` option."
+msgstr ""
+
+#: ../../settings.rst:1394
+msgid "Writing only selected content"
+msgstr ""
+
+#: ../../settings.rst:1396
+msgid ""
+"When only working on a single article or page, or making tweaks to your "
+"theme, it is often desirable to generate and review your work as quickly "
+"as possible. In such cases, generating and writing the entire site output"
+" is often unnecessary. By specifying only the desired files as output "
+"paths in the ``WRITE_SELECTED`` list, **only** those files will be "
+"written. This list can be also specified on the command line using the "
+"``--write-selected`` option, which accepts a comma-separated list of "
+"output file paths. By default this list is empty, so all output is "
+"written. See :ref:`site_generation` for more details."
+msgstr ""
+
+#: ../../settings.rst:1407
+msgid "Example settings"
+msgstr ""
+
