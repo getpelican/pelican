@@ -49,7 +49,7 @@ lxml = "^4.3"
 markdown = "~3.3.7"
 typogrify = "^2.0"
 sphinx = "^5.1"
-furo = "2022.06.21"
+furo = "2022.12.07"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
 pygments = "~2.8"
