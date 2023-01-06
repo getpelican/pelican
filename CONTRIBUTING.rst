@@ -82,7 +82,7 @@ a plugin_ — you can `ask for help`_  to make that determination.
 Using Git and GitHub
 --------------------
 
-* `Create a new git branch`_ specific to your change (as opposed to making
+* `Create a new branch`_ specific to your change (as opposed to making
   your commits in the master branch).
 * **Don't put multiple unrelated fixes/features in the same branch / pull request.**
   For example, if you're working on a new feature and find a bugfix that
@@ -139,7 +139,7 @@ Check out our `Git Tips`_ page or `ask for help`_ if you
 need assistance or have any questions about these guidelines.
 
 .. _`plugin`: https://docs.getpelican.com/en/latest/plugins.html
-.. _`Create a new git branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
+.. _`Create a new branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
 .. _`Squash your commits`: https://github.com/getpelican/pelican/wiki/Git-Tips#squashing-commits
 .. _`Run all the tests`: https://docs.getpelican.com/en/latest/contribute.html#running-the-test-suite
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
