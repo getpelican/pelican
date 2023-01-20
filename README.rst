@@ -58,8 +58,8 @@ Why the name “Pelican”?
 .. _`Pelican's internals`: https://docs.getpelican.com/en/latest/internals.html
 .. _`hosted on GitHub`: https://github.com/getpelican/pelican
 
-.. |build-status| image:: https://img.shields.io/github/workflow/status/getpelican/pelican/build
-   :target: https://github.com/getpelican/pelican/actions
+.. |build-status| image:: https://img.shields.io/github/actions/workflow/status/getpelican/pelican/main.yml?branch=master
+   :target: https://github.com/getpelican/pelican/actions/workflows/main.yml?query=branch%3Amaster
    :alt: GitHub Actions CI: continuous integration status
 .. |pypi-version| image:: https://img.shields.io/pypi/v/pelican.svg
    :target: https://pypi.org/project/pelican/
