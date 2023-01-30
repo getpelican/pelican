@@ -25,6 +25,13 @@ entry_points = {
 README = open('README.rst', encoding='utf-8').read()
 CHANGELOG = open('docs/changelog.rst', encoding='utf-8').read()
 
+# Relative links in the README must be converted to absolute URL's
+# so that they render correctly on PyPI.
+README = README.replace(
+    "<CONTRIBUTING.rst>",
+    "<https://docs.getpelican.com/en/latest/contribute.html>",
+)
+
 description = '\n'.join([README, CHANGELOG])
 
 setup(
