@@ -1,7 +1,13 @@
 Pelican |build-status| |pypi-version| |repology|
 ================================================
 
-Pelican is a static site generator, written in Python_.
+Pelican is a static site generator, written in Python_, which allows you to create
+websites from a set of source files in various formats such as Markdown, reStructuredText, and HTML.
+
+With Pelican, you can create website without worrying about databases or server-side scripting. 
+Pelican generates a static site that functions on any web server or hosting service.
+
+You can perform the following functions with Pelican:
 
 * Compose content in Markdown_ or reStructuredText_ using your editor of choice
 * Simple command-line tool (re)generates HTML, CSS, and JS from your source content
