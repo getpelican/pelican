@@ -1,11 +1,14 @@
 import logging
+import re
+import warnings
 from collections import defaultdict
 
 from rich.console import Console
 from rich.logging import RichHandler
 
 __all__ = [
-    'init'
+    'init',
+    'LimitFilter',
 ]
 
 console = Console()
@@ -23,10 +26,36 @@ class LimitFilter(logging.Filter):
 
     LOGS_DEDUP_MIN_LEVEL = logging.WARNING
 
-    _ignore = set()
+    ignore = set()
+    ignore_regexp = set()
     _raised_messages = set()
     _threshold = 5
     _group_count = defaultdict(int)
+
+    @classmethod
+    def add_ignore_rule(cls, rule_specification):
+        if len(rule_specification) == 2:  # old-style string or template
+            LimitFilter.ignore.add(rule_specification)
+            warnings.warn(
+                '2-tuple specification of LOG_FILTER item is deprecated,' +
+                'replace with 3-tuple starting with \'string\' (see' +
+                'documentation of LOG_FILTER for more details)',
+                FutureWarning
+            )
+        elif len(rule_specification) == 3:  # new-style string/template/regexp
+            if rule_specification[0] == "string":
+                LimitFilter.ignore.add(rule_specification[1:])
+            elif rule_specification[0] == "regex":
+                regex = re.compile(rule_specification[2])
+                LimitFilter.ignore_regexp.add((rule_specification[1], regex))
+            else:
+                raise ValueError(
+                    f"Invalid LOG_FILTER type '{rule_specification[0]}'"
+                )
+        else:
+            raise ValueError(
+                f"Invalid item '{str(rule_specification)}' in LOG_FILTER"
+            )
 
     def filter(self, record):
         # don't limit log messages for anything above "warning"
@@ -50,7 +79,11 @@ class LimitFilter(logging.Filter):
         if logger_level > logging.DEBUG:
             template_key = (record.levelno, record.msg)
             message_key = (record.levelno, record.getMessage())
-            if (template_key in self._ignore or message_key in self._ignore):
+            if template_key in self.ignore or message_key in self.ignore:
+                return False
+            if any(regexp[1].match(record.getMessage())
+                   for regexp in self.ignore_regexp
+                   if regexp[0] == record.levelno):
                 return False
 
         # check if we went over threshold

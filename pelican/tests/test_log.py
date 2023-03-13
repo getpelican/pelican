@@ -1,4 +1,5 @@
 import logging
+import re
 import unittest
 from collections import defaultdict
 from contextlib import contextmanager
@@ -19,7 +20,8 @@ class TestLog(unittest.TestCase):
         super().tearDown()
 
     def _reset_limit_filter(self):
-        log.LimitFilter._ignore = set()
+        log.LimitFilter.ignore = set()
+        log.LimitFilter.ignore_regexp = set()
         log.LimitFilter._raised_messages = set()
         log.LimitFilter._threshold = 5
         log.LimitFilter._group_count = defaultdict(int)
@@ -49,7 +51,7 @@ class TestLog(unittest.TestCase):
 
         # filter by template
         with self.reset_logger():
-            log.LimitFilter._ignore.add((logging.WARNING, 'Log %s'))
+            log.LimitFilter.ignore.add((logging.WARNING, 'Log %s'))
             do_logging()
             self.assertEqual(
                 self.handler.count_logs('Log \\d', logging.WARNING),
@@ -60,7 +62,7 @@ class TestLog(unittest.TestCase):
 
         # filter by exact message
         with self.reset_logger():
-            log.LimitFilter._ignore.add((logging.WARNING, 'Log 3'))
+            log.LimitFilter.ignore.add((logging.WARNING, 'Log 3'))
             do_logging()
             self.assertEqual(
                 self.handler.count_logs('Log \\d', logging.WARNING),
@@ -69,14 +71,30 @@ class TestLog(unittest.TestCase):
                 self.handler.count_logs('Another log \\d', logging.WARNING),
                 5)
 
-        # filter by both
+        # filter by regular expression
         with self.reset_logger():
-            log.LimitFilter._ignore.add((logging.WARNING, 'Log 3'))
-            log.LimitFilter._ignore.add((logging.WARNING, 'Another log %s'))
+            log.LimitFilter.ignore_regexp.add((logging.WARNING,
+                                               re.compile(r'Log.*')))
+            log.LimitFilter.ignore_regexp.add((logging.WARNING,
+                                               re.compile(r'.*log 4')))
             do_logging()
             self.assertEqual(
                 self.handler.count_logs('Log \\d', logging.WARNING),
+                0)
+            self.assertEqual(
+                self.handler.count_logs('Another log \\d', logging.WARNING),
                 4)
+
+        # filter by all
+        with self.reset_logger():
+            log.LimitFilter.ignore.add((logging.WARNING, 'Log 3'))
+            log.LimitFilter.ignore.add((logging.WARNING, 'Another log %s'))
+            log.LimitFilter.ignore_regexp.add((logging.WARNING,
+                                               re.compile(r'Lo.*4$')))
+            do_logging()
+            self.assertEqual(
+                self.handler.count_logs('Log \\d', logging.WARNING),
+                3)
             self.assertEqual(
                 self.handler.count_logs('Another log \\d', logging.WARNING),
                 0)
