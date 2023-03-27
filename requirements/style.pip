@@ -1,2 +1,2 @@
-flake8
+flake8==3.9.2
 flake8-import-order
