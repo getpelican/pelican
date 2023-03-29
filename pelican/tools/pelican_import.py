@@ -839,12 +839,15 @@ def fields2pelican(
                     if pandoc_version >= (1, 16) else '--no-wrap'
                 cmd = ('pandoc --normalize {0} --from=html'
                        ' --to={1} {2} -o "{3}" "{4}"')
-                cmd = cmd.format(parse_raw, out_markup, wrap_none,
+                cmd = cmd.format(parse_raw,
+                                 out_markup if out_markup != 'markdown' else "gfm",
+                                 wrap_none,
                                  out_filename, html_filename)
             else:
                 from_arg = '-f html+raw_html' if not strip_raw else '-f html'
                 cmd = ('pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"')
-                cmd = cmd.format(from_arg, out_markup,
+                cmd = cmd.format(from_arg,
+                                 out_markup if out_markup != 'markdown' else "gfm",
                                  out_filename, html_filename)
 
             try:
