@@ -1,7 +1,8 @@
+---
 # See https://pre-commit.com/hooks.html for info on hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -10,6 +11,7 @@ repos:
       - id: debug-statements
       - id: detect-private-key
       - id: end-of-file-fixer
+      - id: forbid-new-submodules
       - id: trailing-whitespace
   - repo: https://github.com/PyCQA/flake8
     rev: 3.9.2
