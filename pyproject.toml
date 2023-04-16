@@ -60,7 +60,7 @@ pytest-xdist = "^2.0"
 tox = {version = "^3.13", optional = true}
 flake8 = "^3.8"
 flake8-import-order = "^0.18.1"
-invoke = "^1.3"
+invoke = "^2.0"
 isort = "^5.2"
 black = {version = "^19.10b0", allow-prereleases = true}
 
