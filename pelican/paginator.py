@@ -155,7 +155,7 @@ class Page:
         # changed to lstrip() because that would remove all leading slashes and
         # thus make the workaround impossible. See
         # test_custom_pagination_pattern() for a verification of this.
-        if ret[0] == '/':
+        if ret.startswith('/'):
             ret = ret[1:]
         return ret
 
