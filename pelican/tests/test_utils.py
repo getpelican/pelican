@@ -860,3 +860,34 @@ class TestSanitisedJoin(unittest.TestCase):
             utils.posixize_path(
                 os.path.abspath(os.path.join("/foo/bar", "test")))
         )
+
+
+class TestMemoized(unittest.TestCase):
+    def test_memoized(self):
+        class Container:
+            def _get(self, key):
+                pass
+
+            @utils.memoized
+            def get(self, key):
+                return self._get(key)
+
+        container = Container()
+
+        with unittest.mock.patch.object(
+                container, "_get", side_effect=lambda x: x
+        ) as get_mock:
+            self.assertEqual("foo", container.get("foo"))
+            get_mock.assert_called_once_with("foo")
+
+            get_mock.reset_mock()
+            self.assertEqual("foo", container.get("foo"))
+            get_mock.assert_not_called()
+
+            self.assertEqual("bar", container.get("bar"))
+            get_mock.assert_called_once_with("bar")
+
+            get_mock.reset_mock()
+            container.get.cache.clear()
+            self.assertEqual("bar", container.get("bar"))
+            get_mock.assert_called_once_with("bar")
