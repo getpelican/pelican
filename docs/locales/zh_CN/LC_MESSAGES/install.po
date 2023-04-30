@@ -1,0 +1,205 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-29 21:43+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../install.rst:2
+msgid "Installing Pelican"
+msgstr ""
+
+#: ../../install.rst:4
+msgid ""
+"Pelican currently runs best on 3.7+; earlier versions of Python are not "
+"supported."
+msgstr ""
+
+#: ../../install.rst:6
+msgid ""
+"You can install Pelican via several different methods. The simplest is "
+"via Pip_::"
+msgstr ""
+
+#: ../../install.rst:10
+msgid "Or, if you plan on using Markdown::"
+msgstr ""
+
+#: ../../install.rst:14
+msgid ""
+"(Keep in mind that some operating systems will require you to prefix the "
+"above command with ``sudo`` in order to install Pelican system-wide.)"
+msgstr ""
+
+#: ../../install.rst:17
+msgid ""
+"While the above is the simplest method, the recommended approach is to "
+"create a virtual environment for Pelican via virtualenv_ before "
+"installing Pelican. Assuming you have virtualenv_ installed, you can then"
+" open a new terminal session and create a new virtual environment for "
+"Pelican::"
+msgstr ""
+
+#: ../../install.rst:26
+msgid ""
+"Once the virtual environment has been created and activated, Pelican can "
+"be installed via ``python -m pip install pelican`` as noted above. "
+"Alternatively, if you have the project source, you can install Pelican "
+"using the distutils method::"
+msgstr ""
+
+#: ../../install.rst:33
+msgid ""
+"If you have Git installed and prefer to install the latest bleeding-edge "
+"version of Pelican rather than a stable release, use the following "
+"command::"
+msgstr ""
+
+#: ../../install.rst:38
+msgid ""
+"Once Pelican is installed, you can run ``pelican --help`` to see basic "
+"usage options. For more detail, refer to the :doc:`Publish<publish>` "
+"section."
+msgstr ""
+
+#: ../../install.rst:42
+msgid "Optional packages"
+msgstr ""
+
+#: ../../install.rst:44
+msgid ""
+"If you plan on using `Markdown <https://pypi.org/project/Markdown/>`_ as "
+"a markup format, you can install Pelican with Markdown support::"
+msgstr ""
+
+#: ../../install.rst:49
+msgid ""
+"Typographical enhancements can be enabled in your settings file, but "
+"first the requisite `Typogrify <https://pypi.org/project/typogrify/>`_ "
+"library must be installed::"
+msgstr ""
+
+#: ../../install.rst:56
+msgid "Dependencies"
+msgstr ""
+
+#: ../../install.rst:58
+msgid ""
+"When Pelican is installed, the following dependent Python packages should"
+" be automatically installed without any action on your part:"
+msgstr ""
+
+#: ../../install.rst:61
+msgid ""
+"`feedgenerator <https://pypi.org/project/feedgenerator/>`_, to generate "
+"the Atom feeds"
+msgstr ""
+
+#: ../../install.rst:63
+msgid "`jinja2 <https://pypi.org/project/Jinja2/>`_, for templating support"
+msgstr ""
+
+#: ../../install.rst:64
+msgid "`pygments <https://pypi.org/project/Pygments/>`_, for syntax highlighting"
+msgstr ""
+
+#: ../../install.rst:65
+msgid ""
+"`docutils <https://pypi.org/project/docutils/>`_, for supporting "
+"reStructuredText as an input format"
+msgstr ""
+
+#: ../../install.rst:67
+msgid "`pytz <https://pypi.org/project/pytz/>`_, for timezone definitions"
+msgstr ""
+
+#: ../../install.rst:68
+msgid ""
+"`blinker <https://pypi.org/project/blinker/>`_, an object-to-object and "
+"broadcast signaling system"
+msgstr ""
+
+#: ../../install.rst:70
+msgid ""
+"`unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII "
+"transliterations of Unicode text utilities"
+msgstr ""
+
+#: ../../install.rst:73
+msgid ""
+"`MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup-safe "
+"string implementation"
+msgstr ""
+
+#: ../../install.rst:75
+msgid ""
+"`python-dateutil <https://pypi.org/project/python-dateutil/>`_, to read "
+"the date metadata"
+msgstr ""
+
+#: ../../install.rst:79
+msgid "Upgrading"
+msgstr ""
+
+#: ../../install.rst:81
+msgid ""
+"If you installed a stable Pelican release via Pip_ and wish to upgrade to"
+" the latest stable release, you can do so by adding ``--upgrade``::"
+msgstr ""
+
+#: ../../install.rst:86
+msgid ""
+"If you installed Pelican via distutils or the bleeding-edge method, "
+"simply perform the same step to install the most recent version."
+msgstr ""
+
+#: ../../install.rst:90
+msgid "Kickstart your site"
+msgstr ""
+
+#: ../../install.rst:92
+msgid ""
+"Once Pelican has been installed, you can create a skeleton project via "
+"the ``pelican-quickstart`` command, which begins by asking some questions"
+" about your site::"
+msgstr ""
+
+#: ../../install.rst:98
+msgid ""
+"If run inside an activated virtual environment, ``pelican-quickstart`` "
+"will look for an associated project path inside "
+"``$VIRTUAL_ENV/.project``. If that file exists and contains a valid "
+"directory path, the new Pelican project will be saved at that location. "
+"Otherwise, the default is the current working directory. To set the new "
+"project path on initial invocation, use: ``pelican-quickstart --path "
+"/your/desired/directory``"
+msgstr ""
+
+#: ../../install.rst:105
+msgid ""
+"Once you finish answering all the questions, your project will consist of"
+" the following hierarchy (except for *pages* — shown in parentheses below"
+" — which you can optionally add yourself if you plan to create non-"
+"chronological content)::"
+msgstr ""
+
+#: ../../install.rst:119
+msgid ""
+"The next step is to begin to adding content to the *content* folder that "
+"has been created for you."
+msgstr ""
+

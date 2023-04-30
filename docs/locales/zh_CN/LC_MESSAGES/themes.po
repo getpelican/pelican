@@ -1,0 +1,954 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-29 21:43+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../themes.rst:4
+msgid "Themes"
+msgstr ""
+
+#: ../../themes.rst:6
+msgid ""
+"There is a community-managed repository of `Pelican Themes`_ for people "
+"to share and use."
+msgstr ""
+
+#: ../../themes.rst:9
+msgid ""
+"Please note that while we do our best to review and merge theme "
+"contributions, they are submitted by the Pelican community and thus may "
+"have varying levels of support and interoperability."
+msgstr ""
+
+#: ../../themes.rst:14
+msgid "Creating Themes"
+msgstr ""
+
+#: ../../themes.rst:16
+msgid ""
+"To generate its HTML output, Pelican uses the `Jinja "
+"<https://palletsprojects.com/p/jinja/>`_ templating engine due to its "
+"flexibility and straightforward syntax. If you want to create your own "
+"theme, feel free to take inspiration from the `\"simple\" theme "
+"<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_."
+msgstr ""
+
+#: ../../themes.rst:22
+msgid ""
+"To generate your site using a theme you have created (or downloaded "
+"manually and then modified), you can specify that theme via the ``-t`` "
+"flag::"
+msgstr ""
+
+#: ../../themes.rst:27
+msgid ""
+"If you'd rather not specify the theme on every invocation, you can define"
+" ``THEME`` in your settings to point to the location of your preferred "
+"theme."
+msgstr ""
+
+#: ../../themes.rst:32
+msgid "Structure"
+msgstr ""
+
+#: ../../themes.rst:34
+msgid "To make your own theme, you must follow the following structure::"
+msgstr ""
+
+#: ../../themes.rst:52
+msgid ""
+"`static` contains all the static assets, which will be copied to the "
+"output `theme` folder. The above filesystem layout includes CSS and image"
+" folders, but those are just examples. Put what you need here."
+msgstr ""
+
+#: ../../themes.rst:56
+msgid ""
+"`templates` contains all the templates that will be used to generate the "
+"content. The template files listed above are mandatory; you can add your "
+"own templates if it helps you keep things organized while creating your "
+"theme."
+msgstr ""
+
+#: ../../themes.rst:64
+msgid "Templates and Variables"
+msgstr ""
+
+#: ../../themes.rst:66
+msgid ""
+"The idea is to use a simple syntax that you can embed into your HTML "
+"pages. This document describes which templates should exist in a theme, "
+"and which variables will be passed to each template at generation time."
+msgstr ""
+
+#: ../../themes.rst:70
+msgid ""
+"All templates will receive the variables defined in your settings file, "
+"as long as they are in all-caps. You can access them directly."
+msgstr ""
+
+#: ../../themes.rst:75
+msgid "Common Variables"
+msgstr ""
+
+#: ../../themes.rst:77
+msgid "All of these settings will be available to all templates."
+msgstr ""
+
+#: ../../themes.rst:80 ../../themes.rst:147 ../../themes.rst:176
+#: ../../themes.rst:210 ../../themes.rst:243 ../../themes.rst:283
+#: ../../themes.rst:299 ../../themes.rst:332
+msgid "Variable"
+msgstr ""
+
+#: ../../themes.rst:80 ../../themes.rst:147 ../../themes.rst:176
+#: ../../themes.rst:210 ../../themes.rst:243 ../../themes.rst:283
+#: ../../themes.rst:299 ../../themes.rst:332 ../../themes.rst:366
+#: ../../themes.rst:410 ../../themes.rst:429
+msgid "Description"
+msgstr ""
+
+#: ../../themes.rst:82
+msgid "output_file"
+msgstr ""
+
+#: ../../themes.rst:82
+msgid ""
+"The name of the file currently being generated. For instance, when "
+"Pelican is rendering the home page, output_file will be \"index.html\"."
+msgstr ""
+
+#: ../../themes.rst:85 ../../themes.rst:179 ../../themes.rst:213
+#: ../../themes.rst:302
+msgid "articles"
+msgstr ""
+
+#: ../../themes.rst:85
+msgid ""
+"The list of articles, ordered descending by date. All the elements are "
+"`Article` objects, so you can access their attributes (e.g. title, "
+"summary, author etc.). Sometimes this is shadowed (for instance, in the "
+"tags page). You will then find info about it in the `all_articles` "
+"variable."
+msgstr ""
+
+#: ../../themes.rst:91 ../../themes.rst:180 ../../themes.rst:214
+#: ../../themes.rst:303
+msgid "dates"
+msgstr ""
+
+#: ../../themes.rst:91
+msgid "The same list of articles, but ordered by date, ascending."
+msgstr ""
+
+#: ../../themes.rst:93
+msgid "hidden_articles"
+msgstr ""
+
+#: ../../themes.rst:93
+msgid "The list of hidden articles"
+msgstr ""
+
+#: ../../themes.rst:94
+msgid "drafts"
+msgstr ""
+
+#: ../../themes.rst:94
+msgid "The list of draft articles"
+msgstr ""
+
+#: ../../themes.rst:95 ../../themes.rst:370
+msgid "authors"
+msgstr ""
+
+#: ../../themes.rst:95
+msgid ""
+"A list of (author, articles) tuples, containing all the authors and "
+"corresponding articles (values)"
+msgstr ""
+
+#: ../../themes.rst:97
+msgid "categories"
+msgstr ""
+
+#: ../../themes.rst:97
+msgid ""
+"A list of (category, articles) tuples, containing all the categories and "
+"corresponding articles (values)"
+msgstr ""
+
+#: ../../themes.rst:99 ../../themes.rst:390 ../../themes.rst:449
+msgid "tags"
+msgstr ""
+
+#: ../../themes.rst:99
+msgid ""
+"A list of (tag, articles) tuples, containing all the tags and "
+"corresponding articles (values)"
+msgstr ""
+
+#: ../../themes.rst:101
+msgid "pages"
+msgstr ""
+
+#: ../../themes.rst:101
+msgid "The list of pages"
+msgstr ""
+
+#: ../../themes.rst:102
+msgid "hidden_pages"
+msgstr ""
+
+#: ../../themes.rst:102
+msgid "The list of hidden pages"
+msgstr ""
+
+#: ../../themes.rst:103
+msgid "draft_pages"
+msgstr ""
+
+#: ../../themes.rst:103
+msgid "The list of draft pages"
+msgstr ""
+
+#: ../../themes.rst:108
+msgid "Sorting"
+msgstr ""
+
+#: ../../themes.rst:110
+msgid ""
+"URL wrappers (currently categories, tags, and authors), have comparison "
+"methods that allow them to be easily sorted by name::"
+msgstr ""
+
+#: ../../themes.rst:115
+msgid ""
+"If you want to sort based on different criteria, `Jinja's sort command`__"
+" has a number of options."
+msgstr ""
+
+#: ../../themes.rst:122
+msgid "Date Formatting"
+msgstr ""
+
+#: ../../themes.rst:124
+msgid ""
+"Pelican formats the date according to your settings and locale "
+"(``DATE_FORMATS``/``DEFAULT_DATE_FORMAT``) and provides a ``locale_date``"
+" attribute. On the other hand, the ``date`` attribute will be a "
+"`datetime`_ object. If you need custom formatting for a date different "
+"than your settings, use the Jinja filter ``strftime`` that comes with "
+"Pelican. Usage is same as Python `strftime`_ format, but the filter will "
+"do the right thing and format your date according to the locale given in "
+"your settings::"
+msgstr ""
+
+#: ../../themes.rst:139
+msgid "index.html"
+msgstr ""
+
+#: ../../themes.rst:141
+msgid "This is the home page or index of your blog, generated at ``index.html``."
+msgstr ""
+
+#: ../../themes.rst:143
+msgid ""
+"If pagination is active, subsequent pages will reside in "
+"``index{number}.html``."
+msgstr ""
+
+#: ../../themes.rst:149 ../../themes.rst:182 ../../themes.rst:216
+#: ../../themes.rst:305
+msgid "articles_paginator"
+msgstr ""
+
+#: ../../themes.rst:149 ../../themes.rst:182 ../../themes.rst:216
+#: ../../themes.rst:305
+msgid "A paginator object for the list of articles"
+msgstr ""
+
+#: ../../themes.rst:150 ../../themes.rst:183 ../../themes.rst:217
+#: ../../themes.rst:306
+msgid "articles_page"
+msgstr ""
+
+#: ../../themes.rst:150 ../../themes.rst:183 ../../themes.rst:217
+#: ../../themes.rst:306
+msgid "The current page of articles"
+msgstr ""
+
+#: ../../themes.rst:151 ../../themes.rst:184 ../../themes.rst:218
+#: ../../themes.rst:307
+msgid "articles_previous_page"
+msgstr ""
+
+#: ../../themes.rst:151 ../../themes.rst:184 ../../themes.rst:218
+#: ../../themes.rst:307
+msgid "The previous page of articles (``None`` if page does not exist)"
+msgstr ""
+
+#: ../../themes.rst:153 ../../themes.rst:186 ../../themes.rst:220
+#: ../../themes.rst:309
+msgid "articles_next_page"
+msgstr ""
+
+#: ../../themes.rst:153 ../../themes.rst:186 ../../themes.rst:220
+#: ../../themes.rst:309
+msgid "The next page of articles (``None`` if page does not exist)"
+msgstr ""
+
+#: ../../themes.rst:155 ../../themes.rst:188 ../../themes.rst:222
+#: ../../themes.rst:311
+msgid "dates_paginator"
+msgstr ""
+
+#: ../../themes.rst:155 ../../themes.rst:188
+msgid "A paginator object for the article list, ordered by date, ascending."
+msgstr ""
+
+#: ../../themes.rst:157 ../../themes.rst:190 ../../themes.rst:224
+#: ../../themes.rst:313
+msgid "dates_page"
+msgstr ""
+
+#: ../../themes.rst:157 ../../themes.rst:190
+msgid "The current page of articles, ordered by date, ascending."
+msgstr ""
+
+#: ../../themes.rst:159 ../../themes.rst:192 ../../themes.rst:226
+#: ../../themes.rst:315
+msgid "dates_previous_page"
+msgstr ""
+
+#: ../../themes.rst:159 ../../themes.rst:192 ../../themes.rst:226
+#: ../../themes.rst:315
+msgid ""
+"The previous page of articles, ordered by date, ascending (``None`` if "
+"page does not exist)"
+msgstr ""
+
+#: ../../themes.rst:161 ../../themes.rst:194 ../../themes.rst:228
+#: ../../themes.rst:317
+msgid "dates_next_page"
+msgstr ""
+
+#: ../../themes.rst:161 ../../themes.rst:194 ../../themes.rst:228
+#: ../../themes.rst:317
+msgid ""
+"The next page of articles, ordered by date, ascending (``None`` if page "
+"does not exist)"
+msgstr ""
+
+#: ../../themes.rst:163 ../../themes.rst:196 ../../themes.rst:230
+#: ../../themes.rst:319 ../../themes.rst:413
+msgid "page_name"
+msgstr ""
+
+#: ../../themes.rst:163
+msgid "'index' -- useful for pagination links"
+msgstr ""
+
+#: ../../themes.rst:168
+msgid "author.html"
+msgstr ""
+
+#: ../../themes.rst:170
+msgid ""
+"This template will be processed for each of the existing authors, with "
+"output generated according to the ``AUTHOR_SAVE_AS`` setting (`Default:` "
+"``author/{slug}.html``). If pagination is active, subsequent pages will "
+"by default reside at ``author/{slug}{number}.html``."
+msgstr ""
+
+#: ../../themes.rst:178 ../../themes.rst:368 ../../themes.rst:431
+msgid "author"
+msgstr ""
+
+#: ../../themes.rst:178
+msgid "The name of the author being processed"
+msgstr ""
+
+#: ../../themes.rst:179
+msgid "Articles by this author"
+msgstr ""
+
+#: ../../themes.rst:180
+msgid "Articles by this author, but ordered by date, ascending"
+msgstr ""
+
+#: ../../themes.rst:196
+msgid ""
+"AUTHOR_URL where everything after `{slug}` is removed -- useful for "
+"pagination links"
+msgstr ""
+
+#: ../../themes.rst:202
+msgid "category.html"
+msgstr ""
+
+#: ../../themes.rst:204
+msgid ""
+"This template will be processed for each of the existing categories, with"
+" output generated according to the ``CATEGORY_SAVE_AS`` setting "
+"(`Default:` ``category/{slug}.html``). If pagination is active, "
+"subsequent pages will by default reside at "
+"``category/{slug}{number}.html``."
+msgstr ""
+
+#: ../../themes.rst:212 ../../themes.rst:246 ../../themes.rst:372
+msgid "category"
+msgstr ""
+
+#: ../../themes.rst:212
+msgid "The name of the category being processed"
+msgstr ""
+
+#: ../../themes.rst:213
+msgid "Articles for this category"
+msgstr ""
+
+#: ../../themes.rst:214
+msgid "Articles for this category, but ordered by date, ascending"
+msgstr ""
+
+#: ../../themes.rst:222 ../../themes.rst:311
+msgid "A paginator object for the list of articles, ordered by date, ascending"
+msgstr ""
+
+#: ../../themes.rst:224 ../../themes.rst:313
+msgid "The current page of articles, ordered by date, ascending"
+msgstr ""
+
+#: ../../themes.rst:230
+msgid ""
+"CATEGORY_URL where everything after `{slug}` is removed -- useful for "
+"pagination links"
+msgstr ""
+
+#: ../../themes.rst:236
+msgid "article.html"
+msgstr ""
+
+#: ../../themes.rst:238
+msgid ""
+"This template will be processed for each article, with output generated "
+"according to the ``ARTICLE_SAVE_AS`` setting (`Default:` "
+"``{slug}.html``). The following variables are available when rendering."
+msgstr ""
+
+#: ../../themes.rst:245
+msgid "article"
+msgstr ""
+
+#: ../../themes.rst:245
+msgid "The article object to be displayed"
+msgstr ""
+
+#: ../../themes.rst:246
+msgid "The name of the category for the current article"
+msgstr ""
+
+#: ../../themes.rst:249
+msgid ""
+"Any metadata that you put in the header of the article source file will "
+"be available as fields on the ``article`` object. The field name will be "
+"the same as the name of the metadata field, except in all-lowercase "
+"characters."
+msgstr ""
+
+#: ../../themes.rst:253
+msgid ""
+"For example, you could add a field called `FacebookImage` to your article"
+" metadata, as shown below:"
+msgstr ""
+
+#: ../../themes.rst:266
+msgid ""
+"This new metadata will be made available as `article.facebookimage` in "
+"your `article.html` template. This would allow you, for example, to "
+"specify an image for the Facebook open graph tags that will change for "
+"each article:"
+msgstr ""
+
+#: ../../themes.rst:276
+msgid "page.html"
+msgstr ""
+
+#: ../../themes.rst:278
+msgid ""
+"This template will be processed for each page, with output generated "
+"according to the ``PAGE_SAVE_AS`` setting (`Default:` "
+"``pages/{slug}.html``). The following variables are available when "
+"rendering."
+msgstr ""
+
+#: ../../themes.rst:285
+msgid "page"
+msgstr ""
+
+#: ../../themes.rst:285
+msgid ""
+"The page object to be displayed. You can access its title, slug, and "
+"content."
+msgstr ""
+
+#: ../../themes.rst:291
+msgid "tag.html"
+msgstr ""
+
+#: ../../themes.rst:293
+msgid ""
+"This template will be processed for each tag, with output generated "
+"according to the ``TAG_SAVE_AS`` setting (`Default:` "
+"``tag/{slug}.html``). If pagination is active, subsequent pages will by "
+"default reside at ``tag/{slug}{number}.html``."
+msgstr ""
+
+#: ../../themes.rst:301
+msgid "tag"
+msgstr ""
+
+#: ../../themes.rst:301
+msgid "The name of the tag being processed"
+msgstr ""
+
+#: ../../themes.rst:302
+msgid "Articles related to this tag"
+msgstr ""
+
+#: ../../themes.rst:303
+msgid "Articles related to this tag, but ordered by date, ascending"
+msgstr ""
+
+#: ../../themes.rst:319
+msgid ""
+"TAG_URL where everything after `{slug}` is removed -- useful for "
+"pagination links"
+msgstr ""
+
+#: ../../themes.rst:325
+msgid "period_archives.html"
+msgstr ""
+
+#: ../../themes.rst:327
+msgid ""
+"This template will be processed for each year of your posts if a path for"
+" ``YEAR_ARCHIVE_SAVE_AS`` is defined, each month if "
+"``MONTH_ARCHIVE_SAVE_AS`` is defined, and each day if "
+"``DAY_ARCHIVE_SAVE_AS`` is defined."
+msgstr ""
+
+#: ../../themes.rst:334
+msgid "period"
+msgstr ""
+
+#: ../../themes.rst:334
+msgid ""
+"A tuple of the form (`year`, `month`, `day`) that indicates the current "
+"time period. `year` and `day` are numbers while `month` is a string. This"
+" tuple only contains `year` if the time period is a given year. It "
+"contains both `year` and `month` if the time period is over years and "
+"months and so on."
+msgstr ""
+
+#: ../../themes.rst:341
+msgid "period_num"
+msgstr ""
+
+#: ../../themes.rst:341
+msgid ""
+"A tuple of the form (``year``, ``month``, ``day``), as in ``period``, "
+"except all values are numbers."
+msgstr ""
+
+#: ../../themes.rst:346
+msgid ""
+"You can see an example of how to use `period` in the `\"simple\" theme "
+"period_archives.html template "
+"<https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_."
+msgstr ""
+
+#: ../../themes.rst:352
+msgid "Objects"
+msgstr ""
+
+#: ../../themes.rst:354
+msgid ""
+"Detail objects attributes that are available and useful in templates. Not"
+" all attributes are listed here, this is a selection of attributes "
+"considered useful in a template."
+msgstr ""
+
+#: ../../themes.rst:361
+msgid "Article"
+msgstr ""
+
+#: ../../themes.rst:363
+msgid "The string representation of an Article is the `source_path` attribute."
+msgstr ""
+
+#: ../../themes.rst:366 ../../themes.rst:410 ../../themes.rst:429
+msgid "Attribute"
+msgstr ""
+
+#: ../../themes.rst:368
+msgid "The :ref:`Author <object-author_cat_tag>` of this article."
+msgstr ""
+
+#: ../../themes.rst:370
+msgid "A list of :ref:`Authors <object-author_cat_tag>` of this article."
+msgstr ""
+
+#: ../../themes.rst:372
+msgid "The :ref:`Category <object-author_cat_tag>` of this article."
+msgstr ""
+
+#: ../../themes.rst:374 ../../themes.rst:433
+msgid "content"
+msgstr ""
+
+#: ../../themes.rst:374
+msgid "The rendered content of the article."
+msgstr ""
+
+#: ../../themes.rst:375 ../../themes.rst:434
+msgid "date"
+msgstr ""
+
+#: ../../themes.rst:375
+msgid "Datetime object representing the article date."
+msgstr ""
+
+#: ../../themes.rst:376 ../../themes.rst:435
+msgid "date_format"
+msgstr ""
+
+#: ../../themes.rst:376 ../../themes.rst:435
+msgid "Either default date format or locale date format."
+msgstr ""
+
+#: ../../themes.rst:377 ../../themes.rst:436
+msgid "default_template"
+msgstr ""
+
+#: ../../themes.rst:377 ../../themes.rst:436
+msgid "Default template name."
+msgstr ""
+
+#: ../../themes.rst:378 ../../themes.rst:437
+msgid "in_default_lang"
+msgstr ""
+
+#: ../../themes.rst:378 ../../themes.rst:437
+msgid "Boolean representing if the article is written in the default language."
+msgstr ""
+
+#: ../../themes.rst:380 ../../themes.rst:439
+msgid "lang"
+msgstr ""
+
+#: ../../themes.rst:380 ../../themes.rst:439
+msgid "Language of the article."
+msgstr ""
+
+#: ../../themes.rst:381 ../../themes.rst:440
+msgid "locale_date"
+msgstr ""
+
+#: ../../themes.rst:381 ../../themes.rst:440
+msgid "Date formatted by the `date_format`."
+msgstr ""
+
+#: ../../themes.rst:382 ../../themes.rst:441
+msgid "metadata"
+msgstr ""
+
+#: ../../themes.rst:382
+msgid "Article header metadata `dict`."
+msgstr ""
+
+#: ../../themes.rst:383 ../../themes.rst:414 ../../themes.rst:442
+msgid "save_as"
+msgstr ""
+
+#: ../../themes.rst:383
+msgid "Location to save the article page."
+msgstr ""
+
+#: ../../themes.rst:384 ../../themes.rst:415 ../../themes.rst:443
+msgid "slug"
+msgstr ""
+
+#: ../../themes.rst:384 ../../themes.rst:415 ../../themes.rst:443
+msgid "Page slug."
+msgstr ""
+
+#: ../../themes.rst:385 ../../themes.rst:444
+msgid "source_path"
+msgstr ""
+
+#: ../../themes.rst:385
+msgid "Full system path of the article source file."
+msgstr ""
+
+#: ../../themes.rst:386 ../../themes.rst:445
+msgid "relative_source_path"
+msgstr ""
+
+#: ../../themes.rst:386
+msgid "Relative path from PATH_ to the article source file."
+msgstr ""
+
+#: ../../themes.rst:387 ../../themes.rst:446
+msgid "status"
+msgstr ""
+
+#: ../../themes.rst:387
+msgid "The article status, can be any of 'published' or 'draft'."
+msgstr ""
+
+#: ../../themes.rst:389 ../../themes.rst:448
+msgid "summary"
+msgstr ""
+
+#: ../../themes.rst:389 ../../themes.rst:448
+msgid "Rendered summary content."
+msgstr ""
+
+#: ../../themes.rst:390 ../../themes.rst:449
+msgid "List of :ref:`Tag <object-author_cat_tag>` objects."
+msgstr ""
+
+#: ../../themes.rst:392 ../../themes.rst:451
+msgid "template"
+msgstr ""
+
+#: ../../themes.rst:392 ../../themes.rst:451
+msgid "Template name to use for rendering."
+msgstr ""
+
+#: ../../themes.rst:393 ../../themes.rst:452
+msgid "title"
+msgstr ""
+
+#: ../../themes.rst:393
+msgid "Title of the article."
+msgstr ""
+
+#: ../../themes.rst:394 ../../themes.rst:453
+msgid "translations"
+msgstr ""
+
+#: ../../themes.rst:394 ../../themes.rst:453
+msgid "List of translations :ref:`Article <object-article>` objects."
+msgstr ""
+
+#: ../../themes.rst:396 ../../themes.rst:416 ../../themes.rst:455
+msgid "url"
+msgstr ""
+
+#: ../../themes.rst:396
+msgid "URL to the article page."
+msgstr ""
+
+#: ../../themes.rst:405
+msgid "Author / Category / Tag"
+msgstr ""
+
+#: ../../themes.rst:407
+msgid "The string representation of those objects is the `name` attribute."
+msgstr ""
+
+#: ../../themes.rst:412
+msgid "name"
+msgstr ""
+
+#: ../../themes.rst:412
+msgid "Name of this object [1]_."
+msgstr ""
+
+#: ../../themes.rst:413
+msgid "Author page name."
+msgstr ""
+
+#: ../../themes.rst:414
+msgid "Location to save the author page."
+msgstr ""
+
+#: ../../themes.rst:416
+msgid "URL to the author page."
+msgstr ""
+
+#: ../../themes.rst:419
+msgid "for Author object, coming from `:authors:` or `AUTHOR`."
+msgstr ""
+
+#: ../../themes.rst:424
+msgid "Page"
+msgstr ""
+
+#: ../../themes.rst:426
+msgid "The string representation of a Page is the `source_path` attribute."
+msgstr ""
+
+#: ../../themes.rst:431
+msgid "The :ref:`Author <object-author_cat_tag>` of this page."
+msgstr ""
+
+#: ../../themes.rst:433
+msgid "The rendered content of the page."
+msgstr ""
+
+#: ../../themes.rst:434
+msgid "Datetime object representing the page date."
+msgstr ""
+
+#: ../../themes.rst:441
+msgid "Page header metadata `dict`."
+msgstr ""
+
+#: ../../themes.rst:442
+msgid "Location to save the page."
+msgstr ""
+
+#: ../../themes.rst:444
+msgid "Full system path of the page source file."
+msgstr ""
+
+#: ../../themes.rst:445
+msgid "Relative path from PATH_ to the page source file."
+msgstr ""
+
+#: ../../themes.rst:446
+msgid "The page status, can be any of 'published', 'hidden' or 'draft'."
+msgstr ""
+
+#: ../../themes.rst:452
+msgid "Title of the page."
+msgstr ""
+
+#: ../../themes.rst:455
+msgid "URL to the page."
+msgstr ""
+
+#: ../../themes.rst:462
+msgid "Feeds"
+msgstr ""
+
+#: ../../themes.rst:464
+msgid ""
+"The feed variables changed in 3.0. Each variable now explicitly lists "
+"ATOM or RSS in the name. ATOM is still the default. Old themes will need "
+"to be updated. Here is a complete list of the feed variables::"
+msgstr ""
+
+#: ../../themes.rst:483
+msgid "Inheritance"
+msgstr ""
+
+#: ../../themes.rst:485
+msgid ""
+"Since version 3.0, Pelican supports inheritance from the ``simple`` "
+"theme, so you can re-use the ``simple`` theme templates in your own "
+"themes."
+msgstr ""
+
+#: ../../themes.rst:488
+msgid ""
+"If one of the mandatory files in the ``templates/`` directory of your "
+"theme is missing, it will be replaced by the matching template from the "
+"``simple`` theme. So if the HTML structure of a template in the "
+"``simple`` theme is right for you, you don't have to write a new template"
+" from scratch."
+msgstr ""
+
+#: ../../themes.rst:493
+#, python-format
+msgid ""
+"You can also extend templates from the ``simple`` theme in your own "
+"themes by using the ``{% extends %}`` directive as in the following "
+"example:"
+msgstr ""
+
+#: ../../themes.rst:504
+msgid "Example"
+msgstr ""
+
+#: ../../themes.rst:506
+msgid "With this system, it is possible to create a theme with just two files."
+msgstr ""
+
+#: ../../themes.rst:509
+msgid "base.html"
+msgstr ""
+
+#: ../../themes.rst:511
+msgid "The first file is the ``templates/base.html`` template:"
+msgstr ""
+
+#: ../../themes.rst:522
+msgid ""
+"On the first line, we extend the ``base.html`` template from the "
+"``simple`` theme, so we don't have to rewrite the entire file."
+msgstr ""
+
+#: ../../themes.rst:524
+msgid ""
+"On the third line, we open the ``head`` block which has already been "
+"defined in the ``simple`` theme."
+msgstr ""
+
+#: ../../themes.rst:526
+msgid ""
+"On the fourth line, the function ``super()`` keeps the content previously"
+" inserted in the ``head`` block."
+msgstr ""
+
+#: ../../themes.rst:528
+msgid "On the fifth line, we append a stylesheet to the page."
+msgstr ""
+
+#: ../../themes.rst:529
+msgid "On the last line, we close the ``head`` block."
+msgstr ""
+
+#: ../../themes.rst:531
+msgid ""
+"This file will be extended by all the other templates, so the stylesheet "
+"will be linked from all pages."
+msgstr ""
+
+#: ../../themes.rst:535
+msgid "style.css"
+msgstr ""
+
+#: ../../themes.rst:537
+msgid "The second file is the ``static/css/style.css`` CSS stylesheet:"
+msgstr ""
+
+#: ../../themes.rst:581
+msgid "Download"
+msgstr ""
+
+#: ../../themes.rst:583
+msgid ""
+"You can download this example theme :download:`here <_static/theme-"
+"basic.zip>`."
+msgstr ""
+
