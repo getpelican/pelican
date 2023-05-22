@@ -95,8 +95,9 @@ contains a list of reserved metadata keywords:
 ``url``         URL to use for this article/page
 =============== ===============================================================
 
-Readers for additional formats (such as AsciiDoc_) are available via plugins.
-Refer to `pelican-plugins`_ repository for those.
+Readers for additional formats (such as AsciiDoc_) are available via plugins,
+which you can find via the `Pelican Plugins`_ collection as well as the legacy
+`pelican-plugins`_ repository.
 
 Pelican can also process HTML files ending in ``.html`` and ``.htm``. Pelican
 interprets the HTML in a very straightforward manner, reading metadata from
@@ -626,11 +627,12 @@ Hidden Posts
 
 Like pages, posts can also be marked as ``hidden`` with the ``Status: hidden``
 attribute. Hidden posts will be output to ``ARTICLE_SAVE_AS`` as expected, but
-are not included by default in tag, category, and author indexes, nor in the 
+are not included by default in tag, category, and author indexes, nor in the
 main article feed. This has the effect of creating an "unlisted" post.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: https://www.methods.co.nz/asciidoc/
+.. _Pelican Plugins: https://github.com/pelican-plugins
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 .. _Python-Markdown: https://github.com/Python-Markdown/markdown
 .. _Markdown Extensions: https://python-markdown.github.io/extensions/
