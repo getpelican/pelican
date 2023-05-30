@@ -62,7 +62,7 @@ or ``--list`` option:
 In this example, we can see there are three themes available: ``notmyidea``,
 ``simple``, and ``two-column``.
 
-``two-column`` is prefixed with an ``@`` because this theme is not copied to
+``two-column`` is followed by an ``@`` because this theme is not copied to
 the Pelican theme path, but is instead just linked to it (see `Creating
 symbolic links`_ for details about creating symbolic links).
 
