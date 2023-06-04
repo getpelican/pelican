@@ -317,7 +317,7 @@ class TestWordpressXmlImporter(unittest.TestCase):
             self.posts)
         with temporary_folder() as temp:
             md = [r(f) for f in silent_f2p(test_post, 'markdown', temp)][0]
-            sample_line = re.search(r'-   This is a code sample', md).group(0)
+            sample_line = re.search(r'- This is a code sample', md).group(0)
             code_line = re.search(r'\s+a = \[1, 2, 3\]', md).group(0)
             self.assertTrue(sample_line.rindex('This') < code_line.rindex('a'))
 
