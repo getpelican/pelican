@@ -155,7 +155,9 @@ class memoized:
 
     def __get__(self, obj, objtype):
         '''Support instance methods.'''
-        return partial(self.__call__, obj)
+        fn = partial(self.__call__, obj)
+        fn.cache = self.cache
+        return fn
 
 
 def deprecated_attribute(old, new, since=None, remove=None, doc=None):
