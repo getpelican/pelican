@@ -572,32 +572,35 @@ posts for the month at ``posts/2011/Aug/index.html``.
     This way a reader can remove a portion of your URL and automatically arrive
     at an appropriate archive of posts, without having to specify a page name.
 
-.. data:: YEAR_ARCHIVE_URL = ''
-
-   The URL to use for per-year archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
-
 .. data:: YEAR_ARCHIVE_SAVE_AS = ''
 
    The location to save per-year archives of your posts.
 
-.. data:: MONTH_ARCHIVE_URL = ''
+.. data:: YEAR_ARCHIVE_URL = 'posts/{date:%Y}/'
 
-   The URL to use for per-month archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+   The URL to use for per-year archives of your posts. This default value
+   matches a ``YEAR_ARCHIVE_SAVE_AS`` setting of
+   ``posts/{date:%Y}/index.html``.
 
 .. data:: MONTH_ARCHIVE_SAVE_AS = ''
 
    The location to save per-month archives of your posts.
 
-.. data:: DAY_ARCHIVE_URL = ''
+.. data:: MONTH_ARCHIVE_URL = 'posts/{date:%Y}/{date:%b}/'
 
-   The URL to use for per-day archives of your posts. Used only if you have the
-   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+   The URL to use for per-month archives of your posts. This default value
+   matches a ``MONTH_ARCHIVE_SAVE_AS`` setting of
+   ``posts/{date:%Y}/{date:%b}/index.html``.
 
 .. data:: DAY_ARCHIVE_SAVE_AS = ''
 
    The location to save per-day archives of your posts.
+
+.. data:: DAY_ARCHIVE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/'
+
+   The URL to use for per-day archives of your posts. This default value
+   matches a ``DAY_ARCHIVE_SAVE_AS`` setting of
+   ``posts/{date:%Y}/{date:%b}/{date:%d}/index.html``.
 
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
