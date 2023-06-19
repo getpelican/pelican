@@ -368,7 +368,8 @@ visible across different site pages.
 ``period_archives`` is a dict that may contain ``year``, ``month``, and/or
 ``day`` keys, depending on which ``*_ARCHIVE_SAVE_AS`` settings are enabled.
 The corresponding value is a list of dicts, where each dict in turn represents
-a time period, with the following keys and values:
+a time period (ordered according to the ``NEWEST_FIRST_ARCHIVES`` setting)
+with the following keys and values:
 
 ===================     ===================================================
 Key                     Value
@@ -387,7 +388,8 @@ save_as                 The path to the save location of the period archive
                         not relevant to themes.
 articles                A list of :ref:`Article <object-article>` objects
                         that fall under the time period.
-dates                   Same list as ``articles``, but ordered by date.
+dates                   Same list as ``articles``, but ordered according
+                        to the ``NEWEST_FIRST_ARCHIVES`` setting.
 ===================     ===================================================
 
 Here is an example of how ``period_archives`` can be used in a template:
