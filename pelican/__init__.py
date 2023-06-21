@@ -27,7 +27,7 @@ from pelican.plugins._utils import get_plugin_name, load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import read_settings
-from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
+from pelican.utils import (wait_for_changes, clean_output_dir, maybe_pluralize)
 from pelican.writers import Writer
 
 try:
@@ -452,26 +452,19 @@ def autoreload(args, excqueue=None):
     console.print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
                   ' `settings` for changes. ---')
     pelican, settings = get_instance(args)
-    watcher = FileSystemWatcher(args.settings, Readers, settings)
-    sleep = False
+    settings_file = os.path.abspath(args.settings)
     while True:
         try:
-            # Don't sleep first time, but sleep afterwards to reduce cpu load
-            if sleep:
-                time.sleep(0.5)
-            else:
-                sleep = True
+            changed_files = wait_for_changes(args.settings, Readers, settings)
 
-            modified = watcher.check()
+            changed_files = {c[1] for c in changed_files}
 
-            if modified['settings']:
+            if settings_file in changed_files:
                 pelican, settings = get_instance(args)
-                watcher.update_watchers(settings)
 
-            if any(modified.values()):
-                console.print('\n-> Modified: {}. re-generating...'.format(
-                              ', '.join(k for k, v in modified.items() if v)))
-                pelican.run()
+            console.print('\n-> Modified: {}. re-generating...'.format(
+                              ', '.join(changed_files)))
+            pelican.run()
 
         except KeyboardInterrupt:
             if excqueue is not None:
@@ -558,8 +551,6 @@ def main(argv=None):
             listen(settings.get('BIND'), settings.get('PORT'),
                    settings.get("OUTPUT_PATH"))
         else:
-            watcher = FileSystemWatcher(args.settings, Readers, settings)
-            watcher.check()
             with console.status("Generating..."):
                 pelican.run()
     except KeyboardInterrupt:
