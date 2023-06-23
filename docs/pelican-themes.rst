@@ -29,7 +29,7 @@ Optional arguments:
 
 -r theme_name, --remove theme_name      One or more themes to remove
 
--s theme_path, --symlink theme_path     Same as "--install", but create a symbolic link instead of copying the theme.
+-s theme_path, --symlink theme_path     Same as ``--install``, but create a symbolic link instead of copying the theme.
                                         Useful for theme development
 
 -v, --verbose                           Verbose output
