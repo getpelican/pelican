@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python ${{ matrix.config.python }}
+      - name: Set up Python ${{ matrix.config.python }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.config.python }}
@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
@@ -81,7 +81,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
@@ -95,34 +95,42 @@ jobs:
 
   deploy:
     name: Deploy
+    environment: Deployment
     needs: [test, lint, docs]
     runs-on: ubuntu-latest
-    if: ${{ github.ref=='refs/heads/master' && github.event_name!='pull_request' }}
+    if: github.ref=='refs/heads/master' && github.event_name!='pull_request'
+
+    permissions:
+      contents: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+
       - name: Check release
         id: check_release
         run: |
-          python -m pip install pip --upgrade
-          pip install poetry
-          pip install githubrelease
-          pip install --pre autopub
+          python -m pip install --upgrade pip
+          python -m pip install autopub[github]
           autopub check
-        continue-on-error: true
+
       - name: Publish
-        if: steps.check_release.outcome=='success'
+        if: ${{ steps.check_release.outputs.autopub_release=='true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
-          git remote set-url origin https://$GITHUB_TOKEN@github.com/${{ github.repository }}
           autopub prepare
-          poetry build
           autopub commit
+          autopub build
           autopub githubrelease
-          poetry publish -u __token__ -p $PYPI_PASSWORD
+
+      - name: Upload package to PyPI
+        if: ${{ steps.check_release.outputs.autopub_release=='true' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
