@@ -1,0 +1,217 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-23 08:57+0200\n"
+"PO-Revision-Date: 2023-06-23 14:19+0200\n"
+"Last-Translator: Jorge Maldonado Ventura <jorgesumle@freakspot.net>\n"
+"Language-Team: \n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: ../../pelican-themes.rst:2
+msgid "pelican-themes"
+msgstr "pelican-themes"
+
+#: ../../pelican-themes.rst:7
+msgid "Description"
+msgstr "Descripción"
+
+#: ../../pelican-themes.rst:9
+msgid ""
+"``pelican-themes`` is a command line tool for managing themes for Pelican. "
+"See :ref:`settings/themes` for settings related to themes."
+msgstr ""
+"``pelican-themes`` es una herramienta de línea de comandos para gestionar "
+"temas de Pelican. Consulta :ref:`settings/themes` para ajustes relacionados "
+"con temas."
+
+#: ../../pelican-themes.rst:14
+msgid "Usage"
+msgstr "Uso"
+
+#: ../../pelican-themes.rst:16
+msgid "pelican-themes [-h] [-l] [-i theme path [theme path ...]]"
+msgstr "pelican-themes [-h] [-l] [-i ruta del tema [ruta del tema ...]]"
+
+#: ../../pelican-themes.rst:17
+msgid "[-r theme name [theme name ...]]"
+msgstr "[-r nombre del tema [nombre del tema ...]]"
+
+#: ../../pelican-themes.rst:18
+msgid "[-s theme path [theme path ...]] [-v] [--version]"
+msgstr "[-s ruta del tema [ruta del tema ...]] [-v] [--version]"
+
+#: ../../pelican-themes.rst:21
+msgid "Optional arguments:"
+msgstr "Argumentos opcionales:"
+
+#: ../../pelican-themes.rst:24
+msgid "Show the help an exit"
+msgstr "Muestra la ayuda y sale"
+
+#: ../../pelican-themes.rst:26
+msgid "Show the themes already installed"
+msgstr "Muestra los temas ya instalados"
+
+#: ../../pelican-themes.rst:28
+msgid "One or more themes to install"
+msgstr "Uno o más temas a instalar"
+
+#: ../../pelican-themes.rst:30
+msgid "One or more themes to remove"
+msgstr "Uno o más temas a eliminar"
+
+#: ../../pelican-themes.rst:32
+msgid ""
+"Same as \"--install\", but create a symbolic link instead of copying the "
+"theme. Useful for theme development"
+msgstr ""
+"Igual que ``--install``, pero crea un enlace simbólico en vez de copiar el "
+"tema. Útil para el desarrollo de temas"
+
+#: ../../pelican-themes.rst:35
+msgid "Verbose output"
+msgstr "Salida verbosa"
+
+#: ../../pelican-themes.rst:37
+msgid "Print the version of this script"
+msgstr "Imprime la versión de este *script*"
+
+#: ../../pelican-themes.rst:42
+msgid "Examples"
+msgstr "Ejemplos"
+
+#: ../../pelican-themes.rst:46
+msgid "Listing the installed themes"
+msgstr "Listar los temas instalados"
+
+#: ../../pelican-themes.rst:48
+msgid ""
+"With ``pelican-themes``, you can see the available themes by using the ``-"
+"l`` or ``--list`` option:"
+msgstr ""
+"Con ``pelican-themes``, puedes ver los temas disponibles usando la opción ``-"
+"l`` o ``--list``:"
+
+#: ../../pelican-themes.rst:62
+msgid ""
+"In this example, we can see there are three themes available: ``notmyidea``, "
+"``simple``, and ``two-column``."
+msgstr ""
+"En este ejemplo, podemos ver que hay tres temas disponibles: ``notmyidea``, "
+"``simple`` y ``two-column``."
+
+#: ../../pelican-themes.rst:65
+msgid ""
+"``two-column`` is followed by an ``@`` because this theme is not copied to "
+"the Pelican theme path, but is instead just linked to it (see `Creating "
+"symbolic links`_ for details about creating symbolic links)."
+msgstr ""
+"``two-column`` va seguido de una ``@`` porque este tema no está copiado en "
+"la ruta de temas de Pelican, sino que en vez de eso simplemente está "
+"enlazado a esta (consulta `Creating symbolic links`_ para detalles sobre "
+"creación de enlaces simbólicos)."
+
+#: ../../pelican-themes.rst:69
+msgid ""
+"Note that you can combine the ``--list`` option with the ``-v`` or ``--"
+"verbose`` option to get more verbose output, like this:"
+msgstr ""
+"Ten en cuenta que puedes combinar la opción ``--list`` con la opción ``-v`` "
+"o ``--verbose`` para obtener una salida más verbosa, como esta:"
+
+#: ../../pelican-themes.rst:81
+msgid "Installing themes"
+msgstr "Instalar temas"
+
+#: ../../pelican-themes.rst:83
+msgid ""
+"You can install one or more themes using the ``-i`` or ``--install`` option. "
+"This option takes as argument the path(s) of the theme(s) you want to "
+"install, and can be combined with the verbose option:"
+msgstr ""
+"Puedes instalar uno o más temas usando la opción ``-i`` o ``--install``. "
+"Esta opción toma como argumento la(s) ruta(s) de el/los tema(s) que quieres "
+"instalar y puede combinarse con la opción ``--verbose``:"
+
+#: ../../pelican-themes.rst:103
+msgid "Removing themes"
+msgstr "Eliminar temas"
+
+#: ../../pelican-themes.rst:105
+msgid ""
+"The ``pelican-themes`` command can also remove themes from the Pelican "
+"themes path. The ``-r`` or ``--remove`` option takes as argument the name(s) "
+"of the theme(s) you want to remove, and can be combined with the ``--"
+"verbose`` option."
+msgstr ""
+"El comando ``pelican-themes`` también puede eliminar temas de la ruta de "
+"temas de Pelican. La opción ``-r`` o ``--remove`` toma como argumento el/los "
+"nombre(s) del/de los tema(s) que quieres eliminar y puede combinarse con la "
+"opción ``--verbose``."
+
+#: ../../pelican-themes.rst:122
+msgid "Creating symbolic links"
+msgstr "Crear enlaces simbólicos"
+
+#: ../../pelican-themes.rst:124
+msgid ""
+"``pelican-themes`` can also install themes by creating symbolic links "
+"instead of copying entire themes into the Pelican themes path."
+msgstr ""
+"``pelican-themes`` también puede instalar temas creando enlaces simbólicos "
+"en vez de copiar los temas enteros a la ruta de temas de Pelican."
+
+#: ../../pelican-themes.rst:127
+msgid ""
+"To symbolically link a theme, you can use the ``-s`` or ``--symlink``, which "
+"works exactly as the ``--install`` option:"
+msgstr ""
+"Para enlazar simbólicamente a un tema puedes usar ``-s`` o ``--symlink```, "
+"que funciona exactamente igual que la opción ``--install``:"
+
+#: ../../pelican-themes.rst:134
+msgid ""
+"In this example, the ``two-column`` theme is now symbolically linked to the "
+"Pelican themes path, so we can use it, but we can also modify it without "
+"having to reinstall it after each modification."
+msgstr ""
+"En este ejemplo, el tema ``two-column`` es ahora enlazado simbólicamente a "
+"la ruta de temas de Pelican, así que podemos usarlo, pero también "
+"modificarlo sin tener que reinstalarlo después de cada modificación."
+
+#: ../../pelican-themes.rst:138
+msgid "This is useful for theme development:"
+msgstr "Esto es útil para el desarrollo de temas:"
+
+#: ../../pelican-themes.rst:155
+msgid "Doing several things at once"
+msgstr "Hacer varias cosas de golpe"
+
+#: ../../pelican-themes.rst:157
+msgid ""
+"The ``--install``, ``--remove`` and ``--symlink`` option are not mutually "
+"exclusive, so you can combine them in the same command line to do more than "
+"one operation at time, like this:"
+msgstr ""
+"Las opciones ``--install``, ``--remove`` y ``--symlink`` no se excluyen "
+"mutuamente, así que puedes combinarlas en la misma línea de comandos para "
+"hacer más de una operación de golpe, así:"
+
+#: ../../pelican-themes.rst:169
+msgid ""
+"In this example, the theme ``notmyidea-cms`` is replaced by the theme "
+"``notmyidea-cms-fr``"
+msgstr ""
+"En este ejemplo, el tema ``notmyidea-cms`` se reemplaza por el tema "
+"``notmyidea-cms-fr``"
