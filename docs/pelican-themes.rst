@@ -21,7 +21,7 @@ Optional arguments:
 """""""""""""""""""
 
 
--h, --help                              Show the help an exit
+-h, --help                              Show the help and exit
 
 -l, --list                              Show the themes already installed
 
