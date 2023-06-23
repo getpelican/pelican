@@ -82,7 +82,7 @@ Installing themes
 
 You can install one or more themes using the ``-i`` or ``--install`` option.
 This option takes as argument the path(s) of the theme(s) you want to install,
-and can be combined with the verbose option:
+and can be combined with the ``--verbose`` option:
 
 .. code-block:: console
 
@@ -154,7 +154,7 @@ This is useful for theme development:
 Doing several things at once
 """"""""""""""""""""""""""""
 
-The ``--install``, ``--remove`` and ``--symlink`` option are not mutually
+The ``--install``, ``--remove`` and ``--symlink`` options are not mutually
 exclusive, so you can combine them in the same command line to do more than one
 operation at time, like this:
 
