@@ -3,34 +3,37 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 17:37+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2023-01-05 13:24+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.11.0\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: ../../internals.rst:2
 msgid "Pelican internals"
-msgstr ""
+msgstr "Funcionamiento interno de Pelican"
 
 #: ../../internals.rst:4
 msgid ""
 "This section describe how Pelican works internally. As you'll see, it's "
 "quite simple, but a bit of documentation doesn't hurt.  :)"
 msgstr ""
+"Esta sección describe cómo Pelican funciona internamente. Como verás, es "
+"bastante simple, pero un poco de documentación no hace daño.  :)"
 
 #: ../../internals.rst:7
 msgid ""
-"You can also find in the :doc:`report` section an excerpt of a report the"
-" original author wrote with some software design information."
+"You can also find in the :doc:`report` section an excerpt of a report "
+"the original author wrote with some software design information."
 msgstr ""
 
 #: ../../internals.rst:13
@@ -39,10 +42,10 @@ msgstr ""
 
 #: ../../internals.rst:15
 msgid ""
-"What Pelican does is take a list of files and process them into some sort"
-" of output. Usually, the input files are reStructuredText and Markdown "
-"files, and the output is a blog, but both input and output can be "
-"anything you want."
+"What Pelican does is take a list of files and process them into some "
+"sort of output. Usually, the input files are reStructuredText and "
+"Markdown files, and the output is a blog, but both input and output can "
+"be anything you want."
 msgstr ""
 
 #: ../../internals.rst:19
@@ -85,18 +88,18 @@ msgstr ""
 
 #: ../../internals.rst:41
 msgid ""
-"Is there an awesome markup language you want to add to Pelican? Well, the"
-" only thing you have to do is to create a class with a ``read`` method "
-"that returns HTML content and some metadata."
+"Is there an awesome markup language you want to add to Pelican? Well, "
+"the only thing you have to do is to create a class with a ``read`` "
+"method that returns HTML content and some metadata."
 msgstr ""
 
 #: ../../internals.rst:45
 msgid "Take a look at the Markdown reader::"
-msgstr ""
+msgstr "Échale un vistazo al lector de Markdown::"
 
 #: ../../internals.rst:71
 msgid "Simple, isn't it?"
-msgstr ""
+msgstr "Simple, ¿no?"
 
 #: ../../internals.rst:73
 msgid ""
@@ -110,13 +113,14 @@ msgstr ""
 
 #: ../../internals.rst:80
 msgid "How to implement a new generator?"
-msgstr ""
+msgstr "¿Cómo implementar un nuevo generador?"
 
 #: ../../internals.rst:82
+#, fuzzy
 msgid ""
 "Generators have two important methods. You're not forced to create both; "
 "only the existing ones will be called."
-msgstr ""
+msgstr "Los generadores tienen dos métodos importantes. "
 
 #: ../../internals.rst:85
 msgid ""
@@ -136,8 +140,7 @@ msgid ""
 "generating the output.  :) It's here that you may want to look at the "
 "context and call the methods of the ``writer`` object that is passed as "
 "the first argument of this function. In the ``PageGenerator`` example, "
-"this method will look at all the pages recorded in the global context and"
-" output a file on the disk (using the writer method ``write_file``) for "
-"each page encountered."
+"this method will look at all the pages recorded in the global context "
+"and output a file on the disk (using the writer method ``write_file``) "
+"for each page encountered."
 msgstr ""
-

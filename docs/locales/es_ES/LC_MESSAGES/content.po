@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 17:37+0100\n"
-"PO-Revision-Date: 2023-01-03 17:53+0100\n"
+"PO-Revision-Date: 2023-01-30 10:03+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -47,10 +47,11 @@ msgstr ""
 #: ../../content.rst:14
 msgid "You can find sample content in the repository at ``samples/content/``."
 msgstr ""
+"Puedes encontrar contenido de muestra en el repositorio en ``samples/content/``."
 
 #: ../../content.rst:19
 msgid "File metadata"
-msgstr ""
+msgstr "Metadatos de archivo"
 
 #: ../../content.rst:21
 msgid ""
@@ -58,6 +59,10 @@ msgid ""
 "system (for instance, about the category of your articles), but some "
 "information you need to provide in the form of metadata inside your files."
 msgstr ""
+"Pelican trata de ser lo suficientemente inteligente para obtener la información "
+"que necesita del sistema de archivos (por ejemplo, sobre la categoría de tus "
+"artículos), pero necesitas proporcionar alguna información en forma de "
+"metadatos dentro de tus archivos."
 
 #: ../../content.rst:25
 msgid ""
@@ -65,18 +70,27 @@ msgid ""
 "this metadata in text files via the following syntax (give your file the ``."
 "rst`` extension)::"
 msgstr ""
+"Si estás escribiendo tu contenido en formato reStructuredText, puedes "
+"proporcionar estos metadatos en archivos de texto mediante la siguiente "
+"sintaxis (dale a tu archivo la extensión ``.rst``)::"
 
 #: ../../content.rst:40
 msgid ""
 "Author and tag lists may be semicolon-separated instead, which allows you to "
 "write authors and tags containing commas::"
 msgstr ""
+"Las listas de autor y de etiqueta también pueden separarse en su lugar por "
+"puntos y coma, lo que te permite escribir autores y etiquetas que contienen "
+"comas::"
 
 #: ../../content.rst:46
 msgid ""
 "Pelican implements an extension to reStructuredText to enable support for the "
 "``abbr`` HTML tag. To use it, write something like this in your post::"
 msgstr ""
+"Pelican implementa una extensión para reStructuredText para permitir soportar "
+"la etiqueta HTML ``abbr``. Para usarla escribe algo como esto en tu "
+"publicación::"
 
 #: ../../content.rst:51
 msgid ""
@@ -85,6 +99,10 @@ msgid ""
 "explicitly install the Python-Markdown_ package, which can be done via ``pip "
 "install Markdown``."
 msgstr ""
+"También puedes usar la sintaxis de Markdown (con un archivo acabado en ``.md``, "
+"``.markdown``, ``.mkd`` o ``.mdown``). La generación de Markdown requiere que "
+"primero instales explícitamente el paquete Python-Markdown_, lo cual se puede "
+"hacer mediante ``pip install Markdown``."
 
 #: ../../content.rst:56
 msgid ""
@@ -92,10 +110,14 @@ msgid ""
 "separately if they are not included in the default ``Markdown`` package and can "
 "be configured and loaded via the ``MARKDOWN`` setting."
 msgstr ""
+"Pelican también soporta `Markdown Extensions`_, que puede que tenga que ser "
+"instalado de forma separada si no se incluyen en el paquete ``Markdown`` "
+"predeterminado y pueden ser configuradas y cargadas mediante el ajuste "
+"``MARKDOWN``."
 
 #: ../../content.rst:60
 msgid "Metadata syntax for Markdown posts should follow this pattern::"
-msgstr ""
+msgstr "La sintaxis de metadatos para publicaciones Markdown sigue este patrón::"
 
 #: ../../content.rst:73
 msgid ""
@@ -103,148 +125,156 @@ msgid ""
 "reserved metadata keywords) for use in your templates. The following table "
 "contains a list of reserved metadata keywords:"
 msgstr ""
+"También puedes tener tus propias claves de metadatos (siempre que no entren en "
+"conflicto con las palabras clave reservadas de metadatos) para usarlas en tus "
+"plantillas. La siguiente tabla contiene una lista de palabras clave de "
+"metadatos reservadas:"
 
 #: ../../content.rst:78
 msgid "Metadata"
-msgstr ""
+msgstr "Metadatos"
 
 #: ../../content.rst:78 ../../content.rst:544
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #: ../../content.rst:80
 msgid "``title``"
-msgstr ""
+msgstr "``title``"
 
 #: ../../content.rst:80
 msgid "Title of the article or page"
-msgstr ""
+msgstr "Título del artículo o página"
 
 #: ../../content.rst:81
 msgid "``date``"
-msgstr ""
+msgstr "``date``"
 
 #: ../../content.rst:81
 msgid "Publication date (e.g., ``YYYY-MM-DD HH:SS``)"
-msgstr ""
+msgstr "Fecha de publicación (p. ej., ``AAAA-MM-DD HH:SS``)"
 
 #: ../../content.rst:82
 msgid "``modified``"
-msgstr ""
+msgstr "``modified``"
 
 #: ../../content.rst:82
 msgid "Modification date (e.g., ``YYYY-MM-DD HH:SS``)"
-msgstr ""
+msgstr "Fecha de modificación (p. ej., ``AAAA-MM-DD HH:SS``)"
 
 #: ../../content.rst:83
 msgid "``tags``"
-msgstr ""
+msgstr "``tags``"
 
 #: ../../content.rst:83
 msgid "Content tags, separated by commas"
-msgstr ""
+msgstr "Etiquetas de contenido, separadas por comas"
 
 #: ../../content.rst:84
 msgid "``keywords``"
-msgstr ""
+msgstr "``keywords``"
 
 #: ../../content.rst:84
 msgid "Content keywords, separated by commas (HTML content only)"
-msgstr ""
+msgstr "Palabras claves del contenido, separadas por comas (solo contenido HTML)"
 
 #: ../../content.rst:85
 msgid "``category``"
-msgstr ""
+msgstr "``category``"
 
 #: ../../content.rst:85
 msgid "Content category (one only — not multiple)"
-msgstr ""
+msgstr "Categoría del contenido (solo una, no varias)"
 
 #: ../../content.rst:86
 msgid "``slug``"
-msgstr ""
+msgstr "``slug``"
 
 #: ../../content.rst:86
 msgid "Identifier used in URLs and translations"
-msgstr ""
+msgstr "Identificador usado en URLs y traducciones"
 
 #: ../../content.rst:87
 msgid "``author``"
-msgstr ""
+msgstr "``author``"
 
 #: ../../content.rst:87
 msgid "Content author, when there is only one"
-msgstr ""
+msgstr "Autor del contenido, cuando solo hay uno"
 
 #: ../../content.rst:88
 msgid "``authors``"
-msgstr ""
+msgstr "``authors``"
 
 #: ../../content.rst:88
 msgid "Content authors, when there are multiple"
-msgstr ""
+msgstr "Autores del contenido, cuando hay varios"
 
 #: ../../content.rst:89
 msgid "``summary``"
-msgstr ""
+msgstr "``summary``"
 
 #: ../../content.rst:89
 msgid "Brief description of content for index pages"
-msgstr ""
+msgstr "Descripción breve del contenido para páginas de índice"
 
 #: ../../content.rst:90
 msgid "``lang``"
-msgstr ""
+msgstr "``lang``"
 
 #: ../../content.rst:90
 msgid "Content language ID (``en``, ``fr``, etc.)"
-msgstr ""
+msgstr "Identificador del idioma del contenido (``es``, ``fr``, etc.)"
 
 #: ../../content.rst:91
 msgid "``translation``"
-msgstr ""
+msgstr "``translation``"
 
 #: ../../content.rst:91
 msgid "If content is a translation of another (``true`` or ``false``)"
-msgstr ""
+msgstr "Si el contenido es una traducción de otro (``true`` o ``false``)"
 
 #: ../../content.rst:92
 msgid "``status``"
-msgstr ""
+msgstr "``status``"
 
 #: ../../content.rst:92
 msgid "Content status: ``draft``, ``hidden``, or ``published``"
 msgstr ""
+"Estado del contenido: ``draft`` (borrador), ``hidden`` (oculto), or "
+"``published`` (publicado)"
 
 #: ../../content.rst:93
 msgid "``template``"
-msgstr ""
+msgstr "``template``"
 
 #: ../../content.rst:93
 msgid "Name of template to use to generate content (without extension)"
-msgstr ""
+msgstr "Nombre de la plantilla a usar para generar contenido (sin extensión)"
 
 #: ../../content.rst:94
 msgid "``save_as``"
-msgstr ""
+msgstr "``save_as``"
 
 #: ../../content.rst:94
 msgid "Save content to this relative file path"
-msgstr ""
+msgstr "Guardar contenido en esta ruta relativa"
 
 #: ../../content.rst:95
 msgid "``url``"
-msgstr ""
+msgstr "``url``"
 
 #: ../../content.rst:95
 msgid "URL to use for this article/page"
-msgstr ""
+msgstr "URL que usar para este artículo/página"
 
 #: ../../content.rst:98
 msgid ""
 "Readers for additional formats (such as AsciiDoc_) are available via plugins. "
 "Refer to `pelican-plugins`_ repository for those."
 msgstr ""
+"Hay disponibles lectores para formatos adicionales (como AsciiDoc_) mediante "
+"extensiones. Consulta el repositorio `pelican-plugins`_ para usarlos."
 
 #: ../../content.rst:101
 msgid ""
@@ -253,6 +283,10 @@ msgid ""
 "``meta`` tags, the title from the ``title`` tag, and the body out from the "
 "``body`` tag::"
 msgstr ""
+"Pelican también puede procesar archivos HTML que acaban en ``.html`` y ``."
+"htm``. Pelican interpreta el HTML de una manera muy directa, leyendo metadatos "
+"de etiquetas ```meta``, el título de la etiqueta ``title`` y el cuerpo de la "
+"etiqueta ``body``::"
 
 #: ../../content.rst:121
 msgid ""
@@ -261,6 +295,10 @@ msgid ""
 "the ``keywords`` metadata, as is standard in HTML. The two can be used "
 "interchangeably."
 msgstr ""
+"Con HTML solo hay una simple excepción para los metadatos estándares: las "
+"etiquetas puede ser especificadas o con el metadato ``tags``, como es estándar "
+"en Pelican, o con el metadato ```keywords`` como es estándar en HTML. Los dos "
+"pueden usarse indistintamente."
 
 #: ../../content.rst:126
 msgid ""
@@ -274,6 +312,16 @@ msgid ""
 "to ``False``.  When parsing dates given in the page metadata, Pelican supports "
 "the W3C's `suggested subset ISO 8601`__."
 msgstr ""
+"Ten en cuenta de que, a excepción del título, ningún de este contenido de "
+"metadatos es obligatorio: si no se especifica la fecha y ``DEFAULT_DATE`` está "
+"asignado con ``'fs'``, Pelican se basará en la marca temporal \"mtime\" del "
+"archivo, y la categoría puede ser determinada por el directorio donde se "
+"encuentra el archivo. Por ejemplo, un archivo ubicado en ``python/actualidad/mi-"
+"artículo.rst`` tendrá la categoría ``actualidad``. Si te gustaría organizar tus "
+"archivos de otras formas en que el nombre de la subcarpeta no sería un buen "
+"nombre de categoría, puede asignar el ajuste ``USE_FOLDER_AS_CATEGORY`` a "
+"``False``. A la hora de procesar las fechas proporcionadas en los metadatos de "
+"página, Pelican soporta el `subconjunto ISO 8601 sugerido`__ por la W3C."
 
 #: ../../content.rst:136
 msgid ""
@@ -284,6 +332,12 @@ msgid ""
 "*Publishing via Pelican*. If you would prefer this behavior, add the following "
 "line to your settings file::"
 msgstr ""
+"Así pues, el título es el único metadato requerido. Si eso te molesta, no te "
+"preocupes. En vez de especificar manualmente el título en tus metadatos cada "
+"vez, puedes usar el archivo del contenido fuente como el título. Por ejemplo, "
+"un archivo fuente en Markdown llamado ``Publicando con Pelican.md`` tendría "
+"automáticamente asignado el título de *Publicando con Pelican*. Si preferirías "
+"este comportamiento, añade la siguiente línea a tu archivo de ajustes:::"
 
 #: ../../content.rst:147
 msgid ""
@@ -292,6 +346,11 @@ msgid ""
 "caching with ``LOAD_CONTENT_CACHE = False`` or use the ``--ignore-cache`` "
 "command-line switch."
 msgstr ""
+"A la hora de experimentar con diferentes ajustes (especialmente los de "
+"metadatos) el almacenamiento en caché puede interferir y los cambios puede que "
+"no sean visibles. En esos casos deshabilita el almacenamiento en caché con "
+"``LOAD_CONTENT_CACHE = False`` o usa el conmutador de línea de comandos ``--"
+"ignore-cache``."
 
 #: ../../content.rst:154
 msgid ""
@@ -300,12 +359,19 @@ msgid ""
 "feed entries in feed readers will be updated automatically when you set "
 "``modified`` to the current date after you modified your article."
 msgstr ""
+"``modified`` debe ser la última vez que actualizaste el artículo, y por defecto "
+"es ``date`` si no se especifica. Además de poder mostrar ``modified`` en las "
+"plantillas, las entradas de los lectores de fuentes RSS y Atom se actualizarán "
+"automáticamente cuando asignes ``modified`` a la la fecha actual después de "
+"modificar el artículo."
 
 #: ../../content.rst:159
 msgid ""
 "``authors`` is a comma-separated list of article authors. If there's only one "
 "author you can use ``author`` field."
 msgstr ""
+"``authors`` es una lista de los autores del artículo separada por comas. Si "
+"solo hay un autor, puedes usar el campo ``author``."
 
 #: ../../content.rst:162
 msgid ""
@@ -313,6 +379,10 @@ msgid ""
 "``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the "
 "beginning of an article are used as the summary."
 msgstr ""
+"Si no especificas explícitamente metadatos de resumen (*summary*) para una "
+"publicación determinada, el ajuste ``SUMMARY_MAX_LENGTH`` puede utilizarse para "
+"especificar cuántas palabras desde el principio del artículo son usadas como el "
+"resumen."
 
 #: ../../content.rst:166
 msgid ""
@@ -323,16 +393,25 @@ msgid ""
 "example, if you would like to extract both the date and the slug, you could set "
 "something like: ``'(?P<date>\\d{4}-\\d{2}-\\d{2})_(?P<slug>.*)'``"
 msgstr ""
+"También puedes extraer cualquier metadato del nombre de archivo mediante una "
+"expresión regular a ser asignada en el ajuste ``FILENAME_METADATA``. Todos los "
+"grupos nombrados que coincidan serán asignados en el objeto de metadatos. El "
+"valor predeterminado para el ajuste ``FILENAME_METADATA`` solo extraerá la "
+"fecha del nombre de archivo. Por ejemplo, si te gustaría extraer tanto la fecha "
+"como el *slug*, podrías asignar algo como ``'(?P<date>\\d{4}-\\d{2}-\\d{2})_(?"
+"P<slug>.*)'``"
 
 #: ../../content.rst:173
 msgid ""
 "Please note that the metadata available inside your files takes precedence over "
 "the metadata extracted from the filename."
 msgstr ""
+"Ten en cuenta que los metadatos disponibles dentro de tus archivos tienen "
+"preferencia sobre los metadatos extraídos del nombre de archivo."
 
 #: ../../content.rst:177
 msgid "Pages"
-msgstr ""
+msgstr "Páginas"
 
 #: ../../content.rst:179
 msgid ""
@@ -340,23 +419,31 @@ msgid ""
 "in it will be used to generate static pages, such as **About** or **Contact** "
 "pages. (See example filesystem layout below.)"
 msgstr ""
+"Si creas un archivo llamado ``pages`` dentro de la carpeta de contenido, todos "
+"los archivos en ella serán usados para generar páginas estáticas, como páginas "
+"**Acerca de** y **Contacto**. (Consulta el ejemplo de disposición de archivos "
+"abajo.)"
 
 #: ../../content.rst:183
 msgid ""
 "You can use the ``DISPLAY_PAGES_ON_MENU`` setting to control whether all those "
 "pages are displayed in the primary navigation menu. (Default is ``True``.)"
 msgstr ""
+"Puedes usar el ajuste ``DISPLAY_PAGES_ON_MENU`` para controlar si todas esas "
+"páginas se muestran en el menú de navegación primario. (Lo predeterminado es "
+"``True``.)"
 
 #: ../../content.rst:186
+#, fuzzy
 msgid ""
 "If you want to exclude any pages from being linked to or listed in the menu "
 "then add a ``status: hidden`` attribute to its metadata. This is useful for "
 "things like making error pages that fit the generated theme of your site."
-msgstr ""
+msgstr "Si quieres"
 
 #: ../../content.rst:191
 msgid "Static content"
-msgstr ""
+msgstr "Contenido estático"
 
 #: ../../content.rst:193
 msgid ""
@@ -403,7 +490,7 @@ msgstr ""
 
 #: ../../content.rst:228
 msgid "Linking to internal content"
-msgstr ""
+msgstr "Enlazar a contenido interno"
 
 #: ../../content.rst:230
 msgid ""
@@ -432,11 +519,11 @@ msgstr ""
 
 #: ../../content.rst:265
 msgid "and ``article2.md``::"
-msgstr ""
+msgstr "y ``article2.md``::"
 
 #: ../../content.rst:276
 msgid "Linking to static files"
-msgstr ""
+msgstr "Enlazar a archivos estáticos"
 
 #: ../../content.rst:278
 msgid ""
@@ -452,7 +539,7 @@ msgstr ""
 
 #: ../../content.rst:293
 msgid "``test.md`` would include::"
-msgstr ""
+msgstr "``pelicanconf.py`` incluiría::"
 
 #: ../../content.rst:298
 msgid ""
@@ -469,7 +556,7 @@ msgstr ""
 
 #: ../../content.rst:306
 msgid "Attaching static files"
-msgstr ""
+msgstr "Adjuntar archivos estáticos"
 
 #: ../../content.rst:308
 msgid ""
@@ -484,15 +571,15 @@ msgstr ""
 
 #: ../../content.rst:316
 msgid "This only works for linking to static files."
-msgstr ""
+msgstr "Esto solo funciona para enlazar a archivos estáticos."
 
 #: ../../content.rst:329
 msgid "``pelicanconf.py`` would include::"
-msgstr ""
+msgstr "``pelicanconf.py`` incluiría::"
 
 #: ../../content.rst:336
 msgid "``testpost.md`` would include::"
-msgstr ""
+msgstr "``testpost.md`` incluiría::"
 
 #: ../../content.rst:346
 msgid ""
@@ -531,6 +618,22 @@ msgid ""
 "``STATIC_URL`` settings. (Per-file ``save_as`` and ``url`` overrides can still "
 "be set in ``EXTRA_PATH_METADATA``.)"
 msgstr ""
+"**Ten cuidado a la hora de enlazar un archivo desde varios documentos:** Dado "
+"que el primer enlace a un archivo finaliza su ubicación y Pelican no define el "
+"orden en que los documentos son procesados, usar ``{attach}`` en un archivo "
+"enlazado por muchos documentos puede hacer que su ubicación cambie de una "
+"generación del sitio a otra. (Si esto pasa en el práctica depende del sistema "
+"operativo, del sistema de archivos, de la versión de Pelican y los documentos "
+"añadidos, modificados o eliminados por el proyecto.) Cualquier sitio web que "
+"enlace a la ubicación antigua del archivo puede que entonces encuentre los "
+"enlaces rotos. **Por tanto, es recomendable usar {attach} solo si lo usas en "
+"todos los enlaces a un archivo, y solo si los documentos que enlazan comparten "
+"un mismo directorio.** Bajo estas condiciones, la ubicación de la salida del "
+"archivo no cambiará en futuras generaciones. En casos en que no son posibles "
+"precauciones, considera usar enlaces ``{static}`` en vez de ``{attach}`` y "
+"dejar que la ubicación del archivo sea determinada por los ajustes del proyecto "
+"``STATIC_SAVE_AS`` y ``STATIC_URL``. (Por archivo se pueden ajustar "
+"sobreescrituras de ``save_as`` y ``url`` en ``EXTRA_PATH_METADATA``.)"
 
 #: ../../content.rst:381
 msgid ""
@@ -540,7 +643,7 @@ msgstr ""
 
 #: ../../content.rst:385
 msgid "Linking to authors, categories, index and tags"
-msgstr ""
+msgstr "Enlazar a autores, categorías, inicio y etiquetas"
 
 #: ../../content.rst:387
 msgid ""
@@ -550,7 +653,7 @@ msgstr ""
 
 #: ../../content.rst:391
 msgid "Deprecated internal link syntax"
-msgstr ""
+msgstr "Sintaxis de enlaces internos obsoleta"
 
 #: ../../content.rst:393
 msgid ""
@@ -574,6 +677,8 @@ msgstr ""
 #: ../../content.rst:405
 msgid "Both Markdown and reStructuredText syntaxes provide mechanisms for this."
 msgstr ""
+"Tanto la sintaxis de Markdown como la de reStructuredText proporcionan "
+"mecanismos para esto."
 
 #: ../../content.rst:407
 msgid ""
@@ -601,7 +706,7 @@ msgstr ""
 
 #: ../../content.rst:439
 msgid "Importing an existing site"
-msgstr ""
+msgstr "Importar un sitio web existente"
 
 #: ../../content.rst:441
 msgid ""
@@ -611,7 +716,7 @@ msgstr ""
 
 #: ../../content.rst:445
 msgid "Translations"
-msgstr ""
+msgstr "Traducciones"
 
 #: ../../content.rst:447
 msgid ""
@@ -621,6 +726,11 @@ msgid ""
 "default language will be listed, and each article will be accompanied by a list "
 "of available translations for that article."
 msgstr ""
+"Es posible traducir artículos. Para hacerlo tienes que añadir un atributo de "
+"metadato ``lang`` a tus artículos/páginas y asignar el ajuste ``DEFAULT_LANG`` "
+"(que es inglés [en] por defecto). Con esta configuración, solo se mostrarán los "
+"artículos con el idioma predeterminado y cada artículo irá acompañado de una "
+"lista de las traducciones disponibles para ese artículo."
 
 #: ../../content.rst:455
 msgid ""
@@ -637,19 +747,24 @@ msgid ""
 "metadata; if not set explicitly, Pelican will auto-generate the slug from the "
 "title of the article."
 msgstr ""
+"Por defecto, Pelican usa la URL del artículo «slug» para determinar si dos o "
+"más artículos son traducciones. (Esto puede cambiarse con el ajuste "
+"``ARTICLE_TRANSLATION_ID``.) El *slug* (última parte de una URL limpia) puede "
+"asignarse manualmente en los metadatos de archivo; si no se asigna "
+"explícitamente, Pelican autogenerará el *slug* usando el título del artículo."
 
 #: ../../content.rst:466
 msgid ""
 "Here is an example of two articles, one in English and the other in French."
-msgstr ""
+msgstr "Aquí va un ejemplo de dos artículos, uno en inglés y el otro en francés."
 
 #: ../../content.rst:468
 msgid "The English article::"
-msgstr ""
+msgstr "El artículo en inglés::"
 
 #: ../../content.rst:478
 msgid "And the French version::"
-msgstr ""
+msgstr "Y la versión francesa::"
 
 #: ../../content.rst:488
 msgid ""
@@ -669,7 +784,7 @@ msgstr ""
 
 #: ../../content.rst:511
 msgid "Syntax highlighting"
-msgstr ""
+msgstr "Resaltado de sintaxis"
 
 #: ../../content.rst:513
 msgid ""
@@ -704,33 +819,33 @@ msgstr ""
 
 #: ../../content.rst:544
 msgid "Option"
-msgstr ""
+msgstr "Opción"
 
 #: ../../content.rst:544
 msgid "Valid values"
-msgstr ""
+msgstr "Valores válidos"
 
 #: ../../content.rst:546
 msgid "anchorlinenos"
-msgstr ""
+msgstr "anchorlinenos"
 
 #: ../../content.rst:546 ../../content.rst:570 ../../content.rst:572
 msgid "N/A"
-msgstr ""
+msgstr "sin valor"
 
 #: ../../content.rst:546
 msgid "If present wrap line numbers in <a> tags."
-msgstr ""
+msgstr "Si está presente, incluir los números de línea en etiquetas <a>."
 
 #: ../../content.rst:547
 msgid "classprefix"
-msgstr ""
+msgstr "classprefix"
 
 #: ../../content.rst:547 ../../content.rst:555 ../../content.rst:557
 #: ../../content.rst:566 ../../content.rst:568 ../../content.rst:573
 #: ../../content.rst:574
 msgid "string"
-msgstr ""
+msgstr "cadena"
 
 #: ../../content.rst:547
 msgid "String to prepend to token class names"
@@ -738,11 +853,11 @@ msgstr ""
 
 #: ../../content.rst:548
 msgid "hl_lines"
-msgstr ""
+msgstr "hl_lines"
 
 #: ../../content.rst:548
 msgid "numbers"
-msgstr ""
+msgstr "números"
 
 #: ../../content.rst:548
 msgid ""
@@ -754,7 +869,7 @@ msgstr ""
 
 #: ../../content.rst:555
 msgid "lineanchors"
-msgstr ""
+msgstr "lineanchors"
 
 #: ../../content.rst:555
 msgid "Wrap each line in an anchor using this string and -linenumber."
@@ -762,7 +877,7 @@ msgstr ""
 
 #: ../../content.rst:557
 msgid "linenos"
-msgstr ""
+msgstr "linenos"
 
 #: ../../content.rst:557
 msgid ""
@@ -773,11 +888,11 @@ msgstr ""
 
 #: ../../content.rst:562
 msgid "linenospecial"
-msgstr ""
+msgstr "linenospecial"
 
 #: ../../content.rst:562 ../../content.rst:564 ../../content.rst:565
 msgid "number"
-msgstr ""
+msgstr "número"
 
 #: ../../content.rst:562
 msgid "If set every nth line will be given the 'special' css class."
@@ -785,7 +900,7 @@ msgstr ""
 
 #: ../../content.rst:564
 msgid "linenostart"
-msgstr ""
+msgstr "linenostart"
 
 #: ../../content.rst:564
 msgid "Line number for the first line."
@@ -793,23 +908,24 @@ msgstr ""
 
 #: ../../content.rst:565
 msgid "linenostep"
-msgstr ""
+msgstr "linenostep"
 
 #: ../../content.rst:565
+#, fuzzy
 msgid "Print every nth line number."
-msgstr ""
+msgstr "Imprime cada"
 
 #: ../../content.rst:566
 msgid "lineseparator"
-msgstr ""
+msgstr "lineseparator"
 
 #: ../../content.rst:566
 msgid "String to print between lines of code, '\\n' by default."
-msgstr ""
+msgstr "Cadena a imprimir entre líneas de código, '\\n' por defecto."
 
 #: ../../content.rst:568
 msgid "linespans"
-msgstr ""
+msgstr "linespans"
 
 #: ../../content.rst:568
 msgid "Wrap each line in a span using this and -linenumber."
@@ -817,7 +933,7 @@ msgstr ""
 
 #: ../../content.rst:570
 msgid "nobackground"
-msgstr ""
+msgstr "nobackground"
 
 #: ../../content.rst:570
 msgid "If set do not output background color for the wrapping element"
@@ -825,7 +941,7 @@ msgstr ""
 
 #: ../../content.rst:572
 msgid "nowrap"
-msgstr ""
+msgstr "nowrap"
 
 #: ../../content.rst:572
 msgid "If set do not wrap the tokens at all."
@@ -837,7 +953,7 @@ msgstr ""
 
 #: ../../content.rst:573
 msgid "ctags file to use for name definitions."
-msgstr ""
+msgstr "archivo *ctags* a usar para definiciones de nombres."
 
 #: ../../content.rst:574
 msgid "tagurlformat"
@@ -883,7 +999,7 @@ msgstr ""
 
 #: ../../content.rst:606
 msgid "Publishing drafts"
-msgstr ""
+msgstr "Publicar borradores"
 
 #: ../../content.rst:608
 msgid ""
@@ -905,6 +1021,8 @@ msgid ""
 "To publish a post when the default status is ``draft``, update the post's "
 "metadata to include ``Status: published``."
 msgstr ""
+"Para publicar una entrada cuando el estado predeterminado es ``draft``, "
+"actualiza los metadatos de la publicación para incluir ``Status: published``."
 
 #: ../../content.rst:625
 msgid "Hidden Posts"
