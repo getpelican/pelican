@@ -17,7 +17,7 @@ suggestions or problems you might have via `Pelican Discussions
 existing list of discussions and issues (both open and closed) in order to
 avoid submitting topics that have already been covered before.
 
-If you want to contribute, please fork `the git repository
+If you want to contribute, please fork `the Git repository
 <https://github.com/getpelican/pelican/>`_, create a new feature branch, make
 your changes, and issue a pull request. Someone will review your changes as
 soon as possible. Please refer to the :doc:`How to Contribute <contribute>`
@@ -68,7 +68,7 @@ I want to use Markdown, but I got an error.
 ===========================================
 
 If you try to generate Markdown content without first installing the Markdown
-library, may see a message that says ``No valid files found in content``.
+library, you may see a message that says ``No valid files found in content``.
 Markdown is not a hard dependency for Pelican, so if you have content in
 Markdown format, you will need to explicitly install the Markdown library. You
 can do so by typing the following command, prepending ``sudo`` if permissions
@@ -128,7 +128,7 @@ to override the generated URL. Here is an example page in reST format::
     :save_as: override/url/index.html
 
 With this metadata, the page will be written to ``override/url/index.html``
-and Pelican will use url ``override/url/`` to link to this page.
+and Pelican will use the URL ``override/url/`` to link to this page.
 
 How can I use a static page as my home page?
 ============================================
@@ -229,7 +229,7 @@ This can be achieved by explicitly specifying only the filenames of those
 articles in ``ARTICLE_PATHS``. A list of such filenames could be found using a
 command similar to ``cd content; find -name '*.md' | head -n 10``.
 
-My tag-cloud is missing/broken since I upgraded Pelican
+My tag cloud is missing/broken since I upgraded Pelican
 =======================================================
 
 In an ongoing effort to streamline Pelican, tag cloud generation has been
