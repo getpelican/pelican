@@ -3,29 +3,29 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 17:37+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2023-06-24 13:07+0200\n"
+"Last-Translator: Jorge Maldonado Ventura <jorgesumle@freakspot.net>\n"
+"Language-Team: \n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.11.0\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: ../../plugins.rst:4
 msgid "Plugins"
-msgstr ""
+msgstr "Complementos"
 
 #: ../../plugins.rst:6
 msgid ""
-"Beginning with version 3.0, Pelican supports plugins. Plugins are a way "
-"to add features to Pelican without having to directly modify the Pelican "
-"core."
+"Beginning with version 3.0, Pelican supports plugins. Plugins are a way to "
+"add features to Pelican without having to directly modify the Pelican core."
 msgstr ""
 
 #: ../../plugins.rst:10
@@ -34,30 +34,28 @@ msgstr ""
 
 #: ../../plugins.rst:12
 msgid ""
-"Starting with version 4.5, Pelican moved to a new plugin structure "
-"utilizing namespace packages that can be easily installed via Pip_. "
-"Plugins supporting this structure will install under the namespace "
-"package ``pelican.plugins`` and can be automatically discovered by "
-"Pelican. To see a list of Pip-installed namespace plugins that are active"
-" in your environment, run::"
+"Starting with version 4.5, Pelican moved to a new plugin structure utilizing "
+"namespace packages that can be easily installed via Pip_. Plugins supporting "
+"this structure will install under the namespace package ``pelican.plugins`` "
+"and can be automatically discovered by Pelican. To see a list of Pip-"
+"installed namespace plugins that are active in your environment, run::"
 msgstr ""
 
 #: ../../plugins.rst:20
 msgid ""
 "If you leave the ``PLUGINS`` setting as default (``None``), Pelican will "
-"automatically discover namespace plugins and register them. If, on the "
-"other hand, you specify a ``PLUGINS`` setting as a list of plugins, this "
-"auto-discovery will be disabled. At that point, only the plugins you "
-"specify will be registered, and you must explicitly list any namespace "
-"plugins as well."
+"automatically discover namespace plugins and register them. If, on the other "
+"hand, you specify a ``PLUGINS`` setting as a list of plugins, this auto-"
+"discovery will be disabled. At that point, only the plugins you specify will "
+"be registered, and you must explicitly list any namespace plugins as well."
 msgstr ""
 
 #: ../../plugins.rst:26
 msgid ""
 "If you are using the ``PLUGINS`` setting, you can specify plugins in two "
 "ways. The first method specifies plugins as a list of strings. Namespace "
-"plugins can be specified either by their full names "
-"(``pelican.plugins.myplugin``) or by their short names (``myplugin``)::"
+"plugins can be specified either by their full names (``pelican.plugins."
+"myplugin``) or by their short names (``myplugin``)::"
 msgstr ""
 
 #: ../../plugins.rst:35
@@ -69,17 +67,17 @@ msgstr ""
 #: ../../plugins.rst:43
 msgid ""
 "When experimenting with different plugins (especially the ones that deal "
-"with metadata and content) caching may interfere and the changes may not "
-"be visible. In such cases disable caching with ``LOAD_CONTENT_CACHE = "
-"False`` or use the ``--ignore-cache`` command-line switch."
+"with metadata and content) caching may interfere and the changes may not be "
+"visible. In such cases disable caching with ``LOAD_CONTENT_CACHE = False`` "
+"or use the ``--ignore-cache`` command-line switch."
 msgstr ""
 
 #: ../../plugins.rst:48
 msgid ""
 "If your plugins are not in an importable path, you can specify a list of "
-"paths via the ``PLUGIN_PATHS`` setting. As shown in the following "
-"example, paths in the ``PLUGIN_PATHS`` list can be absolute or relative "
-"to the settings file::"
+"paths via the ``PLUGIN_PATHS`` setting. As shown in the following example, "
+"paths in the ``PLUGIN_PATHS`` list can be absolute or relative to the "
+"settings file::"
 msgstr ""
 
 #: ../../plugins.rst:56
@@ -89,16 +87,16 @@ msgstr ""
 #: ../../plugins.rst:57
 msgid ""
 "Namespace plugins can be found in the `pelican-plugins organization`_ as "
-"individual repositories. Legacy plugins are located in the `pelican-"
-"plugins repository`_ and will be gradually phased out in favor of the "
-"namespace versions."
+"individual repositories. Legacy plugins are located in the `pelican-plugins "
+"repository`_ and will be gradually phased out in favor of the namespace "
+"versions."
 msgstr ""
 
 #: ../../plugins.rst:65
 msgid ""
-"Please note that while we do our best to review and maintain these "
-"plugins, they are submitted by the Pelican community and thus may have "
-"varying levels of support and interoperability."
+"Please note that while we do our best to review and maintain these plugins, "
+"they are submitted by the Pelican community and thus may have varying levels "
+"of support and interoperability."
 msgstr ""
 
 #: ../../plugins.rst:70
@@ -114,24 +112,22 @@ msgstr ""
 
 #: ../../plugins.rst:76
 msgid ""
-"The only rule to follow for plugins is to define a ``register`` callable,"
-" in which you map the signals to your plugin logic. Let's take a simple "
-"example::"
+"The only rule to follow for plugins is to define a ``register`` callable, in "
+"which you map the signals to your plugin logic. Let's take a simple example::"
 msgstr ""
 
 #: ../../plugins.rst:93
 msgid ""
-"Signal receivers are weakly-referenced and thus must not be defined "
-"within your ``register`` callable or they will be garbage-collected "
-"before the signal is emitted."
+"Signal receivers are weakly-referenced and thus must not be defined within "
+"your ``register`` callable or they will be garbage-collected before the "
+"signal is emitted."
 msgstr ""
 
 #: ../../plugins.rst:97
 msgid ""
-"If multiple plugins connect to the same signal, there is no way to "
-"guarantee or control in which order the plugins will be executed. This is"
-" a limitation inherited from Blinker_, the dependency Pelican uses to "
-"implement signals."
+"If multiple plugins connect to the same signal, there is no way to guarantee "
+"or control in which order the plugins will be executed. This is a limitation "
+"inherited from Blinker_, the dependency Pelican uses to implement signals."
 msgstr ""
 
 #: ../../plugins.rst:102
@@ -140,25 +136,25 @@ msgstr ""
 
 #: ../../plugins.rst:104
 msgid ""
-"Namespace plugins must adhere to a certain structure in order to function"
-" properly. They need to be installable (i.e. contain ``setup.py`` or "
+"Namespace plugins must adhere to a certain structure in order to function "
+"properly. They need to be installable (i.e. contain ``setup.py`` or "
 "equivalent) and have a folder structure as follows::"
 msgstr ""
 
 #: ../../plugins.rst:117
 msgid ""
-"It is crucial that ``pelican`` or ``pelican/plugins`` folder **not** "
-"contain an ``__init__.py`` file. In fact, it is best to have those "
-"folders empty besides the listed folders in the above structure and keep "
-"your plugin related files contained solely in the "
-"``pelican/plugins/myplugin`` folder to avoid any issues."
+"It is crucial that ``pelican`` or ``pelican/plugins`` folder **not** contain "
+"an ``__init__.py`` file. In fact, it is best to have those folders empty "
+"besides the listed folders in the above structure and keep your plugin "
+"related files contained solely in the ``pelican/plugins/myplugin`` folder to "
+"avoid any issues."
 msgstr ""
 
 #: ../../plugins.rst:123
 msgid ""
 "To easily set up the proper structure, a `cookiecutter template for "
-"plugins`_ is provided. Refer to that project's README for instructions on"
-" how to use it."
+"plugins`_ is provided. Refer to that project's README for instructions on "
+"how to use it."
 msgstr ""
 
 #: ../../plugins.rst:129
@@ -196,9 +192,9 @@ msgstr ""
 
 #: ../../plugins.rst:137
 msgid ""
-"invoked after all the generators are executed and just before pelican "
-"exits useful for custom post processing actions, such as: - minifying "
-"js/css assets. - notify/ping search engines with an updated sitemap."
+"invoked after all the generators are executed and just before pelican exits "
+"useful for custom post processing actions, such as: - minifying js/css "
+"assets. - notify/ping search engines with an updated sitemap."
 msgstr ""
 
 #: ../../plugins.rst:141
@@ -256,8 +252,8 @@ msgstr ""
 
 #: ../../plugins.rst:145
 msgid ""
-"invoked before a article is read in ArticlesGenerator.generate_context; "
-"use if code needs to do something before every article is parsed"
+"invoked before a article is read in ArticlesGenerator.generate_context; use "
+"if code needs to do something before every article is parsed"
 msgstr ""
 
 #: ../../plugins.rst:147
@@ -275,8 +271,8 @@ msgstr ""
 #: ../../plugins.rst:148
 msgid ""
 "invoked before categories and tags lists are created useful when e.g. "
-"modifying the list of articles to be generated so that removed articles "
-"are not leaked in categories or tags"
+"modifying the list of articles to be generated so that removed articles are "
+"not leaked in categories or tags"
 msgstr ""
 
 #: ../../plugins.rst:151 ../../plugins.rst:199
@@ -309,8 +305,8 @@ msgstr ""
 
 #: ../../plugins.rst:153
 msgid ""
-"invoked after all articles and related pages have been written, but "
-"before the article generator is closed."
+"invoked after all articles and related pages have been written, but before "
+"the article generator is closed."
 msgstr ""
 
 #: ../../plugins.rst:155
@@ -319,8 +315,8 @@ msgstr ""
 
 #: ../../plugins.rst:155
 msgid ""
-"invoked in Pelican.get_generator_classes, can return a Generator, or "
-"several generators in a tuple or in a list."
+"invoked in Pelican.get_generator_classes, can return a Generator, or several "
+"generators in a tuple or in a list."
 msgstr ""
 
 #: ../../plugins.rst:158
@@ -349,8 +345,8 @@ msgstr ""
 
 #: ../../plugins.rst:161
 msgid ""
-"invoked before a page is read in PageGenerator.generate_context; use if "
-"code needs to do something before every page is parsed."
+"invoked before a page is read in PageGenerator.generate_context; use if code "
+"needs to do something before every page is parsed."
 msgstr ""
 
 #: ../../plugins.rst:163 ../../plugins.rst:204
@@ -391,8 +387,8 @@ msgstr ""
 
 #: ../../plugins.rst:166
 msgid ""
-"invoked after all pages have been written, but before the page generator "
-"is closed."
+"invoked after all pages have been written, but before the page generator is "
+"closed."
 msgstr ""
 
 #: ../../plugins.rst:168 ../../plugins.rst:205
@@ -413,9 +409,9 @@ msgstr ""
 
 #: ../../plugins.rst:169
 msgid ""
-"invoked before a static file is read in StaticGenerator.generate_context;"
-" use if code needs to do something before every static file is added to "
-"the staticfiles list."
+"invoked before a static file is read in StaticGenerator.generate_context; "
+"use if code needs to do something before every static file is added to the "
+"staticfiles list."
 msgstr ""
 
 #: ../../plugins.rst:172
@@ -468,8 +464,8 @@ msgstr ""
 
 #: ../../plugins.rst:176
 msgid ""
-"invoked each time a feed gets generated. Can be used to modify a feed "
-"object before it gets written."
+"invoked each time a feed gets generated. Can be used to modify a feed object "
+"before it gets written."
 msgstr ""
 
 #: ../../plugins.rst:178
@@ -486,18 +482,18 @@ msgstr ""
 
 #: ../../plugins.rst:183
 msgid ""
-"Avoid ``content_object_init`` signal if you intend to read ``summary`` or"
-" ``content`` properties of the content object. That combination can "
-"result in unresolved links when :ref:`ref-linking-to-internal-content` "
-"(see `pelican-plugins bug #314`_). Use ``_summary`` and ``_content`` "
-"properties instead, or, alternatively, run your plugin at a later stage "
-"(e.g. ``all_generators_finalized``)."
+"Avoid ``content_object_init`` signal if you intend to read ``summary`` or "
+"``content`` properties of the content object. That combination can result in "
+"unresolved links when :ref:`ref-linking-to-internal-content` (see `pelican-"
+"plugins bug #314`_). Use ``_summary`` and ``_content`` properties instead, "
+"or, alternatively, run your plugin at a later stage (e.g. "
+"``all_generators_finalized``)."
 msgstr ""
 
 #: ../../plugins.rst:192
 msgid ""
-"After Pelican 3.2, signal names were standardized.  Older plugins may "
-"need to be updated to use the new names:"
+"After Pelican 3.2, signal names were standardized.  Older plugins may need "
+"to be updated to use the new names:"
 msgstr ""
 
 #: ../../plugins.rst:196
@@ -550,8 +546,8 @@ msgstr ""
 
 #: ../../plugins.rst:212
 msgid ""
-"We eventually realised some of the recipes to create plugins would be "
-"best shared in the documentation somewhere, so here they are!"
+"We eventually realised some of the recipes to create plugins would be best "
+"shared in the documentation somewhere, so here they are!"
 msgstr ""
 
 #: ../../plugins.rst:216
@@ -560,16 +556,16 @@ msgstr ""
 
 #: ../../plugins.rst:218
 msgid ""
-"One thing you might want is to add support for your very own input "
-"format. While it might make sense to add this feature in Pelican core, we"
-" wisely chose to avoid this situation and instead have the different "
-"readers defined via plugins."
+"One thing you might want is to add support for your very own input format. "
+"While it might make sense to add this feature in Pelican core, we wisely "
+"chose to avoid this situation and instead have the different readers defined "
+"via plugins."
 msgstr ""
 
 #: ../../plugins.rst:223
 msgid ""
-"The rationale behind this choice is mainly that plugins are really easy "
-"to write and don't slow down Pelican itself when they're not active."
+"The rationale behind this choice is mainly that plugins are really easy to "
+"write and don't slow down Pelican itself when they're not active."
 msgstr ""
 
 #: ../../plugins.rst:226
@@ -582,9 +578,8 @@ msgstr ""
 
 #: ../../plugins.rst:264
 msgid ""
-"Adding a new generator is also really easy. You might want to have a look"
-" at :doc:`internals` for more information on how to create your own "
-"generator."
+"Adding a new generator is also really easy. You might want to have a look "
+"at :doc:`internals` for more information on how to create your own generator."
 msgstr ""
 
 #: ../../plugins.rst:278
@@ -593,10 +588,10 @@ msgstr ""
 
 #: ../../plugins.rst:280
 msgid ""
-"Adding a writer will allow you to output additional file formats to disk,"
-" or change how the existing formats are written to disk. Note that only "
-"one writer will be active at a time, so be sure to either subclass the "
-"built-in Writer, or completely re-implement it."
+"Adding a writer will allow you to output additional file formats to disk, or "
+"change how the existing formats are written to disk. Note that only one "
+"writer will be active at a time, so be sure to either subclass the built-in "
+"Writer, or completely re-implement it."
 msgstr ""
 
 #: ../../plugins.rst:285
@@ -609,13 +604,12 @@ msgstr ""
 
 #: ../../plugins.rst:307
 msgid ""
-"You can programmatically inject articles or pages using plugins. This can"
-" be useful if you plan to fetch articles from an API, for example."
+"You can programmatically inject articles or pages using plugins. This can be "
+"useful if you plan to fetch articles from an API, for example."
 msgstr ""
 
 #: ../../plugins.rst:310
 msgid ""
-"Following is a simple example of how one can build a plugin that injects "
-"a custom article, using the ``article_generator_pretaxonomy`` signal::"
+"Following is a simple example of how one can build a plugin that injects a "
+"custom article, using the ``article_generator_pretaxonomy`` signal::"
 msgstr ""
-

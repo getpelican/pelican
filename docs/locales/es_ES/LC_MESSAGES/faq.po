@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 17:37+0100\n"
-"PO-Revision-Date: 2023-01-05 12:52+0100\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2023-06-24 13:23+0200\n"
+"Last-Translator: Jorge Maldonado Ventura <jorgesumle@freakspot.net>\n"
 "Language-Team: \n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr ""
 
 #: ../../faq.rst:9
 msgid "Please read our :doc:`feedback guidelines <contribute>`."
-msgstr "Por favor lee nuestras :doc:`directrices de *feedback* <contribute>`."
+msgstr "Por favor lee nuestras :doc:`directrices de «feedback» <contribute>`."
 
 #: ../../faq.rst:12
 msgid "How can I help?"
@@ -54,23 +54,27 @@ msgstr ""
 "evitar enviar temas que hayan sido tratados anteriormente."
 
 #: ../../faq.rst:20
-#, fuzzy
 msgid ""
 "If you want to contribute, please fork `the git repository <https://github.com/"
 "getpelican/pelican/>`_, create a new feature branch, make your changes, and "
 "issue a pull request. Someone will review your changes as soon as possible. "
 "Please refer to the :doc:`How to Contribute <contribute>` section for more "
 "details."
-msgstr "Si quieres contribuir, "
+msgstr ""
+"Si quieres contribuir, por favor, haz un *fork* `del repositorio Git <https://"
+"github.com/getpelican/pelican/>`_, crea una nueva rama para la funcionalidad, "
+"haz los cambios y crea un *pull request*. Alguien revisará tus cambios tan "
+"pronto como sea posible. Consulta la sección :doc:`How to Contribute "
+"<contribute>` para más detalles."
 
 #: ../../faq.rst:26
 msgid ""
 "You can also contribute by creating themes and improving the documentation."
-msgstr ""
+msgstr "También puedes contribuir creando temas y mejorando la documentación."
 
 #: ../../faq.rst:29
 msgid "Is the Pelican settings file mandatory?"
-msgstr ""
+msgstr "¿Es obligatorio el archivo de ajustes de Pelican?"
 
 #: ../../faq.rst:31
 msgid ""
@@ -78,10 +82,14 @@ msgid ""
 "Pelican. For basic operations, it's possible to specify options while invoking "
 "Pelican via the command line. See ``pelican --help`` for more information."
 msgstr ""
+"Los archivos de configuración son opcionales y son simplemente una manera "
+"sencilla de configurar Pelican. Para operaciones básicas, es posible "
+"especificar opciones mientras llamas a Pelican por la línea de comandos. "
+"Consulta ``pelican --help`` para más información."
 
 #: ../../faq.rst:36
 msgid "Changes to the settings file take no effect"
-msgstr ""
+msgstr "Los cambios al archivo de configuración no hacen nada"
 
 #: ../../faq.rst:38
 msgid ""
@@ -90,10 +98,16 @@ msgid ""
 "ensure that caching is disabled via ``LOAD_CONTENT_CACHE = False`` or use the "
 "``--ignore-cache`` command-line switch."
 msgstr ""
+"Al probar con diferentes ajustes (especialmente los de metadatos), el "
+"almacenamiento en caché podría interferir y los cambios podrían no ser "
+"visibles. En esos casos, asegúrate de que el almacenamiento en caché está "
+"desactivado mediante ``LOAD_CONTENT_CACHE = False`` o usa el argumento ``--"
+"ignore-cache``."
 
 #: ../../faq.rst:44
 msgid "I'm creating my own theme. How do I use Pygments for syntax highlighting?"
 msgstr ""
+"Estoy creando mi propio tema. ¿Cómo uso Pygments para el resaltado de sintaxis?"
 
 #: ../../faq.rst:46
 msgid ""
@@ -104,6 +118,14 @@ msgid ""
 "render Django code, for example, use the style selector drop-down at top-right "
 "on the `Pygments project demo site <https://pygments.org/demo/>`_."
 msgstr ""
+"Pygments añade algunas clases al contenido generado. Estas clases son usadas "
+"por los temas para dar estilo al resaltado de sintaxis de código mediante CSS. "
+"En concreto, puedes personalizar la apariencia de tu resaltado de sintaxis "
+"mediante la clase ``.highlight pre`` en el archivo CSS de tu tema. Para ver "
+"cómo se pueden usar estilos diferentes para representar gráficamente código de "
+"Django, por ejemplo, usa el menú desplegable del selector de estilo situado en "
+"la parte superior derecho del `sitio de demostración del proyecto Pygments "
+"<https://pygments.org/demo/>`_."
 
 #: ../../faq.rst:53
 msgid ""
@@ -111,18 +133,23 @@ msgid ""
 "from a Pygments built-in style (in this case, \"monokai\") and then copy the "
 "generated CSS file to your new theme::"
 msgstr ""
+"Puedes usar los siguientes comandos de ejemplo para generar un archivo CSS "
+"inicial a partir del estilo incorporado en Pygments (en este caso «monokai») y "
+"luego copiar el archivo CSS generado a tu nuevo tema::"
 
 #: ../../faq.rst:60
 msgid "Don't forget to import your ``pygment.css`` file from your main CSS file."
 msgstr ""
+"No te olvides de importar tu archivo ``pygment.css`` desde tu principal "
+"archivo CSS."
 
 #: ../../faq.rst:63
 msgid "How do I create my own theme?"
-msgstr ""
+msgstr "¿Cómo creo mi propio tema?"
 
 #: ../../faq.rst:65
 msgid "Please refer to :ref:`theming-pelican`."
-msgstr ""
+msgstr "Por favor, consulta :ref:`theming-pelican`."
 
 #: ../../faq.rst:68
 msgid "I want to use Markdown, but I got an error."
@@ -137,6 +164,12 @@ msgid ""
 "can do so by typing the following command, prepending ``sudo`` if permissions "
 "require it::"
 msgstr ""
+"Si intentas generar contenido Markdown sin antes instalar la biblioteca "
+"Markdown, puede que vea un mensaje que dice ``No valid files found in "
+"content``. Markdown no es estrictamente una dependencia de Pelican, así que si "
+"tienes contenido en formato Markdown, tendrás que instalar la biblioteca "
+"Markdown. Puedes hacerlo escribiendo el siguiente comando, anteponiendo "
+"``sudo`` si se requieren permisos::"
 
 #: ../../faq.rst:80
 msgid "Can I use arbitrary metadata in my templates?"
@@ -147,26 +180,34 @@ msgid ""
 "Yes. For example, to include a modified date in a Markdown post, one could "
 "include the following at the top of the article::"
 msgstr ""
+"Sí. Por ejemplo, para incluir una fecha modificada en una publicación de "
+"Markdown, se podría incluir lo siguiente en la parte superior del artículo::"
 
 #: ../../faq.rst:87
 msgid ""
 "For reStructuredText, this metadata should of course be prefixed with a colon::"
 msgstr ""
+"Por supuesto, para reStructuredText estos metadatos deben ir precedidos de dos "
+"puntos::"
 
 #: ../../faq.rst:91
 msgid ""
 "This metadata can then be accessed in templates such as ``article.html`` via::"
 msgstr ""
+"Se puede acceder a estos metadatos en plantillas como ``article.html`` "
+"mediante::"
 
 #: ../../faq.rst:97
 msgid ""
 "If you want to include metadata in templates outside the article context (e."
 "g., ``base.html``), the ``if`` statement should instead be::"
 msgstr ""
+"Si quieres incluir metadatos en plantillas fuera del contexto del artículo (p. "
+"ej., ``base.html``), el código de ``ìf`` debe ser::"
 
 #: ../../faq.rst:103
 msgid "How do I assign custom templates on a per-page basis?"
-msgstr ""
+msgstr "¿Cómo asigno plantillas personalizadas en función de la página?"
 
 #: ../../faq.rst:105
 msgid ""
@@ -174,36 +215,48 @@ msgid ""
 "you want to have its own template. For example, this is how it would be "
 "handled for content in reST format::"
 msgstr ""
+"Es tan simple como añadir una línea extra de metadato a cualquier página o "
+"artículo que quieras que tenga su propia plantilla. Por ejemplo, así es cómo "
+"se haría para contenido en formato reST::"
 
 #: ../../faq.rst:111
 msgid "For content in Markdown format::"
-msgstr ""
+msgstr "Para contenido en formato Markdown::"
 
 #: ../../faq.rst:115
 msgid ""
 "Then just make sure your theme contains the relevant template file (e.g. "
 "``template_name.html``)."
 msgstr ""
+"Luego simplemente asegúrate de que tu tema contiene el archivo de plantilla "
+"relevante (p. ej., ``template_name.html``)."
 
 #: ../../faq.rst:119
 msgid "How can I override the generated URL of a specific page or article?"
 msgstr ""
+"¿Cómo puedo sobrescribir la URL generada para una página o artículo en "
+"concreto?"
 
 #: ../../faq.rst:121
 msgid ""
 "Include ``url`` and ``save_as`` metadata in any pages or articles that you "
 "want to override the generated URL. Here is an example page in reST format::"
 msgstr ""
+"Incluye los metadatos ``url`` y ``save_as`` en las páginas o artículos en las "
+"que quieras sobrescribir la URL generada. Aquí hay una página de ejemplo en "
+"formato reST::"
 
 #: ../../faq.rst:130
 msgid ""
 "With this metadata, the page will be written to ``override/url/index.html`` "
 "and Pelican will use url ``override/url/`` to link to this page."
 msgstr ""
+"Con estos metadatos, la página será escrita en ``override/url/index.html`` y "
+"Pelican usará la URL ``override/url/`` para enlazar a esta página."
 
 #: ../../faq.rst:134
 msgid "How can I use a static page as my home page?"
-msgstr ""
+msgstr "¿Cómo puedo usar una página estática como mi página de inicio?"
 
 #: ../../faq.rst:136
 msgid ""
@@ -211,6 +264,9 @@ msgid ""
 "your home page. The following Markdown example could be stored in ``content/"
 "pages/home.md``::"
 msgstr ""
+"La funcionalidad de sobrescritura mencionada anteriormente puede ser usada "
+"para especificar una página estática como tu página de inicio. El siguiente "
+"ejemplo de Markdown se podría guardar en ``content/pages/home.md``::"
 
 #: ../../faq.rst:146
 msgid ""
@@ -218,10 +274,13 @@ msgid ""
 "different location by setting ``INDEX_SAVE_AS = 'blog_index.html'`` for the "
 "``'index'`` direct template."
 msgstr ""
+"Si aún quieres tener el *index* original del blog, puede guardarse en una "
+"ubicación diferente asignando ``INDEX_SAVE_AS = 'blog_index.html'`` para la "
+"plantilla directa ``index``."
 
 #: ../../faq.rst:151
 msgid "What if I want to disable feed generation?"
-msgstr ""
+msgstr "¿Y si quiero desactivar la generación de fuente web?"
 
 #: ../../faq.rst:153
 msgid ""
@@ -229,17 +288,25 @@ msgid ""
 "but three feed settings already default to ``None``, so if you want to disable "
 "all feed generation, you only need to specify the following settings::"
 msgstr ""
+"Para desactivar la generación de fuente web, todos los ajustes de fuente web "
+"deben ponerse en ``None``. Todos los ajustes de fuente web ya están por "
+"defecto en ``None``, así que si deseas desactivar toda la generación de fuente "
+"web, solo tienes que especificar los siguientes ajustes::"
 
 #: ../../faq.rst:163
 msgid ""
 "The word ``None`` should not be surrounded by quotes. Please note that "
 "``None`` and ``''`` are not the same thing."
 msgstr ""
+"La palabra ``None`` no debe ser rodeada por comillas. Ten en cuenta que "
+"``None`` y ``''`` no son lo mismo."
 
 #: ../../faq.rst:167
 msgid ""
 "I'm getting a warning about feeds generated without SITEURL being set properly"
 msgstr ""
+"Me sale una advertencia de que las fuentes web generadas sin SITEURL ajustado "
+"correctamente"
 
 #: ../../faq.rst:169
 msgid ""
@@ -247,16 +314,25 @@ msgid ""
 "org/feed/docs/rss2.html#comments>`_. In order to properly generate links in "
 "Pelican you will need to set ``SITEURL`` to the full path of your site."
 msgstr ""
+"`Las fuentes web de RSS y Atom requieren que todos los enlaces sean absolutos "
+"<https://validator.w3.org/feed/docs/rss2.html#comments>`_. Para generar "
+"enlaces correctamente en Pelican tendrás que poner en ``SITEURL`` la ruta "
+"absoluta de tu sitio web."
 
 #: ../../faq.rst:174
 msgid ""
 "Feeds are still generated when this warning is displayed, but links within may "
 "be malformed and thus the feed may not validate."
 msgstr ""
+"Las fuentes web aún se generan cuando se muestra esta advertencia, pero los "
+"enlaces en ellas podrían ser incorrectos, y, por tanto, la fuente web podría "
+"no ser válida."
 
 #: ../../faq.rst:178
 msgid "Can I force Atom feeds to show only summaries instead of article content?"
 msgstr ""
+"¿Puedo hacer que las fuentes de Atom solo muestren resúmenes en vez de "
+"contenido de artículos?"
 
 #: ../../faq.rst:180
 msgid ""
@@ -270,10 +346,21 @@ msgid ""
 "feed generation behavior provides users with a choice: subscribe to Atom feeds "
 "for full content or to RSS feeds for just the summaries."
 msgstr ""
+"En lugar de tener que abrir una ventana separada del navegador para leer "
+"artículos, la inmensa mayoría de la gente que utiliza lectores de fuentes web "
+"prefiere leer el contenido dentro del propio lector de fuentes. Principalmente "
+"por esa razón, Pelican no permite restringir los canales Atom para que solo "
+"contengan resúmenes. A diferencia de las fuentes Atom, la especificación de "
+"fuentes RSS no incluye un campo ``content`` separado, por lo que Pelican "
+"publica por defecto fuentes RSS que solo contienen resúmenes (pero "
+"opcionalmente se pueden configurar para publicar en su lugar fuentes RSS de "
+"contenido completo). Por lo tanto, el comportamiento predeterminado de "
+"generación de fuentes ofrece a los usuarios una opción: suscribirse a fuentes "
+"Atom para el contenido completo o a fuentes RSS solo para los resúmenes."
 
 #: ../../faq.rst:191
 msgid "Is Pelican only suitable for blogs?"
-msgstr ""
+msgstr "¿Pelican solo sirve para blogs?"
 
 #: ../../faq.rst:193
 msgid ""
@@ -283,11 +370,19 @@ msgid ""
 "and do not need tags on your site, you could remove the relevant HTML code "
 "from your theme. You can also disable generation of tag-related pages via::"
 msgstr ""
+"No. Pelican puede configurarse fácilmente para crear y mantener cualquier tipo "
+"de sitio web estático. Esto puede requerir una pequeña personalización de tu "
+"tema y de tu configuración de Pelican. Por ejemplo, si estás creando un sitio "
+"web de presentación para tu producto y no necesitas etiquetas en en él, "
+"podrías eliminar el código HTML correspondiente de tu tema. También puedes "
+"desactivar la generación de páginas asociadas a etiquetas mediante::"
 
 #: ../../faq.rst:203
 msgid ""
 "Why does Pelican always write all HTML files even with content caching enabled?"
 msgstr ""
+"¿Por qué Pelican escribe siempre todos los archivos HTML incluso con la caché "
+"de contenido habilitada?"
 
 #: ../../faq.rst:205
 msgid ""
@@ -300,6 +395,15 @@ msgid ""
 "processing time and memory and storage space. Simply writing the files each "
 "time is a lot faster and a lot more reliable."
 msgstr ""
+"Para determinar de forma fiable si la salida de HTML es diferente antes de "
+"escribirla, habría que guardar y comparar una gran parte del entorno de "
+"generación, incluidos los contextos de las plantillas, las extensiones "
+"exportadas, etc., tendría que ser guardada y comparada, al menos en forma de "
+"*hash* (lo que requeriría un manejo especial de las cosas no *hasheables*), "
+"debido a todas las posibles combinaciones de extensiones, paginación, etc., "
+"que podrían cambiar de muchas formas diferentes. Esto requeriría mucho más "
+"tiempo de procesamiento y espacio de memoria y almacenamiento. Simplemente "
+"escribir los archivos cada vez es mucho más rápido y fiable."
 
 #: ../../faq.rst:214
 msgid ""
@@ -309,6 +413,12 @@ msgid ""
 "option, which will make it compare the file checksums in a much faster way "
 "than Pelican would."
 msgstr ""
+"Sin embargo, esto significa que el tiempo de modificación de los ficheros "
+"cambia cada vez, por lo que una subida basada en ``rsync`` los transferirá "
+"incluso si su contenido no ha cambiado. Una solución sencilla es hacer que "
+"``rsync`` use la opción ``--checksum``, que hará que compare las sumas de "
+"comprobación de los archivos de una forma mucho más rápida que si lo hiciera "
+"Pelican."
 
 #: ../../faq.rst:220
 msgid ""
@@ -316,10 +426,14 @@ msgid ""
 "some specific page or the theme templates), the ``WRITE_SELECTED`` option may "
 "help, see :ref:`writing_only_selected_content`."
 msgstr ""
+"Cuando solo son de interés algunos archivos de salida concretos (p. ej., "
+"cuando se trabaja en alguna página específica o en las plantillas del tema), "
+"la opción ``ẀRITE_SELECTED`` puede ser útil, consulta :ref:"
+"`writing_only_selected_content`."
 
 #: ../../faq.rst:225
 msgid "How to process only a subset of all articles?"
-msgstr ""
+msgstr "¿Cómo procesar solo un subconjunto de todos los artículos?"
 
 #: ../../faq.rst:227
 msgid ""
@@ -328,10 +442,15 @@ msgid ""
 "articles in ``ARTICLE_PATHS``. A list of such filenames could be found using a "
 "command similar to ``cd content; find -name '*.md' | head -n 10``."
 msgstr ""
+"A menudo resulta útil procesar solo 10 artículos, por ejemplo, con fines de "
+"depuración. Esto se puede realizar especificando explícitamente solo los "
+"nombres de archivo de esos artículos en ``ARTICLE_PATHS``. Se podría obtener "
+"una lista de esos nombres de archivo usando un comando como ``cd content; find "
+"-name '*.md' | head -n 10``."
 
 #: ../../faq.rst:233
 msgid "My tag-cloud is missing/broken since I upgraded Pelican"
-msgstr ""
+msgstr "Desde que actualicé Pelican falta/está rota mi nube de etiquetas"
 
 #: ../../faq.rst:235
 msgid ""
@@ -340,10 +459,15 @@ msgid ""
 "pelican-plugins/tag-cloud>`_. See the :ref:`plugins` documentation for further "
 "information about the Pelican plugin system."
 msgstr ""
+"En un esfuerzo continuo por optimizar Pelican, la generación de la nube de "
+"etiquetas se ha trasladado del núcleo de Pelican a un `complemento <https://"
+"github.com/pelican-plugins/tag-cloud>`_ separado. Consulta la documentación "
+"de :ref:`plugins` para más información sobre el sistema de complementos de "
+"Pelican."
 
 #: ../../faq.rst:241
 msgid "Since I upgraded Pelican my pages are no longer rendered"
-msgstr ""
+msgstr "Desde que actualicé Pelican mis páginas no se procesan"
 
 #: ../../faq.rst:243
 msgid ""
@@ -352,14 +476,20 @@ msgid ""
 "has been removed. This is quickly resolved by updating your theme to iterate "
 "over ``pages`` instead of ``PAGES``. Just replace::"
 msgstr ""
+"Las páginas estaban disponibles en los temas como ``pages`` (en minúscula) y "
+"``PAGES`` (en mayúscula). Para ajustar esto a la sección :ref:`templates-"
+"variables`, se eliminó ``PAGES``. Esto se arregla fácilmente actualizando tu "
+"tema para iterar en ``pages`` en vez de en ``PAGES``. Simplemente reemplaza::"
 
 #: ../../faq.rst:250
 msgid "with something like::"
-msgstr ""
+msgstr "por algo como::"
 
 #: ../../faq.rst:255
 msgid "How can I stop Pelican from trying to parse my static files as content?"
 msgstr ""
+"¿Cómo puedo evitar que Pelican intente procesar mis archivos estáticos como "
+"contenido?"
 
 #: ../../faq.rst:257
 msgid ""
@@ -369,16 +499,24 @@ msgid ""
 "a valid content file ending (``.html``, ``.rst``, ``.md``, ...) will be "
 "treated as articles or pages before they get treated as static files."
 msgstr ""
+"Los generadores de artículos y páginas de Pelican se ejecutan antes que el "
+"generador estático. Esto significa que si usas una configuración similar a la "
+"predeterminada, en la que se define un directorio fuente estático dentro de un "
+"ajuste ``*_PATHS``, todos los archivos que tengan una extensión de archivo "
+"válida (``.html``, ``.rst``, ``.md``, ...) serán tratados como artículos o "
+"páginas antes de ser tratados como archivos estáticos."
 
 #: ../../faq.rst:263
 msgid ""
 "To circumvent this issue either use the appropriate ``*_EXCLUDES`` setting or "
 "disable the offending reader via ``READERS`` if you don't need it."
 msgstr ""
+"Para evitar este problema, utiliza la configuración ``*_EXCLUDES`` adecuada o "
+"desactiva el lector problemático mediante ``READERS`` si no lo necesitas."
 
 #: ../../faq.rst:267
 msgid "Why is [arbitrary Markdown syntax] not supported?"
-msgstr ""
+msgstr "¿Por qué no está soportado [sintaxis de Markdown x]?"
 
 #: ../../faq.rst:269
 msgid ""
@@ -392,3 +530,13 @@ msgid ""
 "best choice if there is a particular variant you want to use when writing your "
 "content."
 msgstr ""
+"Pelican no maneja directamente el procesamiento de Markdown y en su lugar "
+"delega esa tarea al proyecto Python-Markdown_, cuyo núcleo sigue "
+"deliberadamente las reglas sintácticas originales de Markdown y no la miríada "
+"de «sabores» de Markdown que se han extendido posteriormente. Dicho esto, "
+"Python-Markdown_ es bastante modular, y la sintaxis que estás buscando puede "
+"ser proporcionada por una de las muchas `Extensiones de Markdown`_ "
+"disponibles. Alternativamente, algunas personas han creado extensiones de "
+"Pelican que soportan variantes de Markdown, así que esto podría ser tu mejor "
+"opción si hay una variante particular que deseas utilizar al escribir tu "
+"contenido."
