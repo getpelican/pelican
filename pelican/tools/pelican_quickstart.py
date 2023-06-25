@@ -16,7 +16,10 @@ except ImportError:
 
 try:
     import tzlocal
-    _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
+    if hasattr(tzlocal.get_localzone(), "zone"):
+        _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
+    else:
+        _DEFAULT_TIMEZONE = tzlocal.get_localzone_name()
 except ImportError:
     _DEFAULT_TIMEZONE = 'Europe/Rome'
 
