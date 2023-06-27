@@ -539,7 +539,7 @@ The specified identifier (e.g. ``python``, ``ruby``) should be one that
 appears on the `list of available lexers <https://pygments.org/docs/lexers/>`_.
 
 When using reStructuredText the following options are available in the
-code-block directive:
+`code-block` directive:
 
 =============   ============  =========================================
 Option          Valid values  Description
