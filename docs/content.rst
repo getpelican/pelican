@@ -184,7 +184,7 @@ files in it will be used to generate static pages, such as **About** or
 You can use the ``DISPLAY_PAGES_ON_MENU`` setting to control whether all those
 pages are displayed in the primary navigation menu. (Default is ``True``.)
 
-If you want to exclude any pages from being linked to or listed in the menu
+If you want to exclude any pages from being linked to or listed in the menu,
 then add a ``status: hidden`` attribute to its metadata. This is useful for
 things like making error pages that fit the generated theme of your site.
 
