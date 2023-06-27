@@ -544,7 +544,7 @@ When using reStructuredText the following options are available in the
 =============   ============  =========================================
 Option          Valid values  Description
 =============   ============  =========================================
-anchorlinenos   N/A           If present wrap line numbers in <a> tags.
+anchorlinenos   N/A           If present, wrap line numbers in ``<a>`` tags.
 classprefix     string        String to prepend to token class names
 hl_lines        numbers       List of lines to be highlighted, where
                               line numbers to highlight are separated
@@ -555,12 +555,12 @@ hl_lines        numbers       List of lines to be highlighted, where
                               line numbers.
 lineanchors     string        Wrap each line in an anchor using this
                               string and -linenumber.
-linenos         string        If present or set to "table" output line
-                              numbers in a table, if set to
-                              "inline" output them inline. "none" means
+linenos         string        If present or set to "table", output line
+                              numbers in a table; if set to
+                              "inline", output them inline. "none" means
                               do not output the line numbers for this
                               table.
-linenospecial   number        If set every nth line will be given the
+linenospecial   number        If set, every nth line will be given the
                               'special' css class.
 linenostart     number        Line number for the first line.
 linenostep      number        Print every nth line number.
@@ -568,9 +568,9 @@ lineseparator   string        String to print between lines of code,
                               '\n' by default.
 linespans       string        Wrap each line in a span using this and
                               -linenumber.
-nobackground    N/A           If set do not output background color for
+nobackground    N/A           If set, do not output background color for
                               the wrapping element
-nowrap          N/A           If set do not wrap the tokens at all.
+nowrap          N/A           If set, do not wrap the tokens at all.
 tagsfile        string        ctags file to use for name definitions.
 tagurlformat    string        format for the ctag links.
 =============   ============  =========================================
@@ -612,7 +612,7 @@ its metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category or tag page.
 
 If your articles should be automatically published as a draft (to not
-accidentally publish an article before it is finished) include the status in
+accidentally publish an article before it is finished), include the status in
 the ``DEFAULT_METADATA``::
 
     DEFAULT_METADATA = {
