@@ -596,7 +596,7 @@ Pelican settings file to include options that will be automatically applied to
 every code block.
 
 For example, if you want to have line numbers displayed for every code block
-and a CSS prefix you would set this variable to::
+and a CSS prefix, you would set this variable to::
 
     PYGMENTS_RST_OPTIONS = {'classprefix': 'pgcss', 'linenos': 'table'}
 
