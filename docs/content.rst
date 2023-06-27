@@ -307,7 +307,7 @@ Attaching static files
 ----------------------
 
 Starting with Pelican 3.5, static files can be "attached" to a page or article
-using this syntax for the link target: ``{attach}path/to/file`` This works
+using this syntax for the link target: ``{attach}path/to/file``. This works
 like the ``{static}`` syntax, but also relocates the static file into the
 linking document's output directory. If the static file originates from a
 subdirectory beneath the linking document's source, that relationship will be
