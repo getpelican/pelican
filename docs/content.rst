@@ -561,7 +561,7 @@ linenos         string        If present or set to "table", output line
                               do not output the line numbers for this
                               table.
 linenospecial   number        If set, every nth line will be given the
-                              'special' css class.
+                              'special' CSS class.
 linenostart     number        Line number for the first line.
 linenostep      number        Print every nth line number.
 lineseparator   string        String to print between lines of code,
