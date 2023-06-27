@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 17:37+0100\n"
-"PO-Revision-Date: 2023-01-30 10:03+0100\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2023-06-27 19:19+0200\n"
+"Last-Translator: Jorge Maldonado Ventura <jorgesumle@freakspot.net>\n"
 "Language-Team: \n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
@@ -434,12 +434,14 @@ msgstr ""
 "``True``.)"
 
 #: ../../content.rst:186
-#, fuzzy
 msgid ""
 "If you want to exclude any pages from being linked to or listed in the menu "
 "then add a ``status: hidden`` attribute to its metadata. This is useful for "
 "things like making error pages that fit the generated theme of your site."
-msgstr "Si quieres"
+msgstr ""
+"Si quieres evitar que se enlace a alguna página o que sea listada en el menú, "
+"añade el atributo ``status: hidden`` a sus metadatos. Esto es útil para cosas "
+"como crear páginas de error que encajen con el tema generado para tu página."
 
 #: ../../content.rst:191
 msgid "Static content"
@@ -454,6 +456,13 @@ msgid ""
 "for this, but others must be added manually. In addition, static files that are "
 "explicitly linked to are included (see below)."
 msgstr ""
+"Los archivos estáticos son archivos distintos de artículos y páginas que se "
+"copian a la carpeta de salida tal cual, sin procesar. Puedes controlar qué "
+"archivos estáticos se copian con la configuración ``STATIC_PATHS`` del archivo "
+"``pelicanconf.py`` del proyecto. La configuración por defecto de Pelican "
+"incluye el directorio ``images`` para esto, pero otros deben ser añadidos "
+"manualmente. Además, se incluyen los archivos estáticos a los que se enlaza "
+"explícitamente (léelo a continuación)."
 
 #: ../../content.rst:202
 msgid ""
@@ -462,10 +471,14 @@ msgid ""
 "generators *before* the static generator. This is avoided by altering the "
 "``*_EXCLUDE`` settings appropriately."
 msgstr ""
+"En la configuración estándar, todos los archivos con un sufijo de contenido de "
+"archivo válido (``.html``, ``.rst``, ``.md``, ...) son procesados por los "
+"generadores de artículos y de páginas *antes* del generador estático. Esto se "
+"puede evitar alterando adecuadamente los ajustes ``*_EXCLUDE``."
 
 #: ../../content.rst:208
 msgid "Mixed content in the same directory"
-msgstr ""
+msgstr "Contenido mixto en el mismo directorio"
 
 #: ../../content.rst:210
 msgid ""
@@ -476,6 +489,13 @@ msgid ""
 "identify and process the page source files normally, and copy the remaining "
 "files as if they lived in a separate directory reserved for static files."
 msgstr ""
+"A partir de Pelican 3.5, los archivos estáticos pueden compartir de forma "
+"segura un directorio fuente con archivos fuente de página, sin exponer las "
+"fuentes de página en el sitio generado. Cualquier directorio de este tipo debe "
+"añadirse tanto a ``STATIC_PATHS`` como a ``PAGE_PATHS`` (o ``STATIC_PATHS`` y "
+"``ARTICLE_PATHS``). Pelican identificará y procesará los archivos fuente de "
+"página normalmente y copiará los archivos restantes como si estuvieran en un "
+"directorio separado reservado para archivos estáticos."
 
 #: ../../content.rst:217
 msgid ""
@@ -487,6 +507,13 @@ msgid ""
 "``*_URL`` settings) can be configured to place files of different types "
 "together, just as they could in earlier versions of Pelican."
 msgstr ""
+"Atención: colocar archivos fuente estáticos y de contenido juntos en el mismo "
+"directorio fuente no garantiza que terminen en el mismo lugar en el sitio "
+"generado. La forma más sencilla de hacer eso es usando la sintaxis de enlace "
+"``{attach}`` (descrita a continuación). Como alternativa, los ajustes "
+"``STATIC_SAVE_AS``, ``PAGE_SAVE_AS`` y ``ARTICLE_SAVE_AS`` (y los ajustes "
+"``*_URL`` correspondientes) pueden ser configurados para colocar archivos de "
+"diferente tipo juntos, tal como era posible en versiones anteriores de Pelican."
 
 #: ../../content.rst:228
 msgid "Linking to internal content"
@@ -500,6 +527,12 @@ msgid ""
 "that may be sitting alongside that post (instead of having to determine where "
 "the other content will be placed after site generation)."
 msgstr ""
+"A partir de Pelican 3.1 es posible especificar enlaces dentro del sitio web a "
+"archivos en la jerarquía *fuente de contenido* en vez de archivos en la "
+"jerarquía *generados*. Esto hace que sea más fácil enlazar en la publicación "
+"actual a otro contenido que pueda encontrarse junto a esa publicación (en vez "
+"de tener que adivinar dónde se colocará el otro contenido después de la "
+"generación del sitio)."
 
 #: ../../content.rst:236
 msgid ""
@@ -508,14 +541,18 @@ msgid ""
 "slashes, ``/``, are the required path separator in the ``{filename}`` directive "
 "on all operating systems, including Windows."
 msgstr ""
+"Para enlazar a contenido interno (archivos en el directorio ``content``), usa "
+"la siguiente sintaxis para el enlace de destino: ``{filename}ruta/a/archivo``. "
+"Atención: las barras, ``/``, son el separador de ruta requerido en la directiva "
+"``{filename}`` en todos los sistemas operativos, incluido Windows."
 
 #: ../../content.rst:242
 msgid "For example, a Pelican project might be structured like this::"
-msgstr ""
+msgstr "Por ejemplo, un proyecto de Pelican podría estar estructurado así::"
 
 #: ../../content.rst:253
 msgid "In this example, ``article1.rst`` could look like this::"
-msgstr ""
+msgstr "En este ejemplo, ``article1.rst`` podría tener este aspecto::"
 
 #: ../../content.rst:265
 msgid "and ``article2.md``::"
@@ -532,10 +569,17 @@ msgid ""
 "the source directories containing them are not included in the ``STATIC_PATHS`` "
 "setting of the project's ``pelicanconf.py`` file."
 msgstr ""
+"Puedes enlazar a contenido estático usando ``{static}ruta/a/archivo``. Los "
+"archivos a los que se enlaza usando esta sintaxis serán automáticamente "
+"copiados el directorio de salida, incluso si los directorios fuente que los "
+"contienen no están incluidos en el ajuste ``STATIC_PATHS`` del archivo "
+"``pelicanconf.py`` de configuración del proyecto."
 
 #: ../../content.rst:283 ../../content.rst:318
 msgid "For example, a project's content directory might be structured like this::"
 msgstr ""
+"Por ejemplo, el directorio de contenido de un proyecto podría estar "
+"estructurado así::"
 
 #: ../../content.rst:293
 msgid "``test.md`` would include::"
@@ -547,12 +591,17 @@ msgid ""
 "``menu.pdf`` to ``output/pdfs/menu.pdf``, and write the appropriate links in "
 "``test.md``."
 msgstr ""
+"La generación del sitio entonces copiaría ``han.jpg`` a ``output/images/han."
+"jpg``, ``menu.pdf`` a ``output/pdfs/menu.pdf`` y escribiría los enlaces "
+"apropiados en ``test.md``."
 
 #: ../../content.rst:302
 msgid ""
 "If you use ``{static}`` to link to an article or a page, this will be turned "
 "into a link to its source code."
 msgstr ""
+"Si usas ``{static}`` para enlazar a un artículo o a una página, eso se "
+"convertirá en un enlace a su código fuente."
 
 #: ../../content.rst:306
 msgid "Attaching static files"
@@ -568,6 +617,13 @@ msgid ""
 "preserved on output. Otherwise, it will become a sibling of the linking "
 "document."
 msgstr ""
+"A partir de Pelican 3.5, los archivos estáticos pueden ser «adjuntados» a una "
+"página o artículo usando esta sintaxis para el enlace de destino: ``{attach}"
+"ruta/a/archivo``. Esto funciona como la sintaxis ``{static}``, pero también "
+"reubica el archivo estático en el directorio de salida del documento que "
+"enlaza. Si el archivo estático procede de un directorio que está bajo la fuente "
+"del documento que enlaza, esa relación será mantenida en la salida. De lo "
+"contrario, se convertirá en un archivo hermano del documento que enlaza."
 
 #: ../../content.rst:316
 msgid "This only works for linking to static files."
@@ -585,12 +641,16 @@ msgstr "``testpost.md`` incluiría::"
 msgid ""
 "Site generation would then produce an output directory structured like this::"
 msgstr ""
+"La generación del sitio entonces crearía un directorio de salida estructurado "
+"así::"
 
 #: ../../content.rst:356
 msgid ""
 "Notice that all the files linked using ``{attach}`` ended up in or beneath the "
 "article's output directory."
 msgstr ""
+"Fíjate en que todos los archivos enlazados usando ``{attach}`` han acabado "
+"dentro o bajo el directorio de salida del artículo."
 
 #: ../../content.rst:359
 msgid ""
@@ -599,6 +659,10 @@ msgid ""
 "link, Pelican will treat ``{attach}`` like ``{static}``. This avoids breaking "
 "the already-processed links."
 msgstr ""
+"Si un archivo estático es enlazado varias veces, la funcionalidad de "
+"reubicación de ``{attach}`` solo funcionará en los primeros enlaces que sean "
+"procesados. Después del primer enlace, Pelican tratará ``{attach}`` como "
+"``{static}``. Esto hace que no se rompan los enlaces ya procesados."
 
 #: ../../content.rst:364
 msgid ""
@@ -640,6 +704,8 @@ msgid ""
 "When using ``{attach}``, any parent directory in ``*_URL`` / ``*_SAVE_AS`` "
 "settings should match each other. See also: :ref:`url-settings`"
 msgstr ""
+"Al usar ``{attach}``, cualquier directorio padre en ajustes ``*_URL`` / "
+"``*_SAVE_AS`` debería coincidir entre sí. Consulta también: :ref:`url-settings`"
 
 #: ../../content.rst:385
 msgid "Linking to authors, categories, index and tags"
@@ -650,6 +716,8 @@ msgid ""
 "You can link to authors, categories, index and tags using the ``{author}name``, "
 "``{category}foobar``, ``{index}`` and ``{tag}tagname`` syntax."
 msgstr ""
+"Puedes enlazar a autores, categorías, etiquetas y al *index* usando la sintaxis "
+"``{author}nombre``, ``{category}categoria``, ``{index}`` and ``{tag}etiqueta``."
 
 #: ../../content.rst:391
 msgid "Deprecated internal link syntax"
@@ -665,14 +733,24 @@ msgid ""
 "to static content with ``{filename}``. The syntax was changed to ``{static}`` "
 "to allow linking to both generated articles and pages and their static sources."
 msgstr ""
+"Para mantener la compatibilidad con versiones anteriores, Pelican todavía "
+"soporta las barras verticales (``||``) además de las llaves (``{}``) para "
+"enlaces internos. Por ejemplo: ``|filename|un_artículo.rst``, ``|tag|"
+"etiqueta``, ``|category|categoría``. La sintaxis se cambió de ``||`` a ``{}`` "
+"para evitar un conflicto con las extensiones de Markdown o las directivas de "
+"reST. Del mismo modo, Pelican todavía permite enlazar a contenido estático con "
+"``{filename}``. La sintaxis se cambió a ``{static}`` para permitir enlazar "
+"tanto a artículos y páginas generados como a sus recursos estáticos."
 
 #: ../../content.rst:401
 msgid "Support for the old syntax may eventually be removed."
 msgstr ""
+"Es posible que en el futuro se elimine la compatibilidad con la sintaxis "
+"antigua."
 
 #: ../../content.rst:404
 msgid "Including other files"
-msgstr ""
+msgstr "Incluir otros archivos"
 
 #: ../../content.rst:405
 msgid "Both Markdown and reStructuredText syntaxes provide mechanisms for this."
@@ -685,24 +763,33 @@ msgid ""
 "Following below are some examples for **reStructuredText** using `the include "
 "directive`_:"
 msgstr ""
+"A continuación hay algunos ejemplos para usar `la directiva «include»`_ en "
+"**reStructuredText**:"
 
 #: ../../content.rst:413
 msgid ""
 "Include a fragment of a file delimited by two identifiers, highlighted as C++ "
 "(slicing based on line numbers is also possible):"
 msgstr ""
+"Incluye un fragmento de un archivo delimitado por dos identificadores, "
+"resaltado como C++ (también es posible extraer una parte especificando números "
+"de línea):"
 
 #: ../../content.rst:422
 msgid ""
 "Include a raw HTML file (or an inline SVG) and put it directly into the output "
 "without any processing:"
 msgstr ""
+"Incluye un archivo HTML puro (o un SVG *inline*) y lo pone directamente en la "
+"salida sin procesar nada:"
 
 #: ../../content.rst:429
 msgid ""
 "For **Markdown**, one must rely on an extension. For example, using the "
 "`mdx_include plugin`_:"
 msgstr ""
+"Para **Markdown** es necesario usar una extensión. Por ejemplo, se puede usar "
+"`mdx_include plugin`_:"
 
 #: ../../content.rst:439
 msgid "Importing an existing site"
@@ -713,6 +800,8 @@ msgid ""
 "It is possible to import your site from WordPress, Tumblr, Dotclear, and RSS "
 "feeds using a simple script. See :ref:`import`."
 msgstr ""
+"Es posible importar tu sitio web de Wordpress, Tumblr, Dotclear y fuentes RSS "
+"usando un simple *script*. Consulta :ref:`import`."
 
 #: ../../content.rst:445
 msgid "Translations"
@@ -738,6 +827,9 @@ msgid ""
 "de``) with translated templates for each language. For such advanced "
 "functionality the `i18n_subsites plugin`_ can be used."
 msgstr ""
+"Esta funcionalidad incluida en Pelican no crea subsitios (p. ej., ``ejemplo.com/"
+"eo``) con plantillas traducidas para cada idioma. Para esta funcionalidad "
+"avanzada puede usarse el `complemento i18n_subsites`_."
 
 #: ../../content.rst:460
 msgid ""
@@ -774,6 +866,12 @@ msgid ""
 "then instead ensure that the translated article titles are identical, since the "
 "slug will be auto-generated from the article title."
 msgstr ""
+"Dejando aparte la calidad del contenido de la entrada, puedes ver que él único "
+"elemento compartido por los dos artículos es el *slug*, que funciona aquí como "
+"identificador. Si preferirías no definir explícitamente el *slug* de esta "
+"forma, deberías asegurarte de que los títulos de los artículos traducidos son "
+"idénticos, pues el *slug* será generado automáticamente a partir del título del "
+"artículo."
 
 #: ../../content.rst:494
 msgid ""
@@ -781,6 +879,9 @@ msgid ""
 "by the ``DEFAULT_LANG`` setting, use the ``translation`` metadata to specify "
 "which posts are translations::"
 msgstr ""
+"Si no quieres que la versión original de un artículo específico sea detectada "
+"por el ajuste ``DEFAULT_LANG``, usa el metadato ``translation`` para "
+"especificar que publicaciones son traducciones::"
 
 #: ../../content.rst:511
 msgid "Syntax highlighting"
@@ -791,12 +892,17 @@ msgid ""
 "Pelican can provide colorized syntax highlighting for your code blocks. To do "
 "so, you must use the following conventions inside your content files."
 msgstr ""
+"Pelican también proporciona resaltado de sintaxis con color para tus bloques de "
+"código. Para hacerlo, tienes que usar las siguientes convenciones dentro de tus "
+"archivos de contenido."
 
 #: ../../content.rst:516
 msgid ""
 "For reStructuredText, use the ``code-block`` directive to specify the type of "
 "code to be highlighted (in these examples, we'll use ``python``)::"
 msgstr ""
+"Para reStructuredText, usa la directiva ``code-block`` para especificar el tipo "
+"de código que será resaltado (en estos ejemplos usaremos ``python``)::"
 
 #: ../../content.rst:523
 msgid ""
@@ -804,18 +910,26 @@ msgid ""
 "highlighting, include the language identifier just above the code block, "
 "indenting both the identifier and the code::"
 msgstr ""
+"Para Markdown, que utiliza la `extensión CodeHilite`_ para proporcionar "
+"resaltado de sintaxis, incluye el identificador del lenguaje justo encima del "
+"bloque de código, dando sangría tanto al identificador como al código::"
 
 #: ../../content.rst:537
 msgid ""
 "The specified identifier (e.g. ``python``, ``ruby``) should be one that appears "
 "on the `list of available lexers <https://pygments.org/docs/lexers/>`_."
 msgstr ""
+"El identificador especificado (p. ej., ``python``, ``ruby``) debería ser uno de "
+"los que aparece en la `lista de analizadores léxicos <https://pygments.org/docs/"
+"lexers/>`_."
 
 #: ../../content.rst:540
 msgid ""
 "When using reStructuredText the following options are available in the code-"
 "block directive:"
 msgstr ""
+"Al usar reStructuredText las siguientes opciones están disponibles en la "
+"directiva `code-block`:"
 
 #: ../../content.rst:544
 msgid "Option"
@@ -849,7 +963,7 @@ msgstr "cadena"
 
 #: ../../content.rst:547
 msgid "String to prepend to token class names"
-msgstr ""
+msgstr "Cadena que se antepone a los nombres de los identificadores de clase"
 
 #: ../../content.rst:548
 msgid "hl_lines"
@@ -866,6 +980,10 @@ msgid ""
 "support a range of line numbers separated by a hyphen, or comma-separated line "
 "numbers."
 msgstr ""
+"Lista de líneas a resaltar, donde los números de línea a resaltar están "
+"separados por un espacio. Esto es parecido a ``emphasize-lines`` en Sphinx, "
+"pero no soporta un rango de números de línea separadas por un guion o números "
+"de línea separados por comas."
 
 #: ../../content.rst:555
 msgid "lineanchors"
@@ -874,6 +992,7 @@ msgstr "lineanchors"
 #: ../../content.rst:555
 msgid "Wrap each line in an anchor using this string and -linenumber."
 msgstr ""
+"Envuelve cada línea en un enlace de ancla usando esta cadena y -numerodelínea."
 
 #: ../../content.rst:557
 msgid "linenos"
@@ -885,6 +1004,9 @@ msgid ""
 "\"inline\" output them inline. \"none\" means do not output the line numbers "
 "for this table."
 msgstr ""
+"Si está presente o configurado como «table», pone los números de línea en una "
+"tabla; si está configurado como «inline», los pone en la misma línea. «none» "
+"significa que no pone los números de línea en esta tabla."
 
 #: ../../content.rst:562
 msgid "linenospecial"
@@ -896,7 +1018,7 @@ msgstr "número"
 
 #: ../../content.rst:562
 msgid "If set every nth line will be given the 'special' css class."
-msgstr ""
+msgstr "Si está configurado, a cada línea n se le dará la clase CSS 'special'."
 
 #: ../../content.rst:564
 msgid "linenostart"
@@ -904,16 +1026,15 @@ msgstr "linenostart"
 
 #: ../../content.rst:564
 msgid "Line number for the first line."
-msgstr ""
+msgstr "Número de línea para la primera línea."
 
 #: ../../content.rst:565
 msgid "linenostep"
 msgstr "linenostep"
 
 #: ../../content.rst:565
-#, fuzzy
 msgid "Print every nth line number."
-msgstr "Imprime cada"
+msgstr "Imprime cada número de línea n."
 
 #: ../../content.rst:566
 msgid "lineseparator"
@@ -929,7 +1050,7 @@ msgstr "linespans"
 
 #: ../../content.rst:568
 msgid "Wrap each line in a span using this and -linenumber."
-msgstr ""
+msgstr "Envuelve cada línea en un *span* usando eso y -númerodelínea."
 
 #: ../../content.rst:570
 msgid "nobackground"
@@ -938,6 +1059,7 @@ msgstr "nobackground"
 #: ../../content.rst:570
 msgid "If set do not output background color for the wrapping element"
 msgstr ""
+"Si está presente, no produce el color de fondo para el elemento que envuelve"
 
 #: ../../content.rst:572
 msgid "nowrap"
@@ -945,11 +1067,11 @@ msgstr "nowrap"
 
 #: ../../content.rst:572
 msgid "If set do not wrap the tokens at all."
-msgstr ""
+msgstr "Se está presente, no envuelve los *tokens*."
 
 #: ../../content.rst:573
 msgid "tagsfile"
-msgstr ""
+msgstr "tagsfile"
 
 #: ../../content.rst:573
 msgid "ctags file to use for name definitions."
@@ -957,11 +1079,11 @@ msgstr "archivo *ctags* a usar para definiciones de nombres."
 
 #: ../../content.rst:574
 msgid "tagurlformat"
-msgstr ""
+msgstr "tagurlformat"
 
 #: ../../content.rst:574
 msgid "format for the ctag links."
-msgstr ""
+msgstr "formato para los enlaces *ctag*."
 
 #: ../../content.rst:577
 msgid ""
@@ -970,6 +1092,10 @@ msgid ""
 "documentation <https://pygments.org/docs/formatters/>`_ for more details on "
 "each of the options."
 msgstr ""
+"Ten en cuenta que, dependiendo de la versión, tu módulo de Pygments podría no "
+"tener todas estas opciones disponibles. Consulta la sección *HtmlFormatter* de "
+"la `documentación de Pygments <https://pygments.org/docs/formatters/>`_ para "
+"más detalles sobre cada una de estas opciones."
 
 #: ../../content.rst:582
 msgid ""
@@ -977,6 +1103,9 @@ msgid ""
 "and prefixes the Pygments CSS classes with *pgcss* to make the names more "
 "unique and avoid possible CSS conflicts::"
 msgstr ""
+"Por ejemplo, el siguiente bloque de código habilita la numeración de líneas, "
+"comenzando por 153, y prefija las clases CSS de Pygments con *pgcss* para hacer "
+"que los nombres sean más únicos y evitar posibles conflictos de CSS::"
 
 #: ../../content.rst:593
 msgid ""
@@ -984,18 +1113,26 @@ msgid ""
 "Pelican settings file to include options that will be automatically applied to "
 "every code block."
 msgstr ""
+"También es posible especificar la variable ``PYGMENTS_RST_OPTIONS`` en tu "
+"archivo de configuración de Pelican para incluir opciones que serán aplicadas "
+"automáticamente a cada bloque de código."
 
 #: ../../content.rst:597
 msgid ""
 "For example, if you want to have line numbers displayed for every code block "
 "and a CSS prefix you would set this variable to::"
 msgstr ""
+"Por ejemplo, si quieres que se muestren números de línea en cada bloque de "
+"código y que se añada un prefijo de CSS, tendrías que asignar así esta "
+"variable::"
 
 #: ../../content.rst:602
 msgid ""
 "If specified, settings for individual code blocks will override the defaults in "
 "your settings file."
 msgstr ""
+"Si se especifican, los ajustes para los bloques de código individuales "
+"sobrescribirán los ajustes predeterminados en tu archivo de configuración."
 
 #: ../../content.rst:606
 msgid "Publishing drafts"
@@ -1008,6 +1145,11 @@ msgid ""
 "its metadata. That article will then be output to the ``drafts`` folder and not "
 "listed on the index page nor on any category or tag page."
 msgstr ""
+"Si quieres publicar un artículo o una página como borrador (para que lo revisen "
+"amigos antes de publicarlo, por ejemplo), puedes añadir un atributo ``Status: "
+"draft`` a sus metadatos. Ese artículo entonces será creado en la carpeta "
+"``drafts`` y no será listado en la página *index* ni en ninguna página de "
+"categoría o de etiqueta."
 
 #: ../../content.rst:613
 msgid ""
@@ -1015,6 +1157,9 @@ msgid ""
 "accidentally publish an article before it is finished) include the status in "
 "the ``DEFAULT_METADATA``::"
 msgstr ""
+"Si tus artículos deben ser publicados automáticamente como borradores (para no "
+"publicar automáticamente un artículo antes de que esté terminado), incluye el "
+"*status* en ``DEFAULT_METADATA``::"
 
 #: ../../content.rst:621
 msgid ""
@@ -1035,3 +1180,8 @@ msgid ""
 "are not included by default in tag, category, and author indexes, nor in the "
 "main article feed. This has the effect of creating an \"unlisted\" post."
 msgstr ""
+"Como las páginas, las publicaciones también pueden marcarse como ``hidden`` con "
+"el atributo ``Status: hidden``. Las publicaciones ocultas serán generadas en "
+"``ARTICLE_SAVE_AS`` según lo previsto, pero no serán incluidas por defecto en "
+"los índices de etiqueta, categoría y autor, ni en la fuente de artículos "
+"principal. Esto tiene el efecto de crear una publicación «no listada»."

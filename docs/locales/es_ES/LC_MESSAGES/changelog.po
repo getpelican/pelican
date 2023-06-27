@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-03 17:37+0100\n"
-"PO-Revision-Date: 2023-01-03 17:50+0100\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2023-06-24 14:36+0200\n"
+"Last-Translator: Jorge Maldonado Ventura <jorgesumle@freakspot.net>\n"
 "Language-Team: \n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../changelog.rst:2
 msgid "Release history"
-msgstr ""
+msgstr "Historial de publicaciones"
 
 #: ../../changelog.rst:5
 msgid "4.8.0 - 2022-07-11"
