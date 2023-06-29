@@ -77,7 +77,7 @@ pelican-themes = "pelican.tools.pelican_themes:main"
 [tool.autopub]
 project-name = "Pelican"
 git-username = "botpub"
-git-email = "botpub@autopub.rocks"
+git-email = "52496925+botpub@users.noreply.github.com"
 changelog-file = "docs/changelog.rst"
 changelog-header = "###############"
 version-header = "="
