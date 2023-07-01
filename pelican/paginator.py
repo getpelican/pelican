@@ -47,6 +47,8 @@ class Paginator:
         if self._num_pages is None:
             hits = max(1, self.count - self.orphans)
             self._num_pages = int(ceil(hits / (float(self.per_page) or 1)))
+        if self.settings["MAX_PAGINATION"]:
+            self._num_pages = min(self.settings["MAX_PAGINATION"], self._num_pages)
         return self._num_pages
     num_pages = property(_get_num_pages)
 

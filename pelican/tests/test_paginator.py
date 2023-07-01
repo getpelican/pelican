@@ -102,3 +102,21 @@ class TestPage(unittest.TestCase):
         page3 = paginator.page(3)
         self.assertEqual(page3.save_as, 'blog/index.html')
         self.assertEqual(page3.url, '//blog.my.site/')
+
+    def test_max_pagination(self):
+        from pelican.paginator import PaginationRule
+        settings = get_settings()
+        settings['MAX_PAGINATION'] = 2
+        settings['PAGINATION_PATTERNS'] = [PaginationRule(*r) for r in [
+            (1, '/{url}{number}/', '{base_name}/{number}/index.html')
+        ]]
+
+        self.page_kwargs['metadata']['author'] = Author('Blogger', settings)
+        object_list = [Article(**self.page_kwargs),
+                       Article(**self.page_kwargs),
+                       Article(**self.page_kwargs)]
+        paginator = Paginator('blog/index.html', '//blog.my.site/',
+                              object_list, settings, 1)
+        self.assertEqual(paginator.count, 3)
+        self.assertEqual(paginator.per_page, 1)
+        self.assertEqual(paginator.num_pages, 2)

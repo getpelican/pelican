@@ -1038,6 +1038,11 @@ You can use the following settings to configure the pagination.
    The maximum number of articles to include on a page, not including orphans.
    False to disable pagination.
 
+.. data:: MAX_PAGINATION = False
+
+   The maximum number of pages generated. ``False`` to paginate all available
+   pages.
+
 .. data:: PAGINATED_TEMPLATES = {'index': None, 'tag': None, 'category': None, 'author': None}
 
    The templates to use pagination with, and the number of articles to include

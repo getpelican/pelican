@@ -90,6 +90,7 @@ DEFAULT_CONFIG = {
         (1, '{name}{extension}', '{name}{extension}'),
         (2, '{name}{number}{extension}', '{name}{number}{extension}'),
     ],
+    'MAX_PAGINATION': False,
     'YEAR_ARCHIVE_URL': '',
     'YEAR_ARCHIVE_SAVE_AS': '',
     'MONTH_ARCHIVE_URL': '',
