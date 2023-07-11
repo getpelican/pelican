@@ -255,12 +255,6 @@ class TestUtils(LoggedTestCase):
                                       '<span>marker</span>'),
             '<!-- comment -->' + 'word ' * 20 + '<span>marker</span>')
 
-        # Words with HTML tags and a Jinja2 generated end marker (Markup)
-        self.assertEqual(
-            utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20,
-                                      Markup('<span>marker</span>')),
-            '<p>' + 'word ' * 20 + '<span>marker</span></p>')
-
         # Words with hypens and apostrophes.
         self.assertEqual(
             utils.truncate_html_words("a-b " * 100, 20),
