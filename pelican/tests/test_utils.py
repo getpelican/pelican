@@ -6,8 +6,6 @@ import time
 from sys import platform
 from tempfile import mkdtemp
 
-from markupsafe import Markup
-
 import pytz
 
 from pelican import utils
