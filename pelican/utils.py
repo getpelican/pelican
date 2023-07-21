@@ -18,9 +18,11 @@ from operator import attrgetter
 
 import dateutil.parser
 
+try:
+    import zoneinfo
+except ModuleNotFoundError:
+    import backports.zoneinfo
 from markupsafe import Markup
-
-import pytz
 
 
 logger = logging.getLogger(__name__)
@@ -919,10 +921,14 @@ class FileSystemWatcher:
 def set_date_tzinfo(d, tz_name=None):
     """Set the timezone for dates that don't have tzinfo"""
     if tz_name and not d.tzinfo:
-        tz = pytz.timezone(tz_name)
-        d = tz.localize(d)
-        return SafeDatetime(d.year, d.month, d.day, d.hour, d.minute, d.second,
-                            d.microsecond, d.tzinfo)
+        try:
+            timezone = zoneinfo.ZoneInfo(tz_name)
+        except NameError:
+            timezone = backports.zoneinfo.ZoneInfo(tz_name)
+        d = d.replace(tzinfo=timezone)
+        return SafeDatetime(
+            d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond, d.tzinfo
+        )
     return d
 
 

@@ -7,7 +7,13 @@ import re
 from html import unescape
 from urllib.parse import unquote, urljoin, urlparse, urlunparse
 
-import pytz
+from datetime import timezone
+
+try:
+    import zoneinfo
+except ModuleNotFoundError:
+    import backports.zoneinfo
+
 
 from pelican.plugins import signals
 from pelican.settings import DEFAULT_CONFIG
@@ -120,9 +126,12 @@ class Content:
             self.date_format = self.date_format[1]
 
         # manage timezone
-        default_timezone = settings.get('TIMEZONE', 'UTC')
-        timezone = getattr(self, 'timezone', default_timezone)
-        self.timezone = pytz.timezone(timezone)
+        default_timezone = settings.get("TIMEZONE", "UTC")
+        timezone = getattr(self, "timezone", default_timezone)
+        try:
+            self.timezone = zoneinfo.ZoneInfo(timezone)
+        except NameError:
+            self.timezone = backports.zoneinfo.ZoneInfo(timezone)
 
         if hasattr(self, 'date'):
             self.date = set_date_tzinfo(self.date, timezone)
@@ -525,7 +534,7 @@ class Article(Content):
             if self.date.tzinfo is None:
                 now = datetime.datetime.now()
             else:
-                now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+                now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
             if self.date > now:
                 self.status = 'draft'
 
