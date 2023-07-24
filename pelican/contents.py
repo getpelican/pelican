@@ -4,11 +4,9 @@ import locale
 import logging
 import os
 import re
-
 from datetime import timezone
 from html import unescape
 from urllib.parse import unquote, urljoin, urlparse, urlunparse
-
 
 try:
     import zoneinfo
