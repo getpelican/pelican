@@ -10,7 +10,7 @@ version = "4.8.0"
 
 requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
             'docutils>=0.15', 'blinker', 'unidecode', 'python-dateutil',
-            'rich', 'backports-zoneinfo >= 0.2; python_version<"3.9"']
+            'rich', 'backports-zoneinfo[tzdata] >= 0.2; python_version<"3.9"']
 
 entry_points = {
     'console_scripts': [
