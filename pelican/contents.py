@@ -11,7 +11,7 @@ from urllib.parse import unquote, urljoin, urlparse, urlunparse
 try:
     import zoneinfo
 except ModuleNotFoundError:
-    import backports.zoneinfo
+    from backports import zoneinfo
 
 
 from pelican.plugins import signals
@@ -127,10 +127,7 @@ class Content:
         # manage timezone
         default_timezone = settings.get("TIMEZONE", "UTC")
         timezone = getattr(self, "timezone", default_timezone)
-        try:
-            self.timezone = zoneinfo.ZoneInfo(timezone)
-        except NameError:
-            self.timezone = backports.zoneinfo.ZoneInfo(timezone)
+        self.timezone = zoneinfo.ZoneInfo(timezone)
 
         if hasattr(self, 'date'):
             self.date = set_date_tzinfo(self.date, timezone)
