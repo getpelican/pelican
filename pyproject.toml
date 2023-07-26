@@ -52,7 +52,7 @@ sphinx = "^5.1"
 furo = "2023.03.27"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
-pygments = "~2.14"
+pygments = "~2.15"
 pytest = "^7.1"
 pytest-cov = "^4.0"
 pytest-sugar = "^0.9.5"
