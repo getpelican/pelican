@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 try:
     import zoneinfo
 except ModuleNotFoundError:
-    import backports.zoneinfo
+    from backports import zoneinfo
 
 try:
     import readline  # NOQA
@@ -161,10 +161,7 @@ def ask(question, answer=str, default=None, length=None):
 
 def ask_timezone(question, default, tzurl):
     """Prompt for time zone and validate input"""
-    try:
-        tz_dict = {tz.lower(): tz for tz in zoneinfo.available_timezones()}
-    except NameError:
-        tz_dict = {tz.lower(): tz for tz in backports.zoneinfo.available_timezones()}
+    tz_dict = {tz.lower(): tz for tz in zoneinfo.available_timezones()}
     while True:
         r = ask(question, str, default)
         r = r.strip().replace(" ", "_").lower()
