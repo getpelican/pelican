@@ -9,9 +9,9 @@ from html import unescape
 from urllib.parse import unquote, urljoin, urlparse, urlunparse
 
 try:
-    import zoneinfo
+    from zoneinfo import ZoneInfo
 except ModuleNotFoundError:
-    from backports import zoneinfo
+    from backports.zoneinfo import ZoneInfo
 
 
 from pelican.plugins import signals
@@ -127,7 +127,7 @@ class Content:
         # manage timezone
         default_timezone = settings.get("TIMEZONE", "UTC")
         timezone = getattr(self, "timezone", default_timezone)
-        self.timezone = zoneinfo.ZoneInfo(timezone)
+        self.timezone = ZoneInfo(timezone)
 
         if hasattr(self, 'date'):
             self.date = set_date_tzinfo(self.date, timezone)
