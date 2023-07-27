@@ -37,10 +37,10 @@ feedgenerator = ">=1.9"
 jinja2 = ">=2.7"
 pygments = ">=2.6"
 python-dateutil = ">=2.8"
-pytz = ">=2020.1"
 rich = ">=10.1"
 unidecode = ">=1.1"
 markdown = {version = ">=3.1", optional = true}
+backports-zoneinfo = {version = "^0.2.1", python = "<3.9"}
 
 [tool.poetry.dev-dependencies]
 BeautifulSoup4 = "^4.9"
@@ -52,7 +52,7 @@ sphinx = "^5.1"
 furo = "2023.03.27"
 livereload = "^2.6"
 psutil = {version = "^5.7", optional = true}
-pygments = "~2.14"
+pygments = "~2.15"
 pytest = "^7.1"
 pytest-cov = "^4.0"
 pytest-sugar = "^0.9.5"
