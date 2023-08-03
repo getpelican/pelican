@@ -11,8 +11,10 @@ build:
   tools:
     python: "3.10"
 
-# Build all formats
-formats: all
+# Build HTML & PDF formats
+formats:
+  - htmlzip
+  - pdf
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
