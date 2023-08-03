@@ -15,6 +15,9 @@ setting file. Note that values must follow JSON notation::
 
     pelican content -e SITENAME='"A site"' READERS='{"html": null}' CACHE_CONTENT=true
 
+Environment variables can also be used here but must be escaped appropriately::
+
+    pelican content -e API_KEY=''\"$API_KEY\"''
 
 .. note::
 
