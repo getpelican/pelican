@@ -259,6 +259,26 @@ class TestUtils(LoggedTestCase):
             utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20),
             '<!-- comment -->' + 'word ' * 20 + '…')
 
+        # Words enclosed or intervaled by HTML tags with a custom end
+        # marker containing HTML tags.
+        self.assertEqual(
+            utils.truncate_html_words('<p>' + 'word ' * 100 + '</p>', 20,
+                                      '<span>marker</span>'),
+            '<p>' + 'word ' * 20 + '<span>marker</span></p>')
+        self.assertEqual(
+            utils.truncate_html_words(
+                    '<span\nstyle="\n…\n">' + 'word ' * 100 + '</span>', 20,
+                    '<span>marker</span>'),
+            '<span\nstyle="\n…\n">' + 'word ' * 20 + '<span>marker</span></span>')
+        self.assertEqual(
+            utils.truncate_html_words('<br>' + 'word ' * 100, 20,
+                                      '<span>marker</span>'),
+            '<br>' + 'word ' * 20 + '<span>marker</span>')
+        self.assertEqual(
+            utils.truncate_html_words('<!-- comment -->' + 'word ' * 100, 20,
+                                      '<span>marker</span>'),
+            '<!-- comment -->' + 'word ' * 20 + '<span>marker</span>')
+
         # Words with hypens and apostrophes.
         self.assertEqual(
             utils.truncate_html_words("a-b " * 100, 20),

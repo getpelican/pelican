@@ -1,10 +1,10 @@
-Pelican |build-status| |pypi-version| |repology|
-================================================
+Pelican |build-status| |pypi-version| |downloads| |repology|
+============================================================
 
 Pelican is a static site generator, written in Python_, that allows you to create
 web sites by composing text files in formats such as Markdown, reStructuredText, and HTML.
 
-With Pelican, you can create web sites without worrying about databases or server-side programming. 
+With Pelican, you can create web sites without worrying about databases or server-side programming.
 Pelican generates static sites that can be served via any web server or hosting service.
 
 You can perform the following functions with Pelican:
@@ -70,6 +70,9 @@ Why the name “Pelican”?
 .. |pypi-version| image:: https://img.shields.io/pypi/v/pelican.svg
    :target: https://pypi.org/project/pelican/
    :alt: PyPI: the Python Package Index
+.. |downloads| image:: https://img.shields.io/pypi/dm/pelican.svg
+   :target: https://pypi.org/project/pelican/
+   :alt: Monthly Downloads from PyPI
 .. |repology| image:: https://repology.org/badge/tiny-repos/pelican.svg
    :target: https://repology.org/project/pelican/versions
    :alt: Repology: the packaging hub

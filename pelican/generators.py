@@ -206,8 +206,9 @@ class Generator:
         self.context['static_links'] |= content.get_static_links()
 
     def _update_context(self, items):
-        """Update the context with the given items from the current
-        processor.
+        """Update the context with the given items from the current processor.
+
+        Note that dictionary arguments will be converted to a list of tuples.
         """
         for item in items:
             value = getattr(self, item)
