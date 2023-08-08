@@ -24,7 +24,7 @@ try:
     else:
         _DEFAULT_TIMEZONE = tzlocal.get_localzone_name()
 except ModuleNotFoundError:
-    _DEFAULT_TIMEZONE = 'Europe/Rome'
+    _DEFAULT_TIMEZONE = "Europe/Rome"
 
 from pelican import __version__
 
