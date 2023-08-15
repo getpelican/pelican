@@ -773,7 +773,11 @@ def wait_for_changes(settings_file, reader_class, settings):
         os.path.join(content_path, path) for path in settings.get('STATIC_PATHS', [])
     )
 
-    watching_paths = [os.path.abspath(p) for p in watching_paths if p and os.path.exists(p)]
+    watching_paths = [os.path.abspath(p) for p in watching_paths if p]
+
+    for path in watching_paths:
+        if not os.path.exists(path):
+            logger.warning("Unable to watch path '%s' as it does not exist.", path)
 
     return next(watchfiles.watch(
         *watching_paths,
