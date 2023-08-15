@@ -358,10 +358,10 @@ def parse_arguments(argv=None):
                         dest='selected_paths', default=None,
                         help='Comma separated list of selected paths to write')
 
-    parser.add_argument('--fatal', metavar='errors|warnings',
-                        choices=('errors', 'warnings'), default='',
+    parser.add_argument('--fatal', metavar='errors|warnings|ignore',
+                        choices=('errors', 'warnings', 'ignore'), default='errors',
                         help=('Exit the program with non-zero status if any '
-                              'errors/warnings encountered.'))
+                              'errors/warnings encountered, or ignore any errors.'))
 
     parser.add_argument('--logs-dedup-min-level', default='WARNING',
                         choices=('DEBUG', 'INFO', 'WARNING', 'ERROR'),
@@ -525,7 +525,7 @@ def listen(server, port, output, excqueue=None):
 def main(argv=None):
     args = parse_arguments(argv)
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
-    init_logging(level=args.verbosity, fatal=args.fatal,
+    init_logging(level=args.verbosity, fatal=(args.fatal if args.fatal != 'ignore' else ''),
                  name=__name__, logs_dedup_min_level=logs_dedup_min_level)
 
     logger.debug('Pelican version: %s', __version__)
