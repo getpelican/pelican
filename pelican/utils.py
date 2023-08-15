@@ -19,9 +19,9 @@ from operator import attrgetter
 import dateutil.parser
 
 try:
-    import zoneinfo
+    from zoneinfo import ZoneInfo
 except ModuleNotFoundError:
-    from backports import zoneinfo
+    from backports.zoneinfo import ZoneInfo
 from markupsafe import Markup
 
 
@@ -921,7 +921,7 @@ class FileSystemWatcher:
 def set_date_tzinfo(d, tz_name=None):
     """Set the timezone for dates that don't have tzinfo"""
     if tz_name and not d.tzinfo:
-        timezone = zoneinfo.ZoneInfo(tz_name)
+        timezone = ZoneInfo(tz_name)
         d = d.replace(tzinfo=timezone)
         return SafeDatetime(
             d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond, d.tzinfo

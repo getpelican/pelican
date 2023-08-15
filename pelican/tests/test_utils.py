@@ -3,10 +3,14 @@ import logging
 import os
 import shutil
 import time
+from datetime import timezone
 from sys import platform
 from tempfile import mkdtemp
 
-import pytz
+try:
+    from zoneinfo import ZoneInfo
+except ModuleNotFoundError:
+    from backports.zoneinfo import ZoneInfo
 
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
@@ -50,21 +54,21 @@ class TestUtils(LoggedTestCase):
             year=2012, month=11, day=22, hour=22, minute=11)
         date_hour_z = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11,
-            tzinfo=pytz.timezone('UTC'))
+            tzinfo=timezone.utc)
         date_hour_est = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11,
-            tzinfo=pytz.timezone('EST'))
+            tzinfo=ZoneInfo("EST"))
         date_hour_sec = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10)
         date_hour_sec_z = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
-            tzinfo=pytz.timezone('UTC'))
+            tzinfo=timezone.utc)
         date_hour_sec_est = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
-            tzinfo=pytz.timezone('EST'))
+            tzinfo=ZoneInfo("EST"))
         date_hour_sec_frac_z = utils.SafeDatetime(
             year=2012, month=11, day=22, hour=22, minute=11, second=10,
-            microsecond=123000, tzinfo=pytz.timezone('UTC'))
+            microsecond=123000, tzinfo=timezone.utc)
         dates = {
             '2012-11-22': date,
             '2012/11/22': date,
@@ -86,13 +90,13 @@ class TestUtils(LoggedTestCase):
         iso_8601_date = utils.SafeDatetime(year=1997, month=7, day=16)
         iso_8601_date_hour_tz = utils.SafeDatetime(
             year=1997, month=7, day=16, hour=19, minute=20,
-            tzinfo=pytz.timezone('CET'))
+            tzinfo=ZoneInfo("Europe/London"))
         iso_8601_date_hour_sec_tz = utils.SafeDatetime(
             year=1997, month=7, day=16, hour=19, minute=20, second=30,
-            tzinfo=pytz.timezone('CET'))
+            tzinfo=ZoneInfo("Europe/London"))
         iso_8601_date_hour_sec_ms_tz = utils.SafeDatetime(
             year=1997, month=7, day=16, hour=19, minute=20, second=30,
-            microsecond=450000, tzinfo=pytz.timezone('CET'))
+            microsecond=450000, tzinfo=ZoneInfo("Europe/London"))
         iso_8601 = {
             '1997-07-16': iso_8601_date,
             '1997-07-16T19:20+01:00': iso_8601_date_hour_tz,
