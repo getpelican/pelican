@@ -760,7 +760,9 @@ def order_content(content_list, order_by='slug'):
 def wait_for_changes(settings_file, reader_class, settings):
     content_path = settings.get('PATH', '')
     theme_path = settings.get('THEME', '')
-    ignore_files = set(settings.get('IGNORE_FILES', []))
+    ignore_files = set(
+        fnmatch.translate(pattern) for pattern in settings.get('IGNORE_FILES', [])
+    )
 
     watching_paths = [
         settings_file,
@@ -780,9 +782,7 @@ def wait_for_changes(settings_file, reader_class, settings):
 
     return next(watchfiles.watch(
         *watching_paths,
-        watch_filter=watchfiles.DefaultFilter(
-            ignore_entity_patterns=[fnmatch.translate(pattern) for pattern in ignore_files]
-        ),
+        watch_filter=watchfiles.DefaultFilter(ignore_entity_patterns=ignore_files),
         rust_timeout=0
     ))
 

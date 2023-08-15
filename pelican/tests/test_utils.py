@@ -2,7 +2,6 @@ import locale
 import logging
 import os
 import shutil
-import time
 from datetime import timezone
 from sys import platform
 from tempfile import mkdtemp
@@ -14,7 +13,6 @@ except ModuleNotFoundError:
 
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
-from pelican.readers import Readers
 from pelican.settings import read_settings
 from pelican.tests.support import (LoggedTestCase, get_article,
                                    locale_available, unittest)

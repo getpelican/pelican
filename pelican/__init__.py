@@ -27,7 +27,7 @@ from pelican.plugins._utils import get_plugin_name, load_plugins
 from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import read_settings
-from pelican.utils import (wait_for_changes, clean_output_dir, maybe_pluralize)
+from pelican.utils import clean_output_dir, maybe_pluralize, wait_for_changes
 from pelican.writers import Writer
 
 try:
