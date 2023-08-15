@@ -758,7 +758,6 @@ def order_content(content_list, order_by='slug'):
 
 
 def wait_for_changes(settings_file, reader_class, settings):
-    new_extensions = set(reader_class(settings).extensions)
     content_path = settings.get('PATH', '')
     theme_path = settings.get('THEME', '')
     ignore_files = set(settings.get('IGNORE_FILES', []))
