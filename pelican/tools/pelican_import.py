@@ -499,8 +499,11 @@ def tumblr2fields(api_key, blogname):
                     fmtstr = '<p><a href="%s">via</a></p>\n'
                 source = fmtstr % post.get('source_url')
                 caption = post.get('caption')
-                players = '\n'.join(player.get('embed_code')
-                                    for player in post.get('player'))
+                try:
+                    players = '\n'.join(player.get('embed_code')
+                                        for player in post.get('player'))
+                except TypeError:
+                    players = '\n'
                 content = source + caption + players
             elif type == 'answer':
                 title = post.get('question')
