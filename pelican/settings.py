@@ -582,7 +582,7 @@ def configure_settings(settings):
     # check content caching layer and warn of incompatibilities
     if settings.get('CACHE_CONTENT', False) and \
             settings.get('CONTENT_CACHING_LAYER', '') == 'generator' and \
-            settings.get('WITH_FUTURE_DATES', False):
+            not settings.get('WITH_FUTURE_DATES', True):
         logger.warning(
             "WITH_FUTURE_DATES conflicts with CONTENT_CACHING_LAYER "
             "set to 'generator', use 'reader' layer instead")
