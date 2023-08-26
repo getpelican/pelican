@@ -468,9 +468,8 @@ def tumblr2fields(api_key, blogname):
                     fmtstr = '<img alt="%s" src="%s" />'
                 content = ''
                 for photo in post.get('photos'):
-                    content += '\n'.join(
-                        fmtstr % (photo.get('caption'),
-                                  photo.get('original_size').get('url')))
+                    content += fmtstr % (photo.get('caption'),
+                                  photo.get('original_size').get('url'))
                 content += '\n\n' + post.get('caption')
             elif type == 'quote':
                 if format == 'markdown':
