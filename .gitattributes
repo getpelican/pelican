@@ -8,3 +8,4 @@ pelican/tests/theme_overrides/* linguist-vendored
 pelican/themes/notmyidea/templates/*.html linguist-language=Jinja
 pelican/themes/simple/templates/*.html linguist-language=Jinja
 samples/* linguist-vendored
+*.html linguist-vendored
