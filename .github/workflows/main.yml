@@ -16,8 +16,6 @@ jobs:
       matrix:
         config:
           - os: ubuntu
-            python: "3.7"
-          - os: ubuntu
             python: "3.8"
           - os: ubuntu
             python: "3.9"
@@ -25,10 +23,12 @@ jobs:
             python: "3.10"
           - os: ubuntu
             python: "3.11"
+          - os: ubuntu
+            python: "3.12"
           - os: macos
-            python: "3.7"
+            python: "3.11"
           - os: windows
-            python: "3.7"
+            python: "3.11"
 
     steps:
       - uses: actions/checkout@v3
@@ -66,7 +66,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.11"
           cache: 'pip'
           cache-dependency-path: '**/requirements/*'
       - name: Install tox
@@ -84,7 +84,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.11"
           cache: 'pip'
           cache-dependency-path: '**/requirements/*'
       - name: Install tox
@@ -112,7 +112,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.11"
 
       - name: Check release
         id: check_release
