@@ -11,12 +11,13 @@ from io import StringIO
 from logging.handlers import BufferingHandler
 from shutil import rmtree
 from tempfile import mkdtemp
+from typing import Optional
 
 from pelican.contents import Article
 from pelican.readers import default_metadata
 from pelican.settings import DEFAULT_CONFIG
 
-__all__ = ['get_article', 'unittest', ]
+__all__ = ['get_article', 'unittest', 'LogCountHandler']
 
 
 @contextmanager
@@ -26,7 +27,7 @@ def temporary_folder():
     This allows to do something like this in tests:
 
         >>> with temporary_folder() as d:
-            # do whatever you want
+        ...     pass  # do whatever you want
     """
     tempdir = mkdtemp()
     try:
@@ -76,8 +77,8 @@ def mute(returns_output=False):
     execution, so be careful with what you apply it to.
 
     >>> def numbers():
-        print "42"
-        print "1984"
+    ...        print("42")
+    ...        print("1984")
     ...
     >>> numbers()
     42
@@ -193,37 +194,12 @@ def get_context(settings=None, **kwargs):
     return context
 
 
-class LogCountHandler(BufferingHandler):
-    """Capturing and counting logged messages."""
-
-    def __init__(self, capacity=1000):
-        super().__init__(capacity)
-
-    def count_logs(self, msg=None, level=None):
-        return len([
-            rec
-            for rec
-            in self.buffer
-            if (msg is None or re.match(msg, rec.getMessage())) and
-               (level is None or rec.levelno == level)
-        ])
-
-    def count_formatted_logs(self, msg=None, level=None):
-        return len([
-            rec
-            for rec
-            in self.buffer
-            if (msg is None or re.search(msg, self.format(rec))) and
-               (level is None or rec.levelno == level)
-        ])
-
-
 def diff_subproc(first, second):
     """
     Return a subprocess that runs a diff on the two paths.
 
     Check results with::
-
+        >>> proc = diff_subproc("first.txt","second.txt")
         >>> out_stream, err_stream = proc.communicate()
         >>> didCheckFail = proc.returnCode != 0
     """
@@ -236,24 +212,103 @@ def diff_subproc(first, second):
     )
 
 
-class LoggedTestCase(unittest.TestCase):
-    """A test case that captures log messages."""
+class LogCountHandler(BufferingHandler):
+    """Capturing and counting logged messages."""
 
-    def setUp(self):
-        super().setUp()
-        self._logcount_handler = LogCountHandler()
-        logging.getLogger().addHandler(self._logcount_handler)
+    def __init__(self, capacity=1000):
+        super().__init__(capacity)
 
-    def tearDown(self):
-        logging.getLogger().removeHandler(self._logcount_handler)
-        super().tearDown()
+    @classmethod
+    @contextmanager
+    def examine(cls, loggerObj):
+        """
+        Context in which a logger's propagated messages can be examined.
 
-    def assertLogCountEqual(self, count=None, msg=None, **kwargs):
-        actual = self._logcount_handler.count_logs(msg=msg, **kwargs)
-        self.assertEqual(
-            actual, count,
-            msg='expected {} occurrences of {!r}, but found {}'.format(
-                count, msg, actual))
+        Yields
+        ======
+        A handle to ``LogCountHandler.assert_count`` that has been added to the
+        specified logger for the duration of the context.
+
+        The yielded caller can be used to assert whether a certain number of
+        log messages have occurred within the context.
+        """
+        hnd = cls()
+        try:
+            loggerObj.addHandler(hnd)
+            yield hnd.assert_count
+        finally:
+            loggerObj.removeHandler(hnd)
+
+    def assert_count(
+        self,
+        count: int,
+        msg: Optional[str] = None,
+        level: Optional[int] = None,
+        as_regex: bool = False
+    ):
+        """
+        Assert how often the specified messages have been handled.
+
+        Raises
+        -------
+        AssertionError
+        """
+        occurances = self.count_logs(msg, level, as_regex)
+        if count != occurances:
+            report = 'Logged occurrence'
+            if msg is not None:
+                report += ' of {!r}'.format(msg)
+
+            if level is not None:
+                raise AssertionError(
+                    ' at {}'.format(logging.getLevelName(level))
+                )
+            raise AssertionError(
+                report + ': expected/found {}/{}'.format(count, occurances)
+            )
+
+    def match_record(
+        self,
+        pattern: re.Pattern,
+        record: logging.LogRecord,
+        level: Optional[int]
+    ) -> Optional[re.Match]:
+        """
+        Return regex object if pattern found in message at specified severity.
+        """
+        if level is not None and level != record.levelno:
+            return None
+
+        # prefix pattern with "^" for re.match behavior
+        return pattern.search(record.getMessage())
+
+    def count_logs(
+        self,
+        msg: Optional[str],
+        level: Optional[int],
+        as_regex: bool = False
+    ) -> int:
+        """
+        Returns the number of times a message has been logged.
+        """
+        if not msg:
+            if not level:
+                matched = self.buffer  # all logged messages
+            else:
+                # all logged messages of matching severity level
+                matched = [rec for rec in self.buffer if rec.levelno == level]
+        else:
+            # all logged messages matching the regex and level
+            if not as_regex:
+                msg = re.escape(msg)
+
+            pattern = re.compile(msg)
+            matched = [
+                record for record in self.buffer
+                if self.match_record(pattern, record, level)
+            ]
+
+        return len(matched)
 
 
 class TestCaseWithCLocale(unittest.TestCase):

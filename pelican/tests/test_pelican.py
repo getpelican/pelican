@@ -12,7 +12,7 @@ from pelican import Pelican
 from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
 from pelican.tests.support import (
-    LoggedTestCase,
+    LogCountHandler,
     diff_subproc,
     locale_available,
     mute,
@@ -20,8 +20,9 @@ from pelican.tests.support import (
 )
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-SAMPLES_PATH = os.path.abspath(os.path.join(
-    CURRENT_DIR, os.pardir, os.pardir, 'samples'))
+SAMPLES_PATH = os.path.abspath(
+    os.path.join(CURRENT_DIR, os.pardir, os.pardir, 'samples')
+)
 OUTPUT_PATH = os.path.abspath(os.path.join(CURRENT_DIR, 'output'))
 
 INPUT_PATH = os.path.join(SAMPLES_PATH, "content")
@@ -41,7 +42,7 @@ def recursiveDiff(dcmp):
     return diff
 
 
-class TestPelican(LoggedTestCase):
+class TestPelican(unittest.TestCase):
     # general functional testing for pelican. Basically, this test case tries
     # to run pelican in different situations and see how it behaves
 
@@ -88,7 +89,8 @@ class TestPelican(LoggedTestCase):
             "StaticGenerator must be the last generator, but it isn't!")
         self.assertIsInstance(
             generator_classes, Sequence,
-            "_get_generator_classes() must return a Sequence to preserve order")
+            "_get_generator_classes() must return a Sequence to preserve order"
+        )
 
     @skipIfNoExecutable(['git', '--version'])
     def test_basic_generation_works(self):
@@ -101,14 +103,19 @@ class TestPelican(LoggedTestCase):
             'LOCALE': locale.normalize('en_US'),
         })
         pelican = Pelican(settings=settings)
-        mute(True)(pelican.run)()
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.contents")
+        ) as count_msgs:
+            mute(True)(pelican.run)()
+            count_msgs(
+                count=1,
+                msg="Unable to find .* skipping url replacement",
+                as_regex=True,
+                level=logging.WARNING
+            )
         self.assertDirsEqual(
             self.temp_path, os.path.join(OUTPUT_PATH, 'basic')
         )
-        self.assertLogCountEqual(
-            count=1,
-            msg="Unable to find.*skipping url replacement",
-            level=logging.WARNING)
 
     @skipIfNoExecutable(['git', '--version'])
     def test_custom_generation_works(self):
@@ -198,16 +205,16 @@ class TestPelican(LoggedTestCase):
             ],
             'LOCALE': locale.normalize('en_US'),
         })
-        pelican = Pelican(settings=settings)
-        logger = logging.getLogger()
-        orig_level = logger.getEffectiveLevel()
+
+        logger = logging.getLogger("pelican.writers")
         logger.setLevel(logging.INFO)
-        mute(True)(pelican.run)()
-        logger.setLevel(orig_level)
-        self.assertLogCountEqual(
-            count=2,
-            msg="Writing .*",
-            level=logging.INFO)
+        with LogCountHandler.examine(logger) as count_msgs:
+            pelican = Pelican(settings=settings)
+            mute(True)(pelican.run)()
+            count_msgs(count=2,
+                       msg="Writing .*",
+                       as_regex=True,
+                       level=logging.INFO)
 
     def test_cyclic_intersite_links_no_warnings(self):
         settings = read_settings(path=None, override={
@@ -215,37 +222,46 @@ class TestPelican(LoggedTestCase):
             'OUTPUT_PATH': self.temp_path,
             'CACHE_PATH': self.temp_cache,
         })
-        pelican = Pelican(settings=settings)
-        mute(True)(pelican.run)()
-        # There are four different intersite links:
-        # - one pointing to the second article from first and third
-        # - one pointing to the first article from second and third
-        # - one pointing to the third article from first and second
-        # - one pointing to a nonexistent from each
-        # If everything goes well, only the warning about the nonexistent
-        # article should be printed. Only two articles are not sufficient,
-        # since the first will always have _context['generated_content'] empty
-        # (thus skipping the link resolving) and the second will always have it
-        # non-empty, containing the first, thus always succeeding.
-        self.assertLogCountEqual(
-            count=1,
-            msg="Unable to find '.*\\.rst', skipping url replacement.",
-            level=logging.WARNING)
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.contents")
+        ) as count_msgs:
+            pelican = Pelican(settings=settings)
+            mute(True)(pelican.run)()
+            # There are four different intersite links:
+            # - one pointing to the second article from first and third
+            # - one pointing to the first article from second and third
+            # - one pointing to the third article from first and second
+            # - one pointing to a nonexistent from each If everything goes
+            # well, only the warning about the nonexistent article should be
+            # printed. Only two articles are not sufficient, since the first
+            # will always have _context['generated_content'] empty (thus
+            # skipping the link resolving) and the second will always have it
+            # non-empty, containing the first, thus always succeeding.
+            count_msgs(
+                count=3,
+                msg="Unable to find '.*[.]rst', skipping url replacement.",
+                as_regex=True,
+                level=logging.WARNING
+            )
 
     def test_md_extensions_deprecation(self):
         """Test that a warning is issued if MD_EXTENSIONS is used"""
-        settings = read_settings(path=None, override={
-            'PATH': INPUT_PATH,
-            'OUTPUT_PATH': self.temp_path,
-            'CACHE_PATH': self.temp_cache,
-            'MD_EXTENSIONS': {},
-        })
-        pelican = Pelican(settings=settings)
-        mute(True)(pelican.run)()
-        self.assertLogCountEqual(
-            count=1,
-            msg="MD_EXTENSIONS is deprecated use MARKDOWN instead.",
-            level=logging.WARNING)
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.settings")
+        ) as count_msgs:
+            settings = read_settings(path=None, override={
+                'PATH': INPUT_PATH,
+                'OUTPUT_PATH': self.temp_path,
+                'CACHE_PATH': self.temp_cache,
+                'MD_EXTENSIONS': {},
+            })
+            pelican = Pelican(settings=settings)
+            mute(True)(pelican.run)()
+            count_msgs(
+                count=1,
+                msg="MD_EXTENSIONS is deprecated use MARKDOWN instead.",
+                level=logging.WARNING
+            )
 
     def test_parse_errors(self):
         # Verify that just an error is printed and the application doesn't
@@ -255,12 +271,17 @@ class TestPelican(LoggedTestCase):
             'OUTPUT_PATH': self.temp_path,
             'CACHE_PATH': self.temp_cache,
         })
-        pelican = Pelican(settings=settings)
-        mute(True)(pelican.run)()
-        self.assertLogCountEqual(
-            count=1,
-            msg="Could not process .*parse_error.rst",
-            level=logging.ERROR)
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.generators")
+        ) as count_msgs:
+            pelican = Pelican(settings=settings)
+            mute(True)(pelican.run)()
+            count_msgs(
+                count=1,
+                msg="Could not process .*parse_error.rst",
+                as_regex=True,
+                level=logging.ERROR
+            )
 
     def test_module_load(self):
         """Test loading via python -m pelican --help displays the help"""

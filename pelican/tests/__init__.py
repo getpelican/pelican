@@ -1,15 +1,13 @@
 import logging
 import warnings
 
-from pelican.log import log_warnings
+# Direct Warnings to the "py.warnings" logger
+logging.captureWarnings(True)
 
-# redirect warnings module to use logging instead
-log_warnings()
-
-# setup warnings to log DeprecationWarning's and error on
-# warnings in pelican's codebase
+# enable DeprecationWarnings
 warnings.simplefilter("default", DeprecationWarning)
+# treat warnings in pelican's codebase as errors
 warnings.filterwarnings("error", ".*", Warning, "pelican")
 
-# Add a NullHandler to silence warning about no available handlers
-logging.getLogger().addHandler(logging.NullHandler())
+# Use: pytest --cli-log-level DEBUG for debug-level logging
+logging.basicConfig(handlers=[logging.NullHandler()])
