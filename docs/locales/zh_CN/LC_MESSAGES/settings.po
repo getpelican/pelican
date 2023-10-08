@@ -21,26 +21,27 @@ msgstr ""
 
 #: ../../settings.rst:2
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: ../../settings.rst:4
 msgid ""
 "Pelican is configurable thanks to a settings file you can pass to the "
 "command line::"
-msgstr ""
+msgstr "可以通过命令行给Pelican传入配置文件："
 
 #: ../../settings.rst:9
 msgid ""
 "If you used the ``pelican-quickstart`` command, your primary settings "
 "file will be named ``pelicanconf.py`` by default."
-msgstr ""
+msgstr "如果使用的是 ``pelican-quickstart`` 命令，默认的主配置文件时 ``pelicanconf.py`` 。"
 
 #: ../../settings.rst:12
 msgid ""
 "You can also specify settings via ``-e`` / ``--extra-settings`` option "
 "flags. It will override default settings as well as any defined within "
 "the setting file. Note that values must follow JSON notation::"
-msgstr ""
+msgstr "通过 ``-e`` / ``--extra-settings`` 选项，可以直接指定一些配置来覆盖配置文件中的设置。"
+"需要注意的是，选项值必须时JSON格式的："
 
 #: ../../settings.rst:21
 msgid ""
@@ -48,7 +49,8 @@ msgid ""
 " caching may interfere and the changes may not be visible. In such cases "
 "disable caching with ``LOAD_CONTENT_CACHE = False`` or use the "
 "``--ignore-cache`` command-line switch."
-msgstr ""
+msgstr "在尝试不同的设置（特别是尝试元数据）时，受缓存的干扰，对设置的更改可能不会生效。"
+"在这种情况下，指定 ``LOAD_CONTENT_CACHE = False`` 设置或 ``--ignore-cache`` 命令行选项即可。"
 
 #: ../../settings.rst:26
 msgid ""
@@ -56,7 +58,8 @@ msgid ""
 " an `example settings file "
 "<https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_"
 " available for reference."
-msgstr ""
+msgstr "设置以Python模块（一个文件）的形式。"
+" `示例配置文件 <https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_ 可供您参考。"
 
 #: ../../settings.rst:31
 msgid ""
@@ -64,7 +67,8 @@ msgid ""
 "default and any customized values, run the following command (append one "
 "or more specific setting names as arguments to see values for those "
 "settings only)::"
-msgstr ""
+msgstr "要查看当前环境下的配置，同时查看默认的或是自定义的配置值，执行下面的命令（在后面以参数的形式添加一个"
+"或多个指定的配置名称，可以单独查看指定的配置项）"
 
 #: ../../settings.rst:37
 msgid ""
@@ -73,7 +77,9 @@ msgid ""
 " (True, False, None, etc.), dictionaries, or tuples should *not* be "
 "enclosed in quotation marks. All other values (i.e., strings) *must* be "
 "enclosed in quotation marks."
-msgstr ""
+msgstr "所有设置的键（设置中的变量名）都必须是大写的，否则会被无视。配置值可能是数值（5、20等）、"
+"布尔值（True、False、None等）、字典或者元组。这些值应该以Python值的形式存在， *不* 需要用引号引起来。"
+"除此之外的其他配置值（例如字符串） *必须* 用引号引起来。"
 
 #: ../../settings.rst:43
 msgid ""
@@ -81,15 +87,16 @@ msgid ""
 "absolute or relative to the configuration file. The settings you define "
 "in the configuration file will be passed to the templates, which allows "
 "you to use your settings to add site-wide content."
-msgstr ""
+msgstr "除非另有指定，设置中指定的路径可以是绝对路径，也可以是相对于配置文件的相对路径。设置中配置的东西"
+"会传递到网站模板上，这使得设置中可以添加在整个站点中都能使用的内容。"
 
 #: ../../settings.rst:48
 msgid "Here is a list of settings for Pelican:"
-msgstr ""
+msgstr "下面是Pelican设置项的列表："
 
 #: ../../settings.rst:52
 msgid "Basic settings"
-msgstr ""
+msgstr "基础设置"
 
 #: ../../settings.rst:56
 msgid ""
@@ -97,30 +104,32 @@ msgid ""
 " to ``True``, and organize your articles in subfolders, the subfolder "
 "will become the category of your post. If set to ``False``, "
 "``DEFAULT_CATEGORY`` will be used as a fallback."
-msgstr ""
+msgstr "当您没有在发布内容中指定元数据categroy时，若本项设置设为了 ``True`` ，并且文章也是通过子文件夹"
+"进行分类管理的，那么这些子文件夹的名称就会作为发布内容的分类。若本项设为了 ``False`` ，会使用 ``DEFAULT_CATEGORY`` "
+"配置项的设置值作为默认分类。"
 
 #: ../../settings.rst:63
 msgid "The default category to fall back on."
-msgstr ""
+msgstr "默认的分类"
 
 #: ../../settings.rst:67
 msgid ""
 "Whether to display pages on the menu of the template. Templates may or "
 "may not honor this setting."
-msgstr ""
+msgstr "指定是否将“页面”显示在模板的菜单中。模板可能不会遵循此项。"
 
 #: ../../settings.rst:72
 msgid ""
 "Whether to display categories on the menu of the template. Templates may "
 "or not honor this setting."
-msgstr ""
+msgstr "指定是否将“分类”显示在模板的菜单中。模板可能不会遵循此项。"
 
 #: ../../settings.rst:77
 msgid ""
 "Extra configuration settings for the docutils publisher (applicable only "
 "to reStructuredText). See `Docutils Configuration`_ settings for more "
 "details."
-msgstr ""
+msgstr "docutils的额外配置项（只针对reStructuredText有效）。在 `Docutils 配置`_ 设置中查看更多信息。"
 
 #: ../../settings.rst:82
 msgid ""
@@ -128,69 +137,72 @@ msgid ""
 "generating new files. This can be useful in preventing older, unnecessary"
 " files from persisting in your output. However, **this is a destructive "
 "setting and should be handled with extreme care.**"
-msgstr ""
+msgstr "在生成新文件前删除输出目录和其中 **所有** 的内容。这可以避免一些老的无用的文件一直存在于输出目录中。"
+"但是， **此项配置是具有破坏性的，请谨慎使用** 。"
 
 #: ../../settings.rst:89
 msgid ""
 "A list of filenames that should be retained and not deleted from the "
 "output directory. One use case would be the preservation of version "
 "control data."
-msgstr ""
+msgstr "是一个文件名的列表，包含了应该保留，不从输出目录中删除的文件。可以用在版本控制数据的保留上。"
 
 #: ../../settings.rst:92 ../../settings.rst:107 ../../settings.rst:133
 msgid "Example::"
-msgstr ""
+msgstr "例子："
 
 #: ../../settings.rst:98
 msgid ""
 "A dictionary of custom Jinja2 environment variables you want to use. This"
 " also includes a list of extensions you may want to include. See `Jinja "
 "Environment documentation`_."
-msgstr ""
+msgstr "是一个字典，用于您想要用的自定义的Jinja2环境变量。这其中也包含了要使用的扩展列表。详见"
+" `Jinja环境文档`_ "
 
 #: ../../settings.rst:104
 msgid ""
 "A dictionary of custom Jinja2 filters you want to use.  The dictionary "
 "should map the filtername to the filter function."
-msgstr ""
+msgstr "是一个字典，存放自定义的Jinja2过滤器。此字典中应该是过滤器名称到过滤器函数的映射。"
 
 #: ../../settings.rst:115
 msgid "See: `Jinja custom filters documentation`_."
-msgstr ""
+msgstr "详见： `Jinja自定义过滤器文档`_ 。"
 
 #: ../../settings.rst:119
 msgid ""
 "A dictionary of custom objects to map into the Jinja2 global environment "
 "namespace. The dictionary should map the global name to the global "
 "variable/function. See: `Jinja global namespace documentation`_."
-msgstr ""
+msgstr "是一个字典，可以将自定义对象映射到Jinja2的全局环境命名空间中。字典中应该是全局名称到全局变量/函数的映射。"
+"详见： `Jinja全局命名空间文档`_ 。"
 
 #: ../../settings.rst:125
 msgid ""
 "A dictionary of custom Jinja2 tests you want to use. The dictionary "
 "should map test names to test functions. See: `Jinja custom tests "
 "documentation`_."
-msgstr ""
+msgstr "是一个字典，自定义了要使用的Jinja测试。字典中应该是测试名到测试函数的映射。详见： `Jinja自定义测试文档`_ 。"
 
 #: ../../settings.rst:130
 msgid ""
 "A list of tuples containing the logging level (up to ``warning``) and the"
 " message to be ignored."
-msgstr ""
+msgstr "一个内容是元组的列表，元组中包含日志等级（最高到 ``warning``）和要忽略的消息。"
 
 #: ../../settings.rst:139
 msgid ""
 "A dictionary of file extensions / Reader classes for Pelican to process "
 "or ignore."
-msgstr ""
+msgstr "一个字典，记录了文件扩展名/Reader类。可以据此让Pelican按照指定规则处理或忽略某些文件。"
 
 #: ../../settings.rst:142
 msgid "For example, to avoid processing .html files, set::"
-msgstr ""
+msgstr "例如，下面的配置可以让Pelican忽略 .html的文件不处理："
 
 #: ../../settings.rst:146
 msgid "To add a custom reader for the ``foo`` extension, set::"
-msgstr ""
+msgstr "为扩展名为 ``foo`` 的文件添加自定义的reader："
 
 #: ../../settings.rst:152
 msgid ""
@@ -198,7 +210,8 @@ msgid ""
 "patterns will be ignored by the processor. For example, the default "
 "``['.#*']`` will ignore emacs lock files, and ``['__pycache__']`` would "
 "ignore Python 3's bytecode caches."
-msgstr ""
+msgstr "通配符模式的列表。任何匹配上的文件和目录都会被忽略。例如，默认的 ``['.#*']`` 可以忽略emacs的锁定文件，"
+" ``['__pycache__']`` 则可以忽略Python3的字节码缓存文件。"
 
 #: ../../settings.rst:159
 msgid ""
@@ -207,80 +220,85 @@ msgid ""
 "markdown.github.io/reference/#markdown>`_ for a complete list of "
 "supported options. The ``extensions`` option will be automatically "
 "computed from the ``extension_configs`` option."
-msgstr ""
+msgstr "对Markdown处理器的额外配置。可以参考Python Markdown文档的 `选项章节 <https://python-"
+"markdown.github.io/reference/#markdown>` ，查看可用选项的完整列表。"
+"其中的 ``extensions_configs`` 选项会用于自动计算 ``extensions`` 选项。"
 
 #: ../../settings.rst:165
 msgid "Defaults to::"
-msgstr ""
+msgstr "默认值为："
 
 #: ../../settings.rst:177
 msgid ""
 "The dictionary defined in your settings file will replace this default "
 "one."
-msgstr ""
+msgstr "设置文件中的字典会覆盖默认设置。"
 
 #: ../../settings.rst:182
 msgid ""
 "Where to output the generated files. This should correspond to your web "
 "server's virtual host root directory."
-msgstr ""
+msgstr "输出生成文件的位置。此项配置应该和web服务器虚拟主机的根目录有关。"
 
 #: ../../settings.rst:187
 msgid ""
 "Path to content directory to be processed by Pelican. If undefined, and "
 "content path is not specified via an argument to the ``pelican`` command,"
 " Pelican will use the current working directory."
-msgstr ""
+msgstr "待Pelican处理的文件目录的路径。如果没有定义，也没有再 ``pelican`` 命令中通过参数"
+"指定，Pelican会默认使用当前工作目录。"
 
 #: ../../settings.rst:193
 msgid ""
 "A list of directories and files to look at for pages, relative to "
 "``PATH``."
-msgstr ""
+msgstr "此列表中的目录和文件会被视为页面，路径是相对于 ``PATH`` 的。"
 
 #: ../../settings.rst:197
 msgid ""
 "A list of directories to exclude when looking for pages in addition to "
 "``ARTICLE_PATHS``."
-msgstr ""
+msgstr "除了 ``ARTICLE_PATHS`` 中的文件不会被视为页面外，此选项中也可指定不被视为页面的文件目录。"
 
 #: ../../settings.rst:202
 msgid ""
 "A list of directories and files to look at for articles, relative to "
 "``PATH``."
-msgstr ""
+msgstr "此列表中的目录和文件会被视为文章，路径是相对于 ``PATH`` 的。"
 
 #: ../../settings.rst:207
 msgid ""
 "A list of directories to exclude when looking for articles in addition to"
 " ``PAGE_PATHS``."
-msgstr ""
+msgstr "除了 ``PAGE_PATHS`` 中的文件不会被视为文章外，此选项中也可指定不被视为文章的文件目录。"
 
 #: ../../settings.rst:212
 msgid ""
 "Set to True if you want to copy the articles and pages in their original "
 "format (e.g. Markdown or reStructuredText) to the specified "
 "``OUTPUT_PATH``."
-msgstr ""
+msgstr "如果你想要将文章和页面以源格式（例如Markdown或reStructuredText）复制一份到 ``OUTPUT_PATH`` "
+"目录中，就将此项设为True。"
 
 #: ../../settings.rst:217
 msgid ""
 "Controls the extension that will be used by the SourcesGenerator.  "
 "Defaults to ``.text``. If not a valid string the default value will be "
 "used."
-msgstr ""
+msgstr "控制会被SourcesGenerator使用的扩展名。默认为 ``.text`` 。如果设置的值是无效的，"
+"会使用默认值。"
 
 #: ../../settings.rst:222
 msgid "The list of plugins to load. See :ref:`plugins`."
-msgstr ""
+msgstr "要加载的插件列表。详见 :ref:`plugins` 。"
 
 #: ../../settings.rst:226
 msgid "A list of directories where to look for plugins. See :ref:`plugins`."
-msgstr ""
+msgstr "查找插件的目录列表。详见 :ref:`plugins` 。"
 
 #: ../../settings.rst:230
 msgid "Your site name"
-msgstr ""
+msgstr "你的站点名称。"
 
 #: ../../settings.rst:234
 msgid ""
@@ -290,7 +308,10 @@ msgid ""
 "should begin with ``https://`` — otherwise use ``http://``. Then append "
 "your domain, with no trailing slash at the end. Example: ``SITEURL = "
 "'https://example.com'``"
-msgstr ""
+msgstr "网站的基础URL。此选项没有默认值，因此最好是指定一下SITEURL；如果不指定，"
+"feeds就无法正确生成URL。如果站点使用了HTTPS，那么此项设定最好以 ``https://`` 开头-"
+"否则使用 ``http://`` 即可。在协议后面接着就是域名，不要以斜杠结尾。"
+"一个例子： ``SITEURL = 'https://example.com'`` "
 
 #: ../../settings.rst:243
 msgid ""
@@ -300,11 +321,13 @@ msgid ""
 "normally be skipped, so it is safe for a directory to appear both here "
 "and in ``PAGE_PATHS`` or ``ARTICLE_PATHS``.  Pelican's default settings "
 "include the \"images\" directory here."
-msgstr ""
+msgstr "用于查找静态文件的目录列表。静态文件会原封不动地拷贝到输出目录中。文章、页面"
+"以及其他的内容源文件都会被跳过，因此一个目录可以安全地同时出现在此选项以及 ``PAGE_PATHS`` "
+"或 ``ARTICLE_PATHS`` 中。Pelican默认会将 \"images\" 目录包含在此选项中。"
 
 #: ../../settings.rst:252
 msgid "A list of directories to exclude when looking for static files."
-msgstr ""
+msgstr "此选项列表中的目录都会在搜索静态文件时排除在外。"
 
 #: ../../settings.rst:256
 msgid ""
@@ -315,7 +338,10 @@ msgid ""
 "``ARTICLE_PATHS`` or ``PAGE_PATHS``. If you are trying to publish your "
 "site's source files, consider using the ``OUTPUT_SOURCES`` setting "
 "instead."
-msgstr ""
+msgstr "如果此选项设为False， ``STATIC_PATHS`` 中的内容源文件将不会被忽略，也会像"
+"静态文件一样被原封不动地拷贝。此项设置是为了给3.5版本前的Pelican进行向后兼容的。"
+"此项设置只有在 ``STATIC_PATH`` 中包含了在 ``ARTICLE_PATHS`` 或 ``PAGE_PATHS`` 中也有"
+"的目录时才会生效。如果你是想将站点的源文件发布出去的话，请考虑使用 ``OUTPUT_SOURCES`` 设置。"
 
 #: ../../settings.rst:265
 msgid ""
@@ -324,14 +350,18 @@ msgid ""
 "to symbolic links if the output directory is on a different filesystem. "
 "If symlinks are created, don't forget to add the ``-L`` or ``--copy-"
 "links`` option to rsync when uploading your site."
-msgstr ""
+msgstr "为静态文件创建链接而不是复制文件本身。如果内容和输出目录位于同一设备上，则创建硬链接；"
+"如果输出目录位于不同的文件系统上，则回退至符号链接。若创建了符号链接，使用rsync上传网站时需要"
+"添加-L或--copy-links选项。"
+
 
 #: ../../settings.rst:273
 msgid ""
 "If set to ``True``, and ``STATIC_CREATE_LINKS`` is ``False``, compare "
 "mtimes of content and output files, and only copy content files that are "
 "newer than existing output files."
-msgstr ""
+msgstr "若设置为True，并且 ``STATIC_CREATE_LINKS`` 设为了 ``False`` ，则会和输出"
+"文件的修改时间mtime进行比较，只有当前文件更新时才会执行拷贝。"
 
 #: ../../settings.rst:279
 msgid ""
@@ -339,14 +369,16 @@ msgid ""
 "into the generated HTML via the `Typogrify "
 "<https://pypi.org/project/typogrify/>`_ library, which can be installed "
 "via: ``python -m pip install typogrify``"
-msgstr ""
+msgstr "若此项设置为True，一些显示上的改进将通过 `Typogrify <https://pypi.org/project/typogrify/>`_ 库"
+"合并到生成的HTML中。可以通过 ``python -m pip install typogrify`` 进行安装。"
 
 #: ../../settings.rst:286
 msgid ""
 "A list of tags for Typogrify to ignore. By default Typogrify will ignore "
 "``pre`` and ``code`` tags. This requires that Typogrify version 2.0.4 or "
 "later is installed"
-msgstr ""
+msgstr "指定Typogrify要忽略的标签列表。默认情况下，Typogrify将忽略 ``pre`` 和 ``code`` 标签"
+"此项特性需要安装高于2.0.4版本的Typogrify。"
 
 #: ../../settings.rst:292
 msgid ""
@@ -358,7 +390,10 @@ msgid ""
 "sees two (``--``) and three (``---``) hyphen characters, respectively. "
 "The ``oldschool_inverted`` setting turns two hyphens into an em-dash and "
 "three hyphens into an en-dash."
-msgstr ""
+msgstr "此设置用于设置Typogrify的Smartypants过滤器，控制过滤器如何解释多个破折号/连字符/减号。"
+"单个ASCII破折号字符 (``-``) 始终被视为连字符。``default`` 不处理短破折号，并会将双连字符转换为长破折号。"
+" ``oldschool`` 会将两个 (``--``) 和三个 (``--``) 连字符分别呈现为短破折号和长破折号。"
+" ``oldschool_inverted`` 则会将两个连字符转换为长破折号，而将三个连字符转换为短破折号。"
 
 #: ../../settings.rst:303
 msgid ""
@@ -366,20 +401,22 @@ msgid ""
 "length (measured in words) of the text created.  This only applies if "
 "your content does not otherwise specify a summary. Setting to ``None`` "
 "will cause the summary to be a copy of the original content."
-msgstr ""
+msgstr "当未给文章或页面书写摘要时，会自动创建摘要，此设置指定了默认创建摘要的长度（以字/词为单位）。"
+"若将此项设为 ``None`` ，摘要将会是原始内容的副本。"
 
 #: ../../settings.rst:310
 msgid ""
 "When creating a short summary of an article and the result was truncated "
 "to match the required word length, this will be used as the truncation "
 "suffix."
-msgstr ""
+msgstr "在创建摘要时，若内容因长度被截断，此项设置值将用作截断的结尾。"
 
 #: ../../settings.rst:315
 msgid ""
 "If disabled, content with dates in the future will get a default status "
 "of ``draft``. See :ref:`reading_only_modified_content` for caveats."
-msgstr ""
+msgstr "若此项设为False，带了未来日期的文章或页面的状态都会设为 ``draft`` 。"
+"相关注意事项详见 :ref:`reading_only_modified_content` 。"
 
 #: ../../settings.rst:320
 msgid ""
@@ -388,52 +425,55 @@ msgid ""
 " say ``filename``, in ``{}`` or ``||``. Identifier between ``{`` and "
 "``}`` goes into the ``what`` capturing group.  For details see :ref:`ref-"
 "linking-to-internal-content`."
-msgstr ""
+msgstr "用于解析内部链接的正则表达式。链接到内部文件、标签等时的默认语法是将标识符"
+"（例如 ``filename`` ）括在 ``{}`` 或 ``||`` 中。 ``{`` 和 ``}`` 之间的则进入 ``what`` 捕获组。"
+"更多详情请参见 :ref:`ref-linking-to-internal-content` 。"
 
 #: ../../settings.rst:328
 msgid ""
 "A list of default Pygments settings for your reStructuredText code "
 "blocks. See :ref:`internal_pygments_options` for a list of supported "
 "options."
-msgstr ""
+msgstr "reStructuredText代码块的默认Pygments设置列表。有关受支持选项的列表，请参阅 :ref:`internal_pygments_options` 。"
 
 #: ../../settings.rst:333
 msgid ""
 "If ``True``, saves content in caches.  See "
 ":ref:`reading_only_modified_content` for details about caching."
-msgstr ""
+msgstr "若设为 ``True`` ，会将内容保存在缓存中。有关缓存请参阅 :ref:`reading_only_modified_content` 。"
 
 #: ../../settings.rst:338
 msgid ""
 "If set to ``'reader'``, save only the raw content and metadata returned "
 "by readers. If set to ``'generator'``, save processed content objects."
-msgstr ""
+msgstr "若设为 ``reader`` ，则只保存reader返回的原始内容和元数据。若设为 ``generator`` ，"
+"则保存处理过的内容对象。"
 
 #: ../../settings.rst:343
 msgid "Directory in which to store cache files."
-msgstr ""
+msgstr "指定存储缓存文件的目录。"
 
 #: ../../settings.rst:347
 msgid "If ``True``, use gzip to (de)compress the cache files."
-msgstr ""
+msgstr "若设为 ``True`` ，则使用gzip对缓存文件进行解压缩。"
 
 #: ../../settings.rst:351
 msgid "Controls how files are checked for modifications."
-msgstr ""
+msgstr "控制检查文件修改的方式"
 
 #: ../../settings.rst:353 ../../settings.rst:1345
 msgid "If set to ``'mtime'``, the modification time of the file is checked."
-msgstr ""
+msgstr "若设为 ``mtime`` ，则检查文件的修改时间。"
 
 #: ../../settings.rst:355 ../../settings.rst:1347
 msgid ""
 "If set to a name of a function provided by the ``hashlib`` module, e.g. "
 "``'md5'``, the file hash is checked."
-msgstr ""
+msgstr "若设为 ``hashlib`` 库中提供的方法名，例如 ``md5`` ，则会检查文件的哈希值。"
 
 #: ../../settings.rst:360
 msgid "If ``True``, load unmodified content from caches."
-msgstr ""
+msgstr "若设为 ``True`` ，则会从缓存中加载未修改的内容。"
 
 #: ../../settings.rst:364
 msgid ""
@@ -441,27 +481,28 @@ msgid ""
 " list are written. Paths should be either absolute or relative to the "
 "current Pelican working directory. For possible use cases see "
 ":ref:`writing_only_selected_content`."
-msgstr ""
+msgstr "若此列表不为空，则 **只会** 输出路径在此列表中的文件。路径可以是绝对的"
+"也可以是相对于Pelican当前工作路径的。有关可能使用到的情况，请参见 :ref:`writing_only_selected_content` 。"
 
 #: ../../settings.rst:371
 msgid ""
 "A list of metadata fields containing reST/Markdown content to be parsed "
 "and translated to HTML."
-msgstr ""
+msgstr "元数据的列表，此列表中的元数据会被解析为HTML。"
 
 #: ../../settings.rst:376
 msgid ""
 "The TCP port to serve content from the output folder via HTTP when "
 "pelican is run with --listen"
-msgstr ""
+msgstr "使用--listen运行pelican时，会在此选项指定的TCP端口上以HTTP提供内容。"
 
 #: ../../settings.rst:381
 msgid "The IP to which to bind the HTTP server."
-msgstr ""
+msgstr "需要和HTTP服务器绑定的IP地址。"
 
 #: ../../settings.rst:386
 msgid "URL settings"
-msgstr ""
+msgstr "URL设置"
 
 #: ../../settings.rst:388
 msgid ""
