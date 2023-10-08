@@ -67,7 +67,7 @@ Deployment
 
 After you have generated your site, previewed it in your local development
 environment, and are ready to deploy it to production, you might first
-re-generate your site with any production-specific settings (e.g., analytics
+re-generate your site with any production-specific settings (e.g., analytics,
 feeds, etc.) that you may have defined::
 
     pelican content -s publishconf.py

@@ -21,7 +21,7 @@ Optional arguments:
 """""""""""""""""""
 
 
--h, --help                              Show the help an exit
+-h, --help                              Show the help and exit
 
 -l, --list                              Show the themes already installed
 
@@ -29,7 +29,7 @@ Optional arguments:
 
 -r theme_name, --remove theme_name      One or more themes to remove
 
--s theme_path, --symlink theme_path     Same as "--install", but create a symbolic link instead of copying the theme.
+-s theme_path, --symlink theme_path     Same as ``--install``, but create a symbolic link instead of copying the theme.
                                         Useful for theme development
 
 -v, --verbose                           Verbose output
@@ -62,7 +62,7 @@ or ``--list`` option:
 In this example, we can see there are three themes available: ``notmyidea``,
 ``simple``, and ``two-column``.
 
-``two-column`` is prefixed with an ``@`` because this theme is not copied to
+``two-column`` is followed by an ``@`` because this theme is not copied to
 the Pelican theme path, but is instead just linked to it (see `Creating
 symbolic links`_ for details about creating symbolic links).
 
@@ -82,7 +82,7 @@ Installing themes
 
 You can install one or more themes using the ``-i`` or ``--install`` option.
 This option takes as argument the path(s) of the theme(s) you want to install,
-and can be combined with the verbose option:
+and can be combined with the ``--verbose`` option:
 
 .. code-block:: console
 
@@ -154,7 +154,7 @@ This is useful for theme development:
 Doing several things at once
 """"""""""""""""""""""""""""
 
-The ``--install``, ``--remove`` and ``--symlink`` option are not mutually
+The ``--install``, ``--remove`` and ``--symlink`` options are not mutually
 exclusive, so you can combine them in the same command line to do more than one
 operation at time, like this:
 

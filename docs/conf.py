@@ -25,7 +25,7 @@ rst_prolog = '''
 '''.format(last_stable)
 
 extlinks = {
-    'pelican-doc':  ('https://docs.getpelican.com/%s/', '%s')
+    'pelican-doc':  ('https://docs.getpelican.com/en/latest/%s.html', '%s')
 }
 
 # -- Options for HTML output --------------------------------------------------

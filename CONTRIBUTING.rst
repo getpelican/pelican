@@ -20,7 +20,7 @@ Before you ask for help, please make sure you do the following:
    you read the docs for the Pelican version you are using.
 2. Use a search engine (e.g., DuckDuckGo, Google) to search for a solution to
    your problem. Someone may have already found a solution, perhaps in the
-   form of a plugin_ or a specific combination of settings.
+   form of a ':pelican-doc:`plugins` or a specific combination of settings.
 
 3. Try reproducing the issue in a clean environment, ensuring you are using:
 
@@ -77,7 +77,7 @@ Contributing code
 Before you submit a contribution, please ask whether it is desired so that you
 don't spend a lot of time working on something that would be rejected for a
 known reason. Consider also whether your new feature might be better suited as
-a plugin_ — you can `ask for help`_  to make that determination.
+a ':pelican-doc:`plugins` — you can `ask for help`_  to make that determination.
 
 Using Git and GitHub
 --------------------
@@ -132,8 +132,8 @@ Contribution quality standards
 * Ensure your code is compatible with the `officially-supported Python releases`_.
 * Add docs and tests for your changes. Undocumented and untested features will
   not be accepted.
-* `Run all the tests`_ **on all versions of Python supported by Pelican** to
-  ensure nothing was accidentally broken.
+* :pelican-doc:`Run all the tests <contribute>` **on all versions of Python
+  supported by Pelican** to ensure nothing was accidentally broken.
 
 Check out our `Git Tips`_ page or `ask for help`_ if you
 need assistance or have any questions about these guidelines.
@@ -141,7 +141,6 @@ need assistance or have any questions about these guidelines.
 .. _`plugin`: https://docs.getpelican.com/en/latest/plugins.html
 .. _`Create a new branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
 .. _`Squash your commits`: https://github.com/getpelican/pelican/wiki/Git-Tips#squashing-commits
-.. _`Run all the tests`: https://docs.getpelican.com/en/latest/contribute.html#running-the-test-suite
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
 .. _`PEP8 coding standards`: https://www.python.org/dev/peps/pep-0008/
 .. _`ask for help`: `How to get help`_

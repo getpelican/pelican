@@ -7,7 +7,10 @@ from typing import Mapping
 
 from jinja2 import Environment, FileSystemLoader
 
-import pytz
+try:
+    import zoneinfo
+except ModuleNotFoundError:
+    from backports import zoneinfo
 
 try:
     import readline  # NOQA
@@ -16,9 +19,12 @@ except ImportError:
 
 try:
     import tzlocal
-    _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
-except ImportError:
-    _DEFAULT_TIMEZONE = 'Europe/Rome'
+    if hasattr(tzlocal.get_localzone(), "zone"):
+        _DEFAULT_TIMEZONE = tzlocal.get_localzone().zone
+    else:
+        _DEFAULT_TIMEZONE = tzlocal.get_localzone_name()
+except ModuleNotFoundError:
+    _DEFAULT_TIMEZONE = "Europe/Rome"
 
 from pelican import __version__
 
@@ -158,16 +164,15 @@ def ask(question, answer=str, default=None, length=None):
 
 def ask_timezone(question, default, tzurl):
     """Prompt for time zone and validate input"""
-    lower_tz = [tz.lower() for tz in pytz.all_timezones]
+    tz_dict = {tz.lower(): tz for tz in zoneinfo.available_timezones()}
     while True:
         r = ask(question, str, default)
-        r = r.strip().replace(' ', '_').lower()
-        if r in lower_tz:
-            r = pytz.all_timezones[lower_tz.index(r)]
+        r = r.strip().replace(" ", "_").lower()
+        if r in tz_dict.keys():
+            r = tz_dict[r]
             break
         else:
-            print('Please enter a valid time zone:\n'
-                  ' (check [{}])'.format(tzurl))
+            print("Please enter a valid time zone:\n" " (check [{}])".format(tzurl))
     return r
 
 
