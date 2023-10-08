@@ -34,11 +34,10 @@ Structure
 To make your own theme, you must follow the following structure::
 
     ├── static
-    │   ├── css
-    │   └── images
+    │   ├── css
+    │   └── images
     └── templates
         ├── archives.html         // to display archives
-        ├── period_archives.html  // to display time-period archives
         ├── article.html          // processed for each article
         ├── author.html           // processed for each author
         ├── authors.html          // must list all the authors
@@ -46,6 +45,7 @@ To make your own theme, you must follow the following structure::
         ├── category.html         // processed for each category
         ├── index.html            // the index (list all the articles)
         ├── page.html             // processed for each page
+        ├── period_archives.html  // to display time-period archives
         ├── tag.html              // processed for each tag
         └── tags.html             // must list all the tags. Can be a tag cloud.
 
@@ -465,14 +465,14 @@ The feed variables changed in 3.0. Each variable now explicitly lists ATOM or
 RSS in the name. ATOM is still the default. Old themes will need to be updated.
 Here is a complete list of the feed variables::
 
-    FEED_ATOM
-    FEED_RSS
-    FEED_ALL_ATOM
-    FEED_ALL_RSS
-    CATEGORY_FEED_ATOM
-    CATEGORY_FEED_RSS
     AUTHOR_FEED_ATOM
     AUTHOR_FEED_RSS
+    CATEGORY_FEED_ATOM
+    CATEGORY_FEED_RSS
+    FEED_ALL_ATOM
+    FEED_ALL_RSS
+    FEED_ATOM
+    FEED_RSS
     TAG_FEED_ATOM
     TAG_FEED_RSS
     TRANSLATION_FEED_ATOM

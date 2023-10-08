@@ -18,9 +18,11 @@ from operator import attrgetter
 
 import dateutil.parser
 
+try:
+    from zoneinfo import ZoneInfo
+except ModuleNotFoundError:
+    from backports.zoneinfo import ZoneInfo
 from markupsafe import Markup
-
-import pytz
 
 
 logger = logging.getLogger(__name__)
@@ -155,7 +157,9 @@ class memoized:
 
     def __get__(self, obj, objtype):
         '''Support instance methods.'''
-        return partial(self.__call__, obj)
+        fn = partial(self.__call__, obj)
+        fn.cache = self.cache
+        return fn
 
 
 def deprecated_attribute(old, new, since=None, remove=None, doc=None):
@@ -917,10 +921,11 @@ class FileSystemWatcher:
 def set_date_tzinfo(d, tz_name=None):
     """Set the timezone for dates that don't have tzinfo"""
     if tz_name and not d.tzinfo:
-        tz = pytz.timezone(tz_name)
-        d = tz.localize(d)
-        return SafeDatetime(d.year, d.month, d.day, d.hour, d.minute, d.second,
-                            d.microsecond, d.tzinfo)
+        timezone = ZoneInfo(tz_name)
+        d = d.replace(tzinfo=timezone)
+        return SafeDatetime(
+            d.year, d.month, d.day, d.hour, d.minute, d.second, d.microsecond, d.tzinfo
+        )
     return d
 
 

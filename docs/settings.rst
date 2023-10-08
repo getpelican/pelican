@@ -15,6 +15,9 @@ setting file. Note that values must follow JSON notation::
 
     pelican content -e SITENAME='"A site"' READERS='{"html": null}' CACHE_CONTENT=true
 
+Environment variables can also be used here but must be escaped appropriately::
+
+    pelican content -e API_KEY=''\"$API_KEY\"''
 
 .. note::
 
@@ -1242,18 +1245,19 @@ Feel free to use them in your themes as well.
    Your GitHub URL (if you have one). It will then use this information to
    create a GitHub ribbon.
 
-.. data:: GOOGLE_ANALYTICS
+.. data:: ANALYTICS
 
-   Set to ``UA-XXXXX-Y`` Property's tracking ID to activate Google Analytics.
+   Put any desired analytics scripts in this setting in ``publishconf.py``.
+   Example:
 
-.. data:: GA_COOKIE_DOMAIN
+   .. parsed-literal::
 
-   Set cookie domain field of Google Analytics tracking code. Defaults to
-   ``auto``.
-
-.. data:: GOSQUARED_SITENAME
-
-   Set to 'XXX-YYYYYY-X' to activate GoSquared.
+      ANALYTICS = """
+          <script src="/theme/js/primary-analytics.js"></script>
+          <script>
+              [ … in-line Javascript code for secondary analytics … ]
+          </script>
+      """
 
 .. data:: MENUITEMS
 

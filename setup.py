@@ -9,8 +9,8 @@ from setuptools import find_packages, setup
 version = "4.8.0"
 
 requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
-            'docutils>=0.15', 'pytz >= 0a', 'blinker', 'unidecode',
-            'python-dateutil', 'rich']
+            'docutils>=0.15', 'blinker', 'unidecode', 'python-dateutil',
+            'rich', 'backports-zoneinfo[tzdata] >= 0.2; python_version<"3.9"']
 
 entry_points = {
     'console_scripts': [
@@ -77,6 +77,8 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: Implementation :: CPython',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries :: Python Modules',

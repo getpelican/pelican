@@ -543,13 +543,15 @@ def main(argv=None):
                 target=listen,
                 args=(settings.get('BIND'), settings.get('PORT'),
                       settings.get("OUTPUT_PATH"), excqueue))
-            p1.start()
-            p2.start()
-            exc = excqueue.get()
-            p1.terminate()
-            p2.terminate()
-            if exc is not None:
-                logger.critical(exc)
+            try:
+                p1.start()
+                p2.start()
+                exc = excqueue.get()
+                if exc is not None:
+                    logger.critical(exc)
+            finally:
+                p1.terminate()
+                p2.terminate()
         elif args.autoreload:
             autoreload(args)
         elif args.listen:

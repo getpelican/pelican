@@ -4,4 +4,8 @@
 # Improve accuracy of GitHub's Linguist-powered language statistics
 pelican/tests/content/* linguist-vendored
 pelican/tests/output/* linguist-vendored
+pelican/tests/theme_overrides/* linguist-vendored
+pelican/themes/notmyidea/templates/*.html linguist-language=Jinja
+pelican/themes/simple/templates/*.html linguist-language=Jinja
 samples/* linguist-vendored
+*.html linguist-vendored

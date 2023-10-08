@@ -95,8 +95,9 @@ contains a list of reserved metadata keywords:
 ``url``         URL to use for this article/page
 =============== ===============================================================
 
-Readers for additional formats (such as AsciiDoc_) are available via plugins.
-Refer to `pelican-plugins`_ repository for those.
+Readers for additional formats (such as AsciiDoc_) are available via plugins,
+which you can find via the `Pelican Plugins`_ collection as well as the legacy
+`pelican-plugins`_ repository.
 
 Pelican can also process HTML files ending in ``.html`` and ``.htm``. Pelican
 interprets the HTML in a very straightforward manner, reading metadata from
@@ -183,7 +184,7 @@ files in it will be used to generate static pages, such as **About** or
 You can use the ``DISPLAY_PAGES_ON_MENU`` setting to control whether all those
 pages are displayed in the primary navigation menu. (Default is ``True``.)
 
-If you want to exclude any pages from being linked to or listed in the menu
+If you want to exclude any pages from being linked to or listed in the menu,
 then add a ``status: hidden`` attribute to its metadata. This is useful for
 things like making error pages that fit the generated theme of your site.
 
@@ -234,7 +235,7 @@ that may be sitting alongside that post (instead of having to determine where
 the other content will be placed after site generation).
 
 To link to internal content (files in the ``content`` directory), use the
-following syntax for the link target: ``{filename}path/to/file``
+following syntax for the link target: ``{filename}path/to/file``.
 Note: forward slashes, ``/``,
 are the required path separator in the ``{filename}`` directive
 on all operating systems, including Windows.
@@ -306,7 +307,7 @@ Attaching static files
 ----------------------
 
 Starting with Pelican 3.5, static files can be "attached" to a page or article
-using this syntax for the link target: ``{attach}path/to/file`` This works
+using this syntax for the link target: ``{attach}path/to/file``. This works
 like the ``{static}`` syntax, but also relocates the static file into the
 linking document's output directory. If the static file originates from a
 subdirectory beneath the linking document's source, that relationship will be
@@ -538,12 +539,12 @@ The specified identifier (e.g. ``python``, ``ruby``) should be one that
 appears on the `list of available lexers <https://pygments.org/docs/lexers/>`_.
 
 When using reStructuredText the following options are available in the
-code-block directive:
+`code-block` directive:
 
 =============   ============  =========================================
 Option          Valid values  Description
 =============   ============  =========================================
-anchorlinenos   N/A           If present wrap line numbers in <a> tags.
+anchorlinenos   N/A           If present, wrap line numbers in ``<a>`` tags.
 classprefix     string        String to prepend to token class names
 hl_lines        numbers       List of lines to be highlighted, where
                               line numbers to highlight are separated
@@ -554,22 +555,22 @@ hl_lines        numbers       List of lines to be highlighted, where
                               line numbers.
 lineanchors     string        Wrap each line in an anchor using this
                               string and -linenumber.
-linenos         string        If present or set to "table" output line
-                              numbers in a table, if set to
-                              "inline" output them inline. "none" means
+linenos         string        If present or set to "table", output line
+                              numbers in a table; if set to
+                              "inline", output them inline. "none" means
                               do not output the line numbers for this
                               table.
-linenospecial   number        If set every nth line will be given the
-                              'special' css class.
+linenospecial   number        If set, every nth line will be given the
+                              'special' CSS class.
 linenostart     number        Line number for the first line.
 linenostep      number        Print every nth line number.
 lineseparator   string        String to print between lines of code,
                               '\n' by default.
 linespans       string        Wrap each line in a span using this and
                               -linenumber.
-nobackground    N/A           If set do not output background color for
+nobackground    N/A           If set, do not output background color for
                               the wrapping element
-nowrap          N/A           If set do not wrap the tokens at all.
+nowrap          N/A           If set, do not wrap the tokens at all.
 tagsfile        string        ctags file to use for name definitions.
 tagurlformat    string        format for the ctag links.
 =============   ============  =========================================
@@ -595,7 +596,7 @@ Pelican settings file to include options that will be automatically applied to
 every code block.
 
 For example, if you want to have line numbers displayed for every code block
-and a CSS prefix you would set this variable to::
+and a CSS prefix, you would set this variable to::
 
     PYGMENTS_RST_OPTIONS = {'classprefix': 'pgcss', 'linenos': 'table'}
 
@@ -611,7 +612,7 @@ its metadata. That article will then be output to the ``drafts`` folder and not
 listed on the index page nor on any category or tag page.
 
 If your articles should be automatically published as a draft (to not
-accidentally publish an article before it is finished) include the status in
+accidentally publish an article before it is finished), include the status in
 the ``DEFAULT_METADATA``::
 
     DEFAULT_METADATA = {
@@ -626,11 +627,12 @@ Hidden Posts
 
 Like pages, posts can also be marked as ``hidden`` with the ``Status: hidden``
 attribute. Hidden posts will be output to ``ARTICLE_SAVE_AS`` as expected, but
-are not included by default in tag, category, and author indexes, nor in the 
+are not included by default in tag, category, and author indexes, nor in the
 main article feed. This has the effect of creating an "unlisted" post.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: https://www.methods.co.nz/asciidoc/
+.. _Pelican Plugins: https://github.com/pelican-plugins
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 .. _Python-Markdown: https://github.com/Python-Markdown/markdown
 .. _Markdown Extensions: https://python-markdown.github.io/extensions/

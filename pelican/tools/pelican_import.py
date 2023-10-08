@@ -15,7 +15,7 @@ from urllib.request import urlretrieve
 
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
-from pelican.settings import read_settings
+from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
 
 
@@ -285,8 +285,7 @@ def dc2fields(file):
 
     print("%i posts read." % len(posts))
 
-    settings = read_settings()
-    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+    subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
     for post in posts:
         fields = post.split('","')
 
@@ -404,8 +403,7 @@ def posterous2fields(api_token, email, password):
 
     page = 1
     posts = get_posterous_posts(api_token, email, password, page)
-    settings = read_settings()
-    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+    subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
     while len(posts) > 0:
         posts = get_posterous_posts(api_token, email, password, page)
         page += 1
@@ -446,8 +444,7 @@ def tumblr2fields(api_key, blogname):
 
     offset = 0
     posts = get_tumblr_posts(api_key, blogname, offset)
-    settings = read_settings()
-    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+    subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
     while len(posts) > 0:
         for post in posts:
             title = \
@@ -531,8 +528,7 @@ def feed2fields(file):
     """Read a feed and yield pelican fields"""
     import feedparser
     d = feedparser.parse(file)
-    settings = read_settings()
-    subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+    subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
     for entry in d.entries:
         date = (time.strftime('%Y-%m-%d %H:%M', entry.updated_parsed)
                 if hasattr(entry, 'updated_parsed') else None)
@@ -778,8 +774,7 @@ def fields2pelican(
     pandoc_version = get_pandoc_version()
     posts_require_pandoc = []
 
-    settings = read_settings()
-    slug_subs = settings['SLUG_REGEX_SUBSTITUTIONS']
+    slug_subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
 
     for (title, content, filename, date, author, categories, tags, status,
             kind, in_markup) in fields:
@@ -839,12 +834,15 @@ def fields2pelican(
                     if pandoc_version >= (1, 16) else '--no-wrap'
                 cmd = ('pandoc --normalize {0} --from=html'
                        ' --to={1} {2} -o "{3}" "{4}"')
-                cmd = cmd.format(parse_raw, out_markup, wrap_none,
+                cmd = cmd.format(parse_raw,
+                                 out_markup if out_markup != 'markdown' else "gfm",
+                                 wrap_none,
                                  out_filename, html_filename)
             else:
                 from_arg = '-f html+raw_html' if not strip_raw else '-f html'
                 cmd = ('pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"')
-                cmd = cmd.format(from_arg, out_markup,
+                cmd = cmd.format(from_arg,
+                                 out_markup if out_markup != 'markdown' else "gfm",
                                  out_filename, html_filename)
 
             try:
