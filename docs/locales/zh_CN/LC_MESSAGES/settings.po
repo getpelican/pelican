@@ -515,7 +515,11 @@ msgid ""
 "quickstart`` script as described in the :doc:`Installation <install>` "
 "section, which will produce two separate configuration files for local "
 "development and publishing, respectively."
-msgstr ""
+msgstr "首先要知道的是，URL格式有两种形式： *相对URL* 、 *绝对URL* 。相对URL在本地测试时"
+"往往比较有用，而绝对URL在发布时往往是比较有效可靠的。要同时支持两种URL形式，可以在本地开发和发布"
+"环境中使用两份不同的配置文件。执行脚本 ``pelican-quickstart`` 就是一个例子，会为本地开发和发布环境"
+"分别生成一份配置文件，此脚本在 :doc:`Installation <install>` 一节中有详细描述。"
+
 
 #: ../../settings.rst:397
 msgid ""
@@ -525,7 +529,10 @@ msgid ""
 "``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see "
 "example below). These settings give you the flexibility to place your "
 "articles and pages anywhere you want."
-msgstr ""
+msgstr "URL和文件存储位置都是可以自定义的， ``*_URL`` 和 ``*_SAVE_AS`` 变量使用Python风格的"
+"格式化字符串。你可以利用一些变量将文章放在诸如 ``{slug}/index.html`` 的位置，并且"
+"可以以 ``{slug}`` 的形式进行链接，如此可以让URL更加简洁（详见下面的例子）。这些设置"
+"可以让你灵活地将文章和页面放在任何你想要的地方。"
 
 #: ../../settings.rst:405
 msgid ""
@@ -533,44 +540,45 @@ msgid ""
 " the parent directory inside the corresponding ``*_URL`` setting, this "
 "may cause Pelican to generate unexpected URLs in a few cases, such as "
 "when using the ``{attach}`` syntax."
-msgstr ""
+msgstr "如果 ``*_SAVE_AS`` 中包含了不在 ``*_URL`` 中的父目录，会导致Pelican在"
+"少数情况下（例如使用 ``{attach}`` 语法时）产生不可知的URL。"
 
 #: ../../settings.rst:410
 msgid ""
 "If you don't want that flexibility and instead prefer that your generated"
 " output paths mirror your source content's filesystem path hierarchy, try"
 " the following settings::"
-msgstr ""
+msgstr "若不希望有这种灵活性，而是希望生成的输出路径保留源内容路径的层次结构，可以尝试下面的设置::"
 
 #: ../../settings.rst:417
 msgid ""
 "Otherwise, you can use a variety of file metadata attributes within URL-"
 "related settings:"
-msgstr ""
+msgstr "否则，可以在URL相关设置中可以使用下面的这些元数据属性："
 
 #: ../../settings.rst:420
 msgid "slug"
-msgstr ""
+msgstr "slug"
 
 #: ../../settings.rst:421
 msgid "date"
-msgstr ""
+msgstr "date"
 
 #: ../../settings.rst:422
 msgid "lang"
-msgstr ""
+msgstr "lang"
 
 #: ../../settings.rst:423
 msgid "author"
-msgstr ""
+msgstr "author"
 
 #: ../../settings.rst:424
 msgid "category"
-msgstr ""
+msgstr "category"
 
 #: ../../settings.rst:426 ../../settings.rst:561
 msgid "Example usage::"
-msgstr ""
+msgstr "用例："
 
 #: ../../settings.rst:433
 msgid ""
@@ -578,7 +586,9 @@ msgid ""
 "/sample-post/index.html``, save your pages into "
 "``/pages/about/index.html``, and render them available at URLs of "
 "``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively."
-msgstr ""
+msgstr "上面的设置会将你的文章以类似于 ``/posts/2011/Aug/07/sample-post/index.html`` 的形式存储，"
+"页面则以 ``/pages/about/index.html`` 的形式存储，对应的URL分别为 ``/posts/2011/Aug/07/sample-post/`` 与"
+" ``/pages/about/`` 。"
 
 #: ../../settings.rst:439
 msgid ""
@@ -586,116 +596,119 @@ msgid ""
 " input files' date metadata attribute. If the date is not specified for a"
 " particular file, Pelican will rely on the file's ``mtime`` timestamp. "
 "Check the `Python datetime documentation`_ for more information."
-msgstr ""
+msgstr "如果指定了 ``datetime`` 的指令，会使用输入文件的日期元数据进行替换。若没有指定日期"
+"Pelican会根据文件的 ``mtime`` 时间戳替换。更多信息可以参考 `Python datetime文档`_ 。"
 
 #: ../../settings.rst:449
 msgid ""
 "Defines whether Pelican should use document-relative URLs or not. Only "
 "set this to ``True`` when developing/testing and only if you fully "
 "understand the effect it can have on links/feeds."
-msgstr ""
+msgstr "定义Pelican是否使用文档间相对URL。请只在开发或测试时将此项设为 ``True`` ，并且确保"
+"你已经明白此项设置对链接与feed的影响。"
+"（译者注：当此项为True时，网页之间的链接会使用相对路径表达，例如 ``../my-article.html`` ）"
 
 #: ../../settings.rst:455
 msgid "The URL to refer to an article."
-msgstr ""
+msgstr "文章的URL格式。"
 
 #: ../../settings.rst:459
 msgid "The place where we will save an article."
-msgstr ""
+msgstr "文章的存储位置。"
 
 #: ../../settings.rst:463
 msgid "The URL to refer to an article which doesn't use the default language."
-msgstr ""
+msgstr "非默认语言文章的URL格式。"
 
 #: ../../settings.rst:467
 msgid ""
 "The place where we will save an article which doesn't use the default "
 "language."
-msgstr ""
+msgstr "非默认语言文章的存储位置。"
 
 #: ../../settings.rst:472
 msgid "The URL to refer to an article draft."
-msgstr ""
+msgstr "draft状态文章的URL格式。"
 
 #: ../../settings.rst:476
 msgid "The place where we will save an article draft."
-msgstr ""
+msgstr "draft状态文章的存储位置。"
 
 #: ../../settings.rst:480
 msgid ""
 "The URL to refer to an article draft which doesn't use the default "
 "language."
-msgstr ""
+msgstr "draft状态非默认语言文章的URL格式。"
 
 #: ../../settings.rst:484
 msgid ""
 "The place where we will save an article draft which doesn't use the "
 "default language."
-msgstr ""
+msgstr "draft状态非默认语言文章的存储位置。"
 
 #: ../../settings.rst:489
 msgid "The URL we will use to link to a page."
-msgstr ""
+msgstr "页面的URL格式。"
 
 #: ../../settings.rst:493
 msgid ""
 "The location we will save the page. This value has to be the same as "
 "PAGE_URL or you need to use a rewrite in your server config."
-msgstr ""
+msgstr "页面的保存位置。除非在服务器上设置了重写规则，否则此项设置必须和PAGE_URL一致。"
 
 #: ../../settings.rst:498
 msgid ""
 "The URL we will use to link to a page which doesn't use the default "
 "language."
-msgstr ""
+msgstr "非默认语言页面的URL格式。"
 
 #: ../../settings.rst:503
 msgid "The location we will save the page which doesn't use the default language."
-msgstr ""
+msgstr "非默认语言页面的存储位置。"
 
 #: ../../settings.rst:507
 msgid "The URL used to link to a page draft."
-msgstr ""
+msgstr "draft状态页面的URL。"
 
 #: ../../settings.rst:511
 msgid "The actual location a page draft is saved at."
-msgstr ""
+msgstr "draft状态页面的实际存储位置。"
 
 #: ../../settings.rst:515
 msgid ""
 "The URL used to link to a page draft which doesn't use the default "
 "language."
-msgstr ""
+msgstr "draft状态非默认语言页面的URL格式。"
 
 #: ../../settings.rst:520
 msgid ""
 "The actual location a page draft which doesn't use the default language "
 "is saved at."
-msgstr ""
+msgstr "draft状态非默认语言页面的实际存储位置。"
 
 #: ../../settings.rst:525
 msgid "The URL to use for an author."
-msgstr ""
+msgstr "某一个作者的URL格式。"
 
 #: ../../settings.rst:529
 msgid "The location to save an author."
-msgstr ""
+msgstr "某一个作者的存储位置。"
 
 #: ../../settings.rst:533
 msgid "The URL to use for a category."
-msgstr ""
+msgstr "某一个分类的URL格式。"
 
 #: ../../settings.rst:537
 msgid "The location to save a category."
-msgstr ""
+msgstr "某一个分类的存储位置。"
 
 #: ../../settings.rst:541
 msgid "The URL to use for a tag."
-msgstr ""
+msgstr "某一个标签的URL格式。"
 
 #: ../../settings.rst:545
 msgid "The location to save the tag page."
-msgstr ""
+msgstr "某一个标签的存储位置"
 
 #: ../../settings.rst:549
 msgid ""
@@ -703,7 +716,8 @@ msgid ""
 "you are the only author on your site and thus do not need an Authors "
 "page), set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent "
 "the relevant page from being generated."
-msgstr ""
+msgstr "如果您不希望创建默认页面（例如你是网站上的唯一作者，因此不需要作者页面），"
+"请将相应的 ``*_SAVE_AS`` 设置设置为 ``''`` 。"
 
 #: ../../settings.rst:554
 msgid ""
@@ -713,14 +727,17 @@ msgid ""
 "``_SAVE_AS`` settings. Period archives fit intuitively with the "
 "hierarchical model of web URLs and can make it easier for readers to "
 "navigate through the posts you've written over time."
-msgstr ""
+msgstr "可选地，Pelican可以为帖子创建每年、每月或是每日的归档。除非你为各自的 ``*_SAVE_AS`` "
+"设置了格式化字符串，否则这些归档在默认情况下是关闭的。按时间进行归档更直观地符合web URL地层次模型，"
+"也可以让读者更容易按时间顺序浏览帖子。"
 
 #: ../../settings.rst:566
 msgid ""
 "With these settings, Pelican will create an archive of all your posts for"
 " the year at (for instance) ``posts/2011/index.html`` and an archive of "
 "all your posts for the month at ``posts/2011/Aug/index.html``."
-msgstr ""
+msgstr "例如若使用了上面的设置，Pelican会创建按年的归档（例如 ``posts/2011/index.html`` ），"
+"以及按月的归档（例如 ``posts/2011/Aug/index.html`` ）。"
 
 #: ../../settings.rst:571
 msgid ""
@@ -728,64 +745,66 @@ msgid ""
 "This way a reader can remove a portion of your URL and automatically "
 "arrive at an appropriate archive of posts, without having to specify a "
 "page name."
-msgstr ""
+msgstr "当路径设置为以 ``index.html`` 结尾时，归档的体验会非常好。读者可以删除URL中的一部分"
+"以到达合适时间段的归档，而不需要指定某一个页面的名称。"
 
 #: ../../settings.rst:577
 msgid ""
 "The URL to use for per-year archives of your posts. Used only if you have"
 " the ``{url}`` placeholder in ``PAGINATION_PATTERNS``."
-msgstr ""
+msgstr "帖子年归档的URL。只有在 ``PAGINATION_PATTERNS`` 中使用 ``{url}`` 时才生效。"
 
 #: ../../settings.rst:582
 msgid "The location to save per-year archives of your posts."
-msgstr ""
+msgstr "年归档的存储位置。"
 
 #: ../../settings.rst:586
 msgid ""
 "The URL to use for per-month archives of your posts. Used only if you "
 "have the ``{url}`` placeholder in ``PAGINATION_PATTERNS``."
-msgstr ""
+msgstr "帖子月归档的URL。只有在 ``PAGINATION_PATTERNS`` 中使用 ``{url}`` 时才生效。"
 
 #: ../../settings.rst:591
 msgid "The location to save per-month archives of your posts."
-msgstr ""
+msgstr "月归档的存储位置。"
 
 #: ../../settings.rst:595
 msgid ""
 "The URL to use for per-day archives of your posts. Used only if you have "
 "the ``{url}`` placeholder in ``PAGINATION_PATTERNS``."
-msgstr ""
+msgstr "帖子日归档的URL。只有在 ``PAGINATION_PATTERNS`` 中使用 ``{url}`` 时才生效。"
 
 #: ../../settings.rst:600
 msgid "The location to save per-day archives of your posts."
-msgstr ""
+msgstr "日归档的存储位置。"
 
 #: ../../settings.rst:602
 msgid ""
 "``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the "
 "``_SAVE_AS`` settings are available, but it is available for any direct "
 "template."
-msgstr ""
+msgstr " ``DIRECT_TEMPLATES`` 的工作方式与上面提到的有点不同，在其中可以使用一些特别的直接模板，"
+"并且仅 ``*_SAVE_AS`` 设置可用。"
 
 #: ../../settings.rst:608
 msgid "The location to save the article archives page."
-msgstr ""
+msgstr "文章归档页面的存储位置。"
 
 #: ../../settings.rst:612
 msgid "The location to save the author list."
-msgstr ""
+msgstr "作者人列表的存储位置。"
 
 #: ../../settings.rst:616
 msgid "The location to save the category list."
-msgstr ""
+msgstr "分类列表的存储位置。"
 
 #: ../../settings.rst:620
 msgid "The location to save the tag list."
-msgstr ""
+msgstr "标签列表的存储位置。"
 
 #: ../../settings.rst:624
 msgid "The location to save the list of all articles."
-msgstr ""
+msgstr "所有文章列表的存储位置。"
 
 #: ../../settings.rst:626
 msgid ""
@@ -793,27 +812,31 @@ msgid ""
 "corresponding ``*_URL`` setting as string, while others hard-code them: "
 "``'archives.html'``, ``'authors.html'``, ``'categories.html'``, "
 "``'tags.html'``."
-msgstr ""
+msgstr "事实上，直接模板页面的URL是和使用的主题相关的。有些主题会使用 ``*_URL`` 作为"
+"变量字符串，而有些则是直接对这些直接模板页面进行硬编码： ``'archives.html'`` 、"
+" ``'authors.html'`` 、 ``'categories.html'`` 。"
 
 #: ../../settings.rst:633
 msgid ""
 "Specifies from where you want the slug to be automatically generated. Can"
 " be set to ``title`` to use the \"Title:\" metadata tag or ``basename`` "
 "to use the article's file name when creating the slug."
-msgstr ""
+msgstr "自动生成slug所依赖的内容。可以指定为元数据标签 ``title`` ，也可以使用文章"
+"源文件的文件名 ``basename`` 。"
 
 #: ../../settings.rst:639
 msgid ""
 "Allow Unicode characters in slugs. Set ``True`` to keep Unicode "
 "characters in auto-generated slugs. Otherwise, Unicode characters will be"
 " replaced with ASCII equivalents."
-msgstr ""
+msgstr "指定是否可以在slug中使用Unicode字符。若设为 ``True`` ，自动生成的slug中会保留"
+"Unicode字符；否则Unicode字符会使用含义相同的ASCII替换。"
 
 #: ../../settings.rst:645
 msgid ""
 "Preserve uppercase characters in slugs. Set ``True`` to keep uppercase "
 "characters from ``SLUGIFY_SOURCE`` as-is."
-msgstr ""
+msgstr "指定是否保留slug中的大写字母。若设为 ``True`` ，则会原样保留 ``SLUGIFY_SOURCE`` 中的大写字母。"
 
 #: ../../settings.rst:655
 msgid ""
@@ -824,25 +847,28 @@ msgid ""
 "to dashes. Apart from these substitutions, slugs are always converted to "
 "lowercase ascii characters and leading and trailing whitespace is "
 "stripped. Useful for backward compatibility with existing URLs."
-msgstr ""
+msgstr "指定生成文章和页面slug时要进行的正则表达式替换。指定的是一对对 ``(from, to)`` "
+"（from为要替换的内容，to为替换进去的内容），列表中的各对替换规则是按序执行且忽略大小写的。"
+"默认的替换会删除非字母非数字的字符并将内部空格替换为连字符。除此之外，slug会将所有字符转换为小写ASCII字符，"
+"并删除所有前导和末尾空格。这有利于现有URL的向后兼容。"
 
 #: ../../settings.rst:665
 msgid ""
 "Regex substitutions for author slugs. Defaults to "
 "``SLUG_REGEX_SUBSTITUTIONS``."
-msgstr ""
+msgstr "针对作者slug的正则替换。默认等于 ``SLUG_REGEX_SUBSTITUTIONS`` 。"
 
 #: ../../settings.rst:670
 msgid ""
 "Regex substitutions for category slugs. Defaults to "
 "``SLUG_REGEX_SUBSTITUTIONS``."
-msgstr ""
+msgstr "针对分类slug的正则替换。默认等于 ``SLUG_REGEX_SUBSTITUTIONS`` 。"
 
 #: ../../settings.rst:675
 msgid ""
 "Regex substitutions for tag slugs. Defaults to "
 "``SLUG_REGEX_SUBSTITUTIONS``."
-msgstr ""
+msgstr "针对标签slug的正则替换。默认等于 ``SLUG_REGEX_SUBSTITUTIONS`` 。"
 
 #: ../../settings.rst:678
 msgid "Time and Date"
