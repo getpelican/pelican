@@ -5,6 +5,7 @@ import locale
 import logging
 import os
 import re
+import sys
 from os.path import isabs
 
 from pelican.log import LimitFilter
@@ -13,6 +14,7 @@ from pelican.log import LimitFilter
 def load_source(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
     spec.loader.exec_module(mod)
     return mod
 
