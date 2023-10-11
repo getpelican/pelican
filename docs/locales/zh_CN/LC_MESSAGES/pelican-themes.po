@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-29 21:43+0800\n"
+"POT-Creation-Date: 2023-10-11 10:44+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Generated-By: Babel 2.13.0\n"
 
 #: ../../pelican-themes.rst:2
 msgid "pelican-themes"
@@ -54,7 +54,7 @@ msgid "Optional arguments:"
 msgstr ""
 
 #: ../../pelican-themes.rst:24
-msgid "Show the help an exit"
+msgid "Show the help and exit"
 msgstr ""
 
 #: ../../pelican-themes.rst:26
@@ -71,7 +71,7 @@ msgstr ""
 
 #: ../../pelican-themes.rst:32
 msgid ""
-"Same as \"--install\", but create a symbolic link instead of copying the "
+"Same as ``--install``, but create a symbolic link instead of copying the "
 "theme. Useful for theme development"
 msgstr ""
 
@@ -105,8 +105,8 @@ msgstr ""
 
 #: ../../pelican-themes.rst:65
 msgid ""
-"``two-column`` is prefixed with an ``@`` because this theme is not copied"
-" to the Pelican theme path, but is instead just linked to it (see "
+"``two-column`` is followed by an ``@`` because this theme is not copied "
+"to the Pelican theme path, but is instead just linked to it (see "
 "`Creating symbolic links`_ for details about creating symbolic links)."
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid ""
 "You can install one or more themes using the ``-i`` or ``--install`` "
 "option. This option takes as argument the path(s) of the theme(s) you "
-"want to install, and can be combined with the verbose option:"
+"want to install, and can be combined with the ``--verbose`` option:"
 msgstr ""
 
 #: ../../pelican-themes.rst:103
@@ -172,9 +172,9 @@ msgstr ""
 
 #: ../../pelican-themes.rst:157
 msgid ""
-"The ``--install``, ``--remove`` and ``--symlink`` option are not mutually"
-" exclusive, so you can combine them in the same command line to do more "
-"than one operation at time, like this:"
+"The ``--install``, ``--remove`` and ``--symlink`` options are not "
+"mutually exclusive, so you can combine them in the same command line to "
+"do more than one operation at time, like this:"
 msgstr ""
 
 #: ../../pelican-themes.rst:169
@@ -182,4 +182,40 @@ msgid ""
 "In this example, the theme ``notmyidea-cms`` is replaced by the theme "
 "``notmyidea-cms-fr``"
 msgstr ""
+
+#~ msgid "Show the help an exit"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Same as \"--install\", but create "
+#~ "a symbolic link instead of copying "
+#~ "the theme. Useful for theme development"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``two-column`` is prefixed with an "
+#~ "``@`` because this theme is not "
+#~ "copied to the Pelican theme path, "
+#~ "but is instead just linked to it"
+#~ " (see `Creating symbolic links`_ for "
+#~ "details about creating symbolic links)."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You can install one or more themes"
+#~ " using the ``-i`` or ``--install`` "
+#~ "option. This option takes as argument"
+#~ " the path(s) of the theme(s) you "
+#~ "want to install, and can be "
+#~ "combined with the verbose option:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The ``--install``, ``--remove`` and "
+#~ "``--symlink`` option are not mutually "
+#~ "exclusive, so you can combine them "
+#~ "in the same command line to do "
+#~ "more than one operation at time, "
+#~ "like this:"
+#~ msgstr ""
 
