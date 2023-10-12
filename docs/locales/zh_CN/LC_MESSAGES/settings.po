@@ -1032,41 +1032,41 @@ msgstr ""
 msgid ""
 "``DIRECT_TEMPLATES`` are searched for over paths maintained in "
 "``THEME_TEMPLATES_OVERRIDES``."
-msgstr " ``DIRECT_TEMPLATES`` 会在 ``THEME_TEMPLATES_OVERRIDES`` 的路径中搜索。"
+msgstr "``DIRECT_TEMPLATES`` 会在 ``THEME_TEMPLATES_OVERRIDES`` 的路径中搜索。"
 
 #: ../../settings.rst:818
 msgid "Metadata"
-msgstr ""
+msgstr "元数据"
 
 #: ../../settings.rst:822
 msgid "Default author (usually your name)."
-msgstr ""
+msgstr "默认作者（通常是你自己的名字）。"
 
 #: ../../settings.rst:826
 msgid "The default metadata you want to use for all articles and pages."
-msgstr ""
+msgstr "应用于所有文章和页面的默认元数据。"
 
 #: ../../settings.rst:830
 msgid ""
 "The regexp that will be used to extract any metadata from the filename. "
 "All named groups that are matched will be set in the metadata object.  "
 "The default value will only extract the date from the filename."
-msgstr ""
-""
+msgstr "指定用于从文件名中提取元数据的正则表达式。所有匹配上的命名匹配组都会用于设置元数据。"
+"默认值会从文件名中提取日期。"
 
 #: ../../settings.rst:834
 msgid "For example, to extract both the date and the slug::"
-msgstr ""
+msgstr "例如，可以同时提取日期和slug："
 
 #: ../../settings.rst:838
 msgid "See also ``SLUGIFY_SOURCE``."
-msgstr ""
+msgstr "另请参看 ``SLUGIFY_SOURCE`` 。"
 
 #: ../../settings.rst:842
 msgid ""
 "Like ``FILENAME_METADATA``, but parsed from a page's full path relative "
 "to the content source directory."
-msgstr ""
+msgstr "和 ``FILENAME_METADATA`` 类似，但提取解析的对象是相对于内容源文件目录的路径。"
 
 #: ../../settings.rst:847
 msgid ""
@@ -1075,7 +1075,9 @@ msgid ""
 " in Windows) unlike some other Pelican file settings. Paths to a "
 "directory apply to all files under it. The most-specific path wins "
 "conflicts."
-msgstr ""
+msgstr "指定要从相对路径提取的额外元数据字典。与Pelican的其他设置文件不同，此项设置需要正确使用"
+"和操作系统对应的目录分隔符（Unix中使用/，Windows中使用\\\\）。若对一个目录设置了规则，该规则会作用于"
+"该目录下所有文件。当有多个路径相互冲突时，Pelican会选用更为具体的路径。"
 
 #: ../../settings.rst:852
 msgid ""
@@ -1087,30 +1089,35 @@ msgid ""
 "use Python's `group name notation`_ ``(?P<name>…)``. If you want to "
 "attach additional metadata but don't want to encode it in the path, you "
 "can set ``EXTRA_PATH_METADATA``:"
-msgstr ""
+msgstr "不是所有元数据都需要直接 :ref:`embedded in source file itself <internal_metadata>` 。"
+"例如，博文可能是以 ``YYYY-MM-DD-SLUG.rst`` 的形式命名的，或者是直接放在 ``YYYY/MM/DD-SLUG`` 文件夹中。"
+"要从文件名或路径中提取元数据，设置 ``FILENAME_METADATA`` 或 ``PATH_METADATA`` 即可，需使用Python"
+"风格的 `命名组表示法`_ ``(?P<name>…)`` 。当你需要为帖子附加一下额外的元数据，但不想将其编码在文件路径"
+"中时，就可以在 ``EXTRA_PATH_METADATA`` 中设置："
 
 #: ../../settings.rst:873
 msgid ""
 "This can be a convenient way to shift the installed location of a "
 "particular file:"
-msgstr ""
+msgstr "通过这个设置项，很方便就可以转移特定文件的位置："
 
 #: ../../settings.rst:893
 msgid "Feed settings"
-msgstr ""
+msgstr "Feed设置"
 
 #: ../../settings.rst:895
 msgid ""
 "By default, Pelican uses Atom feeds. However, it is also possible to use "
 "RSS feeds if you prefer."
-msgstr ""
+msgstr "默认情况下，Pelican会使用Atom Feed。但如果你愿意的话，也可以使用RSS。"
 
 #: ../../settings.rst:898
 msgid ""
 "Pelican generates category feeds as well as feeds for all your articles. "
 "It does not generate feeds for tags by default, but it is possible to do "
 "so using the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:"
-msgstr ""
+msgstr "Pelican会生成分类的feed，也会为所有文章生成，但默认并不会为标签生成feed，要生成标签"
+"feed，可以使用  ``TAG_FEED_ATOM`` 和 ``TAG_FEED_RSS`` 设置："
 
 #: ../../settings.rst:904
 msgid ""
@@ -1119,139 +1126,147 @@ msgid ""
 "\"https://feeds.example.com\"). If you have already explicitly defined "
 "SITEURL (see above) and want to use the same domain for your feeds, you "
 "can just set:  ``FEED_DOMAIN = SITEURL``."
-msgstr ""
+msgstr "指定要添加到feed URL前面的域名。因为feed URL最好是绝对的，所以强烈推荐定义此设置项"
+"（例如 “https://feeds.example.com”）。若SITEURL已经显式地定义了，并且希望使用相同地URL，"
+"就可以直接设置 ``FEED_DOMAIN = SITEURL`` 。"
 
 #: ../../settings.rst:912
 msgid "The location to save the Atom feed."
-msgstr ""
+msgstr "指定保存Atom feed的位置。"
 
 #: ../../settings.rst:916
 msgid ""
 "Relative URL of the Atom feed. If not set, ``FEED_ATOM`` is used both for"
 " save location and URL."
-msgstr ""
+msgstr "Atom feed的相对URL。如果未设置此项，会将 ``FEED_ATOM`` 同时用于存储位置和URL。"
 
 #: ../../settings.rst:921
 msgid "The location to save the RSS feed."
-msgstr ""
+msgstr "指定保存RSS feed的位置。"
 
 #: ../../settings.rst:925
 msgid ""
 "Relative URL of the RSS feed. If not set, ``FEED_RSS`` is used both for "
 "save location and URL."
-msgstr ""
+msgstr "RSS feed的相对URL。如果未设置此项，会将 ``FEED_RSS`` 同时用于存储位置和URL。"
 
 #: ../../settings.rst:930
 msgid ""
 "The location to save the all-posts Atom feed: this feed will contain all "
 "posts regardless of their language."
-msgstr ""
+msgstr "存储“所有帖子”Atom feed的文件位置：无论什么语言的帖子都会在其中。"
 
 #: ../../settings.rst:935
 msgid ""
 "Relative URL of the all-posts Atom feed. If not set, ``FEED_ALL_ATOM`` is"
 " used both for save location and URL."
-msgstr ""
+msgstr "“所有帖子”Atom feed的相对URL。如果未设置此项，会将 ``FEED_ALL_ATOM`` 同时用于存储位置和URL。"
 
 #: ../../settings.rst:940
 msgid ""
 "The location to save the the all-posts RSS feed: this feed will contain "
 "all posts regardless of their language."
-msgstr ""
+msgstr "存储“所有帖子”RSS feed的文件位置：无论什么语言的帖子都会在其中。"
 
 #: ../../settings.rst:945
 msgid ""
 "Relative URL of the all-posts RSS feed. If not set, ``FEED_ALL_RSS`` is "
 "used both for save location and URL."
-msgstr ""
+msgstr "“所有帖子”Atom feed的相对URL。如果未设置此项，会将 ``FEED_ALL_RSS`` 同时用于存储位置和URL。"
 
 #: ../../settings.rst:950
 msgid "The location to save the category Atom feeds. [2]_"
-msgstr ""
+msgstr "存储分类Atom feeds的位置。 [2]_"
 
 #: ../../settings.rst:954
 msgid ""
 "Relative URL of the category Atom feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for "
 "save location and URL."
-msgstr ""
+msgstr "分类Atom feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_ATOM`` "
+"同时用于存储位置和URL。"
 
 #: ../../settings.rst:960
 msgid ""
 "The location to save the category RSS feeds, including the ``{slug}`` "
 "placeholder. [2]_"
-msgstr ""
+msgstr "存储分类RSS feeds的位置，包括 ``{slug}`` 。 [2]_"
 
 #: ../../settings.rst:965
 msgid ""
 "Relative URL of the category RSS feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save"
 " location and URL."
-msgstr ""
+msgstr "分类Atom feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_RSS`` "
+"同时用于存储位置和URL。"
 
 #: ../../settings.rst:971
 msgid "The location to save the author Atom feeds. [2]_"
-msgstr ""
+msgstr "存储作者Atom feeds的位置。 [2]_"
 
 #: ../../settings.rst:975
 msgid ""
 "Relative URL of the author Atom feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save "
 "location and URL."
-msgstr ""
+msgstr "作者Atom feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_ATOM`` "
+"同时用于存储位置和URL。"
 
 #: ../../settings.rst:981
 msgid "The location to save the author RSS feeds. [2]_"
-msgstr ""
+msgstr "存储作者RSS feeds的位置。 [2]_"
 
 #: ../../settings.rst:985
 msgid ""
 "Relative URL of the author RSS feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``AUTHOR_FEED_RSS`` is used both for save "
 "location and URL."
-msgstr ""
+msgstr "作者RSS feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_RSS`` "
+"同时用于存储位置和URL。"
 
 #: ../../settings.rst:990
 msgid ""
 "The location to save the tag Atom feed, including the ``{slug}`` "
 "placeholder. [2]_"
-msgstr ""
+msgstr "存储标签Atom feeds的位置。包括 ``{slug}`` 。 [2]_"
 
 #: ../../settings.rst:995
 msgid ""
 "Relative URL of the tag Atom feed, including the ``{slug}`` placeholder. "
 "[2]_"
-msgstr ""
+msgstr "标签Atom feed的相对URL，包括 ``{slug}`` 。 [2]_"
 
 #: ../../settings.rst:1000
 msgid ""
 "Relative URL to output the tag RSS feed, including the ``{slug}`` "
 "placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location "
 "and URL."
-msgstr ""
+msgstr "标签RSS feed的相对URL，包括 ``{slug}`` 。如果未设置， 会将 ``TAG_FEED_RSS`` "
+"同时用于存储位置和URL。"
 
 #: ../../settings.rst:1006
 msgid ""
 "Maximum number of items allowed in a feed. Feed item quantity is "
 "unrestricted by default."
-msgstr ""
+msgstr "feed中允许的最大项目数量。默认情况下，不限数量"
 
 #: ../../settings.rst:1011
 msgid ""
 "Only include item summaries in the ``description`` tag of RSS feeds. If "
 "set to ``False``, the full content will be included instead. This setting"
 " doesn't affect Atom feeds, only RSS ones."
-msgstr ""
+msgstr "仅在RSS feed的 ``description`` 标签中包含项目摘要。若设为 ``False`` ，则将包含完整内容。"
+"此项设置不会影响Atom feed，只针对RSS feed。"
 
 #: ../../settings.rst:1015
 msgid ""
 "If you don't want to generate some or any of these feeds, set the above "
 "variables to ``None``."
-msgstr ""
+msgstr "若你不想要生成某些feed，将对应变量设为 ``None`` 即可。"
 
 #: ../../settings.rst:1018
 msgid "``{slug}`` is replaced by name of the category / author / tag."
-msgstr ""
+msgstr "``{slug}`` 会用分类名/作者名/标签名来替换。"
 
 #: ../../settings.rst:1022
 msgid "Pagination"
