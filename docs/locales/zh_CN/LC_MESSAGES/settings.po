@@ -1270,7 +1270,7 @@ msgstr "``{slug}`` 会用分类名/作者名/标签名来替换。"
 
 #: ../../settings.rst:1022
 msgid "Pagination"
-msgstr ""
+msgstr "分页"
 
 #: ../../settings.rst:1024
 msgid ""
@@ -1278,38 +1278,41 @@ msgid ""
 "with a short description on the index page. While this works well for "
 "small-to-medium sites, sites with a large quantity of articles will "
 "probably benefit from paginating this list."
-msgstr ""
+msgstr "默认情况下，Pelican会把所有文章以简短描述的形式展示在首页上。虽然这对中小型网站效果不错，"
+"但对于拥有大量文章的网站来说可能需要将此列表进行分页。"
 
 #: ../../settings.rst:1029
 msgid "You can use the following settings to configure the pagination."
-msgstr ""
+msgstr "你可以使用下面的设置来配置分页。"
 
 #: ../../settings.rst:1033
 msgid ""
 "The minimum number of articles allowed on the last page. Use this when "
 "you don't want the last page to only contain a handful of articles."
-msgstr ""
+msgstr "最后一页允许的最小文章数。当不希望最后一页仅包含少数文章时，请使用此选项。"
+"（译者注：当最后一页达不到此最小文章数时，会被合并到前一页）"
 
 #: ../../settings.rst:1038
 msgid ""
 "The maximum number of articles to include on a page, not including "
 "orphans. False to disable pagination."
-msgstr ""
+msgstr "一个页面上包含的最大文章数，不包括孤立文章（译者注：当发生上一条设置选项中说到的合并时，"
+"最后一页显然会超过此最大文章数）。设为False会禁用分页。"
 
 #: ../../settings.rst:1043
 msgid ""
 "The templates to use pagination with, and the number of articles to "
 "include on a page. If this value is ``None``, it defaults to "
 "``DEFAULT_PAGINATION``."
-msgstr ""
+msgstr "指定哪些模板需要启用分页，以及对应的单页面文章数量。若设为 ``None`` ，则默认值为 ``DEFAULT_PAGINATION`` 。"
 
 #: ../../settings.rst:1051
 msgid "A set of patterns that are used to determine advanced pagination output."
-msgstr ""
+msgstr "一组模式，用于确定高级分页输出。"
 
 #: ../../settings.rst:1055
 msgid "Using Pagination Patterns"
-msgstr ""
+msgstr "使用分页模式"
 
 #: ../../settings.rst:1057
 msgid ""
@@ -1317,7 +1320,8 @@ msgid ""
 "``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used "
 "to change this. It takes a sequence of triples, where each triple "
 "consists of::"
-msgstr ""
+msgstr "默认情况下，连续的页面会如此编码URL：第一页为 ``.../foo.html`` ，后一页为 ``.../foo2.html`` 。"
+"``PAGINATION_PATTERNS`` 就是用于修改这个编页规则的，其中是一些三元组："
 
 #: ../../settings.rst:1063
 msgid ""
@@ -1328,20 +1332,25 @@ msgid ""
 "foo/bar`` and ``{extension} == .html``. ``{base_name}`` equals ``{name}``"
 " except that it strips trailing ``/index`` if present. ``{number}`` "
 "equals the page number."
-msgstr ""
+msgstr "在  ``page_url`` 和 ``page_save_as`` 中，你可以使用很多变量。对于不同的页面类型，"
+"``{url}`` 和 ``{save_as}`` 对应于其 ``*_URL`` 和 ``*_SAVE_AS`` 设置项的计算值（例如 ``ARTICLE_SAVE_AS`` ）。"
+"假设 ``{save_as} == foo/bar.html`` ，那么此时 ``{name} == foo/bar`` 、``{extension} == .html`` 。"
+"另外， ``{base_name}`` 和 ``{name}`` 相同，只不过会截去末尾的 ``/index`` （如果有的话）。 ``{number}`` "
+"则等于页码。（译者注： ``minimum_page`` 意味到达该页面数后开始使用此条规则）"
 
 #: ../../settings.rst:1070
 msgid ""
 "For example, if you want to leave the first page unchanged, but place "
 "subsequent pages at ``.../page/2/`` etc, you could set "
 "``PAGINATION_PATTERNS`` as follows::"
-msgstr ""
+msgstr "举个例子，如果你想要保持第一面保持不变，但后续页面都以 ``.../page/2/`` 的形式出现，你可以"
+"如此设置 ``PAGINATION_PATTERNS`` ："
 
 #: ../../settings.rst:1080
 msgid ""
 "If you want a pattern to apply to the last page in the list, use ``-1`` "
 "as the ``minimum_page`` value::"
-msgstr ""
+msgstr "如果你想指定最后一面制定规则，将 ``minimum_page`` 的值设为 ``-1`` 即可："
 
 #: ../../settings.rst:1086
 msgid "Translations"

@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
@@ -244,12 +243,12 @@ msgid "URL to use for this article/page"
 msgstr "指定本篇文章或页面使用的URL"
 
 #: ../../content.rst:98
-#, fuzzy
 msgid ""
 "Readers for additional formats (such as AsciiDoc_) are available via "
 "plugins, which you can find via the `Pelican Plugins`_ collection as well"
 " as the legacy `pelican-plugins`_ repository."
-msgstr "对其他格式的支持（例如 AsciiDoc_ ）可以通过插件实现。请在 `pelican-plugins`_ 仓库中查看所有插件。"
+msgstr "对其他格式的支持（例如 AsciiDoc_ ）可以通过插件实现，在 `Pelican Plugins`_ 集合中可以查看所有插件。"
+"当然，在老的 `pelican-plugins`_ 仓库中也可以查看。"
 
 #: ../../content.rst:102
 msgid ""
@@ -383,15 +382,13 @@ msgid ""
 msgstr "您可以通过 ``DISPLAY_PAGES_ON_MENU`` 设置来决定页面是否被列在主导航菜单中（默认值为 ``True`` ）。"
 
 #: ../../content.rst:187
-#, fuzzy
 msgid ""
 "If you want to exclude any pages from being linked to or listed in the "
 "menu, then add a ``status: hidden`` attribute to its metadata. This is "
 "useful for things like making error pages that fit the generated theme of"
 " your site."
-msgstr ""
-"如果您希望让某些页面不会被链接并且也不列在任何菜单中，可以为它加上元数据属性 ``status: hidden`` "
-"。这对于制作符合网站生成主题的错误页面很有用。"
+msgstr "如果您希望让某些页面不会被链接并且也不列在任何菜单中，可以为它加上元数据属性 ``status: hidden`` 。"
+"这对于制作符合网站生成主题的错误页面很有用。"
 
 #: ../../content.rst:192
 msgid "Static content"
@@ -472,14 +469,13 @@ msgstr ""
 "的层次下指定。当需要在当前推文链接到邻近位置的内容时，可以直接从源内容文件的位置开始链接（而不需要考虑在站点生成后文件会被放在哪儿）。"
 
 #: ../../content.rst:237
-#, fuzzy
 msgid ""
 "To link to internal content (files in the ``content`` directory), use the"
 " following syntax for the link target: ``{filename}path/to/file``. Note: "
 "forward slashes, ``/``, are the required path separator in the "
 "``{filename}`` directive on all operating systems, including Windows."
 msgstr ""
-"要链接到站内（即在 ``content`` 目录下的文件），使用下述的目标链接语法： ``{filename}path/to/file`` "
+"要链接到站内（即在 ``content`` 目录下的文件），使用下述的目标链接语法： ``{filename}path/to/file`` 。"
 "注意，在所有操作系统（当然也包括Windows）上，路径的分隔符都要使用正斜杠 ``/`` 。"
 
 #: ../../content.rst:243
@@ -537,7 +533,6 @@ msgid "Attaching static files"
 msgstr "将静态文件作为附件"
 
 #: ../../content.rst:309
-#, fuzzy
 msgid ""
 "Starting with Pelican 3.5, static files can be \"attached\" to a page or "
 "article using this syntax for the link target: ``{attach}path/to/file``. "
@@ -547,9 +542,10 @@ msgid ""
 "that relationship will be preserved on output. Otherwise, it will become "
 "a sibling of the linking document."
 msgstr ""
-"从Pelican 3.5开始，静态文件可以使用下述语法 \"附\" 在页面或文章上： ``{attach}path/to/file`` 这和 "
-"``{static}`` "
-"语法很像，也会将静态文件重定位到文章或页面的对应输出目录中当文档所链接的静态文件处于其源文件位置的子目录下时，这种关系在输出目录中会得以保留。否则，默认情况下，静态文件会和对应的文档处于同一输出目录下。"
+"从Pelican 3.5开始，静态文件可以使用下述语法 “附” 在页面或文章上： ``{attach}path/to/file`` 。"
+"这和 ``{static}`` 语法很像，也会将静态文件重定位到文章或页面的对应输出目录中。"
+"当文档所链接的静态文件处于其源文件位置的子目录下时，这种父子关系在输出目录中会得以保留。"
+"否则，默认情况下，静态文件会和对应的文档处于同一输出目录下。"
 
 #: ../../content.rst:317
 msgid "This only works for linking to static files."
@@ -805,11 +801,10 @@ msgstr ""
 "<https://pygments.org/docs/lexers/>`_ 中列出的。"
 
 #: ../../content.rst:541
-#, fuzzy
 msgid ""
 "When using reStructuredText the following options are available in the "
 "`code-block` directive:"
-msgstr "对于reStructuredText，下面列出的选项可以在代码块中使用："
+msgstr "对于reStructuredText，下面列出的选项可以在 `code-block` 命令中使用："
 
 #: ../../content.rst:545
 msgid "Option"
@@ -828,9 +823,8 @@ msgid "N/A"
 msgstr "N/A"
 
 #: ../../content.rst:547
-#, fuzzy
 msgid "If present, wrap line numbers in ``<a>`` tags."
-msgstr "行号是否显示在 <a> 标签中"
+msgstr "指定行号是否显示在 <a> 标签中"
 
 #: ../../content.rst:548
 msgid "classprefix"
@@ -875,7 +869,6 @@ msgid "linenos"
 msgstr "linenos"
 
 #: ../../content.rst:558
-#, fuzzy
 msgid ""
 "If present or set to \"table\", output line numbers in a table; if set to"
 " \"inline\", output them inline. \"none\" means do not output the line "
@@ -891,7 +884,6 @@ msgid "number"
 msgstr "number"
 
 #: ../../content.rst:563
-#, fuzzy
 msgid "If set, every nth line will be given the 'special' CSS class."
 msgstr "是否每隔几行就设置一行特殊的css样式类。"
 
@@ -932,7 +924,6 @@ msgid "nobackground"
 msgstr "nobackground"
 
 #: ../../content.rst:571
-#, fuzzy
 msgid "If set, do not output background color for the wrapping element"
 msgstr "若设置，则不为元素输出背景颜色"
 
@@ -941,7 +932,6 @@ msgid "nowrap"
 msgstr "nowrap"
 
 #: ../../content.rst:573
-#, fuzzy
 msgid "If set, do not wrap the tokens at all."
 msgstr "若设置，则不包裹代码符号。"
 
@@ -991,13 +981,11 @@ msgstr ""
 "，如此就可以让Pelican自动在每个代码块上使用指定的选项"
 
 #: ../../content.rst:598
-#, fuzzy
 msgid ""
 "For example, if you want to have line numbers displayed for every code "
 "block and a CSS prefix, you would set this variable to::"
 msgstr ""
-"举个例子，若您希望每个代码块都显示行号，并且在CSS类名前都加上前缀pgcss，就可以像这样设置 ``PYGMENTS_RST_OPTIONS``"
-" ："
+"举个例子，若您希望每个代码块都显示行号，并且在CSS类名前都加上前缀pgcss，就可以像这样设置 ``PYGMENTS_RST_OPTIONS`` ："
 
 #: ../../content.rst:603
 msgid ""
@@ -1023,7 +1011,6 @@ msgstr ""
 " ``drafts`` 文件夹中，并且不会被列在首页、分类或是标签页面中。"
 
 #: ../../content.rst:614
-#, fuzzy
 msgid ""
 "If your articles should be automatically published as a draft (to not "
 "accidentally publish an article before it is finished), include the "
