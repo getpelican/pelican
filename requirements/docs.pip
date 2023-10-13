@@ -1,3 +1,4 @@
 sphinx<6.0
+sphinxext-opengraph
 furo
 livereload
