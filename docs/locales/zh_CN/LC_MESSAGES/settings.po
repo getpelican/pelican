@@ -1772,11 +1772,14 @@ msgid ""
 "``--write-selected`` option, which accepts a comma-separated list of "
 "output file paths. By default this list is empty, so all output is "
 "written. See :ref:`site_generation` for more details."
-msgstr ""
+msgstr "当在处理某一篇文章或页面时，或在对主题进行调整时，会希望快速生成内容以便查看。在这种情况下，"
+"通常不需要生成和写入整个站点。此时，在  ``WRITE_SELECTED`` 列表中指定需要重写的输出文件路径，或是"
+"使用 ``--write-selected`` 命令行选项指定一个或多个输出文件路径（用逗号分隔）即可。此列表默认为空，"
+"即写入所有输出。详见 :ref:`site_generation` 。"
 
 #: ../../settings.rst:1411
 msgid "Example settings"
-msgstr ""
+msgstr "配置示例"
 
 #~ msgid ""
 #~ "Set to ``UA-XXXXX-Y`` Property's "
