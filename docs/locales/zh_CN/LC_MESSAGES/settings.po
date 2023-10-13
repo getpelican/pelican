@@ -1611,7 +1611,7 @@ msgstr "另外，你可以使用 ``notmyidea`` 主题的“宽屏”版本，在
 
 #: ../../settings.rst:1297
 msgid "Logging"
-msgstr ""
+msgstr "日志"
 
 #: ../../settings.rst:1299
 msgid ""
@@ -1619,7 +1619,8 @@ msgid ""
 "Finding the **meaningful** error message in the middle of tons of "
 "annoying log output can be quite tricky. In order to filter out redundant"
 " log messages, Pelican comes with the ``LOG_FILTER`` setting."
-msgstr ""
+msgstr "在站点生成过程中有时可能会出现一堆警告信息。在这一大堆日志输出中寻找 **有意义** 的错误消息"
+"是非常棘手的。为了过滤掉多余的日志消息，可以在Pelican中指定 ``LOG_FILTER`` 设置。"
 
 #: ../../settings.rst:1304
 msgid ""
@@ -1627,42 +1628,44 @@ msgid ""
 "being composed of the logging level (up to ``warning``) and the message "
 "to be ignored. Simply populate the list with the log messages you want to"
 " hide, and they will be filtered out."
-msgstr ""
+msgstr "``LOG_FILTER`` 是元组 ``(level, msg)`` ，level指定日志记录等级（最高为 ``warning`` ），"
+"msg指定要忽略的消息。将想要隐藏的日志消息添加到此列表中就可以将他们过滤掉。"
 
 #: ../../settings.rst:1309 ../../settings.rst:1317
 msgid "For example::"
-msgstr ""
+msgstr "例如："
 
 #: ../../settings.rst:1314
 msgid ""
 "It is possible to filter out messages by a template. Check out source "
 "code to obtain a template."
-msgstr ""
+msgstr "用模板字符串指定要过滤的消息也是可以的。具体的消息种类请查看源码。"
 
 #: ../../settings.rst:1324
 msgid ""
 "Silencing messages by templates is a dangerous feature. It is possible to"
 " unintentionally filter out multiple message types with the same template"
 " (including messages from future Pelican versions). Proceed with caution."
-msgstr ""
+msgstr "通过模板过滤忽略消息是一个危险的功能。 使用同一模板可能会无意中过滤掉多种消息类型"
+"（包括来自新版本Pelican的消息），请谨慎行事。"
 
 #: ../../settings.rst:1330
 msgid "This option does nothing if ``--debug`` is passed."
-msgstr ""
+msgstr "当使用了 ``--debug`` 参数，此项设置就不会起作用。"
 
 #: ../../settings.rst:1336
 msgid "Reading only modified content"
-msgstr ""
+msgstr "只读取修改过的内容"
 
 #: ../../settings.rst:1338
 msgid ""
 "To speed up the build process, Pelican can optionally read only articles "
 "and pages with modified content."
-msgstr ""
+msgstr "为了加速网站构建过程，Pelican能够只读取修改过内容的文章和页面。"
 
 #: ../../settings.rst:1341
 msgid "When Pelican is about to read some content source file:"
-msgstr ""
+msgstr "当Pelican准备读取内容源文件时，会执行下面的规则："
 
 #: ../../settings.rst:1343
 msgid ""
@@ -1670,31 +1673,33 @@ msgid ""
 "build are loaded from a cache file if ``LOAD_CONTENT_CACHE`` is ``True``."
 " These files are stored in the ``CACHE_PATH`` directory.  If the file has"
 " no record in the cache file, it is read as usual."
-msgstr ""
+msgstr "若 ``LOAD_CONTENT_CACHE`` 为 ``True`` ，则从缓存文件中加载上一次构建时文件的哈希值或修改时间。"
+"这些缓存的文件存储在 ``CACHE_PATH`` 所指定的目录中。若文件是新的，在缓存文件中没有记录，则照常读取。"
 
 #: ../../settings.rst:1347
 msgid "The file is checked according to ``CHECK_MODIFIED_METHOD``:"
-msgstr ""
+msgstr "文件会以 ``CHECK_MODIFIED_METHOD`` 设置的方式检查："
 
 #: ../../settings.rst:1353
 msgid ""
 "If set to anything else or the necessary information about the file "
 "cannot be found in the cache file, the content is read as usual."
-msgstr ""
+msgstr "如果设置为其他任何值或在缓存文件中无法找到有关该文件的必要信息，则将照常读取内容。"
 
 #: ../../settings.rst:1356
 msgid ""
 "If the file is considered unchanged, the content data saved in a previous"
 " build corresponding to the file is loaded from the cache, and the file "
 "is not read."
-msgstr ""
+msgstr "如果Pelican认为文件没有更改过，会直接从上一次构建的对应文件中加载内容，源文件就不会被读取。"
 
 #: ../../settings.rst:1359
 msgid ""
 "If the file is considered changed, the file is read and the new "
 "modification information and the content data are saved to the cache if "
 "``CACHE_CONTENT`` is ``True``."
-msgstr ""
+msgstr "若Pelican认为文件更改过了，则会读取源文件；若 ``CACHE_CONTENT`` 设为了 ``True`` ，"
+"Pelican还会将修改后的信息以及内容数据存入缓存。"
 
 #: ../../settings.rst:1363
 msgid ""
@@ -1705,7 +1710,10 @@ msgid ""
 "(as some reading related signals may be skipped) and the "
 "``WITH_FUTURE_DATES`` functionality (as the ``draft`` status of the "
 "cached content objects would not change automatically over time)."
-msgstr ""
+msgstr "若 ``CONTENT_CACHING_LAYER`` 设为了 ``'reader'`` （默认值），则缓存reader返回的原始内容"
+"和元数据；若 ``CONTENT_CACHING_LAYER`` 设为了 ``'generator'`` ，则缓存处理过后的内容对象。"
+"缓存已处理的内容对象可能会和插件（因为可能会跳过一些与读取相关的信号）与 ``WITH_FUTURE_DATES`` 的功能"
+"（因为已处理内容对象的 ``draft`` 状态不会改变）冲突"
 
 #: ../../settings.rst:1371
 msgid ""
@@ -1714,7 +1722,9 @@ msgid ""
 "copying content source files using the ``cp`` or ``rsync`` commands "
 "without the ``mtime`` preservation mode (which for ``rsync`` can be "
 "invoked by passing the ``--archive`` flag)."
-msgstr ""
+msgstr "检查文件修改时间比计算文件哈希更快，但事实上却不太可靠，因为 ``mtime`` 信息有丢失的可能。"
+"例如，使用 ``cp`` 或 ``rsync`` 命令时没有开启 ``mtime`` 保留模式。（rsync可以通过指定 ``--archive`` 标志"
+"启用 ``mtime`` 保留模式。"
 
 #: ../../settings.rst:1377
 msgid ""
@@ -1723,7 +1733,8 @@ msgid ""
 "an error is encountered, it is caught and the cache file is rebuilt "
 "automatically in the new format. The cache files will also be rebuilt "
 "after the ``GZIP_CACHE`` setting has been changed."
-msgstr ""
+msgstr "缓存文件使用的是Python pickles，因此不同版本的Python由于pickle文件格式变化可能无法读取缓存。"
+"如果遇到此类错误，会自动以新格式重新构建缓存。另外，当 ``GZIP_CACHE`` 设置发生变化后，缓存也会自动重建。"
 
 #: ../../settings.rst:1383
 msgid ""
@@ -1733,7 +1744,9 @@ msgid ""
 "purposes. When Pelican runs in autoreload mode, modification of the "
 "settings file will make it ignore the cache automatically if "
 "``AUTORELOAD_IGNORE_CACHE`` is ``True``."
-msgstr ""
+msgstr "当需要重新生成整个缓存时，可以使用 ``--ignore-cache`` 命令行选项，例如当需要修改会影响缓存内容的"
+"设置项时，或是调试时，都可以使用 ``--ignore-cache`` 。若 ``AUTORELOAD_IGNORE_CACHE`` 设为了 ``True`` ，"
+"修改设置文件时会自动忽略缓存。"
 
 #: ../../settings.rst:1389
 msgid ""
@@ -1741,11 +1754,12 @@ msgid ""
 "so the modification times of the generated ``*.html`` files will always "
 "change. Therefore, ``rsync``-based uploading may benefit from the "
 "``--checksum`` option."
-msgstr ""
+msgstr "需要注意的是，即使使用了缓存的内容，最终的输出文件也始终会进行重新写入，因此生成的 ``*.html`` 文件的"
+"修改时间始终会变化。所以，基于 ``rsync`` 进行上传时，可以考虑使用 ``--checksum`` 选项。"
 
 #: ../../settings.rst:1398
 msgid "Writing only selected content"
-msgstr ""
+msgstr "只写入选定的内容"
 
 #: ../../settings.rst:1400
 msgid ""
