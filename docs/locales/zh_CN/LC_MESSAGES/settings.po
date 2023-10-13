@@ -1183,21 +1183,21 @@ msgid ""
 "Relative URL of the category Atom feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for "
 "save location and URL."
-msgstr "分类Atom feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_ATOM`` "
+msgstr "分类Atom feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_ATOM`` "
 "同时用于存储位置和URL。"
 
 #: ../../settings.rst:960
 msgid ""
 "The location to save the category RSS feeds, including the ``{slug}`` "
 "placeholder. [2]_"
-msgstr "存储分类RSS feeds的位置，包括 ``{slug}`` 。 [2]_"
+msgstr "分类RSS feeds的含有 ``{slug}`` 的存储位置，包括 ``{slug}`` 。 [2]_"
 
 #: ../../settings.rst:965
 msgid ""
 "Relative URL of the category RSS feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save"
 " location and URL."
-msgstr "分类Atom feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_RSS`` "
+msgstr "分类Atom feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_RSS`` "
 "同时用于存储位置和URL。"
 
 #: ../../settings.rst:971
@@ -1209,7 +1209,7 @@ msgid ""
 "Relative URL of the author Atom feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save "
 "location and URL."
-msgstr "作者Atom feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_ATOM`` "
+msgstr "作者Atom feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_ATOM`` "
 "同时用于存储位置和URL。"
 
 #: ../../settings.rst:981
@@ -1221,27 +1221,27 @@ msgid ""
 "Relative URL of the author RSS feeds, including the ``{slug}`` "
 "placeholder. [2]_ If not set, ``AUTHOR_FEED_RSS`` is used both for save "
 "location and URL."
-msgstr "作者RSS feed的相对URL，包括 ``{slug}`` 。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_RSS`` "
+msgstr "作者RSS feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_RSS`` "
 "同时用于存储位置和URL。"
 
 #: ../../settings.rst:990
 msgid ""
 "The location to save the tag Atom feed, including the ``{slug}`` "
 "placeholder. [2]_"
-msgstr "存储标签Atom feeds的位置。包括 ``{slug}`` 。 [2]_"
+msgstr "存储标签Atom feeds的含有 ``{slug}`` 的位置。 [2]_"
 
 #: ../../settings.rst:995
 msgid ""
 "Relative URL of the tag Atom feed, including the ``{slug}`` placeholder. "
 "[2]_"
-msgstr "标签Atom feed的相对URL，包括 ``{slug}`` 。 [2]_"
+msgstr "标签Atom feed的含有 ``{slug}`` 的相对URL。 [2]_"
 
 #: ../../settings.rst:1000
 msgid ""
 "Relative URL to output the tag RSS feed, including the ``{slug}`` "
 "placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location "
 "and URL."
-msgstr "标签RSS feed的相对URL，包括 ``{slug}`` 。如果未设置， 会将 ``TAG_FEED_RSS`` "
+msgstr "标签RSS feed的含有 ``{slug}`` 的相对URL。如果未设置， 会将 ``TAG_FEED_RSS`` "
 "同时用于存储位置和URL。"
 
 #: ../../settings.rst:1006
@@ -1354,17 +1354,17 @@ msgstr "如果你想指定最后一面制定规则，将 ``minimum_page`` 的值
 
 #: ../../settings.rst:1086
 msgid "Translations"
-msgstr ""
+msgstr "翻译"
 
 #: ../../settings.rst:1088
 msgid ""
 "Pelican offers a way to translate articles. See the :doc:`Content "
 "<content>` section for more information."
-msgstr ""
+msgstr "Pelican为文章翻译提供了展示方法。详见 :doc:`Content <content>` 。"
 
 #: ../../settings.rst:1093
 msgid "The default language to use."
-msgstr ""
+msgstr "指定默认语言。"
 
 #: ../../settings.rst:1097
 msgid ""
@@ -1372,56 +1372,59 @@ msgid ""
 "translations of one another. May be a string or a collection of strings. "
 "Set to ``None`` or ``False`` to disable the identification of "
 "translations."
-msgstr ""
+msgstr "指定用于标识不同翻译是同一篇文章的元数据。可以是一个或多个字符串。"
+"要禁用对文章翻译的识别，将此项设为 ``None`` 或 ``False`` 。"
 
 #: ../../settings.rst:1103
 msgid ""
 "The metadata attribute(s) used to identify which pages are translations "
 "of one another. May be a string or a collection of strings. Set to "
 "``None`` or ``False`` to disable the identification of translations."
-msgstr ""
+msgstr "指定用于标识不同翻译是同一个页面的元数据。可以是一个或多个字符串。"
+"要禁用对页面翻译的识别，将此项设为 ``None`` 或 ``False`` 。"
 
 #: ../../settings.rst:1109
 msgid "The location to save the Atom feed for translations. [3]_"
-msgstr ""
+msgstr "指定各翻译Atom feed的存储位置。 [3]_"
 
 #: ../../settings.rst:1113
 msgid ""
 "Relative URL of the Atom feed for translations, including the ``{lang}`` "
 "placeholder. [3]_ If not set, ``TRANSLATION_FEED_ATOM`` is used both for "
 "save location and URL."
-msgstr ""
+msgstr "指定各翻译Atom feed的含有 ``{lang}`` 的相对URL。 [3]_ 若未设置此项，"
+"``TRANSLATION_FEED_ATOM`` 会同时用于存储位置和URL。"
 
 #: ../../settings.rst:1119
 msgid "Where to put the RSS feed for translations."
-msgstr ""
+msgstr "指定各翻译RSS feed的存储位置。"
 
 #: ../../settings.rst:1123
 msgid ""
 "Relative URL of the RSS feed for translations, including the ``{lang}`` "
 "placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for "
-"save location and URL."
-msgstr ""
+msgstr "指定各翻译RSS feed的含有 ``{lang}`` 的相对URL。 [3]_ 若未设置此项，"
+"``TRANSLATION_FEED_RSS`` 会同时用于存储位置和URL。"
 
 #: ../../settings.rst:1127
 msgid "{lang} is the language code"
-msgstr ""
+msgstr "{lang} 是语言代码"
 
 #: ../../settings.rst:1131
 msgid "Ordering content"
-msgstr ""
+msgstr "内容的排列顺序"
 
 #: ../../settings.rst:1135
 msgid ""
 "Order archives by newest first by date. (False: orders by date with older"
 " articles first.)"
-msgstr ""
+msgstr "若设为True，日期较新的会排在前面；若设为False，则日期较旧的会排在前面。"
 
 #: ../../settings.rst:1140
 msgid ""
 "Reverse the category order. (True: lists by reverse alphabetical order; "
 "default lists alphabetically.)"
-msgstr ""
+msgstr "若设为True，分类会按字典序逆序排列；若设为False，则按字典序顺序排列。"
 
 #: ../../settings.rst:1145
 msgid ""
@@ -1433,38 +1436,44 @@ msgid ""
 "sort articles in chronological order, while the default value, "
 "``'reversed-date'``, will sort articles by date in reverse order (i.e., "
 "newest article comes first)."
-msgstr ""
+msgstr "定义文章（模板中的 ``articles_page.object_list`` ）的排序方式。有效选项包括：字符串形式的元数据"
+"（使用前缀reverse-来指定逆序）、特殊选项 ``'basename'`` （不带路径的文件名）、或是一个可以从文章中提取"
+"排序键的自定义函数。例如，将选项值设为 ``'date'`` ，文章就会以时间顺序排列文章，但默认值事实上是"
+"``'reversed-date'`` ，会以日期逆序排列，即新文章在前。"
 
 #: ../../settings.rst:1155
 msgid ""
 "Defines how the pages (``pages`` variable in the template) are sorted. "
 "Options are same as ``ARTICLE_ORDER_BY``.  The default value, "
 "``'basename'`` will sort pages by their basename."
-msgstr ""
+msgstr "定义页面（模板中的 ``pages`` 变量）的排序顺序。有效选项和 ``ARTICLE_ORDER_BY`` 中的相同。"
+"默认值为 ``basename``。"
 
 #: ../../settings.rst:1163
 msgid "Themes"
-msgstr ""
+msgstr "主题"
 
 #: ../../settings.rst:1165
 msgid ""
 "Creating Pelican themes is addressed in a dedicated section (see :ref"
 ":`theming-pelican`). However, here are the settings that are related to "
 "themes."
-msgstr ""
+msgstr "创建Pelican主题在单独的一节中讲解（参见 :ref:`theming-pelican` ）。此处讲解和主题有关的设置项。"
 
 #: ../../settings.rst:1171
 msgid ""
 "Theme to use to produce the output. Can be a relative or absolute path to"
 " a theme folder, or the name of a default theme or a theme installed via "
 ":doc:`pelican-themes` (see below)."
-msgstr ""
+msgstr "用于产生输出的主题。可以是到达要使用主题的文件夹的相对或绝对路径，或是主题的名称（默认主题或"
+"通过 :doc:`pelican-themes` 安装的主题）。"
 
 #: ../../settings.rst:1177
 msgid ""
 "Destination directory in the output path where Pelican will place the "
 "files collected from `THEME_STATIC_PATHS`. Default is `theme`."
-msgstr ""
+msgstr "Pelican从 `THEME_STATIC_PATHS` 中发现主题要使用的静态文件，此设置项指定这些静态文件"
+"在输出路径中的目录。默认值为 `theme` 。"
 
 #: ../../settings.rst:1182
 msgid ""
@@ -1472,7 +1481,8 @@ msgid ""
 "your theme has other static paths, you can put them here. If files or "
 "directories with the same names are included in the paths defined in this"
 " settings, they will be progressively overwritten."
-msgstr ""
+msgstr "要复制的静态主题路径。默认值为 `static` ，但如果你的主题有其他静态路径，也可以将其放在此处。"
+"此项设置中若包含了相同名称的文件或目录，前面的会被后面的覆盖。"
 
 #: ../../settings.rst:1189
 msgid ""
@@ -1481,7 +1491,8 @@ msgid ""
 "theme template files without having to fork an existing theme.  Jinja2 "
 "searches in the following order: files in ``THEME_TEMPLATES_OVERRIDES`` "
 "first, then the theme's ``templates/``."
-msgstr ""
+msgstr "在搜索主题的 ``templates/`` 目录前，Jinja2会先搜索此设置项中的路径。可以使用此设置项覆盖主题中的某些"
+"模板文件，以避免修改现有主题。"
 
 #: ../../settings.rst:1195
 #, python-format
@@ -1489,110 +1500,114 @@ msgid ""
 "You can also extend templates from the theme using the ``{% extends %}`` "
 "directive utilizing the ``!theme`` prefix as shown in the following "
 "example:"
-msgstr ""
+msgstr "利用 ``{% extends %}`` 指令中的 ``!theme`` 前缀也可以用于从主题扩展模板，如下例所示："
 
 #: ../../settings.rst:1204
 msgid "Specify the CSS file you want to load."
-msgstr ""
+msgstr "指定需要加载的CSS文件。"
 
 #: ../../settings.rst:1206
 msgid ""
 "By default, two themes are available. You can specify them using the "
 "``THEME`` setting or by passing the ``-t`` option to the ``pelican`` "
 "command:"
-msgstr ""
+msgstr "默认情况下，有两个主题可供选择。可以使用 ``THEME`` 选项指定，或是在 ``pelican`` 命令"
+"中使用 ``-t`` 选项的参数传入。"
 
 #: ../../settings.rst:1209
 msgid "notmyidea"
-msgstr ""
+msgstr "notmyidea（默认值）"
 
 #: ../../settings.rst:1210
 msgid "simple (a synonym for \"plain text\" :)"
-msgstr ""
+msgstr "simple（即“plain text”）"
 
 #: ../../settings.rst:1212
 msgid ""
 "There are a number of other themes available at "
 "https://github.com/getpelican/pelican-themes. Pelican comes with :doc"
 ":`pelican-themes`, a small script for managing themes."
-msgstr ""
+msgstr "还有很多主题可以在 https://github.com/getpelican/pelican-themes 上下载。Pelican使用"
+"一个称为 :doc:`pelican-themes` 的小脚本来管理主题。"
 
 #: ../../settings.rst:1216
 msgid ""
 "You can define your own theme, either by starting from scratch or by "
 "duplicating and modifying a pre-existing theme. Here is :doc:`a guide on "
 "how to create your theme <themes>`."
-msgstr ""
+msgstr "你还可以创建自己的主题，可以从头开始，也可以在已有主题的基础上修改。"
+"请参看 :doc:`a guide on how to create your theme <themes>` 。"
 
 #: ../../settings.rst:1220
 msgid "Following are example ways to specify your preferred theme::"
-msgstr ""
+msgstr "下面是几个指定某个主题的例子："
 
 #: ../../settings.rst:1231
 msgid ""
 "The built-in ``notmyidea`` theme can make good use of the following "
 "settings. Feel free to use them in your themes as well."
-msgstr ""
+msgstr "下面的一下选项可以很好地作用于内置的 ``notmyidea`` 主题。当然在其他主题中"
+"你也可以尽情尝试这些选项。"
 
 #: ../../settings.rst:1236
 msgid "A subtitle to appear in the header."
-msgstr ""
+msgstr "页面顶部要显示的副标题。"
 
 #: ../../settings.rst:1240
 msgid ""
 "Pelican can handle Disqus comments. Specify the Disqus sitename "
 "identifier here."
-msgstr ""
+msgstr "Pelican中可以使用Disqus的评论系统，此设置项用于设置Disqus的站点标识符。"
 
 #: ../../settings.rst:1245
 msgid ""
 "Your GitHub URL (if you have one). It will then use this information to "
 "create a GitHub ribbon."
-msgstr ""
+msgstr "指定你的GitHub URL（如果有的话），此信息将被用于创建GitHub功能区。"
 
 #: ../../settings.rst:1250
 msgid ""
 "Put any desired analytics scripts in this setting in ``publishconf.py``. "
 "Example:"
-msgstr ""
+msgstr "在 ``publishconf.py`` 中设置此项，用于指定想要使用的统计分析脚本。如下例："
 
 #: ../../settings.rst:1264
 msgid ""
 "A list of tuples (Title, URL) for additional menu items to appear at the "
 "beginning of the main menu."
-msgstr ""
+msgstr "元组 (标题, URL) 的列表，用于指定额外的菜单项，会添加在菜单栏的开头。"
 
 #: ../../settings.rst:1269
 msgid "A list of tuples (Title, URL) for links to appear on the header."
-msgstr ""
+msgstr "元组 (标题, URL) 的列表，用于指定要展示在网页开头的链接。"
 
 #: ../../settings.rst:1273
 msgid "A list of tuples (Title, URL) to appear in the \"social\" section."
-msgstr ""
+msgstr "元组 (标题, URL) 的列表，用于指定要展示在“social”部分的内容。"
 
 #: ../../settings.rst:1277
 msgid ""
 "Allows for adding a button to articles to encourage others to tweet about"
 " them. Add your Twitter username if you want this button to appear."
-msgstr ""
+msgstr "允许在文章中添加按钮，以鼓励其他人发布有关它们的推文。如果希望显示此按钮，在此项中设置你的Twitter用户名。"
 
 #: ../../settings.rst:1282
 msgid ""
 "Allows override of the name of the links widget.  If not specified, "
 "defaults to \"links\"."
-msgstr ""
+msgstr "指定用于覆盖“links”部分的名称。默认值为“links”"
 
 #: ../../settings.rst:1287
 msgid ""
 "Allows override of the name of the \"social\" widget.  If not specified, "
 "defaults to \"social\"."
-msgstr ""
+msgstr "指定用于覆盖“social”部分的名称。默认值为“social”"
 
 #: ../../settings.rst:1290
 msgid ""
 "In addition, you can use the \"wide\" version of the ``notmyidea`` theme "
 "by adding the following to your configuration::"
-msgstr ""
+msgstr "另外，你可以使用 ``notmyidea`` 主题的“宽屏”版本，在配置文件中添加下面这行配置即可："
 
 #: ../../settings.rst:1297
 msgid "Logging"
