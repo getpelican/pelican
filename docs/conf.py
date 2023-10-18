@@ -8,9 +8,12 @@ sys.path.append(os.path.abspath(os.pardir))
 
 # -- General configuration ----------------------------------------------------
 templates_path = ['_templates']
-extensions = ['sphinx.ext.autodoc',
-              'sphinx.ext.ifconfig',
-              'sphinx.ext.extlinks']
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.extlinks",
+    "sphinxext.opengraph",
+]
 source_suffix = '.rst'
 master_doc = 'index'
 project = 'Pelican'
