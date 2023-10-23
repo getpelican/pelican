@@ -260,8 +260,8 @@ In this example, ``article1.rst`` could look like this::
 
     See below intra-site link examples in reStructuredText format.
 
-    `a link relative to the current file <{filename}../article2.md>`_
-    `a link relative to the content root <{filename}/article2.md>`_
+    `a link relative to the current file <{filename}../article2.rst>`_
+    `a link relative to the content root <{filename}/article2.rst>`_
 
 and ``article2.md``::
 
@@ -270,8 +270,8 @@ and ``article2.md``::
 
     See below intra-site link examples in Markdown format.
 
-    [a link relative to the current file]({filename}category/article1.rst)
-    [a link relative to the content root]({filename}/category/article1.rst)
+    [a link relative to the current file]({filename}category/article1.md)
+    [a link relative to the content root]({filename}/category/article1.md)
 
 Linking to static files
 -----------------------
