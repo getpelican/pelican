@@ -334,6 +334,32 @@ class TestWordpressXmlImporter(unittest.TestCase):
             escaped_quotes = re.search(r'\\[\'"“”‘’]', md)
             self.assertFalse(escaped_quotes)
 
+    def test_convert_caption_to_figure(self):
+        def r(f):
+            with open(f, encoding='utf-8') as infile:
+                return infile.read()
+        silent_f2p = mute(True)(fields2pelican)
+        test_post = filter(
+            lambda p: p[0].startswith("Caption on image"),
+            self.posts)
+        with temporary_folder() as temp:
+            md = [r(f) for f in silent_f2p(test_post, 'markdown', temp)][0]
+
+        caption = re.search(r'\[caption', md)
+        self.assertFalse(caption)
+
+        for occurence in [
+            '/theme/img/xpelican.png.pagespeed.ic.Rjep0025-y.png',
+            '/theme/img/xpelican-3.png.pagespeed.ic.m-NAIdRCOM.png',
+            '/theme/img/xpelican.png.pagespeed.ic.Rjep0025-y.png',
+            'This is a pelican',
+            'This also a pelican',
+            'Yet another pelican',
+        ]:
+            # pandoc 2.x converts into ![text](src)
+            # pandoc 3.x converts into <figure>src<figcaption>text</figcaption></figure>
+            self.assertIn(occurence, md)
+
 
 class TestBuildHeader(unittest.TestCase):
     def test_build_header(self):

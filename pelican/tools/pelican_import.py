@@ -107,6 +107,13 @@ def decode_wp_content(content, br=True):
             return re.sub(pattern, lambda m: dic[m.group()], string)
         content = _multi_replace(pre_tags, content)
 
+    # convert [caption] tags into <figure>
+    content = re.sub(
+        r'\[caption(?:.*?)(?:caption=\"(.*?)\")?\]'
+        r'((?:\<a(?:.*?)\>)?(?:\<img.*?\>)(?:\<\/a\>)?)\s?(.*?)\[\/caption\]',
+        r'<figure>\n\2\n<figcaption>\1\3</figcaption>\n</figure>',
+        content)
+
     return content
 
 
