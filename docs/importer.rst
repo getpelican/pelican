@@ -11,7 +11,6 @@ software to reStructuredText or Markdown. The supported import formats are:
 
 - Blogger XML export
 - Dotclear export
-- Posterous API
 - Tumblr API
 - WordPress XML export
 - RSS/Atom feed
@@ -48,16 +47,15 @@ Usage
 
 ::
 
-    pelican-import [-h] [--blogger] [--dotclear] [--posterous] [--tumblr] [--wpfile] [--feed]
+    pelican-import [-h] [--blogger] [--dotclear] [--tumblr] [--wpfile] [--feed]
                    [-o OUTPUT] [-m MARKUP] [--dir-cat] [--dir-page] [--strip-raw] [--wp-custpost]
-                   [--wp-attach] [--disable-slugs] [-e EMAIL] [-p PASSWORD] [-b BLOGNAME]
-                   input|api_token|api_key
+                   [--wp-attach] [--disable-slugs] [-b BLOGNAME]
+                   input|api_key
 
 Positional arguments
 --------------------
   =============         ============================================================================
   ``input``             The input file to read
-  ``api_token``         (Posterous only) api_token can be obtained from http://posterous.com/api/
   ``api_key``           (Tumblr only) api_key can be obtained from https://www.tumblr.com/oauth/apps
   =============         ============================================================================
 
@@ -67,7 +65,6 @@ Optional arguments
   -h, --help            Show this help message and exit
   --blogger             Blogger XML export (default: False)
   --dotclear            Dotclear export (default: False)
-  --posterous           Posterous API (default: False)
   --tumblr              Tumblr API (default: False)
   --wpfile              WordPress XML export (default: False)
   --feed                Feed to parse (default: False)
@@ -101,10 +98,6 @@ Optional arguments
                         output. With this disabled, your Pelican URLs may not
                         be consistent with your original posts. (default:
                         False)
-  -e EMAIL, --email=EMAIL
-                        Email used to authenticate Posterous API
-  -p PASSWORD, --password=PASSWORD
-                        Password used to authenticate Posterous API
   -b BLOGNAME, --blogname=BLOGNAME
                         Blog name used in Tumblr API
 
@@ -120,13 +113,9 @@ For Dotclear::
 
     $ pelican-import --dotclear -o ~/output ~/backup.txt
 
-for Posterous::
-
-    $ pelican-import --posterous -o ~/output --email=<email_address> --password=<password> <api_token>
-
 For Tumblr::
 
-    $ pelican-import --tumblr -o ~/output --blogname=<blogname> <api_token>
+    $ pelican-import --tumblr -o ~/output --blogname=<blogname> <api_key>
 
 For WordPress::
 
