@@ -390,22 +390,22 @@ def dc2fields(file):
                post_format)
 
 
-def tumblr2fields(api_key, blogname):
-    """ Imports Tumblr posts (API v2)"""
+def _get_tumblr_posts(api_key, blogname, offset=0):
     import json
     import urllib.request as urllib_request
+    url = ("https://api.tumblr.com/v2/blog/%s.tumblr.com/"
+           "posts?api_key=%s&offset=%d&filter=raw") % (
+        blogname, api_key, offset)
+    request = urllib_request.Request(url)
+    handle = urllib_request.urlopen(request)
+    posts = json.loads(handle.read().decode('utf-8'))
+    return posts.get('response').get('posts')
 
-    def get_tumblr_posts(api_key, blogname, offset=0):
-        url = ("https://api.tumblr.com/v2/blog/%s.tumblr.com/"
-               "posts?api_key=%s&offset=%d&filter=raw") % (
-            blogname, api_key, offset)
-        request = urllib_request.Request(url)
-        handle = urllib_request.urlopen(request)
-        posts = json.loads(handle.read().decode('utf-8'))
-        return posts.get('response').get('posts')
 
+def tumblr2fields(api_key, blogname):
+    """ Imports Tumblr posts (API v2)"""
     offset = 0
-    posts = get_tumblr_posts(api_key, blogname, offset)
+    posts = _get_tumblr_posts(api_key, blogname, offset)
     subs = DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS']
     while len(posts) > 0:
         for post in posts:
@@ -428,12 +428,10 @@ def tumblr2fields(api_key, blogname):
                     fmtstr = '![%s](%s)'
                 else:
                     fmtstr = '<img alt="%s" src="%s" />'
-                content = ''
-                for photo in post.get('photos'):
-                    content += '\n'.join(
-                        fmtstr % (photo.get('caption'),
-                                  photo.get('original_size').get('url')))
-                content += '\n\n' + post.get('caption')
+                content = '\n'.join(
+                    fmtstr % (photo.get('caption'),
+                              photo.get('original_size').get('url'))
+                    for photo in post.get('photos'))
             elif type == 'quote':
                 if format == 'markdown':
                     fmtstr = '\n\n&mdash; %s'
@@ -483,7 +481,7 @@ def tumblr2fields(api_key, blogname):
                    tags, status, kind, format)
 
         offset += len(posts)
-        posts = get_tumblr_posts(api_key, blogname, offset)
+        posts = _get_tumblr_posts(api_key, blogname, offset)
 
 
 def feed2fields(file):

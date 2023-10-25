@@ -1,7 +1,11 @@
+import datetime
 import locale
 import os
 import re
 from posixpath import join as posix_join
+from unittest.mock import patch
+
+import dateutil.tz
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
@@ -10,8 +14,11 @@ from pelican.tools.pelican_import import (blogger2fields, build_header,
                                           build_markdown_header,
                                           decode_wp_content,
                                           download_attachments, fields2pelican,
-                                          get_attachments, wp2fields)
+                                          get_attachments, tumblr2fields,
+                                          wp2fields,
+                                          )
 from pelican.utils import path_to_file_url, slugify
+
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 BLOGGER_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'bloggerexport.xml')
@@ -34,17 +41,26 @@ except ImportError:
     LXML = False
 
 
-@skipIfNoExecutable(['pandoc', '--version'])
-@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
-class TestBloggerXmlImporter(unittest.TestCase):
-
+class TestWithOsDefaults(unittest.TestCase):
+    """Set locale to C and timezone to UTC for tests, then restore."""
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
-        self.posts = blogger2fields(BLOGGER_XML_SAMPLE)
+        self.old_timezone = datetime.datetime.now(dateutil.tz.tzlocal()).tzname()
+        os.environ['TZ'] = 'UTC'
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
+        os.environ['TZ'] = self.old_timezone
+
+
+@skipIfNoExecutable(['pandoc', '--version'])
+@unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
+class TestBloggerXmlImporter(TestWithOsDefaults):
+
+    def setUp(self):
+        super().setUp()
+        self.posts = blogger2fields(BLOGGER_XML_SAMPLE)
 
     def test_recognise_kind_and_title(self):
         """Check that importer only outputs pages, articles and comments,
@@ -85,16 +101,12 @@ class TestBloggerXmlImporter(unittest.TestCase):
 
 @skipIfNoExecutable(['pandoc', '--version'])
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
-class TestWordpressXmlImporter(unittest.TestCase):
+class TestWordpressXmlImporter(TestWithOsDefaults):
 
     def setUp(self):
-        self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
+        super().setUp()
         self.posts = wp2fields(WORDPRESS_XML_SAMPLE)
         self.custposts = wp2fields(WORDPRESS_XML_SAMPLE, True)
-
-    def tearDown(self):
-        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_ignore_empty_posts(self):
         self.assertTrue(self.posts)
@@ -477,3 +489,46 @@ class TestWordpressXMLAttachements(unittest.TestCase):
             self.assertTrue(
                 directory.endswith(posix_join('content', 'article.rst')),
                 directory)
+
+
+class TestTumblrImporter(TestWithOsDefaults):
+    @patch("pelican.tools.pelican_import._get_tumblr_posts")
+    def test_posts(self, get):
+        def get_posts(api_key, blogname, offset=0):
+            if offset > 0:
+                return []
+
+            return [
+                {
+                    "type": "photo",
+                    "blog_name": "testy",
+                    "date": "2019-11-07 21:26:40 GMT",
+                    "timestamp": 1573162000,
+                    "format": "html",
+                    "slug": "a-slug",
+                    "tags": [
+                        "economics"
+                    ],
+                    "state": "published",
+
+                    "photos": [
+                        {
+                            "caption": "",
+                            "original_size": {
+                                "url": "https://..fccdc2360ba7182a.jpg",
+                                "width": 634,
+                                "height": 789
+                            },
+                        }]
+                }
+            ]
+        get.side_effect = get_posts
+
+        posts = list(tumblr2fields("api_key", "blogname"))
+        self.assertEqual(
+            [('Photo',
+              '<img alt="" src="https://..fccdc2360ba7182a.jpg" />\n',
+              '2019-11-07-a-slug', '2019-11-07 21:26:40', 'testy', ['photo'],
+              ['economics'], 'published', 'article', 'html')],
+            posts,
+            posts)
