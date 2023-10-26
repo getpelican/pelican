@@ -838,7 +838,7 @@ proident, sunt in culpa qui officia deserunt mollit anim id est laborum.]]></con
             <wp:meta_key>_edit_last</wp:meta_key>
             <wp:meta_value><![CDATA[3]]></wp:meta_value>
         </wp:postmeta>
-        </item>   
+        </item>
         <item>
         <title>A 2nd custom post type also in category 5</title>
         <link>http://thisisa.test/?p=177</link>

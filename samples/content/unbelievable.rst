@@ -45,7 +45,7 @@ Testing more sourcecode directives
     :lineseparator: <br>
     :linespans: foo
     :nobackground:
-  
+
     def run(self):
         self.assert_has_content()
         try:
@@ -76,8 +76,8 @@ Testing even more sourcecode directives
 .. sourcecode:: python
     :linenos: table
     :nowrap:
-    
-  
+
+
     formatter = self.options and VARIANTS[self.options.keys()[0]]
 
 
@@ -90,8 +90,8 @@ Even if the default is line numbers, we can override it here
 
 .. sourcecode:: python
     :linenos: none
-    
-  
+
+
     formatter = self.options and VARIANTS[self.options.keys()[0]]
 
 
