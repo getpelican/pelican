@@ -459,8 +459,16 @@ def tumblr2fields(api_key, blogname):
                     fmtstr = '<p><a href="%s">via</a></p>\n'
                 source = fmtstr % post.get('source_url')
                 caption = post.get('caption')
-                players = '\n'.join(player.get('embed_code')
-                                    for player in post.get('player'))
+                players = [
+                    # If embed_code is False, couldn't get the video
+                    player.get('embed_code') or None
+                    for player in post.get('player')]
+                # If there are no embeddable players, say so, once
+                if len(players) > 0 and all(
+                        player is None for player in players):
+                    players = "<p>(This video isn't available anymore.)</p>\n"
+                else:
+                    players = '\n'.join(players)
                 content = source + caption + players
             elif type == 'answer':
                 title = post.get('question')
