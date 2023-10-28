@@ -8,9 +8,18 @@ from setuptools import find_packages, setup
 
 version = "4.8.0"
 
-requires = ['feedgenerator >= 1.9', 'jinja2 >= 2.7', 'pygments',
-            'docutils>=0.15', 'blinker', 'unidecode', 'python-dateutil',
-            'rich', 'backports-zoneinfo[tzdata] >= 0.2; python_version<"3.9"']
+requires = [
+    'feedgenerator >= 1.9',
+    'jinja2 >= 2.7',
+    'pygments',
+    'docutils>=0.15',
+    'blinker',
+    'unidecode',
+    'python-dateutil',
+    'rich',
+    'backports-zoneinfo[tzdata] >= 0.2; python_version<"3.9"',
+    'watchfiles'
+]
 
 entry_points = {
     'console_scripts': [

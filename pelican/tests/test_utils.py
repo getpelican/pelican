@@ -2,7 +2,6 @@ import locale
 import logging
 import os
 import shutil
-import time
 from datetime import timezone
 from sys import platform
 from tempfile import mkdtemp
@@ -14,7 +13,6 @@ except ModuleNotFoundError:
 
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
-from pelican.readers import Readers
 from pelican.settings import read_settings
 from pelican.tests.support import (LoggedTestCase, get_article,
                                    locale_available, unittest)
@@ -411,92 +409,6 @@ class TestUtils(LoggedTestCase):
                         elif translation_id == {'slug', 'category'}:
                             self.assertNotIn(a_arts[4], b_arts[5].translations)
                             self.assertNotIn(a_arts[5], b_arts[4].translations)
-
-    def test_filesystemwatcher(self):
-        def create_file(name, content):
-            with open(name, 'w') as f:
-                f.write(content)
-
-        # disable logger filter
-        from pelican.utils import logger
-        logger.disable_filter()
-
-        # create a temp "project" dir
-        root = mkdtemp()
-        content_path = os.path.join(root, 'content')
-        static_path = os.path.join(root, 'content', 'static')
-        config_file = os.path.join(root, 'config.py')
-        theme_path = os.path.join(root, 'mytheme')
-
-        # populate
-        os.mkdir(content_path)
-        os.mkdir(theme_path)
-        create_file(config_file,
-                    'PATH = "content"\n'
-                    'THEME = "mytheme"\n'
-                    'STATIC_PATHS = ["static"]')
-
-        t = time.time() - 1000  # make sure it's in the "past"
-        os.utime(config_file, (t, t))
-        settings = read_settings(config_file)
-
-        watcher = utils.FileSystemWatcher(config_file, Readers, settings)
-        # should get a warning for static not not existing
-        self.assertLogCountEqual(1, 'Watched path does not exist: .*static')
-
-        # create it and update config
-        os.mkdir(static_path)
-        watcher.update_watchers(settings)
-        # no new warning
-        self.assertLogCountEqual(1, 'Watched path does not exist: .*static')
-
-        # get modified values
-        modified = watcher.check()
-        # empty theme and content should raise warnings
-        self.assertLogCountEqual(1, 'No valid files found in content')
-        self.assertLogCountEqual(1, 'Empty theme folder. Using `basic` theme')
-
-        self.assertIsNone(modified['content'])  # empty
-        self.assertIsNone(modified['theme'])  # empty
-        self.assertIsNone(modified['[static]static'])  # empty
-        self.assertTrue(modified['settings'])  # modified, first time
-
-        # add a content, add file to theme and check again
-        create_file(os.path.join(content_path, 'article.md'),
-                    'Title: test\n'
-                    'Date: 01-01-2020')
-
-        create_file(os.path.join(theme_path, 'dummy'),
-                    'test')
-
-        modified = watcher.check()
-        # no new warning
-        self.assertLogCountEqual(1, 'No valid files found in content')
-        self.assertLogCountEqual(1, 'Empty theme folder. Using `basic` theme')
-
-        self.assertIsNone(modified['[static]static'])  # empty
-        self.assertFalse(modified['settings'])  # not modified
-        self.assertTrue(modified['theme'])  # modified
-        self.assertTrue(modified['content'])  # modified
-
-        # change config, remove static path
-        create_file(config_file,
-                    'PATH = "content"\n'
-                    'THEME = "mytheme"\n'
-                    'STATIC_PATHS = []')
-
-        settings = read_settings(config_file)
-        watcher.update_watchers(settings)
-
-        modified = watcher.check()
-        self.assertNotIn('[static]static', modified)  # should be gone
-        self.assertTrue(modified['settings'])  # modified
-        self.assertFalse(modified['content'])  # not modified
-        self.assertFalse(modified['theme'])  # not modified
-
-        # cleanup
-        logger.enable_filter()
-        shutil.rmtree(root)
 
     def test_clean_output_dir(self):
         retention = ()
