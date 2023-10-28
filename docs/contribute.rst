@@ -75,6 +75,9 @@ via::
 
     invoke tests
 
+(For more on Invoke, see ``invoke -l`` to list tasks, or
+https://pyinvoke.org for documentation.)
+
 In addition to running the test suite, it is important to also ensure that any
 lines you changed conform to code style guidelines. You can check that via::
 

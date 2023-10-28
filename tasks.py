@@ -45,6 +45,13 @@ def tests(c):
 
 
 @task
+def coverage(c):
+    """Generate code coverage of running the test suite."""
+    c.run(f"{VENV_BIN}/pytest --cov=pelican", pty=PTY)
+    c.run(f"{VENV_BIN}/coverage html", pty=PTY)
+
+
+@task
 def black(c, check=False, diff=False):
     """Run Black auto-formatter, optionally with --check or --diff"""
     check_flag, diff_flag = "", ""
