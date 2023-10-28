@@ -764,21 +764,25 @@ def wait_for_changes(settings_file, reader_class, settings):
         fnmatch.translate(pattern) for pattern in settings.get('IGNORE_FILES', [])
     )
 
-    watching_paths = [
+    candidate_paths = [
         settings_file,
         theme_path,
         content_path,
     ]
 
-    watching_paths.extend(
+    candidate_paths.extend(
         os.path.join(content_path, path) for path in settings.get('STATIC_PATHS', [])
     )
 
-    watching_paths = [os.path.abspath(p) for p in watching_paths if p]
-
-    for path in watching_paths:
+    watching_paths = []
+    for path in candidate_paths:
+        if not path:
+            continue
+        path = os.path.abspath(path)
         if not os.path.exists(path):
             logger.warning("Unable to watch path '%s' as it does not exist.", path)
+        else:
+            watching_paths.append(path)
 
     return next(watchfiles.watch(
         *watching_paths,
