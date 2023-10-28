@@ -231,7 +231,8 @@ def diff_subproc(first, second):
         ['git', '--no-pager', 'diff', '--no-ext-diff', '--exit-code',
          '-w', first, second],
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
+        text=True,
     )
 
 

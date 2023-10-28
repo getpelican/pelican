@@ -15,7 +15,8 @@ from pelican.tests.support import (
     LoggedTestCase,
     diff_subproc,
     locale_available,
-    mute
+    mute,
+    skipIfNoExecutable,
 )
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -69,7 +70,8 @@ class TestPelican(LoggedTestCase):
         if proc.returncode != 0:
             msg = self._formatMessage(
                 msg,
-                "%s and %s differ:\n%s" % (left_path, right_path, err)
+                "%s and %s differ:\nstdout:\n%s\nstderr\n%s" %
+                (left_path, right_path, out, err)
             )
             raise self.failureException(msg)
 
@@ -88,6 +90,7 @@ class TestPelican(LoggedTestCase):
             generator_classes, Sequence,
             "_get_generator_classes() must return a Sequence to preserve order")
 
+    @skipIfNoExecutable(['git', '--version'])
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
         # ones and generate correct output without raising any exception
@@ -107,6 +110,7 @@ class TestPelican(LoggedTestCase):
             msg="Unable to find.*skipping url replacement",
             level=logging.WARNING)
 
+    @skipIfNoExecutable(['git', '--version'])
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
         settings = read_settings(path=SAMPLE_CONFIG, override={
@@ -121,6 +125,7 @@ class TestPelican(LoggedTestCase):
             self.temp_path, os.path.join(OUTPUT_PATH, 'custom')
         )
 
+    @skipIfNoExecutable(['git', '--version'])
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'), 'French locale needed')
     def test_custom_locale_generation_works(self):
