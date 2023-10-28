@@ -71,6 +71,8 @@ All templates will receive the variables defined in your settings file, as long
 as they are in all-caps. You can access them directly.
 
 
+.. _common_variables:
+
 Common Variables
 ----------------
 
@@ -92,6 +94,10 @@ dates           The same list of articles, but ordered by date,
                 ascending.
 hidden_articles The list of hidden articles
 drafts          The list of draft articles
+period_archives A dictionary containing elements related to
+                time-period archives (if enabled). See the section
+                :ref:`Listing and Linking to Period Archives
+                <period_archives_variable>` for details.
 authors         A list of (author, articles) tuples, containing all
                 the authors and corresponding articles (values)
 categories      A list of (category, articles) tuples, containing
@@ -346,6 +352,63 @@ period_num              A tuple of the form (``year``, ``month``, ``day``),
 You can see an example of how to use `period` in the `"simple" theme
 period_archives.html template
 <https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_.
+
+
+.. _period_archives_variable:
+
+Listing and Linking to Period Archives
+""""""""""""""""""""""""""""""""""""""
+
+The ``period_archives`` variable can be used to generate a list of links to
+the set of period archives that Pelican generates. As a :ref:`common variable
+<common_variables>`, it is available for use in any template, so you
+can implement such an index in a custom direct template, or in a sidebar
+visible across different site pages.
+
+``period_archives`` is a dict that may contain ``year``, ``month``, and/or
+``day`` keys, depending on which ``*_ARCHIVE_SAVE_AS`` settings are enabled.
+The corresponding value is a list of dicts, where each dict in turn represents
+a time period (ordered according to the ``NEWEST_FIRST_ARCHIVES`` setting)
+with the following keys and values:
+
+===================     ===================================================
+Key                     Value
+===================     ===================================================
+period                  The same tuple as described in
+                        ``period_archives.html``, e.g.
+                        ``(2023, 'June', 18)``.
+period_num              The same tuple as described in
+                        ``period_archives.html``, e.g. ``(2023, 6, 18)``.
+url                     The URL to the period archive page, e.g.
+                        ``posts/2023/06/18/``. This is controlled by the
+                        corresponding ``*_ARCHIVE_URL`` setting.
+save_as                 The path to the save location of the period archive
+                        page file, e.g. ``posts/2023/06/18/index.html``.
+                        This is used internally by Pelican and is usually
+                        not relevant to themes.
+articles                A list of :ref:`Article <object-article>` objects
+                        that fall under the time period.
+dates                   Same list as ``articles``, but ordered according
+                        to the ``NEWEST_FIRST_ARCHIVES`` setting.
+===================     ===================================================
+
+Here is an example of how ``period_archives`` can be used in a template:
+
+.. code-block:: html+jinja
+
+    <ul>
+    {% for archive in period_archives.month %}
+        <li>
+            <a href="{{ SITEURL }}/{{ archive.url }}">
+                {{ archive.period | reverse | join(' ') }} ({{ archive.articles|count }})
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+You can change ``period_archives.month`` in the ``for`` statement to
+``period_archives.year`` or ``period_archives.day`` as appropriate, depending
+on the time period granularity desired.
 
 
 Objects

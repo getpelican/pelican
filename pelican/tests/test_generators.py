@@ -405,6 +405,135 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertIn(custom_template, self.articles)
         self.assertIn(standard_template, self.articles)
 
+    def test_period_archives_context(self):
+        """Test correctness of the period_archives context values."""
+
+        old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, 'C')
+        settings = get_settings()
+        settings['CACHE_PATH'] = self.temp_cache
+
+        # No period archives enabled:
+        context = get_context(settings)
+        generator = ArticlesGenerator(
+            context=context, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        period_archives = generator.context['period_archives']
+        self.assertEqual(len(period_archives.items()), 0)
+
+        # Year archives enabled:
+        settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
+        settings['YEAR_ARCHIVE_URL'] = 'posts/{date:%Y}/'
+        context = get_context(settings)
+        generator = ArticlesGenerator(
+            context=context, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        period_archives = generator.context['period_archives']
+        abbreviated_archives = {
+            granularity: {period['period'] for period in periods}
+            for granularity, periods in period_archives.items()
+        }
+        expected = {'year': {(1970,), (2010,), (2012,), (2014,)}}
+        self.assertEqual(expected, abbreviated_archives)
+
+        # Month archives enabled:
+        settings['MONTH_ARCHIVE_SAVE_AS'] = \
+            'posts/{date:%Y}/{date:%b}/index.html'
+        settings['MONTH_ARCHIVE_URL'] = \
+            'posts/{date:%Y}/{date:%b}/'
+        context = get_context(settings)
+        generator = ArticlesGenerator(
+            context=context, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        period_archives = generator.context['period_archives']
+        abbreviated_archives = {
+            granularity: {period['period'] for period in periods}
+            for granularity, periods in period_archives.items()
+        }
+        expected = {
+            'year': {(1970,), (2010,), (2012,), (2014,)},
+            'month': {
+                (1970, 'January'),
+                (2010, 'December'),
+                (2012, 'December'),
+                (2012, 'November'),
+                (2012, 'October'),
+                (2014, 'February'),
+            },
+        }
+        self.assertEqual(expected, abbreviated_archives)
+
+        # Day archives enabled:
+        settings['DAY_ARCHIVE_SAVE_AS'] = \
+            'posts/{date:%Y}/{date:%b}/{date:%d}/index.html'
+        settings['DAY_ARCHIVE_URL'] = \
+            'posts/{date:%Y}/{date:%b}/{date:%d}/'
+        context = get_context(settings)
+        generator = ArticlesGenerator(
+            context=context, settings=settings,
+            path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
+        generator.generate_context()
+        period_archives = generator.context['period_archives']
+        abbreviated_archives = {
+            granularity: {period['period'] for period in periods}
+            for granularity, periods in period_archives.items()
+        }
+        expected = {
+            'year': {(1970,), (2010,), (2012,), (2014,)},
+            'month': {
+                (1970, 'January'),
+                (2010, 'December'),
+                (2012, 'December'),
+                (2012, 'November'),
+                (2012, 'October'),
+                (2014, 'February'),
+            },
+            'day': {
+                (1970, 'January', 1),
+                (2010, 'December', 2),
+                (2012, 'December', 20),
+                (2012, 'November', 29),
+                (2012, 'October', 30),
+                (2012, 'October', 31),
+                (2014, 'February', 9),
+            },
+        }
+        self.assertEqual(expected, abbreviated_archives)
+
+        # Further item values tests
+        filtered_archives = [
+            p for p in period_archives['day']
+            if p['period'] == (2014, 'February', 9)
+        ]
+        self.assertEqual(len(filtered_archives), 1)
+        sample_archive = filtered_archives[0]
+        self.assertEqual(sample_archive['period_num'], (2014, 2, 9))
+        self.assertEqual(
+            sample_archive['save_as'], 'posts/2014/Feb/09/index.html')
+        self.assertEqual(
+            sample_archive['url'], 'posts/2014/Feb/09/')
+        articles = [
+            d for d in generator.articles if
+            d.date.year == 2014 and
+            d.date.month == 2 and
+            d.date.day == 9
+        ]
+        self.assertEqual(len(sample_archive['articles']), len(articles))
+        dates = [
+            d for d in generator.dates if
+            d.date.year == 2014 and
+            d.date.month == 2 and
+            d.date.day == 9
+        ]
+        self.assertEqual(len(sample_archive['dates']), len(dates))
+        self.assertEqual(sample_archive['dates'][0].title, dates[0].title)
+        self.assertEqual(sample_archive['dates'][0].date, dates[0].date)
+
+        locale.setlocale(locale.LC_ALL, old_locale)
+
     def test_period_in_timeperiod_archive(self):
         """
         Test that the context of a generated period_archive is passed

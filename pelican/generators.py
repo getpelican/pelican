@@ -295,6 +295,7 @@ class ArticlesGenerator(CachingGenerator):
         self.drafts = []                   # only drafts in default language
         self.drafts_translations = []
         self.dates = {}
+        self.period_archives = defaultdict(list)
         self.tags = defaultdict(list)
         self.categories = defaultdict(list)
         self.related_posts = []
@@ -493,64 +494,17 @@ class ArticlesGenerator(CachingGenerator):
         except PelicanTemplateNotFound:
             template = self.get_template('archives')
 
-        period_save_as = {
-            'year': self.settings['YEAR_ARCHIVE_SAVE_AS'],
-            'month': self.settings['MONTH_ARCHIVE_SAVE_AS'],
-            'day': self.settings['DAY_ARCHIVE_SAVE_AS'],
-        }
+        for granularity in self.period_archives:
+            for period in self.period_archives[granularity]:
 
-        period_url = {
-            'year': self.settings['YEAR_ARCHIVE_URL'],
-            'month': self.settings['MONTH_ARCHIVE_URL'],
-            'day': self.settings['DAY_ARCHIVE_URL'],
-        }
-
-        period_date_key = {
-            'year': attrgetter('date.year'),
-            'month': attrgetter('date.year', 'date.month'),
-            'day': attrgetter('date.year', 'date.month', 'date.day')
-        }
-
-        def _generate_period_archives(dates, key, save_as_fmt, url_fmt):
-            """Generate period archives from `dates`, grouped by
-            `key` and written to `save_as`.
-            """
-            # `dates` is already sorted by date
-            for _period, group in groupby(dates, key=key):
-                archive = list(group)
-                articles = [a for a in self.articles if a in archive]
-                # arbitrarily grab the first date so that the usual
-                # format string syntax can be used for specifying the
-                # period archive dates
-                date = archive[0].date
-                save_as = save_as_fmt.format(date=date)
-                url = url_fmt.format(date=date)
                 context = self.context.copy()
+                context['period'] = period['period']
+                context['period_num'] = period['period_num']
 
-                if key == period_date_key['year']:
-                    context["period"] = (_period,)
-                    context["period_num"] = (_period,)
-                else:
-                    month_name = calendar.month_name[_period[1]]
-                    if key == period_date_key['month']:
-                        context["period"] = (_period[0],
-                                             month_name)
-                    else:
-                        context["period"] = (_period[0],
-                                             month_name,
-                                             _period[2])
-                    context["period_num"] = tuple(_period)
-
-                write(save_as, template, context, articles=articles,
-                      dates=archive, template_name='period_archives',
-                      blog=True, url=url, all_articles=self.articles)
-
-        for period in 'year', 'month', 'day':
-            save_as = period_save_as[period]
-            url = period_url[period]
-            if save_as:
-                key = period_date_key[period]
-                _generate_period_archives(self.dates, key, save_as, url)
+                write(period['save_as'], template, context,
+                      articles=period['articles'], dates=period['dates'],
+                      template_name='period_archives', blog=True,
+                      url=period['url'], all_articles=self.articles)
 
     def generate_direct_templates(self, write):
         """Generate direct templates pages"""
@@ -690,6 +644,9 @@ class ArticlesGenerator(CachingGenerator):
         self.dates.sort(key=attrgetter('date'),
                         reverse=self.context['NEWEST_FIRST_ARCHIVES'])
 
+        self.period_archives = self._build_period_archives(
+            self.dates, self.articles, self.settings)
+
         # and generate the output :)
 
         # order the categories per name
@@ -704,9 +661,79 @@ class ArticlesGenerator(CachingGenerator):
             'articles', 'drafts', 'hidden_articles',
             'dates', 'tags', 'categories',
             'authors', 'related_posts'))
+        # _update_context flattens dicts, which should not happen to
+        # period_archives, so we update the context directly for it:
+        self.context['period_archives'] = self.period_archives
         self.save_cache()
         self.readers.save_cache()
         signals.article_generator_finalized.send(self)
+
+    def _build_period_archives(self, sorted_articles, articles, settings):
+        """
+        Compute the groupings of articles, with related attributes, for
+        per-year, per-month, and per-day archives.
+        """
+
+        period_archives = defaultdict(list)
+
+        period_archives_settings = {
+            'year': {
+                'save_as': settings['YEAR_ARCHIVE_SAVE_AS'],
+                'url': settings['YEAR_ARCHIVE_URL'],
+            },
+            'month': {
+                'save_as': settings['MONTH_ARCHIVE_SAVE_AS'],
+                'url': settings['MONTH_ARCHIVE_URL'],
+            },
+            'day': {
+                'save_as': settings['DAY_ARCHIVE_SAVE_AS'],
+                'url': settings['DAY_ARCHIVE_URL'],
+            },
+        }
+
+        granularity_key_func = {
+            'year': attrgetter('date.year'),
+            'month': attrgetter('date.year', 'date.month'),
+            'day': attrgetter('date.year', 'date.month', 'date.day'),
+        }
+
+        for granularity in 'year', 'month', 'day':
+            save_as_fmt = period_archives_settings[granularity]['save_as']
+            url_fmt = period_archives_settings[granularity]['url']
+            key_func = granularity_key_func[granularity]
+
+            if not save_as_fmt:
+                # the archives for this period granularity are not needed
+                continue
+
+            for period, group in groupby(sorted_articles, key=key_func):
+                archive = {}
+
+                dates = list(group)
+                archive['dates'] = dates
+                archive['articles'] = [a for a in articles if a in dates]
+
+                # use the first date to specify the period archive URL
+                # and save_as; the specific date used does not matter as
+                # they all belong to the same period
+                d = dates[0].date
+                archive['save_as'] = save_as_fmt.format(date=d)
+                archive['url'] = url_fmt.format(date=d)
+
+                if granularity == 'year':
+                    archive['period'] = (period,)
+                    archive['period_num'] = (period,)
+                else:
+                    month_name = calendar.month_name[period[1]]
+                    if granularity == 'month':
+                        archive['period'] = (period[0], month_name)
+                    else:
+                        archive['period'] = (period[0], month_name, period[2])
+                    archive['period_num'] = tuple(period)
+
+                period_archives[granularity].append(archive)
+
+        return period_archives
 
     def generate_output(self, writer):
         self.generate_feeds(writer)

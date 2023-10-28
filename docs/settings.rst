@@ -564,43 +564,46 @@ written over time.
 Example usage::
 
    YEAR_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/index.html'
+   YEAR_ARCHIVE_URL = 'posts/{date:%Y}/'
    MONTH_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/index.html'
+   MONTH_ARCHIVE_URL = 'posts/{date:%Y}/{date:%b}/'
 
 With these settings, Pelican will create an archive of all your posts for the
 year at (for instance) ``posts/2011/index.html`` and an archive of all your
-posts for the month at ``posts/2011/Aug/index.html``.
+posts for the month at ``posts/2011/Aug/index.html``. These can be accessed
+through the URLs ``posts/2011/`` and ``posts/2011/Aug/``, respectively.
 
 .. note::
     Period archives work best when the final path segment is ``index.html``.
     This way a reader can remove a portion of your URL and automatically arrive
     at an appropriate archive of posts, without having to specify a page name.
 
-.. data:: YEAR_ARCHIVE_URL = ''
-
-   The URL to use for per-year archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
-
 .. data:: YEAR_ARCHIVE_SAVE_AS = ''
 
    The location to save per-year archives of your posts.
 
-.. data:: MONTH_ARCHIVE_URL = ''
+.. data:: YEAR_ARCHIVE_URL = ''
 
-   The URL to use for per-month archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+   The URL to use for per-year archives of your posts. You should set this if
+   you enable per-year archives.
 
 .. data:: MONTH_ARCHIVE_SAVE_AS = ''
 
    The location to save per-month archives of your posts.
 
-.. data:: DAY_ARCHIVE_URL = ''
+.. data:: MONTH_ARCHIVE_URL = ''
 
-   The URL to use for per-day archives of your posts. Used only if you have the
-   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+   The URL to use for per-month archives of your posts. You should set this if
+   you enable per-month archives.
 
 .. data:: DAY_ARCHIVE_SAVE_AS = ''
 
    The location to save per-day archives of your posts.
+
+.. data:: DAY_ARCHIVE_URL = ''
+
+   The URL to use for per-day archives of your posts. You should set this if
+   you enable per-day archives.
 
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
