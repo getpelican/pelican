@@ -3,6 +3,7 @@ Pygments==2.14.0
 pytest
 pytest-cov
 pytest-xdist[psutil]
+tzdata
 
 # Optional Packages
 Markdown==3.4.3
