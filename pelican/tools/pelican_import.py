@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import datetime
 import logging
 import os
 import re
@@ -416,10 +417,12 @@ def tumblr2fields(api_key, blogname):
             slug = post.get('slug') or slugify(title, regex_subs=subs)
             tags = post.get('tags')
             timestamp = post.get('timestamp')
-            date = SafeDatetime.fromtimestamp(int(timestamp)).strftime(
-                "%Y-%m-%d %H:%M:%S")
-            slug = SafeDatetime.fromtimestamp(int(timestamp)).strftime(
-                "%Y-%m-%d-") + slug
+            date = SafeDatetime.fromtimestamp(
+                int(timestamp), tz=datetime.timezone.utc
+            ).strftime("%Y-%m-%d %H:%M:%S%z")
+            slug = SafeDatetime.fromtimestamp(
+                int(timestamp), tz=datetime.timezone.utc
+            ).strftime("%Y-%m-%d-") + slug
             format = post.get('format')
             content = post.get('body')
             type = post.get('type')

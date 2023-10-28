@@ -1,11 +1,8 @@
-import datetime
 import locale
 import os
 import re
 from posixpath import join as posix_join
 from unittest.mock import patch
-
-import dateutil.tz
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
@@ -46,12 +43,9 @@ class TestWithOsDefaults(unittest.TestCase):
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
-        self.old_timezone = datetime.datetime.now(dateutil.tz.tzlocal()).tzname()
-        os.environ['TZ'] = 'UTC'
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
-        os.environ['TZ'] = self.old_timezone
 
 
 @skipIfNoExecutable(['pandoc', '--version'])
@@ -502,7 +496,7 @@ class TestTumblrImporter(TestWithOsDefaults):
                 {
                     "type": "photo",
                     "blog_name": "testy",
-                    "date": "2019-11-07 21:26:40 GMT",
+                    "date": "2019-11-07 21:26:40 UTC",
                     "timestamp": 1573162000,
                     "format": "html",
                     "slug": "a-slug",
@@ -528,7 +522,7 @@ class TestTumblrImporter(TestWithOsDefaults):
         self.assertEqual(
             [('Photo',
               '<img alt="" src="https://..fccdc2360ba7182a.jpg" />\n',
-              '2019-11-07-a-slug', '2019-11-07 21:26:40', 'testy', ['photo'],
+              '2019-11-07-a-slug', '2019-11-07 21:26:40+0000', 'testy', ['photo'],
               ['economics'], 'published', 'article', 'html')],
             posts,
             posts)
@@ -544,7 +538,7 @@ class TestTumblrImporter(TestWithOsDefaults):
                     "type": "video",
                     "blog_name": "testy",
                     "slug": "the-slug",
-                    "date": "2017-07-07 20:31:41 GMT",
+                    "date": "2017-07-07 20:31:41 UTC",
                     "timestamp": 1499459501,
                     "state": "published",
                     "format": "html",
@@ -583,7 +577,7 @@ class TestTumblrImporter(TestWithOsDefaults):
               '<iframe>2</iframe>\n'
               '<iframe>3</iframe>\n',
               '2017-07-07-the-slug',
-              '2017-07-07 20:31:41', 'testy', ['video'], [], 'published',
+              '2017-07-07 20:31:41+0000', 'testy', ['video'], [], 'published',
               'article', 'html')],
             posts,
             posts)
@@ -599,7 +593,7 @@ class TestTumblrImporter(TestWithOsDefaults):
                     "type": "video",
                     "blog_name": "testy",
                     "slug": "the-slug",
-                    "date": "2016-08-14 16:37:35 GMT",
+                    "date": "2016-08-14 16:37:35 UTC",
                     "timestamp": 1471192655,
                     "state": "published",
                     "format": "html",
@@ -638,7 +632,7 @@ class TestTumblrImporter(TestWithOsDefaults):
               'v=b">via</a></p>\n<p>Caption</p>'
               '<p>(This video isn\'t available anymore.)</p>\n',
               '2016-08-14-the-slug',
-              '2016-08-14 16:37:35', 'testy', ['video'], ['interviews'],
+              '2016-08-14 16:37:35+0000', 'testy', ['video'], ['interviews'],
               'published', 'article', 'html')],
             posts,
             posts)
