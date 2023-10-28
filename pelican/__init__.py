@@ -1,4 +1,5 @@
 import argparse
+import importlib.metadata
 import json
 import logging
 import multiprocessing
@@ -30,8 +31,7 @@ from pelican.utils import (FileSystemWatcher, clean_output_dir, maybe_pluralize)
 from pelican.writers import Writer
 
 try:
-    __version__ = __import__('pkg_resources') \
-        .get_distribution('pelican').version
+    __version__ = importlib.metadata.version("pelican")
 except Exception:
     __version__ = "unknown"
 
