@@ -66,13 +66,20 @@ def isort(c, check=False, diff=False):
 
 
 @task
-def flake8(c):
-    c.run(f"git diff HEAD | {VENV_BIN}/flake8 --diff --max-line-length=88", pty=PTY)
+def ruff(c, fix=False, diff=False):
+    """Run Ruff to ensure code meets project standards."""
+    diff_flag, fix_flag = "", ""
+    if fix:
+        fix_flag = "--fix"
+    if diff:
+        diff_flag = "--diff"
+    c.run(f"{VENV_BIN}/ruff check {diff_flag} {fix_flag} .", pty=PTY)
 
 
 @task
-def lint(c):
-    flake8(c)
+def lint(c, fix=False, diff=False):
+    """Check code style via linting tools."""
+    ruff(c, fix=fix, diff=diff)
 
 
 @task

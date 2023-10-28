@@ -10,7 +10,7 @@ def err(msg, die=None):
     """Print an error message and exits if an exit code is given"""
     sys.stderr.write(msg + '\n')
     if die:
-        sys.exit(die if type(die) is int else 1)
+        sys.exit(die if isinstance(die, int) else 1)
 
 
 try:
@@ -135,16 +135,16 @@ def themes():
 
 def list_themes(v=False):
     """Display the list of the themes"""
-    for t, l in themes():
+    for theme_path, link_target in themes():
         if not v:
-            t = os.path.basename(t)
-        if l:
+            theme_path = os.path.basename(theme_path)
+        if link_target:
             if v:
-                print(t + (" (symbolic link to `" + l + "')"))
+                print(theme_path + (" (symbolic link to `" + link_target + "')"))
             else:
-                print(t + '@')
+                print(theme_path + '@')
         else:
-            print(t)
+            print(theme_path)
 
 
 def remove(theme_name, v=False):
