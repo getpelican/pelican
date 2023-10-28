@@ -1,7 +1,33 @@
 [project]
+name = "pelican"
 authors = [{ name = "Justin Mayer", email = "authors@getpelican.com" }]
+description = "Static site generator supporting Markdown and reStructuredText"
+version = "4.8.0"
 license = { text = "AGPLv3" }
-requires-python = ">=3.8,<4.0"
+readme = "README.rst"
+keywords = ["static site generator", "static sites", "ssg"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Framework :: Pelican",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Content Management System",
+    "Topic :: Internet :: WWW/HTTP :: Site Management",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup :: Markdown",
+    "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Text Processing :: Markup :: reStructuredText",
+]
+requires-python = ">=3.8.1,<4.0"
 dependencies = [
     "blinker>=1.4",
     "docutils>=0.16",
@@ -11,32 +37,18 @@ dependencies = [
     "python-dateutil>=2.8",
     "rich>=10.1",
     "unidecode>=1.1",
-    "backports-zoneinfo<1.0.0,>=0.2.1; python_version < \"3.9\"",
+    "backports-zoneinfo<1.0.0,>=0.2.1; python_version<3.9",
 ]
-name = "pelican"
-version = "4.8.0"
-description = "Static site generator supporting Markdown and reStructuredText"
-readme = "README.rst"
-keywords = ["static site generator", "static sites", "ssg"]
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Development Status :: 5 - Production/Stable",
-    "Environment :: Console",
-    "Framework :: Pelican",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Content Management System",
-    "Topic :: Internet :: WWW/HTTP :: Site Management",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Text Processing :: Markup :: Markdown",
-    "Topic :: Text Processing :: Markup :: HTML",
-    "Topic :: Text Processing :: Markup :: reStructuredText",
-]
+
+[project.optional-dependencies]
+markdown = ["markdown>=3.1"]
+
+[project.urls]
+Homepage = "https://getpelican.com"
+Funding = "https://donate.getpelican.com/"
+"Issue Tracker" = "https://github.com/getpelican/pelican/issues"
+Repository = "https://github.com/getpelican/pelican"
+Documentation = "https://docs.getpelican.com"
 
 [project.scripts]
 pelican = "pelican.__main__:main"
@@ -87,16 +99,6 @@ dev = [
 
 [tool.pdm.build]
 includes = []
-
-[project.urls]
-Funding = "https://donate.getpelican.com/"
-Tracker = "https://github.com/getpelican/pelican/issues"
-Homepage = "https://getpelican.com"
-Repository = "https://github.com/getpelican/pelican"
-Documentation = "https://docs.getpelican.com"
-
-[project.optional-dependencies]
-markdown = ["markdown>=3.1"]
 
 [build-system]
 requires = ["pdm-backend"]
