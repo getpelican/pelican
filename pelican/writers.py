@@ -37,13 +37,12 @@ class Writer:
             feed_title = context['SITENAME'] + ' - ' + feed_title
         else:
             feed_title = context['SITENAME']
-        feed = feed_class(
+        return feed_class(
             title=Markup(feed_title).striptags(),
             link=(self.site_url + '/'),
             feed_url=self.feed_url,
             description=context.get('SITESUBTITLE', ''),
             subtitle=context.get('SITESUBTITLE', None))
-        return feed
 
     def _add_item_to_the_feed(self, feed, item):
         title = Markup(item.title).striptags()
@@ -71,7 +70,7 @@ class Writer:
             if description == content:
                 description = None
 
-        categories = list()
+        categories = []
         if hasattr(item, 'category'):
             categories.append(item.category)
         if hasattr(item, 'tags'):
@@ -83,13 +82,17 @@ class Writer:
             unique_id=get_tag_uri(link, item.date),
             description=description,
             content=content,
-            categories=categories if categories else None,
+            categories=categories or None,
             author_name=getattr(item, 'author', ''),
             pubdate=set_date_tzinfo(
-                item.date, self.settings.get('TIMEZONE', None)),
+                item.date, self.settings.get('TIMEZONE', None)
+            ),
             updateddate=set_date_tzinfo(
                 item.modified, self.settings.get('TIMEZONE', None)
-                ) if hasattr(item, 'modified') else None)
+            )
+            if hasattr(item, 'modified')
+            else None,
+        )
 
     def _open_w(self, filename, encoding, override=False):
         """Open a file to write some content to it.
@@ -101,9 +104,8 @@ class Writer:
             if override:
                 raise RuntimeError('File %s is set to be overridden twice'
                                    % filename)
-            else:
-                logger.info('Skipping %s', filename)
-                filename = os.devnull
+            logger.info('Skipping %s', filename)
+            filename = os.devnull
         elif filename in self._written_files:
             if override:
                 logger.info('Overwriting %s', filename)
@@ -139,7 +141,7 @@ class Writer:
             'SITEURL', path_to_url(get_relative_path(path)))
 
         self.feed_domain = context.get('FEED_DOMAIN')
-        self.feed_url = self.urljoiner(self.feed_domain, url if url else path)
+        self.feed_url = self.urljoiner(self.feed_domain, url or path)
 
         feed = self._create_new_feed(feed_type, feed_title, context)
 
