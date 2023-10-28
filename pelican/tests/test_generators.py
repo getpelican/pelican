@@ -1,4 +1,3 @@
-import locale
 import os
 import sys
 from shutil import copy, rmtree
@@ -9,25 +8,20 @@ from pelican.generators import (ArticlesGenerator, Generator, PagesGenerator,
                                 PelicanTemplateNotFound, StaticGenerator,
                                 TemplatePagesGenerator)
 from pelican.tests.support import (can_symlink, get_context, get_settings,
-                                   unittest)
+                                   unittest, TestCaseWithCLocale)
 from pelican.writers import Writer
-
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, 'content')
 
 
-class TestGenerator(unittest.TestCase):
+class TestGenerator(TestCaseWithCLocale):
     def setUp(self):
-        self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
+        super().setUp()
         self.settings = get_settings()
         self.settings['READERS'] = {'asc': None}
         self.generator = Generator(self.settings.copy(), self.settings,
                                    CUR_DIR, self.settings['THEME'], None)
-
-    def tearDown(self):
-        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_include_path(self):
         self.settings['IGNORE_FILES'] = {'ignored1.rst', 'ignored2.rst'}
@@ -408,8 +402,6 @@ class TestArticlesGenerator(unittest.TestCase):
     def test_period_archives_context(self):
         """Test correctness of the period_archives context values."""
 
-        old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
         settings = get_settings()
         settings['CACHE_PATH'] = self.temp_cache
 
@@ -532,15 +524,11 @@ class TestArticlesGenerator(unittest.TestCase):
         self.assertEqual(sample_archive['dates'][0].title, dates[0].title)
         self.assertEqual(sample_archive['dates'][0].date, dates[0].date)
 
-        locale.setlocale(locale.LC_ALL, old_locale)
-
     def test_period_in_timeperiod_archive(self):
         """
         Test that the context of a generated period_archive is passed
         'period' : a tuple of year, month, day according to the time period
         """
-        old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
         settings = get_settings()
 
         settings['YEAR_ARCHIVE_SAVE_AS'] = 'posts/{date:%Y}/index.html'
@@ -625,7 +613,6 @@ class TestArticlesGenerator(unittest.TestCase):
                                  dates=dates, template_name='period_archives',
                                  url="posts/1970/Jan/01/",
                                  all_articles=generator.articles)
-        locale.setlocale(locale.LC_ALL, old_locale)
 
     def test_nonexistent_template(self):
         """Attempt to load a non-existent template"""
@@ -926,20 +913,18 @@ class TestPageGenerator(unittest.TestCase):
                       context['static_links'])
 
 
-class TestTemplatePagesGenerator(unittest.TestCase):
+class TestTemplatePagesGenerator(TestCaseWithCLocale):
 
     TEMPLATE_CONTENT = "foo: {{ foo }}"
 
     def setUp(self):
+        super().setUp()
         self.temp_content = mkdtemp(prefix='pelicantests.')
         self.temp_output = mkdtemp(prefix='pelicantests.')
-        self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
 
     def tearDown(self):
         rmtree(self.temp_content)
         rmtree(self.temp_output)
-        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_generate_output(self):
 
@@ -1299,18 +1284,15 @@ class TestStaticGenerator(unittest.TestCase):
         self.assertTrue(os.path.isfile(self.endfile))
 
 
-class TestJinja2Environment(unittest.TestCase):
+class TestJinja2Environment(TestCaseWithCLocale):
 
     def setUp(self):
         self.temp_content = mkdtemp(prefix='pelicantests.')
         self.temp_output = mkdtemp(prefix='pelicantests.')
-        self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
 
     def tearDown(self):
         rmtree(self.temp_content)
         rmtree(self.temp_output)
-        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def _test_jinja2_helper(self, additional_settings, content, expected):
         settings = get_settings()

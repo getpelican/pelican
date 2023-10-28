@@ -1,4 +1,3 @@
-import locale
 import os
 import re
 from posixpath import join as posix_join
@@ -6,7 +5,7 @@ from unittest.mock import patch
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (mute, skipIfNoExecutable, temporary_folder,
-                                   unittest)
+                                   unittest, TestCaseWithCLocale)
 from pelican.tools.pelican_import import (blogger2fields, build_header,
                                           build_markdown_header,
                                           decode_wp_content,
@@ -15,7 +14,6 @@ from pelican.tools.pelican_import import (blogger2fields, build_header,
                                           wp2fields,
                                           )
 from pelican.utils import path_to_file_url, slugify
-
 
 CUR_DIR = os.path.abspath(os.path.dirname(__file__))
 BLOGGER_XML_SAMPLE = os.path.join(CUR_DIR, 'content', 'bloggerexport.xml')
@@ -38,19 +36,9 @@ except ImportError:
     LXML = False
 
 
-class TestWithOsDefaults(unittest.TestCase):
-    """Set locale to C and timezone to UTC for tests, then restore."""
-    def setUp(self):
-        self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
-
-    def tearDown(self):
-        locale.setlocale(locale.LC_ALL, self.old_locale)
-
-
 @skipIfNoExecutable(['pandoc', '--version'])
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
-class TestBloggerXmlImporter(TestWithOsDefaults):
+class TestBloggerXmlImporter(TestCaseWithCLocale):
 
     def setUp(self):
         super().setUp()
@@ -95,7 +83,7 @@ class TestBloggerXmlImporter(TestWithOsDefaults):
 
 @skipIfNoExecutable(['pandoc', '--version'])
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
-class TestWordpressXmlImporter(TestWithOsDefaults):
+class TestWordpressXmlImporter(TestCaseWithCLocale):
 
     def setUp(self):
         super().setUp()
@@ -433,14 +421,10 @@ class TestBuildHeader(unittest.TestCase):
 
 @unittest.skipUnless(BeautifulSoup, 'Needs BeautifulSoup module')
 @unittest.skipUnless(LXML, 'Needs lxml module')
-class TestWordpressXMLAttachements(unittest.TestCase):
+class TestWordpressXMLAttachements(TestCaseWithCLocale):
     def setUp(self):
-        self.old_locale = locale.setlocale(locale.LC_ALL)
-        locale.setlocale(locale.LC_ALL, 'C')
+        super().setUp()
         self.attachments = get_attachments(WORDPRESS_XML_SAMPLE)
-
-    def tearDown(self):
-        locale.setlocale(locale.LC_ALL, self.old_locale)
 
     def test_recognise_attachments(self):
         self.assertTrue(self.attachments)
@@ -485,7 +469,7 @@ class TestWordpressXMLAttachements(unittest.TestCase):
                 directory)
 
 
-class TestTumblrImporter(TestWithOsDefaults):
+class TestTumblrImporter(TestCaseWithCLocale):
     @patch("pelican.tools.pelican_import._get_tumblr_posts")
     def test_posts(self, get):
         def get_posts(api_key, blogname, offset=0):

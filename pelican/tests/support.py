@@ -254,3 +254,16 @@ class LoggedTestCase(unittest.TestCase):
             actual, count,
             msg='expected {} occurrences of {!r}, but found {}'.format(
                 count, msg, actual))
+
+
+class TestCaseWithCLocale(unittest.TestCase):
+    """Set locale to C for each test case, then restore afterward.
+
+    Use utils.temporary_locale if you want a context manager ("with" statement).
+    """
+    def setUp(self):
+        self.old_locale = locale.setlocale(locale.LC_ALL)
+        locale.setlocale(locale.LC_ALL, 'C')
+
+    def tearDown(self):
+        locale.setlocale(locale.LC_ALL, self.old_locale)
