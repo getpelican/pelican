@@ -431,11 +431,12 @@ class TestArticlesGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         period_archives = generator.context['period_archives']
-        self.assertEqual(len(period_archives.items()), 1)
-        self.assertIn('year', period_archives.keys())
-        archive_years = [p['period'][0] for p in period_archives['year']]
-        self.assertIn(1970, archive_years)
-        self.assertIn(2014, archive_years)
+        abbreviated_archives = {
+            granularity: {period['period'] for period in periods}
+            for granularity, periods in period_archives.items()
+        }
+        expected = {'year': {(1970,), (2010,), (2012,), (2014,)}}
+        self.assertEqual(expected, abbreviated_archives)
 
         # Month archives enabled:
         settings['MONTH_ARCHIVE_SAVE_AS'] = \
@@ -448,11 +449,22 @@ class TestArticlesGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         period_archives = generator.context['period_archives']
-        self.assertEqual(len(period_archives.items()), 2)
-        self.assertIn('month', period_archives.keys())
-        month_archives_tuples = [p['period'] for p in period_archives['month']]
-        self.assertIn((1970, 'January'), month_archives_tuples)
-        self.assertIn((2014, 'February'), month_archives_tuples)
+        abbreviated_archives = {
+            granularity: {period['period'] for period in periods}
+            for granularity, periods in period_archives.items()
+        }
+        expected = {
+            'year': {(1970,), (2010,), (2012,), (2014,)},
+            'month': {
+                (1970, 'January'),
+                (2010, 'December'),
+                (2012, 'December'),
+                (2012, 'November'),
+                (2012, 'October'),
+                (2014, 'February'),
+            },
+        }
+        self.assertEqual(expected, abbreviated_archives)
 
         # Day archives enabled:
         settings['DAY_ARCHIVE_SAVE_AS'] = \
@@ -465,11 +477,31 @@ class TestArticlesGenerator(unittest.TestCase):
             path=CONTENT_DIR, theme=settings['THEME'], output_path=None)
         generator.generate_context()
         period_archives = generator.context['period_archives']
-        self.assertEqual(len(period_archives.items()), 3)
-        self.assertIn('day', period_archives.keys())
-        day_archives_tuples = [p['period'] for p in period_archives['day']]
-        self.assertIn((1970, 'January', 1), day_archives_tuples)
-        self.assertIn((2014, 'February', 9), day_archives_tuples)
+        abbreviated_archives = {
+            granularity: {period['period'] for period in periods}
+            for granularity, periods in period_archives.items()
+        }
+        expected = {
+            'year': {(1970,), (2010,), (2012,), (2014,)},
+            'month': {
+                (1970, 'January'),
+                (2010, 'December'),
+                (2012, 'December'),
+                (2012, 'November'),
+                (2012, 'October'),
+                (2014, 'February'),
+            },
+            'day': {
+                (1970, 'January', 1),
+                (2010, 'December', 2),
+                (2012, 'December', 20),
+                (2012, 'November', 29),
+                (2012, 'October', 30),
+                (2012, 'October', 31),
+                (2014, 'February', 9),
+            },
+        }
+        self.assertEqual(expected, abbreviated_archives)
 
         # Further item values tests
         filtered_archives = [

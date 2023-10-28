@@ -484,7 +484,7 @@ class ArticlesGenerator(CachingGenerator):
         except PelicanTemplateNotFound:
             template = self.get_template('archives')
 
-        for granularity in list(self.period_archives.keys()):
+        for granularity in self.period_archives:
             for period in self.period_archives[granularity]:
 
                 context = self.context.copy()
