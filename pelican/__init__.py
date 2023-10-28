@@ -455,8 +455,9 @@ def autoreload(args, excqueue=None):
     settings_file = os.path.abspath(args.settings)
     while True:
         try:
-            changed_files = wait_for_changes(args.settings, Readers, settings)
+            pelican.run()
 
+            changed_files = wait_for_changes(args.settings, Readers, settings)
             changed_files = {c[1] for c in changed_files}
 
             if settings_file in changed_files:
@@ -464,7 +465,6 @@ def autoreload(args, excqueue=None):
 
             console.print('\n-> Modified: {}. re-generating...'.format(
                               ', '.join(changed_files)))
-            pelican.run()
 
         except KeyboardInterrupt:
             if excqueue is not None:
