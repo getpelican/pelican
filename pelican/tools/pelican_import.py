@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
 import argparse
+import datetime
 import logging
 import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from collections import defaultdict
 from html import unescape
@@ -416,10 +418,12 @@ def tumblr2fields(api_key, blogname):
             slug = post.get('slug') or slugify(title, regex_subs=subs)
             tags = post.get('tags')
             timestamp = post.get('timestamp')
-            date = SafeDatetime.fromtimestamp(int(timestamp)).strftime(
-                "%Y-%m-%d %H:%M:%S")
-            slug = SafeDatetime.fromtimestamp(int(timestamp)).strftime(
-                "%Y-%m-%d-") + slug
+            date = SafeDatetime.fromtimestamp(
+                int(timestamp), tz=datetime.timezone.utc
+            ).strftime("%Y-%m-%d %H:%M:%S%z")
+            slug = SafeDatetime.fromtimestamp(
+                int(timestamp), tz=datetime.timezone.utc
+            ).strftime("%Y-%m-%d-") + slug
             format = post.get('format')
             content = post.get('body')
             type = post.get('type')
@@ -782,9 +786,8 @@ def fields2pelican(
         print(out_filename)
 
         if in_markup in ('html', 'wp-html'):
-            html_filename = os.path.join(output_path, filename + '.html')
-
-            with open(html_filename, 'w', encoding='utf-8') as fp:
+            with tempfile.TemporaryDirectory() as tmpdir:
+                html_filename = os.path.join(tmpdir, 'pandoc-input.html')
                 # Replace newlines with paragraphs wrapped with <p> so
                 # HTML is valid before conversion
                 if in_markup == 'wp-html':
@@ -793,40 +796,38 @@ def fields2pelican(
                     paragraphs = content.splitlines()
                     paragraphs = ['<p>{}</p>'.format(p) for p in paragraphs]
                     new_content = ''.join(paragraphs)
+                with open(html_filename, 'w', encoding='utf-8') as fp:
+                    fp.write(new_content)
 
-                fp.write(new_content)
+                if pandoc_version < (2,):
+                    parse_raw = '--parse-raw' if not strip_raw else ''
+                    wrap_none = '--wrap=none' \
+                        if pandoc_version >= (1, 16) else '--no-wrap'
+                    cmd = ('pandoc --normalize {0} --from=html'
+                           ' --to={1} {2} -o "{3}" "{4}"')
+                    cmd = cmd.format(parse_raw,
+                                     out_markup if out_markup != 'markdown' else "gfm",
+                                     wrap_none,
+                                     out_filename, html_filename)
+                else:
+                    from_arg = '-f html+raw_html' if not strip_raw else '-f html'
+                    cmd = ('pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"')
+                    cmd = cmd.format(from_arg,
+                                     out_markup if out_markup != 'markdown' else "gfm",
+                                     out_filename, html_filename)
 
-            if pandoc_version < (2,):
-                parse_raw = '--parse-raw' if not strip_raw else ''
-                wrap_none = '--wrap=none' \
-                    if pandoc_version >= (1, 16) else '--no-wrap'
-                cmd = ('pandoc --normalize {0} --from=html'
-                       ' --to={1} {2} -o "{3}" "{4}"')
-                cmd = cmd.format(parse_raw,
-                                 out_markup if out_markup != 'markdown' else "gfm",
-                                 wrap_none,
-                                 out_filename, html_filename)
-            else:
-                from_arg = '-f html+raw_html' if not strip_raw else '-f html'
-                cmd = ('pandoc {0} --to={1}-smart --wrap=none -o "{2}" "{3}"')
-                cmd = cmd.format(from_arg,
-                                 out_markup if out_markup != 'markdown' else "gfm",
-                                 out_filename, html_filename)
+                try:
+                    rc = subprocess.call(cmd, shell=True)
+                    if rc < 0:
+                        error = 'Child was terminated by signal %d' % -rc
+                        exit(error)
 
-            try:
-                rc = subprocess.call(cmd, shell=True)
-                if rc < 0:
-                    error = 'Child was terminated by signal %d' % -rc
+                    elif rc > 0:
+                        error = 'Please, check your Pandoc installation.'
+                        exit(error)
+                except OSError as e:
+                    error = 'Pandoc execution failed: %s' % e
                     exit(error)
-
-                elif rc > 0:
-                    error = 'Please, check your Pandoc installation.'
-                    exit(error)
-            except OSError as e:
-                error = 'Pandoc execution failed: %s' % e
-                exit(error)
-
-            os.remove(html_filename)
 
             with open(out_filename, encoding='utf-8') as fs:
                 content = fs.read()
