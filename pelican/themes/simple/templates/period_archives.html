@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ SITENAME }} - {{ period | reverse | join(' ') }} archives{% endblock %}
+{% block title %}{{ SITENAME|striptags }} - {{ period | reverse | join(' ') }} archives{% endblock %}
 
 {% block content %}
 <h1>Archives for {{ period | reverse | join(' ') }}</h1>
