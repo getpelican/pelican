@@ -7,6 +7,7 @@ import os
 import re
 import sys
 from os.path import isabs
+from pathlib import Path
 
 from pelican.log import LimitFilter
 
@@ -408,7 +409,10 @@ def handle_deprecated_settings(settings):
     for key in ['TRANSLATION_FEED_ATOM',
                 'TRANSLATION_FEED_RSS'
                 ]:
-        if settings.get(key) and '%s' in settings[key]:
+        if (
+            settings.get(key) and not isinstance(settings[key], Path)
+            and '%s' in settings[key]
+        ):
             logger.warning('%%s usage in %s is deprecated, use {lang} '
                            'instead.', key)
             try:
@@ -425,7 +429,10 @@ def handle_deprecated_settings(settings):
                 'TAG_FEED_ATOM',
                 'TAG_FEED_RSS',
                 ]:
-        if settings.get(key) and '%s' in settings[key]:
+        if (
+            settings.get(key) and not isinstance(settings[key], Path)
+            and '%s' in settings[key]
+        ):
             logger.warning('%%s usage in %s is deprecated, use {slug} '
                            'instead.', key)
             try:

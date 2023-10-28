@@ -3,6 +3,7 @@ import fnmatch
 import locale
 import logging
 import os
+import pathlib
 import re
 import shutil
 import sys
@@ -942,17 +943,28 @@ def split_all(path):
     >>> split_all(os.path.join('a', 'b', 'c'))
     ['a', 'b', 'c']
     """
-    components = []
-    path = path.lstrip('/')
-    while path:
-        head, tail = os.path.split(path)
-        if tail:
-            components.insert(0, tail)
-        elif head == path:
-            components.insert(0, head)
-            break
-        path = head
-    return components
+    if isinstance(path, str):
+        components = []
+        path = path.lstrip('/')
+        while path:
+            head, tail = os.path.split(path)
+            if tail:
+                components.insert(0, tail)
+            elif head == path:
+                components.insert(0, head)
+                break
+            path = head
+        return components
+    elif isinstance(path, pathlib.Path):
+        return path.parts
+    elif path is None:
+        return None
+    else:
+        raise TypeError(
+            '"path" was {}, must be string, None, or pathlib.Path'.format(
+                type(path)
+            )
+        )
 
 
 def is_selected_for_writing(settings, path):

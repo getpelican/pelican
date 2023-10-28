@@ -1,6 +1,7 @@
 import functools
 import logging
 import os
+import pathlib
 
 from pelican.utils import slugify
 
@@ -110,6 +111,8 @@ class URLWrapper:
         """
         setting = "{}_{}".format(self.__class__.__name__.upper(), key)
         value = self.settings[setting]
+        if isinstance(value, pathlib.Path):
+            value = str(value)
         if not isinstance(value, str):
             logger.warning('%s is set to %s', setting, value)
             return value
