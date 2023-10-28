@@ -3,6 +3,7 @@ import logging
 import os
 import subprocess
 import sys
+import unittest
 from collections.abc import Sequence
 from shutil import rmtree
 from tempfile import mkdtemp
@@ -10,8 +11,13 @@ from tempfile import mkdtemp
 from pelican import Pelican
 from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
-from pelican.tests.support import (LoggedTestCase, locale_available,
-                                   mute, unittest)
+from pelican.tests.support import (
+    LoggedTestCase,
+    diff_subproc,
+    locale_available,
+    mute,
+    skipIfNoExecutable,
+)
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLES_PATH = os.path.abspath(os.path.join(
@@ -54,28 +60,20 @@ class TestPelican(LoggedTestCase):
         locale.setlocale(locale.LC_ALL, self.old_locale)
         super().tearDown()
 
-    def assertDirsEqual(self, left_path, right_path):
-        out, err = subprocess.Popen(
-            ['git', '--no-pager', 'diff', '--no-ext-diff', '--exit-code',
-             '-w', left_path, right_path],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        ).communicate()
+    def assertDirsEqual(self, left_path, right_path, msg=None):
+        """
+        Check if the files are the same (ignoring whitespace) below both paths.
+        """
+        proc = diff_subproc(left_path, right_path)
 
-        def ignorable_git_crlf_errors(line):
-            # Work around for running tests on Windows
-            for msg in [
-                    "LF will be replaced by CRLF",
-                    "CRLF will be replaced by LF",
-                    "The file will have its original line endings"]:
-                if msg in line:
-                    return True
-            return False
-        if err:
-            err = '\n'.join([line for line in err.decode('utf8').splitlines()
-                             if not ignorable_git_crlf_errors(line)])
-        assert not out, out
-        assert not err, err
+        out, err = proc.communicate()
+        if proc.returncode != 0:
+            msg = self._formatMessage(
+                msg,
+                "%s and %s differ:\nstdout:\n%s\nstderr\n%s" %
+                (left_path, right_path, out, err)
+            )
+            raise self.failureException(msg)
 
     def test_order_of_generators(self):
         # StaticGenerator must run last, so it can identify files that
@@ -92,6 +90,7 @@ class TestPelican(LoggedTestCase):
             generator_classes, Sequence,
             "_get_generator_classes() must return a Sequence to preserve order")
 
+    @skipIfNoExecutable(['git', '--version'])
     def test_basic_generation_works(self):
         # when running pelican without settings, it should pick up the default
         # ones and generate correct output without raising any exception
@@ -104,12 +103,14 @@ class TestPelican(LoggedTestCase):
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
         self.assertDirsEqual(
-            self.temp_path, os.path.join(OUTPUT_PATH, 'basic'))
+            self.temp_path, os.path.join(OUTPUT_PATH, 'basic')
+        )
         self.assertLogCountEqual(
             count=1,
             msg="Unable to find.*skipping url replacement",
             level=logging.WARNING)
 
+    @skipIfNoExecutable(['git', '--version'])
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
         settings = read_settings(path=SAMPLE_CONFIG, override={
@@ -121,8 +122,10 @@ class TestPelican(LoggedTestCase):
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
         self.assertDirsEqual(
-            self.temp_path, os.path.join(OUTPUT_PATH, 'custom'))
+            self.temp_path, os.path.join(OUTPUT_PATH, 'custom')
+        )
 
+    @skipIfNoExecutable(['git', '--version'])
     @unittest.skipUnless(locale_available('fr_FR.UTF-8') or
                          locale_available('French'), 'French locale needed')
     def test_custom_locale_generation_works(self):
@@ -141,7 +144,8 @@ class TestPelican(LoggedTestCase):
         pelican = Pelican(settings=settings)
         mute(True)(pelican.run)()
         self.assertDirsEqual(
-            self.temp_path, os.path.join(OUTPUT_PATH, 'custom_locale'))
+            self.temp_path, os.path.join(OUTPUT_PATH, 'custom_locale')
+        )
 
     def test_theme_static_paths_copy(self):
         # the same thing with a specified set of settings should work
