@@ -37,7 +37,8 @@ dependencies = [
     "python-dateutil>=2.8",
     "rich>=10.1",
     "unidecode>=1.1",
-    "backports-zoneinfo<1.0.0,>=0.2.1; python_version<3.9",
+    "backports-zoneinfo<1.0.0,>=0.2.1;python_version<'3.9'",
+    "watchfiles",
 ]
 
 [project.optional-dependencies]
@@ -53,9 +54,9 @@ Documentation = "https://docs.getpelican.com"
 [project.scripts]
 pelican = "pelican.__main__:main"
 pelican-import = "pelican.tools.pelican_import:main"
+pelican-plugins = "pelican.plugins._utils:list_plugins"
 pelican-quickstart = "pelican.tools.pelican_quickstart:main"
 pelican-themes = "pelican.tools.pelican_themes:main"
-pelican-plugins = "pelican.plugins._utils:list_plugins"
 
 [tool.autopub]
 project-name = "Pelican"
@@ -64,14 +65,14 @@ git-email = "52496925+botpub@users.noreply.github.com"
 changelog-file = "docs/changelog.rst"
 changelog-header = "###############"
 version-header = "="
-version-strings = ["setup.py"]
-build-system = "setuptools"
 
 [tool.pdm]
 
 [tool.pdm.scripts]
 docbuild = "invoke docbuild"
 docserve = "invoke docserve"
+lint = "invoke lint"
+test = "invoke tests"
 
 [tool.pdm.dev-dependencies]
 dev = [
@@ -95,10 +96,9 @@ dev = [
     "invoke<3.0,>=2.0",
     "isort<6.0,>=5.2",
     "black<20.0,>=19.10b0",
+    "ruff>=0.1.3,<1.0.0",
+    "tomli;python_version<'3.11'",
 ]
-
-[tool.pdm.build]
-includes = []
 
 [build-system]
 requires = ["pdm-backend"]
