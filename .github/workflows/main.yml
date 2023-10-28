@@ -27,6 +27,10 @@ jobs:
             python: "3.12"
           - os: macos
             python: "3.10"
+          - os: macos
+            python: "3.11"
+          - os: macos
+            python: "3.12"
           - os: windows
             python: "3.10"
 
