@@ -532,3 +532,113 @@ class TestTumblrImporter(TestWithOsDefaults):
               ['economics'], 'published', 'article', 'html')],
             posts,
             posts)
+
+    @patch("pelican.tools.pelican_import._get_tumblr_posts")
+    def test_video_embed(self, get):
+        def get_posts(api_key, blogname, offset=0):
+            if offset > 0:
+                return []
+
+            return [
+                {
+                    "type": "video",
+                    "blog_name": "testy",
+                    "slug": "the-slug",
+                    "date": "2017-07-07 20:31:41 GMT",
+                    "timestamp": 1499459501,
+                    "state": "published",
+                    "format": "html",
+                    "tags": [],
+                    "source_url": "https://href.li/?https://www.youtube.com/a",
+                    "source_title": "youtube.com",
+                    "caption": "<p>Caption</p>",
+                    "player": [
+                        {
+                            "width": 250,
+                            "embed_code":
+                                "<iframe>1</iframe>"
+                        },
+                        {
+                            "width": 400,
+                            "embed_code":
+                                "<iframe>2</iframe>"
+                        },
+                        {
+                            "width": 500,
+                            "embed_code":
+                                "<iframe>3</iframe>"
+                        }
+                    ],
+                    "video_type": "youtube",
+                }
+                ]
+        get.side_effect = get_posts
+
+        posts = list(tumblr2fields("api_key", "blogname"))
+        self.assertEqual(
+            [('youtube.com',
+              '<p><a href="https://href.li/?'
+              'https://www.youtube.com/a">via</a></p>\n<p>Caption</p>'
+              '<iframe>1</iframe>\n'
+              '<iframe>2</iframe>\n'
+              '<iframe>3</iframe>\n',
+              '2017-07-07-the-slug',
+              '2017-07-07 20:31:41', 'testy', ['video'], [], 'published',
+              'article', 'html')],
+            posts,
+            posts)
+
+    @patch("pelican.tools.pelican_import._get_tumblr_posts")
+    def test_broken_video_embed(self, get):
+        def get_posts(api_key, blogname, offset=0):
+            if offset > 0:
+                return []
+
+            return [
+                {
+                    "type": "video",
+                    "blog_name": "testy",
+                    "slug": "the-slug",
+                    "date": "2016-08-14 16:37:35 GMT",
+                    "timestamp": 1471192655,
+                    "state": "published",
+                    "format": "html",
+                    "tags": [
+                        "interviews"
+                    ],
+                    "source_url":
+                        "https://href.li/?https://www.youtube.com/watch?v=b",
+                    "source_title": "youtube.com",
+                    "caption":
+                        "<p>Caption</p>",
+                    "player": [
+                        {
+                            "width": 250,
+                            # If video is gone, embed_code is False
+                            "embed_code": False
+                        },
+                        {
+                            "width": 400,
+                            "embed_code": False
+                        },
+                        {
+                            "width": 500,
+                            "embed_code": False
+                        }
+                    ],
+                    "video_type": "youtube",
+                }
+            ]
+        get.side_effect = get_posts
+
+        posts = list(tumblr2fields("api_key", "blogname"))
+        self.assertEqual(
+            [('youtube.com',
+              '<p><a href="https://href.li/?https://www.youtube.com/watch?'
+              'v=b">via</a></p>\n<p>Caption</p>'
+              '<p>(This video isn\'t available anymore.)</p>\n',
+              '2016-08-14-the-slug',
+              '2016-08-14 16:37:35', 'testy', ['video'], ['interviews'],
+              'published', 'article', 'html')],
+            posts,
+            posts)
