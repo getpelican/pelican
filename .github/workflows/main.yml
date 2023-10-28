@@ -73,7 +73,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry env use "3.9"
-          poetry install --no-interaction
+          poetry install --no-interaction --no-root
       - name: Run linters
         run: poetry run invoke lint --diff
 
