@@ -51,23 +51,18 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-      - name: Install Poetry
-        run: pipx install poetry
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
         with:
-          python-version: "3.9"
-          cache: "poetry"
-          cache-dependency-path: "pyproject.toml"
+          python-version: 3.9
+          cache: true
+          cache-dependency-path: ./pyproject.toml
       - name: Install dependencies
         run: |
-          poetry env use "3.9"
-          poetry install --no-interaction --no-root
+          pdm install --no-default --dev
       - name: Run linters
-        run: poetry run invoke lint --diff
+        run: pdm lint --diff
 
   docs:
     name: Build docs

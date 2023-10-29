@@ -1,7 +1,7 @@
 Installing Pelican
 ##################
 
-Pelican currently runs best on 3.7+; earlier versions of Python are not supported.
+Pelican currently runs best on |min_python|; earlier versions of Python are not supported.
 
 You can install Pelican via several different methods. The simplest is via Pip_::
 

@@ -15,8 +15,8 @@ VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME / PKG_NAME)
 VENV = str(VENV_PATH.expanduser())
 VENV_BIN = Path(VENV) / Path(BIN_DIR)
 
-TOOLS = ["poetry", "pre-commit", "psutil"]
-POETRY = which("poetry") or VENV_BIN / "poetry"
+TOOLS = ["pdm", "pre-commit", "psutil"]
+PDM = which("pdm") or VENV_BIN / "pdm"
 PRECOMMIT = which("pre-commit") or VENV_BIN / "pre-commit"
 
 
@@ -107,7 +107,7 @@ def precommit(c):
 def setup(c):
     c.run(f"{VENV_BIN}/python -m pip install -U pip", pty=PTY)
     tools(c)
-    c.run(f"{POETRY} install", pty=PTY)
+    c.run(f"{PDM} install", pty=PTY)
     precommit(c)
 
 
