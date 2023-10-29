@@ -15,12 +15,12 @@ def test_wheel_contents(pytestconfig):
     wheel_file = pytestconfig.getoption("--check-wheel")
     assert wheel_file.endswith(".whl")
     files_list = ZipFile(wheel_file).namelist()
-    ## Check is theme files are copiedto wheel
+    # Check if theme files are copied to wheel
     simple_theme = Path("./pelican/themes/simple/templates")
     for x in simple_theme.iterdir():
         assert str(x) in files_list
 
-    ## Check is tool templatesare copiedto wheel
+    # Check if tool templates are copied to wheel
     tools = Path("./pelican/tools/templates")
     for x in tools.iterdir():
         assert str(x) in files_list
