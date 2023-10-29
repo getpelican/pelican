@@ -232,7 +232,7 @@ def diff_subproc(first, second):
          '-w', first, second],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        encoding="utf-8",
     )
 
 
