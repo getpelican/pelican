@@ -64,6 +64,23 @@ jobs:
       - name: Run linters
         run: pdm lint --diff
 
+  build:
+    name: Test build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: 3.9
+          cache: true
+          cache-dependency-path: ./pyproject.toml
+      - name: Install dependencies
+        run: pdm install --dev
+      - name: Build package
+        run: pdm build
+      - name: Test build
+        run: pdm run pytest --check-build=dist  pelican/tests/build_test
+
   docs:
     name: Build docs
     runs-on: ubuntu-latest
@@ -84,7 +101,7 @@ jobs:
   deploy:
     name: Deploy
     environment: Deployment
-    needs: [test, lint, docs]
+    needs: [test, lint, docs, build]
     runs-on: ubuntu-latest
     if: github.ref=='refs/heads/master' && github.event_name!='pull_request' && github.repository == 'getpelican/pelican'
 
