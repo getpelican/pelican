@@ -362,28 +362,28 @@ class TestPage(TestBase):
         args['content'] = (
             'A simple test, with a '
             '<a href="|filename|article.rst'
-            '?utm_whatever=234&highlight=word">link</a>'
+            '?utm_whatever=234&amp;highlight=word">link</a>'
         )
         content = Page(**args).get_content('http://notmyidea.org')
         self.assertEqual(
             content,
             'A simple test, with a '
             '<a href="http://notmyidea.org/article.html'
-            '?utm_whatever=234&highlight=word">link</a>'
+            '?utm_whatever=234&amp;highlight=word">link</a>'
         )
 
         # combination
         args['content'] = (
             'A simple test, with a '
             '<a href="|filename|article.rst'
-            '?utm_whatever=234&highlight=word#section-2">link</a>'
+            '?utm_whatever=234&amp;highlight=word#section-2">link</a>'
         )
         content = Page(**args).get_content('http://notmyidea.org')
         self.assertEqual(
             content,
             'A simple test, with a '
             '<a href="http://notmyidea.org/article.html'
-            '?utm_whatever=234&highlight=word#section-2">link</a>'
+            '?utm_whatever=234&amp;highlight=word#section-2">link</a>'
         )
 
         # also test for summary in metadata
@@ -406,6 +406,21 @@ class TestPage(TestBase):
         p.refresh_metadata_intersite_links()
         self.assertEqual(p.summary, linked)
         self.assertEqual(p.custom, linked)
+
+        # SITEURL with characters that should be escaped
+        args['content'] = (
+            'A simple test, with a '
+            '<a href="|filename|article.rst'
+            '#highlight=&quot;word&quot;">link</a>'
+        )
+        content = Page(**args).get_content('http://notmyidea.org/'
+                                           '?app=blog&path=')
+        self.assertEqual(
+            content,
+            'A simple test, with a '
+            '<a href="http://notmyidea.org/?app=blog&amp;path='
+            '/article.html#highlight=&quot;word&quot;">link</a>'
+        )
 
     def test_intrasite_link_more(self):
         cls_name = '_DummyAsset'

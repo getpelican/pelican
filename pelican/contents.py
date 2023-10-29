@@ -25,6 +25,25 @@ from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
 
 logger = logging.getLogger(__name__)
 
+try:
+    import html
+except ImportError:
+    # html.escape()/html.unescape() is since Python 3.2, do this for py2.7
+    # https://wiki.python.org/moin/EscapingHtml
+    from xml.sax.saxutils import escape, unescape
+
+    class html(object):
+        _html_escape_table = {'"': "&quot;",
+                              "'": "&apos;"}
+        _html_unescape_table = {'&quot;': '"',
+                                '&apos;': "'"}
+
+        @classmethod
+        def escape(cls, v): return escape(v, cls._html_escape_table)
+
+        @classmethod
+        def unescape(cls, v): return unescape(v, cls._html_unescape_table)
+
 
 class Content:
     """Represents a content.
@@ -231,9 +250,9 @@ class Content:
 
     def _link_replacer(self, siteurl, m):
         what = m.group('what')
-        value = urlparse(m.group('value'))
+        value = urlparse(html.unescape(m.group('value')))
         path = value.path
-        origin = m.group('path')
+        origin = html.unescape(m.group('path'))
 
         # urllib.parse.urljoin() produces `a.html` for urljoin("..", "a.html")
         # so if RELATIVE_URLS are enabled, we fall back to os.path.join() to
@@ -333,7 +352,7 @@ class Content:
         # keep all other parts, such as query, fragment, etc.
         parts = list(value)
         parts[2] = origin
-        origin = urlunparse(parts)
+        origin = html.escape(urlunparse(parts))
 
         return ''.join((m.group('markup'), m.group('quote'), origin,
                         m.group('quote')))
