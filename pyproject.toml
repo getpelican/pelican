@@ -38,7 +38,7 @@ dependencies = [
     "rich>=10.1",
     "unidecode>=1.1",
     "backports-zoneinfo<1.0.0,>=0.2.1;python_version<'3.9'",
-    "watchfiles",
+    "watchfiles>=0.21.0",
 ]
 
 [project.optional-dependencies]

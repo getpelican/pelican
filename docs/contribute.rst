@@ -15,13 +15,13 @@ Setting up the development environment
 ======================================
 
 While there are many ways to set up one's development environment, the following
-instructions will utilize Pip_ and pdm_. These tools facilitate managing
+instructions will utilize Pip_ and PDM_. These tools facilitate managing
 virtual environments for separate Python projects that are isolated from one
 another, so you can use different packages (and package versions) for each.
 
 Please note that Python |min_python| is required for Pelican development.
 
-*(Optional)* If you prefer to `install pdm <https://pdm.fming.dev/latest/#installation>`_ once for use with multiple projects,
+*(Optional)* If you prefer to `install PDM <https://pdm.fming.dev/latest/#installation>`_ once for use with multiple projects,
 you can install it via::
 
     curl -sSL https://pdm.fming.dev/install-pdm.py | python3 -
@@ -35,7 +35,7 @@ as a Git remote::
     cd ~/projects/pelican
     git remote add upstream https://github.com/getpelican/pelican.git
 
-While pdm can dynamically create and manage virtual environments, we're going
+While PDM can dynamically create and manage virtual environments, we're going
 to manually create and activate a virtual environment::
 
     mkdir ~/virtualenvs && cd ~/virtualenvs
@@ -51,7 +51,7 @@ Install the needed dependencies and set up the project::
 Your local environment should now be ready to go!
 
 .. _Pip: https://pip.pypa.io/
-.. _pdm: https://pdm.fming.dev/latest/
+.. _PDM: https://pdm.fming.dev/latest/
 .. _Pelican repository: https://github.com/getpelican/pelican
 
 Development
