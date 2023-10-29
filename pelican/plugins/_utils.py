@@ -24,26 +24,26 @@ def get_namespace_plugins(ns_pkg=None):
 
     return {
         name: importlib.import_module(name)
-        for finder, name, ispkg
-        in iter_namespace(ns_pkg)
+        for finder, name, ispkg in iter_namespace(ns_pkg)
         if ispkg
     }
 
 
 def list_plugins(ns_pkg=None):
     from pelican.log import init as init_logging
+
     init_logging(logging.INFO)
     ns_plugins = get_namespace_plugins(ns_pkg)
     if ns_plugins:
-        logger.info('Plugins found:\n' + '\n'.join(ns_plugins))
+        logger.info("Plugins found:\n" + "\n".join(ns_plugins))
     else:
-        logger.info('No plugins are installed')
+        logger.info("No plugins are installed")
 
 
 def load_legacy_plugin(plugin, plugin_paths):
-    if '.' in plugin:
+    if "." in plugin:
         # it is in a package, try to resolve package first
-        package, _, _ = plugin.rpartition('.')
+        package, _, _ = plugin.rpartition(".")
         load_legacy_plugin(package, plugin_paths)
 
     # Try to find plugin in PLUGIN_PATHS
@@ -52,7 +52,7 @@ def load_legacy_plugin(plugin, plugin_paths):
         # If failed, try to find it in normal importable locations
         spec = importlib.util.find_spec(plugin)
     if spec is None:
-        raise ImportError('Cannot import plugin `{}`'.format(plugin))
+        raise ImportError("Cannot import plugin `{}`".format(plugin))
     else:
         # Avoid loading the same plugin twice
         if spec.name in sys.modules:
@@ -78,30 +78,28 @@ def load_legacy_plugin(plugin, plugin_paths):
 
 
 def load_plugins(settings):
-    logger.debug('Finding namespace plugins')
+    logger.debug("Finding namespace plugins")
     namespace_plugins = get_namespace_plugins()
     if namespace_plugins:
-        logger.debug('Namespace plugins found:\n' +
-                     '\n'.join(namespace_plugins))
+        logger.debug("Namespace plugins found:\n" + "\n".join(namespace_plugins))
     plugins = []
-    if settings.get('PLUGINS') is not None:
-        for plugin in settings['PLUGINS']:
+    if settings.get("PLUGINS") is not None:
+        for plugin in settings["PLUGINS"]:
             if isinstance(plugin, str):
-                logger.debug('Loading plugin `%s`', plugin)
+                logger.debug("Loading plugin `%s`", plugin)
                 # try to find in namespace plugins
                 if plugin in namespace_plugins:
                     plugin = namespace_plugins[plugin]
-                elif 'pelican.plugins.{}'.format(plugin) in namespace_plugins:
-                    plugin = namespace_plugins['pelican.plugins.{}'.format(
-                        plugin)]
+                elif "pelican.plugins.{}".format(plugin) in namespace_plugins:
+                    plugin = namespace_plugins["pelican.plugins.{}".format(plugin)]
                 # try to import it
                 else:
                     try:
                         plugin = load_legacy_plugin(
-                            plugin,
-                            settings.get('PLUGIN_PATHS', []))
+                            plugin, settings.get("PLUGIN_PATHS", [])
+                        )
                     except ImportError as e:
-                        logger.error('Cannot load plugin `%s`\n%s', plugin, e)
+                        logger.error("Cannot load plugin `%s`\n%s", plugin, e)
                         continue
             plugins.append(plugin)
     else:

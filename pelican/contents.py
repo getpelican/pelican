@@ -16,12 +16,19 @@ except ModuleNotFoundError:
 
 from pelican.plugins import signals
 from pelican.settings import DEFAULT_CONFIG
-from pelican.utils import (deprecated_attribute, memoized, path_to_url,
-                           posixize_path, sanitised_join, set_date_tzinfo,
-                           slugify, truncate_html_words)
+from pelican.utils import (
+    deprecated_attribute,
+    memoized,
+    path_to_url,
+    posixize_path,
+    sanitised_join,
+    set_date_tzinfo,
+    slugify,
+    truncate_html_words,
+)
 
 # Import these so that they're available when you import from pelican.contents.
-from pelican.urlwrappers import (Author, Category, Tag, URLWrapper)  # NOQA
+from pelican.urlwrappers import Author, Category, Tag, URLWrapper  # NOQA
 
 logger = logging.getLogger(__name__)
 
@@ -36,12 +43,14 @@ class Content:
     :param context: The shared context between generators.
 
     """
-    @deprecated_attribute(old='filename', new='source_path', since=(3, 2, 0))
+
+    @deprecated_attribute(old="filename", new="source_path", since=(3, 2, 0))
     def filename():
         return None
 
-    def __init__(self, content, metadata=None, settings=None,
-                 source_path=None, context=None):
+    def __init__(
+        self, content, metadata=None, settings=None, source_path=None, context=None
+    ):
         if metadata is None:
             metadata = {}
         if settings is None:
@@ -59,8 +68,8 @@ class Content:
 
         # set metadata as attributes
         for key, value in local_metadata.items():
-            if key in ('save_as', 'url'):
-                key = 'override_' + key
+            if key in ("save_as", "url"):
+                key = "override_" + key
             setattr(self, key.lower(), value)
 
         # also keep track of the metadata attributes available
@@ -71,53 +80,52 @@ class Content:
 
         # First, read the authors from "authors", if not, fallback to "author"
         # and if not use the settings defined one, if any.
-        if not hasattr(self, 'author'):
-            if hasattr(self, 'authors'):
+        if not hasattr(self, "author"):
+            if hasattr(self, "authors"):
                 self.author = self.authors[0]
-            elif 'AUTHOR' in settings:
-                self.author = Author(settings['AUTHOR'], settings)
+            elif "AUTHOR" in settings:
+                self.author = Author(settings["AUTHOR"], settings)
 
-        if not hasattr(self, 'authors') and hasattr(self, 'author'):
+        if not hasattr(self, "authors") and hasattr(self, "author"):
             self.authors = [self.author]
 
         # XXX Split all the following code into pieces, there is too much here.
 
         # manage languages
         self.in_default_lang = True
-        if 'DEFAULT_LANG' in settings:
-            default_lang = settings['DEFAULT_LANG'].lower()
-            if not hasattr(self, 'lang'):
+        if "DEFAULT_LANG" in settings:
+            default_lang = settings["DEFAULT_LANG"].lower()
+            if not hasattr(self, "lang"):
                 self.lang = default_lang
 
-            self.in_default_lang = (self.lang == default_lang)
+            self.in_default_lang = self.lang == default_lang
 
         # create the slug if not existing, generate slug according to
         # setting of SLUG_ATTRIBUTE
-        if not hasattr(self, 'slug'):
-            if (settings['SLUGIFY_SOURCE'] == 'title' and
-                    hasattr(self, 'title')):
+        if not hasattr(self, "slug"):
+            if settings["SLUGIFY_SOURCE"] == "title" and hasattr(self, "title"):
                 value = self.title
-            elif (settings['SLUGIFY_SOURCE'] == 'basename' and
-                    source_path is not None):
+            elif settings["SLUGIFY_SOURCE"] == "basename" and source_path is not None:
                 value = os.path.basename(os.path.splitext(source_path)[0])
             else:
                 value = None
             if value is not None:
                 self.slug = slugify(
                     value,
-                    regex_subs=settings.get('SLUG_REGEX_SUBSTITUTIONS', []),
-                    preserve_case=settings.get('SLUGIFY_PRESERVE_CASE', False),
-                    use_unicode=settings.get('SLUGIFY_USE_UNICODE', False))
+                    regex_subs=settings.get("SLUG_REGEX_SUBSTITUTIONS", []),
+                    preserve_case=settings.get("SLUGIFY_PRESERVE_CASE", False),
+                    use_unicode=settings.get("SLUGIFY_USE_UNICODE", False),
+                )
 
         self.source_path = source_path
         self.relative_source_path = self.get_relative_source_path()
 
         # manage the date format
-        if not hasattr(self, 'date_format'):
-            if hasattr(self, 'lang') and self.lang in settings['DATE_FORMATS']:
-                self.date_format = settings['DATE_FORMATS'][self.lang]
+        if not hasattr(self, "date_format"):
+            if hasattr(self, "lang") and self.lang in settings["DATE_FORMATS"]:
+                self.date_format = settings["DATE_FORMATS"][self.lang]
             else:
-                self.date_format = settings['DEFAULT_DATE_FORMAT']
+                self.date_format = settings["DEFAULT_DATE_FORMAT"]
 
         if isinstance(self.date_format, tuple):
             locale_string = self.date_format[0]
@@ -129,22 +137,22 @@ class Content:
         timezone = getattr(self, "timezone", default_timezone)
         self.timezone = ZoneInfo(timezone)
 
-        if hasattr(self, 'date'):
+        if hasattr(self, "date"):
             self.date = set_date_tzinfo(self.date, timezone)
             self.locale_date = self.date.strftime(self.date_format)
 
-        if hasattr(self, 'modified'):
+        if hasattr(self, "modified"):
             self.modified = set_date_tzinfo(self.modified, timezone)
             self.locale_modified = self.modified.strftime(self.date_format)
 
         # manage status
-        if not hasattr(self, 'status'):
+        if not hasattr(self, "status"):
             # Previous default of None broke comment plugins and perhaps others
-            self.status = getattr(self, 'default_status', '')
+            self.status = getattr(self, "default_status", "")
 
         # store the summary metadata if it is set
-        if 'summary' in metadata:
-            self._summary = metadata['summary']
+        if "summary" in metadata:
+            self._summary = metadata["summary"]
 
         signals.content_object_init.send(self)
 
@@ -156,8 +164,8 @@ class Content:
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
                 logger.error(
-                    "Skipping %s: could not find information about '%s'",
-                    self, prop)
+                    "Skipping %s: could not find information about '%s'", self, prop
+                )
                 return False
         return True
 
@@ -183,12 +191,13 @@ class Content:
         return True
 
     def _has_valid_status(self):
-        if hasattr(self, 'allowed_statuses'):
+        if hasattr(self, "allowed_statuses"):
             if self.status not in self.allowed_statuses:
                 logger.error(
                     "Unknown status '%s' for file %s, skipping it. (Not in %s)",
                     self.status,
-                    self, self.allowed_statuses
+                    self,
+                    self.allowed_statuses,
                 )
                 return False
 
@@ -198,42 +207,48 @@ class Content:
     def is_valid(self):
         """Validate Content"""
         # Use all() to not short circuit and get results of all validations
-        return all([self._has_valid_mandatory_properties(),
-                    self._has_valid_save_as(),
-                    self._has_valid_status()])
+        return all(
+            [
+                self._has_valid_mandatory_properties(),
+                self._has_valid_save_as(),
+                self._has_valid_status(),
+            ]
+        )
 
     @property
     def url_format(self):
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
-        path = self.metadata.get('path', self.get_relative_source_path())
-        metadata.update({
-            'path': path_to_url(path),
-            'slug': getattr(self, 'slug', ''),
-            'lang': getattr(self, 'lang', 'en'),
-            'date': getattr(self, 'date', datetime.datetime.now()),
-            'author': self.author.slug if hasattr(self, 'author') else '',
-            'category': self.category.slug if hasattr(self, 'category') else ''
-        })
+        path = self.metadata.get("path", self.get_relative_source_path())
+        metadata.update(
+            {
+                "path": path_to_url(path),
+                "slug": getattr(self, "slug", ""),
+                "lang": getattr(self, "lang", "en"),
+                "date": getattr(self, "date", datetime.datetime.now()),
+                "author": self.author.slug if hasattr(self, "author") else "",
+                "category": self.category.slug if hasattr(self, "category") else "",
+            }
+        )
         return metadata
 
     def _expand_settings(self, key, klass=None):
         if not klass:
             klass = self.__class__.__name__
-        fq_key = ('{}_{}'.format(klass, key)).upper()
+        fq_key = ("{}_{}".format(klass, key)).upper()
         return str(self.settings[fq_key]).format(**self.url_format)
 
     def get_url_setting(self, key):
-        if hasattr(self, 'override_' + key):
-            return getattr(self, 'override_' + key)
-        key = key if self.in_default_lang else 'lang_%s' % key
+        if hasattr(self, "override_" + key):
+            return getattr(self, "override_" + key)
+        key = key if self.in_default_lang else "lang_%s" % key
         return self._expand_settings(key)
 
     def _link_replacer(self, siteurl, m):
-        what = m.group('what')
-        value = urlparse(m.group('value'))
+        what = m.group("what")
+        value = urlparse(m.group("value"))
         path = value.path
-        origin = m.group('path')
+        origin = m.group("path")
 
         # urllib.parse.urljoin() produces `a.html` for urljoin("..", "a.html")
         # so if RELATIVE_URLS are enabled, we fall back to os.path.join() to
@@ -241,7 +256,7 @@ class Content:
         # `baz/http://foo/bar.html` for join("baz", "http://foo/bar.html")
         # instead of correct "http://foo/bar.html", so one has to pick a side
         # as there is no silver bullet.
-        if self.settings['RELATIVE_URLS']:
+        if self.settings["RELATIVE_URLS"]:
             joiner = os.path.join
         else:
             joiner = urljoin
@@ -251,16 +266,17 @@ class Content:
             # os.path.join()), so in order to get a correct answer one needs to
             # append a trailing slash to siteurl in that case. This also makes
             # the new behavior fully compatible with Pelican 3.7.1.
-            if not siteurl.endswith('/'):
-                siteurl += '/'
+            if not siteurl.endswith("/"):
+                siteurl += "/"
 
         # XXX Put this in a different location.
-        if what in {'filename', 'static', 'attach'}:
+        if what in {"filename", "static", "attach"}:
+
             def _get_linked_content(key, url):
                 nonlocal value
 
                 def _find_path(path):
-                    if path.startswith('/'):
+                    if path.startswith("/"):
                         path = path[1:]
                     else:
                         # relative to the source path of this content
@@ -287,59 +303,64 @@ class Content:
                     return result
 
                 # check if a static file is linked with {filename}
-                if what == 'filename' and key == 'generated_content':
-                    linked_content = _get_linked_content('static_content', value)
+                if what == "filename" and key == "generated_content":
+                    linked_content = _get_linked_content("static_content", value)
                     if linked_content:
                         logger.warning(
-                            '{filename} used for linking to static'
-                            ' content %s in %s. Use {static} instead',
+                            "{filename} used for linking to static"
+                            " content %s in %s. Use {static} instead",
                             value.path,
-                            self.get_relative_source_path())
+                            self.get_relative_source_path(),
+                        )
                         return linked_content
 
                 return None
 
-            if what == 'filename':
-                key = 'generated_content'
+            if what == "filename":
+                key = "generated_content"
             else:
-                key = 'static_content'
+                key = "static_content"
 
             linked_content = _get_linked_content(key, value)
             if linked_content:
-                if what == 'attach':
+                if what == "attach":
                     linked_content.attach_to(self)
                 origin = joiner(siteurl, linked_content.url)
-                origin = origin.replace('\\', '/')  # for Windows paths.
+                origin = origin.replace("\\", "/")  # for Windows paths.
             else:
                 logger.warning(
                     "Unable to find '%s', skipping url replacement.",
-                    value.geturl(), extra={
-                        'limit_msg': ("Other resources were not found "
-                                      "and their urls not replaced")})
-        elif what == 'category':
+                    value.geturl(),
+                    extra={
+                        "limit_msg": (
+                            "Other resources were not found "
+                            "and their urls not replaced"
+                        )
+                    },
+                )
+        elif what == "category":
             origin = joiner(siteurl, Category(path, self.settings).url)
-        elif what == 'tag':
+        elif what == "tag":
             origin = joiner(siteurl, Tag(path, self.settings).url)
-        elif what == 'index':
-            origin = joiner(siteurl, self.settings['INDEX_SAVE_AS'])
-        elif what == 'author':
+        elif what == "index":
+            origin = joiner(siteurl, self.settings["INDEX_SAVE_AS"])
+        elif what == "author":
             origin = joiner(siteurl, Author(path, self.settings).url)
         else:
             logger.warning(
-                "Replacement Indicator '%s' not recognized, "
-                "skipping replacement",
-                what)
+                "Replacement Indicator '%s' not recognized, " "skipping replacement",
+                what,
+            )
 
         # keep all other parts, such as query, fragment, etc.
         parts = list(value)
         parts[2] = origin
         origin = urlunparse(parts)
 
-        return ''.join((m.group('markup'), m.group('quote'), origin,
-                        m.group('quote')))
+        return "".join((m.group("markup"), m.group("quote"), origin, m.group("quote")))
 
     def _get_intrasite_link_regex(self):
-        intrasite_link_regex = self.settings['INTRASITE_LINK_REGEX']
+        intrasite_link_regex = self.settings["INTRASITE_LINK_REGEX"]
         regex = r"""
             (?P<markup><[^\>]+  # match tag with all url-value attributes
                 (?:href|src|poster|data|cite|formaction|action|content)\s*=\s*)
@@ -369,28 +390,28 @@ class Content:
         static_links = set()
         hrefs = self._get_intrasite_link_regex()
         for m in hrefs.finditer(self._content):
-            what = m.group('what')
-            value = urlparse(m.group('value'))
+            what = m.group("what")
+            value = urlparse(m.group("value"))
             path = value.path
-            if what not in {'static', 'attach'}:
+            if what not in {"static", "attach"}:
                 continue
-            if path.startswith('/'):
+            if path.startswith("/"):
                 path = path[1:]
             else:
                 # relative to the source path of this content
                 path = self.get_relative_source_path(
                     os.path.join(self.relative_dir, path)
                 )
-            path = path.replace('%20', ' ')
+            path = path.replace("%20", " ")
             static_links.add(path)
         return static_links
 
     def get_siteurl(self):
-        return self._context.get('localsiteurl', '')
+        return self._context.get("localsiteurl", "")
 
     @memoized
     def get_content(self, siteurl):
-        if hasattr(self, '_get_content'):
+        if hasattr(self, "_get_content"):
             content = self._get_content()
         else:
             content = self._content
@@ -407,15 +428,17 @@ class Content:
         This is based on the summary metadata if set, otherwise truncate the
         content.
         """
-        if 'summary' in self.metadata:
-            return self.metadata['summary']
+        if "summary" in self.metadata:
+            return self.metadata["summary"]
 
-        if self.settings['SUMMARY_MAX_LENGTH'] is None:
+        if self.settings["SUMMARY_MAX_LENGTH"] is None:
             return self.content
 
-        return truncate_html_words(self.content,
-                                   self.settings['SUMMARY_MAX_LENGTH'],
-                                   self.settings['SUMMARY_END_SUFFIX'])
+        return truncate_html_words(
+            self.content,
+            self.settings["SUMMARY_MAX_LENGTH"],
+            self.settings["SUMMARY_END_SUFFIX"],
+        )
 
     @property
     def summary(self):
@@ -424,8 +447,10 @@ class Content:
     def _get_summary(self):
         """deprecated function to access summary"""
 
-        logger.warning('_get_summary() has been deprecated since 3.6.4. '
-                       'Use the summary decorator instead')
+        logger.warning(
+            "_get_summary() has been deprecated since 3.6.4. "
+            "Use the summary decorator instead"
+        )
         return self.summary
 
     @summary.setter
@@ -444,14 +469,14 @@ class Content:
 
     @property
     def url(self):
-        return self.get_url_setting('url')
+        return self.get_url_setting("url")
 
     @property
     def save_as(self):
-        return self.get_url_setting('save_as')
+        return self.get_url_setting("save_as")
 
     def _get_template(self):
-        if hasattr(self, 'template') and self.template is not None:
+        if hasattr(self, "template") and self.template is not None:
             return self.template
         else:
             return self.default_template
@@ -470,11 +495,10 @@ class Content:
 
         return posixize_path(
             os.path.relpath(
-                os.path.abspath(os.path.join(
-                    self.settings['PATH'],
-                    source_path)),
-                os.path.abspath(self.settings['PATH'])
-            ))
+                os.path.abspath(os.path.join(self.settings["PATH"], source_path)),
+                os.path.abspath(self.settings["PATH"]),
+            )
+        )
 
     @property
     def relative_dir(self):
@@ -482,85 +506,84 @@ class Content:
             os.path.dirname(
                 os.path.relpath(
                     os.path.abspath(self.source_path),
-                    os.path.abspath(self.settings['PATH']))))
+                    os.path.abspath(self.settings["PATH"]),
+                )
+            )
+        )
 
     def refresh_metadata_intersite_links(self):
-        for key in self.settings['FORMATTED_FIELDS']:
-            if key in self.metadata and key != 'summary':
-                value = self._update_content(
-                    self.metadata[key],
-                    self.get_siteurl()
-                )
+        for key in self.settings["FORMATTED_FIELDS"]:
+            if key in self.metadata and key != "summary":
+                value = self._update_content(self.metadata[key], self.get_siteurl())
                 self.metadata[key] = value
                 setattr(self, key.lower(), value)
 
         # _summary is an internal variable that some plugins may be writing to,
         # so ensure changes to it are picked up
-        if ('summary' in self.settings['FORMATTED_FIELDS'] and
-                'summary' in self.metadata):
-            self._summary = self._update_content(
-                self._summary,
-                self.get_siteurl()
-            )
-            self.metadata['summary'] = self._summary
+        if (
+            "summary" in self.settings["FORMATTED_FIELDS"]
+            and "summary" in self.metadata
+        ):
+            self._summary = self._update_content(self._summary, self.get_siteurl())
+            self.metadata["summary"] = self._summary
 
 
 class Page(Content):
-    mandatory_properties = ('title',)
-    allowed_statuses = ('published', 'hidden', 'draft')
-    default_status = 'published'
-    default_template = 'page'
+    mandatory_properties = ("title",)
+    allowed_statuses = ("published", "hidden", "draft")
+    default_status = "published"
+    default_template = "page"
 
     def _expand_settings(self, key):
-        klass = 'draft_page' if self.status == 'draft' else None
+        klass = "draft_page" if self.status == "draft" else None
         return super()._expand_settings(key, klass)
 
 
 class Article(Content):
-    mandatory_properties = ('title', 'date', 'category')
-    allowed_statuses = ('published', 'hidden', 'draft')
-    default_status = 'published'
-    default_template = 'article'
+    mandatory_properties = ("title", "date", "category")
+    allowed_statuses = ("published", "hidden", "draft")
+    default_status = "published"
+    default_template = "article"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # handle WITH_FUTURE_DATES (designate article to draft based on date)
-        if not self.settings['WITH_FUTURE_DATES'] and hasattr(self, 'date'):
+        if not self.settings["WITH_FUTURE_DATES"] and hasattr(self, "date"):
             if self.date.tzinfo is None:
                 now = datetime.datetime.now()
             else:
                 now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
             if self.date > now:
-                self.status = 'draft'
+                self.status = "draft"
 
         # if we are a draft and there is no date provided, set max datetime
-        if not hasattr(self, 'date') and self.status == 'draft':
+        if not hasattr(self, "date") and self.status == "draft":
             self.date = datetime.datetime.max.replace(tzinfo=self.timezone)
 
     def _expand_settings(self, key):
-        klass = 'draft' if self.status == 'draft' else 'article'
+        klass = "draft" if self.status == "draft" else "article"
         return super()._expand_settings(key, klass)
 
 
 class Static(Content):
-    mandatory_properties = ('title',)
-    default_status = 'published'
+    mandatory_properties = ("title",)
+    default_status = "published"
     default_template = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._output_location_referenced = False
 
-    @deprecated_attribute(old='filepath', new='source_path', since=(3, 2, 0))
+    @deprecated_attribute(old="filepath", new="source_path", since=(3, 2, 0))
     def filepath():
         return None
 
-    @deprecated_attribute(old='src', new='source_path', since=(3, 2, 0))
+    @deprecated_attribute(old="src", new="source_path", since=(3, 2, 0))
     def src():
         return None
 
-    @deprecated_attribute(old='dst', new='save_as', since=(3, 2, 0))
+    @deprecated_attribute(old="dst", new="save_as", since=(3, 2, 0))
     def dst():
         return None
 
@@ -577,8 +600,7 @@ class Static(Content):
         return super().save_as
 
     def attach_to(self, content):
-        """Override our output directory with that of the given content object.
-        """
+        """Override our output directory with that of the given content object."""
 
         # Determine our file's new output path relative to the linking
         # document. If it currently lives beneath the linking
@@ -589,8 +611,7 @@ class Static(Content):
         tail_path = os.path.relpath(self.source_path, linking_source_dir)
         if tail_path.startswith(os.pardir + os.sep):
             tail_path = os.path.basename(tail_path)
-        new_save_as = os.path.join(
-            os.path.dirname(content.save_as), tail_path)
+        new_save_as = os.path.join(os.path.dirname(content.save_as), tail_path)
 
         # We do not build our new url by joining tail_path with the linking
         # document's url, because we cannot know just by looking at the latter
@@ -609,12 +630,14 @@ class Static(Content):
                 "%s because %s. Falling back to "
                 "{filename} link behavior instead.",
                 content.get_relative_source_path(),
-                self.get_relative_source_path(), reason,
-                extra={'limit_msg': "More {attach} warnings silenced."})
+                self.get_relative_source_path(),
+                reason,
+                extra={"limit_msg": "More {attach} warnings silenced."},
+            )
 
         # We never override an override, because we don't want to interfere
         # with user-defined overrides that might be in EXTRA_PATH_METADATA.
-        if hasattr(self, 'override_save_as') or hasattr(self, 'override_url'):
+        if hasattr(self, "override_save_as") or hasattr(self, "override_url"):
             if new_save_as != self.save_as or new_url != self.url:
                 _log_reason("its output location was already overridden")
             return

@@ -32,38 +32,37 @@ logger = logging.getLogger(__name__)
 
 
 def sanitised_join(base_directory, *parts):
-    joined = posixize_path(
-        os.path.abspath(os.path.join(base_directory, *parts)))
+    joined = posixize_path(os.path.abspath(os.path.join(base_directory, *parts)))
     base = posixize_path(os.path.abspath(base_directory))
     if not joined.startswith(base):
         raise RuntimeError(
-            "Attempted to break out of output directory to {}".format(
-                joined
-            )
+            "Attempted to break out of output directory to {}".format(joined)
         )
 
     return joined
 
 
 def strftime(date, date_format):
-    '''
+    """
     Enhanced replacement for built-in strftime with zero stripping
 
     This works by 'grabbing' possible format strings (those starting with %),
     formatting them with the date, stripping any leading zeros if - prefix is
     used and replacing formatted output back.
-    '''
+    """
+
     def strip_zeros(x):
-        return x.lstrip('0') or '0'
+        return x.lstrip("0") or "0"
+
     # includes ISO date parameters added by Python 3.6
-    c89_directives = 'aAbBcdfGHIjmMpSUuVwWxXyYzZ%'
+    c89_directives = "aAbBcdfGHIjmMpSUuVwWxXyYzZ%"
 
     # grab candidate format options
-    format_options = '%[-]?.'
+    format_options = "%[-]?."
     candidates = re.findall(format_options, date_format)
 
     # replace candidates with placeholders for later % formatting
-    template = re.sub(format_options, '%s', date_format)
+    template = re.sub(format_options, "%s", date_format)
 
     formatted_candidates = []
     for candidate in candidates:
@@ -72,7 +71,7 @@ def strftime(date, date_format):
             # check for '-' prefix
             if len(candidate) == 3:
                 # '-' prefix
-                candidate = '%{}'.format(candidate[-1])
+                candidate = "%{}".format(candidate[-1])
                 conversion = strip_zeros
             else:
                 conversion = None
@@ -95,10 +94,10 @@ def strftime(date, date_format):
 
 
 class SafeDatetime(datetime.datetime):
-    '''Subclass of datetime that works with utf-8 format strings on PY2'''
+    """Subclass of datetime that works with utf-8 format strings on PY2"""
 
     def strftime(self, fmt, safe=True):
-        '''Uses our custom strftime if supposed to be *safe*'''
+        """Uses our custom strftime if supposed to be *safe*"""
         if safe:
             return strftime(self, fmt)
         else:
@@ -106,22 +105,21 @@ class SafeDatetime(datetime.datetime):
 
 
 class DateFormatter:
-    '''A date formatter object used as a jinja filter
+    """A date formatter object used as a jinja filter
 
     Uses the `strftime` implementation and makes sure jinja uses the locale
     defined in LOCALE setting
-    '''
+    """
 
     def __init__(self):
         self.locale = locale.setlocale(locale.LC_TIME)
 
     def __call__(self, date, date_format):
-
         # on OSX, encoding from LC_CTYPE determines the unicode output in PY3
         # make sure it's same as LC_TIME
-        with temporary_locale(self.locale, locale.LC_TIME), \
-          temporary_locale(self.locale, locale.LC_CTYPE):
-
+        with temporary_locale(self.locale, locale.LC_TIME), temporary_locale(
+            self.locale, locale.LC_CTYPE
+        ):
             formatted = strftime(date, date_format)
 
         return formatted
@@ -155,7 +153,7 @@ class memoized:
         return self.func.__doc__
 
     def __get__(self, obj, objtype):
-        '''Support instance methods.'''
+        """Support instance methods."""
         fn = partial(self.__call__, obj)
         fn.cache = self.cache
         return fn
@@ -177,17 +175,16 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
     Note that the decorator needs a dummy method to attach to, but the
     content of the dummy method is ignored.
     """
+
     def _warn():
-        version = '.'.join(str(x) for x in since)
-        message = ['{} has been deprecated since {}'.format(old, version)]
+        version = ".".join(str(x) for x in since)
+        message = ["{} has been deprecated since {}".format(old, version)]
         if remove:
-            version = '.'.join(str(x) for x in remove)
-            message.append(
-                ' and will be removed by version {}'.format(version))
-        message.append('.  Use {} instead.'.format(new))
-        logger.warning(''.join(message))
-        logger.debug(''.join(str(x) for x
-                             in traceback.format_stack()))
+            version = ".".join(str(x) for x in remove)
+            message.append(" and will be removed by version {}".format(version))
+        message.append(".  Use {} instead.".format(new))
+        logger.warning("".join(message))
+        logger.debug("".join(str(x) for x in traceback.format_stack()))
 
     def fget(self):
         _warn()
@@ -208,21 +205,20 @@ def get_date(string):
 
     If no format matches the given date, raise a ValueError.
     """
-    string = re.sub(' +', ' ', string)
-    default = SafeDatetime.now().replace(hour=0, minute=0,
-                                         second=0, microsecond=0)
+    string = re.sub(" +", " ", string)
+    default = SafeDatetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
-        raise ValueError('{!r} is not a valid date'.format(string))
+        raise ValueError("{!r} is not a valid date".format(string))
 
 
 @contextmanager
-def pelican_open(filename, mode='r', strip_crs=(sys.platform == 'win32')):
+def pelican_open(filename, mode="r", strip_crs=(sys.platform == "win32")):
     """Open a file and return its content"""
 
     # utf-8-sig will clear any BOM if present
-    with open(filename, mode, encoding='utf-8-sig') as infile:
+    with open(filename, mode, encoding="utf-8-sig") as infile:
         content = infile.read()
     yield content
 
@@ -244,7 +240,7 @@ def slugify(value, regex_subs=(), preserve_case=False, use_unicode=False):
     def normalize_unicode(text):
         # normalize text by compatibility composition
         # see: https://en.wikipedia.org/wiki/Unicode_equivalence
-        return unicodedata.normalize('NFKC', text)
+        return unicodedata.normalize("NFKC", text)
 
     # strip tags from value
     value = Markup(value).striptags()
@@ -259,10 +255,8 @@ def slugify(value, regex_subs=(), preserve_case=False, use_unicode=False):
     # perform regex substitutions
     for src, dst in regex_subs:
         value = re.sub(
-            normalize_unicode(src),
-            normalize_unicode(dst),
-            value,
-            flags=re.IGNORECASE)
+            normalize_unicode(src), normalize_unicode(dst), value, flags=re.IGNORECASE
+        )
 
     if not preserve_case:
         value = value.lower()
@@ -283,8 +277,7 @@ def copy(source, destination, ignores=None):
     """
 
     def walk_error(err):
-        logger.warning("While copying %s: %s: %s",
-                       source_, err.filename, err.strerror)
+        logger.warning("While copying %s: %s: %s", source_, err.filename, err.strerror)
 
     source_ = os.path.abspath(os.path.expanduser(source))
     destination_ = os.path.abspath(os.path.expanduser(destination))
@@ -292,39 +285,40 @@ def copy(source, destination, ignores=None):
     if ignores is None:
         ignores = []
 
-    if any(fnmatch.fnmatch(os.path.basename(source), ignore)
-           for ignore in ignores):
-        logger.info('Not copying %s due to ignores', source_)
+    if any(fnmatch.fnmatch(os.path.basename(source), ignore) for ignore in ignores):
+        logger.info("Not copying %s due to ignores", source_)
         return
 
     if os.path.isfile(source_):
         dst_dir = os.path.dirname(destination_)
         if not os.path.exists(dst_dir):
-            logger.info('Creating directory %s', dst_dir)
+            logger.info("Creating directory %s", dst_dir)
             os.makedirs(dst_dir)
-        logger.info('Copying %s to %s', source_, destination_)
+        logger.info("Copying %s to %s", source_, destination_)
         copy_file(source_, destination_)
 
     elif os.path.isdir(source_):
         if not os.path.exists(destination_):
-            logger.info('Creating directory %s', destination_)
+            logger.info("Creating directory %s", destination_)
             os.makedirs(destination_)
         if not os.path.isdir(destination_):
-            logger.warning('Cannot copy %s (a directory) to %s (a file)',
-                           source_, destination_)
+            logger.warning(
+                "Cannot copy %s (a directory) to %s (a file)", source_, destination_
+            )
             return
 
         for src_dir, subdirs, others in os.walk(source_, followlinks=True):
-            dst_dir = os.path.join(destination_,
-                                   os.path.relpath(src_dir, source_))
+            dst_dir = os.path.join(destination_, os.path.relpath(src_dir, source_))
 
-            subdirs[:] = (s for s in subdirs if not any(fnmatch.fnmatch(s, i)
-                                                        for i in ignores))
-            others[:] = (o for o in others if not any(fnmatch.fnmatch(o, i)
-                                                      for i in ignores))
+            subdirs[:] = (
+                s for s in subdirs if not any(fnmatch.fnmatch(s, i) for i in ignores)
+            )
+            others[:] = (
+                o for o in others if not any(fnmatch.fnmatch(o, i) for i in ignores)
+            )
 
             if not os.path.isdir(dst_dir):
-                logger.info('Creating directory %s', dst_dir)
+                logger.info("Creating directory %s", dst_dir)
                 # Parent directories are known to exist, so 'mkdir' suffices.
                 os.mkdir(dst_dir)
 
@@ -332,21 +326,24 @@ def copy(source, destination, ignores=None):
                 src_path = os.path.join(src_dir, o)
                 dst_path = os.path.join(dst_dir, o)
                 if os.path.isfile(src_path):
-                    logger.info('Copying %s to %s', src_path, dst_path)
+                    logger.info("Copying %s to %s", src_path, dst_path)
                     copy_file(src_path, dst_path)
                 else:
-                    logger.warning('Skipped copy %s (not a file or '
-                                   'directory) to %s',
-                                   src_path, dst_path)
+                    logger.warning(
+                        "Skipped copy %s (not a file or " "directory) to %s",
+                        src_path,
+                        dst_path,
+                    )
 
 
 def copy_file(source, destination):
-    '''Copy a file'''
+    """Copy a file"""
     try:
         shutil.copyfile(source, destination)
     except OSError as e:
-        logger.warning("A problem occurred copying file %s to %s; %s",
-                       source, destination, e)
+        logger.warning(
+            "A problem occurred copying file %s to %s; %s", source, destination, e
+        )
 
 
 def clean_output_dir(path, retention):
@@ -367,15 +364,15 @@ def clean_output_dir(path, retention):
     for filename in os.listdir(path):
         file = os.path.join(path, filename)
         if any(filename == retain for retain in retention):
-            logger.debug("Skipping deletion; %s is on retention list: %s",
-                         filename, file)
+            logger.debug(
+                "Skipping deletion; %s is on retention list: %s", filename, file
+            )
         elif os.path.isdir(file):
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
             except Exception as e:
-                logger.error("Unable to delete directory %s; %s",
-                             file, e)
+                logger.error("Unable to delete directory %s; %s", file, e)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
@@ -407,29 +404,31 @@ def posixize_path(rel_path):
     """Use '/' as path separator, so that source references,
     like '{static}/foo/bar.jpg' or 'extras/favicon.ico',
     will work on Windows as well as on Mac and Linux."""
-    return rel_path.replace(os.sep, '/')
+    return rel_path.replace(os.sep, "/")
 
 
 class _HTMLWordTruncator(HTMLParser):
-
-    _word_regex = re.compile(r"{DBC}|(\w[\w'-]*)".format(
-        # DBC means CJK-like characters. An character can stand for a word.
-        DBC=("([\u4E00-\u9FFF])|"          # CJK Unified Ideographs
-             "([\u3400-\u4DBF])|"          # CJK Unified Ideographs Extension A
-             "([\uF900-\uFAFF])|"          # CJK Compatibility Ideographs
-             "([\U00020000-\U0002A6DF])|"  # CJK Unified Ideographs Extension B
-             "([\U0002F800-\U0002FA1F])|"  # CJK Compatibility Ideographs Supplement
-             "([\u3040-\u30FF])|"          # Hiragana and Katakana
-             "([\u1100-\u11FF])|"          # Hangul Jamo
-             "([\uAC00-\uD7FF])|"          # Hangul Compatibility Jamo
-             "([\u3130-\u318F])"           # Hangul Syllables
-             )), re.UNICODE)
-    _word_prefix_regex = re.compile(r'\w', re.U)
-    _singlets = ('br', 'col', 'link', 'base', 'img', 'param', 'area',
-                 'hr', 'input')
+    _word_regex = re.compile(
+        r"{DBC}|(\w[\w'-]*)".format(
+            # DBC means CJK-like characters. An character can stand for a word.
+            DBC=(
+                "([\u4E00-\u9FFF])|"  # CJK Unified Ideographs
+                "([\u3400-\u4DBF])|"  # CJK Unified Ideographs Extension A
+                "([\uF900-\uFAFF])|"  # CJK Compatibility Ideographs
+                "([\U00020000-\U0002A6DF])|"  # CJK Unified Ideographs Extension B
+                "([\U0002F800-\U0002FA1F])|"  # CJK Compatibility Ideographs Supplement
+                "([\u3040-\u30FF])|"  # Hiragana and Katakana
+                "([\u1100-\u11FF])|"  # Hangul Jamo
+                "([\uAC00-\uD7FF])|"  # Hangul Compatibility Jamo
+                "([\u3130-\u318F])"  # Hangul Syllables
+            )
+        ),
+        re.UNICODE,
+    )
+    _word_prefix_regex = re.compile(r"\w", re.U)
+    _singlets = ("br", "col", "link", "base", "img", "param", "area", "hr", "input")
 
     class TruncationCompleted(Exception):
-
         def __init__(self, truncate_at):
             super().__init__(truncate_at)
             self.truncate_at = truncate_at
@@ -455,7 +454,7 @@ class _HTMLWordTruncator(HTMLParser):
         line_start = 0
         lineno, line_offset = self.getpos()
         for i in range(lineno - 1):
-            line_start = self.rawdata.index('\n', line_start) + 1
+            line_start = self.rawdata.index("\n", line_start) + 1
         return line_start + line_offset
 
     def add_word(self, word_end):
@@ -482,7 +481,7 @@ class _HTMLWordTruncator(HTMLParser):
         else:
             # SGML: An end tag closes, back to the matching start tag,
             # all unclosed intervening start tags with omitted end tags
-            del self.open_tags[:i + 1]
+            del self.open_tags[: i + 1]
 
     def handle_data(self, data):
         word_end = 0
@@ -531,7 +530,7 @@ class _HTMLWordTruncator(HTMLParser):
         ref_end = offset + len(name) + 1
 
         try:
-            if self.rawdata[ref_end] == ';':
+            if self.rawdata[ref_end] == ";":
                 ref_end += 1
         except IndexError:
             # We are at the end of the string and there's no ';'
@@ -556,7 +555,7 @@ class _HTMLWordTruncator(HTMLParser):
             codepoint = entities.name2codepoint[name]
             char = chr(codepoint)
         except KeyError:
-            char = ''
+            char = ""
         self._handle_ref(name, char)
 
     def handle_charref(self, name):
@@ -567,17 +566,17 @@ class _HTMLWordTruncator(HTMLParser):
         `#x2014`)
         """
         try:
-            if name.startswith('x'):
+            if name.startswith("x"):
                 codepoint = int(name[1:], 16)
             else:
                 codepoint = int(name)
             char = chr(codepoint)
         except (ValueError, OverflowError):
-            char = ''
-        self._handle_ref('#' + name, char)
+            char = ""
+        self._handle_ref("#" + name, char)
 
 
-def truncate_html_words(s, num, end_text='…'):
+def truncate_html_words(s, num, end_text="…"):
     """Truncates HTML to a certain number of words.
 
     (not counting tags and comments). Closes opened tags if they were correctly
@@ -588,23 +587,23 @@ def truncate_html_words(s, num, end_text='…'):
     """
     length = int(num)
     if length <= 0:
-        return ''
+        return ""
     truncator = _HTMLWordTruncator(length)
     truncator.feed(s)
     if truncator.truncate_at is None:
         return s
-    out = s[:truncator.truncate_at]
+    out = s[: truncator.truncate_at]
     if end_text:
-        out += ' ' + end_text
+        out += " " + end_text
     # Close any tags still open
     for tag in truncator.open_tags:
-        out += '</%s>' % tag
+        out += "</%s>" % tag
     # Return string
     return out
 
 
 def process_translations(content_list, translation_id=None):
-    """ Finds translations and returns them.
+    """Finds translations and returns them.
 
     For each content_list item, populates the 'translations' attribute, and
     returns a tuple with two lists (index, translations). Index list includes
@@ -632,19 +631,23 @@ def process_translations(content_list, translation_id=None):
     try:
         content_list.sort(key=attrgetter(*translation_id))
     except TypeError:
-        raise TypeError('Cannot unpack {}, \'translation_id\' must be falsy, a'
-                        ' string or a collection of strings'
-                        .format(translation_id))
+        raise TypeError(
+            "Cannot unpack {}, 'translation_id' must be falsy, a"
+            " string or a collection of strings".format(translation_id)
+        )
     except AttributeError:
-        raise AttributeError('Cannot use {} as \'translation_id\', there '
-                             'appear to be items without these metadata '
-                             'attributes'.format(translation_id))
+        raise AttributeError(
+            "Cannot use {} as 'translation_id', there "
+            "appear to be items without these metadata "
+            "attributes".format(translation_id)
+        )
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
         # prepare warning string
         id_vals = (id_vals,) if len(translation_id) == 1 else id_vals
-        with_str = 'with' + ', '.join([' {} "{{}}"'] * len(translation_id))\
-            .format(*translation_id).format(*id_vals)
+        with_str = "with" + ", ".join([' {} "{{}}"'] * len(translation_id)).format(
+            *translation_id
+        ).format(*id_vals)
 
         items = list(items)
         original_items = get_original_items(items, with_str)
@@ -662,24 +665,24 @@ def get_original_items(items, with_str):
         args = [len(items)]
         args.extend(extra)
         args.extend(x.source_path for x in items)
-        logger.warning('{}: {}'.format(msg, '\n%s' * len(items)), *args)
+        logger.warning("{}: {}".format(msg, "\n%s" * len(items)), *args)
 
     # warn if several items have the same lang
-    for lang, lang_items in groupby(items, attrgetter('lang')):
+    for lang, lang_items in groupby(items, attrgetter("lang")):
         lang_items = list(lang_items)
         if len(lang_items) > 1:
-            _warn_source_paths('There are %s items "%s" with lang %s',
-                               lang_items, with_str, lang)
+            _warn_source_paths(
+                'There are %s items "%s" with lang %s', lang_items, with_str, lang
+            )
 
     # items with `translation` metadata will be used as translations...
     candidate_items = [
-        i for i in items
-        if i.metadata.get('translation', 'false').lower() == 'false']
+        i for i in items if i.metadata.get("translation", "false").lower() == "false"
+    ]
 
     # ...unless all items with that slug are translations
     if not candidate_items:
-        _warn_source_paths('All items ("%s") "%s" are translations',
-                           items, with_str)
+        _warn_source_paths('All items ("%s") "%s" are translations', items, with_str)
         candidate_items = items
 
     # find items with default language
@@ -691,13 +694,14 @@ def get_original_items(items, with_str):
 
     # warn if there are several original items
     if len(original_items) > 1:
-        _warn_source_paths('There are %s original (not translated) items %s',
-                           original_items, with_str)
+        _warn_source_paths(
+            "There are %s original (not translated) items %s", original_items, with_str
+        )
     return original_items
 
 
-def order_content(content_list, order_by='slug'):
-    """ Sorts content.
+def order_content(content_list, order_by="slug"):
+    """Sorts content.
 
     order_by can be a string of an attribute or sorting function. If order_by
     is defined, content will be ordered by that attribute or sorting function.
@@ -713,22 +717,22 @@ def order_content(content_list, order_by='slug'):
             try:
                 content_list.sort(key=order_by)
             except Exception:
-                logger.error('Error sorting with function %s', order_by)
+                logger.error("Error sorting with function %s", order_by)
         elif isinstance(order_by, str):
-            if order_by.startswith('reversed-'):
+            if order_by.startswith("reversed-"):
                 order_reversed = True
-                order_by = order_by.replace('reversed-', '', 1)
+                order_by = order_by.replace("reversed-", "", 1)
             else:
                 order_reversed = False
 
-            if order_by == 'basename':
+            if order_by == "basename":
                 content_list.sort(
-                    key=lambda x: os.path.basename(x.source_path or ''),
-                    reverse=order_reversed)
+                    key=lambda x: os.path.basename(x.source_path or ""),
+                    reverse=order_reversed,
+                )
             else:
                 try:
-                    content_list.sort(key=attrgetter(order_by),
-                                      reverse=order_reversed)
+                    content_list.sort(key=attrgetter(order_by), reverse=order_reversed)
                 except AttributeError:
                     for content in content_list:
                         try:
@@ -736,26 +740,31 @@ def order_content(content_list, order_by='slug'):
                         except AttributeError:
                             logger.warning(
                                 'There is no "%s" attribute in "%s". '
-                                'Defaulting to slug order.',
+                                "Defaulting to slug order.",
                                 order_by,
                                 content.get_relative_source_path(),
                                 extra={
-                                    'limit_msg': ('More files are missing '
-                                                  'the needed attribute.')
-                                })
+                                    "limit_msg": (
+                                        "More files are missing "
+                                        "the needed attribute."
+                                    )
+                                },
+                            )
         else:
             logger.warning(
-                'Invalid *_ORDER_BY setting (%s). '
-                'Valid options are strings and functions.', order_by)
+                "Invalid *_ORDER_BY setting (%s). "
+                "Valid options are strings and functions.",
+                order_by,
+            )
 
     return content_list
 
 
 def wait_for_changes(settings_file, reader_class, settings):
-    content_path = settings.get('PATH', '')
-    theme_path = settings.get('THEME', '')
+    content_path = settings.get("PATH", "")
+    theme_path = settings.get("THEME", "")
     ignore_files = set(
-        fnmatch.translate(pattern) for pattern in settings.get('IGNORE_FILES', [])
+        fnmatch.translate(pattern) for pattern in settings.get("IGNORE_FILES", [])
     )
 
     candidate_paths = [
@@ -765,7 +774,7 @@ def wait_for_changes(settings_file, reader_class, settings):
     ]
 
     candidate_paths.extend(
-        os.path.join(content_path, path) for path in settings.get('STATIC_PATHS', [])
+        os.path.join(content_path, path) for path in settings.get("STATIC_PATHS", [])
     )
 
     watching_paths = []
@@ -778,11 +787,13 @@ def wait_for_changes(settings_file, reader_class, settings):
         else:
             watching_paths.append(path)
 
-    return next(watchfiles.watch(
-        *watching_paths,
-        watch_filter=watchfiles.DefaultFilter(ignore_entity_patterns=ignore_files),
-        rust_timeout=0
-    ))
+    return next(
+        watchfiles.watch(
+            *watching_paths,
+            watch_filter=watchfiles.DefaultFilter(ignore_entity_patterns=ignore_files),
+            rust_timeout=0,
+        )
+    )
 
 
 def set_date_tzinfo(d, tz_name=None):
@@ -811,7 +822,7 @@ def split_all(path):
     """
     if isinstance(path, str):
         components = []
-        path = path.lstrip('/')
+        path = path.lstrip("/")
         while path:
             head, tail = os.path.split(path)
             if tail:
@@ -827,32 +838,30 @@ def split_all(path):
         return None
     else:
         raise TypeError(
-            '"path" was {}, must be string, None, or pathlib.Path'.format(
-                type(path)
-            )
+            '"path" was {}, must be string, None, or pathlib.Path'.format(type(path))
         )
 
 
 def is_selected_for_writing(settings, path):
-    '''Check whether path is selected for writing
+    """Check whether path is selected for writing
     according to the WRITE_SELECTED list
 
     If WRITE_SELECTED is an empty list (default),
     any path is selected for writing.
-    '''
-    if settings['WRITE_SELECTED']:
-        return path in settings['WRITE_SELECTED']
+    """
+    if settings["WRITE_SELECTED"]:
+        return path in settings["WRITE_SELECTED"]
     else:
         return True
 
 
 def path_to_file_url(path):
-    '''Convert file-system path to file:// URL'''
+    """Convert file-system path to file:// URL"""
     return urllib.parse.urljoin("file://", urllib.request.pathname2url(path))
 
 
 def maybe_pluralize(count, singular, plural):
-    '''
+    """
     Returns a formatted string containing count and plural if count is not 1
     Returns count and singular if count is 1
 
@@ -860,22 +869,22 @@ def maybe_pluralize(count, singular, plural):
     maybe_pluralize(1, 'Article', 'Articles') -> '1 Article'
     maybe_pluralize(2, 'Article', 'Articles') -> '2 Articles'
 
-    '''
+    """
     selection = plural
     if count == 1:
         selection = singular
-    return '{} {}'.format(count, selection)
+    return "{} {}".format(count, selection)
 
 
 @contextmanager
 def temporary_locale(temp_locale=None, lc_category=locale.LC_ALL):
-    '''
+    """
     Enable code to run in a context with a temporary locale
     Resets the locale back when exiting context.
 
     Use tests.support.TestCaseWithCLocale if you want every unit test in a
     class to use the C locale.
-    '''
+    """
     orig_locale = locale.setlocale(lc_category)
     if temp_locale:
         locale.setlocale(lc_category, temp_locale)
