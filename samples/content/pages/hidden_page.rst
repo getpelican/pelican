@@ -6,4 +6,3 @@ This is a test hidden page
 
 This is great for things like error(404) pages
 Anyone can see this page but it's not linked to anywhere!
-
