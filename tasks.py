@@ -63,16 +63,6 @@ def black(c, check=False, diff=False):
 
 
 @task
-def isort(c, check=False, diff=False):
-    check_flag, diff_flag = "", ""
-    if check:
-        check_flag = "-c"
-    if diff:
-        diff_flag = "--diff"
-    c.run(f"{VENV_BIN}/isort {check_flag} {diff_flag} .", pty=PTY)
-
-
-@task
 def ruff(c, fix=False, diff=False):
     """Run Ruff to ensure code meets project standards."""
     diff_flag, fix_flag = "", ""
