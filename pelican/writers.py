@@ -145,11 +145,9 @@ class Writer:
 
         feed = self._create_new_feed(feed_type, feed_title, context)
 
-        max_items = len(elements)
-        if self.settings['FEED_MAX_ITEMS']:
-            max_items = min(self.settings['FEED_MAX_ITEMS'], max_items)
-        for i in range(max_items):
-            self._add_item_to_the_feed(feed, elements[i])
+        # FEED_MAX_ITEMS = None means [:None] to get every element
+        for element in elements[:self.settings['FEED_MAX_ITEMS']]:
+            self._add_item_to_the_feed(feed, element)
 
         signals.feed_generated.send(context, feed=feed)
         if path:

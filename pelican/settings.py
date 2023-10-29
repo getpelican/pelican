@@ -43,7 +43,7 @@ DEFAULT_CONFIG = {
     'AUTHOR_FEED_ATOM': 'feeds/{slug}.atom.xml',
     'AUTHOR_FEED_RSS': 'feeds/{slug}.rss.xml',
     'TRANSLATION_FEED_ATOM': 'feeds/all-{lang}.atom.xml',
-    'FEED_MAX_ITEMS': '',
+    'FEED_MAX_ITEMS': 100,
     'RSS_FEED_SUMMARY_ONLY': True,
     'SITEURL': '',
     'SITENAME': 'A Pelican Blog',

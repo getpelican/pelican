@@ -1004,10 +1004,10 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location and
    URL.
 
-.. data:: FEED_MAX_ITEMS
+.. data:: FEED_MAX_ITEMS = 100
 
-   Maximum number of items allowed in a feed. Feed item quantity is
-   unrestricted by default.
+   Maximum number of items allowed in a feed. Setting to ``None`` will cause the
+   feed to contains every article. 100 if not specified.
 
 .. data:: RSS_FEED_SUMMARY_ONLY = True
 
