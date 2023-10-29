@@ -60,7 +60,7 @@ jobs:
           cache-dependency-path: ./pyproject.toml
       - name: Install dependencies
         run: |
-          pdm install
+          pdm install --no-default --dev
       - name: Run linters
         run: pdm lint --diff
 
