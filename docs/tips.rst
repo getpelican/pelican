@@ -187,6 +187,8 @@ the workflow:
 |              |          | install, for example to enable    |        |               |
 |              |          | markdown and typogrify use:       |        |               |
 |              |          | ``"pelican[markdown] typogrify"`` |        |               |
+|              |          | or if you have a requirements     |        |               |
+|              |          | file: ``"-r requirements.txt"``   |        |               |
 +--------------+----------+-----------------------------------+--------+---------------+
 | output-path  | No       | Where to output the generated     | string | ``"output/"`` |
 |              |          | files (``pelican``'s ``--output`` |        |               |

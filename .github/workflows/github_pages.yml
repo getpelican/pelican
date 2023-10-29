@@ -9,7 +9,7 @@ on:
       requirements:
         required: false
         default: "pelican"
-        description: "The Python requirements to install, for example to enable markdown and typogrify use: 'pelican[markdown] typogrify'"
+        description: "The Python requirements to install, for example to enable markdown and typogrify use: 'pelican[markdown] typogrify' or if you have a requirements file use: '-r requirements.txt'"
         type: string
       output-path:
         required: false
@@ -58,4 +58,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
-
