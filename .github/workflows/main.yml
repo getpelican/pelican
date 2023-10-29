@@ -63,6 +63,8 @@ jobs:
           pdm install --no-default --dev
       - name: Run linters
         run: pdm lint --diff
+      - name: Run pre-commit checks on all files
+        uses: pre-commit/action@v3.0.0
 
   docs:
     name: Build docs
