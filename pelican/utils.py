@@ -294,7 +294,7 @@ def copy(source, destination, ignores=None):
         if not os.path.exists(dst_dir):
             logger.info("Creating directory %s", dst_dir)
             os.makedirs(dst_dir)
-        logger.info('Copying %s to %s', source_, destination_)
+        logger.info("Copying %s to %s", source_, destination_)
         copy_file(source_, destination_)
 
     elif os.path.isdir(source_):
@@ -326,7 +326,7 @@ def copy(source, destination, ignores=None):
                 src_path = os.path.join(src_dir, o)
                 dst_path = os.path.join(dst_dir, o)
                 if os.path.isfile(src_path):
-                    logger.info('Copying %s to %s', src_path, dst_path)
+                    logger.info("Copying %s to %s", src_path, dst_path)
                     copy_file(src_path, dst_path)
                 else:
                     logger.warning(
@@ -337,7 +337,7 @@ def copy(source, destination, ignores=None):
 
 
 def copy_file(source, destination):
-    '''Copy a file'''
+    """Copy a file"""
     try:
         shutil.copyfile(source, destination)
     except OSError as e:
