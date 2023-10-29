@@ -6,8 +6,8 @@ from math import ceil
 
 logger = logging.getLogger(__name__)
 PaginationRule = namedtuple(
-    'PaginationRule',
-    'min_page URL SAVE_AS',
+    "PaginationRule",
+    "min_page URL SAVE_AS",
 )
 
 
@@ -19,7 +19,7 @@ class Paginator:
         self.settings = settings
         if per_page:
             self.per_page = per_page
-            self.orphans = settings['DEFAULT_ORPHANS']
+            self.orphans = settings["DEFAULT_ORPHANS"]
         else:
             self.per_page = len(object_list)
             self.orphans = 0
@@ -32,14 +32,21 @@ class Paginator:
         top = bottom + self.per_page
         if top + self.orphans >= self.count:
             top = self.count
-        return Page(self.name, self.url, self.object_list[bottom:top], number,
-                    self, self.settings)
+        return Page(
+            self.name,
+            self.url,
+            self.object_list[bottom:top],
+            number,
+            self,
+            self.settings,
+        )
 
     def _get_count(self):
         "Returns the total number of objects, across all pages."
         if self._count is None:
             self._count = len(self.object_list)
         return self._count
+
     count = property(_get_count)
 
     def _get_num_pages(self):
@@ -48,6 +55,7 @@ class Paginator:
             hits = max(1, self.count - self.orphans)
             self._num_pages = int(ceil(hits / (float(self.per_page) or 1)))
         return self._num_pages
+
     num_pages = property(_get_num_pages)
 
     def _get_page_range(self):
@@ -56,6 +64,7 @@ class Paginator:
         a template for loop.
         """
         return list(range(1, self.num_pages + 1))
+
     page_range = property(_get_page_range)
 
 
@@ -64,7 +73,7 @@ class Page:
         self.full_name = name
         self.name, self.extension = os.path.splitext(name)
         dn, fn = os.path.split(name)
-        self.base_name = dn if fn in ('index.htm', 'index.html') else self.name
+        self.base_name = dn if fn in ("index.htm", "index.html") else self.name
         self.base_url = url
         self.object_list = object_list
         self.number = number
@@ -72,7 +81,7 @@ class Page:
         self.settings = settings
 
     def __repr__(self):
-        return '<Page {} of {}>'.format(self.number, self.paginator.num_pages)
+        return "<Page {} of {}>".format(self.number, self.paginator.num_pages)
 
     def has_next(self):
         return self.number < self.paginator.num_pages
@@ -117,7 +126,7 @@ class Page:
         rule = None
 
         # find the last matching pagination rule
-        for p in self.settings['PAGINATION_PATTERNS']:
+        for p in self.settings["PAGINATION_PATTERNS"]:
             if p.min_page == -1:
                 if not self.has_next():
                     rule = p
@@ -127,22 +136,22 @@ class Page:
                     rule = p
 
         if not rule:
-            return ''
+            return ""
 
         prop_value = getattr(rule, key)
 
         if not isinstance(prop_value, str):
-            logger.warning('%s is set to %s', key, prop_value)
+            logger.warning("%s is set to %s", key, prop_value)
             return prop_value
 
         # URL or SAVE_AS is a string, format it with a controlled context
         context = {
-            'save_as': self.full_name,
-            'url': self.base_url,
-            'name': self.name,
-            'base_name': self.base_name,
-            'extension': self.extension,
-            'number': self.number,
+            "save_as": self.full_name,
+            "url": self.base_url,
+            "name": self.name,
+            "base_name": self.base_name,
+            "extension": self.extension,
+            "number": self.number,
         }
 
         ret = prop_value.format(**context)
@@ -155,9 +164,9 @@ class Page:
         # changed to lstrip() because that would remove all leading slashes and
         # thus make the workaround impossible. See
         # test_custom_pagination_pattern() for a verification of this.
-        if ret.startswith('/'):
+        if ret.startswith("/"):
             ret = ret[1:]
         return ret
 
-    url = property(functools.partial(_from_settings, key='URL'))
-    save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
+    url = property(functools.partial(_from_settings, key="URL"))
+    save_as = property(functools.partial(_from_settings, key="SAVE_AS"))

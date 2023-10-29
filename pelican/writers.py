@@ -9,14 +9,18 @@ from markupsafe import Markup
 
 from pelican.paginator import Paginator
 from pelican.plugins import signals
-from pelican.utils import (get_relative_path, is_selected_for_writing,
-                           path_to_url, sanitised_join, set_date_tzinfo)
+from pelican.utils import (
+    get_relative_path,
+    is_selected_for_writing,
+    path_to_url,
+    sanitised_join,
+    set_date_tzinfo,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class Writer:
-
     def __init__(self, output_path, settings=None):
         self.output_path = output_path
         self.reminder = dict()
@@ -25,24 +29,26 @@ class Writer:
         self._overridden_files = set()
 
         # See Content._link_replacer for details
-        if "RELATIVE_URLS" in self.settings and self.settings['RELATIVE_URLS']:
+        if "RELATIVE_URLS" in self.settings and self.settings["RELATIVE_URLS"]:
             self.urljoiner = posix_join
         else:
             self.urljoiner = lambda base, url: urljoin(
-                base if base.endswith('/') else base + '/', str(url))
+                base if base.endswith("/") else base + "/", str(url)
+            )
 
     def _create_new_feed(self, feed_type, feed_title, context):
-        feed_class = Rss201rev2Feed if feed_type == 'rss' else Atom1Feed
+        feed_class = Rss201rev2Feed if feed_type == "rss" else Atom1Feed
         if feed_title:
-            feed_title = context['SITENAME'] + ' - ' + feed_title
+            feed_title = context["SITENAME"] + " - " + feed_title
         else:
-            feed_title = context['SITENAME']
+            feed_title = context["SITENAME"]
         return feed_class(
             title=Markup(feed_title).striptags(),
-            link=(self.site_url + '/'),
+            link=(self.site_url + "/"),
             feed_url=self.feed_url,
-            description=context.get('SITESUBTITLE', ''),
-            subtitle=context.get('SITESUBTITLE', None))
+            description=context.get("SITESUBTITLE", ""),
+            subtitle=context.get("SITESUBTITLE", None),
+        )
 
     def _add_item_to_the_feed(self, feed, item):
         title = Markup(item.title).striptags()
@@ -52,7 +58,7 @@ class Writer:
             # RSS feeds use a single tag called 'description' for both the full
             # content and the summary
             content = None
-            if self.settings.get('RSS_FEED_SUMMARY_ONLY'):
+            if self.settings.get("RSS_FEED_SUMMARY_ONLY"):
                 description = item.summary
             else:
                 description = item.get_content(self.site_url)
@@ -71,9 +77,9 @@ class Writer:
                 description = None
 
         categories = []
-        if hasattr(item, 'category'):
+        if hasattr(item, "category"):
             categories.append(item.category)
-        if hasattr(item, 'tags'):
+        if hasattr(item, "tags"):
             categories.extend(item.tags)
 
         feed.add_item(
@@ -83,14 +89,12 @@ class Writer:
             description=description,
             content=content,
             categories=categories or None,
-            author_name=getattr(item, 'author', ''),
-            pubdate=set_date_tzinfo(
-                item.date, self.settings.get('TIMEZONE', None)
-            ),
+            author_name=getattr(item, "author", ""),
+            pubdate=set_date_tzinfo(item.date, self.settings.get("TIMEZONE", None)),
             updateddate=set_date_tzinfo(
-                item.modified, self.settings.get('TIMEZONE', None)
+                item.modified, self.settings.get("TIMEZONE", None)
             )
-            if hasattr(item, 'modified')
+            if hasattr(item, "modified")
             else None,
         )
 
@@ -102,22 +106,29 @@ class Writer:
         """
         if filename in self._overridden_files:
             if override:
-                raise RuntimeError('File %s is set to be overridden twice'
-                                   % filename)
-            logger.info('Skipping %s', filename)
+                raise RuntimeError("File %s is set to be overridden twice" % filename)
+            logger.info("Skipping %s", filename)
             filename = os.devnull
         elif filename in self._written_files:
             if override:
-                logger.info('Overwriting %s', filename)
+                logger.info("Overwriting %s", filename)
             else:
-                raise RuntimeError('File %s is to be overwritten' % filename)
+                raise RuntimeError("File %s is to be overwritten" % filename)
         if override:
             self._overridden_files.add(filename)
         self._written_files.add(filename)
-        return open(filename, 'w', encoding=encoding)
+        return open(filename, "w", encoding=encoding)
 
-    def write_feed(self, elements, context, path=None, url=None,
-                   feed_type='atom', override_output=False, feed_title=None):
+    def write_feed(
+        self,
+        elements,
+        context,
+        path=None,
+        url=None,
+        feed_type="atom",
+        override_output=False,
+        feed_title=None,
+    ):
         """Generate a feed with the list of articles provided
 
         Return the feed. If no path or output_path is specified, just
@@ -137,16 +148,15 @@ class Writer:
         if not is_selected_for_writing(self.settings, path):
             return
 
-        self.site_url = context.get(
-            'SITEURL', path_to_url(get_relative_path(path)))
+        self.site_url = context.get("SITEURL", path_to_url(get_relative_path(path)))
 
-        self.feed_domain = context.get('FEED_DOMAIN')
+        self.feed_domain = context.get("FEED_DOMAIN")
         self.feed_url = self.urljoiner(self.feed_domain, url or path)
 
         feed = self._create_new_feed(feed_type, feed_title, context)
 
         # FEED_MAX_ITEMS = None means [:None] to get every element
-        for element in elements[:self.settings['FEED_MAX_ITEMS']]:
+        for element in elements[: self.settings["FEED_MAX_ITEMS"]]:
             self._add_item_to_the_feed(feed, element)
 
         signals.feed_generated.send(context, feed=feed)
@@ -158,17 +168,25 @@ class Writer:
             except Exception:
                 pass
 
-            with self._open_w(complete_path, 'utf-8', override_output) as fp:
-                feed.write(fp, 'utf-8')
-                logger.info('Writing %s', complete_path)
+            with self._open_w(complete_path, "utf-8", override_output) as fp:
+                feed.write(fp, "utf-8")
+                logger.info("Writing %s", complete_path)
 
-            signals.feed_written.send(
-                complete_path, context=context, feed=feed)
+            signals.feed_written.send(complete_path, context=context, feed=feed)
         return feed
 
-    def write_file(self, name, template, context, relative_urls=False,
-                   paginated=None, template_name=None, override_output=False,
-                   url=None, **kwargs):
+    def write_file(
+        self,
+        name,
+        template,
+        context,
+        relative_urls=False,
+        paginated=None,
+        template_name=None,
+        override_output=False,
+        url=None,
+        **kwargs,
+    ):
         """Render the template and write the file.
 
         :param name: name of the file to output
@@ -185,10 +203,13 @@ class Writer:
         :param **kwargs: additional variables to pass to the templates
         """
 
-        if name is False or \
-           name == "" or \
-           not is_selected_for_writing(self.settings,
-                                       os.path.join(self.output_path, name)):
+        if (
+            name is False
+            or name == ""
+            or not is_selected_for_writing(
+                self.settings, os.path.join(self.output_path, name)
+            )
+        ):
             return
         elif not name:
             # other stuff, just return for now
@@ -197,8 +218,8 @@ class Writer:
         def _write_file(template, localcontext, output_path, name, override):
             """Render the template write the file."""
             # set localsiteurl for context so that Contents can adjust links
-            if localcontext['localsiteurl']:
-                context['localsiteurl'] = localcontext['localsiteurl']
+            if localcontext["localsiteurl"]:
+                context["localsiteurl"] = localcontext["localsiteurl"]
             output = template.render(localcontext)
             path = sanitised_join(output_path, name)
 
@@ -207,9 +228,9 @@ class Writer:
             except Exception:
                 pass
 
-            with self._open_w(path, 'utf-8', override=override) as f:
+            with self._open_w(path, "utf-8", override=override) as f:
                 f.write(output)
-            logger.info('Writing %s', path)
+            logger.info("Writing %s", path)
 
             # Send a signal to say we're writing a file with some specific
             # local context.
@@ -217,54 +238,66 @@ class Writer:
 
         def _get_localcontext(context, name, kwargs, relative_urls):
             localcontext = context.copy()
-            localcontext['localsiteurl'] = localcontext.get(
-                'localsiteurl', None)
+            localcontext["localsiteurl"] = localcontext.get("localsiteurl", None)
             if relative_urls:
                 relative_url = path_to_url(get_relative_path(name))
-                localcontext['SITEURL'] = relative_url
-                localcontext['localsiteurl'] = relative_url
-            localcontext['output_file'] = name
+                localcontext["SITEURL"] = relative_url
+                localcontext["localsiteurl"] = relative_url
+            localcontext["output_file"] = name
             localcontext.update(kwargs)
             return localcontext
 
         if paginated is None:
-            paginated = {key: val for key, val in kwargs.items()
-                         if key in {'articles', 'dates'}}
+            paginated = {
+                key: val for key, val in kwargs.items() if key in {"articles", "dates"}
+            }
 
         # pagination
-        if paginated and template_name in self.settings['PAGINATED_TEMPLATES']:
+        if paginated and template_name in self.settings["PAGINATED_TEMPLATES"]:
             # pagination needed
-            per_page = self.settings['PAGINATED_TEMPLATES'][template_name] \
-                or self.settings['DEFAULT_PAGINATION']
+            per_page = (
+                self.settings["PAGINATED_TEMPLATES"][template_name]
+                or self.settings["DEFAULT_PAGINATION"]
+            )
 
             # init paginators
-            paginators = {key: Paginator(name, url, val, self.settings,
-                                         per_page)
-                          for key, val in paginated.items()}
+            paginators = {
+                key: Paginator(name, url, val, self.settings, per_page)
+                for key, val in paginated.items()
+            }
 
             # generated pages, and write
             for page_num in range(list(paginators.values())[0].num_pages):
                 paginated_kwargs = kwargs.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]
-                    previous_page = paginator.page(page_num) \
-                        if page_num > 0 else None
+                    previous_page = paginator.page(page_num) if page_num > 0 else None
                     page = paginator.page(page_num + 1)
-                    next_page = paginator.page(page_num + 2) \
-                        if page_num + 1 < paginator.num_pages else None
+                    next_page = (
+                        paginator.page(page_num + 2)
+                        if page_num + 1 < paginator.num_pages
+                        else None
+                    )
                     paginated_kwargs.update(
-                        {'%s_paginator' % key: paginator,
-                         '%s_page' % key: page,
-                         '%s_previous_page' % key: previous_page,
-                         '%s_next_page' % key: next_page})
+                        {
+                            "%s_paginator" % key: paginator,
+                            "%s_page" % key: page,
+                            "%s_previous_page" % key: previous_page,
+                            "%s_next_page" % key: next_page,
+                        }
+                    )
 
                 localcontext = _get_localcontext(
-                    context, page.save_as, paginated_kwargs, relative_urls)
-                _write_file(template, localcontext, self.output_path,
-                            page.save_as, override_output)
+                    context, page.save_as, paginated_kwargs, relative_urls
+                )
+                _write_file(
+                    template,
+                    localcontext,
+                    self.output_path,
+                    page.save_as,
+                    override_output,
+                )
         else:
             # no pagination
-            localcontext = _get_localcontext(
-                context, name, kwargs, relative_urls)
-            _write_file(template, localcontext, self.output_path, name,
-                        override_output)
+            localcontext = _get_localcontext(context, name, kwargs, relative_urls)
+            _write_file(template, localcontext, self.output_path, name, override_output)
