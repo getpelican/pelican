@@ -2,6 +2,7 @@ import locale
 import logging
 import os
 import shutil
+import unittest
 from datetime import timezone
 from sys import platform
 from tempfile import mkdtemp
@@ -11,15 +12,19 @@ try:
 except ModuleNotFoundError:
     from backports.zoneinfo import ZoneInfo
 
+from pelican import log
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
 from pelican.settings import read_settings
-from pelican.tests.support import (LoggedTestCase, get_article,
-                                   locale_available, unittest)
+from pelican.tests.support import (
+    LogCountHandler,
+    get_article,
+    locale_available
+)
 from pelican.writers import Writer
 
 
-class TestUtils(LoggedTestCase):
+class TestUtils(unittest.TestCase):
     _new_attribute = 'new_value'
 
     def setUp(self):
@@ -37,13 +42,17 @@ class TestUtils(LoggedTestCase):
         return None
 
     def test_deprecated_attribute(self):
-        value = self._old_attribute
-        self.assertEqual(value, self._new_attribute)
-        self.assertLogCountEqual(
-            count=1,
-            msg=('_old_attribute has been deprecated since 3.1.0 and will be '
-                 'removed by version 4.1.3.  Use _new_attribute instead'),
-            level=logging.WARNING)
+        with LogCountHandler.examine(log.PKG_LOGGER) as count_msgs:
+            value = self._old_attribute
+            self.assertEqual(value, self._new_attribute)
+            count_msgs(
+                count=1,
+                msg=(
+                    '_old_attribute has been deprecated since 3.1.0 and will '
+                    'be removed by version 4.1.3.  Use _new_attribute instead'
+                ),
+                level=logging.WARNING
+            )
 
     def test_get_date(self):
         # valid ones
@@ -269,9 +278,10 @@ class TestUtils(LoggedTestCase):
             '<p>' + 'word ' * 20 + '<span>marker</span></p>')
         self.assertEqual(
             utils.truncate_html_words(
-                    '<span\nstyle="\n…\n">' + 'word ' * 100 + '</span>', 20,
-                    '<span>marker</span>'),
-            '<span\nstyle="\n…\n">' + 'word ' * 20 + '<span>marker</span></span>')
+                '<span\nstyle="\n…\n">' + 'word ' * 100 + '</span>', 20,
+                '<span>marker</span>'),
+            '<span\nstyle="\n…\n">' + 'word ' * 20 + '<span>marker</span></span>'
+        )
         self.assertEqual(
             utils.truncate_html_words('<br>' + 'word ' * 100, 20,
                                       '<span>marker</span>'),

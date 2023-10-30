@@ -15,10 +15,7 @@ from collections.abc import Iterable
 from pkgutil import extend_path
 __path__ = extend_path(__path__, __name__)
 
-# pelican.log has to be the first pelican module to be loaded
-# because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import console
-from pelican.log import init as init_logging
+from pelican import log
 from pelican.generators import (ArticlesGenerator,  # noqa: I100
                                 PagesGenerator, SourceFileGenerator,
                                 StaticGenerator, TemplatePagesGenerator)
@@ -164,15 +161,18 @@ class Pelican:
             'draft page',
             'draft pages')
 
-        console.print('Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.'
-                      .format(
-                              pluralized_articles,
-                              pluralized_drafts,
-                              pluralized_hidden_articles,
-                              pluralized_pages,
-                              pluralized_hidden_pages,
-                              pluralized_draft_pages,
-                              time.time() - start_time))
+        log.console.print(
+            'Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.'
+            .format(
+                pluralized_articles,
+                pluralized_drafts,
+                pluralized_hidden_articles,
+                pluralized_pages,
+                pluralized_hidden_pages,
+                pluralized_draft_pages,
+                time.time() - start_time
+            )
+        )
 
     def _get_generator_classes(self):
         discovered_generators = [
@@ -229,13 +229,13 @@ class Pelican:
 
 class PrintSettings(argparse.Action):
     def __call__(self, parser, namespace, values, option_string):
-        init_logging(name=__name__)
+        log.init(level=logging.WARNING)
 
         try:
             instance, settings = get_instance(namespace)
         except Exception as e:
             logger.critical("%s: %s", e.__class__.__name__, e)
-            console.print_exception()
+            log.console.print_exception()
             sys.exit(getattr(e, 'exitcode', 1))
 
         if values:
@@ -247,15 +247,17 @@ class PrintSettings(argparse.Action):
                         setting_format = '\n{}:\n{}'
                     else:
                         setting_format = '\n{}: {}'
-                    console.print(setting_format.format(
+                    log.console.print(setting_format.format(
                         setting,
                         pprint.pformat(settings[setting])))
                 else:
-                    console.print('\n{} is not a recognized setting.'.format(setting))
+                    log.console.print(
+                        '\n{} is not a recognized setting.'.format(setting)
+                    )
                     break
         else:
             # No argument was given to --print-settings, so print all settings
-            console.print(settings)
+            log.console.print(settings)
 
         parser.exit()
 
@@ -358,15 +360,17 @@ def parse_arguments(argv=None):
                         dest='selected_paths', default=None,
                         help='Comma separated list of selected paths to write')
 
-    parser.add_argument('--fatal', metavar='errors|warnings',
-                        choices=('errors', 'warnings'), default='',
+    parser.add_argument('--fatal', choices=('errors', 'warnings'),
+                        default=None,
+                        # type conversion deferred (see: [FATAL] section below)
                         help=('Exit the program with non-zero status if any '
                               'errors/warnings encountered.'))
 
     parser.add_argument('--logs-dedup-min-level', default='WARNING',
-                        choices=('DEBUG', 'INFO', 'WARNING', 'ERROR'),
-                        help=('Only enable log de-duplication for levels equal'
-                              ' to or above the specified value'))
+                        metavar=('logging severity level'),
+                        type=log.severity_from_name, dest='once_lvl',
+                        help=('Enable log de-duplication for this severity'
+                              ' level and above.'))
 
     parser.add_argument('-l', '--listen', dest='listen', action='store_true',
                         help='Serve content files via HTTP and port 8000.')
@@ -389,6 +393,10 @@ def parse_arguments(argv=None):
                         default={})
 
     args = parser.parse_args(argv)
+
+    # [FATAL] value type is converted *after* parsing, to get around argparse
+    # complaining that converted type does not match the "choices" param type.
+    args.fatal = log.severity_from_name(args.fatal)
 
     if args.port is not None and not args.listen:
         logger.warning('--port without --listen has no effect')
@@ -424,6 +432,10 @@ def get_config(args):
         config['PORT'] = args.port
     if args.bind is not None:
         config['BIND'] = args.bind
+    if args.fatal is not None:
+        config['LOG_FATAL'] = args.fatal
+    if args.once_lvl is not None:
+        config['LOG_ONCE_LEVEL'] = args.once_lvl
     config['DEBUG'] = args.verbosity == logging.DEBUG
     config.update(args.overrides)
 
@@ -449,8 +461,11 @@ def get_instance(args):
 
 
 def autoreload(args, excqueue=None):
-    console.print('  --- AutoReload Mode: Monitoring `content`, `theme` and'
-                  ' `settings` for changes. ---')
+    log.console.print(
+        '  --- '
+        'AutoReload Mode: Monitoring `content`, `theme` and `settings` for changes.'
+        ' ---'
+    )
     pelican, settings = get_instance(args)
     settings_file = os.path.abspath(args.settings)
     while True:
@@ -463,7 +478,7 @@ def autoreload(args, excqueue=None):
             if settings_file in changed_files:
                 pelican, settings = get_instance(args)
 
-            console.print('\n-> Modified: {}. re-generating...'.format(
+            log.console.print('\n-> Modified: {}. re-generating...'.format(
                               ', '.join(changed_files)))
 
         except KeyboardInterrupt:
@@ -485,9 +500,14 @@ def autoreload(args, excqueue=None):
 
 
 def listen(server, port, output, excqueue=None):
-    # set logging level to at least "INFO" (so we can see the server requests)
-    if logger.level < logging.INFO:
-        logger.setLevel(logging.INFO)
+    # elevate logging to *at least* "INFO" level to see the server requests:
+    server_logger = logging.getLogger('pelican.server')
+    if server_logger.getEffectiveLevel() > logging.INFO:
+        logObj = server_logger
+        while logObj:
+            if logObj.level and logObj.level > logging.INFO:
+                logObj.setLevel(logging.INFO)
+            logObj = logObj.parent
 
     RootedHTTPServer.allow_reuse_address = True
     try:
@@ -500,8 +520,8 @@ def listen(server, port, output, excqueue=None):
         return
 
     try:
-        console.print("Serving site at: http://{}:{} - Tap CTRL-C to stop".format(
-                      server, port))
+        log.console.print("Serving site at: http://{}:{} - Tap CTRL-C to stop".format(
+            server, port))
         httpd.serve_forever()
     except Exception as e:
         if excqueue is not None:
@@ -517,15 +537,28 @@ def listen(server, port, output, excqueue=None):
 
 def main(argv=None):
     args = parse_arguments(argv)
-    logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
-    init_logging(level=args.verbosity, fatal=args.fatal,
-                 name=__name__, logs_dedup_min_level=logs_dedup_min_level)
 
+    # logging: add rich handler & set verbosity
+    debug_mode = logging.DEBUG == args.verbosity
+    log.init(level=args.verbosity)
     logger.debug('Pelican version: %s', __version__)
     logger.debug('Python version: %s', sys.version.split()[0])
 
     try:
-        pelican, settings = get_instance(args)
+        logger.info("Reading config...")
+
+        # temp handler to catch possible "fatal" logs while applying settings
+        with log.temp_handler(
+            logging.getLogger(),
+            log.AbortHandler(args.fatal or logging.CRITICAL)
+        ):
+            pelican, settings = get_instance(args)
+
+            if debug_mode:
+                # LOG_FILTER is disabled in --debug
+                settings.pop('LOG_FILTER')
+
+            log.configure(settings)
 
         if args.autoreload and args.listen:
             excqueue = multiprocessing.Queue()
@@ -551,13 +584,15 @@ def main(argv=None):
             listen(settings.get('BIND'), settings.get('PORT'),
                    settings.get("OUTPUT_PATH"))
         else:
-            with console.status("Generating..."):
+            with log.console.status("Generating..."):
                 pelican.run()
     except KeyboardInterrupt:
         logger.warning('Keyboard interrupt received. Exiting.')
     except Exception as e:
-        logger.critical("%s: %s", e.__class__.__name__, e)
+        if debug_mode:  # include traceback:
+            log.AbortHandler.trim_traceback(e)
+            log.console.print_exception()
+        else:
+            log.console.print(e)
 
-        if args.verbosity == logging.DEBUG:
-            console.print_exception()
         sys.exit(getattr(e, 'exitcode', 1))

@@ -9,8 +9,6 @@ import sys
 from os.path import isabs
 from pathlib import Path
 
-from pelican.log import LimitFilter
-
 
 def load_source(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -516,9 +514,18 @@ def configure_settings(settings):
         raise Exception('You need to specify a path containing the content'
                         ' (see pelican --help for more information)')
 
-    # specify the log messages to be ignored
-    log_filter = settings.get('LOG_FILTER', DEFAULT_CONFIG['LOG_FILTER'])
-    LimitFilter._ignore.update(set(log_filter))
+    # LOG_FILTER expects a list of (log_level, str) pairs.
+    blacklist = settings.get('LOG_FILTER', DEFAULT_CONFIG['LOG_FILTER'])
+    for n, (lvl, msg) in enumerate(blacklist):
+        if not isinstance(lvl, int):
+            raise ValueError(
+                "Invalid LOG_FILTER (item {n}): level={lvl}".format(**locals())
+            )
+        if not isinstance(msg, str):
+            raise ValueError(
+                "Invalid LOG_FILTER (item {n}): msg={msg!r}".format(**locals())
+            )
+    settings['LOG_FILTER'] = blacklist
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):

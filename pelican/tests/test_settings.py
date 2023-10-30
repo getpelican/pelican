@@ -1,5 +1,6 @@
 import copy
 import locale
+import logging
 import os
 from os.path import abspath, dirname, join
 
@@ -16,6 +17,7 @@ class TestSettingsConfiguration(unittest.TestCase):
     append new values to the settings (if any), and apply basic settings
     optimizations.
     """
+
     def setUp(self):
         self.old_locale = locale.setlocale(locale.LC_ALL)
         locale.setlocale(locale.LC_ALL, 'C')
@@ -304,3 +306,19 @@ class TestSettingsConfiguration(unittest.TestCase):
                          [(r'C\+\+', 'cpp')] +
                          self.settings['SLUG_REGEX_SUBSTITUTIONS'])
         self.assertNotIn('SLUG_SUBSTITUTIONS', settings)
+
+    def test_log_filter_setting(self):
+        read_settings(None, override=dict(
+            LOG_FILTER=[
+                (logging.INFO, "Ignored Info message."),
+                (logging.WARNING, "Ignored Warning message."),
+                (logging.ERROR, "Ignored Error message.")
+            ]
+        ))
+
+        with self.assertRaises(ValueError):
+            read_settings(None, override=dict(
+                LOG_FILTER=[
+                    ("Wrong order.", logging.ERROR)
+                ]
+            ))

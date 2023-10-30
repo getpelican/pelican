@@ -2,6 +2,7 @@ import datetime
 import locale
 import logging
 import os.path
+import unittest
 from posixpath import join as posix_join
 from sys import platform
 
@@ -10,17 +11,15 @@ from jinja2.utils import generate_lorem_ipsum
 from pelican.contents import Article, Author, Category, Page, Static
 from pelican.plugins.signals import content_object_init
 from pelican.settings import DEFAULT_CONFIG
-from pelican.tests.support import (LoggedTestCase, get_context, get_settings,
-                                   unittest)
+from pelican.tests.support import (LogCountHandler, get_context, get_settings)
 from pelican.utils import (path_to_url, posixize_path, truncate_html_words)
-
 
 # generate one paragraph, enclosed with <p>
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
 
-class TestBase(LoggedTestCase):
+class TestBase(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
@@ -41,19 +40,9 @@ class TestBase(LoggedTestCase):
             },
             'source_path': '/path/to/file/foo.ext'
         }
-        self._disable_limit_filter()
 
     def tearDown(self):
         locale.setlocale(locale.LC_ALL, self.old_locale)
-        self._enable_limit_filter()
-
-    def _disable_limit_filter(self):
-        from pelican.contents import logger
-        logger.disable_filter()
-
-    def _enable_limit_filter(self):
-        from pelican.contents import logger
-        logger.enable_filter()
 
     def _copy_page_kwargs(self):
         # make a deep copy of page_kwargs
@@ -82,11 +71,15 @@ class TestPage(TestBase):
 
     def test_mandatory_properties(self):
         # If the title is not set, must throw an exception.
-        page = Page('content')
-        self.assertFalse(page._has_valid_mandatory_properties())
-        self.assertLogCountEqual(
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.contents")
+        ) as count_msgs:
+            page = Page('content')
+            self.assertFalse(page._has_valid_mandatory_properties())
+            count_msgs(
                 count=1,
                 msg="Skipping .*: could not find information about 'title'",
+                as_regex=True,
                 level=logging.ERROR)
         page = Page('content', metadata={'title': 'foobar'})
         self.assertTrue(page._has_valid_mandatory_properties())
@@ -132,11 +125,16 @@ class TestPage(TestBase):
         page_kwargs = self._copy_page_kwargs()
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, TEST_SUMMARY)
-        self.assertEqual(page._get_summary(), TEST_SUMMARY)
-        self.assertLogCountEqual(
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.contents")
+        ) as count_msgs:
+            self.assertEqual(page._get_summary(), TEST_SUMMARY)
+            count_msgs(
                 count=1,
-                msg=r"_get_summary\(\) has been deprecated since 3\.6\.4\. "
-                    "Use the summary decorator instead",
+                msg=(
+                    "_get_summary() has been deprecated since 3.6.4. Use the"
+                    " summary decorator instead"
+                ),
                 level=logging.WARNING)
 
     def test_slug(self):
@@ -761,7 +759,7 @@ class TestArticle(TestBase):
         self.assertTrue(article._has_valid_save_as())
 
 
-class TestStatic(LoggedTestCase):
+class TestStatic(unittest.TestCase):
 
     def setUp(self):
         super().setUp()
@@ -986,30 +984,34 @@ class TestStatic(LoggedTestCase):
                     metadata={'title': 'fakepage'}, settings=self.settings,
                     source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
                     context=self.context)
-        content = page.get_content('')
-
-        self.assertEqual(content, html)
-        self.assertLogCountEqual(
-            count=1,
-            msg="Replacement Indicator 'unknown' not recognized, "
-                "skipping replacement",
-            level=logging.WARNING)
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.contents")
+        ) as count_msgs:
+            content = page.get_content('')
+            self.assertEqual(content, html)
+            count_msgs(
+                count=1,
+                msg="Replacement Indicator 'unknown' not recognized, "
+                    "skipping replacement",
+                level=logging.WARNING)
 
     def test_link_to_unknown_file(self):
         "{filename} link to unknown file should trigger warning."
 
         html = '<a href="{filename}foo">link</a>'
-        page = Page(content=html,
-                    metadata={'title': 'fakepage'}, settings=self.settings,
-                    source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
-                    context=self.context)
-        content = page.get_content('')
-
-        self.assertEqual(content, html)
-        self.assertLogCountEqual(
-            count=1,
-            msg="Unable to find 'foo', skipping url replacement.",
-            level=logging.WARNING)
+        with LogCountHandler.examine(
+            logging.getLogger("pelican.contents")
+        ) as count_msgs:
+            page = Page(content=html,
+                        metadata={'title': 'fakepage'}, settings=self.settings,
+                        source_path=os.path.join('dir', 'otherdir', 'fakepage.md'),
+                        context=self.context)
+            content = page.get_content('')
+            self.assertEqual(content, html)
+            count_msgs(
+                count=1,
+                msg="Unable to find 'foo', skipping url replacement.",
+                level=logging.WARNING)
 
     def test_index_link_syntax_with_spaces(self):
         """{index} link syntax triggers url replacement
