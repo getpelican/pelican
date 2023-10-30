@@ -91,11 +91,7 @@ dev = [
     "pytest-sugar>=0.9.7",
     "pytest-xdist>=3.3.1",
     "tox>=4.11.3",
-    "flake8>=6.1.0",
-    "flake8-import-order>=0.18.2",
     "invoke>=2.2.0",
-    "isort>=5.12.0",
-    "black>=23.10.1",
     "ruff>=0.1.3",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
