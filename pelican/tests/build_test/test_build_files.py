@@ -12,7 +12,7 @@ import pytest
 )
 def test_wheel_contents(pytestconfig):
     """
-    This test, should test the contents of the wheel to make sure,
+    This test should test the contents of the wheel to make sure
     that everything that is needed is included in the final build
     """
     dist_folder = pytestconfig.getoption("--check-build")
@@ -48,8 +48,8 @@ def test_wheel_contents(pytestconfig):
 )
 def test_sdist_contents(pytestconfig, expected_file):
     """
-    This test, should test the contents of the wheel to make sure,
-    that everything that is needed is included in the final build
+    This test should test the contents of the source distribution to make sure
+    that everything that is needed is included in the final build.
     """
     dist_folder = pytestconfig.getoption("--check-build")
     sdist_files = Path(dist_folder).rglob("*.tar.gz")
