@@ -1,9 +1,11 @@
 import copy
 import locale
+import logging
 import os
+import re
 from os.path import abspath, dirname, join
 
-
+from pelican.log import LimitFilter
 from pelican.settings import (DEFAULT_CONFIG, DEFAULT_THEME,
                               _printf_s_to_format_field,
                               configure_settings,
@@ -107,6 +109,46 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings['FEED_DOMAIN'] = 'http://feeds.example.com'
         configure_settings(settings)
         self.assertEqual(settings['FEED_DOMAIN'], 'http://feeds.example.com')
+
+    def test_configure_log_filter_settings(self):
+        # Various forms of filter settings should be applied correctly.
+        settings = {
+            'LOG_FILTER': [
+                (logging.WARNING, 'foo'),
+                ('string', logging.ERROR, 'bar'),
+                ('regex', logging.INFO, r'baz.*boo'),
+            ],
+            'PATH': os.curdir,
+            'THEME': DEFAULT_THEME,
+        }
+        with self.assertWarns(
+            FutureWarning,
+            msg='2-tuple specification of LOG_FILTER item is deprecated,' +
+                'replace with 3-tuple starting with \'string\' (see' +
+                'documentation of LOG_FILTER for more details)'):
+            configure_settings(settings)
+
+        self.assertEqual(LimitFilter.ignore, {
+            (logging.WARNING, 'foo'),
+            (logging.ERROR, 'bar'),
+        })
+        self.assertEqual(LimitFilter.ignore_regexp, {
+            (logging.INFO, re.compile(r'baz.*boo'))
+        })
+
+        settings['LOG_FILTER'] = [(1, 2, 3, 4)]
+        with self.assertRaisesRegex(
+            ValueError,
+            r"Invalid item '\(1, 2, 3, 4\)' in LOG_FILTER"
+        ):
+            configure_settings(settings)
+
+        settings['LOG_FILTER'] = [('foo', 'bar', 'baz')]
+        with self.assertRaisesRegex(
+            ValueError,
+            r"Invalid LOG_FILTER type 'foo'"
+        ):
+            configure_settings(settings)
 
     def test_theme_settings_exceptions(self):
         settings = self.settings

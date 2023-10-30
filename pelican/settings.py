@@ -518,7 +518,8 @@ def configure_settings(settings):
 
     # specify the log messages to be ignored
     log_filter = settings.get('LOG_FILTER', DEFAULT_CONFIG['LOG_FILTER'])
-    LimitFilter._ignore.update(set(log_filter))
+    for item in log_filter:
+        LimitFilter.add_ignore_rule(item)
 
     # lookup the theme in "pelican/themes" if the given one doesn't exist
     if not os.path.isdir(settings['THEME']):

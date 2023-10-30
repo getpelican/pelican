@@ -130,12 +130,18 @@ Basic settings
 
 .. data:: LOG_FILTER = []
 
-   A list of tuples containing the logging level (up to ``warning``) and the
-   message to be ignored.
+   A list of tuples containing the type (either ``string`` or ``regex``),
+   the logging level (up to ``warning``) and a string. If the type is ``string``
+   messages that are equal to the third argument are not shown. If the type is
+   ``regex``, the third argument is interpreted as a regular expression and any
+   message matching that will not be shown.
 
    Example::
 
-      LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
+      LOG_FILTER = [
+        ('string', logging.WARN, 'Empty theme folder. Using `basic` theme.'),
+        ('regex', logging.WARN, r'Cannot get modification stamp for /foo/.*'),
+      ]
 
 .. data:: READERS = {}
 
@@ -1304,15 +1310,19 @@ the **meaningful** error message in the middle of tons of annoying log output
 can be quite tricky. In order to filter out redundant log messages, Pelican
 comes with the ``LOG_FILTER`` setting.
 
-``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them being
-composed of the logging level (up to ``warning``) and the message to be
+``LOG_FILTER`` should be a list of tuples ``(type, level, msg_or_regexp)``, each
+of them being composed of the type (``string`` or ``regex``), the logging level
+(up to ``warning``) and the message or regular expression to be
 ignored. Simply populate the list with the log messages you want to hide, and
 they will be filtered out.
 
 For example::
 
    import logging
-   LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
+   LOG_FILTER = [
+        ('string', logging.WARN, 'TAG_SAVE_AS is set to False'),
+        ('regex', logging.WARN, r'Cannot get modification stamp for /foo/.*'),
+   ]
 
 It is possible to filter out messages by a template. Check out source code to
 obtain a template.
@@ -1320,13 +1330,14 @@ obtain a template.
 For example::
 
    import logging
-   LOG_FILTER = [(logging.WARN, 'Empty alt attribute for image %s in %s')]
+   LOG_FILTER = [('string', logging.WARN, 'Empty alt attribute for image %s in %s')]
 
 .. Warning::
 
-   Silencing messages by templates is a dangerous feature. It is possible to
-   unintentionally filter out multiple message types with the same template
-   (including messages from future Pelican versions). Proceed with caution.
+   Silencing messages by templates or regular expressons is a dangerous
+   feature. It is possible to unintentionally filter out multiple message
+   types with the same template (including messages from future Pelican
+   versions). Proceed with caution.
 
 .. note::
 
