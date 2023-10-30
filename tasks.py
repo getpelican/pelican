@@ -52,24 +52,16 @@ def coverage(c):
 
 
 @task
-def black(c, check=False, diff=False):
-    """Run Black auto-formatter, optionally with --check or --diff"""
+def format(c, check=False, diff=False):
+    """Run Ruff's auto-formatter, optionally with --check or --diff"""
     check_flag, diff_flag = "", ""
     if check:
         check_flag = "--check"
     if diff:
         diff_flag = "--diff"
-    c.run(f"{VENV_BIN}/black {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY)
-
-
-@task
-def isort(c, check=False, diff=False):
-    check_flag, diff_flag = "", ""
-    if check:
-        check_flag = "-c"
-    if diff:
-        diff_flag = "--diff"
-    c.run(f"{VENV_BIN}/isort {check_flag} {diff_flag} .", pty=PTY)
+    c.run(
+        f"{VENV_BIN}/ruff format {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY
+    )
 
 
 @task
@@ -87,6 +79,7 @@ def ruff(c, fix=False, diff=False):
 def lint(c, fix=False, diff=False):
     """Check code style via linting tools."""
     ruff(c, fix=fix, diff=diff)
+    format(c, check=not fix, diff=diff)
 
 
 @task

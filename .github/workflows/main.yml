@@ -63,6 +63,8 @@ jobs:
           pdm install --no-default --dev
       - name: Run linters
         run: pdm lint --diff
+      - name: Run pre-commit checks on all files
+        uses: pre-commit/action@v3.0.0
 
   build:
     name: Test build
@@ -97,6 +99,11 @@ jobs:
         run: python -m pip install -U pip tox
       - name: Check
         run: tox -e docs
+      - name: cache the docs for inspection
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: docs/_build/html/
 
   deploy:
     name: Deploy

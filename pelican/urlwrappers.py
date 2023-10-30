@@ -31,17 +31,16 @@ class URLWrapper:
     @property
     def slug(self):
         if self._slug is None:
-            class_key = '{}_REGEX_SUBSTITUTIONS'.format(
-                self.__class__.__name__.upper())
+            class_key = "{}_REGEX_SUBSTITUTIONS".format(self.__class__.__name__.upper())
             regex_subs = self.settings.get(
-                class_key,
-                self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
-            preserve_case = self.settings.get('SLUGIFY_PRESERVE_CASE', False)
+                class_key, self.settings.get("SLUG_REGEX_SUBSTITUTIONS", [])
+            )
+            preserve_case = self.settings.get("SLUGIFY_PRESERVE_CASE", False)
             self._slug = slugify(
                 self.name,
                 regex_subs=regex_subs,
                 preserve_case=preserve_case,
-                use_unicode=self.settings.get('SLUGIFY_USE_UNICODE', False)
+                use_unicode=self.settings.get("SLUGIFY_USE_UNICODE", False),
             )
         return self._slug
 
@@ -53,26 +52,26 @@ class URLWrapper:
 
     def as_dict(self):
         d = self.__dict__
-        d['name'] = self.name
-        d['slug'] = self.slug
+        d["name"] = self.name
+        d["slug"] = self.slug
         return d
 
     def __hash__(self):
         return hash(self.slug)
 
     def _normalize_key(self, key):
-        class_key = '{}_REGEX_SUBSTITUTIONS'.format(
-            self.__class__.__name__.upper())
+        class_key = "{}_REGEX_SUBSTITUTIONS".format(self.__class__.__name__.upper())
         regex_subs = self.settings.get(
-            class_key,
-            self.settings.get('SLUG_REGEX_SUBSTITUTIONS', []))
-        use_unicode = self.settings.get('SLUGIFY_USE_UNICODE', False)
-        preserve_case = self.settings.get('SLUGIFY_PRESERVE_CASE', False)
+            class_key, self.settings.get("SLUG_REGEX_SUBSTITUTIONS", [])
+        )
+        use_unicode = self.settings.get("SLUGIFY_USE_UNICODE", False)
+        preserve_case = self.settings.get("SLUGIFY_PRESERVE_CASE", False)
         return slugify(
             key,
             regex_subs=regex_subs,
             preserve_case=preserve_case,
-            use_unicode=use_unicode)
+            use_unicode=use_unicode,
+        )
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -99,7 +98,7 @@ class URLWrapper:
         return self.name
 
     def __repr__(self):
-        return '<{} {}>'.format(type(self).__name__, repr(self._name))
+        return "<{} {}>".format(type(self).__name__, repr(self._name))
 
     def _from_settings(self, key, get_page_name=False):
         """Returns URL information as defined in settings.
@@ -114,7 +113,7 @@ class URLWrapper:
         if isinstance(value, pathlib.Path):
             value = str(value)
         if not isinstance(value, str):
-            logger.warning('%s is set to %s', setting, value)
+            logger.warning("%s is set to %s", setting, value)
             return value
         else:
             if get_page_name:
@@ -122,10 +121,11 @@ class URLWrapper:
             else:
                 return value.format(**self.as_dict())
 
-    page_name = property(functools.partial(_from_settings, key='URL',
-                         get_page_name=True))
-    url = property(functools.partial(_from_settings, key='URL'))
-    save_as = property(functools.partial(_from_settings, key='SAVE_AS'))
+    page_name = property(
+        functools.partial(_from_settings, key="URL", get_page_name=True)
+    )
+    url = property(functools.partial(_from_settings, key="URL"))
+    save_as = property(functools.partial(_from_settings, key="SAVE_AS"))
 
 
 class Category(URLWrapper):

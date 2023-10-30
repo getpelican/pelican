@@ -35,48 +35,41 @@ class TestLog(unittest.TestCase):
     def test_log_filter(self):
         def do_logging():
             for i in range(5):
-                self.logger.warning('Log %s', i)
-                self.logger.warning('Another log %s', i)
+                self.logger.warning("Log %s", i)
+                self.logger.warning("Another log %s", i)
+
         # no filter
         with self.reset_logger():
             do_logging()
+            self.assertEqual(self.handler.count_logs("Log \\d", logging.WARNING), 5)
             self.assertEqual(
-                self.handler.count_logs('Log \\d', logging.WARNING),
-                5)
-            self.assertEqual(
-                self.handler.count_logs('Another log \\d', logging.WARNING),
-                5)
+                self.handler.count_logs("Another log \\d", logging.WARNING), 5
+            )
 
         # filter by template
         with self.reset_logger():
-            log.LimitFilter._ignore.add((logging.WARNING, 'Log %s'))
+            log.LimitFilter._ignore.add((logging.WARNING, "Log %s"))
             do_logging()
+            self.assertEqual(self.handler.count_logs("Log \\d", logging.WARNING), 0)
             self.assertEqual(
-                self.handler.count_logs('Log \\d', logging.WARNING),
-                0)
-            self.assertEqual(
-                self.handler.count_logs('Another log \\d', logging.WARNING),
-                5)
+                self.handler.count_logs("Another log \\d", logging.WARNING), 5
+            )
 
         # filter by exact message
         with self.reset_logger():
-            log.LimitFilter._ignore.add((logging.WARNING, 'Log 3'))
+            log.LimitFilter._ignore.add((logging.WARNING, "Log 3"))
             do_logging()
+            self.assertEqual(self.handler.count_logs("Log \\d", logging.WARNING), 4)
             self.assertEqual(
-                self.handler.count_logs('Log \\d', logging.WARNING),
-                4)
-            self.assertEqual(
-                self.handler.count_logs('Another log \\d', logging.WARNING),
-                5)
+                self.handler.count_logs("Another log \\d", logging.WARNING), 5
+            )
 
         # filter by both
         with self.reset_logger():
-            log.LimitFilter._ignore.add((logging.WARNING, 'Log 3'))
-            log.LimitFilter._ignore.add((logging.WARNING, 'Another log %s'))
+            log.LimitFilter._ignore.add((logging.WARNING, "Log 3"))
+            log.LimitFilter._ignore.add((logging.WARNING, "Another log %s"))
             do_logging()
+            self.assertEqual(self.handler.count_logs("Log \\d", logging.WARNING), 4)
             self.assertEqual(
-                self.handler.count_logs('Log \\d', logging.WARNING),
-                4)
-            self.assertEqual(
-                self.handler.count_logs('Another log \\d', logging.WARNING),
-                0)
+                self.handler.count_logs("Another log \\d", logging.WARNING), 0
+            )

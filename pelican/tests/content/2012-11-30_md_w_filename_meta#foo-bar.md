@@ -3,4 +3,3 @@ author: Alexis Métaireau
 
 Markdown with filename metadata
 ===============================
-

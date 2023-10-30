@@ -4,9 +4,7 @@ from collections import defaultdict
 from rich.console import Console
 from rich.logging import RichHandler
 
-__all__ = [
-    'init'
-]
+__all__ = ["init"]
 
 console = Console()
 
@@ -34,8 +32,8 @@ class LimitFilter(logging.Filter):
             return True
 
         # extract group
-        group = record.__dict__.get('limit_msg', None)
-        group_args = record.__dict__.get('limit_args', ())
+        group = record.__dict__.get("limit_msg", None)
+        group_args = record.__dict__.get("limit_args", ())
 
         # ignore record if it was already raised
         message_key = (record.levelno, record.getMessage())
@@ -50,7 +48,7 @@ class LimitFilter(logging.Filter):
         if logger_level > logging.DEBUG:
             template_key = (record.levelno, record.msg)
             message_key = (record.levelno, record.getMessage())
-            if (template_key in self._ignore or message_key in self._ignore):
+            if template_key in self._ignore or message_key in self._ignore:
                 return False
 
         # check if we went over threshold
@@ -90,12 +88,12 @@ class FatalLogger(LimitLogger):
     def warning(self, *args, **kwargs):
         super().warning(*args, **kwargs)
         if FatalLogger.warnings_fatal:
-            raise RuntimeError('Warning encountered')
+            raise RuntimeError("Warning encountered")
 
     def error(self, *args, **kwargs):
         super().error(*args, **kwargs)
         if FatalLogger.errors_fatal:
-            raise RuntimeError('Error encountered')
+            raise RuntimeError("Error encountered")
 
 
 logging.setLoggerClass(FatalLogger)
@@ -103,17 +101,19 @@ logging.setLoggerClass(FatalLogger)
 logging.getLogger().__class__ = FatalLogger
 
 
-def init(level=None, fatal='', handler=RichHandler(console=console), name=None,
-         logs_dedup_min_level=None):
-    FatalLogger.warnings_fatal = fatal.startswith('warning')
+def init(
+    level=None,
+    fatal="",
+    handler=RichHandler(console=console),
+    name=None,
+    logs_dedup_min_level=None,
+):
+    FatalLogger.warnings_fatal = fatal.startswith("warning")
     FatalLogger.errors_fatal = bool(fatal)
 
     LOG_FORMAT = "%(message)s"
     logging.basicConfig(
-        level=level,
-        format=LOG_FORMAT,
-        datefmt="[%H:%M:%S]",
-        handlers=[handler]
+        level=level, format=LOG_FORMAT, datefmt="[%H:%M:%S]", handlers=[handler]
     )
 
     logger = logging.getLogger(name)
@@ -126,17 +126,18 @@ def init(level=None, fatal='', handler=RichHandler(console=console), name=None,
 
 def log_warnings():
     import warnings
+
     logging.captureWarnings(True)
     warnings.simplefilter("default", DeprecationWarning)
-    init(logging.DEBUG, name='py.warnings')
+    init(logging.DEBUG, name="py.warnings")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     init(level=logging.DEBUG, name=__name__)
 
     root_logger = logging.getLogger(__name__)
-    root_logger.debug('debug')
-    root_logger.info('info')
-    root_logger.warning('warning')
-    root_logger.error('error')
-    root_logger.critical('critical')
+    root_logger.debug("debug")
+    root_logger.info("info")
+    root_logger.warning("warning")
+    root_logger.error("error")
+    root_logger.critical("critical")
