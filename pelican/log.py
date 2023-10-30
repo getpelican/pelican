@@ -103,7 +103,7 @@ logging.setLoggerClass(FatalLogger)
 logging.getLogger().__class__ = FatalLogger
 
 
-def init(level=None, fatal='', handler=RichHandler(console=console), name=None,
+def init(level=None, fatal='errors', handler=RichHandler(console=console), name=None,
          logs_dedup_min_level=None):
     FatalLogger.warnings_fatal = fatal.startswith('warning')
     FatalLogger.errors_fatal = bool(fatal)
