@@ -40,6 +40,22 @@ def list_plugins(ns_pkg=None):
         logger.info("No plugins are installed")
 
 
+def plugin_enabled(name, plugin_list=None):
+    if plugin_list is None or not plugin_list:
+        # no plugins are loaded
+        return False
+
+    if name in plugin_list:
+        # search name as is
+        return True
+
+    if "pelican.plugins.{}".format(name) in plugin_list:
+        # check if short name is a namespace plugin
+        return True
+
+    return False
+
+
 def load_legacy_plugin(plugin, plugin_paths):
     if "." in plugin:
         # it is in a package, try to resolve package first

@@ -140,6 +140,23 @@ your date according to the locale given in your settings::
 .. _datetime: https://docs.python.org/3/library/datetime.html#datetime-objects
 .. _strftime: https://docs.python.org/3/library/datetime.html#strftime-strptime-behavior
 
+Checking Loaded Plugins
+-----------------------
+
+Pelican provides a ``plugin_enabled`` Jinja test for checking if a certain plugin
+is enabled. This test accepts a plugin name as a string and will return a boolean.
+Namespace Plugins can be specified with their full name (``pelican.plugins.plugin_name``)
+or their short name (``plugin_name``). The following example uses ``webassets`` plugin
+to minify CSS if it is enabled and falls back to regular CSS otherwise::
+
+    {% if "webassets" is plugin_enabled %}
+        {% assets filters="cssmin", output="css/style.min.css", "css/style.scss" %}
+            <link rel="stylesheet" href="{{SITEURL}}/{{ASSET_URL}}">
+        {% endassets %}
+    {% else %}
+        <link rel="stylesheet" href="{{SITEURL}}/css/style.css}">
+    {% endif %}
+
 
 index.html
 ----------
