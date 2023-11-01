@@ -82,6 +82,7 @@ dev = [
     "markdown>=3.5",
     "typogrify>=2.0.7",
     "sphinx>=7.1.2",
+    "sphinxext-opengraph>=0.9.0",
     "furo>=2023.9.10",
     "livereload>=2.6.3",
     "psutil>=5.9.6",
