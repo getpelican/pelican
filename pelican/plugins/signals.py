@@ -1,4 +1,8 @@
-from blinker import signal
+from blinker import signal, Signal
+from ordered_set import OrderedSet
+
+# Signals will call functions in the order of connection, i.e. plugin order
+Signal.set_class = OrderedSet
 
 # Run-level signals:
 
