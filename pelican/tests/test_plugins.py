@@ -8,6 +8,7 @@ from pelican.plugins._utils import (
     load_plugins,
     plugin_enabled,
 )
+from pelican.plugins.signals import signal
 from pelican.tests.support import unittest
 
 
@@ -263,3 +264,23 @@ class PluginTest(unittest.TestCase):
             self.assertTrue(plugin_enabled("pelican.plugins.ns_plugin", plugins))
             self.assertTrue(plugin_enabled("normal_plugin", plugins))
             self.assertFalse(plugin_enabled("unknown", plugins))
+
+    def test_blinker_is_ordered(self):
+        """ensure that call order is connetion order"""
+        dummy_signal = signal("dummpy_signal")
+
+        functions = []
+        expected = []
+        for i in range(50):
+            # function appends value of i to a list
+            def func(input, i=i):
+                input.append(i)
+
+            functions.append(func)
+            # we expect functions to be run in the connection order
+            dummy_signal.connect(func)
+            expected.append(i)
+
+        input = []
+        dummy_signal.send(input)
+        self.assertEqual(input, expected)

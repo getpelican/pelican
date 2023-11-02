@@ -94,9 +94,12 @@ which you map the signals to your plugin logic. Let's take a simple example::
     your ``register`` callable or they will be garbage-collected before the
     signal is emitted.
 
-If multiple plugins connect to the same signal, there is no way to guarantee or
-control in which order the plugins will be executed. This is a limitation
-inherited from Blinker_, the dependency Pelican uses to implement signals.
+If multiple plugins connect to the same signal, plugins will be executed in the
+order they are connected. With ``PLUGINS`` setting, order will be as defined in
+the setting. If you rely on auto-discovered namespace plugins, no ``PLUGINS``
+setting, they will be connected in the same order they are discovered (same
+order as ``pelican-plugins`` output). If you want to specify the order
+explicitly, disable auto-discovery by defining ``PLUGINS`` in the desired order.
 
 Namespace plugin structure
 --------------------------
@@ -341,4 +344,3 @@ custom article, using the ``article_generator_pretaxonomy`` signal::
 
 .. _Pip: https://pip.pypa.io/
 .. _pelican-plugins bug #314: https://github.com/getpelican/pelican-plugins/issues/314
-.. _Blinker: https://pythonhosted.org/blinker/
