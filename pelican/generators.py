@@ -20,6 +20,7 @@ from jinja2 import (
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Article, Page, Static
 from pelican.plugins import signals
+from pelican.plugins._utils import plugin_enabled
 from pelican.readers import Readers
 from pelican.utils import (
     DateFormatter,
@@ -102,6 +103,9 @@ class Generator:
 
         # get custom Jinja tests from user settings
         custom_tests = self.settings["JINJA_TESTS"]
+        self.env.tests["plugin_enabled"] = partial(
+            plugin_enabled, plugin_list=self.settings["PLUGINS"]
+        )
         self.env.tests.update(custom_tests)
 
         signals.generator_init.send(self)

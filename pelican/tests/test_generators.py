@@ -1581,6 +1581,31 @@ class TestJinja2Environment(TestCaseWithCLocale):
 
         self._test_jinja2_helper(settings, content, expected)
 
+    def test_jinja2_filter_plugin_enabled(self):
+        """JINJA_FILTERS adds custom filters to Jinja2 environment"""
+        settings = {"PLUGINS": ["legacy_plugin", "pelican.plugins.ns_plugin"]}
+        jinja_template = (
+            "{plugin}: "
+            "{{% if '{plugin}' is plugin_enabled %}}yes"
+            "{{% else %}}no{{% endif %}}"
+        )
+        content = " / ".join(
+            (
+                jinja_template.format(plugin="ns_plugin"),
+                jinja_template.format(plugin="pelican.plugins.ns_plugin"),
+                jinja_template.format(plugin="legacy_plugin"),
+                jinja_template.format(plugin="unknown"),
+            )
+        )
+        expected = (
+            "ns_plugin: yes / "
+            "pelican.plugins.ns_plugin: yes / "
+            "legacy_plugin: yes / "
+            "unknown: no"
+        )
+
+        self._test_jinja2_helper(settings, content, expected)
+
     def test_jinja2_test(self):
         """JINJA_TESTS adds custom tests to Jinja2 environment"""
         content = "foo {{ foo is custom_test }}, bar {{ bar is custom_test }}"

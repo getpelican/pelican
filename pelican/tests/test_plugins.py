@@ -2,7 +2,12 @@ import os
 from contextlib import contextmanager
 
 import pelican.tests.dummy_plugins.normal_plugin.normal_plugin as normal_plugin
-from pelican.plugins._utils import get_namespace_plugins, get_plugin_name, load_plugins
+from pelican.plugins._utils import (
+    get_namespace_plugins,
+    get_plugin_name,
+    load_plugins,
+    plugin_enabled,
+)
 from pelican.tests.support import unittest
 
 
@@ -183,3 +188,78 @@ class PluginTest(unittest.TestCase):
             get_plugin_name(NoopPlugin()),
             "PluginTest.test_get_plugin_name.<locals>.NoopPlugin",
         )
+
+    def test_plugin_enabled(self):
+        def get_plugin_names(plugins):
+            return [get_plugin_name(p) for p in plugins]
+
+        with tmp_namespace_path(self._NS_PLUGIN_FOLDER):
+            # with no `PLUGINS` setting, load namespace plugins
+            SETTINGS = {}
+            plugins = get_plugin_names(load_plugins(SETTINGS))
+            self.assertTrue(plugin_enabled("ns_plugin", plugins))
+            self.assertTrue(plugin_enabled("pelican.plugins.ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("normal_plugin", plugins))
+            self.assertFalse(plugin_enabled("unknown", plugins))
+
+            # disable namespace plugins with `PLUGINS = []`
+            SETTINGS = {"PLUGINS": []}
+            plugins = get_plugin_names(load_plugins(SETTINGS))
+            self.assertFalse(plugin_enabled("ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("pelican.plugins.ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("normal_plugin", plugins))
+            self.assertFalse(plugin_enabled("unknown", plugins))
+
+            # with `PLUGINS`, load only specified plugins
+
+            # normal plugin
+            SETTINGS = {
+                "PLUGINS": ["normal_plugin"],
+                "PLUGIN_PATHS": [self._NORMAL_PLUGIN_FOLDER],
+            }
+            plugins = get_plugin_names(load_plugins(SETTINGS))
+            self.assertFalse(plugin_enabled("ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("pelican.plugins.ns_plugin", plugins))
+            self.assertTrue(plugin_enabled("normal_plugin", plugins))
+            self.assertFalse(plugin_enabled("unknown", plugins))
+
+            # normal submodule/subpackage plugins
+            SETTINGS = {
+                "PLUGINS": [
+                    "normal_submodule_plugin.subplugin",
+                    "normal_submodule_plugin.subpackage.subpackage",
+                ],
+                "PLUGIN_PATHS": [self._NORMAL_PLUGIN_FOLDER],
+            }
+            plugins = get_plugin_names(load_plugins(SETTINGS))
+            self.assertFalse(plugin_enabled("ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("pelican.plugins.ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("normal_plugin", plugins))
+            self.assertFalse(plugin_enabled("unknown", plugins))
+
+            # namespace plugin short
+            SETTINGS = {"PLUGINS": ["ns_plugin"]}
+            plugins = get_plugin_names(load_plugins(SETTINGS))
+            self.assertTrue(plugin_enabled("ns_plugin", plugins))
+            self.assertTrue(plugin_enabled("pelican.plugins.ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("normal_plugin", plugins))
+            self.assertFalse(plugin_enabled("unknown", plugins))
+
+            # namespace plugin long
+            SETTINGS = {"PLUGINS": ["pelican.plugins.ns_plugin"]}
+            plugins = get_plugin_names(load_plugins(SETTINGS))
+            self.assertTrue(plugin_enabled("ns_plugin", plugins))
+            self.assertTrue(plugin_enabled("pelican.plugins.ns_plugin", plugins))
+            self.assertFalse(plugin_enabled("normal_plugin", plugins))
+            self.assertFalse(plugin_enabled("unknown", plugins))
+
+            # normal and namespace plugin
+            SETTINGS = {
+                "PLUGINS": ["normal_plugin", "ns_plugin"],
+                "PLUGIN_PATHS": [self._NORMAL_PLUGIN_FOLDER],
+            }
+            plugins = get_plugin_names(load_plugins(SETTINGS))
+            self.assertTrue(plugin_enabled("ns_plugin", plugins))
+            self.assertTrue(plugin_enabled("pelican.plugins.ns_plugin", plugins))
+            self.assertTrue(plugin_enabled("normal_plugin", plugins))
+            self.assertFalse(plugin_enabled("unknown", plugins))
