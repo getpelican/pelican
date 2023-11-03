@@ -4,7 +4,7 @@ from collections import defaultdict
 from rich.console import Console
 from rich.logging import RichHandler
 
-__all__ = ["init"]
+__all__ = ["init", "console"]
 
 console = Console()
 

@@ -2,7 +2,6 @@ import re
 
 from docutils import nodes, utils
 from docutils.parsers.rst import Directive, directives, roles
-
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import TextLexer, get_lexer_by_name

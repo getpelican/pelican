@@ -20,7 +20,6 @@ from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
 
-
 logger = logging.getLogger(__name__)
 
 
