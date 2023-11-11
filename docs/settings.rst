@@ -1231,6 +1231,12 @@ Following are example ways to specify your preferred theme::
     # Specify a customized theme, via absolute path
     THEME = "/home/myuser/projects/mysite/themes/mycustomtheme"
 
+The built-in ``simple`` theme can be customized using the following settings.
+
+.. data:: STYLESHEET_URL
+
+   The URL of the stylesheet to use.
+
 The built-in ``notmyidea`` theme can make good use of the following settings.
 Feel free to use them in your themes as well.
 
