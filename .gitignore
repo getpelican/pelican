@@ -17,3 +17,4 @@ samples/output
 *.pem
 *.lock
 .pdm-python
+.venv

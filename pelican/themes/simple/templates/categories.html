@@ -3,7 +3,7 @@
 {% block title %}{{ SITENAME|striptags }} - Categories{% endblock %}
 
 {% block content %}
-    <h1>Categories on {{ SITENAME }}</h1>
+    <h2>Categories on {{ SITENAME }}</h2>
     <ul>
     {% for category, articles in categories|sort %}
         <li><a href="{{ SITEURL }}/{{ category.url }}">{{ category }}</a> ({{ articles|count }})</li>

@@ -3,7 +3,7 @@
 {% block title %}{{ SITENAME|striptags }} - Tags{% endblock %}
 
 {% block content %}
-    <h1>Tags for {{ SITENAME }}</h1>
+    <h2>Tags for {{ SITENAME }}</h2>
     <ul>
     {% for tag, articles in tags|sort %}
         <li><a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a> ({{ articles|count }})</li>
