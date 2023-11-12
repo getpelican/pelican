@@ -46,7 +46,6 @@ Install the needed dependencies and set up the project::
 
     python -m pip install invoke
     invoke setup
-    python -m pip install -e ~/projects/pelican
 
 Your local environment should now be ready to go!
 
@@ -159,8 +158,7 @@ check for code style compliance via::
 
 If style violations are found, many of them can be addressed automatically via::
 
-    invoke black
-    invoke isort
+    invoke format
 
 If style violations are found even after running the above auto-formatters,
 you will need to make additional manual changes until ``invoke lint`` no longer
