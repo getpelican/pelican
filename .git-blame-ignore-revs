@@ -1,3 +1,7 @@
 # .git-blame-ignore-revs
 # Apply code style to project via: ruff format .
 cabdb26cee66e1173cf16cb31d3fe5f9fa4392e7
+# Upgrade code base for Python 3.8 and above
+ecd598f293161a52564aa6e8dfdcc8284dc93970
+# Apply Ruff and pyupgrade to Jinja templates
+db241feaa445375dc05e189e69287000ffe5fa8e
