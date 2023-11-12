@@ -362,13 +362,6 @@ Basic settings
 
    If ``True``, load unmodified content from caches.
 
-.. data:: WRITE_SELECTED = []
-
-   If this list is not empty, **only** output files with their paths in this
-   list are written. Paths should be either absolute or relative to the current
-   Pelican working directory. For possible use cases see
-   :ref:`writing_only_selected_content`.
-
 .. data:: FORMATTED_FIELDS = ['summary']
 
    A list of metadata fields containing reST/Markdown content to be parsed and
@@ -1399,21 +1392,6 @@ Note that even when using cached content, all output is always written, so the
 modification times of the generated ``*.html`` files will always change.
 Therefore, ``rsync``-based uploading may benefit from the ``--checksum``
 option.
-
-.. _writing_only_selected_content:
-
-
-Writing only selected content
-=============================
-
-When only working on a single article or page, or making tweaks to your theme,
-it is often desirable to generate and review your work as quickly as possible.
-In such cases, generating and writing the entire site output is often
-unnecessary. By specifying only the desired files as output paths in the
-``WRITE_SELECTED`` list, **only** those files will be written. This list can be
-also specified on the command line using the ``--write-selected`` option, which
-accepts a comma-separated list of output file paths. By default this list is
-empty, so all output is written. See :ref:`site_generation` for more details.
 
 
 Example settings
