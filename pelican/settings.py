@@ -169,7 +169,6 @@ DEFAULT_CONFIG = {
     "GZIP_CACHE": True,
     "CHECK_MODIFIED_METHOD": "mtime",
     "LOAD_CONTENT_CACHE": False,
-    "WRITE_SELECTED": [],
     "FORMATTED_FIELDS": ["summary"],
     "PORT": 8000,
     "BIND": "127.0.0.1",
@@ -557,6 +556,13 @@ def handle_deprecated_settings(settings):
             )
             settings[old] = settings[new]
 
+    # Warn if removed WRITE_SELECTED is present
+    if "WRITE_SELECTED" in settings:
+        logger.warning(
+            "WRITE_SELECTED is present in settings but this functionality was removed. "
+            "It will have no effect."
+        )
+
     return settings
 
 
@@ -584,12 +590,6 @@ def configure_settings(settings):
             settings["THEME"] = theme_path
         else:
             raise Exception("Could not find the theme %s" % settings["THEME"])
-
-    # make paths selected for writing absolute if necessary
-    settings["WRITE_SELECTED"] = [
-        os.path.abspath(path)
-        for path in settings.get("WRITE_SELECTED", DEFAULT_CONFIG["WRITE_SELECTED"])
-    ]
 
     # standardize strings to lowercase strings
     for key in ["DEFAULT_LANG"]:

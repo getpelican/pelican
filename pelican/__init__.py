@@ -435,15 +435,6 @@ def parse_arguments(argv=None):
     )
 
     parser.add_argument(
-        "-w",
-        "--write-selected",
-        type=str,
-        dest="selected_paths",
-        default=None,
-        help="Comma separated list of selected paths to write",
-    )
-
-    parser.add_argument(
         "--fatal",
         metavar="errors|warnings",
         choices=("errors", "warnings"),
@@ -527,8 +518,6 @@ def get_config(args):
         config["LOAD_CONTENT_CACHE"] = False
     if args.cache_path:
         config["CACHE_PATH"] = args.cache_path
-    if args.selected_paths:
-        config["WRITE_SELECTED"] = args.selected_paths.split(",")
     if args.relative_paths:
         config["RELATIVE_URLS"] = args.relative_paths
     if args.port is not None:

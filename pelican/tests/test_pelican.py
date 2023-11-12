@@ -202,29 +202,6 @@ class TestPelican(LoggedTestCase):
         for file in ["a_stylesheet", "a_template"]:
             self.assertTrue(os.path.exists(os.path.join(theme_output, file)))
 
-    def test_write_only_selected(self):
-        """Test that only the selected files are written"""
-        settings = read_settings(
-            path=None,
-            override={
-                "PATH": INPUT_PATH,
-                "OUTPUT_PATH": self.temp_path,
-                "CACHE_PATH": self.temp_cache,
-                "WRITE_SELECTED": [
-                    os.path.join(self.temp_path, "oh-yeah.html"),
-                    os.path.join(self.temp_path, "categories.html"),
-                ],
-                "LOCALE": locale.normalize("en_US"),
-            },
-        )
-        pelican = Pelican(settings=settings)
-        logger = logging.getLogger()
-        orig_level = logger.getEffectiveLevel()
-        logger.setLevel(logging.INFO)
-        mute(True)(pelican.run)()
-        logger.setLevel(orig_level)
-        self.assertLogCountEqual(count=2, msg="Writing .*", level=logging.INFO)
-
     def test_cyclic_intersite_links_no_warnings(self):
         settings = read_settings(
             path=None,

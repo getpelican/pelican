@@ -840,19 +840,6 @@ def split_all(path):
         )
 
 
-def is_selected_for_writing(settings, path):
-    """Check whether path is selected for writing
-    according to the WRITE_SELECTED list
-
-    If WRITE_SELECTED is an empty list (default),
-    any path is selected for writing.
-    """
-    if settings["WRITE_SELECTED"]:
-        return path in settings["WRITE_SELECTED"]
-    else:
-        return True
-
-
 def path_to_file_url(path):
     """Convert file-system path to file:// URL"""
     return urllib.parse.urljoin("file://", urllib.request.pathname2url(path))

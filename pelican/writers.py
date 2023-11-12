@@ -11,7 +11,6 @@ from pelican.paginator import Paginator
 from pelican.plugins import signals
 from pelican.utils import (
     get_relative_path,
-    is_selected_for_writing,
     path_to_url,
     sanitised_join,
     set_date_tzinfo,
@@ -145,9 +144,6 @@ class Writer:
             name should be skipped to keep that one)
         :param feed_title: the title of the feed.o
         """
-        if not is_selected_for_writing(self.settings, path):
-            return
-
         self.site_url = context.get("SITEURL", path_to_url(get_relative_path(path)))
 
         self.feed_domain = context.get("FEED_DOMAIN")
@@ -203,13 +199,7 @@ class Writer:
         :param **kwargs: additional variables to pass to the templates
         """
 
-        if (
-            name is False
-            or name == ""
-            or not is_selected_for_writing(
-                self.settings, os.path.join(self.output_path, name)
-            )
-        ):
+        if name is False or name == "":
             return
         elif not name:
             # other stuff, just return for now
