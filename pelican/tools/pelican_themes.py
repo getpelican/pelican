@@ -58,7 +58,7 @@ def main():
         "-V",
         "--version",
         action="version",
-        version="pelican-themes v{}".format(__version__),
+        version=f"pelican-themes v{__version__}",
         help="Print the version of this script",
     )
 
@@ -224,7 +224,7 @@ def install(path, v=False, u=False):
             install(path, v)
         else:
             if v:
-                print("Copying '{p}' to '{t}' ...".format(p=path, t=theme_path))
+                print(f"Copying '{path}' to '{theme_path}' ...")
             try:
                 shutil.copytree(path, theme_path)
 
@@ -264,7 +264,7 @@ def symlink(path, v=False):
             err(path + " : already exists")
         else:
             if v:
-                print("Linking `{p}' to `{t}' ...".format(p=path, t=theme_path))
+                print(f"Linking `{path}' to `{theme_path}' ...")
             try:
                 os.symlink(path, theme_path)
             except Exception as e:
@@ -288,12 +288,12 @@ def clean(v=False):
         path = os.path.join(_THEMES_PATH, path)
         if os.path.islink(path) and is_broken_link(path):
             if v:
-                print("Removing {}".format(path))
+                print(f"Removing {path}")
             try:
                 os.remove(path)
             except OSError:
-                print("Error: cannot remove {}".format(path))
+                print(f"Error: cannot remove {path}")
             else:
                 c += 1
 
-    print("\nRemoved {} broken links".format(c))
+    print(f"\nRemoved {c} broken links")

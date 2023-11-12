@@ -41,7 +41,7 @@ def decode_wp_content(content, br=True):
             if start == -1:
                 content = content + pre_part
                 continue
-            name = "<pre wp-pre-tag-{}></pre>".format(pre_index)
+            name = f"<pre wp-pre-tag-{pre_index}></pre>"
             pre_tags[name] = pre_part[start:] + "</pre>"
             content = content + pre_part[0:start] + name
             pre_index += 1
@@ -765,7 +765,7 @@ def download_attachments(output_path, urls):
 
         if not os.path.exists(full_path):
             os.makedirs(full_path)
-        print("downloading {}".format(filename))
+        print(f"downloading {filename}")
         try:
             urlretrieve(url, os.path.join(full_path, filename))
             locations[url] = os.path.join(localpath, filename)
@@ -782,7 +782,7 @@ def is_pandoc_needed(in_markup):
 def get_pandoc_version():
     cmd = ["pandoc", "--version"]
     try:
-        output = subprocess.check_output(cmd, universal_newlines=True)
+        output = subprocess.check_output(cmd, text=True)
     except (subprocess.CalledProcessError, OSError) as e:
         logger.warning("Pandoc version unknown: %s", e)
         return ()
@@ -898,7 +898,7 @@ def fields2pelican(
                     new_content = decode_wp_content(content)
                 else:
                     paragraphs = content.splitlines()
-                    paragraphs = ["<p>{}</p>".format(p) for p in paragraphs]
+                    paragraphs = [f"<p>{p}</p>" for p in paragraphs]
                     new_content = "".join(paragraphs)
                 with open(html_filename, "w", encoding="utf-8") as fp:
                     fp.write(new_content)

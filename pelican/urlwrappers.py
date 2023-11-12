@@ -31,7 +31,7 @@ class URLWrapper:
     @property
     def slug(self):
         if self._slug is None:
-            class_key = "{}_REGEX_SUBSTITUTIONS".format(self.__class__.__name__.upper())
+            class_key = f"{self.__class__.__name__.upper()}_REGEX_SUBSTITUTIONS"
             regex_subs = self.settings.get(
                 class_key, self.settings.get("SLUG_REGEX_SUBSTITUTIONS", [])
             )
@@ -60,7 +60,7 @@ class URLWrapper:
         return hash(self.slug)
 
     def _normalize_key(self, key):
-        class_key = "{}_REGEX_SUBSTITUTIONS".format(self.__class__.__name__.upper())
+        class_key = f"{self.__class__.__name__.upper()}_REGEX_SUBSTITUTIONS"
         regex_subs = self.settings.get(
             class_key, self.settings.get("SLUG_REGEX_SUBSTITUTIONS", [])
         )
@@ -98,7 +98,7 @@ class URLWrapper:
         return self.name
 
     def __repr__(self):
-        return "<{} {}>".format(type(self).__name__, repr(self._name))
+        return f"<{type(self).__name__} {repr(self._name)}>"
 
     def _from_settings(self, key, get_page_name=False):
         """Returns URL information as defined in settings.
@@ -108,7 +108,7 @@ class URLWrapper:
         "cat/{slug}" Useful for pagination.
 
         """
-        setting = "{}_{}".format(self.__class__.__name__.upper(), key)
+        setting = f"{self.__class__.__name__.upper()}_{key}"
         value = self.settings[setting]
         if isinstance(value, pathlib.Path):
             value = str(value)

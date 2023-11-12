@@ -32,9 +32,7 @@ class ReaderTest(unittest.TestCase):
                     % (key, value, real_value),
                 )
             else:
-                self.fail(
-                    "Expected %s to have value %s, but was not in Dict" % (key, value)
-                )
+                self.fail(f"Expected {key} to have value {value}, but was not in Dict")
 
 
 class TestAssertDictHasSubset(ReaderTest):

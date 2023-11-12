@@ -170,7 +170,7 @@ class TestSettingsConfiguration(unittest.TestCase):
 
     def test__printf_s_to_format_field(self):
         for s in ("%s", "{%s}", "{%s"):
-            option = "foo/{}/bar.baz".format(s)
+            option = f"foo/{s}/bar.baz"
             result = _printf_s_to_format_field(option, "slug")
             expected = option % "qux"
             found = result.format(slug="qux")

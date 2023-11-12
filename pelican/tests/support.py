@@ -133,7 +133,7 @@ def skipIfNoExecutable(executable):
             res = None
 
     if res is None:
-        return unittest.skip("{} executable not found".format(executable))
+        return unittest.skip(f"{executable} executable not found")
 
     return lambda func: func
 

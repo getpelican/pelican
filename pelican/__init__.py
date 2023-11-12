@@ -273,7 +273,7 @@ class PrintSettings(argparse.Action):
                         )
                     )
                 else:
-                    console.print("\n{} is not a recognized setting.".format(setting))
+                    console.print(f"\n{setting} is not a recognized setting.")
                     break
         else:
             # No argument was given to --print-settings, so print all settings
@@ -611,9 +611,7 @@ def listen(server, port, output, excqueue=None):
         return
 
     try:
-        console.print(
-            "Serving site at: http://{}:{} - Tap CTRL-C to stop".format(server, port)
-        )
+        console.print(f"Serving site at: http://{server}:{port} - Tap CTRL-C to stop")
         httpd.serve_forever()
     except Exception as e:
         if excqueue is not None:

@@ -49,7 +49,7 @@ def plugin_enabled(name, plugin_list=None):
         # search name as is
         return True
 
-    if "pelican.plugins.{}".format(name) in plugin_list:
+    if f"pelican.plugins.{name}" in plugin_list:
         # check if short name is a namespace plugin
         return True
 
@@ -68,7 +68,7 @@ def load_legacy_plugin(plugin, plugin_paths):
         # If failed, try to find it in normal importable locations
         spec = importlib.util.find_spec(plugin)
     if spec is None:
-        raise ImportError("Cannot import plugin `{}`".format(plugin))
+        raise ImportError(f"Cannot import plugin `{plugin}`")
     else:
         # Avoid loading the same plugin twice
         if spec.name in sys.modules:
@@ -106,8 +106,8 @@ def load_plugins(settings):
                 # try to find in namespace plugins
                 if plugin in namespace_plugins:
                     plugin = namespace_plugins[plugin]
-                elif "pelican.plugins.{}".format(plugin) in namespace_plugins:
-                    plugin = namespace_plugins["pelican.plugins.{}".format(plugin)]
+                elif f"pelican.plugins.{plugin}" in namespace_plugins:
+                    plugin = namespace_plugins[f"pelican.plugins.{plugin}"]
                 # try to import it
                 else:
                     try:

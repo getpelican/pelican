@@ -35,9 +35,7 @@ def sanitised_join(base_directory, *parts):
     joined = posixize_path(os.path.abspath(os.path.join(base_directory, *parts)))
     base = posixize_path(os.path.abspath(base_directory))
     if not joined.startswith(base):
-        raise RuntimeError(
-            "Attempted to break out of output directory to {}".format(joined)
-        )
+        raise RuntimeError(f"Attempted to break out of output directory to {joined}")
 
     return joined
 
@@ -71,7 +69,7 @@ def strftime(date, date_format):
             # check for '-' prefix
             if len(candidate) == 3:
                 # '-' prefix
-                candidate = "%{}".format(candidate[-1])
+                candidate = f"%{candidate[-1]}"
                 conversion = strip_zeros
             else:
                 conversion = None
@@ -178,11 +176,11 @@ def deprecated_attribute(old, new, since=None, remove=None, doc=None):
 
     def _warn():
         version = ".".join(str(x) for x in since)
-        message = ["{} has been deprecated since {}".format(old, version)]
+        message = [f"{old} has been deprecated since {version}"]
         if remove:
             version = ".".join(str(x) for x in remove)
-            message.append(" and will be removed by version {}".format(version))
-        message.append(".  Use {} instead.".format(new))
+            message.append(f" and will be removed by version {version}")
+        message.append(f".  Use {new} instead.")
         logger.warning("".join(message))
         logger.debug("".join(str(x) for x in traceback.format_stack()))
 
@@ -210,7 +208,7 @@ def get_date(string):
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
-        raise ValueError("{!r} is not a valid date".format(string))
+        raise ValueError(f"{string!r} is not a valid date")
 
 
 @contextmanager
@@ -763,9 +761,9 @@ def order_content(content_list, order_by="slug"):
 def wait_for_changes(settings_file, reader_class, settings):
     content_path = settings.get("PATH", "")
     theme_path = settings.get("THEME", "")
-    ignore_files = set(
+    ignore_files = {
         fnmatch.translate(pattern) for pattern in settings.get("IGNORE_FILES", [])
-    )
+    }
 
     candidate_paths = [
         settings_file,
@@ -838,7 +836,7 @@ def split_all(path):
         return None
     else:
         raise TypeError(
-            '"path" was {}, must be string, None, or pathlib.Path'.format(type(path))
+            f'"path" was {type(path)}, must be string, None, or pathlib.Path'
         )
 
 
@@ -873,7 +871,7 @@ def maybe_pluralize(count, singular, plural):
     selection = plural
     if count == 1:
         selection = singular
-    return "{} {}".format(count, selection)
+    return f"{count} {selection}"
 
 
 @contextmanager

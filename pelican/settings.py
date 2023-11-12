@@ -265,7 +265,7 @@ def _printf_s_to_format_field(printf_string, format_field):
         format_field
     )
     if result.format(**{format_field: TEST_STRING}) != expected:
-        raise ValueError("Failed to safely replace %s with {{{}}}".format(format_field))
+        raise ValueError(f"Failed to safely replace %s with {{{format_field}}}")
 
     return result
 
@@ -350,9 +350,9 @@ def handle_deprecated_settings(settings):
         ),
     ]:
         if old in settings:
-            message = "The {} setting has been removed in favor of {}".format(old, new)
+            message = f"The {old} setting has been removed in favor of {new}"
             if doc:
-                message += ", see {} for details".format(doc)
+                message += f", see {doc} for details"
             logger.warning(message)
 
     # PAGINATED_DIRECT_TEMPLATES -> PAGINATED_TEMPLATES

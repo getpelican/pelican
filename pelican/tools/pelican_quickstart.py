@@ -90,9 +90,9 @@ def ask(question, answer=str, default=None, length=None):
         r = ""
         while True:
             if default:
-                r = input("> {} [{}] ".format(question, default))
+                r = input(f"> {question} [{default}] ")
             else:
-                r = input("> {} ".format(question))
+                r = input(f"> {question} ")
 
             r = r.strip()
 
@@ -104,7 +104,7 @@ def ask(question, answer=str, default=None, length=None):
                     print("You must enter something")
             else:
                 if length and len(r) != length:
-                    print("Entry must be {} characters long".format(length))
+                    print(f"Entry must be {length} characters long")
                 else:
                     break
 
@@ -114,11 +114,11 @@ def ask(question, answer=str, default=None, length=None):
         r = None
         while True:
             if default is True:
-                r = input("> {} (Y/n) ".format(question))
+                r = input(f"> {question} (Y/n) ")
             elif default is False:
-                r = input("> {} (y/N) ".format(question))
+                r = input(f"> {question} (y/N) ")
             else:
-                r = input("> {} (y/n) ".format(question))
+                r = input(f"> {question} (y/n) ")
 
             r = r.strip().lower()
 
@@ -138,9 +138,9 @@ def ask(question, answer=str, default=None, length=None):
         r = None
         while True:
             if default:
-                r = input("> {} [{}] ".format(question, default))
+                r = input(f"> {question} [{default}] ")
             else:
-                r = input("> {} ".format(question))
+                r = input(f"> {question} ")
 
             r = r.strip()
 
@@ -180,7 +180,7 @@ def render_jinja_template(tmpl_name: str, tmpl_vars: Mapping, target_path: str):
             _template = _jinja_env.get_template(tmpl_name)
             fd.write(_template.render(**tmpl_vars))
     except OSError as e:
-        print("Error: {}".format(e))
+        print(f"Error: {e}")
 
 
 def main():
@@ -376,12 +376,12 @@ needed by Pelican.
     try:
         os.makedirs(os.path.join(CONF["basedir"], "content"))
     except OSError as e:
-        print("Error: {}".format(e))
+        print(f"Error: {e}")
 
     try:
         os.makedirs(os.path.join(CONF["basedir"], "output"))
     except OSError as e:
-        print("Error: {}".format(e))
+        print(f"Error: {e}")
 
     conf_python = dict()
     for key, value in CONF.items():
