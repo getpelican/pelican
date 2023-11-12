@@ -1,5 +1,5 @@
-sphinx<6.0
+sphinx
 sphinxext-opengraph
-furo
+furo==2023.9.10
 livereload
 tomli;python_version<"3.11"
