@@ -401,7 +401,7 @@ class HTMLReader(BaseReader):
                 self._in_body = False
                 self._in_top_level = True
             elif self._in_body:
-                self._data_buffer += "</{}>".format(escape(tag))
+                self._data_buffer += f"</{escape(tag)}>"
 
         def handle_startendtag(self, tag, attrs):
             if tag == "meta" and self._in_head:
@@ -410,28 +410,28 @@ class HTMLReader(BaseReader):
                 self._data_buffer += self.build_tag(tag, attrs, True)
 
         def handle_comment(self, data):
-            self._data_buffer += "<!--{}-->".format(data)
+            self._data_buffer += f"<!--{data}-->"
 
         def handle_data(self, data):
             self._data_buffer += data
 
         def handle_entityref(self, data):
-            self._data_buffer += "&{};".format(data)
+            self._data_buffer += f"&{data};"
 
         def handle_charref(self, data):
-            self._data_buffer += "&#{};".format(data)
+            self._data_buffer += f"&#{data};"
 
         def build_tag(self, tag, attrs, close_tag):
-            result = "<{}".format(escape(tag))
+            result = f"<{escape(tag)}"
             for k, v in attrs:
                 result += " " + escape(k)
                 if v is not None:
                     # If the attribute value contains a double quote, surround
                     # with single quotes, otherwise use double quotes.
                     if '"' in v:
-                        result += "='{}'".format(escape(v, quote=False))
+                        result += f"='{escape(v, quote=False)}'"
                     else:
-                        result += '="{}"'.format(escape(v, quote=False))
+                        result += f'="{escape(v, quote=False)}"'
             if close_tag:
                 return result + " />"
             return result + ">"
@@ -439,7 +439,7 @@ class HTMLReader(BaseReader):
         def _handle_meta_tag(self, attrs):
             name = self._attr_value(attrs, "name")
             if name is None:
-                attr_list = ['{}="{}"'.format(k, v) for k, v in attrs]
+                attr_list = [f'{k}="{v}"' for k, v in attrs]
                 attr_serialized = ", ".join(attr_list)
                 logger.warning(
                     "Meta tag in file %s does not have a 'name' "

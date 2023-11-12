@@ -81,7 +81,7 @@ class Page:
         self.settings = settings
 
     def __repr__(self):
-        return "<Page {} of {}>".format(self.number, self.paginator.num_pages)
+        return f"<Page {self.number} of {self.paginator.num_pages}>"
 
     def has_next(self):
         return self.number < self.paginator.num_pages

@@ -235,7 +235,7 @@ class Content:
     def _expand_settings(self, key, klass=None):
         if not klass:
             klass = self.__class__.__name__
-        fq_key = ("{}_{}".format(klass, key)).upper()
+        fq_key = (f"{klass}_{key}").upper()
         return str(self.settings[fq_key]).format(**self.url_format)
 
     def get_url_setting(self, key):

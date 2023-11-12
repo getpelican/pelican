@@ -61,6 +61,6 @@ def test_sdist_contents(pytestconfig, expected_file):
         filtered_values = [
             path
             for path in files_list
-            if match(f"^pelican-\d\.\d\.\d/{expected_file}{dir_matcher}$", path)
+            if match(rf"^pelican-\d\.\d\.\d/{expected_file}{dir_matcher}$", path)
         ]
         assert len(filtered_values) > 0
