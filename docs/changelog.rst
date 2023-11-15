@@ -1,6 +1,11 @@
 Release history
 ###############
 
+4.9.1 - 2023-11-15
+==================
+
+* Ensure ``tzdata`` dependency is installed on Windows
+
 4.9.0 - 2023-11-12
 ==================
 
