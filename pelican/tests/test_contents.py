@@ -117,6 +117,31 @@ class TestPage(TestBase):
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, "")
 
+    def test_summary_paragraph(self):
+        # If a :SUMMARY_MAX_PARAGRAPHS: is set, the generated summary should
+        # not exceed the given paragraph count.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs["settings"] = settings
+        del page_kwargs["metadata"]["summary"]
+        settings["SUMMARY_MAX_PARAGRAPHS"] = 1
+        settings["SUMMARY_MAX_LENGTH"] = None
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, TEST_CONTENT)
+
+    def test_summary_paragraph_max_length(self):
+        # If a :SUMMARY_MAX_PARAGRAPHS: and :SUMMARY_MAX_LENGTH: are set, the
+        # generated summary should not exceed the given paragraph count and
+        # not exceed the given length.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs["settings"] = settings
+        del page_kwargs["metadata"]["summary"]
+        settings["SUMMARY_MAX_PARAGRAPHS"] = 1
+        settings["SUMMARY_MAX_LENGTH"] = 10
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10))
+
     def test_summary_end_suffix(self):
         # If a :SUMMARY_END_SUFFIX: is set, and there is no other summary,
         # generated summary should contain the specified marker at the end.

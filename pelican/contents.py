@@ -24,6 +24,7 @@ from pelican.utils import (
     sanitised_join,
     set_date_tzinfo,
     slugify,
+    truncate_html_paragraphs,
     truncate_html_words,
 )
 
@@ -431,8 +432,13 @@ class Content:
         if "summary" in self.metadata:
             return self.metadata["summary"]
 
+        content = self.content
+        max_paragraphs = self.settings.get("SUMMARY_MAX_PARAGRAPHS")
+        if max_paragraphs is not None:
+            content = truncate_html_paragraphs(self.content, max_paragraphs)
+
         if self.settings["SUMMARY_MAX_LENGTH"] is None:
-            return self.content
+            return content
 
         return truncate_html_words(
             self.content,

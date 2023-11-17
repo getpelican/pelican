@@ -401,6 +401,23 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(utils.truncate_html_words("&#1234 text", 20), "&#1234 text")
         self.assertEqual(utils.truncate_html_words("&#xabc text", 20), "&#xabc text")
 
+    def test_truncate_html_paragraphs(self):
+        one = "<p>one</p>"
+
+        self.assertEqual(utils.truncate_html_paragraphs(one, 0), "")
+        self.assertEqual(utils.truncate_html_paragraphs(one, 1), one)
+        self.assertEqual(utils.truncate_html_paragraphs(one, 2), one)
+
+        two = one + "<p>two</p>"
+        self.assertEqual(utils.truncate_html_paragraphs(two, 1), one)
+        self.assertEqual(utils.truncate_html_paragraphs(two, 2), two)
+
+        three = two + "<p>three</p>"
+        self.assertEqual(utils.truncate_html_paragraphs(three, 1), one)
+        self.assertEqual(utils.truncate_html_paragraphs(three, 2), two)
+        self.assertEqual(utils.truncate_html_paragraphs(three, 3), three)
+        self.assertEqual(utils.truncate_html_paragraphs(three, 4), three)
+
     def test_process_translations(self):
         fr_articles = []
         en_articles = []
