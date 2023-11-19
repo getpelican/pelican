@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
@@ -21,24 +20,25 @@ msgstr ""
 
 #: ../../themes.rst:4
 msgid "Themes"
-msgstr ""
+msgstr "主题"
 
 #: ../../themes.rst:6
 msgid ""
 "There is a community-managed repository of `Pelican Themes`_ for people "
 "to share and use."
-msgstr ""
+msgstr "有一个由社区管理的主题仓库 `Pelican Themes`_ 供大家使用。"
 
 #: ../../themes.rst:9
 msgid ""
 "Please note that while we do our best to review and merge theme "
 "contributions, they are submitted by the Pelican community and thus may "
 "have varying levels of support and interoperability."
-msgstr ""
+msgstr "请注意，虽然我们已经尽全力审查与合并主题，但是由于他们是由Pelican社区提交的，因此"
+"会有不同程度的支持性和互操作性。"
 
 #: ../../themes.rst:14
 msgid "Creating Themes"
-msgstr ""
+msgstr "创建主题"
 
 #: ../../themes.rst:16
 msgid ""
@@ -47,36 +47,39 @@ msgid ""
 "flexibility and straightforward syntax. If you want to create your own "
 "theme, feel free to take inspiration from the `\"simple\" theme "
 "<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_."
-msgstr ""
+msgstr "Pelican使用 `Jinja <https://palletsprojects.com/p/jinja/>`_ 来生成HTML。如果你"
+"想要创建你自己的主题，请从 `\"simple\" 主题 <https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_ 中找寻灵感。"
 
 #: ../../themes.rst:22
 msgid ""
 "To generate your site using a theme you have created (or downloaded "
 "manually and then modified), you can specify that theme via the ``-t`` "
 "flag::"
-msgstr ""
+msgstr "要使用你自己创建的主题生成站点，你可以通过 ``-t`` 标志指定主题："
 
 #: ../../themes.rst:27
 msgid ""
 "If you'd rather not specify the theme on every invocation, you can define"
 " ``THEME`` in your settings to point to the location of your preferred "
 "theme."
-msgstr ""
+msgstr "如果你不希望每次都通过命令行手动指定主题，你可以在设置文件中定义 ``THEME`` 来指定"
+"你希望使用的主题的位置。"
 
 #: ../../themes.rst:32
 msgid "Structure"
-msgstr ""
+msgstr "结构"
 
 #: ../../themes.rst:34
 msgid "To make your own theme, you must follow the following structure::"
-msgstr ""
+msgstr "你需要遵循下面的结构来制作你自己的主题："
 
 #: ../../themes.rst:52
 msgid ""
 "`static` contains all the static assets, which will be copied to the "
 "output `theme` folder. The above filesystem layout includes CSS and image"
 " folders, but those are just examples. Put what you need here."
-msgstr ""
+msgstr "`static` 文件夹包含了所有静态资源，会被复制输出到 `theme` 文件夹中。上面的文件夹"
+"布局结构包括了CSS和image文件夹，但是这只是举个例子。你可以根据需求安排文件。"
 
 #: ../../themes.rst:56
 msgid ""
@@ -84,60 +87,62 @@ msgid ""
 "content. The template files listed above are mandatory; you can add your "
 "own templates if it helps you keep things organized while creating your "
 "theme."
-msgstr ""
+msgstr "`templates` 文件夹包含了需要用到的所有模板文件，这些模板文件会用于生成网站内容。"
+"上面列出的模板文件都是必须有的。当然，你可以添加一些其他的模板来帮助组织主题文件。"
 
 #: ../../themes.rst:64
 msgid "Templates and Variables"
-msgstr ""
+msgstr "模板和变量"
 
 #: ../../themes.rst:66
 msgid ""
 "The idea is to use a simple syntax that you can embed into your HTML "
 "pages. This document describes which templates should exist in a theme, "
 "and which variables will be passed to each template at generation time."
-msgstr ""
+msgstr "你可以将一些简单的语法嵌入到HTML文件中。以下文档描述了哪些模板需要存在于主题中，"
+"以及有哪些变量可以在模板中使用。"
 
 #: ../../themes.rst:70
 msgid ""
 "All templates will receive the variables defined in your settings file, "
 "as long as they are in all-caps. You can access them directly."
-msgstr ""
+msgstr "所有模板都能收到在设置文件中定义的变量，变量名都是全大写的，可以直接使用。"
 
 #: ../../themes.rst:75
 msgid "Common Variables"
-msgstr ""
+msgstr "通用变量"
 
 #: ../../themes.rst:77
 msgid "All of these settings will be available to all templates."
-msgstr ""
+msgstr "下列各项设置在所有模板中都可以使用"
 
 #: ../../themes.rst:80 ../../themes.rst:147 ../../themes.rst:176
 #: ../../themes.rst:210 ../../themes.rst:243 ../../themes.rst:283
 #: ../../themes.rst:299 ../../themes.rst:332
 msgid "Variable"
-msgstr ""
+msgstr "变量名"
 
 #: ../../themes.rst:80 ../../themes.rst:147 ../../themes.rst:176
 #: ../../themes.rst:210 ../../themes.rst:243 ../../themes.rst:283
 #: ../../themes.rst:299 ../../themes.rst:332 ../../themes.rst:366
 #: ../../themes.rst:410 ../../themes.rst:429
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #: ../../themes.rst:82
 msgid "output_file"
-msgstr ""
+msgstr "output_file"
 
 #: ../../themes.rst:82
 msgid ""
 "The name of the file currently being generated. For instance, when "
 "Pelican is rendering the home page, output_file will be \"index.html\"."
-msgstr ""
+msgstr "当前正在生成的文件名。例如当Pelican在渲染主页时，此变量值就是  \"index.html\" 。"
 
 #: ../../themes.rst:85 ../../themes.rst:179 ../../themes.rst:213
 #: ../../themes.rst:302
 msgid "articles"
-msgstr ""
+msgstr "articles"
 
 #: ../../themes.rst:85
 msgid ""
@@ -146,106 +151,108 @@ msgid ""
 "summary, author etc.). Sometimes this is shadowed (for instance, in the "
 "tags page). You will then find info about it in the `all_articles` "
 "variable."
-msgstr ""
+msgstr "文章列表，以日期降序排列。所有元素都是 `Article` 对象，因此你可以访问 `Article` 对象的属性（"
+"例如title、summary、author等）。有时候此变量是隐藏的（例如，在标签页面中）。但仍可以在 `all_articles` "
+"变量中找到相关信息。"
 
 #: ../../themes.rst:91 ../../themes.rst:180 ../../themes.rst:214
 #: ../../themes.rst:303
 msgid "dates"
-msgstr ""
+msgstr "dates"
 
 #: ../../themes.rst:91
 msgid "The same list of articles, but ordered by date, ascending."
-msgstr ""
+msgstr "和articles相同的文章列表，但是以日期升序排列"
 
 #: ../../themes.rst:93
 msgid "hidden_articles"
-msgstr ""
+msgstr "hidden_articles"
 
 #: ../../themes.rst:93
 msgid "The list of hidden articles"
-msgstr ""
+msgstr "隐藏文章的列表"
 
 #: ../../themes.rst:94
 msgid "drafts"
-msgstr ""
+msgstr "drafts"
 
 #: ../../themes.rst:94
 msgid "The list of draft articles"
-msgstr ""
+msgstr "草稿文章的列表"
 
 #: ../../themes.rst:95 ../../themes.rst:370
 msgid "authors"
-msgstr ""
+msgstr "authors"
 
 #: ../../themes.rst:95
 msgid ""
 "A list of (author, articles) tuples, containing all the authors and "
 "corresponding articles (values)"
-msgstr ""
+msgstr "元组(author, articles)的列表，包含所有作者及对应文章。"
 
 #: ../../themes.rst:97
 msgid "categories"
-msgstr ""
+msgstr "categories"
 
 #: ../../themes.rst:97
 msgid ""
 "A list of (category, articles) tuples, containing all the categories and "
 "corresponding articles (values)"
-msgstr ""
+msgstr "元组(category, articles)的列表，包含所有分类及对应文章"
 
 #: ../../themes.rst:99 ../../themes.rst:390 ../../themes.rst:449
 msgid "tags"
-msgstr ""
+msgstr "tags"
 
 #: ../../themes.rst:99
 msgid ""
 "A list of (tag, articles) tuples, containing all the tags and "
 "corresponding articles (values)"
-msgstr ""
+msgstr "元组(tag, articles)的列表，包含所有标签及对应文章"
 
 #: ../../themes.rst:101
 msgid "pages"
-msgstr ""
+msgstr "pages"
 
 #: ../../themes.rst:101
 msgid "The list of pages"
-msgstr ""
+msgstr "页面的列表"
 
 #: ../../themes.rst:102
 msgid "hidden_pages"
-msgstr ""
+msgstr "hidden_pages"
 
 #: ../../themes.rst:102
 msgid "The list of hidden pages"
-msgstr ""
+msgstr "隐藏页面的列表"
 
 #: ../../themes.rst:103
 msgid "draft_pages"
-msgstr ""
+msgstr "draft_pages"
 
 #: ../../themes.rst:103
 msgid "The list of draft pages"
-msgstr ""
+msgstr "草稿页面的列表"
 
 #: ../../themes.rst:108
 msgid "Sorting"
-msgstr ""
+msgstr "排序"
 
 #: ../../themes.rst:110
 msgid ""
 "URL wrappers (currently categories, tags, and authors), have comparison "
 "methods that allow them to be easily sorted by name::"
-msgstr ""
+msgstr "URL包装器（分类、标签、作者），都拥有比较方法，使其易于按名称排序："
 
 #: ../../themes.rst:115
 msgid ""
 "If you want to sort based on different criteria, `Jinja's sort command`__"
 " has a number of options."
-msgstr ""
+msgstr "如果你想要以不同条件进行排序，可以使用 `Jinja的排序命令`__ ，其中有丰富的选项。"
 
 #: ../../themes.rst:122
 msgid "Date Formatting"
-msgstr ""
+msgstr "日期格式"
 
 #: ../../themes.rst:124
 msgid ""
@@ -257,116 +264,119 @@ msgid ""
 "Pelican. Usage is same as Python `strftime`_ format, but the filter will "
 "do the right thing and format your date according to the locale given in "
 "your settings::"
-msgstr ""
+msgstr "Pelican会根据设置和地区（ ``DATE_FORMATS``/``DEFAULT_DATE_FORMAT`` ）对日期进行"
+"格式化，同时还会提供一个 ``locale_date`` 属性。 ``date`` 属性以 `datetime`_ 类表示。"
+"如果你需要使用与设置中不同的自定义日期格式，使用Jinja中的 ``strftime`` 过滤器即可。"
+"用法Python中的 `strftime`_ 相同，但是过滤器会根据设置中给出的地区对日期进行格式化："
 
 #: ../../themes.rst:139
 msgid "index.html"
-msgstr ""
+msgstr "index.html"
 
 #: ../../themes.rst:141
 msgid "This is the home page or index of your blog, generated at ``index.html``."
-msgstr ""
+msgstr "站点的主页，从 ``index.html`` 中生成。"
 
 #: ../../themes.rst:143
 msgid ""
 "If pagination is active, subsequent pages will reside in "
 "``index{number}.html``."
-msgstr ""
+msgstr "如果开启了分页功能，后续的页面会以 ``index{number}.html`` 的形式保存。"
 
 #: ../../themes.rst:149 ../../themes.rst:182 ../../themes.rst:216
 #: ../../themes.rst:305
 msgid "articles_paginator"
-msgstr ""
+msgstr "articles_paginator"
 
 #: ../../themes.rst:149 ../../themes.rst:182 ../../themes.rst:216
 #: ../../themes.rst:305
 msgid "A paginator object for the list of articles"
-msgstr ""
+msgstr "一个分页器对象，其中存放着文章列表"
 
 #: ../../themes.rst:150 ../../themes.rst:183 ../../themes.rst:217
 #: ../../themes.rst:306
 msgid "articles_page"
-msgstr ""
+msgstr "articles_page"
 
 #: ../../themes.rst:150 ../../themes.rst:183 ../../themes.rst:217
 #: ../../themes.rst:306
 msgid "The current page of articles"
-msgstr ""
+msgstr "文章的当前页"
 
 #: ../../themes.rst:151 ../../themes.rst:184 ../../themes.rst:218
 #: ../../themes.rst:307
 msgid "articles_previous_page"
-msgstr ""
+msgstr "articles_previous_page"
 
 #: ../../themes.rst:151 ../../themes.rst:184 ../../themes.rst:218
 #: ../../themes.rst:307
 msgid "The previous page of articles (``None`` if page does not exist)"
-msgstr ""
+msgstr "文章的前一页（若没有前一页，此变量值为 ``None`` ）"
 
 #: ../../themes.rst:153 ../../themes.rst:186 ../../themes.rst:220
 #: ../../themes.rst:309
 msgid "articles_next_page"
-msgstr ""
+msgstr "articles_next_page"
 
 #: ../../themes.rst:153 ../../themes.rst:186 ../../themes.rst:220
 #: ../../themes.rst:309
 msgid "The next page of articles (``None`` if page does not exist)"
-msgstr ""
+msgstr "文章的后一页（若没有后一页，此变量值为 ``None`` ）"
 
 #: ../../themes.rst:155 ../../themes.rst:188 ../../themes.rst:222
 #: ../../themes.rst:311
 msgid "dates_paginator"
-msgstr ""
+msgstr "dates_paginator"
 
 #: ../../themes.rst:155 ../../themes.rst:188
 msgid "A paginator object for the article list, ordered by date, ascending."
-msgstr ""
+msgstr "分页器对象，存放着以日期正序排列的文章列表。"
 
 #: ../../themes.rst:157 ../../themes.rst:190 ../../themes.rst:224
 #: ../../themes.rst:313
 msgid "dates_page"
-msgstr ""
+msgstr "dates_page"
 
 #: ../../themes.rst:157 ../../themes.rst:190
 msgid "The current page of articles, ordered by date, ascending."
-msgstr ""
+msgstr "文章的当前页，以日期正序排列。"
 
 #: ../../themes.rst:159 ../../themes.rst:192 ../../themes.rst:226
 #: ../../themes.rst:315
 msgid "dates_previous_page"
-msgstr ""
+msgstr "dates_previous_page"
 
 #: ../../themes.rst:159 ../../themes.rst:192 ../../themes.rst:226
 #: ../../themes.rst:315
 msgid ""
 "The previous page of articles, ordered by date, ascending (``None`` if "
 "page does not exist)"
-msgstr ""
+msgstr "文章的前一页，以日期正序排列（若没有前一页，此变量值为 ``None`` ）"
 
 #: ../../themes.rst:161 ../../themes.rst:194 ../../themes.rst:228
 #: ../../themes.rst:317
 msgid "dates_next_page"
-msgstr ""
+msgstr "dates_next_page"
 
 #: ../../themes.rst:161 ../../themes.rst:194 ../../themes.rst:228
 #: ../../themes.rst:317
 msgid ""
 "The next page of articles, ordered by date, ascending (``None`` if page "
 "does not exist)"
-msgstr ""
+msgstr "文章的后一页，以日期正序排列（若没有后一页，此变量值为 ``None`` ）"
 
 #: ../../themes.rst:163 ../../themes.rst:196 ../../themes.rst:230
 #: ../../themes.rst:319 ../../themes.rst:413
 msgid "page_name"
-msgstr ""
+msgstr "page_name"
 
 #: ../../themes.rst:163
 msgid "'index' -- useful for pagination links"
-msgstr ""
+msgstr "值为'index'——在分页链接中很实用"
 
 #: ../../themes.rst:168
 msgid "author.html"
-msgstr ""
+msgstr "author.html"
 
 #: ../../themes.rst:170
 msgid ""
@@ -374,33 +384,34 @@ msgid ""
 "output generated according to the ``AUTHOR_SAVE_AS`` setting (`Default:` "
 "``author/{slug}.html``). If pagination is active, subsequent pages will "
 "by default reside at ``author/{slug}{number}.html``."
-msgstr ""
+msgstr "此模板会应用于每个已存在的作者上，根据设置项 ``AUTHOR_SAVE_AS`` 确定输出路径"
+"（`默认值为：` ``author/{slug}.html`` ）。如果启用了分页，后续页面会保存为 ``author/{slug}{number}.html`` 。"
 
 #: ../../themes.rst:178 ../../themes.rst:368 ../../themes.rst:431
 msgid "author"
-msgstr ""
+msgstr "author"
 
 #: ../../themes.rst:178
 msgid "The name of the author being processed"
-msgstr ""
+msgstr "当前正在处理的作者名"
 
 #: ../../themes.rst:179
 msgid "Articles by this author"
-msgstr ""
+msgstr "当前作者的文章"
 
 #: ../../themes.rst:180
 msgid "Articles by this author, but ordered by date, ascending"
-msgstr ""
+msgstr "当前作者的文章，以日期正序排列"
 
 #: ../../themes.rst:196
 msgid ""
 "AUTHOR_URL where everything after `{slug}` is removed -- useful for "
 "pagination links"
-msgstr ""
+msgstr "变量值与AUTHOR_URL一致，所有在 `{slug}` 之后的字符都会被删除——这对分页链接很有用"
 
 #: ../../themes.rst:202
 msgid "category.html"
-msgstr ""
+msgstr "category.html"
 
 #: ../../themes.rst:204
 msgid ""
@@ -409,60 +420,62 @@ msgid ""
 "(`Default:` ``category/{slug}.html``). If pagination is active, "
 "subsequent pages will by default reside at "
 "``category/{slug}{number}.html``."
-msgstr ""
+msgstr "此模板会应用于每个已存在的分类上，根据设置项 ``CATEGORY_SAVE_AS`` 确定输出路径"
+"（`默认值为：` ``category/{slug}.html`` ）。如果启用了分页，后续页面会保存为 ``category/{slug}{number}.html`` 。"
 
 #: ../../themes.rst:212 ../../themes.rst:246 ../../themes.rst:372
 msgid "category"
-msgstr ""
+msgstr "category"
 
 #: ../../themes.rst:212
 msgid "The name of the category being processed"
-msgstr ""
+msgstr "正在处理的分类名称"
 
 #: ../../themes.rst:213
 msgid "Articles for this category"
-msgstr ""
+msgstr "此分类下的文章"
 
 #: ../../themes.rst:214
 msgid "Articles for this category, but ordered by date, ascending"
-msgstr ""
+msgstr "此分类下的文章，以日期正序排列"
 
 #: ../../themes.rst:222 ../../themes.rst:311
 msgid "A paginator object for the list of articles, ordered by date, ascending"
-msgstr ""
+msgstr "分页器对象，存放着以日期正序排列的文章列表"
 
 #: ../../themes.rst:224 ../../themes.rst:313
 msgid "The current page of articles, ordered by date, ascending"
-msgstr ""
+msgstr "当前页面中的文章，以日期正序排列"
 
 #: ../../themes.rst:230
 msgid ""
 "CATEGORY_URL where everything after `{slug}` is removed -- useful for "
 "pagination links"
-msgstr ""
+msgstr "变量值与CATEGORY_URL一致，所有在 `{slug}` 之后的字符都会被删除——这对分页链接很有用"
 
 #: ../../themes.rst:236
 msgid "article.html"
-msgstr ""
+msgstr "article.html"
 
 #: ../../themes.rst:238
 msgid ""
 "This template will be processed for each article, with output generated "
 "according to the ``ARTICLE_SAVE_AS`` setting (`Default:` "
 "``{slug}.html``). The following variables are available when rendering."
-msgstr ""
+msgstr "此模板会应用于文章上，根据设置项 ``ARTICLE_SAVE_AS`` 确定输出路径"
+"（`默认值为：` ``{slug}.html`` ）。在渲染文章过程中可以使用下列变量。"
 
 #: ../../themes.rst:245
 msgid "article"
-msgstr ""
+msgstr "article"
 
 #: ../../themes.rst:245
 msgid "The article object to be displayed"
-msgstr ""
+msgstr "准备显示的文章对象"
 
 #: ../../themes.rst:246
 msgid "The name of the category for the current article"
-msgstr ""
+msgstr "当前文章所属分类的名称"
 
 #: ../../themes.rst:249
 msgid ""
@@ -470,13 +483,14 @@ msgid ""
 "be available as fields on the ``article`` object. The field name will be "
 "the same as the name of the metadata field, except in all-lowercase "
 "characters."
-msgstr ""
+msgstr "文章源文件开头部分的元数据都会作为 ``article`` 对象的属性存在，属性名和"
+"元数据中指定的相同（但是是全小写的）。"
 
 #: ../../themes.rst:253
 msgid ""
 "For example, you could add a field called `FacebookImage` to your article"
 " metadata, as shown below:"
-msgstr ""
+msgstr "例如，你在文章源文件中添加了一个元数据 `FacebookImage` 如下："
 
 #: ../../themes.rst:266
 msgid ""
@@ -484,11 +498,11 @@ msgid ""
 "your `article.html` template. This would allow you, for example, to "
 "specify an image for the Facebook open graph tags that will change for "
 "each article:"
-msgstr ""
+msgstr "此元数据在 `article.html` 模板中可以通过 `article.facebookimage` 获取。"
 
 #: ../../themes.rst:276
 msgid "page.html"
-msgstr ""
+msgstr "page.html"
 
 #: ../../themes.rst:278
 msgid ""
@@ -496,21 +510,22 @@ msgid ""
 "according to the ``PAGE_SAVE_AS`` setting (`Default:` "
 "``pages/{slug}.html``). The following variables are available when "
 "rendering."
-msgstr ""
+msgstr "此模板会应用于页面上，根据设置项 ``PAGE_SAVE_AS`` 确定输出路径"
+"（`默认值为：` ``pages/{slug}.html`` ）。在渲染过程中可以使用下列变量。"
 
 #: ../../themes.rst:285
 msgid "page"
-msgstr ""
+msgstr "page"
 
 #: ../../themes.rst:285
 msgid ""
 "The page object to be displayed. You can access its title, slug, and "
 "content."
-msgstr ""
+msgstr "准备显示的页面对象，可以从中获取标题、slug和具体内容。"
 
 #: ../../themes.rst:291
 msgid "tag.html"
-msgstr ""
+msgstr "tag.html"
 
 #: ../../themes.rst:293
 msgid ""
@@ -518,33 +533,35 @@ msgid ""
 "according to the ``TAG_SAVE_AS`` setting (`Default:` "
 "``tag/{slug}.html``). If pagination is active, subsequent pages will by "
 "default reside at ``tag/{slug}{number}.html``."
-msgstr ""
+msgstr "此模板会应用于标签页上，根据设置项 ``TAG_SAVE_AS`` 确定输出路径"
+"（`默认值为：` ``tag/{slug}.html`` ）。若启用了分页，后续页面默认存储为。"
+"``tag/{slug}{number}.html`` 。"
 
 #: ../../themes.rst:301
 msgid "tag"
-msgstr ""
+msgstr "tag"
 
 #: ../../themes.rst:301
 msgid "The name of the tag being processed"
-msgstr ""
+msgstr "当前正在处理标签的名称"
 
 #: ../../themes.rst:302
 msgid "Articles related to this tag"
-msgstr ""
+msgstr "和此标签关联的文章"
 
 #: ../../themes.rst:303
 msgid "Articles related to this tag, but ordered by date, ascending"
-msgstr ""
+msgstr "和此标签关联的文章，以日期正序排列"
 
 #: ../../themes.rst:319
 msgid ""
 "TAG_URL where everything after `{slug}` is removed -- useful for "
 "pagination links"
-msgstr ""
+msgstr "变量值与TAG_URL一致，所有在 `{slug}` 之后的字符都会被删除——这对分页链接很有用"
 
 #: ../../themes.rst:325
 msgid "period_archives.html"
-msgstr ""
+msgstr "period_archives.html"
 
 #: ../../themes.rst:327
 msgid ""
@@ -552,11 +569,12 @@ msgid ""
 " ``YEAR_ARCHIVE_SAVE_AS`` is defined, each month if "
 "``MONTH_ARCHIVE_SAVE_AS`` is defined, and each day if "
 "``DAY_ARCHIVE_SAVE_AS`` is defined."
-msgstr ""
+msgstr "此模板用于生成归档页面， ``YEAR_ARCHIVE_SAVE_AS`` 、 ``MONTH_ARCHIVE_SAVE_AS`` 与"
+"``DAY_ARCHIVE_SAVE_AS`` 分别对应着年、月、日的归档，只有指定了对应的路径才会生成归档页面。"
 
 #: ../../themes.rst:334
 msgid "period"
-msgstr ""
+msgstr "period"
 
 #: ../../themes.rst:334
 msgid ""
@@ -565,309 +583,315 @@ msgid ""
 " tuple only contains `year` if the time period is a given year. It "
 "contains both `year` and `month` if the time period is over years and "
 "months and so on."
-msgstr ""
+msgstr "一个元组，格式为 (`year`, `month`, `day`) ，指明了当前的时间段。 `year` 和 `day` 为"
+"数字， `month` 则为字符串。当时间段以年给定时，此元组只会有 `year` ；当时间段以年和月给定时"
+"此元组中则只会包含 `year` 和 `month` ；以此类推。"
 
 #: ../../themes.rst:341
 msgid "period_num"
-msgstr ""
+msgstr "period_num"
 
 #: ../../themes.rst:341
 msgid ""
 "A tuple of the form (``year``, ``month``, ``day``), as in ``period``, "
 "except all values are numbers."
-msgstr ""
+msgstr "一个元组，格式为 (``year``, ``month``, ``day``) ，与 ``period`` 含义相同，"
+"只不过年月日都是以数字给出的。"
 
 #: ../../themes.rst:346
 msgid ""
 "You can see an example of how to use `period` in the `\"simple\" theme "
 "period_archives.html template "
 "<https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_."
-msgstr ""
+msgstr "有关 `period` 的使用可以参考 `\"simple\" 主题中的period_archives.html模板 "
+"<https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_."
 
 #: ../../themes.rst:352
 msgid "Objects"
-msgstr ""
+msgstr "对象"
 
 #: ../../themes.rst:354
 msgid ""
 "Detail objects attributes that are available and useful in templates. Not"
 " all attributes are listed here, this is a selection of attributes "
 "considered useful in a template."
-msgstr ""
+msgstr "下面是对在模板中可用对象的属性的详细说明。以下仅列出了一些模板中比较实用的，并不是全部"
 
 #: ../../themes.rst:361
 msgid "Article"
-msgstr ""
+msgstr "Article"
 
 #: ../../themes.rst:363
 msgid "The string representation of an Article is the `source_path` attribute."
-msgstr ""
+msgstr "Article对象的字符串表示即为 `source_path` 属性。"
 
 #: ../../themes.rst:366 ../../themes.rst:410 ../../themes.rst:429
 msgid "Attribute"
-msgstr ""
+msgstr "属性"
 
 #: ../../themes.rst:368
 msgid "The :ref:`Author <object-author_cat_tag>` of this article."
-msgstr ""
+msgstr "当前文章的 :ref:`Author <object-author_cat_tag>`"
 
 #: ../../themes.rst:370
 msgid "A list of :ref:`Authors <object-author_cat_tag>` of this article."
-msgstr ""
+msgstr "当前文章的多个 :ref:`Authors <object-author_cat_tag>`"
 
 #: ../../themes.rst:372
 msgid "The :ref:`Category <object-author_cat_tag>` of this article."
-msgstr ""
+msgstr "当前文章的 :ref:`Category <object-author_cat_tag>`"
 
 #: ../../themes.rst:374 ../../themes.rst:433
 msgid "content"
-msgstr ""
+msgstr "content"
 
 #: ../../themes.rst:374
 msgid "The rendered content of the article."
-msgstr ""
+msgstr "当前文章渲染完成的内容"
 
 #: ../../themes.rst:375 ../../themes.rst:434
 msgid "date"
-msgstr ""
+msgstr "date"
 
 #: ../../themes.rst:375
 msgid "Datetime object representing the article date."
-msgstr ""
+msgstr "当前文章的Datetime对象"
 
 #: ../../themes.rst:376 ../../themes.rst:435
 msgid "date_format"
-msgstr ""
+msgstr "date_format"
 
 #: ../../themes.rst:376 ../../themes.rst:435
 msgid "Either default date format or locale date format."
-msgstr ""
+msgstr "默认日期格式或是特定地区的日期格式"
 
 #: ../../themes.rst:377 ../../themes.rst:436
 msgid "default_template"
-msgstr ""
+msgstr "default_template"
 
 #: ../../themes.rst:377 ../../themes.rst:436
 msgid "Default template name."
-msgstr ""
+msgstr "默认的模板名称"
 
 #: ../../themes.rst:378 ../../themes.rst:437
 msgid "in_default_lang"
-msgstr ""
+msgstr "in_default_lang"
 
 #: ../../themes.rst:378 ../../themes.rst:437
 msgid "Boolean representing if the article is written in the default language."
-msgstr ""
+msgstr "布尔值，用于表示当前文章是不是以默认语言写的。"
 
 #: ../../themes.rst:380 ../../themes.rst:439
 msgid "lang"
-msgstr ""
+msgstr "lang"
 
 #: ../../themes.rst:380 ../../themes.rst:439
 msgid "Language of the article."
-msgstr ""
+msgstr "当前文章使用的语言。"
 
 #: ../../themes.rst:381 ../../themes.rst:440
 msgid "locale_date"
-msgstr ""
+msgstr "locale_date"
 
 #: ../../themes.rst:381 ../../themes.rst:440
 msgid "Date formatted by the `date_format`."
-msgstr ""
+msgstr "以 `date_format` 格式化后的日期。"
 
 #: ../../themes.rst:382 ../../themes.rst:441
 msgid "metadata"
-msgstr ""
+msgstr "metadata"
 
 #: ../../themes.rst:382
 msgid "Article header metadata `dict`."
-msgstr ""
+msgstr "文章元数据的 `字典`"
 
 #: ../../themes.rst:383 ../../themes.rst:414 ../../themes.rst:442
 msgid "save_as"
-msgstr ""
+msgstr "save_as"
 
 #: ../../themes.rst:383
 msgid "Location to save the article page."
-msgstr ""
+msgstr "保存文章生成页面的位置。"
 
 #: ../../themes.rst:384 ../../themes.rst:415 ../../themes.rst:443
 msgid "slug"
-msgstr ""
+msgstr "slug"
 
 #: ../../themes.rst:384 ../../themes.rst:415 ../../themes.rst:443
 msgid "Page slug."
-msgstr ""
+msgstr "页面的slug"
 
 #: ../../themes.rst:385 ../../themes.rst:444
 msgid "source_path"
-msgstr ""
+msgstr "source_path"
 
 #: ../../themes.rst:385
 msgid "Full system path of the article source file."
-msgstr ""
+msgstr "文章源文件的完整系统路径。"
 
 #: ../../themes.rst:386 ../../themes.rst:445
 msgid "relative_source_path"
-msgstr ""
+msgstr "relative_source_path"
 
 #: ../../themes.rst:386
 msgid "Relative path from PATH_ to the article source file."
-msgstr ""
+msgstr "从 PATH_ 到当前文章源文件的相对路径。"
 
 #: ../../themes.rst:387 ../../themes.rst:446
 msgid "status"
-msgstr ""
+msgstr "status"
 
 #: ../../themes.rst:387
 msgid "The article status, can be any of 'published' or 'draft'."
-msgstr ""
+msgstr "当前文章的状态，可能值为'published'或'draft'。"
 
 #: ../../themes.rst:389 ../../themes.rst:448
 msgid "summary"
-msgstr ""
+msgstr "summary"
 
 #: ../../themes.rst:389 ../../themes.rst:448
 msgid "Rendered summary content."
-msgstr ""
+msgstr "渲染后的摘要内容。"
 
 #: ../../themes.rst:390 ../../themes.rst:449
 msgid "List of :ref:`Tag <object-author_cat_tag>` objects."
-msgstr ""
+msgstr ":ref:`Tag <object-author_cat_tag>` 对象的列表。"
 
 #: ../../themes.rst:392 ../../themes.rst:451
 msgid "template"
-msgstr ""
+msgstr "template"
 
 #: ../../themes.rst:392 ../../themes.rst:451
 msgid "Template name to use for rendering."
-msgstr ""
+msgstr "用于渲染的模板名称"
 
 #: ../../themes.rst:393 ../../themes.rst:452
 msgid "title"
-msgstr ""
+msgstr "title"
 
 #: ../../themes.rst:393
 msgid "Title of the article."
-msgstr ""
+msgstr "当前文章的标题。"
 
 #: ../../themes.rst:394 ../../themes.rst:453
 msgid "translations"
-msgstr ""
+msgstr "translations"
 
 #: ../../themes.rst:394 ../../themes.rst:453
 msgid "List of translations :ref:`Article <object-article>` objects."
-msgstr ""
+msgstr "当前文章所有翻译版本的 :ref:`Article <object-article>` 对象。"
 
 #: ../../themes.rst:396 ../../themes.rst:416 ../../themes.rst:455
 msgid "url"
-msgstr ""
+msgstr "url"
 
 #: ../../themes.rst:396
 msgid "URL to the article page."
-msgstr ""
+msgstr "文章页面的URL。"
 
 #: ../../themes.rst:405
 msgid "Author / Category / Tag"
-msgstr ""
+msgstr "Author / Category / Tag"
 
 #: ../../themes.rst:407
 msgid "The string representation of those objects is the `name` attribute."
-msgstr ""
+msgstr "这些对象的字符串表示与 `name` 属性一致。"
 
 #: ../../themes.rst:412
 msgid "name"
-msgstr ""
+msgstr "name"
 
 #: ../../themes.rst:412
 msgid "Name of this object [1]_."
-msgstr ""
+msgstr "当前对象的名称 [1]_ 。"
 
 #: ../../themes.rst:413
 msgid "Author page name."
-msgstr ""
+msgstr "作者页面的名称。"
 
 #: ../../themes.rst:414
 msgid "Location to save the author page."
-msgstr ""
+msgstr "保存当前作者页面的路径。"
 
 #: ../../themes.rst:416
 msgid "URL to the author page."
-msgstr ""
+msgstr "作者页面的URL。"
 
 #: ../../themes.rst:419
 msgid "for Author object, coming from `:authors:` or `AUTHOR`."
-msgstr ""
+msgstr "对于Author对象，此属性值由 `:authors:`或 `AUTHOR` 得来。"
 
 #: ../../themes.rst:424
 msgid "Page"
-msgstr ""
+msgstr "Page"
 
 #: ../../themes.rst:426
 msgid "The string representation of a Page is the `source_path` attribute."
-msgstr ""
+msgstr "Page对象的字符串表示与 `source_path` 属性一致。"
 
 #: ../../themes.rst:431
 msgid "The :ref:`Author <object-author_cat_tag>` of this page."
-msgstr ""
+msgstr "当前页面的 :ref:`Author <object-author_cat_tag>`"
 
 #: ../../themes.rst:433
 msgid "The rendered content of the page."
-msgstr ""
+msgstr "当前页面渲染后的内容。"
 
 #: ../../themes.rst:434
 msgid "Datetime object representing the page date."
-msgstr ""
+msgstr "当前页面日期对应的Datetime对象。"
 
 #: ../../themes.rst:441
 msgid "Page header metadata `dict`."
-msgstr ""
+msgstr "页面元数据的 `字典` 。"
 
 #: ../../themes.rst:442
 msgid "Location to save the page."
-msgstr ""
+msgstr "保存页面的位置。"
 
 #: ../../themes.rst:444
 msgid "Full system path of the page source file."
-msgstr ""
+msgstr "页面源文件的完整系统路径。"
 
 #: ../../themes.rst:445
 msgid "Relative path from PATH_ to the page source file."
-msgstr ""
+msgstr "页面源文件相对于 PATH_ 的相对路径。"
 
 #: ../../themes.rst:446
 msgid "The page status, can be any of 'published', 'hidden' or 'draft'."
-msgstr ""
+msgstr "页面的状态，可能值有'published'、'hidden'或者'draft'。"
 
 #: ../../themes.rst:452
 msgid "Title of the page."
-msgstr ""
+msgstr "页面的标题。"
 
 #: ../../themes.rst:455
 msgid "URL to the page."
-msgstr ""
+msgstr "页面的URL"
 
 #: ../../themes.rst:462
 msgid "Feeds"
-msgstr ""
+msgstr "订阅源Feeds"
 
 #: ../../themes.rst:464
 msgid ""
 "The feed variables changed in 3.0. Each variable now explicitly lists "
 "ATOM or RSS in the name. ATOM is still the default. Old themes will need "
 "to be updated. Here is a complete list of the feed variables::"
-msgstr ""
+msgstr "订阅源相关变量在3.0版本发生过变化。各变量现在都在名称中显示地表达了属于ATOM还是RSS。"
+"默认使用ATOM。旧的主题需要进行更新。下面是订阅源相关变量的完整列表："
 
 #: ../../themes.rst:483
 msgid "Inheritance"
-msgstr ""
+msgstr "继承"
 
 #: ../../themes.rst:485
 msgid ""
 "Since version 3.0, Pelican supports inheritance from the ``simple`` "
 "theme, so you can re-use the ``simple`` theme templates in your own "
 "themes."
-msgstr ""
+msgstr "从3.0版本开始，Pelican支持从 ``simple`` 主题继承，因此可以在你自己的主题中重用"
+"``simple`` 主题。"
 
 #: ../../themes.rst:488
 msgid ""
@@ -876,79 +900,79 @@ msgid ""
 "``simple`` theme. So if the HTML structure of a template in the "
 "``simple`` theme is right for you, you don't have to write a new template"
 " from scratch."
-msgstr ""
+msgstr "如果缺失了 ``templates/`` 目录中的某些必须要有的文件，会自动使用 ``simple`` 主题中的。"
+"因此如果 ``simple`` 主题中的一些模板正合你意，就没必要重新写个新的了。"
 
 #: ../../themes.rst:493
-#, python-format
 msgid ""
 "You can also extend templates from the ``simple`` theme in your own "
 "themes by using the ``{% extends %}`` directive as in the following "
 "example:"
-msgstr ""
+msgstr "你也可以使用 ``{% extends %}`` 指令在你自己的主题中扩展 ``simple`` 主题："
 
 #: ../../themes.rst:504
 msgid "Example"
-msgstr ""
+msgstr "例子"
 
 #: ../../themes.rst:506
 msgid "With this system, it is possible to create a theme with just two files."
-msgstr ""
+msgstr "利用这种规则，只用两个文件就可以创建一个主题。"
 
 #: ../../themes.rst:509
 msgid "base.html"
-msgstr ""
+msgstr "base.html"
 
 #: ../../themes.rst:511
 msgid "The first file is the ``templates/base.html`` template:"
-msgstr ""
+msgstr "第一个文件是 ``templates/base.html`` 模板："
 
 #: ../../themes.rst:522
 msgid ""
 "On the first line, we extend the ``base.html`` template from the "
 "``simple`` theme, so we don't have to rewrite the entire file."
-msgstr ""
+msgstr "第一行中，从 ``simple`` 主题中扩展了 ``base.html`` 模板，因此无需重写整个文件。"
 
 #: ../../themes.rst:524
 msgid ""
 "On the third line, we open the ``head`` block which has already been "
 "defined in the ``simple`` theme."
-msgstr ""
+msgstr "第三行，我们开始声明 ``head`` 块，这个块已在 ``simple`` 中进行了定义。"
 
 #: ../../themes.rst:526
 msgid ""
 "On the fourth line, the function ``super()`` keeps the content previously"
 " inserted in the ``head`` block."
-msgstr ""
+msgstr "第四行中， ``super()`` 函数使得在 ``head`` 块之前插入的内容得以保留。"
 
 #: ../../themes.rst:528
 msgid "On the fifth line, we append a stylesheet to the page."
-msgstr ""
+msgstr "第五行为页面添加了一个样式表。"
 
 #: ../../themes.rst:529
 msgid "On the last line, we close the ``head`` block."
-msgstr ""
+msgstr "最后一行结束对 ``head`` 块的声明。"
 
 #: ../../themes.rst:531
 msgid ""
 "This file will be extended by all the other templates, so the stylesheet "
 "will be linked from all pages."
-msgstr ""
+msgstr "其他所有模板都会在此文件基础上进行扩展，因此样式表会被所有页面引用。"
 
 #: ../../themes.rst:535
 msgid "style.css"
-msgstr ""
+msgstr "style.css"
 
 #: ../../themes.rst:537
 msgid "The second file is the ``static/css/style.css`` CSS stylesheet:"
-msgstr ""
+msgstr "第二个文件是CSS样式表 ``static/css/style.css`` ："
 
 #: ../../themes.rst:581
 msgid "Download"
-msgstr ""
+msgstr "下载"
 
 #: ../../themes.rst:583
 msgid ""
 "You can download this example theme :download:`here <_static/theme-"
 "basic.zip>`."
-msgstr ""
+msgstr "可以在 :download:`这里 <_static/theme-basic.zip>` 下载此例。"
 
