@@ -44,6 +44,11 @@ jobs:
             --settings "${{ inputs.settings }}" \
             --extra-settings SITEURL='"${{ steps.pages.outputs.base_url }}"' \
             --output "${{ inputs.output-path }}"
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "${{ inputs.output-path }}" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
