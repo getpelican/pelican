@@ -15,16 +15,16 @@ Setting up the development environment
 ======================================
 
 While there are many ways to set up one's development environment, the following
-instructions will utilize Pip_ and Poetry_. These tools facilitate managing
+instructions will utilize Pip_ and PDM_. These tools facilitate managing
 virtual environments for separate Python projects that are isolated from one
 another, so you can use different packages (and package versions) for each.
 
-Please note that Python 3.7+ is required for Pelican development.
+Please note that Python |min_python| is required for Pelican development.
 
-*(Optional)* If you prefer to `install Poetry <https://python-poetry.org/docs/master/#installation>`_ once for use with multiple projects,
+*(Optional)* If you prefer to `install PDM <https://pdm.fming.dev/latest/#installation>`_ once for use with multiple projects,
 you can install it via::
 
-    curl -sSL https://install.python-poetry.org | python3 -
+    curl -sSL https://pdm.fming.dev/install-pdm.py | python3 -
 
 Point your web browser to the `Pelican repository`_ and tap the **Fork** button
 at top-right. Then clone the source for your fork and add the upstream project
@@ -35,7 +35,7 @@ as a Git remote::
     cd ~/projects/pelican
     git remote add upstream https://github.com/getpelican/pelican.git
 
-While Poetry can dynamically create and manage virtual environments, we're going
+While PDM can dynamically create and manage virtual environments, we're going
 to manually create and activate a virtual environment::
 
     mkdir ~/virtualenvs && cd ~/virtualenvs
@@ -46,12 +46,11 @@ Install the needed dependencies and set up the project::
 
     python -m pip install invoke
     invoke setup
-    python -m pip install -e ~/projects/pelican
 
 Your local environment should now be ready to go!
 
 .. _Pip: https://pip.pypa.io/
-.. _Poetry: https://python-poetry.org/
+.. _PDM: https://pdm.fming.dev/latest/
 .. _Pelican repository: https://github.com/getpelican/pelican
 
 Development
@@ -74,6 +73,9 @@ or bug fixes. The tests are located in ``pelican/tests``, and you can run them
 via::
 
     invoke tests
+
+(For more on Invoke, see ``invoke -l`` to list tasks, or
+https://pyinvoke.org for documentation.)
 
 In addition to running the test suite, it is important to also ensure that any
 lines you changed conform to code style guidelines. You can check that via::
@@ -156,8 +158,7 @@ check for code style compliance via::
 
 If style violations are found, many of them can be addressed automatically via::
 
-    invoke black
-    invoke isort
+    invoke format
 
 If style violations are found even after running the above auto-formatters,
 you will need to make additional manual changes until ``invoke lint`` no longer

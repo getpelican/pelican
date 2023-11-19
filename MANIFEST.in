@@ -1,6 +1,0 @@
-include *.rst
-recursive-include pelican *.html *.css *png *.rst *.markdown *.md *.mkd *.xml *.py *.jinja2
-include LICENSE THANKS docs/changelog.rst pyproject.toml
-graft samples
-global-exclude __pycache__
-global-exclude *.py[co]

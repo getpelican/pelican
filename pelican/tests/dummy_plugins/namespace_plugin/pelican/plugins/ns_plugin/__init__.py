@@ -1,4 +1,4 @@
-NAME = 'namespace plugin'
+NAME = "namespace plugin"
 
 
 def register():

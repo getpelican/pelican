@@ -79,6 +79,10 @@ don't spend a lot of time working on something that would be rejected for a
 known reason. Consider also whether your new feature might be better suited as
 a ':pelican-doc:`plugins` — you can `ask for help`_  to make that determination.
 
+Also, if you intend to submit a pull request to address something for which there
+is no existing issue, there is no need to create a new issue and then immediately
+submit a pull request that closes it. You can submit the pull request by itself.
+
 Using Git and GitHub
 --------------------
 
@@ -87,7 +91,8 @@ Using Git and GitHub
 * **Don't put multiple unrelated fixes/features in the same branch / pull request.**
   For example, if you're working on a new feature and find a bugfix that
   doesn't *require* your new feature, **make a new distinct branch and pull
-  request** for the bugfix.
+  request** for the bugfix. Similarly, any proposed changes to code style
+  formatting should be in a completely separate pull request.
 * Add a ``RELEASE.md`` file in the root of the project that contains the
   release type (major, minor, patch) and a summary of the changes that will be
   used as the release changelog entry. For example::
@@ -106,15 +111,8 @@ Using Git and GitHub
   detailed explanation (when relevant).
 * `Squash your commits`_ to eliminate merge commits and ensure a clean and
   readable commit history.
-* If you have previously filed a GitHub issue and want to contribute code that
-  addresses that issue, **please use** ``hub pull-request`` instead of using
-  GitHub's web UI to submit the pull request. This isn't an absolute
-  requirement, but makes the maintainers' lives much easier! Specifically:
-  `install hub <https://github.com/github/hub/#installation>`_ and then run
-  `hub pull-request -i [ISSUE] <https://hub.github.com/hub-pull-request.1.html>`_
-  to turn your GitHub issue into a pull request containing your code.
 * After you have issued a pull request, the continuous integration (CI) system
-  will run the test suite for all supported Python versions and check for PEP8
+  will run the test suite on all supported Python versions and check for code style
   compliance. If any of these checks fail, you should fix them. (If tests fail
   on the CI system but seem to pass locally, ensure that local test runs aren't
   skipping any tests.)
@@ -122,13 +120,7 @@ Using Git and GitHub
 Contribution quality standards
 ------------------------------
 
-* Adhere to `PEP8 coding standards`_. This can be eased via the `pycodestyle
-  <https://pypi.org/project/pycodestyle>`_ or `flake8
-  <https://pypi.org/project/flake8/>`_ tools, the latter of which in
-  particular will give you some useful hints about ways in which the
-  code/formatting can be improved. We try to keep line length within the
-  79-character maximum specified by PEP8. Because that can sometimes compromise
-  readability, the hard/enforced maximum is 88 characters.
+* Adhere to the project's code style standards. See: `Development Environment`_
 * Ensure your code is compatible with the `officially-supported Python releases`_.
 * Add docs and tests for your changes. Undocumented and untested features will
   not be accepted.
@@ -142,6 +134,6 @@ need assistance or have any questions about these guidelines.
 .. _`Create a new branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
 .. _`Squash your commits`: https://github.com/getpelican/pelican/wiki/Git-Tips#squashing-commits
 .. _`Git Tips`: https://github.com/getpelican/pelican/wiki/Git-Tips
-.. _`PEP8 coding standards`: https://www.python.org/dev/peps/pep-0008/
 .. _`ask for help`: `How to get help`_
-.. _`officially-supported Python releases`: https://devguide.python.org/#status-of-python-branches
+.. _`Development Environment`: https://docs.getpelican.com/en/latest/contribute.html#setting-up-the-development-environment
+.. _`officially-supported Python releases`: https://devguide.python.org/versions/#versions

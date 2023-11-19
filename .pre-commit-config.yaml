@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for info on hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -13,13 +13,11 @@ repos:
       - id: end-of-file-fixer
       - id: forbid-new-submodules
       - id: trailing-whitespace
-  - repo: https://github.com/PyCQA/flake8
-    rev: 3.9.2
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.5
     hooks:
-      - id: flake8
-        name: Flake8 on commit diff
-        description: This hook limits Flake8 checks to changed lines of code.
-        entry: bash
-        args: [-c, 'git diff HEAD | flake8 --diff --max-line-length=88']
+      - id: ruff
+      - id: ruff-format
+        args: ["--check"]
 
 exclude: ^pelican/tests/output/

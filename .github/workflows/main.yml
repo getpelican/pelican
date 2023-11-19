@@ -9,35 +9,25 @@ env:
 
 jobs:
   test:
-    name: Test - ${{ matrix.config.python }} - ${{ matrix.config.os }}
-    runs-on: ${{ matrix.config.os }}-latest
+    name: Test - ${{ matrix.python }} - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
 
     strategy:
       matrix:
-        config:
-          - os: ubuntu
-            python: "3.7"
+        os: [ubuntu, macos, windows]
+        python: ["3.10", "3.11", "3.12"]
+        include:
           - os: ubuntu
             python: "3.8"
           - os: ubuntu
             python: "3.9"
-          - os: ubuntu
-            python: "3.10"
-          - os: ubuntu
-            python: "3.11"
-          - os: ubuntu
-            python: "3.12"
-          - os: macos
-            python: "3.7"
-          - os: windows
-            python: "3.7"
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.config.python }}
+      - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.config.python }}
+          python-version: ${{ matrix.python }}
           cache: "pip"
           cache-dependency-path: "**/requirements/*"
       - name: Install locale (Linux)
@@ -56,24 +46,42 @@ jobs:
           echo "=====  PANDOC  ====="
           pandoc --version | head -2
       - name: Run tests
-        run: tox -e py${{ matrix.config.python }}
+        run: tox -e py${{ matrix.python }}
 
   lint:
     name: Lint
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: pdm-project/setup-pdm@v3
         with:
-          python-version: "3.9"
-          cache: "pip"
-          cache-dependency-path: "**/requirements/*"
-      - name: Install tox
-        run: python -m pip install -U pip tox
-      - name: Check
-        run: tox -e flake8
+          python-version: 3.9
+          cache: true
+          cache-dependency-path: ./pyproject.toml
+      - name: Install dependencies
+        run: |
+          pdm install --no-default --dev
+      - name: Run linters
+        run: pdm lint --diff
+      - name: Run pre-commit checks on all files
+        uses: pre-commit/action@v3.0.0
+
+  build:
+    name: Test build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: 3.9
+          cache: true
+          cache-dependency-path: ./pyproject.toml
+      - name: Install dependencies
+        run: pdm install --dev
+      - name: Build package
+        run: pdm build
+      - name: Test build
+        run: pdm run pytest --check-build=dist  pelican/tests/build_test
 
   docs:
     name: Build docs
@@ -91,13 +99,18 @@ jobs:
         run: python -m pip install -U pip tox
       - name: Check
         run: tox -e docs
+      - name: cache the docs for inspection
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: docs/_build/html/
 
   deploy:
     name: Deploy
     environment: Deployment
-    needs: [test, lint, docs]
+    needs: [test, lint, docs, build]
     runs-on: ubuntu-latest
-    if: github.ref=='refs/heads/master' && github.event_name!='pull_request'
+    if: github.ref=='refs/heads/master' && github.event_name!='pull_request' && github.repository == 'getpelican/pelican'
 
     permissions:
       contents: write

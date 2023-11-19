@@ -362,13 +362,6 @@ Basic settings
 
    If ``True``, load unmodified content from caches.
 
-.. data:: WRITE_SELECTED = []
-
-   If this list is not empty, **only** output files with their paths in this
-   list are written. Paths should be either absolute or relative to the current
-   Pelican working directory. For possible use cases see
-   :ref:`writing_only_selected_content`.
-
 .. data:: FORMATTED_FIELDS = ['summary']
 
    A list of metadata fields containing reST/Markdown content to be parsed and
@@ -564,43 +557,46 @@ written over time.
 Example usage::
 
    YEAR_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/index.html'
+   YEAR_ARCHIVE_URL = 'posts/{date:%Y}/'
    MONTH_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/index.html'
+   MONTH_ARCHIVE_URL = 'posts/{date:%Y}/{date:%b}/'
 
 With these settings, Pelican will create an archive of all your posts for the
 year at (for instance) ``posts/2011/index.html`` and an archive of all your
-posts for the month at ``posts/2011/Aug/index.html``.
+posts for the month at ``posts/2011/Aug/index.html``. These can be accessed
+through the URLs ``posts/2011/`` and ``posts/2011/Aug/``, respectively.
 
 .. note::
     Period archives work best when the final path segment is ``index.html``.
     This way a reader can remove a portion of your URL and automatically arrive
     at an appropriate archive of posts, without having to specify a page name.
 
-.. data:: YEAR_ARCHIVE_URL = ''
-
-   The URL to use for per-year archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
-
 .. data:: YEAR_ARCHIVE_SAVE_AS = ''
 
    The location to save per-year archives of your posts.
 
-.. data:: MONTH_ARCHIVE_URL = ''
+.. data:: YEAR_ARCHIVE_URL = ''
 
-   The URL to use for per-month archives of your posts. Used only if you have
-   the ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+   The URL to use for per-year archives of your posts. You should set this if
+   you enable per-year archives.
 
 .. data:: MONTH_ARCHIVE_SAVE_AS = ''
 
    The location to save per-month archives of your posts.
 
-.. data:: DAY_ARCHIVE_URL = ''
+.. data:: MONTH_ARCHIVE_URL = ''
 
-   The URL to use for per-day archives of your posts. Used only if you have the
-   ``{url}`` placeholder in ``PAGINATION_PATTERNS``.
+   The URL to use for per-month archives of your posts. You should set this if
+   you enable per-month archives.
 
 .. data:: DAY_ARCHIVE_SAVE_AS = ''
 
    The location to save per-day archives of your posts.
+
+.. data:: DAY_ARCHIVE_URL = ''
+
+   The URL to use for per-day archives of your posts. You should set this if
+   you enable per-day archives.
 
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
@@ -1001,10 +997,10 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location and
    URL.
 
-.. data:: FEED_MAX_ITEMS
+.. data:: FEED_MAX_ITEMS = 100
 
-   Maximum number of items allowed in a feed. Feed item quantity is
-   unrestricted by default.
+   Maximum number of items allowed in a feed. Setting to ``None`` will cause the
+   feed to contains every article. 100 if not specified.
 
 .. data:: RSS_FEED_SUMMARY_ONLY = True
 
@@ -1228,6 +1224,12 @@ Following are example ways to specify your preferred theme::
     # Specify a customized theme, via absolute path
     THEME = "/home/myuser/projects/mysite/themes/mycustomtheme"
 
+The built-in ``simple`` theme can be customized using the following settings.
+
+.. data:: STYLESHEET_URL
+
+   The URL of the stylesheet to use.
+
 The built-in ``notmyidea`` theme can make good use of the following settings.
 Feel free to use them in your themes as well.
 
@@ -1390,21 +1392,6 @@ Note that even when using cached content, all output is always written, so the
 modification times of the generated ``*.html`` files will always change.
 Therefore, ``rsync``-based uploading may benefit from the ``--checksum``
 option.
-
-.. _writing_only_selected_content:
-
-
-Writing only selected content
-=============================
-
-When only working on a single article or page, or making tweaks to your theme,
-it is often desirable to generate and review your work as quickly as possible.
-In such cases, generating and writing the entire site output is often
-unnecessary. By specifying only the desired files as output paths in the
-``WRITE_SELECTED`` list, **only** those files will be written. This list can be
-also specified on the command line using the ``--write-selected`` option, which
-accepts a comma-separated list of output file paths. By default this list is
-empty, so all output is written. See :ref:`site_generation` for more details.
 
 
 Example settings

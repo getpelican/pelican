@@ -15,4 +15,6 @@ htmlcov
 venv
 samples/output
 *.pem
-poetry.lock
+*.lock
+.pdm-python
+.venv

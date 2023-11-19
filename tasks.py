@@ -8,16 +8,16 @@ PKG_NAME = "pelican"
 PKG_PATH = Path(PKG_NAME)
 DOCS_PORT = os.environ.get("DOCS_PORT", 8000)
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
-PTY = True if os.name != "nt" else False
+PTY = os.name != "nt"
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
 VENV_HOME = Path(os.environ.get("WORKON_HOME", "~/virtualenvs"))
 VENV_PATH = Path(ACTIVE_VENV) if ACTIVE_VENV else (VENV_HOME / PKG_NAME)
 VENV = str(VENV_PATH.expanduser())
 VENV_BIN = Path(VENV) / Path(BIN_DIR)
 
-TOOLS = ["poetry", "pre-commit", "psutil"]
-POETRY = which("poetry") if which("poetry") else (VENV_BIN / "poetry")
-PRECOMMIT = which("pre-commit") if which("pre-commit") else (VENV_BIN / "pre-commit")
+TOOLS = ["pdm", "pre-commit", "psutil"]
+PDM = which("pdm") or VENV_BIN / "pdm"
+PRECOMMIT = which("pre-commit") or VENV_BIN / "pre-commit"
 
 
 @task
@@ -45,34 +45,41 @@ def tests(c):
 
 
 @task
-def black(c, check=False, diff=False):
-    """Run Black auto-formatter, optionally with --check or --diff"""
+def coverage(c):
+    """Generate code coverage of running the test suite."""
+    c.run(f"{VENV_BIN}/pytest --cov=pelican", pty=PTY)
+    c.run(f"{VENV_BIN}/coverage html", pty=PTY)
+
+
+@task
+def format(c, check=False, diff=False):
+    """Run Ruff's auto-formatter, optionally with --check or --diff"""
     check_flag, diff_flag = "", ""
     if check:
         check_flag = "--check"
     if diff:
         diff_flag = "--diff"
-    c.run(f"{VENV_BIN}/black {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY)
+    c.run(
+        f"{VENV_BIN}/ruff format {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY
+    )
 
 
 @task
-def isort(c, check=False, diff=False):
-    check_flag, diff_flag = "", ""
-    if check:
-        check_flag = "-c"
+def ruff(c, fix=False, diff=False):
+    """Run Ruff to ensure code meets project standards."""
+    diff_flag, fix_flag = "", ""
+    if fix:
+        fix_flag = "--fix"
     if diff:
         diff_flag = "--diff"
-    c.run(f"{VENV_BIN}/isort {check_flag} {diff_flag} .", pty=PTY)
+    c.run(f"{VENV_BIN}/ruff check {diff_flag} {fix_flag} .", pty=PTY)
 
 
 @task
-def flake8(c):
-    c.run(f"git diff HEAD | {VENV_BIN}/flake8 --diff --max-line-length=88", pty=PTY)
-
-
-@task
-def lint(c):
-    flake8(c)
+def lint(c, fix=False, diff=False):
+    """Check code style via linting tools."""
+    ruff(c, fix=fix, diff=diff)
+    format(c, check=not fix, diff=diff)
 
 
 @task
@@ -93,7 +100,7 @@ def precommit(c):
 def setup(c):
     c.run(f"{VENV_BIN}/python -m pip install -U pip", pty=PTY)
     tools(c)
-    c.run(f"{POETRY} install", pty=PTY)
+    c.run(f"{PDM} install", pty=PTY)
     precommit(c)
 
 
