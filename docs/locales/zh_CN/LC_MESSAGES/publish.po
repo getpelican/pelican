@@ -324,4 +324,3 @@ msgstr ""
 #~ " 选项就可以让Pelican显示源文件和输出文件的位置对应关系。另外， ``--write-"
 #~ "selected`` 的参数可以是用逗号分隔的多个路径（具体请参阅设置： "
 #~ ":ref:`writing_only_selected_content` ）"
-

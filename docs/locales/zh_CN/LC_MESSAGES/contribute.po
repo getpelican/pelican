@@ -672,4 +672,3 @@ msgstr ""
 #~ " to manually create and activate a"
 #~ " virtual environment::"
 #~ msgstr ""
-

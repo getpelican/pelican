@@ -201,4 +201,3 @@ msgid ""
 "Then, the ``generate_content`` method uses the ``context`` and the "
 "``writer`` to generate the wanted output."
 msgstr ""
-

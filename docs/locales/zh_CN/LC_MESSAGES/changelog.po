@@ -1668,4 +1668,3 @@ msgstr ""
 #: ../../changelog.rst:541
 msgid "First working version"
 msgstr ""
-

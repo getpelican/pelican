@@ -142,4 +142,3 @@ msgid ""
 " output a file on the disk (using the writer method ``write_file``) for "
 "each page encountered."
 msgstr ""
-

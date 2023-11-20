@@ -1101,4 +1101,3 @@ msgid ""
 "You can download this example theme :download:`here <_static/theme-"
 "basic.zip>`."
 msgstr "可以在 :download:`这里 <_static/theme-basic.zip>` 下载此例。"
-

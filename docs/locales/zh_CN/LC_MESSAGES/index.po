@@ -130,4 +130,3 @@ msgstr "请查看文档 :doc:`反馈意见和贡献的提交指南 "
 #: ../../index.rst:54
 msgid "Documentation"
 msgstr "文档"
-
