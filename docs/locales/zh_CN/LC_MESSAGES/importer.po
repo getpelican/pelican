@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-29 21:43+0800\n"
+"POT-Creation-Date: 2023-11-19 20:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Generated-By: Babel 2.13.0\n"
 
 #: ../../importer.rst:4
 msgid "Importing an existing site"
@@ -43,29 +43,25 @@ msgid "Dotclear export"
 msgstr ""
 
 #: ../../importer.rst:14
-msgid "Posterous API"
-msgstr ""
-
-#: ../../importer.rst:15
 msgid "Tumblr API"
 msgstr ""
 
-#: ../../importer.rst:16
+#: ../../importer.rst:15
 msgid "WordPress XML export"
 msgstr ""
 
-#: ../../importer.rst:17
+#: ../../importer.rst:16
 msgid "RSS/Atom feed"
 msgstr ""
 
-#: ../../importer.rst:19
+#: ../../importer.rst:18
 msgid ""
 "The conversion from HTML to reStructuredText or Markdown relies on "
 "`Pandoc`_. For Dotclear, if the source posts are written with Markdown "
 "syntax, they will not be converted (as Pelican also supports Markdown)."
 msgstr ""
 
-#: ../../importer.rst:25
+#: ../../importer.rst:24
 msgid ""
 "Unlike Pelican, Wordpress supports multiple categories per article. These"
 " are imported as a comma-separated string. You have to resolve these "
@@ -73,137 +69,125 @@ msgid ""
 "multiple categories per article."
 msgstr ""
 
-#: ../../importer.rst:31
+#: ../../importer.rst:30
 msgid "Dependencies"
 msgstr ""
 
-#: ../../importer.rst:33
+#: ../../importer.rst:32
 msgid ""
 "``pelican-import`` has some dependencies not required by the rest of "
 "Pelican:"
 msgstr ""
 
-#: ../../importer.rst:35
+#: ../../importer.rst:34
 msgid ""
 "*BeautifulSoup4* and *lxml*, for WordPress and Dotclear import. Can be "
 "installed like any other Python package (``pip install BeautifulSoup4 "
 "lxml``)."
 msgstr ""
 
-#: ../../importer.rst:38
+#: ../../importer.rst:37
 msgid "*Feedparser*, for feed import (``pip install feedparser``)."
 msgstr ""
 
-#: ../../importer.rst:39
+#: ../../importer.rst:38
 msgid ""
 "*Pandoc*, see the `Pandoc site`_ for installation instructions on your "
 "operating system."
 msgstr ""
 
-#: ../../importer.rst:47
+#: ../../importer.rst:46
 msgid "Usage"
 msgstr ""
 
-#: ../../importer.rst:57
+#: ../../importer.rst:56
 msgid "Positional arguments"
 msgstr ""
 
-#: ../../importer.rst:59
+#: ../../importer.rst:58
 msgid "``input``"
 msgstr ""
 
-#: ../../importer.rst:59
+#: ../../importer.rst:58
 msgid "The input file to read"
 msgstr ""
 
-#: ../../importer.rst:60
-msgid "``api_token``"
-msgstr ""
-
-#: ../../importer.rst:60
-msgid "(Posterous only) api_token can be obtained from http://posterous.com/api/"
-msgstr ""
-
-#: ../../importer.rst:61
+#: ../../importer.rst:59
 msgid "``api_key``"
 msgstr ""
 
-#: ../../importer.rst:61
+#: ../../importer.rst:59
 msgid ""
 "(Tumblr only) api_key can be obtained from "
 "https://www.tumblr.com/oauth/apps"
 msgstr ""
 
-#: ../../importer.rst:65
+#: ../../importer.rst:63
 msgid "Optional arguments"
 msgstr ""
 
-#: ../../importer.rst:67
+#: ../../importer.rst:65
 msgid "Show this help message and exit"
 msgstr ""
 
-#: ../../importer.rst:68
+#: ../../importer.rst:66
 msgid "Blogger XML export (default: False)"
 msgstr ""
 
-#: ../../importer.rst:69
+#: ../../importer.rst:67
 msgid "Dotclear export (default: False)"
 msgstr ""
 
-#: ../../importer.rst:70
-msgid "Posterous API (default: False)"
-msgstr ""
-
-#: ../../importer.rst:71
+#: ../../importer.rst:68
 msgid "Tumblr API (default: False)"
 msgstr ""
 
-#: ../../importer.rst:72
+#: ../../importer.rst:69
 msgid "WordPress XML export (default: False)"
 msgstr ""
 
-#: ../../importer.rst:73
+#: ../../importer.rst:70
 msgid "Feed to parse (default: False)"
 msgstr ""
 
-#: ../../importer.rst:75
+#: ../../importer.rst:72
 msgid "Output path (default: content)"
 msgstr ""
 
-#: ../../importer.rst:77
+#: ../../importer.rst:74
 msgid ""
 "Output markup format: ``rst``, ``markdown``, or ``asciidoc`` (default: "
 "``rst``)"
 msgstr ""
 
-#: ../../importer.rst:79
+#: ../../importer.rst:76
 msgid "Put files in directories with categories name (default: False)"
 msgstr ""
 
-#: ../../importer.rst:81
+#: ../../importer.rst:78
 msgid ""
 "Put files recognised as pages in \"pages/\" sub- directory (blogger and "
 "wordpress import only) (default: False)"
 msgstr ""
 
-#: ../../importer.rst:84
+#: ../../importer.rst:81
 msgid "Import only post from the specified author"
 msgstr ""
 
-#: ../../importer.rst:85
+#: ../../importer.rst:82
 msgid ""
 "Strip raw HTML code that can't be converted to markup such as flash "
 "embeds or iframes (wordpress import only) (default: False)"
 msgstr ""
 
-#: ../../importer.rst:88
+#: ../../importer.rst:85
 msgid ""
 "Put wordpress custom post types in directories. If used with --dir-cat "
 "option directories will be created as \"/post_type/category/\" (wordpress"
 " import only)"
 msgstr ""
 
-#: ../../importer.rst:91
+#: ../../importer.rst:88
 msgid ""
 "Download files uploaded to wordpress as attachments. Files will be added "
 "to posts as a list in the post header and links to the files within the "
@@ -214,64 +198,75 @@ msgid ""
 "internet connection)"
 msgstr ""
 
-#: ../../importer.rst:100
+#: ../../importer.rst:97
 msgid ""
 "Disable storing slugs from imported posts within output. With this "
 "disabled, your Pelican URLs may not be consistent with your original "
 "posts. (default: False)"
 msgstr ""
 
-#: ../../importer.rst:105
-msgid "Email used to authenticate Posterous API"
-msgstr ""
-
-#: ../../importer.rst:107
-msgid "Password used to authenticate Posterous API"
-msgstr ""
-
-#: ../../importer.rst:109
+#: ../../importer.rst:102
 msgid "Blog name used in Tumblr API"
 msgstr ""
 
-#: ../../importer.rst:113
+#: ../../importer.rst:106
 msgid "Examples"
 msgstr ""
 
-#: ../../importer.rst:115
+#: ../../importer.rst:108
 msgid "For Blogger::"
 msgstr ""
 
-#: ../../importer.rst:119
+#: ../../importer.rst:112
 msgid "For Dotclear::"
 msgstr ""
 
-#: ../../importer.rst:123
-msgid "for Posterous::"
-msgstr ""
-
-#: ../../importer.rst:127
+#: ../../importer.rst:116
 msgid "For Tumblr::"
 msgstr ""
 
-#: ../../importer.rst:131
+#: ../../importer.rst:120
 msgid "For WordPress::"
 msgstr ""
 
-#: ../../importer.rst:136
+#: ../../importer.rst:125
 msgid "Tests"
 msgstr ""
 
-#: ../../importer.rst:138
+#: ../../importer.rst:127
 msgid "To test the module, one can use sample files:"
 msgstr ""
 
-#: ../../importer.rst:140
+#: ../../importer.rst:129
 msgid ""
 "for WordPress: https://www.wpbeginner.com/wp-themes/how-to-add-dummy-"
 "content-for-theme-development-in-wordpress/"
 msgstr ""
 
-#: ../../importer.rst:141
+#: ../../importer.rst:130
 msgid "for Dotclear: http://media.dotaddict.org/tda/downloads/lorem-backup.txt"
 msgstr ""
+
+#~ msgid "Posterous API"
+#~ msgstr ""
+
+#~ msgid "``api_token``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "(Posterous only) api_token can be "
+#~ "obtained from http://posterous.com/api/"
+#~ msgstr ""
+
+#~ msgid "Posterous API (default: False)"
+#~ msgstr ""
+
+#~ msgid "Email used to authenticate Posterous API"
+#~ msgstr ""
+
+#~ msgid "Password used to authenticate Posterous API"
+#~ msgstr ""
+
+#~ msgid "for Posterous::"
+#~ msgstr ""
 

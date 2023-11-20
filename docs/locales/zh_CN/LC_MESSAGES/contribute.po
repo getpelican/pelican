@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-11 10:44+0800\n"
+"POT-Creation-Date: 2023-11-19 20:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -175,38 +175,48 @@ msgid ""
 "  to make that determination."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:83
+#: ../../../CONTRIBUTING.rst:82
+msgid ""
+"Also, if you intend to submit a pull request to address something for "
+"which there is no existing issue, there is no need to create a new issue "
+"and then immediately submit a pull request that closes it. You can submit"
+" the pull request by itself."
+msgstr ""
+
+#: ../../../CONTRIBUTING.rst:87
 msgid "Using Git and GitHub"
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:85
+#: ../../../CONTRIBUTING.rst:89
 msgid ""
 "`Create a new branch`_ specific to your change (as opposed to making your"
 " commits in the master branch)."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:87
+#: ../../../CONTRIBUTING.rst:91
 msgid ""
 "**Don't put multiple unrelated fixes/features in the same branch / pull "
 "request.** For example, if you're working on a new feature and find a "
 "bugfix that doesn't *require* your new feature, **make a new distinct "
-"branch and pull request** for the bugfix."
+"branch and pull request** for the bugfix. Similarly, any proposed changes"
+" to code style formatting should be in a completely separate pull "
+"request."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:91
+#: ../../../CONTRIBUTING.rst:96
 msgid ""
 "Add a ``RELEASE.md`` file in the root of the project that contains the "
 "release type (major, minor, patch) and a summary of the changes that will"
 " be used as the release changelog entry. For example::"
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:99
+#: ../../../CONTRIBUTING.rst:104
 msgid ""
 "Check for unnecessary whitespace via ``git diff --check`` before "
 "committing."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:100
+#: ../../../CONTRIBUTING.rst:105
 msgid ""
 "First line of your commit message should start with present-tense verb, "
 "be 50 characters or less, and include the relevant issue number(s) if "
@@ -216,73 +226,56 @@ msgid ""
 "automatically closed upon PR merge)."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:105
+#: ../../../CONTRIBUTING.rst:110
 msgid ""
 "After the first line of the commit message, add a blank line and then a "
 "more detailed explanation (when relevant)."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:107
+#: ../../../CONTRIBUTING.rst:112
 msgid ""
 "`Squash your commits`_ to eliminate merge commits and ensure a clean and "
 "readable commit history."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:109
-msgid ""
-"If you have previously filed a GitHub issue and want to contribute code "
-"that addresses that issue, **please use** ``hub pull-request`` instead of"
-" using GitHub's web UI to submit the pull request. This isn't an absolute"
-" requirement, but makes the maintainers' lives much easier! Specifically:"
-" `install hub <https://github.com/github/hub/#installation>`_ and then "
-"run `hub pull-request -i [ISSUE] <https://hub.github.com/hub-pull-"
-"request.1.html>`_ to turn your GitHub issue into a pull request "
-"containing your code."
-msgstr ""
-
-#: ../../../CONTRIBUTING.rst:116
+#: ../../../CONTRIBUTING.rst:114
 msgid ""
 "After you have issued a pull request, the continuous integration (CI) "
-"system will run the test suite for all supported Python versions and "
-"check for PEP8 compliance. If any of these checks fail, you should fix "
+"system will run the test suite on all supported Python versions and check"
+" for code style compliance. If any of these checks fail, you should fix "
 "them. (If tests fail on the CI system but seem to pass locally, ensure "
 "that local test runs aren't skipping any tests.)"
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:123
+#: ../../../CONTRIBUTING.rst:121
 msgid "Contribution quality standards"
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:125
+#: ../../../CONTRIBUTING.rst:123
 msgid ""
-"Adhere to `PEP8 coding standards`_. This can be eased via the "
-"`pycodestyle <https://pypi.org/project/pycodestyle>`_ or `flake8 "
-"<https://pypi.org/project/flake8/>`_ tools, the latter of which in "
-"particular will give you some useful hints about ways in which the "
-"code/formatting can be improved. We try to keep line length within the "
-"79-character maximum specified by PEP8. Because that can sometimes "
-"compromise readability, the hard/enforced maximum is 88 characters."
+"Adhere to the project's code style standards. See: `Development "
+"Environment`_"
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:132
+#: ../../../CONTRIBUTING.rst:124
 msgid ""
 "Ensure your code is compatible with the `officially-supported Python "
 "releases`_."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:133
+#: ../../../CONTRIBUTING.rst:125
 msgid ""
 "Add docs and tests for your changes. Undocumented and untested features "
 "will not be accepted."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:135
+#: ../../../CONTRIBUTING.rst:127
 msgid ""
 ":pelican-doc:`Run all the tests <contribute>` **on all versions of Python"
 " supported by Pelican** to ensure nothing was accidentally broken."
 msgstr ""
 
-#: ../../../CONTRIBUTING.rst:138
+#: ../../../CONTRIBUTING.rst:130
 msgid ""
 "Check out our `Git Tips`_ page or `ask for help`_ if you need assistance "
 "or have any questions about these guidelines."
@@ -295,21 +288,21 @@ msgstr ""
 #: ../../contribute.rst:17
 msgid ""
 "While there are many ways to set up one's development environment, the "
-"following instructions will utilize Pip_ and Poetry_. These tools "
-"facilitate managing virtual environments for separate Python projects "
-"that are isolated from one another, so you can use different packages "
-"(and package versions) for each."
+"following instructions will utilize Pip_ and PDM_. These tools facilitate"
+" managing virtual environments for separate Python projects that are "
+"isolated from one another, so you can use different packages (and package"
+" versions) for each."
 msgstr ""
 
 #: ../../contribute.rst:22
-msgid "Please note that Python 3.7+ is required for Pelican development."
+msgid "Please note that Python |min_python| is required for Pelican development."
 msgstr ""
 
 #: ../../contribute.rst:24
 msgid ""
-"*(Optional)* If you prefer to `install Poetry <https://python-"
-"poetry.org/docs/master/#installation>`_ once for use with multiple "
-"projects, you can install it via::"
+"*(Optional)* If you prefer to `install PDM "
+"<https://pdm.fming.dev/latest/#installation>`_ once for use with multiple"
+" projects, you can install it via::"
 msgstr ""
 
 #: ../../contribute.rst:29
@@ -321,39 +314,39 @@ msgstr ""
 
 #: ../../contribute.rst:38
 msgid ""
-"While Poetry can dynamically create and manage virtual environments, "
-"we're going to manually create and activate a virtual environment::"
+"While PDM can dynamically create and manage virtual environments, we're "
+"going to manually create and activate a virtual environment::"
 msgstr ""
 
-#: ../../contribute.rst:45 ../../contribute.rst:143
+#: ../../contribute.rst:45 ../../contribute.rst:145
 msgid "Install the needed dependencies and set up the project::"
 msgstr ""
 
-#: ../../contribute.rst:51
+#: ../../contribute.rst:50
 msgid "Your local environment should now be ready to go!"
 msgstr ""
 
-#: ../../contribute.rst:58
+#: ../../contribute.rst:57
 msgid "Development"
 msgstr ""
 
-#: ../../contribute.rst:60
+#: ../../contribute.rst:59
 msgid ""
 "Once Pelican has been set up for local development, create a topic branch"
 " for your bug fix or feature::"
 msgstr ""
 
-#: ../../contribute.rst:65
+#: ../../contribute.rst:64
 msgid ""
 "Now you can make changes to Pelican, its documentation, and/or other "
 "aspects of the project."
 msgstr ""
 
-#: ../../contribute.rst:69
+#: ../../contribute.rst:68
 msgid "Running the test suite"
 msgstr ""
 
-#: ../../contribute.rst:71
+#: ../../contribute.rst:70
 msgid ""
 "Each time you make changes to Pelican, there are two things to do "
 "regarding tests: check that the existing tests pass, and add tests for "
@@ -361,14 +354,20 @@ msgid ""
 "``pelican/tests``, and you can run them via::"
 msgstr ""
 
-#: ../../contribute.rst:78
+#: ../../contribute.rst:77
+msgid ""
+"(For more on Invoke, see ``invoke -l`` to list tasks, or "
+"https://pyinvoke.org for documentation.)"
+msgstr ""
+
+#: ../../contribute.rst:80
 msgid ""
 "In addition to running the test suite, it is important to also ensure "
 "that any lines you changed conform to code style guidelines. You can "
 "check that via::"
 msgstr ""
 
-#: ../../contribute.rst:83
+#: ../../contribute.rst:85
 msgid ""
 "If code style violations are found in lines you changed, correct those "
 "lines and re-run the above lint command until they have all been fixed. "
@@ -376,7 +375,7 @@ msgid ""
 "did not touch."
 msgstr ""
 
-#: ../../contribute.rst:87
+#: ../../contribute.rst:89
 msgid ""
 "After making your changes and running the tests, you may see a test "
 "failure mentioning that \"some generated files differ from the expected "
@@ -388,7 +387,7 @@ msgid ""
 " and then run the following command::"
 msgstr ""
 
-#: ../../contribute.rst:97
+#: ../../contribute.rst:99
 msgid ""
 "You may also find that some tests are skipped because some dependency "
 "(e.g., Pandoc) is not installed. This does not automatically mean that "
@@ -396,7 +395,7 @@ msgid ""
 "tests are not affected by your changes."
 msgstr ""
 
-#: ../../contribute.rst:102
+#: ../../contribute.rst:104
 msgid ""
 "You should run the test suite under each of the supported versions of "
 "Python. This is best done by creating a separate Python environment for "
@@ -404,17 +403,17 @@ msgid ""
 "``virtualenv`` environments."
 msgstr ""
 
-#: ../../contribute.rst:110
+#: ../../contribute.rst:112
 msgid "Building the docs"
 msgstr ""
 
-#: ../../contribute.rst:112
+#: ../../contribute.rst:114
 msgid ""
 "If you make changes to the documentation, you should build and inspect "
 "your changes before committing them::"
 msgstr ""
 
-#: ../../contribute.rst:117
+#: ../../contribute.rst:119
 msgid ""
 "Open http://localhost:8000 in your browser to review the documentation. "
 "While the above task is running, any changes you make and save to the "
@@ -422,24 +421,24 @@ msgid ""
 "reloads when it detects changes to the documentation source files."
 msgstr ""
 
-#: ../../contribute.rst:123
+#: ../../contribute.rst:125
 msgid "Plugin development"
 msgstr ""
 
-#: ../../contribute.rst:125
+#: ../../contribute.rst:127
 msgid ""
 "To create a *new* Pelican plugin, please refer to the `plugin template`_ "
 "repository for detailed instructions."
 msgstr ""
 
-#: ../../contribute.rst:128
+#: ../../contribute.rst:130
 msgid ""
 "If you want to contribute to an *existing* Pelican plugin, follow the "
 "steps above to set up Pelican for local development, and then create a "
 "directory to store cloned plugin repositories::"
 msgstr ""
 
-#: ../../contribute.rst:134
+#: ../../contribute.rst:136
 msgid ""
 "Assuming you wanted to contribute to the Simple Footnotes plugin, you "
 "would first browse to the `Simple Footnotes`_ repository on GitHub and "
@@ -447,34 +446,34 @@ msgid ""
 " and add the upstream project as a Git remote::"
 msgstr ""
 
-#: ../../contribute.rst:147
+#: ../../contribute.rst:149
 msgid "Create a topic branch for your plugin bug fix or feature::"
 msgstr ""
 
-#: ../../contribute.rst:151
+#: ../../contribute.rst:153
 msgid ""
 "After writing new tests for your plugin changes, run the plugin test "
 "suite and check for code style compliance via::"
 msgstr ""
 
-#: ../../contribute.rst:157
+#: ../../contribute.rst:159
 msgid ""
 "If style violations are found, many of them can be addressed "
 "automatically via::"
 msgstr ""
 
-#: ../../contribute.rst:162
+#: ../../contribute.rst:163
 msgid ""
 "If style violations are found even after running the above auto-"
 "formatters, you will need to make additional manual changes until "
 "``invoke lint`` no longer reports any code style violations."
 msgstr ""
 
-#: ../../contribute.rst:170
+#: ../../contribute.rst:171
 msgid "Submitting your changes"
 msgstr ""
 
-#: ../../contribute.rst:172
+#: ../../contribute.rst:173
 msgid ""
 "Assuming linting validation and tests pass, add a ``RELEASE.md`` file in "
 "the root of the project that contains the release type (major, minor, "
@@ -482,29 +481,29 @@ msgid ""
 "changelog entry. For example::"
 msgstr ""
 
-#: ../../contribute.rst:181
+#: ../../contribute.rst:182
 msgid "Commit your changes and push your topic branch::"
 msgstr ""
 
-#: ../../contribute.rst:187
+#: ../../contribute.rst:188
 msgid ""
 "Finally, browse to your repository fork on GitHub and submit a pull "
 "request."
 msgstr ""
 
-#: ../../contribute.rst:191
+#: ../../contribute.rst:192
 msgid "Logging tips"
 msgstr ""
 
-#: ../../contribute.rst:193
+#: ../../contribute.rst:194
 msgid "Try to use logging with appropriate levels."
 msgstr ""
 
-#: ../../contribute.rst:195
+#: ../../contribute.rst:196
 msgid "For logging messages that are not repeated, use the usual Python way::"
 msgstr ""
 
-#: ../../contribute.rst:204
+#: ../../contribute.rst:205
 #, python-format
 msgid ""
 "Do not format log messages yourself. Use ``%s`` formatting in messages "
@@ -512,24 +511,24 @@ msgid ""
 "logger will preprocess some arguments, such as exceptions."
 msgstr ""
 
-#: ../../contribute.rst:209
+#: ../../contribute.rst:210
 msgid "Limiting extraneous log messages"
 msgstr ""
 
-#: ../../contribute.rst:211
+#: ../../contribute.rst:212
 msgid ""
 "If the log message can occur several times, you may want to limit the log"
 " to prevent flooding. In order to do that, use the ``extra`` keyword "
 "argument for the logging message in the following format::"
 msgstr ""
 
-#: ../../contribute.rst:218
+#: ../../contribute.rst:219
 msgid ""
 "Optionally, you can also set ``'limit_args'`` as a tuple of arguments in "
 "``extra`` dict if your generic message needs formatting."
 msgstr ""
 
-#: ../../contribute.rst:221
+#: ../../contribute.rst:222
 msgid ""
 "Limit is set to ``5``, i.e, first four logs with the same ``'limit_msg'``"
 " are outputted normally but the fifth one will be logged using "
@@ -537,21 +536,21 @@ msgid ""
 "corresponding log messages will be ignored."
 msgstr ""
 
-#: ../../contribute.rst:226
+#: ../../contribute.rst:227
 msgid ""
 "For example, if you want to log missing resources, use the following "
 "code::"
 msgstr ""
 
-#: ../../contribute.rst:234
+#: ../../contribute.rst:235
 msgid "The log messages will be displayed as follows::"
 msgstr ""
 
-#: ../../contribute.rst:244
+#: ../../contribute.rst:245
 msgid "Outputting traceback in the logs"
 msgstr ""
 
-#: ../../contribute.rst:246
+#: ../../contribute.rst:247
 msgid ""
 "If you're logging inside an ``except`` block, you may want to provide the"
 " traceback information as well. You can do that by setting ``exc_info`` "
@@ -586,5 +585,91 @@ msgstr ""
 #~ "versions of Python supported by "
 #~ "Pelican** to ensure nothing was "
 #~ "accidentally broken."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Don't put multiple unrelated fixes/features"
+#~ " in the same branch / pull "
+#~ "request.** For example, if you're "
+#~ "working on a new feature and find"
+#~ " a bugfix that doesn't *require* your"
+#~ " new feature, **make a new distinct"
+#~ " branch and pull request** for the"
+#~ " bugfix."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "If you have previously filed a "
+#~ "GitHub issue and want to contribute "
+#~ "code that addresses that issue, **please"
+#~ " use** ``hub pull-request`` instead "
+#~ "of using GitHub's web UI to submit"
+#~ " the pull request. This isn't an "
+#~ "absolute requirement, but makes the "
+#~ "maintainers' lives much easier! Specifically:"
+#~ " `install hub "
+#~ "<https://github.com/github/hub/#installation>`_ and then"
+#~ " run `hub pull-request -i [ISSUE] "
+#~ "<https://hub.github.com/hub-pull-request.1.html>`_ "
+#~ "to turn your GitHub issue into a"
+#~ " pull request containing your code."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "After you have issued a pull "
+#~ "request, the continuous integration (CI) "
+#~ "system will run the test suite for"
+#~ " all supported Python versions and "
+#~ "check for PEP8 compliance. If any "
+#~ "of these checks fail, you should "
+#~ "fix them. (If tests fail on the"
+#~ " CI system but seem to pass "
+#~ "locally, ensure that local test runs "
+#~ "aren't skipping any tests.)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Adhere to `PEP8 coding standards`_. This"
+#~ " can be eased via the `pycodestyle"
+#~ " <https://pypi.org/project/pycodestyle>`_ or `flake8"
+#~ " <https://pypi.org/project/flake8/>`_ tools, the "
+#~ "latter of which in particular will "
+#~ "give you some useful hints about "
+#~ "ways in which the code/formatting can"
+#~ " be improved. We try to keep "
+#~ "line length within the 79-character "
+#~ "maximum specified by PEP8. Because that"
+#~ " can sometimes compromise readability, the"
+#~ " hard/enforced maximum is 88 characters."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "While there are many ways to set"
+#~ " up one's development environment, the "
+#~ "following instructions will utilize Pip_ "
+#~ "and Poetry_. These tools facilitate "
+#~ "managing virtual environments for separate "
+#~ "Python projects that are isolated from"
+#~ " one another, so you can use "
+#~ "different packages (and package versions) "
+#~ "for each."
+#~ msgstr ""
+
+#~ msgid "Please note that Python 3.7+ is required for Pelican development."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "*(Optional)* If you prefer to `install"
+#~ " Poetry <https://python-"
+#~ "poetry.org/docs/master/#installation>`_ once for use"
+#~ " with multiple projects, you can "
+#~ "install it via::"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "While Poetry can dynamically create and"
+#~ " manage virtual environments, we're going"
+#~ " to manually create and activate a"
+#~ " virtual environment::"
 #~ msgstr ""
 

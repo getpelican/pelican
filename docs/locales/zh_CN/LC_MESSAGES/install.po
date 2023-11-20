@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-11 10:44+0800\n"
+"POT-Creation-Date: 2023-11-19 20:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -25,9 +24,9 @@ msgstr "安装Pelican"
 
 #: ../../install.rst:4
 msgid ""
-"Pelican currently runs best on 3.7+; earlier versions of Python are not "
-"supported."
-msgstr "Pelican需要运行在3.7版本以上的Python，低版本的Python是不支持的。"
+"Pelican currently runs best on |min_python|; earlier versions of Python "
+"are not supported."
+msgstr "Pelican需要运行在 |min_python| 版本以上的Python，低版本的Python是不支持的。"
 
 #: ../../install.rst:6
 msgid ""

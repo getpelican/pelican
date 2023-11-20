@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-11 10:44+0800\n"
+"POT-Creation-Date: 2023-11-19 20:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -318,19 +318,11 @@ msgid ""
 " much faster way than Pelican would."
 msgstr ""
 
-#: ../../faq.rst:220
-msgid ""
-"When only several specific output files are of interest (e.g. when "
-"working on some specific page or the theme templates), the "
-"``WRITE_SELECTED`` option may help, see "
-":ref:`writing_only_selected_content`."
-msgstr ""
-
-#: ../../faq.rst:225
+#: ../../faq.rst:221
 msgid "How to process only a subset of all articles?"
 msgstr ""
 
-#: ../../faq.rst:227
+#: ../../faq.rst:223
 msgid ""
 "It is often useful to process only e.g. 10 articles for debugging "
 "purposes. This can be achieved by explicitly specifying only the "
@@ -339,11 +331,11 @@ msgid ""
 "-name '*.md' | head -n 10``."
 msgstr ""
 
-#: ../../faq.rst:233
+#: ../../faq.rst:229
 msgid "My tag cloud is missing/broken since I upgraded Pelican"
 msgstr ""
 
-#: ../../faq.rst:235
+#: ../../faq.rst:231
 msgid ""
 "In an ongoing effort to streamline Pelican, tag cloud generation has been"
 " moved out of Pelican core and into a separate `plugin "
@@ -351,11 +343,11 @@ msgid ""
 "documentation for further information about the Pelican plugin system."
 msgstr ""
 
-#: ../../faq.rst:241
+#: ../../faq.rst:237
 msgid "Since I upgraded Pelican my pages are no longer rendered"
 msgstr ""
 
-#: ../../faq.rst:243
+#: ../../faq.rst:239
 msgid ""
 "Pages were available to themes as lowercase ``pages`` and uppercase "
 "``PAGES``. To bring this inline with the :ref:`templates-variables` "
@@ -364,15 +356,15 @@ msgid ""
 "replace::"
 msgstr ""
 
-#: ../../faq.rst:250
+#: ../../faq.rst:246
 msgid "with something like::"
 msgstr ""
 
-#: ../../faq.rst:255
+#: ../../faq.rst:251
 msgid "How can I stop Pelican from trying to parse my static files as content?"
 msgstr ""
 
-#: ../../faq.rst:257
+#: ../../faq.rst:253
 msgid ""
 "Pelican's article and page generators run before it's static generator. "
 "That means if you use a setup similar to the default configuration, where"
@@ -382,18 +374,18 @@ msgid ""
 "treated as static files."
 msgstr ""
 
-#: ../../faq.rst:263
+#: ../../faq.rst:259
 msgid ""
 "To circumvent this issue either use the appropriate ``*_EXCLUDES`` "
 "setting or disable the offending reader via ``READERS`` if you don't need"
 " it."
 msgstr ""
 
-#: ../../faq.rst:267
+#: ../../faq.rst:263
 msgid "Why is [arbitrary Markdown syntax] not supported?"
 msgstr ""
 
-#: ../../faq.rst:269
+#: ../../faq.rst:265
 msgid ""
 "Pelican does not directly handle Markdown processing and instead "
 "delegates that task to the Python-Markdown_ project, the core of which "
@@ -441,5 +433,14 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "My tag-cloud is missing/broken since I upgraded Pelican"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "When only several specific output files"
+#~ " are of interest (e.g. when working"
+#~ " on some specific page or the "
+#~ "theme templates), the ``WRITE_SELECTED`` "
+#~ "option may help, see "
+#~ ":ref:`writing_only_selected_content`."
 #~ msgstr ""
 
