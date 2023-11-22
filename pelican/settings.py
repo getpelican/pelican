@@ -48,6 +48,7 @@ DEFAULT_CONFIG = {
     "TRANSLATION_FEED_ATOM": "feeds/all-{lang}.atom.xml",
     "FEED_MAX_ITEMS": 100,
     "RSS_FEED_SUMMARY_ONLY": True,
+    "FEED_APPEND_REL": False,
     "SITEURL": "",
     "SITENAME": "A Pelican Blog",
     "DISPLAY_PAGES_ON_MENU": True,
