@@ -445,6 +445,7 @@ This would save your articles into something like
    Defines whether Pelican should use document-relative URLs or not. Only set
    this to ``True`` when developing/testing and only if you fully understand
    the effect it can have on links/feeds.
+   This option is enabled by default if you use github pages.
 
 .. data:: ARTICLE_URL = '{slug}.html'
 
