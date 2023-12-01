@@ -26,6 +26,12 @@ not be converted (as Pelican also supports Markdown).
    manually, or use a plugin such as `More Categories`_ that enables multiple
    categories per article.
 
+.. note::
+
+   Imported images may still point to the original site.  So, you might want to
+   download the images yourself and manually re-link the images in the posts
+   to the local copies.
+
 Dependencies
 ============
 
@@ -120,6 +126,15 @@ For Tumblr::
 For WordPress::
 
     $ pelican-import --wpfile -o ~/output ~/posts.xml
+
+For Medium (an example of using an RSS feed):
+
+    $ pip install feedparser
+    $ pelican-import --feed https://medium.com/feed/@username
+
+.. note::
+
+   The RSS feed may only return the most recent posts, not all of them.
 
 Tests
 =====
