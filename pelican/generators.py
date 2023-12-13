@@ -584,9 +584,16 @@ class ArticlesGenerator(CachingGenerator):
                     page_name=tag.page_name,
                     all_articles=self.articles,
                 )
-            except RuntimeError as e:
-                logger.error('Trying to write Tag page for "%s".' % (tag))
-                raise e
+            except RuntimeError:
+                if not tag.slug:
+                    logger.warning(
+                        'Tag "%s" has an invalid slug; skipping writing tag page...',
+                        tag,
+                    )
+                    continue
+                else:
+                    logger.error('Failed to write Tag page for "%s".', tag)
+                    raise
 
     def generate_categories(self, write):
         """Generate category pages."""
@@ -607,9 +614,16 @@ class ArticlesGenerator(CachingGenerator):
                     page_name=cat.page_name,
                     all_articles=self.articles,
                 )
-            except RuntimeError as e:
-                logger.error('Trying to write Category page for "%s".' % (cat))
-                raise e
+            except RuntimeError:
+                if not cat.slug:
+                    logger.warning(
+                        'Category "%s" has an invalid slug; skipping writing category page...',
+                        cat,
+                    )
+                    continue
+                else:
+                    logger.error('Failed to write Category page for "%s".', cat)
+                    raise
 
     def generate_authors(self, write):
         """Generate Author pages."""
@@ -630,9 +644,16 @@ class ArticlesGenerator(CachingGenerator):
                     page_name=aut.page_name,
                     all_articles=self.articles,
                 )
-            except RuntimeError as e:
-                logger.error('Trying to write Author page for "%s".' % (aut))
-                raise e
+            except RuntimeError:
+                if not aut.slug:
+                    logger.warning(
+                        'Author "%s" has an invalid slug; skipping writing author page...',
+                        aut,
+                    )
+                    continue
+                else:
+                    logger.error('Failed to write Author page for "%s".', aut)
+                    raise
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
