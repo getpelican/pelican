@@ -42,11 +42,18 @@ class URLWrapper:
                 preserve_case=preserve_case,
                 use_unicode=self.settings.get("SLUGIFY_USE_UNICODE", False),
             )
+            if not self._slug:
+                logger.warning(
+                    'Unable to generate valid slug for %s "%s".',
+                    self.__class__.__name__,
+                    self.name,
+                    extra={"limit_msg": "Other invalid slugs."},
+                )
         return self._slug
 
     @slug.setter
     def slug(self, slug):
-        # if slug is expliticly set, changing name won't alter slug
+        # if slug is explicitly set, changing name won't alter slug
         self._slug_from_name = False
         self._slug = slug
 
