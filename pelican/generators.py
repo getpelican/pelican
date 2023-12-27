@@ -576,9 +576,10 @@ class ArticlesGenerator(CachingGenerator):
                 )
             except RuntimeError:
                 if not tag.slug:
-                    logger.warning(
+                    logger.info(
                         'Tag "%s" has an invalid slug; skipping writing tag page...',
                         tag,
+                        extra={"limit_msg": "Further tags with invalid slugs."},
                     )
                     continue
                 else:
@@ -606,9 +607,10 @@ class ArticlesGenerator(CachingGenerator):
                 )
             except RuntimeError:
                 if not cat.slug:
-                    logger.warning(
+                    logger.info(
                         'Category "%s" has an invalid slug; skipping writing category page...',
                         cat,
+                        extra={"limit_msg": "Further categories with invalid slugs."},
                     )
                     continue
                 else:
@@ -636,9 +638,10 @@ class ArticlesGenerator(CachingGenerator):
                 )
             except RuntimeError:
                 if not aut.slug:
-                    logger.warning(
+                    logger.info(
                         'Author "%s" has an invalid slug; skipping writing author page...',
                         aut,
+                        extra={"limit_msg": "Further authors with invalid slugs."},
                     )
                     continue
                 else:
