@@ -80,7 +80,8 @@ class Pelican:
                 plugin.register()
                 self.plugins.append(plugin)
             except Exception as e:
-                logger.error("Cannot register plugin `%s`\n%s", name, e)
+                logger.error("Cannot register plugin `%s`\n%s", name, e, stacklevel=3)
+                print(e.stacktrace)
 
         self.settings["PLUGINS"] = [get_plugin_name(p) for p in self.plugins]
 

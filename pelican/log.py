@@ -88,12 +88,16 @@ class FatalLogger(LimitLogger):
     # adding `stacklevel=2` means that the displayed filename and line number
     # will match the "original" calling location, rather than the wrapper here
     def warning(self, *args, **kwargs):
-        super().warning(*args, stacklevel=2, **kwargs)
+        if "stacklevel" not in kwargs.keys():
+            kwargs["stacklevel"] = 2
+        super().warning(*args, **kwargs)
         if FatalLogger.warnings_fatal:
             raise RuntimeError("Warning encountered")
 
     def error(self, *args, **kwargs):
-        super().error(*args, stacklevel=2, **kwargs)
+        if "stacklevel" not in kwargs.keys():
+            kwargs["stacklevel"] = 2
+        super().error(*args, **kwargs)
         if FatalLogger.errors_fatal:
             raise RuntimeError("Error encountered")
 
