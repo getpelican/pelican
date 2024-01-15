@@ -631,7 +631,7 @@ are not included by default in tag, category, and author indexes, nor in the
 main article feed. This has the effect of creating an "unlisted" post.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
-.. _AsciiDoc: https://www.methods.co.nz/asciidoc/
+.. _AsciiDoc: https://asciidoc.org
 .. _Pelican Plugins: https://github.com/pelican-plugins
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 .. _Python-Markdown: https://github.com/Python-Markdown/markdown
