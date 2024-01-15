@@ -28,9 +28,9 @@ not be converted (as Pelican also supports Markdown).
 
 .. note::
 
-   Imported images may still point to the original site.  So, you might want to
-   download the images yourself and manually re-link the images in the posts
-   to the local copies.
+   Imported pages may contain links to images that still point to the original site.
+   So you might want to download those images into your local content and manually
+   re-link them from the relevant pages of your site.
 
 Dependencies
 ============
@@ -129,12 +129,12 @@ For WordPress::
 
 For Medium (an example of using an RSS feed):
 
-    $ pip install feedparser
+    $ python -m pip install feedparser
     $ pelican-import --feed https://medium.com/feed/@username
 
 .. note::
 
-   The RSS feed may only return the most recent posts, not all of them.
+   The RSS feed may only return the most recent posts — not all of them.
 
 Tests
 =====
