@@ -120,11 +120,14 @@ class Pelican:
             if hasattr(p, "generate_context"):
                 p.generate_context()
 
+        # for plugins that create/edit the summary
+        logger.debug("Signal all_generators_finalized.send(<generators>)")
+        signals.all_generators_finalized.send(generators)
+
+        # update links in the summary, etc
         for p in generators:
             if hasattr(p, "refresh_metadata_intersite_links"):
                 p.refresh_metadata_intersite_links()
-
-        signals.all_generators_finalized.send(generators)
 
         writer = self._get_writer()
 

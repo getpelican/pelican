@@ -520,12 +520,17 @@ class Content:
 
         # _summary is an internal variable that some plugins may be writing to,
         # so ensure changes to it are picked up
-        if (
-            "summary" in self.settings["FORMATTED_FIELDS"]
-            and "summary" in self.metadata
-        ):
-            self._summary = self._update_content(self._summary, self.get_siteurl())
-            self.metadata["summary"] = self._summary
+        if "summary" in self.settings["FORMATTED_FIELDS"]:
+            if hasattr(self, "_summary"):
+                self.metadata["summary"] = self._summary
+
+            if "summary" in self.metadata:
+                self.metadata["summary"] = self._update_content(
+                    self.metadata["summary"], self.get_siteurl()
+                )
+
+            if hasattr(self, "_summary") and "summary" in self.metadata:
+                self._summary = self.metadata["summary"]
 
 
 class Page(Content):
