@@ -23,10 +23,8 @@ try:
     from zoneinfo import ZoneInfo
 except ModuleNotFoundError:
     from backports.zoneinfo import ZoneInfo
-from markupsafe import Markup
-
 import watchfiles
-
+from markupsafe import Markup
 
 logger = logging.getLogger(__name__)
 
@@ -233,6 +231,7 @@ def slugify(value, regex_subs=(), preserve_case=False, use_unicode=False):
     """
 
     import unicodedata
+
     import unidecode
 
     def normalize_unicode(text):
@@ -630,14 +629,14 @@ def process_translations(content_list, translation_id=None):
         content_list.sort(key=attrgetter(*translation_id))
     except TypeError:
         raise TypeError(
-            "Cannot unpack {}, 'translation_id' must be falsy, a"
-            " string or a collection of strings".format(translation_id)
+            f"Cannot unpack {translation_id}, 'translation_id' must be falsy, a"
+            " string or a collection of strings"
         )
     except AttributeError:
         raise AttributeError(
-            "Cannot use {} as 'translation_id', there "
+            f"Cannot use {translation_id} as 'translation_id', there "
             "appear to be items without these metadata "
-            "attributes".format(translation_id)
+            "attributes"
         )
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):

@@ -98,7 +98,7 @@ class URLWrapper:
         return self.name
 
     def __repr__(self):
-        return f"<{type(self).__name__} {repr(self._name)}>"
+        return f"<{type(self).__name__} {self._name!r}>"
 
     def _from_settings(self, key, get_page_name=False):
         """Returns URL information as defined in settings.

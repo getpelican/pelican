@@ -13,11 +13,11 @@ from pelican.generators import (
     TemplatePagesGenerator,
 )
 from pelican.tests.support import (
+    TestCaseWithCLocale,
     can_symlink,
     get_context,
     get_settings,
     unittest,
-    TestCaseWithCLocale,
 )
 from pelican.writers import Writer
 

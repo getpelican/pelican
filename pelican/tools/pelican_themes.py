@@ -240,15 +240,11 @@ def install(path, v=False, u=False):
                 except OSError as e:
                     err(
                         "Cannot change permissions of files "
-                        "or directory in `{r}':\n{e}".format(r=theme_path, e=str(e)),
+                        f"or directory in `{theme_path}':\n{e!s}",
                         die=False,
                     )
             except Exception as e:
-                err(
-                    "Cannot copy `{p}' to `{t}':\n{e}".format(
-                        p=path, t=theme_path, e=str(e)
-                    )
-                )
+                err(f"Cannot copy `{path}' to `{theme_path}':\n{e!s}")
 
 
 def symlink(path, v=False):
@@ -268,11 +264,7 @@ def symlink(path, v=False):
             try:
                 os.symlink(path, theme_path)
             except Exception as e:
-                err(
-                    "Cannot link `{p}' to `{t}':\n{e}".format(
-                        p=path, t=theme_path, e=str(e)
-                    )
-                )
+                err(f"Cannot link `{path}' to `{theme_path}':\n{e!s}")
 
 
 def is_broken_link(path):

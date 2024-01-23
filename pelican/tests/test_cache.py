@@ -6,7 +6,6 @@ from unittest.mock import MagicMock
 from pelican.generators import ArticlesGenerator, PagesGenerator
 from pelican.tests.support import get_context, get_settings, unittest
 
-
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_DIR = os.path.join(CUR_DIR, "content")
 

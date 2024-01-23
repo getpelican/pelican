@@ -4,7 +4,6 @@ from posixpath import join as posix_join
 from urllib.parse import urljoin
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
-
 from markupsafe import Markup
 
 from pelican.paginator import Paginator

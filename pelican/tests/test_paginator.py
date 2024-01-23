@@ -7,7 +7,6 @@ from pelican.paginator import Paginator
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import get_settings, unittest
 
-
 # generate one paragraph, enclosed with <p>
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)

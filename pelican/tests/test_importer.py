@@ -5,11 +5,11 @@ from unittest.mock import patch
 
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import (
+    TestCaseWithCLocale,
     mute,
     skipIfNoExecutable,
     temporary_folder,
     unittest,
-    TestCaseWithCLocale,
 )
 from pelican.tools.pelican_import import (
     blogger2fields,
@@ -37,7 +37,7 @@ WORDPRESS_DECODED_CONTENT_SAMPLE = os.path.join(
 try:
     from bs4 import BeautifulSoup
 except ImportError:
-    BeautifulSoup = False  # NOQA
+    BeautifulSoup = False
 
 try:
     import bs4.builder._lxml as LXML
@@ -528,9 +528,7 @@ class TestWordpressXMLAttachements(TestCaseWithCLocale):
                 self.assertEqual(self.attachments[post], {expected_invalid})
             else:
                 self.fail(
-                    "all attachments should match to a " "filename or None, {}".format(
-                        post
-                    )
+                    "all attachments should match to a " f"filename or None, {post}"
                 )
 
     def test_download_attachments(self):

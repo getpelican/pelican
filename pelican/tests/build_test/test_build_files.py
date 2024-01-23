@@ -1,6 +1,6 @@
-from re import match
 import tarfile
 from pathlib import Path
+from re import match
 from zipfile import ZipFile
 
 import pytest
