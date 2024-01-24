@@ -6,7 +6,8 @@ import os
 import re
 from datetime import timezone
 from html import unescape
-from urllib.parse import unquote, urljoin, urlparse, urlunparse
+from typing import Any, Dict, Optional, Set, Tuple
+from urllib.parse import ParseResult, unquote, urljoin, urlparse, urlunparse
 
 try:
     from zoneinfo import ZoneInfo
@@ -15,7 +16,7 @@ except ModuleNotFoundError:
 
 
 from pelican.plugins import signals
-from pelican.settings import DEFAULT_CONFIG
+from pelican.settings import DEFAULT_CONFIG, Settings
 from pelican.utils import (
     deprecated_attribute,
     memoized,
@@ -44,12 +45,20 @@ class Content:
 
     """
 
+    default_template: Optional[str] = None
+    mandatory_properties: Tuple[str, ...] = ()
+
     @deprecated_attribute(old="filename", new="source_path", since=(3, 2, 0))
     def filename():
         return None
 
     def __init__(
-        self, content, metadata=None, settings=None, source_path=None, context=None
+        self,
+        content: str,
+        metadata: Optional[Dict[str, Any]] = None,
+        settings: Optional[Settings] = None,
+        source_path: Optional[str] = None,
+        context: Optional[Dict[Any, Any]] = None,
     ):
         if metadata is None:
             metadata = {}
@@ -156,10 +165,10 @@ class Content:
 
         signals.content_object_init.send(self)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.source_path or repr(self)
 
-    def _has_valid_mandatory_properties(self):
+    def _has_valid_mandatory_properties(self) -> bool:
         """Test mandatory properties are set."""
         for prop in self.mandatory_properties:
             if not hasattr(self, prop):
@@ -169,7 +178,7 @@ class Content:
                 return False
         return True
 
-    def _has_valid_save_as(self):
+    def _has_valid_save_as(self) -> bool:
         """Return true if save_as doesn't write outside output path, false
         otherwise."""
         try:
@@ -190,7 +199,7 @@ class Content:
 
         return True
 
-    def _has_valid_status(self):
+    def _has_valid_status(self) -> bool:
         if hasattr(self, "allowed_statuses"):
             if self.status not in self.allowed_statuses:
                 logger.error(
@@ -204,7 +213,7 @@ class Content:
         # if undefined we allow all
         return True
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """Validate Content"""
         # Use all() to not short circuit and get results of all validations
         return all(
@@ -216,7 +225,7 @@ class Content:
         )
 
     @property
-    def url_format(self):
+    def url_format(self) -> Dict[str, Any]:
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
         path = self.metadata.get("path", self.get_relative_source_path())
@@ -232,19 +241,19 @@ class Content:
         )
         return metadata
 
-    def _expand_settings(self, key, klass=None):
+    def _expand_settings(self, key: str, klass: Optional[str] = None) -> str:
         if not klass:
             klass = self.__class__.__name__
         fq_key = (f"{klass}_{key}").upper()
         return str(self.settings[fq_key]).format(**self.url_format)
 
-    def get_url_setting(self, key):
+    def get_url_setting(self, key: str) -> str:
         if hasattr(self, "override_" + key):
             return getattr(self, "override_" + key)
         key = key if self.in_default_lang else "lang_%s" % key
         return self._expand_settings(key)
 
-    def _link_replacer(self, siteurl, m):
+    def _link_replacer(self, siteurl: str, m: re.Match) -> str:
         what = m.group("what")
         value = urlparse(m.group("value"))
         path = value.path
@@ -272,15 +281,15 @@ class Content:
         # XXX Put this in a different location.
         if what in {"filename", "static", "attach"}:
 
-            def _get_linked_content(key, url):
+            def _get_linked_content(key: str, url: ParseResult) -> Optional[Content]:
                 nonlocal value
 
-                def _find_path(path):
+                def _find_path(path: str) -> Optional[Content]:
                     if path.startswith("/"):
                         path = path[1:]
                     else:
                         # relative to the source path of this content
-                        path = self.get_relative_source_path(
+                        path = self.get_relative_source_path(  # type: ignore
                             os.path.join(self.relative_dir, path)
                         )
                     return self._context[key].get(path, None)
@@ -324,7 +333,7 @@ class Content:
             linked_content = _get_linked_content(key, value)
             if linked_content:
                 if what == "attach":
-                    linked_content.attach_to(self)
+                    linked_content.attach_to(self)  # type: ignore
                 origin = joiner(siteurl, linked_content.url)
                 origin = origin.replace("\\", "/")  # for Windows paths.
             else:
@@ -359,7 +368,7 @@ class Content:
 
         return "".join((m.group("markup"), m.group("quote"), origin, m.group("quote")))
 
-    def _get_intrasite_link_regex(self):
+    def _get_intrasite_link_regex(self) -> re.Pattern:
         intrasite_link_regex = self.settings["INTRASITE_LINK_REGEX"]
         regex = r"""
             (?P<markup><[^\>]+  # match tag with all url-value attributes
@@ -370,7 +379,7 @@ class Content:
             (?P=quote)""".format(intrasite_link_regex)
         return re.compile(regex, re.X)
 
-    def _update_content(self, content, siteurl):
+    def _update_content(self, content: str, siteurl: str) -> str:
         """Update the content attribute.
 
         Change all the relative paths of the content to relative paths
@@ -386,7 +395,7 @@ class Content:
         hrefs = self._get_intrasite_link_regex()
         return hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
 
-    def get_static_links(self):
+    def get_static_links(self) -> Set[str]:
         static_links = set()
         hrefs = self._get_intrasite_link_regex()
         for m in hrefs.finditer(self._content):
@@ -402,15 +411,15 @@ class Content:
                 path = self.get_relative_source_path(
                     os.path.join(self.relative_dir, path)
                 )
-            path = path.replace("%20", " ")
+            path = path.replace("%20", " ")  # type: ignore
             static_links.add(path)
         return static_links
 
-    def get_siteurl(self):
+    def get_siteurl(self) -> str:
         return self._context.get("localsiteurl", "")
 
     @memoized
-    def get_content(self, siteurl):
+    def get_content(self, siteurl: str) -> str:
         if hasattr(self, "_get_content"):
             content = self._get_content()
         else:
@@ -418,11 +427,11 @@ class Content:
         return self._update_content(content, siteurl)
 
     @property
-    def content(self):
+    def content(self) -> str:
         return self.get_content(self.get_siteurl())
 
     @memoized
-    def get_summary(self, siteurl):
+    def get_summary(self, siteurl: str) -> str:
         """Returns the summary of an article.
 
         This is based on the summary metadata if set, otherwise truncate the
@@ -441,10 +450,10 @@ class Content:
         )
 
     @property
-    def summary(self):
+    def summary(self) -> str:
         return self.get_summary(self.get_siteurl())
 
-    def _get_summary(self):
+    def _get_summary(self) -> str:
         """deprecated function to access summary"""
 
         logger.warning(
@@ -454,34 +463,36 @@ class Content:
         return self.summary
 
     @summary.setter
-    def summary(self, value):
+    def summary(self, value: str):
         """Dummy function"""
         pass
 
     @property
-    def status(self):
+    def status(self) -> str:
         return self._status
 
     @status.setter
-    def status(self, value):
+    def status(self, value: str) -> None:
         # TODO maybe typecheck
         self._status = value.lower()
 
     @property
-    def url(self):
+    def url(self) -> str:
         return self.get_url_setting("url")
 
     @property
-    def save_as(self):
+    def save_as(self) -> str:
         return self.get_url_setting("save_as")
 
-    def _get_template(self):
+    def _get_template(self) -> str:
         if hasattr(self, "template") and self.template is not None:
             return self.template
         else:
             return self.default_template
 
-    def get_relative_source_path(self, source_path=None):
+    def get_relative_source_path(
+        self, source_path: Optional[str] = None
+    ) -> Optional[str]:
         """Return the relative path (from the content path) to the given
         source_path.
 
@@ -501,7 +512,7 @@ class Content:
         )
 
     @property
-    def relative_dir(self):
+    def relative_dir(self) -> str:
         return posixize_path(
             os.path.dirname(
                 os.path.relpath(
@@ -511,7 +522,7 @@ class Content:
             )
         )
 
-    def refresh_metadata_intersite_links(self):
+    def refresh_metadata_intersite_links(self) -> None:
         for key in self.settings["FORMATTED_FIELDS"]:
             if key in self.metadata and key != "summary":
                 value = self._update_content(self.metadata[key], self.get_siteurl())
@@ -534,7 +545,7 @@ class Page(Content):
     default_status = "published"
     default_template = "page"
 
-    def _expand_settings(self, key):
+    def _expand_settings(self, key: str) -> str:
         klass = "draft_page" if self.status == "draft" else None
         return super()._expand_settings(key, klass)
 
@@ -561,7 +572,7 @@ class Article(Content):
         if not hasattr(self, "date") and self.status == "draft":
             self.date = datetime.datetime.max.replace(tzinfo=self.timezone)
 
-    def _expand_settings(self, key):
+    def _expand_settings(self, key: str) -> str:
         klass = "draft" if self.status == "draft" else "article"
         return super()._expand_settings(key, klass)
 
@@ -571,7 +582,7 @@ class Static(Content):
     default_status = "published"
     default_template = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._output_location_referenced = False
 
@@ -588,18 +599,18 @@ class Static(Content):
         return None
 
     @property
-    def url(self):
+    def url(self) -> str:
         # Note when url has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
         return super().url
 
     @property
-    def save_as(self):
+    def save_as(self) -> str:
         # Note when save_as has been referenced, so we can avoid overriding it.
         self._output_location_referenced = True
         return super().save_as
 
-    def attach_to(self, content):
+    def attach_to(self, content: Content) -> None:
         """Override our output directory with that of the given content object."""
 
         # Determine our file's new output path relative to the linking
@@ -624,7 +635,7 @@ class Static(Content):
 
         new_url = path_to_url(new_save_as)
 
-        def _log_reason(reason):
+        def _log_reason(reason: str) -> None:
             logger.warning(
                 "The {attach} link in %s cannot relocate "
                 "%s because %s. Falling back to "
