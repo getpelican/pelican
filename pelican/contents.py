@@ -519,7 +519,7 @@ class Content:
                 setattr(self, key.lower(), value)
 
         # _summary is an internal variable that some plugins may be writing to,
-        # so ensure changes to it are picked up
+        # so ensure changes to it are picked up, and write summary back to it
         if "summary" in self.settings["FORMATTED_FIELDS"]:
             if hasattr(self, "_summary"):
                 self.metadata["summary"] = self._summary
@@ -528,8 +528,6 @@ class Content:
                 self.metadata["summary"] = self._update_content(
                     self.metadata["summary"], self.get_siteurl()
                 )
-
-            if hasattr(self, "_summary") and "summary" in self.metadata:
                 self._summary = self.metadata["summary"]
 
 
