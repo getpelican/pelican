@@ -439,8 +439,8 @@ For **Markdown**, one must rely on an extension. For example, using the `mdx_inc
 Importing an existing site
 ==========================
 
-It is possible to import your site from WordPress, Tumblr, Dotclear, and RSS
-feeds using a simple script. See :ref:`import`.
+It is possible to import your site from several other blogging sites
+(like WordPress, Tumblr, ..) using a simple script. See :ref:`import`.
 
 Translations
 ============
