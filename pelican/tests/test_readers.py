@@ -1,5 +1,5 @@
 import os
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from pelican import readers
 from pelican.tests.support import get_settings, unittest
@@ -71,6 +71,18 @@ class DefaultReaderTest(ReaderTest):
     def test_readfile_unknown_extension(self):
         with self.assertRaises(TypeError):
             self.read_file(path="article_with_metadata.unknownextension")
+
+        with self.assertRaises(TypeError):
+            self.read_file(path='article_with.compound.extension')
+
+    def test_readfile_compound_extension(self):
+        CompoundReader = Mock()
+
+        # throws type error b/c of mock
+        with self.assertRaises(TypeError):
+            self.read_file(path='article_with.compound.extension',
+                           READERS={'compound.extension': CompoundReader})
+            CompoundReader.read.assert_called_with('article_with.compound.extension')
 
     def test_readfile_path_metadata_implicit_dates(self):
         test_file = "article_with_metadata_implicit_dates.html"
@@ -931,3 +943,81 @@ class HTMLReaderTest(ReaderTest):
             "title": "Article with an inline SVG",
         }
         self.assertDictHasSubset(page.metadata, expected)
+
+
+class ReaderTreeTest(unittest.TestCase):
+
+    def setUp(self):
+
+        readers_and_exts = {
+            'BaseReader': ['static'],
+            'RstReader': ['rst'],
+            'HtmlReader': ['htm', 'html'],
+            'MDReader': ['md', 'mk', 'mkdown', 'mkd'],
+            'MDeepReader': ['md.html'],
+            'FooReader': ['foo.bar.baz.yaz']
+        }
+
+        self.reader_classes = readers.ReaderTree()
+
+        for reader, exts in readers_and_exts.items():
+            for ext in exts:
+                self.reader_classes[ext] = reader
+
+    def test_correct_mapping_generated(self):
+        expected_mapping = {
+            'static': {'': 'BaseReader'},
+            'rst': {'': 'RstReader'},
+            'htm': {'': 'HtmlReader'},
+            'html': {
+                '': 'HtmlReader',
+                'md': {'': 'MDeepReader'}
+            },
+            'md': {'': 'MDReader'},
+            'mk': {'': 'MDReader'},
+            'mkdown': {'': 'MDReader'},
+            'mkd': {'': 'MDReader'},
+            'yaz': {
+                'baz': {
+                    'bar': {
+                        'foo': {'': 'FooReader'}}}}}
+
+        self.assertEqual(expected_mapping, self.reader_classes.as_dict())
+
+    def test_containment(self):
+        self.assertTrue('md.html' in self.reader_classes)
+        self.assertTrue('html' in self.reader_classes)
+        self.assertFalse('txt' in self.reader_classes)
+
+    def test_deletion(self):
+        self.assertTrue('rst' in self.reader_classes)
+        del self.reader_classes['rst']
+        self.assertFalse('rst' in self.reader_classes)
+
+    def test_update(self):
+        self.reader_classes.update({
+            'new.ext': 'NewExtReader',
+            'txt': 'TxtReader'
+        })
+        self.assertEqual(self.reader_classes['new.ext'], 'NewExtReader')
+        self.assertEqual(self.reader_classes['txt'], 'TxtReader')
+
+    def test_get_format(self):
+        html_ext = self.reader_classes.get_format('text.html')
+        md_ext = self.reader_classes.get_format('another.md')
+        compound_ext = self.reader_classes.get_format('dots.compound.md.html')
+        no_ext = self.reader_classes.get_format('no_extension')
+        bar_ext = self.reader_classes.get_format('file.bar')
+
+        self.assertEqual(html_ext, 'html')
+        self.assertEqual(md_ext, 'md')
+        self.assertEqual(compound_ext, 'md.html')
+        self.assertEqual(no_ext, '')
+        self.assertEqual(bar_ext, '')
+
+    def test_has_reader(self):
+        has_reader = self.reader_classes.has_reader
+        self.assertTrue(has_reader('text.html'))
+        self.assertFalse(has_reader('no_ext'))
+        print(has_reader('bad_ext.bar'))
+        self.assertFalse(has_reader('bad_ext.bar'))

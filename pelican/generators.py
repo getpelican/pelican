@@ -150,9 +150,12 @@ class Generator:
         if any(fnmatch.fnmatch(basename, ignore) for ignore in ignores):
             return False
 
-        ext = os.path.splitext(basename)[1][1:]
-        if extensions is False or ext in extensions:
+        if extensions is False:
             return True
+
+        for ext in extensions:
+            if basename.endswith(f'.{ext}'):
+                return True
 
         return False
 

@@ -1,8 +1,10 @@
 import datetime
 import logging
+import operator
 import os
 import re
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
+from functools import reduce
 from html import escape
 from html.parser import HTMLParser
 from io import StringIO
@@ -507,8 +509,8 @@ class Readers(FileStampDataCacher):
 
     def __init__(self, settings=None, cache_name=""):
         self.settings = settings or {}
-        self.readers = {}
-        self.reader_classes = {}
+        self.readers = ReaderTree()
+        self.reader_classes = ReaderTree()
 
         for cls in [BaseReader] + BaseReader.__subclasses__():
             if not cls.enabled:
@@ -562,8 +564,7 @@ class Readers(FileStampDataCacher):
         logger.debug("Read file %s -> %s", source_path, content_class.__name__)
 
         if not fmt:
-            _, ext = os.path.splitext(os.path.basename(path))
-            fmt = ext[1:]
+            fmt = self.readers.get_format(path)
 
         if fmt not in self.readers:
             raise TypeError("Pelican does not know how to parse %s", path)
@@ -777,3 +778,159 @@ def parse_path_metadata(source_path, settings=None, process=None):
                                 v = process(k, v)
                             metadata[k] = v
     return metadata
+
+
+class ReaderTree():
+
+    def __init__(self):
+        self.tree_dd = ReaderTree._rec_dd()
+
+    def __str__(self):
+        return str(ReaderTree._rec_dd_to_dict(self.tree_dd))
+
+    def __iter__(self):
+        for key in ReaderTree._rec_get_next_key(self.tree_dd):
+            yield key
+
+    def __setitem__(self, key, value):
+        components = reversed(key.split('.'))
+        reduce(operator.getitem, components, self.tree_dd)[''] = value
+
+    def __getitem__(self, key):
+        components = reversed(key.split('.'))
+        value = reduce(operator.getitem, components, self.tree_dd)
+        if value:
+            return value['']
+        else:
+            raise KeyError
+
+    def __delitem__(self, key):
+        value = ReaderTree._rec_del_item(self.tree_dd, key)
+        if not value:
+            raise KeyError
+
+    def __contains__(self, item):
+        try:
+            self[item]
+            return True
+        except KeyError:
+            return False
+
+    def __len__(self):
+        return len(list(self.keys()))
+
+    def keys(self):
+        return self.__iter__()
+
+    def values(self):
+        for value in ReaderTree._rec_get_next_value(self.tree_dd):
+            yield value
+
+    def items(self):
+        return zip(self.keys(), self.values())
+
+    def get(self, key):
+        return self[key]
+
+    def setdefault(self, key, value):
+        if key in self:
+            return self[key]
+        else:
+            self[key] = value
+            return value
+
+    def clear(self):
+        self.tree_dd.clear()
+
+    def pop(self, key, default=None):
+        if key in self:
+            value = self[key]
+            del self[key]
+            return value
+        elif default:
+            return default
+        else:
+            raise KeyError
+
+    def copy(self):
+        return self.tree_dd.copy()
+
+    def update(self, d):
+        for key, value in d.items():
+            self[key] = value
+
+    def get_format(self, filename):
+        try:
+            ext = ReaderTree._rec_get_fmt_from_filename(self.tree_dd, filename)
+            return ext[1:]
+        except TypeError:
+            return ''
+
+    def has_reader(self, filename):
+        fmt = self.get_format(filename)
+        return fmt in self
+
+    def as_dict(self):
+        return ReaderTree._rec_dd_to_dict(self.tree_dd)
+
+    @staticmethod
+    def _rec_dd():
+        return defaultdict(ReaderTree._rec_dd)
+
+    @staticmethod
+    def _rec_dd_to_dict(dd):
+        d = dict(dd)
+
+        for key, value in d.items():
+            if type(value) == defaultdict:
+                d[key] = ReaderTree._rec_dd_to_dict(value)
+
+        return d
+
+    @staticmethod
+    def _rec_get_next_key(d):
+        for key in d:
+            if key != '':
+                if '' in d[key]:
+                    yield key
+                if type(d[key]) == defaultdict:
+                    for component in ReaderTree._rec_get_next_key(d[key]):
+                        yield '.'.join([component, key])
+
+    @staticmethod
+    def _rec_get_next_value(d):
+        for key, value in d.items():
+            if key == '':
+                yield value
+            else:
+                if type(d[key]) == defaultdict:
+                    yield from ReaderTree._rec_get_next_value(d[key])
+
+    @staticmethod
+    def _rec_del_item(d, intended_key):
+        if intended_key in d:
+            value = d[intended_key]['']
+            del d[intended_key]['']
+            return value
+        else:
+            for key in d:
+                if type(d[key]) == defaultdict:
+                    ReaderTree._rec_del_item(d[key], intended_key)
+
+        return None
+
+    @staticmethod
+    def _rec_get_fmt_from_filename(d, filename):
+        if '.' in filename:
+            file, ext = os.path.splitext(filename)
+            fmt = ext[1:] if ext else ext
+
+            if fmt in d:
+                next_component = ReaderTree._rec_get_fmt_from_filename(d[fmt], file)
+                return '.'.join([next_component, fmt])
+            elif '' in d:
+                return ''
+            else:
+                raise TypeError('No reader found for file.')
+        else:
+            return ''
