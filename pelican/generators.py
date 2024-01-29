@@ -7,6 +7,7 @@ from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter
+from pathlib import Path
 
 from jinja2 import (
     BaseLoader,
@@ -150,7 +151,7 @@ class Generator:
         if any(fnmatch.fnmatch(basename, ignore) for ignore in ignores):
             return False
 
-        ext = os.path.splitext(basename)[1][1:]
+        ext = ''.join(Path(basename).suffixes)[1:]
         if extensions is False or ext in extensions:
             return True
 
