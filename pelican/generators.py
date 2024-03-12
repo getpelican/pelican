@@ -558,57 +558,93 @@ class ArticlesGenerator(CachingGenerator):
         tag_template = self.get_template("tag")
         for tag, articles in self.tags.items():
             dates = [article for article in self.dates if article in articles]
-            write(
-                tag.save_as,
-                tag_template,
-                self.context,
-                tag=tag,
-                url=tag.url,
-                articles=articles,
-                dates=dates,
-                template_name="tag",
-                blog=True,
-                page_name=tag.page_name,
-                all_articles=self.articles,
-            )
+            try:
+                write(
+                    tag.save_as,
+                    tag_template,
+                    self.context,
+                    tag=tag,
+                    url=tag.url,
+                    articles=articles,
+                    dates=dates,
+                    template_name="tag",
+                    blog=True,
+                    page_name=tag.page_name,
+                    all_articles=self.articles,
+                )
+            except RuntimeError:
+                if not tag.slug:
+                    logger.info(
+                        'Tag "%s" has an invalid slug; skipping writing tag page...',
+                        tag,
+                        extra={"limit_msg": "Further tags with invalid slugs."},
+                    )
+                    continue
+                else:
+                    logger.error('Failed to write Tag page for "%s".', tag)
+                    raise
 
     def generate_categories(self, write):
         """Generate category pages."""
         category_template = self.get_template("category")
         for cat, articles in self.categories:
             dates = [article for article in self.dates if article in articles]
-            write(
-                cat.save_as,
-                category_template,
-                self.context,
-                url=cat.url,
-                category=cat,
-                articles=articles,
-                dates=dates,
-                template_name="category",
-                blog=True,
-                page_name=cat.page_name,
-                all_articles=self.articles,
-            )
+            try:
+                write(
+                    cat.save_as,
+                    category_template,
+                    self.context,
+                    url=cat.url,
+                    category=cat,
+                    articles=articles,
+                    dates=dates,
+                    template_name="category",
+                    blog=True,
+                    page_name=cat.page_name,
+                    all_articles=self.articles,
+                )
+            except RuntimeError:
+                if not cat.slug:
+                    logger.info(
+                        'Category "%s" has an invalid slug; skipping writing category page...',
+                        cat,
+                        extra={"limit_msg": "Further categories with invalid slugs."},
+                    )
+                    continue
+                else:
+                    logger.error('Failed to write Category page for "%s".', cat)
+                    raise
 
     def generate_authors(self, write):
         """Generate Author pages."""
         author_template = self.get_template("author")
         for aut, articles in self.authors:
             dates = [article for article in self.dates if article in articles]
-            write(
-                aut.save_as,
-                author_template,
-                self.context,
-                url=aut.url,
-                author=aut,
-                articles=articles,
-                dates=dates,
-                template_name="author",
-                blog=True,
-                page_name=aut.page_name,
-                all_articles=self.articles,
-            )
+            try:
+                write(
+                    aut.save_as,
+                    author_template,
+                    self.context,
+                    url=aut.url,
+                    author=aut,
+                    articles=articles,
+                    dates=dates,
+                    template_name="author",
+                    blog=True,
+                    page_name=aut.page_name,
+                    all_articles=self.articles,
+                )
+            except RuntimeError:
+                if not aut.slug:
+                    logger.info(
+                        'Author "%s" has an invalid slug; skipping writing author page...',
+                        aut,
+                        extra={"limit_msg": "Further authors with invalid slugs."},
+                    )
+                    continue
+                else:
+                    logger.error('Failed to write Author page for "%s".', aut)
+                    raise
 
     def generate_drafts(self, write):
         """Generate drafts pages."""
