@@ -64,7 +64,7 @@ jobs:
       - name: Run linters
         run: pdm lint --diff
       - name: Run pre-commit checks on all files
-        uses: pre-commit/action@v3.0.0
+        uses: pre-commit/action@v3.0.1
 
   build:
     name: Test build
@@ -100,7 +100,7 @@ jobs:
       - name: Check
         run: tox -e docs
       - name: cache the docs for inspection
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docs
           path: docs/_build/html/
