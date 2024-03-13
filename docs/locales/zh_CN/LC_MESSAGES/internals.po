@@ -1,0 +1,144 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-29 21:43+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../internals.rst:2
+msgid "Pelican internals"
+msgstr ""
+
+#: ../../internals.rst:4
+msgid ""
+"This section describe how Pelican works internally. As you'll see, it's "
+"quite simple, but a bit of documentation doesn't hurt.  :)"
+msgstr ""
+
+#: ../../internals.rst:7
+msgid ""
+"You can also find in the :doc:`report` section an excerpt of a report the"
+" original author wrote with some software design information."
+msgstr ""
+
+#: ../../internals.rst:13
+msgid "Overall structure"
+msgstr ""
+
+#: ../../internals.rst:15
+msgid ""
+"What Pelican does is take a list of files and process them into some sort"
+" of output. Usually, the input files are reStructuredText and Markdown "
+"files, and the output is a blog, but both input and output can be "
+"anything you want."
+msgstr ""
+
+#: ../../internals.rst:19
+msgid "The logic is separated into different classes and concepts:"
+msgstr ""
+
+#: ../../internals.rst:21
+msgid ""
+"**Writers** are responsible for writing files: .html files, RSS feeds, "
+"and so on. Since those operations are commonly used, the object is "
+"created once and then passed to the generators."
+msgstr ""
+
+#: ../../internals.rst:25
+msgid ""
+"**Readers** are used to read from various formats (HTML, Markdown and "
+"reStructuredText for now, but the system is extensible). Given a file, "
+"they return metadata (author, tags, category, etc.) and content (HTML-"
+"formatted)."
+msgstr ""
+
+#: ../../internals.rst:29
+msgid ""
+"**Generators** generate the different outputs. For instance, Pelican "
+"comes with ``ArticlesGenerator`` and ``PageGenerator``. Given a "
+"configuration, they can do whatever they want. Most of the time, it's "
+"generating files from inputs."
+msgstr ""
+
+#: ../../internals.rst:34
+msgid ""
+"Pelican also uses templates, so it's easy to write your own theme. The "
+"syntax is `Jinja2 <https://palletsprojects.com/p/jinja/>`_ and is very "
+"easy to learn, so don't hesitate to jump in and build your own theme."
+msgstr ""
+
+#: ../../internals.rst:39
+msgid "How to implement a new reader?"
+msgstr ""
+
+#: ../../internals.rst:41
+msgid ""
+"Is there an awesome markup language you want to add to Pelican? Well, the"
+" only thing you have to do is to create a class with a ``read`` method "
+"that returns HTML content and some metadata."
+msgstr ""
+
+#: ../../internals.rst:45
+msgid "Take a look at the Markdown reader::"
+msgstr ""
+
+#: ../../internals.rst:71
+msgid "Simple, isn't it?"
+msgstr ""
+
+#: ../../internals.rst:73
+msgid ""
+"If your new reader requires additional Python dependencies, then you "
+"should wrap their ``import`` statements in a ``try...except`` block.  "
+"Then inside the reader's class, set the ``enabled`` class attribute to "
+"mark import success or failure. This makes it possible for users to "
+"continue using their favourite markup method without needing to install "
+"modules for formats they don't use."
+msgstr ""
+
+#: ../../internals.rst:80
+msgid "How to implement a new generator?"
+msgstr ""
+
+#: ../../internals.rst:82
+msgid ""
+"Generators have two important methods. You're not forced to create both; "
+"only the existing ones will be called."
+msgstr ""
+
+#: ../../internals.rst:85
+msgid ""
+"``generate_context``, that is called first, for all the generators. Do "
+"whatever you have to do, and update the global context if needed. This "
+"context is shared between all generators, and will be passed to the "
+"templates. For instance, the ``PageGenerator`` ``generate_context`` "
+"method finds all the pages, transforms them into objects, and populates "
+"the context with them. Be careful *not* to output anything using this "
+"context at this stage, as it is likely to change by the effect of other "
+"generators."
+msgstr ""
+
+#: ../../internals.rst:93
+msgid ""
+"``generate_output`` is then called. And guess what is it made for? Oh, "
+"generating the output.  :) It's here that you may want to look at the "
+"context and call the methods of the ``writer`` object that is passed as "
+"the first argument of this function. In the ``PageGenerator`` example, "
+"this method will look at all the pages recorded in the global context and"
+" output a file on the disk (using the writer method ``write_file``) for "
+"each page encountered."
+msgstr ""

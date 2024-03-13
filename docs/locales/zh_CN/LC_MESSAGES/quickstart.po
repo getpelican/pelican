@@ -1,0 +1,136 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-19 20:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.0\n"
+
+#: ../../quickstart.rst:2
+msgid "Quickstart"
+msgstr "快速入门"
+
+#: ../../quickstart.rst:4
+msgid ""
+"Reading through all the documentation is highly recommended, but for the "
+"truly impatient, following are some quick steps to get started."
+msgstr "强烈建议将所有文档完整地看一遍，但如果您真的非常没有耐心看完，下面的步骤可以帮助您快速地开始使用Pelican。"
+
+#: ../../quickstart.rst:8
+msgid "Installation"
+msgstr "安装"
+
+#: ../../quickstart.rst:10
+msgid ""
+"Install Pelican (and optionally Markdown if you intend to use it) on "
+"Python |min_python| by running the following command in your preferred "
+"terminal, prefixing with ``sudo`` if permissions warrant::"
+msgstr ""
+"在命令行中执行下面的命令就可以安装Pelican了（如果您需要Markdown支持的话，也可以同时安装）。Pelican需要使用 |min_python| 以上版本的Python，当然如果需要授权，请在命令前加上"
+" ``sudo``"
+
+#: ../../quickstart.rst:17
+msgid "Create a project"
+msgstr "创建项目"
+
+#: ../../quickstart.rst:19
+msgid ""
+"First, choose a name for your project, create an appropriately-named "
+"directory for your site, and switch to that directory::"
+msgstr "首先，给您的项目想个名字，并以合适的名字创建一个文件夹来存放您的站点接着进入这个新创建的文件夹"
+
+#: ../../quickstart.rst:25
+msgid ""
+"Create a skeleton project via the ``pelican-quickstart`` command, which "
+"begins by asking some questions about your site::"
+msgstr "通过 ``pelican-quickstart`` 命令创建一个项目的框架，执行这个命令后，您需要输入一些站点相关的信息"
+
+#: ../../quickstart.rst:30
+msgid ""
+"For questions that have default values denoted in brackets, feel free to "
+"use the Return key to accept those default values [#tzlocal_fn]_. When "
+"asked for your URL prefix, enter your domain name as indicated (e.g., "
+"``https://example.com``)."
+msgstr ""
+"对于那些在括号中写了默认值的问题，完全可以直接回车使用预先设定好的默认值 "
+"[#tzlocal_fn]_。在输入站点URL的前缀（prefix）时，请根据提示的格式输入站点的域名（例如 "
+"``https://example.com`` ）。"
+
+#: ../../quickstart.rst:36
+msgid "Create an article"
+msgstr "创建文章"
+
+#: ../../quickstart.rst:38
+msgid ""
+"You cannot run Pelican until you have created some content. Use your "
+"preferred text editor to create your first article with the following "
+"content::"
+msgstr "在运行Pelican前，您需要先写一些内容。您可以使用喜欢的文本编辑器来创建第一篇文章。下面是一个样例，可以将它作为您的第一篇文章："
+
+#: ../../quickstart.rst:47
+msgid ""
+"Given that this example article is in Markdown format, save it as "
+"``~/projects/yoursite/content/keyboard-review.md``."
+msgstr ""
+"上面这篇文章是以Markdown的格式完成的，请将它保存为（注意要保存在content文件夹下）``~/projects/yoursite/content"
+"/keyboard-review.md``。"
+
+#: ../../quickstart.rst:51
+msgid "Generate your site"
+msgstr "生成站点"
+
+#: ../../quickstart.rst:53
+msgid ""
+"From your project root directory, run the ``pelican`` command to generate"
+" your site::"
+msgstr "在项目的根目录下，直接运行命令 ``pelican`` 就可以生成您自己的站点了："
+
+#: ../../quickstart.rst:57
+msgid ""
+"Your site has now been generated inside the ``output/`` directory. (You "
+"may see a warning related to feeds, but that is normal when developing "
+"locally and can be ignored for now.)"
+msgstr "站点会生成在 ``output/`` 目录下。（可能会显示和feeds有关的警告，这和现在的本地开发环境有关，目前完全可以忽略它。）"
+
+#: ../../quickstart.rst:62
+msgid "Preview your site"
+msgstr "预览站点"
+
+#: ../../quickstart.rst:64
+msgid ""
+"Open a new terminal session, navigate to your project root directory, and"
+" run the following command to launch Pelican's web server::"
+msgstr "打开一个新的命令行，进入刚才项目的根目录，执行下面的命令让Pelican自己运行一个web服务器："
+
+#: ../../quickstart.rst:69
+msgid "Preview your site by navigating to http://localhost:8000/ in your browser."
+msgstr "打开浏览器，进入http://localhost:8000/就可以看到刚刚生成的站点了。"
+
+#: ../../quickstart.rst:71
+msgid ""
+"Continue reading the other documentation sections for more detail, and "
+"check out the Pelican wiki's Tutorials_ page for links to community-"
+"published tutorials."
+msgstr "请继续阅读文档中的其他部分来了解更多Pelican的用法，也可以前往Pelican的wiki 教程_ 页面获取社区发布的教程。"
+
+#: ../../quickstart.rst:78
+msgid "Footnotes"
+msgstr "脚注"
+
+#: ../../quickstart.rst:80
+msgid ""
+"You can help localize default fields by installing the optional `tzlocal "
+"<https://pypi.org/project/tzlocal/>`_ module."
+msgstr "您可以安装可选模块 `tzlocal <https://pypi.org/project/tzlocal/>`_ 来本地化默认字段。"

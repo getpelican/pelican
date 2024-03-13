@@ -1,0 +1,279 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-19 20:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.0\n"
+
+#: ../../importer.rst:4
+msgid "Importing an existing site"
+msgstr "导入已有站点"
+
+#: ../../importer.rst:7
+msgid "Description"
+msgstr "简介"
+
+#: ../../importer.rst:9
+msgid ""
+"``pelican-import`` is a command-line tool for converting articles from "
+"other software to reStructuredText or Markdown. The supported import "
+"formats are:"
+msgstr "命令行工具 ``pelican-import`` 用于将其他软件生成的文章转换成reStructuredText或Markdown格式。"
+"支持导入下面这些格式"
+
+#: ../../importer.rst:12
+msgid "Blogger XML export"
+msgstr "Blogger XML export"
+
+#: ../../importer.rst:13
+msgid "Dotclear export"
+msgstr "Dotclear export"
+
+#: ../../importer.rst:14
+msgid "Tumblr API"
+msgstr "Tumblr API"
+
+#: ../../importer.rst:15
+msgid "WordPress XML export"
+msgstr "WordPress XML export"
+
+#: ../../importer.rst:16
+msgid "RSS/Atom feed"
+msgstr "RSS/Atom feed"
+
+#: ../../importer.rst:18
+msgid ""
+"The conversion from HTML to reStructuredText or Markdown relies on "
+"`Pandoc`_. For Dotclear, if the source posts are written with Markdown "
+"syntax, they will not be converted (as Pelican also supports Markdown)."
+msgstr "从HTML转换到reStructuredText或Markdown是依赖 `Pandoc`_ 完成的。对于Dotclear，"
+"若原帖子是由Markdown语法写的，则无需转换（因为Pelican本就支持Markdown）。"
+
+#: ../../importer.rst:24
+msgid ""
+"Unlike Pelican, Wordpress supports multiple categories per article. These"
+" are imported as a comma-separated string. You have to resolve these "
+"manually, or use a plugin such as `More Categories`_ that enables "
+"multiple categories per article."
+msgstr "和Pelican不同，在Wordpress中可以将一篇文章同时放在多个分类中。在导入时，各个分类会以逗号"
+"分隔，你必须自己手动进行处理。或者也可以使用例如 `More Categories`_ 这样的插件，从而可以将文章"
+"放在多个分类中。"
+
+#: ../../importer.rst:30
+msgid "Dependencies"
+msgstr "依赖"
+
+#: ../../importer.rst:32
+msgid ""
+"``pelican-import`` has some dependencies not required by the rest of "
+"Pelican:"
+msgstr "``pelican-import`` 需要用到一些其他依赖，这些依赖只会被 ``pelican-import`` 用到："
+
+#: ../../importer.rst:34
+msgid ""
+"*BeautifulSoup4* and *lxml*, for WordPress and Dotclear import. Can be "
+"installed like any other Python package (``pip install BeautifulSoup4 "
+"lxml``)."
+msgstr "为了能够导入WordPress和Dotclear的内容，需要*BeautifulSoup4* 与 *lxml* 。"
+"安装方法与其他Python包相同（ ``pip install BeautifulSoup4 lxml`` ）"
+
+#: ../../importer.rst:37
+msgid "*Feedparser*, for feed import (``pip install feedparser``)."
+msgstr "为了能够导入订阅源，需要 *Feedparser* （ ``pip install feedparser`` ）"
+
+#: ../../importer.rst:38
+msgid ""
+"*Pandoc*, see the `Pandoc site`_ for installation instructions on your "
+"operating system."
+msgstr "还需要 *Pandoc* ，参照 `Pandoc官方网站`_ 进行安装。"
+
+#: ../../importer.rst:46
+msgid "Usage"
+msgstr "用法"
+
+#: ../../importer.rst:56
+msgid "Positional arguments"
+msgstr "位置参数"
+
+#: ../../importer.rst:58
+msgid "``input``"
+msgstr "``input``"
+
+#: ../../importer.rst:58
+msgid "The input file to read"
+msgstr "需要读取的输入文件"
+
+#: ../../importer.rst:59
+msgid "``api_key``"
+msgstr "``api_key``"
+
+#: ../../importer.rst:59
+msgid ""
+"(Tumblr only) api_key can be obtained from "
+"https://www.tumblr.com/oauth/apps"
+msgstr "（只会在Tumblr中用到）从 https://www.tumblr.com/oauth/apps 中获取到的api_key"
+
+#: ../../importer.rst:63
+msgid "Optional arguments"
+msgstr "可选参数"
+
+#: ../../importer.rst:65
+msgid "Show this help message and exit"
+msgstr "显示此帮助信息并退出 ``pelican-import`` "
+
+#: ../../importer.rst:66
+msgid "Blogger XML export (default: False)"
+msgstr "输入是否为Blogger XML格式（默认：False）"
+
+#: ../../importer.rst:67
+msgid "Dotclear export (default: False)"
+msgstr "输入是否为Dotclear格式（默认：False）"
+
+#: ../../importer.rst:68
+msgid "Tumblr API (default: False)"
+msgstr "输入是否为Tumblr API格式（默认：False）"
+
+#: ../../importer.rst:69
+msgid "WordPress XML export (default: False)"
+msgstr "输入是否为WordPress XML格式（默认：False）"
+
+#: ../../importer.rst:70
+msgid "Feed to parse (default: False)"
+msgstr "输入是否为订阅源格式（默认：False）"
+
+#: ../../importer.rst:72
+msgid "Output path (default: content)"
+msgstr "输出路径（默认：content）"
+
+#: ../../importer.rst:74
+msgid ""
+"Output markup format: ``rst``, ``markdown``, or ``asciidoc`` (default: "
+"``rst``)"
+msgstr "输出格式，可选值为： ``rst`` 、 ``markdown`` 、 ``asciidoc`` （默认： ``rst`` ）"
+
+#: ../../importer.rst:76
+msgid "Put files in directories with categories name (default: False)"
+msgstr "将输出文件按分类名放到各文件夹中（默认：False）"
+
+#: ../../importer.rst:78
+msgid ""
+"Put files recognised as pages in \"pages/\" sub- directory (blogger and "
+"wordpress import only) (default: False)"
+msgstr "将识别为页面的文件放入 \"pages/\" 子文件夹中（仅在blogger和wordpress中有用）（默认：False）"
+
+#: ../../importer.rst:81
+msgid "Import only post from the specified author"
+msgstr "只导入某个作者的帖子"
+
+#: ../../importer.rst:82
+msgid ""
+"Strip raw HTML code that can't be converted to markup such as flash "
+"embeds or iframes (wordpress import only) (default: False)"
+msgstr "删除无法转换的HTML代码，例如嵌入的flash或iframe（只在wordpress中有效）（默认：False）"
+
+#: ../../importer.rst:85
+msgid ""
+"Put wordpress custom post types in directories. If used with --dir-cat "
+"option directories will be created as \"/post_type/category/\" (wordpress"
+" import only)"
+msgstr "将wordpress中的自定义类型博文放到对应文件夹中。如果同时还使用了 --dir-cat 选项，"
+"输出转换后文件时会创建诸如 \"/post_type/category/\" 的文件夹。（只在wordpress中有效）"
+
+#: ../../importer.rst:88
+msgid ""
+"Download files uploaded to wordpress as attachments. Files will be added "
+"to posts as a list in the post header and links to the files within the "
+"post will be updated. All files will be downloaded, even if they aren't "
+"associated with a post. Files will be downloaded with their original path"
+" inside the output directory, e.g. \"output/wp-"
+"uploads/date/postname/file.jpg\". (wordpress import only) (requires an "
+"internet connection)"
+msgstr "下载作为附件上传到WordPress的文件。文件会以列表形式添加到帖子的开头，并且到"
+"这些文件的链接都会进行更新。另外，即使某些文件没有在任何帖子中用到，也同样会被下载。文件会被"
+"下载到输出文件夹下，并保持原始路径，例如  \"output/wp-uploads/date/postname/file.jpg\" 。"
+"（只有在wordpress中有用，且需要互联网连接）"
+
+#: ../../importer.rst:97
+msgid ""
+"Disable storing slugs from imported posts within output. With this "
+"disabled, your Pelican URLs may not be consistent with your original "
+"posts. (default: False)"
+msgstr "不保存导入帖子的slug，会导致Pelican的URL和原始帖子不一致。（默认：False）"
+
+#: ../../importer.rst:102
+msgid "Blog name used in Tumblr API"
+msgstr "Tumblr API中使用的博客名"
+
+#: ../../importer.rst:106
+msgid "Examples"
+msgstr "例子"
+
+#: ../../importer.rst:108
+msgid "For Blogger::"
+msgstr "导入Blogger："
+
+#: ../../importer.rst:112
+msgid "For Dotclear::"
+msgstr "导入Dotclear"
+
+#: ../../importer.rst:116
+msgid "For Tumblr::"
+msgstr "导入Tumblr"
+
+#: ../../importer.rst:120
+msgid "For WordPress::"
+msgstr "导入WordPress"
+
+#: ../../importer.rst:125
+msgid "Tests"
+msgstr "测试"
+
+#: ../../importer.rst:127
+msgid "To test the module, one can use sample files:"
+msgstr "可以使用下面的文件作为样例，来测试模块"
+
+#: ../../importer.rst:129
+msgid ""
+"for WordPress: https://www.wpbeginner.com/wp-themes/how-to-add-dummy-"
+"content-for-theme-development-in-wordpress/"
+msgstr "WordPress： https://www.wpbeginner.com/wp-themes/how-to-add-dummy-content-for-theme-development-in-wordpress/"
+
+#: ../../importer.rst:130
+msgid "for Dotclear: http://media.dotaddict.org/tda/downloads/lorem-backup.txt"
+msgstr "Dotclear： http://media.dotaddict.org/tda/downloads/lorem-backup.txt"
+
+#~ msgid "Posterous API"
+#~ msgstr ""
+
+#~ msgid "``api_token``"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "(Posterous only) api_token can be "
+#~ "obtained from http://posterous.com/api/"
+#~ msgstr ""
+
+#~ msgid "Posterous API (default: False)"
+#~ msgstr ""
+
+#~ msgid "Email used to authenticate Posterous API"
+#~ msgstr ""
+
+#~ msgid "Password used to authenticate Posterous API"
+#~ msgstr ""
+
+#~ msgid "for Posterous::"
+#~ msgstr ""

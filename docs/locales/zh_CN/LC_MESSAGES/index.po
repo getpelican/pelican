@@ -1,0 +1,132 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-04-29 21:43+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: ../../index.rst:2
+msgid "Pelican |release|"
+msgstr "Pelican |release|"
+
+#: ../../index.rst:13
+msgid ""
+"Pelican is a static site generator, written in Python_. Highlights "
+"include:"
+msgstr "Pelican是一个用 Python_ 写的静态站点生成器，"
+"它有诸多亮点："
+
+#: ../../index.rst:15
+msgid ""
+"Write your content directly with your editor of choice in "
+"reStructuredText_ or Markdown_ formats"
+msgstr "你可以直接在自己的编辑器中用 reStructuredText_ 或 Markdown_ 完成内容创作"
+
+#: ../../index.rst:17
+msgid "Includes a simple CLI tool to (re)generate your site"
+msgstr "自带了一个简单的命令行工具，你可以用它来生成你的站点"
+
+#: ../../index.rst:18
+msgid "Easy to interface with distributed version control systems and web hooks"
+msgstr "易于和分布式版本控制系统和webhook连接"
+
+#: ../../index.rst:19
+msgid "Completely static output is easy to host anywhere"
+msgstr "生成的站点是完全静态的，可以在任何主机上轻松地部署"
+
+#: ../../index.rst:21
+msgid "Ready to get started? Check out the :doc:`Quickstart<quickstart>` guide."
+msgstr "准备好开始体验了吗？请查看 :doc:`快速入门<quickstart>` 指南。"
+
+#: ../../index.rst:24
+msgid "Features"
+msgstr "特性"
+
+#: ../../index.rst:26
+msgid "Pelican’s feature highlights include:"
+msgstr "Pelican在特性上也有很多亮点："
+
+#: ../../index.rst:28
+msgid ""
+"Articles (e.g., blog posts) and pages (e.g., \"About\", \"Projects\", "
+"\"Contact\")"
+msgstr "可以生成文章（例如博客推文）和页面（例如“关于”、“联系我们”、“项目”）"
+
+#: ../../index.rst:29
+msgid "Integration with external services"
+msgstr "可以和外部服务集成"
+
+#: ../../index.rst:30
+msgid "Site themes (created using Jinja2_ templates)"
+msgstr "可以使用主题（主题使用 Jinja2_ 模板引擎创建的）"
+
+#: ../../index.rst:31
+msgid "Publication of articles in multiple languages"
+msgstr "可以发布多语言文章（可切换语言）"
+
+#: ../../index.rst:32
+msgid "Generation of Atom and RSS feeds"
+msgstr "可以生成Atom和Rss feeds"
+
+#: ../../index.rst:33
+msgid "Code syntax highlighting"
+msgstr "可以显示代码高亮"
+
+#: ../../index.rst:34
+msgid "Import existing content from WordPress, Dotclear, or RSS feeds"
+msgstr "可以从WordPress、Dotclear或Rss feeds导入已有的内容"
+
+#: ../../index.rst:35
+msgid "Fast rebuild times thanks to content caching and selective output writing"
+msgstr "得益于内容缓存和选择性生成，可以快速的重新生成站点"
+
+#: ../../index.rst:36
+msgid "Extensible via a rich plugin ecosystem: `Pelican Plugins`_"
+msgstr "可扩展性强，有丰富的插件生态： `Pelican Plugins`_"
+
+#: ../../index.rst:39
+msgid "Why the name \"Pelican\"?"
+msgstr "为什么叫做“Pelican”？"
+
+#: ../../index.rst:41
+msgid ""
+"\"Pelican\" is an anagram for *calepin*, which means \"notebook\" in "
+"French. ;)"
+msgstr "“Pelican”是法语词笔记本 *calepin* 读音的回文。;)"
+
+#: ../../index.rst:44
+msgid "Source code"
+msgstr "源码"
+
+#: ../../index.rst:46
+msgid "You can access the source code at: https://github.com/getpelican/pelican"
+msgstr "在这里可以获取Pelican的源码： https://github.com/getpelican/pelican"
+
+#: ../../index.rst:49
+msgid "How to get help, contribute, or provide feedback"
+msgstr "如何获取帮助、贡献内容或是提供反馈"
+
+#: ../../index.rst:51
+msgid ""
+"See our :doc:`feedback and contribution submission guidelines "
+"<contribute>`."
+msgstr "请查看文档 :doc:`反馈意见和贡献的提交指南 "
+"<contribute>`。"
+
+#: ../../index.rst:54
+msgid "Documentation"
+msgstr "文档"

@@ -1,0 +1,1877 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-19 20:08+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.0\n"
+
+#: ../../settings.rst:2
+msgid "Settings"
+msgstr "设置"
+
+#: ../../settings.rst:4
+msgid ""
+"Pelican is configurable thanks to a settings file you can pass to the "
+"command line::"
+msgstr "可以通过命令行给Pelican传入配置文件："
+
+#: ../../settings.rst:9
+msgid ""
+"If you used the ``pelican-quickstart`` command, your primary settings "
+"file will be named ``pelicanconf.py`` by default."
+msgstr "如果使用的是 ``pelican-quickstart`` 命令，默认的主配置文件时 ``pelicanconf.py`` 。"
+
+#: ../../settings.rst:12
+msgid ""
+"You can also specify settings via ``-e`` / ``--extra-settings`` option "
+"flags. It will override default settings as well as any defined within "
+"the setting file. Note that values must follow JSON notation::"
+msgstr ""
+"通过 ``-e`` / ``--extra-settings`` "
+"选项，可以直接指定一些配置来覆盖配置文件中的设置。需要注意的是，选项值必须时JSON格式的："
+
+#: ../../settings.rst:18
+msgid ""
+"Environment variables can also be used here but must be escaped "
+"appropriately::"
+msgstr "可以在命令中使用环境变量，但是需要正确地进行转义："
+
+#: ../../settings.rst:24
+msgid ""
+"When experimenting with different settings (especially the metadata ones)"
+" caching may interfere and the changes may not be visible. In such cases "
+"disable caching with ``LOAD_CONTENT_CACHE = False`` or use the "
+"``--ignore-cache`` command-line switch."
+msgstr ""
+"在尝试不同的设置（特别是尝试元数据）时，受缓存的干扰，对设置的更改可能不会生效。在这种情况下，指定 ``LOAD_CONTENT_CACHE = "
+"False`` 设置或 ``--ignore-cache`` 命令行选项即可。"
+
+#: ../../settings.rst:29
+msgid ""
+"Settings are configured in the form of a Python module (a file). There is"
+" an `example settings file "
+"<https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_"
+" available for reference."
+msgstr ""
+"设置以Python模块（一个文件）的形式。 `示例配置文件 "
+"<https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_"
+" 可供您参考。"
+
+#: ../../settings.rst:34
+msgid ""
+"To see a list of current settings in your environment, including both "
+"default and any customized values, run the following command (append one "
+"or more specific setting names as arguments to see values for those "
+"settings only)::"
+msgstr "要查看当前环境下的配置，同时查看默认的或是自定义的配置值，执行下面的命令（在后面以参数的形式添加一个或多个指定的配置名称，可以单独查看指定的配置项）"
+
+#: ../../settings.rst:40
+msgid ""
+"All the setting identifiers must be set in all-caps, otherwise they will "
+"not be processed. Setting values that are numbers (5, 20, etc.), booleans"
+" (True, False, None, etc.), dictionaries, or tuples should *not* be "
+"enclosed in quotation marks. All other values (i.e., strings) *must* be "
+"enclosed in quotation marks."
+msgstr ""
+"所有设置的键（设置中的变量名）都必须是大写的，否则会被无视。配置值可能是数值（5、20等）、布尔值（True、False、None等）、字典或者元组。这些值应该以Python值的形式存在，"
+" *不* 需要用引号引起来。除此之外的其他配置值（例如字符串） *必须* 用引号引起来。"
+
+#: ../../settings.rst:46
+msgid ""
+"Unless otherwise specified, settings that refer to paths can be either "
+"absolute or relative to the configuration file. The settings you define "
+"in the configuration file will be passed to the templates, which allows "
+"you to use your settings to add site-wide content."
+msgstr "除非另有指定，设置中指定的路径可以是绝对路径，也可以是相对于配置文件的相对路径。设置中配置的东西会传递到网站模板上，这使得设置中可以添加在整个站点中都能使用的内容。"
+
+#: ../../settings.rst:51
+msgid "Here is a list of settings for Pelican:"
+msgstr "下面是Pelican设置项的列表："
+
+#: ../../settings.rst:55
+msgid "Basic settings"
+msgstr "基础设置"
+
+#: ../../settings.rst:59
+msgid ""
+"When you don't specify a category in your post metadata, set this setting"
+" to ``True``, and organize your articles in subfolders, the subfolder "
+"will become the category of your post. If set to ``False``, "
+"``DEFAULT_CATEGORY`` will be used as a fallback."
+msgstr ""
+"当您没有在发布内容中指定元数据categroy时，若本项设置设为了 ``True`` "
+"，并且文章也是通过子文件夹进行分类管理的，那么这些子文件夹的名称就会作为发布内容的分类。若本项设为了 ``False`` ，会使用 "
+"``DEFAULT_CATEGORY`` 配置项的设置值作为默认分类。"
+
+#: ../../settings.rst:66
+msgid "The default category to fall back on."
+msgstr "默认的分类"
+
+#: ../../settings.rst:70
+msgid ""
+"Whether to display pages on the menu of the template. Templates may or "
+"may not honor this setting."
+msgstr "指定是否将“页面”显示在模板的菜单中。模板可能不会遵循此项。"
+
+#: ../../settings.rst:75
+msgid ""
+"Whether to display categories on the menu of the template. Templates may "
+"or not honor this setting."
+msgstr "指定是否将“分类”显示在模板的菜单中。模板可能不会遵循此项。"
+
+#: ../../settings.rst:80
+msgid ""
+"Extra configuration settings for the docutils publisher (applicable only "
+"to reStructuredText). See `Docutils Configuration`_ settings for more "
+"details."
+msgstr "docutils的额外配置项（只针对reStructuredText有效）。在 `Docutils 配置`_ 设置中查看更多信息。"
+
+#: ../../settings.rst:85
+msgid ""
+"Delete the output directory, and **all** of its contents, before "
+"generating new files. This can be useful in preventing older, unnecessary"
+" files from persisting in your output. However, **this is a destructive "
+"setting and should be handled with extreme care.**"
+msgstr ""
+"在生成新文件前删除输出目录和其中 **所有** 的内容。这可以避免一些老的无用的文件一直存在于输出目录中。但是， "
+"**此项配置是具有破坏性的，请谨慎使用** 。"
+
+#: ../../settings.rst:92
+msgid ""
+"A list of filenames that should be retained and not deleted from the "
+"output directory. One use case would be the preservation of version "
+"control data."
+msgstr "是一个文件名的列表，包含了应该保留，不从输出目录中删除的文件。可以用在版本控制数据的保留上。"
+
+#: ../../settings.rst:95 ../../settings.rst:110 ../../settings.rst:136
+msgid "Example::"
+msgstr "例子："
+
+#: ../../settings.rst:101
+msgid ""
+"A dictionary of custom Jinja2 environment variables you want to use. This"
+" also includes a list of extensions you may want to include. See `Jinja "
+"Environment documentation`_."
+msgstr "是一个字典，用于您想要用的自定义的Jinja2环境变量。这其中也包含了要使用的扩展列表。详见 `Jinja环境文档`_ "
+
+#: ../../settings.rst:107
+msgid ""
+"A dictionary of custom Jinja2 filters you want to use.  The dictionary "
+"should map the filtername to the filter function."
+msgstr "是一个字典，存放自定义的Jinja2过滤器。此字典中应该是过滤器名称到过滤器函数的映射。"
+
+#: ../../settings.rst:118
+msgid "See: `Jinja custom filters documentation`_."
+msgstr "详见： `Jinja自定义过滤器文档`_ 。"
+
+#: ../../settings.rst:122
+msgid ""
+"A dictionary of custom objects to map into the Jinja2 global environment "
+"namespace. The dictionary should map the global name to the global "
+"variable/function. See: `Jinja global namespace documentation`_."
+msgstr ""
+"是一个字典，可以将自定义对象映射到Jinja2的全局环境命名空间中。字典中应该是全局名称到全局变量/函数的映射。详见： "
+"`Jinja全局命名空间文档`_ 。"
+
+#: ../../settings.rst:128
+msgid ""
+"A dictionary of custom Jinja2 tests you want to use. The dictionary "
+"should map test names to test functions. See: `Jinja custom tests "
+"documentation`_."
+msgstr "是一个字典，自定义了要使用的Jinja测试。字典中应该是测试名到测试函数的映射。详见： `Jinja自定义测试文档`_ 。"
+
+#: ../../settings.rst:133
+msgid ""
+"A list of tuples containing the logging level (up to ``warning``) and the"
+" message to be ignored."
+msgstr "一个内容是元组的列表，元组中包含日志等级（最高到 ``warning``）和要忽略的消息。"
+
+#: ../../settings.rst:142
+msgid ""
+"A dictionary of file extensions / Reader classes for Pelican to process "
+"or ignore."
+msgstr "一个字典，记录了文件扩展名/Reader类。可以据此让Pelican按照指定规则处理或忽略某些文件。"
+
+#: ../../settings.rst:145
+msgid "For example, to avoid processing .html files, set::"
+msgstr "例如，下面的配置可以让Pelican忽略 .html的文件不处理："
+
+#: ../../settings.rst:149
+msgid "To add a custom reader for the ``foo`` extension, set::"
+msgstr "为扩展名为 ``foo`` 的文件添加自定义的reader："
+
+#: ../../settings.rst:155
+msgid ""
+"A list of glob patterns.  Files and directories matching any of these "
+"patterns will be ignored by the processor. For example, the default "
+"``['.#*']`` will ignore emacs lock files, and ``['__pycache__']`` would "
+"ignore Python 3's bytecode caches."
+msgstr ""
+"通配符模式的列表。任何匹配上的文件和目录都会被忽略。例如，默认的 ``['.#*']`` 可以忽略emacs的锁定文件，  "
+"``['__pycache__']`` 则可以忽略Python3的字节码缓存文件。"
+
+#: ../../settings.rst:162
+msgid ""
+"Extra configuration settings for the Markdown processor. Refer to the "
+"Python Markdown documentation's `Options section <https://python-"
+"markdown.github.io/reference/#markdown>`_ for a complete list of "
+"supported options. The ``extensions`` option will be automatically "
+"computed from the ``extension_configs`` option."
+msgstr ""
+"对Markdown处理器的额外配置。可以参考Python Markdown文档的 `选项章节 <https://python-"
+"markdown.github.io/reference/#markdown>` ，查看可用选项的完整列表。其中的 "
+"``extensions_configs`` 选项会用于自动计算 ``extensions`` 选项。"
+
+#: ../../settings.rst:168
+msgid "Defaults to::"
+msgstr "默认值为："
+
+#: ../../settings.rst:180
+msgid ""
+"The dictionary defined in your settings file will replace this default "
+"one."
+msgstr "设置文件中的字典会覆盖默认设置。"
+
+#: ../../settings.rst:185
+msgid ""
+"Where to output the generated files. This should correspond to your web "
+"server's virtual host root directory."
+msgstr "输出生成文件的位置。此项配置应该和web服务器虚拟主机的根目录有关。"
+
+#: ../../settings.rst:190
+msgid ""
+"Path to content directory to be processed by Pelican. If undefined, and "
+"content path is not specified via an argument to the ``pelican`` command,"
+" Pelican will use the current working directory."
+msgstr "待Pelican处理的文件目录的路径。如果没有定义，也没有再 ``pelican`` 命令中通过参数指定，Pelican会默认使用当前工作目录。"
+
+#: ../../settings.rst:196
+msgid ""
+"A list of directories and files to look at for pages, relative to "
+"``PATH``."
+msgstr "此列表中的目录和文件会被视为页面，路径是相对于 ``PATH`` 的。"
+
+#: ../../settings.rst:200
+msgid ""
+"A list of directories to exclude when looking for pages in addition to "
+"``ARTICLE_PATHS``."
+msgstr "除了 ``ARTICLE_PATHS`` 中的文件不会被视为页面外，此选项中也可指定不被视为页面的文件目录。"
+
+#: ../../settings.rst:205
+msgid ""
+"A list of directories and files to look at for articles, relative to "
+"``PATH``."
+msgstr "此列表中的目录和文件会被视为文章，路径是相对于 ``PATH`` 的。"
+
+#: ../../settings.rst:210
+msgid ""
+"A list of directories to exclude when looking for articles in addition to"
+" ``PAGE_PATHS``."
+msgstr "除了 ``PAGE_PATHS`` 中的文件不会被视为文章外，此选项中也可指定不被视为文章的文件目录。"
+
+#: ../../settings.rst:215
+msgid ""
+"Set to True if you want to copy the articles and pages in their original "
+"format (e.g. Markdown or reStructuredText) to the specified "
+"``OUTPUT_PATH``."
+msgstr ""
+"如果你想要将文章和页面以源格式（例如Markdown或reStructuredText）复制一份到 ``OUTPUT_PATH`` "
+"目录中，就将此项设为True。"
+
+#: ../../settings.rst:220
+msgid ""
+"Controls the extension that will be used by the SourcesGenerator.  "
+"Defaults to ``.text``. If not a valid string the default value will be "
+"used."
+msgstr "控制会被SourcesGenerator使用的扩展名。默认为 ``.text`` 。如果设置的值是无效的，会使用默认值。"
+
+#: ../../settings.rst:225
+msgid "The list of plugins to load. See :ref:`plugins`."
+msgstr "要加载的插件列表。详见 :ref:`plugins` 。"
+
+#: ../../settings.rst:229
+msgid "A list of directories where to look for plugins. See :ref:`plugins`."
+msgstr "查找插件的目录列表。详见 :ref:`plugins` 。"
+
+#: ../../settings.rst:233
+msgid "Your site name"
+msgstr "你的站点名称。"
+
+#: ../../settings.rst:237
+msgid ""
+"Base URL of your web site. Not defined by default, so it is best to "
+"specify your SITEURL; if you do not, feeds will not be generated with "
+"properly-formed URLs. If your site is available via HTTPS, this setting "
+"should begin with ``https://`` — otherwise use ``http://``. Then append "
+"your domain, with no trailing slash at the end. Example: ``SITEURL = "
+"'https://example.com'``"
+msgstr ""
+"网站的基础URL。此选项没有默认值，因此最好是指定一下SITEURL；如果不指定，feeds就无法正确生成URL。如果站点使用了HTTPS，那么此项设定最好以"
+" ``https://`` 开头-否则使用 ``http://`` 即可。在协议后面接着就是域名，不要以斜杠结尾。一个例子： ``SITEURL "
+"= 'https://example.com'`` "
+
+#: ../../settings.rst:246
+msgid ""
+"A list of directories (relative to ``PATH``) in which to look for static "
+"files. Such files will be copied to the output directory without "
+"modification. Articles, pages, and other content source files will "
+"normally be skipped, so it is safe for a directory to appear both here "
+"and in ``PAGE_PATHS`` or ``ARTICLE_PATHS``.  Pelican's default settings "
+"include the \"images\" directory here."
+msgstr ""
+"用于查找静态文件的目录列表。静态文件会原封不动地拷贝到输出目录中。文章、页面以及其他的内容源文件都会被跳过，因此一个目录可以安全地同时出现在此选项以及"
+" ``PAGE_PATHS`` 或 ``ARTICLE_PATHS`` 中。Pelican默认会将 \"images\" 目录包含在此选项中。"
+
+#: ../../settings.rst:255
+msgid "A list of directories to exclude when looking for static files."
+msgstr "此选项列表中的目录都会在搜索静态文件时排除在外。"
+
+#: ../../settings.rst:259
+msgid ""
+"If set to False, content source files will not be skipped when copying "
+"files found in ``STATIC_PATHS``. This setting is for backward "
+"compatibility with Pelican releases before version 3.5.  It has no effect"
+" unless ``STATIC_PATHS`` contains a directory that is also in "
+"``ARTICLE_PATHS`` or ``PAGE_PATHS``. If you are trying to publish your "
+"site's source files, consider using the ``OUTPUT_SOURCES`` setting "
+"instead."
+msgstr ""
+"如果此选项设为False， ``STATIC_PATHS`` "
+"中的内容源文件将不会被忽略，也会像静态文件一样被原封不动地拷贝。此项设置是为了给3.5版本前的Pelican进行向后兼容的。此项设置只有在 "
+"``STATIC_PATH`` 中包含了在 ``ARTICLE_PATHS`` 或 ``PAGE_PATHS`` "
+"中也有的目录时才会生效。如果你是想将站点的源文件发布出去的话，请考虑使用 ``OUTPUT_SOURCES`` 设置。"
+
+#: ../../settings.rst:268
+msgid ""
+"Create links instead of copying files. If the content and output "
+"directories are on the same device, then create hard links.  Falls back "
+"to symbolic links if the output directory is on a different filesystem. "
+"If symlinks are created, don't forget to add the ``-L`` or ``--copy-"
+"links`` option to rsync when uploading your site."
+msgstr ""
+"为静态文件创建链接而不是复制文件本身。如果内容和输出目录位于同一设备上，则创建硬链接；如果输出目录位于不同的文件系统上，则回退至符号链接。若创建了符号链接，使用rsync上传网站时需要添加-L或"
+"--copy-links选项。"
+
+#: ../../settings.rst:276
+msgid ""
+"If set to ``True``, and ``STATIC_CREATE_LINKS`` is ``False``, compare "
+"mtimes of content and output files, and only copy content files that are "
+"newer than existing output files."
+msgstr ""
+"若设置为True，并且 ``STATIC_CREATE_LINKS`` 设为了 ``False`` "
+"，则会和输出文件的修改时间mtime进行比较，只有当前文件更新时才会执行拷贝。"
+
+#: ../../settings.rst:282
+msgid ""
+"If set to True, several typographical improvements will be incorporated "
+"into the generated HTML via the `Typogrify "
+"<https://pypi.org/project/typogrify/>`_ library, which can be installed "
+"via: ``python -m pip install typogrify``"
+msgstr ""
+"若此项设置为True，一些显示上的改进将通过 `Typogrify <https://pypi.org/project/typogrify/>`_"
+" 库合并到生成的HTML中。可以通过 ``python -m pip install typogrify`` 进行安装。"
+
+#: ../../settings.rst:289
+msgid ""
+"A list of tags for Typogrify to ignore. By default Typogrify will ignore "
+"``pre`` and ``code`` tags. This requires that Typogrify version 2.0.4 or "
+"later is installed"
+msgstr ""
+"指定Typogrify要忽略的标签列表。默认情况下，Typogrify将忽略 ``pre`` 和 ``code`` "
+"标签此项特性需要安装高于2.0.4版本的Typogrify。"
+
+#: ../../settings.rst:295
+msgid ""
+"This setting controls how Typogrify sets up the Smartypants filter to "
+"interpret multiple dash/hyphen/minus characters. A single ASCII dash "
+"character (``-``) is always rendered as a hyphen. The ``default`` setting"
+" does not handle en-dashes and converts double-hyphens into em-dashes. "
+"The ``oldschool`` setting renders both en-dashes and em-dashes when it "
+"sees two (``--``) and three (``---``) hyphen characters, respectively. "
+"The ``oldschool_inverted`` setting turns two hyphens into an em-dash and "
+"three hyphens into an en-dash."
+msgstr ""
+"此设置用于设置Typogrify的Smartypants过滤器，控制过滤器如何解释多个破折号/连字符/减号。单个ASCII破折号字符 "
+"(``-``) 始终被视为连字符。``default`` 不处理短破折号，并会将双连字符转换为长破折号。 ``oldschool`` 会将两个 "
+"(``--``) 和三个 (``--``) 连字符分别呈现为短破折号和长破折号。 ``oldschool_inverted`` "
+"则会将两个连字符转换为长破折号，而将三个连字符转换为短破折号。"
+
+#: ../../settings.rst:306
+msgid ""
+"When creating a short summary of an article, this will be the default "
+"length (measured in words) of the text created.  This only applies if "
+"your content does not otherwise specify a summary. Setting to ``None`` "
+"will cause the summary to be a copy of the original content."
+msgstr ""
+"当未给文章或页面书写摘要时，会自动创建摘要，此设置指定了默认创建摘要的长度（以字/词为单位）。若将此项设为 ``None`` "
+"，摘要将会是原始内容的副本。"
+
+#: ../../settings.rst:313
+msgid ""
+"When creating a short summary of an article and the result was truncated "
+"to match the required word length, this will be used as the truncation "
+"suffix."
+msgstr "在创建摘要时，若内容因长度被截断，此项设置值将用作截断的结尾。"
+
+#: ../../settings.rst:318
+msgid ""
+"If disabled, content with dates in the future will get a default status "
+"of ``draft``. See :ref:`reading_only_modified_content` for caveats."
+msgstr ""
+"若此项设为False，带了未来日期的文章或页面的状态都会设为 ``draft`` 。相关注意事项详见 "
+":ref:`reading_only_modified_content` 。"
+
+#: ../../settings.rst:323
+msgid ""
+"Regular expression that is used to parse internal links. Default syntax "
+"when linking to internal files, tags, etc., is to enclose the identifier,"
+" say ``filename``, in ``{}`` or ``||``. Identifier between ``{`` and "
+"``}`` goes into the ``what`` capturing group.  For details see :ref:`ref-"
+"linking-to-internal-content`."
+msgstr ""
+"用于解析内部链接的正则表达式。链接到内部文件、标签等时的默认语法是将标识符（例如 ``filename`` ）括在 ``{}`` 或 ``||``"
+" 中。 ``{`` 和 ``}`` 之间的则进入 ``what`` 捕获组。更多详情请参见 :ref:`ref-linking-to-"
+"internal-content` 。"
+
+#: ../../settings.rst:331
+msgid ""
+"A list of default Pygments settings for your reStructuredText code "
+"blocks. See :ref:`internal_pygments_options` for a list of supported "
+"options."
+msgstr ""
+"reStructuredText代码块的默认Pygments设置列表。有关受支持选项的列表，请参阅 "
+":ref:`internal_pygments_options` 。"
+
+#: ../../settings.rst:336
+msgid ""
+"If ``True``, saves content in caches.  See "
+":ref:`reading_only_modified_content` for details about caching."
+msgstr "若设为 ``True`` ，会将内容保存在缓存中。有关缓存请参阅 :ref:`reading_only_modified_content` 。"
+
+#: ../../settings.rst:341
+msgid ""
+"If set to ``'reader'``, save only the raw content and metadata returned "
+"by readers. If set to ``'generator'``, save processed content objects."
+msgstr "若设为 ``reader`` ，则只保存reader返回的原始内容和元数据。若设为 ``generator`` ，则保存处理过的内容对象。"
+
+#: ../../settings.rst:346
+msgid "Directory in which to store cache files."
+msgstr "指定存储缓存文件的目录。"
+
+#: ../../settings.rst:350
+msgid "If ``True``, use gzip to (de)compress the cache files."
+msgstr "若设为 ``True`` ，则使用gzip对缓存文件进行解压缩。"
+
+#: ../../settings.rst:354
+msgid "Controls how files are checked for modifications."
+msgstr "控制检查文件修改的方式"
+
+#: ../../settings.rst:356 ../../settings.rst:1351
+msgid "If set to ``'mtime'``, the modification time of the file is checked."
+msgstr "若设为 ``mtime`` ，则检查文件的修改时间。"
+
+#: ../../settings.rst:358 ../../settings.rst:1353
+msgid ""
+"If set to a name of a function provided by the ``hashlib`` module, e.g. "
+"``'md5'``, the file hash is checked."
+msgstr "若设为 ``hashlib`` 库中提供的方法名，例如 ``md5`` ，则会检查文件的哈希值。"
+
+#: ../../settings.rst:363
+msgid "If ``True``, load unmodified content from caches."
+msgstr "若设为 ``True`` ，则会从缓存中加载未修改的内容。"
+
+#: ../../settings.rst:367
+msgid ""
+"A list of metadata fields containing reST/Markdown content to be parsed "
+"and translated to HTML."
+msgstr "元数据的列表，此列表中的元数据会被解析为HTML。"
+
+#: ../../settings.rst:372
+msgid ""
+"The TCP port to serve content from the output folder via HTTP when "
+"pelican is run with --listen"
+msgstr "使用--listen运行pelican时，会在此选项指定的TCP端口上以HTTP提供内容。"
+
+#: ../../settings.rst:377
+msgid "The IP to which to bind the HTTP server."
+msgstr "需要和HTTP服务器绑定的IP地址。"
+
+#: ../../settings.rst:382
+msgid "URL settings"
+msgstr "URL设置"
+
+#: ../../settings.rst:384
+msgid ""
+"The first thing to understand is that there are currently two supported "
+"methods for URL formation: *relative* and *absolute*. Relative URLs are "
+"useful when testing locally, and absolute URLs are reliable and most "
+"useful when publishing. One method of supporting both is to have one "
+"Pelican configuration file for local development and another for "
+"publishing. To see an example of this type of setup, use the ``pelican-"
+"quickstart`` script as described in the :doc:`Installation <install>` "
+"section, which will produce two separate configuration files for local "
+"development and publishing, respectively."
+msgstr ""
+"首先要知道的是，URL格式有两种形式： *相对URL* 、 *绝对URL* "
+"。相对URL在本地测试时往往比较有用，而绝对URL在发布时往往是比较有效可靠的。要同时支持两种URL形式，可以在本地开发和发布环境中使用两份不同的配置文件。执行脚本"
+" ``pelican-quickstart`` 就是一个例子，会为本地开发和发布环境分别生成一份配置文件，此脚本在 "
+":doc:`Installation <install>` 一节中有详细描述。"
+
+#: ../../settings.rst:393
+msgid ""
+"You can customize the URLs and locations where files will be saved. The "
+"``*_URL`` and ``*_SAVE_AS`` variables use Python's format strings. These "
+"variables allow you to place your articles in a location such as "
+"``{slug}/index.html`` and link to them as ``{slug}`` for clean URLs (see "
+"example below). These settings give you the flexibility to place your "
+"articles and pages anywhere you want."
+msgstr ""
+"URL和文件存储位置都是可以自定义的， ``*_URL`` 和 ``*_SAVE_AS`` "
+"变量使用Python风格的格式化字符串。你可以利用一些变量将文章放在诸如 ``{slug}/index.html`` 的位置，并且可以以 "
+"``{slug}`` 的形式进行链接，如此可以让URL更加简洁（详见下面的例子）。这些设置可以让你灵活地将文章和页面放在任何你想要的地方。"
+
+#: ../../settings.rst:401
+msgid ""
+"If a ``*_SAVE_AS`` setting contains a parent directory that doesn't match"
+" the parent directory inside the corresponding ``*_URL`` setting, this "
+"may cause Pelican to generate unexpected URLs in a few cases, such as "
+"when using the ``{attach}`` syntax."
+msgstr ""
+"如果 ``*_SAVE_AS`` 中包含了不在 ``*_URL`` 中的父目录，会导致Pelican在少数情况下（例如使用 "
+"``{attach}`` 语法时）产生不可知的URL。"
+
+#: ../../settings.rst:406
+msgid ""
+"If you don't want that flexibility and instead prefer that your generated"
+" output paths mirror your source content's filesystem path hierarchy, try"
+" the following settings::"
+msgstr "若不希望有这种灵活性，而是希望生成的输出路径保留源内容路径的层次结构，可以尝试下面的设置::"
+
+#: ../../settings.rst:413
+msgid ""
+"Otherwise, you can use a variety of file metadata attributes within URL-"
+"related settings:"
+msgstr "否则，可以在URL相关设置中可以使用下面的这些元数据属性："
+
+#: ../../settings.rst:416
+msgid "slug"
+msgstr "slug"
+
+#: ../../settings.rst:417
+msgid "date"
+msgstr "date"
+
+#: ../../settings.rst:418
+msgid "lang"
+msgstr "lang"
+
+#: ../../settings.rst:419
+msgid "author"
+msgstr "author"
+
+#: ../../settings.rst:420
+msgid "category"
+msgstr "category"
+
+#: ../../settings.rst:422 ../../settings.rst:557
+msgid "Example usage::"
+msgstr "用例："
+
+#: ../../settings.rst:429
+msgid ""
+"This would save your articles into something like ``/posts/2011/Aug/07"
+"/sample-post/index.html``, save your pages into "
+"``/pages/about/index.html``, and render them available at URLs of "
+"``/posts/2011/Aug/07/sample-post/`` and ``/pages/about/``, respectively."
+msgstr ""
+"上面的设置会将你的文章以类似于 ``/posts/2011/Aug/07/sample-post/index.html`` 的形式存储，页面则以 "
+"``/pages/about/index.html`` 的形式存储，对应的URL分别为 ``/posts/2011/Aug/07/sample-"
+"post/`` 与 ``/pages/about/`` 。"
+
+#: ../../settings.rst:435
+msgid ""
+"If you specify a ``datetime`` directive, it will be substituted using the"
+" input files' date metadata attribute. If the date is not specified for a"
+" particular file, Pelican will rely on the file's ``mtime`` timestamp. "
+"Check the `Python datetime documentation`_ for more information."
+msgstr ""
+"如果指定了 ``datetime`` 的指令，会使用输入文件的日期元数据进行替换。若没有指定日期Pelican会根据文件的 ``mtime`` "
+"时间戳替换。更多信息可以参考 `Python datetime文档`_ 。"
+
+#: ../../settings.rst:445
+msgid ""
+"Defines whether Pelican should use document-relative URLs or not. Only "
+"set this to ``True`` when developing/testing and only if you fully "
+"understand the effect it can have on links/feeds."
+msgstr ""
+"定义Pelican是否使用文档间相对URL。请只在开发或测试时将此项设为 ``True`` "
+"，并且确保你已经明白此项设置对链接与feed的影响。（译者注：当此项为True时，网页之间的链接会使用相对路径表达，例如 ``../my-"
+"article.html`` ）"
+
+#: ../../settings.rst:451
+msgid "The URL to refer to an article."
+msgstr "文章的URL格式。"
+
+#: ../../settings.rst:455
+msgid "The place where we will save an article."
+msgstr "文章的存储位置。"
+
+#: ../../settings.rst:459
+msgid "The URL to refer to an article which doesn't use the default language."
+msgstr "非默认语言文章的URL格式。"
+
+#: ../../settings.rst:463
+msgid ""
+"The place where we will save an article which doesn't use the default "
+"language."
+msgstr "非默认语言文章的存储位置。"
+
+#: ../../settings.rst:468
+msgid "The URL to refer to an article draft."
+msgstr "draft状态文章的URL格式。"
+
+#: ../../settings.rst:472
+msgid "The place where we will save an article draft."
+msgstr "draft状态文章的存储位置。"
+
+#: ../../settings.rst:476
+msgid ""
+"The URL to refer to an article draft which doesn't use the default "
+"language."
+msgstr "draft状态非默认语言文章的URL格式。"
+
+#: ../../settings.rst:480
+msgid ""
+"The place where we will save an article draft which doesn't use the "
+"default language."
+msgstr "draft状态非默认语言文章的存储位置。"
+
+#: ../../settings.rst:485
+msgid "The URL we will use to link to a page."
+msgstr "页面的URL格式。"
+
+#: ../../settings.rst:489
+msgid ""
+"The location we will save the page. This value has to be the same as "
+"PAGE_URL or you need to use a rewrite in your server config."
+msgstr "页面的保存位置。除非在服务器上设置了重写规则，否则此项设置必须和PAGE_URL一致。"
+
+#: ../../settings.rst:494
+msgid ""
+"The URL we will use to link to a page which doesn't use the default "
+"language."
+msgstr "非默认语言页面的URL格式。"
+
+#: ../../settings.rst:499
+msgid "The location we will save the page which doesn't use the default language."
+msgstr "非默认语言页面的存储位置。"
+
+#: ../../settings.rst:503
+msgid "The URL used to link to a page draft."
+msgstr "draft状态页面的URL。"
+
+#: ../../settings.rst:507
+msgid "The actual location a page draft is saved at."
+msgstr "draft状态页面的实际存储位置。"
+
+#: ../../settings.rst:511
+msgid ""
+"The URL used to link to a page draft which doesn't use the default "
+"language."
+msgstr "draft状态非默认语言页面的URL格式。"
+
+#: ../../settings.rst:516
+msgid ""
+"The actual location a page draft which doesn't use the default language "
+"is saved at."
+msgstr "draft状态非默认语言页面的实际存储位置。"
+
+#: ../../settings.rst:521
+msgid "The URL to use for an author."
+msgstr "某一个作者的URL格式。"
+
+#: ../../settings.rst:525
+msgid "The location to save an author."
+msgstr "某一个作者的存储位置。"
+
+#: ../../settings.rst:529
+msgid "The URL to use for a category."
+msgstr "某一个分类的URL格式。"
+
+#: ../../settings.rst:533
+msgid "The location to save a category."
+msgstr "某一个分类的存储位置。"
+
+#: ../../settings.rst:537
+msgid "The URL to use for a tag."
+msgstr "某一个标签的URL格式。"
+
+#: ../../settings.rst:541
+msgid "The location to save the tag page."
+msgstr "某一个标签的存储位置"
+
+#: ../../settings.rst:545
+msgid ""
+"If you do not want one or more of the default pages to be created (e.g., "
+"you are the only author on your site and thus do not need an Authors "
+"page), set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent "
+"the relevant page from being generated."
+msgstr "如果您不希望创建默认页面（例如你是网站上的唯一作者，因此不需要作者页面），请将相应的 ``*_SAVE_AS`` 设置设置为 ``''`` 。"
+
+#: ../../settings.rst:550
+msgid ""
+"Pelican can optionally create per-year, per-month, and per-day archives "
+"of your posts. These secondary archives are disabled by default but are "
+"automatically enabled if you supply format strings for their respective "
+"``_SAVE_AS`` settings. Period archives fit intuitively with the "
+"hierarchical model of web URLs and can make it easier for readers to "
+"navigate through the posts you've written over time."
+msgstr ""
+"可选地，Pelican可以为帖子创建每年、每月或是每日的归档。除非你为各自的 ``*_SAVE_AS`` "
+"设置了格式化字符串，否则这些归档在默认情况下是关闭的。按时间进行归档更直观地符合web URL地层次模型，也可以让读者更容易按时间顺序浏览帖子。"
+
+#: ../../settings.rst:564
+msgid ""
+"With these settings, Pelican will create an archive of all your posts for"
+" the year at (for instance) ``posts/2011/index.html`` and an archive of "
+"all your posts for the month at ``posts/2011/Aug/index.html``. These can "
+"be accessed through the URLs ``posts/2011/`` and ``posts/2011/Aug/``, "
+"respectively."
+msgstr ""
+"例如若使用了上面的设置，Pelican会创建按年的归档（例如 ``posts/2011/index.html`` ），以及按月的归档（例如 ``posts/2011/Aug/index.html`` ）。这两个页面分别通过 ``posts/2011/`` 和"
+"``posts/2011/Aug/`` 进行访问。"
+
+#: ../../settings.rst:570
+msgid ""
+"Period archives work best when the final path segment is ``index.html``. "
+"This way a reader can remove a portion of your URL and automatically "
+"arrive at an appropriate archive of posts, without having to specify a "
+"page name."
+msgstr ""
+"当路径设置为以 ``index.html`` "
+"结尾时，归档的体验会非常好。读者可以删除URL中的一部分以到达合适时间段的归档，而不需要指定某一个页面的名称。"
+
+#: ../../settings.rst:576
+msgid "The location to save per-year archives of your posts."
+msgstr "年归档的存储位置。"
+
+#: ../../settings.rst:580
+msgid ""
+"The URL to use for per-year archives of your posts. You should set this "
+"if you enable per-year archives."
+msgstr ""
+
+#: ../../settings.rst:585
+msgid "The location to save per-month archives of your posts."
+msgstr "月归档的存储位置。"
+
+#: ../../settings.rst:589
+msgid ""
+"The URL to use for per-month archives of your posts. You should set this "
+"if you enable per-month archives."
+msgstr "按月归档的URL。当启用了按月归档时，就需要配置此项。"
+
+#: ../../settings.rst:594
+msgid "The location to save per-day archives of your posts."
+msgstr "日归档的存储位置。"
+
+#: ../../settings.rst:598
+msgid ""
+"The URL to use for per-day archives of your posts. You should set this if"
+" you enable per-day archives."
+msgstr ""
+
+#: ../../settings.rst:601
+msgid ""
+"``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the "
+"``_SAVE_AS`` settings are available, but it is available for any direct "
+"template."
+msgstr ""
+" ``DIRECT_TEMPLATES`` 的工作方式与上面提到的有点不同，在其中可以使用一些特别的直接模板，并且仅 ``*_SAVE_AS`` "
+"设置可用。"
+
+#: ../../settings.rst:607
+msgid "The location to save the article archives page."
+msgstr "文章归档页面的存储位置。"
+
+#: ../../settings.rst:611
+msgid "The location to save the author list."
+msgstr "作者人列表的存储位置。"
+
+#: ../../settings.rst:615
+msgid "The location to save the category list."
+msgstr "分类列表的存储位置。"
+
+#: ../../settings.rst:619
+msgid "The location to save the tag list."
+msgstr "标签列表的存储位置。"
+
+#: ../../settings.rst:623
+msgid "The location to save the list of all articles."
+msgstr "所有文章列表的存储位置。"
+
+#: ../../settings.rst:625
+msgid ""
+"URLs for direct template pages are theme-dependent. Some themes use "
+"corresponding ``*_URL`` setting as string, while others hard-code them: "
+"``'archives.html'``, ``'authors.html'``, ``'categories.html'``, "
+"``'tags.html'``."
+msgstr ""
+"事实上，直接模板页面的URL是和使用的主题相关的。有些主题会使用 ``*_URL`` 作为变量字符串，而有些则是直接对这些直接模板页面进行硬编码："
+" ``'archives.html'`` 、 ``'authors.html'`` 、 ``'categories.html'`` 。"
+
+#: ../../settings.rst:632
+msgid ""
+"Specifies from where you want the slug to be automatically generated. Can"
+" be set to ``title`` to use the \"Title:\" metadata tag or ``basename`` "
+"to use the article's file name when creating the slug."
+msgstr "自动生成slug所依赖的内容。可以指定为元数据标签 ``title`` ，也可以使用文章源文件的文件名 ``basename`` 。"
+
+#: ../../settings.rst:638
+msgid ""
+"Allow Unicode characters in slugs. Set ``True`` to keep Unicode "
+"characters in auto-generated slugs. Otherwise, Unicode characters will be"
+" replaced with ASCII equivalents."
+msgstr ""
+"指定是否可以在slug中使用Unicode字符。若设为 ``True`` "
+"，自动生成的slug中会保留Unicode字符；否则Unicode字符会使用含义相同的ASCII替换。"
+
+#: ../../settings.rst:644
+msgid ""
+"Preserve uppercase characters in slugs. Set ``True`` to keep uppercase "
+"characters from ``SLUGIFY_SOURCE`` as-is."
+msgstr "指定是否保留slug中的大写字母。若设为 ``True`` ，则会原样保留 ``SLUGIFY_SOURCE`` 中的大写字母。"
+
+#: ../../settings.rst:654
+msgid ""
+"Regex substitutions to make when generating slugs of articles and pages. "
+"Specified as a list of pairs of ``(from, to)`` which are applied in "
+"order, ignoring case. The default substitutions have the effect of "
+"removing non-alphanumeric characters and converting internal whitespace "
+"to dashes. Apart from these substitutions, slugs are always converted to "
+"lowercase ascii characters and leading and trailing whitespace is "
+"stripped. Useful for backward compatibility with existing URLs."
+msgstr ""
+"指定生成文章和页面slug时要进行的正则表达式替换。指定的是一对对 ``(from, to)`` "
+"（from为要替换的内容，to为替换进去的内容），列表中的各对替换规则是按序执行且忽略大小写的。默认的替换会删除非字母非数字的字符并将内部空格替换为连字符。除此之外，slug会将所有字符转换为小写ASCII字符，并删除所有前导和末尾空格。这有利于现有URL的向后兼容。"
+
+#: ../../settings.rst:664
+msgid ""
+"Regex substitutions for author slugs. Defaults to "
+"``SLUG_REGEX_SUBSTITUTIONS``."
+msgstr "针对作者slug的正则替换。默认等于 ``SLUG_REGEX_SUBSTITUTIONS`` 。"
+
+#: ../../settings.rst:669
+msgid ""
+"Regex substitutions for category slugs. Defaults to "
+"``SLUG_REGEX_SUBSTITUTIONS``."
+msgstr "针对分类slug的正则替换。默认等于 ``SLUG_REGEX_SUBSTITUTIONS`` 。"
+
+#: ../../settings.rst:674
+msgid ""
+"Regex substitutions for tag slugs. Defaults to "
+"``SLUG_REGEX_SUBSTITUTIONS``."
+msgstr "针对标签slug的正则替换。默认等于 ``SLUG_REGEX_SUBSTITUTIONS`` 。"
+
+#: ../../settings.rst:677
+msgid "Time and Date"
+msgstr "日期与时间"
+
+#: ../../settings.rst:681
+msgid "The timezone used in the date information, to generate Atom and RSS feeds."
+msgstr "日期信息中使用的时区，会用于生成Atom和RSS feeds。（无默认值，必须手动设置指定）"
+
+#: ../../settings.rst:683
+msgid ""
+"If no timezone is defined, UTC is assumed. This means that the generated "
+"Atom and RSS feeds will contain incorrect date information if your locale"
+" is not UTC."
+msgstr "若没有定义时区，会直接使用UTC时区。这意味着当你的时区不在UTC中时，生成的Atom和RSS feeds中会包含错误的日期信息。"
+
+#: ../../settings.rst:687
+msgid ""
+"Pelican issues a warning in case this setting is not defined, as it was "
+"not mandatory in previous versions."
+msgstr "在之前的版本中，这一项设置并不是强制的，因此Pelican会在未设置时区时提出警告。"
+
+#: ../../settings.rst:690
+msgid ""
+"Have a look at `the wikipedia page`_ to get a list of valid timezone "
+"values."
+msgstr "有效的时区设置值可以在 `维基百科页`_ 中查看。"
+
+#: ../../settings.rst:696
+msgid ""
+"The default date you want to use.  If ``'fs'``, Pelican will use the file"
+" system timestamp information (mtime) if it can't get date information "
+"from the metadata.  If given any other string, it will be parsed by the "
+"same method as article metadata.  If set to a tuple object, the default "
+"datetime object will instead be generated by passing the tuple to the "
+"``datetime.datetime`` constructor."
+msgstr ""
+"要使用的默认日期。若设为 ``'fs'`` "
+"，Pelican在无法从元数据中获取日期时，会以系统的时间戳信息（mtime）为准；若设为其他字符串，Pelican将用与解析文章元数据相同的方法进行解析；若设为元组，则会将该元组传递给"
+" ``datetime.datetime`` 的构造函数来生成日期。"
+
+#: ../../settings.rst:705
+msgid "The default date format you want to use."
+msgstr "指定要使用的默认日期格式。"
+
+#: ../../settings.rst:709
+msgid "If you manage multiple languages, you can set the date formatting here."
+msgstr "若需要管理多种语言，可以在这里针对不同语言设置不同的日期格式。"
+
+#: ../../settings.rst:711
+msgid ""
+"If no ``DATE_FORMATS`` are set, Pelican will fall back to "
+"``DEFAULT_DATE_FORMAT``. If you need to maintain multiple languages with "
+"different date formats, you can set the ``DATE_FORMATS`` dictionary using"
+" the language name (``lang`` metadata in your post content) as the key."
+msgstr ""
+"如果 ``DATE_FORMATS`` 没有设置过，Pelican会使用 ``DEFAULT_DATE_FORMAT`` "
+"。如果要为不同语言设置不同如期格式，可以在此设置项字典中指定，键为语言名称（对应于帖子内容元数据中的 ``lang`` ），值为日期格式字符串。"
+
+#: ../../settings.rst:716
+#, python-format
+msgid ""
+"In addition to the standard C89 strftime format codes that are listed in "
+"`Python datetime documentation`_, you can use the ``-`` character between"
+" ``%`` and the format character to remove any leading zeros. For example,"
+" ``%d/%m/%Y`` will output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will "
+"result in ``1/1/2014``."
+msgstr ""
+"除了 `Python datetime文档`_ 中列出的标准C89 strftime格式代码之外，可以通过在 ``%`` 和格式字符之间添加 "
+"``-`` 来删除日期中的前导零。例如  ``%d/%m/%Y`` 对应输出 ``01/01/2014`` ，而 ``%-d/%-m/%Y`` "
+"对应输出 ``1/1/2014`` 。"
+
+#: ../../settings.rst:729
+msgid ""
+"It is also possible to set different locale settings for each language by"
+" using a ``(locale, format)`` tuple as a dictionary value which will "
+"override the ``LOCALE`` setting:"
+msgstr "你还能够通过将元组 ``(locale, format)`` 作为值，来为每种语言指定地区，此处设置的地区会覆盖 ``LOCALE`` 设置："
+
+#: ../../settings.rst:749
+msgid ""
+"Change the locale [#]_. A list of locales can be provided here or a "
+"single string representing one locale.  When providing a list, all the "
+"locales will be tried until one works."
+msgstr "设置地区 [#]_ 。可以同时指定多个地区，也可以使用字符串指定单个地区。当设置了多个地区时，会一个个尝试直到某一个可以使用。"
+
+#: ../../settings.rst:753
+msgid "You can set locale to further control date format:"
+msgstr "通过设置地区进一步控制日期格式："
+
+#: ../../settings.rst:761
+msgid ""
+"For a list of available locales refer to `locales on Windows`_  or on "
+"Unix/Linux, use the ``locale -a`` command; see manpage `locale(1)`_ for "
+"more information."
+msgstr ""
+"要查看可用的地区列表，可以参看 `Windows上的地区`_ ；若使用的时Unix/Linux系统， 使用 ``locale -a`` "
+"命令即可，有关该命令的更多信息可以参阅手册 `locale(1)`_ 。"
+
+#: ../../settings.rst:766
+msgid "Default is the system locale."
+msgstr "默认值与系统的地区设置保持一致。"
+
+#: ../../settings.rst:780
+msgid "Template pages"
+msgstr "模板页面"
+
+#: ../../settings.rst:784
+msgid ""
+"A mapping containing template pages that will be rendered with the blog "
+"entries."
+msgstr "一些映射关系，指出了会和博客一起渲染的模板页面。"
+
+#: ../../settings.rst:787
+msgid ""
+"If you want to generate custom pages besides your blog entries, you can "
+"point any Jinja2 template file with a path pointing to the file and the "
+"destination path for the generated file."
+msgstr "如果你想要生成除了博客之外的自定义页面，你可以指出任何Jinja2的模板文件，需要同时指出源文件路径和生成文件的路径。"
+
+#: ../../settings.rst:791
+msgid ""
+"For instance, if you have a blog with three static pages — a list of "
+"books, your resume, and a contact page — you could have::"
+msgstr "例如，如果你的博客有三个静态页面——书籍列表、你的简历、以及一个联系页面，你可这么配置："
+
+#: ../../settings.rst:800
+msgid "The extensions to use when looking up template files from template names."
+msgstr "指定要查找并视为模板文件的文件扩展名。"
+
+#: ../../settings.rst:804
+msgid ""
+"List of templates that are used directly to render content. Typically "
+"direct templates are used to generate index pages for collections of "
+"content (e.g., category and tag index pages). If the author, category and"
+" tag collections are not needed, set ``DIRECT_TEMPLATES = ['index', "
+"'archives']``"
+msgstr ""
+"指定用于直接渲染内容的模板列表。一般来说直接模板会用于生成内容集合的主页（例如分类和标签的主页）。如果不需要作者、分类或者标签集合，可以设置 "
+"``DIRECT_TEMPLATES = ['index', archives']`` 。"
+
+#: ../../settings.rst:809
+msgid ""
+"``DIRECT_TEMPLATES`` are searched for over paths maintained in "
+"``THEME_TEMPLATES_OVERRIDES``."
+msgstr "``DIRECT_TEMPLATES`` 会在 ``THEME_TEMPLATES_OVERRIDES`` 的路径中搜索。"
+
+#: ../../settings.rst:814
+msgid "Metadata"
+msgstr "元数据"
+
+#: ../../settings.rst:818
+msgid "Default author (usually your name)."
+msgstr "默认作者（通常是你自己的名字）。"
+
+#: ../../settings.rst:822
+msgid "The default metadata you want to use for all articles and pages."
+msgstr "应用于所有文章和页面的默认元数据。"
+
+#: ../../settings.rst:826
+msgid ""
+"The regexp that will be used to extract any metadata from the filename. "
+"All named groups that are matched will be set in the metadata object.  "
+"The default value will only extract the date from the filename."
+msgstr "指定用于从文件名中提取元数据的正则表达式。所有匹配上的命名匹配组都会用于设置元数据。默认值会从文件名中提取日期。"
+
+#: ../../settings.rst:830
+msgid "For example, to extract both the date and the slug::"
+msgstr "例如，可以同时提取日期和slug："
+
+#: ../../settings.rst:834
+msgid "See also ``SLUGIFY_SOURCE``."
+msgstr "另请参看 ``SLUGIFY_SOURCE`` 。"
+
+#: ../../settings.rst:838
+msgid ""
+"Like ``FILENAME_METADATA``, but parsed from a page's full path relative "
+"to the content source directory."
+msgstr "和 ``FILENAME_METADATA`` 类似，但提取解析的对象是相对于内容源文件目录的路径。"
+
+#: ../../settings.rst:843
+msgid ""
+"Extra metadata dictionaries keyed by relative path. Relative paths "
+"require correct OS-specific directory separators (i.e. / in UNIX and \\\\"
+" in Windows) unlike some other Pelican file settings. Paths to a "
+"directory apply to all files under it. The most-specific path wins "
+"conflicts."
+msgstr "指定要从相对路径提取的额外元数据字典。与Pelican的其他设置文件不同，此项设置需要正确使用和操作系统对应的目录分隔符（Unix中使用/，Windows中使用\\\\）。若对一个目录设置了规则，该规则会作用于该目录下所有文件。当有多个路径相互冲突时，Pelican会选用更为具体的路径。"
+
+#: ../../settings.rst:848
+msgid ""
+"Not all metadata needs to be :ref:`embedded in source file itself "
+"<internal_metadata>`. For example, blog posts are often named following a"
+" ``YYYY-MM-DD-SLUG.rst`` pattern, or nested into ``YYYY/MM/DD-SLUG`` "
+"directories. To extract metadata from the filename or path, set "
+"``FILENAME_METADATA`` or ``PATH_METADATA`` to regular expressions that "
+"use Python's `group name notation`_ ``(?P<name>…)``. If you want to "
+"attach additional metadata but don't want to encode it in the path, you "
+"can set ``EXTRA_PATH_METADATA``:"
+msgstr ""
+"不是所有元数据都需要直接 :ref:`embedded in source file itself <internal_metadata>` "
+"。例如，博文可能是以 ``YYYY-MM-DD-SLUG.rst`` 的形式命名的，或者是直接放在 ``YYYY/MM/DD-SLUG`` "
+"文件夹中。要从文件名或路径中提取元数据，设置 ``FILENAME_METADATA`` 或 ``PATH_METADATA`` "
+"即可，需使用Python风格的 `命名组表示法`_ ``(?P<name>…)`` "
+"。当你需要为帖子附加一下额外的元数据，但不想将其编码在文件路径中时，就可以在 ``EXTRA_PATH_METADATA`` 中设置："
+
+#: ../../settings.rst:869
+msgid ""
+"This can be a convenient way to shift the installed location of a "
+"particular file:"
+msgstr "通过这个设置项，很方便就可以转移特定文件的位置："
+
+#: ../../settings.rst:889
+msgid "Feed settings"
+msgstr "Feed设置"
+
+#: ../../settings.rst:891
+msgid ""
+"By default, Pelican uses Atom feeds. However, it is also possible to use "
+"RSS feeds if you prefer."
+msgstr "默认情况下，Pelican会使用Atom Feed。但如果你愿意的话，也可以使用RSS。"
+
+#: ../../settings.rst:894
+msgid ""
+"Pelican generates category feeds as well as feeds for all your articles. "
+"It does not generate feeds for tags by default, but it is possible to do "
+"so using the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:"
+msgstr ""
+"Pelican会生成分类的feed，也会为所有文章生成，但默认并不会为标签生成feed，要生成标签feed，可以使用  "
+"``TAG_FEED_ATOM`` 和 ``TAG_FEED_RSS`` 设置："
+
+#: ../../settings.rst:900
+msgid ""
+"The domain prepended to feed URLs. Since feed URLs should always be "
+"absolute, it is highly recommended to define this (e.g., "
+"\"https://feeds.example.com\"). If you have already explicitly defined "
+"SITEURL (see above) and want to use the same domain for your feeds, you "
+"can just set:  ``FEED_DOMAIN = SITEURL``."
+msgstr ""
+"指定要添加到feed URL前面的域名。因为feed URL最好是绝对的，所以强烈推荐定义此设置项（例如 "
+"“https://feeds.example.com”）。若SITEURL已经显式地定义了，并且希望使用相同地URL，就可以直接设置 "
+"``FEED_DOMAIN = SITEURL`` 。"
+
+#: ../../settings.rst:908
+msgid "The location to save the Atom feed."
+msgstr "指定保存Atom feed的位置。"
+
+#: ../../settings.rst:912
+msgid ""
+"Relative URL of the Atom feed. If not set, ``FEED_ATOM`` is used both for"
+" save location and URL."
+msgstr "Atom feed的相对URL。如果未设置此项，会将 ``FEED_ATOM`` 同时用于存储位置和URL。"
+
+#: ../../settings.rst:917
+msgid "The location to save the RSS feed."
+msgstr "指定保存RSS feed的位置。"
+
+#: ../../settings.rst:921
+msgid ""
+"Relative URL of the RSS feed. If not set, ``FEED_RSS`` is used both for "
+"save location and URL."
+msgstr "RSS feed的相对URL。如果未设置此项，会将 ``FEED_RSS`` 同时用于存储位置和URL。"
+
+#: ../../settings.rst:926
+msgid ""
+"The location to save the all-posts Atom feed: this feed will contain all "
+"posts regardless of their language."
+msgstr "存储“所有帖子”Atom feed的文件位置：无论什么语言的帖子都会在其中。"
+
+#: ../../settings.rst:931
+msgid ""
+"Relative URL of the all-posts Atom feed. If not set, ``FEED_ALL_ATOM`` is"
+" used both for save location and URL."
+msgstr "“所有帖子”Atom feed的相对URL。如果未设置此项，会将 ``FEED_ALL_ATOM`` 同时用于存储位置和URL。"
+
+#: ../../settings.rst:936
+msgid ""
+"The location to save the the all-posts RSS feed: this feed will contain "
+"all posts regardless of their language."
+msgstr "存储“所有帖子”RSS feed的文件位置：无论什么语言的帖子都会在其中。"
+
+#: ../../settings.rst:941
+msgid ""
+"Relative URL of the all-posts RSS feed. If not set, ``FEED_ALL_RSS`` is "
+"used both for save location and URL."
+msgstr "“所有帖子”Atom feed的相对URL。如果未设置此项，会将 ``FEED_ALL_RSS`` 同时用于存储位置和URL。"
+
+#: ../../settings.rst:946
+msgid "The location to save the category Atom feeds. [2]_"
+msgstr "存储分类Atom feeds的位置。 [2]_"
+
+#: ../../settings.rst:950
+msgid ""
+"Relative URL of the category Atom feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for "
+"save location and URL."
+msgstr ""
+"分类Atom feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_ATOM`` "
+"同时用于存储位置和URL。"
+
+#: ../../settings.rst:956
+msgid ""
+"The location to save the category RSS feeds, including the ``{slug}`` "
+"placeholder. [2]_"
+msgstr "分类RSS feeds的含有 ``{slug}`` 的存储位置，包括 ``{slug}`` 。 [2]_"
+
+#: ../../settings.rst:961
+msgid ""
+"Relative URL of the category RSS feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save"
+" location and URL."
+msgstr ""
+"分类Atom feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``CATEGORY_FEED_RSS`` "
+"同时用于存储位置和URL。"
+
+#: ../../settings.rst:967
+msgid "The location to save the author Atom feeds. [2]_"
+msgstr "存储作者Atom feeds的位置。 [2]_"
+
+#: ../../settings.rst:971
+msgid ""
+"Relative URL of the author Atom feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save "
+"location and URL."
+msgstr ""
+"作者Atom feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_ATOM`` "
+"同时用于存储位置和URL。"
+
+#: ../../settings.rst:977
+msgid "The location to save the author RSS feeds. [2]_"
+msgstr "存储作者RSS feeds的位置。 [2]_"
+
+#: ../../settings.rst:981
+msgid ""
+"Relative URL of the author RSS feeds, including the ``{slug}`` "
+"placeholder. [2]_ If not set, ``AUTHOR_FEED_RSS`` is used both for save "
+"location and URL."
+msgstr ""
+"作者RSS feed的含有 ``{slug}`` 的相对URL。 [2]_ 如果未设置， 会将 ``AUTHOR_FEED_RSS`` "
+"同时用于存储位置和URL。"
+
+#: ../../settings.rst:986
+msgid ""
+"The location to save the tag Atom feed, including the ``{slug}`` "
+"placeholder. [2]_"
+msgstr "存储标签Atom feeds的含有 ``{slug}`` 的位置。 [2]_"
+
+#: ../../settings.rst:991
+msgid ""
+"Relative URL of the tag Atom feed, including the ``{slug}`` placeholder. "
+"[2]_"
+msgstr "标签Atom feed的含有 ``{slug}`` 的相对URL。 [2]_"
+
+#: ../../settings.rst:996
+msgid ""
+"Relative URL to output the tag RSS feed, including the ``{slug}`` "
+"placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location "
+"and URL."
+msgstr "标签RSS feed的含有 ``{slug}`` 的相对URL。如果未设置， 会将 ``TAG_FEED_RSS`` 同时用于存储位置和URL。"
+
+#: ../../settings.rst:1002
+msgid ""
+"Maximum number of items allowed in a feed. Setting to ``None`` will cause"
+" the feed to contains every article. 100 if not specified."
+msgstr ""
+
+#: ../../settings.rst:1007
+msgid ""
+"Only include item summaries in the ``description`` tag of RSS feeds. If "
+"set to ``False``, the full content will be included instead. This setting"
+" doesn't affect Atom feeds, only RSS ones."
+msgstr ""
+"仅在RSS feed的 ``description`` 标签中包含项目摘要。若设为 ``False`` "
+"，则将包含完整内容。此项设置不会影响Atom feed，只针对RSS feed。"
+
+#: ../../settings.rst:1011
+msgid ""
+"If you don't want to generate some or any of these feeds, set the above "
+"variables to ``None``."
+msgstr "若你不想要生成某些feed，将对应变量设为 ``None`` 即可。"
+
+#: ../../settings.rst:1014
+msgid "``{slug}`` is replaced by name of the category / author / tag."
+msgstr "``{slug}`` 会用分类名/作者名/标签名来替换。"
+
+#: ../../settings.rst:1018
+msgid "Pagination"
+msgstr "分页"
+
+#: ../../settings.rst:1020
+msgid ""
+"The default behaviour of Pelican is to list all the article titles along "
+"with a short description on the index page. While this works well for "
+"small-to-medium sites, sites with a large quantity of articles will "
+"probably benefit from paginating this list."
+msgstr "默认情况下，Pelican会把所有文章以简短描述的形式展示在首页上。虽然这对中小型网站效果不错，但对于拥有大量文章的网站来说可能需要将此列表进行分页。"
+
+#: ../../settings.rst:1025
+msgid "You can use the following settings to configure the pagination."
+msgstr "你可以使用下面的设置来配置分页。"
+
+#: ../../settings.rst:1029
+msgid ""
+"The minimum number of articles allowed on the last page. Use this when "
+"you don't want the last page to only contain a handful of articles."
+msgstr "最后一页允许的最小文章数。当不希望最后一页仅包含少数文章时，请使用此选项。（译者注：当最后一页达不到此最小文章数时，会被合并到前一页）"
+
+#: ../../settings.rst:1034
+msgid ""
+"The maximum number of articles to include on a page, not including "
+"orphans. False to disable pagination."
+msgstr "一个页面上包含的最大文章数，不包括孤立文章（译者注：当发生上一条设置选项中说到的合并时，最后一页显然会超过此最大文章数）。设为False会禁用分页。"
+
+#: ../../settings.rst:1039
+msgid ""
+"The templates to use pagination with, and the number of articles to "
+"include on a page. If this value is ``None``, it defaults to "
+"``DEFAULT_PAGINATION``."
+msgstr "指定哪些模板需要启用分页，以及对应的单页面文章数量。若设为 ``None`` ，则默认值为 ``DEFAULT_PAGINATION`` 。"
+
+#: ../../settings.rst:1047
+msgid "A set of patterns that are used to determine advanced pagination output."
+msgstr "一组模式，用于确定高级分页输出。"
+
+#: ../../settings.rst:1051
+msgid "Using Pagination Patterns"
+msgstr "使用分页模式"
+
+#: ../../settings.rst:1053
+msgid ""
+"By default, pages subsequent to ``.../foo.html`` are created as "
+"``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used "
+"to change this. It takes a sequence of triples, where each triple "
+"consists of::"
+msgstr ""
+"默认情况下，连续的页面会如此编码URL：第一页为 ``.../foo.html`` ，后一页为 ``.../foo2.html`` "
+"。``PAGINATION_PATTERNS`` 就是用于修改这个编页规则的，其中是一些三元组："
+
+#: ../../settings.rst:1059
+msgid ""
+"For ``page_url`` and ``page_save_as``, you may use a number of variables."
+" ``{url}`` and ``{save_as}`` correspond respectively to the ``*_URL`` and"
+" ``*_SAVE_AS`` values of the corresponding page type (e.g. "
+"``ARTICLE_SAVE_AS``). If ``{save_as} == foo/bar.html``, then ``{name} == "
+"foo/bar`` and ``{extension} == .html``. ``{base_name}`` equals ``{name}``"
+" except that it strips trailing ``/index`` if present. ``{number}`` "
+"equals the page number."
+msgstr ""
+"在  ``page_url`` 和 ``page_save_as`` 中，你可以使用很多变量。对于不同的页面类型，``{url}`` 和 "
+"``{save_as}`` 对应于其 ``*_URL`` 和 ``*_SAVE_AS`` 设置项的计算值（例如 "
+"``ARTICLE_SAVE_AS`` ）。假设 ``{save_as} == foo/bar.html`` ，那么此时 ``{name} == "
+"foo/bar`` 、``{extension} == .html`` 。另外， ``{base_name}`` 和 ``{name}`` "
+"相同，只不过会截去末尾的 ``/index`` （如果有的话）。 ``{number}`` 则等于页码。（译者注： "
+"``minimum_page`` 意味到达该页面数后开始使用此条规则）"
+
+#: ../../settings.rst:1066
+msgid ""
+"For example, if you want to leave the first page unchanged, but place "
+"subsequent pages at ``.../page/2/`` etc, you could set "
+"``PAGINATION_PATTERNS`` as follows::"
+msgstr ""
+"举个例子，如果你想要保持第一面保持不变，但后续页面都以 ``.../page/2/`` 的形式出现，你可以如此设置 "
+"``PAGINATION_PATTERNS`` ："
+
+#: ../../settings.rst:1076
+msgid ""
+"If you want a pattern to apply to the last page in the list, use ``-1`` "
+"as the ``minimum_page`` value::"
+msgstr "如果你想指定最后一面制定规则，将 ``minimum_page`` 的值设为 ``-1`` 即可："
+
+#: ../../settings.rst:1082
+msgid "Translations"
+msgstr "翻译"
+
+#: ../../settings.rst:1084
+msgid ""
+"Pelican offers a way to translate articles. See the :doc:`Content "
+"<content>` section for more information."
+msgstr "Pelican为文章翻译提供了展示方法。详见 :doc:`Content <content>` 。"
+
+#: ../../settings.rst:1089
+msgid "The default language to use."
+msgstr "指定默认语言。"
+
+#: ../../settings.rst:1093
+msgid ""
+"The metadata attribute(s) used to identify which articles are "
+"translations of one another. May be a string or a collection of strings. "
+"Set to ``None`` or ``False`` to disable the identification of "
+"translations."
+msgstr "指定用于标识不同翻译是同一篇文章的元数据。可以是一个或多个字符串。要禁用对文章翻译的识别，将此项设为 ``None`` 或 ``False`` 。"
+
+#: ../../settings.rst:1099
+msgid ""
+"The metadata attribute(s) used to identify which pages are translations "
+"of one another. May be a string or a collection of strings. Set to "
+"``None`` or ``False`` to disable the identification of translations."
+msgstr "指定用于标识不同翻译是同一个页面的元数据。可以是一个或多个字符串。要禁用对页面翻译的识别，将此项设为 ``None`` 或 ``False`` 。"
+
+#: ../../settings.rst:1105
+msgid "The location to save the Atom feed for translations. [3]_"
+msgstr "指定各翻译Atom feed的存储位置。 [3]_"
+
+#: ../../settings.rst:1109
+msgid ""
+"Relative URL of the Atom feed for translations, including the ``{lang}`` "
+"placeholder. [3]_ If not set, ``TRANSLATION_FEED_ATOM`` is used both for "
+"save location and URL."
+msgstr ""
+"指定各翻译Atom feed的含有 ``{lang}`` 的相对URL。 [3]_ "
+"若未设置此项，``TRANSLATION_FEED_ATOM`` 会同时用于存储位置和URL。"
+
+#: ../../settings.rst:1115
+msgid "Where to put the RSS feed for translations."
+msgstr "指定各翻译RSS feed的存储位置。"
+
+#: ../../settings.rst:1119
+msgid ""
+"Relative URL of the RSS feed for translations, including the ``{lang}`` "
+"placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for "
+"save location and URL."
+msgstr ""
+"文章或页面不同翻译在RSS订阅源中的相对路径，其中含有 ``{lang}``。 [3]_ "
+"若未设置此项，``TRANSLATION_FEED_ATOM`` 会同时用于存储位置和URL。"
+
+#: ../../settings.rst:1123
+msgid "{lang} is the language code"
+msgstr "{lang} 是语言代码"
+
+#: ../../settings.rst:1127
+msgid "Ordering content"
+msgstr "内容的排列顺序"
+
+#: ../../settings.rst:1131
+msgid ""
+"Order archives by newest first by date. (False: orders by date with older"
+" articles first.)"
+msgstr "若设为True，日期较新的会排在前面；若设为False，则日期较旧的会排在前面。"
+
+#: ../../settings.rst:1136
+msgid ""
+"Reverse the category order. (True: lists by reverse alphabetical order; "
+"default lists alphabetically.)"
+msgstr "若设为True，分类会按字典序逆序排列；若设为False，则按字典序顺序排列。"
+
+#: ../../settings.rst:1141
+msgid ""
+"Defines how the articles (``articles_page.object_list`` in the template) "
+"are sorted. Valid options are: metadata as a string (use ``reversed-`` "
+"prefix to reverse the sort order), special option ``'basename'`` which "
+"will use the basename of the file (without path), or a custom function to"
+" extract the sorting key from articles. Using a value of ``'date'`` will "
+"sort articles in chronological order, while the default value, "
+"``'reversed-date'``, will sort articles by date in reverse order (i.e., "
+"newest article comes first)."
+msgstr ""
+"定义文章（模板中的 ``articles_page.object_list`` "
+"）的排序方式。有效选项包括：字符串形式的元数据（使用前缀reverse-来指定逆序）、特殊选项 ``'basename'`` "
+"（不带路径的文件名）、或是一个可以从文章中提取排序键的自定义函数。例如，将选项值设为 ``'date'`` "
+"，文章就会以时间顺序排列文章，但默认值事实上是``'reversed-date'`` ，会以日期逆序排列，即新文章在前。"
+
+#: ../../settings.rst:1151
+msgid ""
+"Defines how the pages (``pages`` variable in the template) are sorted. "
+"Options are same as ``ARTICLE_ORDER_BY``.  The default value, "
+"``'basename'`` will sort pages by their basename."
+msgstr ""
+"定义页面（模板中的 ``pages`` 变量）的排序顺序。有效选项和 ``ARTICLE_ORDER_BY`` 中的相同。默认值为 "
+"``basename``。"
+
+#: ../../settings.rst:1159
+msgid "Themes"
+msgstr "主题"
+
+#: ../../settings.rst:1161
+msgid ""
+"Creating Pelican themes is addressed in a dedicated section (see :ref"
+":`theming-pelican`). However, here are the settings that are related to "
+"themes."
+msgstr "创建Pelican主题在单独的一节中讲解（参见 :ref:`theming-pelican` ）。此处讲解和主题有关的设置项。"
+
+#: ../../settings.rst:1167
+msgid ""
+"Theme to use to produce the output. Can be a relative or absolute path to"
+" a theme folder, or the name of a default theme or a theme installed via "
+":doc:`pelican-themes` (see below)."
+msgstr ""
+"用于产生输出的主题。可以是到达要使用主题的文件夹的相对或绝对路径，或是主题的名称（默认主题或通过 :doc:`pelican-themes` "
+"安装的主题）。"
+
+#: ../../settings.rst:1173
+msgid ""
+"Destination directory in the output path where Pelican will place the "
+"files collected from `THEME_STATIC_PATHS`. Default is `theme`."
+msgstr ""
+"Pelican从 `THEME_STATIC_PATHS` 中发现主题要使用的静态文件，此设置项指定这些静态文件在输出路径中的目录。默认值为 "
+"`theme` 。"
+
+#: ../../settings.rst:1178
+msgid ""
+"Static theme paths you want to copy. Default value is `static`, but if "
+"your theme has other static paths, you can put them here. If files or "
+"directories with the same names are included in the paths defined in this"
+" settings, they will be progressively overwritten."
+msgstr ""
+"要复制的静态主题路径。默认值为 `static` "
+"，但如果你的主题有其他静态路径，也可以将其放在此处。此项设置中若包含了相同名称的文件或目录，前面的会被后面的覆盖。"
+
+#: ../../settings.rst:1185
+msgid ""
+"A list of paths you want Jinja2 to search for templates before searching "
+"the theme's ``templates/`` directory.  Allows for overriding individual "
+"theme template files without having to fork an existing theme.  Jinja2 "
+"searches in the following order: files in ``THEME_TEMPLATES_OVERRIDES`` "
+"first, then the theme's ``templates/``."
+msgstr ""
+"在搜索主题的 ``templates/`` "
+"目录前，Jinja2会先搜索此设置项中的路径。可以使用此设置项覆盖主题中的某些模板文件，以避免修改现有主题。"
+
+#: ../../settings.rst:1191
+#, python-format
+msgid ""
+"You can also extend templates from the theme using the ``{% extends %}`` "
+"directive utilizing the ``!theme`` prefix as shown in the following "
+"example:"
+msgstr "利用 ``{% extends %}`` 指令中的 ``!theme`` 前缀也可以用于从主题扩展模板，如下例所示："
+
+#: ../../settings.rst:1200
+msgid "Specify the CSS file you want to load."
+msgstr "指定需要加载的CSS文件。"
+
+#: ../../settings.rst:1202
+msgid ""
+"By default, two themes are available. You can specify them using the "
+"``THEME`` setting or by passing the ``-t`` option to the ``pelican`` "
+"command:"
+msgstr "默认情况下，有两个主题可供选择。可以使用 ``THEME`` 选项指定，或是在 ``pelican`` 命令中使用 ``-t`` 选项的参数传入。"
+
+#: ../../settings.rst:1205
+msgid "notmyidea"
+msgstr "notmyidea（默认值）"
+
+#: ../../settings.rst:1206
+msgid "simple (a synonym for \"plain text\" :)"
+msgstr "simple（即“plain text”）"
+
+#: ../../settings.rst:1208
+msgid ""
+"There are a number of other themes available at "
+"https://github.com/getpelican/pelican-themes. Pelican comes with :doc"
+":`pelican-themes`, a small script for managing themes."
+msgstr ""
+"还有很多主题可以在 https://github.com/getpelican/pelican-themes 上下载。Pelican使用一个称为 "
+":doc:`pelican-themes` 的小脚本来管理主题。"
+
+#: ../../settings.rst:1212
+msgid ""
+"You can define your own theme, either by starting from scratch or by "
+"duplicating and modifying a pre-existing theme. Here is :doc:`a guide on "
+"how to create your theme <themes>`."
+msgstr ""
+"你还可以创建自己的主题，可以从头开始，也可以在已有主题的基础上修改。请参看 :doc:`a guide on how to create your"
+" theme <themes>` 。"
+
+#: ../../settings.rst:1216
+msgid "Following are example ways to specify your preferred theme::"
+msgstr "下面是几个指定某个主题的例子："
+
+#: ../../settings.rst:1227
+msgid ""
+"The built-in ``simple`` theme can be customized using the following "
+"settings."
+msgstr "内置的 ``simple`` 主题可以使用以下设置项进行自定义。"
+
+#: ../../settings.rst:1231
+msgid "The URL of the stylesheet to use."
+msgstr ""
+
+#: ../../settings.rst:1233
+msgid ""
+"The built-in ``notmyidea`` theme can make good use of the following "
+"settings. Feel free to use them in your themes as well."
+msgstr "下面的一下选项可以很好地作用于内置的 ``notmyidea`` 主题。当然在其他主题中你也可以尽情尝试这些选项。"
+
+#: ../../settings.rst:1238
+msgid "A subtitle to appear in the header."
+msgstr "页面顶部要显示的副标题。"
+
+#: ../../settings.rst:1242
+msgid ""
+"Pelican can handle Disqus comments. Specify the Disqus sitename "
+"identifier here."
+msgstr "Pelican中可以使用Disqus的评论系统，此设置项用于设置Disqus的站点标识符。"
+
+#: ../../settings.rst:1247
+msgid ""
+"Your GitHub URL (if you have one). It will then use this information to "
+"create a GitHub ribbon."
+msgstr "指定你的GitHub URL（如果有的话），此信息将被用于创建GitHub功能区。"
+
+#: ../../settings.rst:1252
+msgid ""
+"Put any desired analytics scripts in this setting in ``publishconf.py``. "
+"Example:"
+msgstr "在 ``publishconf.py`` 中设置此项，用于指定想要使用的统计分析脚本。如下例："
+
+#: ../../settings.rst:1266
+msgid ""
+"A list of tuples (Title, URL) for additional menu items to appear at the "
+"beginning of the main menu."
+msgstr "元组 (标题, URL) 的列表，用于指定额外的菜单项，会添加在菜单栏的开头。"
+
+#: ../../settings.rst:1271
+msgid "A list of tuples (Title, URL) for links to appear on the header."
+msgstr "元组 (标题, URL) 的列表，用于指定要展示在网页开头的链接。"
+
+#: ../../settings.rst:1275
+msgid "A list of tuples (Title, URL) to appear in the \"social\" section."
+msgstr "元组 (标题, URL) 的列表，用于指定要展示在“social”部分的内容。"
+
+#: ../../settings.rst:1279
+msgid ""
+"Allows for adding a button to articles to encourage others to tweet about"
+" them. Add your Twitter username if you want this button to appear."
+msgstr "允许在文章中添加按钮，以鼓励其他人发布有关它们的推文。如果希望显示此按钮，在此项中设置你的Twitter用户名。"
+
+#: ../../settings.rst:1284
+msgid ""
+"Allows override of the name of the links widget.  If not specified, "
+"defaults to \"links\"."
+msgstr "指定用于覆盖“links”部分的名称。默认值为“links”"
+
+#: ../../settings.rst:1289
+msgid ""
+"Allows override of the name of the \"social\" widget.  If not specified, "
+"defaults to \"social\"."
+msgstr "指定用于覆盖“social”部分的名称。默认值为“social”"
+
+#: ../../settings.rst:1292
+msgid ""
+"In addition, you can use the \"wide\" version of the ``notmyidea`` theme "
+"by adding the following to your configuration::"
+msgstr "另外，你可以使用 ``notmyidea`` 主题的“宽屏”版本，在配置文件中添加下面这行配置即可："
+
+#: ../../settings.rst:1299
+msgid "Logging"
+msgstr "日志"
+
+#: ../../settings.rst:1301
+msgid ""
+"Sometimes, a long list of warnings may appear during site generation. "
+"Finding the **meaningful** error message in the middle of tons of "
+"annoying log output can be quite tricky. In order to filter out redundant"
+" log messages, Pelican comes with the ``LOG_FILTER`` setting."
+msgstr ""
+"在站点生成过程中有时可能会出现一堆警告信息。在这一大堆日志输出中寻找 **有意义** "
+"的错误消息是非常棘手的。为了过滤掉多余的日志消息，可以在Pelican中指定 ``LOG_FILTER`` 设置。"
+
+#: ../../settings.rst:1306
+msgid ""
+"``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them "
+"being composed of the logging level (up to ``warning``) and the message "
+"to be ignored. Simply populate the list with the log messages you want to"
+" hide, and they will be filtered out."
+msgstr ""
+"``LOG_FILTER`` 是元组 ``(level, msg)`` ，level指定日志记录等级（最高为 ``warning`` "
+"），msg指定要忽略的消息。将想要隐藏的日志消息添加到此列表中就可以将他们过滤掉。"
+
+#: ../../settings.rst:1311 ../../settings.rst:1319
+msgid "For example::"
+msgstr "例如："
+
+#: ../../settings.rst:1316
+msgid ""
+"It is possible to filter out messages by a template. Check out source "
+"code to obtain a template."
+msgstr "用模板字符串指定要过滤的消息也是可以的。具体的消息种类请查看源码。"
+
+#: ../../settings.rst:1326
+msgid ""
+"Silencing messages by templates is a dangerous feature. It is possible to"
+" unintentionally filter out multiple message types with the same template"
+" (including messages from future Pelican versions). Proceed with caution."
+msgstr "通过模板过滤忽略消息是一个危险的功能。 使用同一模板可能会无意中过滤掉多种消息类型（包括来自新版本Pelican的消息），请谨慎行事。"
+
+#: ../../settings.rst:1332
+msgid "This option does nothing if ``--debug`` is passed."
+msgstr "当使用了 ``--debug`` 参数，此项设置就不会起作用。"
+
+#: ../../settings.rst:1338
+msgid "Reading only modified content"
+msgstr "只读取修改过的内容"
+
+#: ../../settings.rst:1340
+msgid ""
+"To speed up the build process, Pelican can optionally read only articles "
+"and pages with modified content."
+msgstr "为了加速网站构建过程，Pelican能够只读取修改过内容的文章和页面。"
+
+#: ../../settings.rst:1343
+msgid "When Pelican is about to read some content source file:"
+msgstr "当Pelican准备读取内容源文件时，会执行下面的规则："
+
+#: ../../settings.rst:1345
+msgid ""
+"The hash or modification time information for the file from a previous "
+"build are loaded from a cache file if ``LOAD_CONTENT_CACHE`` is ``True``."
+" These files are stored in the ``CACHE_PATH`` directory.  If the file has"
+" no record in the cache file, it is read as usual."
+msgstr ""
+"若 ``LOAD_CONTENT_CACHE`` 为 ``True`` "
+"，则从缓存文件中加载上一次构建时文件的哈希值或修改时间。这些缓存的文件存储在 ``CACHE_PATH`` "
+"所指定的目录中。若文件是新的，在缓存文件中没有记录，则照常读取。"
+
+#: ../../settings.rst:1349
+msgid "The file is checked according to ``CHECK_MODIFIED_METHOD``:"
+msgstr "文件会以 ``CHECK_MODIFIED_METHOD`` 设置的方式检查："
+
+#: ../../settings.rst:1355
+msgid ""
+"If set to anything else or the necessary information about the file "
+"cannot be found in the cache file, the content is read as usual."
+msgstr "如果设置为其他任何值或在缓存文件中无法找到有关该文件的必要信息，则将照常读取内容。"
+
+#: ../../settings.rst:1358
+msgid ""
+"If the file is considered unchanged, the content data saved in a previous"
+" build corresponding to the file is loaded from the cache, and the file "
+"is not read."
+msgstr "如果Pelican认为文件没有更改过，会直接从上一次构建的对应文件中加载内容，源文件就不会被读取。"
+
+#: ../../settings.rst:1361
+msgid ""
+"If the file is considered changed, the file is read and the new "
+"modification information and the content data are saved to the cache if "
+"``CACHE_CONTENT`` is ``True``."
+msgstr ""
+"若Pelican认为文件更改过了，则会读取源文件；若 ``CACHE_CONTENT`` 设为了 ``True`` "
+"，Pelican还会将修改后的信息以及内容数据存入缓存。"
+
+#: ../../settings.rst:1365
+msgid ""
+"If ``CONTENT_CACHING_LAYER`` is set to ``'reader'`` (the default), the "
+"raw content and metadata returned by a reader are cached. If this setting"
+" is instead set to ``'generator'``, the processed content object is "
+"cached. Caching the processed content object may conflict with plugins "
+"(as some reading related signals may be skipped) and the "
+"``WITH_FUTURE_DATES`` functionality (as the ``draft`` status of the "
+"cached content objects would not change automatically over time)."
+msgstr ""
+"若 ``CONTENT_CACHING_LAYER`` 设为了 ``'reader'`` （默认值），则缓存reader返回的原始内容和元数据；若"
+" ``CONTENT_CACHING_LAYER`` 设为了 ``'generator'`` "
+"，则缓存处理过后的内容对象。缓存已处理的内容对象可能会和插件（因为可能会跳过一些与读取相关的信号）与 ``WITH_FUTURE_DATES`` "
+"的功能（因为已处理内容对象的 ``draft`` 状态不会改变）冲突"
+
+#: ../../settings.rst:1373
+msgid ""
+"Checking modification times is faster than comparing file hashes, but it "
+"is not as reliable because ``mtime`` information can be lost, e.g., when "
+"copying content source files using the ``cp`` or ``rsync`` commands "
+"without the ``mtime`` preservation mode (which for ``rsync`` can be "
+"invoked by passing the ``--archive`` flag)."
+msgstr ""
+"检查文件修改时间比计算文件哈希更快，但事实上却不太可靠，因为 ``mtime`` 信息有丢失的可能。例如，使用 ``cp`` 或 "
+"``rsync`` 命令时没有开启 ``mtime`` 保留模式。（rsync可以通过指定 ``--archive`` 标志启用 "
+"``mtime`` 保留模式。"
+
+#: ../../settings.rst:1379
+msgid ""
+"The cache files are Python pickles, so they may not be readable by "
+"different versions of Python as the pickle format often changes. If such "
+"an error is encountered, it is caught and the cache file is rebuilt "
+"automatically in the new format. The cache files will also be rebuilt "
+"after the ``GZIP_CACHE`` setting has been changed."
+msgstr ""
+"缓存文件使用的是Python "
+"pickles，因此不同版本的Python由于pickle文件格式变化可能无法读取缓存。如果遇到此类错误，会自动以新格式重新构建缓存。另外，当 "
+"``GZIP_CACHE`` 设置发生变化后，缓存也会自动重建。"
+
+#: ../../settings.rst:1385
+msgid ""
+"The ``--ignore-cache`` command-line option is useful when the whole cache"
+" needs to be regenerated, such as when making modifications to the "
+"settings file that will affect the cached content, or just for debugging "
+"purposes. When Pelican runs in autoreload mode, modification of the "
+"settings file will make it ignore the cache automatically if "
+"``AUTORELOAD_IGNORE_CACHE`` is ``True``."
+msgstr ""
+"当需要重新生成整个缓存时，可以使用 ``--ignore-cache`` "
+"命令行选项，例如当需要修改会影响缓存内容的设置项时，或是调试时，都可以使用 ``--ignore-cache`` 。若 "
+"``AUTORELOAD_IGNORE_CACHE`` 设为了 ``True`` ，修改设置文件时会自动忽略缓存。"
+
+#: ../../settings.rst:1391
+msgid ""
+"Note that even when using cached content, all output is always written, "
+"so the modification times of the generated ``*.html`` files will always "
+"change. Therefore, ``rsync``-based uploading may benefit from the "
+"``--checksum`` option."
+msgstr ""
+"需要注意的是，即使使用了缓存的内容，最终的输出文件也始终会进行重新写入，因此生成的 ``*.html`` 文件的修改时间始终会变化。所以，基于 "
+"``rsync`` 进行上传时，可以考虑使用 ``--checksum`` 选项。"
+
+#: ../../settings.rst:1398
+msgid "Example settings"
+msgstr "配置示例"
+
+#~ msgid ""
+#~ "Set to ``UA-XXXXX-Y`` Property's "
+#~ "tracking ID to activate Google "
+#~ "Analytics."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Set cookie domain field of Google "
+#~ "Analytics tracking code. Defaults to "
+#~ "``auto``."
+#~ msgstr ""
+
+#~ msgid "Set to 'XXX-YYYYYY-X' to activate GoSquared."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "If this list is not empty, "
+#~ "**only** output files with their paths"
+#~ " in this list are written. Paths "
+#~ "should be either absolute or relative"
+#~ " to the current Pelican working "
+#~ "directory. For possible use cases see"
+#~ " :ref:`writing_only_selected_content`."
+#~ msgstr ""
+#~ "若此列表不为空，则 **只会** "
+#~ "输出路径在此列表中的文件。路径可以是绝对的也可以是相对于Pelican当前工作路径的。有关可能使用到的情况，请参见 "
+#~ ":ref:`writing_only_selected_content` 。"
+
+#~ msgid ""
+#~ "The URL to use for per-year "
+#~ "archives of your posts. Used only "
+#~ "if you have the ``{url}`` placeholder"
+#~ " in ``PAGINATION_PATTERNS``."
+#~ msgstr "帖子年归档的URL。只有在 ``PAGINATION_PATTERNS`` 中使用 ``{url}`` 时才生效。"
+
+#~ msgid ""
+#~ "The URL to use for per-day "
+#~ "archives of your posts. Used only "
+#~ "if you have the ``{url}`` placeholder"
+#~ " in ``PAGINATION_PATTERNS``."
+#~ msgstr "帖子日归档的URL。只有在 ``PAGINATION_PATTERNS`` 中使用 ``{url}`` 时才生效。"
+
+#~ msgid ""
+#~ "Maximum number of items allowed in "
+#~ "a feed. Feed item quantity is "
+#~ "unrestricted by default."
+#~ msgstr "feed中允许的最大项目数量。默认情况下，不限数量"
+
+#~ msgid ""
+#~ "Relative URL of the RSS feed for"
+#~ " translations, including the ``{lang}`` "
+#~ "placeholder. [3]_ If not set, "
+#~ "``TRANSLATION_FEED_RSS`` is used both for \n"
+#~ msgstr ""
+#~ "指定各翻译RSS feed的含有 ``{lang}`` 的相对URL。 [3]_ "
+#~ "若未设置此项，``TRANSLATION_FEED_RSS`` 会同时用于存储位置和URL。"
+
+#~ msgid "Writing only selected content"
+#~ msgstr "只写入选定的内容"
+
+#~ msgid ""
+#~ "When only working on a single "
+#~ "article or page, or making tweaks "
+#~ "to your theme, it is often "
+#~ "desirable to generate and review your"
+#~ " work as quickly as possible. In "
+#~ "such cases, generating and writing the"
+#~ " entire site output is often "
+#~ "unnecessary. By specifying only the "
+#~ "desired files as output paths in "
+#~ "the ``WRITE_SELECTED`` list, **only** those"
+#~ " files will be written. This list "
+#~ "can be also specified on the "
+#~ "command line using the ``--write-"
+#~ "selected`` option, which accepts a "
+#~ "comma-separated list of output file "
+#~ "paths. By default this list is "
+#~ "empty, so all output is written. "
+#~ "See :ref:`site_generation` for more details."
+#~ msgstr ""
+#~ "当在处理某一篇文章或页面时，或在对主题进行调整时，会希望快速生成内容以便查看。在这种情况下，通常不需要生成和写入整个站点。此时，在  "
+#~ "``WRITE_SELECTED`` 列表中指定需要重写的输出文件路径，或是使用 ``--write-"
+#~ "selected`` 命令行选项指定一个或多个输出文件路径（用逗号分隔）即可。此列表默认为空，即写入所有输出。详见 "
+#~ ":ref:`site_generation` 。"
