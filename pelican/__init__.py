@@ -80,7 +80,14 @@ class Pelican:
                 plugin.register()
                 self.plugins.append(plugin)
             except Exception as e:
-                logger.error("Cannot register plugin `%s`\n%s", name, e)
+                logger.error(
+                    "Cannot register plugin `%s`\n%s",
+                    name,
+                    e,
+                    stacklevel=2,
+                )
+                if self.settings.get("DEBUG", False):
+                    console.print_exception()
 
         self.settings["PLUGINS"] = [get_plugin_name(p) for p in self.plugins]
 
@@ -120,11 +127,14 @@ class Pelican:
             if hasattr(p, "generate_context"):
                 p.generate_context()
 
+        # for plugins that create/edit the summary
+        logger.debug("Signal all_generators_finalized.send(<generators>)")
+        signals.all_generators_finalized.send(generators)
+
+        # update links in the summary, etc
         for p in generators:
             if hasattr(p, "refresh_metadata_intersite_links"):
                 p.refresh_metadata_intersite_links()
-
-        signals.all_generators_finalized.send(generators)
 
         writer = self._get_writer()
 

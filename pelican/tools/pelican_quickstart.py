@@ -44,6 +44,7 @@ _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templ
 _jinja_env = Environment(
     loader=FileSystemLoader(_TEMPLATES_DIR),
     trim_blocks=True,
+    keep_trailing_newline=True,
 )
 
 

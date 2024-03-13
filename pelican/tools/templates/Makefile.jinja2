@@ -37,6 +37,7 @@ DROPBOX_DIR={{dropbox_dir}}
 {% endif %}
 {% if github %}
 GITHUB_PAGES_BRANCH={{github_pages_branch}}
+GITHUB_PAGES_COMMIT_MESSAGE=Generate Pelican site
 
 {% endif %}
 
@@ -161,7 +162,7 @@ cf_upload: publish
 {% if github %}
 {% set upload = upload + ["github"] %}
 github: publish
-	ghp-import -m "Generate Pelican site" -b $(GITHUB_PAGES_BRANCH) "$(OUTPUTDIR)"
+	ghp-import -m "$(GITHUB_PAGES_COMMIT_MESSAGE)" -b $(GITHUB_PAGES_BRANCH) "$(OUTPUTDIR)" --no-jekyll
 	git push origin $(GITHUB_PAGES_BRANCH)
 
 {% endif %}

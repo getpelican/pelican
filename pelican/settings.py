@@ -8,11 +8,13 @@ import re
 import sys
 from os.path import isabs
 from pathlib import Path
+from types import ModuleType
+from typing import Any, Dict, Optional
 
 from pelican.log import LimitFilter
 
 
-def load_source(name, path):
+def load_source(name: str, path: str) -> ModuleType:
     spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
     sys.modules[name] = mod
@@ -21,6 +23,8 @@ def load_source(name, path):
 
 
 logger = logging.getLogger(__name__)
+
+Settings = Dict[str, Any]
 
 DEFAULT_THEME = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "themes", "notmyidea"
@@ -177,7 +181,9 @@ DEFAULT_CONFIG = {
 PYGMENTS_RST_OPTIONS = None
 
 
-def read_settings(path=None, override=None):
+def read_settings(
+    path: Optional[str] = None, override: Optional[Settings] = None
+) -> Settings:
     settings = override or {}
 
     if path:
@@ -221,7 +227,7 @@ def read_settings(path=None, override=None):
     return settings
 
 
-def get_settings_from_module(module=None):
+def get_settings_from_module(module: Optional[ModuleType] = None) -> Settings:
     """Loads settings from a module, returns a dictionary."""
 
     context = {}
@@ -230,7 +236,7 @@ def get_settings_from_module(module=None):
     return context
 
 
-def get_settings_from_file(path):
+def get_settings_from_file(path: str) -> Settings:
     """Loads settings from a file path, returning a dict."""
 
     name, ext = os.path.splitext(os.path.basename(path))
@@ -238,7 +244,7 @@ def get_settings_from_file(path):
     return get_settings_from_module(module)
 
 
-def get_jinja_environment(settings):
+def get_jinja_environment(settings: Settings) -> Settings:
     """Sets the environment for Jinja"""
 
     jinja_env = settings.setdefault(
@@ -253,7 +259,7 @@ def get_jinja_environment(settings):
     return settings
 
 
-def _printf_s_to_format_field(printf_string, format_field):
+def _printf_s_to_format_field(printf_string: str, format_field: str) -> str:
     """Tries to replace %s with {format_field} in the provided printf_string.
     Raises ValueError in case of failure.
     """
@@ -269,7 +275,7 @@ def _printf_s_to_format_field(printf_string, format_field):
     return result
 
 
-def handle_deprecated_settings(settings):
+def handle_deprecated_settings(settings: Settings) -> Settings:
     """Converts deprecated settings and issues warnings. Issues an exception
     if both old and new setting is specified.
     """
@@ -566,7 +572,7 @@ def handle_deprecated_settings(settings):
     return settings
 
 
-def configure_settings(settings):
+def configure_settings(settings: Settings) -> Settings:
     """Provide optimizations, error checking, and warnings for the given
     settings.
     Also, specify the log messages to be ignored.

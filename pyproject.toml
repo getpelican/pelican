@@ -95,7 +95,7 @@ dev = [
     "pytest-xdist>=3.4.0",
     "tox>=4.11.3",
     "invoke>=2.2.0",
-    "ruff>=0.1.5",
+    "ruff>=0.1.5,<0.2.0",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
 
