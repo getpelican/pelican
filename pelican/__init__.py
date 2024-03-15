@@ -461,7 +461,7 @@ def parse_arguments(argv=None):
         default="rich",
         choices=LOGS_HANDLERS,
         help=(
-            "Which handler to to format log messages. "
+            "Which handler to use to format log messages. "
             "The `rich` handler prints output in columns."
         ),
     )
