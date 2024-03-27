@@ -69,6 +69,7 @@ changelog-header = "###############"
 version-header = "="
 
 [tool.pdm]
+ignore_package_warnings = ["sphinx"]
 
 [tool.pdm.scripts]
 docbuild = "invoke docbuild"
