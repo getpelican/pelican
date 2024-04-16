@@ -53,8 +53,8 @@ class Writer:
         title = Markup(item.title).striptags()
         link = self.urljoiner(self.site_url, item.url)
 
-        if self.settings["FEED_APPEND_REL"]:
-            link = link + "?rel=rss"
+        if self.settings["FEED_APPEND_REF"]:
+            link = link + "?ref=feed"
 
         if isinstance(feed, Rss201rev2Feed):
             # RSS feeds use a single tag called 'description' for both the full
