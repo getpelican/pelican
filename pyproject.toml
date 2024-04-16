@@ -183,6 +183,7 @@ ignore = [
     "ISC001",  # single-line-implicit-string-concatenation
     "C408",  # unnecessary-collection-call
     "B904",  # raise-without-from-inside-except
+    "UP007",  # use `|` operator for union type annotations (PEP 604)
     "UP031",  # printf-string-formatting
     "PLR5501",  # collapsible-else-if
     "PERF203",  # try-except-in-loop
@@ -197,6 +198,7 @@ ignore = [
     "ISC003",  # explicit-string-concatenation
     "EXE002",  # shebang-missing-executable-file
     "C401",  # unnecessary-generator-set
+    "C416",  # unnecessary `list` comprehension
     "B028",  # no-explicit-stacklevel
     "B008",  # function-call-in-default-argument
 ]
