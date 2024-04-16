@@ -21,6 +21,10 @@ from pelican.tools.pelican_import import (
     get_attachments,
     tumblr2fields,
     wp2fields,
+    mediumpost2fields,
+    mediumposts2fields,
+    strip_medium_post_content,
+    medium_slug,
 )
 from pelican.utils import path_to_file_url, slugify
 
@@ -705,4 +709,83 @@ class TestTumblrImporter(TestCaseWithCLocale):
             ],
             posts,
             posts,
+        )
+
+
+class TestMediumImporter(TestCaseWithCLocale):
+    def setUp(self):
+        super().setUp()
+        self.test_content_root = "pelican/tests/content"
+        # The content coming out of parsing is similar, but not the same.
+        # Beautiful soup rearranges the order of attributes, for example.
+        # So, we keep a copy of the content for the test.
+        content_filename = f"{self.test_content_root}/medium_post_content.txt"
+        with open(content_filename, encoding="utf-8") as the_content_file:
+            # Many editors and scripts add a final newline, so live with that
+            # in our test
+            the_content = the_content_file.read()
+            assert the_content[-1] == "\n"
+            the_content = the_content[:-1]
+        self.post_tuple = (
+            "A title",
+            the_content,
+            # slug:
+            "2017-04-21-medium-post",
+            "2017-04-21 17:11",
+            "User Name",
+            None,
+            (),
+            "published",
+            "article",
+            "html",
+        )
+
+    def test_mediumpost2field(self):
+        """Parse one post"""
+        post_filename = f"{self.test_content_root}/medium_posts/2017-04-21_-medium-post--d1bf01d62ba3.html"
+        val = mediumpost2fields(post_filename)
+        self.assertEqual(self.post_tuple, val, val)
+
+    def test_mediumposts2field(self):
+        """Parse all posts in an export directory"""
+        posts = [
+            fields
+            for fields in mediumposts2fields(f"{self.test_content_root}/medium_posts")
+        ]
+        self.assertEqual(1, len(posts))
+        self.assertEqual(self.post_tuple, posts[0])
+
+    def test_strip_content(self):
+        """Strip out unhelpful tags"""
+        html_doc = (
+            "<section>This keeps <i>lots</i> of <b>tags</b>, but not "
+            "the <section>section</section> tags</section>"
+        )
+        soup = BeautifulSoup(html_doc, "html.parser")
+        self.assertEqual(
+            "This keeps <i>lots</i> of <b>tags</b>, but not the section tags",
+            strip_medium_post_content(soup),
+        )
+
+    def test_medium_slug(self):
+        # Remove hex stuff at the end
+        self.assertEqual(
+            "2017-04-27_A-long-title",
+            medium_slug(
+                "medium-export/posts/2017-04-27_A-long-title--2971442227dd.html"
+            ),
+        )
+        # Remove "--DRAFT" at the end
+        self.assertEqual(
+            "2017-04-27_A-long-title",
+            medium_slug("medium-export/posts/2017-04-27_A-long-title--DRAFT.html"),
+        )
+        # Remove both (which happens)
+        self.assertEqual(
+            "draft_How-to-do", medium_slug("draft_How-to-do--DRAFT--87225c81dddd.html")
+        )
+        # If no hex stuff, leave it alone
+        self.assertEqual(
+            "2017-04-27_A-long-title",
+            medium_slug("medium-export/posts/2017-04-27_A-long-title.html"),
         )

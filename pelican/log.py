@@ -85,13 +85,39 @@ class FatalLogger(LimitLogger):
     warnings_fatal = False
     errors_fatal = False
 
-    def warning(self, *args, **kwargs):
-        super().warning(*args, **kwargs)
+    def warning(self, *args, stacklevel=1, **kwargs):
+        """
+        Displays a logging warning.
+
+        Wrapping it here allows Pelican to filter warnings, and conditionally
+        make warnings fatal.
+
+        Args:
+            stacklevel (int): the stacklevel that would be used to display the
+            calling location, except for this function. Adjusting the
+            stacklevel allows you to see the "true" calling location of the
+            warning, rather than this wrapper location.
+        """
+        stacklevel += 1
+        super().warning(*args, stacklevel=stacklevel, **kwargs)
         if FatalLogger.warnings_fatal:
             raise RuntimeError("Warning encountered")
 
-    def error(self, *args, **kwargs):
-        super().error(*args, **kwargs)
+    def error(self, *args, stacklevel=1, **kwargs):
+        """
+        Displays a logging error.
+
+        Wrapping it here allows Pelican to filter errors, and conditionally
+        make errors non-fatal.
+
+        Args:
+            stacklevel (int): the stacklevel that would be used to display the
+            calling location, except for this function. Adjusting the
+            stacklevel allows you to see the "true" calling location of the
+            error, rather than this wrapper location.
+        """
+        stacklevel += 1
+        super().error(*args, stacklevel=stacklevel, **kwargs)
         if FatalLogger.errors_fatal:
             raise RuntimeError("Error encountered")
 

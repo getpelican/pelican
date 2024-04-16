@@ -11,6 +11,7 @@ software to reStructuredText or Markdown. The supported import formats are:
 
 - Blogger XML export
 - Dotclear export
+- Medium export
 - Tumblr API
 - WordPress XML export
 - RSS/Atom feed
@@ -25,6 +26,12 @@ not be converted (as Pelican also supports Markdown).
    are imported as a comma-separated string. You have to resolve these
    manually, or use a plugin such as `More Categories`_ that enables multiple
    categories per article.
+
+.. note::
+
+   Imported pages may contain links to images that still point to the original site.
+   So you might want to download those images into your local content and manually
+   re-link them from the relevant pages of your site.
 
 Dependencies
 ============
@@ -65,6 +72,7 @@ Optional arguments
   -h, --help            Show this help message and exit
   --blogger             Blogger XML export (default: False)
   --dotclear            Dotclear export (default: False)
+  --medium              Medium export (default: False)
   --tumblr              Tumblr API (default: False)
   --wpfile              WordPress XML export (default: False)
   --feed                Feed to parse (default: False)
@@ -80,8 +88,7 @@ Optional arguments
                           (default: False)
   --filter-author       Import only post from the specified author
   --strip-raw           Strip raw HTML code that can't be converted to markup
-                        such as flash embeds or iframes (wordpress import
-                        only) (default: False)
+                        such as flash embeds or iframes (default: False)
   --wp-custpost         Put wordpress custom post types in directories. If
                         used with --dir-cat option directories will be created
                         as "/post_type/category/" (wordpress import only)
@@ -113,6 +120,14 @@ For Dotclear::
 
     $ pelican-import --dotclear -o ~/output ~/backup.txt
 
+For Medium::
+
+    $ pelican-import --medium -o ~/output ~/medium-export/posts/
+
+The Medium export is a zip file.  Unzip it, and point this tool to the
+"posts" subdirectory.  For more information on how to export, see
+https://help.medium.com/hc/en-us/articles/115004745787-Export-your-account-data.
+
 For Tumblr::
 
     $ pelican-import --tumblr -o ~/output --blogname=<blogname> <api_key>
@@ -120,6 +135,15 @@ For Tumblr::
 For WordPress::
 
     $ pelican-import --wpfile -o ~/output ~/posts.xml
+
+For Medium (an example of using an RSS feed):
+
+    $ python -m pip install feedparser
+    $ pelican-import --feed https://medium.com/feed/@username
+
+.. note::
+
+   The RSS feed may only return the most recent posts — not all of them.
 
 Tests
 =====

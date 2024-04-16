@@ -439,8 +439,8 @@ For **Markdown**, one must rely on an extension. For example, using the `mdx_inc
 Importing an existing site
 ==========================
 
-It is possible to import your site from WordPress, Tumblr, Dotclear, and RSS
-feeds using a simple script. See :ref:`import`.
+It is possible to import your site from several other blogging sites
+(like WordPress, Tumblr, ..) using a simple script. See :ref:`import`.
 
 Translations
 ============
@@ -631,7 +631,7 @@ are not included by default in tag, category, and author indexes, nor in the
 main article feed. This has the effect of creating an "unlisted" post.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
-.. _AsciiDoc: https://www.methods.co.nz/asciidoc/
+.. _AsciiDoc: https://asciidoc.org
 .. _Pelican Plugins: https://github.com/pelican-plugins
 .. _pelican-plugins: https://github.com/getpelican/pelican-plugins
 .. _Python-Markdown: https://github.com/Python-Markdown/markdown
