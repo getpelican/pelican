@@ -19,12 +19,12 @@ from pelican.tools.pelican_import import (
     download_attachments,
     fields2pelican,
     get_attachments,
-    tumblr2fields,
-    wp2fields,
+    medium_slug,
     mediumpost2fields,
     mediumposts2fields,
     strip_medium_post_content,
-    medium_slug,
+    tumblr2fields,
+    wp2fields,
 )
 from pelican.utils import path_to_file_url, slugify
 
