@@ -455,11 +455,11 @@ def parse_arguments(argv=None):
         ),
     )
 
-    LOGS_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
+    LOG_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
     parser.add_argument(
-        "--logs-handler",
+        "--log-handler",
         default="rich",
-        choices=LOGS_HANDLERS,
+        choices=LOG_HANDLERS,
         help=(
             "Which handler to use to format log messages. "
             "The `rich` handler prints output in columns."
@@ -520,7 +520,7 @@ def parse_arguments(argv=None):
     if args.bind is not None and not args.listen:
         logger.warning("--bind without --listen has no effect")
 
-    args.logs_handler = LOGS_HANDLERS[args.logs_handler]
+    args.log_handler = LOG_HANDLERS[args.log_handler]
 
     return args
 
@@ -644,7 +644,7 @@ def main(argv=None):
         level=args.verbosity,
         fatal=args.fatal,
         name=__name__,
-        handler=args.logs_handler,
+        handler=args.log_handler,
         logs_dedup_min_level=logs_dedup_min_level,
     )
 
