@@ -132,6 +132,10 @@ class DateFormatter:
 
     def __init__(self) -> None:
         self.locale = locale.setlocale(locale.LC_TIME)
+        # python has issue with Turkish_Türkiye.1254 locale, replace it to
+        # something accepted: Turkish
+        if self.locale == "Turkish_Türkiye.1254":
+            self.locale = "Turkish"
 
     def __call__(self, date: datetime.datetime, date_format: str) -> str:
         # on OSX, encoding from LC_CTYPE determines the unicode output in PY3
@@ -922,6 +926,10 @@ def temporary_locale(
     class to use the C locale.
     """
     orig_locale = locale.setlocale(lc_category)
+    # python has issue with Turkish_Türkiye.1254 locale, replace it to
+    # something accepted: Turkish
+    if orig_locale == "Turkish_Türkiye.1254":
+        orig_locale = "Turkish"
     if temp_locale:
         locale.setlocale(lc_category, temp_locale)
     yield
