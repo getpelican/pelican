@@ -1008,6 +1008,11 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    to ``False``, the full content will be included instead. This setting
    doesn't affect Atom feeds, only RSS ones.
 
+.. data:: FEED_APPEND_REF = False
+
+   If set to ``True``, ``?ref=feed`` will be appended to links in generated
+   feeds for the purpose of referrer tracking.
+
 If you don't want to generate some or any of these feeds, set the above
 variables to ``None``.
 
