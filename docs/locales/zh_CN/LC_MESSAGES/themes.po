@@ -192,7 +192,8 @@ msgid ""
 "A dictionary containing elements related to time-period archives (if "
 "enabled). See the section :ref:`Listing and Linking to Period Archives "
 "<period_archives_variable>` for details."
-msgstr ""
+msgstr "一个字典，包含与时间段存档相关的元素（若启用了时间段存档）。详见 "
+":ref:`时间段存档的列表和链接 <period_archives_variable>`"
 
 #: ../../themes.rst:101 ../../themes.rst:450
 msgid "authors"
@@ -657,7 +658,7 @@ msgid ""
 " you can implement such an index in a custom direct template, or in a "
 "sidebar visible across different site pages."
 msgstr "对于Pelican给出的归档时间段，``period_archives`` 可用于生成对应的链接列表。"
-"此变量作为 :ref:`common variable <common_variables>` ，可在所有模板中使用。因此可以借此"
+"此变量作为 :ref:`通用变量 <common_variables>` ，可在所有模板中使用。因此可以借此"
 "在自定义直接模板中或是侧边栏中实现链接索引。"
 
 #: ../../themes.rst:385
@@ -737,7 +738,7 @@ msgid ""
 "You can change ``period_archives.month`` in the ``for`` statement to "
 "``period_archives.year`` or ``period_archives.day`` as appropriate, "
 "depending on the time period granularity desired."
-msgstr "你可以根据需要的时间粒度将 ``for`` 语句中的 ``period_archives.month`` 改为"
+msgstr "你可以根据需要的时间粒度将 ``for`` 语句中的 ``period_archives.month`` 改为 "
 "``period_archives.year`` 或 ``period_archives.day`` 。"
 
 #: ../../themes.rst:432
@@ -945,7 +946,7 @@ msgstr "作者页面的URL。"
 
 #: ../../themes.rst:499
 msgid "for Author object, coming from `:authors:` or `AUTHOR`."
-msgstr "对于Author对象，此属性值由 `:authors:`或 `AUTHOR` 得来。"
+msgstr "对于Author对象，此属性值由 `:authors:` 或 `AUTHOR` 得来。"
 
 #: ../../themes.rst:504
 msgid "Page"

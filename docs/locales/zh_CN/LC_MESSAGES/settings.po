@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-19 20:08+0800\n"
+"POT-Creation-Date: 2024-05-08 10:08+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh_CN\n"
@@ -479,11 +479,11 @@ msgstr "若设为 ``True`` ，则使用gzip对缓存文件进行解压缩。"
 msgid "Controls how files are checked for modifications."
 msgstr "控制检查文件修改的方式"
 
-#: ../../settings.rst:356 ../../settings.rst:1351
+#: ../../settings.rst:356 ../../settings.rst:1356
 msgid "If set to ``'mtime'``, the modification time of the file is checked."
 msgstr "若设为 ``mtime`` ，则检查文件的修改时间。"
 
-#: ../../settings.rst:358 ../../settings.rst:1353
+#: ../../settings.rst:358 ../../settings.rst:1358
 msgid ""
 "If set to a name of a function provided by the ``hashlib`` module, e.g. "
 "``'md5'``, the file hash is checked."
@@ -751,8 +751,9 @@ msgid ""
 "be accessed through the URLs ``posts/2011/`` and ``posts/2011/Aug/``, "
 "respectively."
 msgstr ""
-"例如若使用了上面的设置，Pelican会创建按年的归档（例如 ``posts/2011/index.html`` ），以及按月的归档（例如 ``posts/2011/Aug/index.html`` ）。这两个页面分别通过 ``posts/2011/`` 和"
-"``posts/2011/Aug/`` 进行访问。"
+"例如若使用了上面的设置，Pelican会创建按年的归档（例如 ``posts/2011/index.html`` ），以及按月的归档（例如 "
+"``posts/2011/Aug/index.html`` ）。这两个页面分别通过 ``posts/2011/`` "
+"和``posts/2011/Aug/`` 进行访问。"
 
 #: ../../settings.rst:570
 msgid ""
@@ -800,7 +801,7 @@ msgid ""
 "``_SAVE_AS`` settings are available, but it is available for any direct "
 "template."
 msgstr ""
-" ``DIRECT_TEMPLATES`` 的工作方式与上面提到的有点不同，在其中可以使用一些特别的直接模板，并且仅 ``*_SAVE_AS`` "
+"``DIRECT_TEMPLATES`` 的工作方式与上面提到的有点不同，在其中可以使用一些特别的直接模板，并且仅 ``*_SAVE_AS`` "
 "设置可用。"
 
 #: ../../settings.rst:607
@@ -1260,21 +1261,27 @@ msgstr ""
 "仅在RSS feed的 ``description`` 标签中包含项目摘要。若设为 ``False`` "
 "，则将包含完整内容。此项设置不会影响Atom feed，只针对RSS feed。"
 
-#: ../../settings.rst:1011
+#: ../../settings.rst:1013
+msgid ""
+"If set to ``True``, ``?ref=feed`` will be appended to links in generated "
+"feeds for the purpose of referrer tracking."
+msgstr ""
+
+#: ../../settings.rst:1016
 msgid ""
 "If you don't want to generate some or any of these feeds, set the above "
 "variables to ``None``."
 msgstr "若你不想要生成某些feed，将对应变量设为 ``None`` 即可。"
 
-#: ../../settings.rst:1014
+#: ../../settings.rst:1019
 msgid "``{slug}`` is replaced by name of the category / author / tag."
 msgstr "``{slug}`` 会用分类名/作者名/标签名来替换。"
 
-#: ../../settings.rst:1018
+#: ../../settings.rst:1023
 msgid "Pagination"
 msgstr "分页"
 
-#: ../../settings.rst:1020
+#: ../../settings.rst:1025
 msgid ""
 "The default behaviour of Pelican is to list all the article titles along "
 "with a short description on the index page. While this works well for "
@@ -1282,38 +1289,38 @@ msgid ""
 "probably benefit from paginating this list."
 msgstr "默认情况下，Pelican会把所有文章以简短描述的形式展示在首页上。虽然这对中小型网站效果不错，但对于拥有大量文章的网站来说可能需要将此列表进行分页。"
 
-#: ../../settings.rst:1025
+#: ../../settings.rst:1030
 msgid "You can use the following settings to configure the pagination."
 msgstr "你可以使用下面的设置来配置分页。"
 
-#: ../../settings.rst:1029
+#: ../../settings.rst:1034
 msgid ""
 "The minimum number of articles allowed on the last page. Use this when "
 "you don't want the last page to only contain a handful of articles."
 msgstr "最后一页允许的最小文章数。当不希望最后一页仅包含少数文章时，请使用此选项。（译者注：当最后一页达不到此最小文章数时，会被合并到前一页）"
 
-#: ../../settings.rst:1034
+#: ../../settings.rst:1039
 msgid ""
 "The maximum number of articles to include on a page, not including "
 "orphans. False to disable pagination."
 msgstr "一个页面上包含的最大文章数，不包括孤立文章（译者注：当发生上一条设置选项中说到的合并时，最后一页显然会超过此最大文章数）。设为False会禁用分页。"
 
-#: ../../settings.rst:1039
+#: ../../settings.rst:1044
 msgid ""
 "The templates to use pagination with, and the number of articles to "
 "include on a page. If this value is ``None``, it defaults to "
 "``DEFAULT_PAGINATION``."
 msgstr "指定哪些模板需要启用分页，以及对应的单页面文章数量。若设为 ``None`` ，则默认值为 ``DEFAULT_PAGINATION`` 。"
 
-#: ../../settings.rst:1047
+#: ../../settings.rst:1052
 msgid "A set of patterns that are used to determine advanced pagination output."
 msgstr "一组模式，用于确定高级分页输出。"
 
-#: ../../settings.rst:1051
+#: ../../settings.rst:1056
 msgid "Using Pagination Patterns"
 msgstr "使用分页模式"
 
-#: ../../settings.rst:1053
+#: ../../settings.rst:1058
 msgid ""
 "By default, pages subsequent to ``.../foo.html`` are created as "
 "``.../foo2.html``, etc. The ``PAGINATION_PATTERNS`` setting can be used "
@@ -1323,7 +1330,7 @@ msgstr ""
 "默认情况下，连续的页面会如此编码URL：第一页为 ``.../foo.html`` ，后一页为 ``.../foo2.html`` "
 "。``PAGINATION_PATTERNS`` 就是用于修改这个编页规则的，其中是一些三元组："
 
-#: ../../settings.rst:1059
+#: ../../settings.rst:1064
 msgid ""
 "For ``page_url`` and ``page_save_as``, you may use a number of variables."
 " ``{url}`` and ``{save_as}`` correspond respectively to the ``*_URL`` and"
@@ -1340,7 +1347,7 @@ msgstr ""
 "相同，只不过会截去末尾的 ``/index`` （如果有的话）。 ``{number}`` 则等于页码。（译者注： "
 "``minimum_page`` 意味到达该页面数后开始使用此条规则）"
 
-#: ../../settings.rst:1066
+#: ../../settings.rst:1071
 msgid ""
 "For example, if you want to leave the first page unchanged, but place "
 "subsequent pages at ``.../page/2/`` etc, you could set "
@@ -1349,27 +1356,27 @@ msgstr ""
 "举个例子，如果你想要保持第一面保持不变，但后续页面都以 ``.../page/2/`` 的形式出现，你可以如此设置 "
 "``PAGINATION_PATTERNS`` ："
 
-#: ../../settings.rst:1076
+#: ../../settings.rst:1081
 msgid ""
 "If you want a pattern to apply to the last page in the list, use ``-1`` "
 "as the ``minimum_page`` value::"
 msgstr "如果你想指定最后一面制定规则，将 ``minimum_page`` 的值设为 ``-1`` 即可："
 
-#: ../../settings.rst:1082
+#: ../../settings.rst:1087
 msgid "Translations"
 msgstr "翻译"
 
-#: ../../settings.rst:1084
+#: ../../settings.rst:1089
 msgid ""
 "Pelican offers a way to translate articles. See the :doc:`Content "
 "<content>` section for more information."
 msgstr "Pelican为文章翻译提供了展示方法。详见 :doc:`Content <content>` 。"
 
-#: ../../settings.rst:1089
+#: ../../settings.rst:1094
 msgid "The default language to use."
 msgstr "指定默认语言。"
 
-#: ../../settings.rst:1093
+#: ../../settings.rst:1098
 msgid ""
 "The metadata attribute(s) used to identify which articles are "
 "translations of one another. May be a string or a collection of strings. "
@@ -1377,18 +1384,18 @@ msgid ""
 "translations."
 msgstr "指定用于标识不同翻译是同一篇文章的元数据。可以是一个或多个字符串。要禁用对文章翻译的识别，将此项设为 ``None`` 或 ``False`` 。"
 
-#: ../../settings.rst:1099
+#: ../../settings.rst:1104
 msgid ""
 "The metadata attribute(s) used to identify which pages are translations "
 "of one another. May be a string or a collection of strings. Set to "
 "``None`` or ``False`` to disable the identification of translations."
 msgstr "指定用于标识不同翻译是同一个页面的元数据。可以是一个或多个字符串。要禁用对页面翻译的识别，将此项设为 ``None`` 或 ``False`` 。"
 
-#: ../../settings.rst:1105
+#: ../../settings.rst:1110
 msgid "The location to save the Atom feed for translations. [3]_"
 msgstr "指定各翻译Atom feed的存储位置。 [3]_"
 
-#: ../../settings.rst:1109
+#: ../../settings.rst:1114
 msgid ""
 "Relative URL of the Atom feed for translations, including the ``{lang}`` "
 "placeholder. [3]_ If not set, ``TRANSLATION_FEED_ATOM`` is used both for "
@@ -1397,11 +1404,11 @@ msgstr ""
 "指定各翻译Atom feed的含有 ``{lang}`` 的相对URL。 [3]_ "
 "若未设置此项，``TRANSLATION_FEED_ATOM`` 会同时用于存储位置和URL。"
 
-#: ../../settings.rst:1115
+#: ../../settings.rst:1120
 msgid "Where to put the RSS feed for translations."
 msgstr "指定各翻译RSS feed的存储位置。"
 
-#: ../../settings.rst:1119
+#: ../../settings.rst:1124
 msgid ""
 "Relative URL of the RSS feed for translations, including the ``{lang}`` "
 "placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for "
@@ -1410,27 +1417,27 @@ msgstr ""
 "文章或页面不同翻译在RSS订阅源中的相对路径，其中含有 ``{lang}``。 [3]_ "
 "若未设置此项，``TRANSLATION_FEED_ATOM`` 会同时用于存储位置和URL。"
 
-#: ../../settings.rst:1123
+#: ../../settings.rst:1128
 msgid "{lang} is the language code"
 msgstr "{lang} 是语言代码"
 
-#: ../../settings.rst:1127
+#: ../../settings.rst:1132
 msgid "Ordering content"
 msgstr "内容的排列顺序"
 
-#: ../../settings.rst:1131
+#: ../../settings.rst:1136
 msgid ""
 "Order archives by newest first by date. (False: orders by date with older"
 " articles first.)"
 msgstr "若设为True，日期较新的会排在前面；若设为False，则日期较旧的会排在前面。"
 
-#: ../../settings.rst:1136
+#: ../../settings.rst:1141
 msgid ""
 "Reverse the category order. (True: lists by reverse alphabetical order; "
 "default lists alphabetically.)"
 msgstr "若设为True，分类会按字典序逆序排列；若设为False，则按字典序顺序排列。"
 
-#: ../../settings.rst:1141
+#: ../../settings.rst:1146
 msgid ""
 "Defines how the articles (``articles_page.object_list`` in the template) "
 "are sorted. Valid options are: metadata as a string (use ``reversed-`` "
@@ -1446,7 +1453,7 @@ msgstr ""
 "（不带路径的文件名）、或是一个可以从文章中提取排序键的自定义函数。例如，将选项值设为 ``'date'`` "
 "，文章就会以时间顺序排列文章，但默认值事实上是``'reversed-date'`` ，会以日期逆序排列，即新文章在前。"
 
-#: ../../settings.rst:1151
+#: ../../settings.rst:1156
 msgid ""
 "Defines how the pages (``pages`` variable in the template) are sorted. "
 "Options are same as ``ARTICLE_ORDER_BY``.  The default value, "
@@ -1455,18 +1462,18 @@ msgstr ""
 "定义页面（模板中的 ``pages`` 变量）的排序顺序。有效选项和 ``ARTICLE_ORDER_BY`` 中的相同。默认值为 "
 "``basename``。"
 
-#: ../../settings.rst:1159
+#: ../../settings.rst:1164
 msgid "Themes"
 msgstr "主题"
 
-#: ../../settings.rst:1161
+#: ../../settings.rst:1166
 msgid ""
 "Creating Pelican themes is addressed in a dedicated section (see :ref"
 ":`theming-pelican`). However, here are the settings that are related to "
 "themes."
 msgstr "创建Pelican主题在单独的一节中讲解（参见 :ref:`theming-pelican` ）。此处讲解和主题有关的设置项。"
 
-#: ../../settings.rst:1167
+#: ../../settings.rst:1172
 msgid ""
 "Theme to use to produce the output. Can be a relative or absolute path to"
 " a theme folder, or the name of a default theme or a theme installed via "
@@ -1475,7 +1482,7 @@ msgstr ""
 "用于产生输出的主题。可以是到达要使用主题的文件夹的相对或绝对路径，或是主题的名称（默认主题或通过 :doc:`pelican-themes` "
 "安装的主题）。"
 
-#: ../../settings.rst:1173
+#: ../../settings.rst:1178
 msgid ""
 "Destination directory in the output path where Pelican will place the "
 "files collected from `THEME_STATIC_PATHS`. Default is `theme`."
@@ -1483,7 +1490,7 @@ msgstr ""
 "Pelican从 `THEME_STATIC_PATHS` 中发现主题要使用的静态文件，此设置项指定这些静态文件在输出路径中的目录。默认值为 "
 "`theme` 。"
 
-#: ../../settings.rst:1178
+#: ../../settings.rst:1183
 msgid ""
 "Static theme paths you want to copy. Default value is `static`, but if "
 "your theme has other static paths, you can put them here. If files or "
@@ -1493,7 +1500,7 @@ msgstr ""
 "要复制的静态主题路径。默认值为 `static` "
 "，但如果你的主题有其他静态路径，也可以将其放在此处。此项设置中若包含了相同名称的文件或目录，前面的会被后面的覆盖。"
 
-#: ../../settings.rst:1185
+#: ../../settings.rst:1190
 msgid ""
 "A list of paths you want Jinja2 to search for templates before searching "
 "the theme's ``templates/`` directory.  Allows for overriding individual "
@@ -1504,7 +1511,7 @@ msgstr ""
 "在搜索主题的 ``templates/`` "
 "目录前，Jinja2会先搜索此设置项中的路径。可以使用此设置项覆盖主题中的某些模板文件，以避免修改现有主题。"
 
-#: ../../settings.rst:1191
+#: ../../settings.rst:1196
 #, python-format
 msgid ""
 "You can also extend templates from the theme using the ``{% extends %}`` "
@@ -1512,26 +1519,26 @@ msgid ""
 "example:"
 msgstr "利用 ``{% extends %}`` 指令中的 ``!theme`` 前缀也可以用于从主题扩展模板，如下例所示："
 
-#: ../../settings.rst:1200
+#: ../../settings.rst:1205
 msgid "Specify the CSS file you want to load."
 msgstr "指定需要加载的CSS文件。"
 
-#: ../../settings.rst:1202
+#: ../../settings.rst:1207
 msgid ""
 "By default, two themes are available. You can specify them using the "
 "``THEME`` setting or by passing the ``-t`` option to the ``pelican`` "
 "command:"
 msgstr "默认情况下，有两个主题可供选择。可以使用 ``THEME`` 选项指定，或是在 ``pelican`` 命令中使用 ``-t`` 选项的参数传入。"
 
-#: ../../settings.rst:1205
+#: ../../settings.rst:1210
 msgid "notmyidea"
 msgstr "notmyidea（默认值）"
 
-#: ../../settings.rst:1206
+#: ../../settings.rst:1211
 msgid "simple (a synonym for \"plain text\" :)"
 msgstr "simple（即“plain text”）"
 
-#: ../../settings.rst:1208
+#: ../../settings.rst:1213
 msgid ""
 "There are a number of other themes available at "
 "https://github.com/getpelican/pelican-themes. Pelican comes with :doc"
@@ -1540,7 +1547,7 @@ msgstr ""
 "还有很多主题可以在 https://github.com/getpelican/pelican-themes 上下载。Pelican使用一个称为 "
 ":doc:`pelican-themes` 的小脚本来管理主题。"
 
-#: ../../settings.rst:1212
+#: ../../settings.rst:1217
 msgid ""
 "You can define your own theme, either by starting from scratch or by "
 "duplicating and modifying a pre-existing theme. Here is :doc:`a guide on "
@@ -1549,91 +1556,91 @@ msgstr ""
 "你还可以创建自己的主题，可以从头开始，也可以在已有主题的基础上修改。请参看 :doc:`a guide on how to create your"
 " theme <themes>` 。"
 
-#: ../../settings.rst:1216
+#: ../../settings.rst:1221
 msgid "Following are example ways to specify your preferred theme::"
 msgstr "下面是几个指定某个主题的例子："
 
-#: ../../settings.rst:1227
+#: ../../settings.rst:1232
 msgid ""
 "The built-in ``simple`` theme can be customized using the following "
 "settings."
 msgstr "内置的 ``simple`` 主题可以使用以下设置项进行自定义。"
 
-#: ../../settings.rst:1231
+#: ../../settings.rst:1236
 msgid "The URL of the stylesheet to use."
 msgstr ""
 
-#: ../../settings.rst:1233
+#: ../../settings.rst:1238
 msgid ""
 "The built-in ``notmyidea`` theme can make good use of the following "
 "settings. Feel free to use them in your themes as well."
 msgstr "下面的一下选项可以很好地作用于内置的 ``notmyidea`` 主题。当然在其他主题中你也可以尽情尝试这些选项。"
 
-#: ../../settings.rst:1238
+#: ../../settings.rst:1243
 msgid "A subtitle to appear in the header."
 msgstr "页面顶部要显示的副标题。"
 
-#: ../../settings.rst:1242
+#: ../../settings.rst:1247
 msgid ""
 "Pelican can handle Disqus comments. Specify the Disqus sitename "
 "identifier here."
 msgstr "Pelican中可以使用Disqus的评论系统，此设置项用于设置Disqus的站点标识符。"
 
-#: ../../settings.rst:1247
+#: ../../settings.rst:1252
 msgid ""
 "Your GitHub URL (if you have one). It will then use this information to "
 "create a GitHub ribbon."
 msgstr "指定你的GitHub URL（如果有的话），此信息将被用于创建GitHub功能区。"
 
-#: ../../settings.rst:1252
+#: ../../settings.rst:1257
 msgid ""
 "Put any desired analytics scripts in this setting in ``publishconf.py``. "
 "Example:"
 msgstr "在 ``publishconf.py`` 中设置此项，用于指定想要使用的统计分析脚本。如下例："
 
-#: ../../settings.rst:1266
+#: ../../settings.rst:1271
 msgid ""
 "A list of tuples (Title, URL) for additional menu items to appear at the "
 "beginning of the main menu."
 msgstr "元组 (标题, URL) 的列表，用于指定额外的菜单项，会添加在菜单栏的开头。"
 
-#: ../../settings.rst:1271
+#: ../../settings.rst:1276
 msgid "A list of tuples (Title, URL) for links to appear on the header."
 msgstr "元组 (标题, URL) 的列表，用于指定要展示在网页开头的链接。"
 
-#: ../../settings.rst:1275
+#: ../../settings.rst:1280
 msgid "A list of tuples (Title, URL) to appear in the \"social\" section."
 msgstr "元组 (标题, URL) 的列表，用于指定要展示在“social”部分的内容。"
 
-#: ../../settings.rst:1279
+#: ../../settings.rst:1284
 msgid ""
 "Allows for adding a button to articles to encourage others to tweet about"
 " them. Add your Twitter username if you want this button to appear."
 msgstr "允许在文章中添加按钮，以鼓励其他人发布有关它们的推文。如果希望显示此按钮，在此项中设置你的Twitter用户名。"
 
-#: ../../settings.rst:1284
+#: ../../settings.rst:1289
 msgid ""
 "Allows override of the name of the links widget.  If not specified, "
 "defaults to \"links\"."
 msgstr "指定用于覆盖“links”部分的名称。默认值为“links”"
 
-#: ../../settings.rst:1289
+#: ../../settings.rst:1294
 msgid ""
 "Allows override of the name of the \"social\" widget.  If not specified, "
 "defaults to \"social\"."
 msgstr "指定用于覆盖“social”部分的名称。默认值为“social”"
 
-#: ../../settings.rst:1292
+#: ../../settings.rst:1297
 msgid ""
 "In addition, you can use the \"wide\" version of the ``notmyidea`` theme "
 "by adding the following to your configuration::"
 msgstr "另外，你可以使用 ``notmyidea`` 主题的“宽屏”版本，在配置文件中添加下面这行配置即可："
 
-#: ../../settings.rst:1299
+#: ../../settings.rst:1304
 msgid "Logging"
 msgstr "日志"
 
-#: ../../settings.rst:1301
+#: ../../settings.rst:1306
 msgid ""
 "Sometimes, a long list of warnings may appear during site generation. "
 "Finding the **meaningful** error message in the middle of tons of "
@@ -1643,7 +1650,7 @@ msgstr ""
 "在站点生成过程中有时可能会出现一堆警告信息。在这一大堆日志输出中寻找 **有意义** "
 "的错误消息是非常棘手的。为了过滤掉多余的日志消息，可以在Pelican中指定 ``LOG_FILTER`` 设置。"
 
-#: ../../settings.rst:1306
+#: ../../settings.rst:1311
 msgid ""
 "``LOG_FILTER`` should be a list of tuples ``(level, msg)``, each of them "
 "being composed of the logging level (up to ``warning``) and the message "
@@ -1653,42 +1660,42 @@ msgstr ""
 "``LOG_FILTER`` 是元组 ``(level, msg)`` ，level指定日志记录等级（最高为 ``warning`` "
 "），msg指定要忽略的消息。将想要隐藏的日志消息添加到此列表中就可以将他们过滤掉。"
 
-#: ../../settings.rst:1311 ../../settings.rst:1319
+#: ../../settings.rst:1316 ../../settings.rst:1324
 msgid "For example::"
 msgstr "例如："
 
-#: ../../settings.rst:1316
+#: ../../settings.rst:1321
 msgid ""
 "It is possible to filter out messages by a template. Check out source "
 "code to obtain a template."
 msgstr "用模板字符串指定要过滤的消息也是可以的。具体的消息种类请查看源码。"
 
-#: ../../settings.rst:1326
+#: ../../settings.rst:1331
 msgid ""
 "Silencing messages by templates is a dangerous feature. It is possible to"
 " unintentionally filter out multiple message types with the same template"
 " (including messages from future Pelican versions). Proceed with caution."
 msgstr "通过模板过滤忽略消息是一个危险的功能。 使用同一模板可能会无意中过滤掉多种消息类型（包括来自新版本Pelican的消息），请谨慎行事。"
 
-#: ../../settings.rst:1332
+#: ../../settings.rst:1337
 msgid "This option does nothing if ``--debug`` is passed."
 msgstr "当使用了 ``--debug`` 参数，此项设置就不会起作用。"
 
-#: ../../settings.rst:1338
+#: ../../settings.rst:1343
 msgid "Reading only modified content"
 msgstr "只读取修改过的内容"
 
-#: ../../settings.rst:1340
+#: ../../settings.rst:1345
 msgid ""
 "To speed up the build process, Pelican can optionally read only articles "
 "and pages with modified content."
 msgstr "为了加速网站构建过程，Pelican能够只读取修改过内容的文章和页面。"
 
-#: ../../settings.rst:1343
+#: ../../settings.rst:1348
 msgid "When Pelican is about to read some content source file:"
 msgstr "当Pelican准备读取内容源文件时，会执行下面的规则："
 
-#: ../../settings.rst:1345
+#: ../../settings.rst:1350
 msgid ""
 "The hash or modification time information for the file from a previous "
 "build are loaded from a cache file if ``LOAD_CONTENT_CACHE`` is ``True``."
@@ -1699,24 +1706,24 @@ msgstr ""
 "，则从缓存文件中加载上一次构建时文件的哈希值或修改时间。这些缓存的文件存储在 ``CACHE_PATH`` "
 "所指定的目录中。若文件是新的，在缓存文件中没有记录，则照常读取。"
 
-#: ../../settings.rst:1349
+#: ../../settings.rst:1354
 msgid "The file is checked according to ``CHECK_MODIFIED_METHOD``:"
 msgstr "文件会以 ``CHECK_MODIFIED_METHOD`` 设置的方式检查："
 
-#: ../../settings.rst:1355
+#: ../../settings.rst:1360
 msgid ""
 "If set to anything else or the necessary information about the file "
 "cannot be found in the cache file, the content is read as usual."
 msgstr "如果设置为其他任何值或在缓存文件中无法找到有关该文件的必要信息，则将照常读取内容。"
 
-#: ../../settings.rst:1358
+#: ../../settings.rst:1363
 msgid ""
 "If the file is considered unchanged, the content data saved in a previous"
 " build corresponding to the file is loaded from the cache, and the file "
 "is not read."
 msgstr "如果Pelican认为文件没有更改过，会直接从上一次构建的对应文件中加载内容，源文件就不会被读取。"
 
-#: ../../settings.rst:1361
+#: ../../settings.rst:1366
 msgid ""
 "If the file is considered changed, the file is read and the new "
 "modification information and the content data are saved to the cache if "
@@ -1725,7 +1732,7 @@ msgstr ""
 "若Pelican认为文件更改过了，则会读取源文件；若 ``CACHE_CONTENT`` 设为了 ``True`` "
 "，Pelican还会将修改后的信息以及内容数据存入缓存。"
 
-#: ../../settings.rst:1365
+#: ../../settings.rst:1370
 msgid ""
 "If ``CONTENT_CACHING_LAYER`` is set to ``'reader'`` (the default), the "
 "raw content and metadata returned by a reader are cached. If this setting"
@@ -1740,7 +1747,7 @@ msgstr ""
 "，则缓存处理过后的内容对象。缓存已处理的内容对象可能会和插件（因为可能会跳过一些与读取相关的信号）与 ``WITH_FUTURE_DATES`` "
 "的功能（因为已处理内容对象的 ``draft`` 状态不会改变）冲突"
 
-#: ../../settings.rst:1373
+#: ../../settings.rst:1378
 msgid ""
 "Checking modification times is faster than comparing file hashes, but it "
 "is not as reliable because ``mtime`` information can be lost, e.g., when "
@@ -1752,7 +1759,7 @@ msgstr ""
 "``rsync`` 命令时没有开启 ``mtime`` 保留模式。（rsync可以通过指定 ``--archive`` 标志启用 "
 "``mtime`` 保留模式。"
 
-#: ../../settings.rst:1379
+#: ../../settings.rst:1384
 msgid ""
 "The cache files are Python pickles, so they may not be readable by "
 "different versions of Python as the pickle format often changes. If such "
@@ -1764,7 +1771,7 @@ msgstr ""
 "pickles，因此不同版本的Python由于pickle文件格式变化可能无法读取缓存。如果遇到此类错误，会自动以新格式重新构建缓存。另外，当 "
 "``GZIP_CACHE`` 设置发生变化后，缓存也会自动重建。"
 
-#: ../../settings.rst:1385
+#: ../../settings.rst:1390
 msgid ""
 "The ``--ignore-cache`` command-line option is useful when the whole cache"
 " needs to be regenerated, such as when making modifications to the "
@@ -1777,7 +1784,7 @@ msgstr ""
 "命令行选项，例如当需要修改会影响缓存内容的设置项时，或是调试时，都可以使用 ``--ignore-cache`` 。若 "
 "``AUTORELOAD_IGNORE_CACHE`` 设为了 ``True`` ，修改设置文件时会自动忽略缓存。"
 
-#: ../../settings.rst:1391
+#: ../../settings.rst:1396
 msgid ""
 "Note that even when using cached content, all output is always written, "
 "so the modification times of the generated ``*.html`` files will always "
@@ -1787,7 +1794,7 @@ msgstr ""
 "需要注意的是，即使使用了缓存的内容，最终的输出文件也始终会进行重新写入，因此生成的 ``*.html`` 文件的修改时间始终会变化。所以，基于 "
 "``rsync`` 进行上传时，可以考虑使用 ``--checksum`` 选项。"
 
-#: ../../settings.rst:1398
+#: ../../settings.rst:1403
 msgid "Example settings"
 msgstr "配置示例"
 
@@ -1843,7 +1850,8 @@ msgstr "配置示例"
 #~ "Relative URL of the RSS feed for"
 #~ " translations, including the ``{lang}`` "
 #~ "placeholder. [3]_ If not set, "
-#~ "``TRANSLATION_FEED_RSS`` is used both for \n"
+#~ "``TRANSLATION_FEED_RSS`` is used both for"
+#~ " \n"
 #~ msgstr ""
 #~ "指定各翻译RSS feed的含有 ``{lang}`` 的相对URL。 [3]_ "
 #~ "若未设置此项，``TRANSLATION_FEED_RSS`` 会同时用于存储位置和URL。"
@@ -1875,3 +1883,4 @@ msgstr "配置示例"
 #~ "``WRITE_SELECTED`` 列表中指定需要重写的输出文件路径，或是使用 ``--write-"
 #~ "selected`` 命令行选项指定一个或多个输出文件路径（用逗号分隔）即可。此列表默认为空，即写入所有输出。详见 "
 #~ ":ref:`site_generation` 。"
+

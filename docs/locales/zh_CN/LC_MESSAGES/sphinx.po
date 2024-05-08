@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
@@ -21,24 +20,24 @@ msgstr ""
 
 #: ../../_templates/page.html:68
 msgid "Back to top"
-msgstr ""
+msgstr "返回顶部"
 
 #: ../../_templates/page.html:101
 msgid "Next"
-msgstr ""
+msgstr "下一节"
 
 #: ../../_templates/page.html:113
 msgid "Previous"
-msgstr ""
+msgstr "前一节"
 
 #: ../../_templates/page.html:116
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #: ../../_templates/page.html:129
 #, python-format
 msgid "<a href=\"%(path)s\">Copyright</a> &#169; %(copyright)s"
-msgstr ""
+msgstr "<a href=\"%(path)s\">Copyright</a> &#169; %(copyright)s"
 
 #: ../../_templates/page.html:133
 #, python-format
@@ -47,12 +46,15 @@ msgid ""
 "href=\"https://justinmayer.com\">Justin Mayer</a>, Alexis Metaireau, and "
 "contributors"
 msgstr ""
+"Copyright &#169; %(copyright)s, <a "
+"href=\"https://justinmayer.com\">Justin Mayer</a>, Alexis Metaireau, and "
+"contributors"
 
 #: ../../_templates/page.html:141
 #, python-format
 msgid "Last updated on %(last_updated)s"
-msgstr ""
+msgstr "最后更新于 %(last_updated)s"
 
 #: ../../_templates/page.html:187
 msgid "On this page"
-msgstr ""
+msgstr "本页目录"

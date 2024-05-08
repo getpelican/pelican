@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"

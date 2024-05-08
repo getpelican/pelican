@@ -2,8 +2,6 @@
 # Copyright (C) 2010–2023
 # This file is distributed under the same license as the Pelican package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
-#
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Pelican 4\n"
@@ -21,7 +19,7 @@ msgstr ""
 
 #: ../../changelog.rst:2
 msgid "Release history"
-msgstr ""
+msgstr "更新日志"
 
 #: ../../changelog.rst:5
 msgid "4.9.1 - 2023-11-15"
