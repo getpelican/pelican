@@ -326,4 +326,3 @@ msgstr "Dotclear： http://media.dotaddict.org/tda/downloads/lorem-backup.txt"
 
 #~ msgid "for Posterous::"
 #~ msgstr ""
-
