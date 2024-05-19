@@ -89,7 +89,7 @@ contains a list of reserved metadata keywords:
 ``summary``     Brief description of content for index pages
 ``lang``        Content language ID (``en``, ``fr``, etc.)
 ``translation`` If content is a translation of another (``true`` or ``false``)
-``status``      Content status: ``draft``, ``hidden``, or ``published``
+``status``      Content status: ``draft``, ``hidden``, ``skip``, or ``published``
 ``template``    Name of template to use to generate content (without extension)
 ``save_as``     Save content to this relative file path
 ``url``         URL to use for this article/page
@@ -632,6 +632,13 @@ Like pages, posts can also be marked as ``hidden`` with the ``Status: hidden``
 attribute. Hidden posts will be output to ``ARTICLE_SAVE_AS`` as expected, but
 are not included by default in tag, category, and author indexes, nor in the
 main article feed. This has the effect of creating an "unlisted" post.
+
+Skipped Posts
+==============
+
+Posts marked with the ``skip`` status are ignored entirely. They are not
+processed, and not output to the ``ARTICLE_SAVE_AS`` path. These posts will
+also not be included in indexes or feeds.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: https://asciidoc.org
