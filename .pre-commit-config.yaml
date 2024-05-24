@@ -13,11 +13,12 @@ repos:
       - id: end-of-file-fixer
       - id: forbid-new-submodules
       - id: trailing-whitespace
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.1.15
     hooks:
       - id: ruff
-        args: ["--fix"]
+        args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
 
 exclude: ^pelican/tests/output/
