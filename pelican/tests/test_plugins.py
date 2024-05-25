@@ -1,7 +1,7 @@
 import os
 from contextlib import contextmanager
 
-import pelican.tests.dummy_plugins.normal_plugin.normal_plugin as normal_plugin
+from pelican.tests.dummy_plugins.normal_plugin import normal_plugin
 from pelican.plugins._utils import (
     get_namespace_plugins,
     get_plugin_name,

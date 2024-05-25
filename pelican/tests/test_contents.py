@@ -297,7 +297,6 @@ class TestPage(TestBase):
     def test_signal(self):
         def receiver_test_function(sender):
             receiver_test_function.has_been_called = True
-            pass
 
         receiver_test_function.has_been_called = False
 

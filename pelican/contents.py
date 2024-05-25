@@ -370,13 +370,13 @@ class Content:
 
     def _get_intrasite_link_regex(self) -> re.Pattern:
         intrasite_link_regex = self.settings["INTRASITE_LINK_REGEX"]
-        regex = r"""
+        regex = rf"""
             (?P<markup><[^\>]+  # match tag with all url-value attributes
                 (?:href|src|poster|data|cite|formaction|action|content)\s*=\s*)
 
             (?P<quote>["\'])      # require value to be quoted
-            (?P<path>{}(?P<value>.*?))  # the url value
-            (?P=quote)""".format(intrasite_link_regex)
+            (?P<path>{intrasite_link_regex}(?P<value>.*?))  # the url value
+            (?P=quote)"""
         return re.compile(regex, re.X)
 
     def _update_content(self, content: str, siteurl: str) -> str:
@@ -465,7 +465,6 @@ class Content:
     @summary.setter
     def summary(self, value: str):
         """Dummy function"""
-        pass
 
     @property
     def status(self) -> str:

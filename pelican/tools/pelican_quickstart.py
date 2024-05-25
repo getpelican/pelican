@@ -169,7 +169,7 @@ def ask_timezone(question, default, tzurl):
             r = tz_dict[r]
             break
         else:
-            print("Please enter a valid time zone:\n" " (check [{}])".format(tzurl))
+            print("Please enter a valid time zone:\n" f" (check [{tzurl}])")
     return r
 
 
@@ -205,14 +205,14 @@ def main():
     args = parser.parse_args()
 
     print(
-        """Welcome to pelican-quickstart v{v}.
+        f"""Welcome to pelican-quickstart v{__version__}.
 
 This script will help you create a new Pelican-based website.
 
 Please answer the following questions so this script can generate the files
 needed by Pelican.
 
-    """.format(v=__version__)
+    """
     )
 
     project = os.path.join(os.environ.get("VIRTUAL_ENV", os.curdir), ".project")

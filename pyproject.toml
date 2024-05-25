@@ -111,3 +111,102 @@ source-includes = [
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
+
+[tool.ruff.lint]
+# see https://docs.astral.sh/ruff/configuration/#using-pyprojecttoml
+# "F" contains autoflake, see https://github.com/astral-sh/ruff/issues/1647
+# add more rules
+select = [
+    # default Ruff checkers as of ruff 0.1.3: E4, E7, E9, F
+    "E4",
+    "E7",
+    "E9",
+    "F",  # pyflakes
+
+    # the rest in alphabetical order:
+    # TODO: "A",   # flake8-builtins
+    # TODO: "ARG", # flake8-unused-arguments
+    "B",   # flake8-bugbear
+    # TODO: "BLE", # flake8-blind-except
+    # TODO: Do I want "COM", # flake8-commas
+    "C4",  # flake8-comprehensions
+    # TODO: "DJ",  # flake8-django
+    # TODO: "DTZ", # flake8-datetimez
+    # TODO: "EM",  # flake8-errmsg
+    "EXE", # flake8-executable
+    # TODO: "FURB", # refurb
+    # TODO: "FBT", # flake8-boolean-trap
+    # TODO: "G",   # flake8-logging-format
+    # TODO: enable isort after we're sure import reordering is okay
+    # "I",   # isort
+    "ICN", # flake8-import-conventions
+    "INP", # flake8-no-pep420
+    # TODO: "INT", # flake8-gettext
+    "ISC", # flake8-implicit-str-concat
+    # TODO: "LOG", # flake8-logging
+    "PERF", # perflint
+    "PIE", # flake8-pie
+    "PL",  # pylint
+    "PYI", # flake8-pyi
+    # TODO: "RET", # flake8-return
+    "RSE", # flake8-raise
+    "RUF",
+    # TODO: "SIM", # flake8-simplify
+    "SLF", # flake8-self
+    "SLOT", # flake8-slots
+    "TID", # flake8-tidy-imports
+    "UP",  # pyupgrade
+    "Q",   # flake8-quotes
+    "TCH", # flake8-type-checking
+    "T10", # flake8-debugger
+    "T20", # flake8-print
+    # TODO: "S",   # flake8-bandit
+    "YTT", # flake8-2020
+    # TODO: add more flake8 rules
+  ]
+
+ignore = [
+    # suppression in order of # of violations in Dec 2023:
+    "B007",  # unused-loop-control-variable
+    "T201",  # print
+    "PLW2901",  # redefined-loop-name
+    "SLF001",  # private-member-access
+    "RUF001",  # ambiguous-unicode-character-string
+    "PLR2004",  # magic-value-comparison
+    "PLR0912",  # too-many-branches
+    "PLR0913",  # too-many-arguments
+    "RUF005",  # collection-literal-concatenation
+    "RUF012",  # mutable-class-default
+    "PLR0915",  # too-many-statements
+    "INP001",  # implicit-namespace-package
+    "RUF015",  # unnecessary-iterable-allocation-for-first-element
+    "PLR1722",  # sys-exit-alias
+    "ISC001",  # single-line-implicit-string-concatenation
+    "C408",  # unnecessary-collection-call
+    "B904",  # raise-without-from-inside-except
+    "UP007",  # use `|` operator for union type annotations (PEP 604)
+    "UP031",  # printf-string-formatting
+    "PLR5501",  # collapsible-else-if
+    "PERF203",  # try-except-in-loop
+    "B006",  # mutable-argument-default
+    "PLR1714",  # repeated-equality-comparison
+    "PERF401",  # manual-list-comprehension
+    # TODO: these only have one violation each in Dec 2023:
+    "SLOT000",  # no-slots-in-str-subclass
+    "PYI024",  # collections-named-tuple
+    "PLW0603",  # global-statement
+    "PIE800",  # unnecessary-spread
+    "ISC003",  # explicit-string-concatenation
+    "EXE002",  # shebang-missing-executable-file
+    "C401",  # unnecessary-generator-set
+    "C416",  # unnecessary `list` comprehension
+    "B028",  # no-explicit-stacklevel
+    "B008",  # function-call-in-default-argument
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+
+"pelican/__init__.py" = [
+    # allow imports after a call to a function, see the file
+    "E402"
+]
