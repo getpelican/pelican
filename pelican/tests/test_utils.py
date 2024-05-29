@@ -23,9 +23,17 @@ from pelican.tests.support import (
 from pelican.writers import Writer
 
 
-class TestUtils(LoggedTestCase):
+class ClassDeprAttr:
     _new_attribute = "new_value"
 
+    @utils.deprecated_attribute(
+        old="_old_attribute", new="_new_attribute", since=(3, 1, 0), remove=(4, 1, 3)
+    )
+    def _old_attribute():
+        return None
+
+
+class TestUtils(LoggedTestCase):
     def setUp(self):
         super().setUp()
         self.temp_output = mkdtemp(prefix="pelicantests.")
@@ -34,15 +42,10 @@ class TestUtils(LoggedTestCase):
         super().tearDown()
         shutil.rmtree(self.temp_output)
 
-    @utils.deprecated_attribute(
-        old="_old_attribute", new="_new_attribute", since=(3, 1, 0), remove=(4, 1, 3)
-    )
-    def _old_attribute():
-        return None
-
     def test_deprecated_attribute(self):
-        value = self._old_attribute
-        self.assertEqual(value, self._new_attribute)
+        test_class = ClassDeprAttr()
+        value = test_class._old_attribute
+        self.assertEqual(value, test_class._new_attribute)
         self.assertLogCountEqual(
             count=1,
             msg=(
