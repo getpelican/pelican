@@ -190,19 +190,10 @@ ignore = [
     "PLR5501",  # collapsible-else-if
     "PERF203",  # try-except-in-loop
     "B006",  # mutable-argument-default
-    "PLR1714",  # repeated-equality-comparison
-    "PERF401",  # manual-list-comprehension
     # TODO: these only have one violation each in Dec 2023:
     "SLOT000",  # no-slots-in-str-subclass
     "PYI024",  # collections-named-tuple
-    "PLW0603",  # global-statement
     "PIE800",  # unnecessary-spread
-    "ISC003",  # explicit-string-concatenation
-    "EXE002",  # shebang-missing-executable-file
-    "C401",  # unnecessary-generator-set
-    "C416",  # unnecessary `list` comprehension
-    "B028",  # no-explicit-stacklevel
-    "B008",  # function-call-in-default-argument
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
