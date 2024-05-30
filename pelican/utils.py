@@ -446,15 +446,15 @@ class _HTMLWordTruncator(HTMLParser):
         r"{DBC}|(\w[\w'-]*)".format(
             # DBC means CJK-like characters. An character can stand for a word.
             DBC=(
-                "([\u4E00-\u9FFF])|"  # CJK Unified Ideographs
-                "([\u3400-\u4DBF])|"  # CJK Unified Ideographs Extension A
-                "([\uF900-\uFAFF])|"  # CJK Compatibility Ideographs
-                "([\U00020000-\U0002A6DF])|"  # CJK Unified Ideographs Extension B
-                "([\U0002F800-\U0002FA1F])|"  # CJK Compatibility Ideographs Supplement
-                "([\u3040-\u30FF])|"  # Hiragana and Katakana
-                "([\u1100-\u11FF])|"  # Hangul Jamo
-                "([\uAC00-\uD7FF])|"  # Hangul Compatibility Jamo
-                "([\u3130-\u318F])"  # Hangul Syllables
+                "([\u4e00-\u9fff])|"  # CJK Unified Ideographs
+                "([\u3400-\u4dbf])|"  # CJK Unified Ideographs Extension A
+                "([\uf900-\ufaff])|"  # CJK Compatibility Ideographs
+                "([\U00020000-\U0002a6df])|"  # CJK Unified Ideographs Extension B
+                "([\U0002f800-\U0002fa1f])|"  # CJK Compatibility Ideographs Supplement
+                "([\u3040-\u30ff])|"  # Hiragana and Katakana
+                "([\u1100-\u11ff])|"  # Hangul Jamo
+                "([\uac00-\ud7ff])|"  # Hangul Compatibility Jamo
+                "([\u3130-\u318f])"  # Hangul Syllables
             )
         ),
         re.UNICODE,

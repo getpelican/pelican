@@ -193,15 +193,7 @@ class Pelican:
         )
 
         console.print(
-            "Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.".format(
-                pluralized_articles,
-                pluralized_drafts,
-                pluralized_hidden_articles,
-                pluralized_pages,
-                pluralized_hidden_pages,
-                pluralized_draft_pages,
-                time.time() - start_time,
-            )
+            f"Done: Processed {pluralized_articles}, {pluralized_drafts}, {pluralized_hidden_articles}, {pluralized_pages}, {pluralized_hidden_pages} and {pluralized_draft_pages} in {time.time() - start_time:.2f} seconds."
         )
 
     def _get_generator_classes(self):
