@@ -152,11 +152,12 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
 
     def test_dircat(self):
         silent_f2p = mute(True)(fields2pelican)
-        test_posts = []
-        for post in self.posts:
-            # check post kind
-            if len(post[5]) > 0:  # Has a category
-                test_posts.append(post)
+        test_posts = [
+            post
+            for post in self.posts
+            # check post has a category
+            if len(post[5]) > 0
+        ]
         with temporary_folder() as temp:
             fnames = list(silent_f2p(test_posts, "markdown", temp, dircat=True))
         subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
@@ -185,7 +186,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
             kind,
             format,
         ) in self.posts:
-            if kind == "page" or kind == "article":
+            if kind in {"page", "article"}:
                 pass
             else:
                 pages_data.append((title, fname))
@@ -206,7 +207,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
             kind,
             format,
         ) in self.custposts:
-            if kind == "article" or kind == "page":
+            if kind in {"page", "article"}:
                 pass
             else:
                 cust_data.append((title, kind))
@@ -266,11 +267,12 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
     def test_wp_custpost_true_dirpage_false(self):
         # pages should only be put in their own directory when dirpage = True
         silent_f2p = mute(True)(fields2pelican)
-        test_posts = []
-        for post in self.custposts:
+        test_posts = [
+            post
+            for post in self.custposts
             # check post kind
-            if post[8] == "page":
-                test_posts.append(post)
+            if post[8] == "page"
+        ]
         with temporary_folder() as temp:
             fnames = list(
                 silent_f2p(
@@ -748,10 +750,7 @@ class TestMediumImporter(TestCaseWithCLocale):
 
     def test_mediumposts2field(self):
         """Parse all posts in an export directory"""
-        posts = [
-            fields
-            for fields in mediumposts2fields(f"{self.test_content_root}/medium_posts")
-        ]
+        posts = list(mediumposts2fields(f"{self.test_content_root}/medium_posts"))
         self.assertEqual(1, len(posts))
         self.assertEqual(self.post_tuple, posts[0])
 
