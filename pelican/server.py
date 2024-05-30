@@ -32,19 +32,18 @@ def parse_arguments():
         "--cert",
         default="./cert.pem",
         nargs="?",
-        help="Path to certificate file. " + "Relative to current directory",
+        help="Path to certificate file. Relative to current directory",
     )
     parser.add_argument(
         "--key",
         default="./key.pem",
         nargs="?",
-        help="Path to certificate key file. " + "Relative to current directory",
+        help="Path to certificate key file. Relative to current directory",
     )
     parser.add_argument(
         "--path",
         default=".",
-        help="Path to pelican source directory to serve. "
-        + "Relative to current directory",
+        help="Path to pelican source directory to serve. Relative to current directory",
     )
     return parser.parse_args()
 

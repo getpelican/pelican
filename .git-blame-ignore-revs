@@ -9,3 +9,5 @@ db241feaa445375dc05e189e69287000ffe5fa8e
 6d8597addb17d5fa3027ead91427939e8e4e89ec
 # Upgrade Ruff from 0.1.x to 0.4.x
 0bd02c00c078fe041b65fbf4eab13601bb42676d
+# Apply more Ruff checks to code
+9d30c5608a58d202b1c02d55651e6ac746bfb173

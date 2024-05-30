@@ -223,7 +223,7 @@ def read_settings(
     # parameters to docutils directive handlers, so we have to have a
     # variable here that we'll import from within Pygments.run (see
     # rstdirectives.py) to see what the user defaults were.
-    global PYGMENTS_RST_OPTIONS
+    global PYGMENTS_RST_OPTIONS  # noqa: PLW0603
     PYGMENTS_RST_OPTIONS = settings.get("PYGMENTS_RST_OPTIONS", None)
     return settings
 
