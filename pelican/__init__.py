@@ -19,7 +19,7 @@ __path__ = extend_path(__path__, __name__)
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import console  # noqa: I001
+from pelican.log import console, DEFAULT_LOG_HANDLER  # noqa: I001
 from pelican.log import init as init_logging
 from pelican.generators import (
     ArticlesGenerator,
@@ -455,6 +455,17 @@ def parse_arguments(argv=None):
         ),
     )
 
+    LOG_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
+    parser.add_argument(
+        "--log-handler",
+        default="rich",
+        choices=LOG_HANDLERS,
+        help=(
+            "Which handler to use to format log messages. "
+            "The `rich` handler prints output in columns."
+        ),
+    )
+
     parser.add_argument(
         "--logs-dedup-min-level",
         default="WARNING",
@@ -508,6 +519,8 @@ def parse_arguments(argv=None):
         logger.warning("--port without --listen has no effect")
     if args.bind is not None and not args.listen:
         logger.warning("--bind without --listen has no effect")
+
+    args.log_handler = LOG_HANDLERS[args.log_handler]
 
     return args
 
@@ -631,6 +644,7 @@ def main(argv=None):
         level=args.verbosity,
         fatal=args.fatal,
         name=__name__,
+        handler=args.log_handler,
         logs_dedup_min_level=logs_dedup_min_level,
     )
 
