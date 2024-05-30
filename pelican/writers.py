@@ -4,7 +4,6 @@ from posixpath import join as posix_join
 from urllib.parse import urljoin
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
-
 from markupsafe import Markup
 
 from pelican.paginator import Paginator
@@ -52,6 +51,9 @@ class Writer:
     def _add_item_to_the_feed(self, feed, item):
         title = Markup(item.title).striptags()
         link = self.urljoiner(self.site_url, item.url)
+
+        if self.settings["FEED_APPEND_REF"]:
+            link = link + "?ref=feed"
 
         if isinstance(feed, Rss201rev2Feed):
             # RSS feeds use a single tag called 'description' for both the full
