@@ -267,9 +267,7 @@ def _printf_s_to_format_field(printf_string: str, format_field: str) -> str:
     TEST_STRING = "PELICAN_PRINTF_S_DEPRECATION"
     expected = printf_string % TEST_STRING
 
-    result = printf_string.replace("{", "{{").replace("}", "}}") % "{{{}}}".format(
-        format_field
-    )
+    result = printf_string.replace("{", "{{").replace("}", "}}") % f"{{{format_field}}}"
     if result.format(**{format_field: TEST_STRING}) != expected:
         raise ValueError(f"Failed to safely replace %s with {{{format_field}}}")
 
@@ -412,7 +410,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
         )
         logger.warning(message)
         if old_values.get("SLUG"):
-            for f in {"CATEGORY", "TAG"}:
+            for f in ("CATEGORY", "TAG"):
                 if old_values.get(f):
                     old_values[f] = old_values["SLUG"] + old_values[f]
             old_values["AUTHOR"] = old_values.get("AUTHOR", [])

@@ -13,7 +13,6 @@ from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import LoggedTestCase, get_context, get_settings, unittest
 from pelican.utils import path_to_url, posixize_path, truncate_html_words
 
-
 # generate one paragraph, enclosed with <p>
 TEST_CONTENT = str(generate_lorem_ipsum(n=1))
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
@@ -297,7 +296,6 @@ class TestPage(TestBase):
     def test_signal(self):
         def receiver_test_function(sender):
             receiver_test_function.has_been_called = True
-            pass
 
         receiver_test_function.has_been_called = False
 
