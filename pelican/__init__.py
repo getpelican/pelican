@@ -19,10 +19,10 @@ __path__ = extend_path(__path__, __name__)
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import console
+from pelican.log import console  # noqa: I001
 from pelican.log import init as init_logging
 from pelican.generators import (
-    ArticlesGenerator,  # noqa: I100
+    ArticlesGenerator,
     PagesGenerator,
     SourceFileGenerator,
     StaticGenerator,
@@ -354,8 +354,8 @@ def parse_arguments(argv=None):
         "--settings",
         dest="settings",
         help="The settings of the application, this is "
-        "automatically set to {} if a file exists with this "
-        "name.".format(DEFAULT_CONFIG_NAME),
+        f"automatically set to {DEFAULT_CONFIG_NAME} if a file exists with this "
+        "name.",
     )
 
     parser.add_argument(

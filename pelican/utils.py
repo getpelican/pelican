@@ -23,14 +23,10 @@ from typing import (
     Any,
     Callable,
     Collection,
-    Dict,
     Generator,
     Iterable,
-    List,
     Optional,
     Sequence,
-    Tuple,
-    Type,
     Union,
 )
 
@@ -40,9 +36,8 @@ try:
     from zoneinfo import ZoneInfo
 except ModuleNotFoundError:
     from backports.zoneinfo import ZoneInfo
-from markupsafe import Markup
-
 import watchfiles
+from markupsafe import Markup
 
 if TYPE_CHECKING:
     from pelican.contents import Content
@@ -158,7 +153,7 @@ class memoized:
 
     def __init__(self, func: Callable) -> None:
         self.func = func
-        self.cache: Dict[Any, Any] = {}
+        self.cache: dict[Any, Any] = {}
 
     def __call__(self, *args) -> Any:
         if not isinstance(args, Hashable):
@@ -185,8 +180,8 @@ class memoized:
 def deprecated_attribute(
     old: str,
     new: str,
-    since: Tuple[int, ...],
-    remove: Optional[Tuple[int, ...]] = None,
+    since: tuple[int, ...],
+    remove: Optional[tuple[int, ...]] = None,
     doc: Optional[str] = None,
 ):
     """Attribute deprecation decorator for gentle upgrades
@@ -256,7 +251,7 @@ def pelican_open(
 
 def slugify(
     value: str,
-    regex_subs: Iterable[Tuple[str, str]] = (),
+    regex_subs: Iterable[tuple[str, str]] = (),
     preserve_case: bool = False,
     use_unicode: bool = False,
 ) -> str:
@@ -642,9 +637,9 @@ def truncate_html_words(s: str, num: int, end_text: str = "…") -> str:
 
 
 def process_translations(
-    content_list: List[Content],
+    content_list: list[Content],
     translation_id: Optional[Union[str, Collection[str]]] = None,
-) -> Tuple[List[Content], List[Content]]:
+) -> tuple[list[Content], list[Content]]:
     """Finds translations and returns them.
 
     For each content_list item, populates the 'translations' attribute, and
@@ -674,14 +669,14 @@ def process_translations(
         content_list.sort(key=attrgetter(*translation_id))
     except TypeError:
         raise TypeError(
-            "Cannot unpack {}, 'translation_id' must be falsy, a"
-            " string or a collection of strings".format(translation_id)
+            f"Cannot unpack {translation_id}, 'translation_id' must be falsy, a"
+            " string or a collection of strings"
         )
     except AttributeError:
         raise AttributeError(
-            "Cannot use {} as 'translation_id', there "
+            f"Cannot use {translation_id} as 'translation_id', there "
             "appear to be items without these metadata "
-            "attributes".format(translation_id)
+            "attributes"
         )
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
@@ -702,7 +697,7 @@ def process_translations(
     return index, translations
 
 
-def get_original_items(items: List[Content], with_str: str) -> List[Content]:
+def get_original_items(items: list[Content], with_str: str) -> list[Content]:
     def _warn_source_paths(msg, items, *extra):
         args = [len(items)]
         args.extend(extra)
@@ -743,9 +738,9 @@ def get_original_items(items: List[Content], with_str: str) -> List[Content]:
 
 
 def order_content(
-    content_list: List[Content],
+    content_list: list[Content],
     order_by: Union[str, Callable[[Content], Any], None] = "slug",
-) -> List[Content]:
+) -> list[Content]:
     """Sorts content.
 
     order_by can be a string of an attribute or sorting function. If order_by
@@ -807,8 +802,8 @@ def order_content(
 
 def wait_for_changes(
     settings_file: str,
-    reader_class: Type["Readers"],
-    settings: "Settings",
+    reader_class: type[Readers],
+    settings: Settings,
 ):
     content_path = settings.get("PATH", "")
     theme_path = settings.get("THEME", "")
