@@ -126,8 +126,9 @@ branch of your GitHub repository::
 Publishing to GitHub Pages Using a Custom GitHub Actions Workflow
 -----------------------------------------------------------------
 
-Pelican comes with a `custom workflow <https://github.com/getpelican/pelican/blob/master/.github/workflows/github_pages.yml>`_
-for publishing a Pelican site. To use it:
+Pelican-powered sites can be published to GitHub Pages via a `custom workflow
+<https://github.com/getpelican/pelican/blob/master/.github/workflows/github_pages.yml>`_.
+**No official support is provided** for this community-submitted workflow. To use it:
 
 1. Enable GitHub Pages in your repo: go to **Settings → Pages** and choose
    **GitHub Actions** for the **Source** setting.

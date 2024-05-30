@@ -22,7 +22,7 @@ from pelican.utils import get_date, pelican_open, posixize_path
 try:
     from markdown import Markdown
 except ImportError:
-    Markdown = False  # NOQA
+    Markdown = False
 
 # Metadata processors have no way to discard an unwanted value, so we have
 # them return this value instead to signal that it should be discarded later.
@@ -607,8 +607,8 @@ class Readers(FileStampDataCacher):
 
         # eventually filter the content with typogrify if asked so
         if self.settings["TYPOGRIFY"]:
-            from typogrify.filters import typogrify
             import smartypants
+            from typogrify.filters import typogrify
 
             typogrify_dashes = self.settings["TYPOGRIFY_DASHES"]
             if typogrify_dashes == "oldschool":

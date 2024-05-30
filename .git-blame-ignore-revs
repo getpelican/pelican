@@ -5,3 +5,5 @@ cabdb26cee66e1173cf16cb31d3fe5f9fa4392e7
 ecd598f293161a52564aa6e8dfdcc8284dc93970
 # Apply Ruff and pyupgrade to Jinja templates
 db241feaa445375dc05e189e69287000ffe5fa8e
+# Change pre-commit to run ruff and ruff-format with fixes
+6d8597addb17d5fa3027ead91427939e8e4e89ec
