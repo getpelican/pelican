@@ -27,7 +27,7 @@ class Writer:
         self._overridden_files = set()
 
         # See Content._link_replacer for details
-        if "RELATIVE_URLS" in self.settings and self.settings["RELATIVE_URLS"]:
+        if self.settings.get("RELATIVE_URLS"):
             self.urljoiner = posix_join
         else:
             self.urljoiner = lambda base, url: urljoin(

@@ -322,10 +322,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             "EXTRA_TEMPLATES_PATHS is deprecated use "
             "THEME_TEMPLATES_OVERRIDES instead."
         )
-        if (
-            "THEME_TEMPLATES_OVERRIDES" in settings
-            and settings["THEME_TEMPLATES_OVERRIDES"]
-        ):
+        if settings.get("THEME_TEMPLATES_OVERRIDES"):
             raise Exception(
                 "Setting both EXTRA_TEMPLATES_PATHS and "
                 "THEME_TEMPLATES_OVERRIDES is not permitted. Please move to "

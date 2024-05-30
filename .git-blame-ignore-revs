@@ -7,3 +7,5 @@ ecd598f293161a52564aa6e8dfdcc8284dc93970
 db241feaa445375dc05e189e69287000ffe5fa8e
 # Change pre-commit to run ruff and ruff-format with fixes
 6d8597addb17d5fa3027ead91427939e8e4e89ec
+# Upgrade Ruff from 0.1.x to 0.4.x
+0bd02c00c078fe041b65fbf4eab13601bb42676d
