@@ -17,7 +17,7 @@ repos:
     rev: v0.1.15
     hooks:
       - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
-        args: ["--check"]
 
 exclude: ^pelican/tests/output/
