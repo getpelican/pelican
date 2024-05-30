@@ -922,14 +922,14 @@ class TestSanitisedJoin(unittest.TestCase):
     def test_detect_parent_breakout(self):
         with self.assertRaisesRegex(
             RuntimeError,
-            "Attempted to break out of output directory to " "(.*?:)?/foo/test",
+            "Attempted to break out of output directory to (.*?:)?/foo/test",
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "../test")
 
     def test_detect_root_breakout(self):
         with self.assertRaisesRegex(
             RuntimeError,
-            "Attempted to break out of output directory to " "(.*?:)?/test",
+            "Attempted to break out of output directory to (.*?:)?/test",
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "/test")
 

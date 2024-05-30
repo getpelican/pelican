@@ -72,7 +72,7 @@ class Content:
         self._context = context
         self.translations = []
 
-        local_metadata = dict()
+        local_metadata = {}
         local_metadata.update(metadata)
 
         # set metadata as attributes
@@ -357,7 +357,7 @@ class Content:
             origin = joiner(siteurl, Author(path, self.settings).url)
         else:
             logger.warning(
-                "Replacement Indicator '%s' not recognized, " "skipping replacement",
+                "Replacement Indicator '%s' not recognized, skipping replacement",
                 what,
             )
 

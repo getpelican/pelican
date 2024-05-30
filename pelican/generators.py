@@ -156,7 +156,7 @@ class Generator:
 
         return False
 
-    def get_files(self, paths, exclude=[], extensions=None):
+    def get_files(self, paths, exclude=None, extensions=None):
         """Return a list of files to use, based on rules
 
         :param paths: the list pf paths to search (relative to self.path)
@@ -164,6 +164,8 @@ class Generator:
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
+        if exclude is None:
+            exclude = []
         # backward compatibility for older generators
         if isinstance(paths, str):
             paths = [paths]
@@ -1068,7 +1070,7 @@ class StaticGenerator(Generator):
         except OSError as err:
             if err.errno == errno.EXDEV:  # 18: Invalid cross-device link
                 logger.debug(
-                    "Cross-device links not valid. " "Creating symbolic links instead."
+                    "Cross-device links not valid. Creating symbolic links instead."
                 )
                 self.fallback_to_symlinks = True
                 self._link_staticfile(sc)
