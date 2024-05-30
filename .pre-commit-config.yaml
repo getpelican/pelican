@@ -13,6 +13,7 @@ repos:
       - id: end-of-file-fixer
       - id: forbid-new-submodules
       - id: trailing-whitespace
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # ruff version should match the one in pyproject.toml
     rev: v0.4.6
@@ -20,3 +21,10 @@ repos:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
+
+  - repo: https://github.com/rtts/djhtml
+    rev: '3.0.6'
+    hooks:
+      - id: djhtml
+      - id: djcss
+      - id: djjs
