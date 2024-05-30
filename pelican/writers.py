@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class Writer:
     def __init__(self, output_path, settings=None):
         self.output_path = output_path
-        self.reminder = dict()
+        self.reminder = {}
         self.settings = settings or {}
         self._written_files = set()
         self._overridden_files = set()

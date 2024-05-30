@@ -1095,7 +1095,7 @@ def fields2pelican(
 
     if posts_require_pandoc:
         logger.error(
-            "Pandoc must be installed to import the following posts:" "\n  {}".format(
+            "Pandoc must be installed to import the following posts:\n  {}".format(
                 "\n  ".join(posts_require_pandoc)
             )
         )
@@ -1232,7 +1232,7 @@ def main():
             exit(error)
 
     if args.wp_attach and input_type != "wordpress":
-        error = "You must be importing a wordpress xml " "to use the --wp-attach option"
+        error = "You must be importing a wordpress xml to use the --wp-attach option"
         exit(error)
 
     if input_type == "blogger":

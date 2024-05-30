@@ -182,14 +182,17 @@ ignore = [
     "INP001",  # implicit-namespace-package
     "RUF015",  # unnecessary-iterable-allocation-for-first-element
     "PLR1722",  # sys-exit-alias
+    # ruff-format wants us to ignore ISC001.  I don't love that, but okay.
+    # "warning: The following rules may cause conflicts when used with the formatter:
+    #  `ISC001`. To avoid unexpected behavior, we recommend disabling these rules,
+    #  either by removing them from the `select` or `extend-select` configuration,
+    #  or adding them to the `ignore` configuration."
     "ISC001",  # single-line-implicit-string-concatenation
-    "C408",  # unnecessary-collection-call
     "B904",  # raise-without-from-inside-except
-    "UP007",  # use `|` operator for union type annotations (PEP 604)
     "UP031",  # printf-string-formatting
-    "PLR5501",  # collapsible-else-if
+    # PERF203 has minimal performance impact, and you have to catch the exception
+    # inside the loop if you want to ignore it, so let's ignore PERF203.
     "PERF203",  # try-except-in-loop
-    "B006",  # mutable-argument-default
     # TODO: these only have one violation each in Dec 2023:
     "SLOT000",  # no-slots-in-str-subclass
     "PYI024",  # collections-named-tuple

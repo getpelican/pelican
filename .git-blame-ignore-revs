@@ -11,3 +11,5 @@ db241feaa445375dc05e189e69287000ffe5fa8e
 0bd02c00c078fe041b65fbf4eab13601bb42676d
 # Apply more Ruff checks to code
 9d30c5608a58d202b1c02d55651e6ac746bfb173
+# Apply yet more Ruff checks to code
+7577dd7603f7cb3a09922d1edb65b6eafb6e2ac7

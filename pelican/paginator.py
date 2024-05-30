@@ -131,9 +131,8 @@ class Page:
                 if not self.has_next():
                     rule = p
                     break
-            else:
-                if p.min_page <= self.number:
-                    rule = p
+            elif p.min_page <= self.number:
+                rule = p
 
         if not rule:
             return ""

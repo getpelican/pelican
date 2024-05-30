@@ -199,7 +199,7 @@ class RstReader(BaseReader):
             self._language_code = lang_code
         else:
             logger.warning(
-                "Docutils has no localization for '%s'." " Using 'en' instead.",
+                "Docutils has no localization for '%s'. Using 'en' instead.",
                 lang_code,
             )
             self._language_code = "en"
@@ -320,7 +320,7 @@ class MarkdownReader(BaseReader):
             elif not DUPLICATES_DEFINITIONS_ALLOWED.get(name, True):
                 if len(value) > 1:
                     logger.warning(
-                        "Duplicate definition of `%s` " "for %s. Using first one.",
+                        "Duplicate definition of `%s` for %s. Using first one.",
                         name,
                         self._source_path,
                     )

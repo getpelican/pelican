@@ -447,7 +447,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             and not isinstance(settings[key], Path)
             and "%s" in settings[key]
         ):
-            logger.warning("%%s usage in %s is deprecated, use {lang} " "instead.", key)
+            logger.warning("%%s usage in %s is deprecated, use {lang} instead.", key)
             try:
                 settings[key] = _printf_s_to_format_field(settings[key], "lang")
             except ValueError:
@@ -470,7 +470,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             and not isinstance(settings[key], Path)
             and "%s" in settings[key]
         ):
-            logger.warning("%%s usage in %s is deprecated, use {slug} " "instead.", key)
+            logger.warning("%%s usage in %s is deprecated, use {slug} instead.", key)
             try:
                 settings[key] = _printf_s_to_format_field(settings[key], "slug")
             except ValueError:
@@ -614,7 +614,7 @@ def configure_settings(settings: Settings) -> Settings:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
             logger.warn(
-                "Detected misconfigured %s (%s), " "falling back to the default (%s)",
+                "Detected misconfigured %s (%s), falling back to the default (%s)",
                 key,
                 value,
                 DEFAULT_CONFIG[key],
@@ -676,7 +676,7 @@ def configure_settings(settings: Settings) -> Settings:
     if any(settings.get(k) for k in feed_keys):
         if not settings.get("SITEURL"):
             logger.warning(
-                "Feeds generated without SITEURL set properly may" " not be valid"
+                "Feeds generated without SITEURL set properly may not be valid"
             )
 
     if "TIMEZONE" not in settings:

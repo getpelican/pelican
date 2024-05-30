@@ -71,7 +71,7 @@ class TestBloggerXmlImporter(TestCaseWithCLocale):
         )
         comment_titles = {x[0] for x in test_posts if x[8] == "comment"}
         self.assertEqual(
-            {"Mishka, always a pleasure to read your " "adventures!..."}, comment_titles
+            {"Mishka, always a pleasure to read your adventures!..."}, comment_titles
         )
 
     def test_recognise_status_with_correct_filename(self):
@@ -478,7 +478,7 @@ class TestBuildHeader(unittest.TestCase):
             attachments=["output/test1", "output/test2"],
         )
         self.assertEqual(
-            header, ("test\n####\n" ":attachments: output/test1, " "output/test2\n\n")
+            header, ("test\n####\n:attachments: output/test1, output/test2\n\n")
         )
 
     def test_galleries_added_to_markdown_header(self):
@@ -521,10 +521,10 @@ class TestWordpressXMLAttachements(TestCaseWithCLocale):
                 self.assertEqual(self.attachments[post], expected)
             elif post == "with-excerpt":
                 expected_invalid = (
-                    "http://thisurlisinvalid.notarealdomain/" "not_an_image.jpg"
+                    "http://thisurlisinvalid.notarealdomain/not_an_image.jpg"
                 )
                 expected_pelikan = (
-                    "http://en.wikipedia.org/wiki/" "File:Pelikan_Walvis_Bay.jpg"
+                    "http://en.wikipedia.org/wiki/File:Pelikan_Walvis_Bay.jpg"
                 )
                 self.assertEqual(
                     self.attachments[post], {expected_invalid, expected_pelikan}
@@ -533,9 +533,7 @@ class TestWordpressXMLAttachements(TestCaseWithCLocale):
                 expected_invalid = "http://thisurlisinvalid.notarealdomain"
                 self.assertEqual(self.attachments[post], {expected_invalid})
             else:
-                self.fail(
-                    "all attachments should match to a " f"filename or None, {post}"
-                )
+                self.fail(f"all attachments should match to a filename or None, {post}")
 
     def test_download_attachments(self):
         real_file = os.path.join(CUR_DIR, "content/article.rst")

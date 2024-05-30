@@ -417,7 +417,7 @@ def parse_arguments(argv=None):
         "--relative-urls",
         dest="relative_paths",
         action="store_true",
-        help="Use relative urls in output, " "useful for site development",
+        help="Use relative urls in output, useful for site development",
     )
 
     parser.add_argument(
@@ -433,7 +433,7 @@ def parse_arguments(argv=None):
         "--ignore-cache",
         action="store_true",
         dest="ignore_cache",
-        help="Ignore content cache " "from previous runs by not loading cache files.",
+        help="Ignore content cache from previous runs by not loading cache files.",
     )
 
     parser.add_argument(
@@ -488,7 +488,7 @@ def parse_arguments(argv=None):
         "-b",
         "--bind",
         dest="bind",
-        help="IP to bind to when serving files via HTTP " "(default: 127.0.0.1)",
+        help="IP to bind to when serving files via HTTP (default: 127.0.0.1)",
     )
 
     parser.add_argument(
