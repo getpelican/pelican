@@ -438,12 +438,12 @@ def parse_arguments(argv=None):
 
     parser.add_argument(
         "--fatal",
-        metavar="errors|warnings",
-        choices=("errors", "warnings"),
-        default="",
+        metavar="errors|warnings|ignore",
+        choices=("errors", "warnings", "ignore"),
+        default="errors",
         help=(
             "Exit the program with non-zero status if any "
-            "errors/warnings encountered."
+            "errors/warnings encountered, or ignore any errors."
         ),
     )
 
@@ -634,7 +634,7 @@ def main(argv=None):
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
     init_logging(
         level=args.verbosity,
-        fatal=args.fatal,
+        fatal=args.fatal if args.fatal != "ignore" else "",
         name=__name__,
         handler=args.log_handler,
         logs_dedup_min_level=logs_dedup_min_level,

@@ -131,7 +131,7 @@ DEFAULT_LOG_HANDLER = RichHandler(console=console)
 
 def init(
     level=None,
-    fatal="",
+    fatal="errors",
     handler=DEFAULT_LOG_HANDLER,
     name=None,
     logs_dedup_min_level=None,
