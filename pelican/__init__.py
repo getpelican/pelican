@@ -634,7 +634,7 @@ def main(argv=None):
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
     init_logging(
         level=args.verbosity,
-        fatal=args.fatal if args.fatal != "ignore" else "",
+        fatal=args.fatal,
         name=__name__,
         handler=args.log_handler,
         logs_dedup_min_level=logs_dedup_min_level,
