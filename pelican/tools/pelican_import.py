@@ -1070,14 +1070,14 @@ def fields2pelican(
                     rc = subprocess.call(cmd, shell=True)
                     if rc < 0:
                         error = "Child was terminated by signal %d" % -rc
-                        exit(error)
+                        sys.exit(error)
 
                     elif rc > 0:
                         error = "Please, check your Pandoc installation."
-                        exit(error)
+                        sys.exit(error)
                 except OSError as e:
                     error = "Pandoc execution failed: %s" % e
-                    exit(error)
+                    sys.exit(error)
 
             with open(out_filename, encoding="utf-8") as fs:
                 content = fs.read()
@@ -1222,18 +1222,18 @@ def main():
             "You must provide one of --blogger, --dotclear, "
             "--medium, --tumblr, --wpfile or --feed options"
         )
-        exit(error)
+        sys.exit(error)
 
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
         except OSError:
             error = "Unable to create the output folder: " + args.output
-            exit(error)
+            sys.exit(error)
 
     if args.wp_attach and input_type != "wordpress":
         error = "You must be importing a wordpress xml to use the --wp-attach option"
-        exit(error)
+        sys.exit(error)
 
     if input_type == "blogger":
         fields = blogger2fields(args.input)

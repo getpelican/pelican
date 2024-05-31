@@ -259,7 +259,7 @@ class Writer:
             }
 
             # generated pages, and write
-            for page_num in range(list(paginators.values())[0].num_pages):
+            for page_num in range(next(iter(paginators.values())).num_pages):
                 paginated_kwargs = kwargs.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]

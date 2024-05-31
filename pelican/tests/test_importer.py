@@ -108,15 +108,15 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         self.assertTrue(self.posts)
         for (
             title,
-            content,
-            fname,
-            date,
-            author,
-            categ,
-            tags,
-            status,
-            kind,
-            format,
+            _content,
+            _fname,
+            _date,
+            _author,
+            _categ,
+            _tags,
+            _status,
+            _kind,
+            _format,
         ) in self.posts:
             self.assertTrue(title.strip())
 
@@ -127,15 +127,15 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         pages_data = []
         for (
             title,
-            content,
+            _content,
             fname,
-            date,
-            author,
-            categ,
-            tags,
-            status,
+            _date,
+            _author,
+            _categ,
+            _tags,
+            _status,
             kind,
-            format,
+            _format,
         ) in self.posts:
             if kind == "page":
                 pages_data.append((title, fname))
@@ -147,7 +147,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Empty Page"), self.posts)
         with temporary_folder() as temp:
-            fname = list(silent_f2p(test_post, "markdown", temp, dirpage=True))[0]
+            fname = next(iter(silent_f2p(test_post, "markdown", temp, dirpage=True)))
             self.assertTrue(fname.endswith("pages%sempty.md" % os.path.sep))
 
     def test_dircat(self):
@@ -176,15 +176,15 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         pages_data = []
         for (
             title,
-            content,
+            _content,
             fname,
-            date,
-            author,
-            categ,
-            tags,
-            status,
+            _date,
+            _author,
+            _categ,
+            _tags,
+            _status,
             kind,
-            format,
+            _format,
         ) in self.posts:
             if kind in {"page", "article"}:
                 pass
@@ -197,15 +197,15 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         cust_data = []
         for (
             title,
-            content,
-            fname,
-            date,
-            author,
-            categ,
-            tags,
-            status,
+            _content,
+            _fname,
+            _date,
+            _author,
+            _categ,
+            _tags,
+            _status,
             kind,
-            format,
+            _format,
         ) in self.custposts:
             if kind in {"page", "article"}:
                 pass
@@ -346,7 +346,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Code in List"), self.posts)
         with temporary_folder() as temp:
-            md = [r(f) for f in silent_f2p(test_post, "markdown", temp)][0]
+            md = next(r(f) for f in silent_f2p(test_post, "markdown", temp))
             self.assertTrue(re.search(r"\s+a = \[1, 2, 3\]", md))
             self.assertTrue(re.search(r"\s+b = \[4, 5, 6\]", md))
 
@@ -362,7 +362,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Code in List"), self.posts)
         with temporary_folder() as temp:
-            md = [r(f) for f in silent_f2p(test_post, "markdown", temp)][0]
+            md = next(r(f) for f in silent_f2p(test_post, "markdown", temp))
             sample_line = re.search(r"- This is a code sample", md).group(0)
             code_line = re.search(r"\s+a = \[1, 2, 3\]", md).group(0)
             self.assertTrue(sample_line.rindex("This") < code_line.rindex("a"))
@@ -375,7 +375,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Post with raw data"), self.posts)
         with temporary_folder() as temp:
-            md = [r(f) for f in silent_f2p(test_post, "markdown", temp)][0]
+            md = next(r(f) for f in silent_f2p(test_post, "markdown", temp))
             escaped_quotes = re.search(r'\\[\'"“”‘’]', md)
             self.assertFalse(escaped_quotes)
 
@@ -387,7 +387,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         silent_f2p = mute(True)(fields2pelican)
         test_post = filter(lambda p: p[0].startswith("Caption on image"), self.posts)
         with temporary_folder() as temp:
-            md = [r(f) for f in silent_f2p(test_post, "markdown", temp)][0]
+            md = next(r(f) for f in silent_f2p(test_post, "markdown", temp))
 
         caption = re.search(r"\[caption", md)
         self.assertFalse(caption)

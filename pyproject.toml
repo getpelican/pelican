@@ -168,7 +168,6 @@ select = [
 
 ignore = [
     # suppression in order of # of violations in Dec 2023:
-    "B007",  # unused-loop-control-variable
     "T201",  # print
     "PLW2901",  # redefined-loop-name
     "SLF001",  # private-member-access
@@ -176,12 +175,18 @@ ignore = [
     "PLR2004",  # magic-value-comparison
     "PLR0912",  # too-many-branches
     "PLR0913",  # too-many-arguments
+    # RUF005: this is a different style of concatenating literals.  It perhaps performs
+    # a bit better, but doesn't seem any more readable to me.  So, ignore it.
     "RUF005",  # collection-literal-concatenation
+    # TODO: several classes have class variables.  If that is correct, we should
+    #   annotate them with ClassVar.
+    # See https://docs.astral.sh/ruff/rules/mutable-class-default/
     "RUF012",  # mutable-class-default
     "PLR0915",  # too-many-statements
+    # Note: we have a couple of "namespace packages" (i.e. missing __init__.py)
+    # Not sure if we should add __init__.py to them, or they really need to be
+    # namespace packages.
     "INP001",  # implicit-namespace-package
-    "RUF015",  # unnecessary-iterable-allocation-for-first-element
-    "PLR1722",  # sys-exit-alias
     # ruff-format wants us to ignore ISC001.  I don't love that, but okay.
     # "warning: The following rules may cause conflicts when used with the formatter:
     #  `ISC001`. To avoid unexpected behavior, we recommend disabling these rules,
