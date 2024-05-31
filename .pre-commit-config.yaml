@@ -20,5 +20,3 @@ repos:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
-
-exclude: ^pelican/tests/output/
