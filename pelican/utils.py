@@ -81,7 +81,7 @@ def strftime(date: datetime.datetime, date_format: str) -> str:
         # test for valid C89 directives only
         if candidate[-1] in c89_directives:
             # check for '-' prefix
-            if len(candidate) == 3:
+            if len(candidate) == 3:  # noqa: PLR2004
                 # '-' prefix
                 candidate = f"%{candidate[-1]}"
                 conversion = strip_zeros
@@ -232,7 +232,7 @@ def get_date(string: str) -> datetime.datetime:
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
-        raise ValueError(f"{string!r} is not a valid date")
+        raise ValueError(f"{string!r} is not a valid date") from None
 
 
 @contextmanager
@@ -666,13 +666,13 @@ def process_translations(
         raise TypeError(
             f"Cannot unpack {translation_id}, 'translation_id' must be falsy, a"
             " string or a collection of strings"
-        )
+        ) from None
     except AttributeError:
         raise AttributeError(
             f"Cannot use {translation_id} as 'translation_id', there "
             "appear to be items without these metadata "
             "attributes"
-        )
+        ) from None
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
         # prepare warning string

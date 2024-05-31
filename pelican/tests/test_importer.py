@@ -376,7 +376,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         test_post = filter(lambda p: p[0].startswith("Post with raw data"), self.posts)
         with temporary_folder() as temp:
             md = next(r(f) for f in silent_f2p(test_post, "markdown", temp))
-            escaped_quotes = re.search(r'\\[\'"“”‘’]', md)
+            escaped_quotes = re.search(r'\\[\'"“”‘’]', md)  # noqa: RUF001
             self.assertFalse(escaped_quotes)
 
     def test_convert_caption_to_figure(self):
@@ -505,7 +505,7 @@ class TestWordpressXMLAttachements(TestCaseWithCLocale):
 
     def test_recognise_attachments(self):
         self.assertTrue(self.attachments)
-        self.assertTrue(len(self.attachments.keys()) == 3)
+        self.assertEqual(3, len(self.attachments.keys()))
 
     def test_attachments_associated_with_correct_post(self):
         self.assertTrue(self.attachments)

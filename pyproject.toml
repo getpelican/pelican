@@ -168,11 +168,8 @@ select = [
 
 ignore = [
     # suppression in order of # of violations in Dec 2023:
-    "T201",  # print
     "PLW2901",  # redefined-loop-name
     "SLF001",  # private-member-access
-    "RUF001",  # ambiguous-unicode-character-string
-    "PLR2004",  # magic-value-comparison
     "PLR0912",  # too-many-branches
     "PLR0913",  # too-many-arguments
     # RUF005: this is a different style of concatenating literals.  It perhaps performs
@@ -193,15 +190,10 @@ ignore = [
     #  either by removing them from the `select` or `extend-select` configuration,
     #  or adding them to the `ignore` configuration."
     "ISC001",  # single-line-implicit-string-concatenation
-    "B904",  # raise-without-from-inside-except
     "UP031",  # printf-string-formatting
     # PERF203 has minimal performance impact, and you have to catch the exception
     # inside the loop if you want to ignore it, so let's ignore PERF203.
     "PERF203",  # try-except-in-loop
-    # TODO: these only have one violation each in Dec 2023:
-    "SLOT000",  # no-slots-in-str-subclass
-    "PYI024",  # collections-named-tuple
-    "PIE800",  # unnecessary-spread
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
@@ -209,4 +201,17 @@ ignore = [
 "pelican/__init__.py" = [
     # allow imports after a call to a function, see the file
     "E402"
+]
+"pelican/tests/test_utils.py" = [
+    # the tests have a bunch of unicode characters
+    "RUF001"
+]
+"pelican/tests/test_generators.py" = [
+    # the tests have a bunch of constants, why not
+    "PLR2004"
+]
+
+"pelican/tools/*.py}" = [
+    # this is a command-line utility, prints are fine
+    "T201"
 ]

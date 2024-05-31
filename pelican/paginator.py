@@ -5,7 +5,7 @@ from collections import namedtuple
 from math import ceil
 
 logger = logging.getLogger(__name__)
-PaginationRule = namedtuple(
+PaginationRule = namedtuple(  # noqa: PYI024
     "PaginationRule",
     "min_page URL SAVE_AS",
 )
