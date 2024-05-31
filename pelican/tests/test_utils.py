@@ -210,13 +210,10 @@ class TestUtils(LoggedTestCase):
             )
 
         # check with preserve case
-        for value, expected in samples:
-            self.assertEqual(
-                utils.slugify(
-                    "Çığ", regex_subs=subs, preserve_case=True, use_unicode=True
-                ),
-                "Çığ",
-            )
+        self.assertEqual(
+            utils.slugify("Çığ", regex_subs=subs, preserve_case=True, use_unicode=True),
+            "Çığ",
+        )
 
         # check normalization
         samples = (

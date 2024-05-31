@@ -483,7 +483,7 @@ class _HTMLWordTruncator(HTMLParser):
     def getoffset(self) -> int:
         line_start = 0
         lineno, line_offset = self.getpos()
-        for i in range(lineno - 1):
+        for _ in range(lineno - 1):
             line_start = self.rawdata.index("\n", line_start) + 1
         return line_start + line_offset
 
