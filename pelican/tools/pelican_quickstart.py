@@ -79,7 +79,7 @@ _TZ_URL = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
 
 # Create a 'marked' default path, to determine if someone has supplied
 # a path on the command-line.
-class _DEFAULT_PATH_TYPE(str):
+class _DEFAULT_PATH_TYPE(str):  # noqa: SLOT000
     is_default_path = True
 
 

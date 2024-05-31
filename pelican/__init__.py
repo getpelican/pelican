@@ -294,7 +294,7 @@ class ParseOverrides(argparse.Action):
                 raise ValueError(
                     "Extra settings must be specified as KEY=VALUE pairs "
                     f"but you specified {item}"
-                )
+                ) from None
             try:
                 overrides[k] = json.loads(v)
             except json.decoder.JSONDecodeError:
@@ -305,7 +305,7 @@ class ParseOverrides(argparse.Action):
                     "Use -e KEY='\"string\"' to specify a string value; "
                     "-e KEY=null to specify None; "
                     "-e KEY=false (or true) to specify False (or True)."
-                )
+                ) from None
         setattr(namespace, self.dest, overrides)
 
 

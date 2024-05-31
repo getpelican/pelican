@@ -53,14 +53,12 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
 
     extensions_map = {
         **server.SimpleHTTPRequestHandler.extensions_map,
-        **{
-            # web fonts
-            ".oft": "font/oft",
-            ".sfnt": "font/sfnt",
-            ".ttf": "font/ttf",
-            ".woff": "font/woff",
-            ".woff2": "font/woff2",
-        },
+        # web fonts
+        ".oft": "font/oft",
+        ".sfnt": "font/sfnt",
+        ".ttf": "font/ttf",
+        ".woff": "font/woff",
+        ".woff2": "font/woff2",
     }
 
     def translate_path(self, path):
