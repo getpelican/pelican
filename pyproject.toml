@@ -190,7 +190,6 @@ ignore = [
     #  either by removing them from the `select` or `extend-select` configuration,
     #  or adding them to the `ignore` configuration."
     "ISC001",  # single-line-implicit-string-concatenation
-    "UP031",  # printf-string-formatting
     # PERF203 has minimal performance impact, and you have to catch the exception
     # inside the loop if you want to ignore it, so let's ignore PERF203.
     "PERF203",  # try-except-in-loop
