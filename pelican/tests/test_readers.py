@@ -27,8 +27,7 @@ class ReaderTest(unittest.TestCase):
                 self.assertEqual(
                     value,
                     real_value,
-                    "Expected %s to have value %s, but was %s"
-                    % (key, value, real_value),
+                    f"Expected {key} to have value {value}, but was {real_value}",
                 )
             else:
                 self.fail(f"Expected {key} to have value {value}, but was not in Dict")

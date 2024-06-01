@@ -282,7 +282,7 @@ class TestPage(TestBase):
             #
             # Until we find some other method to test this functionality, we
             # will simply skip this test.
-            unittest.skip("There is no locale %s in this system." % locale)
+            unittest.skip(f"There is no locale {locale} in this system.")
 
     def test_template(self):
         # Pages default to page, metadata overwrites

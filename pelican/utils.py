@@ -626,7 +626,7 @@ def truncate_html_words(s: str, num: int, end_text: str = "…") -> str:
         out += " " + end_text
     # Close any tags still open
     for tag in truncator.open_tags:
-        out += "</%s>" % tag
+        out += f"</{tag}>"
     # Return string
     return out
 
