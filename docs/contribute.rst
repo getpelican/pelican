@@ -64,6 +64,20 @@ your bug fix or feature::
 Now you can make changes to Pelican, its documentation, and/or other aspects of
 the project.
 
+Setting up git blame
+--------------------
+
+``git blame`` annotates lines from a file with information about the pull request
+that last modified it.  Sweeping shallow changes (like formatting) can make that
+information less useful, so we keep a list of such changes to be ignored.  To set
+that up in your repository::
+
+    git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+For more information, see here_.
+
+.. _here: https://www.michaelheap.com/git-ignore-rev/
+
 Running the test suite
 ----------------------
 
@@ -107,6 +121,20 @@ Tox_ is a useful tool to automate running tests inside ``virtualenv``
 environments.
 
 .. _Tox: https://tox.readthedocs.io/en/latest/
+
+Running a code coverage report
+------------------------------
+
+The code is more likely to stay robust if it is tested.
+coverage_ is a library that measures how much of the code is tested.
+To run it::
+
+    invoke coverage
+    open htmlcov/index.html
+
+The HTML will show overall coverage, coverage per file, and even line-by-line coverage.
+
+.. _coverage: https://github.com/nedbat/coveragepy
 
 Building the docs
 -----------------
