@@ -220,7 +220,7 @@ needed by Pelican.
         CONF["basedir"] = open(project).read().rstrip("\n")
         print(
             "Using project associated with current virtual environment. "
-            "Will save to:\n%s\n" % CONF["basedir"]
+            "Will save to:\n{}\n".format(CONF["basedir"])
         )
     else:
         CONF["basedir"] = os.path.abspath(
@@ -394,7 +394,7 @@ needed by Pelican.
         render_jinja_template("tasks.py.jinja2", CONF, "tasks.py")
         render_jinja_template("Makefile.jinja2", CONF, "Makefile")
 
-    print("Done. Your new project is available at %s" % CONF["basedir"])
+    print("Done. Your new project is available at {}".format(CONF["basedir"]))
 
 
 if __name__ == "__main__":

@@ -591,7 +591,7 @@ def configure_settings(settings: Settings) -> Settings:
         if os.path.exists(theme_path):
             settings["THEME"] = theme_path
         else:
-            raise Exception("Could not find the theme %s" % settings["THEME"])
+            raise Exception("Could not find the theme {}".format(settings["THEME"]))
 
     # standardize strings to lowercase strings
     for key in ["DEFAULT_LANG"]:

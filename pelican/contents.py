@@ -250,7 +250,7 @@ class Content:
     def get_url_setting(self, key: str) -> str:
         if hasattr(self, "override_" + key):
             return getattr(self, "override_" + key)
-        key = key if self.in_default_lang else "lang_%s" % key
+        key = key if self.in_default_lang else f"lang_{key}"
         return self._expand_settings(key)
 
     def _link_replacer(self, siteurl: str, m: re.Match) -> str:

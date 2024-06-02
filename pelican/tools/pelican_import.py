@@ -155,7 +155,7 @@ def wp2fields(xml, wp_custpost=False):
                 # Use HTMLParser due to issues with BeautifulSoup 3
                 title = unescape(item.title.contents[0])
             except IndexError:
-                title = "No title [%s]" % item.find("post_name").string
+                title = "No title [{}]".format(item.find("post_name").string)
                 logger.warning('Post "%s" is lacking a proper title', title)
 
             post_name = item.find("post_name").string
@@ -510,11 +510,10 @@ def tumblr2fields(api_key, blogname):
                 title = post.get("question")
                 content = (
                     "<p>"
-                    '<a href="%s" rel="external nofollow">%s</a>'
-                    ": %s"
+                    '<a href="{}" rel="external nofollow">{}</a>'
+                    ": {}"
                     "</p>\n"
-                    " %s"
-                    % (
+                    " {}".format(
                         post.get("asking_name"),
                         post.get("asking_url"),
                         post.get("question"),
@@ -710,19 +709,19 @@ def build_header(
 
     header = "{}\n{}\n".format(title, "#" * column_width(title))
     if date:
-        header += ":date: %s\n" % date
+        header += f":date: {date}\n"
     if author:
-        header += ":author: %s\n" % author
+        header += f":author: {author}\n"
     if categories:
-        header += ":category: %s\n" % ", ".join(categories)
+        header += ":category: {}\n".format(", ".join(categories))
     if tags:
-        header += ":tags: %s\n" % ", ".join(tags)
+        header += ":tags: {}\n".format(", ".join(tags))
     if slug:
-        header += ":slug: %s\n" % slug
+        header += f":slug: {slug}\n"
     if status:
-        header += ":status: %s\n" % status
+        header += f":status: {status}\n"
     if attachments:
-        header += ":attachments: %s\n" % ", ".join(attachments)
+        header += ":attachments: {}\n".format(", ".join(attachments))
     header += "\n"
     return header
 
@@ -732,21 +731,21 @@ def build_asciidoc_header(
 ):
     """Build a header from a list of fields"""
 
-    header = "= %s\n" % title
+    header = f"= {title}\n"
     if author:
-        header += "%s\n" % author
+        header += f"{author}\n"
         if date:
-            header += "%s\n" % date
+            header += f"{date}\n"
     if categories:
-        header += ":category: %s\n" % ", ".join(categories)
+        header += ":category: {}\n".format(", ".join(categories))
     if tags:
-        header += ":tags: %s\n" % ", ".join(tags)
+        header += ":tags: {}\n".format(", ".join(tags))
     if slug:
-        header += ":slug: %s\n" % slug
+        header += f":slug: {slug}\n"
     if status:
-        header += ":status: %s\n" % status
+        header += f":status: {status}\n"
     if attachments:
-        header += ":attachments: %s\n" % ", ".join(attachments)
+        header += ":attachments: {}\n".format(", ".join(attachments))
     header += "\n"
     return header
 
@@ -755,21 +754,21 @@ def build_markdown_header(
     title, date, author, categories, tags, slug, status=None, attachments=None
 ):
     """Build a header from a list of fields"""
-    header = "Title: %s\n" % title
+    header = f"Title: {title}\n"
     if date:
-        header += "Date: %s\n" % date
+        header += f"Date: {date}\n"
     if author:
-        header += "Author: %s\n" % author
+        header += f"Author: {author}\n"
     if categories:
-        header += "Category: %s\n" % ", ".join(categories)
+        header += "Category: {}\n".format(", ".join(categories))
     if tags:
-        header += "Tags: %s\n" % ", ".join(tags)
+        header += "Tags: {}\n".format(", ".join(tags))
     if slug:
-        header += "Slug: %s\n" % slug
+        header += f"Slug: {slug}\n"
     if status:
-        header += "Status: %s\n" % status
+        header += f"Status: {status}\n"
     if attachments:
-        header += "Attachments: %s\n" % ", ".join(attachments)
+        header += "Attachments: {}\n".format(", ".join(attachments))
     header += "\n"
     return header
 
@@ -1076,7 +1075,7 @@ def fields2pelican(
                         error = "Please, check your Pandoc installation."
                         sys.exit(error)
                 except OSError as e:
-                    error = "Pandoc execution failed: %s" % e
+                    error = f"Pandoc execution failed: {e}"
                     sys.exit(error)
 
             with open(out_filename, encoding="utf-8") as fs:

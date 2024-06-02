@@ -721,11 +721,11 @@ class TestCopy(unittest.TestCase):
 
     def _exist_file(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.isfile(path), "File does not exist: %s" % path)
+        self.assertTrue(os.path.isfile(path), f"File does not exist: {path}")
 
     def _exist_dir(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.exists(path), "Directory does not exist: %s" % path)
+        self.assertTrue(os.path.exists(path), f"Directory does not exist: {path}")
 
     def test_copy_file_same_path(self):
         self._create_file("a.txt")

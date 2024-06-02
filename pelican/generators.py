@@ -537,9 +537,9 @@ class ArticlesGenerator(CachingGenerator):
         """Generate direct templates pages"""
         for template in self.settings["DIRECT_TEMPLATES"]:
             save_as = self.settings.get(
-                "%s_SAVE_AS" % template.upper(), "%s.html" % template
+                f"{template.upper()}_SAVE_AS", f"{template}.html"
             )
-            url = self.settings.get("%s_URL" % template.upper(), "%s.html" % template)
+            url = self.settings.get(f"{template.upper()}_URL", f"{template}.html")
             if not save_as:
                 continue
 

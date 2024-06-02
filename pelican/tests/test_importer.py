@@ -148,7 +148,7 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         test_post = filter(lambda p: p[0].startswith("Empty Page"), self.posts)
         with temporary_folder() as temp:
             fname = next(iter(silent_f2p(test_post, "markdown", temp, dirpage=True)))
-            self.assertTrue(fname.endswith("pages%sempty.md" % os.path.sep))
+            self.assertTrue(fname.endswith(f"pages{os.path.sep}empty.md"))
 
     def test_dircat(self):
         silent_f2p = mute(True)(fields2pelican)
