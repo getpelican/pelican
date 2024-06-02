@@ -15,3 +15,5 @@ db241feaa445375dc05e189e69287000ffe5fa8e
 7577dd7603f7cb3a09922d1edb65b6eafb6e2ac7
 # Indent Jinja templates, HTML, CSS, and JS via DjHTML
 4af40e80772a58eac8969360e5caeb99e3e26e78
+# Ruff UP031: Use F-string format specifiers instead of percent format
+30bde3823f50b9ba8ac5996c1c46bb72031aa6b8
