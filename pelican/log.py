@@ -126,11 +126,13 @@ logging.setLoggerClass(FatalLogger)
 # force root logger to be of our preferred class
 logging.getLogger().__class__ = FatalLogger
 
+DEFAULT_LOG_HANDLER = RichHandler(console=console)
+
 
 def init(
     level=None,
     fatal="",
-    handler=RichHandler(console=console),
+    handler=DEFAULT_LOG_HANDLER,
     name=None,
     logs_dedup_min_level=None,
 ):
@@ -139,7 +141,10 @@ def init(
 
     LOG_FORMAT = "%(message)s"
     logging.basicConfig(
-        level=level, format=LOG_FORMAT, datefmt="[%H:%M:%S]", handlers=[handler]
+        level=level,
+        format=LOG_FORMAT,
+        datefmt="[%H:%M:%S]",
+        handlers=[handler] if handler else [],
     )
 
     logger = logging.getLogger(name)

@@ -4,13 +4,13 @@
 
 {% block content %}
 
-<section id="content" class="body">
-    <h1>Tags for {{ SITENAME }}</h1>
-    <ul>
-    {% for tag, articles in tags|sort %}
-        <li><a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a> ({{ articles|count }})</li>
-    {% endfor %}
-    </ul>
-</section>
+    <section id="content" class="body">
+        <h1>Tags for {{ SITENAME }}</h1>
+        <ul>
+            {% for tag, articles in tags|sort %}
+                <li><a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a> ({{ articles|count }})</li>
+            {% endfor %}
+        </ul>
+    </section>
 
 {% endblock %}

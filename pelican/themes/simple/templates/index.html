@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-{% block content_title %}
-<h2>All articles</h2>
-{% endblock %}
+    {% block content_title %}
+        <h2>All articles</h2>
+    {% endblock %}
 
 
-{% for article in articles_page.object_list %}
+    {% for article in articles_page.object_list %}
         <article>
-                <header> <h2><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2> </header>
-                <section>{{ article.summary }}</section>
-                <footer>
-                    <p>Published: <time datetime="{{ article.date.isoformat() }}"> {{ article.locale_date }} </time></p>
-                    <address>By
+            <header> <h2><a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark" title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2> </header>
+            <section>{{ article.summary }}</section>
+            <footer>
+                <p>Published: <time datetime="{{ article.date.isoformat() }}"> {{ article.locale_date }} </time></p>
+                <address>By
                     {% for author in article.authors %}
                         <a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
                     {% endfor %}
-                    </address>
-                </footer>
+                </address>
+            </footer>
         </article>
-{% endfor %}
+    {% endfor %}
 
-{% if articles_page.has_other_pages() %}
-    {% include 'pagination.html' %}
-{% endif %}
+    {% if articles_page.has_other_pages() %}
+        {% include 'pagination.html' %}
+    {% endif %}
 
 {% endblock content %}

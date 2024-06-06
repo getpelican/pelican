@@ -115,11 +115,10 @@ class URLWrapper:
         if not isinstance(value, str):
             logger.warning("%s is set to %s", setting, value)
             return value
+        elif get_page_name:
+            return os.path.splitext(value)[0].format(**self.as_dict())
         else:
-            if get_page_name:
-                return os.path.splitext(value)[0].format(**self.as_dict())
-            else:
-                return value.format(**self.as_dict())
+            return value.format(**self.as_dict())
 
     page_name = property(
         functools.partial(_from_settings, key="URL", get_page_name=True)

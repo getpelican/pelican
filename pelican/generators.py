@@ -156,7 +156,7 @@ class Generator:
 
         return False
 
-    def get_files(self, paths, exclude=[], extensions=None):
+    def get_files(self, paths, exclude=None, extensions=None):
         """Return a list of files to use, based on rules
 
         :param paths: the list pf paths to search (relative to self.path)
@@ -164,6 +164,8 @@ class Generator:
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
+        if exclude is None:
+            exclude = []
         # backward compatibility for older generators
         if isinstance(paths, str):
             paths = [paths]
@@ -535,9 +537,9 @@ class ArticlesGenerator(CachingGenerator):
         """Generate direct templates pages"""
         for template in self.settings["DIRECT_TEMPLATES"]:
             save_as = self.settings.get(
-                "%s_SAVE_AS" % template.upper(), "%s.html" % template
+                f"{template.upper()}_SAVE_AS", f"{template}.html"
             )
-            url = self.settings.get("%s_URL" % template.upper(), "%s.html" % template)
+            url = self.settings.get(f"{template.upper()}_URL", f"{template}.html")
             if not save_as:
                 continue
 
@@ -1038,7 +1040,7 @@ class StaticGenerator(Generator):
         save_as = os.path.join(self.output_path, staticfile.save_as)
         s_mtime = os.path.getmtime(source_path)
         d_mtime = os.path.getmtime(save_as)
-        return s_mtime - d_mtime > 0.000001
+        return s_mtime - d_mtime > 0.000001  # noqa: PLR2004
 
     def _link_or_copy_staticfile(self, sc):
         if self.settings["STATIC_CREATE_LINKS"]:
@@ -1068,7 +1070,7 @@ class StaticGenerator(Generator):
         except OSError as err:
             if err.errno == errno.EXDEV:  # 18: Invalid cross-device link
                 logger.debug(
-                    "Cross-device links not valid. " "Creating symbolic links instead."
+                    "Cross-device links not valid. Creating symbolic links instead."
                 )
                 self.fallback_to_symlinks = True
                 self._link_staticfile(sc)

@@ -27,8 +27,7 @@ class ReaderTest(unittest.TestCase):
                 self.assertEqual(
                     value,
                     real_value,
-                    "Expected %s to have value %s, but was %s"
-                    % (key, value, real_value),
+                    f"Expected {key} to have value {value}, but was {real_value}",
                 )
             else:
                 self.fail(f"Expected {key} to have value {value}, but was not in Dict")
@@ -591,7 +590,7 @@ class MdReaderTest(ReaderTest):
             "modified": SafeDatetime(2012, 11, 1),
             "multiline": [
                 "Line Metadata should be handle properly.",
-                "See syntax of Meta-Data extension of " "Python Markdown package:",
+                "See syntax of Meta-Data extension of Python Markdown package:",
                 "If a line is indented by 4 or more spaces,",
                 "that line is assumed to be an additional line of the value",
                 "for the previous keyword.",

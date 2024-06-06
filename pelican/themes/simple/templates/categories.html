@@ -5,8 +5,8 @@
 {% block content %}
     <h2>Categories on {{ SITENAME }}</h2>
     <ul>
-    {% for category, articles in categories|sort %}
-        <li><a href="{{ SITEURL }}/{{ category.url }}">{{ category }}</a> ({{ articles|count }})</li>
-    {% endfor %}
+        {% for category, articles in categories|sort %}
+            <li><a href="{{ SITEURL }}/{{ category.url }}">{{ category }}</a> ({{ articles|count }})</li>
+        {% endfor %}
     </ul>
 {% endblock %}

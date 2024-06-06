@@ -223,7 +223,7 @@ def read_settings(
     # parameters to docutils directive handlers, so we have to have a
     # variable here that we'll import from within Pygments.run (see
     # rstdirectives.py) to see what the user defaults were.
-    global PYGMENTS_RST_OPTIONS
+    global PYGMENTS_RST_OPTIONS  # noqa: PLW0603
     PYGMENTS_RST_OPTIONS = settings.get("PYGMENTS_RST_OPTIONS", None)
     return settings
 
@@ -322,10 +322,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             "EXTRA_TEMPLATES_PATHS is deprecated use "
             "THEME_TEMPLATES_OVERRIDES instead."
         )
-        if (
-            "THEME_TEMPLATES_OVERRIDES" in settings
-            and settings["THEME_TEMPLATES_OVERRIDES"]
-        ):
+        if settings.get("THEME_TEMPLATES_OVERRIDES"):
             raise Exception(
                 "Setting both EXTRA_TEMPLATES_PATHS and "
                 "THEME_TEMPLATES_OVERRIDES is not permitted. Please move to "
@@ -450,7 +447,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             and not isinstance(settings[key], Path)
             and "%s" in settings[key]
         ):
-            logger.warning("%%s usage in %s is deprecated, use {lang} " "instead.", key)
+            logger.warning("%%s usage in %s is deprecated, use {lang} instead.", key)
             try:
                 settings[key] = _printf_s_to_format_field(settings[key], "lang")
             except ValueError:
@@ -473,7 +470,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             and not isinstance(settings[key], Path)
             and "%s" in settings[key]
         ):
-            logger.warning("%%s usage in %s is deprecated, use {slug} " "instead.", key)
+            logger.warning("%%s usage in %s is deprecated, use {slug} instead.", key)
             try:
                 settings[key] = _printf_s_to_format_field(settings[key], "slug")
             except ValueError:
@@ -594,7 +591,7 @@ def configure_settings(settings: Settings) -> Settings:
         if os.path.exists(theme_path):
             settings["THEME"] = theme_path
         else:
-            raise Exception("Could not find the theme %s" % settings["THEME"])
+            raise Exception("Could not find the theme {}".format(settings["THEME"]))
 
     # standardize strings to lowercase strings
     for key in ["DEFAULT_LANG"]:
@@ -617,7 +614,7 @@ def configure_settings(settings: Settings) -> Settings:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
             logger.warn(
-                "Detected misconfigured %s (%s), " "falling back to the default (%s)",
+                "Detected misconfigured %s (%s), falling back to the default (%s)",
                 key,
                 value,
                 DEFAULT_CONFIG[key],
@@ -679,7 +676,7 @@ def configure_settings(settings: Settings) -> Settings:
     if any(settings.get(k) for k in feed_keys):
         if not settings.get("SITEURL"):
             logger.warning(
-                "Feeds generated without SITEURL set properly may" " not be valid"
+                "Feeds generated without SITEURL set properly may not be valid"
             )
 
     if "TIMEZONE" not in settings:

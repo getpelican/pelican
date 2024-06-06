@@ -210,13 +210,10 @@ class TestUtils(LoggedTestCase):
             )
 
         # check with preserve case
-        for value, expected in samples:
-            self.assertEqual(
-                utils.slugify(
-                    "Çığ", regex_subs=subs, preserve_case=True, use_unicode=True
-                ),
-                "Çığ",
-            )
+        self.assertEqual(
+            utils.slugify("Çığ", regex_subs=subs, preserve_case=True, use_unicode=True),
+            "Çığ",
+        )
 
         # check normalization
         samples = (
@@ -724,11 +721,11 @@ class TestCopy(unittest.TestCase):
 
     def _exist_file(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.isfile(path), "File does not exist: %s" % path)
+        self.assertTrue(os.path.isfile(path), f"File does not exist: {path}")
 
     def _exist_dir(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.exists(path), "Directory does not exist: %s" % path)
+        self.assertTrue(os.path.exists(path), f"Directory does not exist: {path}")
 
     def test_copy_file_same_path(self):
         self._create_file("a.txt")
@@ -922,14 +919,14 @@ class TestSanitisedJoin(unittest.TestCase):
     def test_detect_parent_breakout(self):
         with self.assertRaisesRegex(
             RuntimeError,
-            "Attempted to break out of output directory to " "(.*?:)?/foo/test",
+            "Attempted to break out of output directory to (.*?:)?/foo/test",
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "../test")
 
     def test_detect_root_breakout(self):
         with self.assertRaisesRegex(
             RuntimeError,
-            "Attempted to break out of output directory to " "(.*?:)?/test",
+            "Attempted to break out of output directory to (.*?:)?/test",
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "/test")
 

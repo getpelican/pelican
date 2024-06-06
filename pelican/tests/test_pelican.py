@@ -71,8 +71,7 @@ class TestPelican(LoggedTestCase):
         if proc.returncode != 0:
             msg = self._formatMessage(
                 msg,
-                "%s and %s differ:\nstdout:\n%s\nstderr\n%s"
-                % (left_path, right_path, out, err),
+                f"{left_path} and {right_path} differ:\nstdout:\n{out}\nstderr\n{err}",
             )
             raise self.failureException(msg)
 

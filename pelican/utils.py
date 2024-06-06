@@ -25,9 +25,7 @@ from typing import (
     Collection,
     Generator,
     Iterable,
-    Optional,
     Sequence,
-    Union,
 )
 
 import dateutil.parser
@@ -83,7 +81,7 @@ def strftime(date: datetime.datetime, date_format: str) -> str:
         # test for valid C89 directives only
         if candidate[-1] in c89_directives:
             # check for '-' prefix
-            if len(candidate) == 3:
+            if len(candidate) == 3:  # noqa: PLR2004
                 # '-' prefix
                 candidate = f"%{candidate[-1]}"
                 conversion = strip_zeros
@@ -167,7 +165,7 @@ class memoized:
             self.cache[args] = value
             return value
 
-    def __repr__(self) -> Optional[str]:
+    def __repr__(self) -> str | None:
         return self.func.__doc__
 
     def __get__(self, obj: Any, objtype):
@@ -181,8 +179,8 @@ def deprecated_attribute(
     old: str,
     new: str,
     since: tuple[int, ...],
-    remove: Optional[tuple[int, ...]] = None,
-    doc: Optional[str] = None,
+    remove: tuple[int, ...] | None = None,
+    doc: str | None = None,
 ):
     """Attribute deprecation decorator for gentle upgrades
 
@@ -234,7 +232,7 @@ def get_date(string: str) -> datetime.datetime:
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
-        raise ValueError(f"{string!r} is not a valid date")
+        raise ValueError(f"{string!r} is not a valid date") from None
 
 
 @contextmanager
@@ -296,9 +294,7 @@ def slugify(
     return value.strip()
 
 
-def copy(
-    source: str, destination: str, ignores: Optional[Iterable[str]] = None
-) -> None:
+def copy(source: str, destination: str, ignores: Iterable[str] | None = None) -> None:
     """Recursively copy source into destination.
 
     If source is a file, destination has to be a file as well.
@@ -364,7 +360,7 @@ def copy(
                     copy_file(src_path, dst_path)
                 else:
                     logger.warning(
-                        "Skipped copy %s (not a file or " "directory) to %s",
+                        "Skipped copy %s (not a file or directory) to %s",
                         src_path,
                         dst_path,
                     )
@@ -446,15 +442,15 @@ class _HTMLWordTruncator(HTMLParser):
         r"{DBC}|(\w[\w'-]*)".format(
             # DBC means CJK-like characters. An character can stand for a word.
             DBC=(
-                "([\u4E00-\u9FFF])|"  # CJK Unified Ideographs
-                "([\u3400-\u4DBF])|"  # CJK Unified Ideographs Extension A
-                "([\uF900-\uFAFF])|"  # CJK Compatibility Ideographs
-                "([\U00020000-\U0002A6DF])|"  # CJK Unified Ideographs Extension B
-                "([\U0002F800-\U0002FA1F])|"  # CJK Compatibility Ideographs Supplement
-                "([\u3040-\u30FF])|"  # Hiragana and Katakana
-                "([\u1100-\u11FF])|"  # Hangul Jamo
-                "([\uAC00-\uD7FF])|"  # Hangul Compatibility Jamo
-                "([\u3130-\u318F])"  # Hangul Syllables
+                "([\u4e00-\u9fff])|"  # CJK Unified Ideographs
+                "([\u3400-\u4dbf])|"  # CJK Unified Ideographs Extension A
+                "([\uf900-\ufaff])|"  # CJK Compatibility Ideographs
+                "([\U00020000-\U0002a6df])|"  # CJK Unified Ideographs Extension B
+                "([\U0002f800-\U0002fa1f])|"  # CJK Compatibility Ideographs Supplement
+                "([\u3040-\u30ff])|"  # Hiragana and Katakana
+                "([\u1100-\u11ff])|"  # Hangul Jamo
+                "([\uac00-\ud7ff])|"  # Hangul Compatibility Jamo
+                "([\u3130-\u318f])"  # Hangul Syllables
             )
         ),
         re.UNICODE,
@@ -474,7 +470,7 @@ class _HTMLWordTruncator(HTMLParser):
         self.words_found = 0
         self.open_tags = []
         self.last_word_end = None
-        self.truncate_at: Optional[int] = None
+        self.truncate_at: int | None = None
 
     def feed(self, *args, **kwargs) -> None:
         try:
@@ -487,7 +483,7 @@ class _HTMLWordTruncator(HTMLParser):
     def getoffset(self) -> int:
         line_start = 0
         lineno, line_offset = self.getpos()
-        for i in range(lineno - 1):
+        for _ in range(lineno - 1):
             line_start = self.rawdata.index("\n", line_start) + 1
         return line_start + line_offset
 
@@ -573,11 +569,10 @@ class _HTMLWordTruncator(HTMLParser):
         if self.last_word_end is None:
             if self._word_prefix_regex.match(char):
                 self.last_word_end = ref_end
+        elif self._word_regex.match(char):
+            self.last_word_end = ref_end
         else:
-            if self._word_regex.match(char):
-                self.last_word_end = ref_end
-            else:
-                self.add_last_word()
+            self.add_last_word()
 
     def handle_entityref(self, name: str) -> None:
         """
@@ -631,14 +626,14 @@ def truncate_html_words(s: str, num: int, end_text: str = "…") -> str:
         out += " " + end_text
     # Close any tags still open
     for tag in truncator.open_tags:
-        out += "</%s>" % tag
+        out += f"</{tag}>"
     # Return string
     return out
 
 
 def process_translations(
     content_list: list[Content],
-    translation_id: Optional[Union[str, Collection[str]]] = None,
+    translation_id: str | Collection[str] | None = None,
 ) -> tuple[list[Content], list[Content]]:
     """Finds translations and returns them.
 
@@ -671,13 +666,13 @@ def process_translations(
         raise TypeError(
             f"Cannot unpack {translation_id}, 'translation_id' must be falsy, a"
             " string or a collection of strings"
-        )
+        ) from None
     except AttributeError:
         raise AttributeError(
             f"Cannot use {translation_id} as 'translation_id', there "
             "appear to be items without these metadata "
             "attributes"
-        )
+        ) from None
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
         # prepare warning string
@@ -739,7 +734,7 @@ def get_original_items(items: list[Content], with_str: str) -> list[Content]:
 
 def order_content(
     content_list: list[Content],
-    order_by: Union[str, Callable[[Content], Any], None] = "slug",
+    order_by: str | Callable[[Content], Any] | None = "slug",
 ) -> list[Content]:
     """Sorts content.
 
@@ -841,7 +836,7 @@ def wait_for_changes(
 
 
 def set_date_tzinfo(
-    d: datetime.datetime, tz_name: Optional[str] = None
+    d: datetime.datetime, tz_name: str | None = None
 ) -> datetime.datetime:
     """Set the timezone for dates that don't have tzinfo"""
     if tz_name and not d.tzinfo:
@@ -857,7 +852,7 @@ def mkdir_p(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
 
-def split_all(path: Union[str, pathlib.Path, None]) -> Optional[Sequence[str]]:
+def split_all(path: str | pathlib.Path | None) -> Sequence[str] | None:
     """Split a path into a list of components
 
     While os.path.split() splits a single component off the back of
@@ -911,7 +906,7 @@ def maybe_pluralize(count: int, singular: str, plural: str) -> str:
 
 @contextmanager
 def temporary_locale(
-    temp_locale: Optional[str] = None, lc_category: int = locale.LC_ALL
+    temp_locale: str | None = None, lc_category: int = locale.LC_ALL
 ) -> Generator[None, None, None]:
     """
     Enable code to run in a context with a temporary locale
