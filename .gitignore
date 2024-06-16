@@ -18,3 +18,9 @@ samples/output
 *.lock
 .pdm-python
 .venv
+
+# direnv
+.envrc
+
+# pycharm
+.idea

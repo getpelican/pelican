@@ -64,6 +64,27 @@ your bug fix or feature::
 Now you can make changes to Pelican, its documentation, and/or other aspects of
 the project.
 
+Setting up ``git blame`` (optional)
+-----------------------------------
+
+``git blame`` annotates lines in a file with information about the pull request
+that last modified it. Sweeping shallow changes (like formatting) can make that
+information less useful, so we keep a list of such changes to be ignored. Run the
+following command to set this up in your repository, adding ``--global`` if you
+want this setting to apply to all repositories::
+
+    git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+As noted in a `useful article`_ about ``git blame``, there are other related
+settings you may find to be beneficial::
+
+    # Add `?` to any lines that have had a commit skipped using --ignore-rev
+    git config --global blame.markIgnoredLines true
+    # Add `*` to any lines that were added in a skipped commit and can not be attributed
+    git config --global blame.markUnblamableLines true
+
+.. _useful article: https://www.michaelheap.com/git-ignore-rev/
+
 Running the test suite
 ----------------------
 
@@ -107,6 +128,21 @@ Tox_ is a useful tool to automate running tests inside ``virtualenv``
 environments.
 
 .. _Tox: https://tox.readthedocs.io/en/latest/
+
+Running a code coverage report
+------------------------------
+
+Code is more likely to stay robust if it is tested. Coverage_ is a library that
+measures how much of the code is tested. To run it::
+
+    invoke coverage
+
+This will show overall coverage, coverage per file, and even line-by-line coverage.
+There is also an HTML report available::
+
+    open htmlcov/index.html
+
+.. _Coverage: https://github.com/nedbat/coveragepy
 
 Building the docs
 -----------------

@@ -1,2 +1,4 @@
 [report]
-omit = pelican/tests/*
+omit =
+       pelican/tests/*
+       pelican/signals.py

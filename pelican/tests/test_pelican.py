@@ -1,3 +1,5 @@
+import contextlib
+import io
 import locale
 import logging
 import os
@@ -6,9 +8,12 @@ import sys
 import unittest
 from collections.abc import Sequence
 from shutil import rmtree
-from tempfile import mkdtemp
+from tempfile import TemporaryDirectory, mkdtemp
+from unittest.mock import patch
 
-from pelican import Pelican
+from rich.console import Console
+
+from pelican import Pelican, __version__, main
 from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
 from pelican.tests.support import (
@@ -270,3 +275,31 @@ class TestPelican(LoggedTestCase):
             [sys.executable, "-m", "pelican", "--help"]
         ).decode("ascii", "replace")
         assert "usage:" in output
+
+    def test_main_version(self):
+        """Run main --version."""
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            with self.assertRaises(SystemExit):
+                main(["--version"])
+            self.assertEqual(f"{__version__}\n", out.getvalue())
+
+    def test_main_help(self):
+        """Run main --help."""
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            with self.assertRaises(SystemExit):
+                main(["--help"])
+            self.assertIn("A tool to generate a static blog", out.getvalue())
+
+    def test_main_on_content(self):
+        """Invoke main on simple_content directory."""
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            with TemporaryDirectory() as temp_dir:
+                # Don't highlight anything.
+                # See https://rich.readthedocs.io/en/stable/highlighting.html
+                with patch("pelican.console", new=Console(highlight=False)):
+                    main(["-o", temp_dir, "pelican/tests/simple_content"])
+            self.assertIn("Processed 1 article", out.getvalue())
+            self.assertEqual("", err.getvalue())

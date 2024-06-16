@@ -1,0 +1,1 @@
+../content/article_with_md_extension.md
