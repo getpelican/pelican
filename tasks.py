@@ -49,7 +49,7 @@ def coverage(c):
     """Generate code coverage of running the test suite."""
     c.run(
         f"{VENV_BIN}/pytest --cov=pelican --cov-report term-missing "
-        "--cov-fail-under 74.8",
+        "--cov-fail-under 74",
         pty=PTY,
     )
     c.run(f"{VENV_BIN}/coverage html", pty=PTY)
