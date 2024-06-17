@@ -7,6 +7,7 @@ from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter
+from typing import List, Optional, Set
 
 from jinja2 import (
     BaseLoader,
@@ -156,7 +157,9 @@ class Generator:
 
         return False
 
-    def get_files(self, paths, exclude=None, extensions=None):
+    def get_files(
+        self, paths, exclude: Optional[List[str]] = None, extensions=None
+    ) -> Set[str]:
         """Return a list of files to use, based on rules
 
         :param paths: the list pf paths to search (relative to self.path)
@@ -249,6 +252,13 @@ class Generator:
     def __str__(self):
         # return the name of the class for logging purposes
         return self.__class__.__name__
+
+    def _check_disabled_readers(self, paths, exclude: Optional[List[str]]) -> None:
+        """Log warnings for files that would have been processed by disabled readers."""
+        for fil in self.get_files(
+            paths, exclude=exclude, extensions=self.readers.disabled_extensions
+        ):
+            self.readers.check_file(fil)
 
 
 class CachingGenerator(Generator, FileStampDataCacher):
@@ -643,6 +653,11 @@ class ArticlesGenerator(CachingGenerator):
         self.generate_authors(write)
         self.generate_drafts(write)
 
+    def check_disabled_readers(self) -> None:
+        self._check_disabled_readers(
+            self.settings["ARTICLE_PATHS"], exclude=self.settings["ARTICLE_EXCLUDES"]
+        )
+
     def generate_context(self):
         """Add the articles into the shared context"""
 
@@ -849,6 +864,11 @@ class PagesGenerator(CachingGenerator):
         super().__init__(*args, **kwargs)
         signals.page_generator_init.send(self)
 
+    def check_disabled_readers(self) -> None:
+        self._check_disabled_readers(
+            self.settings["PAGE_PATHS"], exclude=self.settings["PAGE_EXCLUDES"]
+        )
+
     def generate_context(self):
         all_pages = []
         hidden_pages = []
@@ -952,6 +972,11 @@ class StaticGenerator(Generator):
         super().__init__(*args, **kwargs)
         self.fallback_to_symlinks = False
         signals.static_generator_init.send(self)
+
+    def check_disabled_readers(self) -> None:
+        self._check_disabled_readers(
+            self.settings["STATIC_PATHS"], exclude=self.settings["STATIC_EXCLUDES"]
+        )
 
     def generate_context(self):
         self.staticfiles = []

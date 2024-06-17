@@ -966,3 +966,10 @@ class TestMemoized(unittest.TestCase):
             container.get.cache.clear()
             self.assertEqual("bar", container.get("bar"))
             get_mock.assert_called_once_with("bar")
+
+
+class TestStringUtils(unittest.TestCase):
+    def test_file_suffix(self):
+        self.assertEqual("", utils.file_suffix(""))
+        self.assertEqual("", utils.file_suffix("foo"))
+        self.assertEqual("md", utils.file_suffix("foo.md"))
