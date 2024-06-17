@@ -1,4 +1,4 @@
-# Workflow for publishing to GitHub Pages. **NO OFFICIAL SUPPORT PROVIDED.**
+# Workflow for publishing to GitHub Pages.
 name: Deploy to GitHub Pages
 on:
   workflow_call:
