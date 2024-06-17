@@ -240,7 +240,7 @@ Here's the complete list of workflow inputs:
 |                  |          | Pages site, which is correct in most       |        |               |
 |                  |          | cases.                                     |        |               |
 +------------------+----------+--------------------------------------------+--------+---------------+
-| ``feed_domain``  |          | The domain to be prepended to feed URLs    | string | The URL of    |
+| ``feed_domain``  | No       | The domain to be prepended to feed URLs    | string | The URL of    |
 |                  |          | (Pelican's ``FEED_DOMAIN`` setting). If    |        | your GitHub   |
 |                  |          | not passed this will default to the URL of |        | Pages site.   |
 |                  |          | your GitHub Pages site, which is correct   |        |               |
