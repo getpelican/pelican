@@ -152,6 +152,25 @@ Pelican-powered sites can be published to GitHub Pages via a `custom workflow
            with:
              settings: "publishconf.py"
 
+   You may want to replace the ``@master`` with the ID of a specific commit in
+   this repo in order to pin the version of the reusable workflow that you're using:
+   ``uses: getpelican/pelican/.github/workflows/github_pages.yml@<COMMIT_ID>``.
+   If you do this you might want to get Dependabot to send you automated pull
+   requests to update that commit ID whenever new versions of this workflow are
+   published, like so:
+
+   .. code-block:: yaml
+
+       # .github/dependabot.yml
+       version: 2
+       updates:
+         - package-ecosystem: "github-actions"
+           directory: "/"
+           schedule:
+             interval: "monthly"
+
+   See `GitHub's docs about using Dependabot to keep your actions up to date <https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot>`_.
+
 3. Go to the **Actions** tab in your repo
    (``https://github.com/<username>/<repository>/actions``) and you should see a
    **Deploy to GitHub Pages** action running.
