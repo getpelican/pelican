@@ -21,7 +21,6 @@ with open("../pyproject.toml", "rb") as f:
 templates_path = ["_templates"]
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.ifconfig",
     "sphinx.ext.extlinks",
     "sphinxext.opengraph",
 ]
