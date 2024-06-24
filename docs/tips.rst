@@ -128,7 +128,7 @@ Publishing to GitHub Pages Using a Custom GitHub Actions Workflow
 
 Pelican-powered sites can be published to GitHub Pages via a `custom workflow
 <https://github.com/getpelican/pelican/blob/master/.github/workflows/github_pages.yml>`_.
-**No official support is provided** for this community-submitted workflow. To use it:
+To use it:
 
 1. Enable GitHub Pages in your repo: go to **Settings → Pages** and choose
    **GitHub Actions** for the **Source** setting.
@@ -152,6 +152,25 @@ Pelican-powered sites can be published to GitHub Pages via a `custom workflow
            with:
              settings: "publishconf.py"
 
+   You may want to replace the ``@master`` with the ID of a specific commit in
+   this repo in order to pin the version of the reusable workflow that you're using:
+   ``uses: getpelican/pelican/.github/workflows/github_pages.yml@<COMMIT_ID>``.
+   If you do this you might want to get Dependabot to send you automated pull
+   requests to update that commit ID whenever new versions of this workflow are
+   published, like so:
+
+   .. code-block:: yaml
+
+       # .github/dependabot.yml
+       version: 2
+       updates:
+         - package-ecosystem: "github-actions"
+           directory: "/"
+           schedule:
+             interval: "monthly"
+
+   See `GitHub's docs about using Dependabot to keep your actions up to date <https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot>`_.
+
 3. Go to the **Actions** tab in your repo
    (``https://github.com/<username>/<repository>/actions``) and you should see a
    **Deploy to GitHub Pages** action running.
@@ -163,8 +182,8 @@ Pelican-powered sites can be published to GitHub Pages via a `custom workflow
 
 Notes:
 
-* You don't need to set ``SITEURL`` in your Pelican settings: the workflow will
-  set it for you
+* You don't need to set ``SITEURL`` or ``FEED_DOMAIN`` in your Pelican
+  settings: the workflow will set them correctly for you
 
 * You don't need to commit your ``--output`` / ``OUTPUT_PATH`` directory
   (``output/``) to git: the workflow will run ``pelican`` to build the output
@@ -174,36 +193,72 @@ See `GitHub's docs about reusable workflows <https://docs.github.com/en/actions/
 for more information.
 
 A number of optional inputs can be added to the ``with:`` block when calling
-the workflow:
-
-+--------------+----------+-----------------------------------+--------+---------------+
-| Name         | Required | Description                       | Type   | Default       |
-+==============+==========+===================================+========+===============+
-| settings     | Yes      | The path to your Pelican settings | string |               |
-|              |          | file (``pelican``'s               |        |               |
-|              |          | ``--settings`` option),           |        |               |
-|              |          | for example: ``"publishconf.py"`` |        |               |
-+--------------+----------+-----------------------------------+--------+---------------+
-| requirements | No       | The Python requirements to        | string | ``"pelican"`` |
-|              |          | install, for example to enable    |        |               |
-|              |          | markdown and typogrify use:       |        |               |
-|              |          | ``"pelican[markdown] typogrify"`` |        |               |
-|              |          | or if you have a requirements     |        |               |
-|              |          | file: ``"-r requirements.txt"``   |        |               |
-+--------------+----------+-----------------------------------+--------+---------------+
-| output-path  | No       | Where to output the generated     | string | ``"output/"`` |
-|              |          | files (``pelican``'s ``--output`` |        |               |
-|              |          | option)                           |        |               |
-+--------------+----------+-----------------------------------+--------+---------------+
-
-For example:
+the workflow, for example:
 
 .. code-block:: yaml
 
     with:
       settings: "publishconf.py"
       requirements: "pelican[markdown] typogrify"
-      output-path: "__output__/"
+      theme: "https://github.com/seanh/sidecar.git"
+      python: "3.12"
+
+Here's the complete list of workflow inputs:
+
++------------------+----------+--------------------------------------------+--------+---------------+
+| Name             | Required | Description                                | Type   | Default       |
++==================+==========+============================================+========+===============+
+| ``settings``     | Yes      | The path to your Pelican settings          | string |               |
+|                  |          | file (``pelican``'s                        |        |               |
+|                  |          | ``--settings`` option),                    |        |               |
+|                  |          | for example: ``"publishconf.py"``          |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
+| ``requirements`` | No       | The Python requirements to                 | string | ``"pelican"`` |
+|                  |          | install, for example to enable             |        |               |
+|                  |          | markdown and typogrify use:                |        |               |
+|                  |          | ``"pelican[markdown] typogrify"``          |        |               |
+|                  |          | or if you have a requirements              |        |               |
+|                  |          | file: ``"-r requirements.txt"``            |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
+| ``output-path``  | No       | Where to output the generated              | string | ``"output/"`` |
+|                  |          | files (``pelican``'s ``--output``          |        |               |
+|                  |          | option)                                    |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
+| ``theme``        | No       | The GitHub repo URL of a custom            | string | ``""``        |
+|                  |          | theme to use, for example:                 |        |               |
+|                  |          | ``"https://github.com/seanh/sidecar.git"`` |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
+| ``python``       | No       | The version of Python to use to build the  | string | ``"3.12"``    |
+|                  |          | site, for example: ``"3.12"`` (to use the  |        |               |
+|                  |          | most recent version of Python 3.12, this   |        |               |
+|                  |          | is faster) or ``"3.12.1"`` (to use an      |        |               |
+|                  |          | exact version, slower)                     |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
+| ``siteurl``      | No       | The base URL of your web site (Pelican's   | string | The URL of    |
+|                  |          | ``SITEURL`` setting). If not passed this   |        | your GitHub   |
+|                  |          | will default to the URL of your GitHub     |        | Pages site.   |
+|                  |          | Pages site, which is correct in most       |        |               |
+|                  |          | cases.                                     |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
+| ``feed_domain``  | No       | The domain to be prepended to feed URLs    | string | The URL of    |
+|                  |          | (Pelican's ``FEED_DOMAIN`` setting). If    |        | your GitHub   |
+|                  |          | not passed this will default to the URL of |        | Pages site.   |
+|                  |          | your GitHub Pages site, which is correct   |        |               |
+|                  |          | in most cases.                             |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
+
+
+"Insecure content" warnings from browsers
+"""""""""""""""""""""""""""""""""""""""""
+
+If your site uses ``https://`` and is broken because the browser is blocking
+network requests (for example for CSS files) due to "insecure content" this
+may be because GitHub Pages is generating ``http://`` URLs for your site.
+
+To fix this go into your site repo's settings and enable the **Enforce HTTPS** setting:
+go to **Settings → Pages** and check **Enforce HTTPS**.
+Then re-run the workflow to re-deploy your site.
+Alternatively, you can use the workflow's ``siteurl`` and ``feed_domain`` settings.
 
 Custom 404 Pages
 ----------------
