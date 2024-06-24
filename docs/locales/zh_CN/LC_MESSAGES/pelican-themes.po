@@ -1,0 +1,227 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2023
+# This file is distributed under the same license as the Pelican package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Pelican 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-11 10:44+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.0\n"
+
+#: ../../pelican-themes.rst:2
+msgid "pelican-themes"
+msgstr "pelican-themes命令"
+
+#: ../../pelican-themes.rst:7
+msgid "Description"
+msgstr "简介"
+
+#: ../../pelican-themes.rst:9
+msgid ""
+"``pelican-themes`` is a command line tool for managing themes for "
+"Pelican. See :ref:`settings/themes` for settings related to themes."
+msgstr "``pelican-themes`` 是一个命令行工具，用于Pelican的主题管理。"
+"有关主题的设置，请参考 :ref:`settings/themes` 。"
+
+#: ../../pelican-themes.rst:14
+msgid "Usage"
+msgstr "用法"
+
+#: ../../pelican-themes.rst:16
+msgid "pelican-themes [-h] [-l] [-i theme path [theme path ...]]"
+msgstr "pelican-themes [-h] [-l] [-i theme path [theme path ...]]"
+
+#: ../../pelican-themes.rst:17
+msgid "[-r theme name [theme name ...]]"
+msgstr "[-r theme name [theme name ...]]"
+
+#: ../../pelican-themes.rst:18
+msgid "[-s theme path [theme path ...]] [-v] [--version]"
+msgstr "[-s theme path [theme path ...]] [-v] [--version]"
+
+#: ../../pelican-themes.rst:21
+msgid "Optional arguments:"
+msgstr "可选参数"
+
+#: ../../pelican-themes.rst:24
+msgid "Show the help and exit"
+msgstr "显示帮助信息并退出"
+
+#: ../../pelican-themes.rst:26
+msgid "Show the themes already installed"
+msgstr "显示已安装的主题"
+
+#: ../../pelican-themes.rst:28
+msgid "One or more themes to install"
+msgstr "安装一个或多个主题"
+
+#: ../../pelican-themes.rst:30
+msgid "One or more themes to remove"
+msgstr "移除一个或多个主题"
+
+#: ../../pelican-themes.rst:32
+msgid ""
+"Same as ``--install``, but create a symbolic link instead of copying the "
+"theme. Useful for theme development"
+msgstr "和 ``--install`` 相同，区别在于此选项仅会创建一个符号链接到给定的目录，"
+"而不会将主题完整拷贝。一般用于主题的开发。"
+
+#: ../../pelican-themes.rst:35
+msgid "Verbose output"
+msgstr "开启详细输出"
+
+#: ../../pelican-themes.rst:37
+msgid "Print the version of this script"
+msgstr "显示此工具的版本信息"
+
+#: ../../pelican-themes.rst:42
+msgid "Examples"
+msgstr "例子"
+
+#: ../../pelican-themes.rst:46
+msgid "Listing the installed themes"
+msgstr "列出已安装主题"
+
+#: ../../pelican-themes.rst:48
+msgid ""
+"With ``pelican-themes``, you can see the available themes by using the "
+"``-l`` or ``--list`` option:"
+msgstr "在 ``pelican-themes`` 中使用 ``-l`` 或 ``--list`` 选项，查看可用主题："
+
+#: ../../pelican-themes.rst:62
+msgid ""
+"In this example, we can see there are three themes available: "
+"``notmyidea``, ``simple``, and ``two-column``."
+msgstr "在上面的例子中，可以看到有三个主题可供使用： ``notmyidea`` 、 ``simple`` 、和 ``two-column`` 。"
+
+#: ../../pelican-themes.rst:65
+msgid ""
+"``two-column`` is followed by an ``@`` because this theme is not copied "
+"to the Pelican theme path, but is instead just linked to it (see "
+"`Creating symbolic links`_ for details about creating symbolic links)."
+msgstr "主题 ``two-column`` 后有一个 ``@`` ，这是因为该主题没有被拷贝到Pelican的主题"
+"路径下，而只是为其创建了一个符号链接 （详见 `创建符号链接`_ ）。"
+
+#: ../../pelican-themes.rst:69
+msgid ""
+"Note that you can combine the ``--list`` option with the ``-v`` or "
+"``--verbose`` option to get more verbose output, like this:"
+msgstr "当然，你可以将 ``--list`` 选项和 ``-v`` 或 ``--verbose`` 结合起来，从而"
+"得到更详细的输出："
+
+#: ../../pelican-themes.rst:81
+msgid "Installing themes"
+msgstr "安装主题"
+
+#: ../../pelican-themes.rst:83
+msgid ""
+"You can install one or more themes using the ``-i`` or ``--install`` "
+"option. This option takes as argument the path(s) of the theme(s) you "
+"want to install, and can be combined with the ``--verbose`` option:"
+msgstr "使用 ``-i`` 或 ``--install`` 选项可以安装一个或多个主题。此选项将一个"
+"或多个到达主题的路径作为参数，同样可以结合 ``--verbose`` 选项："
+
+#: ../../pelican-themes.rst:103
+msgid "Removing themes"
+msgstr "移除主题"
+
+#: ../../pelican-themes.rst:105
+msgid ""
+"The ``pelican-themes`` command can also remove themes from the Pelican "
+"themes path. The ``-r`` or ``--remove`` option takes as argument the "
+"name(s) of the theme(s) you want to remove, and can be combined with the "
+"``--verbose`` option."
+msgstr "``pelican-themes`` 命令同样可用于移除Pelican主题文件夹下的主题。 ``-r`` 或 "
+"``--remove`` 选项以一个或多个主题的名称为参数，同样也可以结合 ``--verbose`` 选项使用。"
+
+#: ../../pelican-themes.rst:122
+msgid "Creating symbolic links"
+msgstr "创建符号链接"
+
+#: ../../pelican-themes.rst:124
+msgid ""
+"``pelican-themes`` can also install themes by creating symbolic links "
+"instead of copying entire themes into the Pelican themes path."
+msgstr "``pelican-themes`` 也可以通过创建符号链接来安装主题，这样就不需要拷贝整个主题文件了。"
+
+#: ../../pelican-themes.rst:127
+msgid ""
+"To symbolically link a theme, you can use the ``-s`` or ``--symlink``, "
+"which works exactly as the ``--install`` option:"
+msgstr "使用 ``-s`` 或 ``--symlink`` 选项来为主题创建符号链接，用法和 ``--install`` 选项相同："
+
+#: ../../pelican-themes.rst:134
+msgid ""
+"In this example, the ``two-column`` theme is now symbolically linked to "
+"the Pelican themes path, so we can use it, but we can also modify it "
+"without having to reinstall it after each modification."
+msgstr "在上面的例子中， ``two-column`` 主题就已经在Pelican主题目录下创建了符号链接，"
+"也可以正常使用。如此，当我们修改主题后就无需重新进行安装。"
+
+#: ../../pelican-themes.rst:138
+msgid "This is useful for theme development:"
+msgstr "这对主题的开发是很有用的："
+
+#: ../../pelican-themes.rst:155
+msgid "Doing several things at once"
+msgstr "同时执行多个动作"
+
+#: ../../pelican-themes.rst:157
+msgid ""
+"The ``--install``, ``--remove`` and ``--symlink`` options are not "
+"mutually exclusive, so you can combine them in the same command line to "
+"do more than one operation at time, like this:"
+msgstr "``--install`` 、 ``--remove`` 和 ``--symlink`` 可以同时使用，不会冲突，"
+"因此可以在同一行中同时做多个操作："
+
+#: ../../pelican-themes.rst:169
+msgid ""
+"In this example, the theme ``notmyidea-cms`` is replaced by the theme "
+"``notmyidea-cms-fr``"
+msgstr "在上面的例子中，用 ``notmyidea-cms-fr`` 替换了 ``notmyidea-cms`` 主题。"
+
+#~ msgid "Show the help an exit"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Same as \"--install\", but create "
+#~ "a symbolic link instead of copying "
+#~ "the theme. Useful for theme development"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "``two-column`` is prefixed with an "
+#~ "``@`` because this theme is not "
+#~ "copied to the Pelican theme path, "
+#~ "but is instead just linked to it"
+#~ " (see `Creating symbolic links`_ for "
+#~ "details about creating symbolic links)."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You can install one or more themes"
+#~ " using the ``-i`` or ``--install`` "
+#~ "option. This option takes as argument"
+#~ " the path(s) of the theme(s) you "
+#~ "want to install, and can be "
+#~ "combined with the verbose option:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The ``--install``, ``--remove`` and "
+#~ "``--symlink`` option are not mutually "
+#~ "exclusive, so you can combine them "
+#~ "in the same command line to do "
+#~ "more than one operation at time, "
+#~ "like this:"
+#~ msgstr ""
