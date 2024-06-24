@@ -243,4 +243,3 @@ msgid ""
 "has been created for you."
 msgstr ""
 "接下来就可以开始往 *content* 目录中添加自己创作的内容了。"
-

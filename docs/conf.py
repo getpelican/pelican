@@ -19,7 +19,7 @@ with open("../pyproject.toml", "rb") as f:
 
 # -- General configuration ----------------------------------------------------
 templates_path = ["_templates"]
-locale_dirs = ['locale/']
+locale_dirs = ["locale/"]
 gettext_compact = False
 gettext_uuid = True
 extensions = [
