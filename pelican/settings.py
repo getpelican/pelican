@@ -347,7 +347,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             "FILES_TO_COPY",
             "STATIC_PATHS and EXTRA_PATH_METADATA",
             "https://github.com/getpelican/pelican/"
-            "blob/master/docs/settings.rst#path-metadata",
+            "blob/main/docs/settings.rst#path-metadata",
         ),
     ]:
         if old in settings:
