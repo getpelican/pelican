@@ -117,7 +117,7 @@ class TestPage(TestBase):
         self.assertEqual(page.summary, "")
 
     def test_summary_paragraph(self):
-        # If a :SUMMARY_MAX_PARAGRAPHS: is set, the generated summary should
+        # If SUMMARY_MAX_PARAGRAPHS is set, the generated summary should
         # not exceed the given paragraph count.
         page_kwargs = self._copy_page_kwargs()
         settings = get_settings()
@@ -129,8 +129,8 @@ class TestPage(TestBase):
         self.assertEqual(page.summary, TEST_CONTENT)
 
     def test_summary_paragraph_max_length(self):
-        # If a :SUMMARY_MAX_PARAGRAPHS: and :SUMMARY_MAX_LENGTH: are set, the
-        # generated summary should not exceed the given paragraph count and
+        # If both SUMMARY_MAX_PARAGRAPHS and SUMMARY_MAX_LENGTH are set,
+        # the generated summary should not exceed the given paragraph count and
         # not exceed the given length.
         page_kwargs = self._copy_page_kwargs()
         settings = get_settings()

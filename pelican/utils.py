@@ -632,7 +632,7 @@ def truncate_html_words(s: str, num: int, end_text: str = "…") -> str:
 
 
 def truncate_html_paragraphs(s, count):
-    """Truncates HTML to a certain number of paragraphs.
+    """Truncate HTML to a certain number of paragraphs.
 
     :param count: number of paragraphs to keep
 
@@ -641,7 +641,7 @@ def truncate_html_paragraphs(s, count):
     paragraphs = []
     tag_stop = 0
     substr = s[:]
-    for i in range(count):
+    for _ in range(count):
         substr = substr[tag_stop:]
         tag_start = substr.find("<p>")
         tag_stop = substr.find("</p>") + len("</p>")

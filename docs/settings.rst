@@ -311,7 +311,7 @@ Basic settings
 .. data:: SUMMARY_MAX_PARAGRAPHS = None
 
    When creating a short summary of an article, this will be the number of
-   paragraphs to use as the summary.  This only applies if your content
+   paragraphs to use as the summary. This only applies if your content
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to use the whole text (up to ``SUMMARY_MAX_LENGTH``) instead of just
    the first N paragraphs.
