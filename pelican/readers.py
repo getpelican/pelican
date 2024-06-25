@@ -353,8 +353,8 @@ class MarkdownReader(BaseReader):
 
     def disabled_message(self) -> str:
         return (
-            "Could not import markdown.Markdown.  "
-            "Have you installed the markdown package?"
+            "Could not import 'markdown.Markdown'. "
+            "Have you installed the 'markdown' package?"
         )
 
 

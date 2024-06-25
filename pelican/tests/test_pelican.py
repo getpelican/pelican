@@ -322,6 +322,6 @@ class TestPelican(LoggedTestCase):
                 self.assertLogCountEqual(
                     1,
                     ".*article_with_md_extension.md: "
-                    "Could not import markdown.Markdown.  "
-                    "Have you installed the markdown package?",
+                    "Could not import 'markdown.Markdown'. "
+                    "Have you installed the 'markdown' package?",
                 )
