@@ -32,8 +32,7 @@ msgstr ""
 
 #: ../../quickstart.rst:8 c5982d5ecf7c445590254370b84995be
 msgid "Installation"
-msgstr ""
-"安装"
+msgstr "安装"
 
 #: ../../quickstart.rst:10 fda7d08c05f14e2fa0c07a4a1d216db5
 msgid ""
@@ -46,8 +45,7 @@ msgstr ""
 
 #: ../../quickstart.rst:17 9db650d9dc9d4ac48df4dd9fc0a246ac
 msgid "Create a project"
-msgstr ""
-"创建项目"
+msgstr "创建项目"
 
 #: ../../quickstart.rst:19 2e9a72a878754604abdb27d9ec37937e
 msgid ""
@@ -78,8 +76,7 @@ msgstr ""
 
 #: ../../quickstart.rst:36 66d29d63cce0488a8ec9e43ce97035f9
 msgid "Create an article"
-msgstr ""
-"创作文章"
+msgstr "创作文章"
 
 #: ../../quickstart.rst:38 03af35552ef84e4491b46d8bf8c0f51e
 msgid ""
@@ -99,8 +96,7 @@ msgstr ""
 
 #: ../../quickstart.rst:51 5cc306848439434f81708eddee812f0e
 msgid "Generate your site"
-msgstr ""
-"生成站点"
+msgstr "生成站点"
 
 #: ../../quickstart.rst:53 03037d0c3b0b4a64b957f8284f008c9d
 msgid ""
@@ -120,8 +116,7 @@ msgstr ""
 
 #: ../../quickstart.rst:62 7cf36e609f544f02a0c800f8412cf79c
 msgid "Preview your site"
-msgstr ""
-"预览站点"
+msgstr "预览站点"
 
 #: ../../quickstart.rst:64 1a64015c5cc9401bac0a6ac953164fb3
 msgid ""
@@ -132,8 +127,7 @@ msgstr ""
 
 #: ../../quickstart.rst:69 eb286b4785304d22a46e90884d26de07
 msgid "Preview your site by navigating to http://localhost:8000/ in your browser."
-msgstr ""
-"打开浏览器，进入 http://localhost:8000/ 就可以看到刚刚生成的站点了。"
+msgstr "打开浏览器，进入 http://localhost:8000/ 就可以看到刚刚生成的站点了。"
 
 #: ../../quickstart.rst:71 1dc30b5cb267402c9da251303ff59dbf
 msgid ""
@@ -146,8 +140,7 @@ msgstr ""
 
 #: ../../quickstart.rst:78 6c135ea1cbb44400b446c0f9074e0fc5
 msgid "Footnotes"
-msgstr ""
-"脚注"
+msgstr "脚注"
 
 #: ../../quickstart.rst:80 911df4217fd94e6184502153ed0e53dc
 msgid ""
