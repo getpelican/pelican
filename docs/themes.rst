@@ -17,7 +17,7 @@ To generate its HTML output, Pelican uses the `Jinja
 <https://palletsprojects.com/p/jinja/>`_ templating engine due to its flexibility and
 straightforward syntax. If you want to create your own theme, feel free to take
 inspiration from the `"simple" theme
-<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_.
+<https://github.com/getpelican/pelican/tree/main/pelican/themes/simple/templates>`_.
 
 To generate your site using a theme you have created (or downloaded manually
 and then modified), you can specify that theme via the ``-t`` flag::
@@ -368,7 +368,7 @@ period_num              A tuple of the form (``year``, ``month``, ``day``),
 
 You can see an example of how to use `period` in the `"simple" theme
 period_archives.html template
-<https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_.
+<https://github.com/getpelican/pelican/blob/main/pelican/themes/simple/templates/period_archives.html>`_.
 
 
 .. _period_archives_variable:
