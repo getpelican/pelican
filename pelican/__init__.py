@@ -30,7 +30,6 @@ from pelican.generators import (
 )
 from pelican.plugins import signals
 from pelican.plugins._utils import get_plugin_name, load_plugins
-from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, maybe_pluralize, wait_for_changes
@@ -126,6 +125,8 @@ class Pelican:
         for p in generators:
             if hasattr(p, "generate_context"):
                 p.generate_context()
+            if hasattr(p, "check_disabled_readers"):
+                p.check_disabled_readers()
 
         # for plugins that create/edit the summary
         logger.debug("Signal all_generators_finalized.send(<generators>)")
@@ -573,7 +574,7 @@ def autoreload(args, excqueue=None):
         try:
             pelican.run()
 
-            changed_files = wait_for_changes(args.settings, Readers, settings)
+            changed_files = wait_for_changes(args.settings, settings)
             changed_files = {c[1] for c in changed_files}
 
             if settings_file in changed_files:
