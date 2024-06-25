@@ -17,12 +17,12 @@ from pelican import rstdirectives  # NOQA
 from pelican.cache import FileStampDataCacher
 from pelican.contents import Author, Category, Page, Tag
 from pelican.plugins import signals
-from pelican.utils import get_date, pelican_open, posixize_path
+from pelican.utils import file_suffix, get_date, pelican_open, posixize_path
 
 try:
     from markdown import Markdown
 except ImportError:
-    Markdown = False  # NOQA
+    Markdown = False
 
 # Metadata processors have no way to discard an unwanted value, so we have
 # them return this value instead to signal that it should be discarded later.
@@ -125,6 +125,10 @@ class BaseReader:
         metadata = {}
         return content, metadata
 
+    def disabled_message(self) -> str:
+        """Message about why this plugin was disabled."""
+        return ""
+
 
 class _FieldBodyTranslator(HTMLTranslator):
     def __init__(self, document):
@@ -199,7 +203,7 @@ class RstReader(BaseReader):
             self._language_code = lang_code
         else:
             logger.warning(
-                "Docutils has no localization for '%s'." " Using 'en' instead.",
+                "Docutils has no localization for '%s'. Using 'en' instead.",
                 lang_code,
             )
             self._language_code = "en"
@@ -320,7 +324,7 @@ class MarkdownReader(BaseReader):
             elif not DUPLICATES_DEFINITIONS_ALLOWED.get(name, True):
                 if len(value) > 1:
                     logger.warning(
-                        "Duplicate definition of `%s` " "for %s. Using first one.",
+                        "Duplicate definition of `%s` for %s. Using first one.",
                         name,
                         self._source_path,
                     )
@@ -346,6 +350,12 @@ class MarkdownReader(BaseReader):
         else:
             metadata = {}
         return content, metadata
+
+    def disabled_message(self) -> str:
+        return (
+            "Could not import 'markdown.Markdown'. "
+            "Have you installed the 'markdown' package?"
+        )
 
 
 class HTMLReader(BaseReader):
@@ -508,17 +518,23 @@ class Readers(FileStampDataCacher):
     def __init__(self, settings=None, cache_name=""):
         self.settings = settings or {}
         self.readers = {}
+        self.disabled_readers = {}
+        # extension => reader for readers that are enabled
         self.reader_classes = {}
+        # extension => reader for readers that are not enabled
+        disabled_reader_classes = {}
 
         for cls in [BaseReader] + BaseReader.__subclasses__():
             if not cls.enabled:
                 logger.debug(
                     "Missing dependencies for %s", ", ".join(cls.file_extensions)
                 )
-                continue
 
             for ext in cls.file_extensions:
-                self.reader_classes[ext] = cls
+                if cls.enabled:
+                    self.reader_classes[ext] = cls
+                else:
+                    disabled_reader_classes[ext] = cls
 
         if self.settings["READERS"]:
             self.reader_classes.update(self.settings["READERS"])
@@ -531,6 +547,9 @@ class Readers(FileStampDataCacher):
 
             self.readers[fmt] = reader_class(self.settings)
 
+        for fmt, reader_class in disabled_reader_classes.items():
+            self.disabled_readers[fmt] = reader_class(self.settings)
+
         # set up caching
         cache_this_level = (
             cache_name != "" and self.settings["CONTENT_CACHING_LAYER"] == "reader"
@@ -541,7 +560,12 @@ class Readers(FileStampDataCacher):
 
     @property
     def extensions(self):
+        """File extensions that will be processed by a reader."""
         return self.readers.keys()
+
+    @property
+    def disabled_extensions(self):
+        return self.disabled_readers.keys()
 
     def read_file(
         self,
@@ -562,8 +586,7 @@ class Readers(FileStampDataCacher):
         logger.debug("Read file %s -> %s", source_path, content_class.__name__)
 
         if not fmt:
-            _, ext = os.path.splitext(os.path.basename(path))
-            fmt = ext[1:]
+            fmt = file_suffix(path)
 
         if fmt not in self.readers:
             raise TypeError("Pelican does not know how to parse %s", path)
@@ -607,8 +630,8 @@ class Readers(FileStampDataCacher):
 
         # eventually filter the content with typogrify if asked so
         if self.settings["TYPOGRIFY"]:
-            from typogrify.filters import typogrify
             import smartypants
+            from typogrify.filters import typogrify
 
             typogrify_dashes = self.settings["TYPOGRIFY_DASHES"]
             if typogrify_dashes == "oldschool":
@@ -653,6 +676,12 @@ class Readers(FileStampDataCacher):
             source_path=path,
             context=context,
         )
+
+    def check_file(self, source_path: str) -> None:
+        """Log a warning if a file is processed by a disabled reader."""
+        reader = self.disabled_readers.get(file_suffix(source_path), None)
+        if reader:
+            logger.warning(f"{source_path}: {reader.disabled_message()}")
 
 
 def find_empty_alt(content, path):

@@ -15,11 +15,12 @@ from urllib.error import URLError
 from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
 
+import dateutil.parser
+
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.utils import SafeDatetime, slugify
-
 
 logger = logging.getLogger(__name__)
 
@@ -114,19 +115,25 @@ def decode_wp_content(content, br=True):
     return content
 
 
-def xml_to_soup(xml):
-    """Opens an xml file"""
+def _import_bs4():
+    """Import and return bs4, otherwise sys.exit."""
     try:
-        from bs4 import BeautifulSoup
+        import bs4
     except ImportError:
         error = (
             'Missing dependency "BeautifulSoup4" and "lxml" required to '
             "import XML files."
         )
         sys.exit(error)
+    return bs4
+
+
+def file_to_soup(xml, features="xml"):
+    """Reads a file, returns soup."""
+    bs4 = _import_bs4()
     with open(xml, encoding="utf-8") as infile:
         xmlfile = infile.read()
-    soup = BeautifulSoup(xmlfile, "xml")
+    soup = bs4.BeautifulSoup(xmlfile, features)
     return soup
 
 
@@ -140,7 +147,7 @@ def get_filename(post_name, post_id):
 def wp2fields(xml, wp_custpost=False):
     """Opens a wordpress XML file, and yield Pelican fields"""
 
-    soup = xml_to_soup(xml)
+    soup = file_to_soup(xml)
     items = soup.rss.channel.findAll("item")
     for item in items:
         if item.find("status").string in ["publish", "draft"]:
@@ -148,7 +155,7 @@ def wp2fields(xml, wp_custpost=False):
                 # Use HTMLParser due to issues with BeautifulSoup 3
                 title = unescape(item.title.contents[0])
             except IndexError:
-                title = "No title [%s]" % item.find("post_name").string
+                title = "No title [{}]".format(item.find("post_name").string)
                 logger.warning('Post "%s" is lacking a proper title', title)
 
             post_name = item.find("post_name").string
@@ -210,7 +217,7 @@ def wp2fields(xml, wp_custpost=False):
 def blogger2fields(xml):
     """Opens a blogger XML file, and yield Pelican fields"""
 
-    soup = xml_to_soup(xml)
+    soup = file_to_soup(xml)
     entries = soup.feed.findAll("entry")
     for entry in entries:
         raw_kind = entry.find(
@@ -503,11 +510,10 @@ def tumblr2fields(api_key, blogname):
                 title = post.get("question")
                 content = (
                     "<p>"
-                    '<a href="%s" rel="external nofollow">%s</a>'
-                    ": %s"
+                    '<a href="{}" rel="external nofollow">{}</a>'
+                    ": {}"
                     "</p>\n"
-                    " %s"
-                    % (
+                    " {}".format(
                         post.get("asking_name"),
                         post.get("asking_url"),
                         post.get("question"),
@@ -534,6 +540,133 @@ def tumblr2fields(api_key, blogname):
 
         offset += len(posts)
         posts = _get_tumblr_posts(api_key, blogname, offset)
+
+
+def strip_medium_post_content(soup) -> str:
+    """Strip some tags and attributes from medium post content.
+
+    For example, the 'section' and 'div' tags cause trouble while rendering.
+
+    The problem with these tags is you can get a section divider (--------------)
+    that is not between two pieces of content.  For example:
+
+      Some text.
+
+      .. container:: section-divider
+
+         --------------
+
+      .. container:: section-content
+
+      More content.
+
+    In this case, pandoc complains: "Unexpected section title or transition."
+
+    Also, the "id" and "name" attributes in tags cause similar problems.  They show
+    up in .rst as extra junk that separates transitions.
+    """
+    # Remove tags
+    # section and div cause problems
+    # footer also can cause problems, and has nothing we want to keep
+    # See https://stackoverflow.com/a/8439761
+    invalid_tags = ["section", "div", "footer"]
+    for tag in invalid_tags:
+        for match in soup.findAll(tag):
+            match.replaceWithChildren()
+
+    # Remove attributes
+    # See https://stackoverflow.com/a/9045719
+    invalid_attributes = ["name", "id", "class"]
+    bs4 = _import_bs4()
+    for tag in soup.descendants:
+        if isinstance(tag, bs4.element.Tag):
+            tag.attrs = {
+                key: value
+                for key, value in tag.attrs.items()
+                if key not in invalid_attributes
+            }
+
+    # Get the string of all content, keeping other tags
+    all_content = "".join(str(element) for element in soup.contents)
+    return all_content
+
+
+def mediumpost2fields(filepath: str) -> tuple:
+    """Take an HTML post from a medium export, return Pelican fields."""
+
+    soup = file_to_soup(filepath, "html.parser")
+    if not soup:
+        raise ValueError(f"{filepath} could not be parsed by beautifulsoup")
+    kind = "article"
+
+    content = soup.find("section", class_="e-content")
+    if not content:
+        raise ValueError(f"{filepath}: Post has no content")
+
+    title = soup.find("title").string or ""
+
+    raw_date = soup.find("time", class_="dt-published")
+    date = None
+    if raw_date:
+        # This datetime can include timezone, e.g., "2017-04-21T17:11:55.799Z"
+        # python before 3.11 can't parse the timezone using datetime.fromisoformat
+        # See also https://docs.python.org/3.10/library/datetime.html#datetime.datetime.fromisoformat
+        # "This does not support parsing arbitrary ISO 8601 strings"
+        # So, we use dateutil.parser, which can handle it.
+        date_object = dateutil.parser.parse(raw_date.attrs["datetime"])
+        date = date_object.strftime("%Y-%m-%d %H:%M")
+        status = "published"
+    else:
+        status = "draft"
+    author = soup.find("a", class_="p-author h-card")
+    if author:
+        author = author.string
+
+    # Now that we're done with classes, we can strip the content
+    content = strip_medium_post_content(content)
+
+    # medium HTML export doesn't have tag or category
+    # RSS feed has tags, but it doesn't have all the posts.
+    tags = ()
+
+    slug = medium_slug(filepath)
+
+    # TODO: make the fields a python dataclass
+    return (
+        title,
+        content,
+        slug,
+        date,
+        author,
+        None,
+        tags,
+        status,
+        kind,
+        "html",
+    )
+
+
+def medium_slug(filepath: str) -> str:
+    """Make the filepath of a medium exported file into a slug."""
+    # slug: filename without extension
+    slug = os.path.basename(filepath)
+    slug = os.path.splitext(slug)[0]
+    # A medium export filename looks like date_-title-...html
+    # But, RST doesn't like "_-" (see https://github.com/sphinx-doc/sphinx/issues/4350)
+    # so get rid of it
+    slug = slug.replace("_-", "-")
+    # drop the hex string medium puts on the end of the filename, why keep it.
+    # e.g., "-a8a8a8a8" or "---a9a9a9a9"
+    # also: drafts don't need "--DRAFT"
+    slug = re.sub(r"((-)+([0-9a-f]+|DRAFT))+$", "", slug)
+    return slug
+
+
+def mediumposts2fields(medium_export_dir: str):
+    """Take HTML posts in a medium export directory, and yield Pelican fields."""
+    for file in os.listdir(medium_export_dir):
+        filename = os.fsdecode(file)
+        yield mediumpost2fields(os.path.join(medium_export_dir, filename))
 
 
 def feed2fields(file):
@@ -576,19 +709,19 @@ def build_header(
 
     header = "{}\n{}\n".format(title, "#" * column_width(title))
     if date:
-        header += ":date: %s\n" % date
+        header += f":date: {date}\n"
     if author:
-        header += ":author: %s\n" % author
+        header += f":author: {author}\n"
     if categories:
-        header += ":category: %s\n" % ", ".join(categories)
+        header += ":category: {}\n".format(", ".join(categories))
     if tags:
-        header += ":tags: %s\n" % ", ".join(tags)
+        header += ":tags: {}\n".format(", ".join(tags))
     if slug:
-        header += ":slug: %s\n" % slug
+        header += f":slug: {slug}\n"
     if status:
-        header += ":status: %s\n" % status
+        header += f":status: {status}\n"
     if attachments:
-        header += ":attachments: %s\n" % ", ".join(attachments)
+        header += ":attachments: {}\n".format(", ".join(attachments))
     header += "\n"
     return header
 
@@ -598,21 +731,21 @@ def build_asciidoc_header(
 ):
     """Build a header from a list of fields"""
 
-    header = "= %s\n" % title
+    header = f"= {title}\n"
     if author:
-        header += "%s\n" % author
+        header += f"{author}\n"
         if date:
-            header += "%s\n" % date
+            header += f"{date}\n"
     if categories:
-        header += ":category: %s\n" % ", ".join(categories)
+        header += ":category: {}\n".format(", ".join(categories))
     if tags:
-        header += ":tags: %s\n" % ", ".join(tags)
+        header += ":tags: {}\n".format(", ".join(tags))
     if slug:
-        header += ":slug: %s\n" % slug
+        header += f":slug: {slug}\n"
     if status:
-        header += ":status: %s\n" % status
+        header += f":status: {status}\n"
     if attachments:
-        header += ":attachments: %s\n" % ", ".join(attachments)
+        header += ":attachments: {}\n".format(", ".join(attachments))
     header += "\n"
     return header
 
@@ -621,21 +754,21 @@ def build_markdown_header(
     title, date, author, categories, tags, slug, status=None, attachments=None
 ):
     """Build a header from a list of fields"""
-    header = "Title: %s\n" % title
+    header = f"Title: {title}\n"
     if date:
-        header += "Date: %s\n" % date
+        header += f"Date: {date}\n"
     if author:
-        header += "Author: %s\n" % author
+        header += f"Author: {author}\n"
     if categories:
-        header += "Category: %s\n" % ", ".join(categories)
+        header += "Category: {}\n".format(", ".join(categories))
     if tags:
-        header += "Tags: %s\n" % ", ".join(tags)
+        header += "Tags: {}\n".format(", ".join(tags))
     if slug:
-        header += "Slug: %s\n" % slug
+        header += f"Slug: {slug}\n"
     if status:
-        header += "Status: %s\n" % status
+        header += f"Status: {status}\n"
     if attachments:
-        header += "Attachments: %s\n" % ", ".join(attachments)
+        header += "Attachments: {}\n".format(", ".join(attachments))
     header += "\n"
     return header
 
@@ -711,7 +844,7 @@ def get_attachments(xml):
     """returns a dictionary of posts that have attachments with a list
     of the attachment_urls
     """
-    soup = xml_to_soup(xml)
+    soup = file_to_soup(xml)
     items = soup.rss.channel.findAll("item")
     names = {}
     attachments = []
@@ -837,6 +970,9 @@ def fields2pelican(
             posts_require_pandoc.append(filename)
 
         slug = not disable_slugs and filename or None
+        assert slug is None or filename == os.path.basename(
+            filename
+        ), f"filename is not a basename: {filename}"
 
         if wp_attach and attachments:
             try:
@@ -933,14 +1069,14 @@ def fields2pelican(
                     rc = subprocess.call(cmd, shell=True)
                     if rc < 0:
                         error = "Child was terminated by signal %d" % -rc
-                        exit(error)
+                        sys.exit(error)
 
                     elif rc > 0:
                         error = "Please, check your Pandoc installation."
-                        exit(error)
+                        sys.exit(error)
                 except OSError as e:
-                    error = "Pandoc execution failed: %s" % e
-                    exit(error)
+                    error = f"Pandoc execution failed: {e}"
+                    sys.exit(error)
 
             with open(out_filename, encoding="utf-8") as fs:
                 content = fs.read()
@@ -958,7 +1094,7 @@ def fields2pelican(
 
     if posts_require_pandoc:
         logger.error(
-            "Pandoc must be installed to import the following posts:" "\n  {}".format(
+            "Pandoc must be installed to import the following posts:\n  {}".format(
                 "\n  ".join(posts_require_pandoc)
             )
         )
@@ -983,6 +1119,9 @@ def main():
     )
     parser.add_argument(
         "--dotclear", action="store_true", dest="dotclear", help="Dotclear export"
+    )
+    parser.add_argument(
+        "--medium", action="store_true", dest="medium", help="Medium export"
     )
     parser.add_argument(
         "--tumblr", action="store_true", dest="tumblr", help="Tumblr export"
@@ -1069,6 +1208,8 @@ def main():
         input_type = "blogger"
     elif args.dotclear:
         input_type = "dotclear"
+    elif args.medium:
+        input_type = "medium"
     elif args.tumblr:
         input_type = "tumblr"
     elif args.wpfile:
@@ -1077,32 +1218,36 @@ def main():
         input_type = "feed"
     else:
         error = (
-            "You must provide either --blogger, --dotclear, "
-            "--tumblr, --wpfile or --feed options"
+            "You must provide one of --blogger, --dotclear, "
+            "--medium, --tumblr, --wpfile or --feed options"
         )
-        exit(error)
+        sys.exit(error)
 
     if not os.path.exists(args.output):
         try:
             os.mkdir(args.output)
         except OSError:
             error = "Unable to create the output folder: " + args.output
-            exit(error)
+            sys.exit(error)
 
     if args.wp_attach and input_type != "wordpress":
-        error = "You must be importing a wordpress xml " "to use the --wp-attach option"
-        exit(error)
+        error = "You must be importing a wordpress xml to use the --wp-attach option"
+        sys.exit(error)
 
     if input_type == "blogger":
         fields = blogger2fields(args.input)
     elif input_type == "dotclear":
         fields = dc2fields(args.input)
+    elif input_type == "medium":
+        fields = mediumposts2fields(args.input)
     elif input_type == "tumblr":
         fields = tumblr2fields(args.input, args.blogname)
     elif input_type == "wordpress":
         fields = wp2fields(args.input, args.wp_custpost or False)
     elif input_type == "feed":
         fields = feed2fields(args.input)
+    else:
+        raise ValueError(f"Unhandled input_type {input_type}")
 
     if args.wp_attach:
         attachments = get_attachments(args.input)

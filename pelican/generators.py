@@ -7,6 +7,7 @@ from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter
+from typing import List, Optional, Set
 
 from jinja2 import (
     BaseLoader,
@@ -156,7 +157,9 @@ class Generator:
 
         return False
 
-    def get_files(self, paths, exclude=[], extensions=None):
+    def get_files(
+        self, paths, exclude: Optional[List[str]] = None, extensions=None
+    ) -> Set[str]:
         """Return a list of files to use, based on rules
 
         :param paths: the list pf paths to search (relative to self.path)
@@ -164,6 +167,8 @@ class Generator:
         :param extensions: the list of allowed extensions (if False, all
             extensions are allowed)
         """
+        if exclude is None:
+            exclude = []
         # backward compatibility for older generators
         if isinstance(paths, str):
             paths = [paths]
@@ -247,6 +252,13 @@ class Generator:
     def __str__(self):
         # return the name of the class for logging purposes
         return self.__class__.__name__
+
+    def _check_disabled_readers(self, paths, exclude: Optional[List[str]]) -> None:
+        """Log warnings for files that would have been processed by disabled readers."""
+        for fil in self.get_files(
+            paths, exclude=exclude, extensions=self.readers.disabled_extensions
+        ):
+            self.readers.check_file(fil)
 
 
 class CachingGenerator(Generator, FileStampDataCacher):
@@ -384,8 +396,8 @@ class ArticlesGenerator(CachingGenerator):
                     str(self.settings["CATEGORY_FEED_ATOM"]).format(slug=cat.slug),
                     self.settings.get(
                         "CATEGORY_FEED_ATOM_URL",
-                        str(self.settings["CATEGORY_FEED_ATOM"]).format(slug=cat.slug),
-                    ),
+                        str(self.settings["CATEGORY_FEED_ATOM"]),
+                    ).format(slug=cat.slug),
                     feed_title=cat.name,
                 )
 
@@ -396,8 +408,8 @@ class ArticlesGenerator(CachingGenerator):
                     str(self.settings["CATEGORY_FEED_RSS"]).format(slug=cat.slug),
                     self.settings.get(
                         "CATEGORY_FEED_RSS_URL",
-                        str(self.settings["CATEGORY_FEED_RSS"]).format(slug=cat.slug),
-                    ),
+                        str(self.settings["CATEGORY_FEED_RSS"]),
+                    ).format(slug=cat.slug),
                     feed_title=cat.name,
                     feed_type="rss",
                 )
@@ -410,8 +422,8 @@ class ArticlesGenerator(CachingGenerator):
                     str(self.settings["AUTHOR_FEED_ATOM"]).format(slug=auth.slug),
                     self.settings.get(
                         "AUTHOR_FEED_ATOM_URL",
-                        str(self.settings["AUTHOR_FEED_ATOM"]).format(slug=auth.slug),
-                    ),
+                        str(self.settings["AUTHOR_FEED_ATOM"]),
+                    ).format(slug=auth.slug),
                     feed_title=auth.name,
                 )
 
@@ -422,8 +434,8 @@ class ArticlesGenerator(CachingGenerator):
                     str(self.settings["AUTHOR_FEED_RSS"]).format(slug=auth.slug),
                     self.settings.get(
                         "AUTHOR_FEED_RSS_URL",
-                        str(self.settings["AUTHOR_FEED_RSS"]).format(slug=auth.slug),
-                    ),
+                        str(self.settings["AUTHOR_FEED_RSS"]),
+                    ).format(slug=auth.slug),
                     feed_title=auth.name,
                     feed_type="rss",
                 )
@@ -437,8 +449,8 @@ class ArticlesGenerator(CachingGenerator):
                         str(self.settings["TAG_FEED_ATOM"]).format(slug=tag.slug),
                         self.settings.get(
                             "TAG_FEED_ATOM_URL",
-                            str(self.settings["TAG_FEED_ATOM"]).format(slug=tag.slug),
-                        ),
+                            str(self.settings["TAG_FEED_ATOM"]),
+                        ).format(slug=tag.slug),
                         feed_title=tag.name,
                     )
 
@@ -449,8 +461,8 @@ class ArticlesGenerator(CachingGenerator):
                         str(self.settings["TAG_FEED_RSS"]).format(slug=tag.slug),
                         self.settings.get(
                             "TAG_FEED_RSS_URL",
-                            str(self.settings["TAG_FEED_RSS"]).format(slug=tag.slug),
-                        ),
+                            str(self.settings["TAG_FEED_RSS"]),
+                        ).format(slug=tag.slug),
                         feed_title=tag.name,
                         feed_type="rss",
                     )
@@ -471,10 +483,8 @@ class ArticlesGenerator(CachingGenerator):
                         str(self.settings["TRANSLATION_FEED_ATOM"]).format(lang=lang),
                         self.settings.get(
                             "TRANSLATION_FEED_ATOM_URL",
-                            str(self.settings["TRANSLATION_FEED_ATOM"]).format(
-                                lang=lang
-                            ),
-                        ),
+                            str(self.settings["TRANSLATION_FEED_ATOM"]),
+                        ).format(lang=lang),
                     )
                 if self.settings.get("TRANSLATION_FEED_RSS"):
                     writer.write_feed(
@@ -537,9 +547,9 @@ class ArticlesGenerator(CachingGenerator):
         """Generate direct templates pages"""
         for template in self.settings["DIRECT_TEMPLATES"]:
             save_as = self.settings.get(
-                "%s_SAVE_AS" % template.upper(), "%s.html" % template
+                f"{template.upper()}_SAVE_AS", f"{template}.html"
             )
-            url = self.settings.get("%s_URL" % template.upper(), "%s.html" % template)
+            url = self.settings.get(f"{template.upper()}_URL", f"{template}.html")
             if not save_as:
                 continue
 
@@ -642,6 +652,11 @@ class ArticlesGenerator(CachingGenerator):
         self.generate_categories(write)
         self.generate_authors(write)
         self.generate_drafts(write)
+
+    def check_disabled_readers(self) -> None:
+        self._check_disabled_readers(
+            self.settings["ARTICLE_PATHS"], exclude=self.settings["ARTICLE_EXCLUDES"]
+        )
 
     def generate_context(self):
         """Add the articles into the shared context"""
@@ -849,6 +864,11 @@ class PagesGenerator(CachingGenerator):
         super().__init__(*args, **kwargs)
         signals.page_generator_init.send(self)
 
+    def check_disabled_readers(self) -> None:
+        self._check_disabled_readers(
+            self.settings["PAGE_PATHS"], exclude=self.settings["PAGE_EXCLUDES"]
+        )
+
     def generate_context(self):
         all_pages = []
         hidden_pages = []
@@ -953,6 +973,11 @@ class StaticGenerator(Generator):
         self.fallback_to_symlinks = False
         signals.static_generator_init.send(self)
 
+    def check_disabled_readers(self) -> None:
+        self._check_disabled_readers(
+            self.settings["STATIC_PATHS"], exclude=self.settings["STATIC_EXCLUDES"]
+        )
+
     def generate_context(self):
         self.staticfiles = []
         linked_files = set(self.context["static_links"])
@@ -1040,7 +1065,7 @@ class StaticGenerator(Generator):
         save_as = os.path.join(self.output_path, staticfile.save_as)
         s_mtime = os.path.getmtime(source_path)
         d_mtime = os.path.getmtime(save_as)
-        return s_mtime - d_mtime > 0.000001
+        return s_mtime - d_mtime > 0.000001  # noqa: PLR2004
 
     def _link_or_copy_staticfile(self, sc):
         if self.settings["STATIC_CREATE_LINKS"]:
@@ -1070,7 +1095,7 @@ class StaticGenerator(Generator):
         except OSError as err:
             if err.errno == errno.EXDEV:  # 18: Invalid cross-device link
                 logger.debug(
-                    "Cross-device links not valid. " "Creating symbolic links instead."
+                    "Cross-device links not valid. Creating symbolic links instead."
                 )
                 self.fallback_to_symlinks = True
                 self._link_staticfile(sc)

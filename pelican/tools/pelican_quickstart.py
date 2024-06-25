@@ -44,6 +44,7 @@ _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templ
 _jinja_env = Environment(
     loader=FileSystemLoader(_TEMPLATES_DIR),
     trim_blocks=True,
+    keep_trailing_newline=True,
 )
 
 
@@ -78,7 +79,7 @@ _TZ_URL = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
 
 # Create a 'marked' default path, to determine if someone has supplied
 # a path on the command-line.
-class _DEFAULT_PATH_TYPE(str):
+class _DEFAULT_PATH_TYPE(str):  # noqa: SLOT000
     is_default_path = True
 
 
@@ -102,11 +103,10 @@ def ask(question, answer=str, default=None, length=None):
                     break
                 else:
                     print("You must enter something")
+            elif length and len(r) != length:
+                print(f"Entry must be {length} characters long")
             else:
-                if length and len(r) != length:
-                    print(f"Entry must be {length} characters long")
-                else:
-                    break
+                break
 
         return r
 
@@ -168,7 +168,7 @@ def ask_timezone(question, default, tzurl):
             r = tz_dict[r]
             break
         else:
-            print("Please enter a valid time zone:\n" " (check [{}])".format(tzurl))
+            print(f"Please enter a valid time zone:\n (check [{tzurl}])")
     return r
 
 
@@ -204,14 +204,14 @@ def main():
     args = parser.parse_args()
 
     print(
-        """Welcome to pelican-quickstart v{v}.
+        f"""Welcome to pelican-quickstart v{__version__}.
 
 This script will help you create a new Pelican-based website.
 
 Please answer the following questions so this script can generate the files
 needed by Pelican.
 
-    """.format(v=__version__)
+    """
     )
 
     project = os.path.join(os.environ.get("VIRTUAL_ENV", os.curdir), ".project")
@@ -220,7 +220,7 @@ needed by Pelican.
         CONF["basedir"] = open(project).read().rstrip("\n")
         print(
             "Using project associated with current virtual environment. "
-            "Will save to:\n%s\n" % CONF["basedir"]
+            "Will save to:\n{}\n".format(CONF["basedir"])
         )
     else:
         CONF["basedir"] = os.path.abspath(
@@ -252,7 +252,7 @@ needed by Pelican.
         default=True,
     ):
         CONF["siteurl"] = ask(
-            "What is your URL prefix? (see " "above example; no trailing slash)",
+            "What is your URL prefix? (see above example; no trailing slash)",
             str,
             CONF["siteurl"],
         )
@@ -265,7 +265,7 @@ needed by Pelican.
 
     if CONF["with_pagination"]:
         CONF["default_pagination"] = ask(
-            "How many articles per page " "do you want?",
+            "How many articles per page do you want?",
             int,
             CONF["default_pagination"],
         )
@@ -295,7 +295,7 @@ needed by Pelican.
                 "What is your username on that server?", str, CONF["ftp_user"]
             )
             CONF["ftp_target_dir"] = ask(
-                "Where do you want to put your " "web site on that server?",
+                "Where do you want to put your web site on that server?",
                 str,
                 CONF["ftp_target_dir"],
             )
@@ -313,7 +313,7 @@ needed by Pelican.
                 "What is your username on that server?", str, CONF["ssh_user"]
             )
             CONF["ssh_target_dir"] = ask(
-                "Where do you want to put your " "web site on that server?",
+                "Where do you want to put your web site on that server?",
                 str,
                 CONF["ssh_target_dir"],
             )
@@ -337,23 +337,23 @@ needed by Pelican.
             )
 
         if ask(
-            "Do you want to upload your website using " "Rackspace Cloud Files?",
+            "Do you want to upload your website using Rackspace Cloud Files?",
             answer=bool,
             default=False,
         ):
             CONF["cloudfiles"] = (True,)
             CONF["cloudfiles_username"] = ask(
-                "What is your Rackspace " "Cloud username?",
+                "What is your Rackspace Cloud username?",
                 str,
                 CONF["cloudfiles_username"],
             )
             CONF["cloudfiles_api_key"] = ask(
-                "What is your Rackspace " "Cloud API key?",
+                "What is your Rackspace Cloud API key?",
                 str,
                 CONF["cloudfiles_api_key"],
             )
             CONF["cloudfiles_container"] = ask(
-                "What is the name of your " "Cloud Files container?",
+                "What is the name of your Cloud Files container?",
                 str,
                 CONF["cloudfiles_container"],
             )
@@ -383,7 +383,7 @@ needed by Pelican.
     except OSError as e:
         print(f"Error: {e}")
 
-    conf_python = dict()
+    conf_python = {}
     for key, value in CONF.items():
         conf_python[key] = repr(value)
     render_jinja_template("pelicanconf.py.jinja2", conf_python, "pelicanconf.py")
@@ -394,7 +394,7 @@ needed by Pelican.
         render_jinja_template("tasks.py.jinja2", CONF, "tasks.py")
         render_jinja_template("Makefile.jinja2", CONF, "Makefile")
 
-    print("Done. Your new project is available at %s" % CONF["basedir"])
+    print("Done. Your new project is available at {}".format(CONF["basedir"]))
 
 
 if __name__ == "__main__":

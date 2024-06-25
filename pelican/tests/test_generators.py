@@ -13,11 +13,11 @@ from pelican.generators import (
     TemplatePagesGenerator,
 )
 from pelican.tests.support import (
+    TestCaseWithCLocale,
     can_symlink,
     get_context,
     get_settings,
     unittest,
-    TestCaseWithCLocale,
 )
 from pelican.writers import Writer
 
@@ -264,6 +264,7 @@ class TestArticlesGenerator(unittest.TestCase):
 
     def test_generate_context(self):
         articles_expected = [
+            ["A title", "published", "medium_posts", "article"],
             ["Article title", "published", "Default", "article"],
             [
                 "Article with markdown and summary metadata multi",
@@ -391,13 +392,24 @@ class TestArticlesGenerator(unittest.TestCase):
         # terms of process order will define the name for that category
         categories = [cat.name for cat, _ in self.generator.categories]
         categories_alternatives = (
-            sorted(["Default", "TestCategory", "Yeah", "test", "指導書"]),
-            sorted(["Default", "TestCategory", "yeah", "test", "指導書"]),
+            sorted(
+                ["Default", "TestCategory", "medium_posts", "Yeah", "test", "指導書"]
+            ),
+            sorted(
+                ["Default", "TestCategory", "medium_posts", "yeah", "test", "指導書"]
+            ),
         )
         self.assertIn(sorted(categories), categories_alternatives)
         # test for slug
         categories = [cat.slug for cat, _ in self.generator.categories]
-        categories_expected = ["default", "testcategory", "yeah", "test", "zhi-dao-shu"]
+        categories_expected = [
+            "default",
+            "testcategory",
+            "medium_posts",
+            "yeah",
+            "test",
+            "zhi-dao-shu",
+        ]
         self.assertEqual(sorted(categories), sorted(categories_expected))
 
     def test_do_not_use_folder_as_category(self):
@@ -549,7 +561,8 @@ class TestArticlesGenerator(unittest.TestCase):
             granularity: {period["period"] for period in periods}
             for granularity, periods in period_archives.items()
         }
-        expected = {"year": {(1970,), (2010,), (2012,), (2014,)}}
+        self.maxDiff = None
+        expected = {"year": {(1970,), (2010,), (2012,), (2014,), (2017,)}}
         self.assertEqual(expected, abbreviated_archives)
 
         # Month archives enabled:
@@ -570,7 +583,7 @@ class TestArticlesGenerator(unittest.TestCase):
             for granularity, periods in period_archives.items()
         }
         expected = {
-            "year": {(1970,), (2010,), (2012,), (2014,)},
+            "year": {(1970,), (2010,), (2012,), (2014,), (2017,)},
             "month": {
                 (1970, "January"),
                 (2010, "December"),
@@ -578,14 +591,15 @@ class TestArticlesGenerator(unittest.TestCase):
                 (2012, "November"),
                 (2012, "October"),
                 (2014, "February"),
+                (2017, "April"),
             },
         }
         self.assertEqual(expected, abbreviated_archives)
 
         # Day archives enabled:
-        settings[
-            "DAY_ARCHIVE_SAVE_AS"
-        ] = "posts/{date:%Y}/{date:%b}/{date:%d}/index.html"
+        settings["DAY_ARCHIVE_SAVE_AS"] = (
+            "posts/{date:%Y}/{date:%b}/{date:%d}/index.html"
+        )
         settings["DAY_ARCHIVE_URL"] = "posts/{date:%Y}/{date:%b}/{date:%d}/"
         context = get_context(settings)
         generator = ArticlesGenerator(
@@ -602,7 +616,7 @@ class TestArticlesGenerator(unittest.TestCase):
             for granularity, periods in period_archives.items()
         }
         expected = {
-            "year": {(1970,), (2010,), (2012,), (2014,)},
+            "year": {(1970,), (2010,), (2012,), (2014,), (2017,)},
             "month": {
                 (1970, "January"),
                 (2010, "December"),
@@ -610,6 +624,7 @@ class TestArticlesGenerator(unittest.TestCase):
                 (2012, "November"),
                 (2012, "October"),
                 (2014, "February"),
+                (2017, "April"),
             },
             "day": {
                 (1970, "January", 1),
@@ -619,6 +634,7 @@ class TestArticlesGenerator(unittest.TestCase):
                 (2012, "October", 30),
                 (2012, "October", 31),
                 (2014, "February", 9),
+                (2017, "April", 21),
             },
         }
         self.assertEqual(expected, abbreviated_archives)
@@ -721,9 +737,9 @@ class TestArticlesGenerator(unittest.TestCase):
             all_articles=generator.articles,
         )
 
-        settings[
-            "DAY_ARCHIVE_SAVE_AS"
-        ] = "posts/{date:%Y}/{date:%b}/{date:%d}/index.html"
+        settings["DAY_ARCHIVE_SAVE_AS"] = (
+            "posts/{date:%Y}/{date:%b}/{date:%d}/index.html"
+        )
         settings["DAY_ARCHIVE_URL"] = "posts/{date:%Y}/{date:%b}/{date:%d}/"
         context = get_context(settings)
         generator = ArticlesGenerator(
@@ -836,8 +852,12 @@ class TestArticlesGenerator(unittest.TestCase):
 
         categories = sorted([category.name for category, _ in generator.categories])
         categories_expected = [
-            sorted(["Default", "TestCategory", "yeah", "test", "指導書"]),
-            sorted(["Default", "TestCategory", "Yeah", "test", "指導書"]),
+            sorted(
+                ["Default", "TestCategory", "medium_posts", "yeah", "test", "指導書"]
+            ),
+            sorted(
+                ["Default", "TestCategory", "medium_posts", "Yeah", "test", "指導書"]
+            ),
         ]
         self.assertIn(categories, categories_expected)
 
@@ -864,6 +884,7 @@ class TestArticlesGenerator(unittest.TestCase):
         generator.generate_context()
 
         expected = [
+            "A title",
             "An Article With Code Block To Test Typogrify Ignore",
             "Article title",
             "Article with Nonconformant HTML meta tags",

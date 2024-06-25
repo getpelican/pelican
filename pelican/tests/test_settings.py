@@ -3,7 +3,6 @@ import locale
 import os
 from os.path import abspath, dirname, join
 
-
 from pelican.settings import (
     DEFAULT_CONFIG,
     DEFAULT_THEME,

@@ -8,11 +8,13 @@ import re
 import sys
 from os.path import isabs
 from pathlib import Path
+from types import ModuleType
+from typing import Any, Dict, Optional
 
 from pelican.log import LimitFilter
 
 
-def load_source(name, path):
+def load_source(name: str, path: str) -> ModuleType:
     spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
     sys.modules[name] = mod
@@ -21,6 +23,8 @@ def load_source(name, path):
 
 
 logger = logging.getLogger(__name__)
+
+Settings = Dict[str, Any]
 
 DEFAULT_THEME = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "themes", "notmyidea"
@@ -48,6 +52,7 @@ DEFAULT_CONFIG = {
     "TRANSLATION_FEED_ATOM": "feeds/all-{lang}.atom.xml",
     "FEED_MAX_ITEMS": 100,
     "RSS_FEED_SUMMARY_ONLY": True,
+    "FEED_APPEND_REF": False,
     "SITEURL": "",
     "SITENAME": "A Pelican Blog",
     "DISPLAY_PAGES_ON_MENU": True,
@@ -177,7 +182,9 @@ DEFAULT_CONFIG = {
 PYGMENTS_RST_OPTIONS = None
 
 
-def read_settings(path=None, override=None):
+def read_settings(
+    path: Optional[str] = None, override: Optional[Settings] = None
+) -> Settings:
     settings = override or {}
 
     if path:
@@ -216,12 +223,12 @@ def read_settings(path=None, override=None):
     # parameters to docutils directive handlers, so we have to have a
     # variable here that we'll import from within Pygments.run (see
     # rstdirectives.py) to see what the user defaults were.
-    global PYGMENTS_RST_OPTIONS
+    global PYGMENTS_RST_OPTIONS  # noqa: PLW0603
     PYGMENTS_RST_OPTIONS = settings.get("PYGMENTS_RST_OPTIONS", None)
     return settings
 
 
-def get_settings_from_module(module=None):
+def get_settings_from_module(module: Optional[ModuleType] = None) -> Settings:
     """Loads settings from a module, returns a dictionary."""
 
     context = {}
@@ -230,7 +237,7 @@ def get_settings_from_module(module=None):
     return context
 
 
-def get_settings_from_file(path):
+def get_settings_from_file(path: str) -> Settings:
     """Loads settings from a file path, returning a dict."""
 
     name, ext = os.path.splitext(os.path.basename(path))
@@ -238,7 +245,7 @@ def get_settings_from_file(path):
     return get_settings_from_module(module)
 
 
-def get_jinja_environment(settings):
+def get_jinja_environment(settings: Settings) -> Settings:
     """Sets the environment for Jinja"""
 
     jinja_env = settings.setdefault(
@@ -253,23 +260,21 @@ def get_jinja_environment(settings):
     return settings
 
 
-def _printf_s_to_format_field(printf_string, format_field):
+def _printf_s_to_format_field(printf_string: str, format_field: str) -> str:
     """Tries to replace %s with {format_field} in the provided printf_string.
     Raises ValueError in case of failure.
     """
     TEST_STRING = "PELICAN_PRINTF_S_DEPRECATION"
     expected = printf_string % TEST_STRING
 
-    result = printf_string.replace("{", "{{").replace("}", "}}") % "{{{}}}".format(
-        format_field
-    )
+    result = printf_string.replace("{", "{{").replace("}", "}}") % f"{{{format_field}}}"
     if result.format(**{format_field: TEST_STRING}) != expected:
         raise ValueError(f"Failed to safely replace %s with {{{format_field}}}")
 
     return result
 
 
-def handle_deprecated_settings(settings):
+def handle_deprecated_settings(settings: Settings) -> Settings:
     """Converts deprecated settings and issues warnings. Issues an exception
     if both old and new setting is specified.
     """
@@ -317,10 +322,7 @@ def handle_deprecated_settings(settings):
             "EXTRA_TEMPLATES_PATHS is deprecated use "
             "THEME_TEMPLATES_OVERRIDES instead."
         )
-        if (
-            "THEME_TEMPLATES_OVERRIDES" in settings
-            and settings["THEME_TEMPLATES_OVERRIDES"]
-        ):
+        if settings.get("THEME_TEMPLATES_OVERRIDES"):
             raise Exception(
                 "Setting both EXTRA_TEMPLATES_PATHS and "
                 "THEME_TEMPLATES_OVERRIDES is not permitted. Please move to "
@@ -345,7 +347,7 @@ def handle_deprecated_settings(settings):
             "FILES_TO_COPY",
             "STATIC_PATHS and EXTRA_PATH_METADATA",
             "https://github.com/getpelican/pelican/"
-            "blob/master/docs/settings.rst#path-metadata",
+            "blob/main/docs/settings.rst#path-metadata",
         ),
     ]:
         if old in settings:
@@ -405,7 +407,7 @@ def handle_deprecated_settings(settings):
         )
         logger.warning(message)
         if old_values.get("SLUG"):
-            for f in {"CATEGORY", "TAG"}:
+            for f in ("CATEGORY", "TAG"):
                 if old_values.get(f):
                     old_values[f] = old_values["SLUG"] + old_values[f]
             old_values["AUTHOR"] = old_values.get("AUTHOR", [])
@@ -445,7 +447,7 @@ def handle_deprecated_settings(settings):
             and not isinstance(settings[key], Path)
             and "%s" in settings[key]
         ):
-            logger.warning("%%s usage in %s is deprecated, use {lang} " "instead.", key)
+            logger.warning("%%s usage in %s is deprecated, use {lang} instead.", key)
             try:
                 settings[key] = _printf_s_to_format_field(settings[key], "lang")
             except ValueError:
@@ -468,7 +470,7 @@ def handle_deprecated_settings(settings):
             and not isinstance(settings[key], Path)
             and "%s" in settings[key]
         ):
-            logger.warning("%%s usage in %s is deprecated, use {slug} " "instead.", key)
+            logger.warning("%%s usage in %s is deprecated, use {slug} instead.", key)
             try:
                 settings[key] = _printf_s_to_format_field(settings[key], "slug")
             except ValueError:
@@ -566,7 +568,7 @@ def handle_deprecated_settings(settings):
     return settings
 
 
-def configure_settings(settings):
+def configure_settings(settings: Settings) -> Settings:
     """Provide optimizations, error checking, and warnings for the given
     settings.
     Also, specify the log messages to be ignored.
@@ -589,7 +591,7 @@ def configure_settings(settings):
         if os.path.exists(theme_path):
             settings["THEME"] = theme_path
         else:
-            raise Exception("Could not find the theme %s" % settings["THEME"])
+            raise Exception("Could not find the theme {}".format(settings["THEME"]))
 
     # standardize strings to lowercase strings
     for key in ["DEFAULT_LANG"]:
@@ -612,7 +614,7 @@ def configure_settings(settings):
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
             logger.warn(
-                "Detected misconfigured %s (%s), " "falling back to the default (%s)",
+                "Detected misconfigured %s (%s), falling back to the default (%s)",
                 key,
                 value,
                 DEFAULT_CONFIG[key],
@@ -674,7 +676,7 @@ def configure_settings(settings):
     if any(settings.get(k) for k in feed_keys):
         if not settings.get("SITEURL"):
             logger.warning(
-                "Feeds generated without SITEURL set properly may" " not be valid"
+                "Feeds generated without SITEURL set properly may not be valid"
             )
 
     if "TIMEZONE" not in settings:

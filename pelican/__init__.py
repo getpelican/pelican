@@ -19,10 +19,10 @@ __path__ = extend_path(__path__, __name__)
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger
-from pelican.log import console
+from pelican.log import console, DEFAULT_LOG_HANDLER  # noqa: I001
 from pelican.log import init as init_logging
 from pelican.generators import (
-    ArticlesGenerator,  # noqa: I100
+    ArticlesGenerator,
     PagesGenerator,
     SourceFileGenerator,
     StaticGenerator,
@@ -30,7 +30,6 @@ from pelican.generators import (
 )
 from pelican.plugins import signals
 from pelican.plugins._utils import get_plugin_name, load_plugins
-from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, maybe_pluralize, wait_for_changes
@@ -80,7 +79,14 @@ class Pelican:
                 plugin.register()
                 self.plugins.append(plugin)
             except Exception as e:
-                logger.error("Cannot register plugin `%s`\n%s", name, e)
+                logger.error(
+                    "Cannot register plugin `%s`\n%s",
+                    name,
+                    e,
+                    stacklevel=2,
+                )
+                if self.settings.get("DEBUG", False):
+                    console.print_exception()
 
         self.settings["PLUGINS"] = [get_plugin_name(p) for p in self.plugins]
 
@@ -119,12 +125,17 @@ class Pelican:
         for p in generators:
             if hasattr(p, "generate_context"):
                 p.generate_context()
+            if hasattr(p, "check_disabled_readers"):
+                p.check_disabled_readers()
 
+        # for plugins that create/edit the summary
+        logger.debug("Signal all_generators_finalized.send(<generators>)")
+        signals.all_generators_finalized.send(generators)
+
+        # update links in the summary, etc
         for p in generators:
             if hasattr(p, "refresh_metadata_intersite_links"):
                 p.refresh_metadata_intersite_links()
-
-        signals.all_generators_finalized.send(generators)
 
         writer = self._get_writer()
 
@@ -183,15 +194,7 @@ class Pelican:
         )
 
         console.print(
-            "Done: Processed {}, {}, {}, {}, {} and {} in {:.2f} seconds.".format(
-                pluralized_articles,
-                pluralized_drafts,
-                pluralized_hidden_articles,
-                pluralized_pages,
-                pluralized_hidden_pages,
-                pluralized_draft_pages,
-                time.time() - start_time,
-            )
+            f"Done: Processed {pluralized_articles}, {pluralized_drafts}, {pluralized_hidden_articles}, {pluralized_pages}, {pluralized_hidden_pages} and {pluralized_draft_pages} in {time.time() - start_time:.2f} seconds."
         )
 
     def _get_generator_classes(self):
@@ -292,7 +295,7 @@ class ParseOverrides(argparse.Action):
                 raise ValueError(
                     "Extra settings must be specified as KEY=VALUE pairs "
                     f"but you specified {item}"
-                )
+                ) from None
             try:
                 overrides[k] = json.loads(v)
             except json.decoder.JSONDecodeError:
@@ -303,7 +306,7 @@ class ParseOverrides(argparse.Action):
                     "Use -e KEY='\"string\"' to specify a string value; "
                     "-e KEY=null to specify None; "
                     "-e KEY=false (or true) to specify False (or True)."
-                )
+                ) from None
         setattr(namespace, self.dest, overrides)
 
 
@@ -344,8 +347,8 @@ def parse_arguments(argv=None):
         "--settings",
         dest="settings",
         help="The settings of the application, this is "
-        "automatically set to {} if a file exists with this "
-        "name.".format(DEFAULT_CONFIG_NAME),
+        f"automatically set to {DEFAULT_CONFIG_NAME} if a file exists with this "
+        "name.",
     )
 
     parser.add_argument(
@@ -415,7 +418,7 @@ def parse_arguments(argv=None):
         "--relative-urls",
         dest="relative_paths",
         action="store_true",
-        help="Use relative urls in output, " "useful for site development",
+        help="Use relative urls in output, useful for site development",
     )
 
     parser.add_argument(
@@ -431,7 +434,7 @@ def parse_arguments(argv=None):
         "--ignore-cache",
         action="store_true",
         dest="ignore_cache",
-        help="Ignore content cache " "from previous runs by not loading cache files.",
+        help="Ignore content cache from previous runs by not loading cache files.",
     )
 
     parser.add_argument(
@@ -442,6 +445,17 @@ def parse_arguments(argv=None):
         help=(
             "Exit the program with non-zero status if any "
             "errors/warnings encountered."
+        ),
+    )
+
+    LOG_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
+    parser.add_argument(
+        "--log-handler",
+        default="rich",
+        choices=LOG_HANDLERS,
+        help=(
+            "Which handler to use to format log messages. "
+            "The `rich` handler prints output in columns."
         ),
     )
 
@@ -475,7 +489,7 @@ def parse_arguments(argv=None):
         "-b",
         "--bind",
         dest="bind",
-        help="IP to bind to when serving files via HTTP " "(default: 127.0.0.1)",
+        help="IP to bind to when serving files via HTTP (default: 127.0.0.1)",
     )
 
     parser.add_argument(
@@ -498,6 +512,8 @@ def parse_arguments(argv=None):
         logger.warning("--port without --listen has no effect")
     if args.bind is not None and not args.listen:
         logger.warning("--bind without --listen has no effect")
+
+    args.log_handler = LOG_HANDLERS[args.log_handler]
 
     return args
 
@@ -558,7 +574,7 @@ def autoreload(args, excqueue=None):
         try:
             pelican.run()
 
-            changed_files = wait_for_changes(args.settings, Readers, settings)
+            changed_files = wait_for_changes(args.settings, settings)
             changed_files = {c[1] for c in changed_files}
 
             if settings_file in changed_files:
@@ -621,6 +637,7 @@ def main(argv=None):
         level=args.verbosity,
         fatal=args.fatal,
         name=__name__,
+        handler=args.log_handler,
         logs_dedup_min_level=logs_dedup_min_level,
     )
 

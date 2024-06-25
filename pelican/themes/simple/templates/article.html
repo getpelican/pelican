@@ -22,44 +22,44 @@
 {% endblock %}
 
 {% block content %}
-<article>
-  <header>
-    <h2>
-      <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
-         title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
- {% import 'translations.html' as translations with context %}
- {{ translations.translations_for(article) }}
-  </header>
-  {{ article.content }}
-  <footer>
-    <p>Published: <time datetime="{{ article.date.isoformat() }}">
-      {{ article.locale_date }}
-    </time></p>
-    {% if article.modified %}
-    <p>Last updated: <time datetime="{{ article.modified.isoformat() }}">
-      {{ article.locale_modified }}
-    </time></p>
-    {% endif %}
-    {% if article.authors %}
-    <address>
-      By {% for author in article.authors %}
-          <a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
-        {% endfor %}
-    </address>
-    {% endif %}
-    {% if article.category %}
-    <p>
-        Category: <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
-    </p>
-    {% endif %}
-    {% if article.tags %}
-    <p>
-        Tags:
-        {% for tag in article.tags %}
+  <article>
+    <header>
+      <h2>
+        <a href="{{ SITEURL }}/{{ article.url }}" rel="bookmark"
+           title="Permalink to {{ article.title|striptags }}">{{ article.title }}</a></h2>
+      {% import 'translations.html' as translations with context %}
+      {{ translations.translations_for(article) }}
+    </header>
+    {{ article.content }}
+    <footer>
+      <p>Published: <time datetime="{{ article.date.isoformat() }}">
+        {{ article.locale_date }}
+      </time></p>
+      {% if article.modified %}
+        <p>Last updated: <time datetime="{{ article.modified.isoformat() }}">
+          {{ article.locale_modified }}
+        </time></p>
+      {% endif %}
+      {% if article.authors %}
+        <address>
+          By {% for author in article.authors %}
+            <a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
+          {% endfor %}
+        </address>
+      {% endif %}
+      {% if article.category %}
+        <p>
+          Category: <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
+        </p>
+      {% endif %}
+      {% if article.tags %}
+        <p>
+          Tags:
+          {% for tag in article.tags %}
             <a href="{{ SITEURL }}/{{ tag.url }}">{{ tag }}</a>
-        {% endfor %}
-    </p>
-    {% endif %}
-  </footer>
+          {% endfor %}
+        </p>
+      {% endif %}
+    </footer>
   </article>
 {% endblock %}

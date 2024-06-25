@@ -2,7 +2,6 @@ import re
 
 from docutils import nodes, utils
 from docutils.parsers.rst import Directive, directives, roles
-
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import TextLexer, get_lexer_by_name
@@ -79,7 +78,7 @@ class abbreviation(nodes.Inline, nodes.TextElement):
     pass
 
 
-def abbr_role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
+def abbr_role(typ, rawtext, text, lineno, inliner, options=None, content=None):
     text = utils.unescape(text)
     m = _abbr_re.search(text)
     if m is None:

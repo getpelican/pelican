@@ -23,9 +23,17 @@ from pelican.tests.support import (
 from pelican.writers import Writer
 
 
-class TestUtils(LoggedTestCase):
+class ClassDeprAttr:
     _new_attribute = "new_value"
 
+    @utils.deprecated_attribute(
+        old="_old_attribute", new="_new_attribute", since=(3, 1, 0), remove=(4, 1, 3)
+    )
+    def _old_attribute():
+        return None
+
+
+class TestUtils(LoggedTestCase):
     def setUp(self):
         super().setUp()
         self.temp_output = mkdtemp(prefix="pelicantests.")
@@ -34,15 +42,10 @@ class TestUtils(LoggedTestCase):
         super().tearDown()
         shutil.rmtree(self.temp_output)
 
-    @utils.deprecated_attribute(
-        old="_old_attribute", new="_new_attribute", since=(3, 1, 0), remove=(4, 1, 3)
-    )
-    def _old_attribute():
-        return None
-
     def test_deprecated_attribute(self):
-        value = self._old_attribute
-        self.assertEqual(value, self._new_attribute)
+        test_class = ClassDeprAttr()
+        value = test_class._old_attribute
+        self.assertEqual(value, test_class._new_attribute)
         self.assertLogCountEqual(
             count=1,
             msg=(
@@ -207,13 +210,10 @@ class TestUtils(LoggedTestCase):
             )
 
         # check with preserve case
-        for value, expected in samples:
-            self.assertEqual(
-                utils.slugify(
-                    "Çığ", regex_subs=subs, preserve_case=True, use_unicode=True
-                ),
-                "Çığ",
-            )
+        self.assertEqual(
+            utils.slugify("Çığ", regex_subs=subs, preserve_case=True, use_unicode=True),
+            "Çığ",
+        )
 
         # check normalization
         samples = (
@@ -738,11 +738,11 @@ class TestCopy(unittest.TestCase):
 
     def _exist_file(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.isfile(path), "File does not exist: %s" % path)
+        self.assertTrue(os.path.isfile(path), f"File does not exist: {path}")
 
     def _exist_dir(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.exists(path), "Directory does not exist: %s" % path)
+        self.assertTrue(os.path.exists(path), f"Directory does not exist: {path}")
 
     def test_copy_file_same_path(self):
         self._create_file("a.txt")
@@ -936,14 +936,14 @@ class TestSanitisedJoin(unittest.TestCase):
     def test_detect_parent_breakout(self):
         with self.assertRaisesRegex(
             RuntimeError,
-            "Attempted to break out of output directory to " "(.*?:)?/foo/test",
+            "Attempted to break out of output directory to (.*?:)?/foo/test",
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "../test")
 
     def test_detect_root_breakout(self):
         with self.assertRaisesRegex(
             RuntimeError,
-            "Attempted to break out of output directory to " "(.*?:)?/test",
+            "Attempted to break out of output directory to (.*?:)?/test",
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "/test")
 
@@ -983,3 +983,10 @@ class TestMemoized(unittest.TestCase):
             container.get.cache.clear()
             self.assertEqual("bar", container.get("bar"))
             get_mock.assert_called_once_with("bar")
+
+
+class TestStringUtils(unittest.TestCase):
+    def test_file_suffix(self):
+        self.assertEqual("", utils.file_suffix(""))
+        self.assertEqual("", utils.file_suffix("foo"))
+        self.assertEqual("md", utils.file_suffix("foo.md"))

@@ -4,7 +4,6 @@ from posixpath import join as posix_join
 from urllib.parse import urljoin
 
 from feedgenerator import Atom1Feed, Rss201rev2Feed, get_tag_uri
-
 from markupsafe import Markup
 
 from pelican.paginator import Paginator
@@ -22,13 +21,13 @@ logger = logging.getLogger(__name__)
 class Writer:
     def __init__(self, output_path, settings=None):
         self.output_path = output_path
-        self.reminder = dict()
+        self.reminder = {}
         self.settings = settings or {}
         self._written_files = set()
         self._overridden_files = set()
 
         # See Content._link_replacer for details
-        if "RELATIVE_URLS" in self.settings and self.settings["RELATIVE_URLS"]:
+        if self.settings.get("RELATIVE_URLS"):
             self.urljoiner = posix_join
         else:
             self.urljoiner = lambda base, url: urljoin(
@@ -52,6 +51,9 @@ class Writer:
     def _add_item_to_the_feed(self, feed, item):
         title = Markup(item.title).striptags()
         link = self.urljoiner(self.site_url, item.url)
+
+        if self.settings["FEED_APPEND_REF"]:
+            link = link + "?ref=feed"
 
         if isinstance(feed, Rss201rev2Feed):
             # RSS feeds use a single tag called 'description' for both the full
@@ -105,14 +107,14 @@ class Writer:
         """
         if filename in self._overridden_files:
             if override:
-                raise RuntimeError("File %s is set to be overridden twice" % filename)
+                raise RuntimeError(f"File {filename} is set to be overridden twice")
             logger.info("Skipping %s", filename)
             filename = os.devnull
         elif filename in self._written_files:
             if override:
                 logger.info("Overwriting %s", filename)
             else:
-                raise RuntimeError("File %s is to be overwritten" % filename)
+                raise RuntimeError(f"File {filename} is to be overwritten")
         if override:
             self._overridden_files.add(filename)
         self._written_files.add(filename)
@@ -257,7 +259,7 @@ class Writer:
             }
 
             # generated pages, and write
-            for page_num in range(list(paginators.values())[0].num_pages):
+            for page_num in range(next(iter(paginators.values())).num_pages):
                 paginated_kwargs = kwargs.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]
@@ -270,10 +272,10 @@ class Writer:
                     )
                     paginated_kwargs.update(
                         {
-                            "%s_paginator" % key: paginator,
-                            "%s_page" % key: page,
-                            "%s_previous_page" % key: previous_page,
-                            "%s_next_page" % key: next_page,
+                            f"{key}_paginator": paginator,
+                            f"{key}_page": page,
+                            f"{key}_previous_page": previous_page,
+                            f"{key}_next_page": next_page,
                         }
                     )
 

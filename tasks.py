@@ -47,7 +47,11 @@ def tests(c):
 @task
 def coverage(c):
     """Generate code coverage of running the test suite."""
-    c.run(f"{VENV_BIN}/pytest --cov=pelican", pty=PTY)
+    c.run(
+        f"{VENV_BIN}/pytest --cov=pelican --cov-report term-missing "
+        "--cov-fail-under 75",
+        pty=PTY,
+    )
     c.run(f"{VENV_BIN}/coverage html", pty=PTY)
 
 

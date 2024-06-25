@@ -24,7 +24,7 @@ Before you ask for help, please make sure you do the following:
 
 3. Try reproducing the issue in a clean environment, ensuring you are using:
 
-* latest Pelican release (or an up-to-date Git clone of Pelican master)
+* latest Pelican release (or an up-to-date Git clone of Pelican ``main`` branch)
 * latest releases of libraries used by Pelican
 * no plugins or only those related to the issue
 
@@ -87,7 +87,7 @@ Using Git and GitHub
 --------------------
 
 * `Create a new branch`_ specific to your change (as opposed to making
-  your commits in the master branch).
+  your commits in the ``main`` branch).
 * **Don't put multiple unrelated fixes/features in the same branch / pull request.**
   For example, if you're working on a new feature and find a bugfix that
   doesn't *require* your new feature, **make a new distinct branch and pull

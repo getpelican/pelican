@@ -1,0 +1,14 @@
+# See https://docs.github.com/en/free-pro-team@latest/
+#  github/administering-a-repository/enabling-and-disabling-version-updates
+
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 10
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"

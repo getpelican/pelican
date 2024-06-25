@@ -69,6 +69,7 @@ changelog-header = "###############"
 version-header = "="
 
 [tool.pdm]
+ignore_package_warnings = ["sphinx"]
 
 [tool.pdm.scripts]
 docbuild = "invoke docbuild"
@@ -95,7 +96,8 @@ dev = [
     "pytest-xdist>=3.4.0",
     "tox>=4.11.3",
     "invoke>=2.2.0",
-    "ruff>=0.1.5",
+    # ruff version should match the one in .pre-commit-config.yaml
+    "ruff==0.4.10",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
 
@@ -110,3 +112,105 @@ source-includes = [
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
+
+
+[tool.ruff.lint]
+# see https://docs.astral.sh/ruff/configuration/#using-pyprojecttoml
+# "F" contains autoflake, see https://github.com/astral-sh/ruff/issues/1647
+# add more rules
+select = [
+    # default Ruff checkers as of ruff 0.1.3: E4, E7, E9, F
+    "E4",
+    "E7",
+    "E9",
+    "F",  # pyflakes
+
+    # the rest in alphabetical order:
+    # TODO: "A",   # flake8-builtins
+    # TODO: "ARG", # flake8-unused-arguments
+    "B",   # flake8-bugbear
+    # TODO: "BLE", # flake8-blind-except
+    # TODO: Do I want "COM", # flake8-commas
+    "C4",  # flake8-comprehensions
+    # TODO: "DJ",  # flake8-django
+    # TODO: "DTZ", # flake8-datetimez
+    # TODO: "EM",  # flake8-errmsg
+    "EXE", # flake8-executable
+    # TODO: "FURB", # refurb
+    # TODO: "FBT", # flake8-boolean-trap
+    # TODO: "G",   # flake8-logging-format
+    "I",   # isort
+    "ICN", # flake8-import-conventions
+    "INP", # flake8-no-pep420
+    # TODO: "INT", # flake8-gettext
+    "ISC", # flake8-implicit-str-concat
+    # TODO: "LOG", # flake8-logging
+    "PERF", # perflint
+    "PIE", # flake8-pie
+    "PL",  # pylint
+    "PYI", # flake8-pyi
+    # TODO: "RET", # flake8-return
+    "RSE", # flake8-raise
+    "RUF",
+    # TODO: "SIM", # flake8-simplify
+    "SLF", # flake8-self
+    "SLOT", # flake8-slots
+    "TID", # flake8-tidy-imports
+    "UP",  # pyupgrade
+    "Q",   # flake8-quotes
+    "TCH", # flake8-type-checking
+    "T10", # flake8-debugger
+    "T20", # flake8-print
+    # TODO: "S",   # flake8-bandit
+    "YTT", # flake8-2020
+    # TODO: add more flake8 rules
+  ]
+
+ignore = [
+    # suppression in order of # of violations in Dec 2023:
+    "PLW2901",  # redefined-loop-name
+    "SLF001",  # private-member-access
+    "PLR0912",  # too-many-branches
+    "PLR0913",  # too-many-arguments
+    # RUF005: this is a different style of concatenating literals.  It perhaps performs
+    # a bit better, but doesn't seem any more readable to me.  So, ignore it.
+    "RUF005",  # collection-literal-concatenation
+    # TODO: several classes have class variables.  If that is correct, we should
+    #   annotate them with ClassVar.
+    # See https://docs.astral.sh/ruff/rules/mutable-class-default/
+    "RUF012",  # mutable-class-default
+    "PLR0915",  # too-many-statements
+    # Note: we have a couple of "namespace packages" (i.e. missing __init__.py)
+    # Not sure if we should add __init__.py to them, or they really need to be
+    # namespace packages.
+    "INP001",  # implicit-namespace-package
+    # ruff-format wants us to ignore ISC001.  I don't love that, but okay.
+    # "warning: The following rules may cause conflicts when used with the formatter:
+    #  `ISC001`. To avoid unexpected behavior, we recommend disabling these rules,
+    #  either by removing them from the `select` or `extend-select` configuration,
+    #  or adding them to the `ignore` configuration."
+    "ISC001",  # single-line-implicit-string-concatenation
+    # PERF203 has minimal performance impact, and you have to catch the exception
+    # inside the loop if you want to ignore it, so let's ignore PERF203.
+    "PERF203",  # try-except-in-loop
+]
+
+[tool.ruff.lint.extend-per-file-ignores]
+
+"pelican/__init__.py" = [
+    # allow imports after a call to a function, see the file
+    "E402"
+]
+"pelican/tests/test_utils.py" = [
+    # the tests have a bunch of unicode characters
+    "RUF001"
+]
+"pelican/tests/test_generators.py" = [
+    # the tests have a bunch of constants, why not
+    "PLR2004"
+]
+
+"pelican/tools/*.py}" = [
+    # this is a command-line utility, prints are fine
+    "T201"
+]

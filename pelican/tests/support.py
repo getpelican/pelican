@@ -261,9 +261,7 @@ class LoggedTestCase(unittest.TestCase):
         self.assertEqual(
             actual,
             count,
-            msg="expected {} occurrences of {!r}, but found {}".format(
-                count, msg, actual
-            ),
+            msg=f"expected {count} occurrences of {msg!r}, but found {actual}",
         )
 
 

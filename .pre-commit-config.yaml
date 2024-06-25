@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for info on hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -13,11 +13,18 @@ repos:
       - id: end-of-file-fixer
       - id: forbid-new-submodules
       - id: trailing-whitespace
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.5
+    # ruff version should match the one in pyproject.toml
+    rev: v0.4.10
     hooks:
       - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
-        args: ["--check"]
 
-exclude: ^pelican/tests/output/
+  - repo: https://github.com/rtts/djhtml
+    rev: '3.0.6'
+    hooks:
+      - id: djhtml
+      - id: djcss
+      - id: djjs

@@ -1,10 +1,9 @@
 import os
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 
 from pelican import readers
 from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
-
 
 CUR_DIR = os.path.dirname(__file__)
 CONTENT_PATH = os.path.join(CUR_DIR, "content")
@@ -28,11 +27,23 @@ class ReaderTest(unittest.TestCase):
                 self.assertEqual(
                     value,
                     real_value,
-                    "Expected %s to have value %s, but was %s"
-                    % (key, value, real_value),
+                    f"Expected {key} to have value {value}, but was {real_value}",
                 )
             else:
                 self.fail(f"Expected {key} to have value {value}, but was not in Dict")
+
+    def test_markdown_disabled(self):
+        with patch.object(
+            readers.MarkdownReader, "enabled", new_callable=PropertyMock
+        ) as attr_mock:
+            attr_mock.return_value = False
+            readrs = readers.Readers(settings=get_settings())
+            self.assertEqual(
+                set(readers.MarkdownReader.file_extensions),
+                readrs.disabled_readers.keys(),
+            )
+            for val in readrs.disabled_readers.values():
+                self.assertEqual(readers.MarkdownReader, val.__class__)
 
 
 class TestAssertDictHasSubset(ReaderTest):
@@ -592,7 +603,7 @@ class MdReaderTest(ReaderTest):
             "modified": SafeDatetime(2012, 11, 1),
             "multiline": [
                 "Line Metadata should be handle properly.",
-                "See syntax of Meta-Data extension of " "Python Markdown package:",
+                "See syntax of Meta-Data extension of Python Markdown package:",
                 "If a line is indented by 4 or more spaces,",
                 "that line is assumed to be an additional line of the value",
                 "for the previous keyword.",

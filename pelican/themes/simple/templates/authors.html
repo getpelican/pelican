@@ -5,8 +5,8 @@
 {% block content %}
     <h2>Authors on {{ SITENAME }}</h2>
     <ul>
-    {% for author, articles in authors|sort %}
-        <li><a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a> ({{ articles|count }})</li>
-    {% endfor %}
+        {% for author, articles in authors|sort %}
+            <li><a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a> ({{ articles|count }})</li>
+        {% endfor %}
     </ul>
 {% endblock %}

@@ -5,3 +5,15 @@ cabdb26cee66e1173cf16cb31d3fe5f9fa4392e7
 ecd598f293161a52564aa6e8dfdcc8284dc93970
 # Apply Ruff and pyupgrade to Jinja templates
 db241feaa445375dc05e189e69287000ffe5fa8e
+# Change pre-commit to run ruff and ruff-format with fixes
+6d8597addb17d5fa3027ead91427939e8e4e89ec
+# Upgrade Ruff from 0.1.x to 0.4.x
+0bd02c00c078fe041b65fbf4eab13601bb42676d
+# Apply more Ruff checks to code
+9d30c5608a58d202b1c02d55651e6ac746bfb173
+# Apply yet more Ruff checks to code
+7577dd7603f7cb3a09922d1edb65b6eafb6e2ac7
+# Indent Jinja templates, HTML, CSS, and JS via DjHTML
+4af40e80772a58eac8969360e5caeb99e3e26e78
+# Ruff UP031: Use F-string format specifiers instead of percent format
+30bde3823f50b9ba8ac5996c1c46bb72031aa6b8

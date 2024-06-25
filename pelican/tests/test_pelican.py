@@ -1,3 +1,5 @@
+import contextlib
+import io
 import locale
 import logging
 import os
@@ -6,9 +8,13 @@ import sys
 import unittest
 from collections.abc import Sequence
 from shutil import rmtree
-from tempfile import mkdtemp
+from tempfile import TemporaryDirectory, mkdtemp
+from unittest.mock import PropertyMock, patch
 
-from pelican import Pelican
+from rich.console import Console
+
+import pelican.readers
+from pelican import Pelican, __version__, main
 from pelican.generators import StaticGenerator
 from pelican.settings import read_settings
 from pelican.tests.support import (
@@ -71,8 +77,7 @@ class TestPelican(LoggedTestCase):
         if proc.returncode != 0:
             msg = self._formatMessage(
                 msg,
-                "%s and %s differ:\nstdout:\n%s\nstderr\n%s"
-                % (left_path, right_path, out, err),
+                f"{left_path} and {right_path} differ:\nstdout:\n{out}\nstderr\n{err}",
             )
             raise self.failureException(msg)
 
@@ -271,3 +276,52 @@ class TestPelican(LoggedTestCase):
             [sys.executable, "-m", "pelican", "--help"]
         ).decode("ascii", "replace")
         assert "usage:" in output
+
+    def test_main_version(self):
+        """Run main --version."""
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            with self.assertRaises(SystemExit):
+                main(["--version"])
+            self.assertEqual(f"{__version__}\n", out.getvalue())
+
+    def test_main_help(self):
+        """Run main --help."""
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            with self.assertRaises(SystemExit):
+                main(["--help"])
+            self.assertIn("A tool to generate a static blog", out.getvalue())
+
+    def test_main_on_content(self):
+        """Invoke main on simple_content directory."""
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            with TemporaryDirectory() as temp_dir:
+                # Don't highlight anything.
+                # See https://rich.readthedocs.io/en/stable/highlighting.html
+                with patch("pelican.console", new=Console(highlight=False)):
+                    main(["-o", temp_dir, "pelican/tests/simple_content"])
+            self.assertIn("Processed 1 article", out.getvalue())
+            self.assertEqual("", err.getvalue())
+
+    def test_main_on_content_markdown_disabled(self):
+        """Invoke main on simple_content directory."""
+        with patch.object(
+            pelican.readers.MarkdownReader, "enabled", new_callable=PropertyMock
+        ) as attr_mock:
+            attr_mock.return_value = False
+            out, err = io.StringIO(), io.StringIO()
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                with TemporaryDirectory() as temp_dir:
+                    # Don't highlight anything.
+                    # See https://rich.readthedocs.io/en/stable/highlighting.html
+                    with patch("pelican.console", new=Console(highlight=False)):
+                        main(["-o", temp_dir, "pelican/tests/simple_content"])
+                self.assertIn("Processed 0 articles", out.getvalue())
+                self.assertLogCountEqual(
+                    1,
+                    ".*article_with_md_extension.md: "
+                    "Could not import 'markdown.Markdown'. "
+                    "Have you installed the 'markdown' package?",
+                )
