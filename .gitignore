@@ -24,3 +24,6 @@ samples/output
 
 # pycharm
 .idea
+
+# vscode
+.vscode

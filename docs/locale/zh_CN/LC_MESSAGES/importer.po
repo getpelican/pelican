@@ -1,0 +1,321 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 19:06+0800\n"
+"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.15.0\n"
+
+#: ../../importer.rst:4 2e58a5582f664ba0af49aac4480bc799
+msgid "Importing an existing site"
+msgstr "导入已有站点"
+
+#: ../../importer.rst:7 5182de0b717543c7a4813491755b720a
+msgid "Description"
+msgstr "简介"
+
+#: ../../importer.rst:9 29a8bae0ba78486894ed4c286cd2f3b4
+msgid ""
+"``pelican-import`` is a command-line tool for converting articles from "
+"other software to reStructuredText or Markdown. The supported import "
+"formats are:"
+msgstr ""
+"命令行工具 ``pelican-import`` 用于将其他软件生成的文章转换成reStructuredText"
+"或Markdown格式。支持导入下面这些格式："
+
+#: ../../importer.rst:12 c670f6055ad24d818132d74951c9928c
+msgid "Blogger XML export"
+msgstr "Blogger XML export"
+
+#: ../../importer.rst:13 d31ddaa8c7d54a268b379f706164de39
+msgid "Dotclear export"
+msgstr "Dotclear export"
+
+#: ../../importer.rst:14 5102eb70c58240b2ad4d508a196b176e
+msgid "Medium export"
+msgstr "Medium export"
+
+#: ../../importer.rst:15 2cfcdf575387417bae3a9938aa55b0e6
+msgid "Tumblr API"
+msgstr "Tumblr API"
+
+#: ../../importer.rst:16 42233d68a4bc46339b284681bdbdd19c
+msgid "WordPress XML export"
+msgstr "WordPress XML export"
+
+#: ../../importer.rst:17 0170dad08a80435b99a39ccaf887c5bb
+msgid "RSS/Atom feed"
+msgstr "RSS/Atom feed"
+
+#: ../../importer.rst:19 077a8220f4a84dd297ec5aa7cff15a24
+msgid ""
+"The conversion from HTML to reStructuredText or Markdown relies on "
+"`Pandoc`_. For Dotclear, if the source posts are written with Markdown "
+"syntax, they will not be converted (as Pelican also supports Markdown)."
+msgstr ""
+"从HTML转换到reStructuredText或Markdown是依赖 `Pandoc`_ "
+"完成的。对于Dotclear，若原帖子是由Markdown语法写的，则无需转换"
+"（因为Pelican本就支持Markdown）。"
+
+#: ../../importer.rst:25 e9b94b6029204b82b009d3ef23c19814
+msgid ""
+"Unlike Pelican, Wordpress supports multiple categories per article. These"
+" are imported as a comma-separated string. You have to resolve these "
+"manually, or use a plugin such as `More Categories`_ that enables "
+"multiple categories per article."
+msgstr ""
+"和Pelican不同，在Wordpress中可以将一篇文章同时放在多个分类中。在导入时，各个分类"
+"会以逗号分隔，你必须自己手动进行处理。或者也可以使用例如 `More Categories`_ "
+"这样的插件，使得文章可以同时存在于多个分类中。"
+
+#: ../../importer.rst:32 f7add19b68754b6e8a617a1d50dee759
+msgid ""
+"Imported pages may contain links to images that still point to the "
+"original site. So you might want to download those images into your local"
+" content and manually re-link them from the relevant pages of your site."
+msgstr ""
+"要导入的内容中可能会包含指向原站点的图片链接，你可能希望将他们全部下载下来，然后再"
+"重新手动调整这些链接。"
+
+#: ../../importer.rst:37 22cc1a514c4f42efbcf9afc3d987c42e
+msgid "Dependencies"
+msgstr "依赖"
+
+#: ../../importer.rst:39 6139199770a24fc7af7ca7e556d18d5f
+msgid ""
+"``pelican-import`` has some dependencies not required by the rest of "
+"Pelican:"
+msgstr ""
+"``pelican-import`` 需要用到一些其他依赖，这些依赖只会被 ``pelican-import`` 用到："
+
+#: ../../importer.rst:41 0e8eb04bb07f4752880b873e73e7f7e5
+msgid ""
+"*BeautifulSoup4* and *lxml*, for WordPress and Dotclear import. Can be "
+"installed like any other Python package (``pip install BeautifulSoup4 "
+"lxml``)."
+msgstr ""
+"为了能够导入WordPress和Dotclear的内容，需要 *BeautifulSoup4* 与 *lxml* 。"
+"安装方法与其他Python包相同（ ``pip install BeautifulSoup4 lxml`` ）"
+
+#: ../../importer.rst:44 7d31c1ad4ecb4014a3ef240436b9b3e1
+msgid "*Feedparser*, for feed import (``pip install feedparser``)."
+msgstr "为了能够导入订阅源，需要 *Feedparser* （ ``pip install feedparser`` ）"
+
+#: ../../importer.rst:45 db7a18b1a4534a17956c9d030dddff56
+msgid ""
+"*Pandoc*, see the `Pandoc site`_ for installation instructions on your "
+"operating system."
+msgstr ""
+"还需要 *Pandoc* ，参照 `Pandoc官方网站`_ 进行安装。"
+
+#: ../../importer.rst:53 9952881aed104ef0ac82af5339e6b149
+msgid "Usage"
+msgstr "用法"
+
+#: ../../importer.rst:63 83dbe43e4d2e4d8eaf3e37724ac119e3
+msgid "Positional arguments"
+msgstr "位置参数"
+
+#: ../../importer.rst:65 4a12692744024752be75d82ed74d369d
+msgid "``input``"
+msgstr "``input``"
+
+#: ../../importer.rst:65 52f62f22221f4c3d964df5aced3d2a2b
+msgid "The input file to read"
+msgstr "需要读取的输入文件"
+
+#: ../../importer.rst:66 acc46432d5c14ea8a5e27e6ec2b84d18
+msgid "``api_key``"
+msgstr "``api_key``"
+
+#: ../../importer.rst:66 29dd358bf2fe49d8a218c56ca376f6a6
+msgid ""
+"(Tumblr only) api_key can be obtained from "
+"https://www.tumblr.com/oauth/apps"
+msgstr ""
+"（只会在Tumblr中用到）从 https://www.tumblr.com/oauth/apps 中获取到的api_key"
+
+#: ../../importer.rst:70 a81b90d51a9f4c28adc09038715cf5c2
+msgid "Optional arguments"
+msgstr "可选参数"
+
+#: ../../importer.rst:72 d4d5211b75aa4103b06ad7685368af06
+msgid "Show this help message and exit"
+msgstr "显示此帮助信息并退出 ``pelican-import`` "
+
+#: ../../importer.rst:73 a7bae87fe16644f4b5da7d32fdc05f95
+msgid "Blogger XML export (default: False)"
+msgstr "输入是否为Blogger XML格式（默认：False）"
+
+#: ../../importer.rst:74 e8c133125ed04120bcc3737fa2a0ba60
+msgid "Dotclear export (default: False)"
+msgstr "输入是否为Dotclear格式（默认：False）"
+
+#: ../../importer.rst:75 caffd159f92a4f36aadedec398823ac3
+msgid "Medium export (default: False)"
+msgstr "输入是否为Medium格式（默认：False）"
+
+#: ../../importer.rst:76 f1bcaccf8e2f43f6894f2f0540c9d7ba
+msgid "Tumblr API (default: False)"
+msgstr "输入是否为Tumblr API格式（默认：False）"
+
+#: ../../importer.rst:77 6131f8fa00294515a028f4bb1a3a3053
+msgid "WordPress XML export (default: False)"
+msgstr "输入是否为WordPress XML格式（默认：False）"
+
+#: ../../importer.rst:78 dad00ee0aebb4550acae995ecdbb622f
+msgid "Feed to parse (default: False)"
+msgstr "输入是否为订阅源格式（默认：False）"
+
+#: ../../importer.rst:80 0ca3cbbc57c64b5b88444ccde94f94ce
+msgid "Output path (default: content)"
+msgstr "输出路径（默认：content）"
+
+#: ../../importer.rst:82 baa2762a4ee745028e29865720ca299d
+msgid ""
+"Output markup format: ``rst``, ``markdown``, or ``asciidoc`` (default: "
+"``rst``)"
+msgstr ""
+"输出格式，可选值为： ``rst`` 、 ``markdown`` 、 ``asciidoc`` （默认： ``rst`` ）"
+
+#: ../../importer.rst:84 53232a317a58422d8f070c245d3b7409
+msgid "Put files in directories with categories name (default: False)"
+msgstr "是否要将输出文件按分类名放到各文件夹中（默认：False）"
+
+#: ../../importer.rst:86 f72e1895d9fc4facb90ddffb53b31a0a
+msgid ""
+"Put files recognised as pages in \"pages/\" sub- directory (blogger and "
+"wordpress import only) (default: False)"
+msgstr ""
+"将识别为页面的文件放入“pages/” 子文件夹中（仅在blogger和wordpress中有用）（默认：False）"
+
+#: ../../importer.rst:89 3f9315af4f1e4ced8ece96fca71cb1e7
+msgid "Import only post from the specified author"
+msgstr "仅导入某个作者的帖子"
+
+#: ../../importer.rst:90 0b34125f0bb744b089fe77b86b3e50f7
+msgid ""
+"Strip raw HTML code that can't be converted to markup such as flash "
+"embeds or iframes (default: False)"
+msgstr ""
+"删除无法转换的HTML代码，例如嵌入的flash或iframe（默认：False）"
+
+#: ../../importer.rst:92 f899a119b708450bbd38913f813255c2
+msgid ""
+"Put wordpress custom post types in directories. If used with --dir-cat "
+"option directories will be created as \"/post_type/category/\" (wordpress"
+" import only)"
+msgstr ""
+"将wordpress中的自定义类型博文放到对应文件夹中。如果同时还使用了 --dir-cat 选项，"
+"输出转换后文件时会创建诸如“/post_type/category/” 的文件夹（只在wordpress中有效）"
+
+#: ../../importer.rst:95 627c041fab81460eafd4f5fe361bcd1a
+msgid ""
+"Download files uploaded to wordpress as attachments. Files will be added "
+"to posts as a list in the post header and links to the files within the "
+"post will be updated. All files will be downloaded, even if they aren't "
+"associated with a post. Files will be downloaded with their original path"
+" inside the output directory, e.g. \"output/wp-"
+"uploads/date/postname/file.jpg\". (wordpress import only) (requires an "
+"internet connection)"
+msgstr ""
+"下载作为附件上传到WordPress的文件。文件会以列表形式添加到帖子的开头，并且到这些"
+"文件的链接都会进行更新。另外，即使某些文件没有在任何帖子中用到，也同样会被下载。"
+"文件会被下载到输出文件夹下，并保持原始路径，例如"
+"“output/wp-uploads/date/postname/file.jpg” 。（仅在wordpress中有效，"
+"且需要互联网连接）"
+
+#: ../../importer.rst:104 11162d8c497b4108a38c2a60af4a4215
+msgid ""
+"Disable storing slugs from imported posts within output. With this "
+"disabled, your Pelican URLs may not be consistent with your original "
+"posts. (default: False)"
+msgstr ""
+"不保存导入推文的slug，会导致Pelican的URL和原推文不一致。（默认：False）"
+
+#: ../../importer.rst:109 f4f4b6e918d3498e927b59c5d0bae05a
+msgid "Blog name used in Tumblr API"
+msgstr "Tumblr API中使用的博客名"
+
+#: ../../importer.rst:113 16e0f9bd1c6e4b338673f1800e6a4995
+msgid "Examples"
+msgstr "例子"
+
+#: ../../importer.rst:115 0cf17b9fd72940c391a1bb8bf7de534b
+msgid "For Blogger::"
+msgstr "导入Blogger："
+
+#: ../../importer.rst:119 3fc79daf9e9e4f5ba1a121faaabd0c9e
+msgid "For Dotclear::"
+msgstr "导入Dotclear："
+
+#: ../../importer.rst:123 328ff8145b464fa2ab59505a8bc3236a
+msgid "For Medium::"
+msgstr "导入Medium："
+
+#: ../../importer.rst:127 8ca5f721833142249b6d798efcb77458
+msgid ""
+"The Medium export is a zip file.  Unzip it, and point this tool to the "
+"\"posts\" subdirectory.  For more information on how to export, see "
+"https://help.medium.com/hc/en-us/articles/115004745787-Export-your-"
+"account-data."
+msgstr ""
+"Medium中导出的是一个zip文件。请先解压之，然后再将其中的“posts”子目录传给此工具。 "
+"https://help.medium.com/hc/en-us/articles/115004745787-Export-your-account-data "
+"中有更详细的导出指导。"
+
+#: ../../importer.rst:131 516a83a4d8cf4570a9a6fff416e5cf5a
+msgid "For Tumblr::"
+msgstr "导入Tumblr："
+
+#: ../../importer.rst:135 8fcab620c0d44bb29a120d8d781f4daa
+msgid "For WordPress::"
+msgstr "导入WordPress："
+
+#: ../../importer.rst:139 a929213eb21f4118b9adbb6199bd78ea
+msgid "For Medium (an example of using an RSS feed):"
+msgstr "导入Medium（例子中使用了RSS订阅源）："
+
+#: ../../importer.rst:141 5e23c5d167ef4db1994f4323ac3d120e
+msgid ""
+"$ python -m pip install feedparser $ pelican-import --feed "
+"https://medium.com/feed/@username"
+msgstr ""
+"$ python -m pip install feedparser $ pelican-import --feed "
+"https://medium.com/feed/@username"
+
+#: ../../importer.rst:146 b44dfe0f807049899c0560c6bf62c386
+msgid "The RSS feed may only return the most recent posts — not all of them."
+msgstr "RSS订阅源可能只会返回最新的帖子，而不是所有帖子。"
+
+#: ../../importer.rst:149 575426ff787d4647b3aa2469b8b52412
+msgid "Tests"
+msgstr "测试"
+
+#: ../../importer.rst:151 036d2119412b41f3a3cb69cec74ecc81
+msgid "To test the module, one can use sample files:"
+msgstr "可以使用下面的文件作为样例进行测试："
+
+#: ../../importer.rst:153 482b30f9aab54717bb14218ae5fa8ea6
+msgid ""
+"for WordPress: https://www.wpbeginner.com/wp-themes/how-to-add-dummy-"
+"content-for-theme-development-in-wordpress/"
+msgstr ""
+"WordPress： https://www.wpbeginner.com/wp-themes/how-to-add-dummy-content-"
+"for-theme-development-in-wordpress/"
+
+#: ../../importer.rst:154 6cb1bd10d37e4993aabece8aaed20171
+msgid "for Dotclear: http://media.dotaddict.org/tda/downloads/lorem-backup.txt"
+msgstr "Dotclear： http://media.dotaddict.org/tda/downloads/lorem-backup.txt"

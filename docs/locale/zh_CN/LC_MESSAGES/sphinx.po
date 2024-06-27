@@ -1,0 +1,60 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 19:06+0800\n"
+"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.15.0\n"
+
+#: ../../_templates/page.html:68 697aead398874e06aa15cfd74d134745
+msgid "Back to top"
+msgstr "返回顶部"
+
+#: ../../_templates/page.html:101 f91a64e54aae49c2bd09a944ea693193
+msgid "Next"
+msgstr "下一节"
+
+#: ../../_templates/page.html:113 6c3ad069077b4e2cb6e1f77cc2962881
+msgid "Previous"
+msgstr "前一节"
+
+#: ../../_templates/page.html:116 e83e03d0b50c4065a9f87db25a23b3ee
+msgid "Home"
+msgstr "首页"
+
+#: ../../_templates/page.html:129 1d0fdb4c0b4e420283101ba5c21ac985
+#, python-format
+msgid "<a href=\"%(path)s\">Copyright</a> &#169; %(copyright)s"
+msgstr "<a href=\"%(path)s\">Copyright</a> &#169; %(copyright)s"
+
+#: ../../_templates/page.html:133 0a35c662e6574da48f7ac5c6b2c82874
+#, python-format
+msgid ""
+"Copyright &#169; %(copyright)s, <a "
+"href=\"https://justinmayer.com\">Justin Mayer</a>, Alexis Metaireau, and "
+"contributors"
+msgstr ""
+"Copyright &#169; %(copyright)s, <a "
+"href=\"https://justinmayer.com\">Justin Mayer</a>, Alexis Metaireau, and "
+"contributors"
+
+#: ../../_templates/page.html:141 07b89372db484251bfcd3b54e0845bf0
+#, python-format
+msgid "Last updated on %(last_updated)s"
+msgstr "最后更新于 %(last_updated)s"
+
+#: ../../_templates/page.html:187 2eb9f1b479a7405290a91d8e1962f265
+msgid "On this page"
+msgstr "本页目录"

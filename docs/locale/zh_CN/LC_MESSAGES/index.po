@@ -1,0 +1,134 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 19:06+0800\n"
+"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.15.0\n"
+
+#: ../../index.rst:2 160b5c32c524404ba295da4e89124739
+msgid "Pelican |release|"
+msgstr "Pelican |release|"
+
+#: ../../index.rst:4 19170a80b4274f71b77062c7a6b90726
+msgid ""
+"Pelican is a static site generator, written in Python_. Highlights "
+"include:"
+msgstr ""
+"Pelican是一个用 Python_ 写的静态站点生成器，它有诸多亮点："
+
+#: ../../index.rst:6 6ab42a346f2c46d789cd46655195f2d3
+msgid ""
+"Write your content directly with your editor of choice in "
+"reStructuredText_ or Markdown_ formats"
+msgstr ""
+"你可以直接在自己的编辑器中用 reStructuredText_ 或 Markdown_ 完成内容创作"
+
+#: ../../index.rst:8 dbd17888530e43ce8bdfc1594947032c
+msgid "Includes a simple CLI tool to (re)generate your site"
+msgstr "自带了一个简单的命令行工具，你可以用它来生成你的站点"
+
+#: ../../index.rst:9 2bbe72bda8db457a88f3d3a94d16cc0c
+msgid "Easy to interface with distributed version control systems and web hooks"
+msgstr "易于与分布式版本控制系统和webhook交互"
+
+#: ../../index.rst:10 24af69b083024f2a9c4f162d54fa57c6
+msgid "Completely static output is easy to host anywhere"
+msgstr "生成的站点是完全静态的，可以在任何主机上轻松地部署"
+
+#: ../../index.rst:12 1e2090f3f19d49a19a6c50524e4cd0b7
+msgid "Ready to get started? Check out the :doc:`Quickstart<quickstart>` guide."
+msgstr "准备好开始体验了吗？请查看 :doc:`快速入门<quickstart>` 指南。"
+
+#: ../../index.rst:15 481a352565e84c848e018de507fbe9af
+msgid "Features"
+msgstr "特性"
+
+#: ../../index.rst:17 6c7b5d9b43ca42f1b1df139e7f884d26
+msgid "Pelican’s feature highlights include:"
+msgstr "Pelican在特性上也有很多亮点："
+
+#: ../../index.rst:19 464e5e8ea8324fab9c5496b317a6db97
+msgid ""
+"Articles (e.g., blog posts) and pages (e.g., \"About\", \"Projects\", "
+"\"Contact\")"
+msgstr ""
+"可以生成文章（例如博客推文）和页面（例如“关于”、“联系我们”、“项目”）"
+
+#: ../../index.rst:20 c7cc4fe6ea8145feb0ace7d0965e2634
+msgid "Integration with external services"
+msgstr "可以和外部服务集成"
+
+#: ../../index.rst:21 ceb2c8a629024157946eba53638d7eb1
+msgid "Site themes (created using Jinja2_ templates)"
+msgstr "可以使用主题（主题使用 Jinja2_ 模板引擎创建）"
+
+#: ../../index.rst:22 51c3defcba6c4d31a77c3aade6826f1a
+msgid "Publication of articles in multiple languages"
+msgstr "可以为同一篇文章发布多种语言版本"
+
+#: ../../index.rst:23 6f7cbfae94c54318a904e9725ce73677
+msgid "Generation of Atom and RSS feeds"
+msgstr "可以生成Atom和Rss订阅源"
+
+#: ../../index.rst:24 3d667d2ed98a489788f6c38a4e4a6752
+msgid "Code syntax highlighting"
+msgstr "可以渲染代码高亮"
+
+#: ../../index.rst:25 bf1a1f91b821464182471a3760a59d4f
+msgid "Import existing content from WordPress, Dotclear, or RSS feeds"
+msgstr "可以从WordPress、Dotclear或Rss订阅源导入已有的内容"
+
+#: ../../index.rst:26 bd82641c549645cb8b4cd3187800397c
+msgid "Fast rebuild times thanks to content caching and selective output writing"
+msgstr "得益于内容缓存和选择性生成设计，可以快速重新生成站点"
+
+#: ../../index.rst:27 8dec47d1ab13410c9b99db0709c860a3
+msgid "Extensible via a rich plugin ecosystem: `Pelican Plugins`_"
+msgstr "可扩展性强，有丰富的插件生态： `Pelican Plugins`_"
+
+#: ../../index.rst:30 c7e090d7d2e04ff1ac1844e56209d75b
+msgid "Why the name \"Pelican\"?"
+msgstr "为什么叫做“Pelican”？"
+
+#: ../../index.rst:32 8c31222af5e24ba69acb5dd07a5b5d56
+msgid ""
+"\"Pelican\" is an anagram for *calepin*, which means \"notebook\" in "
+"French. ;)"
+msgstr ""
+"“Pelican”是法语词笔记本 *calepin* 读音的回文。;)"
+
+#: ../../index.rst:35 188f72b2bb644f978180eba22009ebc6
+msgid "Source code"
+msgstr "源码"
+
+#: ../../index.rst:37 2c8804f173fb4aa8973fb4d2413c263b
+msgid "You can access the source code at: https://github.com/getpelican/pelican"
+msgstr "在这里可以获取Pelican的源码： https://github.com/getpelican/pelican"
+
+#: ../../index.rst:40 06ab21b7cde94cee92193199ddc69775
+msgid "How to get help, contribute, or provide feedback"
+msgstr "如何获取帮助、贡献内容或是提供反馈"
+
+#: ../../index.rst:42 7fdcc2bcaac04317a6f4114f1d9c327f
+msgid ""
+"See our :doc:`feedback and contribution submission guidelines "
+"<contribute>`."
+msgstr ""
+"请查看文档 :doc:`反馈意见和贡献的提交指南 <contribute>`。"
+
+#: ../../index.rst:45 3d15499d76e1489d8e8782c65f73bb29
+msgid "Documentation"
+msgstr "文档"
