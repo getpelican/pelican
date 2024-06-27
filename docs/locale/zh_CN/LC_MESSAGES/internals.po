@@ -1,0 +1,172 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 19:06+0800\n"
+"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.15.0\n"
+
+#: ../../internals.rst:2 5d90a7c7f9dd42b5ba1fdfc05c5e9c3c
+msgid "Pelican internals"
+msgstr "Pelican内部机制"
+
+#: ../../internals.rst:4 fa53597118244e8585b3b0a9fb4336c0
+msgid ""
+"This section describe how Pelican works internally. As you'll see, it's "
+"quite simple, but a bit of documentation doesn't hurt.  :)"
+msgstr ""
+"这一节描述了Pelican的内部运行机制。你会发现，Pelican的内部其实并不复杂。 :)"
+
+#: ../../internals.rst:7 c9a34db098f34796b80ee62896702be2
+msgid ""
+"You can also find in the :doc:`report` section an excerpt of a report the"
+" original author wrote with some software design information."
+msgstr "你可以在 :doc:`report` 一节中找到原作者用软件设计相关内容报告的节选。"
+
+#: ../../internals.rst:13 ac2af84842574bef9a791b416e21834e
+msgid "Overall structure"
+msgstr "总体结构"
+
+#: ../../internals.rst:15 fb7aea45b8f74c9c877bf2640d47aaac
+msgid ""
+"What Pelican does is take a list of files and process them into some sort"
+" of output. Usually, the input files are reStructuredText and Markdown "
+"files, and the output is a blog, but both input and output can be "
+"anything you want."
+msgstr ""
+"Pelican做的事情其实很简单：获取一个文件列表，并将它们处理为某种输出。通常，输入文件是"
+"reStructuredText和Markdown文件，输出是一个博客，但事实上输入和输出都可以是你想要的"
+"任何内容。"
+
+#: ../../internals.rst:19 599649d1e9da4355ab02b50ea4fbdb19
+msgid "The logic is separated into different classes and concepts:"
+msgstr "系统的整体逻辑可以分为几个不同的类和概念："
+
+#: ../../internals.rst:21 8ec0821a726e4ade8046921cc09b3ea3
+msgid ""
+"**Writers** are responsible for writing files: .html files, RSS feeds, "
+"and so on. Since those operations are commonly used, the object is "
+"created once and then passed to the generators."
+msgstr ""
+"**Writers** 负责完成 html、RSS订阅源等等内容的文件写入。因为这些操作都是比较常用的，"
+"这个类只会被创建一次，然后再传给Generators。"
+
+#: ../../internals.rst:25 63c9a61869884147a8752e9be188e0e9
+msgid ""
+"**Readers** are used to read from various formats (HTML, Markdown and "
+"reStructuredText for now, but the system is extensible). Given a file, "
+"they return metadata (author, tags, category, etc.) and content (HTML-"
+"formatted)."
+msgstr ""
+"**Readers** 用于读取不同格式的文件（目前支持HTML、Markdown、reStructuredText，"
+"但可以继续扩展）。向**Readers**输入一个文件，它会返回文档的元数据（作者、标签、"
+"分类等等）与HTML格式的文档正文内容。"
+
+#: ../../internals.rst:29 d9bc146ae213415b804cd93ebf43e340
+msgid ""
+"**Generators** generate the different outputs. For instance, Pelican "
+"comes with ``ArticlesGenerator`` and ``PageGenerator``. Given a "
+"configuration, they can do whatever they want. Most of the time, it's "
+"generating files from inputs."
+msgstr ""
+"**Generators** 用以生成不同的输出，Pelican自带了 ``ArticlesGenerator`` 和 "
+"``PageGenerator`` 。给定一套配置信息， **Generators** 可以做几乎任何事。"
+"但大多数情况下，它的工作就是从输入生成文件。"
+
+#: ../../internals.rst:34 49ef39e8677a4529a3ee226faae1526b
+msgid ""
+"Pelican also uses templates, so it's easy to write your own theme. The "
+"syntax is `Jinja2 <https://palletsprojects.com/p/jinja/>`_ and is very "
+"easy to learn, so don't hesitate to jump in and build your own theme."
+msgstr ""
+"Pelican使用了模板引擎，因此可以较为简单地编写自定义主题。模板语法使用的是易于学习的 "
+"`Jinja2 <https://palletsprojects.com/p/jinja/>`_ ，因此快去构建你自己的主题吧。"
+
+#: ../../internals.rst:39 1aef766f93d549afa332fad4278c4063
+msgid "How to implement a new reader?"
+msgstr "如何实现一个新的reader？"
+
+#: ../../internals.rst:41 abbbfc19ccea4e3ea3716179981e3c1d
+msgid ""
+"Is there an awesome markup language you want to add to Pelican? Well, the"
+" only thing you have to do is to create a class with a ``read`` method "
+"that returns HTML content and some metadata."
+msgstr ""
+"若是希望为Pelican添加一个标记语言，只需要创建一个类，实现 ``read`` 方法，并在其中"
+"返回元数据和以HTML表示的正文内容。"
+
+#: ../../internals.rst:45 1e9fc1bcc9444db4b751f1c621280a32
+msgid "Take a look at the Markdown reader::"
+msgstr "可以看一看Markdown的reader："
+
+#: ../../internals.rst:71 cbc4f49384964be3a0a68b1083100839
+msgid "Simple, isn't it?"
+msgstr "是不是很简单呢？"
+
+#: ../../internals.rst:73 02643c7e485d49e39344570ba5639a60
+msgid ""
+"If your new reader requires additional Python dependencies, then you "
+"should wrap their ``import`` statements in a ``try...except`` block.  "
+"Then inside the reader's class, set the ``enabled`` class attribute to "
+"mark import success or failure. This makes it possible for users to "
+"continue using their favourite markup method without needing to install "
+"modules for formats they don't use."
+msgstr ""
+"如果新创建的reader需要额外的Python依赖，应该把 ``import`` 放在 ``try...except`` "
+"块中。在reader类中，设置类属性 ``enabled`` 来标记import是否成功。这使得用户能"
+"继续使用他们喜欢的标记语言而无需安装用不到的模块。"
+
+#: ../../internals.rst:80 02deeeac368b4dbc8c7b1025275d5bd5
+msgid "How to implement a new generator?"
+msgstr "如何实现一个新的generator？"
+
+#: ../../internals.rst:82 f7e5c28efbdb40c0bac7b985e8264310
+msgid ""
+"Generators have two important methods. You're not forced to create both; "
+"only the existing ones will be called."
+msgstr ""
+"generator有两个重要方法。不一定两个都要创建，若只创建了一个，就会自动调用存在的方法。"
+
+#: ../../internals.rst:85 01f2801461e043e7882167907e337d2c
+msgid ""
+"``generate_context``, that is called first, for all the generators. Do "
+"whatever you have to do, and update the global context if needed. This "
+"context is shared between all generators, and will be passed to the "
+"templates. For instance, the ``PageGenerator`` ``generate_context`` "
+"method finds all the pages, transforms them into objects, and populates "
+"the context with them. Be careful *not* to output anything using this "
+"context at this stage, as it is likely to change by the effect of other "
+"generators."
+msgstr ""
+"``generate_context`` 会优先被调用，其中可以完成任何你想要做的事，如果需要的话，还要"
+"更新全局上下文。全局上下文会在所有generator间共享，并在之后传给模板。例如 "
+"``PageGenerator`` 的 ``generate_context`` 方法会找寻所有页面，并将他们转换为对象，"
+"再将上下文传入其中。注意，请 *不要* 在此阶段使用该上下文输出任何内容，因为其他"
+"generator还会继续影响上下文。"
+
+#: ../../internals.rst:93 3241d04af8944c48bf162963a774000c
+msgid ""
+"``generate_output`` is then called. And guess what is it made for? Oh, "
+"generating the output.  :) It's here that you may want to look at the "
+"context and call the methods of the ``writer`` object that is passed as "
+"the first argument of this function. In the ``PageGenerator`` example, "
+"this method will look at all the pages recorded in the global context and"
+" output a file on the disk (using the writer method ``write_file``) for "
+"each page encountered."
+msgstr ""
+"``generate_output`` 会在 ``generate_context`` 之后被调用，用于生成要输出的内容。"
+"此时就需要使用上下文并调用 ``writer`` 对象的方法，此 ``writer`` 就是传入 "
+"``generate_output`` 方法的第一个参数。``PageGenerator`` 的 ``generate_output`` "
+"方法中，会使用writer的 ``write_file`` 方法为全局上下文中的每一个页面输出一个文件。"
