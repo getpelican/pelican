@@ -631,6 +631,25 @@ def truncate_html_words(s: str, num: int, end_text: str = "…") -> str:
     return out
 
 
+def truncate_html_paragraphs(s, count):
+    """Truncate HTML to a certain number of paragraphs.
+
+    :param count: number of paragraphs to keep
+
+    Newlines in the HTML are preserved.
+    """
+    paragraphs = []
+    tag_stop = 0
+    substr = s[:]
+    for _ in range(count):
+        substr = substr[tag_stop:]
+        tag_start = substr.find("<p>")
+        tag_stop = substr.find("</p>") + len("</p>")
+        paragraphs.append(substr[tag_start:tag_stop])
+
+    return "".join(paragraphs)
+
+
 def process_translations(
     content_list: list[Content],
     translation_id: str | Collection[str] | None = None,

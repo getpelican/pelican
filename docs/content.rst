@@ -162,7 +162,10 @@ author you can use ``author`` field.
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the
-beginning of an article are used as the summary.
+beginning of an article are used as the summary. You can also use an article's
+first N paragraphs as its summary using the ``SUMMARY_MAX_PARAGRAPHS`` setting.
+If both settings are in use, the specified number of paragraphs will
+be used but may be truncated to respect the specified maximum length.
 
 You can also extract any metadata from the filename through a regular
 expression to be set in the ``FILENAME_METADATA`` setting. All named groups
