@@ -1813,4 +1813,3 @@ msgstr ""
 #: ../../settings.rst:1411 2aa4b6fbbab24465ab36a606cecf299c
 msgid "Example settings"
 msgstr "配置示例"
-
