@@ -475,5 +475,5 @@ msgstr ""
 "Pelican并不直接对Markdown进行处理，而是将此任务交给 Python-Markdown_ 项目，此项目"
 "的核心有意只遵循原始的Markdown语法规则，而不服从之后传播开的大量Markdown风格。"
 "另外， Python-Markdown_ 是相当模块化的，你想要使用的语法可能已经有现成的 "
-"`Markdown扩展`_ 进行了实现。或者，也有人创建了支持Markdown变体的Pelican插件，“
-”如果你想要用某种Markdown变体，可以在这些地方寻找支持。"
+"`Markdown扩展`_ 进行了实现。或者，也有人创建了支持Markdown变体的Pelican插件，"
+"如果你想要用某种Markdown变体，可以在这些地方寻找支持。"
