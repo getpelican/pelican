@@ -1,0 +1,731 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-25 20:36+0800\n"
+"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.15.0\n"
+
+#: ../../contribute.rst:2 e8f9694c47aa44e7944dae800ee528f3
+msgid "Contributing and feedback guidelines"
+msgstr "项目贡献与意见反馈"
+
+#: ../../contribute.rst:4 784f37182e78474b960306a5a794ae16
+msgid ""
+"There are many ways to contribute to Pelican. You can improve the "
+"documentation, add missing features, and fix bugs (or just report them). "
+"You can also help out by reviewing and commenting on `existing issues "
+"<https://github.com/getpelican/pelican/issues>`_."
+msgstr ""
+"有很多渠道可以参与到贡献项目中来，例如帮助改进文档、添加缺失的特性、修复与报告bug。"
+"可以从查看 `已有 issues <https://github.com/getpelican/pelican/issues>`_ 开始。"
+
+#: ../../contribute.rst:9 e17c3ff0fa71469cbe22cb4ad2640ad8
+msgid ""
+"Don't hesitate to fork Pelican and submit an issue or pull request on "
+"GitHub. When doing so, please consider the following guidelines."
+msgstr ""
+"随时随地都可以fork Pelican或是在GitHub上提交issue或PR。"
+
+#: ../../../CONTRIBUTING.rst:2 f8bc69070fab4dd7be34e1cc6a42cc02
+msgid "Filing issues"
+msgstr "提出issue"
+
+#: ../../../CONTRIBUTING.rst:4 fe98a059b9c24fcc92358f2c4505174d
+msgid "Before you submit a new issue, try `asking for help`_ first."
+msgstr "在你提交一个新的issue之前，可以先尝试 `请求他人帮助`_ 。"
+
+#: ../../../CONTRIBUTING.rst:5 e9fff7c354614ae28db994c0fcc121c0
+msgid ""
+"If determined to create a new issue, first search `Pelican Discussions`_ "
+"and `existing issues`_ (open and closed) to see if your question has "
+"already been answered previously."
+msgstr ""
+"当你决定要提出新的issue时，先在 `Pelican的讨论版`_ 和 `已有issues`_ 中搜索一下，"
+"（开放关闭的issue都搜一下），来看看你的问题是不是有人之前已经提出过。"
+
+#: ../../../CONTRIBUTING.rst:14 84cb74beed564f31810674cacf5c1f97
+msgid "How to get help"
+msgstr "如何获取帮助"
+
+#: ../../../CONTRIBUTING.rst:16 0557a84947c14606be4fd0565247d85d
+msgid "Before you ask for help, please make sure you do the following:"
+msgstr "在寻求帮助之前，请先尝试如下步骤："
+
+#: ../../../CONTRIBUTING.rst:18 6d59a3356e734dd196ec8a0739556b4c
+msgid ""
+"Read the documentation_ thoroughly. If in a hurry, at least use the "
+"search field that is provided at top-left on the documentation_ pages. "
+"Make sure you read the docs for the Pelican version you are using."
+msgstr ""
+"完整阅读 documentation_ 。如果你很急，至少先在 documentation_ 左上角的搜索栏"
+"中尝试搜索。确保你阅读的文档和使用的Pelican版本相匹配。"
+
+#: ../../../CONTRIBUTING.rst:21 4b33299936404cf98a66b672fad0e38f
+msgid ""
+"Use a search engine (e.g., DuckDuckGo, Google) to search for a solution "
+"to your problem. Someone may have already found a solution, perhaps in "
+"the form of a ':pelican-doc:`plugins` or a specific combination of "
+"settings."
+msgstr ""
+"使用搜索引擎（例如 DuckDuckGo、Google）搜索遇到问题的解决方案。互联网上可能"
+"已经有人遇到过相同的问题，解决方法可能包括使用某些 :pelican-doc:`plugins` 或配置"
+"一系列的设置选项。"
+
+#: ../../../CONTRIBUTING.rst:25 b48195d9ef674566b89aabc38139c301
+msgid "Try reproducing the issue in a clean environment, ensuring you are using:"
+msgstr "尝试在一个尽可能简单的环境中重现问题，并确保以下几点："
+
+#: ../../../CONTRIBUTING.rst:27 685d2888d2c94ea9a752ec433f8b9f1f
+msgid ""
+"latest Pelican release (or an up-to-date Git clone of Pelican ``main`` "
+"branch)"
+msgstr "使用最新版本的Pelican（或是用Git克隆Pelican的main分支）"
+
+#: ../../../CONTRIBUTING.rst:28 910a372d95d8448492eafc66eccd1ccf
+msgid "latest releases of libraries used by Pelican"
+msgstr "将Pelican使用的库升级到最新版本"
+
+#: ../../../CONTRIBUTING.rst:29 c44f4dc6b05d4be29eccc889f042702c
+msgid "no plugins or only those related to the issue"
+msgstr "此环境中没有使用插件或是只使用和问题相关的插件"
+
+#: ../../../CONTRIBUTING.rst:31 3abdf6131cf4412a8205b634a6651b01
+msgid ""
+"**NOTE:** The most common sources of problems are anomalies in (1) "
+"themes, (2) plugins, (3) settings files, and (4) ``make``/``invoke`` "
+"automation wrappers. If you can't reproduce your problem when using the "
+"following steps to generate your site, then the problem is almost "
+"certainly with one of the above-listed elements (and not Pelican "
+"itself)::"
+msgstr ""
+"**注意：** 最常见的问题基本上都产生于主题、插件、设置文件和自动化工具 "
+"``make``/``invoke`` 中。如果按照下述步骤生成站点后无法复现之前的问题，那么"
+"几乎可以肯定问题出在这四个地方，而不在Pelican本身："
+
+#: ../../../CONTRIBUTING.rst:41 f2331ea165ac4a3c8e70bf98c995f0e8
+msgid ""
+"If you can generate your site without problems using the steps above, "
+"then your problem is unlikely to be caused by Pelican itself, and "
+"therefore please consider reaching out to the maintainers of the "
+"plugins/theme you are using instead of raising the topic with the Pelican"
+" core community."
+msgstr ""
+"如果按照上述步骤能够正常生成站点，那么你的问题不太可能是由Pelican本身导致的，"
+"请考虑联系对应插件/主题的维护者，而不是在Pelican内核的社区中提出问题。"
+
+#: ../../../CONTRIBUTING.rst:46 d83b0036d4894f3ebc73e657a203d11a
+msgid ""
+"If despite the above efforts you still cannot resolve your problem, be "
+"sure to include in your inquiry the following information, preferably in "
+"the form of links to content uploaded to a `paste service`_, GitHub "
+"repository, or other publicly-accessible location:"
+msgstr ""
+"经过上面这些努力，若您仍无法解决问题，确保你的提问中包括如下信息，可以以 "
+"`paste service`_ 链接、GitHub仓库，或者其他可公开获取的形式提供："
+
+#: ../../../CONTRIBUTING.rst:51 4281f931e9064336b267bd67a35134e9
+msgid ""
+"Describe what version of Pelican you are running (output of ``pelican "
+"--version`` or the HEAD commit hash if you cloned the repo) and how "
+"exactly you installed it (the full command you used, e.g. ``python -m pip"
+" install pelican``)."
+msgstr ""
+"描述正在运行的Pelican版本信息（可以通过 ``pelican --version`` 命令得到，如果"
+"clone的源仓库则可以查看HEAD commit的哈希值），以及你是如何安装Pelican的"
+"（要包括使用到的命令，例如 ``python -m pip install pelican``）"
+
+#: ../../../CONTRIBUTING.rst:54 b1303c98bca840efb895aceb16789eb9
+msgid ""
+"If you are looking for a way to get some end result, prepare a detailed "
+"description of what the end result should look like (preferably in the "
+"form of an image or a mock-up page) and explain in detail what you have "
+"done so far to achieve it."
+msgstr ""
+"如果你希望产生某种特定的最终结果，请详细描述此最终结果是什么样的（最好以图片或者"
+"伪页面的形式），，并且细致讲述你做了哪些尝试。"
+
+#: ../../../CONTRIBUTING.rst:58 8fe972c4685140d5bd1c37f4635f6f09
+msgid ""
+"If you are trying to solve some issue, prepare a detailed description of "
+"how to reproduce the problem. If the issue cannot be easily reproduced, "
+"it cannot be debugged by developers or volunteers. Describe only the "
+"**minimum steps** necessary to reproduce it (no extra plugins, etc.)."
+msgstr ""
+"如果你在尝试解决某些问题，请详细描述如何复现此问题。如果问题很难被复现，其他开发者和志愿者就很难进行调试。"
+"尽量只写出复现该问题的 **最少步骤** （无额外插件）。"
+
+#: ../../../CONTRIBUTING.rst:62 1f3874f308e64281b910dc716180ebcf
+msgid ""
+"Upload your settings file or any other custom code that would enable "
+"people to reproduce the problem or to see what you have already tried to "
+"achieve the desired end result."
+msgstr ""
+"上传你的配置文件以及所有自定义过的代码，这可以使得大家能够重现问题或者看到你已经"
+"做出的尝试。"
+
+#: ../../../CONTRIBUTING.rst:65 1fdc6c63f1b141c7a35233607ec0d922
+msgid ""
+"Upload detailed and **complete** output logs and backtraces (remember to "
+"add the ``--debug`` flag: ``pelican --debug content [...]``)"
+msgstr ""
+"上传详细 **完整** 的输出日志以及backtraces信息（记得在执行pelican命令时加上 "
+"``--debug`` 标记： ``pelican --debug content [...]`` ）"
+
+#: ../../../CONTRIBUTING.rst:71 8741dba5da1a4990ae9c30531d05dc19
+msgid ""
+"Once the above preparation is ready, you can post your query as a new "
+"thread in `Pelican Discussions`_. Remember to include all the information"
+" you prepared."
+msgstr ""
+"一旦做好了上述准备，就可以在 `Pelican Discussions`_ 中发起你的问题了。记得在请求"
+"中附上收集好的信息。"
+
+#: ../../../CONTRIBUTING.rst:75 b34a3031f5d1427e92a9d1969d7b5274
+msgid "Contributing code"
+msgstr "贡献代码"
+
+#: ../../../CONTRIBUTING.rst:77 e29672c736554ebbbd6efd441af19df7
+msgid ""
+"Before you submit a contribution, please ask whether it is desired so "
+"that you don't spend a lot of time working on something that would be "
+"rejected for a known reason. Consider also whether your new feature might"
+" be better suited as a ':pelican-doc:`plugins` — you can `ask for help`_"
+"  to make that determination."
+msgstr ""
+"在提交代码修改前，请先询问是否需要此修改，以免你做的工作因为已知原因而被拒绝。"
+"想想要添加的新特性是否更适合以 :pelican-doc:`插件` 形式完成。可以通过 "
+"`如何获取帮助`_ 来帮助你作出决定。"
+
+#: ../../../CONTRIBUTING.rst:82 e263c09fb6e5471eb0c2c3e97994322d
+msgid ""
+"Also, if you intend to submit a pull request to address something for "
+"which there is no existing issue, there is no need to create a new issue "
+"and then immediately submit a pull request that closes it. You can submit"
+" the pull request by itself."
+msgstr ""
+"另外，如果你的PR是为了解决一个目前没有在issue中出现过的问题，那么就没有必要先创建"
+"一个新的issue，而是可以直接提起PR。"
+
+#: ../../../CONTRIBUTING.rst:87 9b08ef3e5fe4474e9306e4bfe9662fff
+msgid "Using Git and GitHub"
+msgstr "使用Git与GitHub"
+
+#: ../../../CONTRIBUTING.rst:89 7ad95f82b7d04c0ca97bb958d2425e27
+msgid ""
+"`Create a new branch`_ specific to your change (as opposed to making your"
+" commits in the ``main`` branch)."
+msgstr ""
+"`创建一个新的分支`_ 来标记你做的修改（而不是直接在主分支中提交）。"
+
+#: ../../../CONTRIBUTING.rst:91 8a31c5d7ae4045cdbf2aa67e79be3f9c
+msgid ""
+"**Don't put multiple unrelated fixes/features in the same branch / pull "
+"request.** For example, if you're working on a new feature and find a "
+"bugfix that doesn't *require* your new feature, **make a new distinct "
+"branch and pull request** for the bugfix. Similarly, any proposed changes"
+" to code style formatting should be in a completely separate pull "
+"request."
+msgstr ""
+"**不要把多个无关联的修复/特性修改放在同一个分支/拉去请求中。** 如果当你在做新特性的时候"
+"发现了一个bug可以修复，但修复这个bug *不需要用到* 这个新特性， **那么请另外创建"
+"一个分支并拉取请求。** 类似的，任何对代码风格的格式化都应该在单独的请求中拉取。"
+
+#: ../../../CONTRIBUTING.rst:96 ef2e10f7ec5e4fbbb0f977dd09b7be49
+msgid ""
+"Add a ``RELEASE.md`` file in the root of the project that contains the "
+"release type (major, minor, patch) and a summary of the changes that will"
+" be used as the release changelog entry. For example::"
+msgstr ""
+"在项目根目录下添加 ``RELEASE.md`` 文件，在其中包含release的类型（主要、次要、补丁），"
+"以及对项目改变的概述，这些内容会作为该release发布日志的一部分。下面是一个例子："
+
+#: ../../../CONTRIBUTING.rst:104 24a4d63624f44f63a0ce809901455c02
+msgid ""
+"Check for unnecessary whitespace via ``git diff --check`` before "
+"committing."
+msgstr ""
+"在提交前使用 ``git diff --check`` 来检查是否有无意义的空白字符。"
+
+#: ../../../CONTRIBUTING.rst:105 11c5b82604fe4638bf9ee6e9ef0a401b
+msgid ""
+"First line of your commit message should start with present-tense verb, "
+"be 50 characters or less, and include the relevant issue number(s) if "
+"applicable. *Example:* ``Ensure proper PLUGIN_PATH behavior. Refs #428.``"
+" If the commit *completely fixes* an existing bug report, please use "
+"``Fixes #585`` or ``Fix #585`` syntax (so the relevant issue is "
+"automatically closed upon PR merge)."
+msgstr ""
+"commit信息的第一行应该以现在时动词开头，并且第一行尽量保持在50字以下，并且包含相关联"
+"issue的编号（如果有的话）。 例如： ``Ensure proper PLUGIN_PATH behavior. "
+"Refs #428.`` 如果此项提交 *完全修复* 了某项已报告的bug，请使用例如 ``Fixes #585`` "
+"或 ``Fix #585`` 的语法（这样的话相关的issue会在PR合并后自动关闭）。"
+
+#: ../../../CONTRIBUTING.rst:110 0c1ff9d0738440e1bce853fc830278af
+msgid ""
+"After the first line of the commit message, add a blank line and then a "
+"more detailed explanation (when relevant)."
+msgstr ""
+"在第一行commit信息后添加一行空白行，再进行更多相关的细节描述。"
+
+#: ../../../CONTRIBUTING.rst:112 d817ad5d9e35488eb45d88828ee9f053
+msgid ""
+"`Squash your commits`_ to eliminate merge commits and ensure a clean and "
+"readable commit history."
+msgstr ""
+"`压缩commit`_ 来消除合并commits，确保你的commit历史记录是干净可读的。"
+
+#: ../../../CONTRIBUTING.rst:114 b7064f44923a499da3c3ce078470e269
+msgid ""
+"After you have issued a pull request, the continuous integration (CI) "
+"system will run the test suite on all supported Python versions and check"
+" for code style compliance. If any of these checks fail, you should fix "
+"them. (If tests fail on the CI system but seem to pass locally, ensure "
+"that local test runs aren't skipping any tests.)"
+msgstr ""
+"在你发出PR后，持续集成（CI）系统会在所有支持的Python版本上运行测试套件，并且"
+"检查代码风格的合规性。如果出现了错误，你应该将其修复。（如果没有通过CI系统上的"
+"测试但是本地测试通过了，请再检查一下，确保在本地进行了所有CI系统中的检查）"
+
+#: ../../../CONTRIBUTING.rst:121 342f2e6c14b9441caaf3f9b6d2eb764b
+msgid "Contribution quality standards"
+msgstr "贡献的质量标准"
+
+#: ../../../CONTRIBUTING.rst:123 842514f115634a5d821d48490d4aed7b
+msgid ""
+"Adhere to the project's code style standards. See: `Development "
+"Environment`_"
+msgstr ""
+"遵循项目的代码风格标准。详见 `开发环境`_"
+
+#: ../../../CONTRIBUTING.rst:124 4719590d89be4a5e94817902cc424be5
+msgid ""
+"Ensure your code is compatible with the `officially-supported Python "
+"releases`_."
+msgstr ""
+"确保你的代码可以兼容 `python的官方发布版本`_"
+
+#: ../../../CONTRIBUTING.rst:125 fa0ad5dd93e149fa8a12dd339bef9056
+msgid ""
+"Add docs and tests for your changes. Undocumented and untested features "
+"will not be accepted."
+msgstr ""
+"请为你修改的内容添加文档与测试。未注有文档或没有对应测试的特性会被拒绝。"
+
+#: ../../../CONTRIBUTING.rst:127 dc4db53c2ce34e5490a0c57ea800a4da
+msgid ""
+":pelican-doc:`Run all the tests <contribute>` **on all versions of Python"
+" supported by Pelican** to ensure nothing was accidentally broken."
+msgstr ""
+"**在Pelican支持的所有Python版本上** :pelican-doc:`执行所有测试 <contribute>` ，"
+"以确保没有意料之外的问题。"
+
+#: ../../../CONTRIBUTING.rst:130 3a88c2e8326a4acd896d0ac75d4c9ccb
+msgid ""
+"Check out our `Git Tips`_ page or `ask for help`_ if you need assistance "
+"or have any questions about these guidelines."
+msgstr ""
+"若需要帮助或对以上指南有任何疑惑，还可以查看我们的 `Git提示`_ 页面和 `请求帮助`_ 部分。"
+
+#: ../../contribute.rst:15 daead9e8fb804eb6acd152b85d837182
+msgid "Setting up the development environment"
+msgstr "配置开发环境"
+
+#: ../../contribute.rst:17 1ab6df98bcb141f49e278d153cc96e22
+msgid ""
+"While there are many ways to set up one's development environment, the "
+"following instructions will utilize Pip_ and PDM_. These tools facilitate"
+" managing virtual environments for separate Python projects that are "
+"isolated from one another, so you can use different packages (and package"
+" versions) for each."
+msgstr ""
+"在配置开发环境时往往有很多种方式，但下面的指南会使用 Pip_ 和 PDM_ 完成配置。这两个工具"
+"都可以用于管理虚拟环境，使得不同的Python项目相互隔离，这样就可以很方便的在不同的项目中"
+"使用不同的库（以及不同的库版本）。"
+
+#: ../../contribute.rst:22 6a9c8f6ddb1d495f8a9bd1b8a131cabd
+msgid "Please note that Python |min_python| is required for Pelican development."
+msgstr "请注意，要进行Pelican的开发，至少需要Python |min_python|"
+
+#: ../../contribute.rst:24 3d994e2a522141d7ada0a8fe13eb4c64
+msgid ""
+"*(Optional)* If you prefer to `install PDM "
+"<https://pdm.fming.dev/latest/#installation>`_ once for use with multiple"
+" projects, you can install it via::"
+msgstr ""
+"*（可选）* 若您想要 `安装PDM <https://pdm.fming.dev/latest/#installation>`_ ，"
+"可以使用下面这条命令："
+
+#: ../../contribute.rst:29 dbaa532c292048cb87926dd8b6e3141a
+msgid ""
+"Point your web browser to the `Pelican repository`_ and tap the **Fork** "
+"button at top-right. Then clone the source for your fork and add the "
+"upstream project as a Git remote::"
+msgstr ""
+"在Web浏览器中进入 `Pelican的代码仓库`_ ，点击右上角的 **Fork** 按钮。然后克隆"
+"你自己的这份fork，最后添加项目的原仓库为远程仓库upstream："
+
+#: ../../contribute.rst:38 adbe5d876f114645a3e1b489b2a34bd9
+msgid ""
+"While PDM can dynamically create and manage virtual environments, we're "
+"going to manually create and activate a virtual environment::"
+msgstr ""
+"通过下面的命令可以手动创建并激活一个虚拟环境："
+
+#: ../../contribute.rst:45 ../../contribute.rst:181
+#: 6ede38ac05174bc19df4198e735342e0 f6d42cdd70384eaebbe115aefd0d01ec
+msgid "Install the needed dependencies and set up the project::"
+msgstr "安装必需的依赖并配置项目："
+
+#: ../../contribute.rst:50 d863bf4dc76e4b18b933f2635a6a3af3
+msgid "Your local environment should now be ready to go!"
+msgstr "现在，你的本地开发环境就配置完成了！"
+
+#: ../../contribute.rst:57 dc19edf71c914f48a953b379efa076c0
+msgid "Development"
+msgstr "开发"
+
+#: ../../contribute.rst:59 6082eb5afbf14f86a031ed4f53d2943c
+msgid ""
+"Once Pelican has been set up for local development, create a topic branch"
+" for your bug fix or feature::"
+msgstr ""
+"在配置好Pelican的本地开发环境后，请先为你的bug修复或特性增加创建一个分支："
+
+#: ../../contribute.rst:64 1cafbaea6ec04597b62e871c0f0793b2
+msgid ""
+"Now you can make changes to Pelican, its documentation, and/or other "
+"aspects of the project."
+msgstr ""
+"在切换到新建的分支后，就可以开始对Pelican的文档或其他内容做更改了。"
+
+#: ../../contribute.rst:68 e0f5da1e216f499d86427e21c23557d4
+msgid "Setting up ``git blame`` (optional)"
+msgstr "配置 ``git blame`` （可选）"
+
+#: ../../contribute.rst:70 2906e116c2dc4a2c8db78fa64820af56
+msgid ""
+"``git blame`` annotates lines in a file with information about the pull "
+"request that last modified it. Sweeping shallow changes (like formatting)"
+" can make that information less useful, so we keep a list of such changes"
+" to be ignored. Run the following command to set this up in your "
+"repository, adding ``--global`` if you want this setting to apply to all "
+"repositories::"
+msgstr ""
+"``git blame`` 会在文件中的行上标注有关最后一次修改该行的PR信息。对浅层变化（如格式化）"
+"进行批量更改可能会使这些信息变得不那么有用，因此我们维护一个包含此类更改的列表，"
+"以便忽略它们。运行以下命令在您的存储库中设置此配置，如果希望此设置适用于所有存储库，"
+"请添加 ``--global`` ："
+
+#: ../../contribute.rst:78 36f257406a294713835841cf549e0f67
+msgid ""
+"As noted in a `useful article`_ about ``git blame``, there are other "
+"related settings you may find to be beneficial::"
+msgstr ""
+"就像在 `这篇文章`_ 中提到的，还可以进行一些可能有用的额外设置："
+
+#: ../../contribute.rst:89 37a3a813eeb84f408546bf6a83fdafd6
+msgid "Running the test suite"
+msgstr "运行测试套件"
+
+#: ../../contribute.rst:91 44276ab045104e5c9ab3d2425172d7ac
+msgid ""
+"Each time you make changes to Pelican, there are two things to do "
+"regarding tests: check that the existing tests pass, and add tests for "
+"any new features or bug fixes. The tests are located in "
+"``pelican/tests``, and you can run them via::"
+msgstr ""
+"每次对Pelican做出修改后，在测试方面需要做两个工作：检查是否能通过已有的测试、"
+"为新增特性或bug修复创建测试。请将自动化测试文件放在 ``pelican/tests`` 中，"
+"接着执行以下命令："
+
+#: ../../contribute.rst:98 9557eb87ac4945ccbaf8775aa7768f6e
+msgid ""
+"(For more on Invoke, see ``invoke -l`` to list tasks, or "
+"https://pyinvoke.org for documentation.)"
+msgstr ""
+"（执行 ``invoke -l`` 会列出可以调用的测试任务，关于此的更多文档请参阅 "
+"https://pyinvoke.org ）"
+
+#: ../../contribute.rst:101 d1cebbdf4fcf4be5b918613c5050d638
+msgid ""
+"In addition to running the test suite, it is important to also ensure "
+"that any lines you changed conform to code style guidelines. You can "
+"check that via::"
+msgstr ""
+"除了运行测试套件外，还要确保修改了的部分遵循代码风格指南。可以通过下面的命令"
+"检查代码风格："
+
+#: ../../contribute.rst:106 7a0b9ebf408f472aa786f6c3ac639240
+msgid ""
+"If code style violations are found in lines you changed, correct those "
+"lines and re-run the above lint command until they have all been fixed. "
+"You do not need to address style violations, if any, for code lines you "
+"did not touch."
+msgstr ""
+"如果在修改过的代码中有地方违反了代码风格规范，请纠正并再次运行上述命令，直到全部纠正。"
+"但是若是发现违反代码风格的地方并不是你修改的，请忽略之，不要进行纠正。"
+
+#: ../../contribute.rst:110 74ec20f2daf74ad18cc083ad48b89dfe
+msgid ""
+"After making your changes and running the tests, you may see a test "
+"failure mentioning that \"some generated files differ from the expected "
+"functional tests output.\" If you have made changes that affect the HTML "
+"output generated by Pelican, and the changes to that output are expected "
+"and deemed correct given the nature of your changes, then you should "
+"update the output used by the functional tests. To do so, **make sure you"
+" have both** ``en_EN.utf8`` **and** ``fr_FR.utf8`` **locales installed**,"
+" and then run the following command::"
+msgstr ""
+"在修改完代码，运行测试的过程中，你可能会看到测试失败中有提到“some generated files "
+"differ from the expected functional tests output” 。这可能是由于你对代码的修改"
+"影响到了Pelican的HTML输出，若输出的结果确实是你想要的，请更新功能测试所用的输出用例。"
+"请确保你安装了 ``en_EN.utf8`` 和 ``fr_FR.utf8`` ，然后执行下述命令："
+
+#: ../../contribute.rst:120 4299259dadd748238f9465eefb84727c
+msgid ""
+"You may also find that some tests are skipped because some dependency "
+"(e.g., Pandoc) is not installed. This does not automatically mean that "
+"these tests have passed; you should at least verify that any skipped "
+"tests are not affected by your changes."
+msgstr ""
+"你还可能会发现有一些测试由于缺少依赖（例如 Pandoc）而被跳过。这并不意味着通过"
+"了这些测试，请至少确保对代码的修改不会影响到这些被跳过的测试。"
+
+#: ../../contribute.rst:125 a8835ccddf624fc1994c618ded8cc5ba
+msgid ""
+"You should run the test suite under each of the supported versions of "
+"Python. This is best done by creating a separate Python environment for "
+"each version. Tox_ is a useful tool to automate running tests inside "
+"``virtualenv`` environments."
+msgstr ""
+"你应该在Pelican支持的所有Python版本下运行测试套件。一般会通过为每一个Python版本"
+"创建一个虚拟环境来实现这一点。Tox_ 是一个用于在 ``virtualenv`` 环境中自动运行"
+"测试的工具。"
+
+#: ../../contribute.rst:133 b8b8c16b0d0743b98de5d759f79d07ba
+msgid "Running a code coverage report"
+msgstr "运行代码测试覆盖报告"
+
+#: ../../contribute.rst:135 674a92a42d924931801c9f9c02463cd5
+msgid ""
+"Code is more likely to stay robust if it is tested. Coverage_ is a "
+"library that measures how much of the code is tested. To run it::"
+msgstr ""
+"经过测试的代码往往具有更好的健壮性。 Coverage_ 是一个用于衡量代码测试覆盖率的库"
+"执行下面的命令以调取之："
+
+#: ../../contribute.rst:140 ecb5e7f9e83c4243ba04b58764e573b6
+msgid ""
+"This will show overall coverage, coverage per file, and even line-by-line"
+" coverage. There is also an HTML report available::"
+msgstr ""
+"该命令会展示总体覆盖率以及在每个文件上的覆盖率，甚至还会展示每一行的覆盖情况。"
+"同样也会有一份HTML格式的报告供您查看："
+
+#: ../../contribute.rst:148 bad31d4cb0b644ac8ecb7885b22072a7
+msgid "Building the docs"
+msgstr "构建文档"
+
+#: ../../contribute.rst:150 47e1f1caa594462d9b3b4403645abf3b
+msgid ""
+"If you make changes to the documentation, you should build and inspect "
+"your changes before committing them::"
+msgstr ""
+"若你对文档进行过修改，请在commit前完成构建和检查："
+
+#: ../../contribute.rst:155 a4961ae22c2c4de9bbc8bb98d3a3ec81
+msgid ""
+"Open http://localhost:8000 in your browser to review the documentation. "
+"While the above task is running, any changes you make and save to the "
+"documentation should automatically appear in the browser, as it live-"
+"reloads when it detects changes to the documentation source files."
+msgstr ""
+"执行上述命令后，请在Web浏览器中打开 http://localhost:8000 来查看文档。"
+"在上述命令执行时，对文档做的任何修改应该会自动反映在浏览器中。"
+
+#: ../../contribute.rst:161 7740ec477ad747ebaa2dde2b2aef45d5
+msgid "Plugin development"
+msgstr "插件开发"
+
+#: ../../contribute.rst:163 9505da5fcac24d718f59c797061d2b0f
+msgid ""
+"To create a *new* Pelican plugin, please refer to the `plugin template`_ "
+"repository for detailed instructions."
+msgstr ""
+"要创建一个 *新的* Pelican插件，请参阅 `插件模板`_ 仓库以获得更为详细的指导。"
+
+#: ../../contribute.rst:166 5fdae4611a6949b9a4c3bc82c52d3bc6
+msgid ""
+"If you want to contribute to an *existing* Pelican plugin, follow the "
+"steps above to set up Pelican for local development, and then create a "
+"directory to store cloned plugin repositories::"
+msgstr ""
+"若你想在 *已有* Pelican插件中做贡献，请先按前文所述步骤配置Pelican的本地开发环境，"
+"然后创建一个文件夹来存放克隆下来的插件仓库："
+
+#: ../../contribute.rst:172 0f50b12aaf3b4049999130a92fa6b670
+msgid ""
+"Assuming you wanted to contribute to the Simple Footnotes plugin, you "
+"would first browse to the `Simple Footnotes`_ repository on GitHub and "
+"tap the **Fork** button at top-right. Then clone the source for your fork"
+" and add the upstream project as a Git remote::"
+msgstr ""
+"假设想要为Simple Footnotes插件做贡献，你应该先查看并fork `Simple Footnotes`_ "
+"的Github仓库，然后克隆你自己fork的那一份，再添加原仓库作为Git远程仓库upstream："
+
+#: ../../contribute.rst:185 2efe992372f149c3b63ca22016f8501b
+msgid "Create a topic branch for your plugin bug fix or feature::"
+msgstr "同样地，为你想要进行的bug修复或特性添加创建一个分支："
+
+#: ../../contribute.rst:189 40f3c07d12cc4630bc75355c3449196d
+msgid ""
+"After writing new tests for your plugin changes, run the plugin test "
+"suite and check for code style compliance via::"
+msgstr ""
+"完成修改并添加测试后，运行测试套件，并检查代码风格："
+
+#: ../../contribute.rst:195 ba97ce962daa437cbcf2d09897394aed
+msgid ""
+"If style violations are found, many of them can be addressed "
+"automatically via::"
+msgstr ""
+"若存在不合规范风格的代码，大多数情况下可以通过下述命令自动纠正："
+
+#: ../../contribute.rst:199 a0ee1e11aaea4f5c8ba4c4704678bbaf
+msgid ""
+"If style violations are found even after running the above auto-"
+"formatters, you will need to make additional manual changes until "
+"``invoke lint`` no longer reports any code style violations."
+msgstr ""
+"如果在自动格式化后仍存在代码风格上的问题，请手动修正这些问题，直到执行 "
+"``invoke lint`` 时不再报告问题。"
+
+#: ../../contribute.rst:207 e9d1e344bb0d4b2fb9d08c2d71d9a342
+msgid "Submitting your changes"
+msgstr "提交更改"
+
+#: ../../contribute.rst:209 716c9f94166d42299d9ee58eed4f9b53
+msgid ""
+"Assuming linting validation and tests pass, add a ``RELEASE.md`` file in "
+"the root of the project that contains the release type (major, minor, "
+"patch) and a summary of the changes that will be used as the release "
+"changelog entry. For example::"
+msgstr ""
+"通过了风格检查和所有测试后，请在项目的根目录下添加一个 ``RELEASE.md`` 文件，"
+"其中应包含发布的类型（major、minor、patch）以及代码变更的摘要，这份摘要会被用作"
+"更新日志的条目。下面是一个例子："
+
+#: ../../contribute.rst:218 656309283e5642b99981c84da9b04c86
+msgid "Commit your changes and push your topic branch::"
+msgstr "commit你的更改，并push对应分支："
+
+#: ../../contribute.rst:224 16617b687db94783b5488884e4c9be1b
+msgid ""
+"Finally, browse to your repository fork on GitHub and submit a pull "
+"request."
+msgstr ""
+"最后，前往Github，从你fork的仓库向原仓库提出PR。"
+
+#: ../../contribute.rst:228 629ae326bd4e4718a8865d3925c02c3e
+msgid "Logging tips"
+msgstr "日志技巧"
+
+#: ../../contribute.rst:230 486bb6ae6c484431923a96b7a7aff0c5
+msgid "Try to use logging with appropriate levels."
+msgstr "请仔细斟酌合适的日志等级。"
+
+#: ../../contribute.rst:232 fbe2aed8f0f5412081461fce5d36e51e
+msgid "For logging messages that are not repeated, use the usual Python way::"
+msgstr "对于不重复的日志消息，使用一般的方式即可："
+
+#: ../../contribute.rst:241 bab220240a0744f5b1170783098b5eac
+#, python-format
+msgid ""
+"Do not format log messages yourself. Use ``%s`` formatting in messages "
+"and pass arguments to logger. This is important, because the Pelican "
+"logger will preprocess some arguments, such as exceptions."
+msgstr ""
+"请不要自己格式化日志消息，而是使用在日志消息中使用 ``%s`` 并向logger传入参数。请务必"
+"遵循这一规则，因为Pelican的logger会自动预处理一些特殊的参数，例如exception。"
+
+#: ../../contribute.rst:246 a760419565b8440ebc8b4dc8898520db
+msgid "Limiting extraneous log messages"
+msgstr "限制低关联日志消息"
+
+#: ../../contribute.rst:248 dcf900d9f7d0424fabff4a9c5a7e5dc8
+msgid ""
+"If the log message can occur several times, you may want to limit the log"
+" to prevent flooding. In order to do that, use the ``extra`` keyword "
+"argument for the logging message in the following format::"
+msgstr ""
+"如果同一日志消息会重复多次，你会希望限制这些多余的内容。使用 ``extra`` "
+"命名参数来实现这一点："
+
+#: ../../contribute.rst:255 1ca7d769fc9348f8a5f9eef7b614522b
+msgid ""
+"Optionally, you can also set ``'limit_args'`` as a tuple of arguments in "
+"``extra`` dict if your generic message needs formatting."
+msgstr ""
+"可选的，如果通用日志消息需要格式化，可以添加 ``'limit_args'`` 参数并将其对应值"
+"设为一个元组。"
+
+#: ../../contribute.rst:258 85328a267c464f9aaacb1b0ef289d624
+msgid ""
+"Limit is set to ``5``, i.e, first four logs with the same ``'limit_msg'``"
+" are outputted normally but the fifth one will be logged using "
+"``'limit_msg'`` (and ``'limit_args'`` if present). After the fifth, "
+"corresponding log messages will be ignored."
+msgstr ""
+"限制数默认设为了 ``5`` ，即前四个有相同 ``'limit_msg'`` 参数的日志消息会正常输出，"
+"但第五条这样的日志消息会呈现为 ``'limit_msg'`` 参数值本身（ ``'limit_args'`` 同理）。"
+"第六条及之后的日志消息会被直接忽略。"
+
+#: ../../contribute.rst:263 7a51dbb9559d4a579654b2ab0938d09b
+msgid ""
+"For example, if you want to log missing resources, use the following "
+"code::"
+msgstr ""
+"例如，如果你想要用日志记录资源缺失的信息，可以使用下面的代码："
+
+#: ../../contribute.rst:271 8db05f7332f3475b940fb79d24e74ce7
+msgid "The log messages will be displayed as follows::"
+msgstr "最终的日志消息看起来会像这样："
+
+#: ../../contribute.rst:281 93d618c58e6e4688bebb999ddf591eaa
+msgid "Outputting traceback in the logs"
+msgstr "在日志中输出traceback信息"
+
+#: ../../contribute.rst:283 3d56bb4bc804499a8d3c8f14dc614916
+msgid ""
+"If you're logging inside an ``except`` block, you may want to provide the"
+" traceback information as well. You can do that by setting ``exc_info`` "
+"keyword argument to ``True`` during logging. However, doing so by default"
+" can be undesired because tracebacks are long and can be confusing to "
+"regular users. Try to limit them to ``--debug`` mode like the following::"
+msgstr ""
+"当在 ``except`` 块中进行日志记录时，你可能会希望同时输出traceback信息。可以"
+"简单地将 ``exc_info`` 参数设为 ``True`` 来实现这一功能。但是通过此方法输出的"
+"traceback信息会非常长，不便于理解。可以像下述代码一样将这些信息限制在 "
+"``--debug`` 模式中："
+
+#~ msgid "latest Pelican release (or an up-to-date Git clone of Pelican master)"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "`Create a new branch`_ specific to "
+#~ "your change (as opposed to making "
+#~ "your commits in the master branch)."
+#~ msgstr ""
