@@ -19,7 +19,7 @@ from jinja2 import (
 )
 
 from pelican.cache import FileStampDataCacher
-from pelican.contents import Article, Page, Static
+from pelican.contents import Article, Page, SkipStub, Static
 from pelican.plugins import signals
 from pelican.plugins._utils import plugin_enabled
 from pelican.readers import Readers
@@ -690,6 +690,10 @@ class ArticlesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
+                if isinstance(article, SkipStub):
+                    logger.debug("Safely skipping %s", f)
+                    continue
+
                 if not article.is_valid():
                     self._add_failed_source_path(f)
                     continue
@@ -702,6 +706,10 @@ class ArticlesGenerator(CachingGenerator):
                 all_drafts.append(article)
             elif article.status == "hidden":
                 hidden_articles.append(article)
+            elif article.status == "skipped":
+                raise AssertionError(
+                    "Documents with 'disabled' status should be skipped"
+                )
 
             self.add_source_path(article)
             self.add_static_links(article)
@@ -899,6 +907,10 @@ class PagesGenerator(CachingGenerator):
                     self._add_failed_source_path(f)
                     continue
 
+                if isinstance(page, SkipStub):
+                    logger.debug("Safely skipping %s", f)
+                    continue
+
                 if not page.is_valid():
                     self._add_failed_source_path(f)
                     continue
@@ -911,6 +923,11 @@ class PagesGenerator(CachingGenerator):
                 hidden_pages.append(page)
             elif page.status == "draft":
                 draft_pages.append(page)
+            elif page.status == "skipped":
+                raise AssertionError(
+                    "Documents with 'disabled' status should be skipped"
+                )
+
             self.add_source_path(page)
             self.add_static_links(page)
 
