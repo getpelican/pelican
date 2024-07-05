@@ -11,7 +11,8 @@ that can be served via any web server or hosting service.
 
 You can perform the following functions with Pelican:
 
-*  Compose content in Markdown or reStructuredText using your editor of choice
+*  Compose content in Markdown or reStructuredText using your
+   editor of choice
 *  Simple command-line tool (re)generates HTML, CSS, and JS from your
    source content
 *  Easy to interface with version control systems and web hooks
@@ -19,7 +20,8 @@ You can perform the following functions with Pelican:
 
 Pelican features main highlights include:
 
-*  Chronological content (e.g., articles, blog posts) as well as static pages
+*  Chronological content (e.g., articles, blog posts) as
+   well as static pages
 *  Integration with external services
 *  Site themes (created using Jinja2 templates)
 *  Publication of articles in multiple languages
@@ -117,7 +119,7 @@ class Pelican:
         signals.initialized.send(self)
 
     def init_path(self):
-        """Add this path to the Python builtin/system module search path, if missing.
+        """Add a path to Python system module search path, if missing.
 
         :param self: implicit Pelican class scope
         :type self: class
@@ -823,7 +825,8 @@ def listen(server, port, output, excqueue=None):
     :type server: str
     :param port: port number to listen on. (`PORT`)
     :type port: str
-    :param output: the CLI arguments provided by the main routine (`OUTPUT_PATH`)
+    :param output: the CLI arguments provided by the main
+                   routine (`OUTPUT_PATH`)
     :type output: str
     :param excqueue: Function of execution queue handler to use
     :type excqueue: Method
