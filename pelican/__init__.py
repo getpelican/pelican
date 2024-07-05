@@ -1,3 +1,42 @@
+"""
+Pelican - Extensible Static Site Generator, with plugin support.
+
+Pelican is a static site generator, written in Python, that allows
+you to create websites by composing text files in formats such as
+Markdown, reStructuredText, and HTML.
+
+With Pelican, you can create websites without worrying about
+databases or server-side programming. Pelican generates static sites
+that can be served via any web server or hosting service.
+
+You can perform the following functions with Pelican:
+
+*  Compose content in Markdown or reStructuredText using your editor of choice
+*  Simple command-line tool (re)generates HTML, CSS, and JS from your
+   source content
+*  Easy to interface with version control systems and web hooks
+*  Completely static output is simple to host anywhere
+
+Pelican features main highlights include:
+
+*  Chronological content (e.g., articles, blog posts) as well as static pages
+*  Integration with external services
+*  Site themes (created using Jinja2 templates)
+*  Publication of articles in multiple languages
+*  Generation of Atom and RSS feeds
+*  Code syntax highlighting via Pygments
+*  Import existing content from WordPress, Dotclear, or RSS feeds
+*  Fast rebuild times due to content caching and selective output writing
+*  Extensible via a rich plugin ecosystem: Pelican Plugins
+
+URL: https://github.com/getpelican/pelican
+Git Repo: https://github.com/getpelican/pelican.git
+Issues: https://github.com/getpelican/pelican/issues
+Wiki: https://github.com/getpelican/pelican/wiki
+ReadTheDocs: https://docs.getpelican.com/en/latest/
+Discussion: https://github.com/getpelican/pelican/discussions
+"""
+
 import argparse
 import importlib.metadata
 import json
@@ -48,9 +87,21 @@ class Pelican:
     def __init__(self, settings):
         """Pelican initialization
 
-        Performs some checks on the environment before doing anything else.
-        """
+        Performs the following steps:
+           * obtain configuration file (-c), import its settings
+           * supply missing configuration settings
+           * update/delete any legacy settings
+           * normalize any relative paths into absolute path
+           * validate values of static current settings
+           * check for valid file access on filespec-related settings
+           * check for valid directory access on dirpath-related settings
+           * find all the plugins (PLUGIN_PATH)
+           * register and initialize each desired plugins (PLUGINS)
+           * sends signals.initilized and let all participating plugins know
 
+        :param self: Pelican configuration settings
+        :type self: Settings
+        """
         # define the default settings
         self.settings = settings
 
@@ -66,11 +117,23 @@ class Pelican:
         signals.initialized.send(self)
 
     def init_path(self):
+        """Add this path to the Python builtin/system module search path, if missing.
+
+        :param self: implicit Pelican class scope
+        :type self: class
+        """
         if not any(p in sys.path for p in ["", os.curdir]):
             logger.debug("Adding current directory to system path")
             sys.path.insert(0, "")
 
     def init_plugins(self):
+        """Add all desired plugins, then initialize each
+
+        :param self: implicit Pelican class scope
+        :type self: class
+        :return: None
+        :raises Exception: any exception error
+        """
         self.plugins = []
         for plugin in load_plugins(self.settings):
             name = get_plugin_name(plugin)
@@ -91,7 +154,36 @@ class Pelican:
         self.settings["PLUGINS"] = [get_plugin_name(p) for p in self.plugins]
 
     def run(self):
-        """Run the generators and return"""
+        """Runs the Pelican generator
+
+        Copies the current settings to this Pelican class context.
+
+        Iterate each of the following subclasses of Content class
+        for its Pelican module availability:
+
+        * ArticlesGenerator
+        * PagesGenerator
+        * StaticGenerator
+
+        Deletes the OUTPUT_PATH (`output/`) directory, if CLI
+        option -d is supplied
+
+        Iterate over each subclasses of Content class for:
+        * being given with its current Pelican context
+        * not having its reader disabled
+
+        Sends signals.all_generators_finalized to all participating plugins.
+
+        Iterate over each subclasses of Content class for:
+        * Update the links between summaries
+        * update metadata and make available to all contents
+
+        Determine which writer to use (HTML, AsciiDoc, ...)
+
+        :param self: implicit Pelican class scope
+        :type self: class
+        :return: None
+        """
         start_time = time.time()
 
         context = self.settings.copy()
@@ -198,6 +290,28 @@ class Pelican:
         )
 
     def _get_generator_classes(self):
+        """
+        Compile a list of generators
+
+        Collect all the internal generators as well as any
+        external generators (might be supplied by plugins)
+
+        Such internal generators are but not limited to:
+
+        * ArticlesGenerator()
+        * PagesGenerator()
+        * StaticGenerator()
+        * TemplatePagesGenerator() (`TEMPLATE_PAGES`)
+        * SourceFileGenerator()  (`OUTPUT_SOURCES`)
+
+        And any external generator that might be supplied by
+        any participating plugins (`PLUGINS`).
+
+        :param self: implicit Pelican class scope
+        :type self: class
+        :return: generator
+        :rtype: list
+        """
         discovered_generators = [
             (ArticlesGenerator, "internal"),
             (PagesGenerator, "internal"),
@@ -235,6 +349,14 @@ class Pelican:
         return generators
 
     def _get_writer(self):
+        """
+        Get a list of "approved" writer
+
+        :param self: implicit Pelican class scope
+        :type self: class
+        :return: generator
+        :rtype: list
+        """
         writers = [w for _, w in signals.get_writer.send(self) if isinstance(w, type)]
         num_writers = len(writers)
 
@@ -251,7 +373,28 @@ class Pelican:
 
 
 class PrintSettings(argparse.Action):
+    """
+    Printing out the current settings
+    """
+
     def __call__(self, parser, namespace, values, option_string):
+        """
+        Get a list of "approved" writer
+
+        :param self: implicit PrintingSettings class scope
+        :type self: class
+        :param parser:
+        :type parser:
+        :param namespace: an argument list supplied by CLI
+        :type namespace: Namespace class
+        :param values: a list of keyword/keyvalues
+        :type values: list
+        :param option_string: Unused
+        :type option_string: list
+        :return: generator
+        :rtype: list
+        :raises Exception: any exception error
+        """
         init_logging(name=__name__)
 
         try:
@@ -286,7 +429,32 @@ class PrintSettings(argparse.Action):
 
 
 class ParseOverrides(argparse.Action):
+    """
+    Overrides certain CLI argument options
+    """
+
     def __call__(self, parser, namespace, values, option_string=None):
+        """
+        Get a list of "approved" writer
+
+        :param self: implicit PrintingSettings class scope
+        :type self: class
+        :param parser:
+        :type parser:
+        :param namespace: an argument list supplied by CLI
+        :type namespace: list args[]
+        :param values: a list of keyword/keyvalues
+        :type values: list
+        :param option_string: Unused
+        :type option_string: list
+        :return: generator
+        :rtype: list
+        :raises ValueError: Raised when an operation or function receives
+                            an argument that has the right type but an
+                            inappropriate value, and the situation is not
+                            described by a more precise exception such as
+                            IndexError.
+        """
         overrides = {}
         for item in values:
             try:
@@ -311,6 +479,17 @@ class ParseOverrides(argparse.Action):
 
 
 def parse_arguments(argv=None):
+    """
+    Received the argv list, check each arguments, each options and
+    its option argument(s) from the command line (CLI),
+    make any necessary adjustment then return it back to
+    the caller this new argv list.
+
+    :param argv: the CLI arguments provided by the main routine.
+    :type argv: list
+    :return: the argv which may have been modified
+    :rtype: list
+    """
     parser = argparse.ArgumentParser(
         description="A tool to generate a static blog, "
         " with restructured text input files.",
@@ -519,7 +698,17 @@ def parse_arguments(argv=None):
 
 
 def get_config(args):
-    """Builds a config dictionary based on supplied `args`."""
+    """
+    Builds a config dictionary based on supplied `args`.
+
+    Of the mandatory minimum settings requires, fill in the blank
+    ones from the supplied Pelican settings list in args.
+
+    :param args: the provided CLI arguments.
+    :type args: list
+    :return: the entire working Pelican configuration settings
+    :rtype: dict
+    """
     config = {}
     if args.path:
         config["PATH"] = os.path.abspath(os.path.expanduser(args.path))
@@ -547,6 +736,14 @@ def get_config(args):
 
 
 def get_instance(args):
+    """
+    Determine its Pelican class
+
+    :param args: the CLI arguments provided by the main routine.
+    :type args: list
+    :return: the entire working Pelican configuration settings
+    :rtype: class, list
+    """
     config_file = args.settings
     if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
         config_file = DEFAULT_CONFIG_NAME
@@ -564,6 +761,22 @@ def get_instance(args):
 
 
 def autoreload(args, excqueue=None):
+    """
+    Runs Pelican generator, while taking in any updated settings LIVE.
+
+    Useful if running in server mode where changes can be
+    made to its setting file and not have to restart the
+    server?
+
+    :param args: the CLI arguments provided by the main routine.
+    :type args: list
+    :param excqueue:  A method having a .put() function.
+    :type excqueue: method
+    :return: None
+    :raises KeyboardInterrupt: Raised when the user hits the interrupt
+            key (normally Control-C or Delete).
+    :raises Exception: any exception error
+    """
     console.print(
         "  --- AutoReload Mode: Monitoring `content`, `theme` and"
         " `settings` for changes. ---"
@@ -602,6 +815,25 @@ def autoreload(args, excqueue=None):
 
 
 def listen(server, port, output, excqueue=None):
+    """
+    Listen on a port and dish out any HTML stuff, a web server
+
+    :param server: this server name, in either a domain name or an
+                   IP address (`BIND`)
+    :type server: str
+    :param port: port number to listen on. (`PORT`)
+    :type port: str
+    :param output: the CLI arguments provided by the main routine (`OUTPUT_PATH`)
+    :type output: str
+    :param excqueue: Function of execution queue handler to use
+    :type excqueue: Method
+    :return: None
+    :raises OSError: returns a system-related error, including I/O failures
+            such as “file not found” or “disk full”
+    :raises KeyboardInterrupt: Raised when the user hits the interrupt
+            key (normally Control-C or Delete).
+    :raises Exception: any exception error
+    """
     # set logging level to at least "INFO" (so we can see the server requests)
     if logger.level < logging.INFO:
         logger.setLevel(logging.INFO)
@@ -631,6 +863,16 @@ def listen(server, port, output, excqueue=None):
 
 
 def main(argv=None):
+    """
+    Pelican's main routine
+
+    :param argv: this server name, in either a domain name or an IP address (`BIND`)
+    :type server: str
+    :return: int
+    :raises KeyboardInterrupt: Raised when the user hits the interrupt
+            key (normally Control-C or Delete).
+    :raises Exception: any exception error
+    """
     args = parse_arguments(argv)
     logs_dedup_min_level = getattr(logging, args.logs_dedup_min_level)
     init_logging(
