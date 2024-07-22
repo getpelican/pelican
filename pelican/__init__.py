@@ -547,12 +547,16 @@ def get_config(args):
 
 
 def get_instance(args):
-    config_file = args.settings
-    if config_file is None and os.path.isfile(DEFAULT_CONFIG_NAME):
-        config_file = DEFAULT_CONFIG_NAME
-        args.settings = DEFAULT_CONFIG_NAME
+    config_settings_file = args.settings
+    if config_settings_file is None:
+        if os.path.isfile(DEFAULT_CONFIG_NAME):
+            config_settings_file = DEFAULT_CONFIG_NAME
+            args.settings = DEFAULT_CONFIG_NAME
+        else:
+            config_settings_file = "pelicanconf.py"
+            args.settings = "pelicanconf.py"
 
-    settings = read_settings(config_file, override=get_config(args))
+    settings = read_settings(config_settings_file, override=get_config(args))
 
     cls = settings["PELICAN_CLASS"]
     if isinstance(cls, str):

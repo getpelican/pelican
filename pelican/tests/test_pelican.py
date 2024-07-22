@@ -295,13 +295,14 @@ class TestPelican(LoggedTestCase):
 
     def test_main_on_content(self):
         """Invoke main on simple_content directory."""
+        content_subdir = "pelican/tests/simple_content"
         out, err = io.StringIO(), io.StringIO()
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             with TemporaryDirectory() as temp_dir:
                 # Don't highlight anything.
                 # See https://rich.readthedocs.io/en/stable/highlighting.html
                 with patch("pelican.console", new=Console(highlight=False)):
-                    main(["-o", temp_dir, "pelican/tests/simple_content"])
+                    main(["-o", temp_dir, content_subdir])
             self.assertIn("Processed 1 article", out.getvalue())
             self.assertEqual("", err.getvalue())
 
