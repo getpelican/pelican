@@ -1122,8 +1122,11 @@ class TestPageGenerator(unittest.TestCase):
         Test to ensure links of the form {static}filename and {attach}filename
         are included in context['static_links']
         """
+        tests_subdir = os.path.dirname(__file__)
+        testpages_subdir = tests_subdir + os.sep + "TestPages"
+        page_w_static_links = testpages_subdir + os.sep + "page_with_static_links.md"
         settings = get_settings()
-        settings["PAGE_PATHS"] = ["TestPages/page_with_static_links.md"]
+        settings["PAGE_PATHS"] = [page_w_static_links]
         settings["CACHE_PATH"] = self.temp_cache
         settings["DEFAULT_DATE"] = (1970, 1, 1)
         context = get_context(settings)
@@ -1137,8 +1140,8 @@ class TestPageGenerator(unittest.TestCase):
         )
         generator.generate_context()
 
-        self.assertIn("pelican/tests/TestPages/image0.jpg", context["static_links"])
-        self.assertIn("pelican/tests/TestPages/image1.jpg", context["static_links"])
+        self.assertIn("TestPages/image0.jpg", context["static_links"])
+        self.assertIn("TestPages/image1.jpg", context["static_links"])
 
 
 class TestTemplatePagesGenerator(TestCaseWithCLocale):
