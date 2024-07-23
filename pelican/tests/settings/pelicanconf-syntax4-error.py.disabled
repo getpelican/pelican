@@ -1,0 +1,12 @@
+#! Ohhhtay, this is not a python file despite it's .py file extension
+
+#  Error to occur is at line 5, column 2
+
+ // put some C code in it
+
+int i
+
+for (i = 1; i < 200; ) {
+        i = i + 1;
+
+        }
