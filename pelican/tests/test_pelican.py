@@ -272,10 +272,18 @@ class TestPelican(LoggedTestCase):
 
     def test_module_load(self):
         """Test loading via python -m pelican --help displays the help"""
+        tests_subdir = os.path.dirname(__file__)  # anchor to 'tests' directory
+        pelican_srcdir = os.path.dirname(tests_subdir)
+        pelican_pkgdir = os.path.dirname(pelican_srcdir)
+        original_cwd = os.getcwd()
+        os.chdir(pelican_pkgdir)
         output = subprocess.check_output(
             [sys.executable, "-m", "pelican", "--help"]
         ).decode("ascii", "replace")
+
         assert "usage:" in output
+
+        os.chdir(original_cwd)
 
     def test_main_version(self):
         """Run main --version."""
@@ -295,19 +303,32 @@ class TestPelican(LoggedTestCase):
 
     def test_main_on_content(self):
         """Invoke main on simple_content directory."""
-        content_subdir = "pelican/tests/simple_content"
+        tests_subdir = os.path.dirname(__file__)  # anchor to 'tests' directory
+        pelican_srcdir = os.path.dirname(tests_subdir)
+        pelican_pkgdir = os.path.dirname(pelican_srcdir)
+        original_cwd = os.getcwd()
+        os.chdir(pelican_pkgdir)
+        content_subdir = "pelican/tests/simple_content"  # from pelican_pkgdir POV
         out, err = io.StringIO(), io.StringIO()
+
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             with TemporaryDirectory() as temp_dir:
                 # Don't highlight anything.
                 # See https://rich.readthedocs.io/en/stable/highlighting.html
                 with patch("pelican.console", new=Console(highlight=False)):
                     main(["-o", temp_dir, content_subdir])
+
             self.assertIn("Processed 1 article", out.getvalue())
             self.assertEqual("", err.getvalue())
 
+        os.chdir(original_cwd)
+
     def test_main_on_content_markdown_disabled(self):
         """Invoke main on simple_content directory."""
+        tests_subdir = os.path.dirname(__file__)  # anchor to 'tests' directory
+        settings_subdir = tests_subdir + os.sep + "settings"
+        settings_file = settings_subdir + os.sep + "pelicanconf.py"
+        content_subdir = tests_subdir + os.sep + "simple_content"
         with patch.object(
             pelican.readers.MarkdownReader, "enabled", new_callable=PropertyMock
         ) as attr_mock:
@@ -318,7 +339,7 @@ class TestPelican(LoggedTestCase):
                     # Don't highlight anything.
                     # See https://rich.readthedocs.io/en/stable/highlighting.html
                     with patch("pelican.console", new=Console(highlight=False)):
-                        main(["-o", temp_dir, "pelican/tests/simple_content"])
+                        main(["-o", temp_dir, "-s", settings_file, content_subdir])
                 self.assertIn("Processed 0 articles", out.getvalue())
                 self.assertLogCountEqual(
                     1,
@@ -326,3 +347,7 @@ class TestPelican(LoggedTestCase):
                     "Could not import 'markdown.Markdown'. "
                     "Have you installed the 'markdown' package?",
                 )
+
+
+if __file__ == "main":
+    unittest.main()

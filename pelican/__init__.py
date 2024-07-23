@@ -550,11 +550,12 @@ def get_instance(args):
     config_settings_file = args.settings
     if config_settings_file is None:
         if os.path.isfile(DEFAULT_CONFIG_NAME):
-            config_settings_file = DEFAULT_CONFIG_NAME
-            args.settings = DEFAULT_CONFIG_NAME
+            config_settings_file = DEFAULT_CONFIG_NAME  # relative path to $CWD
+            args.settings = DEFAULT_CONFIG_NAME  # relative path to $CWD
         else:
-            config_settings_file = "pelicanconf.py"
-            args.settings = "pelicanconf.py"
+            err_msg = f"Configuration {config_settings_file} file is not found."
+            logger.error(err_msg)
+            raise FileNotFoundError(err_msg)
 
     settings = read_settings(config_settings_file, override=get_config(args))
 
