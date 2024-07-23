@@ -1,7 +1,7 @@
 #
 #  Focused on settings.py/load_source(), specifically syntax error handling
 #
-# Minimum version: Python 3.6 (tempfile.mkdtemp())
+# Minimum version: Python 3.8
 # Minimum version: Pytest 4.0, Python 3.8+
 #
 # To see collection/ordering of a fixture for a specific function, execute:
@@ -20,20 +20,11 @@ from pathlib import Path
 
 import pytest
 
-from pelican.settings import (
-    load_source,
-)
-
-TMP_DIRNAME_SUFFIX = "pelican"
+from pelican.settings import load_source
 
 # Valid Python file extension
 EXT_PYTHON = ".py"
 EXT_PYTHON_DISABLED = ".disabled"
-
-# DIRSPEC_: where all the test config files are stored
-# we hope that current working directory is always in pelican/pelican/tests
-DIRSPEC_DATADIR: str = "settings" + os.sep
-DIRSPEC_RELATIVE: str = DIRSPEC_DATADIR  # reuse 'tests/settings/' as scratch area
 
 # PC_ = Pelican Configuration or PELICANCONF or pelicanconf
 # FILENAME_: file name without the extension
@@ -61,8 +52,6 @@ PC_MODULES_TEST = {
     PC_MODNAME_SYNTAX4_ERROR,
 }
 
-TMP_FILENAME_SUFFIX = PC_FILENAME_DEFAULT
-
 # FULLNAME_: filename + extension
 PC_FULLNAME_INDENT1_ERROR: str = PC_FILENAME_INDENT1_ERROR + EXT_PYTHON
 PC_FULLNAME_INDENT2_ERROR: str = PC_FILENAME_INDENT2_ERROR + EXT_PYTHON
@@ -73,33 +62,6 @@ BLOB_FULLNAME_INDENT1_ERROR = PC_FULLNAME_INDENT1_ERROR + EXT_PYTHON_DISABLED
 BLOB_FULLNAME_INDENT2_ERROR = PC_FULLNAME_INDENT2_ERROR + EXT_PYTHON_DISABLED
 BLOB_FULLNAME_SYNTAX3_ERROR = PC_FULLNAME_SYNTAX3_ERROR + EXT_PYTHON_DISABLED
 BLOB_FULLNAME_SYNTAX4_ERROR = PC_FULLNAME_SYNTAX4_ERROR + EXT_PYTHON_DISABLED
-
-# DIRNAME_: a construct of where to find config file for specific test
-PC_DIRNAME_NOACCESS: str = "unreadable-directory"
-
-# DIRSPEC_: the full directory path
-
-# Our test files
-BLOB_FILESPEC_INDENT1_ERROR = Path(DIRSPEC_DATADIR) / str(
-    PC_FULLNAME_INDENT1_ERROR + EXT_PYTHON_DISABLED
-)
-BLOB_FILESPEC_INDENT2_ERROR = Path(DIRSPEC_DATADIR) / str(
-    PC_FULLNAME_INDENT2_ERROR + EXT_PYTHON_DISABLED
-)
-BLOB_FILESPEC_SYNTAX3_ERROR = Path(DIRSPEC_DATADIR) / str(
-    PC_FULLNAME_SYNTAX3_ERROR + EXT_PYTHON_DISABLED
-)
-BLOB_FILESPEC_SYNTAX4_ERROR = Path(DIRSPEC_DATADIR) / str(
-    PC_FULLNAME_SYNTAX4_ERROR + EXT_PYTHON_DISABLED
-)
-
-# PATH_: the final path for unit tests here
-# FILESPEC_: the full path + filename + extension
-# REL_: relative path
-RO_FILESPEC_REL_INDENT1_ERROR_PATH = Path(DIRSPEC_DATADIR) / PC_FULLNAME_INDENT1_ERROR
-RO_FILESPEC_REL_INDENT2_ERROR_PATH = Path(DIRSPEC_DATADIR) / PC_FULLNAME_INDENT2_ERROR
-RO_FILESPEC_REL_SYNTAX3_ERROR_PATH = Path(DIRSPEC_DATADIR) / PC_FULLNAME_SYNTAX3_ERROR
-RO_FILESPEC_REL_SYNTAX4_ERROR_PATH = Path(DIRSPEC_DATADIR) / PC_FULLNAME_SYNTAX4_ERROR
 
 # SyntaxError placement for use with settings/pelicanconf-syntax-error.py
 SM_UT_SYNTAX_INDENT1_LINENO = 5  # tests/settings/pelicanconf-indent-error1.py.disabled
@@ -166,6 +128,29 @@ def cwd_inside_tests_dir__fixture_module(get_tests_dir__fixture_session):
     os.chdir(tests_dir_path)
 
     yield Path(tests_dir_path)
+
+    os.chdir(original_cwd)
+
+
+@pytest.fixture(scope="module")
+def cwd_inside_tests_settings_dir__fixture_module(
+    get_tests_settings_dir__fixture_session,
+):
+    """Work inside the `tests/settings` directory
+
+    This pytest module-wide fixture will change the current working directory
+    to the `pelican/pelican/tests/settings` directory, run the unit test, then return
+    back to its original directory.
+
+    This fixture gets evoked exactly once (per-file) due to `scope=module`.
+
+    :return: Returns the absolute path of the `tests/settings` directory
+    :rtype: pathlib.Path"""
+    tests_settings_dir_path = get_tests_settings_dir__fixture_session
+    original_cwd = os.getcwd()
+    os.chdir(tests_settings_dir_path)
+
+    yield Path(tests_settings_dir_path)
 
     os.chdir(original_cwd)
 
@@ -288,7 +273,7 @@ class TestSettingsSyntax:
         serialize_sys_modules__fixture_session,
         assert_module_integrity__fixture_session,
     ):
-        """Check for integrity of sys.modules[] thoroughly"""
+        """Check for integrity of `sys.modules[]` thoroughly"""
         check_module_integrity()
         yield
         check_module_integrity()
@@ -309,40 +294,34 @@ class TestSettingsSyntax:
     ##########################################################################
     #  Test cases with focus on IndentationError syntax handling of Python file
     ##########################################################################
-    def test_load_source_module_str_abs_indent1_error_fail(
+    def test_load_source_module_str_abs_indent1_error_tempdir_fail(
         self,
-        locale_to_c__fixture_session,
-        assert_module_integrity__fixture_func,
-        get_tests_settings_dir__fixture_session,
         cwd_inside_tempdir__fixture_func,
+        get_tests_settings_dir__fixture_session,
+        assert_module_integrity__fixture_func,
+        locale_to_c__fixture_session,
     ):
-        """ "syntax error; absolute path, str type; passing mode"""
-        # In Pelican, module name shall always be 'pelicanconf
+        """syntax error; absolute path, str type; passing mode"""
         default_module = PC_MODNAME_INDENT1_ERROR
         not_expected_in_sys_modules(default_module)
-        # identify blob of  "pseudo-script" file (ruff/black avoidance of syntax-error)
-        blob: str = str(
-            get_tests_settings_dir__fixture_session / BLOB_FULLNAME_INDENT1_ERROR
-        )
-        # Set up temporary absolute "/$TEMPDIR/pelicanXXXXXX/(here)"
+        settings_data_dir: Path = get_tests_settings_dir__fixture_session
+        blob: Path = settings_data_dir / BLOB_FULLNAME_INDENT1_ERROR
         tmp_dir_abs_path: Path = cwd_inside_tempdir__fixture_func
-        indent_error_file_abs_str: str = str(
-            tmp_dir_abs_path / PC_FULLNAME_INDENT1_ERROR
-        )
+        indent_error_file: Path = tmp_dir_abs_path / PC_FULLNAME_INDENT1_ERROR
         # despite tempdir, check if file does NOT exist
-        if Path(indent_error_file_abs_str).exists():
+        if indent_error_file.exists():
             # Bad test setup, assert out
             raise AssertionError(
-                f"File {indent_error_file_abs_str} should not " "exist in tempdir"
+                f"File {indent_error_file!s} should not exist in tempdir."
             )
         # Copy mangled pseudo-Python file into temporary absolute area as a Python file
-        shutil.copyfile(blob, indent_error_file_abs_str)
+        shutil.copyfile(blob, indent_error_file)
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
             with pytest.raises(SyntaxError) as sample:
                 # ignore return value due to sys.exit()
-                load_source(default_module, indent_error_file_abs_str)
+                load_source(default_module, str(indent_error_file))
             assert sample.type == SyntaxError
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
         # assert "unexpected indent" in self._caplog.text
@@ -350,7 +329,154 @@ class TestSettingsSyntax:
         # Cleanup
         if expected_in_sys_modules(default_module):
             del sys.modules[default_module]
-        Path(indent_error_file_abs_str).unlink(missing_ok=False)
+        indent_error_file.unlink(missing_ok=False)
+
+    def test_load_source_module_str_abs_indent1_error_pkg_dir_fail(
+        self,
+        cwd_inside_pelican_package_dir__fixture_module,
+        get_tests_settings_dir__fixture_session,
+        assert_module_integrity__fixture_func,
+        locale_to_c__fixture_session,
+    ):
+        """yntax error; absolute path, str type; passing mode"""
+        default_module = PC_MODNAME_INDENT1_ERROR
+        not_expected_in_sys_modules(default_module)
+        settings_data_dir: Path = get_tests_settings_dir__fixture_session
+        blob: Path = settings_data_dir / BLOB_FULLNAME_INDENT1_ERROR
+        cwd_path: Path = cwd_inside_pelican_package_dir__fixture_module
+        indent_error_file: Path = cwd_path / PC_FULLNAME_INDENT1_ERROR
+        # despite tempdir, check if file does NOT exist
+        if indent_error_file.exists():
+            # Bad test setup, assert out
+            raise AssertionError(
+                f"File {indent_error_file!s} should not exist in tempdir."
+            )
+        # Copy mangled pseudo-Python file into temporary absolute area as a Python file
+        shutil.copyfile(blob, indent_error_file)
+
+        with self._caplog.at_level(logging.DEBUG):
+            self._caplog.clear()
+            with pytest.raises(SyntaxError) as sample:
+                # ignore return value due to sys.exit()
+                load_source(default_module, str(indent_error_file))
+            assert sample.type == SyntaxError
+        # TODO Issue #09005 - say something to the end-user exactly where syntax err is
+        # assert "unexpected indent" in self._caplog.text
+
+        # Cleanup
+        if expected_in_sys_modules(default_module):
+            del sys.modules[default_module]
+        indent_error_file.unlink(missing_ok=False)
+
+    def test_load_source_module_str_abs_indent1_error_src_dir_fail(
+        self,
+        cwd_inside_pelican_source_dir__fixture_module,
+        get_tests_settings_dir__fixture_session,
+        assert_module_integrity__fixture_func,
+        locale_to_c__fixture_session,
+    ):
+        """syntax error; absolute path, str type; passing mode"""
+        default_module = PC_MODNAME_INDENT1_ERROR
+        not_expected_in_sys_modules(default_module)
+        settings_data_dir = get_tests_settings_dir__fixture_session
+        blob: Path = settings_data_dir / BLOB_FULLNAME_INDENT1_ERROR
+        cwd_path: Path = cwd_inside_pelican_source_dir__fixture_module
+        indent_error_file: Path = cwd_path / PC_FULLNAME_INDENT1_ERROR
+        # despite tempdir, check if file does NOT exist
+        if indent_error_file.exists():
+            # Bad test setup, assert out
+            raise AssertionError(
+                f"File {indent_error_file!s} should not exist in tempdir."
+            )
+        # Copy mangled pseudo-Python file into temporary absolute area as a Python file
+        shutil.copyfile(blob, indent_error_file)
+
+        with self._caplog.at_level(logging.DEBUG):
+            self._caplog.clear()
+            with pytest.raises(SyntaxError) as sample:
+                # ignore return value due to sys.exit()
+                load_source(default_module, str(indent_error_file))
+            assert sample.type == SyntaxError
+        # TODO Issue #09005 - say something to the end-user exactly where syntax err is
+        # assert "unexpected indent" in self._caplog.text
+
+        # Cleanup
+        if expected_in_sys_modules(default_module):
+            del sys.modules[default_module]
+        indent_error_file.unlink(missing_ok=False)
+
+    def test_load_source_module_str_abs_indent1_error_tests_dir_fail(
+        self,
+        cwd_inside_tests_dir__fixture_module,
+        get_tests_settings_dir__fixture_session,
+        assert_module_integrity__fixture_func,
+        locale_to_c__fixture_session,
+    ):
+        """syntax error; absolute path, str type; passing mode"""
+        default_module = PC_MODNAME_INDENT1_ERROR
+        not_expected_in_sys_modules(default_module)
+        settings_data_dir = get_tests_settings_dir__fixture_session
+        blob: Path = settings_data_dir / BLOB_FULLNAME_INDENT1_ERROR
+        cwd_path: Path = cwd_inside_tests_dir__fixture_module
+        indent_error_file: Path = cwd_path / PC_FULLNAME_INDENT1_ERROR
+        # despite tempdir, check if file does NOT exist
+        if indent_error_file.exists():
+            # Bad test setup, assert out
+            raise AssertionError(
+                f"File {indent_error_file} should not exist in tempdir."
+            )
+        # Copy mangled pseudo-Python file into temporary absolute area as a Python file
+        shutil.copyfile(blob, indent_error_file)
+
+        with self._caplog.at_level(logging.DEBUG):
+            self._caplog.clear()
+            with pytest.raises(SyntaxError) as sample:
+                # ignore return value due to sys.exit()
+                load_source(default_module, str(indent_error_file))
+            assert sample.type == SyntaxError
+        # TODO Issue #09005 - say something to the end-user exactly where syntax err is
+        # assert "unexpected indent" in self._caplog.text
+
+        # Cleanup
+        if expected_in_sys_modules(default_module):
+            del sys.modules[default_module]
+        indent_error_file.unlink(missing_ok=False)
+
+    def test_load_source_module_str_abs_indent1_error_tests_settings_dir_fail(
+        self,
+        cwd_inside_tests_settings_dir__fixture_module,
+        get_tests_settings_dir__fixture_session,
+        assert_module_integrity__fixture_func,
+        locale_to_c__fixture_session,
+    ):
+        """syntax error; absolute path, str type; passing mode"""
+        default_module = PC_MODNAME_INDENT1_ERROR
+        not_expected_in_sys_modules(default_module)
+        settings_data_dir = get_tests_settings_dir__fixture_session
+        blob: str = str(settings_data_dir / BLOB_FULLNAME_INDENT1_ERROR)
+        cwd_path: Path = cwd_inside_tests_settings_dir__fixture_module
+        indent_error_file: Path = cwd_path / PC_FULLNAME_INDENT1_ERROR
+        # despite tempdir, check if file does NOT exist
+        if indent_error_file.exists():
+            raise AssertionError(
+                f"File {indent_error_file!s} should not exist in tempdir."
+            )
+        # Copy mangled pseudo-Python file into temporary absolute area as a Python file
+        shutil.copyfile(blob, indent_error_file)
+
+        with self._caplog.at_level(logging.DEBUG):
+            self._caplog.clear()
+            with pytest.raises(SyntaxError) as sample:
+                # ignore return value due to sys.exit()
+                load_source(default_module, str(indent_error_file))
+            assert sample.type == SyntaxError
+        # TODO Issue #09005 - say something to the end-user exactly where syntax err is
+        # assert "unexpected indent" in self._caplog.text
+
+        # Cleanup
+        if expected_in_sys_modules(default_module):
+            del sys.modules[default_module]
+        Path(indent_error_file).unlink(missing_ok=False)
 
     def test_load_source_module_str_rel_indent2_error_fail(
         self,
@@ -363,24 +489,23 @@ class TestSettingsSyntax:
         # In Pelican, module name shall always be 'pelicanconf'
         indent_error_module = PC_MODNAME_INDENT2_ERROR
         not_expected_in_sys_modules(indent_error_module)
-        # copy "pseudo-script" file into 'settings/pelicanXXXXX/(here)'
-        # An essential avoidance of ruff/black's own syntax-error asserts
-        blob: str = str(
-            get_tests_settings_dir__fixture_session / BLOB_FULLNAME_INDENT2_ERROR
-        )
-        # Set up temporary relative "settings/pelicanXXXXXX/(here)"
-        tmp_rel_dirspec_path: Path = cwd_inside_tempdir__fixture_func
-        indent_error_file_str: str = str(
-            tmp_rel_dirspec_path / PC_FULLNAME_INDENT2_ERROR
-        )
+        settings_data_dir = get_tests_settings_dir__fixture_session
+        blob: Path = settings_data_dir / BLOB_FULLNAME_INDENT2_ERROR
+        temp_dir: Path = cwd_inside_tempdir__fixture_func
+        indent_error_file: Path = temp_dir / PC_FULLNAME_INDENT2_ERROR
+        # despite tempdir, check if file does NOT exist
+        if indent_error_file.exists():
+            raise AssertionError(
+                f"File {indent_error_file!s} should not exist in tempdir."
+            )
         # Copy mangled pseudo-Python file into temporary area as a Python file
-        shutil.copyfile(blob, indent_error_file_str)
+        shutil.copyfile(blob, indent_error_file)
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
             with pytest.raises(SyntaxError) as sample:
                 # ignore return value due to sys.exit()
-                load_source(indent_error_module, path=indent_error_file_str)
+                load_source(indent_error_module, path=str(indent_error_file))
 
             assert sample.type == SyntaxError
             assert sample.value.lineno == SM_UT_SYNTAX_INDENT2_LINENO
@@ -392,7 +517,7 @@ class TestSettingsSyntax:
         if expected_in_sys_modules(indent_error_module):
             del sys.modules[indent_error_module]
         not_expected_in_sys_modules(indent_error_module)
-        Path(indent_error_file_str).unlink(missing_ok=False)
+        indent_error_file.unlink(missing_ok=False)
 
     def test_load_source_module_path_rel_syntax3_error_fail(
         self,
@@ -403,76 +528,63 @@ class TestSettingsSyntax:
     ):
         """Syntax error; valid relative file, Path type; valid module; passing mode"""
         # In Pelican, module name shall always be 'pelicanconf'
-        default_module = PC_MODNAME_SYNTAX3_ERROR
-        not_expected_in_sys_modules(default_module)
-        # identify blob of  "pseudo-script" file (ruff/black avoidance of syntax-error)
-        blob: str = str(
-            get_tests_settings_dir__fixture_session / BLOB_FULLNAME_SYNTAX3_ERROR
-        )
-        # Set up temporary relative "settings/pelicanXXXXXX/(here)"
-        tmp_rel_dirspec_path: Path = cwd_inside_tempdir__fixture_func
-        syntax_err_rel_filespec_path: Path = (
-            tmp_rel_dirspec_path / PC_FULLNAME_SYNTAX3_ERROR
-        )
-        # despite tempdir, check if file does NOT exist
-        if syntax_err_rel_filespec_path.exists():
+        syntax3_module = PC_MODNAME_SYNTAX3_ERROR
+        not_expected_in_sys_modules(syntax3_module)
+        settings_data_dir = get_tests_settings_dir__fixture_session
+        blob: Path = settings_data_dir / BLOB_FULLNAME_SYNTAX3_ERROR
+        cwd_path: Path = cwd_inside_tempdir__fixture_func
+        syntax_error_file: Path = cwd_path / PC_FULLNAME_SYNTAX3_ERROR
+        if syntax_error_file.exists():
             # Bad test setup, assert out
             raise AssertionError(
-                f"File {syntax_err_rel_filespec_path!s} should not exist in tempdir"
+                f"File {syntax_error_file!s} should not exist in tempdir."
             )
         # Copy mangled pseudo-Python file into temporary absolute area as a Python file
-        shutil.copyfile(blob, syntax_err_rel_filespec_path)
+        shutil.copyfile(blob, syntax_error_file)
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
             with pytest.raises(SyntaxError) as sample:
                 # ignore return value due to sys.exit()
-                load_source(default_module, path=syntax_err_rel_filespec_path)
+                load_source(name=syntax3_module, path=str(syntax_error_file))
             assert sample.type == SyntaxError
         assert sample.value.lineno == SM_UT_SYNTAX_ERROR3_LINENO
         assert sample.value.offset == SM_UT_SYNTAX_ERROR3_OFFSET
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
         # assert "unexpected indent" in self._caplog.text
 
-        if expected_in_sys_modules(default_module):
-            del sys.modules[default_module]
-        Path(syntax_err_rel_filespec_path).unlink(missing_ok=True)
+        if expected_in_sys_modules(syntax3_module):
+            del sys.modules[syntax3_module]
+        syntax_error_file.unlink(missing_ok=True)
 
     def test_load_source_module_path_abs_syntax4_error_fail(
         self,
-        locale_to_c__fixture_session,  # internationalization
-        assert_module_integrity__fixture_func,  # integrity of sys.modules via serialization
-        get_tests_settings_dir__fixture_session,  # tests/settings
-        cwd_inside_tempdir__fixture_func,  # change working dir to a temporary directory
+        locale_to_c__fixture_session,
+        assert_module_integrity__fixture_func,
+        get_tests_settings_dir__fixture_session,
+        cwd_inside_tempdir__fixture_func,
     ):
         """Syntax error; valid absolute file, Path type; valid module; passing mode"""
         # In Pelican, module name shall always be 'pelicanconf'
         default_module = PC_MODNAME_SYNTAX4_ERROR
         not_expected_in_sys_modules(default_module)
-        # Set up temporary absolute "/$TEMPDIR/pelicanXXXXXX/(here)"
-        tmp_abs_dirspec_path: Path = cwd_inside_tempdir__fixture_func
-        syntax_err_abs_filespec_path: Path = (
-            tmp_abs_dirspec_path / PC_FULLNAME_SYNTAX4_ERROR
-        )
-        # copy "pseudo-script" file to '/tmp' (ruff/black avoidance of syntax-error)
-        blob: Path = (
-            get_tests_settings_dir__fixture_session / BLOB_FULLNAME_SYNTAX4_ERROR
-        )
-        # despite tempdir, check if file does NOT exist
-        if Path(syntax_err_abs_filespec_path).exists():
-            # Bad test setup, assert out
+        settings_data_dir = get_tests_settings_dir__fixture_session
+        blob: Path = settings_data_dir / BLOB_FULLNAME_SYNTAX4_ERROR
+        cwd_path: Path = cwd_inside_tempdir__fixture_func
+        syntax_error_file: Path = cwd_path / PC_FULLNAME_SYNTAX4_ERROR
+        if syntax_error_file.exists():
             raise AssertionError(
-                f"File {syntax_err_abs_filespec_path} should not " "exist in tempdir"
+                f"File {syntax_error_file!s} should not exist in tempdir."
             )
         # Copy mangled pseudo-Python file into temporary area as a Python file
-        shutil.copyfile(blob, syntax_err_abs_filespec_path)
+        shutil.copyfile(blob, syntax_error_file)
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
-            with pytest.raises(IndentationError) as sample:
-                load_source(default_module, syntax_err_abs_filespec_path)
+            with pytest.raises(SyntaxError) as sample:
+                load_source(default_module, str(syntax_error_file))
 
-            assert sample.type == IndentationError
+            assert sample.type == SyntaxError
             assert sample.value.lineno == SM_UT_SYNTAX_ERROR4_LINENO
             assert sample.value.offset == SM_UT_SYNTAX_ERROR4_OFFSET
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
@@ -481,7 +593,7 @@ class TestSettingsSyntax:
         # Cleanup temporary
         if expected_in_sys_modules(default_module):
             del sys.modules[default_module]
-        Path(syntax_err_abs_filespec_path).unlink(missing_ok=False)
+        syntax_error_file.unlink(missing_ok=False)
 
 
 if __name__ == "__main__":
