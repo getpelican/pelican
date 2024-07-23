@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 from shutil import copy, rmtree
@@ -1122,7 +1123,13 @@ class TestPageGenerator(unittest.TestCase):
         Test to ensure links of the form {static}filename and {attach}filename
         are included in context['static_links']
         """
+        logger = logging.Logger(name=__file__, level=0)
+        logger.fatal(f"sys.path[0]: {sys.path[0]}")
+
+        previous_cwd = os.getcwd()
         tests_subdir = os.path.dirname(__file__)
+        pelican_srcdir = os.path.dirname(tests_subdir)
+        pelican_pkgdir = os.path.dirname(pelican_srcdir)
         testpages_subdir = tests_subdir + os.sep + "TestPages"
         page_w_static_links = testpages_subdir + os.sep + "page_with_static_links.md"
         settings = get_settings()
@@ -1130,6 +1137,7 @@ class TestPageGenerator(unittest.TestCase):
         settings["CACHE_PATH"] = self.temp_cache
         settings["DEFAULT_DATE"] = (1970, 1, 1)
         context = get_context(settings)
+        os.chdir(pelican_pkgdir)
 
         generator = PagesGenerator(
             context=context,
@@ -1140,8 +1148,9 @@ class TestPageGenerator(unittest.TestCase):
         )
         generator.generate_context()
 
-        self.assertIn("TestPages/image0.jpg", context["static_links"])
-        self.assertIn("TestPages/image1.jpg", context["static_links"])
+        self.assertIn("pelican/tests/TestPages/image0.jpg", context["static_links"])
+        self.assertIn("pelican/tests/TestPages/image1.jpg", context["static_links"])
+        os.chdir(previous_cwd)
 
 
 class TestTemplatePagesGenerator(TestCaseWithCLocale):
