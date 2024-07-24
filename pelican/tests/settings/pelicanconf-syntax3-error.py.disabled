@@ -1,18 +1,18 @@
 #! Ohhhtay, this is not a python file despite it's .py file extension
-#  Error to occur is at line 13, column 5
+#  Error to occur is at line 9, column 29
 #  CAUTION: do not change this error location without corresponding changes in test cases
 
 import me
 
 def function_a(arg1):
 
+    value1 = [ 'a', 'b', 'c' }
     value2 = arg1
     value3 = value2 + 1
     return value3
 
-int i
 
-for (i = 1; i < 200; ) {
+    for (i = 1; i < 200; ) {
         i = i + 1;
 
         }

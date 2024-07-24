@@ -15,7 +15,8 @@ from collections.abc import Iterable
 # locations in the file system (e.g. pip with `-e` or `--user`)
 from pkgutil import extend_path
 
-__path__ = extend_path(__path__, __name__)
+if "__path__" in globals():
+    __path__ = extend_path(__path__, __name__)
 
 # pelican.log has to be the first pelican module to be loaded
 # because logging.setLoggerClass has to be called before logging.getLogger

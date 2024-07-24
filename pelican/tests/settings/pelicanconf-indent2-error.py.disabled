@@ -1,14 +1,8 @@
 #! Ohhhtay, this is not a python file despite it's .py file extension
-#  Error to occur is at line 13, column 5
-#  CAUTION: do not change this error location without corresponding changes in test cases
 
-import me
+#  Error to occur is at line 5, column 2
 
-def function_a(arg1):
-
-    value2 = arg1
-    value3 = value2 + 1
-    return value3
+ // put some C code in it
 
 int i
 

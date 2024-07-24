@@ -64,14 +64,14 @@ BLOB_FULLNAME_SYNTAX3_ERROR = PC_FULLNAME_SYNTAX3_ERROR + EXT_PYTHON_DISABLED
 BLOB_FULLNAME_SYNTAX4_ERROR = PC_FULLNAME_SYNTAX4_ERROR + EXT_PYTHON_DISABLED
 
 # SyntaxError placement for use with settings/pelicanconf-syntax-error.py
-SM_UT_SYNTAX_INDENT1_LINENO = 5  # tests/settings/pelicanconf-indent-error1.py.disabled
-SM_UT_SYNTAX_INDENT1_OFFSET = 1  # tests/settings/pelicanconf-indent-error1.py.disabled
-SM_UT_SYNTAX_INDENT2_LINENO = 13  # tests/settings/pelicanconf-indent-error2.py.disabled
-SM_UT_SYNTAX_INDENT2_OFFSET = 5  # tests/settings/pelicanconf-indent-error2.py.disabled
-SM_UT_SYNTAX_ERROR3_LINENO = 13  # tests/settings/pelicanconf-syntax-error3.py.disabled
-SM_UT_SYNTAX_ERROR3_OFFSET = 5  # tests/settings/pelicanconf-syntax-error3.py.disabled
-SM_UT_SYNTAX_ERROR4_LINENO = 5  # tests/settings/pelicanconf-syntax-error4.py.disabled
-SM_UT_SYNTAX_ERROR4_OFFSET = 1  # tests/settings/pelicanconf-syntax-error4.py.disabled
+SM_UT_SYNTAX_INDENT1_LINENO = 10  # tests/settings/pelicanconf-indent-error1.py.disabled
+SM_UT_SYNTAX_INDENT1_OFFSET = 7  # tests/settings/pelicanconf-indent-error1.py.disabled
+SM_UT_SYNTAX_INDENT2_LINENO = 5  # tests/settings/pelicanconf-indent-error2.py.disabled
+SM_UT_SYNTAX_INDENT2_OFFSET = 1  # tests/settings/pelicanconf-indent-error2.py.disabled
+SM_UT_SYNTAX_ERROR3_LINENO = 9  # tests/settings/pelicanconf-syntax-error3.py.disabled
+SM_UT_SYNTAX_ERROR3_OFFSET = 30  # tests/settings/pelicanconf-syntax-error3.py.disabled
+SM_UT_SYNTAX_ERROR4_LINENO = 13  # tests/settings/pelicanconf-syntax-error4.py.disabled
+SM_UT_SYNTAX_ERROR4_OFFSET = 10  # tests/settings/pelicanconf-syntax-error4.py.disabled
 
 load_source_argument_list_count = 2
 
@@ -319,10 +319,10 @@ class TestSettingsSyntax:
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
-            with pytest.raises(SyntaxError) as sample:
+            with pytest.raises(IndentationError) as sample:
                 # ignore return value due to sys.exit()
                 load_source(default_module, str(indent_error_file))
-            assert sample.type == SyntaxError
+            assert sample.type == IndentationError
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
         # assert "unexpected indent" in self._caplog.text
 
@@ -356,10 +356,10 @@ class TestSettingsSyntax:
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
-            with pytest.raises(SyntaxError) as sample:
+            with pytest.raises(IndentationError) as sample:
                 # ignore return value due to sys.exit()
                 load_source(default_module, str(indent_error_file))
-            assert sample.type == SyntaxError
+            assert sample.type == IndentationError
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
         # assert "unexpected indent" in self._caplog.text
 
@@ -393,10 +393,10 @@ class TestSettingsSyntax:
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
-            with pytest.raises(SyntaxError) as sample:
+            with pytest.raises(IndentationError) as sample:
                 # ignore return value due to sys.exit()
                 load_source(default_module, str(indent_error_file))
-            assert sample.type == SyntaxError
+            assert sample.type == IndentationError
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
         # assert "unexpected indent" in self._caplog.text
 
@@ -430,10 +430,10 @@ class TestSettingsSyntax:
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
-            with pytest.raises(SyntaxError) as sample:
+            with pytest.raises(IndentationError) as sample:
                 # ignore return value due to sys.exit()
                 load_source(default_module, str(indent_error_file))
-            assert sample.type == SyntaxError
+            assert sample.type == IndentationError
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
         # assert "unexpected indent" in self._caplog.text
 
@@ -466,10 +466,10 @@ class TestSettingsSyntax:
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
-            with pytest.raises(SyntaxError) as sample:
+            with pytest.raises(IndentationError) as sample:
                 # ignore return value due to sys.exit()
                 load_source(default_module, str(indent_error_file))
-            assert sample.type == SyntaxError
+            assert sample.type == IndentationError
         # TODO Issue #09005 - say something to the end-user exactly where syntax err is
         # assert "unexpected indent" in self._caplog.text
 
@@ -503,11 +503,11 @@ class TestSettingsSyntax:
 
         with self._caplog.at_level(logging.DEBUG):
             self._caplog.clear()
-            with pytest.raises(SyntaxError) as sample:
+            with pytest.raises(IndentationError) as sample:
                 # ignore return value due to sys.exit()
                 load_source(indent_error_module, path=str(indent_error_file))
 
-            assert sample.type == SyntaxError
+            assert sample.type == IndentationError
             assert sample.value.lineno == SM_UT_SYNTAX_INDENT2_LINENO
             assert sample.value.offset == SM_UT_SYNTAX_INDENT2_OFFSET
         # Would be nice if a STDERR says something to end-user WHERE
