@@ -9,3 +9,4 @@ Markdown==3.5.1
 BeautifulSoup4
 lxml
 typogrify
+filelock
