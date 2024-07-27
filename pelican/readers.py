@@ -15,7 +15,7 @@ from docutils.writers.html4css1 import HTMLTranslator, Writer
 
 from pelican import rstdirectives  # NOQA
 from pelican.cache import FileStampDataCacher
-from pelican.contents import Author, Category, Page, Tag
+from pelican.contents import Author, Category, Page, SkipStub, Tag
 from pelican.plugins import signals
 from pelican.utils import file_suffix, get_date, pelican_open, posixize_path
 
@@ -668,6 +668,9 @@ class Readers(FileStampDataCacher):
                 "Signal %s.send(%s, <metadata>)", context_signal.name, context_sender
             )
             context_signal.send(context_sender, metadata=metadata)
+
+        if metadata.get("status") == "skip":
+            content_class = SkipStub
 
         return content_class(
             content=content,
