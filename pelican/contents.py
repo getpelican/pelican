@@ -14,7 +14,6 @@ try:
 except ModuleNotFoundError:
     from backports.zoneinfo import ZoneInfo
 
-
 from pelican.plugins import signals
 from pelican.settings import DEFAULT_CONFIG, Settings
 
@@ -282,7 +281,9 @@ class Content:
         # XXX Put this in a different location.
         if what in {"filename", "static", "attach"}:
 
-            def _get_linked_content(key: str, url: ParseResult) -> Optional[Content]:
+            def _get_linked_content(
+                key: str, url: ParseResult, extension: Optional[str] = None
+            ) -> Optional[Content]:
                 nonlocal value
 
                 def _find_path(path: str) -> Optional[Content]:
@@ -295,13 +296,15 @@ class Content:
                         )
                     return self._context[key].get(path, None)
 
+                url_path = url.path if not extension else f"{url.path}.{extension}"
+
                 # try path
-                result = _find_path(url.path)
+                result = _find_path(url_path)
                 if result is not None:
                     return result
 
                 # try unquoted path
-                result = _find_path(unquote(url.path))
+                result = _find_path(unquote(url_path))
                 if result is not None:
                     return result
 
@@ -331,7 +334,13 @@ class Content:
             else:
                 key = "static_content"
 
-            linked_content = _get_linked_content(key, value)
+            # Where do we find a comprehensive list of Reader extensions?
+            reader_ext = ["md", "markdown"]
+            extensions = [None] + reader_ext
+            for extension in extensions:
+                if linked_content := _get_linked_content(key, value, extension):
+                    break
+
             if linked_content:
                 if what == "attach":
                     linked_content.attach_to(self)  # type: ignore
