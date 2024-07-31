@@ -17,6 +17,7 @@ samples/output
 *.pem
 *.lock
 .pdm-python
+.vale
 .venv
 
 # direnv
