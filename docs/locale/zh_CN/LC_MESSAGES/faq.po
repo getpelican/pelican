@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PELICAN 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-24 19:06+0800\n"
+"POT-Creation-Date: 2024-07-31 22:54+0800\n"
 "PO-Revision-Date: 2024-06-27 19:00+0800\n"
 "Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
 "Language: zh_CN\n"
@@ -18,27 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.15.0\n"
 
-#: ../../faq.rst:2 fa25c571ea68463daf6a3023c0609153
+#: ../../faq.rst:2 87acb7c16d974b4eb060949b8ce40914
 msgid "Frequently Asked Questions (FAQ)"
 msgstr "常见问题解答"
 
-#: ../../faq.rst:4 9e823949772d4f9fb516b86ef8ce1aae
+#: ../../faq.rst:4 76aee892f7f14d0590db2d76c7cc0123
 msgid "Here are some frequently asked questions about Pelican."
 msgstr "以下是一些Pelican的常见问题解答。"
 
-#: ../../faq.rst:7 9615f3701a824e57be069597eff0b619
+#: ../../faq.rst:7 c98549fdd5814984bfa3a6eaf4631d37
 msgid "What's the best way to communicate a problem, question, or suggestion?"
 msgstr "交流问题、疑问或提建议的最佳方式是什么？"
 
-#: ../../faq.rst:9 30e3c613852a43b9b8c888430ebb49fa
+#: ../../faq.rst:9 dbecb306adeb482ba3b9bd68483bc372
 msgid "Please read our :doc:`feedback guidelines <contribute>`."
 msgstr "请参阅文档 :doc:`项目贡献与意见反馈 <contribute>` 。"
 
-#: ../../faq.rst:12 d3229a6ef8014e18ad1dc81fb0d107c8
+#: ../../faq.rst:12 8fe91d51140946f1b2cb131d786c1814
 msgid "How can I help?"
 msgstr "我可以帮上什么忙？"
 
-#: ../../faq.rst:14 c7e9abc3703b405aa011637adf8baae4
+#: ../../faq.rst:14 d8477da414c446b3936e73931eb4f63a
 msgid ""
 "There are several ways to help out. First, you can communicate any "
 "Pelican suggestions or problems you might have via `Pelican Discussions "
@@ -47,11 +47,10 @@ msgid ""
 "order to avoid submitting topics that have already been covered before."
 msgstr ""
 "有好多种方法可以提供帮助。首先，可以在 `Pelican讨论板块 "
-"<https://github.com/getpelican/pelican/discussions>`_ 中提出任何关于Pelican"
-"的建议或是问题。在提问或建议之前，请先查看已关闭或开放的issues中是否已有相关"
-"内容，以避免内容上的重复。"
+"<https://github.com/getpelican/pelican/discussions>`_ "
+"中提出任何关于Pelican的建议或是问题。在提问或建议之前，请先查看已关闭或开放的issues中是否已有相关内容，以避免内容上的重复。"
 
-#: ../../faq.rst:20 a471ab8119d945a09b1d41e69bfba0b5
+#: ../../faq.rst:20 95a29a97e08a452f89aa4eaad191b698
 msgid ""
 "If you want to contribute, please fork `the Git repository "
 "<https://github.com/getpelican/pelican/>`_, create a new feature branch, "
@@ -59,51 +58,49 @@ msgid ""
 "changes as soon as possible. Please refer to the :doc:`How to Contribute "
 "<contribute>` section for more details."
 msgstr ""
-"如果你想要对项目进行贡献，请fork `Git仓库 <https://github.com/getpelican/pelican/>`_ ，"
-"创建一个新的功能分支，并在其中进行修改，在修改完成后提出一个PR。项目组会尽快审核你的PR。"
-"关于此的更多内容，请参见 :doc:`项目贡献与意见反馈 <contribute>` 一节。"
+"如果你想要对项目进行贡献，请fork `Git仓库 <https://github.com/getpelican/pelican/>`_ "
+"，创建一个新的功能分支，并在其中进行修改，在修改完成后提出一个PR。项目组会尽快审核你的PR。关于此的更多内容，请参见 "
+":doc:`项目贡献与意见反馈 <contribute>` 一节。"
 
-#: ../../faq.rst:26 9a6bf61d3abd4a588cd67e50e443932f
+#: ../../faq.rst:26 bf7a6828eec74dc588c18e185bdd7090
 msgid ""
 "You can also contribute by creating themes and improving the "
 "documentation."
-msgstr ""
-"你可以发起的贡献当然也包括创建主题和改进文档。"
+msgstr "你可以发起的贡献当然也包括创建主题和改进文档。"
 
-#: ../../faq.rst:29 6287fd8c173547ba9eb96c08c74ea991
+#: ../../faq.rst:29 2ce846241ce744fd81981a376d3f5fe2
 msgid "Is the Pelican settings file mandatory?"
 msgstr "Pelican配置文件是必要的吗？"
 
-#: ../../faq.rst:31 848e9be329e242de8665ad1e816664bd
+#: ../../faq.rst:31 527720062339422095e2c95755af5584
 msgid ""
 "Configuration files are optional and are just an easy way to configure "
 "Pelican. For basic operations, it's possible to specify options while "
 "invoking Pelican via the command line. See ``pelican --help`` for more "
 "information."
 msgstr ""
-"配置文件是可选的，其本质是使您可以更方便地配置Pelican。对于一些基本的配置操作，"
-"完全可以在命令行中指定，调用 ``pelican --help`` 可以查看pelican命令的更多信息。"
+"配置文件是可选的，其本质是使您可以更方便地配置Pelican。对于一些基本的配置操作，完全可以在命令行中指定，调用 ``pelican "
+"--help`` 可以查看pelican命令的更多信息。"
 
-#: ../../faq.rst:36 5fb374eaf9b44aa69ebed16b0f6f11c7
+#: ../../faq.rst:36 d0ca19a2e40c4ecaa9ecba6cc677f142
 msgid "Changes to the settings file take no effect"
 msgstr "修改后的配置文件没有生效"
 
-#: ../../faq.rst:38 e1a69738ea674fee9dbabb0380d2d7bf
+#: ../../faq.rst:38 5b741cbb28854893818826c593f8e323
 msgid ""
 "When experimenting with different settings (especially the metadata ones)"
 " caching may interfere and the changes may not be visible. In such cases,"
 " ensure that caching is disabled via ``LOAD_CONTENT_CACHE = False`` or "
 "use the ``--ignore-cache`` command-line switch."
 msgstr ""
-"在尝试不同的配置时（尤其是尝试不同元数据时），缓存很可能会产生干扰，使得修改不可见。"
-"此时，确保配置了 ``LOAD_CONTENT_CACHE = False`` 或在命令行中加上 "
-"``--ignore-cache`` 以禁用缓存。"
+"在尝试不同的配置时（尤其是尝试不同元数据时），缓存很可能会产生干扰，使得修改不可见。此时，确保配置了 ``LOAD_CONTENT_CACHE ="
+" False`` 或在命令行中加上 ``--ignore-cache`` 以禁用缓存。"
 
-#: ../../faq.rst:44 9ad0c32d3ea741e890f8f7143c211582
+#: ../../faq.rst:44 439f2221927b42f7a4c219ab1a76f849
 msgid "I'm creating my own theme. How do I use Pygments for syntax highlighting?"
 msgstr "在自己创建主题时，如何使用Pygments来调整语法高亮？"
 
-#: ../../faq.rst:46 07b404b62ea84b5d86d88947aed83a49
+#: ../../faq.rst:46 3475c1550e584c84a118ac061461f9f6
 msgid ""
 "Pygments adds some classes to the generated content. These classes are "
 "used by themes to style code syntax highlighting via CSS. Specifically, "
@@ -113,37 +110,34 @@ msgid ""
 "selector drop-down at top-right on the `Pygments project demo site "
 "<https://pygments.org/demo/>`_."
 msgstr ""
-"Pygments会为生成的内容添加一些CSS类。这些类会为主题所用，主题会通过CSS来为代码"
-"添加语法高亮。具体来说，你可以通过主题CSS文件中的 ``.highlight pre`` 类来自定义"
-"语法高亮的外观。在 `Pygments 项目的demo网站 <https://pygments.org/demo/>`_ "
-"上可以预览能够渲染的代码类型。"
+"Pygments会为生成的内容添加一些CSS类。这些类会为主题所用，主题会通过CSS来为代码添加语法高亮。具体来说，你可以通过主题CSS文件中的 "
+"``.highlight pre`` 类来自定义语法高亮的外观。在 `Pygments 项目的demo网站 "
+"<https://pygments.org/demo/>`_ 上可以预览能够渲染的代码类型。"
 
-#: ../../faq.rst:53 7abb3483ec044e34aa64995403525b9d
+#: ../../faq.rst:53 ecffb1f9501f46c88f799b79fc0ba343
 msgid ""
 "You can use the following example commands to generate a starting CSS "
 "file from a Pygments built-in style (in this case, \"monokai\") and then "
 "copy the generated CSS file to your new theme::"
-msgstr ""
-"你可以使用下面的命令来让Pygments使用内置风格（此处为“monokai”）生成一个初始CSS文件，"
-"然后将此文件拷贝到新主题中："
+msgstr "你可以使用下面的命令来让Pygments使用内置风格（此处为“monokai”）生成一个初始CSS文件，然后将此文件拷贝到新主题中："
 
-#: ../../faq.rst:60 178d79676bc74980a55ef3d750482e30
+#: ../../faq.rst:60 8fc71763c5c243339c9e737cc55b99da
 msgid "Don't forget to import your ``pygment.css`` file from your main CSS file."
 msgstr "不要忘了在你的CSS主文件中引入  ``pygment.css`` 文件。"
 
-#: ../../faq.rst:63 51319e2b84ec4005ac9374f5a4d38be8
+#: ../../faq.rst:63 ad118f1f46db423fab19f570cd789798
 msgid "How do I create my own theme?"
 msgstr "如何创建我自己的主题？"
 
-#: ../../faq.rst:65 00e40a97319844179dd04422afdd8149
+#: ../../faq.rst:65 1674585960e742cbade644b63d3bb32a
 msgid "Please refer to :ref:`theming-pelican`."
 msgstr "请参阅 :ref:`theming-pelican` 。"
 
-#: ../../faq.rst:68 57b614bda57b491e86b63a957a64d22b
+#: ../../faq.rst:68 b06c6a8df1634d20b988515af6536e2c
 msgid "I want to use Markdown, but I got an error."
 msgstr "我想要使用Markdown，但是出错了。"
 
-#: ../../faq.rst:70 23ca349202534a138552cea9a6486e43
+#: ../../faq.rst:70 c0a89314dbdf4368b2e32d781c0ae95b
 msgid ""
 "If you try to generate Markdown content without first installing the "
 "Markdown library, you may see a message that says ``No valid files found "
@@ -152,140 +146,137 @@ msgid ""
 "Markdown library. You can do so by typing the following command, "
 "prepending ``sudo`` if permissions require it::"
 msgstr ""
-"如果没有事先安装Markdown库，在生成Markdown内容时会看到一条提示 "
-"``No valid files found in content`` 。虽然Markdown并不是必需依赖，但如果"
-"你写的内容中含有Markdown格式，就需要安装Markdown库了。输入下面的命令以安装"
-"Markdown库，如果需要权限，请在前面添加 ``sudo`` ："
+"如果没有事先安装Markdown库，在生成Markdown内容时会看到一条提示 ``No valid files found in "
+"content`` "
+"。虽然Markdown并不是必需依赖，但如果你写的内容中含有Markdown格式，就需要安装Markdown库了。输入下面的命令以安装Markdown库，如果需要权限，请在前面添加"
+" ``sudo`` ："
 
-#: ../../faq.rst:80 a52cf031c7d3467db7b4b5e6d5e64675
+#: ../../faq.rst:80 a4c93b71eb914652b3f05357067f87b3
 msgid "Can I use arbitrary metadata in my templates?"
 msgstr "在模板中可以使用任意元数据吗？"
 
-#: ../../faq.rst:82 f9d78e1d962748b683d98a7f57e54f0f
+#: ../../faq.rst:82 6ac1579e5d8842f5bf97b87745848c6a
 msgid ""
 "Yes. For example, to include a modified date in a Markdown post, one "
 "could include the following at the top of the article::"
-msgstr ""
-"当然可以。例如，可以在Markdown帖子中包含一个“修改日期”，加在文章开头即可："
+msgstr "当然可以。例如，可以在Markdown帖子中包含一个“修改日期”，加在文章开头即可："
 
-#: ../../faq.rst:87 a1752b9699e5419b945239a0145274e4
+#: ../../faq.rst:87 d1ad8fa8e07c4500ab754962064749a8
 msgid ""
 "For reStructuredText, this metadata should of course be prefixed with a "
 "colon::"
-msgstr ""
-"对于reStructuredText，此元数据也应当以冒号为前缀："
+msgstr "对于reStructuredText，此元数据也应当以冒号为前缀："
 
-#: ../../faq.rst:91 b19bc365c91841308df1e8af8a7a4f14
+#: ../../faq.rst:91 e3c9814b5b3849a7957f964565038e45
 msgid ""
 "This metadata can then be accessed in templates such as ``article.html`` "
 "via::"
-msgstr ""
-"此元数据可以在模板中获取到，例如在 ``article.html`` 中，可以像这样获取："
+msgstr "此元数据可以在模板中获取到，例如在 ``article.html`` 中，可以像这样获取："
 
-#: ../../faq.rst:97 4ebc8a8e0c684bb384a958829fa7f2d9
+#: ../../faq.rst:97 11d953b5718c4baeb7f7fbbb9538c763
 msgid ""
 "If you want to include metadata in templates outside the article context "
 "(e.g., ``base.html``), the ``if`` statement should instead be::"
-msgstr ""
-"如果您想在其他模板（例如 ``base.html`` ）中获取此元数据，则 ``if`` 语句应改为："
+msgstr "如果您想在其他模板（例如 ``base.html`` ）中获取此元数据，则 ``if`` 语句应改为："
 
-#: ../../faq.rst:103 77a843f7426a48ea9b5e7e42ada86c4a
+#: ../../faq.rst:103 99ca0aeea6d14c159cf1f1b8d9cf016d
+msgid ""
+"How do I make my output folder structure identical to my content "
+"hierarchy?"
+msgstr "如何使得输出目录的结构和content目录的结构保持一致？"
+
+#: ../../faq.rst:105 e97223e6c7c94c08a1d42f783fd67f7e
+msgid "Try these settings::"
+msgstr "可以尝试如下配置："
+
+#: ../../faq.rst:112 d35f11a227ba421596458ea8f26ecde0
 msgid "How do I assign custom templates on a per-page basis?"
 msgstr "如何为某个页面指定某个模板？"
 
-#: ../../faq.rst:105 6da8dbb15a5047faaa2f60573dc78649
+#: ../../faq.rst:114 287bac0946dc47feab068bdb76d0bc2e
 msgid ""
 "It's as simple as adding an extra line of metadata to any page or article"
 " that you want to have its own template. For example, this is how it "
 "would be handled for content in reST format::"
-msgstr ""
-"这非常简单，在任何页面或者文章中，都可以通过多添加一行元数据来指定特定模板。"
-"例如，在reST中，使用："
+msgstr "这非常简单，在任何页面或者文章中，都可以通过多添加一行元数据来指定特定模板。例如，在reST中，使用："
 
-#: ../../faq.rst:111 41541a99816a4c7c8a3070b6b0714a9c
+#: ../../faq.rst:120 b845784299bf47629e616505000724c1
 msgid "For content in Markdown format::"
 msgstr "对于Markdown，则使用："
 
-#: ../../faq.rst:115 7b79c101e30f4cc7a3e58b490233af49
+#: ../../faq.rst:124 fa734dbb540e4cda8a5be5fb1b2da124
 msgid ""
 "Then just make sure your theme contains the relevant template file (e.g. "
 "``template_name.html``)."
-msgstr ""
-"确保对应的模板文件在主题中存在即可（例如 ``template_name.html`` ）。"
+msgstr "确保对应的模板文件在主题中存在即可（例如 ``template_name.html`` ）。"
 
-#: ../../faq.rst:119 457f386854f34e7f8c4a0e64a07e193e
+#: ../../faq.rst:128 bdee9be4397f4839855295ee1a0fdd12
 msgid "How can I override the generated URL of a specific page or article?"
 msgstr "如何重写某一个页面或文章生成的URL？"
 
-#: ../../faq.rst:121 cdfea710133544c884c8df2f9c12376f
+#: ../../faq.rst:130 ed91b5bdcbe24473a6fed738784311b8
 msgid ""
 "Include ``url`` and ``save_as`` metadata in any pages or articles that "
 "you want to override the generated URL. Here is an example page in reST "
 "format::"
-msgstr ""
-"在任意页面或文章中都可以添加 ``url`` 和 ``save_as`` 元数据，这样就可以重写URL了。"
-"下面以reST格式为例："
+msgstr "在任意页面或文章中都可以添加 ``url`` 和 ``save_as`` 元数据，这样就可以重写URL了。下面以reST格式为例："
 
-#: ../../faq.rst:130 1d32447a5a684720b5d187d33a6fe2db
+#: ../../faq.rst:139 5aa733d8d3bd4d86920e7e142715b1f4
 msgid ""
 "With this metadata, the page will be written to "
 "``override/url/index.html`` and Pelican will use the URL "
 "``override/url/`` to link to this page."
 msgstr ""
-"有了这样的元数据，此页面会保存为 ``override/url/index.html`` ，Pelican会将 "
-"``override/url/`` 作为链接到此页面的URL。"
+"有了这样的元数据，此页面会保存为 ``override/url/index.html`` ，Pelican会将 ``override/url/``"
+" 作为链接到此页面的URL。"
 
-#: ../../faq.rst:134 32302119b0aa4d79b5aeaf8df51a8092
+#: ../../faq.rst:143 04d9890aa34d4c1e86bc7a49cd64938a
 msgid "How can I use a static page as my home page?"
 msgstr "如何使用一个静态页面作为主页？"
 
-#: ../../faq.rst:136 8cebb5a67c984e36ab89e9dbf8994e98
+#: ../../faq.rst:145 d3e8a4e2d453446f9037fa46e6775080
 msgid ""
 "The override feature mentioned above can be used to specify a static page"
 " as your home page. The following Markdown example could be stored in "
 "``content/pages/home.md``::"
-msgstr ""
-"上一个问题中提到的特性可以用于实现此需求。下面例子中的Markdown文件保存为 "
-"``content/pages/home.md`` ："
+msgstr "上一个问题中提到的特性可以用于实现此需求。下面例子中的Markdown文件保存为 ``content/pages/home.md`` ："
 
-#: ../../faq.rst:146 01b38e9fae154722b9febc59d00e12f7
+#: ../../faq.rst:155 739da75e7ce946af99c9f577e8a284ff
 msgid ""
 "If the original blog index is still wanted, it can then be saved in a "
 "different location by setting ``INDEX_SAVE_AS = 'blog_index.html'`` for "
 "the ``'index'`` direct template."
 msgstr ""
-"如果仍需要原来的博客主页（即 ``'index'`` 直接模板），可以通过设置 "
-"``INDEX_SAVE_AS = 'blog_index.html'`` 将其存储在其他位置。"
+"如果仍需要原来的博客主页（即 ``'index'`` 直接模板），可以通过设置 ``INDEX_SAVE_AS = "
+"'blog_index.html'`` 将其存储在其他位置。"
 
-#: ../../faq.rst:151 f429296b911841489b3770a16324b5ba
+#: ../../faq.rst:160 5224f09821d24e4a8db6870da1266a20
 msgid "What if I want to disable feed generation?"
 msgstr "可以禁用订阅源生成吗？"
 
-#: ../../faq.rst:153 c83a543c335e479597d2ee48ad97544c
+#: ../../faq.rst:162 8f014ffab3c44b0ebf2b0d9872bfbfa7
 msgid ""
 "To disable feed generation, all feed settings should be set to ``None``. "
 "All but three feed settings already default to ``None``, so if you want "
 "to disable all feed generation, you only need to specify the following "
 "settings::"
 msgstr ""
-"要禁用订阅源，所有订阅源相关的配置都应被设为 ``None`` 。其中有三项设置默认为 "
-"``None`` ，因此如果要彻底不生成订阅源，你只需要指定下面这些设置："
+"要禁用订阅源，所有订阅源相关的配置都应被设为 ``None`` 。其中有三项设置默认为 ``None`` "
+"，因此如果要彻底不生成订阅源，你只需要指定下面这些设置："
 
-#: ../../faq.rst:163 4da337babb98472b9524e1c5e237ad23
+#: ../../faq.rst:172 9ab29ccca83c4ecfabcb3ad4dd17c751
 msgid ""
 "The word ``None`` should not be surrounded by quotes. Please note that "
 "``None`` and ``''`` are not the same thing."
-msgstr ""
-"``None`` 两侧不需要加引号。请注意 ``None`` 和 ``''`` 不是同一个东西。"
+msgstr "``None`` 两侧不需要加引号。请注意 ``None`` 和 ``''`` 不是同一个东西。"
 
-#: ../../faq.rst:167 83b6e5ee1c4c4f2fb4ce4500ee987c6f
+#: ../../faq.rst:176 fd8cbe4962d145ccadfd480419dbea9e
 msgid ""
 "I'm getting a warning about feeds generated without SITEURL being set "
 "properly"
-msgstr ""
-"Pelican警告说由于SITEURL设置不正确，无法正常生成订阅源"
+msgstr "Pelican警告说由于SITEURL设置不正确，无法正常生成订阅源"
 
-#: ../../faq.rst:169 0c95aa3710ad4908aa381b4e89827802
+#: ../../faq.rst:178 e3135e5903ec422f8d7895866ca6f365
 msgid ""
 "`RSS and Atom feeds require all URL links to be absolute "
 "<https://validator.w3.org/feed/docs/rss2.html#comments>`_. In order to "
@@ -293,21 +284,20 @@ msgid ""
 "the full path of your site."
 msgstr ""
 "`RSS和Atom订阅源要求所有URL都要链接到绝对地址 "
-"<https://validator.w3.org/feed/docs/rss2.html#comments>`_ 。为了使得Pelican"
-"能正确生成链接，你需要将站点的 ``SITEURL`` 设置为完整路径。"
+"<https://validator.w3.org/feed/docs/rss2.html#comments>`_ "
+"。为了使得Pelican能正确生成链接，你需要将站点的 ``SITEURL`` 设置为完整路径。"
 
-#: ../../faq.rst:174 9730f059380146548f4dc79f33513750
+#: ../../faq.rst:183 4f2cd929dda7464cbd577d1249969920
 msgid ""
 "Feeds are still generated when this warning is displayed, but links "
 "within may be malformed and thus the feed may not validate."
-msgstr ""
-"虽然Pelican提出了警告，但是仍会生成订阅源，但其中的链接可能是无效的，这会导致订阅源不可用。"
+msgstr "虽然Pelican提出了警告，但是仍会生成订阅源，但其中的链接可能是无效的，这会导致订阅源不可用。"
 
-#: ../../faq.rst:178 27cb1c1cb12c498b892b66c7f43e1683
+#: ../../faq.rst:187 a9f3465fda8c4a0d9395b2d6d9d5478f
 msgid "Can I force Atom feeds to show only summaries instead of article content?"
 msgstr "可以让Atom订阅源只显示摘要，不显示文章内容吗？"
 
-#: ../../faq.rst:180 7833256562ce47eba4ba309d6d6186fe
+#: ../../faq.rst:189 baf140533501453aa8caeddfc276d8fb
 msgid ""
 "Instead of having to open a separate browser window to read articles, the"
 " overwhelming majority of folks who use feed readers prefer to read "
@@ -320,17 +310,15 @@ msgid ""
 "users with a choice: subscribe to Atom feeds for full content or to RSS "
 "feeds for just the summaries."
 msgstr ""
-"绝大多数使用订阅源阅读器的人都更喜欢直接在阅读器中阅读文章内容，而不是另外再"
-"打开窗口来阅读。因此，Pelican不支持使Atom只包含摘要。但是由于RSS不包含单独的 "
-"``content`` 字段，因此Pelican在发布RSS时默认只包含摘要（当然也可以设置为包含"
-"文章内容）。Pelican在订阅源生成上的如此行为就可以让用户自行选择订阅类型：包含了"
-"完整内容的Atom或是只包含摘要的RSS。"
+"绝大多数使用订阅源阅读器的人都更喜欢直接在阅读器中阅读文章内容，而不是另外再打开窗口来阅读。因此，Pelican不支持使Atom只包含摘要。但是由于RSS不包含单独的"
+" ``content`` "
+"字段，因此Pelican在发布RSS时默认只包含摘要（当然也可以设置为包含文章内容）。Pelican在订阅源生成上的如此行为就可以让用户自行选择订阅类型：包含了完整内容的Atom或是只包含摘要的RSS。"
 
-#: ../../faq.rst:191 c4c3d9121d944f9db4ef392801c0a92a
+#: ../../faq.rst:200 850ac093f2764547a7df74d5d055cbd4
 msgid "Is Pelican only suitable for blogs?"
 msgstr "Pelican只适合用于博客吗？"
 
-#: ../../faq.rst:193 8270fda0900f4b78ac00f95e3c6b2fba
+#: ../../faq.rst:202 1fb5d92096b242d09da5e0e490b34685
 msgid ""
 "No. Pelican can be easily configured to create and maintain any type of "
 "static site. This may require a little customization of your theme and "
@@ -338,18 +326,15 @@ msgid ""
 " your product and do not need tags on your site, you could remove the "
 "relevant HTML code from your theme. You can also disable generation of "
 "tag-related pages via::"
-msgstr ""
-"不是的。Pelican可以方便地用于创建维护任何静态站点，为此你需要对主题和配置做一些定制。"
-"例如，如果要为你的产品构建一个宣传网站，即不需要使用标签特性，从主题中移除与标签相关的"
-"HTML代码即可。另外，还可以通过下面的设置来禁用标签相关页面的生成："
+msgstr "不是的。Pelican可以方便地用于创建维护任何静态站点，为此你需要对主题和配置做一些定制。例如，如果要为你的产品构建一个宣传网站，即不需要使用标签特性，从主题中移除与标签相关的HTML代码即可。另外，还可以通过下面的设置来禁用标签相关页面的生成："
 
-#: ../../faq.rst:203 07e08fe08df7451fb5b9570e87cebc16
+#: ../../faq.rst:212 5452959b3b694cbc89bb8e91bfbef840
 msgid ""
 "Why does Pelican always write all HTML files even with content caching "
 "enabled?"
 msgstr "启用内容缓存后，为什么Pelican仍会每次都写入所有HTML文件？"
 
-#: ../../faq.rst:205 5b2a62af3981409387523568390dc932
+#: ../../faq.rst:214 b27b4b7256f749f1bc5970b95fa742ab
 msgid ""
 "In order to reliably determine whether the HTML output is different "
 "before writing it, a large part of the generation environment including "
@@ -360,13 +345,9 @@ msgid ""
 "This would require a lot more processing time and memory and storage "
 "space. Simply writing the files each time is a lot faster and a lot more "
 "reliable."
-msgstr ""
-"为了确定HTML输出确实和之前的不同，模板上下文、插件等很多生成环境都需要保存并比较"
-"某种哈希值（对于不可哈希的内容类型还需要进行一些额外处理）。另外，由于插件、分页"
-"等内容的存在，输出的HTML很可能会与之前不同。因此，考虑到处理时间和存储空间，每次"
-"都重新写入全部HTML会更快更可靠。"
+msgstr "为了确定HTML输出确实和之前的不同，模板上下文、插件等很多生成环境都需要保存并比较某种哈希值（对于不可哈希的内容类型还需要进行一些额外处理）。另外，由于插件、分页等内容的存在，输出的HTML很可能会与之前不同。因此，考虑到处理时间和存储空间，每次都重新写入全部HTML会更快更可靠。"
 
-#: ../../faq.rst:214 b2a71d323e974d18b26791cef492bedd
+#: ../../faq.rst:223 dcb5b1cf0e1b413bb7c04f6deb4ad5d7
 msgid ""
 "However, this means that the modification time of the files changes every"
 " time, so a ``rsync`` based upload will transfer them even if their "
@@ -375,14 +356,14 @@ msgid ""
 " much faster way than Pelican would."
 msgstr ""
 "然而，这样的机制会使得在每次生成站点后，文件的修改时间都会变化，因此基于 ``rsync`` "
-"上传时会把没有变化的内容也进行上传。一个简便的解决方法就是给 ``rsync`` 加上 "
-"``--checksum`` 选项，这会比Pelican在生成时进行校验更快。"
+"上传时会把没有变化的内容也进行上传。一个简便的解决方法就是给 ``rsync`` 加上 ``--checksum`` "
+"选项，这会比Pelican在生成时进行校验更快。"
 
-#: ../../faq.rst:221 0193e364bb1d4498993ca38310afdd12
+#: ../../faq.rst:230 628a1180f3fd4c0b8301b33e0728d2c2
 msgid "How to process only a subset of all articles?"
 msgstr "如何只处理一部分文章？"
 
-#: ../../faq.rst:223 a730281dd99c4e4baeb8a380d6327257
+#: ../../faq.rst:232 c2bfe768775342bb8386255ea1bbbe4e
 msgid ""
 "It is often useful to process only e.g. 10 articles for debugging "
 "purposes. This can be achieved by explicitly specifying only the "
@@ -390,30 +371,29 @@ msgid ""
 "filenames could be found using a command similar to ``cd content; find "
 "-name '*.md' | head -n 10``."
 msgstr ""
-"简便起见，在调试时可能只需要处理几篇文章。可以直接在配置项 ``ARTICLE_PATHS`` "
-"中添加需要处理文章的文件名。可以通过像 "
-"``cd content; find -name '*.md' | head -n 10`` 这样的命令获取文章文件名的列表。"
+"简便起见，在调试时可能只需要处理几篇文章。可以直接在配置项 ``ARTICLE_PATHS`` 中添加需要处理文章的文件名。可以通过像 ``cd "
+"content; find -name '*.md' | head -n 10`` 这样的命令获取文章文件名的列表。"
 
-#: ../../faq.rst:229 de4528ae89704b43ba44e8c7adb9f7ef
+#: ../../faq.rst:238 72d30cb7a6e348c483cba0c6b6de8d3a
 msgid "My tag cloud is missing/broken since I upgraded Pelican"
 msgstr "在升级Pelican后，标签云消失或不可用了"
 
-#: ../../faq.rst:231 9e67e93a9bf7458a899d3a85e98417ea
+#: ../../faq.rst:240 7d07dcddab5d42d1aab6a8dbd27ce36c
 msgid ""
 "In an ongoing effort to streamline Pelican, tag cloud generation has been"
 " moved out of Pelican core and into a separate `plugin "
 "<https://github.com/pelican-plugins/tag-cloud>`_. See the :ref:`plugins` "
 "documentation for further information about the Pelican plugin system."
 msgstr ""
-"我们一直致力于精简Pelican，标签云生成的功能已经从Pelican核心中移除，转而放到"
-"了一个单独的 `tag-cloud插件 <https://github.com/pelican-plugins/tag-cloud>`_ 中。"
-"查看 :ref:`plugins` 文档获取更多关于Pelican插件系统的信息。"
+"我们一直致力于精简Pelican，标签云生成的功能已经从Pelican核心中移除，转而放到了一个单独的 `tag-cloud插件 "
+"<https://github.com/pelican-plugins/tag-cloud>`_ 中。查看 :ref:`plugins` "
+"文档获取更多关于Pelican插件系统的信息。"
 
-#: ../../faq.rst:237 e37c50ba6f254dd99cda53ed13a4d40c
+#: ../../faq.rst:246 51c727bc21f946b8915f958312369e0f
 msgid "Since I upgraded Pelican my pages are no longer rendered"
 msgstr "升级Pelican后，一些页面没有被渲染"
 
-#: ../../faq.rst:239 79c0f836005f49d882cd440b13677272
+#: ../../faq.rst:248 4a0d962bc2d844cbab3d0b3e7f6f7bba
 msgid ""
 "Pages were available to themes as lowercase ``pages`` and uppercase "
 "``PAGES``. To bring this inline with the :ref:`templates-variables` "
@@ -421,20 +401,19 @@ msgid ""
 " your theme to iterate over ``pages`` instead of ``PAGES``. Just "
 "replace::"
 msgstr ""
-"在以前的版本中，主题通过小写的 ``pages`` 和大写的 ``PAGES`` 都能获取到页面。"
-"为了使之与 :ref:`templates-variables` 一节中的内容保持一致，大写的 ``PAGES`` "
-"被删除了。只要将主题中的 ``PAGES`` 替换为 ``pages`` ，问题即可解决。例如将原先的："
+"在以前的版本中，主题通过小写的 ``pages`` 和大写的 ``PAGES`` 都能获取到页面。为了使之与 :ref:`templates-"
+"variables` 一节中的内容保持一致，大写的 ``PAGES`` 被删除了。只要将主题中的 ``PAGES`` 替换为 ``pages`` "
+"，问题即可解决。例如将原先的："
 
-#: ../../faq.rst:246 bf5d8d635c324c8d8aa6c37a2be640bf
+#: ../../faq.rst:255 6167ad6b52db43d384247747db1884ca
 msgid "with something like::"
 msgstr "替换为："
 
-#: ../../faq.rst:251 3c6e053f07be42afbc31d2257386be0f
+#: ../../faq.rst:260 a7a04eb9e8e549fa8a2a72db3f35b532
 msgid "How can I stop Pelican from trying to parse my static files as content?"
-msgstr "如何避免让Pelican将我的静态文件解析为内容文件？（译者注：例如要将一个HTML文件"
-"作为静态文件）？"
+msgstr "如何避免让Pelican将我的静态文件解析为内容文件？（译者注：例如要将一个HTML文件作为静态文件）？"
 
-#: ../../faq.rst:253 744370ca28724ecba0f7ba9138057816
+#: ../../faq.rst:262 6baaf265738d4acaa26f7829c64a0ac5
 msgid ""
 "Pelican's article and page generators run before it's static generator. "
 "That means if you use a setup similar to the default configuration, where"
@@ -443,11 +422,11 @@ msgid ""
 "``.md``, ...) will be treated as articles or pages before they get "
 "treated as static files."
 msgstr ""
-"Pelican的文章与页面生成器会先于静态文件生成器运行。这意味着若使用默认配置，即静态"
-"资源文件夹定义在某个 ``*_PATHS`` 配置项中，所有以有效内容文件后缀结尾的文件"
-"（ ``.html`` 、 ``.rst`` 、 ``.md`` 等）都会被视为文章或者页面，而不是静态文件。"
+"Pelican的文章与页面生成器会先于静态文件生成器运行。这意味着若使用默认配置，即静态资源文件夹定义在某个 ``*_PATHS`` "
+"配置项中，所有以有效内容文件后缀结尾的文件（ ``.html`` 、 ``.rst`` 、 ``.md`` "
+"等）都会被视为文章或者页面，而不是静态文件。"
 
-#: ../../faq.rst:259 c00fd4d015864abdb1708804c06e36a8
+#: ../../faq.rst:268 e4591dd94ddd4199900b9a451d12929e
 msgid ""
 "To circumvent this issue either use the appropriate ``*_EXCLUDES`` "
 "setting or disable the offending reader via ``READERS`` if you don't need"
@@ -456,11 +435,11 @@ msgstr ""
 "为了避免这个问题，使用合适的 ``*_EXCLUDES`` 配置，在必要时还可以通过 ``READERS`` "
 "配置项来直接禁用产生问题的reader。"
 
-#: ../../faq.rst:263 2af10fee375e4a2b8b724b1b85d34dbb
+#: ../../faq.rst:272 ca927fe2be10411ab365bcc3e4fa4dbd
 msgid "Why is [arbitrary Markdown syntax] not supported?"
 msgstr "为什么不是所有的Markdown语法都支持？"
 
-#: ../../faq.rst:265 9bef088cd7c5489f878bac3e3af38dde
+#: ../../faq.rst:274 5c9cc929a6bf4f1db9d4eed5f37fc0af
 msgid ""
 "Pelican does not directly handle Markdown processing and instead "
 "delegates that task to the Python-Markdown_ project, the core of which "
@@ -472,8 +451,7 @@ msgid ""
 "Markdown variants, so that may be your best choice if there is a "
 "particular variant you want to use when writing your content."
 msgstr ""
-"Pelican并不直接对Markdown进行处理，而是将此任务交给 Python-Markdown_ 项目，此项目"
-"的核心有意只遵循原始的Markdown语法规则，而不服从之后传播开的大量Markdown风格。"
-"另外， Python-Markdown_ 是相当模块化的，你想要使用的语法可能已经有现成的 "
-"`Markdown扩展`_ 进行了实现。或者，也有人创建了支持Markdown变体的Pelican插件，"
-"如果你想要用某种Markdown变体，可以在这些地方寻找支持。"
+"Pelican并不直接对Markdown进行处理，而是将此任务交给 Python-Markdown_ "
+"项目，此项目的核心有意只遵循原始的Markdown语法规则，而不服从之后传播开的大量Markdown风格。另外， Python-Markdown_"
+" 是相当模块化的，你想要使用的语法可能已经有现成的 `Markdown扩展`_ "
+"进行了实现。或者，也有人创建了支持Markdown变体的Pelican插件，如果你想要用某种Markdown变体，可以在这些地方寻找支持。"
