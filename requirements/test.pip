@@ -1,5 +1,5 @@
 # Tests
-Pygments==2.14.0
+Pygments==2.16.1
 pytest
 pytest-cov
 pytest-xdist[psutil]
