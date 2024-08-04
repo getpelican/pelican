@@ -2,11 +2,15 @@ import os
 import shlex
 import shutil
 import sys
+{% if github %}
 import datetime
+{% endif %}
 
 from invoke import task
 from invoke.main import program
+{% if cloudfiles %}
 from invoke.util import cd
+{% endif %}
 from pelican import main as pelican_main
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import DEFAULT_CONFIG, get_settings_from_file
