@@ -633,12 +633,12 @@ attribute. Hidden posts will be output to ``ARTICLE_SAVE_AS`` as expected, but
 are not included by default in tag, category, and author indexes, nor in the
 main article feed. This has the effect of creating an "unlisted" post.
 
-Skipped Posts
-==============
+Skip Posts
+==========
 
-Posts marked with the ``skip`` status are ignored entirely. They are not
-processed, and not output to the ``ARTICLE_SAVE_AS`` path. These posts will
-also not be included in indexes or feeds.
+Posts marked with ``skip`` status are ignored entirely. They are not processed
+nor output to the ``ARTICLE_SAVE_AS`` path. Such posts will similarly not be
+included in indexes or feeds.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: https://asciidoc.org
