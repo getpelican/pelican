@@ -548,7 +548,7 @@ class Content:
 
 
 class SkipStub(Content):
-    # Stub class representing content that should not be processed in any way
+    """Stub class representing content that should not be processed in any way."""
 
     def __init__(
         self, content, metadata=None, settings=None, source_path=None, context=None
