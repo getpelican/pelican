@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PELICAN 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-27 16:18+0800\n"
+"POT-Creation-Date: 2024-09-15 09:23+0800\n"
 "PO-Revision-Date: 2024-06-25 19:00+0800\n"
 "Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
 "Language: zh_CN\n"
@@ -218,8 +218,8 @@ msgid "``status``"
 msgstr "``status``"
 
 #: ../../content.rst:92 f6ab65a6adf64379a14fb89d300d9eaa
-msgid "Content status: ``draft``, ``hidden``, or ``published``"
-msgstr "推文的状态： ``draft``、 ``hidden`` 或 ``published`` "
+msgid "Content status: ``draft``, ``hidden``, ``skip``, or ``published``"
+msgstr "推文的状态： ``draft``、 ``hidden`` 、 ``skip`` 或 ``published`` "
 
 #: ../../content.rst:93 d9aefdcc77aa462d9934eb49f2b39095
 msgid "``template``"
@@ -348,8 +348,8 @@ msgid ""
 msgstr ""
 "若您没有显式地指定summary元数据，Pelican会自动从推文开头截取 ``SUMMARY_MAX_LENGTH`` "
 "指定长度的内容作为summary。另外，您也可以使用配置项 ``SUMMARY_MAX_PARAGRAPHS`` "
-"指定推文开头前N段内容作为summary。若同时指定了这两个配置项，首先会考虑 ``SUMMARY_MAX_PARAGRAPHS`` ，"
-"若前N段的总长度超过 ``SUMMARY_MAX_LENGTH`` ，还是会按照 ``SUMMARY_MAX_LENGTH`` 进行截断。"
+"指定推文开头前N段内容作为summary。若同时指定了这两个配置项，首先会考虑 ``SUMMARY_MAX_PARAGRAPHS`` "
+"，若前N段的总长度超过 ``SUMMARY_MAX_LENGTH`` ，还是会按照 ``SUMMARY_MAX_LENGTH`` 进行截断。"
 
 #: ../../content.rst:170 64a7dcd4911447338ac1871083242a83
 msgid ""
@@ -1059,3 +1059,17 @@ msgid ""
 msgstr ""
 "和页面一样，推文也能通过 ``Status: hidden`` 标记为隐藏状态。隐藏的推文会输出到 ``ARTICLE_SAVE_AS`` "
 "指定的目录中，这些推文“不会被列出”，即不会在标签、分类、作者主页、feed中出现。"
+
+#: ../../content.rst:637 2d67772b24bb40748d56dc3938195ce6
+msgid "Skip Posts"
+msgstr "忽略推文"
+
+#: ../../content.rst:639 0c97c429a7a74ba4830851491829d63e
+msgid ""
+"Posts marked with ``skip`` status are ignored entirely. They are not "
+"processed nor output to the ``ARTICLE_SAVE_AS`` path. Such posts will "
+"similarly not be included in indexes or feeds."
+msgstr ""
+"状态设为了 ``skip`` 的推文将会被完全忽略。也就是说，他们不会被处理，也不会输出到 ``ARTICLE_SAVE_AS`` "
+"指定的目录中。同样，被忽略的推文不会出现在索引或者订阅源中。"
+
