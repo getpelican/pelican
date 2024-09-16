@@ -4,7 +4,7 @@
 *.pyc
 .DS_Store
 docs/_build
-docs/fr/_build
+docs/*/_build
 build
 dist
 tags
@@ -19,9 +19,11 @@ samples/output
 .pdm-python
 .vale
 .venv
+**/LC_MESSAGES/*.mo
 
 # direnv
 .envrc
 
-# pycharm
+# IDE cruft
 .idea
+.vscode
