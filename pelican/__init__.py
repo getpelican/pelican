@@ -310,6 +310,9 @@ class ParseOverrides(argparse.Action):
         setattr(namespace, self.dest, overrides)
 
 
+LOG_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
+
+
 def parse_arguments(argv=None):
     parser = argparse.ArgumentParser(
         description="A tool to generate a static blog, "
@@ -448,7 +451,6 @@ def parse_arguments(argv=None):
         ),
     )
 
-    LOG_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
     parser.add_argument(
         "--log-handler",
         default="rich",
@@ -512,8 +514,6 @@ def parse_arguments(argv=None):
         logger.warning("--port without --listen has no effect")
     if args.bind is not None and not args.listen:
         logger.warning("--bind without --listen has no effect")
-
-    args.log_handler = LOG_HANDLERS[args.log_handler]
 
     return args
 
@@ -637,7 +637,7 @@ def main(argv=None):
         level=args.verbosity,
         fatal=args.fatal,
         name=__name__,
-        handler=args.log_handler,
+        handler=LOG_HANDLERS[args.log_handler],
         logs_dedup_min_level=logs_dedup_min_level,
     )
 
