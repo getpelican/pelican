@@ -1,6 +1,12 @@
 Release history
 ###############
 
+4.10.1 - 2024-09-28
+===================
+
+- Fix error when running ``pelican -r -l``
+- Fix symlink handling in ``pelican-themes``
+
 4.10.0 - 2024-09-16
 ===================
 

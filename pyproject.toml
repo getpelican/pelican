@@ -2,7 +2,7 @@
 name = "pelican"
 authors = [{ name = "Justin Mayer", email = "authors@getpelican.com" }]
 description = "Static site generator supporting Markdown and reStructuredText"
-version = "4.10.0"
+version = "4.10.1"
 license = { text = "AGPLv3" }
 readme = "README.rst"
 keywords = ["static site generator", "static sites", "ssg"]
