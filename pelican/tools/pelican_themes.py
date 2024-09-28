@@ -249,6 +249,7 @@ def install(path, v=False, u=False):
 
 def symlink(path, v=False):
     """Symbolically link a theme"""
+    path = os.path.realpath(path)
     if not os.path.exists(path):
         err(path + " : no such file or directory")
     elif not os.path.isdir(path):
@@ -269,7 +270,7 @@ def symlink(path, v=False):
 
 def is_broken_link(path):
     """Returns True if the path given as is a broken symlink"""
-    path = os.readlink(path)
+    path = os.path.realpath(path)
     return not os.path.exists(path)
 
 
