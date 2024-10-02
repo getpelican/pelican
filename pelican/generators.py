@@ -138,7 +138,7 @@ class Generator:
     def _include_path(self, path, extensions=None):
         """Inclusion logic for .get_files(), returns True/False
 
-        :param path: the path which might be including
+        :param path: potential path to include (relative to content root)
         :param extensions: the list of allowed extensions, or False if all
             extensions are allowed
         """
