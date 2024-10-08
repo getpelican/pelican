@@ -46,7 +46,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    uses: "noelmiller/pelican/.github/workflows/build.yml@decouple_build_workflow"
+    uses: "getpelican/pelican/.github/workflows/build.yml@main"
     with:
       settings: ${{ inputs.settings }}
       requirements: ${{ inputs.requirements }}
