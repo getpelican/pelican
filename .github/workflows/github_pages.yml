@@ -46,47 +46,15 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ inputs.python }}
-      - name: Checkout theme
-        if: ${{ inputs.theme }}
-        run: git clone '${{ inputs.theme }}' .theme
-      - name: Configure GitHub Pages
-        id: pages
-        uses: actions/configure-pages@v5
-      - name: Install requirements
-        run: pip install ${{ inputs.requirements }}
-      - name: Build Pelican site
-        shell: python
-        run: |
-          import subprocess
-
-          cmd = "pelican"
-          cmd += " --settings ${{ inputs.settings }}"
-          cmd += " --extra-settings"
-          cmd += """ SITEURL='"${{ inputs.siteurl || steps.pages.outputs.base_url }}"'"""
-          cmd += """ FEED_DOMAIN='"${{ inputs.feed_domain || steps.pages.outputs.base_url }}"'"""
-          cmd += " --output ${{ inputs.output-path }}"
-
-          if "${{ inputs.theme }}":
-              cmd += " --theme-path .theme"
-
-          subprocess.run(cmd, shell=True, check=True)
-      - name: Fix permissions
-        run: |
-          chmod -c -R +rX "${{ inputs.output-path }}" | while read line; do
-            echo "::warning title=Invalid file permissions automatically fixed::$line"
-          done
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ${{ inputs.output-path }}
+    uses: "noelmiller/pelican/.github/workflows/build.yml@decouple_build_workflow"
+    with:
+      settings: ${{ inputs.settings }}
+      requirements: ${{ inputs.requirements }}
+      output-path: ${{ inputs.output-path }}
+      theme: ${{ inputs.theme }}
+      python: ${{ inputs.python }}
+      siteurl: ${{ inputs.siteurl }}
+      feed_domain: ${{ inputs.feed_domain }}
   deploy:
     environment:
       name: github-pages
