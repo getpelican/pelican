@@ -64,6 +64,19 @@ How do I create my own theme?
 
 Please refer to :ref:`theming-pelican`.
 
+Can I override individual templates without forking the whole theme?
+====================================================================
+
+Yes, you can override existing templates of the theme that you are using, or
+add new templates, via the ``THEME_TEMPLATES_OVERRIDES`` variable. For example,
+to override the page template, you can define the location for your templates
+like this::
+
+    THEME_TEMPLATES_OVERRIDES = ["templates"]
+
+You can then define a custom template in ``templates/page.html``.
+See :ref:`settings/themes` for details.
+
 I want to use Markdown, but I got an error.
 ===========================================
 
@@ -122,7 +135,8 @@ For content in Markdown format::
     Template: template_name
 
 Then just make sure your theme contains the relevant template file (e.g.
-``template_name.html``).
+``template_name.html``). If you just want to add a new custom template to an
+existing theme, you can also provide it in a directory specified by ``THEME_TEMPLATES_OVERRIDES`` (see :ref:`settings/themes`).
 
 How can I override the generated URL of a specific page or article?
 ===================================================================
