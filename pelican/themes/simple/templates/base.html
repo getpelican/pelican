@@ -40,33 +40,41 @@
   </head>
 
   <body>
-    <header>
-      <hgroup><h1><a href="{{ SITEURL }}/">{{ SITENAME }}</a></h1>{% if SITESUBTITLE %}<p>{{ SITESUBTITLE }}</p>{% endif %}</hgroup>
-      <nav><ul>
-        {% for title, link in MENUITEMS %}
-          <li><a href="{{ link }}">{{ title }}</a></li>
-        {% endfor %}
-        {% if DISPLAY_PAGES_ON_MENU %}
-          {% for p in pages %}
-            <li><a href="{{ SITEURL }}/{{ p.url }}" {% if p==page %} aria-current="page" {% endif %}>{{ p.title }}</a></li>
-          {% endfor %}
-        {% endif %}
-        {% if DISPLAY_CATEGORIES_ON_MENU %}
-          {% for cat, null in categories %}
-            <li><a href="{{ SITEURL }}/{{ cat.url }}" {% if cat==category %} aria-current="page" {% endif %}>{{ cat}}</a></li>
-          {% endfor %}
-        {% endif %}
-      </ul></nav>
-    </header>
-    <main>
-      {% block content %}
-      {% endblock %}
-    </main>
-    <footer>
-      <address>
-        Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
-        which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
-      </address>
-    </footer>
+    {% block body %}
+      <header>
+        {% block header %}
+          <hgroup><h1><a href="{{ SITEURL }}/">{{ SITENAME }}</a></h1>{% if SITESUBTITLE %}<p>{{ SITESUBTITLE }}</p>{% endif %}</hgroup>
+        {% endblock %}
+        {% block nav %}
+          <nav><ul>
+            {% for title, link in MENUITEMS %}
+              <li><a href="{{ link }}">{{ title }}</a></li>
+            {% endfor %}
+            {% if DISPLAY_PAGES_ON_MENU %}
+              {% for p in pages %}
+                <li><a href="{{ SITEURL }}/{{ p.url }}" {% if p==page %} aria-current="page" {% endif %}>{{ p.title }}</a></li>
+              {% endfor %}
+            {% endif %}
+            {% if DISPLAY_CATEGORIES_ON_MENU %}
+              {% for cat, null in categories %}
+                <li><a href="{{ SITEURL }}/{{ cat.url }}" {% if cat==category %} aria-current="page" {% endif %}>{{ cat}}</a></li>
+              {% endfor %}
+            {% endif %}
+          </ul></nav>
+        {% endblock %}
+      </header>
+      <main>
+        {% block content %}
+        {% endblock %}
+      </main>
+      <footer>
+        {% block footer %}
+          <address>
+            Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
+            which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
+          </address>
+        {% endblock %}
+      </footer>
+    {% endblock %}
   </body>
 </html>
