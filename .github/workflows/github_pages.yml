@@ -1,4 +1,4 @@
-# Workflow for publishing to GitHub Pages.
+# Workflow for building the site and (optionally) publishing it to GitHub Pages.
 name: Deploy to GitHub Pages
 on:
   workflow_call:
@@ -37,25 +37,63 @@ on:
         default: ""
         description: "The domain to be prepended to feed URLs (Pelican's FEED_DOMAIN setting). If not passed this will default to the URL of your GitHub Pages site, which is correct in most cases."
         type: string
+      deploy:
+        required: false
+        default: true
+        description: "Whether to deploy the site. If true then build the site and deploy it. If false then just test that the site builds successfully but don't deploy anything."
+        type: boolean
 permissions:
   contents: read
   pages: write
   id-token: write
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 jobs:
   build:
-    uses: "getpelican/pelican/.github/workflows/build.yml@main"
-    with:
-      settings: ${{ inputs.settings }}
-      requirements: ${{ inputs.requirements }}
-      output-path: ${{ inputs.output-path }}
-      theme: ${{ inputs.theme }}
-      python: ${{ inputs.python }}
-      siteurl: ${{ inputs.siteurl }}
-      feed_domain: ${{ inputs.feed_domain }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python }}
+      - name: Checkout theme
+        if: ${{ inputs.theme }}
+        run: git clone '${{ inputs.theme }}' .theme
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Install requirements
+        run: pip install ${{ inputs.requirements }}
+      - name: Build Pelican site
+        shell: python
+        run: |
+          import subprocess
+
+          cmd = "pelican"
+          cmd += " --settings ${{ inputs.settings }}"
+          cmd += " --extra-settings"
+          cmd += """ SITEURL='"${{ inputs.siteurl || steps.pages.outputs.base_url }}"'"""
+          cmd += """ FEED_DOMAIN='"${{ inputs.feed_domain || steps.pages.outputs.base_url }}"'"""
+          cmd += " --output ${{ inputs.output-path }}"
+
+          if "${{ inputs.theme }}":
+              cmd += " --theme-path .theme"
+
+          subprocess.run(cmd, shell=True, check=True)
+      - name: Fix permissions
+        run: |
+          chmod -c -R +rX "${{ inputs.output-path }}" | while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ inputs.output-path }}
   deploy:
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    if: ${{ inputs.deploy }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
