@@ -46,7 +46,12 @@ ifeq ($(DEBUG), 1)
 	PELICANOPTS += -D
 endif
 
+{% if github %}
+RELATIVE ?= 1
+{% else %}
 RELATIVE ?= 0
+{% endif %}
+
 ifeq ($(RELATIVE), 1)
 	PELICANOPTS += --relative-urls
 endif
