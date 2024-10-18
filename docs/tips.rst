@@ -253,7 +253,7 @@ Here's the complete list of workflow inputs:
 |                  |          | before deploying those change.             |        |               |
 +------------------+----------+--------------------------------------------+--------+---------------+
 
-Testing your build in a GitHub Pull Request
+Testing Your Build in a GitHub Pull Request
 """""""""""""""""""""""""""""""""""""""""""
 
 If you want to test your build in a pull request before deploying to GitHub, your workflow might look something like this:
@@ -271,7 +271,7 @@ If you want to test your build in a pull request before deploying to GitHub, you
           deploy:
             required: false
             default: true
-            description: "Whether to deploy the site. If checked then build the site and deploy it. If not checked then just test that  the site builds successfully but don't deploy anything."
+            description: "Whether to deploy the site. If checked, then build the site and deploy it. If not checked, then just test that the site builds successfully but don't deploy anything."
             type: boolean
     jobs:
       deploy:
@@ -289,9 +289,9 @@ The ``on`` section of the workflow defines the events that will trigger the work
 
 ``workflow_dispatch`` defines the deploy boolean to be true by default. This means that if you run the workflow manually, it will deploy the site.
 
-The ``deploy`` input for the job is using a set of standard github workflow variables to control when deploy will either be true or false (you can customize this to your needs).
+The ``deploy`` input for the job is using a set of standard GitHub workflow variables to control when ``deploy`` will either be true or false (you can customize this to your needs).
 
-In this example, the deploy will be true if the event is a push to the main branch (or merging into main from a PR) or a manual run of the workflow. If the event is a pull request, the deploy will be false and it will only build an artifact for the site.
+In this example, the ``deploy`` will be true if the event is a push to the main branch (or merging into main from a PR) or a manual run of the workflow. If the event is a pull request, the ``deploy`` will be false and it will only build an artifact for the site.
 
 "Insecure content" warnings from browsers
 """""""""""""""""""""""""""""""""""""""""
