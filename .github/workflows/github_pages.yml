@@ -1,4 +1,4 @@
-# Workflow for publishing to GitHub Pages.
+# Workflow for building the site and (optionally) publishing it to GitHub Pages.
 name: Deploy to GitHub Pages
 on:
   workflow_call:
@@ -37,13 +37,15 @@ on:
         default: ""
         description: "The domain to be prepended to feed URLs (Pelican's FEED_DOMAIN setting). If not passed this will default to the URL of your GitHub Pages site, which is correct in most cases."
         type: string
+      deploy:
+        required: false
+        default: true
+        description: "Whether to deploy the site. If true then build the site and deploy it. If false then just test that the site builds successfully but don't deploy anything."
+        type: boolean
 permissions:
   contents: read
   pages: write
   id-token: write
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -88,6 +90,10 @@ jobs:
         with:
           path: ${{ inputs.output-path }}
   deploy:
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+    if: ${{ inputs.deploy }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
