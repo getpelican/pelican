@@ -257,7 +257,7 @@ def slugify(
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
 
-    Took from Django sources.
+    Taken from Django sources.
 
     For a set of sensible default regex substitutions to pass to regex_subs
     look into pelican.settings.DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS'].
