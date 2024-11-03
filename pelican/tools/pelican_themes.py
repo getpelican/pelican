@@ -23,7 +23,6 @@ except ImportError:
     )
 
 
-global _THEMES_PATH
 _THEMES_PATH = os.path.join(
     os.path.dirname(os.path.abspath(pelican.__file__)), "themes"
 )

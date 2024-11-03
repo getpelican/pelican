@@ -97,7 +97,7 @@ dev = [
     "tox>=4.11.3",
     "invoke>=2.2.0",
     # ruff version should match the one in .pre-commit-config.yaml
-    "ruff==0.4.10",
+    "ruff==0.7.2",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
 

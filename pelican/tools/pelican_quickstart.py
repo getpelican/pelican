@@ -87,7 +87,7 @@ _DEFAULT_PATH = _DEFAULT_PATH_TYPE(os.curdir)
 
 
 def ask(question, answer=str, default=None, length=None):
-    if answer == str:
+    if answer is str:
         r = ""
         while True:
             if default:
@@ -110,7 +110,7 @@ def ask(question, answer=str, default=None, length=None):
 
         return r
 
-    elif answer == bool:
+    elif answer is bool:
         r = None
         while True:
             if default is True:
@@ -134,7 +134,7 @@ def ask(question, answer=str, default=None, length=None):
             else:
                 print("You must answer 'yes' or 'no'")
         return r
-    elif answer == int:
+    elif answer is int:
         r = None
         while True:
             if default:
