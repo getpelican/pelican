@@ -1,15 +1,6 @@
 Pelican |release|
 =================
 
-
-.. ifconfig:: release.endswith('.dev')
-
-    .. warning::
-
-        This documentation is for the version of Pelican currently under
-        development. Were you looking for version |last_stable| documentation?
-
-
 Pelican is a static site generator, written in Python_. Highlights include:
 
 * Write your content directly with your editor of choice in reStructuredText_

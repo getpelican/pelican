@@ -1,5 +1,5 @@
 import os
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 
 from pelican import readers
 from pelican.tests.support import get_settings, unittest
@@ -27,11 +27,23 @@ class ReaderTest(unittest.TestCase):
                 self.assertEqual(
                     value,
                     real_value,
-                    "Expected %s to have value %s, but was %s"
-                    % (key, value, real_value),
+                    f"Expected {key} to have value {value}, but was {real_value}",
                 )
             else:
                 self.fail(f"Expected {key} to have value {value}, but was not in Dict")
+
+    def test_markdown_disabled(self):
+        with patch.object(
+            readers.MarkdownReader, "enabled", new_callable=PropertyMock
+        ) as attr_mock:
+            attr_mock.return_value = False
+            readrs = readers.Readers(settings=get_settings())
+            self.assertEqual(
+                set(readers.MarkdownReader.file_extensions),
+                readrs.disabled_readers.keys(),
+            )
+            for val in readrs.disabled_readers.values():
+                self.assertEqual(readers.MarkdownReader, val.__class__)
 
 
 class TestAssertDictHasSubset(ReaderTest):

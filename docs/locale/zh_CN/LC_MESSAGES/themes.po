@@ -1,0 +1,1269 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-25 20:36+0800\n"
+"PO-Revision-Date: 2024-06-26 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.15.0\n"
+
+#: ../../themes.rst:4 89902fe106274689a45bfad9447f4485
+msgid "Themes"
+msgstr "主题"
+
+#: ../../themes.rst:6 877321a191544e6db8b1fe257b7bfc82
+msgid ""
+"There is a community-managed repository of `Pelican Themes`_ for people "
+"to share and use."
+msgstr ""
+"有一个由社区管理的主题仓库 `Pelican Themes`_ 供大家使用。"
+
+#: ../../themes.rst:9 6f0fdcf7ea28413482621e993a00aba2
+msgid ""
+"Please note that while we do our best to review and merge theme "
+"contributions, they are submitted by the Pelican community and thus may "
+"have varying levels of support and interoperability."
+msgstr ""
+"请注意，虽然我们已经尽全力审查与合并主题，但是由于他们是由社区提交的，因此"
+"支持性和互操作性各有不同。"
+
+#: ../../themes.rst:14 f4083056816746ad8779108e8605f782
+msgid "Creating Themes"
+msgstr "创建主题"
+
+#: ../../themes.rst:16 11544ff05900447c9d89b7e4b762b456
+msgid ""
+"To generate its HTML output, Pelican uses the `Jinja "
+"<https://palletsprojects.com/p/jinja/>`_ templating engine due to its "
+"flexibility and straightforward syntax. If you want to create your own "
+"theme, feel free to take inspiration from the `\"simple\" theme "
+"<https://github.com/getpelican/pelican/tree/main/pelican/themes/simple/templates>`_."
+msgstr ""
+"Pelican使用 `Jinja <https://palletsprojects.com/p/jinja/>`_ 来生成HTML。"
+"如果你想要创建你自己的主题，请从 `\"simple\" 主题 "
+"<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_ "
+"中找寻灵感。"
+
+#: ../../themes.rst:22 646df766f1a64f6e89ba22466a9a57ee
+msgid ""
+"To generate your site using a theme you have created (or downloaded "
+"manually and then modified), you can specify that theme via the ``-t`` "
+"flag::"
+msgstr ""
+"要使用你自己创建的主题生成站点，你可以通过命令行中的 ``-t`` 参数指定主题："
+
+#: ../../themes.rst:27 f3b0f229f56444d0b09f27dcc5076398
+msgid ""
+"If you'd rather not specify the theme on every invocation, you can define"
+" ``THEME`` in your settings to point to the location of your preferred "
+"theme."
+msgstr ""
+"如果你不希望每次都通过命令行手动指定主题，你可以在配置文件中定义 ``THEME`` "
+"来指定你希望使用的主题的位置。"
+
+#: ../../themes.rst:32 b8028cb48f844e16b49bd30e6f7c7ec5
+msgid "Structure"
+msgstr "结构"
+
+#: ../../themes.rst:34 a3fcbbe24e4c4448b09db74e7140dd52
+msgid "To make your own theme, you must follow the following structure::"
+msgstr "你需要遵循下面的结构来制作你自己的主题："
+
+#: ../../themes.rst:52 153830a0dc1c47358f1fd67c11174676
+msgid ""
+"`static` contains all the static assets, which will be copied to the "
+"output `theme` folder. The above filesystem layout includes CSS and image"
+" folders, but those are just examples. Put what you need here."
+msgstr ""
+"`static` 文件夹包含了所有静态资源，会被复制输出到 `theme` 文件夹中。上面的文件夹"
+"布局结构包括了CSS和image文件夹，但是这只是举个例子。你可以根据需求安排文件。"
+
+#: ../../themes.rst:56 e923579cd7b74cdc94f43d4da4e47b2e
+msgid ""
+"`templates` contains all the templates that will be used to generate the "
+"content. The template files listed above are mandatory; you can add your "
+"own templates if it helps you keep things organized while creating your "
+"theme."
+msgstr ""
+"`templates` 文件夹包含了需要用到的所有模板文件，这些模板文件会用于生成网站内容。"
+"上面列出的模板文件都是必须有的。当然，你可以添加一些其他的模板来帮助组织主题文件。"
+
+#: ../../themes.rst:64 354197c97b424a53b682d31d2432bbd7
+msgid "Templates and Variables"
+msgstr "模板和变量"
+
+#: ../../themes.rst:66 263ff11382b1433082f35b605ed76f4b
+msgid ""
+"The idea is to use a simple syntax that you can embed into your HTML "
+"pages. This document describes which templates should exist in a theme, "
+"and which variables will be passed to each template at generation time."
+msgstr ""
+"你可以将一些简单的语法嵌入到HTML文件中。以下文档描述了哪些模板需要存在于主题中，"
+"以及有哪些变量可以在模板中使用。"
+
+#: ../../themes.rst:70 b511ed5df3fc4f75a8e9ca6e874b6cf7
+msgid ""
+"All templates will receive the variables defined in your settings file, "
+"as long as they are in all-caps. You can access them directly."
+msgstr ""
+"所有模板都能接收到配置文件中定义的变量，变量名都是全大写的，可以直接使用。"
+
+#: ../../themes.rst:77 903d9890350a4b08a3c5e11bdc202d10
+msgid "Common Variables"
+msgstr "通用变量"
+
+#: ../../themes.rst:79 fa18fc2c334d4b51ae7545d24a8b5df5
+msgid "All of these settings will be available to all templates."
+msgstr "下列变量在所有模板中均可使用。"
+
+#: ../../themes.rst:82 ../../themes.rst:170 ../../themes.rst:199
+#: ../../themes.rst:233 ../../themes.rst:266 ../../themes.rst:306
+#: ../../themes.rst:322 ../../themes.rst:355 1a4a93014c47420d8957a7f2209d6525
+#: 2d1889e9a23a4cb298d38366289f381d 63553de1af084662a41fded0a700913d
+#: 87ec83ae24564eaf831ada4f4aab01a3 8907d23ec9f94b5b83a9bdd717fc95bd
+#: 951f8b457243424da836ecf85c5db0e1 a3866a27423c4782a6d47b28d41e1144
+#: eee781bef37d4e94a9796ff50dd63447
+msgid "Variable"
+msgstr "变量名"
+
+#: ../../themes.rst:82 ../../themes.rst:170 ../../themes.rst:199
+#: ../../themes.rst:233 ../../themes.rst:266 ../../themes.rst:306
+#: ../../themes.rst:322 ../../themes.rst:355 ../../themes.rst:446
+#: ../../themes.rst:490 ../../themes.rst:509 17384d55be144a6ab765864d5833f96f
+#: 2e69f59326a04747b7655b61a713bcf5 46ecfcac4e0b48879a665f5ded2abc4c
+#: 4b4d47cfd511455db6eb2793e60907b6 6b9bab6f2603419da0032456f90e326a
+#: 9cadd069ae2b471eaaeeac1281b7f88d af7a426781734d61a2f1c95aff008adc
+#: c1274b2e4b5442d7b9774ffacdd22c1a f53c09af9fd642f7a26552ada70160d8
+#: f9ffc9bb411340199e68bb28e1c38e97 ff0cc823d5f44c71be4d9dfb09198ae5
+msgid "Description"
+msgstr "描述"
+
+#: ../../themes.rst:84 92684afe53b74e5eacca15acf5567c1c
+msgid "output_file"
+msgstr "output_file"
+
+#: ../../themes.rst:84 9534d42aed3a4f5bbcefb8f9aebefc9e
+msgid ""
+"The name of the file currently being generated. For instance, when "
+"Pelican is rendering the home page, output_file will be \"index.html\"."
+msgstr ""
+"当前正在生成的文件名。例如在Pelican渲染主页时，此变量的值就是“index.html”。"
+
+#: ../../themes.rst:87 ../../themes.rst:202 ../../themes.rst:236
+#: ../../themes.rst:325 ../../themes.rst:406 5e810b19b7934988905a23189aa25584
+#: 7ce75b9ff72a41368aa4d85147b3ee01 b304eca8c6ab4a97b9f9816e48e785a3
+#: b4b801b67a5f4a038664df8273752437 f6d5de62ec124133abd3e71d052076c9
+msgid "articles"
+msgstr "articles"
+
+#: ../../themes.rst:87 a37338288479498dabc0d35a3499ae2a
+msgid ""
+"The list of articles, ordered descending by date. All the elements are "
+"`Article` objects, so you can access their attributes (e.g. title, "
+"summary, author etc.). Sometimes this is shadowed (for instance, in the "
+"tags page). You will then find info about it in the `all_articles` "
+"variable."
+msgstr ""
+"文章列表，以日期降序排列。所有元素都是 `Article` 对象，因此你可以访问 `Article` "
+"对象的属性（例如title、summary、author等）。有时候此变量是隐藏的（例如在标签页面中）。"
+"但仍可以在 `all_articles` 变量中找到相关信息。"
+
+#: ../../themes.rst:93 ../../themes.rst:203 ../../themes.rst:237
+#: ../../themes.rst:326 ../../themes.rst:408 100c5d8c8602411da08bfcde279249f2
+#: 24ff711ecb9e4308b52d404b822244f3 389e8343632d48048b4ced0128d20011
+#: 3d9a59ea4c7a428998e0bb4df84c6576 b0fe593f0e774b7a9b33ff8e44c8284a
+msgid "dates"
+msgstr "dates"
+
+#: ../../themes.rst:93 957d856345744280bb8cde05d15b934c
+msgid "The same list of articles, but ordered by date, ascending."
+msgstr "和articles相同的文章列表，但是以日期升序排列"
+
+#: ../../themes.rst:95 850f75175d0f44c9987b95b244e0e085
+msgid "hidden_articles"
+msgstr "hidden_articles"
+
+#: ../../themes.rst:95 2853b0eb27e241c78c5ad83d8d502905
+msgid "The list of hidden articles"
+msgstr "处于隐藏状态的文章的列表"
+
+#: ../../themes.rst:96 68baf2e00aeb4fbbb9b18c562f5215de
+msgid "drafts"
+msgstr "drafts"
+
+#: ../../themes.rst:96 3eefce5813424f4b8a5edb283ec34699
+msgid "The list of draft articles"
+msgstr "处于草稿状态的文章的列表"
+
+#: ../../themes.rst:97 2bde499d530048a8ba3e5fb72a4a1840
+msgid "period_archives"
+msgstr "period_archives"
+
+#: ../../themes.rst:97 afad8caed5294d4bae4922b2674806ff
+msgid ""
+"A dictionary containing elements related to time-period archives (if "
+"enabled). See the section :ref:`Listing and Linking to Period Archives "
+"<period_archives_variable>` for details."
+msgstr ""
+"一个字典，包含与时间段存档相关的元素（若启用了时间段存档）。详见 "
+":ref:`时间段存档的列表和链接 <period_archives_variable>`"
+
+#: ../../themes.rst:101 ../../themes.rst:450 0b796b141cc24e34b57bc554273720c1
+#: d5bf3dd243d04c55ace1738de4d5b81b
+msgid "authors"
+msgstr "authors"
+
+#: ../../themes.rst:101 10010e1b527e4eedb7477d52bbf0ed94
+msgid ""
+"A list of (author, articles) tuples, containing all the authors and "
+"corresponding articles (values)"
+msgstr ""
+"元组(author, articles)的列表，包含所有作者及对应文章。"
+
+#: ../../themes.rst:103 7bb90c8b99344911b68de2dc8ba1a9d7
+msgid "categories"
+msgstr "categories"
+
+#: ../../themes.rst:103 becaee92fa434a47bb2ffa4ba6d3d863
+msgid ""
+"A list of (category, articles) tuples, containing all the categories and "
+"corresponding articles (values)"
+msgstr ""
+"元组(category, articles)的列表，包含所有分类及对应文章"
+
+#: ../../themes.rst:105 ../../themes.rst:470 ../../themes.rst:529
+#: 9d21fa3040b14b91a47dff071caae024 b8597a5c585e43a0bb544bfe8cf9bd26
+#: d692f555b4ea461ca4d8c0c65a67f21a
+msgid "tags"
+msgstr "tags"
+
+#: ../../themes.rst:105 0c0424ec68a74f578e271d0b1fe44b28
+msgid ""
+"A list of (tag, articles) tuples, containing all the tags and "
+"corresponding articles (values)"
+msgstr ""
+"元组(tag, articles)的列表，包含所有标签及对应文章"
+
+#: ../../themes.rst:107 196d2ef3131b4ab2b7e90a43d8c17dcd
+msgid "pages"
+msgstr "pages"
+
+#: ../../themes.rst:107 abb2b6303bb44b3e9335fcc9bfa2a704
+msgid "The list of pages"
+msgstr "页面的列表"
+
+#: ../../themes.rst:108 14a71679646448d59f6ccc2c63c2cc8b
+msgid "hidden_pages"
+msgstr "hidden_pages"
+
+#: ../../themes.rst:108 dfc32fdbe91240a78c15ff048e2f58ce
+msgid "The list of hidden pages"
+msgstr "处于隐藏状态的页面的列表"
+
+#: ../../themes.rst:109 78a644f88301408e977449a4fc0ffe12
+msgid "draft_pages"
+msgstr "draft_pages"
+
+#: ../../themes.rst:109 7418727938f343da8cb0071239f67d71
+msgid "The list of draft pages"
+msgstr "处于草稿状态的页面的列表"
+
+#: ../../themes.rst:114 04e0bd5e7d504ff8975c8492ce8c250a
+msgid "Sorting"
+msgstr "排序"
+
+#: ../../themes.rst:116 edae254af6974908bbeb7125dca0c708
+msgid ""
+"URL wrappers (currently categories, tags, and authors), have comparison "
+"methods that allow them to be easily sorted by name::"
+msgstr ""
+"URL包装器（分类、标签、作者），都拥有比较方法，使其易于按名称排序："
+
+#: ../../themes.rst:121 878bb8a3a3064552b7608444cb419856
+msgid ""
+"If you want to sort based on different criteria, `Jinja's sort command`__"
+" has a number of options."
+msgstr ""
+"如果你想要以不同条件进行排序，可以使用 `Jinja的排序命令`__ ，其中有丰富的选项。"
+
+#: ../../themes.rst:128 3f3c857d79ed447f9dd3f5ce91082747
+msgid "Date Formatting"
+msgstr "日期格式"
+
+#: ../../themes.rst:130 37d3f94188aa435297071a869bfdca96
+msgid ""
+"Pelican formats the date according to your settings and locale "
+"(``DATE_FORMATS``/``DEFAULT_DATE_FORMAT``) and provides a ``locale_date``"
+" attribute. On the other hand, the ``date`` attribute will be a "
+"`datetime`_ object. If you need custom formatting for a date different "
+"than your settings, use the Jinja filter ``strftime`` that comes with "
+"Pelican. Usage is same as Python `strftime`_ format, but the filter will "
+"do the right thing and format your date according to the locale given in "
+"your settings::"
+msgstr ""
+"Pelican会根据设置和地区（ ``DATE_FORMATS``/``DEFAULT_DATE_FORMAT`` ）对日期"
+"进行格式化，同时还会提供一个 ``locale_date`` 属性。 ``date`` 属性以 `datetime`_ "
+"类表示。如果你需要使用与设置中不同的自定义日期格式，使用Jinja中的 ``strftime`` "
+"过滤器即可。用法Python中的 `strftime`_ 相同，但是过滤器会根据设置中给出的地区对"
+"日期进行格式化："
+
+#: ../../themes.rst:144 cc5bc390c54b4c4f96641b2d8efe2169
+msgid "Checking Loaded Plugins"
+msgstr "检测已加载的插件"
+
+#: ../../themes.rst:146 2805eea94378479eafe1f9e214875f44
+msgid ""
+"Pelican provides a ``plugin_enabled`` Jinja test for checking if a "
+"certain plugin is enabled. This test accepts a plugin name as a string "
+"and will return a Boolean. Namespace plugins can be specified by full "
+"name (``pelican.plugins.plugin_name``) or short name (``plugin_name``). "
+"The following example uses the ``webassets`` plugin to minify CSS if the "
+"plugin is enabled and otherwise falls back to regular CSS::"
+msgstr ""
+"Pelican 提供了一个名为 ``plugin_enabled`` 的Jinja test，可用于检测某个插件是否启用。"
+"此test以字符串形式接受一个插件名称，并且返回一个布尔值。命名空间插件可以通过全名"
+"（ ``pelican.plugins.plugin_name`` ）或者短名称（ ``plugin_name`` ）指定。"
+"下面的例子中通过 ``webassets`` 插件来减小CSS的体积，但若此插件未启用，则回滚回普通的CSS："
+
+#: ../../themes.rst:162 f31869529aef47a28224e3da3bc0c702
+msgid "index.html"
+msgstr "index.html"
+
+#: ../../themes.rst:164 d412aecaa8e34b2ca56032be8711b258
+msgid "This is the home page or index of your blog, generated at ``index.html``."
+msgstr "站点的主页，可以理解为推文的索引页，生成为 ``index.html`` 。"
+
+#: ../../themes.rst:166 396a268629374d1aaef9857ccff9ee53
+msgid ""
+"If pagination is active, subsequent pages will reside in "
+"``index{number}.html``."
+msgstr ""
+"如果开启了分页功能，后续的页面会以 ``index{number}.html`` 的形式生成。"
+
+#: ../../themes.rst:172 ../../themes.rst:205 ../../themes.rst:239
+#: ../../themes.rst:328 08f6e73beb544181b9b2627ad68dbbfe
+#: 244d220cd8684bb68489bf61227f87b5 34b8185111f54d8fbffa9ac5a87302a8
+#: d7bcb30486284e9dac239a40d4b9f229
+msgid "articles_paginator"
+msgstr "articles_paginator"
+
+#: ../../themes.rst:172 ../../themes.rst:205 ../../themes.rst:239
+#: ../../themes.rst:328 3fa810e9ae1d4dc1839754210e5d2570
+#: 9554b801f6df475caedff0345c5dfb93 bbc15c5dfe934bcd9e5f258f2008af11
+#: e5952c856b7d4670a93a99863ef94c49
+msgid "A paginator object for the list of articles"
+msgstr "一个分页器对象，其中存放着文章列表"
+
+#: ../../themes.rst:173 ../../themes.rst:206 ../../themes.rst:240
+#: ../../themes.rst:329 2362ac4e51264ba8b1a38272414c026c
+#: 755bbbd447fe420eb124c1dcbfecd767 7eaa5ec86823488fa38009e3a5bf1756
+#: 82eef974e6c2428eb29528b9a6cae6d3
+msgid "articles_page"
+msgstr "articles_page"
+
+#: ../../themes.rst:173 ../../themes.rst:206 ../../themes.rst:240
+#: ../../themes.rst:329 283875f54861414396ce8695d3002f7d
+#: b7400c136a8340df9eaa5e5f29b81766 ba00d04cfe6c4040bf704c17be73470f
+#: cdb81b11ea1a44d2890915c496eada40
+msgid "The current page of articles"
+msgstr "当前分页包含的文章的列表"
+
+#: ../../themes.rst:174 ../../themes.rst:207 ../../themes.rst:241
+#: ../../themes.rst:330 4fd0b5d101a74f23b8fb32e95b35af7f
+#: 6d6631ebf17e436ebd910cb778fa47e6 8869fe25c487475ea64c0ab80ee8c48b
+#: efd8e4bfc9234996870b90026c00f695
+msgid "articles_previous_page"
+msgstr "articles_previous_page"
+
+#: ../../themes.rst:174 ../../themes.rst:207 ../../themes.rst:241
+#: ../../themes.rst:330 228a67aba662491bb3e8b8f53d936921
+#: 4e0499da01e146d78c4c50ab293ceaec a9c5b7f1fb854f359f596f2de65510e9
+#: eaeb09fc611545ec87fbdbe32b7da599
+msgid "The previous page of articles (``None`` if page does not exist)"
+msgstr "前一分页包含的文章的列表（若没有前一页，此变量值为 ``None`` ）"
+
+#: ../../themes.rst:176 ../../themes.rst:209 ../../themes.rst:243
+#: ../../themes.rst:332 44e81860c57c4136953fec9d390a1896
+#: 92e4766edf0d4f1a94801521a3ccc8c6 c7f7e0e63a5e4b3f838df1082628f71f
+#: eb4130c14eef4dc59383097aa4bfd9cc
+msgid "articles_next_page"
+msgstr "articles_next_page"
+
+#: ../../themes.rst:176 ../../themes.rst:209 ../../themes.rst:243
+#: ../../themes.rst:332 0aaccba1bbd843f3a13da1b8b206cb47
+#: 87d1cad4927745329bf74840147f3cae 9df65206ff0040caae56f0d2185e63d4
+#: a38e11e768ec40acafdc943d00fd1c39
+msgid "The next page of articles (``None`` if page does not exist)"
+msgstr "后一分页包含的文章的列表（若没有后一页，此变量值为 ``None`` ）"
+
+#: ../../themes.rst:178 ../../themes.rst:211 ../../themes.rst:245
+#: ../../themes.rst:334 06c22ce247524bc59649f37ac570360d
+#: 3f913f031d1544049d4204b5c786e8eb 80e9ef1975ac43cb87b1cb1e2292a15d
+#: 9d50cd6bc33542ff9ec268664242cdac
+msgid "dates_paginator"
+msgstr "dates_paginator"
+
+#: ../../themes.rst:178 ../../themes.rst:211 470234ce4ff84c1282773c5e074a0984
+#: 66b61e29b0d94312be1924ffbf6a76f0
+msgid "A paginator object for the article list, ordered by date, ascending."
+msgstr "分页器对象，存放着以日期正序排列的文章列表。"
+
+#: ../../themes.rst:180 ../../themes.rst:213 ../../themes.rst:247
+#: ../../themes.rst:336 06688dad88b84be0a1b8a77904d3e36c
+#: 4c3336d0cc6146c0854e1a3b0a01226a c22fbf78288d40c2a7f53a0e05827bc9
+#: cbead4319b8449948907728edd1563e5
+msgid "dates_page"
+msgstr "dates_page"
+
+#: ../../themes.rst:180 ../../themes.rst:213 332ab164d0d14965a064f41289fd8b5a
+#: 9c0313b487514c1a8ea9ed741a022a98
+msgid "The current page of articles, ordered by date, ascending."
+msgstr "以日期正序（从旧到新）排列时，当前分页包含的文章的列表。"
+
+#: ../../themes.rst:182 ../../themes.rst:215 ../../themes.rst:249
+#: ../../themes.rst:338 225a16b1ca764c1297a6126e82294ea5
+#: 25b7b90357db4d999771a5dbb3ee46f0 f42233112a7940cfa0e448f72c254385
+#: fd276760afc04d66a3abb295db0c491b
+msgid "dates_previous_page"
+msgstr "dates_previous_page"
+
+#: ../../themes.rst:182 ../../themes.rst:215 ../../themes.rst:249
+#: ../../themes.rst:338 058e893b353046ffbdee082ea0ddcde2
+#: 0b15ab2a1e6e4d58a6648a72a2207ae5 13dc7929b6e9453bac9c30a9abf9a5f6
+#: 62de8d49e771412a89266c2d8731bd49
+msgid ""
+"The previous page of articles, ordered by date, ascending (``None`` if "
+"page does not exist)"
+msgstr ""
+"以日期正序（从旧到新）排列时，前一分页包含的文章的列表。"
+"（若没有前一页，此变量值为 ``None`` ）"
+
+#: ../../themes.rst:184 ../../themes.rst:217 ../../themes.rst:251
+#: ../../themes.rst:340 156f78d11b96475a9d52085860a1e6c5
+#: 33b0c94c117c41ee955df750c1fd728c 5763fdf2c1cd43fc96013756029661d6
+#: add31a94f5dc490684aac08b7bcad8e5
+msgid "dates_next_page"
+msgstr "dates_next_page"
+
+#: ../../themes.rst:184 ../../themes.rst:217 ../../themes.rst:251
+#: ../../themes.rst:340 a61d56f03b5946899f9e951eba65df08
+#: ac60da91c10449cc8d519beb0b2f1102 cdfa2284c2c54da3a366d1deaefab551
+#: dc9ea16f9bb44d1d8d1032397aac1a8e
+msgid ""
+"The next page of articles, ordered by date, ascending (``None`` if page "
+"does not exist)"
+msgstr ""
+"以日期正序（从旧到新）排列时，后一分页包含的文章的列表。"
+"（若没有后一页，此变量值为 ``None`` ）"
+
+#: ../../themes.rst:186 ../../themes.rst:219 ../../themes.rst:253
+#: ../../themes.rst:342 ../../themes.rst:493 501f30d99fc441f3b5070f8703c7e324
+#: 6a4735af4aa84d56bf745244c29f7e0c 8c9158f1b7f04d5ea07058d816be2e70
+#: cf1d564d80d34860a32fcddbac41375c e8c83819bbc0448799bae5ea19538100
+msgid "page_name"
+msgstr "page_name"
+
+#: ../../themes.rst:186 99f67be157844a6e85f1ebe6d40c9182
+msgid "'index' -- useful for pagination links"
+msgstr "值为 'index' ——在分页链接中很实用"
+
+#: ../../themes.rst:191 01c6da9f6c7b431d971fa0ec426f948f
+msgid "author.html"
+msgstr "author.html"
+
+#: ../../themes.rst:193 feee792cfdbf49b3a289762c8e0e0edb
+msgid ""
+"This template will be processed for each of the existing authors, with "
+"output generated according to the ``AUTHOR_SAVE_AS`` setting (`Default:` "
+"``author/{slug}.html``). If pagination is active, subsequent pages will "
+"by default reside at ``author/{slug}{number}.html``."
+msgstr ""
+"此模板会应用于每个已存在的作者上，并根据配置项 ``AUTHOR_SAVE_AS`` 确定输出路径"
+"（ `默认值为：` ``author/{slug}.html`` ）。如果启用了分页，后续页面会保存为 "
+"``author/{slug}{number}.html`` 。"
+
+#: ../../themes.rst:201 ../../themes.rst:448 ../../themes.rst:511
+#: 1f0784e3f85140afab2178a061897017 af9d9be813ae4f43be00ff6770a75fe5
+#: f9ea3f154b7f4268ab412ea2e6bf6c87
+msgid "author"
+msgstr "author"
+
+#: ../../themes.rst:201 01d284aaf9534cc5852557cc4063b6dc
+msgid "The name of the author being processed"
+msgstr "当前正在处理的作者名"
+
+#: ../../themes.rst:202 9a53c5cec5fb4fdd8df98bab9cfc77fa
+msgid "Articles by this author"
+msgstr "当前作者的文章"
+
+#: ../../themes.rst:203 4d5fc91dac964d63a9ac28ff07f44b97
+msgid "Articles by this author, but ordered by date, ascending"
+msgstr "当前作者的文章，以日期正序排列"
+
+#: ../../themes.rst:219 2f5aca7ff98c4de4bfdd82d6e57803e1
+msgid ""
+"AUTHOR_URL where everything after `{slug}` is removed -- useful for "
+"pagination links"
+msgstr ""
+"变量值与AUTHOR_URL一致，所有在 `{slug}` 之后的字符都会被删除——这对分页链接很有用"
+
+#: ../../themes.rst:225 a603e6fd07f7404ca86716249a4347ef
+msgid "category.html"
+msgstr "category.html"
+
+#: ../../themes.rst:227 10beee5e95394fd2ac3ab29e76cc06fc
+msgid ""
+"This template will be processed for each of the existing categories, with"
+" output generated according to the ``CATEGORY_SAVE_AS`` setting "
+"(`Default:` ``category/{slug}.html``). If pagination is active, "
+"subsequent pages will by default reside at "
+"``category/{slug}{number}.html``."
+msgstr ""
+"此模板会应用于每个已存在的分类上，根据设置项 ``CATEGORY_SAVE_AS`` 确定输出路径"
+"（`默认值为：` ``category/{slug}.html`` ）。如果启用了分页，后续页面会保存为 "
+"``category/{slug}{number}.html`` 。"
+
+#: ../../themes.rst:235 ../../themes.rst:269 ../../themes.rst:452
+#: 04b6f1c1d1f04e0e806f898dda0df53e a8a2719723a44a04b0cc7516a9b8e811
+#: fc79984925564ea5b5dece084dbd3f15
+msgid "category"
+msgstr "category"
+
+#: ../../themes.rst:235 feb49105f74f4e93b8f7f3471327cc4b
+msgid "The name of the category being processed"
+msgstr "正在处理的分类名称"
+
+#: ../../themes.rst:236 fa6d2909a42446edbce322e4bdd74ca9
+msgid "Articles for this category"
+msgstr "此分类下的文章"
+
+#: ../../themes.rst:237 c89759eb3241470fb8f098ccb022f286
+msgid "Articles for this category, but ordered by date, ascending"
+msgstr "此分类下的文章，以日期正序排列"
+
+#: ../../themes.rst:245 ../../themes.rst:334 03985448999c44859adcb45b7a9da87c
+#: b5506c9105b843de92190998f7d07245
+msgid "A paginator object for the list of articles, ordered by date, ascending"
+msgstr "分页器对象，存放着以日期正序排列的文章列表"
+
+#: ../../themes.rst:247 ../../themes.rst:336 926e4184e9fc4288be3701737c8ea3cc
+#: 929ee1e0a49d4a7fa52343db55e6201b
+msgid "The current page of articles, ordered by date, ascending"
+msgstr "当前页面中的文章，以日期正序排列"
+
+#: ../../themes.rst:253 6b396d9ad87e4156a694c9e31663d935
+msgid ""
+"CATEGORY_URL where everything after `{slug}` is removed -- useful for "
+"pagination links"
+msgstr ""
+"变量值与CATEGORY_URL一致，所有在 `{slug}` 之后的字符都会被删除——这对分页链接很有用"
+
+#: ../../themes.rst:259 0c7b031962f14ca78b9cd72aa2de5b03
+msgid "article.html"
+msgstr "article.html"
+
+#: ../../themes.rst:261 1132a54c80564ac0a2706b026b263af7
+msgid ""
+"This template will be processed for each article, with output generated "
+"according to the ``ARTICLE_SAVE_AS`` setting (`Default:` "
+"``{slug}.html``). The following variables are available when rendering."
+msgstr ""
+"此模板会应用于文章上，根据设置项 ``ARTICLE_SAVE_AS`` 确定输出路径（`默认值为：` "
+"``{slug}.html`` ）。在渲染文章过程中可以使用下列变量。"
+
+#: ../../themes.rst:268 6cc80575f5ac41e9bca4ce466d593f1d
+msgid "article"
+msgstr "article"
+
+#: ../../themes.rst:268 bbad6618dfa346c396dfa8cf02cb7ee7
+msgid "The article object to be displayed"
+msgstr "准备显示的文章对象"
+
+#: ../../themes.rst:269 4a9bcc18543a4d9eb533092d25bd59a2
+msgid "The name of the category for the current article"
+msgstr "当前文章所属分类的名称"
+
+#: ../../themes.rst:272 fdbbcc85d2aa406493ae4f0b4511e1a8
+msgid ""
+"Any metadata that you put in the header of the article source file will "
+"be available as fields on the ``article`` object. The field name will be "
+"the same as the name of the metadata field, except in all-lowercase "
+"characters."
+msgstr ""
+"文章源文件开头部分的元数据都会作为 ``article`` 对象的属性存在，属性名和元数据中"
+"指定的相同（但是是全小写的）。"
+
+#: ../../themes.rst:276 1c7d9a6b460849daacae3a205b6a59a6
+msgid ""
+"For example, you could add a field called `FacebookImage` to your article"
+" metadata, as shown below:"
+msgstr ""
+"例如，一篇文章源文件中添加了一个额外的元数据 `FacebookImage` ："
+
+#: ../../themes.rst:289 b934e5fbde064a7eb6d09405abc0ba1d
+msgid ""
+"This new metadata will be made available as `article.facebookimage` in "
+"your `article.html` template. This would allow you, for example, to "
+"specify an image for the Facebook open graph tags that will change for "
+"each article:"
+msgstr ""
+"此元数据在 `article.html` 模板中可以通过 `article.facebookimage` 获取。"
+"通过这种方式，就可以实现例如Facebook的动态打开标签："
+
+#: ../../themes.rst:299 dacf9a5dc4de4a5398baf9632399be4b
+msgid "page.html"
+msgstr "page.html"
+
+#: ../../themes.rst:301 a65649dffe0e4e1fb26e38565a89fbf2
+msgid ""
+"This template will be processed for each page, with output generated "
+"according to the ``PAGE_SAVE_AS`` setting (`Default:` "
+"``pages/{slug}.html``). The following variables are available when "
+"rendering."
+msgstr ""
+"此模板会应用于页面上，根据设置项 ``PAGE_SAVE_AS`` 确定输出路径（`默认值为：` "
+"``pages/{slug}.html`` ）。在渲染过程中可以使用下列变量。"
+
+#: ../../themes.rst:308 fb581643c0c04d6b89c3aa62bcdb5225
+msgid "page"
+msgstr "page"
+
+#: ../../themes.rst:308 02c821223e5448d7999f67d499844684
+msgid ""
+"The page object to be displayed. You can access its title, slug, and "
+"content."
+msgstr ""
+"准备显示的页面对象，可以从中获取标题、slug和具体内容。"
+
+#: ../../themes.rst:314 4f312193d3914a58be2a8e54e2fb61d8
+msgid "tag.html"
+msgstr "tag.html"
+
+#: ../../themes.rst:316 e96e2b0601e340878872dfcf5159575e
+msgid ""
+"This template will be processed for each tag, with output generated "
+"according to the ``TAG_SAVE_AS`` setting (`Default:` "
+"``tag/{slug}.html``). If pagination is active, subsequent pages will by "
+"default reside at ``tag/{slug}{number}.html``."
+msgstr ""
+"此模板会应用于标签页上，根据设置项 ``TAG_SAVE_AS`` 确定输出路径（`默认值为：` "
+"``tag/{slug}.html`` ）。若启用了分页，后续页面默认存储为。``tag/{slug}{number}.html`` 。"
+
+#: ../../themes.rst:324 2c8332f2cdc144828b75e23937d3ef8e
+msgid "tag"
+msgstr "tag"
+
+#: ../../themes.rst:324 413cc4b9730a40d3aaee657a7d261daa
+msgid "The name of the tag being processed"
+msgstr "当前正在处理标签的名称"
+
+#: ../../themes.rst:325 726e68a5b71c4ba182afd29b36394c82
+msgid "Articles related to this tag"
+msgstr "和此标签关联的文章"
+
+#: ../../themes.rst:326 780cb9b0de1e4bc1842b8a1bc1ad9202
+msgid "Articles related to this tag, but ordered by date, ascending"
+msgstr "和此标签关联的文章，以日期正序排列"
+
+#: ../../themes.rst:342 c6fb1ba5f18b454ead7abdee5cded85b
+msgid ""
+"TAG_URL where everything after `{slug}` is removed -- useful for "
+"pagination links"
+msgstr ""
+"变量值与TAG_URL一致，所有在 `{slug}` 之后的字符都会被删除——这对分页链接很有用"
+
+#: ../../themes.rst:348 8786a045b390459fad281b06b7edae8c
+msgid "period_archives.html"
+msgstr "period_archives.html"
+
+#: ../../themes.rst:350 c2fad0f517ec40eb8309beca3794ca8b
+msgid ""
+"This template will be processed for each year of your posts if a path for"
+" ``YEAR_ARCHIVE_SAVE_AS`` is defined, each month if "
+"``MONTH_ARCHIVE_SAVE_AS`` is defined, and each day if "
+"``DAY_ARCHIVE_SAVE_AS`` is defined."
+msgstr ""
+"此模板用于生成归档页面， ``YEAR_ARCHIVE_SAVE_AS`` 、 ``MONTH_ARCHIVE_SAVE_AS`` "
+"与 ``DAY_ARCHIVE_SAVE_AS`` 分别对应着年、月、日的归档，只有指定了对应的路径才会生成"
+"归档页面。"
+
+#: ../../themes.rst:357 ../../themes.rst:394 ef52bf257ddc4687801b9438efa2660a
+#: f6eb6f96a622406cbf6d60a5c57276c7
+msgid "period"
+msgstr "period"
+
+#: ../../themes.rst:357 2d01d1314880482791134dbae86647d8
+msgid ""
+"A tuple of the form (`year`, `month`, `day`) that indicates the current "
+"time period. `year` and `day` are numbers while `month` is a string. This"
+" tuple only contains `year` if the time period is a given year. It "
+"contains both `year` and `month` if the time period is over years and "
+"months and so on."
+msgstr ""
+"一个元组，格式为 (`year`, `month`, `day`) ，指明了当前的时间段。 `year` 和 `day` "
+"为数字， `month` 则为字符串。当时间段以年给定时，此元组只会有 `year` ；当时间段以年"
+"和月给定时此元组中则只会包含 `year` 和 `month` ；以此类推。"
+
+#: ../../themes.rst:364 ../../themes.rst:397 2164d658ab7342839ea592c7f534c332
+#: ff99b9574a444dec9014c06b0c9b908e
+msgid "period_num"
+msgstr "period_num"
+
+#: ../../themes.rst:364 c4864711405b4f9fa565ac3bcc3a8803
+msgid ""
+"A tuple of the form (``year``, ``month``, ``day``), as in ``period``, "
+"except all values are numbers."
+msgstr ""
+"一个元组，格式为 (``year``, ``month``, ``day``) ，与 ``period`` 含义相同，"
+"只不过年月日都是以数字给出的。"
+
+#: ../../themes.rst:369 27affb54796f4855826eaf3506ed4ed5
+msgid ""
+"You can see an example of how to use `period` in the `\"simple\" theme "
+"period_archives.html template "
+"<https://github.com/getpelican/pelican/blob/main/pelican/themes/simple/templates/period_archives.html>`_."
+msgstr ""
+"有关 `period` 的使用可以参考 `\"simple\" 主题中的period_archives.html模板 "
+"<https://github.com/getpelican/pelican/blob/main/pelican/themes/simple/templates/period_archives.html>`_ ."
+
+#: ../../themes.rst:377 f556c7dd5ca5454888d19edf992c8dfa
+msgid "Listing and Linking to Period Archives"
+msgstr "列出归档与链接到归档"
+
+#: ../../themes.rst:379 d76f0d91885c42edb2652303f4a60cb6
+msgid ""
+"The ``period_archives`` variable can be used to generate a list of links "
+"to the set of period archives that Pelican generates. As a :ref:`common "
+"variable <common_variables>`, it is available for use in any template, so"
+" you can implement such an index in a custom direct template, or in a "
+"sidebar visible across different site pages."
+msgstr ""
+"对于Pelican给出的归档时间段， ``period_archives`` 可用于生成对应的链接列表。"
+"此变量作为 :ref:`通用变量 <common_variables>` ，可在所有模板中使用。因此可以借此"
+"在自定义直接模板中或是侧边栏中实现链接索引。"
+
+#: ../../themes.rst:385 bf76ed577485401d8c5e180a2ea6b7fe
+msgid ""
+"``period_archives`` is a dict that may contain ``year``, ``month``, "
+"and/or ``day`` keys, depending on which ``*_ARCHIVE_SAVE_AS`` settings "
+"are enabled. The corresponding value is a list of dicts, where each dict "
+"in turn represents a time period (ordered according to the "
+"``NEWEST_FIRST_ARCHIVES`` setting) with the following keys and values:"
+msgstr ""
+"``period_archives`` 是一个字典，根据 ``*_ARCHIVE_SAVE_AS`` 设置的启用情况，"
+"其键对应为 ``year`` 、 ``month`` 与 ``day`` ，其值是包含字典的列表，每个字典依次"
+"表示一个时间段（顺序由 ``NEWEST_FIRST_ARCHIVES`` 设置决定），并包含以下键值对："
+
+#: ../../themes.rst:392 d4b7e16101e24e13ac49a201f2e9b288
+msgid "Key"
+msgstr "键"
+
+#: ../../themes.rst:392 cda01b45b25c4b76bf38849c6b5368d0
+msgid "Value"
+msgstr "值"
+
+#: ../../themes.rst:394 ac2a1a43510a417fb10561cff9a5189e
+msgid ""
+"The same tuple as described in ``period_archives.html``, e.g. ``(2023, "
+"'June', 18)``."
+msgstr ""
+"一个元组，内容和 ``period_archives.html`` 中一样，例如 ``(2023, 'June', 18)`` 。"
+
+#: ../../themes.rst:397 fdae5356b80444dc84294a4e54b7a69e
+msgid ""
+"The same tuple as described in ``period_archives.html``, e.g. ``(2023, 6,"
+" 18)``."
+msgstr ""
+"一个元组，内容和 ``period_archives.html`` 中一样，例如 ``(2023, 6, 18)`` 。"
+
+#: ../../themes.rst:399 ../../themes.rst:476 ../../themes.rst:496
+#: ../../themes.rst:535 08cccff8dd0048a39054424ae58bfe24
+#: 3fe5b8e9d83a4cd28bfc96c745406432 c2d9d11c36e94278a94b3404e8335524
+#: c9ee356463204591986c9c17f8dfc8b4
+msgid "url"
+msgstr "url"
+
+#: ../../themes.rst:399 0c826cc879af4c8fa1fb4fceb92bb362
+msgid ""
+"The URL to the period archive page, e.g. ``posts/2023/06/18/``. This is "
+"controlled by the corresponding ``*_ARCHIVE_URL`` setting."
+msgstr ""
+"当前时间段归档页面的URL，例如 ``posts/2023/06/18/`` 。具体值由对应的设置项 "
+"``*_ARCHIVE_URL`` 决定。"
+
+#: ../../themes.rst:402 ../../themes.rst:463 ../../themes.rst:494
+#: ../../themes.rst:522 155a764c3763409c9bdf881881da49e4
+#: 8da502261f724333814ae130f068a454 d3eaeebea8a54785a4778eac9d436479
+#: ec45a7fbd4db443ab75b13b0fb2876e7
+msgid "save_as"
+msgstr "save_as"
+
+#: ../../themes.rst:402 29cd2e19b0f24fa8ac20e184aea547c5
+msgid ""
+"The path to the save location of the period archive page file, e.g. "
+"``posts/2023/06/18/index.html``. This is used internally by Pelican and "
+"is usually not relevant to themes."
+msgstr ""
+"当前时间段归档页面的存储路径，例如 ``posts/2023/06/18/index.html`` 。此路径用于"
+"Pelican内部处理，往往与主题无关。"
+
+#: ../../themes.rst:406 4bd641dcf26c4f61bf8d3c8667552501
+msgid ""
+"A list of :ref:`Article <object-article>` objects that fall under the "
+"time period."
+msgstr ""
+"一个列表，其中为当前时间段内所有文章的 :ref:`Article <object-article>` 对象。"
+
+#: ../../themes.rst:408 c59db635e66a4ed68b2648b6cd8691a4
+msgid ""
+"Same list as ``articles``, but ordered according to the "
+"``NEWEST_FIRST_ARCHIVES`` setting."
+msgstr ""
+"和 ``articles`` 相同的列表，但按照 ``NEWEST_FIRST_ARCHIVES`` 设置项进行排列。"
+
+#: ../../themes.rst:412 f096e1915d684d6b9bd0a1e5e034e5f0
+msgid "Here is an example of how ``period_archives`` can be used in a template:"
+msgstr "下面的例子展示了如何在模板中使用 ``period_archives`` ："
+
+#: ../../themes.rst:426 3f6144d2a3914984bc376ed6f33af53b
+msgid ""
+"You can change ``period_archives.month`` in the ``for`` statement to "
+"``period_archives.year`` or ``period_archives.day`` as appropriate, "
+"depending on the time period granularity desired."
+msgstr ""
+"你可以根据需要的时间粒度将 ``for`` 语句中的 ``period_archives.month`` 改为 "
+"``period_archives.year`` 或 ``period_archives.day`` 。"
+
+#: ../../themes.rst:432 ce9158ea38b54c5faeee718a7644ca5f
+msgid "Objects"
+msgstr "对象"
+
+#: ../../themes.rst:434 dd0725152df94c8f9e2d94439ccfa3a1
+msgid ""
+"Detail objects attributes that are available and useful in templates. Not"
+" all attributes are listed here, this is a selection of attributes "
+"considered useful in a template."
+msgstr ""
+"下面是对在模板中可用对象的属性的详细说明。以下仅列出了较常用的一些，并不是全部。"
+
+#: ../../themes.rst:441 af8644dff51348af8e52938bb8d6a0c8
+msgid "Article"
+msgstr "Article"
+
+#: ../../themes.rst:443 cc283674732243e5883a99b6a32166af
+msgid "The string representation of an Article is the `source_path` attribute."
+msgstr "Article对象的字符串表示即为 `source_path` 属性。"
+
+#: ../../themes.rst:446 ../../themes.rst:490 ../../themes.rst:509
+#: 3f2a9f3ea4c34e4ba7b83b17897f4b59 529f2387d2044534a0e3059defb2be46
+#: 97104fabe548459e9142574e4194afdb
+msgid "Attribute"
+msgstr "属性"
+
+#: ../../themes.rst:448 16d19143b7964b99953026728e8a5d4a
+msgid "The :ref:`Author <object-author_cat_tag>` of this article."
+msgstr "当前文章的 :ref:`Author <object-author_cat_tag>`"
+
+#: ../../themes.rst:450 5a7ae4c0e9164288bd46cbf698ae01f8
+msgid "A list of :ref:`Authors <object-author_cat_tag>` of this article."
+msgstr "当前文章的多个 :ref:`Authors <object-author_cat_tag>`"
+
+#: ../../themes.rst:452 982b4fe7fa4a41a5b3aed3a82168b462
+msgid "The :ref:`Category <object-author_cat_tag>` of this article."
+msgstr "当前文章的 :ref:`Category <object-author_cat_tag>`"
+
+#: ../../themes.rst:454 ../../themes.rst:513 10ea5d1008fa4e7e9f11680013530b13
+#: 3bca890724c2487885fbfb34803f0a8b
+msgid "content"
+msgstr "content"
+
+#: ../../themes.rst:454 14973ea2fac140dbac7ed05f09f3b27d
+msgid "The rendered content of the article."
+msgstr "当前文章渲染完成的内容"
+
+#: ../../themes.rst:455 ../../themes.rst:514 1733ed5bfe0d421d96f074c2ea46c163
+#: b577071078d5413ba0199a4b5a64a926
+msgid "date"
+msgstr "date"
+
+#: ../../themes.rst:455 c99033f75c6c4aabb03c1ed24e530551
+msgid "Datetime object representing the article date."
+msgstr "当前文章的Datetime对象"
+
+#: ../../themes.rst:456 ../../themes.rst:515 9f8a6847d9f24162980e8bac2cc6e159
+#: c01cd89b410d45258311d8d62a0b3b24
+msgid "date_format"
+msgstr "date_format"
+
+#: ../../themes.rst:456 ../../themes.rst:515 14a1bee230d243da83e1a8f8e4817838
+#: 35bed86384a74210a5c5be86feb1ca83
+msgid "Either default date format or locale date format."
+msgstr "默认日期格式或是特定地区的日期格式"
+
+#: ../../themes.rst:457 ../../themes.rst:516 7c05e281dd0f4b7885653f977ce73b96
+#: 942fcdc259554437b58035fd53b3f430
+msgid "default_template"
+msgstr "default_template"
+
+#: ../../themes.rst:457 ../../themes.rst:516 754d4caf3da64863818cae661450c76b
+#: 7fc12db08b5641f388113c447d272970
+msgid "Default template name."
+msgstr "默认的模板名称"
+
+#: ../../themes.rst:458 ../../themes.rst:517 6434f76e9f2c425ab2e0f4e1df0d5eff
+#: 7a42be4c30d74d93b9778768d88f0d61
+msgid "in_default_lang"
+msgstr "in_default_lang"
+
+#: ../../themes.rst:458 ../../themes.rst:517 573f32f9ea2942b2849cb62bc4ad5b0d
+#: d9bbddf5ba92486faca7219d41907449
+msgid "Boolean representing if the article is written in the default language."
+msgstr "布尔值，用于表示当前文章是不是以默认语言写的。"
+
+#: ../../themes.rst:460 ../../themes.rst:519 c06096412cd6477f9a9505202b65a66b
+#: cf2ee07db2b544fb8bb5867fd47b4766
+msgid "lang"
+msgstr "lang"
+
+#: ../../themes.rst:460 ../../themes.rst:519 5feb94756b424a1f970b45ad224ab4df
+#: bb4db90299324791bcc00c9687d458e8
+msgid "Language of the article."
+msgstr "当前文章使用的语言。"
+
+#: ../../themes.rst:461 ../../themes.rst:520 3ddd8549af7f4c54bb4d1176ab4991fe
+#: f599ee9e24d24679ae8efe1b92bfabd2
+msgid "locale_date"
+msgstr "locale_date"
+
+#: ../../themes.rst:461 ../../themes.rst:520 492201eaff5d43bcb2a27d38dd414ea5
+#: bd9e52a8bfc24c89982c21a7ec33546b
+msgid "Date formatted by the `date_format`."
+msgstr "以 `date_format` 格式化后的日期。"
+
+#: ../../themes.rst:462 ../../themes.rst:521 298a8c49a9c54aa08e92063a205b4270
+#: 91a12b6902f140a285bd808fe527e942
+msgid "metadata"
+msgstr "metadata"
+
+#: ../../themes.rst:462 a6266566a3764288a3439022e3a374b5
+msgid "Article header metadata `dict`."
+msgstr "文章元数据的字典。"
+
+#: ../../themes.rst:463 8c8bb35d3d0a4fd4a8cbbe66da13e9f6
+msgid "Location to save the article page."
+msgstr "本篇文章生成保存的位置。"
+
+#: ../../themes.rst:464 ../../themes.rst:495 ../../themes.rst:523
+#: 02324ac5ed2f418d8aeabad7ef196271 265ffa91569c417faf9edfad84909010
+#: eb3abbd690c540dc8c8f96c457a949f1
+msgid "slug"
+msgstr "slug"
+
+#: ../../themes.rst:464 ../../themes.rst:495 ../../themes.rst:523
+#: 6ceb857897804044822f46787b8b2e24 6f893196b6f94121aa829816652d9b8d
+#: d07f43f0b91e4e0492db289b425a66ca
+msgid "Page slug."
+msgstr "推文的slug"
+
+#: ../../themes.rst:465 ../../themes.rst:524 2a6c951175234a94ad49fe66b5e0ac67
+#: 8cc7b9782316464ab8f4d93f44364487
+msgid "source_path"
+msgstr "source_path"
+
+#: ../../themes.rst:465 e56b161d0ff444db81b9ef5438205492
+msgid "Full system path of the article source file."
+msgstr "文章源文件的完整系统路径。"
+
+#: ../../themes.rst:466 ../../themes.rst:525 3288505bb4c94604a880a6e41e854174
+#: c6d1c1970adc4b7d851fc9a62579e2c6
+msgid "relative_source_path"
+msgstr "relative_source_path"
+
+#: ../../themes.rst:466 efa94005826e46b1a7ace439cfea8ecd
+msgid "Relative path from PATH_ to the article source file."
+msgstr "从 PATH_ 到当前文章源文件的相对路径。"
+
+#: ../../themes.rst:467 ../../themes.rst:526 0f57131e78b043bd974e545651a9eac6
+#: 4f11a741e9684957bc2ac83e1aa850ca
+msgid "status"
+msgstr "status"
+
+#: ../../themes.rst:467 ff6df46c090044a9afd9bafe55483999
+msgid "The article status, can be any of 'published' or 'draft'."
+msgstr "当前文章的状态，可能值为'published'或'draft'。"
+
+#: ../../themes.rst:469 ../../themes.rst:528 042ac3c1853845f99752c484e341dbde
+#: 59ec1f34a47b41959621ae638ee75bf6
+msgid "summary"
+msgstr "summary"
+
+#: ../../themes.rst:469 ../../themes.rst:528 f13f50f1e1024ce2bb1a3cd2d6bd0f45
+#: fe9173ab1a3b42a39d1ae3f24b2e13b6
+msgid "Rendered summary content."
+msgstr "渲染后的摘要内容。"
+
+#: ../../themes.rst:470 ../../themes.rst:529 455d848accf04082b6d0efe5c0451a8c
+#: 5acb76f85cdd47f0933b5c411f645ccd
+msgid "List of :ref:`Tag <object-author_cat_tag>` objects."
+msgstr ":ref:`Tag <object-author_cat_tag>` 对象的列表。"
+
+#: ../../themes.rst:472 ../../themes.rst:531 346843df50f64fcb8738d9a33a5991c0
+#: 5b43ff1b52e049a080dcfcf7c8532e55
+msgid "template"
+msgstr "template"
+
+#: ../../themes.rst:472 ../../themes.rst:531 1c98b0c5f84b438d9fbcdc7e564b532a
+#: 75b07b60fd0540ac998a7a5f8c755abb
+msgid "Template name to use for rendering."
+msgstr "用于渲染的模板名称"
+
+#: ../../themes.rst:473 ../../themes.rst:532 3da31ca0f3a74f1b807028b268704562
+#: 939c8b4e82c34cdc9e11fff8728e925a
+msgid "title"
+msgstr "title"
+
+#: ../../themes.rst:473 4f435f74edea49abba15e465cd65bc9b
+msgid "Title of the article."
+msgstr "当前文章的标题。"
+
+#: ../../themes.rst:474 ../../themes.rst:533 4c7c144119804fcc9b3aff5ba1cc1d60
+#: 60cfb30189bc4622b9f0f10d57e8cebb
+msgid "translations"
+msgstr "translations"
+
+#: ../../themes.rst:474 ../../themes.rst:533 5086f31401d243e5ba1e7d3a4dbc75ea
+#: 6c9e4cba9d80461787be1e245ea0e77c
+msgid "List of translations :ref:`Article <object-article>` objects."
+msgstr "当前文章所有翻译版本的 :ref:`Article <object-article>` 对象。"
+
+#: ../../themes.rst:476 0bbe38a721924758b16f7ed92bd47060
+msgid "URL to the article page."
+msgstr "文章页面的URL。"
+
+#: ../../themes.rst:485 6a1b829fd11b4a5aaa913e8ab5d8cb9a
+msgid "Author / Category / Tag"
+msgstr "Author / Category / Tag"
+
+#: ../../themes.rst:487 e74be0b0e7d7477791a14dc892a01970
+msgid "The string representation of those objects is the `name` attribute."
+msgstr "这些对象的字符串表示与 `name` 属性一致。"
+
+#: ../../themes.rst:492 95f673648cd347589e30bac268c62402
+msgid "name"
+msgstr "name"
+
+#: ../../themes.rst:492 c85c4552f17e47ce8e75aa83968488b7
+msgid "Name of this object [1]_."
+msgstr "当前对象的名称 [1]_ 。"
+
+#: ../../themes.rst:493 9ab58cf8d1c14233b5fab67bcff1ed07
+msgid "Author page name."
+msgstr "作者页面的名称。"
+
+#: ../../themes.rst:494 8924be38e76744c18a232657e3e53541
+msgid "Location to save the author page."
+msgstr "保存当前作者页面的路径。"
+
+#: ../../themes.rst:496 d836061f54274605b775c9a303e73355
+msgid "URL to the author page."
+msgstr "作者页面的URL。"
+
+#: ../../themes.rst:499 8a004fbcd1134a6aa51ecc83ead04eb3
+msgid "for Author object, coming from `:authors:` or `AUTHOR`."
+msgstr "对于Author对象，此属性值由 `:authors:` 或 `AUTHOR` 得来。"
+
+#: ../../themes.rst:504 015a5ef21bc1482baa94fe2ecc389be9
+msgid "Page"
+msgstr "Page"
+
+#: ../../themes.rst:506 e509492329b543b094117d9b207d40c1
+msgid "The string representation of a Page is the `source_path` attribute."
+msgstr "Page对象的字符串表示与 `source_path` 属性一致。"
+
+#: ../../themes.rst:511 acbd8346326242e3a6124d349d90c83f
+msgid "The :ref:`Author <object-author_cat_tag>` of this page."
+msgstr "当前页面的 :ref:`Author <object-author_cat_tag>` 。"
+
+#: ../../themes.rst:513 17df00ade1b84d89b90e0cf8949014c5
+msgid "The rendered content of the page."
+msgstr "当前页面渲染后的内容。"
+
+#: ../../themes.rst:514 50ec2f44596c4f849458456113b6688d
+msgid "Datetime object representing the page date."
+msgstr "当前页面日期对应的Datetime对象。"
+
+#: ../../themes.rst:521 29fd9eb25f1643bc844a9480618ddee3
+msgid "Page header metadata `dict`."
+msgstr "页面元数据的 `字典` 。"
+
+#: ../../themes.rst:522 caeac875f56345dfb4b871dd5cc47ff6
+msgid "Location to save the page."
+msgstr "保存页面的位置。"
+
+#: ../../themes.rst:524 ee2e9caa90d24f7f8106e82449194c5b
+msgid "Full system path of the page source file."
+msgstr "页面源文件的完整系统路径。"
+
+#: ../../themes.rst:525 4ac1a61bb61b491ab05058392e561819
+msgid "Relative path from PATH_ to the page source file."
+msgstr "页面源文件相对于 PATH_ 的相对路径。"
+
+#: ../../themes.rst:526 1e21d2a5056e4f56b1fb9aeb9b56240a
+msgid "The page status, can be any of 'published', 'hidden' or 'draft'."
+msgstr "页面的状态，可能值有'published'、'hidden'或者'draft'。"
+
+#: ../../themes.rst:532 0afb2b618cdd49d5b6f4c37dfa84c847
+msgid "Title of the page."
+msgstr "页面的标题。"
+
+#: ../../themes.rst:535 e4f719f69ae3495280e4953b0e948e02
+msgid "URL to the page."
+msgstr "页面的URL"
+
+#: ../../themes.rst:542 dbc8f1369a294996ac59e07d955880b6
+msgid "Feeds"
+msgstr "订阅源"
+
+#: ../../themes.rst:544 dbfa3023cab6407cb324cffe523c8533
+msgid ""
+"The feed variables changed in 3.0. Each variable now explicitly lists "
+"ATOM or RSS in the name. ATOM is still the default. Old themes will need "
+"to be updated. Here is a complete list of the feed variables::"
+msgstr ""
+"订阅源相关变量在3.0版本发生过变化。各变量现在都在名称中显示地表达了属于ATOM还是RSS。"
+"默认使用ATOM。旧的主题需要进行更新。下面是订阅源相关变量的完整列表："
+
+#: ../../themes.rst:563 ee43d4b51dda44288f9786eefb8bf62c
+msgid "Inheritance"
+msgstr "继承"
+
+#: ../../themes.rst:565 a921f3b3e050422db6694600b6ae3379
+msgid ""
+"Since version 3.0, Pelican supports inheritance from the ``simple`` "
+"theme, so you can re-use the ``simple`` theme templates in your own "
+"themes."
+msgstr ""
+"从3.0版本开始，Pelican支持从 ``simple`` 主题继承，因此可以在你自己的主题中"
+"重用 ``simple`` 主题。"
+
+#: ../../themes.rst:568 36142bb5338a43a5bf0d9e53b52c0c05
+msgid ""
+"If one of the mandatory files in the ``templates/`` directory of your "
+"theme is missing, it will be replaced by the matching template from the "
+"``simple`` theme. So if the HTML structure of a template in the "
+"``simple`` theme is right for you, you don't have to write a new template"
+" from scratch."
+msgstr ""
+"如果 ``templates/`` 目录中缺失了的某些必须要有的文件，会自动使用 ``simple`` "
+"主题中的对应模板。因此如果 ``simple`` 主题中的一些模板正合你意，就没必要重新"
+"写个新的了。"
+
+#: ../../themes.rst:573 d4c77f03fe8049ed82ea0870e4384991
+#, python-format
+msgid ""
+"You can also extend templates from the ``simple`` theme in your own "
+"themes by using the ``{% extends %}`` directive as in the following "
+"example:"
+msgstr ""
+"你也可以使用 ``{% extends %}`` 指令在你自己的主题中扩展 ``simple`` 主题："
+
+#: ../../themes.rst:584 6c8634ea148d48e68124f8b240de47c3
+msgid "Example"
+msgstr "例子"
+
+#: ../../themes.rst:586 c5845f57a75642a5a2a0c9018fd1dac0
+msgid "With this system, it is possible to create a theme with just two files."
+msgstr "利用这种自动继承的规则，只用两个文件就可以创建一个主题。"
+
+#: ../../themes.rst:589 c7ea4273a1ca4050968a1308a5a47c51
+msgid "base.html"
+msgstr "base.html"
+
+#: ../../themes.rst:591 4fa7a95ff17c4421bd39c45a9cd42f8f
+msgid "The first file is the ``templates/base.html`` template:"
+msgstr "第一个文件是 ``templates/base.html`` 模板："
+
+#: ../../themes.rst:602 87484a8d548449b4b58d6773201ddf67
+msgid ""
+"On the first line, we extend the ``base.html`` template from the "
+"``simple`` theme, so we don't have to rewrite the entire file."
+msgstr ""
+"第一行中，从 ``simple`` 主题中扩展了 ``base.html`` 模板，因此无需重写整个文件。"
+
+#: ../../themes.rst:604 20209f5462c24d3b9918f14db3dc9f0c
+msgid ""
+"On the third line, we open the ``head`` block which has already been "
+"defined in the ``simple`` theme."
+msgstr ""
+"第三行，我们开始声明 ``head`` 块，这个块已在 ``simple`` 中进行了定义。"
+
+#: ../../themes.rst:606 9d6577b07bdd4eab814a188effd796c7
+msgid ""
+"On the fourth line, the function ``super()`` keeps the content previously"
+" inserted in the ``head`` block."
+msgstr ""
+"第四行中， ``super()`` 函数使得已添加到 ``head`` 块中的前序内容得以保留。"
+
+#: ../../themes.rst:608 157f34425e4d4b119c97bc7a9cb513ff
+msgid "On the fifth line, we append a stylesheet to the page."
+msgstr "第五行为页面添加了一个样式表。"
+
+#: ../../themes.rst:609 bf52b4834d67475194b43b35c2a9dfde
+msgid "On the last line, we close the ``head`` block."
+msgstr "最后一行结束对 ``head`` 块的声明。"
+
+#: ../../themes.rst:611 968532a3244e436fba5b6df5c996888d
+msgid ""
+"This file will be extended by all the other templates, so the stylesheet "
+"will be linked from all pages."
+msgstr ""
+"其他所有模板都会在此文件基础上进行扩展，因此样式表会被所有页面引用。"
+
+#: ../../themes.rst:615 62629bf8d5ea4271a598b95ebede4757
+msgid "style.css"
+msgstr "style.css"
+
+#: ../../themes.rst:617 e8e0ee6348e84ff590fe5afebe39ec63
+msgid "The second file is the ``static/css/style.css`` CSS stylesheet:"
+msgstr "第二个文件是CSS样式表 ``static/css/style.css`` ："
+
+#: ../../themes.rst:661 80ec5c70bd9b49e7b22718cc18e46b84
+msgid "Download"
+msgstr "下载"
+
+#: ../../themes.rst:663 acf9dfc296794b3c928572374b39926e
+msgid ""
+"You can download this example theme :download:`here <_static/theme-"
+"basic.zip>`."
+msgstr ""
+"可以在 :download:`这里 <_static/theme-basic.zip>` 下载此例。"
+
+#~ msgid ""
+#~ "To generate its HTML output, Pelican "
+#~ "uses the `Jinja "
+#~ "<https://palletsprojects.com/p/jinja/>`_ templating engine"
+#~ " due to its flexibility and "
+#~ "straightforward syntax. If you want to"
+#~ " create your own theme, feel free "
+#~ "to take inspiration from the `\"simple\""
+#~ " theme "
+#~ "<https://github.com/getpelican/pelican/tree/master/pelican/themes/simple/templates>`_."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You can see an example of how "
+#~ "to use `period` in the `\"simple\" "
+#~ "theme period_archives.html template "
+#~ "<https://github.com/getpelican/pelican/blob/master/pelican/themes/simple/templates/period_archives.html>`_."
+#~ msgstr ""

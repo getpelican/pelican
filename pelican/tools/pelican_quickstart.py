@@ -79,7 +79,7 @@ _TZ_URL = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
 
 # Create a 'marked' default path, to determine if someone has supplied
 # a path on the command-line.
-class _DEFAULT_PATH_TYPE(str):
+class _DEFAULT_PATH_TYPE(str):  # noqa: SLOT000
     is_default_path = True
 
 
@@ -87,7 +87,7 @@ _DEFAULT_PATH = _DEFAULT_PATH_TYPE(os.curdir)
 
 
 def ask(question, answer=str, default=None, length=None):
-    if answer == str:
+    if answer is str:
         r = ""
         while True:
             if default:
@@ -110,7 +110,7 @@ def ask(question, answer=str, default=None, length=None):
 
         return r
 
-    elif answer == bool:
+    elif answer is bool:
         r = None
         while True:
             if default is True:
@@ -134,7 +134,7 @@ def ask(question, answer=str, default=None, length=None):
             else:
                 print("You must answer 'yes' or 'no'")
         return r
-    elif answer == int:
+    elif answer is int:
         r = None
         while True:
             if default:
@@ -220,7 +220,7 @@ needed by Pelican.
         CONF["basedir"] = open(project).read().rstrip("\n")
         print(
             "Using project associated with current virtual environment. "
-            "Will save to:\n%s\n" % CONF["basedir"]
+            "Will save to:\n{}\n".format(CONF["basedir"])
         )
     else:
         CONF["basedir"] = os.path.abspath(
@@ -394,7 +394,7 @@ needed by Pelican.
         render_jinja_template("tasks.py.jinja2", CONF, "tasks.py")
         render_jinja_template("Makefile.jinja2", CONF, "Makefile")
 
-    print("Done. Your new project is available at %s" % CONF["basedir"])
+    print("Done. Your new project is available at {}".format(CONF["basedir"]))
 
 
 if __name__ == "__main__":

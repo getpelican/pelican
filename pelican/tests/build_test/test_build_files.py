@@ -1,9 +1,12 @@
+import importlib.metadata
 import tarfile
 from pathlib import Path
 from re import match
 from zipfile import ZipFile
 
 import pytest
+
+version = importlib.metadata.version("pelican")
 
 
 @pytest.mark.skipif(
@@ -16,7 +19,7 @@ def test_wheel_contents(pytestconfig):
     that everything that is needed is included in the final build
     """
     dist_folder = pytestconfig.getoption("--check-build")
-    wheels = Path(dist_folder).rglob("*.whl")
+    wheels = Path(dist_folder).rglob(f"pelican-{version}-py3-none-any.whl")
     for wheel_file in wheels:
         files_list = ZipFile(wheel_file).namelist()
         # Check if theme files are copied to wheel
@@ -52,7 +55,7 @@ def test_sdist_contents(pytestconfig, expected_file):
     that everything that is needed is included in the final build.
     """
     dist_folder = pytestconfig.getoption("--check-build")
-    sdist_files = Path(dist_folder).rglob("*.tar.gz")
+    sdist_files = Path(dist_folder).rglob(f"pelican-{version}.tar.gz")
     for dist in sdist_files:
         files_list = tarfile.open(dist, "r:gz").getnames()
         dir_matcher = ""
@@ -61,6 +64,6 @@ def test_sdist_contents(pytestconfig, expected_file):
         filtered_values = [
             path
             for path in files_list
-            if match(rf"^pelican-\d\.\d\.\d/{expected_file}{dir_matcher}$", path)
+            if match(rf"^pelican-{version}/{expected_file}{dir_matcher}$", path)
         ]
         assert len(filtered_values) > 0

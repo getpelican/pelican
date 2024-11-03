@@ -110,7 +110,7 @@ jobs:
     environment: Deployment
     needs: [test, lint, docs, build]
     runs-on: ubuntu-latest
-    if: github.ref=='refs/heads/master' && github.event_name!='pull_request' && github.repository == 'getpelican/pelican'
+    if: github.ref=='refs/heads/main' && github.event_name!='pull_request' && github.repository == 'getpelican/pelican'
 
     permissions:
       contents: write

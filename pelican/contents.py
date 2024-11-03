@@ -28,6 +28,7 @@ from pelican.utils import (
     sanitised_join,
     set_date_tzinfo,
     slugify,
+    truncate_html_paragraphs,
     truncate_html_words,
 )
 
@@ -250,7 +251,7 @@ class Content:
     def get_url_setting(self, key: str) -> str:
         if hasattr(self, "override_" + key):
             return getattr(self, "override_" + key)
-        key = key if self.in_default_lang else "lang_%s" % key
+        key = key if self.in_default_lang else f"lang_{key}"
         return self._expand_settings(key)
 
     def _link_replacer(self, siteurl: str, m: re.Match) -> str:
@@ -440,8 +441,13 @@ class Content:
         if "summary" in self.metadata:
             return self.metadata["summary"]
 
+        content = self.content
+        max_paragraphs = self.settings.get("SUMMARY_MAX_PARAGRAPHS")
+        if max_paragraphs is not None:
+            content = truncate_html_paragraphs(self.content, max_paragraphs)
+
         if self.settings["SUMMARY_MAX_LENGTH"] is None:
-            return self.content
+            return content
 
         return truncate_html_words(
             self.content,
@@ -541,9 +547,29 @@ class Content:
                 self._summary = self.metadata["summary"]
 
 
+class SkipStub(Content):
+    """Stub class representing content that should not be processed in any way."""
+
+    def __init__(
+        self, content, metadata=None, settings=None, source_path=None, context=None
+    ):
+        self.source_path = source_path
+
+    def is_valid(self):
+        return False
+
+    @property
+    def content(self):
+        raise NotImplementedError("Stub content should not be read")
+
+    @property
+    def save_as(self):
+        raise NotImplementedError("Stub content cannot be saved")
+
+
 class Page(Content):
     mandatory_properties = ("title",)
-    allowed_statuses = ("published", "hidden", "draft")
+    allowed_statuses = ("published", "hidden", "draft", "skip")
     default_status = "published"
     default_template = "page"
 
@@ -554,7 +580,7 @@ class Page(Content):
 
 class Article(Content):
     mandatory_properties = ("title", "date", "category")
-    allowed_statuses = ("published", "hidden", "draft")
+    allowed_statuses = ("published", "hidden", "draft", "skip")
     default_status = "published"
     default_template = "article"
 

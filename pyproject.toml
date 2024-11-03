@@ -2,7 +2,7 @@
 name = "pelican"
 authors = [{ name = "Justin Mayer", email = "authors@getpelican.com" }]
 description = "Static site generator supporting Markdown and reStructuredText"
-version = "4.9.1"
+version = "4.10.1"
 license = { text = "AGPLv3" }
 readme = "README.rst"
 keywords = ["static site generator", "static sites", "ssg"]
@@ -97,7 +97,7 @@ dev = [
     "tox>=4.11.3",
     "invoke>=2.2.0",
     # ruff version should match the one in .pre-commit-config.yaml
-    "ruff==0.4.6",
+    "ruff==0.7.2",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
 
@@ -168,35 +168,31 @@ select = [
 
 ignore = [
     # suppression in order of # of violations in Dec 2023:
-    "B007",  # unused-loop-control-variable
-    "T201",  # print
     "PLW2901",  # redefined-loop-name
     "SLF001",  # private-member-access
-    "RUF001",  # ambiguous-unicode-character-string
-    "PLR2004",  # magic-value-comparison
     "PLR0912",  # too-many-branches
     "PLR0913",  # too-many-arguments
+    # RUF005: this is a different style of concatenating literals.  It perhaps performs
+    # a bit better, but doesn't seem any more readable to me.  So, ignore it.
     "RUF005",  # collection-literal-concatenation
+    # TODO: several classes have class variables.  If that is correct, we should
+    #   annotate them with ClassVar.
+    # See https://docs.astral.sh/ruff/rules/mutable-class-default/
     "RUF012",  # mutable-class-default
     "PLR0915",  # too-many-statements
+    # Note: we have a couple of "namespace packages" (i.e. missing __init__.py)
+    # Not sure if we should add __init__.py to them, or they really need to be
+    # namespace packages.
     "INP001",  # implicit-namespace-package
-    "RUF015",  # unnecessary-iterable-allocation-for-first-element
-    "PLR1722",  # sys-exit-alias
     # ruff-format wants us to ignore ISC001.  I don't love that, but okay.
     # "warning: The following rules may cause conflicts when used with the formatter:
     #  `ISC001`. To avoid unexpected behavior, we recommend disabling these rules,
     #  either by removing them from the `select` or `extend-select` configuration,
     #  or adding them to the `ignore` configuration."
     "ISC001",  # single-line-implicit-string-concatenation
-    "B904",  # raise-without-from-inside-except
-    "UP031",  # printf-string-formatting
     # PERF203 has minimal performance impact, and you have to catch the exception
     # inside the loop if you want to ignore it, so let's ignore PERF203.
     "PERF203",  # try-except-in-loop
-    # TODO: these only have one violation each in Dec 2023:
-    "SLOT000",  # no-slots-in-str-subclass
-    "PYI024",  # collections-named-tuple
-    "PIE800",  # unnecessary-spread
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
@@ -204,4 +200,17 @@ ignore = [
 "pelican/__init__.py" = [
     # allow imports after a call to a function, see the file
     "E402"
+]
+"pelican/tests/test_utils.py" = [
+    # the tests have a bunch of unicode characters
+    "RUF001"
+]
+"pelican/tests/test_generators.py" = [
+    # the tests have a bunch of constants, why not
+    "PLR2004"
+]
+
+"pelican/tools/*.py}" = [
+    # this is a command-line utility, prints are fine
+    "T201"
 ]

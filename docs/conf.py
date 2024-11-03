@@ -19,9 +19,11 @@ with open("../pyproject.toml", "rb") as f:
 
 # -- General configuration ----------------------------------------------------
 templates_path = ["_templates"]
+locale_dirs = ["locale/"]
+gettext_compact = False
+gettext_uuid = True
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.ifconfig",
     "sphinx.ext.extlinks",
     "sphinxext.opengraph",
 ]
@@ -29,7 +31,7 @@ source_suffix = ".rst"
 master_doc = "index"
 project = project_data.get("name").upper()
 year = datetime.datetime.now().date().year
-copyright = f"2010–{year}"
+copyright = f"2010–{year}"  # noqa: RUF001
 exclude_patterns = ["_build"]
 release = project_data.get("version")
 version = ".".join(release.split(".")[:1])

@@ -29,6 +29,7 @@ from typing import (
 )
 
 import dateutil.parser
+from watchfiles import Change
 
 try:
     from zoneinfo import ZoneInfo
@@ -39,7 +40,6 @@ from markupsafe import Markup
 
 if TYPE_CHECKING:
     from pelican.contents import Content
-    from pelican.readers import Readers
     from pelican.settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -81,7 +81,7 @@ def strftime(date: datetime.datetime, date_format: str) -> str:
         # test for valid C89 directives only
         if candidate[-1] in c89_directives:
             # check for '-' prefix
-            if len(candidate) == 3:
+            if len(candidate) == 3:  # noqa: PLR2004
                 # '-' prefix
                 candidate = f"%{candidate[-1]}"
                 conversion = strip_zeros
@@ -232,7 +232,7 @@ def get_date(string: str) -> datetime.datetime:
     try:
         return dateutil.parser.parse(string, default=default)
     except (TypeError, ValueError):
-        raise ValueError(f"{string!r} is not a valid date")
+        raise ValueError(f"{string!r} is not a valid date") from None
 
 
 @contextmanager
@@ -483,7 +483,7 @@ class _HTMLWordTruncator(HTMLParser):
     def getoffset(self) -> int:
         line_start = 0
         lineno, line_offset = self.getpos()
-        for i in range(lineno - 1):
+        for _ in range(lineno - 1):
             line_start = self.rawdata.index("\n", line_start) + 1
         return line_start + line_offset
 
@@ -626,9 +626,28 @@ def truncate_html_words(s: str, num: int, end_text: str = "…") -> str:
         out += " " + end_text
     # Close any tags still open
     for tag in truncator.open_tags:
-        out += "</%s>" % tag
+        out += f"</{tag}>"
     # Return string
     return out
+
+
+def truncate_html_paragraphs(s, count):
+    """Truncate HTML to a certain number of paragraphs.
+
+    :param count: number of paragraphs to keep
+
+    Newlines in the HTML are preserved.
+    """
+    paragraphs = []
+    tag_stop = 0
+    substr = s[:]
+    for _ in range(count):
+        substr = substr[tag_stop:]
+        tag_start = substr.find("<p>")
+        tag_stop = substr.find("</p>") + len("</p>")
+        paragraphs.append(substr[tag_start:tag_stop])
+
+    return "".join(paragraphs)
 
 
 def process_translations(
@@ -666,13 +685,13 @@ def process_translations(
         raise TypeError(
             f"Cannot unpack {translation_id}, 'translation_id' must be falsy, a"
             " string or a collection of strings"
-        )
+        ) from None
     except AttributeError:
         raise AttributeError(
             f"Cannot use {translation_id} as 'translation_id', there "
             "appear to be items without these metadata "
             "attributes"
-        )
+        ) from None
 
     for id_vals, items in groupby(content_list, attrgetter(*translation_id)):
         # prepare warning string
@@ -797,9 +816,8 @@ def order_content(
 
 def wait_for_changes(
     settings_file: str,
-    reader_class: type[Readers],
     settings: Settings,
-):
+) -> set[tuple[Change, str]]:
     content_path = settings.get("PATH", "")
     theme_path = settings.get("THEME", "")
     ignore_files = {
@@ -924,3 +942,13 @@ def temporary_locale(
         locale.setlocale(lc_category, temp_locale)
     yield
     locale.setlocale(lc_category, orig_locale)
+
+
+def file_suffix(path: str) -> str:
+    """Return the suffix of a filename in a path."""
+    _, ext = os.path.splitext(os.path.basename(path))
+    ret = ""
+    if len(ext) > 1:
+        # drop the ".", e.g., "exe", not ".exe"
+        ret = ext[1:]
+    return ret

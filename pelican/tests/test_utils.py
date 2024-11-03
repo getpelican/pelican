@@ -210,13 +210,10 @@ class TestUtils(LoggedTestCase):
             )
 
         # check with preserve case
-        for value, expected in samples:
-            self.assertEqual(
-                utils.slugify(
-                    "Çığ", regex_subs=subs, preserve_case=True, use_unicode=True
-                ),
-                "Çığ",
-            )
+        self.assertEqual(
+            utils.slugify("Çığ", regex_subs=subs, preserve_case=True, use_unicode=True),
+            "Çığ",
+        )
 
         # check normalization
         samples = (
@@ -403,6 +400,23 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(utils.truncate_html_words("&mdash text", 20), "&mdash text")
         self.assertEqual(utils.truncate_html_words("&#1234 text", 20), "&#1234 text")
         self.assertEqual(utils.truncate_html_words("&#xabc text", 20), "&#xabc text")
+
+    def test_truncate_html_paragraphs(self):
+        one = "<p>one</p>"
+
+        self.assertEqual(utils.truncate_html_paragraphs(one, 0), "")
+        self.assertEqual(utils.truncate_html_paragraphs(one, 1), one)
+        self.assertEqual(utils.truncate_html_paragraphs(one, 2), one)
+
+        two = one + "<p>two</p>"
+        self.assertEqual(utils.truncate_html_paragraphs(two, 1), one)
+        self.assertEqual(utils.truncate_html_paragraphs(two, 2), two)
+
+        three = two + "<p>three</p>"
+        self.assertEqual(utils.truncate_html_paragraphs(three, 1), one)
+        self.assertEqual(utils.truncate_html_paragraphs(three, 2), two)
+        self.assertEqual(utils.truncate_html_paragraphs(three, 3), three)
+        self.assertEqual(utils.truncate_html_paragraphs(three, 4), three)
 
     def test_process_translations(self):
         fr_articles = []
@@ -724,11 +738,11 @@ class TestCopy(unittest.TestCase):
 
     def _exist_file(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.isfile(path), "File does not exist: %s" % path)
+        self.assertTrue(os.path.isfile(path), f"File does not exist: {path}")
 
     def _exist_dir(self, *path):
         path = os.path.join(self.root_dir, *path)
-        self.assertTrue(os.path.exists(path), "Directory does not exist: %s" % path)
+        self.assertTrue(os.path.exists(path), f"Directory does not exist: {path}")
 
     def test_copy_file_same_path(self):
         self._create_file("a.txt")
@@ -969,3 +983,10 @@ class TestMemoized(unittest.TestCase):
             container.get.cache.clear()
             self.assertEqual("bar", container.get("bar"))
             get_mock.assert_called_once_with("bar")
+
+
+class TestStringUtils(unittest.TestCase):
+    def test_file_suffix(self):
+        self.assertEqual("", utils.file_suffix(""))
+        self.assertEqual("", utils.file_suffix("foo"))
+        self.assertEqual("md", utils.file_suffix("foo.md"))

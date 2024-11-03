@@ -116,6 +116,31 @@ class TestPage(TestBase):
         page = Page(**page_kwargs)
         self.assertEqual(page.summary, "")
 
+    def test_summary_paragraph(self):
+        # If SUMMARY_MAX_PARAGRAPHS is set, the generated summary should
+        # not exceed the given paragraph count.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs["settings"] = settings
+        del page_kwargs["metadata"]["summary"]
+        settings["SUMMARY_MAX_PARAGRAPHS"] = 1
+        settings["SUMMARY_MAX_LENGTH"] = None
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, TEST_CONTENT)
+
+    def test_summary_paragraph_max_length(self):
+        # If both SUMMARY_MAX_PARAGRAPHS and SUMMARY_MAX_LENGTH are set,
+        # the generated summary should not exceed the given paragraph count and
+        # not exceed the given length.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs["settings"] = settings
+        del page_kwargs["metadata"]["summary"]
+        settings["SUMMARY_MAX_PARAGRAPHS"] = 1
+        settings["SUMMARY_MAX_LENGTH"] = 10
+        page = Page(**page_kwargs)
+        self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10))
+
     def test_summary_end_suffix(self):
         # If a :SUMMARY_END_SUFFIX: is set, and there is no other summary,
         # generated summary should contain the specified marker at the end.
@@ -282,7 +307,7 @@ class TestPage(TestBase):
             #
             # Until we find some other method to test this functionality, we
             # will simply skip this test.
-            unittest.skip("There is no locale %s in this system." % locale)
+            unittest.skip(f"There is no locale {locale} in this system.")
 
     def test_template(self):
         # Pages default to page, metadata overwrites

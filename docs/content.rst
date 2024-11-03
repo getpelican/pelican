@@ -89,7 +89,7 @@ contains a list of reserved metadata keywords:
 ``summary``     Brief description of content for index pages
 ``lang``        Content language ID (``en``, ``fr``, etc.)
 ``translation`` If content is a translation of another (``true`` or ``false``)
-``status``      Content status: ``draft``, ``hidden``, or ``published``
+``status``      Content status: ``draft``, ``hidden``, ``skip``, or ``published``
 ``template``    Name of template to use to generate content (without extension)
 ``save_as``     Save content to this relative file path
 ``url``         URL to use for this article/page
@@ -162,7 +162,10 @@ author you can use ``author`` field.
 
 If you do not explicitly specify summary metadata for a given post, the
 ``SUMMARY_MAX_LENGTH`` setting can be used to specify how many words from the
-beginning of an article are used as the summary.
+beginning of an article are used as the summary. You can also use an article's
+first N paragraphs as its summary using the ``SUMMARY_MAX_PARAGRAPHS`` setting.
+If both settings are in use, the specified number of paragraphs will
+be used but may be truncated to respect the specified maximum length.
 
 You can also extract any metadata from the filename through a regular
 expression to be set in the ``FILENAME_METADATA`` setting. All named groups
@@ -629,6 +632,13 @@ Like pages, posts can also be marked as ``hidden`` with the ``Status: hidden``
 attribute. Hidden posts will be output to ``ARTICLE_SAVE_AS`` as expected, but
 are not included by default in tag, category, and author indexes, nor in the
 main article feed. This has the effect of creating an "unlisted" post.
+
+Skip Posts
+==========
+
+Posts marked with ``skip`` status are ignored entirely. They are not processed
+nor output to the ``ARTICLE_SAVE_AS`` path. Such posts will similarly not be
+included in indexes or feeds.
 
 .. _W3C ISO 8601: https://www.w3.org/TR/NOTE-datetime
 .. _AsciiDoc: https://asciidoc.org

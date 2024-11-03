@@ -28,7 +28,7 @@ Environment variables can also be used here but must be escaped appropriately::
 
 Settings are configured in the form of a Python module (a file). There is an
 `example settings file
-<https://github.com/getpelican/pelican/raw/master/samples/pelican.conf.py>`_
+<https://github.com/getpelican/pelican/raw/main/samples/pelican.conf.py>`_
 available for reference.
 
 To see a list of current settings in your environment, including both default
@@ -307,6 +307,14 @@ Basic settings
    (measured in words) of the text created.  This only applies if your content
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to be a copy of the original content.
+
+.. data:: SUMMARY_MAX_PARAGRAPHS = None
+
+   When creating a short summary of an article, this will be the number of
+   paragraphs to use as the summary. This only applies if your content
+   does not otherwise specify a summary. Setting to ``None`` will cause the
+   summary to use the whole text (up to ``SUMMARY_MAX_LENGTH``) instead of just
+   the first N paragraphs.
 
 .. data:: SUMMARY_END_SUFFIX = '…'
 

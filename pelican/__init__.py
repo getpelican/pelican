@@ -30,7 +30,6 @@ from pelican.generators import (
 )
 from pelican.plugins import signals
 from pelican.plugins._utils import get_plugin_name, load_plugins
-from pelican.readers import Readers
 from pelican.server import ComplexHTTPRequestHandler, RootedHTTPServer
 from pelican.settings import read_settings
 from pelican.utils import clean_output_dir, maybe_pluralize, wait_for_changes
@@ -126,6 +125,8 @@ class Pelican:
         for p in generators:
             if hasattr(p, "generate_context"):
                 p.generate_context()
+            if hasattr(p, "check_disabled_readers"):
+                p.check_disabled_readers()
 
         # for plugins that create/edit the summary
         logger.debug("Signal all_generators_finalized.send(<generators>)")
@@ -294,7 +295,7 @@ class ParseOverrides(argparse.Action):
                 raise ValueError(
                     "Extra settings must be specified as KEY=VALUE pairs "
                     f"but you specified {item}"
-                )
+                ) from None
             try:
                 overrides[k] = json.loads(v)
             except json.decoder.JSONDecodeError:
@@ -305,8 +306,11 @@ class ParseOverrides(argparse.Action):
                     "Use -e KEY='\"string\"' to specify a string value; "
                     "-e KEY=null to specify None; "
                     "-e KEY=false (or true) to specify False (or True)."
-                )
+                ) from None
         setattr(namespace, self.dest, overrides)
+
+
+LOG_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
 
 
 def parse_arguments(argv=None):
@@ -447,7 +451,6 @@ def parse_arguments(argv=None):
         ),
     )
 
-    LOG_HANDLERS = {"plain": None, "rich": DEFAULT_LOG_HANDLER}
     parser.add_argument(
         "--log-handler",
         default="rich",
@@ -512,8 +515,6 @@ def parse_arguments(argv=None):
     if args.bind is not None and not args.listen:
         logger.warning("--bind without --listen has no effect")
 
-    args.log_handler = LOG_HANDLERS[args.log_handler]
-
     return args
 
 
@@ -573,7 +574,7 @@ def autoreload(args, excqueue=None):
         try:
             pelican.run()
 
-            changed_files = wait_for_changes(args.settings, Readers, settings)
+            changed_files = wait_for_changes(args.settings, settings)
             changed_files = {c[1] for c in changed_files}
 
             if settings_file in changed_files:
@@ -636,7 +637,7 @@ def main(argv=None):
         level=args.verbosity,
         fatal=args.fatal,
         name=__name__,
-        handler=args.log_handler,
+        handler=LOG_HANDLERS[args.log_handler],
         logs_dedup_min_level=logs_dedup_min_level,
     )
 

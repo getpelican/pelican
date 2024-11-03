@@ -107,14 +107,14 @@ class Writer:
         """
         if filename in self._overridden_files:
             if override:
-                raise RuntimeError("File %s is set to be overridden twice" % filename)
+                raise RuntimeError(f"File {filename} is set to be overridden twice")
             logger.info("Skipping %s", filename)
             filename = os.devnull
         elif filename in self._written_files:
             if override:
                 logger.info("Overwriting %s", filename)
             else:
-                raise RuntimeError("File %s is to be overwritten" % filename)
+                raise RuntimeError(f"File {filename} is to be overwritten")
         if override:
             self._overridden_files.add(filename)
         self._written_files.add(filename)
@@ -259,7 +259,7 @@ class Writer:
             }
 
             # generated pages, and write
-            for page_num in range(list(paginators.values())[0].num_pages):
+            for page_num in range(next(iter(paginators.values())).num_pages):
                 paginated_kwargs = kwargs.copy()
                 for key in paginators.keys():
                     paginator = paginators[key]
@@ -272,10 +272,10 @@ class Writer:
                     )
                     paginated_kwargs.update(
                         {
-                            "%s_paginator" % key: paginator,
-                            "%s_page" % key: page,
-                            "%s_previous_page" % key: previous_page,
-                            "%s_next_page" % key: next_page,
+                            f"{key}_paginator": paginator,
+                            f"{key}_page": page,
+                            f"{key}_previous_page": previous_page,
+                            f"{key}_next_page": next_page,
                         }
                     )
 
