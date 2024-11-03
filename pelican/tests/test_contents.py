@@ -519,6 +519,9 @@ class TestPage(TestBase):
             "images/poster.jpg": Static(
                 "", settings=args["settings"], source_path="images/poster.jpg"
             ),
+            "images/placeholder.jpg": Static(
+                "", settings=args["settings"], source_path="images/placeholder.jpg"
+            ),
         }
         args["context"]["generated_content"] = {
             "article.rst": Article(
@@ -545,6 +548,16 @@ class TestPage(TestBase):
         content = Page(**args).get_content("http://cool.site")
         self.assertEqual(
             content, '<img src="http://static.cool.site/images/poster.jpg"/>'
+        )
+
+        # Image with two links
+        args["content"] = (
+            '<img src="{static}/images/placeholder.jpg" data-src="{static}/images/poster.jpg"/>'
+        )
+        content = Page(**args).get_content("http://cool.site")
+        self.assertEqual(
+            content,
+            '<img src="http://static.cool.site/images/placeholder.jpg" data-src="http://static.cool.site/images/poster.jpg"/>',
         )
 
         # Image link will go to static
