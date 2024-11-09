@@ -1,0 +1,711 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-24 19:06+0800\n"
+"PO-Revision-Date: 2024-06-26 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.15.0\n"
+
+#: ../../plugins.rst:4 b1b40bca7d3748008eefe26806d5d5ef
+msgid "Plugins"
+msgstr "插件"
+
+#: ../../plugins.rst:6 42ca486828e4442a9d74216d0d8bb37d
+msgid ""
+"Beginning with version 3.0, Pelican supports plugins. Plugins are a way "
+"to add features to Pelican without having to directly modify the Pelican "
+"core."
+msgstr ""
+"Pelican从3.0版本开始支持插件。通过插件，不必直接修改Pelican的核心代码就可以给"
+"Pelican添加新功能。"
+
+#: ../../plugins.rst:10 6bb8ab4cb7eb44ddb1ed4734f47f6781
+msgid "How to use plugins"
+msgstr "如何使用插件"
+
+#: ../../plugins.rst:12 822e0bd7ce2f4433a7c39b3accde01a1
+msgid ""
+"Starting with version 4.5, Pelican moved to a new plugin structure "
+"utilizing namespace packages that can be easily installed via Pip_. "
+"Plugins supporting this structure will install under the namespace "
+"package ``pelican.plugins`` and can be automatically discovered by "
+"Pelican. To see a list of Pip-installed namespace plugins that are active"
+" in your environment, run::"
+msgstr ""
+"Pelican从4.5版本开始使用了一种全新的插件结构，利用了命名空间包，"
+"并且可以轻松地通过 Pip_ 进行安装。支持此结构地插件都会被安装在命名空间包 "
+"``pelican.plugins`` 下，因此Pelican可以自动发现他们。下面的命令可以用于"
+"查看环境中用Pip安装的所有插件："
+
+#: ../../plugins.rst:20 2b59c5d107dc4b118dc76116910e9495
+msgid ""
+"If you leave the ``PLUGINS`` setting as default (``None``), Pelican will "
+"automatically discover namespace plugins and register them. If, on the "
+"other hand, you specify a ``PLUGINS`` setting as a list of plugins, this "
+"auto-discovery will be disabled. At that point, only the plugins you "
+"specify will be registered, and you must explicitly list any namespace "
+"plugins as well."
+msgstr ""
+"若将 ``PLUGINS`` 配置项设为默认的 ``None`` ，Pelican会自动发现命名空间中的"
+"插件并且将他们全部加载；若你在 ``PLUGINS`` 设置项中指定了一系列的插件，"
+"Pelican就不会去自动发现插件，也就是说，你需要显式地指定所有要使用的插件。"
+
+#: ../../plugins.rst:26 52d1968196294569a478931f7022e686
+msgid ""
+"If you are using the ``PLUGINS`` setting, you can specify plugins in two "
+"ways. The first method specifies plugins as a list of strings. Namespace "
+"plugins can be specified either by their full names "
+"(``pelican.plugins.myplugin``) or by their short names (``myplugin``)::"
+msgstr ""
+"在配置 ``PLUGINS`` 时，有两种方式。一是用字符串列表指定插件的名称，可以是包含"
+"命名空间的完整名称（例如 ``pelican.plugins.myplugin`` ），也可以是简短名称"
+"（ ``myplugin``）："
+
+#: ../../plugins.rst:35 b2c75e52e66e4000968e744ffa4b89a9
+msgid ""
+"Alternatively, you can import them in your settings file and pass the "
+"modules::"
+msgstr ""
+"二是在设置文件中先import进来，再将import进的模块放在 ``PLUGINS`` 设置项中："
+
+#: ../../plugins.rst:43 88af9139373f4cd89fa5b958196c9448
+msgid ""
+"When experimenting with different plugins (especially the ones that deal "
+"with metadata and content) caching may interfere and the changes may not "
+"be visible. In such cases disable caching with ``LOAD_CONTENT_CACHE = "
+"False`` or use the ``--ignore-cache`` command-line switch."
+msgstr ""
+"在尝试不同的插件时（尤其是那些处理元数据和内容的插件），缓存可能会相互干扰，"
+"一些更改不会生效。发生这种情况时，就需要通过设置 ``LOAD_CONTENT_CACHE = False`` "
+"或使用 ``--ignore-cache`` 命令行选项禁用缓存。"
+
+#: ../../plugins.rst:48 d0e3cd59052c4a7d995fb5e1e15d9799
+msgid ""
+"If your plugins are not in an importable path, you can specify a list of "
+"paths via the ``PLUGIN_PATHS`` setting. As shown in the following "
+"example, paths in the ``PLUGIN_PATHS`` list can be absolute or relative "
+"to the settings file::"
+msgstr ""
+"如果插件处于无法直接进行import的路径，可以在 ``PLUGIN_PATHS`` 配置项中指定这些路径。"
+"如下例所示， ``PLUGIN_PATHS`` 中的路径可以是绝对的，也可以是相对于设置文件的："
+
+#: ../../plugins.rst:56 4c3de952a8514e5caea402392b911f0b
+msgid "Where to find plugins"
+msgstr "在哪儿下载插件"
+
+#: ../../plugins.rst:57 16173c9dceb0409f89964412dd7e71e9
+msgid ""
+"Namespace plugins can be found in the `pelican-plugins organization`_ as "
+"individual repositories. Legacy plugins are located in the `pelican-"
+"plugins repository`_ and will be gradually phased out in favor of the "
+"namespace versions."
+msgstr ""
+"新的命名空间插件可以在GitHub的 `pelican-plugins 组织`_ 中找到，每个插件都是"
+"一个独立的仓库。而老的插件则可以在GitHub的 `pelican-plugins 仓库`_ 中找到。"
+"这些老的插件会逐步淘汰并转移到新的命名空间版本。"
+
+#: ../../plugins.rst:65 a30a9862112b47128f6e7b28c6836f27
+msgid ""
+"Please note that while we do our best to review and maintain these "
+"plugins, they are submitted by the Pelican community and thus may have "
+"varying levels of support and interoperability."
+msgstr ""
+"请注意，尽管我们尽全力审查和维护这些插件，但这些插件是Pelican社区提交的，"
+"因此支持性和互操作性程度各不相同。"
+
+#: ../../plugins.rst:70 f4e140c61c0f45ed8ac53dca3b05b1f1
+msgid "How to create plugins"
+msgstr "如何创建插件"
+
+#: ../../plugins.rst:72 43013c6cf4f34ca09205e8dab0b9fa6d
+msgid ""
+"Plugins are based on the concept of signals. Pelican sends signals, and "
+"plugins subscribe to those signals. The list of available signals is "
+"documented in a subsequent section."
+msgstr ""
+"插件是基于信号这一概念的。Pelican会发送信号，插件则订阅这些信号。可用的信号"
+"在下一节会贴出来。"
+
+#: ../../plugins.rst:76 5377a966ab114a29acb61f79eadc632b
+msgid ""
+"The only rule to follow for plugins is to define a ``register`` callable,"
+" in which you map the signals to your plugin logic. Let's take a simple "
+"example::"
+msgstr ""
+"对于插件来说，唯一需要遵循的规则就是一定要定义一个可调用的 ``register`` ，"
+"在 ``register`` 中需要将信号映射到插件逻辑上。下面是一个简单的例子："
+
+#: ../../plugins.rst:93 2217318326524c62804ec94e55a4ca20
+msgid ""
+"Signal receivers are weakly-referenced and thus must not be defined "
+"within your ``register`` callable or they will be garbage-collected "
+"before the signal is emitted."
+msgstr ""
+"信号接收器在Pelican中是弱引用的，因此不能将它定义在可调用的 ``register`` 中，"
+"否则接收器在信号发送之前就会被回收。"
+
+#: ../../plugins.rst:97 6731cc78478a46c5a0cb51a8cd477318
+msgid ""
+"If multiple plugins connect to the same signal, plugins will be executed "
+"in the order they are connected. With ``PLUGINS`` setting, order will be "
+"as defined in the setting. If you rely on auto-discovered namespace "
+"plugins, no ``PLUGINS`` setting, they will be connected in the same order"
+" they are discovered (same order as ``pelican-plugins`` output). If you "
+"want to specify the order explicitly, disable auto-discovery by defining "
+"``PLUGINS`` in the desired order."
+msgstr ""
+"如果多个插件关联到同一个信号，插件将按照它们关联的前后顺序执行。但若设置了 "
+"``PLUGINS`` 配置项会以此配置项中的顺序为准。如果您使用了无需PLUGINS设置的新版"
+"命名空间插件，它们将按照被探测到的顺序进行连接（与 pelican-plugins 输出的顺序相同）。"
+
+#: ../../plugins.rst:105 6dad534cc0014b78a3638a91cc4a1120
+msgid "Namespace plugin structure"
+msgstr "命名空间插件的结构"
+
+#: ../../plugins.rst:107 aa6f290c3f4d42558b684d0e3487af95
+msgid ""
+"Namespace plugins must adhere to a certain structure in order to function"
+" properly. They need to be installable (i.e. contain ``setup.py`` or "
+"equivalent) and have a folder structure as follows::"
+msgstr ""
+"命名空间插件必须遵循特定的结构才能正常工作。这些插件需要是可安装的"
+"（即包含 ``setup.py`` 或其他等效文件），并且遵循下述文件夹结构："
+
+#: ../../plugins.rst:120 b8d73cfdb5f042cca1705f97d693263d
+msgid ""
+"It is crucial that ``pelican`` or ``pelican/plugins`` folder **not** "
+"contain an ``__init__.py`` file. In fact, it is best to have those "
+"folders empty besides the listed folders in the above structure and keep "
+"your plugin related files contained solely in the "
+"``pelican/plugins/myplugin`` folder to avoid any issues."
+msgstr ""
+"非常关键的一点就是， ``pelican`` 和 ``pelican/plugins`` 文件夹下都 **不能** 包含 "
+"``__init__.py`` 文件。事实上，这两个文件夹下最好是只有上面列出的文件夹，"
+"并且保证与插件相关的文件都仅包含在 ``pelican/plugins/myplugin`` 文件夹中，"
+"以避免奇奇怪怪的问题。"
+
+#: ../../plugins.rst:126 c3f08ae8c0d7415098157bbd1c99ce08
+msgid ""
+"To easily set up the proper structure, a `cookiecutter template for "
+"plugins`_ is provided. Refer to that project's README for instructions on"
+" how to use it."
+msgstr ""
+"为了让大家更容易就能建立正确的结构，我们为插件提供了一个 `cookiecutter模板`_ ，"
+"使用方法参考此项目README文件中的指示即可。"
+
+#: ../../plugins.rst:132 c2321eec3dc84224918172c5040a259f
+msgid "List of signals"
+msgstr "信号列表"
+
+#: ../../plugins.rst:134 78c4cfefae7e412f8f6287da2e3c8d34
+msgid "Here is the list of currently implemented signals:"
+msgstr "下面是目前已经实现了的信号："
+
+#: ../../plugins.rst:137 7a3c3b8b0f114d54b497ab77b09dc558
+msgid "Signal"
+msgstr "信号"
+
+#: ../../plugins.rst:137 781b5c11f87f43b9ba4b3e75bee696d0
+msgid "Arguments"
+msgstr "参数"
+
+#: ../../plugins.rst:137 df7d14950fed44f4a4b93908aed36060
+msgid "Description"
+msgstr "描述"
+
+#: ../../plugins.rst:139 598901e7cb5b49ac9acb5f148bf7c0e7
+msgid "initialized"
+msgstr "initialized"
+
+#: ../../plugins.rst:139 ../../plugins.rst:140 ../../plugins.rst:158
+#: ../../plugins.rst:161 4cedbf9ee7fb4c7abe20e15e4ee1c7fb
+#: 704ff7e1ddfc4eb3bd7798d25df1e668 bc98001ef73d419b8f811bbb3d3a571a
+#: c9104ccaf84c48d98fafca001ec187e2
+msgid "pelican object"
+msgstr "pelican object"
+
+#: ../../plugins.rst:140 6f1a09178e2c44c9bda76ed0c0025bef
+msgid "finalized"
+msgstr "finalized"
+
+#: ../../plugins.rst:140 175a1d1ab8374325812a00cfd581e54e
+msgid ""
+"invoked after all the generators are executed and just before pelican "
+"exits useful for custom post processing actions, such as: - minifying "
+"js/css assets. - notify/ping search engines with an updated sitemap."
+msgstr ""
+"所有generator执行完成后调用，即pelican退出之前。这对于自定义后处理操作是"
+"非常有用的，例如可以简化js/css资源、向搜索引擎告知更新后的sitemap。"
+
+#: ../../plugins.rst:144 8d390b6db281423d92a4d7bd4921b4b4
+msgid "generator_init"
+msgstr "generator_init"
+
+#: ../../plugins.rst:144 fef4d6e70a4c4365be408a5f1579135c
+msgid "generator"
+msgstr "generator"
+
+#: ../../plugins.rst:144 dbe5ff1590dc4df38cb8fd234708c7bd
+msgid "invoked in the Generator.__init__"
+msgstr "在Generator.__init__中调用"
+
+#: ../../plugins.rst:145 0324812d14d9452fbf28c286c2a10834
+msgid "all_generators_finalized"
+msgstr "all_generators_finalized"
+
+#: ../../plugins.rst:145 f6170ebf34b247868d149f0efca462b3
+msgid "generators"
+msgstr "generators"
+
+#: ../../plugins.rst:145 d67dff93c28146498074abbf3aeb5103
+msgid "invoked after all the generators are executed and before writing output"
+msgstr "在所有generator执行完后，写入输出内容前调用，"
+
+#: ../../plugins.rst:146 0e9feed7804b4bbdb23711f9d6ad4f40
+msgid "readers_init"
+msgstr "readers_init"
+
+#: ../../plugins.rst:146 f0de00423c104ecd8e60fb3450b534b4
+msgid "readers"
+msgstr "readers"
+
+#: ../../plugins.rst:146 b554b35806e34e51bc5ab974fb517541
+msgid "invoked in the Readers.__init__"
+msgstr "在Readers.__init__中调用"
+
+#: ../../plugins.rst:147 ../../plugins.rst:201 003cdeb23b67433e8cf70c600a42e8e4
+#: 7f4a2f6665064a16bcd1b7ea347f5b49
+msgid "article_generator_context"
+msgstr "article_generator_context"
+
+#: ../../plugins.rst:147 8997b3fd1a8d4efb86245916e50c31b9
+msgid "article_generator, metadata"
+msgstr "article_generator, metadata"
+
+#: ../../plugins.rst:148 ../../plugins.rst:203 4496df152e48410995ae35f73e3ce0e9
+#: f46672e3f919441ba2486f9641752913
+msgid "article_generator_preread"
+msgstr "article_generator_preread"
+
+#: ../../plugins.rst:148 ../../plugins.rst:150 ../../plugins.rst:151
+#: ../../plugins.rst:154 3408ba823f14463196f2296480e25c7d
+#: 43b073d3f3ad4a2ba3d0c18447cb7cf6 c776a7323f0a41babb44daf3abfd6b85
+#: f47ca0a3f9654ed4b7653fd946b2d9b6
+msgid "article_generator"
+msgstr "article_generator"
+
+#: ../../plugins.rst:148 94e2a57c5b074d068f051d5de850060c
+msgid ""
+"invoked before a article is read in ArticlesGenerator.generate_context; "
+"use if code needs to do something before every article is parsed"
+msgstr ""
+"在ArticlesGenerator.generate_context读取文章之前调用；若代码需要在解析每篇文章前"
+"执行某些操作，就可以使用此信号。"
+
+#: ../../plugins.rst:150 c58f32123f234e6cafa42aa4ede5bf73
+msgid "article_generator_init"
+msgstr "article_generator_init"
+
+#: ../../plugins.rst:150 10d3585dc8f94d978643a9c2dc9219a9
+msgid "invoked in the ArticlesGenerator.__init__"
+msgstr "在ArticlesGenerator.__init__中调用"
+
+#: ../../plugins.rst:151 93ec423e266b4ba9b941a5826e290fec
+msgid "article_generator_pretaxonomy"
+msgstr "article_generator_pretaxonomy"
+
+#: ../../plugins.rst:151 27290d55819e4bfabe1624059956258f
+msgid ""
+"invoked before categories and tags lists are created useful when e.g. "
+"modifying the list of articles to be generated so that removed articles "
+"are not leaked in categories or tags"
+msgstr ""
+"在创建类别和标签列表之前调用。例如，当需要变更要生成的文章列表时可以使用，"
+"如此可以避免一些已移除文章在分类或标签列表中泄露。"
+
+#: ../../plugins.rst:154 ../../plugins.rst:202 12c99acda2ac45debe4fc574a246fc63
+#: f3bfb220e59d473bb27601c16f5a1625
+msgid "article_generator_finalized"
+msgstr "article_generator_finalized"
+
+#: ../../plugins.rst:154 4cb8ed5b4701426b8e1707c6c6b0d48f
+msgid "invoked at the end of ArticlesGenerator.generate_context"
+msgstr "在ArticlesGenerator.generate_context的最后调用"
+
+#: ../../plugins.rst:155 c19a632018d44ad2b72d5cf6b7cc9c14
+msgid "article_generator_write_article"
+msgstr "article_generator_write_article"
+
+#: ../../plugins.rst:155 9da20e77d40b45e292ae994fb0fbe97c
+msgid "article_generator, content"
+msgstr "article_generator, content"
+
+#: ../../plugins.rst:155 a2d5bc3f72b64e47bcaccff3bf27dec2
+msgid "invoked before writing each article, the article is passed as content"
+msgstr "在写入每篇文章前调用，文章以内容的形式作为参数传入。"
+
+#: ../../plugins.rst:156 0db965f5b99f49e48fc1db531c139f13
+msgid "article_writer_finalized"
+msgstr "article_writer_finalized"
+
+#: ../../plugins.rst:156 c6af98478be14eb283bb95e7b6a3118c
+msgid "article_generator, writer"
+msgstr "article_generator, writer"
+
+#: ../../plugins.rst:156 c48e1152864c4249886f3c7ed4ece85b
+msgid ""
+"invoked after all articles and related pages have been written, but "
+"before the article generator is closed."
+msgstr ""
+"在所有文章及相关联页面写入完成后，在文章generator关闭前调用。"
+
+#: ../../plugins.rst:158 f6af27fc844d43779d581cb4383b97ed
+msgid "get_generators"
+msgstr "get_generators"
+
+#: ../../plugins.rst:158 b41e27f19c47478a8ece4f43a685f6be
+msgid ""
+"invoked in Pelican.get_generator_classes, can return a Generator, or "
+"several generators in a tuple or in a list."
+msgstr ""
+"在Pelican.get_generator_classes中调用，可以返回一个Generator，也可以以一个"
+"元组或列表的形式返回多个generator。"
+
+#: ../../plugins.rst:161 f23075094c4f46958de609a44850eb6d
+msgid "get_writer"
+msgstr "get_writer"
+
+#: ../../plugins.rst:161 365671a73e17434f90973ee8e632fa32
+msgid "invoked in Pelican.get_writer, can return a custom Writer."
+msgstr "在Pelican.get_writer前调用，可以返回一个自定义Writer。"
+
+#: ../../plugins.rst:163 ../../plugins.rst:204 299eef53e530489a9e7366042919059f
+#: 917cc78965d84285bc832cecf181ce55
+msgid "page_generator_context"
+msgstr "page_generator_context"
+
+#: ../../plugins.rst:163 26f64e1dbe854ca287aa0f59b269477c
+msgid "page_generator, metadata"
+msgstr "page_generator, metadata"
+
+#: ../../plugins.rst:164 ../../plugins.rst:205 c2ec4e60dda142569cdcfe5a311b21a5
+#: fcd417f63054406ea7869a2a945dc819
+msgid "page_generator_preread"
+msgstr "page_generator_preread"
+
+#: ../../plugins.rst:164 ../../plugins.rst:166 ../../plugins.rst:167
+#: 89c2d7a279604926a290c2665fe8082a 98ab9a5bc2804442a217233f4ab8a003
+#: fca779509f1742e99e3d10a6602561c9
+msgid "page_generator"
+msgstr "page_generator"
+
+#: ../../plugins.rst:164 295fe11e61ba4f80a145ce06a1ffc777
+msgid ""
+"invoked before a page is read in PageGenerator.generate_context; use if "
+"code needs to do something before every page is parsed."
+msgstr ""
+"在PageGenerator.generate_context读取页面前调用，若代码需要在解析每个页面前"
+"执行某些操作，就可以使用此信号。"
+
+#: ../../plugins.rst:166 ../../plugins.rst:207 4f2b1db9b6054af2b0fd0545082bcafd
+#: db8ee3e356d84758b427d9f29d034000
+msgid "page_generator_init"
+msgstr "page_generator_init"
+
+#: ../../plugins.rst:166 1d4e2e940e0f4dd5a151519aea710454
+msgid "invoked in the PagesGenerator.__init__"
+msgstr "在PagesGenerator.__init__中调用"
+
+#: ../../plugins.rst:167 ../../plugins.rst:206 319e921c48474a43bbdac4bf43a688f2
+#: 5e9b33a48c51417fb5211824b0ad008d
+msgid "page_generator_finalized"
+msgstr "page_generator_finalized"
+
+#: ../../plugins.rst:167 019fa3fddf2e4725b978326f221c80bd
+msgid "invoked at the end of PagesGenerator.generate_context"
+msgstr "在PagesGenerator.generate_context的最后调用"
+
+#: ../../plugins.rst:168 0f77c3c609594768a0aaed6529260b97
+msgid "page_generator_write_page"
+msgstr "page_generator_write_page"
+
+#: ../../plugins.rst:168 0ca5fb200a254cff8529cb5d95e8e26e
+msgid "page_generator, content"
+msgstr "page_generator, content"
+
+#: ../../plugins.rst:168 164d45dac5ab4df8abd898c1466e186d
+msgid "invoked before writing each page, the page is passed as content"
+msgstr "在写入每个页面前调用，页面以内容形式作为参数传入"
+
+#: ../../plugins.rst:169 4780473ba6ae47998f891232f122b34a
+msgid "page_writer_finalized"
+msgstr "page_writer_finalized"
+
+#: ../../plugins.rst:169 6c516a5ae777406ca9ed7bf27b7124c7
+msgid "page_generator, writer"
+msgstr "page_generator, writer"
+
+#: ../../plugins.rst:169 e8978d0fb878427cbf686608c593aa67
+msgid ""
+"invoked after all pages have been written, but before the page generator "
+"is closed."
+msgstr "调用于所有页面写入完成后，在页面generator关闭前。"
+
+#: ../../plugins.rst:171 ../../plugins.rst:208 47bf9969c38b4fef9e15e9d7ea67630e
+#: d9a3d5d939d4499b9320ea15dbd3f26e
+msgid "static_generator_context"
+msgstr "static_generator_context"
+
+#: ../../plugins.rst:171 47064012c4e447f5a1f087a7af420f8f
+msgid "static_generator, metadata"
+msgstr "static_generator, metadata"
+
+#: ../../plugins.rst:172 ../../plugins.rst:209 7050e1889934465a8837ba65fa249118
+#: f45c31c591fd450badd89a7f87c6f991
+msgid "static_generator_preread"
+msgstr "static_generator_preread"
+
+#: ../../plugins.rst:172 ../../plugins.rst:175 ../../plugins.rst:176
+#: 1e99fc14855a4a2e8d1f4758e12792d9 45cdf5c2a8d049889b4315d1ea78f462
+#: b7ae37b94f2f44feb24ac32b0cdfa447
+msgid "static_generator"
+msgstr "static_generator"
+
+#: ../../plugins.rst:172 431017db31bf439f8d3fb5e16b020376
+msgid ""
+"invoked before a static file is read in StaticGenerator.generate_context;"
+" use if code needs to do something before every static file is added to "
+"the staticfiles list."
+msgstr ""
+"在StaticGenerator.generate_context读取静态文件前调用，若代码需要在每个静态文件"
+"加入静态文件列表前进行一些修改，就可以使用此信号。"
+
+#: ../../plugins.rst:175 2a380c26f2984e659ec36248a543a4c3
+msgid "static_generator_init"
+msgstr "static_generator_init"
+
+#: ../../plugins.rst:175 832447303775460c83743d831aa58290
+msgid "invoked in the StaticGenerator.__init__"
+msgstr "在StaticGenerator.__init__中调用"
+
+#: ../../plugins.rst:176 b01307445d54485a9036fb0f9619ff78
+msgid "static_generator_finalized"
+msgstr "static_generator_finalized"
+
+#: ../../plugins.rst:176 2f7e7e25668b44fc824bb39270c3de96
+msgid "invoked at the end of StaticGenerator.generate_context"
+msgstr "在StaticGenerator.generate_context的最后调用"
+
+#: ../../plugins.rst:177 2a34785767ee416dbe41a6aa1f7e4ab1
+msgid "content_object_init"
+msgstr "content_object_init"
+
+#: ../../plugins.rst:177 c41d8a8653a94d648b573b5c13db3954
+msgid "content_object"
+msgstr "content_object"
+
+#: ../../plugins.rst:177 379b6d76d2f14d05bf1502d2c55b125f
+msgid "invoked at the end of Content.__init__"
+msgstr "在Content.__init__的最后调用"
+
+#: ../../plugins.rst:178 10761aa6a1d54ee0a28e562bdacffebf
+msgid "content_written"
+msgstr "content_written"
+
+#: ../../plugins.rst:178 001ad90e09ab4b21a702b2ed9771a156
+msgid "path, context"
+msgstr "path, context"
+
+#: ../../plugins.rst:178 69b05b02e1564fe4b48dbd2926fdaec3
+msgid "invoked each time a content file is written."
+msgstr "每一次内容文件写入后调用。"
+
+#: ../../plugins.rst:179 30938518f54f46028c8fd03808471be7
+msgid "feed_generated"
+msgstr "feed_generated"
+
+#: ../../plugins.rst:179 e29bf37e7114454099baa21955b7fce0
+msgid "context, feed"
+msgstr "context, feed"
+
+#: ../../plugins.rst:179 366ba164593242309dab922c36667dc3
+msgid ""
+"invoked each time a feed gets generated. Can be used to modify a feed "
+"object before it gets written."
+msgstr "每个feed生成前调用。可以用于在feed写入前修改之。"
+
+#: ../../plugins.rst:181 0b6d7fc85d374b9c82c60d4a0df69fcd
+msgid "feed_written"
+msgstr "feed_written"
+
+#: ../../plugins.rst:181 d3fdc3a669e9418b9f6e738c549fa151
+msgid "path, context, feed"
+msgstr "path, context, feed"
+
+#: ../../plugins.rst:181 3da952e464034f8c8491caa94f0aec2d
+msgid "invoked each time a feed file is written."
+msgstr "每一个feed文件写入后调用。"
+
+#: ../../plugins.rst:186 24bf768827184a8a9c2ad9d23d3549e4
+msgid ""
+"Avoid ``content_object_init`` signal if you intend to read ``summary`` or"
+" ``content`` properties of the content object. That combination can "
+"result in unresolved links when :ref:`ref-linking-to-internal-content` "
+"(see `pelican-plugins bug #314`_). Use ``_summary`` and ``_content`` "
+"properties instead, or, alternatively, run your plugin at a later stage "
+"(e.g. ``all_generators_finalized``)."
+msgstr ""
+"请避免使用 ``content_object_init`` 信号读取content对象的 ``summary`` 或 "
+"``content`` 属性，这可能导致在 :ref:`ref-linking-to-internal-content` 时无法"
+"解析链接（请参阅 `pelican-plugins bug #314`_ ）。请改用 ``_summary`` 和 "
+"``_content`` 属性，或者就在后续阶段再运行插件（例如 ``all_generators_finalized`` 时）。"
+
+#: ../../plugins.rst:195 9222300d10c74a9eb27fc229488e63a4
+msgid ""
+"After Pelican 3.2, signal names were standardized.  Older plugins may "
+"need to be updated to use the new names:"
+msgstr ""
+"Pelican3.2之后，信号名都进行了标准化，较老的插件可能需要进行更新："
+
+#: ../../plugins.rst:199 2ba779a696064672965e17c70f70d927
+msgid "Old name"
+msgstr "旧名称"
+
+#: ../../plugins.rst:199 d21e933be9064983aa2cfaeca4f00cb9
+msgid "New name"
+msgstr "新名称"
+
+#: ../../plugins.rst:201 805ac7c62fc94113a3481890793f5417
+msgid "article_generate_context"
+msgstr "article_generate_context"
+
+#: ../../plugins.rst:202 d6f1a03ae49349b091045c8079b80d44
+msgid "article_generate_finalized"
+msgstr "article_generate_finalized"
+
+#: ../../plugins.rst:203 c967c8322a744c2c970beb6b98b90743
+msgid "article_generate_preread"
+msgstr "article_generate_preread"
+
+#: ../../plugins.rst:204 71adeb83fba74317ad0fac5784612a3d
+msgid "pages_generate_context"
+msgstr "pages_generate_context"
+
+#: ../../plugins.rst:205 d2297a5ec351411e8a66a74d8168caa0
+msgid "pages_generate_preread"
+msgstr "pages_generate_preread"
+
+#: ../../plugins.rst:206 fb572935b7f445d298ff2c9c89c59c4e
+msgid "pages_generator_finalized"
+msgstr "pages_generator_finalized"
+
+#: ../../plugins.rst:207 0bb615d8a6f643a3a1a9abac2ec4f712
+msgid "pages_generator_init"
+msgstr "pages_generator_init"
+
+#: ../../plugins.rst:208 beddb5f81a62458b87c0703355a7b5a4
+msgid "static_generate_context"
+msgstr "static_generate_context"
+
+#: ../../plugins.rst:209 8fe8895dcb464e11bb01657e975f1352
+msgid "static_generate_preread"
+msgstr "static_generate_preread"
+
+#: ../../plugins.rst:213 44b14caddfd245c18cacd755fd0023e9
+msgid "Recipes"
+msgstr "具体使用方法举例"
+
+#: ../../plugins.rst:215 c24473f41cc84d028c99fa56af636037
+msgid ""
+"We eventually realised some of the recipes to create plugins would be "
+"best shared in the documentation somewhere, so here they are!"
+msgstr ""
+"下面分享了一些创建插件的具体方法，请享用！"
+
+#: ../../plugins.rst:219 96de26e8150e4339b3461d2dcc478cf3
+msgid "How to create a new reader"
+msgstr "如何创建一个新的reader"
+
+#: ../../plugins.rst:221 3f26c1183b814401b333bbd8528675d9
+msgid ""
+"One thing you might want is to add support for your very own input "
+"format. While it might make sense to add this feature in Pelican core, we"
+" wisely chose to avoid this situation and instead have the different "
+"readers defined via plugins."
+msgstr ""
+"你可能需要添加对输入文件格式的特殊支持。这似乎可以作为Pelican核心的一个功能，"
+"但我们选择避免将此功能放在核心中，而是通过插件实现不同的reader。"
+
+#: ../../plugins.rst:226 8167dcbaa6864da3b2262a2a99e08a15
+msgid ""
+"The rationale behind this choice is mainly that plugins are really easy "
+"to write and don't slow down Pelican itself when they're not active."
+msgstr ""
+"做出这个决定主要是因为实现这样的格式支持插件非常容易，而且这样在不需要此功能时"
+"也不会影响Pelican自身的速度。"
+
+#: ../../plugins.rst:229 26c8185062964b52921860cfa2ce508c
+msgid "No more talking — here is an example::"
+msgstr "多说无益，下面是一个具体例子："
+
+#: ../../plugins.rst:265 ea51efb1925f45e79c87d6e5488cbbcd
+msgid "Adding a new generator"
+msgstr "添加新的generator"
+
+#: ../../plugins.rst:267 9e04f17a5fa1488d82d3629edf8cdf3f
+msgid ""
+"Adding a new generator is also really easy. You might want to have a look"
+" at :doc:`internals` for more information on how to create your own "
+"generator."
+msgstr ""
+"添加一个generator也非常简单，你可能会想要看一看 :doc:`internals` ，其中有关于"
+"如何创建generator的内容。"
+
+#: ../../plugins.rst:281 f4c92958e88a41a7a0deee697b48fc58
+msgid "Adding a new writer"
+msgstr "添加新的writer"
+
+#: ../../plugins.rst:283 188bf0e8a68446458ae525c67cfe098c
+msgid ""
+"Adding a writer will allow you to output additional file formats to disk,"
+" or change how the existing formats are written to disk. Note that only "
+"one writer will be active at a time, so be sure to either subclass the "
+"built-in Writer, or completely re-implement it."
+msgstr ""
+"添加writer可以让你将其他文件格式输出到磁盘，或者可以改变现有格式写入磁盘的方式。"
+"请注意，一次只能启用一个writer，因此请确保继承了内置的Writer，并且完全重新实现之。"
+
+#: ../../plugins.rst:288 edb5d1fa15bc48859c2912ba7c344286
+msgid "Here is a basic example of how to set up your own writer::"
+msgstr "下面是启用你的自定义writer的一个基本例子："
+
+#: ../../plugins.rst:308 0df8f3318357472cbd72e17e1b5085b2
+msgid "Using Plugins to Inject Content"
+msgstr "使用插件添加内容"
+
+#: ../../plugins.rst:310 d0161dbe86c44111a6295259ec8cab54
+msgid ""
+"You can programmatically inject articles or pages using plugins. This can"
+" be useful if you plan to fetch articles from an API, for example."
+msgstr ""
+"可以通过插件以可编程的方式添加文章或页面。如果你打算从某些API获取文章，这就会很有用。"
+
+#: ../../plugins.rst:313 5d5c41dbeb7243d4b497752771bc7858
+msgid ""
+"Following is a simple example of how one can build a plugin that injects "
+"a custom article, using the ``article_generator_pretaxonomy`` signal::"
+msgstr ""
+"下面是一个简单的示例，说明了如何使用 ``article_generator_pretaxonomy`` "
+"信号构建一个添加自定义文章的插件："

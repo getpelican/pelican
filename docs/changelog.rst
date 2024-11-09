@@ -1,6 +1,26 @@
 Release history
 ###############
 
+4.10.1 - 2024-09-28
+===================
+
+- Fix error when running ``pelican -r -l``
+- Fix symlink handling in ``pelican-themes``
+
+4.10.0 - 2024-09-16
+===================
+
+- Add setting to specify summary via paragraph count
+- Add new status to skip generation of a post
+- Add setting to append ``ref`` parameter to links in feeds
+- Configure logging handler via ``--log-handler`` CLI option
+- Resolve intra-site links in summaries
+- Warn when files are not processed due to disabled readers
+- Add Medium post importer
+- Improve GitHub Pages workflow
+- Improve code test coverage
+- Translate documentation into Simplified Chinese
+
 4.9.1 - 2023-11-15
 ==================
 

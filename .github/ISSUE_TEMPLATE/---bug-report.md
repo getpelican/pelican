@@ -17,11 +17,15 @@ assignees: ''
 
 <!-- Checked checkbox should look like this: [x] -->
 - [ ] I have read the [Filing Issues](https://docs.getpelican.com/en/latest/contribute.html#filing-issues) and subsequent “How to Get Help” sections of the documentation.
+- [ ] I can reproduce this problem with stock/default settings file, theme, and sample content (as described in above “How to Get Help” sections of the documentation).
 - [ ] I have searched the [issues](https://github.com/getpelican/pelican/issues?q=is%3Aissue) (including closed ones) and believe that this is not a duplicate.
 
 <!--
-  Once the above boxes are checked, if you are able to fill in the following list
-  with your information, it would be very helpful for maintainers.
+  If you cannot reproduce the problem with stock/default settings file, theme, and sample content,
+  please close this tab and ask your question in the Discussions area instead:
+  <https://github.com/getpelican/pelican/discussions>
+  Otherwise, once the above boxes are checked, please fill out the following list
+  of information, which would be very helpful for maintainers.
 -->
 
 - **OS version and name**: <!-- Replace with version + name -->

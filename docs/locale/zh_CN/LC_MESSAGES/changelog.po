@@ -1,0 +1,1725 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-07 16:25+0800\n"
+"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: ../../changelog.rst:2 0742e96cabd04fc99355bbfa66fcb719
+msgid "Release history"
+msgstr "更新日志"
+
+#: ../../changelog.rst:5 47b916504e6c4a33a499718574212ed2
+msgid "4.10.1 - 2024-09-28"
+msgstr ""
+
+#: ../../changelog.rst:7 33731d204a8f42d6972a5b41035bf6fa
+msgid "Fix error when running ``pelican -r -l``"
+msgstr ""
+
+#: ../../changelog.rst:8 0c82e22bd70f497880747a23445a279e
+msgid "Fix symlink handling in ``pelican-themes``"
+msgstr ""
+
+#: ../../changelog.rst:11 2a6b4d6833884393bf6eb0f664f07027
+msgid "4.10.0 - 2024-09-16"
+msgstr ""
+
+#: ../../changelog.rst:13 c5b7388ced0246df9383968b896cee1d
+msgid "Add setting to specify summary via paragraph count"
+msgstr ""
+
+#: ../../changelog.rst:14 55bef71482124d7ba15dcc13def666b4
+msgid "Add new status to skip generation of a post"
+msgstr ""
+
+#: ../../changelog.rst:15 74aa099718c64ec3864fb4b54e8c7e7b
+msgid "Add setting to append ``ref`` parameter to links in feeds"
+msgstr ""
+
+#: ../../changelog.rst:16 be0d21b2ffd648f9aad935e95fa2e9b2
+msgid "Configure logging handler via ``--log-handler`` CLI option"
+msgstr ""
+
+#: ../../changelog.rst:17 f582b79f9b19462988607337626e92e8
+msgid "Resolve intra-site links in summaries"
+msgstr ""
+
+#: ../../changelog.rst:18 00e8752d88364591a1e7844b3605963c
+msgid "Warn when files are not processed due to disabled readers"
+msgstr ""
+
+#: ../../changelog.rst:19 0de52c3ba40b44f0816cc8dabf7913ab
+msgid "Add Medium post importer"
+msgstr ""
+
+#: ../../changelog.rst:20 051bf922a7304dd798e894ddcfb64635
+msgid "Improve GitHub Pages workflow"
+msgstr ""
+
+#: ../../changelog.rst:21 7db880406e9540de9b2d5b023cc10147
+msgid "Improve code test coverage"
+msgstr ""
+
+#: ../../changelog.rst:22 c4327d2df9e34af384a4b0c96031e7e1
+msgid "Translate documentation into Simplified Chinese"
+msgstr ""
+
+#: ../../changelog.rst:25 75bd952da32744868b68714fa89d62ec
+msgid "4.9.1 - 2023-11-15"
+msgstr ""
+
+#: ../../changelog.rst:27 f896a982ada348e3bf763a9cf620d432
+msgid "Ensure ``tzdata`` dependency is installed on Windows"
+msgstr ""
+
+#: ../../changelog.rst:30 f7893a294e2c4c44bd82d68283421096
+msgid "4.9.0 - 2023-11-12"
+msgstr ""
+
+#: ../../changelog.rst:32 3fc89471c16044349176c6bf58daef61
+msgid "Upgrade code to new minimum supported Python version: 3.8"
+msgstr ""
+
+#: ../../changelog.rst:33 361eb8523ae54e6c965c4957d5af9a0b
+msgid ""
+"Settings support for ``pathlib.Path`` `(#2758) "
+"<https://github.com/getpelican/pelican/pull/2758>`_"
+msgstr ""
+
+#: ../../changelog.rst:34 7ea2147f8b6c4bc1af0e926b897fbbc7
+msgid ""
+"Various improvements to Simple theme (`#2976 "
+"<https://github.com/getpelican/pelican/pull/2976>`_ & `#3234 "
+"<https://github.com/getpelican/pelican/pull/3234>`_)"
+msgstr ""
+
+#: ../../changelog.rst:35 fc0e0bb6fd8a49bca130f352208d4e65
+msgid ""
+"Use Furo as Sphinx documentation theme `(#3023) "
+"<https://github.com/getpelican/pelican/pull/3023>`_"
+msgstr ""
+
+#: ../../changelog.rst:36 1767e84116304b62bff9c66576c8b530
+msgid ""
+"Default to 100 articles maximum in feeds `(#3127) "
+"<https://github.com/getpelican/pelican/pull/3127>`_"
+msgstr ""
+
+#: ../../changelog.rst:37 1f42290cb97f4c22b71b49bfd4e1d763
+msgid ""
+"Add ``period_archives common context`` variable `(#3148) "
+"<https://github.com/getpelican/pelican/pull/3148>`_"
+msgstr ""
+
+#: ../../changelog.rst:38 8e70999f32d743d8be9d7a09a7b8440e
+msgid ""
+"Use ``watchfiles`` as the file-watching backend `(#3151) "
+"<https://github.com/getpelican/pelican/pull/3151>`_"
+msgstr ""
+
+#: ../../changelog.rst:39 eb554022ed4445b4886e5fb7b1ffda48
+msgid ""
+"Add GitHub Actions workflow for GitHub Pages `(#3189) "
+"<https://github.com/getpelican/pelican/pull/3189>`_"
+msgstr ""
+
+#: ../../changelog.rst:40 aee78c33fc074a5aa2a3e7b6b074a2d1
+msgid ""
+"Allow dataclasses in settings `(#3204) "
+"<https://github.com/getpelican/pelican/pull/3204>`_"
+msgstr ""
+
+#: ../../changelog.rst:41 b302dcfa9ab347c7a4190e35a2fec468
+msgid ""
+"Switch build tool to PDM instead of Setuptools/Poetry `(#3220) "
+"<https://github.com/getpelican/pelican/pull/3220>`_"
+msgstr ""
+
+#: ../../changelog.rst:42 39c35ce577d6418ebe1bdb8bd83855da
+msgid ""
+"Provide a ``plugin_enabled`` Jinja test for themes `(#3235) "
+"<https://github.com/getpelican/pelican/pull/3235>`_"
+msgstr ""
+
+#: ../../changelog.rst:43 10520c5ebec34d02996410cc1d611162
+msgid ""
+"Preserve connection order in Blinker `(#3238) "
+"<https://github.com/getpelican/pelican/pull/3238>`_"
+msgstr ""
+
+#: ../../changelog.rst:44 e3e01fbe72ff48578ee636044d930861
+msgid ""
+"Remove social icons from default ``notmyidea`` theme `(#3240) "
+"<https://github.com/getpelican/pelican/pull/3240>`_"
+msgstr ""
+
+#: ../../changelog.rst:45 0e0d4fc6f77947a79bc3864dbcfd3025
+msgid ""
+"Remove unreliable ``WRITE_SELECTED`` feature `(#3243) "
+"<https://github.com/getpelican/pelican/pull/3243>`_"
+msgstr ""
+
+#: ../../changelog.rst:46 3945b50f56c849e8b756418a049e8bd5
+msgid ""
+"Importer: Report broken embedded video links when importing from Tumblr "
+"`(#3177) <https://github.com/getpelican/pelican/issues/3177>`_"
+msgstr ""
+
+#: ../../changelog.rst:47 91a65ac386d64de293807b14a1ee66c1
+msgid ""
+"Importer: Remove newline addition when iterating Photo post types "
+"`(#3178) <https://github.com/getpelican/pelican/issues/3178>`_"
+msgstr ""
+
+#: ../../changelog.rst:48 5965fc057a0a4c94a2507956a2227789
+msgid ""
+"Importer: Force timestamp conversion in Tumblr importer to be UTC with "
+"offset `(#3221) <https://github.com/getpelican/pelican/pull/3221>`_"
+msgstr ""
+
+#: ../../changelog.rst:49 f4a79028bfa946debc9a6924670e5456
+msgid ""
+"Importer: Use tempfile for intermediate HTML file for Pandoc `(#3221) "
+"<https://github.com/getpelican/pelican/pull/3221>`_"
+msgstr ""
+
+#: ../../changelog.rst:50 ac3ff1ef109f49898c54eb75bb9d4bf3
+msgid ""
+"Switch linters to Ruff `(#3223) "
+"<https://github.com/getpelican/pelican/pull/3223>`_"
+msgstr ""
+
+#: ../../changelog.rst:53 87b5ee37dea84dce9c75361f533e8057
+msgid "4.8.0 - 2022-07-11"
+msgstr ""
+
+#: ../../changelog.rst:55 858d9945de86466eb1507d7859efc304
+msgid ""
+"Use JSON values for extra settings in Invoke tasks template `(#2994) "
+"<https://github.com/getpelican/pelican/pull/2994>`_"
+msgstr ""
+
+#: ../../changelog.rst:56 ad022a2dbbe74c28ab78757f64791daa
+msgid ""
+"Add content tag for links, which can help with things like Twitter social"
+" cards `(#3001) <https://github.com/getpelican/pelican/pull/3001>`_"
+msgstr ""
+
+#: ../../changelog.rst:57 889f590d0fda46dbb6a14336644f265e
+msgid ""
+"Improve word count behavior when generating summary `(#3002) "
+"<https://github.com/getpelican/pelican/pull/3002>`_"
+msgstr ""
+
+#: ../../changelog.rst:60 c6c9bfd44396439c8e3a04b083dfc9b3
+msgid "4.7.2 - 2022-02-09"
+msgstr ""
+
+#: ../../changelog.rst:62 21432dcec96e438c8f21de585540e9b9
+msgid ""
+"Fix incorrect parsing of parameters specified via `-e` / `--extra-"
+"settings` option flags `(#2938) "
+"<https://github.com/getpelican/pelican/pull/2938>`_"
+msgstr ""
+
+#: ../../changelog.rst:63 250cb0b205ea4bc091bcbfa18a688398
+msgid ""
+"Add ``categories.html`` template to default theme `(#2973) "
+"<https://github.com/getpelican/pelican/pull/2973>`_"
+msgstr ""
+
+#: ../../changelog.rst:64 f404aaef8abe40d89a8394f71043767b
+msgid ""
+"Document how to use plugins to inject content `(#2922) "
+"<https://github.com/getpelican/pelican/pull/2922>`_"
+msgstr ""
+
+#: ../../changelog.rst:67 ea47463991054e678639e2d5afee8733
+msgid "4.7.1 - 2021-10-12"
+msgstr ""
+
+#: ../../changelog.rst:69 52f38102dca542dcaa5e901ba9cff484
+msgid ""
+"Extend rich logging to server component `(#2927) "
+"<https://github.com/getpelican/pelican/pull/2927>`_"
+msgstr ""
+
+#: ../../changelog.rst:70 e2f47cedaac946b6b3877063c1531849
+msgid ""
+"Fix an issue where metadata flagged to be discarded was being cached "
+"`(#2926) <https://github.com/getpelican/pelican/pull/2926>`_"
+msgstr ""
+
+#: ../../changelog.rst:71 c7270f10045541f992ea76f9b8f938bc
+msgid ""
+"Adjust suffix in server to allow redirection when needed `(#2931) "
+"<https://github.com/getpelican/pelican/pull/2931>`_"
+msgstr ""
+
+#: ../../changelog.rst:72 25eecc81230442e8be149c26afebcba8
+msgid ""
+"Add MIME types for web fonts `(#2929) "
+"<https://github.com/getpelican/pelican/pull/2929>`_"
+msgstr ""
+
+#: ../../changelog.rst:73 28bdcfa53bcf4bf5908acd39b88b1264
+msgid ""
+"Distribute sample data used to run tests `(#2935) "
+"<https://github.com/getpelican/pelican/pull/2935>`_"
+msgstr ""
+
+#: ../../changelog.rst:74 90855b72a6744760a57195ca0566401c
+msgid "Add Python 3.10 to test matrix"
+msgstr ""
+
+#: ../../changelog.rst:77 a5d1ee359c9a472bac01a3c953358994
+msgid "4.7.0 - 2021-10-01"
+msgstr ""
+
+#: ../../changelog.rst:79 1b28838f5000456aa396f8768c307102
+msgid ""
+"Improve default theme rendering on mobile and other small screen devices "
+"`(#2914) <https://github.com/getpelican/pelican/pull/2914>`_"
+msgstr ""
+
+#: ../../changelog.rst:80 e080e2f741464f92b7d988da7e3dba5d
+msgid ""
+"Add support for hidden articles `(#2866) "
+"<https://github.com/getpelican/pelican/pull/2866>`_"
+msgstr ""
+
+#: ../../changelog.rst:81 71036c834cc4480ba38566d039d9b50a
+msgid ""
+"Improve word count behavior when generating summary CJK & other locales "
+"`(#2864) <https://github.com/getpelican/pelican/pull/2864>`_"
+msgstr ""
+
+#: ../../changelog.rst:82 dad2c8c0f0d84a4db5b0139e8dc4bec8
+msgid ""
+"Add progress spinner during generation `(#2869) "
+"<https://github.com/getpelican/pelican/pull/2869>`_ and richer logging "
+"`(#2897) <https://github.com/getpelican/pelican/pull/2897>`_, both via "
+"`Rich <https://github.com/willmcgugan/rich>`_"
+msgstr ""
+
+#: ../../changelog.rst:84 ad420f41f0fb44809f0f88d2638ed6b9
+msgid ""
+"Invoke tasks ``serve`` and ``livereload`` now auto-open a web browser "
+"pointing to the locally-served web site `(#2764) "
+"<https://github.com/getpelican/pelican/pull/2764>`_"
+msgstr ""
+
+#: ../../changelog.rst:85 34794ceaec054ec4b47706297e65a498
+msgid ""
+"Support some date format codes used by ISO dates `(#2902) "
+"<https://github.com/getpelican/pelican/pull/2902>`_"
+msgstr ""
+
+#: ../../changelog.rst:86 cd9520f44e004be6a7d7fb27032d37a6
+msgid ""
+"Document how to add a new writer `(#2901) "
+"<https://github.com/getpelican/pelican/pull/2901>`_"
+msgstr ""
+
+#: ../../changelog.rst:89 278990583126431793bd184ef69e4315
+msgid "4.6.0 - 2021-03-23"
+msgstr ""
+
+#: ../../changelog.rst:91 a7a02445adbd4dd58d066f6f8fa5810b
+msgid ""
+"Add new URL pattern to ``PAGINATION_PATTERNS`` for the last page in the "
+"list `(#1401) <https://github.com/getpelican/pelican/issues/1401>`_"
+msgstr ""
+
+#: ../../changelog.rst:92 e5e2fd04bc8a40edb8a0d1c088a95708
+msgid ""
+"Speed up ``livereload`` Invoke task via caching `(#2847) "
+"<https://github.com/getpelican/pelican/pull/2847>`_"
+msgstr ""
+
+#: ../../changelog.rst:93 e37a383072324f98a8f5698edab71384
+msgid ""
+"Ignore ``None`` return value from ``get_generators`` signal `(#2850) "
+"<https://github.com/getpelican/pelican/pull/2850>`_"
+msgstr ""
+
+#: ../../changelog.rst:94 ea446fad671d4e1e8b3220a35ffe170b
+msgid "Relax dependency minimum versions and remove upper bounds"
+msgstr ""
+
+#: ../../changelog.rst:97 3e38341f147e414ba7b10c339d28a0d4
+msgid "4.5.4 - 2021-01-04"
+msgstr ""
+
+#: ../../changelog.rst:99 b4296b7abe7a411faedd991310af951f
+msgid ""
+"Replace plugin definitions in settings with string representations after "
+"registering, so they can be cached correctly `(#2828) "
+"<https://github.com/getpelican/pelican/issues/2828>`_."
+msgstr ""
+
+#: ../../changelog.rst:102 7fc32eaefef846d28cd834cabfa8dee9
+msgid "4.5.3 - 2020-12-01"
+msgstr ""
+
+#: ../../changelog.rst:104 5e0db3263ddd42bca058026426cf06e6
+msgid "Fix a mistake made in PR #2821"
+msgstr ""
+
+#: ../../changelog.rst:107 1ef29d1cc4de42d1aa3c0c163df3514a
+msgid "4.5.2 - 2020-11-22"
+msgstr ""
+
+#: ../../changelog.rst:109 c7c77959e6d04be4a6a6c7ace8d64c0d
+msgid "Improve logging of generators and writer loaders"
+msgstr ""
+
+#: ../../changelog.rst:112 00572ddf9ed24457aedc3f744b684404
+msgid "4.5.1 - 2020-11-02"
+msgstr ""
+
+#: ../../changelog.rst:114 85d67c71b8664cf3900c982deba934b5
+msgid ""
+"Refactor intra-site link discovery in order to match more permissively "
+"`(#2646) <https://github.com/getpelican/pelican/issues/2646>`_"
+msgstr ""
+
+#: ../../changelog.rst:115 0ae962176dac4745a0929eac1cb0a671
+msgid ""
+"Fix plugins running twice in auto-reload mode `(#2817) "
+"<https://github.com/getpelican/pelican/issues/2817>`_"
+msgstr ""
+
+#: ../../changelog.rst:116 6c9d2b7c8f5c40d9830f38cc39807326
+msgid ""
+"Add notice to use ``from pelican import signals`` instead of ``import "
+"pelican.signals`` `(#2805) "
+"<https://github.com/getpelican/pelican/issues/2805>`_"
+msgstr ""
+
+#: ../../changelog.rst:119 cc543240f72d4e15bafa37e8cbe86c54
+msgid "4.5.0 - 2020-08-20"
+msgstr ""
+
+#: ../../changelog.rst:121 3b3db764e63f49c0b00d2b1cc71755f2
+msgid "Add namespace plugin support; list plugins via ``pelican-plugins`` command"
+msgstr ""
+
+#: ../../changelog.rst:122 ad62f8bcd989447e97326c5845ec146b
+msgid "Override settings via ``-e`` / ``--extra-settings`` CLI option flags"
+msgstr ""
+
+#: ../../changelog.rst:123 f12bccb1dc904d0bbffb0d9e5291ad3d
+msgid "Add settings for custom Jinja globals and tests"
+msgstr ""
+
+#: ../../changelog.rst:124 c569ff52ef904228971c38b1a958847f
+msgid "Customize article summary ellipsis via ``SUMMARY_END_SUFFIX`` setting"
+msgstr ""
+
+#: ../../changelog.rst:125 733087bf4e14447095fb364a1d5b606f
+msgid "Customize Typogrify dash handling via new ``TYPOGRIFY_DASHES`` setting"
+msgstr ""
+
+#: ../../changelog.rst:126 9e0de47310964a99bf1ec0a87f810036
+msgid "Support Unicode when generating slugs"
+msgstr ""
+
+#: ../../changelog.rst:127 c496a287d95b47759425578bc29d4cf3
+msgid "Support Asciidoc ``.adoc`` file generation in Pelican importer"
+msgstr ""
+
+#: ../../changelog.rst:128 1f8597af3f9946129cfb150e9728c25c
+msgid "Improve user experience when ``pelican --listen`` web server is quit"
+msgstr ""
+
+#: ../../changelog.rst:129 418a06eb1d9d4332945b5b1729734579
+msgid "Improve Invoke tasks template"
+msgstr ""
+
+#: ../../changelog.rst:130 8b63e2e5d29a4cde830ea8c1df058ab1
+msgid "Include tests in source distributions"
+msgstr ""
+
+#: ../../changelog.rst:131 68105e5e919a43518ac6af8b88957e44
+msgid "Switch CI from Travis to GitHub Actions"
+msgstr ""
+
+#: ../../changelog.rst:132 053f40c3741c4d54bc840f2ad32f34eb
+msgid "Remove support for Python 2.7"
+msgstr ""
+
+#: ../../changelog.rst:135 6190d59940dd4c57a603140e0813f9b5
+msgid "4.2.0 - 2019-10-17"
+msgstr ""
+
+#: ../../changelog.rst:137 5f11442743c841ff91d46b643698dfa9
+msgid "Support inline SVGs; don't treat titles in SVGs as HTML titles"
+msgstr ""
+
+#: ../../changelog.rst:138 a68bbd4f2a024c7a84c259aee8fcb621
+msgid "Add category to feeds (in addition to tags)"
+msgstr ""
+
+#: ../../changelog.rst:139 dd3937b7cb38480a84e6a5daed48e113
+msgid "Improve content metadata field docs"
+msgstr ""
+
+#: ../../changelog.rst:140 87030fc248dc46e5902d3e7681702351
+msgid "Add docs for including other Markdown/reST files in content"
+msgstr ""
+
+#: ../../changelog.rst:143 85163f7808a64f7cac3dd54f98c2a2fd
+msgid "4.1.3 - 2019-10-09"
+msgstr ""
+
+#: ../../changelog.rst:145 486947a4cc584437aff9364d721eeb41
+msgid "Fix quick-start docs regarding ``pelican --listen``"
+msgstr ""
+
+#: ../../changelog.rst:146 cf68238f21bd40b081eb670527e5ad88
+msgid "Set default listen address to 127.0.0.1"
+msgstr ""
+
+#: ../../changelog.rst:147 21aed223e69549038ee7b840fe0e45a5
+msgid "Add extra/optional Markdown dependency to setup.py"
+msgstr ""
+
+#: ../../changelog.rst:148 5c5c50a24bf945babe1fea501be5b672
+msgid "Use correct SSH port syntax for rsync in tasks.py"
+msgstr ""
+
+#: ../../changelog.rst:149 cafa64aa81c94212a964ece5f6d00ea6
+msgid "Place all deprecated settings handling together"
+msgstr ""
+
+#: ../../changelog.rst:150 92ad7248e4d848f5b9955653a132ba1d
+msgid "Add related project URLs for display on PyPI"
+msgstr ""
+
+#: ../../changelog.rst:151 f97dcb0a8c6f41ca8e6a249f975688ab
+msgid "Skip some tests on Windows that can't pass due to filesystem differences"
+msgstr ""
+
+#: ../../changelog.rst:154 cb1b18c4628a48f3a7b59e4447057291
+msgid "4.1.2 - 2019-09-23"
+msgstr ""
+
+#: ../../changelog.rst:156 1cc7ba6aab5a43e9a3fbb04a8cf4c954
+msgid "Fix pelican.settings.load_source to avoid caching issues - PR #2621"
+msgstr ""
+
+#: ../../changelog.rst:159 808b70fac79147a7a30cb263bfc091d5
+msgid "4.1.1 - 2019-08-23"
+msgstr ""
+
+#: ../../changelog.rst:161 3515525c09794e3eb685696916e9b4a8
+msgid "Add AutoPub to auto-publish releases on PR merge"
+msgstr ""
+
+#: ../../changelog.rst:162 e3958153de2543ab8af7b27e424a5199
+msgid "Add CSS classes for reStructuredText figures"
+msgstr ""
+
+#: ../../changelog.rst:163 469aba039b0e4bb5b08bd7bc9fd455f9
+msgid "Pass ``argv`` to Pelican ``main`` entrypoint"
+msgstr ""
+
+#: ../../changelog.rst:164 08494f27a31149a8a4e662d7160d334a
+msgid "Set default content status to a blank string rather than ``None``"
+msgstr ""
+
+#: ../../changelog.rst:167 4e7e6da9e1a94e5886de5c7bb90da964
+msgid "4.1.0 - 2019-07-14"
+msgstr ""
+
+#: ../../changelog.rst:169 de8697dee456433f8fd5592c79dc1235
+msgid "Live browser reload upon changed files (provided via Invoke task)"
+msgstr ""
+
+#: ../../changelog.rst:170 67db4943813d410386e77969e6aea98f
+msgid "Add ``pyproject.toml``, managed by Poetry"
+msgstr ""
+
+#: ../../changelog.rst:171 a6388203f3c44a31b2458bd0961c9e91
+msgid "Support for invoking ``python -m pelican``"
+msgstr ""
+
+#: ../../changelog.rst:172 b526c18ddea74343b14a62d3933c31db
+msgid "Add relative source path attribute to content"
+msgstr ""
+
+#: ../../changelog.rst:173 98e5827380d24bb2b640c709ee1fa5bf
+msgid "Allow directories in ``EXTRA_PATH_METADATA``"
+msgstr ""
+
+#: ../../changelog.rst:174 7372879d036e4c19967f008fed50bcfb
+msgid ""
+"Add ``all_articles`` variable to period pages (for recent posts "
+"functionality)"
+msgstr ""
+
+#: ../../changelog.rst:175 8b41c0640e9a4c4ca9458eea777c6c72
+msgid "Improve debug mode output"
+msgstr ""
+
+#: ../../changelog.rst:176 00af35668b044b6da9e934104b73eac9
+msgid "Remove blank or duplicate summaries from Atom feed"
+msgstr ""
+
+#: ../../changelog.rst:177 97c5594b58d94c45ada8a9efdb2216c8
+msgid ""
+"Fix bugs in pagination, pelican-import, pelican-quickstart, and feed "
+"importer"
+msgstr ""
+
+#: ../../changelog.rst:180 496531289a9c446c97d5e1842e5761f9
+msgid "4.0.1 (2018-11-30)"
+msgstr ""
+
+#: ../../changelog.rst:182 48f43697fb824914a518283bab0ab39d
+msgid "Refactor ``pelican.server`` logging"
+msgstr ""
+
+#: ../../changelog.rst:183 7f431162613848738f2267518e0f435e
+msgid "Fix bug in which all static files were processed as \"draft\""
+msgstr ""
+
+#: ../../changelog.rst:184 7c9866081cc0478aab4bcbb65f241b2b
+msgid "Bug fixes for Invoke/Makefile automation, Importer, and other miscellanea"
+msgstr ""
+
+#: ../../changelog.rst:186 b4f0a6a574f54e8baec02108e3cdf121
+#, python-format
+msgid ""
+"If upgrading from 3.7.x or earlier, please note that slug-related "
+"settings in 4.0+ use ``{slug}`` and/or ``{lang}`` rather than ``%s``. If "
+"``%s``-style settings are encountered, Pelican will emit a warning and "
+"fall back to the default setting. Some user-submitted themes might try to"
+" format setting values but fail upon site build with a ``TypeError``. In "
+"such cases, the theme needs to be updated. For example, instead of "
+"``TAG_FEED_ATOM|format(tag.slug)``, use "
+"``TAG_FEED_ATOM.format(slug=tag.slug)``"
+msgstr ""
+
+#: ../../changelog.rst:195 963535bf97cb4048b11dd47fa7fe5cb1
+msgid "4.0.0 (2018-11-13)"
+msgstr ""
+
+#: ../../changelog.rst:197 be207dbf17cc4c38ab4c8617ece18d43
+msgid "Replace ``develop_server.sh`` script with ``pelican --listen``"
+msgstr ""
+
+#: ../../changelog.rst:198 bfeb93e653cc44b4a6e65c1b5978e0d2
+msgid "Improved copy/link behavior for large static files (e.g., videos)"
+msgstr ""
+
+#: ../../changelog.rst:199 0f6be38dbd8942c8a8692c377624a26a
+msgid ""
+"New ``{static}`` syntax to link to static content; content linked to by "
+"``{static}`` and ``{attach}`` is automatically copied over even if not in"
+" ``STATIC_PATHS``"
+msgstr ""
+
+#: ../../changelog.rst:202 6d42f604ef724c72b0d691d52cced384
+msgid "Pages can now have ``draft`` status"
+msgstr ""
+
+#: ../../changelog.rst:203 c6513f293ae04b9fb1cee4ef355de4bd
+msgid "Show current settings via new ``--print-settings`` flag"
+msgstr ""
+
+#: ../../changelog.rst:204 63636f2fc7184030bc83647b4f81d63a
+#, python-format
+msgid ""
+"All settings for slugs now use ``{slug}`` and/or ``{lang}`` rather than "
+"``%s``. If ``%s``-style settings are encountered, Pelican will emit a "
+"warning and fallback to the default setting."
+msgstr ""
+
+#: ../../changelog.rst:207 594a958f9f9c495c86c4eb15ee1d353e
+msgid "New signals: ``feed_generated`` and ``page_generated_write_page``"
+msgstr ""
+
+#: ../../changelog.rst:208 4c1a13c890d04aea9bdb43ba3a85f98e
+msgid "Replace Fabric with Invoke and ``fabfile.py`` template with ``tasks.py``"
+msgstr ""
+
+#: ../../changelog.rst:209 05c5bacea3de4d159dc464bb80d3b70d
+msgid ""
+"Replace ``PAGINATED_DIRECT_TEMPLATES`` by ``PAGINATED_TEMPLATES``, "
+"extending control over pagination to all templates and making page size "
+"variable"
+msgstr ""
+
+#: ../../changelog.rst:211 d4c57ccd147b409bafd324580546ce89
+msgid ""
+"Replace ``SLUG_SUBSTITUTIONS`` (and friends) by "
+"``SLUG_REGEX_SUBSTITUTIONS`` for more finegrained control"
+msgstr ""
+
+#: ../../changelog.rst:213 5fcdd3851c4348ffb6f9f30e21d01cca
+msgid ""
+"``'{base_name}'`` value in ``PAGINATION_PATTERNS`` setting no longer "
+"strips ``'bar'`` from ``'foo/bar.html'`` (unless ``'bar' == 'index'``)."
+msgstr ""
+
+#: ../../changelog.rst:215 f21a405be2434ee78cac35d1f653b6ba
+msgid ""
+"``ARTICLE_ORDER_BY`` and ``PAGE_ORDER_BY`` now also affect 1) category, "
+"tag and author pages 2) feeds 3) draft and hidden articles and pages"
+msgstr ""
+
+#: ../../changelog.rst:217 781dd286cb154c46a9e2036e697bcf7f
+msgid ""
+"New ``ARTICLE_TRANSLATION_ID`` and ``PAGE_TRANSLATION_ID`` settings to "
+"specify metadata attributes used to identify/disable translations"
+msgstr ""
+
+#: ../../changelog.rst:219 ae7fd53c1d6047eb8027016c4a00bd65
+msgid "Make the HTML reader parse multiple occurrences of metadata tags as a list"
+msgstr ""
+
+#: ../../changelog.rst:220 dca4b981c67c42a080e5724d65ddf825
+msgid "New Blogger XML backup importer"
+msgstr ""
+
+#: ../../changelog.rst:221 f92482bf76ec447186de98f4a471dd55
+msgid ""
+"Wordpress importer now updates file links to point to local copies if the"
+" files were downloaded with ``--wp-attach``."
+msgstr ""
+
+#: ../../changelog.rst:223 0778a52f39704e629fed5df26deeaeb6
+msgid ""
+"Importer no longer inserts extra newlines, to prevent breaking of HTML "
+"attributes."
+msgstr ""
+
+#: ../../changelog.rst:225 6b21bcb847014ebcb4e658aaf54fd591
+msgid ""
+"Pelican server now prioritises ``foo.html`` and ``foo/index.html`` over "
+"``foo/`` when resolving ``foo``."
+msgstr ""
+
+#: ../../changelog.rst:229 d9c7906de4814a988e96a0f836121773
+msgid "3.7.1 (2017-01-10)"
+msgstr ""
+
+#: ../../changelog.rst:231 dee875ace0cf4cf4a84e968613c64f1e
+msgid "Fix locale issues in Quickstart script"
+msgstr ""
+
+#: ../../changelog.rst:232 0735e4ab311648fba920ba433eb5c81b
+msgid "Specify encoding for README and CHANGELOG in setup.py"
+msgstr ""
+
+#: ../../changelog.rst:235 713d99ebaa1f446a857751b754b63677
+msgid "3.7.0 (2016-12-12)"
+msgstr ""
+
+#: ../../changelog.rst:237 0330d842ba514f58965a9b625db18791
+msgid "Atom feeds output ``<content>`` in addition to ``<summary>``"
+msgstr ""
+
+#: ../../changelog.rst:238 7e5d0a914d214dbfb969b4e270f148c5
+msgid ""
+"Atom feeds use ``<published>`` for the original publication date and "
+"``<updated>`` for modifications"
+msgstr ""
+
+#: ../../changelog.rst:240 4f0ed4869e00418b8b16a7e692516126
+msgid "Simplify Atom feed ID generation and support URL fragments"
+msgstr ""
+
+#: ../../changelog.rst:241 cdc742c1ed2c44a1b76a5cf7374c1374
+msgid "Produce category feeds with category-specific titles"
+msgstr ""
+
+#: ../../changelog.rst:242 6a89fde3d1084e0d91e8b89b293a851c
+msgid ""
+"RSS feeds now default to summary instead of full content; set "
+"``RSS_FEED_SUMMARY_ONLY = False`` to revert to previous behavior"
+msgstr ""
+
+#: ../../changelog.rst:244 dbe1f00b9a114bf6a5e7728eb15cbfd2
+msgid "Replace ``MD_EXTENSIONS`` with ``MARKDOWN`` setting"
+msgstr ""
+
+#: ../../changelog.rst:245 e8d183ddfb3a4b2bbb4ccc523ff1ce4d
+msgid ""
+"Replace ``JINJA_EXTENSIONS`` with more-robust ``JINJA_ENVIRONMENT`` "
+"setting"
+msgstr ""
+
+#: ../../changelog.rst:246 c4044fb542ce4772bc469c06f3606f88
+msgid ""
+"Improve summary truncation logic to handle special characters and tags "
+"that span multiple lines, using HTML parser instead of regular "
+"expressions"
+msgstr ""
+
+#: ../../changelog.rst:248 6f6a8c2b60324ad6b00feb9f492c4d45
+msgid "Include summary when looking for intra-site link substitutions"
+msgstr ""
+
+#: ../../changelog.rst:249 e121d156b37b4f59a8846b700e1769ea
+msgid "Link to authors and index via ``{author}name`` and ``{index}`` syntax"
+msgstr ""
+
+#: ../../changelog.rst:250 1d210456ced542c1babb622b06b2c4f4
+msgid "Override widget names via ``LINKS_WIDGET_NAME`` and ``SOCIAL_WIDGET_NAME``"
+msgstr ""
+
+#: ../../changelog.rst:251 6104e9c05e844436b12e538008947f47
+msgid "Add ``INDEX_SAVE_AS`` option to override default ``index.html`` value"
+msgstr ""
+
+#: ../../changelog.rst:252 0f875978cade45889a49f818c6664093
+msgid "Remove ``PAGES`` context variable for themes in favor of ``pages``"
+msgstr ""
+
+#: ../../changelog.rst:253 bd6d148038524dbd8889ef4479115f15
+msgid ""
+"``SLUG_SUBSTITUTIONS`` now accepts 3-tuple elements, allowing URL slugs "
+"to contain non-alphanumeric characters"
+msgstr ""
+
+#: ../../changelog.rst:255 84e180ffd01640e39c8a02616d665f92
+msgid ""
+"Tag and category slugs can be controlled with greater precision using the"
+" ``TAG_SUBSTITUTIONS`` and ``CATEGORY_SUBSTITUTIONS`` settings"
+msgstr ""
+
+#: ../../changelog.rst:257 c42874e842584772a9c6abda4cf1d2b2
+msgid ""
+"Author slugs can be controlled with greater precision using the "
+"``AUTHOR_SUBSTITUTIONS`` setting"
+msgstr ""
+
+#: ../../changelog.rst:259 c3ad7f1d581d4a848a0d80425732faaa
+msgid "``DEFAULT_DATE`` can be defined as a string"
+msgstr ""
+
+#: ../../changelog.rst:260 28824188813542f08ef3546d48faeb4d
+msgid "Use ``mtime`` instead of ``ctime`` when ``DEFAULT_DATE = 'fs'``"
+msgstr ""
+
+#: ../../changelog.rst:261 4cbfd98d99134eaba723b0a98dd38fdd
+msgid "Add ``--fatal=errors|warnings`` option for use with continuous integration"
+msgstr ""
+
+#: ../../changelog.rst:262 e0346ee13c104f26a360952f415db7ca
+msgid ""
+"When using generator-level caching, ensure previously-cached files are "
+"processed instead of just new files."
+msgstr ""
+
+#: ../../changelog.rst:264 3faa472e3d4440dfacb1e40b20cdbb36
+msgid "Add Python and Pelican version information to debug output"
+msgstr ""
+
+#: ../../changelog.rst:265 7ca51c4375d641d18777b07bedb86f2c
+msgid "Improve compatibility with Python 3.5"
+msgstr ""
+
+#: ../../changelog.rst:266 cf9b150420fa47369ff0c95e8edc002b
+msgid "Comply with and enforce PEP8 guidelines"
+msgstr ""
+
+#: ../../changelog.rst:267 889cf4339a4b4d8daf520a7fb9985d8b
+msgid "Replace tables in settings documentation with ``data::`` directives"
+msgstr ""
+
+#: ../../changelog.rst:270 586aeb301e8941fcb2171458f12ad198
+msgid "3.6.3 (2015-08-14)"
+msgstr ""
+
+#: ../../changelog.rst:272 5499ed424969406c924c504f6f62f63e
+msgid "Fix permissions issue in release tarball"
+msgstr ""
+
+#: ../../changelog.rst:275 da9c552726b940a3b07c45b4233657ce
+msgid "3.6.2 (2015-08-01)"
+msgstr ""
+
+#: ../../changelog.rst:277 d29fcc033a634d8aac8f656c5eb9674f
+msgid "Fix installation errors related to Unicode in tests"
+msgstr ""
+
+#: ../../changelog.rst:278 1276e0c3d1a9447d84e25c3ad9e7abe7
+msgid "Don't show pagination in ``notmyidea`` theme if there's only one page"
+msgstr ""
+
+#: ../../changelog.rst:279 c12da2ed75d64539af457cd49216fd7b
+msgid "Make hidden pages available in context"
+msgstr ""
+
+#: ../../changelog.rst:280 22195be7d66d49b5a2536d4125dbb247
+msgid "Improve URLWrapper comparison"
+msgstr ""
+
+#: ../../changelog.rst:283 3fa9c04278aa4a6daaaacf03bcbc86c4
+msgid "3.6.0 (2015-06-15)"
+msgstr ""
+
+#: ../../changelog.rst:285 743e2686d8584c64bba2ff52de34b282
+msgid "Disable caching by default in order to prevent potential confusion"
+msgstr ""
+
+#: ../../changelog.rst:286 5b7083ceed2642178328e7faf6c2e3d7
+msgid "Improve caching behavior, replacing ``pickle`` with ``cpickle``"
+msgstr ""
+
+#: ../../changelog.rst:287 de23594147fd4549af0d010d938b04b1
+msgid "Allow Markdown or reST content in metadata fields other than ``summary``"
+msgstr ""
+
+#: ../../changelog.rst:288 7d11607580c449709f22c3a7f1dd8cf1
+msgid "Support semicolon-separated author/tag lists"
+msgstr ""
+
+#: ../../changelog.rst:289 1b78213ac5644a09b8d58bac7c132b30
+msgid "Improve flexibility of article sorting"
+msgstr ""
+
+#: ../../changelog.rst:290 24fc473a1dcc409fbceb231cc61bf0db
+msgid "Add ``--relative-urls`` argument"
+msgstr ""
+
+#: ../../changelog.rst:291 a56f975051ca406b8ba80ed2b688316e
+msgid "Support devserver listening on addresses other than localhost"
+msgstr ""
+
+#: ../../changelog.rst:292 e1c6f89208aa43768200ae0b5cb667e4
+msgid "Unify HTTP server handlers to ``pelican.server`` throughout"
+msgstr ""
+
+#: ../../changelog.rst:293 c2543badc27243f1aadd684351852866
+msgid "Handle intra-site links to draft posts"
+msgstr ""
+
+#: ../../changelog.rst:294 3c111a7e2c7b43c683c7bef6a78058a7
+msgid "Move ``tag_cloud`` from core to plugin"
+msgstr ""
+
+#: ../../changelog.rst:295 5e8d38af8ae647ba80edfb065967c18a
+msgid "Load default theme's external resources via HTTPS"
+msgstr ""
+
+#: ../../changelog.rst:296 8577b7a1315f4c0caa8a68379c7b9da6
+msgid "Import drafts from WordPress XML"
+msgstr ""
+
+#: ../../changelog.rst:297 e2debaa9a5224d09af847e937c1446a6
+msgid "Improve support for Windows users"
+msgstr ""
+
+#: ../../changelog.rst:298 b2042bbb92e74fe5ae51df03addf61da
+msgid "Enhance logging and test suite"
+msgstr ""
+
+#: ../../changelog.rst:299 373b2ce42e7b4b10b4302660f177b137
+msgid "Clean up and refactor codebase"
+msgstr ""
+
+#: ../../changelog.rst:300 ad174f831fc7487c9efec8f1b1ebc937
+msgid "New signals: ``all_generators_finalized`` and ``page_writer_finalized``"
+msgstr ""
+
+#: ../../changelog.rst:303 a0e616e94c144183bb7cd8f0d0f9f253
+msgid "3.5.0 (2014-11-04)"
+msgstr ""
+
+#: ../../changelog.rst:305 d4c1d004789b4cfa9187a2994e2f3613
+msgid ""
+"Introduce ``ARTICLE_ORDER_BY`` and ``PAGE_ORDER_BY`` settings to control "
+"the order of articles and pages."
+msgstr ""
+
+#: ../../changelog.rst:307 8532ec7e6c884d6d886c75690a860810
+msgid "Include time zone information in dates rendered in templates."
+msgstr ""
+
+#: ../../changelog.rst:308 399b4302a06c4d71853eb69309edaec9
+msgid "Expose the reader name in the metadata for articles and pages."
+msgstr ""
+
+#: ../../changelog.rst:309 03f44d912342475d981539bfc28e893b
+msgid ""
+"Add the ability to store static files along with content in the same "
+"directory as articles and pages using ``{attach}`` in the path."
+msgstr ""
+
+#: ../../changelog.rst:311 aad755538ae5458bb0266537ce3a3488
+msgid ""
+"Prevent Pelican from raising an exception when there are duplicate pieces"
+" of metadata in a Markdown file."
+msgstr ""
+
+#: ../../changelog.rst:313 6ccca5efc34c43fc9e6549ce27d07b1a
+msgid ""
+"Introduce the ``TYPOGRIFY_IGNORE_TAGS`` setting to add HTML tags to be "
+"ignored by Typogrify."
+msgstr ""
+
+#: ../../changelog.rst:315 3a07ce5e47fb446f935a8aef182feda9
+#, python-format
+msgid ""
+"Add the ability to use ``-`` in date formats to strip leading zeros. For "
+"example, ``%-d/%-m/%y`` will now result in the date ``9/8/12``."
+msgstr ""
+
+#: ../../changelog.rst:317 2b9865f51d2c431cad79bb1ad85dcf13
+msgid ""
+"Ensure feed generation is correctly disabled during quickstart "
+"configuration."
+msgstr ""
+
+#: ../../changelog.rst:318 900fd70063554c06b56e0c13084c5e56
+msgid ""
+"Fix ``PAGE_EXCLUDES`` and ``ARTICLE_EXCLUDES`` from incorrectly matching "
+"sub-directories."
+msgstr ""
+
+#: ../../changelog.rst:320 bef97ccdcc354bf68f7a738fefee44d0
+msgid "Introduce ``STATIC_EXCLUDE`` setting to add static file excludes."
+msgstr ""
+
+#: ../../changelog.rst:321 96218c06cbc84b9884f17d4b3c2782d4
+msgid ""
+"Fix an issue when using ``PAGINATION_PATTERNS`` while ``RELATIVE_URLS`` "
+"is enabled."
+msgstr ""
+
+#: ../../changelog.rst:323 0c2ccbc6e9e74f69912fecf3a9812535
+msgid ""
+"Fix feed generation causing links to use the wrong language for month "
+"names when using other locales."
+msgstr ""
+
+#: ../../changelog.rst:325 ddc6d5315bfa4dd1888de8ff606e1efe
+msgid ""
+"Fix an issue where the authors list in the simple template wasn't "
+"correctly formatted."
+msgstr ""
+
+#: ../../changelog.rst:327 28013aa7b4734809bd162e47c5bded8f
+msgid "Fix an issue when parsing non-string URLs from settings."
+msgstr ""
+
+#: ../../changelog.rst:328 4fe13830f2ed4449820e4a126e29db74
+msgid "Improve consistency of debug and warning messages."
+msgstr ""
+
+#: ../../changelog.rst:331 e412e8ca8ce94736a1bd9b64260a17c7
+msgid "3.4.0 (2014-07-01)"
+msgstr ""
+
+#: ../../changelog.rst:333 1153f4eed1394ce3a12d65af79337222
+msgid "Speed up content generation via new caching mechanism"
+msgstr ""
+
+#: ../../changelog.rst:334 78911d6e2e8f43ce879ae634815c16a4
+msgid "Add selective post generation (instead of always building entire site)"
+msgstr ""
+
+#: ../../changelog.rst:335 4fe3d9df73aa40f986e1a6f7602c3b09
+msgid "Many documentation improvements, including switching to prettier RtD theme"
+msgstr ""
+
+#: ../../changelog.rst:336 517fbe1c874c48c2ab429e1ea5633fe3
+msgid "Add support for multiple content and plugin paths"
+msgstr ""
+
+#: ../../changelog.rst:337 ebcfb3cf3a3a4841a4e144fa186ab023
+msgid ""
+"Add ``:modified:`` metadata field to complement ``:date:``. Used to "
+"specify the last date and time an article was updated independently from "
+"the date and time it was published."
+msgstr ""
+
+#: ../../changelog.rst:340 350a9e23a1e24e8d927ea35835b92ca0
+msgid "Add support for multiple authors via new ``:authors:`` metadata field"
+msgstr ""
+
+#: ../../changelog.rst:341 0b0f1d5303444f29990c75b5e071be14
+msgid "Watch for changes in static directories when in auto-regeneration mode"
+msgstr ""
+
+#: ../../changelog.rst:342 29aafd6e485d45188d102fdb72feaafe
+msgid "Add filters to limit log output when desired"
+msgstr ""
+
+#: ../../changelog.rst:343 a77cea47df51490595f9ee1b8e05fdd1
+msgid "Add language support to drafts"
+msgstr ""
+
+#: ../../changelog.rst:344 4bd686906beb45ddab847c0cdac33be8
+msgid "Add ``SLUGIFY_SOURCE`` setting to control how post slugs are generated"
+msgstr ""
+
+#: ../../changelog.rst:345 6ce9976300e64d7dadb2048080424994
+msgid "Fix many issues relating to locale and encoding"
+msgstr ""
+
+#: ../../changelog.rst:346 da577863fe4844d9b74218625a26f6ad
+msgid "Apply Typogrify filter to post summary"
+msgstr ""
+
+#: ../../changelog.rst:347 faa72319441d4e8698e29c1bf829189f
+msgid ""
+"Preserve file metadata (e.g. time stamps) when copying static files to "
+"output"
+msgstr ""
+
+#: ../../changelog.rst:348 d2b92229d5494bea903ad60e6a5c8335
+msgid "Move AsciiDoc support from Pelican core into separate plugin"
+msgstr ""
+
+#: ../../changelog.rst:349 61a9b4aa9cb44033b2f4229d2b167c64
+msgid ""
+"Produce inline links instead of reference-style links when importing "
+"content"
+msgstr ""
+
+#: ../../changelog.rst:350 d94f8c5cce634cc8ba784a3b59fb4819
+msgid "Improve handling of ``IGNORE_FILES`` setting behavior"
+msgstr ""
+
+#: ../../changelog.rst:351 e3d657b677384a4588da385c9b21080a
+msgid "Properly escape symbol characters in tag names (e.g., ``C++``)"
+msgstr ""
+
+#: ../../changelog.rst:352 d519c9f50e564647987ec969d7ec0ccf
+msgid "Minor tweaks for Python 3.4 compatibility"
+msgstr ""
+
+#: ../../changelog.rst:353 5ce6f5c727f447c9a432d1fd363e2c29
+msgid "Add several new signals"
+msgstr ""
+
+#: ../../changelog.rst:356 dae29c0187c44c27972be55b01c69ef8
+msgid "3.3.0 (2013-09-24)"
+msgstr ""
+
+#: ../../changelog.rst:358 17fad8c0afd94ba5a3b660e70b74a282
+msgid "Drop Python 3.2 support in favor of Python 3.3"
+msgstr ""
+
+#: ../../changelog.rst:359 ad9c00a4712845a9a13423e6b9b02a92
+msgid ""
+"Add ``Fabfile`` so Fabric can be used for workflow automation instead of "
+"Make"
+msgstr ""
+
+#: ../../changelog.rst:360 cd23162f223245a685ff1a9881b8b195
+msgid ""
+"``OUTPUT_RETENTION`` setting can be used to preserve metadata (e.g., VCS "
+"data such as ``.hg`` and ``.git``) from being removed from output "
+"directory"
+msgstr ""
+
+#: ../../changelog.rst:362 2d4af689970445558506be64942cda4d
+msgid "Tumblr import"
+msgstr ""
+
+#: ../../changelog.rst:363 94cb151962db4a4186070048cf9a52d1
+msgid "Improve logic and consistency when cleaning output folder"
+msgstr ""
+
+#: ../../changelog.rst:364 4f24e4305c8f49baba762604f81a009b
+msgid "Improve documentation versioning and release automation"
+msgstr ""
+
+#: ../../changelog.rst:365 fd8868d0c4ee4ec5b998c117e60fe784
+msgid "Improve pagination flexibility"
+msgstr ""
+
+#: ../../changelog.rst:366 eb2be9edbc6e470f952a97cac0a8c012
+msgid ""
+"Rename signals for better consistency (some plugins may need to be "
+"updated)"
+msgstr ""
+
+#: ../../changelog.rst:367 89f9707a3d1e443389b024a5bc34f87e
+msgid ""
+"Move metadata extraction from generators to readers; metadata extraction "
+"no longer article-specific"
+msgstr ""
+
+#: ../../changelog.rst:369 41bb6f6c43cd493ab89c900de7aa6628
+msgid ""
+"Deprecate ``FILES_TO_COPY`` in favor of ``STATIC_PATHS`` and "
+"``EXTRA_PATH_METADATA``"
+msgstr ""
+
+#: ../../changelog.rst:371 86a7dff5bc8645c3be130a8ae4add149
+msgid "Summaries in Markdown posts no longer include footnotes"
+msgstr ""
+
+#: ../../changelog.rst:372 009790743d7f42ba8278f18c392db041
+msgid ""
+"Remove unnecessary whitespace in output via ``lstrip_blocks`` Jinja "
+"parameter"
+msgstr ""
+
+#: ../../changelog.rst:373 38b06c9a766c4c93b6d8e2869a5b3711
+msgid "Move PDF generation from core to plugin"
+msgstr ""
+
+#: ../../changelog.rst:374 bb68b5bb0de84b9abfcd65987be9c368
+msgid "Replace ``MARKUP`` setting with ``READERS``"
+msgstr ""
+
+#: ../../changelog.rst:375 4a0c9f70f0f24261a597ce1b155e0800
+msgid "Add warning if img tag is missing ``alt`` attribute"
+msgstr ""
+
+#: ../../changelog.rst:376 dcabdeff1f5e4ee69292730bb31c9131
+msgid "Add support for ``{}`` in relative links syntax, besides ``||``"
+msgstr ""
+
+#: ../../changelog.rst:377 9fde536f5fca40e6a620b5f07049a0c3
+msgid "Add support for ``{tag}`` and ``{category}`` relative links"
+msgstr ""
+
+#: ../../changelog.rst:378 b241cd3f2847484bb7a56631c58d5ba4
+msgid "Add a ``content_written`` signal"
+msgstr ""
+
+#: ../../changelog.rst:381 b6077687c2a64ddeafa187b1448c048f
+msgid "3.2.1 and 3.2.2"
+msgstr ""
+
+#: ../../changelog.rst:383 bf6c37fc7c2e47f0aee3ee9cb0cb5306
+msgid "Facilitate inclusion in FreeBSD Ports Collection"
+msgstr ""
+
+#: ../../changelog.rst:386 3e800dbf3fe24766b77a043bc8da3c09
+msgid "3.2 (2013-04-24)"
+msgstr ""
+
+#: ../../changelog.rst:388 17cb561f2e184679831d2e3ac7eda3de
+msgid "Support for Python 3!"
+msgstr ""
+
+#: ../../changelog.rst:389 faee303362bb40ad952cc4581036f070
+msgid ""
+"Override page save-to location from meta-data (enables using a static "
+"page as the site's home page, for example)"
+msgstr ""
+
+#: ../../changelog.rst:391 3fc6523eaace489494b61380def294d1
+msgid "Time period archives (per-year, per-month, and per-day archives of posts)"
+msgstr ""
+
+#: ../../changelog.rst:392 3eafb73945bf414cbcb903a9695ff8de
+msgid "Posterous blog import"
+msgstr ""
+
+#: ../../changelog.rst:393 cc3982d7a21146319745d929a38b43d9
+msgid "Improve WordPress blog import"
+msgstr ""
+
+#: ../../changelog.rst:394 165fdfe5bfe1415c8b6cd56af637f3d4
+msgid "Migrate plugins to separate repository"
+msgstr ""
+
+#: ../../changelog.rst:395 2f62212ada534de6ade55404aae98383
+msgid "Improve HTML parser"
+msgstr ""
+
+#: ../../changelog.rst:396 66b0bf3a2b4a47c78a5a936c80c0e4fb
+msgid ""
+"Provide ability to show or hide categories from menu using "
+"``DISPLAY_CATEGORIES_ON_MENU`` option"
+msgstr ""
+
+#: ../../changelog.rst:398 d316333413c3459f803d9ec694450dab
+msgid "Auto-regeneration can be told to ignore files via ``IGNORE_FILES`` setting"
+msgstr ""
+
+#: ../../changelog.rst:399 7a199ee7396d485aaa55496b32e8a5c0
+msgid "Improve post-generation feedback to user"
+msgstr ""
+
+#: ../../changelog.rst:400 6deb9ccecfab4fcba7157680ce6a35b9
+msgid ""
+"For multilingual posts, use meta-data to designate which is the original "
+"and which is the translation"
+msgstr ""
+
+#: ../../changelog.rst:402 be2051f4c2304904b3264bd61da6bb3b
+msgid "Add ``.mdown`` to list of supported Markdown file extensions"
+msgstr ""
+
+#: ../../changelog.rst:403 be4c498c73604b7289bd908490b820fe
+msgid "Document-relative URL generation (``RELATIVE_URLS``) is now off by default"
+msgstr ""
+
+#: ../../changelog.rst:406 26c902ee59b54f5199b53dbd841981ce
+msgid "3.1 (2012-12-04)"
+msgstr ""
+
+#: ../../changelog.rst:408 1dce4c50db964039b0d0b4a27e19ce96
+msgid ""
+"Importer now stores slugs within files by default. This can be disabled "
+"with the ``--disable-slugs`` option."
+msgstr ""
+
+#: ../../changelog.rst:410 247f3c4937844361a98a9bbc557774cb
+msgid "Improve handling of links to intra-site resources"
+msgstr ""
+
+#: ../../changelog.rst:411 baf6646be1424810853be748d7a15129
+msgid ""
+"Ensure WordPress import adds paragraphs for all types of line endings in "
+"post content"
+msgstr ""
+
+#: ../../changelog.rst:413 4cefab609bb64186a2f597cedad65b61
+msgid "Decode HTML entities within WordPress post titles on import"
+msgstr ""
+
+#: ../../changelog.rst:414 8b1e222311f749a5b50858f0dc34466d
+msgid "Improve appearance of LinkedIn icon in default theme"
+msgstr ""
+
+#: ../../changelog.rst:415 bd4f42ac16a040d6b0e5cb1e9f5d5977
+msgid "Add GitHub and Google+ social icons support in default theme"
+msgstr ""
+
+#: ../../changelog.rst:416 d65513f7ff4d4294a5a4b755f6aa65c4
+msgid "Optimize social icons"
+msgstr ""
+
+#: ../../changelog.rst:417 9c930d0296f9464490df06094597739f
+msgid ""
+"Add ``FEED_ALL_ATOM`` and ``FEED_ALL_RSS`` to generate feeds containing "
+"all posts regardless of their language"
+msgstr ""
+
+#: ../../changelog.rst:419 c3c18b3ea6ce4a24abb55abd44b7164f
+msgid ""
+"Split ``TRANSLATION_FEED`` into ``TRANSLATION_FEED_ATOM`` and "
+"``TRANSLATION_FEED_RSS``"
+msgstr ""
+
+#: ../../changelog.rst:421 9994413cfc6347fd8b9879e117b2b889
+msgid "Different feeds can now be enabled/disabled individually"
+msgstr ""
+
+#: ../../changelog.rst:422 ca5c45416f784c87bed555ace354af21
+msgid ""
+"Allow for blank author: if ``AUTHOR`` setting is not set, author won't "
+"default to ``${USER}`` anymore, and a post won't contain any author "
+"information if the post author is empty"
+msgstr ""
+
+#: ../../changelog.rst:425 5270ac00aa8f4f2d98f2a3a57a6bf03c
+msgid "Move LESS and Webassets support from Pelican core to plugin"
+msgstr ""
+
+#: ../../changelog.rst:426 a8e64d393d0a4e3195dbdc1215302f9c
+msgid ""
+"The ``DEFAULT_DATE`` setting now defaults to ``None``, which means that "
+"articles won't be generated unless date metadata is specified"
+msgstr ""
+
+#: ../../changelog.rst:428 e9d682bcd1de45f3a1a98ae17193aced
+msgid ""
+"Add ``FILENAME_METADATA`` setting to support metadata extraction from "
+"filename"
+msgstr ""
+
+#: ../../changelog.rst:430 fe3a4d2bc15d4b4fba48fc8af3569336
+msgid ""
+"Add ``gzip_cache`` plugin to compress common text files into a ``.gz`` "
+"file within the same directory as the original file, preventing the "
+"server (e.g. Nginx) from having to compress files during an HTTP call"
+msgstr ""
+
+#: ../../changelog.rst:433 c44353005d5d4e1293cc9a1878517726
+msgid "Add support for AsciiDoc-formatted content"
+msgstr ""
+
+#: ../../changelog.rst:434 dcdc1aff409544f1b60d7c22a7a41b6b
+msgid ""
+"Add ``USE_FOLDER_AS_CATEGORY`` setting so that feature can be toggled "
+"on/off"
+msgstr ""
+
+#: ../../changelog.rst:435 f6675e347a114c75a3952ef5ef5f1e29
+msgid "Support arbitrary Jinja template files"
+msgstr ""
+
+#: ../../changelog.rst:436 87ba44c075b144ee8c4734e4f6f4e4c9
+msgid "Restore basic functional tests"
+msgstr ""
+
+#: ../../changelog.rst:437 0354818a87df49e59ac35a7d738c8e83
+msgid ""
+"New signals: ``generator_init``, ``get_generators``, and "
+"``article_generate_preread``"
+msgstr ""
+
+#: ../../changelog.rst:441 1256b71b526e43dbb94823c0604f0bc6
+msgid "3.0 (2012-08-08)"
+msgstr ""
+
+#: ../../changelog.rst:443 e79ee10015eb41fea71877bff6453a0b
+msgid "Refactored the way URLs are handled"
+msgstr ""
+
+#: ../../changelog.rst:444 f41008aff59344b0a964a38304c8f27d
+msgid "Improved the English documentation"
+msgstr ""
+
+#: ../../changelog.rst:445 9cfcf344ed0d41c0aa20d2e4178de487
+msgid "Fixed packaging using ``setuptools`` entrypoints"
+msgstr ""
+
+#: ../../changelog.rst:446 75d4a7f700424bb69bd8fbba899fe5f2
+msgid "Added ``typogrify`` support"
+msgstr ""
+
+#: ../../changelog.rst:447 e9e8e0933822437381e4a099118d17a8
+msgid "Added a way to disable feed generation"
+msgstr ""
+
+#: ../../changelog.rst:448 c9746121791347a18725b210eb69fca6
+msgid "Added support for ``DIRECT_TEMPLATES``"
+msgstr ""
+
+#: ../../changelog.rst:449 84b68057366c4c1eb56502f64a42bb73
+msgid "Allow multiple extensions for content files"
+msgstr ""
+
+#: ../../changelog.rst:450 36450fadc3a1446898365333ebd9a369
+msgid "Added LESS support"
+msgstr ""
+
+#: ../../changelog.rst:451 1e1d7cc4e8b647c1b9c5be55374c43f0
+msgid "Improved the import script"
+msgstr ""
+
+#: ../../changelog.rst:452 bbb3522bded542c9af30ade57961b005
+msgid "Added functional tests"
+msgstr ""
+
+#: ../../changelog.rst:453 06d82b81708d4234911c4552adb21aa3
+msgid "Rsync support in the generated Makefile"
+msgstr ""
+
+#: ../../changelog.rst:454 9e0ef37470e4457d91f43b9a7ceb77aa
+msgid "Improved feed support (easily pluggable with Feedburner for instance)"
+msgstr ""
+
+#: ../../changelog.rst:455 5a84812ef2d440b5953327383ac064ed
+msgid "Added support for ``abbr`` in reST"
+msgstr ""
+
+#: ../../changelog.rst:456 3e899ccc01a94cca8886244190cf5944
+msgid "Fixed a bunch of bugs :-)"
+msgstr ""
+
+#: ../../changelog.rst:459 73ed385ee1c143dcb9d1f5a2aa21a101
+msgid "2.8 (2012-02-28)"
+msgstr ""
+
+#: ../../changelog.rst:461 e037cd34f3af4d2c826ccc7a949f2df8
+msgid "Dotclear importer"
+msgstr ""
+
+#: ../../changelog.rst:462 994601f5041a465086869af70ae072dc
+msgid "Allow the usage of Markdown extensions"
+msgstr ""
+
+#: ../../changelog.rst:463 0830c593481e4e5ea1526f4d1a8848fa
+msgid "Themes are now easily extensible"
+msgstr ""
+
+#: ../../changelog.rst:464 3ff0b224c93e442684a1b686d8666ced
+msgid "Don't output pagination information if there is only one page"
+msgstr ""
+
+#: ../../changelog.rst:465 ec4ec66862df420caf61a32c472f972b
+msgid "Add a page per author, with all their articles"
+msgstr ""
+
+#: ../../changelog.rst:466 864df61f6eef43e4980bf957b14ac26e
+msgid "Improved the test suite"
+msgstr ""
+
+#: ../../changelog.rst:467 285e4cb5a43241558e3d2bf1876c0ee5
+msgid "Made the themes easier to extend"
+msgstr ""
+
+#: ../../changelog.rst:468 7597e818692d42039cffc1fb67513c52
+msgid "Removed Skribit support"
+msgstr ""
+
+#: ../../changelog.rst:469 867bceffc3cf431a919f92d33691870a
+msgid "Added a ``pelican-quickstart`` script"
+msgstr ""
+
+#: ../../changelog.rst:470 bdbf4396e57242af8f2be7c4c20ea455
+msgid "Fixed timezone-related issues"
+msgstr ""
+
+#: ../../changelog.rst:471 2a8752a2c1d14916aa78eaf4878db4f9
+msgid "Added some scripts for Windows support"
+msgstr ""
+
+#: ../../changelog.rst:472 67d470d30d8d41d38022c6a7024f3c62
+msgid "Date can be specified in seconds"
+msgstr ""
+
+#: ../../changelog.rst:473 fcdf6b71286b4951ac69786e590c7649
+msgid "Never fail when generating posts (skip and continue)"
+msgstr ""
+
+#: ../../changelog.rst:474 9cba8ad7120b4ea0bdd385d5facb119f
+msgid "Allow the use of future dates"
+msgstr ""
+
+#: ../../changelog.rst:475 4ded329080034fac931b6be8f801ce2d
+msgid "Support having different timezones per language"
+msgstr ""
+
+#: ../../changelog.rst:476 5a5f49be18c449fba6a8aeaa2b36b14e
+msgid "Enhanced the documentation"
+msgstr ""
+
+#: ../../changelog.rst:479 d49c481caef348f59c74d194bcca6579
+msgid "2.7 (2011-06-11)"
+msgstr ""
+
+#: ../../changelog.rst:481 7d8c241cc73642d8a5214b44dcfe30ca
+msgid "Use ``logging`` rather than echoing to stdout"
+msgstr ""
+
+#: ../../changelog.rst:482 670a6095a13c4970aac3016915813b9c
+msgid "Support custom Jinja filters"
+msgstr ""
+
+#: ../../changelog.rst:483 be2c4c82052b4cb48e02ca0dca49eeb6
+msgid "Compatibility with Python 2.5"
+msgstr ""
+
+#: ../../changelog.rst:484 773398476e4d45df89d7d958d2e496e6
+msgid "Added a theme manager"
+msgstr ""
+
+#: ../../changelog.rst:485 963c80928b8e4d92a9c549a4daa58cb9
+msgid "Packaged for Debian"
+msgstr ""
+
+#: ../../changelog.rst:486 c37c96fad3ad438395e73f2b2fdd5678
+msgid "Added draft support"
+msgstr ""
+
+#: ../../changelog.rst:489 7c215208f8a34f53ae0d22361f9305af
+msgid "2.6 (2011-03-08)"
+msgstr ""
+
+#: ../../changelog.rst:491 deeb4eb9a00547bea54a8f4486cea948
+msgid "Changes in the output directory structure"
+msgstr ""
+
+#: ../../changelog.rst:492 5719cd5592b442549b860851c95ace8a
+msgid "Makes templates easier to work with / create"
+msgstr ""
+
+#: ../../changelog.rst:493 a14ed59f0b7d43b7b64033cbda6fa1b3
+msgid "Added RSS support (was Atom-only)"
+msgstr ""
+
+#: ../../changelog.rst:494 2b78e48ee5c04ee88a19e82dd5736b08
+msgid "Added tag support for the feeds"
+msgstr ""
+
+#: ../../changelog.rst:495 129c8684dfe34773943a63f7294422dc
+msgid "Enhance the documentation"
+msgstr ""
+
+#: ../../changelog.rst:496 865503839227447ca15dae5cccbbd7f8
+msgid "Added another theme (brownstone)"
+msgstr ""
+
+#: ../../changelog.rst:497 ecbde1d7724c445283ca769b43684207
+msgid "Added translations"
+msgstr ""
+
+#: ../../changelog.rst:498 6877cc6c1e92490fab2840698dadba59
+msgid "Added a way to use cleaner URLs with a rewrite url module (or equivalent)"
+msgstr ""
+
+#: ../../changelog.rst:499 4b937b4f363b4bfd86d3447d61ac79e0
+msgid "Added a tag cloud"
+msgstr ""
+
+#: ../../changelog.rst:500 61ebc53121c34b96bb6edf9bd95b385e
+msgid ""
+"Added an autoreloading feature: the blog is automatically regenerated "
+"each time a modification is detected"
+msgstr ""
+
+#: ../../changelog.rst:502 79b3ebc425c64a60a5e9914da9e43752
+msgid "Translate the documentation into French"
+msgstr ""
+
+#: ../../changelog.rst:503 a1446ce9b3e147ac9926754b1db32746
+msgid "Import a blog from an RSS feed"
+msgstr ""
+
+#: ../../changelog.rst:504 0d427fc4738a447fbdae05b78559171e
+msgid "Pagination support"
+msgstr ""
+
+#: ../../changelog.rst:505 d70488ef9cea45db8389a99209fe9d9a
+msgid "Added Skribit support"
+msgstr ""
+
+#: ../../changelog.rst:508 ee9730d28c0a4e378618499401e1e399
+msgid "2.5 (2010-11-20)"
+msgstr ""
+
+#: ../../changelog.rst:510 41764632aa2a46a9864a41bfa73b3d58
+msgid "Import from WordPress"
+msgstr ""
+
+#: ../../changelog.rst:511 b3ee93bdd46e4699adea39b8e99ba3c4
+msgid "Added some new themes (martyalchin / wide-notmyidea)"
+msgstr ""
+
+#: ../../changelog.rst:512 1a023f24ad50438c947a0c980213819a
+msgid "First bug report!"
+msgstr ""
+
+#: ../../changelog.rst:513 573a4f64b2d2486f80416c4f98e5a3e4
+msgid "Linkedin support"
+msgstr ""
+
+#: ../../changelog.rst:514 c3c6ab49cad54f60a2f167abc9888764
+msgid "Added a FAQ"
+msgstr ""
+
+#: ../../changelog.rst:515 7cf0a7d9c46545dd81397ed03bcd542e
+msgid "Google Analytics support"
+msgstr ""
+
+#: ../../changelog.rst:516 de467a7c0a654db0a31ec42908c83b39
+msgid "Twitter support"
+msgstr ""
+
+#: ../../changelog.rst:517 455af156688d454f8dea6b8dcca0cb48
+msgid "Use relative URLs, not static ones"
+msgstr ""
+
+#: ../../changelog.rst:520 12dceabc363e493599eb83725eb0d891
+msgid "2.4 (2010-11-06)"
+msgstr ""
+
+#: ../../changelog.rst:522 0d24870c616a4d02a6e23758a1022a0c
+msgid "Minor themes changes"
+msgstr ""
+
+#: ../../changelog.rst:523 4d8d6c48d9824e258c6789afe95ffb4e
+msgid "Add Disqus support (so we have comments)"
+msgstr ""
+
+#: ../../changelog.rst:524 74cd4df65f8b41a1967033aedead1c87
+msgid "Another code refactoring"
+msgstr ""
+
+#: ../../changelog.rst:525 a44c01fa1c1242ab86a6ab32851e0284
+msgid "Added config settings about pages"
+msgstr ""
+
+#: ../../changelog.rst:526 c4519c5267eb4606b7f5de643028429e
+msgid "Blog entries can also be generated in PDF"
+msgstr ""
+
+#: ../../changelog.rst:529 7164d3eacbd946c8a317dc16929ba48d
+msgid "2.3 (2010-10-31)"
+msgstr ""
+
+#: ../../changelog.rst:531 ca062e8a7c1a43f2a678bbfe22484d6a
+msgid "Markdown support"
+msgstr ""
+
+#: ../../changelog.rst:534 fc9a53b1a9034f809688d3c4114b412c
+msgid "2.2 (2010-10-30)"
+msgstr ""
+
+#: ../../changelog.rst:536 121f2a61adc043a79c029fb4acc3ea0d
+msgid "Prettify output"
+msgstr ""
+
+#: ../../changelog.rst:537 f6a56a02617e458089148229dd92bd08
+msgid "Manages static pages as well"
+msgstr ""
+
+#: ../../changelog.rst:540 c4d2a7150f2a46f7a87e1d810777b5be
+msgid "2.1 (2010-10-30)"
+msgstr ""
+
+#: ../../changelog.rst:542 739f08f2d6a746199390e3809f4a27f1
+msgid "Make notmyidea the default theme"
+msgstr ""
+
+#: ../../changelog.rst:545 2596c0b20ea947a5845cd92f3190f32e
+msgid "2.0 (2010-10-30)"
+msgstr ""
+
+#: ../../changelog.rst:547 a023ea05a0864c2085b91526bfa23554
+msgid "Refactoring to be more extensible"
+msgstr ""
+
+#: ../../changelog.rst:548 a411e0742c7a4751b1b5d8f7848cbf2b
+msgid "Change into the setting variables"
+msgstr ""
+
+#: ../../changelog.rst:551 d8933a28653242fc942087162ac6a4c9
+msgid "1.2 (2010-09-28)"
+msgstr ""
+
+#: ../../changelog.rst:553 66415309e0d64d06a490ecaef4efb36d
+msgid "Added a debug option"
+msgstr ""
+
+#: ../../changelog.rst:554 ceaef7c8b0fe4df79600738d71b8d094
+msgid "Added per-category feeds"
+msgstr ""
+
+#: ../../changelog.rst:555 6bac9fd70e104b28bfd06a936d71e32a
+msgid "Use filesystem to get dates if no metadata is provided"
+msgstr ""
+
+#: ../../changelog.rst:556 1f663ceee61b4c0595834cc72a9e3e7d
+msgid "Add Pygments support"
+msgstr ""
+
+#: ../../changelog.rst:559 1df408a7787943e68de9384710331200
+msgid "1.1 (2010-08-19)"
+msgstr ""
+
+#: ../../changelog.rst:561 7e611ea96d6c4b4db5751229abbfec38
+msgid "First working version"
+msgstr ""

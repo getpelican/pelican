@@ -246,7 +246,52 @@ Here's the complete list of workflow inputs:
 |                  |          | your GitHub Pages site, which is correct   |        |               |
 |                  |          | in most cases.                             |        |               |
 +------------------+----------+--------------------------------------------+--------+---------------+
+| ``deploy``       | No       | This is used to determine whether you will | bool   | ``true``      |
+|                  |          | deploy the site or not to GitHub Pages.    |        |               |
+|                  |          | This is most useful if you want to test a  |        |               |
+|                  |          | change to your website in a pull request   |        |               |
+|                  |          | before deploying those change.             |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
 
+Testing Your Build in a GitHub Pull Request
+"""""""""""""""""""""""""""""""""""""""""""
+
+If you want to test your build in a pull request before deploying to GitHub, your workflow might look something like this:
+
+.. code-block:: yaml
+
+    name: Build and Deploy Site
+    on:
+      push:
+        branches: ["main"]
+      pull_request:
+        branches: ["main"]
+      workflow_dispatch:
+        inputs:
+          deploy:
+            required: false
+            default: true
+            description: "Whether to deploy the site. If checked, then build the site and deploy it. If not checked, then just test that the site builds successfully but don't deploy anything."
+            type: boolean
+    jobs:
+      deploy:
+        uses: "getpelican/pelican/.github/workflows/github_pages.yml@main"
+        permissions:
+          id-token: write
+          contents: read
+          pages: write
+        with:
+          settings: "publishconf.py"
+          requirements: "-r requirements.txt"
+          deploy: ${{ (github.event_name == 'workflow_dispatch' && inputs.deploy == true) || (github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch) }}
+
+The ``on`` section of the workflow defines the events that will trigger the workflow. In this example, the workflow will run on pushes to the main branch, pull requests to the main branch, and manual runs of the workflow.
+
+``workflow_dispatch`` defines the deploy boolean to be true by default. This means that if you run the workflow manually, it will deploy the site.
+
+The ``deploy`` input for the job is using a set of standard GitHub workflow variables to control when ``deploy`` will either be true or false (you can customize this to your needs).
+
+In this example, the ``deploy`` will be true if the event is a push to the main branch (or merging into main from a PR) or a manual run of the workflow. If the event is a pull request, the ``deploy`` will be false and it will only build an artifact for the site.
 
 "Insecure content" warnings from browsers
 """""""""""""""""""""""""""""""""""""""""

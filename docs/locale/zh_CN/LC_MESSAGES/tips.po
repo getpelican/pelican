@@ -1,0 +1,723 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2010–2024
+# This file is distributed under the same license as the PELICAN package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PELICAN 4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-07 16:25+0800\n"
+"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+#: ../../tips.rst:2 9c4618aaecd44b0d93537cb760e227fa
+msgid "Tips"
+msgstr "小技巧"
+
+#: ../../tips.rst:4 f49ab5e1ef034ca29140bac3832e8e1c
+msgid "Here are some tips about Pelican that you might find useful."
+msgstr "以下是一些实用的小技巧。"
+
+#: ../../tips.rst:7 ../../tips.rst:309 95bea35d0347495bb551fe9486bcd29d
+#: b64b7ed713b64f588ea7488c6d0b0441
+msgid "Custom 404 Pages"
+msgstr "自定义404页面"
+
+#: ../../tips.rst:9 d59dc30de5954aa1abc7c46fbac596c6
+msgid ""
+"When a browser requests a resource that the web server cannot find, the "
+"web server usually displays a generic \"File not found\" (404) error page"
+" that can be stark and unsightly. One way to provide an error page that "
+"matches the theme of your site is to create a custom 404 page (*not* an "
+"article), such as this Markdown-formatted example stored in "
+"``content/pages/404.md``::"
+msgstr ""
+"当浏览器请求的资源无法在服务器中找到时，web服务器常常会显示一个通用的“File not found "
+"404”的错误页面，这可能会不太美观。为了能使用一个与站点主题相匹配的404页面（注意是页面而 **不是** "
+"文章），例如下面这个Markdown格式的例子，将此文件存为了 ``content/pages/404.md`` ："
+
+#: ../../tips.rst:22 416f9b3eeaac4af8bdc9f32b7cdcba39
+msgid ""
+"The next step is to configure your web server to display this custom page"
+" instead of its default 404 page. For Nginx, add the following to your "
+"configuration file's ``location`` block::"
+msgstr ""
+"接下来就是要配置web服务器，使其显示此自定义页面而不是默认的404页面。例如对于Nginx，在配置文件的 ``location`` "
+"块中添加下面的命令："
+
+#: ../../tips.rst:28 5d52fbcc9d9d4603b3f9d97360face10
+msgid "For Apache::"
+msgstr "对于Apache："
+
+#: ../../tips.rst:32 5413c6bcff6a41688ffcede94b9955e4
+msgid ""
+"For Amazon S3, first navigate to the ``Static Site Hosting`` menu in the "
+"bucket settings on your AWS console. From there::"
+msgstr "对于Amazon S3实例，先在控制台的设置中找到  ``Static Site Hosting`` ，并添加："
+
+#: ../../tips.rst:38 9b02aa39367a4c33918bddef02d1788d
+msgid "Publishing to GitHub Pages"
+msgstr "发布到GitHub Pages"
+
+#: ../../tips.rst:40 ca3f1deb69a04d40a89576f580d63781
+msgid ""
+"If you use `GitHub <https://github.com/>`_ for your Pelican site you can "
+"publish your site to `GitHub Pages <https://pages.github.com/>`_ for "
+"free. Your site will be published to ``https://<username>.github.io`` if "
+"it's a user or organization site or to "
+"``https://<username>.github.io/<repository>`` if it's a project site. "
+"It's also possible to `use a custom domain with GitHub Pages "
+"<https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-"
+"github-pages-site>`_."
+msgstr ""
+"如果将Pelican站点放在了 `GitHub <https://github.com/>`_ 上，那么你就可以将站点免费发布在 `GitHub "
+"Pages <https://pages.github.com/>`_ 上。如果是用户或组织的站点，发布的地址为 "
+"``https://<username>.github.io`` ；如果是某个项目的站点，发布的地址则为 "
+"``https://<username>.github.io/<repository>`` 。当然也可以 `在GitHub "
+"Pages上使用自定义域名 <https://docs.github.com/en/pages/configuring-a-custom-"
+"domain-for-your-github-pages-site>`_ 。"
+
+#: ../../tips.rst:46 5962c3cb4a0b41289d6b08b9edd2fdee
+msgid ""
+"There are `two ways to publish a site to GitHub Pages "
+"<https://docs.github.com/en/pages/getting-started-with-github-"
+"pages/configuring-a-publishing-source-for-your-github-pages-site>`_:"
+msgstr ""
+"总的来说，有 `两种将站点发布到GitHub Pages的方法 <https://docs.github.com/en/pages"
+"/getting-started-with-github-pages/configuring-a-publishing-source-for-"
+"your-github-pages-site>`_ ："
+
+#: ../../tips.rst:48 ad6f071b3cdc4529a41776f799347da0
+msgid ""
+"**Publishing from a branch:** run ``pelican`` locally and push the output"
+" directory to a special branch of your GitHub repo. GitHub will then "
+"publish the contents of this branch to your GitHub Pages site."
+msgstr ""
+"**从某一分支发布：** 在本地运行 ``pelican`` "
+"后将输出文件夹push到GitHub仓库的某一分支。GitHub就会将该分支的内容发布到GitHub Pages上。"
+
+#: ../../tips.rst:51 6237e147cf4142d9b172588964ec00d2
+msgid ""
+"**Publishing with a custom GitHub Actions workflow:** just push the "
+"source files of your Pelican site to your GitHub repo's default branch "
+"and have a custom GitHub Actions workflow run ``pelican`` for you to "
+"generate the output directory and publish it to your GitHub Pages site.  "
+"This way you don't need to run ``pelican`` locally. You can even edit "
+"your site's source files using GitHub's web interface and any changes "
+"that you commit will be published."
+msgstr ""
+"**从自定义GitHub Actions工作流发布：** 将内容源文件推送到GitHub仓库的默认分支，然后在GitHub "
+"Actions工作流中执行 ``pelican`` 以生成输出文件夹，最后将其发布到你的GitHub Pages站点。此种方法下就无需在本地执行 "
+"``pelican`` 命令了。甚至可以直接在GitHub的网页中在线修改站点内容源文件。"
+
+#: ../../tips.rst:60 f2655b8ab23147e58fd68e2385a7624a
+msgid "Publishing a Project Site to GitHub Pages from a Branch"
+msgstr "从某一分支发布项目站点到GitHub Pages"
+
+#: ../../tips.rst:62 1a156c5a8019400d86a33ce306b521ac
+msgid ""
+"To publish a Pelican site as a Project Page you need to *push* the "
+"content of the ``output`` dir generated by Pelican to a repository's "
+"``gh-pages`` branch on GitHub."
+msgstr ""
+"要将Pelican站点发布为项目页面，你需要将Pelican生成的 ``output`` 目录 **push** 到GitHub仓库的 ``gh-"
+"pages`` 分支。"
+
+#: ../../tips.rst:66 22caeeba90b24dbe9f0305370de074fc
+msgid ""
+"The excellent `ghp-import <https://github.com/davisp/ghp-import>`_, which"
+" can be installed with ``pip``, makes this process really easy."
+msgstr ""
+"可通过 ``pip`` 安装的 `ghp-import <https://github.com/davisp/ghp-import>`_ "
+"使这一步变得非常简单。"
+
+#: ../../tips.rst:69 6ea08af050644b58ae5255dafb4f4d8b
+msgid ""
+"For example, if the source of your Pelican site is contained in a GitHub "
+"repository, and if you want to publish that Pelican site in the form of "
+"Project Pages to this repository, you can then use the following::"
+msgstr "例如，当Pelican站点的源文件已经包含在GitHub仓库中时，可以将其作为此仓库的项目页面："
+
+#: ../../tips.rst:77 355b81e8a2194cf9b91bee0f4ee6dca9
+msgid ""
+"The ``ghp-import output`` command updates the local ``gh-pages`` branch "
+"with the content of the ``output`` directory (creating the branch if it "
+"doesn't already exist). The ``git push origin gh-pages`` command updates "
+"the remote ``gh-pages`` branch, effectively publishing the Pelican site."
+msgstr ""
+"``ghp-import output`` 命令会用 ``output`` 目录下的内容更新本地的 ``gh-pages`` "
+"分支（如果此分支不存在则会先创建）。接着再用  ``git push origin gh-pages`` 命令更新远程分支 ``gh-"
+"pages`` ，如此就能够发布Pelican站点了。"
+
+#: ../../tips.rst:84 8a3fd725eba44fa99541376722601cce
+msgid ""
+"The ``github`` target of the Makefile (and the ``gh_pages`` task of "
+"``tasks.py``) created by the ``pelican-quickstart`` command publishes the"
+" Pelican site as Project Pages, as described above."
+msgstr ""
+"``pelican-quickstart`` 在Makefile文件中所生成的 ``github`` 目标（以及为 ``gh_pages`` "
+"任务生成的 ``tasks.py`` ）使得Pelican站点能像上面描述的那样被发布为项目页面。"
+
+#: ../../tips.rst:89 e8ebf23099ed45e7a65d23b9a7e4ccbd
+msgid "Publishing a User Site to GitHub Pages from a Branch"
+msgstr "从某一分支发布用户站点到GitHub Pages"
+
+#: ../../tips.rst:91 7dc8ae1992b7411d9d6db7cc4a0127cb
+msgid ""
+"To publish a Pelican site in the form of User Pages, you need to *push* "
+"the content of the ``output`` dir generated by Pelican to the ``main`` "
+"branch of your ``<username>.github.io`` repository on GitHub."
+msgstr ""
+"要以用户页面形式发布Pelican站点，你需要将Pelican生成的 ``output`` 目录内容 **push** 到 "
+"``<username>.github.io`` 仓库的 ``master`` 分支上。"
+
+#: ../../tips.rst:95 da706340ef5f4d18bfb183596a4196c9
+msgid "Again, you can take advantage of ``ghp-import``::"
+msgstr "同样的，此处也可以使用 ``ghp-import`` ："
+
+#: ../../tips.rst:101 61aa6f0d9fdf407682d3f781ae5475c6
+msgid ""
+"The ``git push`` command pushes the local ``gh-pages`` branch (freshly "
+"updated by the ``ghp-import`` command) to the ``elemoine.github.io`` "
+"repository's ``main`` branch on GitHub."
+msgstr ""
+"``git push`` 命令将本地的 ``gh-pages`` 分支（此分支在刚刚通过 ``ghp-import`` "
+"命令进行了更新）push到了GitHub仓库 ``elemoine.github.io`` 的 ``master`` 分支。"
+
+#: ../../tips.rst:107 f74afbf668a1472d901fe0a16472ab98
+msgid ""
+"To publish your Pelican site as User Pages, feel free to adjust the "
+"``github`` target of the Makefile."
+msgstr "要将Pelican站点发布为用户页面，可以根据需要修改Makefile中的 ``github`` 目标。"
+
+#: ../../tips.rst:110 d69dcdb58a4b4b38aa8b8bf8e4fd733a
+msgid ""
+"Another option for publishing to User Pages is to generate the output "
+"files in the root directory of the project."
+msgstr "发布用户页面的另一种方法就是将输出文件生成在项目的根目录下。"
+
+#: ../../tips.rst:113 4991892f24df40b982faf01ddb292175
+msgid ""
+"For example, your main project folder is ``<username>.github.io`` and you"
+" can create the Pelican project in a subdirectory called ``Pelican``. "
+"Then from inside the ``Pelican`` folder you can run::"
+msgstr ""
+"例如，项目的主文件夹是 ``<username>.github.io`` ，你可以在子目录 ``Pelican`` "
+"中创建一个Pelican项目。然后你可以在这个 ``Pelican`` 文件夹中执行下面的命令："
+
+#: ../../tips.rst:119 ca5939f8c58b44b69ebfb2f953a4a73b
+msgid ""
+"Now you can push the whole project ``<username>.github.io`` to the main "
+"branch of your GitHub repository::"
+msgstr "接着可以将整个项目 ``<username>.github.io`` push到GitHub仓库的master分支中："
+
+#: ../../tips.rst:124 54962439805d47abb121ca9454e7a4cc
+msgid "(assuming origin is set to your remote repository)."
+msgstr "（此处假设远程仓库命名为origin）。"
+
+#: ../../tips.rst:127 b3fe320a90904fbda8c7ed8c7bddbd6e
+msgid "Publishing to GitHub Pages Using a Custom GitHub Actions Workflow"
+msgstr "使用自定义GitHub Actions工作流将站点发布GitHub Pages中"
+
+#: ../../tips.rst:129 3b368bc0a307473dae560671fd9527be
+msgid ""
+"Pelican-powered sites can be published to GitHub Pages via a `custom "
+"workflow "
+"<https://github.com/getpelican/pelican/blob/main/.github/workflows/github_pages.yml>`_."
+" To use it:"
+msgstr ""
+"Pelican已经给你准备了一份 `自定义工作流 "
+"<https://github.com/getpelican/pelican/blob/main/.github/workflows/github_pages.yml>`_"
+" ，你可以直接使用此工作流发布站点："
+
+#: ../../tips.rst:133 a7b1be522b694d9a8beb186b4603a7aa
+msgid ""
+"Enable GitHub Pages in your repo: go to **Settings → Pages** and choose "
+"**GitHub Actions** for the **Source** setting."
+msgstr ""
+"首先为仓库开启GitHub Pages： **Settings → Pages** 中有个 **Source** 设置项，将其选择为 "
+"**GitHub Actions** 。"
+
+#: ../../tips.rst:136 9cc114d8a6b44ff49fa7fecbdbcd012f
+msgid ""
+"Commit a ``.github/workflows/pelican.yml`` file to your repo with these "
+"contents:"
+msgstr "往你的仓库中commit一个 ``.github/workflows/pelican.yml`` 文件，文件内容如下："
+
+#: ../../tips.rst:155 f7d029425d7047deae43e9506c7f4779
+msgid ""
+"You may want to replace the ``@main`` with the ID of a specific commit in"
+" this repo in order to pin the version of the reusable workflow that "
+"you're using: ``uses: "
+"getpelican/pelican/.github/workflows/github_pages.yml@<COMMIT_ID>``. If "
+"you do this you might want to get Dependabot to send you automated pull "
+"requests to update that commit ID whenever new versions of this workflow "
+"are published, like so:"
+msgstr ""
+"你可能想要将 ``@main`` 替换为这个仓库中某个特定commit的ID，以便将你使用的可重用工作流的版本固定下来，此时，可以使用 "
+"``uses: "
+"getpelican/pelican/.github/workflows/github_pages.yml@<COMMIT_ID>`` "
+"。在这种情况下，你可能想让Dependabot自动向你发送PR，以便在发布新版本的工作流时更新commit ID，如下所示:"
+
+#: ../../tips.rst:172 fd060b5d5d824ab8825b384d37872894
+msgid ""
+"See `GitHub's docs about using Dependabot to keep your actions up to date"
+" <https://docs.github.com/en/code-security/dependabot/working-with-"
+"dependabot/keeping-your-actions-up-to-date-with-dependabot>`_."
+msgstr ""
+"请参阅 `GitHub文档 <https://docs.github.com/en/code-security/dependabot"
+"/working-with-dependabot/keeping-your-actions-up-to-date-with-"
+"dependabot>`_ ，了解如何使用Dependabot使您的action保持最新。"
+
+#: ../../tips.rst:174 1b862876e15c4fcd898c4d9b3ba616c5
+msgid ""
+"Go to the **Actions** tab in your repo "
+"(``https://github.com/<username>/<repository>/actions``) and you should "
+"see a **Deploy to GitHub Pages** action running."
+msgstr ""
+"选中仓库的 **Actions** 标签栏（ "
+"``https://github.com/<username>/<repository>/actions`` ），此时你应该会看到已经有一个名为 "
+"**Deploy to GitHub Pages** 的action正在运行。"
+
+#: ../../tips.rst:178 f8413793636140f9b017abad379b3429
+msgid ""
+"Once the action completes you should see your Pelican site deployed at "
+"your repo's GitHub Pages URL: ``https://<username>.github.io`` for a user"
+" or organization site or ``https://<username>.github.io/<repository>>`` "
+"for a project site."
+msgstr ""
+"当此action执行完成，就能够通过仓库的GitHub Pages地址 ``https://<username>.github.io`` "
+"看到部署好了的用户或组织站点了，对于项目站点，可通过 ``https://<username>.github.io/<repository>`` "
+"访问。"
+
+#: ../../tips.rst:183 d792bb046c474f70aa98b2c16a5b1254
+msgid "Notes:"
+msgstr "注意事项："
+
+#: ../../tips.rst:185 89472d2b7231439faf9e51eda07d8323
+msgid ""
+"You don't need to set ``SITEURL`` or ``FEED_DOMAIN`` in your Pelican "
+"settings: the workflow will set them correctly for you"
+msgstr "无需在Pelican配置文件中设置 ``SITEURL`` ，工作流会帮你进行设置。"
+
+#: ../../tips.rst:188 ea2b632160804a6e9bf1b4cecb7de716
+msgid ""
+"You don't need to commit your ``--output`` / ``OUTPUT_PATH`` directory "
+"(``output/``) to git: the workflow will run ``pelican`` to build the "
+"output directory for you on GitHub Actions"
+msgstr ""
+"无需commit ``--output`` 或 ``OUTPUT_PATH`` 所指定的目录（ ``output/`` ）：工作流会自己执行 "
+"``pelican`` 命令来构建输出目录。"
+
+#: ../../tips.rst:192 fd9fb772fba844f099cac781f2b0642f
+msgid ""
+"See `GitHub's docs about reusable workflows "
+"<https://docs.github.com/en/actions/using-workflows/reusing-workflows>`_ "
+"for more information."
+msgstr ""
+"更多信息请参阅 `GitHub可重用工作流文档 <https://docs.github.com/en/actions/using-"
+"workflows/reusing-workflows>`_ 。"
+
+#: ../../tips.rst:195 f9c527704af24f6da0b4229b7882a25b
+msgid ""
+"A number of optional inputs can be added to the ``with:`` block when "
+"calling the workflow, for example:"
+msgstr "有一些可选输入可以添加到工作流的 ``with:`` 块中："
+
+#: ../../tips.rst:206 956f5bae1fc64096acd2a2540a29004c
+msgid "Here's the complete list of workflow inputs:"
+msgstr "下面是工作流可用输入参数的完整列表："
+
+#: ../../tips.rst:209 eb37c894d7bc4278ab1a92e3b82c5603
+msgid "Name"
+msgstr "名称"
+
+#: ../../tips.rst:209 446faf9e7d544e6aa47d4a1eca506c01
+msgid "Required"
+msgstr "是否必需"
+
+#: ../../tips.rst:209 de96e4f5cd09488296f97f569fe1fb90
+msgid "Description"
+msgstr "描述"
+
+#: ../../tips.rst:209 181bbfff09144f5b9c241b2fc79c989d
+msgid "Type"
+msgstr "值的类型"
+
+#: ../../tips.rst:209 c3d44d1e7be6421a83bae2f5dc6e578f
+msgid "Default"
+msgstr "默认值"
+
+#: ../../tips.rst:211 305d9d73681b4c6c80161cc906d60bbd
+msgid "``settings``"
+msgstr "``settings``"
+
+#: ../../tips.rst:211 dbe6210f19914ae3b11e4caec7a945f0
+msgid "Yes"
+msgstr "是"
+
+#: ../../tips.rst:211 bbd2306b324d4b5eae513cb7a7683286
+msgid ""
+"The path to your Pelican settings file (``pelican``'s ``--settings`` "
+"option), for example: ``\"publishconf.py\"``"
+msgstr ""
+"Pelican配置文件的路径（会被用于 ``pelican`` 命令的 ``--settings`` 选项），例如 "
+"``\"publishconf.py\"`` 。"
+
+#: ../../tips.rst:211 ../../tips.rst:216 ../../tips.rst:223 ../../tips.rst:227
+#: ../../tips.rst:231 ../../tips.rst:237 ../../tips.rst:243
+#: 073e18d8ae29406eb05040d4e3a9ae60 7d43e6cfb091410ebec7464da05b61b4
+#: 8837cc8935f148fb80f05cc5d3d53629 b2da1f7640f948039230cd835c49accd
+#: bfe3d052cdc443bb81fed82e77acf3c1 c93816e00a254ef69c69f05833e8762b
+#: ee35302c7e034070af1d234ab919c32a
+msgid "string"
+msgstr "string"
+
+#: ../../tips.rst:216 4eab6faa96244f13a09754112a783f2f
+msgid "``requirements``"
+msgstr "``requirements``"
+
+#: ../../tips.rst:216 ../../tips.rst:223 ../../tips.rst:227 ../../tips.rst:231
+#: ../../tips.rst:237 ../../tips.rst:243 ../../tips.rst:249
+#: 197d6ee11fce4a50996a0c458cfdbdad 2086d667b9b1475cb0f002924cdfde12
+#: 25e940621f5b48c9af487d898d7f93cf 5664232c9fdd46c7b8278b8ecef8e3b1
+#: 6693126a0da74c61b67e14ca8e535ec3 7f8a93a2048140748fa73537bfae2a54
+#: 85fd40a29f31490bb23b20f05e574aaa
+msgid "No"
+msgstr "否"
+
+#: ../../tips.rst:216 9d5bdd70e7da4794805180cc758ebe37
+msgid ""
+"The Python requirements to install, for example to enable markdown and "
+"typogrify use: ``\"pelican[markdown] typogrify\"`` or if you have a "
+"requirements file: ``\"-r requirements.txt\"``"
+msgstr ""
+"需要安装的Python模块，例如要开启markdown和typogrify，可指定 ``\"pelican[markdown] "
+"typogrify\"`` ，或者可以指定一个requirements文件： ``\"-r requirements.txt\"`` "
+
+#: ../../tips.rst:216 03ad0b322a714032bcce9f56ce66318d
+msgid "``\"pelican\"``"
+msgstr "``\"pelican\"``"
+
+#: ../../tips.rst:223 e568553782b443dbacecaa7ded4c391c
+msgid "``output-path``"
+msgstr "``output-path``"
+
+#: ../../tips.rst:223 2920ae9de5a64ae1ad82bd2287fa7c1e
+msgid "Where to output the generated files (``pelican``'s ``--output`` option)"
+msgstr "生成文件的输出位置（会被用于 ``pelican`` 命令的 ``--output`` 选项）"
+
+#: ../../tips.rst:223 41b90747f0954a5799c8baf4a59d99fd
+msgid "``\"output/\"``"
+msgstr "``\"output/\"``"
+
+#: ../../tips.rst:227 e2cc62185182463abc5140244a808e6d
+msgid "``theme``"
+msgstr "``theme``"
+
+#: ../../tips.rst:227 cd3b78d03dcd4554a8ce10a873f5ff9f
+msgid ""
+"The GitHub repo URL of a custom theme to use, for example: "
+"``\"https://github.com/seanh/sidecar.git\"``"
+msgstr "要使用的自定义主题的GitHub仓库URL，例如： ``\"https://github.com/seanh/sidecar.git\"``"
+
+#: ../../tips.rst:227 d94f331173334fb2a84b1caadffb72df
+msgid "``\"\"``"
+msgstr "``\"\"``"
+
+#: ../../tips.rst:231 44ceb2743481486b95c1c739d543f15d
+msgid "``python``"
+msgstr "``python``"
+
+#: ../../tips.rst:231 4b5cddab44d24c7c8560e16991b784c7
+msgid ""
+"The version of Python to use to build the site, for example: ``\"3.12\"``"
+" (to use the most recent version of Python 3.12, this is faster) or "
+"``\"3.12.1\"`` (to use an exact version, slower)"
+msgstr "构建站点时使用的Python版本，例如： ``\"3.12\"`` 或 ``\"3.12.1\"``"
+
+#: ../../tips.rst:231 919c0e36e8ff40bcbcc4480081b49ce5
+msgid "``\"3.12\"``"
+msgstr "``\"3.12\"``"
+
+#: ../../tips.rst:237 842af56c539f4a74a97c7a5b1525eb35
+msgid "``siteurl``"
+msgstr "``siteurl``"
+
+#: ../../tips.rst:237 7fc0777d6e174d6f8d757926a61aa3c8
+msgid ""
+"The base URL of your web site (Pelican's ``SITEURL`` setting). If not "
+"passed this will default to the URL of your GitHub Pages site, which is "
+"correct in most cases."
+msgstr "站点的基URL，会用于配置项 ``SITEURL`` 。若未指定，默认值为GitHub Pages站点的URL，这适用于大部分情况。"
+
+#: ../../tips.rst:237 ../../tips.rst:243 082f65333e224d71817b82b1e4f515c4
+#: 3d786e828a4745db849bdb8f47738db8
+msgid "The URL of your GitHub Pages site."
+msgstr "GitHub Pages站点的URL"
+
+#: ../../tips.rst:243 e5adb69f985547b7b3cc2bd3f31d4cc3
+msgid "``feed_domain``"
+msgstr "``feed_domain``"
+
+#: ../../tips.rst:243 c88f037c9f1f4148bef6347228257f7d
+msgid ""
+"The domain to be prepended to feed URLs (Pelican's ``FEED_DOMAIN`` "
+"setting). If not passed this will default to the URL of your GitHub Pages"
+" site, which is correct in most cases."
+msgstr ""
+"订阅源URL前要附加的域名，会用于配置项 ``FEED_DOMAIN`` 。若未指定，默认值为GitHub "
+"Pages站点的URL，这适用于大部分情况。"
+
+#: ../../tips.rst:249 358c5aa434cd4ad09beab02df88413d5
+msgid "``deploy``"
+msgstr "``deploy``"
+
+#: ../../tips.rst:249 b8748aeace5a448d9382e225be98f90c
+msgid ""
+"This is used to determine whether you will deploy the site or not to "
+"GitHub Pages. This is most useful if you want to test a change to your "
+"website in a pull request before deploying those change."
+msgstr "此项配置用于表示是否要将站点部署至GitHub Pages。当对站点做了更改，并且在正式部署前进行测试，就可以用到此项。"
+
+#: ../../tips.rst:249 034006b9b71b4cb486f230b8aad873ce
+msgid "bool"
+msgstr "bool"
+
+#: ../../tips.rst:249 078ac613a8b74703af98c75bb5a007c1
+msgid "``true``"
+msgstr "``true``"
+
+#: ../../tips.rst:257 e63cf881e3204be8b52ee5d8635ba4cf
+msgid "Testing Your Build in a GitHub Pull Request"
+msgstr "在Github拉取请求时进行测试"
+
+#: ../../tips.rst:259 a2f6bd3420eb46a08f54efda35a6eaf4
+msgid ""
+"If you want to test your build in a pull request before deploying to "
+"GitHub, your workflow might look something like this:"
+msgstr "如果想在正式部署到 GitHub 前在PR中进行测试，下面是一个可用的 workflow 示例"
+
+#: ../../tips.rst:288 84393693279741efa82c5ee6b27cbd28
+msgid ""
+"The ``on`` section of the workflow defines the events that will trigger "
+"the workflow. In this example, the workflow will run on pushes to the "
+"main branch, pull requests to the main branch, and manual runs of the "
+"workflow."
+msgstr "工作流的 ``on`` 部分定义了工作流的触发器。在此示例中，工作流将在main分支收到push、有PR提起到主分支以及"
+"手动运行工作流时执行。"
+
+#: ../../tips.rst:290 cd3c13b2af974a32aa4291d07fc11e9c
+msgid ""
+"``workflow_dispatch`` defines the deploy boolean to be true by default. "
+"This means that if you run the workflow manually, it will deploy the "
+"site."
+msgstr "``workflow_dispatch`` 将 deploy 的默认值设为 true。也就是说当手动运行工作流时，更改的内容就会正式部署。"
+
+#: ../../tips.rst:292 5402cd211d5b4aa8a244c916bb381a5b
+msgid ""
+"The ``deploy`` input for the job is using a set of standard GitHub "
+"workflow variables to control when ``deploy`` will either be true or "
+"false (you can customize this to your needs)."
+msgstr "job中的 ``deploy`` 使用了一些 GitHub workflow 变量来计算 ``deploy`` 值为 true 还是 false（您可以根据需要自定义）。"
+
+#: ../../tips.rst:294 d084908e3a0749f0b802b43626cfe2c4
+msgid ""
+"In this example, the ``deploy`` will be true if the event is a push to "
+"the main branch (or merging into main from a PR) or a manual run of the "
+"workflow. If the event is a pull request, the ``deploy`` will be false "
+"and it will only build an artifact for the site."
+msgstr "在此示例中，如果触发事件是推送到主分支（或从 PR 合并到主分支）或手动运行工作流，则 deploy 将为 true；"
+"如果触发事件只是Pull Request，则 ``deploy`` 将为 false，并且此时只会为站点构建一个artifact。"
+
+#: ../../tips.rst:297 85e70fc3faa04208979f7bbe92b025ef
+msgid "\"Insecure content\" warnings from browsers"
+msgstr "浏览器报“不安全的内容（Insecure content）”警告"
+
+#: ../../tips.rst:299 34f7075cf31f416da2aeb529c616d97d
+msgid ""
+"If your site uses ``https://`` and is broken because the browser is "
+"blocking network requests (for example for CSS files) due to \"insecure "
+"content\" this may be because GitHub Pages is generating ``http://`` URLs"
+" for your site."
+msgstr ""
+"当站点使用 ``https://`` "
+"时，可能会损坏，无法正常显示，这是由于浏览器阻拦了一些对“不安全内容”的网络请求。可能的原因之一是GitHub Pages给你的站点生成了 "
+"``http://`` URL。"
+
+#: ../../tips.rst:303 47271df82577424c8e2c31a9e76a553a
+msgid ""
+"To fix this go into your site repo's settings and enable the **Enforce "
+"HTTPS** setting: go to **Settings → Pages** and check **Enforce HTTPS**. "
+"Then re-run the workflow to re-deploy your site. Alternatively, you can "
+"use the workflow's ``siteurl`` and ``feed_domain`` settings."
+msgstr ""
+"要想解决这一问题，需要为站点所在仓库开启 **强制使用HTTPS** ：点击 **Settings → Pages** 并在其中勾选 "
+"**Enforce HTTPS** ，接着再重新执行工作流以重新部署站点。也可以尝试通过配置 ``siteurl`` 与 "
+"``feed_domain`` 解决问题。"
+
+#: ../../tips.rst:311 e69189ef4a8440fb8940d8012b4f19d6
+msgid ""
+"GitHub Pages will display the custom 404 page described above, as noted "
+"in the relevant `GitHub docs "
+"<https://help.github.com/articles/custom-404-pages/>`_."
+msgstr ""
+"如果按前述进行配置，GitHub Pages是能够正确显示自定义的404页面的，相关内容在 `GitHub的文档中 "
+"<https://help.github.com/articles/custom-404-pages/>`_ 也有提到。"
+
+#: ../../tips.rst:315 1b8c2457f44a4d61a033363830b8bd90
+msgid "Update your site on each commit"
+msgstr "在每次commit后都更新站点"
+
+#: ../../tips.rst:317 476dbdb670924c02a962e78d6a7854c1
+msgid ""
+"To automatically update your Pelican site on each commit, you can create "
+"a post-commit hook. For example, you can add the following to "
+"``.git/hooks/post-commit``::"
+msgstr ""
+"要想在每次commit后自动更新Pelican站点，你可以创建一个post-commit钩子。例如，可以将下面的内容保存为 "
+"``.git/hooks/post-commit`` ："
+
+#: ../../tips.rst:324 36dc5f05eaf84573acada36c59d8d2fc
+msgid "Copy static files to the root of your site"
+msgstr "将静态文件拷贝到站点根目录"
+
+#: ../../tips.rst:326 4a0722ad68e944ee80e6378259cc1dd6
+msgid ""
+"To use a `custom domain <https://help.github.com/articles/setting-up-a"
+"-custom-domain-with-pages>`_ with GitHub Pages, you need to put the "
+"domain of your site (e.g., ``blog.example.com``) inside a ``CNAME`` file "
+"at the root of your site. To do this, create the ``content/extra/`` "
+"directory and add a ``CNAME`` file to it. Then use the ``STATIC_PATHS`` "
+"setting to tell Pelican to copy this file to your output directory. For "
+"example::"
+msgstr ""
+"要将 `自定义域名 <https://help.github.com/articles/setting-up-a-custom-domain-"
+"with-pages>`_ 与GitHub Pages一起使用，需要将站点的域名（例如 ``blog.example.com`` "
+"）添加到站点根目录的 ``CNAME`` 文件中。为此，请创建 ``content/extra/`` 目录，并在里面添加一个 ``CNAME`` "
+"文件。然后使用Pelican的 ``STATIC_PATHS`` 来告诉Pelican将此文件复制到输出目录："
+
+#: ../../tips.rst:337 8ad906848762400d9e2462034d151a16
+msgid "Note: use forward slashes, ``/``, even on Windows."
+msgstr "请注意：务必使用正斜杠 ``/`` ，在Windows上也是。"
+
+#: ../../tips.rst:339 7b109f4944064382babc9158567c8e82
+msgid ""
+"You can also use the ``EXTRA_PATH_METADATA`` mechanism to place a "
+"``favicon.ico`` or ``robots.txt`` at the root of any site."
+msgstr ""
+"利用 ``EXTRA_PATH_METADATA`` 机制，你可以将 ``favicon.ico`` 或 ``robots.txt`` "
+"也拷贝到站点的根目录下。"
+
+#: ../../tips.rst:343 678eea0644b5400496ad9173d05368d5
+msgid "How to add YouTube or Vimeo Videos"
+msgstr "如何添加YouTube或Vimeo视频"
+
+#: ../../tips.rst:345 ca57b327dd6b432d82cdc91193bde6bb
+msgid ""
+"The easiest way is to paste the embed code of the video from these sites "
+"directly into your source content."
+msgstr "最简单的方法是将这些网站的视频嵌入代码直接粘贴到您的源内容文件中。"
+
+#: ../../tips.rst:348 0a4f27e2edbe494ab52f73595646986e
+msgid ""
+"Alternatively, you can also use Pelican plugins like ``liquid_tags``, "
+"``pelican_youtube``, or ``pelican_vimeo`` to embed videos in your "
+"content."
+msgstr ""
+"或者，您还可以使用例如 ``liquid_tags`` 、``pelican_youtube`` 或 ``pelican_vimeo`` "
+"等Pelican插件将视频嵌入。"
+
+#: ../../tips.rst:351 e73517b72da347738421784b776b1f1c
+msgid ""
+"Moreover, markup languages like reST and Markdown have plugins that let "
+"you embed videos in the markup. You can use `reST video directive "
+"<https://gist.github.com/dbrgn/2922648>`_ for reST or `mdx_video plugin "
+"<https://github.com/italomaia/mdx-video>`_ for Markdown."
+msgstr ""
+"此外，像reST和 Markdown这样的标记语言都有对应插件可以让你在其中嵌入视频。可以使用 `reST的视频指令 "
+"<https://gist.github.com/dbrgn/2922648>`_ 或者 `Markdown的mdx_video插件 "
+"<https://github.com/italomaia/mdx-video>`_ 。"
+
+#: ../../tips.rst:358 b9d27cda716048b2ab7c13646d7faf09
+msgid "Develop Locally Using SSL"
+msgstr "在本地使用SSL进行开发"
+
+#: ../../tips.rst:360 50df9ec072aa47eabbae132fd8f5cb68
+msgid "Here's how you can set up your local pelican server to support SSL."
+msgstr "以下描述了如何在本地Pelican服务器上配置SSL。"
+
+#: ../../tips.rst:362 9b5045375a874c4d9c29f7109f05c539
+msgid ""
+"First, create a self-signed certificate and key using ``openssl`` (this "
+"creates ``cert.pem`` and ``key.pem``)::"
+msgstr "首先，通过 ``openssl`` 创建自签名的证书和密钥，这会生成 ``cert.pem`` 和 ``key.pem`` 文件："
+
+#: ../../tips.rst:366 2f1cfa536fc540f69d671f8a118769d7
+msgid ""
+"And use this command to launch the server (the server starts within your "
+"``output`` directory)::"
+msgstr "接着使用下面的命令来开启服务器（此服务器会在 ``output`` 目录下开启）："
+
+#: ../../tips.rst:370 029ea2b0e4fe4b0f814158ae33e3a8ff
+msgid "If you are using ``develop-server.sh``,  add this to the top::"
+msgstr "如果你使用的是 ``develop-server.sh`` 脚本，在脚本的开头添加："
+
+#: ../../tips.rst:375 c2784fdd9fdb433799d57f903d0e49d8
+msgid "and modify the ``pelican.server`` line as follows::"
+msgstr "然后修改按照下述修改 ``pelican.server`` 一行："
+
+#~ msgid ""
+#~ "To publish a Pelican site in the"
+#~ " form of User Pages, you need "
+#~ "to *push* the content of the "
+#~ "``output`` dir generated by Pelican to"
+#~ " the ``master`` branch of your "
+#~ "``<username>.github.io`` repository on GitHub."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "The ``git push`` command pushes the "
+#~ "local ``gh-pages`` branch (freshly "
+#~ "updated by the ``ghp-import`` command)"
+#~ " to the ``elemoine.github.io`` repository's "
+#~ "``master`` branch on GitHub."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Now you can push the whole project"
+#~ " ``<username>.github.io`` to the master "
+#~ "branch of your GitHub repository::"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Pelican-powered sites can be published"
+#~ " to GitHub Pages via a `custom "
+#~ "workflow "
+#~ "<https://github.com/getpelican/pelican/blob/master/.github/workflows/github_pages.yml>`_."
+#~ " To use it:"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "You may want to replace the "
+#~ "``@master`` with the ID of a "
+#~ "specific commit in this repo in "
+#~ "order to pin the version of the"
+#~ " reusable workflow that you're using: "
+#~ "``uses: "
+#~ "getpelican/pelican/.github/workflows/github_pages.yml@<COMMIT_ID>``."
+#~ " If you do this you might want"
+#~ " to get Dependabot to send you "
+#~ "automated pull requests to update that"
+#~ " commit ID whenever new versions of"
+#~ " this workflow are published, like "
+#~ "so:"
+#~ msgstr ""

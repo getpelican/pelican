@@ -556,9 +556,29 @@ class Content:
                 self._summary = self.metadata["summary"]
 
 
+class SkipStub(Content):
+    """Stub class representing content that should not be processed in any way."""
+
+    def __init__(
+        self, content, metadata=None, settings=None, source_path=None, context=None
+    ):
+        self.source_path = source_path
+
+    def is_valid(self):
+        return False
+
+    @property
+    def content(self):
+        raise NotImplementedError("Stub content should not be read")
+
+    @property
+    def save_as(self):
+        raise NotImplementedError("Stub content cannot be saved")
+
+
 class Page(Content):
     mandatory_properties = ("title",)
-    allowed_statuses = ("published", "hidden", "draft")
+    allowed_statuses = ("published", "hidden", "draft", "skip")
     default_status = "published"
     default_template = "page"
 
@@ -569,7 +589,7 @@ class Page(Content):
 
 class Article(Content):
     mandatory_properties = ("title", "date", "category")
-    allowed_statuses = ("published", "hidden", "draft")
+    allowed_statuses = ("published", "hidden", "draft", "skip")
     default_status = "published"
     default_template = "article"
 
