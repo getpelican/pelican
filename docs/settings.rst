@@ -150,12 +150,12 @@ Basic settings
 
       READERS = {'foo': FooReader}
 
-.. data:: IGNORE_FILES = ['.#*']
+.. data:: IGNORE_FILES = ['.*']
 
-   A list of glob patterns.  Files and directories matching any of these
-   patterns will be ignored by the processor. For example, the default
-   ``['.#*']`` will ignore emacs lock files, and ``['__pycache__']`` would
-   ignore Python 3's bytecode caches.
+   A list of glob patterns. Files and directories matching any of these patterns
+   will be ignored by the processor. For example, the default ``['.*']`` will
+   ignore "hidden" files and directories, and ``['__pycache__']`` would ignore
+   Python 3's bytecode caches.
 
 .. data:: MARKDOWN = {...}
 
