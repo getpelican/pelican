@@ -13,8 +13,12 @@ from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import LoggedTestCase, get_context, get_settings, unittest
 from pelican.utils import path_to_url, posixize_path, truncate_html_words
 
-# generate one paragraph, enclosed with <p>
-TEST_CONTENT = str(generate_lorem_ipsum(n=1))
+# generate 3 test paragraphs, each enclosed with <p>
+# save the first paragraph separately for testing the summary generation algorithm
+# NOTE: these values are nondeterministic between test runs
+TEST_CONTENT_FIRST_PARAGRAPH = str(generate_lorem_ipsum(n=1))
+TEST_CONTENT_REMAINING_PARAGRAPHS = str(generate_lorem_ipsum(n=2))
+TEST_CONTENT = TEST_CONTENT_FIRST_PARAGRAPH + TEST_CONTENT_REMAINING_PARAGRAPHS
 TEST_SUMMARY = generate_lorem_ipsum(n=1, html=False)
 
 
@@ -126,7 +130,7 @@ class TestPage(TestBase):
         settings["SUMMARY_MAX_PARAGRAPHS"] = 1
         settings["SUMMARY_MAX_LENGTH"] = None
         page = Page(**page_kwargs)
-        self.assertEqual(page.summary, TEST_CONTENT)
+        self.assertEqual(page.summary, TEST_CONTENT_FIRST_PARAGRAPH)
 
     def test_summary_paragraph_max_length(self):
         # If both SUMMARY_MAX_PARAGRAPHS and SUMMARY_MAX_LENGTH are set,
@@ -139,7 +143,25 @@ class TestPage(TestBase):
         settings["SUMMARY_MAX_PARAGRAPHS"] = 1
         settings["SUMMARY_MAX_LENGTH"] = 10
         page = Page(**page_kwargs)
-        self.assertEqual(page.summary, truncate_html_words(TEST_CONTENT, 10))
+        self.assertEqual(
+            page.summary, truncate_html_words(TEST_CONTENT_FIRST_PARAGRAPH, 10)
+        )
+
+    def test_summary_paragraph_long_max_length(self):
+        # If both SUMMARY_MAX_PARAGRAPHS and SUMMARY_MAX_LENGTH are set,
+        # and the first SUMMARY_MAX_PARAGRAPHS paragraphs have fewer words
+        # than SUMMARY_MAX_LENGTH, the generated summary should still only
+        # contain the given number of paragraphs.
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs["settings"] = settings
+        del page_kwargs["metadata"]["summary"]
+        settings["SUMMARY_MAX_PARAGRAPHS"] = 1
+        settings["SUMMARY_MAX_LENGTH"] = 50
+        page = Page(**page_kwargs)
+        self.assertEqual(
+            page.summary, truncate_html_words(TEST_CONTENT_FIRST_PARAGRAPH, 50)
+        )
 
     def test_summary_end_suffix(self):
         # If a :SUMMARY_END_SUFFIX: is set, and there is no other summary,
