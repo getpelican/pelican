@@ -4,7 +4,8 @@ import warnings
 from pelican.log import log_warnings
 
 # redirect warnings module to use logging instead
-log_warnings()
+# "ignore" means "don't raise on logging an error"
+log_warnings("ignore")
 
 # setup warnings to log DeprecationWarning's and error on
 # warnings in pelican's codebase
