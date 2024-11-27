@@ -1,6 +1,12 @@
 Release history
 ###############
 
+4.10.2 - 2024-11-27
+===================
+
+- Change ``IGNORE_FILES`` setting default to ignore all hidden files
+- Fix ``SUMMARY_MAX_PARAGRAPHS`` not being respected in some combinations with ``SUMMARY_MAX_LENGTH``
+
 4.10.1 - 2024-09-28
 ===================
 
