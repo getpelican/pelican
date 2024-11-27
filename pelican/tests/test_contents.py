@@ -1058,7 +1058,7 @@ class TestStatic(LoggedTestCase):
         self.assertEqual(content, html)
         self.assertLogCountEqual(
             count=1,
-            msg="Replacement Indicator 'unknown' not recognized, "
+            msg="Replacement Indicator 'unknown' not recognized in '{unknown}foo', "
             "skipping replacement",
             level=logging.WARNING,
         )

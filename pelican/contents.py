@@ -358,8 +358,9 @@ class Content:
             origin = joiner(siteurl, Author(path, self.settings).url)
         else:
             logger.warning(
-                "Replacement Indicator '%s' not recognized, skipping replacement",
+                "Replacement Indicator %r not recognized in %r, skipping replacement",
                 what,
+                origin,
             )
 
         # keep all other parts, such as query, fragment, etc.
