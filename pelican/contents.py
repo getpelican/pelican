@@ -451,7 +451,7 @@ class Content:
             return content
 
         return truncate_html_words(
-            self.content,
+            content,
             self.settings["SUMMARY_MAX_LENGTH"],
             self.settings["SUMMARY_END_SUFFIX"],
         )
