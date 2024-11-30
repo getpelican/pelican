@@ -1,5 +1,6 @@
 import datetime
 import os
+import time
 import sys
 
 if sys.version_info >= (3, 11):
@@ -30,7 +31,7 @@ extensions = [
 source_suffix = ".rst"
 master_doc = "index"
 project = project_data.get("name").upper()
-year = datetime.datetime.now().date().year
+year = datetime.datetime.utcfromtimestamp(int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))).year
 copyright = f"2010–{year}"  # noqa: RUF001
 exclude_patterns = ["_build"]
 release = project_data.get("version")
