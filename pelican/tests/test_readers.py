@@ -147,7 +147,7 @@ class RstReaderTest(ReaderTest):
             "category": "yeah",
             "author": "Alexis Métaireau",
             "title": "This is a super article !",
-            "summary": '<p class="first last">Multi-line metadata should be'
+            "summary": "<p>Multi-line metadata should be"
             " supported\nas well as <strong>inline"
             " markup</strong> and stuff to &quot;typogrify"
             "&quot;...</p>\n",
@@ -165,7 +165,7 @@ class RstReaderTest(ReaderTest):
             "category": "yeah",
             "author": "Alexis Métaireau",
             "title": "This is a super article !",
-            "summary": '<p class="first last">Multi-line metadata should be'
+            "summary": "<p>Multi-line metadata should be"
             " supported\nas well as <strong>inline"
             " markup</strong> and stuff to &quot;typogrify"
             "&quot;...</p>\n",
@@ -387,7 +387,7 @@ class RstReaderTest(ReaderTest):
         # unmodified
         page = self.read_file(path="article_with_metadata.rst")
         expected = (
-            '<p class="first last">Multi-line metadata should be'
+            "<p>Multi-line metadata should be"
             " supported\nas well as <strong>inline"
             " markup</strong> and stuff to &quot;typogrify"
             "&quot;...</p>\n"
@@ -399,7 +399,7 @@ class RstReaderTest(ReaderTest):
             # otherwise, typogrify should be applied
             page = self.read_file(path="article_with_metadata.rst", TYPOGRIFY=True)
             expected = (
-                '<p class="first last">Multi-line metadata should be'
+                "<p>Multi-line metadata should be"
                 " supported\nas well as <strong>inline"
                 " markup</strong> and stuff to&nbsp;&#8220;typogrify"
                 "&#8221;&#8230;</p>\n"
@@ -423,8 +423,8 @@ class RstReaderTest(ReaderTest):
                 '<span class="n">x</span>'
                 ' <span class="o">&amp;</span>'
                 ' <span class="n">y</span>\n</pre></div>\n'
-                "<p>A block&nbsp;quote:</p>\n<blockquote>\nx "
-                "&amp; y</blockquote>\n"
+                "<p>A block&nbsp;quote:</p>\n<blockquote>\n<p>x "
+                "&amp;&nbsp;y</p>\n</blockquote>\n"
                 "<p>Normal:\nx &amp;&nbsp;y</p>\n"
             )
             self.assertEqual(page.content, expected)
@@ -518,8 +518,9 @@ class RstReaderTest(ReaderTest):
                 '<span class="n">x</span>'
                 ' <span class="o">&amp;</span>'
                 ' <span class="n">y</span>\n</pre></div>\n'
-                "<p>A block&nbsp;quote:</p>\n<blockquote>\nx "
-                '<span class="amp">&amp;</span> y</blockquote>\n'
+                "<p>A block&nbsp;quote:</p>\n<blockquote>\n<p>x "
+                '<span class="amp">&amp;</span>&nbsp;y</p>\n'
+                "</blockquote>\n"
                 "<p>Normal:\nx"
                 ' <span class="amp">&amp;</span>'
                 "&nbsp;y"
@@ -541,8 +542,8 @@ class RstReaderTest(ReaderTest):
                 '</span><span class="n">x</span>'
                 ' <span class="o">&amp;</span>'
                 ' <span class="n">y</span>\n</pre></div>\n'
-                "<p>A block&nbsp;quote:</p>\n<blockquote>\nx "
-                "&amp; y</blockquote>\n"
+                "<p>A block&nbsp;quote:</p>\n<blockquote>\n<p>x "
+                "&amp; y</p>\n</blockquote>\n"
                 "<p>Normal:\nx"
                 ' <span class="amp">&amp;</span>'
                 "&nbsp;y"
