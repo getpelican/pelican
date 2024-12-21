@@ -613,7 +613,7 @@ def configure_settings(settings: Settings) -> Settings:
     ]:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
-            logger.warn(
+            logger.warning(
                 "Detected misconfigured %s (%s), falling back to the default (%s)",
                 key,
                 value,
