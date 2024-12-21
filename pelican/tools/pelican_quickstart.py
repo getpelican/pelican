@@ -3,7 +3,7 @@
 import argparse
 import locale
 import os
-from typing import Mapping
+from collections.abc import Mapping
 
 from jinja2 import Environment, FileSystemLoader
 

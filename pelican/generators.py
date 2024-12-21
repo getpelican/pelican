@@ -7,7 +7,7 @@ from collections import defaultdict
 from functools import partial
 from itertools import chain, groupby
 from operator import attrgetter
-from typing import List, Optional, Set
+from typing import Optional
 
 from jinja2 import (
     BaseLoader,
@@ -158,8 +158,8 @@ class Generator:
         return False
 
     def get_files(
-        self, paths, exclude: Optional[List[str]] = None, extensions=None
-    ) -> Set[str]:
+        self, paths, exclude: Optional[list[str]] = None, extensions=None
+    ) -> set[str]:
         """Return a list of files to use, based on rules
 
         :param paths: the list pf paths to search (relative to self.path)
@@ -253,7 +253,7 @@ class Generator:
         # return the name of the class for logging purposes
         return self.__class__.__name__
 
-    def _check_disabled_readers(self, paths, exclude: Optional[List[str]]) -> None:
+    def _check_disabled_readers(self, paths, exclude: Optional[list[str]]) -> None:
         """Log warnings for files that would have been processed by disabled readers."""
         for fil in self.get_files(
             paths, exclude=exclude, extensions=self.readers.disabled_extensions

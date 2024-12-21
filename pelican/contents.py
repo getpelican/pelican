@@ -6,7 +6,7 @@ import os
 import re
 from datetime import timezone
 from html import unescape
-from typing import Any, Dict, Optional, Set, Tuple
+from typing import Any, Optional
 from urllib.parse import ParseResult, unquote, urljoin, urlparse, urlunparse
 
 try:
@@ -47,7 +47,7 @@ class Content:
     """
 
     default_template: Optional[str] = None
-    mandatory_properties: Tuple[str, ...] = ()
+    mandatory_properties: tuple[str, ...] = ()
 
     @deprecated_attribute(old="filename", new="source_path", since=(3, 2, 0))
     def filename():
@@ -56,10 +56,10 @@ class Content:
     def __init__(
         self,
         content: str,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[dict[str, Any]] = None,
         settings: Optional[Settings] = None,
         source_path: Optional[str] = None,
-        context: Optional[Dict[Any, Any]] = None,
+        context: Optional[dict[Any, Any]] = None,
     ):
         if metadata is None:
             metadata = {}
@@ -226,7 +226,7 @@ class Content:
         )
 
     @property
-    def url_format(self) -> Dict[str, Any]:
+    def url_format(self) -> dict[str, Any]:
         """Returns the URL, formatted with the proper values"""
         metadata = copy.copy(self.metadata)
         path = self.metadata.get("path", self.get_relative_source_path())
@@ -397,7 +397,7 @@ class Content:
         hrefs = self._get_intrasite_link_regex()
         return hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
 
-    def get_static_links(self) -> Set[str]:
+    def get_static_links(self) -> set[str]:
         static_links = set()
         hrefs = self._get_intrasite_link_regex()
         for m in hrefs.finditer(self._content):

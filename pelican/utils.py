@@ -11,7 +11,7 @@ import shutil
 import sys
 import traceback
 import urllib
-from collections.abc import Hashable
+from collections.abc import Collection, Generator, Hashable, Iterable, Sequence
 from contextlib import contextmanager
 from functools import partial
 from html import entities
@@ -22,10 +22,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Collection,
-    Generator,
-    Iterable,
-    Sequence,
 )
 
 import dateutil.parser
@@ -133,8 +129,9 @@ class DateFormatter:
     def __call__(self, date: datetime.datetime, date_format: str) -> str:
         # on OSX, encoding from LC_CTYPE determines the unicode output in PY3
         # make sure it's same as LC_TIME
-        with temporary_locale(self.locale, locale.LC_TIME), temporary_locale(
-            self.locale, locale.LC_CTYPE
+        with (
+            temporary_locale(self.locale, locale.LC_TIME),
+            temporary_locale(self.locale, locale.LC_CTYPE),
         ):
             formatted = strftime(date, date_format)
 
