@@ -1,5 +1,4 @@
 import os
-import sys
 from shutil import copy, rmtree
 from tempfile import mkdtemp
 from unittest.mock import MagicMock
@@ -1528,18 +1527,9 @@ class TestStaticGenerator(unittest.TestCase):
         self.generator.generate_context()
         self.generator.generate_output(None)
         self.assertTrue(os.path.islink(self.endfile))
-
-        # os.path.realpath is broken on Windows before python3.8 for symlinks.
-        # This is a (ugly) workaround.
-        # see: https://bugs.python.org/issue9949
-        if os.name == "nt" and sys.version_info < (3, 8):
-
-            def get_real_path(path):
-                return os.readlink(path) if os.path.islink(path) else path
-        else:
-            get_real_path = os.path.realpath
-
-        self.assertEqual(get_real_path(self.endfile), get_real_path(self.startfile))
+        self.assertEqual(
+            os.path.realpath(self.endfile), os.path.realpath(self.startfile)
+        )
 
     def test_delete_existing_file_before_mkdir(self):
         with open(self.startfile, "w") as f:
