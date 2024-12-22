@@ -9,7 +9,7 @@ import sys
 from os.path import isabs
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 from pelican.log import LimitFilter
 
@@ -24,7 +24,7 @@ def load_source(name: str, path: str) -> ModuleType:
 
 logger = logging.getLogger(__name__)
 
-Settings = Dict[str, Any]
+Settings = dict[str, Any]
 
 DEFAULT_THEME = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "themes", "notmyidea"
@@ -613,7 +613,7 @@ def configure_settings(settings: Settings) -> Settings:
     ]:
         if key in settings and not isinstance(settings[key], types):
             value = settings.pop(key)
-            logger.warn(
+            logger.warning(
                 "Detected misconfigured %s (%s), falling back to the default (%s)",
                 key,
                 value,
