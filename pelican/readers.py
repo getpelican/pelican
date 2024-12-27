@@ -648,11 +648,22 @@ class Readers(FileStampDataCacher):
             smartypants.Attr.default |= smartypants.Attr.w
 
             def typogrify_wrapper(text):
-                """Ensures ignore_tags feature is backward compatible"""
+                """Ensure compatibility with older versions of Typogrify.
+
+                The 'TYPOGRIFY_IGNORE_TAGS' and/or 'TYPOGRIFY_OMIT_FILTERS'
+                settings will be ignored if the installed version of Typogrify
+                doesn't have the corresponding features."""
                 try:
-                    return typogrify(text, self.settings["TYPOGRIFY_IGNORE_TAGS"])
+                    return typogrify(
+                        text,
+                        self.settings["TYPOGRIFY_IGNORE_TAGS"],
+                        **{f: False for f in self.settings["TYPOGRIFY_OMIT_FILTERS"]},
+                    )
                 except TypeError:
-                    return typogrify(text)
+                    try:
+                        typogrify(text, self.settings["TYPOGRIFY_IGNORE_TAGS"])
+                    except TypeError:
+                        return typogrify(text)
 
             if content:
                 content = typogrify_wrapper(content)

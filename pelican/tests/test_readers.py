@@ -409,6 +409,90 @@ class RstReaderTest(ReaderTest):
         except ImportError:
             return unittest.skip("need the typogrify distribution")
 
+    def test_typogrify_ignore_filters(self):
+        try:
+            # typogrify should be able to ignore user specified filters.
+            page = self.read_file(
+                path="article_with_code_block.rst",
+                TYPOGRIFY=True,
+                TYPOGRIFY_OMIT_FILTERS=["amp"],
+            )
+            expected = (
+                "<p>An article with some&nbsp;code</p>\n"
+                '<div class="highlight"><pre><span></span>'
+                '<span class="n">x</span>'
+                ' <span class="o">&amp;</span>'
+                ' <span class="n">y</span>\n</pre></div>\n'
+                "<p>A block&nbsp;quote:</p>\n<blockquote>\nx "
+                "&amp; y</blockquote>\n"
+                "<p>Normal:\nx &amp;&nbsp;y</p>\n"
+            )
+            self.assertEqual(page.content, expected)
+
+            page = self.read_file(
+                path="article.rst",
+                TYPOGRIFY=True,
+                TYPOGRIFY_OMIT_FILTERS=["smartypants"],
+            )
+            expected = (
+                '<p><span class="caps">THIS</span> is some content. '
+                "With some stuff to&nbsp;&quot;typogrify&quot;...</p>\n"
+                '<p>Now with added support for <abbr title="three letter '
+                'acronym"><span class="caps">TLA</span></abbr>.</p>\n'
+            )
+            self.assertEqual(page.content, expected)
+
+            page = self.read_file(
+                path="article.rst",
+                TYPOGRIFY=True,
+                TYPOGRIFY_OMIT_FILTERS=["caps"],
+            )
+            expected = (
+                "<p>THIS is some content. "
+                "With some stuff to&nbsp;&#8220;typogrify&#8221;&#8230;</p>\n"
+                '<p>Now with added support for <abbr title="three letter '
+                'acronym">TLA</abbr>.</p>\n'
+            )
+            self.assertEqual(page.content, expected)
+
+            page = self.read_file(
+                path="article.rst",
+                TYPOGRIFY=True,
+                TYPOGRIFY_OMIT_FILTERS=["initial_quotes"],
+            )
+            expected = (
+                '<p><span class="caps">THIS</span> is some content. '
+                "With some stuff to&nbsp;&#8220;typogrify&#8221;&#8230;</p>\n"
+                '<p>Now with added support for <abbr title="three letter '
+                'acronym"><span class="caps">TLA</span></abbr>.</p>\n'
+            )
+            self.assertEqual(page.content, expected)
+
+            page = self.read_file(
+                path="article.rst",
+                TYPOGRIFY=True,
+                TYPOGRIFY_OMIT_FILTERS=["widont"],
+            )
+            expected = (
+                '<p><span class="caps">THIS</span> is some content. '
+                "With some stuff to "
+                "&#8220;typogrify&#8221;&#8230;</p>\n<p>Now with added "
+                'support for <abbr title="three letter acronym">'
+                '<span class="caps">TLA</span></abbr>.</p>\n'
+            )
+            self.assertEqual(page.content, expected)
+
+            page = self.read_file(
+                path="article.rst",
+                TYPOGRIFY=True,
+                TYPOGRIFY_OMIT_FILTERS=["this-filter-does-not-exists"],
+            )
+            self.assertRaises(TypeError)
+        except ImportError:
+            return unittest.skip("need the typogrify distribution")
+        except TypeError:
+            return unittest.skip("need typogrify version 2.0.8 or later")
+
     def test_typogrify_ignore_tags(self):
         try:
             # typogrify should be able to ignore user specified tags,
