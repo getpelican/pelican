@@ -811,15 +811,30 @@ def order_content(
     return content_list
 
 
+class FileChangeFilter(watchfiles.DefaultFilter):
+    def __init__(self, ignore_file_patterns: Sequence[str], *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ignore_file_patterns = ignore_file_patterns
+
+    def __call__(self, change: watchfiles.Change, path: str) -> bool:
+        """Returns `True` if a file should be watched for changes. The `IGNORE_FILES`
+        setting is a list of Unix glob patterns. This call will filter out files and
+        directories specified by `IGNORE_FILES` Pelican setting and by the default
+        filters of `watchfiles.DefaultFilter`, seen here:
+        https://watchfiles.helpmanual.io/api/filters/#watchfiles.DefaultFilter.ignore_dirs
+        """
+        return super().__call__(change, path) and not any(
+            fnmatch.fnmatch(os.path.abspath(path), p) for p in self.ignore_file_patterns
+        )
+
+
 def wait_for_changes(
     settings_file: str,
     settings: Settings,
 ) -> set[tuple[Change, str]]:
     content_path = settings.get("PATH", "")
     theme_path = settings.get("THEME", "")
-    ignore_files = {
-        fnmatch.translate(pattern) for pattern in settings.get("IGNORE_FILES", [])
-    }
+    ignore_file_patterns = set(settings.get("IGNORE_FILES", []))
 
     candidate_paths = [
         settings_file,
@@ -844,7 +859,7 @@ def wait_for_changes(
     return next(
         watchfiles.watch(
             *watching_paths,
-            watch_filter=watchfiles.DefaultFilter(ignore_entity_patterns=ignore_files),  # type: ignore
+            watch_filter=FileChangeFilter(ignore_file_patterns=ignore_file_patterns),
             rust_timeout=0,
         )
     )
