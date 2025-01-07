@@ -491,7 +491,7 @@ class RstReaderTest(ReaderTest):
         except ImportError:
             return unittest.skip("need the typogrify distribution")
         except TypeError:
-            return unittest.skip("need typogrify version 2.0.8 or later")
+            return unittest.skip("need typogrify version 2.1.0 or later")
 
     def test_typogrify_ignore_tags(self):
         try:

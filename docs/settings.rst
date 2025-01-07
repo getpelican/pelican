@@ -295,7 +295,7 @@ Basic settings
    A list of Typogrify filters to skip. Allowed values are: ``'amp'``,
    ``'smartypants'``, ``'caps'``, ``'initial_quotes'``, ``'widont'``. By
    default, no filter is omitted (in other words, all filters get applied). This
-   setting requires that Typogrify version 2.0.8 or later is installed.
+   setting requires that Typogrify version 2.1.0 or later is installed.
 
 .. data:: TYPOGRIFY_DASHES = 'default'
 
