@@ -94,12 +94,14 @@ which you map the signals to your plugin logic. Let's take a simple example::
     your ``register`` callable or they will be garbage-collected before the
     signal is emitted.
 
-If multiple plugins connect to the same signal, plugins will be executed in the
-order they are connected. With ``PLUGINS`` setting, order will be as defined in
-the setting. If you rely on auto-discovered namespace plugins, no ``PLUGINS``
-setting, they will be connected in the same order they are discovered (same
-order as ``pelican-plugins`` output). If you want to specify the order
-explicitly, disable auto-discovery by defining ``PLUGINS`` in the desired order.
+If multiple plugins connect to the same signal, plugins will be invoked in the
+order they are registered. When the ``PLUGINS`` setting is defined, plugin
+invocation order will be the order in which the plugins are listed in the
+``PLUGINS`` setting. If you rely on auto-discovered namespace plugins and have
+no ``PLUGINS`` setting defined, plugins will be invoked in the same order that
+they are discovered (the same order as listed in the output of the
+``pelican-plugins`` command). If you want to specify the order explicitly,
+disable auto-discovery by defining ``PLUGINS`` in the desired order.
 
 Namespace plugin structure
 --------------------------
