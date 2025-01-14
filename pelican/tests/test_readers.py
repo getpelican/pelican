@@ -495,13 +495,12 @@ class RstReaderTest(ReaderTest):
 
     def test_typogrify_ignore_tags(self):
         try:
-            # typogrify should be able to ignore user specified tags,
-            # but tries to be clever with widont extension
+            # typogrify should be able to ignore user specified tags.
             page = self.read_file(
                 path="article.rst", TYPOGRIFY=True, TYPOGRIFY_IGNORE_TAGS=["p"]
             )
             expected = (
-                "<p>THIS is some content. With some stuff to&nbsp;"
+                "<p>THIS is some content. With some stuff to "
                 "&quot;typogrify&quot;...</p>\n<p>Now with added "
                 'support for <abbr title="three letter acronym">'
                 "TLA</abbr>.</p>\n"
