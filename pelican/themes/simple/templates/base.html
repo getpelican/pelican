@@ -44,7 +44,7 @@
       <header>
         {% block header %}
           <hgroup><h1><a href="{{ SITEURL }}/">{{ SITENAME }}</a></h1>{% if SITESUBTITLE %}<p>{{ SITESUBTITLE }}</p>{% endif %}</hgroup>
-        {% endblock %}
+        {% endblock header %}
         {% block nav %}
           <nav><ul>
             {% for title, link in MENUITEMS %}
@@ -61,11 +61,11 @@
               {% endfor %}
             {% endif %}
           </ul></nav>
-        {% endblock %}
+        {% endblock nav %}
       </header>
       <main>
         {% block content %}
-        {% endblock %}
+        {% endblock content %}
       </main>
       <footer>
         {% block footer %}
@@ -73,8 +73,8 @@
             Proudly powered by <a rel="nofollow" href="https://getpelican.com/">Pelican</a>,
             which takes great advantage of <a rel="nofollow" href="https://www.python.org/">Python</a>.
           </address>
-        {% endblock %}
+        {% endblock footer %}
       </footer>
-    {% endblock %}
+    {% endblock body %}
   </body>
 </html>
