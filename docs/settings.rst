@@ -150,12 +150,16 @@ Basic settings
 
       READERS = {'foo': FooReader}
 
-.. data:: IGNORE_FILES = ['.*']
+.. data:: IGNORE_FILES = ['**/.*']
 
-   A list of glob patterns. Files and directories matching any of these patterns
-   will be ignored by the processor. For example, the default ``['.*']`` will
+   A list of Unix glob patterns. Files and directories matching any of these patterns
+   or any of the commonly hidden files and directories set by ``watchfiles.DefaultFilter``
+   will be ignored by the processor. For example, the default ``['**/.*']`` will
    ignore "hidden" files and directories, and ``['__pycache__']`` would ignore
    Python 3's bytecode caches.
+
+   For a full list of the commonly hidden files set by ``watchfiles.DefaultFilter``,
+   please refer to the `watchfiles documentation`_.
 
 .. data:: MARKDOWN = {...}
 
@@ -1423,3 +1427,4 @@ Example settings
 
 .. _Jinja Environment documentation: https://jinja.palletsprojects.com/en/latest/api/#jinja2.Environment
 .. _Docutils Configuration: http://docutils.sourceforge.net/docs/user/config.html
+.. _`watchfiles documentation`: https://watchfiles.helpmanual.io/api/filters/#watchfiles.DefaultFilter.ignore_dirs

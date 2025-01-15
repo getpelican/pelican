@@ -6,6 +6,8 @@ from datetime import timezone
 from sys import platform
 from tempfile import mkdtemp
 
+import watchfiles
+
 try:
     from zoneinfo import ZoneInfo
 except ModuleNotFoundError:
@@ -13,7 +15,7 @@ except ModuleNotFoundError:
 
 from pelican import utils
 from pelican.generators import TemplatePagesGenerator
-from pelican.settings import read_settings
+from pelican.settings import DEFAULT_CONFIG, read_settings
 from pelican.tests.support import (
     LoggedTestCase,
     get_article,
@@ -990,3 +992,68 @@ class TestStringUtils(unittest.TestCase):
         self.assertEqual("", utils.file_suffix(""))
         self.assertEqual("", utils.file_suffix("foo"))
         self.assertEqual("md", utils.file_suffix("foo.md"))
+
+
+class TestFileChangeFilter(unittest.TestCase):
+    ignore_file_patterns = DEFAULT_CONFIG["IGNORE_FILES"]
+
+    def test_regular_files_not_filtered(self):
+        filter = utils.FileChangeFilter(ignore_file_patterns=self.ignore_file_patterns)
+        basename = "article.rst"
+        full_path = os.path.join(os.path.dirname(__file__), "content", basename)
+
+        for change in watchfiles.Change:
+            self.assertTrue(filter(change=change, path=basename))
+            self.assertTrue(filter(change=change, path=full_path))
+
+    def test_dotfiles_filtered(self):
+        filter = utils.FileChangeFilter(ignore_file_patterns=self.ignore_file_patterns)
+        basename = ".config"
+        full_path = os.path.join(os.path.dirname(__file__), "content", basename)
+
+        # Testing with just the hidden file name and the full file path to the hidden file
+        for change in watchfiles.Change:
+            self.assertFalse(filter(change=change, path=basename))
+            self.assertFalse(filter(change=change, path=full_path))
+
+    def test_default_filters(self):
+        # Testing a subset of the default filters
+        # For reference: https://watchfiles.helpmanual.io/api/filters/#watchfiles.DefaultFilter.ignore_dirs
+        filter = utils.FileChangeFilter(ignore_file_patterns=[])
+        test_basenames = [
+            "__pycache__",
+            ".git",
+            ".hg",
+            ".svn",
+            ".tox",
+            ".venv",
+            ".idea",
+            "node_modules",
+            ".mypy_cache",
+            ".pytest_cache",
+            ".hypothesis",
+            ".DS_Store",
+            "flycheck_file",
+            "test_file~",
+        ]
+
+        for basename in test_basenames:
+            full_path = os.path.join(os.path.dirname(__file__), basename)
+            for change in watchfiles.Change:
+                self.assertFalse(filter(change=change, path=basename))
+                self.assertFalse(filter(change=change, path=full_path))
+
+    def test_custom_ignore_pattern(self):
+        filter = utils.FileChangeFilter(ignore_file_patterns=["*.rst"])
+        basename = "article.rst"
+        full_path = os.path.join(os.path.dirname(__file__), basename)
+        for change in watchfiles.Change:
+            self.assertFalse(filter(change=change, path=basename))
+            self.assertFalse(filter(change=change, path=full_path))
+
+        # If the user changes `IGNORE_FILES` to only contain ['*.rst'], then dotfiles would not be filtered anymore
+        basename = ".config"
+        full_path = os.path.join(os.path.dirname(__file__), basename)
+        for change in watchfiles.Change:
+            self.assertTrue(filter(change=change, path=basename))
+            self.assertTrue(filter(change=change, path=full_path))

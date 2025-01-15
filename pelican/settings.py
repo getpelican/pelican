@@ -158,7 +158,7 @@ DEFAULT_CONFIG = {
     "PYGMENTS_RST_OPTIONS": {},
     "TEMPLATE_PAGES": {},
     "TEMPLATE_EXTENSIONS": [".html"],
-    "IGNORE_FILES": [".*"],
+    "IGNORE_FILES": ["**/.*"],
     "SLUG_REGEX_SUBSTITUTIONS": [
         (r"[^\w\s-]", ""),  # remove non-alphabetical/whitespace/'-' chars
         (r"(?u)\A\s*", ""),  # strip leading whitespace
