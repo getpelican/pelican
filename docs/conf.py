@@ -31,8 +31,8 @@ extensions = [
 source_suffix = ".rst"
 master_doc = "index"
 project = project_data.get("name").upper()
-year = datetime.datetime.utcfromtimestamp(
-    int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))
+year = datetime.datetime.fromtimestamp(
+    int(os.environ.get("SOURCE_DATE_EPOCH", time.time())), datetime.timezone.utc
 ).year
 copyright = f"2010–{year}"  # noqa: RUF001
 exclude_patterns = ["_build"]
