@@ -82,7 +82,7 @@ jobs:
           subprocess.run(cmd, shell=True, check=True)
       - name: Fix permissions
         run: |
-          chmod -c -R +rX "${{ inputs.output-path }}" | while read line; do
+          chmod -c -R +rX "${{ inputs.output-path }}" | while read -r line; do
             echo "::warning title=Invalid file permissions automatically fixed::$line"
           done
       - name: Upload artifact
