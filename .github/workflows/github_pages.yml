@@ -42,6 +42,11 @@ on:
         default: true
         description: "Whether to deploy the site. If true then build the site and deploy it. If false then just test that the site builds successfully but don't deploy anything."
         type: boolean
+      stork:
+        required: false
+        default: false
+        description: "Whether to add stork. If true it will be installed on runner"
+        type: boolean
 permissions:
   contents: read
   pages: write
@@ -62,6 +67,9 @@ jobs:
       - name: Configure GitHub Pages
         id: pages
         uses: actions/configure-pages@v5
+      - name: Install stork
+        if: ${{ inputs.stork }}
+        run: cargo install stork-search --locked
       - name: Install requirements
         run: pip install ${{ inputs.requirements }}
       - name: Build Pelican site
