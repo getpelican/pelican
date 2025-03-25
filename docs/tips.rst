@@ -252,6 +252,10 @@ Here's the complete list of workflow inputs:
 |                  |          | change to your website in a pull request   |        |               |
 |                  |          | before deploying those change.             |        |               |
 +------------------+----------+--------------------------------------------+--------+---------------+
+| ``stork``        | No       | This is used to determine whether stork    | bool   | ``false``     |
+|                  |          | will be installed on the runner to be able |        |               |
+|                  |          | to build a site with stork search enabled  |        |               |
++------------------+----------+--------------------------------------------+--------+---------------+
 
 Testing Your Build in a GitHub Pull Request
 """""""""""""""""""""""""""""""""""""""""""
