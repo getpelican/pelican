@@ -54,40 +54,41 @@ Here is a list of settings for Pelican:
 Basic settings
 ==============
 
-.. data:: USE_FOLDER_AS_CATEGORY = True
+.. data:: USE_FOLDER_AS_CATEGORY
 
    When you don't specify a category in your post metadata, set this setting to
    ``True``, and organize your articles in subfolders, the subfolder will
    become the category of your post. If set to ``False``, ``DEFAULT_CATEGORY``
-   will be used as a fallback.
+   will be used as a fallback. The default is ``True``.
 
-.. data:: DEFAULT_CATEGORY = 'misc'
+.. data:: DEFAULT_CATEGORY
 
-   The default category to fall back on.
+   The default category to fall back on. The default is ``'misc'``.
 
-.. data:: DISPLAY_PAGES_ON_MENU = True
+.. data:: DISPLAY_PAGES_ON_MENU
 
    Whether to display pages on the menu of the template. Templates may or may
-   not honor this setting.
+   not honor this setting. The default is ``True``.
 
-.. data:: DISPLAY_CATEGORIES_ON_MENU = True
+.. data:: DISPLAY_CATEGORIES_ON_MENU
 
    Whether to display categories on the menu of the template. Templates may or
-   not honor this setting.
+   not honor this setting. The default is ``True``.
 
-.. data:: DOCUTILS_SETTINGS = {}
+.. data:: DOCUTILS_SETTINGS
 
    Extra configuration settings for the docutils publisher (applicable only to
    reStructuredText). See `Docutils Configuration`_ settings for more details.
+   The default is ``{}`` with no extra configuration settings.
 
-.. data:: DELETE_OUTPUT_DIRECTORY = False
+.. data:: DELETE_OUTPUT_DIRECTORY
 
    Delete the output directory, and **all** of its contents, before generating
    new files. This can be useful in preventing older, unnecessary files from
    persisting in your output. However, **this is a destructive setting and
-   should be handled with extreme care.**
+   should be handled with extreme care.** The default is ``False``.
 
-.. data:: OUTPUT_RETENTION = []
+.. data:: OUTPUT_RETENTION
 
    A list of filenames that should be retained and not deleted from the output
    directory. One use case would be the preservation of version control data.
@@ -96,13 +97,16 @@ Basic settings
 
       OUTPUT_RETENTION = [".hg", ".git", ".bzr"]
 
-.. data:: JINJA_ENVIRONMENT = {'trim_blocks': True, 'lstrip_blocks': True}
+   The default is ``[]``.
+
+.. data:: JINJA_ENVIRONMENT
 
    A dictionary of custom Jinja2 environment variables you want to use. This
    also includes a list of extensions you may want to include. See `Jinja
-   Environment documentation`_.
+   Environment documentation`_. The default is
+   ``{'extensions': [], 'trim_blocks': True, 'lstrip_blocks': True}``.
 
-.. data:: JINJA_FILTERS = {}
+.. data:: JINJA_FILTERS
 
    A dictionary of custom Jinja2 filters you want to use.  The dictionary
    should map the filtername to the filter function.
@@ -115,20 +119,22 @@ Basic settings
     from custom_filter import urlencode_filter
     JINJA_FILTERS = {'urlencode': urlencode_filter}
 
-   See: `Jinja custom filters documentation`_.
+   See: `Jinja custom filters documentation`_. The default is ``{}``.
 
-.. data:: JINJA_GLOBALS = {}
+.. data:: JINJA_GLOBALS
 
    A dictionary of custom objects to map into the Jinja2 global environment
    namespace. The dictionary should map the global name to the global
-   variable/function. See: `Jinja global namespace documentation`_.
+   variable/function. See: `Jinja global namespace documentation`_. The
+   default is ``{}``.
 
-.. data:: JINJA_TESTS = {}
+.. data:: JINJA_TESTS
 
    A dictionary of custom Jinja2 tests you want to use. The dictionary should
    map test names to test functions. See: `Jinja custom tests documentation`_.
+   The default is ``{}``.
 
-.. data:: LOG_FILTER = []
+.. data:: LOG_FILTER
 
    A list of tuples containing the logging level (up to ``warning``) and the
    message to be ignored.
@@ -137,7 +143,9 @@ Basic settings
 
       LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
 
-.. data:: READERS = {}
+   The default is ``[]``.
+
+.. data:: READERS
 
    A dictionary of file extensions / Reader classes for Pelican to process or
    ignore.
@@ -150,7 +158,9 @@ Basic settings
 
       READERS = {'foo': FooReader}
 
-.. data:: IGNORE_FILES = ['**/.*']
+   The default is ``{}``.
+
+.. data:: IGNORE_FILES
 
    A list of Unix glob patterns. Files and directories matching any of these patterns
    or any of the commonly hidden files and directories set by ``watchfiles.DefaultFilter``
@@ -161,7 +171,9 @@ Basic settings
    For a full list of the commonly hidden files set by ``watchfiles.DefaultFilter``,
    please refer to the `watchfiles documentation`_.
 
-.. data:: MARKDOWN = {...}
+   The default is ``['**/.*']``.
+
+.. data:: MARKDOWN
 
    Extra configuration settings for the Markdown processor. Refer to the Python
    Markdown documentation's `Options section
@@ -169,7 +181,7 @@ Basic settings
    list of supported options. The ``extensions`` option will be automatically
    computed from the ``extension_configs`` option.
 
-   Defaults to::
+   The default is::
 
         MARKDOWN = {
             'extension_configs': {
@@ -184,57 +196,63 @@ Basic settings
       The dictionary defined in your settings file will replace this default
       one.
 
-.. data:: OUTPUT_PATH = 'output/'
+.. data:: OUTPUT_PATH
 
    Where to output the generated files. This should correspond to your web
    server's virtual host root directory.
+
+   The default is ``'output'``.
 
 .. data:: PATH
 
    Path to content directory to be processed by Pelican. If undefined, and
    content path is not specified via an argument to the ``pelican`` command,
-   Pelican will use the current working directory.
+   Pelican will default to ``'.'``, the current working directory.
 
-.. data:: PAGE_PATHS = ['pages']
+.. data:: PAGE_PATHS
 
    A list of directories and files to look at for pages, relative to ``PATH``.
+   The default is ``['pages']``.
 
-.. data:: PAGE_EXCLUDES = []
+.. data:: PAGE_EXCLUDES
 
    A list of directories to exclude when looking for pages in addition to
-   ``ARTICLE_PATHS``.
+   ``ARTICLE_PATHS``. The default is ``[]``.
 
-.. data:: ARTICLE_PATHS = ['']
+.. data:: ARTICLE_PATHS
 
    A list of directories and files to look at for articles, relative to
-   ``PATH``.
+   ``PATH``. The default is ``['']``.
 
-.. data:: ARTICLE_EXCLUDES = []
+.. data:: ARTICLE_EXCLUDES
 
    A list of directories to exclude when looking for articles in addition to
-   ``PAGE_PATHS``.
+   ``PAGE_PATHS``. The default is ``[]``.
 
-.. data:: OUTPUT_SOURCES = False
+.. data:: OUTPUT_SOURCES
 
    Set to True if you want to copy the articles and pages in their original
    format (e.g. Markdown or reStructuredText) to the specified ``OUTPUT_PATH``.
+   The default is ``False``.
 
-.. data:: OUTPUT_SOURCES_EXTENSION = '.text'
+.. data:: OUTPUT_SOURCES_EXTENSION
 
    Controls the extension that will be used by the SourcesGenerator.  Defaults
-   to ``.text``. If not a valid string the default value will be used.
+   to ``.text``. If not a valid string the default value will be used. The
+   default is ``'.text'``.
 
-.. data:: PLUGINS = None
+.. data:: PLUGINS
 
-   The list of plugins to load. See :ref:`plugins`.
+   The list of plugins to load. See :ref:`plugins`. The default is ``None``.
 
-.. data:: PLUGIN_PATHS = []
+.. data:: PLUGIN_PATHS
 
-   A list of directories where to look for plugins. See :ref:`plugins`.
+   A list of directories where to look for plugins. See :ref:`plugins`. The
+   default is ``[]``.
 
-.. data:: SITENAME = 'A Pelican Blog'
+.. data:: SITENAME
 
-   Your site name
+   Your site's name. The default is ``'A Pelican Blog'``.
 
 .. data:: SITEURL
 
@@ -245,63 +263,68 @@ Basic settings
    domain, with no trailing slash at the end. Example: ``SITEURL =
    'https://example.com'``
 
-.. data:: STATIC_PATHS = ['images']
+   The default is ``''``, the blank string.
+
+.. data:: STATIC_PATHS
 
    A list of directories (relative to ``PATH``) in which to look for static
    files. Such files will be copied to the output directory without
    modification. Articles, pages, and other content source files will normally
    be skipped, so it is safe for a directory to appear both here and in
    ``PAGE_PATHS`` or ``ARTICLE_PATHS``.  Pelican's default settings include the
-   "images" directory here.
+   "images" directory here. The default is ``['images']``.
 
-.. data:: STATIC_EXCLUDES = []
+.. data:: STATIC_EXCLUDES
 
-   A list of directories to exclude when looking for static files.
+   A list of directories to exclude when looking for static files. The default
+   is ``[]``.
 
-.. data:: STATIC_EXCLUDE_SOURCES = True
+.. data:: STATIC_EXCLUDE_SOURCES
 
    If set to False, content source files will not be skipped when copying files
    found in ``STATIC_PATHS``. This setting is for backward compatibility with
    Pelican releases before version 3.5.  It has no effect unless
    ``STATIC_PATHS`` contains a directory that is also in ``ARTICLE_PATHS`` or
    ``PAGE_PATHS``. If you are trying to publish your site's source files,
-   consider using the ``OUTPUT_SOURCES`` setting instead.
+   consider using the ``OUTPUT_SOURCES`` setting instead. The default is
+   ``True``.
 
-.. data:: STATIC_CREATE_LINKS = False
+.. data:: STATIC_CREATE_LINKS
 
    Create links instead of copying files. If the content and output directories
    are on the same device, then create hard links.  Falls back to symbolic
    links if the output directory is on a different filesystem. If symlinks are
    created, don't forget to add the ``-L`` or ``--copy-links`` option to rsync
-   when uploading your site.
+   when uploading your site. The default is ``False``.
 
-.. data:: STATIC_CHECK_IF_MODIFIED = False
+.. data:: STATIC_CHECK_IF_MODIFIED
 
    If set to ``True``, and ``STATIC_CREATE_LINKS`` is ``False``, compare mtimes
    of content and output files, and only copy content files that are newer than
-   existing output files.
+   existing output files. The default is ``False``.
 
-.. data:: TYPOGRIFY = False
+.. data:: TYPOGRIFY
 
-   If set to True, several typographical improvements will be incorporated into
+   If set to ``True``, several typographical improvements will be incorporated into
    the generated HTML via the `Typogrify
    <https://pypi.org/project/typogrify/>`_ library, which can be installed
-   via: ``python -m pip install typogrify``
+   via: ``python -m pip install typogrify``. The default is ``False``.
 
-.. data:: TYPOGRIFY_IGNORE_TAGS = []
+.. data:: TYPOGRIFY_IGNORE_TAGS
 
    A list of tags for Typogrify to ignore. By default Typogrify will ignore
    ``pre`` and ``code`` tags. This requires that Typogrify version 2.0.4 or
-   later is installed.
+   later is installed. The default is ``[]``.
 
-.. data:: TYPOGRIFY_OMIT_FILTERS = []
+.. data:: TYPOGRIFY_OMIT_FILTERS
 
    A list of Typogrify filters to skip. Allowed values are: ``'amp'``,
    ``'smartypants'``, ``'caps'``, ``'initial_quotes'``, ``'widont'``. By
    default, no filter is omitted (in other words, all filters get applied). This
-   setting requires that Typogrify version 2.1.0 or later is installed.
+   setting requires that Typogrify version 2.1.0 or later is installed. The
+   default is ``[]``.
 
-.. data:: TYPOGRIFY_DASHES = 'default'
+.. data:: TYPOGRIFY_DASHES
 
    This setting controls how Typogrify sets up the Smartypants filter to
    interpret multiple dash/hyphen/minus characters. A single ASCII dash
@@ -310,65 +333,72 @@ Basic settings
    ``oldschool`` setting renders both en-dashes and em-dashes when it sees two
    (``--``) and three (``---``) hyphen characters, respectively. The
    ``oldschool_inverted`` setting turns two hyphens into an em-dash and three
-   hyphens into an en-dash.
+   hyphens into an en-dash. The default is ``'default'``.
 
-.. data:: SUMMARY_MAX_LENGTH = 50
+.. data:: SUMMARY_MAX_LENGTH
 
    When creating a short summary of an article, this will be the default length
    (measured in words) of the text created.  This only applies if your content
    does not otherwise specify a summary. Setting to ``None`` will cause the
-   summary to be a copy of the original content.
+   summary to be a copy of the original content. The default is ``50``.
 
-.. data:: SUMMARY_MAX_PARAGRAPHS = None
+.. data:: SUMMARY_MAX_PARAGRAPHS
 
    When creating a short summary of an article, this will be the number of
    paragraphs to use as the summary. This only applies if your content
    does not otherwise specify a summary. Setting to ``None`` will cause the
    summary to use the whole text (up to ``SUMMARY_MAX_LENGTH``) instead of just
-   the first N paragraphs.
+   the first N paragraphs. The default is ``None``.
 
-.. data:: SUMMARY_END_SUFFIX = '…'
+.. data:: SUMMARY_END_SUFFIX
 
    When creating a short summary of an article and the result was truncated to
    match the required word length, this will be used as the truncation suffix.
+   The default is ``'…'``.
 
-.. data:: WITH_FUTURE_DATES = True
+.. data:: WITH_FUTURE_DATES
 
    If disabled, content with dates in the future will get a default status of
-   ``draft``. See :ref:`reading_only_modified_content` for caveats.
+   ``draft``. See :ref:`reading_only_modified_content` for caveats. The default
+   is ``True``.
 
-.. data:: INTRASITE_LINK_REGEX = '[{|](?P<what>.*?)[|}]'
+.. data:: INTRASITE_LINK_REGEX
 
    Regular expression that is used to parse internal links. Default syntax when
    linking to internal files, tags, etc., is to enclose the identifier, say
    ``filename``, in ``{}`` or ``||``. Identifier between ``{`` and ``}`` goes
    into the ``what`` capturing group.  For details see
-   :ref:`ref-linking-to-internal-content`.
+   :ref:`ref-linking-to-internal-content`. The default is
+   ``'[{|](?P<what>.*?)[|}]'``.
 
-.. data:: PYGMENTS_RST_OPTIONS = []
+.. data:: PYGMENTS_RST_OPTIONS
 
    A list of default Pygments settings for your reStructuredText code blocks.
-   See :ref:`internal_pygments_options` for a list of supported options.
+   See :ref:`internal_pygments_options` for a list of supported options. The
+   default is ``{}``.
 
-.. data:: CACHE_CONTENT = False
+.. data:: CACHE_CONTENT
 
    If ``True``, saves content in caches.  See
-   :ref:`reading_only_modified_content` for details about caching.
+   :ref:`reading_only_modified_content` for details about caching. The default
+   is ``False``.
 
-.. data:: CONTENT_CACHING_LAYER = 'reader'
+.. data:: CONTENT_CACHING_LAYER
 
    If set to ``'reader'``, save only the raw content and metadata returned by
-   readers. If set to ``'generator'``, save processed content objects.
+   readers. If set to ``'generator'``, save processed content objects. The
+   default is ``'reader'``.
 
-.. data:: CACHE_PATH = 'cache'
+.. data:: CACHE_PATH
 
-   Directory in which to store cache files.
+   Directory in which to store cache files. The default is ``'cache'``.
 
-.. data:: GZIP_CACHE = True
+.. data:: GZIP_CACHE
 
-   If ``True``, use gzip to (de)compress the cache files.
+   If ``True``, use gzip to (de)compress the cache files. The default is
+   ``True``.
 
-.. data:: CHECK_MODIFIED_METHOD = 'mtime'
+.. data:: CHECK_MODIFIED_METHOD
 
    Controls how files are checked for modifications.
 
@@ -377,23 +407,25 @@ Basic settings
    - If set to a name of a function provided by the ``hashlib``
      module, e.g. ``'md5'``, the file hash is checked.
 
-.. data:: LOAD_CONTENT_CACHE = False
+   The default is ``'mtime'``.
 
-   If ``True``, load unmodified content from caches.
+.. data:: LOAD_CONTENT_CACHE
 
-.. data:: FORMATTED_FIELDS = ['summary']
+   If ``True``, load unmodified content from caches. The default is ``False``.
+
+.. data:: FORMATTED_FIELDS
 
    A list of metadata fields containing reST/Markdown content to be parsed and
-   translated to HTML.
+   translated to HTML. The default is ``['summary']``.
 
-.. data:: PORT = 8000
+.. data:: PORT
 
    The TCP port to serve content from the output folder via HTTP when pelican
-   is run with --listen
+   is run with ``--listen``. The default is ``8000``.
 
-.. data:: BIND = ''
+.. data:: BIND
 
-   The IP to which to bind the HTTP server.
+   The IP to which to bind the HTTP server. The default is ``'127.0.0.1'``.
 
 .. _url-settings:
 
@@ -459,105 +491,113 @@ This would save your articles into something like
 .. _Python datetime documentation:
     https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 
-.. data:: RELATIVE_URLS = False
+.. data:: RELATIVE_URLS
 
    Defines whether Pelican should use document-relative URLs or not. Only set
    this to ``True`` when developing/testing and only if you fully understand
-   the effect it can have on links/feeds.
+   the effect it can have on links/feeds. The default is ``False``.
 
-.. data:: ARTICLE_URL = '{slug}.html'
+.. data:: ARTICLE_URL
 
-   The URL to refer to an article.
+   The URL to refer to an article. The default is ``'{slug}.html'``.
 
-.. data:: ARTICLE_SAVE_AS = '{slug}.html'
+.. data:: ARTICLE_SAVE_AS
 
-   The place where we will save an article.
+   The place where we will save an article. The default is ``'{slug.html}'``.
 
-.. data:: ARTICLE_LANG_URL = '{slug}-{lang}.html'
+.. data:: ARTICLE_LANG_URL
 
    The URL to refer to an article which doesn't use the default language.
+   The default is ``'{slug}-{lang}.html``.
 
-.. data:: ARTICLE_LANG_SAVE_AS = '{slug}-{lang}.html'
+.. data:: ARTICLE_LANG_SAVE_AS
 
    The place where we will save an article which doesn't use the default
-   language.
+   language. The default is ``'{slug}-{lang}.html'``.
 
-.. data:: DRAFT_URL = 'drafts/{slug}.html'
+.. data:: DRAFT_URL
 
-   The URL to refer to an article draft.
+   The URL to refer to an article draft. The default is
+   ``'drafts/{slug}.html'``.
 
-.. data:: DRAFT_SAVE_AS = 'drafts/{slug}.html'
+.. data:: DRAFT_SAVE_AS
 
-   The place where we will save an article draft.
+   The place where we will save an article draft. The default is ``'drafts/{slug}.html'``.
 
-.. data:: DRAFT_LANG_URL = 'drafts/{slug}-{lang}.html'
+.. data:: DRAFT_LANG_URL
 
    The URL to refer to an article draft which doesn't use the default language.
+   The default is ``'drafts/{slug}-{lang}.html'``.
 
-.. data:: DRAFT_LANG_SAVE_AS = 'drafts/{slug}-{lang}.html'
+.. data:: DRAFT_LANG_SAVE_AS
 
    The place where we will save an article draft which doesn't use the default
-   language.
+   language. The default is ``'drafts/{slug}-{lang}.html'``.
 
-.. data:: PAGE_URL = 'pages/{slug}.html'
+.. data:: PAGE_URL
 
-   The URL we will use to link to a page.
+   The URL we will use to link to a page. The default is
+   ``'pages/{slug}.html'``.
 
-.. data:: PAGE_SAVE_AS = 'pages/{slug}.html'
+.. data:: PAGE_SAVE_AS
 
    The location we will save the page. This value has to be the same as
-   PAGE_URL or you need to use a rewrite in your server config.
+   PAGE_URL or you need to use a rewrite in your server config. The default
+   is ``'pages/{slug}.html'``.
 
-.. data:: PAGE_LANG_URL = 'pages/{slug}-{lang}.html'
+.. data:: PAGE_LANG_URL
 
    The URL we will use to link to a page which doesn't use the default
-   language.
+   language. The default is ``'pages/{slug}-{lang}.html'``.
 
-.. data:: PAGE_LANG_SAVE_AS = 'pages/{slug}-{lang}.html'
+.. data:: PAGE_LANG_SAVE_AS
 
    The location we will save the page which doesn't use the default language.
+   The default is ``'pages/{slug}-{lang}.html'``.
 
-.. data:: DRAFT_PAGE_URL = 'drafts/pages/{slug}.html'
+.. data:: DRAFT_PAGE_URL
 
-   The URL used to link to a page draft.
+   The URL used to link to a page draft. The default is
+   ``'drafts/pages/{slug}.html'``.
 
-.. data:: DRAFT_PAGE_SAVE_AS = 'drafts/pages/{slug}.html'
+.. data:: DRAFT_PAGE_SAVE_AS
 
-   The actual location a page draft is saved at.
+   The actual location a page draft is saved at. The default is
+   ``'drafts/pages/{slug}.html'``.
 
-.. data:: DRAFT_PAGE_LANG_URL = 'drafts/pages/{slug}-{lang}.html'
+.. data:: DRAFT_PAGE_LANG_URL
 
    The URL used to link to a page draft which doesn't use the default
-   language.
+   language. The default is ``'drafts/pages/{slug}-{lang}.html'``.
 
-.. data:: DRAFT_PAGE_LANG_SAVE_AS = 'drafts/pages/{slug}-{lang}.html'
+.. data:: DRAFT_PAGE_LANG_SAVE_AS
 
    The actual location a page draft which doesn't use the default language is
-   saved at.
+   saved at. The default is ``'drafts/pages/{slug}-{lang}.html'``.
 
-.. data:: AUTHOR_URL = 'author/{slug}.html'
+.. data:: AUTHOR_URL
 
-   The URL to use for an author.
+   The URL to use for an author. The default is ``'author/{slug}.html'``.
 
-.. data:: AUTHOR_SAVE_AS = 'author/{slug}.html'
+.. data:: AUTHOR_SAVE_AS
 
-   The location to save an author.
+   The location to save an author. The default is ``'author/{slug}.html'``.
 
-.. data:: CATEGORY_URL = 'category/{slug}.html'
+.. data:: CATEGORY_URL
 
-   The URL to use for a category.
+   The URL to use for a category. The default is ``'category/{slug}.html'``.
 
-.. data:: CATEGORY_SAVE_AS = 'category/{slug}.html'
+.. data:: CATEGORY_SAVE_AS
 
-   The location to save a category.
+   The location to save a category. The default is ``'category/{slug}.html'``.
 
-.. data:: TAG_URL = 'tag/{slug}.html'
+.. data:: TAG_URL
 
-   The URL to use for a tag.
+   The URL to use for a tag. The default is ``'tag/{slug}.html'``.
 
-.. data:: TAG_SAVE_AS = 'tag/{slug}.html'
+.. data:: TAG_SAVE_AS
 
-   The location to save the tag page.
+   The location to save the tag page. The default is ``'tag/{slug}.html'``.
 
 .. note::
 
@@ -590,85 +630,81 @@ through the URLs ``posts/2011/`` and ``posts/2011/Aug/``, respectively.
     This way a reader can remove a portion of your URL and automatically arrive
     at an appropriate archive of posts, without having to specify a page name.
 
-.. data:: YEAR_ARCHIVE_SAVE_AS = ''
+.. data:: YEAR_ARCHIVE_SAVE_AS
 
-   The location to save per-year archives of your posts.
+   The location to save per-year archives of your posts. The default is ``''``.
 
-.. data:: YEAR_ARCHIVE_URL = ''
+.. data:: YEAR_ARCHIVE_URL
 
    The URL to use for per-year archives of your posts. You should set this if
-   you enable per-year archives.
+   you enable per-year archives. The default is ``''``.
 
-.. data:: MONTH_ARCHIVE_SAVE_AS = ''
+.. data:: MONTH_ARCHIVE_SAVE_AS
 
-   The location to save per-month archives of your posts.
+   The location to save per-month archives of your posts. The default is
+   ``''``.
 
-.. data:: MONTH_ARCHIVE_URL = ''
+.. data:: MONTH_ARCHIVE_URL
 
    The URL to use for per-month archives of your posts. You should set this if
-   you enable per-month archives.
+   you enable per-month archives. The default is ``''``.
 
-.. data:: DAY_ARCHIVE_SAVE_AS = ''
+.. data:: DAY_ARCHIVE_SAVE_AS
 
-   The location to save per-day archives of your posts.
+   The location to save per-day archives of your posts. The default is ``''``.
 
-.. data:: DAY_ARCHIVE_URL = ''
+.. data:: DAY_ARCHIVE_URL
 
    The URL to use for per-day archives of your posts. You should set this if
-   you enable per-day archives.
+   you enable per-day archives. The default is ``''``.
 
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
 template.
 
-.. data:: ARCHIVES_SAVE_AS = 'archives.html'
+.. data:: ARCHIVES_SAVE_AS
 
-   The location to save the article archives page.
+   The location to save the article archives page. The default is ``'archives.html'``.
 
-.. data:: AUTHORS_SAVE_AS = 'authors.html'
+.. data:: AUTHORS_SAVE_AS
 
-   The location to save the author list.
+   The location to save the author list. The default is ``'authors.html'``.
 
-.. data:: CATEGORIES_SAVE_AS = 'categories.html'
+.. data:: CATEGORIES_SAVE_AS
 
-   The location to save the category list.
+   The location to save the category list. The default is ``'categories.html'``.
 
-.. data:: TAGS_SAVE_AS = 'tags.html'
+.. data:: TAGS_SAVE_AS
 
-   The location to save the tag list.
+   The location to save the tag list. The default is ``'tags.html'``.
 
-.. data:: INDEX_SAVE_AS = 'index.html'
+.. data:: INDEX_SAVE_AS
 
-   The location to save the list of all articles.
+   The location to save the list of all articles. The default is ``'index.html'``.
 
 URLs for direct template pages are theme-dependent. Some themes use
 corresponding ``*_URL`` setting as string, while others hard-code them:
 ``'archives.html'``, ``'authors.html'``, ``'categories.html'``,
 ``'tags.html'``.
 
-.. data:: SLUGIFY_SOURCE = 'title'
+.. data:: SLUGIFY_SOURCE
 
    Specifies from where you want the slug to be automatically generated. Can be
    set to ``title`` to use the "Title:" metadata tag or ``basename`` to use the
-   article's file name when creating the slug.
+   article's file name when creating the slug. The default is ``'title'``.
 
-.. data:: SLUGIFY_USE_UNICODE = False
+.. data:: SLUGIFY_USE_UNICODE
 
    Allow Unicode characters in slugs. Set ``True`` to keep Unicode characters
    in auto-generated slugs. Otherwise, Unicode characters will be replaced
-   with ASCII equivalents.
+   with ASCII equivalents. The default is ``False``.
 
-.. data:: SLUGIFY_PRESERVE_CASE = False
+.. data:: SLUGIFY_PRESERVE_CASE
 
    Preserve uppercase characters in slugs. Set ``True`` to keep uppercase
-   characters from ``SLUGIFY_SOURCE`` as-is.
+   characters from ``SLUGIFY_SOURCE`` as-is. The default is ``False``.
 
-.. data:: SLUG_REGEX_SUBSTITUTIONS = [
-        (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
-        (r'(?u)\\A\\s*', ''),  # strip leading whitespace
-        (r'(?u)\\s*\\Z', ''),  # strip trailing whitespace
-        (r'[-\\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
-    ]
+.. data:: SLUG_REGEX_SUBSTITUTIONS
 
    Regex substitutions to make when generating slugs of articles and pages.
    Specified as a list of pairs of ``(from, to)`` which are applied in order,
@@ -678,19 +714,27 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
    ascii characters and leading and trailing whitespace is stripped. Useful for
    backward compatibility with existing URLs.
 
-.. data:: AUTHOR_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+   The default is ``[
+        (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
+        (r'(?u)\\A\\s*', ''),  # strip leading whitespace
+        (r'(?u)\\s*\\Z', ''),  # strip trailing whitespace
+        (r'[-\\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
+    ]``
 
-   Regex substitutions for author slugs. Defaults to
+.. data:: AUTHOR_REGEX_SUBSTITUTIONS
+
+   Regex substitutions for author slugs. The default is
    ``SLUG_REGEX_SUBSTITUTIONS``.
 
-.. data:: CATEGORY_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+.. data:: CATEGORY_REGEX_SUBSTITUTIONS
 
-   Regex substitutions for category slugs. Defaults to
+   Regex substitutions for category slugs. The default is
    ``SLUG_REGEX_SUBSTITUTIONS``.
 
-.. data:: TAG_REGEX_SUBSTITUTIONS = SLUG_REGEX_SUBSTITUTIONS
+.. data:: TAG_REGEX_SUBSTITUTIONS
 
-   Regex substitutions for tag slugs. Defaults to ``SLUG_REGEX_SUBSTITUTIONS``.
+   Regex substitutions for tag slugs. The default is
+   ``SLUG_REGEX_SUBSTITUTIONS``.
 
 Time and Date
 =============
@@ -710,20 +754,20 @@ Time and Date
 
 .. _the wikipedia page: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
-.. data:: DEFAULT_DATE = None
+.. data:: DEFAULT_DATE
 
    The default date you want to use.  If ``'fs'``, Pelican will use the file
    system timestamp information (mtime) if it can't get date information from
    the metadata.  If given any other string, it will be parsed by the same
    method as article metadata.  If set to a tuple object, the default datetime
    object will instead be generated by passing the tuple to the
-   ``datetime.datetime`` constructor.
+   ``datetime.datetime`` constructor. The default is ``None``.
 
-.. data:: DEFAULT_DATE_FORMAT = '%a %d %B %Y'
+.. data:: DEFAULT_DATE_FORMAT
 
-   The default date format you want to use.
+   The default date format you want to use. The default is ``'%a %d %B %Y'``.
 
-.. data:: DATE_FORMATS = {}
+.. data:: DATE_FORMATS
 
    If you manage multiple languages, you can set the date formatting here.
 
@@ -763,9 +807,11 @@ Time and Date
           'jp': ('jpn','%Y-%m-%d(%a)'),
       }
 
+   The default is ``{}``.
+
 .. data:: LOCALE
 
-   Change the locale [#]_. A list of locales can be provided here or a single
+   Change the locale. A list of locales can be provided here or a single
    string representing one locale.  When providing a list, all the locales will
    be tried until one works.
 
@@ -779,10 +825,8 @@ Time and Date
 
    For a list of available locales refer to `locales on Windows`_  or on
    Unix/Linux, use the ``locale -a`` command; see manpage
-   `locale(1)`_ for more information.
+   `locale(1)`_ for more information. The default is the system locale.
 
-
-.. [#] Default is the system locale.
 
 .. _Jinja custom filters documentation: https://jinja.palletsprojects.com/en/latest/api/#custom-filters
 .. _Jinja global namespace documentation: https://jinja.palletsprojects.com/en/latest/api/#the-global-namespace
@@ -798,7 +842,7 @@ Time and Date
 Template pages
 ==============
 
-.. data:: TEMPLATE_PAGES = None
+.. data:: TEMPLATE_PAGES
 
    A mapping containing template pages that will be rendered with the blog
    entries.
@@ -814,11 +858,14 @@ Template pages
                          'src/resume.html': 'dest/resume.html',
                          'src/contact.html': 'dest/contact.html'}
 
-.. data:: TEMPLATE_EXTENSIONS = ['.html']
+   The default is ``{}``.
+
+.. data:: TEMPLATE_EXTENSIONS
 
    The extensions to use when looking up template files from template names.
+   The default is ``['.html']``.
 
-.. data:: DIRECT_TEMPLATES = ['index', 'authors', 'categories', 'tags', 'archives']
+.. data:: DIRECT_TEMPLATES
 
    List of templates that are used directly to render content. Typically direct
    templates are used to generate index pages for collections of content (e.g.,
@@ -828,19 +875,21 @@ Template pages
    ``DIRECT_TEMPLATES`` are searched for over paths maintained in
    ``THEME_TEMPLATES_OVERRIDES``.
 
+   The default is ``['index', 'tags', 'categories', 'authors', 'archives']``.
 
 Metadata
 ========
 
 .. data:: AUTHOR
 
-   Default author (usually your name).
+   Default author (usually your name). The default is ``None``, which removes the byline.
 
-.. data:: DEFAULT_METADATA = {}
+.. data:: DEFAULT_METADATA
 
-   The default metadata you want to use for all articles and pages.
+   The default metadata you want to use for all articles and pages. The default
+   is ``{}``.
 
-.. data:: FILENAME_METADATA = r'(?P<date>\\d{4}-\\d{2}-\\d{2}).*'
+.. data:: FILENAME_METADATA
 
    The regexp that will be used to extract any metadata from the filename. All
    named groups that are matched will be set in the metadata object.  The
@@ -850,14 +899,14 @@ Metadata
 
       FILENAME_METADATA = r'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'
 
-   See also ``SLUGIFY_SOURCE``.
+   See also ``SLUGIFY_SOURCE``. The default is ``r'(?P<date>\d{4}-\d{2}-\d{2}).*'``.
 
-.. data:: PATH_METADATA = ''
+.. data:: PATH_METADATA
 
    Like ``FILENAME_METADATA``, but parsed from a page's full path relative to
-   the content source directory.
+   the content source directory. The default is ``''``.
 
-.. data:: EXTRA_PATH_METADATA = {}
+.. data:: EXTRA_PATH_METADATA
 
    Extra metadata dictionaries keyed by relative path. Relative paths require
    correct OS-specific directory separators (i.e. / in UNIX and \\ in Windows)
@@ -903,6 +952,8 @@ file:
 .. _group name notation:
    https://docs.python.org/3/library/re.html#regular-expression-syntax
 
+   The default is ``{}``.
+
 
 Feed settings
 =============
@@ -914,123 +965,130 @@ Pelican generates category feeds as well as feeds for all your articles. It
 does not generate feeds for tags by default, but it is possible to do so using
 the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
-.. data:: FEED_DOMAIN = None, i.e. base URL is "/"
+.. data:: FEED_DOMAIN
 
    The domain prepended to feed URLs. Since feed URLs should always be
    absolute, it is highly recommended to define this (e.g.,
    "https://feeds.example.com"). If you have already explicitly defined SITEURL
    (see above) and want to use the same domain for your feeds, you can just
-   set:  ``FEED_DOMAIN = SITEURL``.
+   set:  ``FEED_DOMAIN = SITEURL``. The default is ``None``, which uses the
+   base URL "/".
 
-.. data:: FEED_ATOM = None, i.e. no Atom feed
+.. data:: FEED_ATOM
 
-   The location to save the Atom feed.
+   The location to save the Atom feed. The default is ``None``, for no Atom
+   feed.
 
-.. data:: FEED_ATOM_URL = None
+.. data:: FEED_ATOM_URL
 
    Relative URL of the Atom feed. If not set, ``FEED_ATOM`` is used both for
-   save location and URL.
+   save location and URL. The default is ``None``.
 
-.. data:: FEED_RSS = None, i.e. no RSS
+.. data:: FEED_RSS
 
-   The location to save the RSS feed.
+   The location to save the RSS feed. The default is ``None``, for no RSS feed.
 
-.. data:: FEED_RSS_URL = None
+.. data:: FEED_RSS_URL
 
    Relative URL of the RSS feed. If not set, ``FEED_RSS`` is used both for save
-   location and URL.
+   location and URL. The default is ``None``.
 
-.. data:: FEED_ALL_ATOM = 'feeds/all.atom.xml'
+.. data:: FEED_ALL_ATOM
 
    The location to save the all-posts Atom feed: this feed will contain all
-   posts regardless of their language.
+   posts regardless of their language. The default is ``'feeds/all.atom.xml'``.
 
-.. data:: FEED_ALL_ATOM_URL = None
+.. data:: FEED_ALL_ATOM_URL
 
    Relative URL of the all-posts Atom feed. If not set, ``FEED_ALL_ATOM`` is
-   used both for save location and URL.
+   used both for save location and URL. The default is ``None``.
 
-.. data:: FEED_ALL_RSS = None, i.e. no all-posts RSS
+.. data:: FEED_ALL_RSS
 
    The location to save the the all-posts RSS feed: this feed will contain all
-   posts regardless of their language.
+   posts regardless of their language. The default is ``None``, for no
+   all-posts RSS feed.
 
-.. data:: FEED_ALL_RSS_URL = None
+.. data:: FEED_ALL_RSS_URL
 
    Relative URL of the all-posts RSS feed. If not set, ``FEED_ALL_RSS`` is used
-   both for save location and URL.
+   both for save location and URL. The default is ``None``.
 
-.. data:: CATEGORY_FEED_ATOM = 'feeds/{slug}.atom.xml'
+.. data:: CATEGORY_FEED_ATOM
 
-   The location to save the category Atom feeds. [2]_
+   The location to save the category Atom feeds. [2]_ The default is
+   ``'feeds/{slug}.atom.xml'``.
 
-.. data:: CATEGORY_FEED_ATOM_URL = None
+.. data:: CATEGORY_FEED_ATOM_URL
 
    Relative URL of the category Atom feeds, including the ``{slug}``
    placeholder. [2]_ If not set, ``CATEGORY_FEED_ATOM`` is used both for save
-   location and URL.
+   location and URL. The default is ``None``.
 
-.. data:: CATEGORY_FEED_RSS = None, i.e. no RSS
+.. data:: CATEGORY_FEED_RSS
 
    The location to save the category RSS feeds, including the ``{slug}``
-   placeholder. [2]_
+   placeholder. [2]_ The default is ``None``, for no RSS feed.
 
-.. data:: CATEGORY_FEED_RSS_URL = None
+.. data:: CATEGORY_FEED_RSS_URL
 
    Relative URL of the category RSS feeds, including the ``{slug}``
    placeholder. [2]_ If not set, ``CATEGORY_FEED_RSS`` is used both for save
-   location and URL.
+   location and URL. The default is ``None``.
 
-.. data:: AUTHOR_FEED_ATOM = 'feeds/{slug}.atom.xml'
+.. data:: AUTHOR_FEED_ATOM
 
-   The location to save the author Atom feeds. [2]_
+   The location to save the author Atom feeds. [2]_ The default is
+   ``'feeds/{slug}.atom.xml'``.
 
-.. data:: AUTHOR_FEED_ATOM_URL = None
+.. data:: AUTHOR_FEED_ATOM_URL
 
    Relative URL of the author Atom feeds, including the ``{slug}`` placeholder.
    [2]_ If not set, ``AUTHOR_FEED_ATOM`` is used both for save location and
-   URL.
+   URL. The default is ``None`` (not set).
 
-.. data:: AUTHOR_FEED_RSS = 'feeds/{slug}.rss.xml'
+.. data:: AUTHOR_FEED_RSS
 
-   The location to save the author RSS feeds. [2]_
+   The location to save the author RSS feeds. [2]_ The default is
+   ``'feeds/{slug}.rss.xml'``.
 
-.. data:: AUTHOR_FEED_RSS_URL = None
+.. data:: AUTHOR_FEED_RSS_URL
 
    Relative URL of the author RSS feeds, including the ``{slug}`` placeholder.
    [2]_ If not set, ``AUTHOR_FEED_RSS`` is used both for save location and URL.
+   The default is ``None``.
 
-.. data:: TAG_FEED_ATOM = None, i.e. no tag feed
+.. data:: TAG_FEED_ATOM
 
    The location to save the tag Atom feed, including the ``{slug}``
-   placeholder. [2]_
+   placeholder. [2]_ The default is ``None``, for no tag feed.
 
-.. data:: TAG_FEED_ATOM_URL = None
+.. data:: TAG_FEED_ATOM_URL
 
    Relative URL of the tag Atom feed, including the ``{slug}`` placeholder.
-   [2]_
+   [2]_ The default is ``None``.
 
-.. data:: TAG_FEED_RSS = None, i.e. no RSS tag feed
+.. data:: TAG_FEED_RSS
 
    Relative URL to output the tag RSS feed, including the ``{slug}``
    placeholder. If not set, ``TAG_FEED_RSS`` is used both for save location and
-   URL.
+   URL. The default is ``None``, for no tag feed.
 
-.. data:: FEED_MAX_ITEMS = 100
+.. data:: FEED_MAX_ITEMS
 
    Maximum number of items allowed in a feed. Setting to ``None`` will cause the
-   feed to contains every article. 100 if not specified.
+   feed to contains every article. 100 if not specified. The default is ``100``.
 
-.. data:: RSS_FEED_SUMMARY_ONLY = True
+.. data:: RSS_FEED_SUMMARY_ONLY
 
    Only include item summaries in the ``description`` tag of RSS feeds. If set
    to ``False``, the full content will be included instead. This setting
-   doesn't affect Atom feeds, only RSS ones.
+   doesn't affect Atom feeds, only RSS ones. The default is ``True``.
 
-.. data:: FEED_APPEND_REF = False
+.. data:: FEED_APPEND_REF
 
    If set to ``True``, ``?ref=feed`` will be appended to links in generated
-   feeds for the purpose of referrer tracking.
+   feeds for the purpose of referrer tracking. The default is ``False``.
 
 If you don't want to generate some or any of these feeds, set the above
 variables to ``None``.
@@ -1048,27 +1106,30 @@ paginating this list.
 
 You can use the following settings to configure the pagination.
 
-.. data:: DEFAULT_ORPHANS = 0
+.. data:: DEFAULT_ORPHANS
 
    The minimum number of articles allowed on the last page. Use this when you
-   don't want the last page to only contain a handful of articles.
+   don't want the last page to only contain a handful of articles. The default
+   is ``0``.
 
-.. data:: DEFAULT_PAGINATION = False
+.. data:: DEFAULT_PAGINATION
 
    The maximum number of articles to include on a page, not including orphans.
-   False to disable pagination.
+   False to disable pagination. The default is ``False``.
 
-.. data:: PAGINATED_TEMPLATES = {'index': None, 'tag': None, 'category': None, 'author': None}
+.. data:: PAGINATED_TEMPLATES
 
    The templates to use pagination with, and the number of articles to include
    on a page. If this value is ``None``, it defaults to ``DEFAULT_PAGINATION``.
+   The default is ``{'index': None, 'tag': None, 'category': None, 'author': None}``.
 
-.. data:: PAGINATION_PATTERNS = (
+.. data:: PAGINATION_PATTERNS
+
+   A set of patterns that are used to determine advanced pagination output. The
+   default is ``(
       (1, '{name}{extension}', '{name}{extension}'),
       (2, '{name}{number}{extension}', '{name}{number}{extension}'),
-  )
-
-   A set of patterns that are used to determine advanced pagination output.
+  )``.
 
 
 Using Pagination Patterns
@@ -1108,59 +1169,60 @@ Translations
 Pelican offers a way to translate articles. See the :doc:`Content <content>`
 section for more information.
 
-.. data:: DEFAULT_LANG = 'en'
+.. data:: DEFAULT_LANG
 
-   The default language to use.
+   The default language to use. The default is ``'en'``.
 
-.. data:: ARTICLE_TRANSLATION_ID = 'slug'
+.. data:: ARTICLE_TRANSLATION_ID
 
    The metadata attribute(s) used to identify which articles are translations
    of one another. May be a string or a collection of strings. Set to ``None``
-   or ``False`` to disable the identification of translations.
+   or ``False`` to disable the identification of translations. The default is
+   ``'slug'``.
 
-.. data:: PAGE_TRANSLATION_ID = 'slug'
+.. data:: PAGE_TRANSLATION_ID
 
    The metadata attribute(s) used to identify which pages are translations of
    one another. May be a string or a collection of strings. Set to ``None`` or
-   ``False`` to disable the identification of translations.
+   ``False`` to disable the identification of translations. The default is
+   ``'slug'``.
 
-.. data:: TRANSLATION_FEED_ATOM = 'feeds/all-{lang}.atom.xml'
+.. data:: TRANSLATION_FEED_ATOM
 
-   The location to save the Atom feed for translations. [3]_
+   The location to save the Atom feed for translations. [3]_ The default is
+   ``'feeds/all-{lang}.atom.xml'``.
 
-.. data:: TRANSLATION_FEED_ATOM_URL = None
+.. data:: TRANSLATION_FEED_ATOM_URL
 
    Relative URL of the Atom feed for translations, including the ``{lang}``
    placeholder. [3]_ If not set, ``TRANSLATION_FEED_ATOM`` is used both for
-   save location and URL.
+   save location and URL. The default is ``None``.
 
-.. data:: TRANSLATION_FEED_RSS = None, i.e. no RSS
+.. data:: TRANSLATION_FEED_RSS
 
-   Where to put the RSS feed for translations.
+   Where to put the RSS feed for translations. The default is ``None``,
+   meaning no RSS feed.
 
-.. data:: TRANSLATION_FEED_RSS_URL = None
+.. data:: TRANSLATION_FEED_RSS_URL
 
    Relative URL of the RSS feed for translations, including the ``{lang}``
    placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for save
-   location and URL.
-
-.. [3] {lang} is the language code
-
+   location and URL. The default is ``None``.
 
 Ordering content
 ================
 
-.. data:: NEWEST_FIRST_ARCHIVES = True
+.. data:: NEWEST_FIRST_ARCHIVES
 
    Order archives by newest first by date. (False: orders by date with older
-   articles first.)
+   articles first.) The default is ``True``.
 
-.. data:: REVERSE_CATEGORY_ORDER = False
+.. data:: REVERSE_CATEGORY_ORDER
 
    Reverse the category order. (True: lists by reverse alphabetical order;
-   default lists alphabetically.)
+   default lists alphabetically.) The default is ``False``.
 
-.. data:: ARTICLE_ORDER_BY = 'reversed-date'
+.. data:: ARTICLE_ORDER_BY
 
    Defines how the articles (``articles_page.object_list`` in the template) are
    sorted. Valid options are: metadata as a string (use ``reversed-`` prefix
@@ -1168,13 +1230,14 @@ Ordering content
    the basename of the file (without path), or a custom function to extract the
    sorting key from articles. Using a value of ``'date'`` will sort articles in
    chronological order, while the default value, ``'reversed-date'``, will sort
-   articles by date in reverse order (i.e., newest article comes first).
+   articles by date in reverse order (i.e., newest article comes first). The
+   default is ``'reversed-date'``.
 
-.. data:: PAGE_ORDER_BY = 'basename'
+.. data:: PAGE_ORDER_BY
 
    Defines how the pages (``pages`` variable in the template) are sorted.
    Options are same as ``ARTICLE_ORDER_BY``.  The default value, ``'basename'``
-   will sort pages by their basename.
+   will sort pages by their basename. The default is ``'basename'``.
 
 
 .. _settings/themes:
@@ -1190,27 +1253,28 @@ themes.
 
    Theme to use to produce the output. Can be a relative or absolute path to a
    theme folder, or the name of a default theme or a theme installed via
-   :doc:`pelican-themes` (see below).
+   :doc:`pelican-themes` (see below). The default theme is "notmyidea".
 
-.. data:: THEME_STATIC_DIR = 'theme'
+.. data:: THEME_STATIC_DIR
 
    Destination directory in the output path where Pelican will place the files
-   collected from `THEME_STATIC_PATHS`. Default is `theme`.
+   collected from `THEME_STATIC_PATHS`. Default is `theme`. The default is
+   ``'theme'``.
 
-.. data:: THEME_STATIC_PATHS = ['static']
+.. data:: THEME_STATIC_PATHS
 
    Static theme paths you want to copy. Default value is `static`, but if your
    theme has other static paths, you can put them here. If files or directories
    with the same names are included in the paths defined in this settings, they
-   will be progressively overwritten.
+   will be progressively overwritten. The default is ``['static']``.
 
-.. data:: THEME_TEMPLATES_OVERRIDES = []
+.. data:: THEME_TEMPLATES_OVERRIDES
 
    A list of paths you want Jinja2 to search for templates before searching the
    theme's ``templates/`` directory.  Allows for overriding individual theme
    template files without having to fork an existing theme.  Jinja2 searches in
    the following order: files in ``THEME_TEMPLATES_OVERRIDES`` first, then the
-   theme's ``templates/``.
+   theme's ``templates/``. The default is ``[]``.
 
    You can also extend templates from the theme using the ``{% extends %}``
    directive utilizing the ``!theme`` prefix as shown in the following example:
@@ -1219,9 +1283,9 @@ themes.
 
       {% extends '!theme/article.html' %}
 
-.. data:: CSS_FILE = 'main.css'
+.. data:: CSS_FILE
 
-   Specify the CSS file you want to load.
+   Specify the CSS file you want to load. The default is ``'main.css'``.
 
 By default, two themes are available. You can specify them using the ``THEME``
 setting or by passing the ``-t`` option to the ``pelican`` command:
@@ -1252,24 +1316,24 @@ The built-in ``simple`` theme can be customized using the following settings.
 
 .. data:: STYLESHEET_URL
 
-   The URL of the stylesheet to use.
+   The URL of the stylesheet to use. The default is ``None``.
 
 The built-in ``notmyidea`` theme can make good use of the following settings.
 Feel free to use them in your themes as well.
 
 .. data:: SITESUBTITLE
 
-   A subtitle to appear in the header.
+   A subtitle to appear in the header. The default is ``None``.
 
 .. data:: DISQUS_SITENAME
 
    Pelican can handle Disqus comments. Specify the Disqus sitename identifier
-   here.
+   here. The default is ``None``.
 
 .. data:: GITHUB_URL
 
    Your GitHub URL (if you have one). It will then use this information to
-   create a GitHub ribbon.
+   create a GitHub ribbon. The default is ``None``.
 
 .. data:: ANALYTICS
 
@@ -1285,33 +1349,38 @@ Feel free to use them in your themes as well.
           </script>
       """
 
+   The default is ``None``.
+
 .. data:: MENUITEMS
 
    A list of tuples (Title, URL) for additional menu items to appear at the
-   beginning of the main menu.
+   beginning of the main menu. The default is ``None``.
 
 .. data:: LINKS
 
-   A list of tuples (Title, URL) for links to appear on the header.
+   A list of tuples (Title, URL) for links to appear on the header. The
+   default is ``None``.
 
 .. data:: SOCIAL
 
-   A list of tuples (Title, URL) to appear in the "social" section.
+   A list of tuples (Title, URL) to appear in the "social" section. The
+   default is ``None``.
 
 .. data:: TWITTER_USERNAME
 
    Allows for adding a button to articles to encourage others to tweet about
-   them. Add your Twitter username if you want this button to appear.
+   them. Add your Twitter username if you want this button to appear. The
+   default is ``None``.
 
 .. data:: LINKS_WIDGET_NAME
 
    Allows override of the name of the links widget.  If not specified, defaults
-   to "links".
+   to "links". The default is ``None``.
 
 .. data:: SOCIAL_WIDGET_NAME
 
    Allows override of the name of the "social" widget.  If not specified,
-   defaults to "social".
+   defaults to "social". The default is ``None``.
 
 In addition, you can use the "wide" version of the ``notmyidea`` theme by
 adding the following to your configuration::
