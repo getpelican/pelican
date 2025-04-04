@@ -45,7 +45,7 @@ on:
       stork:
         required: false
         default: false
-        description: "Whether to add stork. If true it will be installed on runner"
+        description: "Whether to add Stork search tool. If true, it will be installed on runner."
         type: boolean
 permissions:
   contents: read
@@ -67,7 +67,7 @@ jobs:
       - name: Configure GitHub Pages
         id: pages
         uses: actions/configure-pages@v5
-      - name: Install stork
+      - name: Install Stork
         if: ${{ inputs.stork }}
         run: cargo install stork-search --locked
       - name: Install requirements
