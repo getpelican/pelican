@@ -27,6 +27,13 @@ body {
     text-align: left;
 }
 
+@media (prefers-color-scheme: dark) {
+    body {
+        background: #070808;
+        color: #FFFEFE;
+    }
+}
+
 /* Headings */
 h1 {font-size: 2em }
 h2 {font-size: 1.571em}	/* 22px */
@@ -197,6 +204,12 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
 
 #banner h1 strong {font-size: 0.36em; font-weight: normal;}
 
+@media (prefers-color-scheme: dark) {
+    #banner h1 a:link, #banner h1 a:visited {
+        color: #FFFAF8;
+    }
+}
+
 	/* Main Nav */
 #banner nav {
     background: #000305;
@@ -211,6 +224,12 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
+}
+
+@media (prefers-color-scheme: dark) {
+    #banner nav {
+        background: #121518;
+    }
 }
 
 #banner nav ul {list-style: none; margin: 0 auto; max-width: 800px;}
@@ -255,6 +274,12 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
     -webkit-border-radius: 10px;
 }
 
+@media (prefers-color-scheme: dark) {
+    #featured {
+        background: #151617;
+    }
+}
+
 #featured figure {
     border: 2px solid #eee;
     float: right;
@@ -284,6 +309,12 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
     -webkit-border-radius: 10px;
 }
 
+@media (prefers-color-scheme: dark) {
+    #content {
+        background: #111;
+    }
+}
+
 /*
 	Extras
 *****************/
@@ -304,6 +335,12 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
     border-bottom: 1px solid #F4E3E3;
     text-decoration: none;
     padding: .3em .25em;
+}
+
+@media (prefers-color-scheme: dark) {
+    #extras a:link, #extras a:visited {
+        color: #888;
+    }
 }
 
 #extras a:hover, #extras a:active {color: #fff;}
@@ -339,6 +376,12 @@ div.figure p.caption, figure p.caption { /* margin provided by figure */
     -webkit-border-radius: 10px;
 }
 
+@media (prefers-color-scheme: dark) {
+    #about {
+        background: #222;
+    }
+}
+
 #about .primary {float: left; max-width: 165px;}
 #about .primary strong {color: #C64350; display: block; font-size: 1.286em;}
 #about .photo {float: left; margin: 5px 20px;}
@@ -366,6 +409,12 @@ li:first-child .hentry, #content > .hentry {border: 0; margin: 0;}
 .entry-title {font-size: 3em; margin-bottom: 10px; margin-top: 0;}
 .entry-title a:link, .entry-title a:visited {text-decoration: none; color: #333;}
 .entry-title a:visited {background-color: #fff;}
+
+@media (prefers-color-scheme: dark) {
+    .entry-title a:link, .entry-title a:visited {
+        color: #C74350;
+    }
+}
 
 .hentry .post-info * {font-style: normal;}
 
