@@ -1,9 +1,18 @@
 {% if GITHUB_URL %}
+	<style type="text/css">
+	  div.github_url {
+		position: absolute;
+		border: 0;
+		background: black;
+		padding: 2px 8px;
+		width: 120px;
+	  }
+	</style>
     <a href="{{ GITHUB_URL }}">
         {% if GITHUB_POSITION != "left" %}
-            <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+			<div class="github_url" style="top: 0; right: 0; border-radius: 0 0 0 8px;">Fork me on GitHub</div>
         {% else %}
-            <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_left_white_ffffff.png" alt="Fork me on GitHub" />
+			<div class="github_url" style="top: 0; left: 0; border-radius: 0 0 8px 0;">Fork me on GitHub</div>
         {% endif %}
     </a>
 {% endif %}
