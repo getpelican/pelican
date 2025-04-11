@@ -78,7 +78,7 @@ test = "invoke tests"
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "BeautifulSoup4>=4.12.2",
+    "BeautifulSoup4>=4.13.3",
     "jinja2>=3.1.2",
     "lxml>=4.9.3",
     "markdown>=3.5.1",
