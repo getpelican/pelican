@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 def decode_wp_content(content, br=True):
     pre_tags = {}
-    if content.strip() == "":
+    if content is None or content.strip() == "":
         return ""
 
     content += "\n"
@@ -148,7 +148,7 @@ def wp2fields(xml, wp_custpost=False):
     """Opens a wordpress XML file, and yield Pelican fields"""
 
     soup = file_to_soup(xml)
-    items = soup.rss.channel.findAll("item")
+    items = soup.rss.channel.find_all("item")
     for item in items:
         if item.find("status").string in ["publish", "draft"]:
             try:
@@ -172,11 +172,11 @@ def wp2fields(xml, wp_custpost=False):
             author = item.find("creator").string
 
             categories = [
-                cat.string for cat in item.findAll("category", {"domain": "category"})
+                cat.string for cat in item.find_all("category", {"domain": "category"})
             ]
 
             tags = [
-                tag.string for tag in item.findAll("category", {"domain": "post_tag"})
+                tag.string for tag in item.find_all("category", {"domain": "post_tag"})
             ]
             # To publish a post the status should be 'published'
             status = (
@@ -218,7 +218,7 @@ def blogger2fields(xml):
     """Opens a blogger XML file, and yield Pelican fields"""
 
     soup = file_to_soup(xml)
-    entries = soup.feed.findAll("entry")
+    entries = soup.feed.find_all("entry")
     for entry in entries:
         raw_kind = entry.find(
             "category", {"scheme": "http://schemas.google.com/g/2005#kind"}
@@ -253,7 +253,7 @@ def blogger2fields(xml):
         # blogger posts only have tags, no category
         tags = [
             tag.get("term")
-            for tag in entry.findAll(
+            for tag in entry.find_all(
                 "category", {"scheme": "http://www.blogger.com/atom/ns#"}
             )
         ]
@@ -571,8 +571,8 @@ def strip_medium_post_content(soup) -> str:
     # See https://stackoverflow.com/a/8439761
     invalid_tags = ["section", "div", "footer"]
     for tag in invalid_tags:
-        for match in soup.findAll(tag):
-            match.replaceWithChildren()
+        for match in soup.find_all(tag):
+            match.unwrap()
 
     # Remove attributes
     # See https://stackoverflow.com/a/9045719
@@ -845,7 +845,7 @@ def get_attachments(xml):
     of the attachment_urls
     """
     soup = file_to_soup(xml)
-    items = soup.rss.channel.findAll("item")
+    items = soup.rss.channel.find_all("item")
     names = {}
     attachments = []
 
