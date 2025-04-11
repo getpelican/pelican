@@ -25,10 +25,10 @@ session and create a new virtual environment for Pelican::
 
 Once the virtual environment has been created and activated, Pelican can be
 installed via ``python -m pip install pelican`` as noted above. Alternatively, if you
-have the project source, you can install Pelican using the distutils method::
+have the project source, you can install Pelican using the setuptools method::
 
     cd path-to-Pelican-source
-    python setup.py install
+    python -m pip install .
 
 If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
