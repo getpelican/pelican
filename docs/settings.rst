@@ -712,14 +712,14 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
    non-alphanumeric characters and converting internal whitespace to dashes.
    Apart from these substitutions, slugs are always converted to lowercase
    ascii characters and leading and trailing whitespace is stripped. Useful for
-   backward compatibility with existing URLs.
+   backward compatibility with existing URLs. The default is::
 
-   The default is ``[
-        (r'[^\\w\\s-]', ''),  # remove non-alphabetical/whitespace/'-' chars
-        (r'(?u)\\A\\s*', ''),  # strip leading whitespace
-        (r'(?u)\\s*\\Z', ''),  # strip trailing whitespace
-        (r'[-\\s]+', '-'),  # reduce multiple whitespace or '-' to single '-'
-    ]``
+       [
+           (r'[^\\w\\s-]', ''),   # remove non-alphabetical/whitespace/'-' chars
+           (r'(?u)\\A\\s*', ''),  # strip leading whitespace
+           (r'(?u)\\s*\\Z', ''),  # strip trailing whitespace
+           (r'[-\\s]+', '-'),     # reduce multiple whitespace or '-' to single '-'
+       ]
 
 .. data:: AUTHOR_REGEX_SUBSTITUTIONS
 
@@ -1126,10 +1126,12 @@ You can use the following settings to configure the pagination.
 .. data:: PAGINATION_PATTERNS
 
    A set of patterns that are used to determine advanced pagination output. The
-   default is ``(
-      (1, '{name}{extension}', '{name}{extension}'),
-      (2, '{name}{number}{extension}', '{name}{number}{extension}'),
-  )``.
+   default is::
+
+       (
+           (1, '{name}{extension}', '{name}{extension}'),
+           (2, '{name}{number}{extension}', '{name}{number}{extension}'),
+       )
 
 
 Using Pagination Patterns
@@ -1208,6 +1210,8 @@ section for more information.
    Relative URL of the RSS feed for translations, including the ``{lang}``
    placeholder. [3]_ If not set, ``TRANSLATION_FEED_RSS`` is used both for save
    location and URL. The default is ``None``.
+
+.. [3] {lang} is the language code
 
 Ordering content
 ================
