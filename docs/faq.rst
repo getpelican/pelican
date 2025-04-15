@@ -118,7 +118,7 @@ How do I make my output folder structure identical to my content hierarchy?
 Try these settings::
 
     USE_FOLDER_AS_CATEGORY = False
-    PATH_METADATA = "(?P<path_no_ext>.*)\..*"
+    PATH_METADATA = r"(?P<path_no_ext>.*)\..*"
     ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = "{path_no_ext}.html"
 
 How do I assign custom templates on a per-page basis?

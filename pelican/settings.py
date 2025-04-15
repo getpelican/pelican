@@ -144,7 +144,7 @@ DEFAULT_CONFIG = {
     "DEFAULT_ORPHANS": 0,
     "DEFAULT_METADATA": {},
     "FILENAME_METADATA": r"(?P<date>\d{4}-\d{2}-\d{2}).*",
-    "PATH_METADATA": "",
+    "PATH_METADATA": r"",
     "EXTRA_PATH_METADATA": {},
     "ARTICLE_PERMALINK_STRUCTURE": "",
     "TYPOGRIFY": False,

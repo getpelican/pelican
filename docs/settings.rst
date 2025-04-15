@@ -458,7 +458,7 @@ If you don't want that flexibility and instead prefer that your generated
 output paths mirror your source content's filesystem path hierarchy, try the
 following settings::
 
-    PATH_METADATA = '(?P<path_no_ext>.*)\..*'
+    PATH_METADATA = r'(?P<path_no_ext>.*)\..*'
     ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = '{path_no_ext}.html'
 
 Otherwise, you can use a variety of file metadata attributes within URL-related
