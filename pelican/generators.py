@@ -86,6 +86,7 @@ class Generator:
                     ),  # explicit ones
                 ]
             ),
+            autoescape=True,
             **self.settings["JINJA_ENVIRONMENT"],
         )
 

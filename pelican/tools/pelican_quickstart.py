@@ -45,6 +45,7 @@ _jinja_env = Environment(
     loader=FileSystemLoader(_TEMPLATES_DIR),
     trim_blocks=True,
     keep_trailing_newline=True,
+    autoescape=True,
 )
 
 
