@@ -503,7 +503,7 @@ This would save your articles into something like
 
 .. data:: ARTICLE_SAVE_AS
 
-   The place where we will save an article. The default is ``'{slug.html}'``.
+   The place where we will save an article. The default is ``'{slug}.html'``.
 
 .. data:: ARTICLE_LANG_URL
 
