@@ -273,14 +273,14 @@ class PluginTest(unittest.TestCase):
         expected = []
         for i in range(50):
             # function appends value of i to a list
-            def func(input, i=i):
-                input.append(i)
+            def func(dummy_input, i=i):
+                dummy_input.append(i)
 
             functions.append(func)
             # we expect functions to be run in the connection order
             dummy_signal.connect(func)
             expected.append(i)
 
-        input = []
-        dummy_signal.send(input)
-        self.assertEqual(input, expected)
+        dummy_input = []
+        dummy_signal.send(dummy_input)
+        self.assertEqual(dummy_input, expected)

@@ -998,28 +998,32 @@ class TestFileChangeFilter(unittest.TestCase):
     ignore_file_patterns = DEFAULT_CONFIG["IGNORE_FILES"]
 
     def test_regular_files_not_filtered(self):
-        filter = utils.FileChangeFilter(ignore_file_patterns=self.ignore_file_patterns)
+        file_change_filter = utils.FileChangeFilter(
+            ignore_file_patterns=self.ignore_file_patterns
+        )
         basename = "article.rst"
         full_path = os.path.join(os.path.dirname(__file__), "content", basename)
 
         for change in watchfiles.Change:
-            self.assertTrue(filter(change=change, path=basename))
-            self.assertTrue(filter(change=change, path=full_path))
+            self.assertTrue(file_change_filter(change=change, path=basename))
+            self.assertTrue(file_change_filter(change=change, path=full_path))
 
     def test_dotfiles_filtered(self):
-        filter = utils.FileChangeFilter(ignore_file_patterns=self.ignore_file_patterns)
+        file_change_filter = utils.FileChangeFilter(
+            ignore_file_patterns=self.ignore_file_patterns
+        )
         basename = ".config"
         full_path = os.path.join(os.path.dirname(__file__), "content", basename)
 
         # Testing with just the hidden file name and the full file path to the hidden file
         for change in watchfiles.Change:
-            self.assertFalse(filter(change=change, path=basename))
-            self.assertFalse(filter(change=change, path=full_path))
+            self.assertFalse(file_change_filter(change=change, path=basename))
+            self.assertFalse(file_change_filter(change=change, path=full_path))
 
     def test_default_filters(self):
         # Testing a subset of the default filters
         # For reference: https://watchfiles.helpmanual.io/api/filters/#watchfiles.DefaultFilter.ignore_dirs
-        filter = utils.FileChangeFilter(ignore_file_patterns=[])
+        file_change_filter = utils.FileChangeFilter(ignore_file_patterns=[])
         test_basenames = [
             "__pycache__",
             ".git",
@@ -1040,20 +1044,20 @@ class TestFileChangeFilter(unittest.TestCase):
         for basename in test_basenames:
             full_path = os.path.join(os.path.dirname(__file__), basename)
             for change in watchfiles.Change:
-                self.assertFalse(filter(change=change, path=basename))
-                self.assertFalse(filter(change=change, path=full_path))
+                self.assertFalse(file_change_filter(change=change, path=basename))
+                self.assertFalse(file_change_filter(change=change, path=full_path))
 
     def test_custom_ignore_pattern(self):
-        filter = utils.FileChangeFilter(ignore_file_patterns=["*.rst"])
+        file_change_filter = utils.FileChangeFilter(ignore_file_patterns=["*.rst"])
         basename = "article.rst"
         full_path = os.path.join(os.path.dirname(__file__), basename)
         for change in watchfiles.Change:
-            self.assertFalse(filter(change=change, path=basename))
-            self.assertFalse(filter(change=change, path=full_path))
+            self.assertFalse(file_change_filter(change=change, path=basename))
+            self.assertFalse(file_change_filter(change=change, path=full_path))
 
         # If the user changes `IGNORE_FILES` to only contain ['*.rst'], then dotfiles would not be filtered anymore
         basename = ".config"
         full_path = os.path.join(os.path.dirname(__file__), basename)
         for change in watchfiles.Change:
-            self.assertTrue(filter(change=change, path=basename))
-            self.assertTrue(filter(change=change, path=full_path))
+            self.assertTrue(file_change_filter(change=change, path=basename))
+            self.assertTrue(file_change_filter(change=change, path=full_path))

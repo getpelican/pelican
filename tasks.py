@@ -56,7 +56,7 @@ def coverage(c):
 
 
 @task
-def format(c, check=False, diff=False):
+def formatcode(c, check=False, diff=False):
     """Run Ruff's auto-formatter, optionally with --check or --diff"""
     check_flag, diff_flag = "", ""
     if check:
@@ -83,7 +83,7 @@ def ruff(c, fix=False, diff=False):
 def lint(c, fix=False, diff=False):
     """Check code style via linting tools."""
     ruff(c, fix=fix, diff=diff)
-    format(c, check=not fix, diff=diff)
+    formatcode(c, check=not fix, diff=diff)
 
 
 @task
