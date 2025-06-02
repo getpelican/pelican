@@ -819,9 +819,9 @@ Time and Date
 
    .. parsed-literal::
 
-      LOCALE = ('usa', 'jpn',      # On Windows
+      LOCALE = ['usa', 'jpn',      # On Windows
                 'en_US', 'ja_JP'   # On Unix/Linux
-      )
+      ]
 
    For a list of available locales refer to `locales on Windows`_  or on
    Unix/Linux, use the ``locale -a`` command; see manpage
