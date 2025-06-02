@@ -122,8 +122,8 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
 
         return mimetype
 
-    def log_message(self, format, *args):
-        logger.info(format, *args)
+    def log_message(self, msg_format, *args):
+        logger.info(msg_format, *args)
 
 
 class RootedHTTPServer(server.HTTPServer):

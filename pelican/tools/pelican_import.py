@@ -320,7 +320,7 @@ def dc2fields(file):
         # post_id = fields[0][1:]
         # blog_id = fields[1]
         # user_id = fields[2]
-        cat_id = fields[3]
+        cat_ids = fields[3]
         # post_dt = fields[4]
         # post_tz = fields[5]
         post_creadt = fields[6]
@@ -354,8 +354,10 @@ def dc2fields(file):
         categories = []
         tags = []
 
-        if cat_id:
-            categories = [category_list[id].strip() for id in cat_id.split(",")]
+        if cat_ids:
+            categories = [
+                category_list[cat_id].strip() for cat_id in cat_ids.split(",")
+            ]
 
         # Get tags related to a post
         tag = (
@@ -453,11 +455,11 @@ def tumblr2fields(api_key, blogname):
                 ).strftime("%Y-%m-%d-")
                 + slug
             )
-            format = post.get("format")
+            post_format = post.get("format")
             content = post.get("body")
-            type = post.get("type")
-            if type == "photo":
-                if format == "markdown":
+            post_type = post.get("type")
+            if post_type == "photo":
+                if post_format == "markdown":
                     fmtstr = "![%s](%s)"
                 else:
                     fmtstr = '<img alt="%s" src="%s" />'
@@ -466,20 +468,20 @@ def tumblr2fields(api_key, blogname):
                     % (photo.get("caption"), photo.get("original_size").get("url"))
                     for photo in post.get("photos")
                 )
-            elif type == "quote":
-                if format == "markdown":
+            elif post_type == "quote":
+                if post_format == "markdown":
                     fmtstr = "\n\n&mdash; %s"
                 else:
                     fmtstr = "<p>&mdash; %s</p>"
                 content = post.get("text") + fmtstr % post.get("source")
-            elif type == "link":
-                if format == "markdown":
+            elif post_type == "link":
+                if post_format == "markdown":
                     fmtstr = "[via](%s)\n\n"
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
                 content = fmtstr % post.get("url") + post.get("description")
-            elif type == "audio":
-                if format == "markdown":
+            elif post_type == "audio":
+                if post_format == "markdown":
                     fmtstr = "[via](%s)\n\n"
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
@@ -488,8 +490,8 @@ def tumblr2fields(api_key, blogname):
                     + post.get("caption")
                     + post.get("player")
                 )
-            elif type == "video":
-                if format == "markdown":
+            elif post_type == "video":
+                if post_format == "markdown":
                     fmtstr = "[via](%s)\n\n"
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
@@ -506,7 +508,7 @@ def tumblr2fields(api_key, blogname):
                 else:
                     players = "\n".join(players)
                 content = source + caption + players
-            elif type == "answer":
+            elif post_type == "answer":
                 title = post.get("question")
                 content = (
                     "<p>"
@@ -531,11 +533,11 @@ def tumblr2fields(api_key, blogname):
                 slug,
                 date,
                 post.get("blog_name"),
-                [type],
+                [post_type],
                 tags,
                 status,
                 kind,
-                format,
+                post_format,
             )
 
         offset += len(posts)
