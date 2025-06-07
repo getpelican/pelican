@@ -715,10 +715,10 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
    backward compatibility with existing URLs. The default is::
 
        [
-           (r'[^\\w\\s-]', ''),   # remove non-alphabetical/whitespace/'-' chars
-           (r'(?u)\\A\\s*', ''),  # strip leading whitespace
-           (r'(?u)\\s*\\Z', ''),  # strip trailing whitespace
-           (r'[-\\s]+', '-'),     # reduce multiple whitespace or '-' to single '-'
+           (r'[^\w\s-]', ''),   # remove non-alphabetical/whitespace/'-' chars
+           (r'(?u)\A\s*', ''),  # strip leading whitespace
+           (r'(?u)\s*\Z', ''),  # strip trailing whitespace
+           (r'[-\s]+', '-'),     # reduce multiple whitespace or '-' to single '-'
        ]
 
 .. data:: AUTHOR_REGEX_SUBSTITUTIONS
