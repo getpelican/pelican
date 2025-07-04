@@ -41,7 +41,7 @@ version = ".".join(release.split(".")[:1])
 last_stable = project_data.get("version")
 rst_prolog = f"""
 .. |last_stable| replace:: :pelican-doc:`{last_stable}`
-.. |min_python| replace:: {project_data.get('requires-python').split(",")[0]}
+.. |min_python| replace:: {project_data.get("requires-python").split(",")[0]}
 """
 
 extlinks = {"pelican-doc": ("https://docs.getpelican.com/en/latest/%s.html", "%s")}

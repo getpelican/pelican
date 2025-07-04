@@ -402,8 +402,7 @@ def parse_arguments(argv=None):
         "--autoreload",
         dest="autoreload",
         action="store_true",
-        help="Relaunch pelican each time a modification occurs"
-        " on the content files.",
+        help="Relaunch pelican each time a modification occurs on the content files.",
     )
 
     parser.add_argument(
@@ -446,8 +445,7 @@ def parse_arguments(argv=None):
         choices=("errors", "warnings"),
         default="",
         help=(
-            "Exit the program with non-zero status if any "
-            "errors/warnings encountered."
+            "Exit the program with non-zero status if any errors/warnings encountered."
         ),
     )
 
