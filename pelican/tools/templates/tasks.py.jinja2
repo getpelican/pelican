@@ -2,9 +2,7 @@ import os
 import shlex
 import shutil
 import sys
-{% if github %}
 import datetime
-{% endif %}
 
 from invoke import task
 from invoke.main import program
@@ -27,6 +25,15 @@ CONFIG = {
     "settings_publish": "publishconf.py",
     # Output path. Can be absolute or relative to tasks.py. Default: 'output'
     "deploy_path": SETTINGS["OUTPUT_PATH"],
+    # New content created by `invoke new`, will create inside `content/`
+    "new_path": SETTINGS["PATH"],
+    # or create content in `content/<year>/`
+    #"new_path": os.path.join(
+    #    SETTINGS["PATH"],
+    #    str(datetime.datetime.now().year),
+    #),
+    # Default format for new content: "rst" or "md"
+    "new_ext": "rst",
 {% if ssh %}
     # Remote server configuration
     "ssh_user": "{{ssh_user}}",
@@ -49,6 +56,26 @@ CONFIG = {
     "host": "localhost",
     "port": 8000,
 }
+
+NEW_TEMPLATE_RST = """{title}
+{title_underline}
+
+:date: {date}
+:category: {category}
+
+Write content here.
+"""
+
+NEW_TEMPLATE_MD = """Title: {title}
+Date: {date}
+Category: {category}
+
+Write content here."""
+
+NEW_TEMPLATES = {
+    "rst": NEW_TEMPLATE_RST,
+    "md": NEW_TEMPLATE_MD,
+}[CONFIG["new_ext"]]
 
 
 @task
@@ -187,6 +214,37 @@ def gh_pages(c):
         "{deploy_path} -p".format(**CONFIG)
     )
 {% endif %}
+
+@task
+def new(c):
+    """Creates a new article, prompting user for details"""
+    from pelican.utils import slugify
+
+    title = input("Enter new article title: ")
+
+    default_slug = slugify(title, SETTINGS["SLUG_REGEX_SUBSTITUTIONS"])
+    slug = input(f"Enter new artile slug [{default_slug}]: ") or default_slug
+
+    category = input("Enter new article category: ")
+
+    filename = f"{slug}.{CONFIG['new_ext']}"
+    path = os.path.join(CONFIG["new_path"], filename)
+
+    if os.path.exists(path):
+        print(f"{path} already exists, abording.")
+        return
+
+    print(f"creating {path}")
+    with open(path, "w") as f:
+        f.write(
+            NEW_TEMPLATES.format(
+                title=title,
+                title_underline="#" * len(title),
+                date=datetime.datetime.now().strftime("%Y-%m-%d"),
+                category=category,
+            )
+        )
+
 
 def pelican_run(cmd):
     cmd += " " + program.core.remainder  # allows to pass-through args to pelican
