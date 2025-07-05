@@ -261,8 +261,7 @@ class Writer:
             # generated pages, and write
             for page_num in range(next(iter(paginators.values())).num_pages):
                 paginated_kwargs = kwargs.copy()
-                for key in paginators.keys():
-                    paginator = paginators[key]
+                for key, paginator in paginators.items():
                     previous_page = paginator.page(page_num) if page_num > 0 else None
                     page = paginator.page(page_num + 1)
                     next_page = (

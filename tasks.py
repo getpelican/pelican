@@ -3,10 +3,11 @@ from pathlib import Path
 from shutil import which
 
 from invoke import task
+from livereload import Server
 
 PKG_NAME = "pelican"
 PKG_PATH = Path(PKG_NAME)
-DOCS_PORT = os.environ.get("DOCS_PORT", 8000)
+DOCS_PORT = int(os.environ.get("DOCS_PORT", "8000"))
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
 PTY = os.name != "nt"
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
@@ -29,8 +30,6 @@ def docbuild(c):
 @task(docbuild)
 def docserve(c):
     """Serve docs at http://localhost:$DOCS_PORT/ (default port is 8000)"""
-    from livereload import Server
-
     server = Server()
     server.watch("docs/conf.py", lambda: docbuild(c))
     server.watch("CONTRIBUTING.rst", lambda: docbuild(c))

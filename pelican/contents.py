@@ -342,8 +342,7 @@ class Content:
                     value.geturl(),
                     extra={
                         "limit_msg": (
-                            "Other resources were not found "
-                            "and their urls not replaced"
+                            "Other resources were not found and their urls not replaced"
                         )
                     },
                 )

@@ -10,6 +10,7 @@ import re
 import shutil
 import sys
 import traceback
+import unicodedata
 import urllib
 from collections.abc import Collection, Generator, Hashable, Iterable, Sequence
 from contextlib import contextmanager
@@ -25,6 +26,7 @@ from typing import (
 )
 
 import dateutil.parser
+import unidecode
 from watchfiles import Change
 
 try:
@@ -259,10 +261,6 @@ def slugify(
     For a set of sensible default regex substitutions to pass to regex_subs
     look into pelican.settings.DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS'].
     """
-
-    import unicodedata
-
-    import unidecode
 
     def normalize_unicode(text: str) -> str:
         # normalize text by compatibility composition
@@ -796,8 +794,7 @@ def order_content(
                                 content.get_relative_source_path(),
                                 extra={
                                     "limit_msg": (
-                                        "More files are missing "
-                                        "the needed attribute."
+                                        "More files are missing the needed attribute."
                                     )
                                 },
                             )

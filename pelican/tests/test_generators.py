@@ -916,10 +916,7 @@ class TestArticlesGenerator(unittest.TestCase):
             "This is a super article !",
             "This is a super article !",
             "This is an article with category !",
-            (
-                "This is an article with multiple authors in lastname, "
-                "firstname format!"
-            ),
+            ("This is an article with multiple authors in lastname, firstname format!"),
             "This is an article with multiple authors in list format!",
             "This is an article with multiple authors!",
             "This is an article with multiple authors!",

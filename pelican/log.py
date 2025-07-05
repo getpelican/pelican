@@ -1,4 +1,5 @@
 import logging
+import warnings
 from collections import defaultdict
 
 from rich.console import Console
@@ -156,8 +157,6 @@ def init(
 
 
 def log_warnings():
-    import warnings
-
     logging.captureWarnings(True)
     warnings.simplefilter("default", DeprecationWarning)
     init(logging.DEBUG, name="py.warnings")

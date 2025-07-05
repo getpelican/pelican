@@ -17,8 +17,7 @@ try:
     import pelican
 except ImportError:
     err(
-        "Cannot import pelican.\nYou must "
-        "install Pelican in order to run this script.",
+        "Cannot import pelican.\nYou must install Pelican in order to run this script.",
         -1,
     )
 

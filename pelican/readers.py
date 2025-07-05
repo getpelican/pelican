@@ -630,8 +630,9 @@ class Readers(FileStampDataCacher):
 
         # eventually filter the content with typogrify if asked so
         if self.settings["TYPOGRIFY"]:
-            import smartypants
-            from typogrify.filters import typogrify
+            # typogrify is an optional feature, user may not have it installed
+            import smartypants  # noqa: PLC0415
+            from typogrify.filters import typogrify  # noqa: PLC0415
 
             typogrify_dashes = self.settings["TYPOGRIFY_DASHES"]
             if typogrify_dashes == "oldschool":
@@ -657,7 +658,7 @@ class Readers(FileStampDataCacher):
                     return typogrify(
                         text,
                         self.settings["TYPOGRIFY_IGNORE_TAGS"],
-                        **{f: False for f in self.settings["TYPOGRIFY_OMIT_FILTERS"]},
+                        **dict.fromkeys(self.settings["TYPOGRIFY_OMIT_FILTERS"], False),
                     )
                 except TypeError:
                     try:

@@ -3,7 +3,7 @@ import locale
 from jinja2.utils import generate_lorem_ipsum
 
 from pelican.contents import Article, Author
-from pelican.paginator import Paginator
+from pelican.paginator import PaginationRule, Paginator
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import get_settings, unittest
 
@@ -35,8 +35,6 @@ class TestPage(unittest.TestCase):
     def test_save_as_preservation(self):
         settings = get_settings()
         # fix up pagination rules
-        from pelican.paginator import PaginationRule
-
         pagination_rules = [
             PaginationRule(*r)
             for r in settings.get(
@@ -56,8 +54,6 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page.save_as, "foobar.foo")
 
     def test_custom_pagination_pattern(self):
-        from pelican.paginator import PaginationRule
-
         settings = get_settings()
         settings["PAGINATION_PATTERNS"] = [
             PaginationRule(*r)
@@ -81,8 +77,6 @@ class TestPage(unittest.TestCase):
         self.assertEqual(page2.url, "//blog.my.site/2/")
 
     def test_custom_pagination_pattern_last_page(self):
-        from pelican.paginator import PaginationRule
-
         settings = get_settings()
         settings["PAGINATION_PATTERNS"] = [
             PaginationRule(*r)

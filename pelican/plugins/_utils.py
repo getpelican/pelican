@@ -19,7 +19,7 @@ def iter_namespace(ns_pkg):
 
 def get_namespace_plugins(ns_pkg=None):
     if ns_pkg is None:
-        import pelican.plugins as ns_pkg
+        import pelican.plugins as ns_pkg  # noqa: PLC0415
 
     return {
         name: importlib.import_module(name)
@@ -29,7 +29,7 @@ def get_namespace_plugins(ns_pkg=None):
 
 
 def list_plugins(ns_pkg=None):
-    from pelican.log import init as init_logging
+    from pelican.log import init as init_logging  # noqa: PLC0415
 
     init_logging(logging.INFO)
     ns_plugins = get_namespace_plugins(ns_pkg)
