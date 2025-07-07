@@ -442,12 +442,12 @@ def parse_arguments(argv=None):
 
     parser.add_argument(
         "--fatal",
-        metavar="errors|warnings",
-        choices=("errors", "warnings"),
-        default="",
+        metavar="errors|warnings|ignore",
+        choices=("errors", "warnings", "ignore"),
+        default="errors",
         help=(
             "Exit the program with non-zero status if any "
-            "errors/warnings encountered."
+            "errors/warnings encountered, or ignore any errors."
         ),
     )
 

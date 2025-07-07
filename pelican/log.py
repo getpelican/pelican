@@ -131,13 +131,23 @@ DEFAULT_LOG_HANDLER = RichHandler(console=console)
 
 def init(
     level=None,
-    fatal="",
+    fatal="errors",
     handler=DEFAULT_LOG_HANDLER,
     name=None,
     logs_dedup_min_level=None,
 ):
+    """Initialize the logger.
+
+    :param level: the log level
+    :param fatal: how to set up the FatalLogger.  If "warning", then warnings are fatal.
+                  If fatal is set to anything other than "" or "ignore",
+                  then errors are fatal.
+    :param handler: the logging handler
+    :param name: the name of the logger to use
+    :param logs_dedup_min_level:  the LimitFilter.LOGS_DEDUP_MIN_LEVEL to use
+    """
     FatalLogger.warnings_fatal = fatal.startswith("warning")
-    FatalLogger.errors_fatal = bool(fatal)
+    FatalLogger.errors_fatal = bool(fatal) and fatal != "ignore"
 
     LOG_FORMAT = "%(message)s"
     logging.basicConfig(
@@ -155,12 +165,13 @@ def init(
         LimitFilter.LOGS_DEDUP_MIN_LEVEL = logs_dedup_min_level
 
 
-def log_warnings():
+def log_warnings(fatal: str) -> None:
+    """Redirect warnings module to use logging instead."""
     import warnings
 
     logging.captureWarnings(True)
     warnings.simplefilter("default", DeprecationWarning)
-    init(logging.DEBUG, name="py.warnings")
+    init(logging.DEBUG, name="py.warnings", fatal=fatal)
 
 
 if __name__ == "__main__":
