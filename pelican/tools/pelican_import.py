@@ -2,6 +2,7 @@
 
 import argparse
 import datetime
+import json
 import logging
 import os
 import re
@@ -9,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.request as urllib_request
 from collections import defaultdict
 from html import unescape
 from urllib.error import URLError
@@ -16,6 +18,7 @@ from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
 
 import dateutil.parser
+from docutils.utils import column_width
 
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
@@ -118,7 +121,7 @@ def decode_wp_content(content, br=True):
 def _import_bs4():
     """Import and return bs4, otherwise sys.exit."""
     try:
-        import bs4
+        import bs4  # noqa: PLC0415
     except ImportError:
         error = (
             'Missing dependency "BeautifulSoup4" and "lxml" required to '
@@ -272,7 +275,7 @@ def blogger2fields(xml):
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
     try:
-        from bs4 import BeautifulSoup
+        from bs4 import BeautifulSoup  # noqa: PLC0415
     except ImportError:
         error = (
             "Missing dependency "
@@ -311,7 +314,7 @@ def dc2fields(file):
                 else:
                     posts.append(line)
 
-    print("%i posts read." % len(posts))
+    print(f"{len(posts)} posts read.")
 
     subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
     for post in posts:
@@ -367,7 +370,7 @@ def dc2fields(file):
             .replace("a:0:", "")
         )
         if len(tag) > 1:
-            if int(len(tag[:1])) == 1:
+            if len(tag[:1]) == 1:
                 newtag = tag.split('"')[1]
                 tags.append(
                     BeautifulSoup(newtag, "xml")
@@ -418,13 +421,10 @@ def dc2fields(file):
 
 
 def _get_tumblr_posts(api_key, blogname, offset=0):
-    import json
-    import urllib.request as urllib_request
-
     url = (
-        "https://api.tumblr.com/v2/blog/%s.tumblr.com/"
-        "posts?api_key=%s&offset=%d&filter=raw"
-    ) % (blogname, api_key, offset)
+        f"https://api.tumblr.com/v2/blog/{blogname}.tumblr.com/"
+        f"posts?api_key={api_key}&offset={offset}&filter=raw"
+    )
     request = urllib_request.Request(url)
     handle = urllib_request.urlopen(request)
     posts = json.loads(handle.read().decode("utf-8"))
@@ -673,7 +673,7 @@ def mediumposts2fields(medium_export_dir: str):
 
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
-    import feedparser
+    import feedparser  # noqa: PLC0415
 
     d = feedparser.parse(file)
     subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
@@ -706,8 +706,6 @@ def build_header(
     title, date, author, categories, tags, slug, status=None, attachments=None
 ):
     """Build a header from a list of fields"""
-
-    from docutils.utils import column_width
 
     header = "{}\n{}\n".format(title, "#" * column_width(title))
     if date:
@@ -971,10 +969,10 @@ def fields2pelican(
         if is_pandoc_needed(in_markup) and not pandoc_version:
             posts_require_pandoc.append(filename)
 
-        slug = not disable_slugs and filename or None
-        assert slug is None or filename == os.path.basename(
-            filename
-        ), f"filename is not a basename: {filename}"
+        slug = (not disable_slugs and filename) or None
+        assert slug is None or filename == os.path.basename(filename), (
+            f"filename is not a basename: {filename}"
+        )
 
         if wp_attach and attachments:
             try:
@@ -1047,8 +1045,7 @@ def fields2pelican(
                         "--wrap=none" if pandoc_version >= (1, 16) else "--no-wrap"
                     )
                     cmd = (
-                        "pandoc --normalize {0} --from=html"
-                        ' --to={1} {2} -o "{3}" "{4}"'
+                        'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
                     )
                     cmd = cmd.format(
                         parse_raw,
@@ -1070,7 +1067,7 @@ def fields2pelican(
                 try:
                     rc = subprocess.call(cmd, shell=True)
                     if rc < 0:
-                        error = "Child was terminated by signal %d" % -rc
+                        error = f"Child was terminated by signal {-rc}"
                         sys.exit(error)
 
                     elif rc > 0:

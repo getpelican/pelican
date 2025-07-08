@@ -7,7 +7,7 @@ from sys import platform
 
 from jinja2.utils import generate_lorem_ipsum
 
-from pelican.contents import Article, Author, Category, Page, Static
+from pelican.contents import Article, Author, Category, Page, Static, logger
 from pelican.plugins.signals import content_object_init
 from pelican.settings import DEFAULT_CONFIG
 from pelican.tests.support import LoggedTestCase, get_context, get_settings, unittest
@@ -49,24 +49,18 @@ class TestBase(LoggedTestCase):
         self._enable_limit_filter()
 
     def _disable_limit_filter(self):
-        from pelican.contents import logger
-
         logger.disable_filter()
 
     def _enable_limit_filter(self):
-        from pelican.contents import logger
-
         logger.enable_filter()
 
     def _copy_page_kwargs(self):
-        # make a deep copy of page_kwargs
-        page_kwargs = {key: self.page_kwargs[key] for key in self.page_kwargs}
-        for key in page_kwargs:
-            if not isinstance(page_kwargs[key], dict):
+        # copy page_kwargs
+        page_kwargs = dict(self.page_kwargs)
+        for key, val in page_kwargs.items():
+            if not isinstance(val, dict):
                 break
-            page_kwargs[key] = {
-                subkey: page_kwargs[key][subkey] for subkey in page_kwargs[key]
-            }
+            page_kwargs[key] = {subkey: val[subkey] for subkey in val}
 
         return page_kwargs
 
@@ -310,18 +304,16 @@ class TestPage(TestBase):
 
         # I doubt this can work on all platforms ...
         if platform == "win32":
-            locale = "jpn"
+            the_locale = "jpn"
         else:
-            locale = "ja_JP.utf8"
-        page_kwargs["settings"]["DATE_FORMATS"] = {"jp": (locale, "%Y-%m-%d(%a)")}
+            the_locale = "ja_JP.utf8"
+        page_kwargs["settings"]["DATE_FORMATS"] = {"jp": (the_locale, "%Y-%m-%d(%a)")}
         page_kwargs["metadata"]["lang"] = "jp"
-
-        import locale as locale_module
 
         try:
             page = Page(**page_kwargs)
             self.assertEqual(page.locale_date, "2015-09-13(\u65e5)")
-        except locale_module.Error:
+        except locale.Error:
             # The constructor of ``Page`` will try to set the locale to
             # ``ja_JP.utf8``. But this attempt will failed when there is no
             # such locale in the system. You can see which locales there are
@@ -329,7 +321,7 @@ class TestPage(TestBase):
             #
             # Until we find some other method to test this functionality, we
             # will simply skip this test.
-            unittest.skip(f"There is no locale {locale} in this system.")
+            unittest.skip(f"There is no locale {the_locale} in this system.")
 
     def test_template(self):
         # Pages default to page, metadata overwrites
@@ -406,8 +398,7 @@ class TestPage(TestBase):
 
         # fragment
         args["content"] = (
-            "A simple test, with a "
-            '<a href="|filename|article.rst#section-2">link</a>'
+            'A simple test, with a <a href="|filename|article.rst#section-2">link</a>'
         )
         content = Page(**args).get_content("http://notmyidea.org")
         self.assertEqual(
@@ -687,8 +678,7 @@ class TestPage(TestBase):
         }
 
         args["content"] = (
-            "A simple test, with a link to a"
-            '<a href="{filename}poster.jpg">poster</a>'
+            'A simple test, with a link to a<a href="{filename}poster.jpg">poster</a>'
         )
         content = Page(**args).get_content("http://notmyidea.org")
         self.assertEqual(

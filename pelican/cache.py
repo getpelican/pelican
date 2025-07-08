@@ -1,3 +1,4 @@
+import gzip
 import hashlib
 import logging
 import os
@@ -22,8 +23,6 @@ class FileDataCacher:
         self._cache_path = os.path.join(self.settings["CACHE_PATH"], cache_name)
         self._cache_data_policy = caching_policy
         if self.settings["GZIP_CACHE"]:
-            import gzip
-
             self._cache_open = gzip.open
         else:
             self._cache_open = open

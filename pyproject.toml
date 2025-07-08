@@ -96,7 +96,7 @@ dev = [
     "tox>=4.11.3",
     "invoke>=2.2.0",
     # ruff version should match the one in .pre-commit-config.yaml
-    "ruff==0.7.2",
+    "ruff==0.12.2",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
 
@@ -111,7 +111,6 @@ source-includes = [
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
-
 
 [tool.ruff.lint]
 # see https://docs.astral.sh/ruff/configuration/#using-pyprojecttoml

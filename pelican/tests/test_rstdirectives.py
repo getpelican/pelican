@@ -1,12 +1,11 @@
 from unittest.mock import Mock
 
+from pelican.rstdirectives import abbr_role
 from pelican.tests.support import unittest
 
 
 class Test_abbr_role(unittest.TestCase):
     def call_it(self, text):
-        from pelican.rstdirectives import abbr_role
-
         rawtext = text
         lineno = 42
         inliner = Mock(name="inliner")

@@ -23,7 +23,7 @@ def tmp_namespace_path(path):
     """
     # This avoids calls to internal `pelican.plugins.__path__._recalculate()`
     # as it should not be necessary
-    import pelican
+    import pelican  # noqa: PLC0415
 
     old_path = pelican.__path__[:]
     try:
@@ -41,8 +41,8 @@ class PluginTest(unittest.TestCase):
     _NORMAL_PLUGIN_FOLDER = os.path.join(_PLUGIN_FOLDER, "normal_plugin")
 
     def test_namespace_path_modification(self):
-        import pelican
-        import pelican.plugins
+        import pelican  # noqa: PLC0415
+        import pelican.plugins  # noqa: PLC0415
 
         old_path = pelican.__path__[:]
 
