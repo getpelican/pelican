@@ -17,3 +17,5 @@ db241feaa445375dc05e189e69287000ffe5fa8e
 4af40e80772a58eac8969360e5caeb99e3e26e78
 # Ruff UP031: Use F-string format specifiers instead of percent format
 30bde3823f50b9ba8ac5996c1c46bb72031aa6b8
+# Upgrade Ruff to 0.12.x & comply with new rules
+4dedf1795831db99d18941c707923ba48cc28ce7
