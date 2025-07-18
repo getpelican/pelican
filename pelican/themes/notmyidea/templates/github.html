@@ -1,18 +1,18 @@
 {% if GITHUB_URL %}
-	<style type="text/css">
-	  div.github_url {
-		position: absolute;
-		border: 0;
-		background: black;
-		padding: 2px 8px;
-		width: 120px;
-	  }
-	</style>
+    <style type="text/css">
+      div.github_url {
+        position: absolute;
+        border: 0;
+        background: black;
+        padding: 2px 8px;
+        width: 120px;
+      }
+    </style>
     <a href="{{ GITHUB_URL }}">
         {% if GITHUB_POSITION != "left" %}
-			<div class="github_url" style="top: 0; right: 0; border-radius: 0 0 0 8px;">Fork me on GitHub</div>
+            <div class="github_url" style="top: 0; right: 0; border-radius: 0 0 0 8px;">Fork me on GitHub</div>
         {% else %}
-			<div class="github_url" style="top: 0; left: 0; border-radius: 0 0 8px 0;">Fork me on GitHub</div>
+            <div class="github_url" style="top: 0; left: 0; border-radius: 0 0 8px 0;">Fork me on GitHub</div>
         {% endif %}
     </a>
 {% endif %}

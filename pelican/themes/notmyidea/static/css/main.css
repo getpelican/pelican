@@ -113,6 +113,12 @@ dd {margin-left: 1.5em;}
 
 pre{background-color:  rgb(238, 238, 238); padding: 10px; margin: 10px; overflow: auto;}
 
+@media (prefers-color-scheme: dark) {
+    pre {
+        background: rgb(38, 38, 38);
+    }
+}
+
 /* Quotes */
 blockquote {
     margin: 20px;
