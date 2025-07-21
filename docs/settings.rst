@@ -969,10 +969,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 
    The domain prepended to feed URLs. Since feed URLs should always be
    absolute, it is highly recommended to define this (e.g.,
-   "https://feeds.example.com"). If you have already explicitly defined SITEURL
-   (see above) and want to use the same domain for your feeds, you can just
-   set:  ``FEED_DOMAIN = SITEURL``. The default is ``None``, which uses the
-   base URL "/".
+   "https://feeds.example.com"). The default is ``SITEURL``.
 
 .. data:: FEED_ATOM
 
