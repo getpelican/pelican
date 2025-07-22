@@ -8,7 +8,6 @@ import os
 import pathlib
 import re
 import shutil
-import sys
 import traceback
 import unicodedata
 import urllib
@@ -215,7 +214,7 @@ def deprecated_attribute(
         _warn()
         setattr(self, new, value)
 
-    def decorator(dummy):
+    def decorator(_dummy):
         return property(fget=fget, fset=fset, doc=doc)
 
     return decorator
@@ -235,9 +234,7 @@ def get_date(string: str) -> datetime.datetime:
 
 
 @contextmanager
-def pelican_open(
-    filename: str, mode: str = "r", strip_crs: bool = (sys.platform == "win32")
-) -> Generator[str, None, None]:
+def pelican_open(filename: str, mode: str = "r") -> Generator[str, None, None]:
     """Open a file and return its content"""
 
     # utf-8-sig will clear any BOM if present
@@ -493,6 +490,7 @@ class _HTMLWordTruncator(HTMLParser):
             self.add_word(self.last_word_end)
 
     def handle_starttag(self, tag: str, attrs: Any) -> None:
+        del attrs  # Unused argument
         self.add_last_word()
         if tag not in self._singlets:
             self.open_tags.insert(0, tag)

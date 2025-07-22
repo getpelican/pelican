@@ -552,7 +552,7 @@ class TestWordpressXMLAttachements(TestCaseWithCLocale):
 class TestTumblrImporter(TestCaseWithCLocale):
     @patch("pelican.tools.pelican_import._get_tumblr_posts")
     def test_posts(self, get):
-        def get_posts(api_key, blogname, offset=0):
+        def get_posts(_api_key, _blogname, offset=0):
             if offset > 0:
                 return []
 
@@ -603,7 +603,7 @@ class TestTumblrImporter(TestCaseWithCLocale):
 
     @patch("pelican.tools.pelican_import._get_tumblr_posts")
     def test_video_embed(self, get):
-        def get_posts(api_key, blogname, offset=0):
+        def get_posts(_api_key, _blogname, offset=0):
             if offset > 0:
                 return []
 
@@ -657,7 +657,7 @@ class TestTumblrImporter(TestCaseWithCLocale):
 
     @patch("pelican.tools.pelican_import._get_tumblr_posts")
     def test_broken_video_embed(self, get):
-        def get_posts(api_key, blogname, offset=0):
+        def get_posts(_api_key, _blogname, offset=0):
             if offset > 0:
                 return []
 

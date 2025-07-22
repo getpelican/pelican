@@ -125,7 +125,7 @@ select = [
 
     # the rest in alphabetical order:
     "A",   # flake8-builtins
-    # TODO: "ARG", # flake8-unused-arguments
+    "ARG", # flake8-unused-arguments
     "B",   # flake8-bugbear
     # TODO: "BLE", # flake8-blind-except
     # TODO: Do I want "COM", # flake8-commas
