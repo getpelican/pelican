@@ -252,6 +252,7 @@ class Pelican:
 
 class PrintSettings(argparse.Action):
     def __call__(self, parser, namespace, values, option_string):
+        del option_string  # Unused argument
         init_logging(name=__name__)
 
         try:
@@ -287,6 +288,7 @@ class PrintSettings(argparse.Action):
 
 class ParseOverrides(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
+        del parser, option_string  # Unused arguments
         overrides = {}
         for item in values:
             try:

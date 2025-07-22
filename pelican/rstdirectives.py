@@ -79,6 +79,7 @@ class abbreviation(nodes.Inline, nodes.TextElement):
 
 
 def abbr_role(typ, rawtext, text, lineno, inliner, options=None, content=None):
+    del typ, rawtext, lineno, inliner, options, content  # Unused arguments
     text = utils.unescape(text)
     m = _abbr_re.search(text)
     if m is None:

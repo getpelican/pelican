@@ -296,6 +296,7 @@ class _FileLoader(BaseLoader):
         self.fullpath = os.path.join(basedir, path)
 
     def get_source(self, environment, template):
+        del environment  # Unused argument
         if template != self.path or not os.path.exists(self.fullpath):
             raise TemplateNotFound(template)
         mtime = os.path.getmtime(self.fullpath)
@@ -1022,6 +1023,7 @@ class StaticGenerator(Generator):
         signals.static_generator_finalized.send(self)
 
     def generate_output(self, writer):
+        del writer  # Unused argument
         self._copy_paths(
             self.settings["THEME_STATIC_PATHS"],
             self.theme,
@@ -1131,6 +1133,7 @@ class SourceFileGenerator(Generator):
         copy(obj.source_path, dest)
 
     def generate_output(self, writer=None):
+        del writer  # Unused argument
         logger.info("Generating source files...")
         for obj in chain(self.context["articles"], self.context["pages"]):
             self._create_source(obj)

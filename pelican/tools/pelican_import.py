@@ -941,7 +941,6 @@ def fields2pelican(
     strip_raw=False,
     disable_slugs=False,
     dirpage=False,
-    filename_template=None,
     filter_author=None,
     wp_custpost=False,
     wp_attach=False,

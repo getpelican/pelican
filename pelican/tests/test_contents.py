@@ -333,7 +333,7 @@ class TestPage(TestBase):
         self.assertEqual("custom", custom_page.template)
 
     def test_signal(self):
-        def receiver_test_function(sender):
+        def receiver_test_function(_sender):
             receiver_test_function.has_been_called = True
 
         receiver_test_function.has_been_called = False
