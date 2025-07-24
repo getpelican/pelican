@@ -378,8 +378,8 @@ def clean_output_dir(path: str, retention: Iterable[str]) -> None:
     if not os.path.isdir(path):
         try:
             os.remove(path)
-        except Exception as e:
-            logger.error("Unable to delete file %s; %s", path, e)
+        except Exception:
+            logger.exception("Unable to delete file %s", path)
         return
 
     # remove existing content from output folder unless in retention list
@@ -393,14 +393,14 @@ def clean_output_dir(path: str, retention: Iterable[str]) -> None:
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
-            except Exception as e:
-                logger.error("Unable to delete directory %s; %s", file, e)
+            except Exception:
+                logger.exception("Unable to delete directory %s", file)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s", file)
-            except Exception as e:
-                logger.error("Unable to delete file %s; %s", file, e)
+            except Exception:
+                logger.exception("Unable to delete file %s", file)
         else:
             logger.error("Unable to delete %s, file type unknown", file)
 
@@ -764,7 +764,7 @@ def order_content(
             try:
                 content_list.sort(key=order_by)
             except Exception:
-                logger.error("Error sorting with function %s", order_by)
+                logger.exception("Error sorting with function %s", order_by)
         elif isinstance(order_by, str):
             if order_by.startswith("reversed-"):
                 order_reversed = True
