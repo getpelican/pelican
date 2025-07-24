@@ -96,7 +96,7 @@ dev = [
     "tox>=4.11.3",
     "invoke>=2.2.0",
     # ruff version should match the one in .pre-commit-config.yaml
-    "ruff==0.12.2",
+    "ruff==0.12.7",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
 
@@ -127,7 +127,7 @@ select = [
     "A",   # flake8-builtins
     "ARG", # flake8-unused-arguments
     "B",   # flake8-bugbear
-    # TODO: "BLE", # flake8-blind-except
+    "BLE", # flake8-blind-except
     # TODO: Do I want "COM", # flake8-commas
     "C4",  # flake8-comprehensions
     # TODO: "DJ",  # flake8-django

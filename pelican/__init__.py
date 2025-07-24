@@ -37,7 +37,7 @@ from pelican.writers import Writer
 
 try:
     __version__ = importlib.metadata.version("pelican")
-except Exception:
+except importlib.metadata.PackageNotFoundError:
     __version__ = "unknown"
 
 DEFAULT_CONFIG_NAME = "pelicanconf.py"
@@ -78,11 +78,10 @@ class Pelican:
             try:
                 plugin.register()
                 self.plugins.append(plugin)
-            except Exception as e:
-                logger.error(
-                    "Cannot register plugin `%s`\n%s",
+            except Exception:
+                logger.exception(
+                    "Cannot register plugin `%s`",
                     name,
-                    e,
                     stacklevel=2,
                 )
                 if self.settings.get("DEBUG", False):
@@ -258,7 +257,7 @@ class PrintSettings(argparse.Action):
         try:
             instance, settings = get_instance(namespace)
         except Exception as e:
-            logger.critical("%s: %s", e.__class__.__name__, e)
+            logger.critical("%s", e.__class__.__name__, exc_info=True)
             console.print_exception()
             sys.exit(getattr(e, "exitcode", 1))
 
@@ -621,7 +620,8 @@ def listen(server, port, output, excqueue=None):
     except Exception as e:
         if excqueue is not None:
             excqueue.put(traceback.format_exception_only(type(e), e)[-1])
-        return
+        else:
+            logging.exception("Listening aborted unexpectedly.")
 
     except KeyboardInterrupt:
         httpd.socket.close()
@@ -680,7 +680,7 @@ def main(argv=None):
     except KeyboardInterrupt:
         logger.warning("Keyboard interrupt received. Exiting.")
     except Exception as e:
-        logger.critical("%s: %s", e.__class__.__name__, e)
+        logger.critical("%s: %s", e.__class__.__name__, e, exc_info=True)
 
         if args.verbosity == logging.DEBUG:
             console.print_exception()
