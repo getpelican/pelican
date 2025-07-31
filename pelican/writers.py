@@ -161,10 +161,7 @@ class Writer:
         if path:
             complete_path = sanitised_join(self.output_path, path)
 
-            try:
-                os.makedirs(os.path.dirname(complete_path))
-            except Exception:
-                pass
+            os.makedirs(os.path.dirname(complete_path), exist_ok=True)
 
             with self._open_w(complete_path, "utf-8", override_output) as fp:
                 feed.write(fp, "utf-8")
@@ -215,10 +212,7 @@ class Writer:
             output = template.render(localcontext)
             path = sanitised_join(output_path, name)
 
-            try:
-                os.makedirs(os.path.dirname(path))
-            except Exception:
-                pass
+            os.makedirs(os.path.dirname(path), exist_ok=True)
 
             with self._open_w(path, "utf-8", override=override) as f:
                 f.write(output)
