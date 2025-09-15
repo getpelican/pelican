@@ -9,6 +9,10 @@ import sys
 import time
 import traceback
 from collections.abc import Iterable
+import asyncio
+from desktop_notifier import DesktopNotifier
+
+NOTIFIER = DesktopNotifier()
 
 # Combines all paths to `pelican` package accessible from `sys.path`
 # Makes it possible to install `pelican` and namespace plugins into different
@@ -193,9 +197,9 @@ class Pelican:
             "draft pages",
         )
 
-        console.print(
-            f"Done: Processed {pluralized_articles}, {pluralized_drafts}, {pluralized_hidden_articles}, {pluralized_pages}, {pluralized_hidden_pages} and {pluralized_draft_pages} in {time.time() - start_time:.2f} seconds."
-        )
+        message = f"Done: Processed {pluralized_articles}, {pluralized_drafts}, {pluralized_hidden_articles}, {pluralized_pages}, {pluralized_hidden_pages} and {pluralized_draft_pages} in {time.time() - start_time:.2f} seconds."
+        console.print(message)
+        asyncio.run(NOTIFIER.send(title="Pelican", message=message))
 
     def _get_generator_classes(self):
         discovered_generators = [
