@@ -4,7 +4,6 @@ import locale
 import logging
 import os
 import re
-from datetime import timezone
 from html import unescape
 from typing import Any, Optional
 from urllib.parse import ParseResult, unquote, urljoin, urlparse, urlunparse
@@ -343,8 +342,7 @@ class Content:
                     value.geturl(),
                     extra={
                         "limit_msg": (
-                            "Other resources were not found "
-                            "and their urls not replaced"
+                            "Other resources were not found and their urls not replaced"
                         )
                     },
                 )
@@ -433,7 +431,7 @@ class Content:
         return self.get_content(self.get_siteurl())
 
     @memoized
-    def get_summary(self, siteurl: str) -> str:
+    def get_summary(self, _siteurl: str) -> str:
         """Returns the summary of an article.
 
         This is based on the summary metadata if set, otherwise truncate the
@@ -554,6 +552,7 @@ class SkipStub(Content):
     def __init__(
         self, content, metadata=None, settings=None, source_path=None, context=None
     ):
+        del content, metadata, settings, context  # Unused arguments
         self.source_path = source_path
 
     def is_valid(self):
@@ -593,7 +592,7 @@ class Article(Content):
             if self.date.tzinfo is None:
                 now = datetime.datetime.now()
             else:
-                now = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
+                now = datetime.datetime.now(datetime.timezone.utc)
             if self.date > now:
                 self.status = "draft"
 

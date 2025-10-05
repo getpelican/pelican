@@ -8,7 +8,7 @@ from pelican.tests.support import unittest
 
 
 class MockRequest:
-    def makefile(self, *args, **kwargs):
+    def makefile(self, *_args, **_kwargs):
         return BytesIO(b"")
 
 

@@ -3,10 +3,11 @@ from pathlib import Path
 from shutil import which
 
 from invoke import task
+from livereload import Server
 
 PKG_NAME = "pelican"
 PKG_PATH = Path(PKG_NAME)
-DOCS_PORT = os.environ.get("DOCS_PORT", 8000)
+DOCS_PORT = int(os.environ.get("DOCS_PORT", "8000"))
 BIN_DIR = "bin" if os.name != "nt" else "Scripts"
 PTY = os.name != "nt"
 ACTIVE_VENV = os.environ.get("VIRTUAL_ENV", None)
@@ -29,8 +30,6 @@ def docbuild(c):
 @task(docbuild)
 def docserve(c):
     """Serve docs at http://localhost:$DOCS_PORT/ (default port is 8000)"""
-    from livereload import Server
-
     server = Server()
     server.watch("docs/conf.py", lambda: docbuild(c))
     server.watch("CONTRIBUTING.rst", lambda: docbuild(c))
@@ -56,7 +55,7 @@ def coverage(c):
 
 
 @task
-def format(c, check=False, diff=False):
+def formatcode(c, check=False, diff=False):
     """Run Ruff's auto-formatter, optionally with --check or --diff"""
     check_flag, diff_flag = "", ""
     if check:
@@ -83,7 +82,7 @@ def ruff(c, fix=False, diff=False):
 def lint(c, fix=False, diff=False):
     """Check code style via linting tools."""
     ruff(c, fix=fix, diff=diff)
-    format(c, check=not fix, diff=diff)
+    formatcode(c, check=not fix, diff=diff)
 
 
 @task

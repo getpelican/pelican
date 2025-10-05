@@ -2,6 +2,7 @@
 
 import argparse
 import datetime
+import json
 import logging
 import os
 import re
@@ -9,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import urllib.request as urllib_request
 from collections import defaultdict
 from html import unescape
 from urllib.error import URLError
@@ -16,6 +18,7 @@ from urllib.parse import quote, urlparse, urlsplit, urlunsplit
 from urllib.request import urlretrieve
 
 import dateutil.parser
+from docutils.utils import column_width
 
 # because logging.setLoggerClass has to be called before logging.getLogger
 from pelican.log import init
@@ -27,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 def decode_wp_content(content, br=True):
     pre_tags = {}
-    if content.strip() == "":
+    if content is None or content.strip() == "":
         return ""
 
     content += "\n"
@@ -118,7 +121,7 @@ def decode_wp_content(content, br=True):
 def _import_bs4():
     """Import and return bs4, otherwise sys.exit."""
     try:
-        import bs4
+        import bs4  # noqa: PLC0415
     except ImportError:
         error = (
             'Missing dependency "BeautifulSoup4" and "lxml" required to '
@@ -148,7 +151,7 @@ def wp2fields(xml, wp_custpost=False):
     """Opens a wordpress XML file, and yield Pelican fields"""
 
     soup = file_to_soup(xml)
-    items = soup.rss.channel.findAll("item")
+    items = soup.rss.channel.find_all("item")
     for item in items:
         if item.find("status").string in ["publish", "draft"]:
             try:
@@ -172,11 +175,11 @@ def wp2fields(xml, wp_custpost=False):
             author = item.find("creator").string
 
             categories = [
-                cat.string for cat in item.findAll("category", {"domain": "category"})
+                cat.string for cat in item.find_all("category", {"domain": "category"})
             ]
 
             tags = [
-                tag.string for tag in item.findAll("category", {"domain": "post_tag"})
+                tag.string for tag in item.find_all("category", {"domain": "post_tag"})
             ]
             # To publish a post the status should be 'published'
             status = (
@@ -218,7 +221,7 @@ def blogger2fields(xml):
     """Opens a blogger XML file, and yield Pelican fields"""
 
     soup = file_to_soup(xml)
-    entries = soup.feed.findAll("entry")
+    entries = soup.feed.find_all("entry")
     for entry in entries:
         raw_kind = entry.find(
             "category", {"scheme": "http://schemas.google.com/g/2005#kind"}
@@ -253,7 +256,7 @@ def blogger2fields(xml):
         # blogger posts only have tags, no category
         tags = [
             tag.get("term")
-            for tag in entry.findAll(
+            for tag in entry.find_all(
                 "category", {"scheme": "http://www.blogger.com/atom/ns#"}
             )
         ]
@@ -272,7 +275,7 @@ def blogger2fields(xml):
 def dc2fields(file):
     """Opens a Dotclear export file, and yield pelican fields"""
     try:
-        from bs4 import BeautifulSoup
+        from bs4 import BeautifulSoup  # noqa: PLC0415
     except ImportError:
         error = (
             "Missing dependency "
@@ -311,7 +314,7 @@ def dc2fields(file):
                 else:
                     posts.append(line)
 
-    print("%i posts read." % len(posts))
+    print(f"{len(posts)} posts read.")
 
     subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
     for post in posts:
@@ -320,7 +323,7 @@ def dc2fields(file):
         # post_id = fields[0][1:]
         # blog_id = fields[1]
         # user_id = fields[2]
-        cat_id = fields[3]
+        cat_ids = fields[3]
         # post_dt = fields[4]
         # post_tz = fields[5]
         post_creadt = fields[6]
@@ -354,8 +357,10 @@ def dc2fields(file):
         categories = []
         tags = []
 
-        if cat_id:
-            categories = [category_list[id].strip() for id in cat_id.split(",")]
+        if cat_ids:
+            categories = [
+                category_list[cat_id].strip() for cat_id in cat_ids.split(",")
+            ]
 
         # Get tags related to a post
         tag = (
@@ -365,7 +370,7 @@ def dc2fields(file):
             .replace("a:0:", "")
         )
         if len(tag) > 1:
-            if int(len(tag[:1])) == 1:
+            if len(tag[:1]) == 1:
                 newtag = tag.split('"')[1]
                 tags.append(
                     BeautifulSoup(newtag, "xml")
@@ -416,13 +421,10 @@ def dc2fields(file):
 
 
 def _get_tumblr_posts(api_key, blogname, offset=0):
-    import json
-    import urllib.request as urllib_request
-
     url = (
-        "https://api.tumblr.com/v2/blog/%s.tumblr.com/"
-        "posts?api_key=%s&offset=%d&filter=raw"
-    ) % (blogname, api_key, offset)
+        f"https://api.tumblr.com/v2/blog/{blogname}.tumblr.com/"
+        f"posts?api_key={api_key}&offset={offset}&filter=raw"
+    )
     request = urllib_request.Request(url)
     handle = urllib_request.urlopen(request)
     posts = json.loads(handle.read().decode("utf-8"))
@@ -453,11 +455,11 @@ def tumblr2fields(api_key, blogname):
                 ).strftime("%Y-%m-%d-")
                 + slug
             )
-            format = post.get("format")
+            post_format = post.get("format")
             content = post.get("body")
-            type = post.get("type")
-            if type == "photo":
-                if format == "markdown":
+            post_type = post.get("type")
+            if post_type == "photo":
+                if post_format == "markdown":
                     fmtstr = "![%s](%s)"
                 else:
                     fmtstr = '<img alt="%s" src="%s" />'
@@ -466,20 +468,20 @@ def tumblr2fields(api_key, blogname):
                     % (photo.get("caption"), photo.get("original_size").get("url"))
                     for photo in post.get("photos")
                 )
-            elif type == "quote":
-                if format == "markdown":
+            elif post_type == "quote":
+                if post_format == "markdown":
                     fmtstr = "\n\n&mdash; %s"
                 else:
                     fmtstr = "<p>&mdash; %s</p>"
                 content = post.get("text") + fmtstr % post.get("source")
-            elif type == "link":
-                if format == "markdown":
+            elif post_type == "link":
+                if post_format == "markdown":
                     fmtstr = "[via](%s)\n\n"
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
                 content = fmtstr % post.get("url") + post.get("description")
-            elif type == "audio":
-                if format == "markdown":
+            elif post_type == "audio":
+                if post_format == "markdown":
                     fmtstr = "[via](%s)\n\n"
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
@@ -488,8 +490,8 @@ def tumblr2fields(api_key, blogname):
                     + post.get("caption")
                     + post.get("player")
                 )
-            elif type == "video":
-                if format == "markdown":
+            elif post_type == "video":
+                if post_format == "markdown":
                     fmtstr = "[via](%s)\n\n"
                 else:
                     fmtstr = '<p><a href="%s">via</a></p>\n'
@@ -506,7 +508,7 @@ def tumblr2fields(api_key, blogname):
                 else:
                     players = "\n".join(players)
                 content = source + caption + players
-            elif type == "answer":
+            elif post_type == "answer":
                 title = post.get("question")
                 content = (
                     "<p>"
@@ -531,11 +533,11 @@ def tumblr2fields(api_key, blogname):
                 slug,
                 date,
                 post.get("blog_name"),
-                [type],
+                [post_type],
                 tags,
                 status,
                 kind,
-                format,
+                post_format,
             )
 
         offset += len(posts)
@@ -571,8 +573,8 @@ def strip_medium_post_content(soup) -> str:
     # See https://stackoverflow.com/a/8439761
     invalid_tags = ["section", "div", "footer"]
     for tag in invalid_tags:
-        for match in soup.findAll(tag):
-            match.replaceWithChildren()
+        for match in soup.find_all(tag):
+            match.unwrap()
 
     # Remove attributes
     # See https://stackoverflow.com/a/9045719
@@ -671,7 +673,7 @@ def mediumposts2fields(medium_export_dir: str):
 
 def feed2fields(file):
     """Read a feed and yield pelican fields"""
-    import feedparser
+    import feedparser  # noqa: PLC0415
 
     d = feedparser.parse(file)
     subs = DEFAULT_CONFIG["SLUG_REGEX_SUBSTITUTIONS"]
@@ -704,8 +706,6 @@ def build_header(
     title, date, author, categories, tags, slug, status=None, attachments=None
 ):
     """Build a header from a list of fields"""
-
-    from docutils.utils import column_width
 
     header = "{}\n{}\n".format(title, "#" * column_width(title))
     if date:
@@ -845,7 +845,7 @@ def get_attachments(xml):
     of the attachment_urls
     """
     soup = file_to_soup(xml)
-    items = soup.rss.channel.findAll("item")
+    items = soup.rss.channel.find_all("item")
     names = {}
     attachments = []
 
@@ -941,7 +941,6 @@ def fields2pelican(
     strip_raw=False,
     disable_slugs=False,
     dirpage=False,
-    filename_template=None,
     filter_author=None,
     wp_custpost=False,
     wp_attach=False,
@@ -969,10 +968,10 @@ def fields2pelican(
         if is_pandoc_needed(in_markup) and not pandoc_version:
             posts_require_pandoc.append(filename)
 
-        slug = not disable_slugs and filename or None
-        assert slug is None or filename == os.path.basename(
-            filename
-        ), f"filename is not a basename: {filename}"
+        slug = (not disable_slugs and filename) or None
+        assert slug is None or filename == os.path.basename(filename), (
+            f"filename is not a basename: {filename}"
+        )
 
         if wp_attach and attachments:
             try:
@@ -1045,8 +1044,7 @@ def fields2pelican(
                         "--wrap=none" if pandoc_version >= (1, 16) else "--no-wrap"
                     )
                     cmd = (
-                        "pandoc --normalize {0} --from=html"
-                        ' --to={1} {2} -o "{3}" "{4}"'
+                        'pandoc --normalize {0} --from=html --to={1} {2} -o "{3}" "{4}"'
                     )
                     cmd = cmd.format(
                         parse_raw,
@@ -1068,7 +1066,7 @@ def fields2pelican(
                 try:
                     rc = subprocess.call(cmd, shell=True)
                     if rc < 0:
-                        error = "Child was terminated by signal %d" % -rc
+                        error = f"Child was terminated by signal {-rc}"
                         sys.exit(error)
 
                     elif rc > 0:

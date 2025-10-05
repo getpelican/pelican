@@ -23,7 +23,7 @@ def tmp_namespace_path(path):
     """
     # This avoids calls to internal `pelican.plugins.__path__._recalculate()`
     # as it should not be necessary
-    import pelican
+    import pelican  # noqa: PLC0415
 
     old_path = pelican.__path__[:]
     try:
@@ -41,8 +41,8 @@ class PluginTest(unittest.TestCase):
     _NORMAL_PLUGIN_FOLDER = os.path.join(_PLUGIN_FOLDER, "normal_plugin")
 
     def test_namespace_path_modification(self):
-        import pelican
-        import pelican.plugins
+        import pelican  # noqa: PLC0415
+        import pelican.plugins  # noqa: PLC0415
 
         old_path = pelican.__path__[:]
 
@@ -273,14 +273,14 @@ class PluginTest(unittest.TestCase):
         expected = []
         for i in range(50):
             # function appends value of i to a list
-            def func(input, i=i):
-                input.append(i)
+            def func(dummy_input, i=i):
+                dummy_input.append(i)
 
             functions.append(func)
             # we expect functions to be run in the connection order
             dummy_signal.connect(func)
             expected.append(i)
 
-        input = []
-        dummy_signal.send(input)
-        self.assertEqual(input, expected)
+        dummy_input = []
+        dummy_signal.send(dummy_input)
+        self.assertEqual(dummy_input, expected)
