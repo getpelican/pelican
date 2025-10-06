@@ -52,7 +52,6 @@ Why the name “Pelican”?
 “Pelican” is an anagram of *calepin*, which means “notebook” in French.
 
 
-
 .. Links
 
 .. _Python: https://www.python.org/
