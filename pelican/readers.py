@@ -268,9 +268,11 @@ class RstReader(BaseReader):
             extra_params.update(user_params)
 
         pub = docutils.core.Publisher(
-            writer=self.writer_class(), destination_class=docutils.io.StringOutput
+            reader="standalone",
+            parser="restructuredtext",
+            writer=self.writer_class(),
+            destination_class=docutils.io.StringOutput,
         )
-        pub.set_components("standalone", "restructuredtext", "html")
         pub.process_programmatic_settings(None, extra_params, None)
         pub.set_source(source_path=source_path)
         pub.publish()
