@@ -27,6 +27,7 @@ from pelican.utils import (
     sanitised_join,
     set_date_tzinfo,
     slugify,
+    strip_toc_elements_from_html,
     truncate_html_paragraphs,
     truncate_html_words,
 )
@@ -446,13 +447,19 @@ class Content:
             content = truncate_html_paragraphs(self.content, max_paragraphs)
 
         if self.settings["SUMMARY_MAX_LENGTH"] is None:
-            return content
+            summary = content
+        else:
+            summary = truncate_html_words(
+                content,
+                self.settings["SUMMARY_MAX_LENGTH"],
+                self.settings["SUMMARY_END_SUFFIX"],
+            )
 
-        return truncate_html_words(
-            content,
-            self.settings["SUMMARY_MAX_LENGTH"],
-            self.settings["SUMMARY_END_SUFFIX"],
-        )
+        # Strip TOC elements that would contain broken links in summary context
+        # TOC anchors only work in full article view, not in summaries/excerpts
+        summary = strip_toc_elements_from_html(summary)
+
+        return summary
 
     @property
     def summary(self) -> str:

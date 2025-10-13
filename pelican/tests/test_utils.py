@@ -420,6 +420,60 @@ class TestUtils(LoggedTestCase):
         self.assertEqual(utils.truncate_html_paragraphs(three, 3), three)
         self.assertEqual(utils.truncate_html_paragraphs(three, 4), three)
 
+    def test_strip_toc_elements_from_html(self):
+        # Test removing TOC div with various class names
+        html_with_toc = (
+            '<div class="contents topic" id="table-of-contents">'
+            '<p class="topic-title">Table of Contents</p>'
+            '<ul><li><a href="#section1">Section 1</a></li></ul>'
+            "</div>"
+            "<p>Some content here</p>"
+        )
+        result = utils.strip_toc_elements_from_html(html_with_toc)
+        self.assertNotIn('<div class="contents', result)
+        self.assertIn("<p>Some content here</p>", result)
+
+        # Test removing toc-backref anchors while preserving heading text
+        html_with_backref = (
+            '<h2><a class="toc-backref" href="#id1">Section Heading</a></h2>'
+            "<p>Some content</p>"
+        )
+        result = utils.strip_toc_elements_from_html(html_with_backref)
+        self.assertNotIn("toc-backref", result)
+        self.assertNotIn("<a class=", result)
+        self.assertIn("Section Heading", result)
+        self.assertIn("<h2>Section Heading</h2>", result)
+
+        # Test combined - remove both TOC div and backrefs
+        html_combined = (
+            '<div class="contents">'
+            "<p>TOC here</p>"
+            "</div>"
+            '<h2><a class="toc-backref" href="#id1">the design</a></h2>'
+            "<p>Article content</p>"
+            '<h2><a class="toc-backref" href="#id2">key features</a></h2>'
+            "<p>More content</p>"
+        )
+        result = utils.strip_toc_elements_from_html(html_combined)
+        self.assertNotIn('<div class="contents', result)
+        self.assertNotIn("toc-backref", result)
+        self.assertIn("the design", result)
+        self.assertIn("key features", result)
+        self.assertIn("<p>Article content</p>", result)
+
+        # Test empty input
+        self.assertEqual(utils.strip_toc_elements_from_html(""), "")
+
+        # Test HTML without TOC elements (should be unchanged)
+        plain_html = "<p>Just some plain content</p>"
+        self.assertEqual(utils.strip_toc_elements_from_html(plain_html), plain_html)
+
+        # Test case-insensitive matching
+        html_mixed_case = '<div CLASS="CONTENTS"><p>TOC</p></div><p>Content</p>'
+        result = utils.strip_toc_elements_from_html(html_mixed_case)
+        self.assertNotIn("CONTENTS", result)
+        self.assertIn("<p>Content</p>", result)
+
     def test_process_translations(self):
         fr_articles = []
         en_articles = []
