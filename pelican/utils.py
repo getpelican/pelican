@@ -383,19 +383,19 @@ def clean_output_dir(path: str, retention: Iterable[str]) -> None:
         return
 
     # remove existing content from output folder unless in retention list
-    for filename in os.listdir(path):
-        file = os.path.join(path, filename)
-        if any(filename == retain for retain in retention):
+    for dir_entry in os.scandir(path):
+        file = dir_entry.path
+        if any(dir_entry.name == retain for retain in retention):
             logger.debug(
-                "Skipping deletion; %s is on retention list: %s", filename, file
+                "Skipping deletion; %s is on retention list: %s", dir_entry.name, file
             )
-        elif os.path.isdir(file):
+        elif dir_entry.is_dir():
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
             except Exception as e:
                 logger.error("Unable to delete directory %s; %s", file, e)
-        elif os.path.isfile(file) or os.path.islink(file):
+        elif dir_entry.is_file(follow_symlinks=False) or dir_entry.is_symlink():
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s", file)
