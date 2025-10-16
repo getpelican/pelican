@@ -11,7 +11,14 @@ import shutil
 import traceback
 import unicodedata
 import urllib
-from collections.abc import Collection, Generator, Hashable, Iterable, Sequence
+from collections.abc import (
+    Callable,
+    Collection,
+    Generator,
+    Hashable,
+    Iterable,
+    Sequence,
+)
 from contextlib import contextmanager
 from functools import partial
 from html import entities
@@ -21,7 +28,6 @@ from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
 )
 
 import dateutil.parser
@@ -234,7 +240,7 @@ def get_date(string: str) -> datetime.datetime:
 
 
 @contextmanager
-def pelican_open(filename: str, mode: str = "r") -> Generator[str, None, None]:
+def pelican_open(filename: str, mode: str = "r") -> Generator[str]:
     """Open a file and return its content"""
 
     # utf-8-sig will clear any BOM if present
@@ -932,7 +938,7 @@ def maybe_pluralize(count: int, singular: str, plural: str) -> str:
 @contextmanager
 def temporary_locale(
     temp_locale: str | None = None, lc_category: int = locale.LC_ALL
-) -> Generator[None, None, None]:
+) -> Generator[None]:
     """
     Enable code to run in a context with a temporary locale
     Resets the locale back when exiting context.
