@@ -85,10 +85,28 @@ jobs:
           chmod -c -R +rX "${{ inputs.output-path }}" | while read line; do
             echo "::warning title=Invalid file permissions automatically fixed::$line"
           done
+      - name: Archive artifact
+        shell: sh
+        run: |
+          echo "::group::Archive artifact"
+          tar \
+            --dereference \
+            --hard-dereference \
+            --directory "$OUTPUT_PATH" \
+            -cvf "$RUNNER_TEMP/artifact.tar" \
+            --exclude=.git \
+            --exclude=.github \
+            .
+          echo "::endgroup::"
+        env:
+          OUTPUT_PATH: ${{ inputs.output-path }}
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          path: ${{ inputs.output-path }}
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
   deploy:
     concurrency:
       group: "pages"
