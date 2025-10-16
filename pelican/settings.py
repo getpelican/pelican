@@ -9,7 +9,7 @@ import sys
 from os.path import isabs
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Optional
+from typing import Any
 
 from pelican.log import LimitFilter
 from pelican.paginator import PaginationRule
@@ -185,7 +185,7 @@ PYGMENTS_RST_OPTIONS = None
 
 
 def read_settings(
-    path: Optional[str] = None, override: Optional[Settings] = None
+    path: str | None = None, override: Settings | None = None
 ) -> Settings:
     settings = override or {}
 
@@ -230,7 +230,7 @@ def read_settings(
     return settings
 
 
-def get_settings_from_module(module: Optional[ModuleType] = None) -> Settings:
+def get_settings_from_module(module: ModuleType | None = None) -> Settings:
     """Loads settings from a module, returns a dictionary."""
 
     context = {}

@@ -266,7 +266,7 @@ class PrintSettings(argparse.Action):
             for setting in values:
                 if setting in settings:
                     # Only add newline between setting name and value if dict
-                    if isinstance(settings[setting], (dict, tuple, list)):
+                    if isinstance(settings[setting], dict | tuple | list):
                         setting_format = "\n{}:\n{}"
                     else:
                         setting_format = "\n{}: {}"

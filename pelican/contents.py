@@ -5,7 +5,7 @@ import logging
 import os
 import re
 from html import unescape
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import ParseResult, unquote, urljoin, urlparse, urlunparse
 
 try:
@@ -45,7 +45,7 @@ class Content:
 
     """
 
-    default_template: Optional[str] = None
+    default_template: str | None = None
     mandatory_properties: tuple[str, ...] = ()
 
     @deprecated_attribute(old="filename", new="source_path", since=(3, 2, 0))
@@ -55,10 +55,10 @@ class Content:
     def __init__(
         self,
         content: str,
-        metadata: Optional[dict[str, Any]] = None,
-        settings: Optional[Settings] = None,
-        source_path: Optional[str] = None,
-        context: Optional[dict[Any, Any]] = None,
+        metadata: dict[str, Any] | None = None,
+        settings: Settings | None = None,
+        source_path: str | None = None,
+        context: dict[Any, Any] | None = None,
     ):
         if metadata is None:
             metadata = {}
@@ -241,7 +241,7 @@ class Content:
         )
         return metadata
 
-    def _expand_settings(self, key: str, klass: Optional[str] = None) -> str:
+    def _expand_settings(self, key: str, klass: str | None = None) -> str:
         if not klass:
             klass = self.__class__.__name__
         fq_key = (f"{klass}_{key}").upper()
@@ -281,10 +281,10 @@ class Content:
         # XXX Put this in a different location.
         if what in {"filename", "static", "attach"}:
 
-            def _get_linked_content(key: str, url: ParseResult) -> Optional[Content]:
+            def _get_linked_content(key: str, url: ParseResult) -> Content | None:
                 nonlocal value
 
-                def _find_path(path: str) -> Optional[Content]:
+                def _find_path(path: str) -> Content | None:
                     if path.startswith("/"):
                         path = path[1:]
                     else:
@@ -494,9 +494,7 @@ class Content:
         else:
             return self.default_template
 
-    def get_relative_source_path(
-        self, source_path: Optional[str] = None
-    ) -> Optional[str]:
+    def get_relative_source_path(self, source_path: str | None = None) -> str | None:
         """Return the relative path (from the content path) to the given
         source_path.
 
