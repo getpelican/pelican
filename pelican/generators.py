@@ -681,11 +681,10 @@ class ArticlesGenerator(CachingGenerator):
                         context_signal=signals.article_generator_context,
                         context_sender=self,
                     )
-                except Exception as e:
-                    logger.error(
-                        "Could not process %s\n%s",
+                except Exception:
+                    logger.exception(
+                        "Could not process %s",
                         f,
-                        e,
                         exc_info=self.settings.get("DEBUG", False),
                     )
                     self._add_failed_source_path(f)
@@ -896,11 +895,10 @@ class PagesGenerator(CachingGenerator):
                         context_signal=signals.page_generator_context,
                         context_sender=self,
                     )
-                except Exception as e:
-                    logger.error(
-                        "Could not process %s\n%s",
+                except Exception:
+                    logger.exception(
+                        "Could not process %s",
                         f,
-                        e,
                         exc_info=self.settings.get("DEBUG", False),
                     )
                     self._add_failed_source_path(f)
