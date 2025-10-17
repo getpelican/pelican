@@ -649,6 +649,37 @@ def truncate_html_paragraphs(s, count):
     return "".join(paragraphs)
 
 
+def strip_toc_elements_from_html(html: str) -> str:
+    """Strip table of contents elements from HTML summaries.
+
+    Removes TOC divs (with broken navigation links) and toc-backref anchor
+    links from headings. Both are necessary since TOC anchor targets don't
+    exist when summaries are displayed outside full article context
+    (e.g., homepage, RSS feeds).
+
+    :param html: HTML content to process
+    :return: Cleaned HTML with TOC elements removed
+    """
+    # Remove the entire <div class="contents"> ... </div> block
+    html = re.sub(
+        r'<div\s+class="contents[^"]*"[^>]*>.*?</div>',
+        "",
+        html,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+
+    # Remove anchor links from headings (e.g., <a class="toc-backref" href="#id1">text</a>)
+    # These links point to anchors that don't exist in summary context
+    html = re.sub(
+        r'<a[^>]*class="[^"]*toc-backref[^"]*"[^>]*>(.*?)</a>',
+        r"\1",
+        html,
+        flags=re.DOTALL | re.IGNORECASE,
+    )
+
+    return html
+
+
 def process_translations(
     content_list: list[Content],
     translation_id: str | Collection[str] | None = None,
