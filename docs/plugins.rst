@@ -64,7 +64,9 @@ versions.
 
 Please note that while we do our best to review and maintain these plugins,
 they are submitted by the Pelican community and thus may have varying levels of
-support and interoperability.
+support and interoperability. If you would like to help migrate legacy plugins
+to the new `pelican-plugins repository`_ then a detailed guide is available on
+the :ref:`namespace_plugin_migration` page.
 
 How to create plugins
 =====================
