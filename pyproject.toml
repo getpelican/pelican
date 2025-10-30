@@ -107,8 +107,9 @@ source-includes = [
     "docs/changelog.rst",
     "samples/",
 ]
-# Don't include Apple debugging symbols
-excludes = ["pelican/build/*"]
+excludes = [
+    "pelican/build/"
+]
 
 [build-system]
 requires = ["pdm-backend"]
