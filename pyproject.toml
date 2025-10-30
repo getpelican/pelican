@@ -107,6 +107,9 @@ source-includes = [
     "docs/changelog.rst",
     "samples/",
 ]
+excludes = [
+    "pelican/build/"
+]
 
 [build-system]
 requires = ["pdm-backend"]
