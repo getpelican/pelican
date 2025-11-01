@@ -95,7 +95,7 @@ jobs:
       - name: Check
         run: tox -e docs
       - name: cache the docs for inspection
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docs
           path: docs/_build/html/

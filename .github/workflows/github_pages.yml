@@ -109,7 +109,7 @@ jobs:
         env:
           OUTPUT_PATH: ${{ inputs.output-path }}
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: github-pages
           path: ${{ runner.temp }}/artifact.tar
