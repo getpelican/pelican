@@ -2,6 +2,10 @@
 # Ref: https://help.github.com/en/github/building-a-strong-community/configuring-issue-templates-for-your-repository#configuring-the-template-chooser
 blank_issues_enabled: false
 contact_links:
+- name: '🗃️ Everything Else'
+  url: https://github.com/getpelican/pelican/discussions
+  about: |
+    Do you have a question/issue that does not fall into any of the other categories?
 - name: '💬 Pelican IRC Channel'
   url: https://web.libera.chat/?#pelican
   about: |
