@@ -24,8 +24,8 @@ on:
         type: string
       python:
         required: false
-        default: "3.12"
-        description: "The version of Python to use, for example: '3.12' (to use the most recent version of Python 3.12, this is faster) or '3.12.1' (to use an exact version, slower)"
+        default: "3.14"
+        description: "The version of Python to use, for example: '3.14' (to use the most recent version of Python 3.14, this is faster) or '3.14.0' (to use an exact version, slower)"
         type: string
       siteurl:
         required: false
