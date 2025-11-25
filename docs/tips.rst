@@ -205,57 +205,63 @@ the workflow, for example:
 
 Here's the complete list of workflow inputs:
 
-+------------------+----------+--------------------------------------------+--------+---------------+
-| Name             | Required | Description                                | Type   | Default       |
-+==================+==========+============================================+========+===============+
-| ``settings``     | Yes      | The path to your Pelican settings          | string |               |
-|                  |          | file (``pelican``'s                        |        |               |
-|                  |          | ``--settings`` option),                    |        |               |
-|                  |          | for example: ``"publishconf.py"``          |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``requirements`` | No       | The Python requirements to                 | string | ``"pelican"`` |
-|                  |          | install, for example to enable             |        |               |
-|                  |          | markdown and typogrify use:                |        |               |
-|                  |          | ``"pelican[markdown] typogrify"``          |        |               |
-|                  |          | or if you have a requirements              |        |               |
-|                  |          | file: ``"-r requirements.txt"``            |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``output-path``  | No       | Where to output the generated              | string | ``"output/"`` |
-|                  |          | files (``pelican``'s ``--output``          |        |               |
-|                  |          | option)                                    |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``theme``        | No       | The GitHub repo URL of a custom            | string | ``""``        |
-|                  |          | theme to use, for example:                 |        |               |
-|                  |          | ``"https://github.com/seanh/sidecar.git"`` |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``python``       | No       | The version of Python to use to build the  | string | ``"3.12"``    |
-|                  |          | site, for example: ``"3.12"`` (to use the  |        |               |
-|                  |          | most recent version of Python 3.12, this   |        |               |
-|                  |          | is faster) or ``"3.12.1"`` (to use an      |        |               |
-|                  |          | exact version, slower)                     |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``siteurl``      | No       | The base URL of your web site (Pelican's   | string | The URL of    |
-|                  |          | ``SITEURL`` setting). If not passed this   |        | your GitHub   |
-|                  |          | will default to the URL of your GitHub     |        | Pages site.   |
-|                  |          | Pages site, which is correct in most       |        |               |
-|                  |          | cases.                                     |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``feed_domain``  | No       | The domain to be prepended to feed URLs    | string | The URL of    |
-|                  |          | (Pelican's ``FEED_DOMAIN`` setting). If    |        | your GitHub   |
-|                  |          | not passed this will default to the URL of |        | Pages site.   |
-|                  |          | your GitHub Pages site, which is correct   |        |               |
-|                  |          | in most cases.                             |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``deploy``       | No       | This is used to determine whether you will | bool   | ``true``      |
-|                  |          | deploy the site or not to GitHub Pages.    |        |               |
-|                  |          | This is most useful if you want to test a  |        |               |
-|                  |          | change to your website in a pull request   |        |               |
-|                  |          | before deploying those change.             |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
-| ``stork``        | No       | This is used to determine whether Stork    | bool   | ``false``     |
-|                  |          | will be installed on the runner to be able |        |               |
-|                  |          | to build a site with Stork search enabled  |        |               |
-+------------------+----------+--------------------------------------------+--------+---------------+
++--------------------+----------+--------------------------------------------+--------+---------------+
+| Name               | Required | Description                                | Type   | Default       |
++====================+==========+============================================+========+===============+
+| ``settings``       | Yes      | The path to your Pelican settings          | string |               |
+|                    |          | file (``pelican``'s                        |        |               |
+|                    |          | ``--settings`` option),                    |        |               |
+|                    |          | for example: ``"publishconf.py"``          |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``requirements``   | No       | The Python requirements to                 | string | ``"pelican"`` |
+|                    |          | install, for example to enable             |        |               |
+|                    |          | markdown and typogrify use:                |        |               |
+|                    |          | ``"pelican[markdown] typogrify"``          |        |               |
+|                    |          | or if you have a requirements              |        |               |
+|                    |          | file: ``"-r requirements.txt"``            |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``output-path``    | No       | Where to output the generated              | string | ``"output/"`` |
+|                    |          | files (``pelican``'s ``--output``          |        |               |
+|                    |          | option)                                    |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``theme``          | No       | The GitHub repo URL of a custom            | string | ``""``        |
+|                    |          | theme to use, for example:                 |        |               |
+|                    |          | ``"https://github.com/seanh/sidecar.git"`` |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``theme-checkout`` | No       | Git ref (branch, tag or commit) of the     | string | ``""``        |
+|                    |          | theme repo to checkout. This can be used   |        |               |
+|                    |          | to pin the version of your theme. If not   |        |               |
+|                    |          | specified defaults to the theme repo's     |        |               |
+|                    |          | default branch.                            |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``python``         | No       | The version of Python to use to build the  | string | ``"3.12"``    |
+|                    |          | site, for example: ``"3.12"`` (to use the  |        |               |
+|                    |          | most recent version of Python 3.12, this   |        |               |
+|                    |          | is faster) or ``"3.12.1"`` (to use an      |        |               |
+|                    |          | exact version, slower)                     |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``siteurl``        | No       | The base URL of your web site (Pelican's   | string | The URL of    |
+|                    |          | ``SITEURL`` setting). If not passed this   |        | your GitHub   |
+|                    |          | will default to the URL of your GitHub     |        | Pages site.   |
+|                    |          | Pages site, which is correct in most       |        |               |
+|                    |          | cases.                                     |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``feed_domain``    | No       | The domain to be prepended to feed URLs    | string | The URL of    |
+|                    |          | (Pelican's ``FEED_DOMAIN`` setting). If    |        | your GitHub   |
+|                    |          | not passed this will default to the URL of |        | Pages site.   |
+|                    |          | your GitHub Pages site, which is correct   |        |               |
+|                    |          | in most cases.                             |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``deploy``         | No       | This is used to determine whether you will | bool   | ``true``      |
+|                    |          | deploy the site or not to GitHub Pages.    |        |               |
+|                    |          | This is most useful if you want to test a  |        |               |
+|                    |          | change to your website in a pull request   |        |               |
+|                    |          | before deploying those change.             |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
+| ``stork``          | No       | This is used to determine whether Stork    | bool   | ``false``     |
+|                    |          | will be installed on the runner to be able |        |               |
+|                    |          | to build a site with Stork search enabled  |        |               |
++--------------------+----------+--------------------------------------------+--------+---------------+
 
 Testing Your Build in a GitHub Pull Request
 """""""""""""""""""""""""""""""""""""""""""
