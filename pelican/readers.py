@@ -11,7 +11,7 @@ import docutils
 import docutils.core
 import docutils.io
 from docutils.parsers.rst.languages import get_language as get_docutils_lang
-from docutils.writers.html4css1 import HTMLTranslator, Writer
+from docutils.writers.html5_polyglot import HTMLTranslator, Writer
 
 from pelican import rstdirectives  # NOQA
 from pelican.cache import FileStampDataCacher
@@ -180,8 +180,8 @@ class RstReader(BaseReader):
     """Reader for reStructuredText files
 
     By default the output HTML is written using
-    docutils.writers.html4css1.Writer and translated using a subclass of
-    docutils.writers.html4css1.HTMLTranslator. If you want to override it with
+    docutils.writers.html5_polyglot.Writer and translated using a subclass of
+    docutils.writers.html5_polyglot.HTMLTranslator. If you want to override it with
     your own writer/translator (e.g. a HTML5-based one), pass your classes to
     these two attributes. Look in the source code for details.
 
