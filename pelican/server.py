@@ -49,7 +49,7 @@ def parse_arguments():
 
 
 class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
-    SUFFIXES = [".html", "/index.html", "/", ""]
+    SUFFIXES = ["/index.html",".html", "/", ""]
 
     extensions_map = {
         **server.SimpleHTTPRequestHandler.extensions_map,
