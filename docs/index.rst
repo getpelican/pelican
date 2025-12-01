@@ -53,6 +53,7 @@ Documentation
    publish
    settings
    plugins
+   namespace-plugin-migration
    themes
    pelican-themes
    importer
