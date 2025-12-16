@@ -177,6 +177,19 @@ DEFAULT_CONFIG = {
     "CHECK_MODIFIED_METHOD": "mtime",
     "LOAD_CONTENT_CACHE": False,
     "FORMATTED_FIELDS": ["summary"],
+    "HEADING_METADATA": False,
+    "HEADING_METADATA_MAP": {
+        1: "title",  # # Heading → title
+        2: "subtitle",  # ## Heading → subtitle
+        3: "summary",  # ### Heading → summary
+    },
+    "HEADING_METADATA_PATTERNS": {
+        "title": r"^#\s+(.+)$",
+        "subtitle": r"^##\s+(.+)$",
+        "summary": r"^###\s+(.+)$",
+        "author": r"^###\s+Author[:\s]+(.+)$",
+        "date": r"^###\s+Date[:\s]+(.+)$",
+    },
     "PORT": 8000,
     "BIND": "127.0.0.1",
 }
@@ -242,7 +255,7 @@ def get_settings_from_module(module: ModuleType | None = None) -> Settings:
 def get_settings_from_file(path: str) -> Settings:
     """Loads settings from a file path, returning a dict."""
 
-    name, ext = os.path.splitext(os.path.basename(path))
+    name, _ext = os.path.splitext(os.path.basename(path))
     module = load_source(name, path)
     return get_settings_from_module(module)
 
@@ -324,7 +337,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             "EXTRA_TEMPLATES_PATHS is deprecated use THEME_TEMPLATES_OVERRIDES instead."
         )
         if settings.get("THEME_TEMPLATES_OVERRIDES"):
-            raise Exception(
+            raise ValueError(
                 "Setting both EXTRA_TEMPLATES_PATHS and "
                 "THEME_TEMPLATES_OVERRIDES is not permitted. Please move to "
                 "only setting THEME_TEMPLATES_OVERRIDES."
@@ -392,7 +405,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
         if f + "_REGEX_SUBSTITUTIONS" in settings
     }
     if old_values and new_values:
-        raise Exception(
+        raise ValueError(
             "Setting both {new_key} and {old_key} (or variants thereof) is "
             "not permitted. Please move to only setting {new_key}.".format(
                 old_key="SLUG_SUBSTITUTIONS", new_key="SLUG_REGEX_SUBSTITUTIONS"
@@ -573,7 +586,7 @@ def configure_settings(settings: Settings) -> Settings:
     Also, specify the log messages to be ignored.
     """
     if "PATH" not in settings or not os.path.isdir(settings["PATH"]):
-        raise Exception(
+        raise ValueError(
             "You need to specify a path containing the content"
             " (see pelican --help for more information)"
         )
@@ -590,7 +603,7 @@ def configure_settings(settings: Settings) -> Settings:
         if os.path.exists(theme_path):
             settings["THEME"] = theme_path
         else:
-            raise Exception("Could not find the theme {}".format(settings["THEME"]))
+            raise ValueError("Could not find the theme {}".format(settings["THEME"]))
 
     # standardize strings to lowercase strings
     for key in ["DEFAULT_LANG"]:

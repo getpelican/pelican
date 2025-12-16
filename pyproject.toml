@@ -211,7 +211,7 @@ ignore = [
     "PLR2004"
 ]
 
-"pelican/tools/*.py}" = [
+"pelican/tools/*.py" = [
     # this is a command-line utility, prints are fine
     "T201"
 ]

@@ -244,7 +244,7 @@ class RstReaderTest(ReaderTest):
     def test_article_metadata_key_lowercase(self):
         # Keys of metadata should be lowercase.
         reader = readers.RstReader(settings=get_settings())
-        content, metadata = reader.read(_path("article_with_uppercase_metadata.rst"))
+        _content, metadata = reader.read(_path("article_with_uppercase_metadata.rst"))
 
         self.assertIn("category", metadata, "Key should be lowercase.")
         self.assertEqual("Yeah", metadata.get("category"), "Value keeps case.")
@@ -627,7 +627,7 @@ class RstReaderTest(ReaderTest):
 class MdReaderTest(ReaderTest):
     def test_article_with_metadata(self):
         reader = readers.MarkdownReader(settings=get_settings())
-        content, metadata = reader.read(_path("article_with_md_extension.md"))
+        _, metadata = reader.read(_path("article_with_md_extension.md"))
         expected = {
             "category": "test",
             "title": "Test md File",
@@ -638,7 +638,7 @@ class MdReaderTest(ReaderTest):
         }
         self.assertDictHasSubset(metadata, expected)
 
-        content, metadata = reader.read(
+        _content, metadata = reader.read(
             _path("article_with_markdown_and_nonascii_summary.md")
         )
         expected = {
@@ -700,7 +700,7 @@ class MdReaderTest(ReaderTest):
         reader = readers.MarkdownReader(settings=get_settings())
         # test to ensure the md file extension is being processed by the
         # correct reader
-        content, metadata = reader.read(_path("article_with_md_extension.md"))
+        content, _ = reader.read(_path("article_with_md_extension.md"))
         expected = (
             "<h1>Test Markdown File Header</h1>\n"
             "<h2>Used for pelican test</h2>\n"
@@ -709,7 +709,7 @@ class MdReaderTest(ReaderTest):
         self.assertEqual(content, expected)
         # test to ensure the mkd file extension is being processed by the
         # correct reader
-        content, metadata = reader.read(_path("article_with_mkd_extension.mkd"))
+        content, _ = reader.read(_path("article_with_mkd_extension.mkd"))
         expected = (
             "<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"
             " test</h2>\n<p>This is another markdown test file.  Uses"
@@ -718,9 +718,7 @@ class MdReaderTest(ReaderTest):
         self.assertEqual(content, expected)
         # test to ensure the markdown file extension is being processed by the
         # correct reader
-        content, metadata = reader.read(
-            _path("article_with_markdown_extension.markdown")
-        )
+        content, _ = reader.read(_path("article_with_markdown_extension.markdown"))
         expected = (
             "<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"
             " test</h2>\n<p>This is another markdown test file.  Uses"
@@ -729,7 +727,7 @@ class MdReaderTest(ReaderTest):
         self.assertEqual(content, expected)
         # test to ensure the mdown file extension is being processed by the
         # correct reader
-        content, metadata = reader.read(_path("article_with_mdown_extension.mdown"))
+        content, _metadata = reader.read(_path("article_with_mdown_extension.mdown"))
         expected = (
             "<h1>Test Markdown File Header</h1>\n<h2>Used for pelican"
             " test</h2>\n<p>This is another markdown test file.  Uses"
@@ -825,7 +823,9 @@ class MdReaderTest(ReaderTest):
 
     def test_duplicate_tags_or_authors_are_removed(self):
         reader = readers.MarkdownReader(settings=get_settings())
-        content, metadata = reader.read(_path("article_with_duplicate_tags_authors.md"))
+        _content, metadata = reader.read(
+            _path("article_with_duplicate_tags_authors.md")
+        )
         expected = {
             "tags": ["foo", "bar", "foobar"],
             "authors": ["Author, First", "Author, Second"],
@@ -837,7 +837,7 @@ class MdReaderTest(ReaderTest):
         settings["FORMATTED_FIELDS"] = ["summary"]
 
         reader = readers.MarkdownReader(settings=settings)
-        content, metadata = reader.read(
+        _content, metadata = reader.read(
             _path("article_with_markdown_and_nested_metadata.md")
         )
         expected = {

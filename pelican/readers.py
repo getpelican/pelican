@@ -341,18 +341,119 @@ class MarkdownReader(BaseReader):
                 output[name] = self.process_metadata(name, value[0])
         return output
 
+    def _extract_heading_metadata(self, text, source_path):
+        """Extract metadata from Markdown headings based on configuration.
+
+        Args:
+            text (str): Raw Markdown text
+            source_path (str): Path to source file for error reporting
+
+        Returns:
+            tuple: (extracted_metadata, lines_to_remove)
+                - extracted_metadata (dict): Extracted metadata from headings
+                - lines_to_remove (set): Line numbers of headings used for metadata
+        """
+        metadata = OrderedDict()
+        lines_to_remove = set()
+
+        # Get configuration
+        heading_map = self.settings.get("HEADING_METADATA_MAP", {})
+        heading_patterns = self.settings.get("HEADING_METADATA_PATTERNS", {})
+
+        # If no configuration provided, use default title extraction
+        if not heading_map and not heading_patterns:
+            heading_patterns = {"title": r"^#\s+(.+)$"}
+
+        # Extract metadata using both level mapping and custom patterns
+        lines = text.split("\n")
+        for line_num, line in enumerate(lines, 1):
+            custom_matched = False
+
+            # Try custom patterns first
+            for field_name, pattern in heading_patterns.items():
+                match = re.match(pattern, line.strip())
+                if match:
+                    value = match.group(1).strip()
+                    if field_name not in metadata:  # Only keep first occurrence
+                        metadata[field_name] = [value]
+                        lines_to_remove.add(line_num)
+                    custom_matched = True
+                    break
+
+            # Try level mapping (always run, not just if no custom matched)
+            if heading_map and not custom_matched:
+                # Match heading levels (# ## ### etc.)
+                heading_match = re.match(r"^(#{1,6})\s+(.+)$", line.strip())
+                if heading_match:
+                    level = len(heading_match.group(1))
+                    title = heading_match.group(2).strip()
+
+                    # Map level to field name
+                    field_name = heading_map.get(level)
+                    if field_name and field_name not in metadata:
+                        metadata[field_name] = [title]
+                        lines_to_remove.add(line_num)
+
+        # Process extracted metadata through existing processors
+        processed_metadata = {}
+        metadata_processors = self.settings.get("METADATA_PROCESSORS", {})
+
+        for field_name, values in metadata.items():
+            if isinstance(values, list) and len(values) == 1:
+                values = values[0]
+
+            # Apply metadata processor if available
+            if field_name in metadata_processors:
+                processor = metadata_processors[field_name]
+                try:
+                    values = processor(values, self.settings)
+                except (ValueError, TypeError, AttributeError) as e:
+                    logger.warning(
+                        f"Metadata processor for '{field_name}' failed on "
+                        f"'{values}' in '{source_path}': {e}"
+                    )
+
+            processed_metadata[field_name] = values
+
+        return processed_metadata, lines_to_remove
+
     def read(self, source_path):
         """Parse content and metadata of markdown files"""
 
         self._source_path = source_path
         self._md = Markdown(**self.settings["MARKDOWN"])
         with pelican_open(source_path) as text:
+            # Extract heading metadata before markdown conversion
+            heading_metadata = {}
+            lines_to_remove = set()
+            if self.settings.get("HEADING_METADATA", False):
+                heading_metadata, lines_to_remove = self._extract_heading_metadata(
+                    text, source_path
+                )
+
+            # Remove the heading lines that were used for metadata extraction
+            if lines_to_remove:
+                text_lines = text.split("\n")
+                # Filter out the lines that were used for metadata
+                filtered_lines = [
+                    line
+                    for line_num, line in enumerate(text_lines, 1)
+                    if line_num not in lines_to_remove
+                ]
+                text = "\n".join(filtered_lines)
+
             content = self._md.convert(text)
 
         if hasattr(self._md, "Meta"):
             metadata = self._parse_metadata(self._md.Meta)
         else:
             metadata = {}
+
+        # Merge heading metadata with regular metadata
+        # Regular metadata takes precedence over heading metadata
+        heading_metadata.update(metadata)
+        metadata = heading_metadata
+
         return content, metadata
 
     def disabled_message(self) -> str:
@@ -805,7 +906,7 @@ def parse_path_metadata(source_path, settings=None, process=None):
     """
     metadata = {}
     dirname, basename = os.path.split(source_path)
-    base, ext = os.path.splitext(basename)
+    base, _ext = os.path.splitext(basename)
     subdir = os.path.basename(dirname)
     if settings:
         checks = []
