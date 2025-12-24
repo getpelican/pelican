@@ -673,7 +673,7 @@ def configure_settings(settings: Settings) -> Settings:
     ]
 
     if any(settings.get(k) for k in feed_keys):
-        if not settings.get("SITEURL", settings.get("FEED_DOMAIN")):
+        if not (settings.get("SITEURL") or settings.get("FEED_DOMAIN")):
             logger.warning(
                 "Feeds generated without SITEURL or FEED_DOMAIN set properly"
                 " may not be valid"
