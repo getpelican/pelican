@@ -87,8 +87,7 @@ class LimitLogger(logging.Logger):
 
 
 class FatalLogger(LimitLogger):
-    warnings_fatal = False
-    errors_fatal = False
+    fatal_lvl = logging.CRITICAL + 1  # i.e. No levels by default
 
     def filter(self, record):
         """A hack to let _log() know whether a message was logged or not."""
@@ -102,12 +101,11 @@ class FatalLogger(LimitLogger):
         try:
             super()._log(level, msg, args, exc_info, extra, stack_info, stacklevel + 1)
         except FilteredMessage:
+            # Avoid raising RuntimeError below if no log was emitted.
             return
 
-        if FatalLogger.warnings_fatal and level >= logging.WARNING:
-            raise RuntimeError("Warning encountered")
-        elif FatalLogger.errors_fatal and level >= logging.ERROR:
-            raise RuntimeError("Error encountered")
+        if level >= FatalLogger.fatal_lvl:
+            raise RuntimeError("Warning or error encountered")
 
 
 logging.setLoggerClass(FatalLogger)
@@ -124,8 +122,8 @@ def init(
     name=None,
     logs_dedup_min_level=None,
 ):
-    FatalLogger.warnings_fatal = fatal.startswith("warning")
-    FatalLogger.errors_fatal = bool(fatal)
+    if fatal:
+        FatalLogger.fatal_lvl = logging.WARNING if fatal.startswith("warning") else logging.ERROR
 
     LOG_FORMAT = "%(message)s"
     logging.basicConfig(
