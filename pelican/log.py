@@ -10,6 +10,10 @@ __all__ = ["init"]
 console = Console()
 
 
+class FilteredMessage(Exception):
+    """An exception to signal whether a message was filtered or not."""
+
+
 class LimitFilter(logging.Filter):
     """
     Remove duplicates records, and limit the number of records in the same
@@ -86,40 +90,23 @@ class FatalLogger(LimitLogger):
     warnings_fatal = False
     errors_fatal = False
 
-    def warning(self, *args, stacklevel=1, **kwargs):
-        """
-        Displays a logging warning.
+    def filter(self, record):
+        """A hack to let _log() know whether a message was logged or not."""
+        result = super().filter(record)
+        if not result:
+            raise FilteredMessage()
+        return result
 
-        Wrapping it here allows Pelican to filter warnings, and conditionally
-        make warnings fatal.
+    def _log(self, level, msg, args, exc_info=None, extra=None, stack_info=False,
+             stacklevel=1):
+        try:
+            super()._log(level, msg, args, exc_info, extra, stack_info, stacklevel + 1)
+        except FilteredMessage:
+            return
 
-        Args:
-            stacklevel (int): the stacklevel that would be used to display the
-            calling location, except for this function. Adjusting the
-            stacklevel allows you to see the "true" calling location of the
-            warning, rather than this wrapper location.
-        """
-        stacklevel += 1
-        super().warning(*args, stacklevel=stacklevel, **kwargs)
-        if FatalLogger.warnings_fatal:
+        if FatalLogger.warnings_fatal and level >= logging.WARNING:
             raise RuntimeError("Warning encountered")
-
-    def error(self, *args, stacklevel=1, **kwargs):
-        """
-        Displays a logging error.
-
-        Wrapping it here allows Pelican to filter errors, and conditionally
-        make errors non-fatal.
-
-        Args:
-            stacklevel (int): the stacklevel that would be used to display the
-            calling location, except for this function. Adjusting the
-            stacklevel allows you to see the "true" calling location of the
-            error, rather than this wrapper location.
-        """
-        stacklevel += 1
-        super().error(*args, stacklevel=stacklevel, **kwargs)
-        if FatalLogger.errors_fatal:
+        elif FatalLogger.errors_fatal and level >= logging.ERROR:
             raise RuntimeError("Error encountered")
 
 
