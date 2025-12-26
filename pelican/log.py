@@ -104,7 +104,9 @@ class FatalLogger(LimitLogger):
             # Avoid raising RuntimeError below if no log was emitted.
             return
 
-        if level >= FatalLogger.fatal_lvl:
+        # __init__.py:main() catches this exception then does it's own critical log.
+        # We need to avoid throwing the exception a second time here.
+        if level >= FatalLogger.fatal_lvl and level != logging.CRITICAL:
             raise RuntimeError("Warning or error encountered")
 
 
