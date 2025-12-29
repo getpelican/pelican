@@ -1,62 +1,59 @@
 Installing Pelican
 ##################
 
-Pelican currently runs best on |min_python|; earlier versions of Python are not supported.
+Pelican currently runs best on Python |min_python|; earlier versions of Python are not supported.
 
 Once Pelican is installed, you can run ``pelican --help`` to see basic usage
 options. For more detail, refer to the :doc:`Publish<publish>` section.
 
-You can install Pelican via several different methods. The simplest is via
-`pip <http://www.pip-installer.org/>`_::
+You can install Pelican via several different methods.
 
-    python -m pip install pelican
+**Recommended method:** `Pip <https://pip.pypa.io/>`_ User Install
 
-Keep in mind that operating systems will often require you to prefix the above
-command with ``sudo`` in order to install Pelican system-wide. **You should
-not do this** as it may break your operating system. In this case you
-can add the ``--user`` flag or try one of the recommended methods below.
+To install Pelican via Pip::
 
-**Recommended method 1:** `pipx <https://github.com/pipxproject/pipx/>`_
+    python3 -m pip install --user "pelican[markdown]"
 
-pipx lets you execute binaries from Python packages in isolated environments.
-You can install pipx according to instructions on its  
-`homepage <https://github.com/pipxproject/pipx/>`_. After pipx is installed,
-you can install pelican::
+Or, if you do not plan to use `Markdown <https://pypi.org/project/Markdown/>`_,
+you can omit the ``[markdown]`` suffix::
 
-    $ pipx install pelican
-    installed package pelican 4.0.1, Python 3.6.7
-    These binaries are now globally available
-     - pelican
-     - pelican-import
-     - pelican-quickstart
-     - pelican-themes
-    done! ✨ 🌟 ✨
+    python3 -m pip install --user pelican
 
-To upgrade or uninstall::
+**Alternate method 1:** `Pipx <https://github.com/pypa/pipx>`_
 
-    pipx upgrade pelican
-    pipx uninstall pelican
+Pipx lets you execute binaries from Python packages in isolated environments.
+You can install Pipx by following its
+`documentation <https://pipx.pypa.io>`_. After Pipx is installed,
+you can install Pelican via::
 
-**Recommended method 2:** Virtual Environment
+    pipx install "pelican[markdown]"
 
-If you prefer to manually manage a Virtual Environment, you can create 
-a virtual environment for Pelican via venv_ (or virtualenv_ if you are 
-using Python2) before installing Pelican.::
+**Alternate method 2:** `uv <https://docs.astral.sh/uv/>`_
 
-    python -m venv ~/virtualenvs/pelican
-    . ~/virtualenvs/pelican/bin/activate
+Like Pipx, ``uv`` allows you to install tools in isolated environments.
+If you have ``uv`` installed, you can install Pelican via::
 
-Once the virtual environment has been created and activated, Pelican can be
-installed via ``python -m pip install pelican`` as noted above. Alternatively, if you
-have the project source, you can install Pelican using the setuptools method::
+    uv tool install "pelican[markdown]"
+
+**Alternate method 3:** Virtual Environment
+
+If you prefer to manually manage a virtual environment, you can create
+a virtual environment for Pelican via venv_ before installing Pelican::
+
+    python3 -m venv ~/virtualenvs/pelican
+    source ~/virtualenvs/pelican/bin/activate
+    python3 -m pip install "pelican[markdown]"
+
+Alternatively, if you have the project source, you can replace the last command
+with the following to install Pelican using the ``setuptools`` method::
 
     cd path-to-Pelican-source
-    python -m pip install .
+    python3 -m pip install .
 
 If you have Git installed and prefer to install the latest bleeding-edge
 version of Pelican rather than a stable release, use the following command::
 
-    python -m pip install -e "git+https://github.com/getpelican/pelican.git#egg=pelican"
+    python3 -m pip install -e "git+https://github.com/getpelican/pelican.git#egg=pelican"
 
 To exit the virtual environment, type ``deactivate``.
 
@@ -66,18 +63,23 @@ Optional packages
 If you plan on using `Markdown <https://pypi.org/project/Markdown/>`_ as a
 markup format, you can install Pelican with Markdown support::
 
-    python -m pip install "pelican[markdown]"
+    python3 -m pip install --user "pelican[markdown]"
 
 Typographical enhancements can be enabled in your settings file, but first the
-requisite `Typogrify <https://pypi.org/project/typogrify/>`_ library must be
+requisite `Typogrify <https://github.com/justinmayer/typogrify>`_ library must be
 installed::
 
-    python -m pip install typogrify
+    python3 -m pip install --user typogrify
 
-If you are using pipx, you can inject packages into the pipx-managed virtual
-environment::
+If you are using Pipx, you can inject packages into the Pipx-managed virtual
+environment. For example, to add Typogrify::
 
-    pipx inject pelican Markdown
+    pipx inject pelican typogrify
+
+To use ``uv`` to install Pelican with additional extra packages, use the
+following example command, which like above will also install Typogrify::
+
+    uv tool install --with typogrify "pelican[markdown]"
 
 Dependencies
 ------------
@@ -107,14 +109,18 @@ Upgrading
 If you installed a stable Pelican release via Pip_ and wish to upgrade to
 the latest stable release, you can do so by adding ``--upgrade``::
 
-    python -m pip install --upgrade pelican
+    python3 -m pip install --upgrade pelican
 
-If you installed Pelican via distutils or the bleeding-edge method, simply
+If you installed Pelican via ``setuptools`` or the bleeding-edge method,
 perform the same step to install the most recent version.
 
-If you installed with pipx::
+If you installed with Pipx, upgrade via::
 
     pipx upgrade pelican
+
+If you installed with ``uv``, upgrade via::
+
+    uv tool upgrade pelican
 
 Kickstart your site
 -------------------
