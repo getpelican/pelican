@@ -59,24 +59,7 @@ pelican-plugins = "pelican.plugins._utils:list_plugins"
 pelican-quickstart = "pelican.tools.pelican_quickstart:main"
 pelican-themes = "pelican.tools.pelican_themes:main"
 
-[tool.autopub]
-project-name = "Pelican"
-git-username = "botpub"
-git-email = "52496925+botpub@users.noreply.github.com"
-changelog-file = "docs/changelog.rst"
-changelog-header = "###############"
-version-header = "="
-
-[tool.pdm]
-ignore_package_warnings = ["sphinx"]
-
-[tool.pdm.scripts]
-docbuild = "invoke docbuild"
-docserve = "invoke docserve"
-lint = "invoke lint"
-test = "invoke tests"
-
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
     "BeautifulSoup4>=4.13.3",
     "jinja2>=3.1.2",
@@ -99,6 +82,23 @@ dev = [
     "ruff==0.12.7",
     "tomli>=2.0.1; python_version < \"3.11\"",
 ]
+
+[tool.autopub]
+project-name = "Pelican"
+git-username = "botpub"
+git-email = "52496925+botpub@users.noreply.github.com"
+changelog-file = "docs/changelog.rst"
+changelog-header = "###############"
+version-header = "="
+
+[tool.pdm]
+ignore_package_warnings = ["sphinx"]
+
+[tool.pdm.scripts]
+docbuild = "invoke docbuild"
+docserve = "invoke docserve"
+lint = "invoke lint"
+test = "invoke tests"
 
 [tool.pdm.build]
 source-includes = [
