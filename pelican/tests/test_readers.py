@@ -33,10 +33,16 @@ class ReaderTest(unittest.TestCase):
                 self.fail(f"Expected {key} to have value {value}, but was not in Dict")
 
     def test_markdown_disabled(self):
-        with patch.object(
-            readers.MarkdownReader, "enabled", new_callable=PropertyMock
-        ) as attr_mock:
-            attr_mock.return_value = False
+        with (
+            patch.object(
+                readers.MarkdownReader, "enabled", new_callable=PropertyMock
+            ) as md_attr_mock,
+            patch.object(
+                readers.MystReader, "enabled", new_callable=PropertyMock
+            ) as myst_attr_mock,
+        ):
+            md_attr_mock.return_value = False
+            myst_attr_mock.return_value = True
             readrs = readers.Readers(settings=get_settings())
             self.assertEqual(
                 set(readers.MarkdownReader.file_extensions),
@@ -44,6 +50,25 @@ class ReaderTest(unittest.TestCase):
             )
             for val in readrs.disabled_readers.values():
                 self.assertEqual(readers.MarkdownReader, val.__class__)
+
+    def test_myst_disabled(self):
+        with (
+            patch.object(
+                readers.MystReader, "enabled", new_callable=PropertyMock
+            ) as myst_attr_mock,
+            patch.object(
+                readers.MarkdownReader, "enabled", new_callable=PropertyMock
+            ) as md_attr_mock,
+        ):
+            myst_attr_mock.return_value = False
+            md_attr_mock.return_value = True
+            readrs = readers.Readers(settings=get_settings())
+            self.assertEqual(
+                set(readers.MystReader.file_extensions),
+                readrs.disabled_readers.keys(),
+            )
+            for val in readrs.disabled_readers.values():
+                self.assertEqual(readers.MystReader, val.__class__)
 
 
 class TestAssertDictHasSubset(ReaderTest):
@@ -1025,3 +1050,61 @@ class HTMLReaderTest(ReaderTest):
             "title": "Article with an inline SVG",
         }
         self.assertDictHasSubset(page.metadata, expected)
+
+
+@unittest.skipUnless(readers.MystParser, "myst-parser isn't installed")
+class MystReaderTest(ReaderTest):
+    def test_article_with_yaml_metadata(self):
+        reader = readers.MystReader(settings=get_settings())
+        content, metadata = reader.read(_path("article_myst_basic.myst"))
+        expected = {
+            "title": "Test MyST Article",
+            "date": SafeDatetime(2024, 1, 15, 10, 30),
+            "modified": SafeDatetime(2024, 1, 16, 14, 45),
+            "category": "test",
+            "tags": ["myst", "markdown", "test"],
+            "author": "Test Author",
+            "summary": "<p>This is a <strong>summary</strong> with <em>inline</em> markup.</p>",
+        }
+        self.assertDictHasSubset(metadata, expected)
+        self.assertIn("<h2>Introduction", content)
+        self.assertIn("This is a test article", content)
+
+    def test_article_with_directives(self):
+        reader = readers.MystReader(settings=get_settings())
+        content, metadata = reader.read(_path("article_myst_directives.myst"))
+        expected = {
+            "title": "MyST Directives Test",
+            "date": SafeDatetime(2024, 1, 20),
+        }
+        self.assertDictHasSubset(metadata, expected)
+        self.assertIn("note", content.lower())
+        self.assertIn("warning", content.lower())
+        self.assertIn("<sub>", content)
+        self.assertIn("<sup>", content)
+
+    def test_article_without_metadata(self):
+        reader = readers.MystReader(settings=get_settings())
+        content, metadata = reader.read(_path("article_myst_no_metadata.myst"))
+        self.assertIn("title", metadata)
+        self.assertEqual(metadata["title"], "Simple MyST")
+        self.assertIn("Just some simple content", content)
+
+    def test_myst_extensions(self):
+        settings = get_settings()
+        settings["MYST"] = {
+            "enable_extensions": ["colon_fence", "deflist"],
+        }
+        reader = readers.MystReader(settings=settings)
+        content, metadata = reader.read(_path("article_myst_basic.myst"))
+        self.assertIsNotNone(content)
+
+    def test_myst_config_options(self):
+        settings = get_settings()
+        settings["MYST"] = {
+            "enable_extensions": ["smartquotes", "replacements"],
+            "all_links_external": True,
+        }
+        reader = readers.MystReader(settings=settings)
+        content, metadata = reader.read(_path("article_myst_basic.myst"))
+        self.assertIsNotNone(content)
