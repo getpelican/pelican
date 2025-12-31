@@ -30,7 +30,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "blinker>=1.7.0",
-    "docutils>=0.20.1",
+    "docutils>=0.22.2",
     "feedgenerator>=2.1.0",
     "jinja2>=3.1.2",
     "ordered-set>=4.1.0",
@@ -83,9 +83,6 @@ dev = [
     "lxml>=4.9.3",
     "markdown>=3.5.1",
     "typogrify>=2.1.0",
-    "sphinx>=7.1.2",
-    "sphinxext-opengraph>=0.9.0",
-    "furo==2025.9.25",
     "livereload>=2.6.3",
     "psutil>=5.9.6",
     "pygments>=2.16.1,<2.20.0",

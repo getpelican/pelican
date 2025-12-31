@@ -3,4 +3,5 @@ sphinxext-opengraph
 furo==2023.9.10
 livereload
 matplotlib
+roman
 tomli;python_version<"3.11"
