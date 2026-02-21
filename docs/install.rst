@@ -1,5 +1,40 @@
 Installing Pelican
 ##################
+Using Pelican on Windows
+------------------------
+
+If you are using **Git Bash** on Windows, you may encounter:
+
+    bash: pelican-quickstart: command not found
+
+**Reason:** Bash does not automatically recognize Python’s Scripts folder on Windows.
+
+**Solutions:**
+
+1. **Use PowerShell** (recommended) instead of Git Bash:
+
+    pelican-quickstart
+
+2. **Use WSL** (Windows Subsystem for Linux) if you prefer a Linux-like environment.
+
+3. **Check your PATH**: On PowerShell, if you get:
+
+    <command name>: The term '<command name>' is not recognized as a name of a cmdlet, function, script file, or executable program.
+
+   then the Python Scripts folder may not be in your PATH. Add it:
+
+    C:\Users\<your-username>\AppData\Local\Programs\Python\Python312\Scripts
+
+4. **Alternative quickfix:** Run the scripts directly with Python:
+
+    py C:\Users\<your-username>\AppData\Local\Programs\Python\Python312\Lib\site-packages\pelican\tools\pelican_quickstart.py
+    py -m pelican -r -l
+
+-------------------------------
+Kickstart your site
+-------------------
+
+
 
 Pelican currently runs best on |min_python|; earlier versions of Python are not supported.
 
