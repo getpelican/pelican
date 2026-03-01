@@ -1,40 +1,5 @@
 Installing Pelican
 ##################
-Using Pelican on Windows
-------------------------
-
-If you are using **Git Bash** on Windows, you may encounter:
-
-    bash: pelican-quickstart: command not found
-
-**Reason:** Bash does not automatically recognize Python’s Scripts folder on Windows.
-
-**Solutions:**
-
-1. **Use PowerShell** (recommended) instead of Git Bash:
-
-    pelican-quickstart
-
-2. **Use WSL** (Windows Subsystem for Linux) if you prefer a Linux-like environment.
-
-3. **Check your PATH**: On PowerShell, if you get:
-
-    <command name>: The term '<command name>' is not recognized as a name of a cmdlet, function, script file, or executable program.
-
-   then the Python Scripts folder may not be in your PATH. Add it:
-
-    C:\Users\<your-username>\AppData\Local\Programs\Python\Python312\Scripts
-
-4. **Alternative quickfix:** Run the scripts directly with Python:
-
-    py C:\Users\<your-username>\AppData\Local\Programs\Python\Python312\Lib\site-packages\pelican\tools\pelican_quickstart.py
-    py -m pelican -r -l
-
--------------------------------
-Kickstart your site
--------------------
-
-
 
 Pelican currently runs best on |min_python|; earlier versions of Python are not supported.
 
@@ -103,7 +68,6 @@ automatically installed without any action on your part:
   broadcast signaling system
 * `unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII
   transliterations of Unicode text
-  utilities
 * `MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup-safe
   string implementation
 * `python-dateutil <https://pypi.org/project/python-dateutil/>`_, to read
@@ -120,6 +84,30 @@ the latest stable release, you can do so by adding ``--upgrade``::
 If you installed Pelican via distutils or the bleeding-edge method, simply
 perform the same step to install the most recent version.
 
+Windows notes
+-------------
+
+Git Bash users may encounter::
+
+    bash: pelican-quickstart: command not found
+
+This occurs because Git Bash does not automatically include Python’s Scripts
+directory in ``PATH``.
+
+**Recommended options:**
+
+* Use **PowerShell** instead of Git Bash
+* Use **WSL (Windows Subsystem for Linux)** for a Linux-like environment
+
+**Alternative workarounds:**
+
+* Ensure Python’s Scripts directory is in ``PATH``
+* Run Pelican via::
+
+      python -m pelican
+
+See issue #3574 for discussion.
+
 Kickstart your site
 -------------------
 
@@ -133,8 +121,9 @@ If run inside an activated virtual environment, ``pelican-quickstart`` will
 look for an associated project path inside ``$VIRTUAL_ENV/.project``. If that
 file exists and contains a valid directory path, the new Pelican project will
 be saved at that location. Otherwise, the default is the current working
-directory. To set the new project path on initial invocation, use:
-``pelican-quickstart --path /your/desired/directory``
+directory. To set the new project path on initial invocation, use::
+
+    pelican-quickstart --path /your/desired/directory
 
 Once you finish answering all the questions, your project will consist of the
 following hierarchy (except for *pages* — shown in parentheses below — which
@@ -150,8 +139,8 @@ content)::
     ├── pelicanconf.py       # Main settings file
     └── publishconf.py       # Settings to use when ready to publish
 
-The next step is to begin to adding content to the *content* folder that has
-been created for you.
+The next step is to begin adding content to the *content* folder that has been
+created for you.
 
 .. _Pip: https://pip.pypa.io/
 .. _virtualenv: https://virtualenv.pypa.io/en/latest/
