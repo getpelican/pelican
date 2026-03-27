@@ -20,7 +20,7 @@
     {% import 'translations.html' as translations with context %}
     {{ translations.translations_for(page) }}
 
-    {{ page.content }}
+    {% block page_content %}{{ page.content }}{% endblock page_content %}
 
     {% if page.modified %}
       <footer>
