@@ -949,6 +949,69 @@ file:
         'static/robots.txt': {'path': 'robots.txt'},
         }
 
+.. data:: HEADING_METADATA
+
+   Enable or disable metadata extraction from Markdown headings. When set to
+   ``True``, Pelican will extract metadata from headings according to the
+   ``HEADING_METADATA_MAP`` and ``HEADING_METADATA_PATTERNS`` settings. Pelican
+   removes extracted headings from the content to avoid duplication. The default
+   is ``False``.
+
+.. data:: HEADING_METADATA_MAP
+
+   A mapping of heading levels to metadata field names. This pallows metadata to
+   be extracted from specific heading levels. For example, ``{1: 'title'}`` will
+   map level 1 headings (``# Heading``) to the ``title`` metadata field.
+   Multiple levels can be mapped to different fields. The default is::
+
+       HEADING_METADATA_MAP = {
+           1: 'title',      # # Heading → title
+           2: 'subtitle',   # ## Heading → subtitle
+           3: 'summary',    # ### Heading → summary
+       }
+
+.. data:: HEADING_METADATA_PATTERNS
+
+   Custom regex patterns for extracting metadata from headings. This provides
+   more flexibility than ``HEADING_METADATA_MAP`` by allowing you to match
+   specific heading patterns. The patterns are processed before the level
+   mapping, if both are configured. The default is::
+
+       HEADING_METADATA_PATTERNS = {
+           'title': r'^#\s+(.+)$',
+           'subtitle': r'^##\s+(.+)$',
+           'summary': r'^###\s+(.+)$',
+           'author': r'^###\s+Author[:\s]+(.+)$',
+           'date': r'^###\s+Date[:\s]+(.+)$',
+       }
+
+   Example usage::
+
+       # Enable heading metadata extraction
+       HEADING_METADATA = True
+
+       # Simple title extraction from first level heading
+       HEADING_METADATA_PATTERNS = {
+           'title': r'^#\s+(.+)$'
+       }
+
+       # Or use level mapping instead
+       HEADING_METADATA_MAP = {
+           1: 'title'
+       }
+
+   This allows Markdown files like::
+
+       Date: 2023-12-01
+       Category: tech
+
+       # My Article Title
+
+       Content goes here...
+
+   This allows their titles to be extracted automatically without requiring
+   explicit ``Title:`` metadata.
+
 .. _group name notation:
    https://docs.python.org/3/library/re.html#regular-expression-syntax
 

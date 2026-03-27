@@ -118,7 +118,7 @@ class TestSettingsConfiguration(unittest.TestCase):
 
         # Check that non-existent theme raises exception
         settings["THEME"] = "foo"
-        self.assertRaises(Exception, configure_settings, settings)
+        self.assertRaises(ValueError, configure_settings, settings)
 
     def test_deprecated_dir_setting(self):
         settings = self.settings
@@ -155,17 +155,17 @@ class TestSettingsConfiguration(unittest.TestCase):
         # test that 'PATH' is set
         settings = {}
 
-        self.assertRaises(Exception, configure_settings, settings)
+        self.assertRaises(ValueError, configure_settings, settings)
 
         # Test that 'PATH' is valid
         settings["PATH"] = ""
-        self.assertRaises(Exception, configure_settings, settings)
+        self.assertRaises(ValueError, configure_settings, settings)
 
         # Test nonexistent THEME
         settings["PATH"] = os.curdir
         settings["THEME"] = "foo"
 
-        self.assertRaises(Exception, configure_settings, settings)
+        self.assertRaises(ValueError, configure_settings, settings)
 
     def test__printf_s_to_format_field(self):
         for s in ("%s", "{%s}", "{%s"):
@@ -218,14 +218,14 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings["EXTRA_TEMPLATES_PATHS"] = ["/ha"]
         settings["THEME_TEMPLATES_OVERRIDES"] = ["/foo/bar"]
 
-        self.assertRaises(Exception, handle_deprecated_settings, settings)
+        self.assertRaises(ValueError, handle_deprecated_settings, settings)
 
     def test_slug_and_slug_regex_substitutions_exception(self):
         settings = {}
         settings["SLUG_REGEX_SUBSTITUTIONS"] = [("C++", "cpp")]
         settings["TAG_SUBSTITUTIONS"] = [("C#", "csharp")]
 
-        self.assertRaises(Exception, handle_deprecated_settings, settings)
+        self.assertRaises(ValueError, handle_deprecated_settings, settings)
 
     def test_deprecated_slug_substitutions(self):
         default_slug_regex_subs = self.settings["SLUG_REGEX_SUBSTITUTIONS"]

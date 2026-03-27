@@ -788,7 +788,9 @@ class TestArticlesGenerator(unittest.TestCase):
             theme=settings["THEME"],
             output_path=None,
         )
-        self.assertRaises(Exception, generator.get_template, "not_a_template")
+        self.assertRaises(
+            PelicanTemplateNotFound, generator.get_template, "not_a_template"
+        )
 
     def test_generate_authors(self):
         """Check authors generation."""
