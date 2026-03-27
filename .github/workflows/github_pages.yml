@@ -73,6 +73,7 @@ jobs:
         if: ${{ inputs.theme && inputs.theme-checkout }}
         run: git -C .theme checkout '${{ inputs.theme-checkout }}'
       - name: Configure GitHub Pages
+        if: ${{ inputs.deploy }}
         id: pages
         uses: actions/configure-pages@v5
       - name: Install Stork
