@@ -18,6 +18,10 @@ from pelican.utils import (
 logger = logging.getLogger(__name__)
 
 
+class FileOverwriteFailedError(RuntimeError):
+    """Failed to overwrite an existing file."""
+
+
 class Writer:
     def __init__(self, output_path, settings=None):
         self.output_path = output_path
@@ -107,14 +111,16 @@ class Writer:
         """
         if filename in self._overridden_files:
             if override:
-                raise RuntimeError(f"File {filename} is set to be overridden twice")
+                raise FileOverwriteFailedError(
+                    f"File {filename} is set to be overridden twice"
+                )
             logger.info("Skipping %s", filename)
             filename = os.devnull
         elif filename in self._written_files:
             if override:
                 logger.info("Overwriting %s", filename)
             else:
-                raise RuntimeError(f"File {filename} is to be overwritten")
+                raise FileOverwriteFailedError(f"File {filename} is to be overwritten")
         if override:
             self._overridden_files.add(filename)
         self._written_files.add(filename)
