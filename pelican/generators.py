@@ -30,6 +30,7 @@ from pelican.utils import (
     posixize_path,
     process_translations,
 )
+from pelican.writers import FileOverwriteFailedError
 
 logger = logging.getLogger(__name__)
 
@@ -584,7 +585,7 @@ class ArticlesGenerator(CachingGenerator):
                     page_name=tag.page_name,
                     all_articles=self.articles,
                 )
-            except RuntimeError:
+            except FileOverwriteFailedError:
                 if not tag.slug:
                     logger.info(
                         'Tag "%s" has an invalid slug; skipping writing tag page...',
@@ -615,7 +616,7 @@ class ArticlesGenerator(CachingGenerator):
                     page_name=cat.page_name,
                     all_articles=self.articles,
                 )
-            except RuntimeError:
+            except FileOverwriteFailedError:
                 if not cat.slug:
                     logger.info(
                         'Category "%s" has an invalid slug; skipping writing category page...',
@@ -646,7 +647,7 @@ class ArticlesGenerator(CachingGenerator):
                     page_name=aut.page_name,
                     all_articles=self.articles,
                 )
-            except RuntimeError:
+            except FileOverwriteFailedError:
                 if not aut.slug:
                     logger.info(
                         'Author "%s" has an invalid slug; skipping writing author page...',
