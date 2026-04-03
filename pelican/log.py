@@ -93,7 +93,7 @@ class FatalLogger(LimitLogger):
         """A hack to let _log() know whether a message was logged or not."""
         result = super().filter(record)
         if not result:
-            raise FilteredMessage()
+            raise FilteredMessage
         return result
 
     def _log(self, level, msg, args, exc_info=None, extra=None, stack_info=False,
