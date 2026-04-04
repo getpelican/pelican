@@ -112,15 +112,19 @@ class Writer:
         if filename in self._overridden_files:
             if override:
                 raise FileOverwriteFailedError(
-                    f"File {filename} is set to be overridden twice"
+                    f'Failed to overwrite "{filename}" a second time '
+                    "(was previously overwritten)"
                 )
-            logger.info("Skipping %s", filename)
+            logger.info('Skipping "%s", not overwriting', filename)
             filename = os.devnull
         elif filename in self._written_files:
             if override:
-                logger.info("Overwriting %s", filename)
+                logger.info('Overwriting "%s"', filename)
             else:
-                raise FileOverwriteFailedError(f"File {filename} is to be overwritten")
+                raise FileOverwriteFailedError(
+                    f'Failed to overwrite "{filename}" as Pelican has already '
+                    "written to it previously (set `override=True` if intended)"
+                )
         if override:
             self._overridden_files.add(filename)
         self._written_files.add(filename)
@@ -171,7 +175,7 @@ class Writer:
 
             with self._open_w(complete_path, "utf-8", override_output) as fp:
                 feed.write(fp, "utf-8")
-                logger.info("Writing %s", complete_path)
+                logger.info('Writing "%s"', complete_path)
 
             signals.feed_written.send(complete_path, context=context, feed=feed)
         return feed
@@ -222,7 +226,7 @@ class Writer:
 
             with self._open_w(path, "utf-8", override=override) as f:
                 f.write(output)
-            logger.info("Writing %s", path)
+            logger.info('Writing "%s"', path)
 
             # Send a signal to say we're writing a file with some specific
             # local context.
