@@ -117,10 +117,10 @@ and have a folder structure as follows::
 
     myplugin
     ├── pelican
-    │   └── plugins
-    │       └── myplugin
-    │           ├── __init__.py
-    │           └── ...
+    │   └── plugins
+    │       └── myplugin
+    │           ├── __init__.py
+    │           └── ...
     ├── ...
     └── setup.py
 
