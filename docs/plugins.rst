@@ -66,6 +66,11 @@ Please note that while we do our best to review and maintain these plugins,
 they are submitted by the Pelican community and thus may have varying levels of
 support and interoperability.
 
+Community plugins can also be found on PyPI tagged with "`Framework ::
+Pelican :: Plugins`_".
+
+.. _Framework :: Pelican :: Plugins: https://pypi.org/search/?q=&o=-created&c=Framework+%3A%3A+Pelican+%3A%3A+Plugins
+
 How to create plugins
 =====================
 
