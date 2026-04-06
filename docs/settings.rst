@@ -632,31 +632,36 @@ through the URLs ``posts/2011/`` and ``posts/2011/Aug/``, respectively.
 
 .. data:: YEAR_ARCHIVE_SAVE_AS
 
-   The location to save per-year archives of your posts. The default is ``''``.
+   The location to save per-year archives of your posts. The default is ``""``,
+   i.e. this is disabled by default.
 
 .. data:: YEAR_ARCHIVE_URL
 
    The URL to use for per-year archives of your posts. You should set this if
-   you enable per-year archives. The default is ``''``.
+   you enable per-year archives. The default is ``""``, i.e. this is disabled
+   by default.
 
 .. data:: MONTH_ARCHIVE_SAVE_AS
 
    The location to save per-month archives of your posts. The default is
-   ``''``.
+   ``""``, i.e. this is disabled by default.
 
 .. data:: MONTH_ARCHIVE_URL
 
    The URL to use for per-month archives of your posts. You should set this if
-   you enable per-month archives. The default is ``''``.
+   you enable per-month archives. The default is ``""``, i.e. this is disabled
+   by default.
 
 .. data:: DAY_ARCHIVE_SAVE_AS
 
-   The location to save per-day archives of your posts. The default is ``''``.
+   The location to save per-day archives of your posts. The default is ``""``,
+   i.e. this is disabled by default.
 
 .. data:: DAY_ARCHIVE_URL
 
    The URL to use for per-day archives of your posts. You should set this if
-   you enable per-day archives. The default is ``''``.
+   you enable per-day archives. The default is ``""``, i.e. this is disabled by
+   default.
 
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
@@ -893,18 +898,37 @@ Metadata
 
    The regexp that will be used to extract any metadata from the filename. All
    named groups that are matched will be set in the metadata object.  The
-   default value will only extract the date from the filename.
+   default value is ``r"(?P<date>\d{4}-\d{2}-\d{2}).*"`` and will only extract
+   the date from the filename.
 
-   For example, to extract both the date and the slug::
+   For example, if your source file were titled ``2026-04-30_blog-article.md``,
+   you could extract both the date and the slug::
 
-      FILENAME_METADATA = r'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'
+      FILENAME_METADATA = r"(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)"
 
-   See also ``SLUGIFY_SOURCE``. The default is ``r'(?P<date>\d{4}-\d{2}-\d{2}).*'``.
+   giving you a date of *April 30, 2026* and a slug of *blog-article*.
+
+   See also ``SLUGIFY_SOURCE``. The default is
+   ``r"(?P<date>\d{4}-\d{2}-\d{2}).*"``, i.e. it assumed your filenames start
+   with an ISO-style date, e.g. ``2026-04-30``.
+
+   See also, ``FILENAME_METADATA``.
 
 .. data:: PATH_METADATA
 
    Like ``FILENAME_METADATA``, but parsed from a page's full path relative to
-   the content source directory. The default is ``''``.
+   the content source directory, include the source filename. The default
+   value is ``""``.
+
+   For example, if your source files were stored in folders by year and then my
+   month, with the filename being the day of the month, (e.g.
+   ``2026/04/30.rst``) you could extract that with::
+
+      PATH_METADATA = r"(?P<date>\d{4}/\d{2}/\d{2}).*"
+
+   (The above works on Windows as well.)
+
+   See also ``FILENAME_METADATA``.
 
 .. data:: EXTRA_PATH_METADATA
 
@@ -913,44 +937,44 @@ Metadata
    unlike some other Pelican file settings. Paths to a directory apply to all
    files under it. The most-specific path wins conflicts.
 
-Not all metadata needs to be :ref:`embedded in source file itself
-<internal_metadata>`. For example, blog posts are often named following a
-``YYYY-MM-DD-SLUG.rst`` pattern, or nested into ``YYYY/MM/DD-SLUG``
-directories. To extract metadata from the filename or path, set
-``FILENAME_METADATA`` or ``PATH_METADATA`` to regular expressions that use
-Python's `group name notation`_ ``(?P<name>…)``. If you want to attach
-additional metadata but don't want to encode it in the path, you can set
-``EXTRA_PATH_METADATA``:
+   Not all metadata needs to be :ref:`embedded in source file itself
+   <internal_metadata>`. For example, blog posts are often named following a
+   ``YYYY-MM-DD-SLUG.rst`` pattern, or nested into ``YYYY/MM/DD-SLUG``
+   directories. To extract metadata from the filename or path, set
+   ``FILENAME_METADATA`` or ``PATH_METADATA`` to regular expressions that use
+   Python's `group name notation`_ ``(?P<name>…)``. If you want to attach
+   additional metadata but don't want to encode it in the path, you can set
+   ``EXTRA_PATH_METADATA``:
 
-.. parsed-literal::
+   .. parsed-literal::
 
-    EXTRA_PATH_METADATA = {
-        'relative/path/to/file-1': {
-            'key-1a': 'value-1a',
-            'key-1b': 'value-1b',
-            },
-        'relative/path/to/file-2': {
-            'key-2': 'value-2',
-            },
-        }
+       EXTRA_PATH_METADATA = {
+           "relative/path/to/file-1": {
+               "key-1a": "value-1a",
+               "key-1b": "value-1b",
+           },
+           "relative/path/to/file-2": {
+               "key-2": "value-2",
+           },
+       }
 
-This can be a convenient way to shift the installed location of a particular
-file:
+   This can be a convenient way to shift the output location of a particular
+   file:
 
-.. parsed-literal::
+   .. parsed-literal::
 
-    # Take advantage of the following defaults
-    # STATIC_SAVE_AS = '{path}'
-    # STATIC_URL = '{path}'
-    STATIC_PATHS = [
-        'static/robots.txt',
-        ]
-    EXTRA_PATH_METADATA = {
-        'static/robots.txt': {'path': 'robots.txt'},
-        }
+       # Take advantage of the following defaults:
+       # STATIC_SAVE_AS = "{path}"
+       # STATIC_URL = "{path}"
+       STATIC_PATHS = [
+           "static/robots.txt",
+       ]
+       EXTRA_PATH_METADATA = {
+           "static/robots.txt": {"path": "robots.txt"},
+       }
 
-.. _group name notation:
-   https://docs.python.org/3/library/re.html#regular-expression-syntax
+   .. _group name notation:
+      https://docs.python.org/3/library/re.html#regular-expression-syntax
 
    The default is ``{}``.
 
@@ -1074,7 +1098,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 .. data:: FEED_MAX_ITEMS
 
    Maximum number of items allowed in a feed. Setting to ``None`` will cause the
-   feed to contains every article. 100 if not specified. The default is ``100``.
+   feed to contains every article. The default is ``100``.
 
 .. data:: RSS_FEED_SUMMARY_ONLY
 
@@ -1313,7 +1337,10 @@ Following are example ways to specify your preferred theme::
     # Specify a customized theme, via absolute path
     THEME = "/home/myuser/projects/mysite/themes/mycustomtheme"
 
-The built-in ``simple`` theme can be customized using the following settings.
+Simple Theme
+------------
+
+The built-in ``simple`` theme can be customized using the following settings:
 
 .. data:: STYLESHEET_URL
 
@@ -1383,6 +1410,9 @@ Feel free to use them in your themes as well.
    Allows override of the name of the "social" widget.  If not specified,
    defaults to "social". The default is ``None``.
 
+Notmyidea Theme
+---------------
+
 In addition, you can use the "wide" version of the ``notmyidea`` theme by
 adding the following to your configuration::
 
@@ -1428,7 +1458,7 @@ For example::
 .. _reading_only_modified_content:
 
 
-Reading only modified content
+Reading Only Modified Content
 =============================
 
 To speed up the build process, Pelican can optionally read only articles and
@@ -1442,12 +1472,12 @@ When Pelican is about to read some content source file:
    file has no record in the cache file, it is read as usual.
 2. The file is checked according to ``CHECK_MODIFIED_METHOD``:
 
-    - If set to ``'mtime'``, the modification time of the file is
-      checked.
-    - If set to a name of a function provided by the ``hashlib``
-      module, e.g. ``'md5'``, the file hash is checked.
-    - If set to anything else or the necessary information about the
-      file cannot be found in the cache file, the content is read as usual.
+   - If set to ``"mtime"``, the modification time of the file is
+     checked.
+   - If set to a name of a function provided by the ``hashlib``
+     module, e.g. ``"md5"``, the file hash is checked.
+   - If set to anything else or the necessary information about the
+     file cannot be found in the cache file, the content is read as usual.
 
 3. If the file is considered unchanged, the content data saved in a
    previous build corresponding to the file is loaded from the cache, and the
