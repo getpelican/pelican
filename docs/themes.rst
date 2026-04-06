@@ -10,6 +10,12 @@ Please note that while we do our best to review and merge theme contributions,
 they are submitted by the Pelican community and thus may have varying levels of
 support and interoperability.
 
+Community themes can also be found on PyPI tagged with "`Framework ::
+Pelican :: Themes`_".
+
+.. _Framework :: Pelican :: Themes: https://pypi.org/search/?q=&o=-created&c=Framework+%3A%3A+Pelican+%3A%3A+Themes
+
+
 Creating Themes
 ~~~~~~~~~~~~~~~
 
