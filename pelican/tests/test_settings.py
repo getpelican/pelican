@@ -4,6 +4,7 @@ import logging
 import os
 from os.path import abspath, dirname, join
 
+from pelican import log
 from pelican.settings import (
     DEFAULT_CONFIG,
     DEFAULT_THEME,
@@ -12,7 +13,6 @@ from pelican.settings import (
     handle_deprecated_settings,
     read_settings,
 )
-from pelican import log
 from pelican.tests.support import LogCountHandler, unittest
 
 
