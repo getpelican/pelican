@@ -12,6 +12,7 @@ from pelican.settings import (
     handle_deprecated_settings,
     read_settings,
 )
+from pelican import log
 from pelican.tests.support import LogCountHandler, unittest
 
 
@@ -109,35 +110,40 @@ class TestSettingsConfiguration(unittest.TestCase):
         configure_settings(settings)
         self.assertEqual(settings["FEED_DOMAIN"], "http://feeds.example.com")
 
-    def test_feeds_warning(self):
+    def _feeds_warning_settings(self, **overrides):
+        base = {
+            "LOCALE": "",
+            "PATH": os.curdir,
+            "THEME": DEFAULT_THEME,
+            "FEED_RSS": "feeds/all.rss.xml",
+        }
+        base.update(overrides)
         handler = LogCountHandler()
-        logging.getLogger().addHandler(handler)
+        logger = logging.getLogger()
+        logger.addHandler(handler)
+        saved = log.LimitFilter._raised_messages.copy()
+        log.LimitFilter._raised_messages = set()
         try:
-            base = {
-                "LOCALE": "",
-                "PATH": os.curdir,
-                "THEME": DEFAULT_THEME,
-                "FEED_RSS": "feeds/all.rss.xml",
-            }
-            warning_msg = "Feeds generated without SITEURL"
-
-            # No warning when SITEURL is set
-            configure_settings({**base, "SITEURL": "http://example.com"})
-            self.assertEqual(handler.count_logs(warning_msg, logging.WARNING), 0)
-
-            # No warning when FEED_DOMAIN is set
-            handler.flush()
-            configure_settings(
-                {**base, "FEED_DOMAIN": "http://feeds.example.com"}
+            configure_settings(base)
+            return handler.count_logs(
+                "Feeds generated without SITEURL", logging.WARNING
             )
-            self.assertEqual(handler.count_logs(warning_msg, logging.WARNING), 0)
-
-            # Warning when neither SITEURL nor FEED_DOMAIN is set
-            handler.flush()
-            configure_settings(base.copy())
-            self.assertEqual(handler.count_logs(warning_msg, logging.WARNING), 1)
         finally:
-            logging.getLogger().removeHandler(handler)
+            log.LimitFilter._raised_messages = saved
+            logger.removeHandler(handler)
+
+    def test_feeds_warning_with_siteurl(self):
+        self.assertEqual(
+            self._feeds_warning_settings(SITEURL="http://example.com"), 0
+        )
+
+    def test_feeds_warning_with_feed_domain(self):
+        self.assertEqual(
+            self._feeds_warning_settings(FEED_DOMAIN="http://feeds.example.com"), 0
+        )
+
+    def test_feeds_warning_without_siteurl_or_feed_domain(self):
+        self.assertEqual(self._feeds_warning_settings(), 1)
 
     def test_theme_settings_exceptions(self):
         settings = self.settings
