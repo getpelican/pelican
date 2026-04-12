@@ -1,5 +1,6 @@
 import copy
 import locale
+import logging
 import os
 from os.path import abspath, dirname, join
 
@@ -11,7 +12,7 @@ from pelican.settings import (
     handle_deprecated_settings,
     read_settings,
 )
-from pelican.tests.support import unittest
+from pelican.tests.support import LogCountHandler, unittest
 
 
 class TestSettingsConfiguration(unittest.TestCase):
@@ -107,6 +108,36 @@ class TestSettingsConfiguration(unittest.TestCase):
         settings["FEED_DOMAIN"] = "http://feeds.example.com"
         configure_settings(settings)
         self.assertEqual(settings["FEED_DOMAIN"], "http://feeds.example.com")
+
+    def test_feeds_warning(self):
+        handler = LogCountHandler()
+        logging.getLogger().addHandler(handler)
+        try:
+            base = {
+                "LOCALE": "",
+                "PATH": os.curdir,
+                "THEME": DEFAULT_THEME,
+                "FEED_RSS": "feeds/all.rss.xml",
+            }
+            warning_msg = "Feeds generated without SITEURL"
+
+            # No warning when SITEURL is set
+            configure_settings({**base, "SITEURL": "http://example.com"})
+            self.assertEqual(handler.count_logs(warning_msg, logging.WARNING), 0)
+
+            # No warning when FEED_DOMAIN is set
+            handler.flush()
+            configure_settings(
+                {**base, "FEED_DOMAIN": "http://feeds.example.com"}
+            )
+            self.assertEqual(handler.count_logs(warning_msg, logging.WARNING), 0)
+
+            # Warning when neither SITEURL nor FEED_DOMAIN is set
+            handler.flush()
+            configure_settings(base.copy())
+            self.assertEqual(handler.count_logs(warning_msg, logging.WARNING), 1)
+        finally:
+            logging.getLogger().removeHandler(handler)
 
     def test_theme_settings_exceptions(self):
         settings = self.settings
