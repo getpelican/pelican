@@ -96,8 +96,16 @@ class FatalLogger(LimitLogger):
             raise FilteredMessage
         return result
 
-    def _log(self, level, msg, args, exc_info=None, extra=None, stack_info=False,
-             stacklevel=1):
+    def _log(
+        self,
+        level,
+        msg,
+        args,
+        exc_info=None,
+        extra=None,
+        stack_info=False,
+        stacklevel=1,
+    ):
         try:
             super()._log(level, msg, args, exc_info, extra, stack_info, stacklevel + 1)
         except FilteredMessage:
@@ -125,7 +133,9 @@ def init(
     logs_dedup_min_level=None,
 ):
     if fatal:
-        FatalLogger.fatal_lvl = logging.WARNING if fatal.startswith("warning") else logging.ERROR
+        FatalLogger.fatal_lvl = (
+            logging.WARNING if fatal.startswith("warning") else logging.ERROR
+        )
 
     LOG_FORMAT = "%(message)s"
     logging.basicConfig(
