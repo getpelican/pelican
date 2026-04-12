@@ -133,9 +133,7 @@ class TestSettingsConfiguration(unittest.TestCase):
             logger.removeHandler(handler)
 
     def test_feeds_warning_with_siteurl(self):
-        self.assertEqual(
-            self._feeds_warning_settings(SITEURL="http://example.com"), 0
-        )
+        self.assertEqual(self._feeds_warning_settings(SITEURL="http://example.com"), 0)
 
     def test_feeds_warning_with_feed_domain(self):
         self.assertEqual(
