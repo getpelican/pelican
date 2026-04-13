@@ -164,9 +164,7 @@ class TestTemplateInheritance(LoggedTestCase):
             pelican = Pelican(settings=settings)
             mute(True)(pelican.run)()
 
-            with open(
-                os.path.join(self.temp_output, "no-category-article.html")
-            ) as f:
+            with open(os.path.join(self.temp_output, "no-category-article.html")) as f:
                 content = f.read()
 
             self.assertNotIn("Category:", content)
