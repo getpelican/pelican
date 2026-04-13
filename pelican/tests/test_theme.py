@@ -218,5 +218,42 @@ class TestTemplateInheritance(LoggedTestCase):
             content,
         )
 
+    def test_css_only_theme(self):
+        """A theme with only a static/css/main.css file (no templates)
+        should work by falling back to the simple theme's templates."""
+
+        css_only_theme = mkdtemp(prefix="pelican_test_css_only_theme.")
+        css_dir = os.path.join(css_only_theme, "static", "css")
+        os.makedirs(css_dir)
+        with open(os.path.join(css_dir, "main.css"), "w") as f:
+            f.write("body { margin: 0; }")
+
+        try:
+            settings = read_settings(
+                path=None,
+                override={
+                    "THEME": css_only_theme,
+                    "PATH": CONTENT_DIR,
+                    "OUTPUT_PATH": self.temp_output,
+                    "CACHE_PATH": self.temp_cache,
+                    "SITEURL": "http://example.com",
+                },
+            )
+
+            pelican = Pelican(settings=settings)
+            mute(True)(pelican.run)()
+
+            with open(os.path.join(self.temp_output, "test-md-file.html")) as f:
+                content = f.read()
+
+            self.assertIn(
+                'href="http://example.com/theme/css/main.css"',
+                content,
+            )
+            self.assertIn("Proudly powered by", content)
+        finally:
+            rmtree(css_only_theme)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -589,38 +589,12 @@ using the ``{% extends %}`` directive as in the following example:
 Example
 -------
 
-With this system, it is possible to create a theme with just two files.
+With this system, it is possible to create a theme with just one file.
 
-base.html
-"""""""""
+main.css
+""""""""
 
-The first file is the ``templates/base.html`` template:
-
-.. code-block:: html+jinja
-
-    {% extends "!simple/base.html" %}
-
-    {% block head %}
-    {{ super() }}
-       <link rel="stylesheet" type="text/css" href="{{ SITEURL }}/theme/css/style.css" />
-    {% endblock %}
-
-1. On the first line, we extend the ``base.html`` template from the ``simple``
-   theme, so we don't have to rewrite the entire file.
-2. On the third line, we open the ``head`` block which has already been defined
-   in the ``simple`` theme.
-3. On the fourth line, the function ``super()`` keeps the content previously
-   inserted in the ``head`` block.
-4. On the fifth line, we append a stylesheet to the page.
-5. On the last line, we close the ``head`` block.
-
-This file will be extended by all the other templates, so the stylesheet will
-be linked from all pages.
-
-style.css
-"""""""""
-
-The second file is the ``static/css/style.css`` CSS stylesheet:
+The file is ``static/css/main.css`` (the default ``CSS_FILE``):
 
 .. code-block:: css
 
@@ -663,10 +637,32 @@ The second file is the ``static/css/style.css`` CSS stylesheet:
         margin-top : 1em ;
     }
 
-Download
-""""""""
+Custom templates
+""""""""""""""""
 
-You can download this example theme :download:`here <_static/theme-basic.zip>`.
+If you want to customise the templates as well, you can extend them. For
+example, to add a custom footer, create a ``templates/base.html``:
+
+.. code-block:: html+jinja
+
+    {% extends "!simple/base.html" %}
+
+    {% block footer %}
+        <p>Custom footer</p>
+    {{ super() }}
+    {% endblock %}
+
+1. On the first line, we extend the ``base.html`` template from the ``simple``
+   theme, so we don't have to rewrite the entire file.
+2. On the third line, we open the ``footer`` block which has already been
+   defined in the ``simple`` theme.
+3. On the fourth line, we insert the extra footer content.
+4. On the fifth line, the function ``super()`` keeps the content previously
+   inserted in the ``head`` block.
+5. On the last line, we close the ``footer`` block.
+
+This file will be extended by all the other templates, so the custom footer
+will appear on all pages.
 
 
 .. Links
