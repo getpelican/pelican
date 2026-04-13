@@ -446,13 +446,13 @@ def tumblr2fields(api_key, blogname):
             slug = post.get("slug") or slugify(title, regex_subs=subs)
             tags = post.get("tags")
             timestamp = post.get("timestamp")
-            date = SafeDatetime.fromtimestamp(
-                int(timestamp), tz=datetime.timezone.utc
-            ).strftime("%Y-%m-%d %H:%M:%S%z")
+            date = SafeDatetime.fromtimestamp(int(timestamp), tz=datetime.UTC).strftime(
+                "%Y-%m-%d %H:%M:%S%z"
+            )
             slug = (
-                SafeDatetime.fromtimestamp(
-                    int(timestamp), tz=datetime.timezone.utc
-                ).strftime("%Y-%m-%d-")
+                SafeDatetime.fromtimestamp(int(timestamp), tz=datetime.UTC).strftime(
+                    "%Y-%m-%d-"
+                )
                 + slug
             )
             post_format = post.get("format")

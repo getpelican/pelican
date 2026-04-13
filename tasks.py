@@ -3,7 +3,6 @@ from pathlib import Path
 from shutil import which
 
 from invoke import task
-from livereload import Server
 
 PKG_NAME = "pelican"
 PKG_PATH = Path(PKG_NAME)
@@ -30,6 +29,8 @@ def docbuild(c):
 @task(docbuild)
 def docserve(c):
     """Serve docs at http://localhost:$DOCS_PORT/ (default port is 8000)"""
+    from livereload import Server  # noqa: PLC0415
+
     server = Server()
     server.watch("docs/conf.py", lambda: docbuild(c))
     server.watch("CONTRIBUTING.rst", lambda: docbuild(c))

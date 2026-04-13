@@ -684,9 +684,10 @@ def configure_settings(settings: Settings) -> Settings:
     ]
 
     if any(settings.get(k) for k in feed_keys):
-        if not settings.get("SITEURL"):
+        if not (settings.get("SITEURL") or settings.get("FEED_DOMAIN")):
             logger.warning(
-                "Feeds generated without SITEURL set properly may not be valid"
+                "Feeds generated without SITEURL or FEED_DOMAIN set properly"
+                " may not be valid"
             )
 
     if "TIMEZONE" not in settings:
