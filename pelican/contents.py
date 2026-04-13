@@ -590,7 +590,7 @@ class Article(Content):
             if self.date.tzinfo is None:
                 now = datetime.datetime.now()
             else:
-                now = datetime.datetime.now(datetime.timezone.utc)
+                now = datetime.datetime.now(datetime.UTC)
             if self.date > now:
                 self.status = "draft"
 

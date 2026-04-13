@@ -128,7 +128,7 @@ ssh_upload: publish
 
 {% set upload = upload + ["sftp_upload"] %}
 sftp_upload: publish
-	printf 'put -r $(OUTPUTDIR)/*' | sftp $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
+	printf 'put -r $(OUTPUTDIR)/*' | sftp -P $(SSH_PORT) $(SSH_USER)@$(SSH_HOST):$(SSH_TARGET_DIR)
 
 {% set upload = upload + ["rsync_upload"] %}
 rsync_upload: publish

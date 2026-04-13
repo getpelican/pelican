@@ -95,7 +95,7 @@ class URLWrapper:
         return False
 
     def __str__(self):
-        return self.name
+        return self.name or ""
 
     def __repr__(self):
         return f"<{type(self).__name__} {self._name!r}>"

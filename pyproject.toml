@@ -14,7 +14,6 @@ classifiers = [
     "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -27,10 +26,10 @@ classifiers = [
     "Topic :: Text Processing :: Markup :: HTML",
     "Topic :: Text Processing :: Markup :: reStructuredText",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "blinker>=1.7.0",
-    "docutils>=0.20.1",
+    "docutils>=0.22.0",
     "feedgenerator>=2.1.0",
     "jinja2>=3.1.2",
     "ordered-set>=4.1.0",
@@ -59,6 +58,30 @@ pelican-plugins = "pelican.plugins._utils:list_plugins"
 pelican-quickstart = "pelican.tools.pelican_quickstart:main"
 pelican-themes = "pelican.tools.pelican_themes:main"
 
+[dependency-groups]
+dev = [
+    "BeautifulSoup4>=4.13.3",
+    "jinja2>=3.1.2",
+    "lxml>=4.9.3",
+    "markdown>=3.5.1",
+    "typogrify>=2.1.0",
+    "sphinx>=9.0.0",
+    "sphinxext-opengraph>=0.9.0",
+    "furo==2025.12.19",
+    "livereload>=2.6.3",
+    "psutil>=5.9.6",
+    "pygments>=2.16.1,<2.20.0",
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "pytest-sugar>=0.9.7",
+    "pytest-xdist>=3.4.0",
+    "tox>=4.11.3",
+    "invoke>=2.2.0",
+    # ruff version should match the one in .pre-commit-config.yaml
+    "ruff==0.12.7",
+    "tomli>=2.0.1; python_version < \"3.11\"",
+]
+
 [tool.autopub]
 project-name = "Pelican"
 git-username = "botpub"
@@ -75,30 +98,6 @@ docbuild = "invoke docbuild"
 docserve = "invoke docserve"
 lint = "invoke lint"
 test = "invoke tests"
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "BeautifulSoup4>=4.13.3",
-    "jinja2>=3.1.2",
-    "lxml>=4.9.3",
-    "markdown>=3.5.1",
-    "typogrify>=2.1.0",
-    "sphinx>=7.1.2",
-    "sphinxext-opengraph>=0.9.0",
-    "furo==2025.9.25",
-    "livereload>=2.6.3",
-    "psutil>=5.9.6",
-    "pygments>=2.16.1,<2.20.0",
-    "pytest>=7.4.3",
-    "pytest-cov>=4.1.0",
-    "pytest-sugar>=0.9.7",
-    "pytest-xdist>=3.4.0",
-    "tox>=4.11.3",
-    "invoke>=2.2.0",
-    # ruff version should match the one in .pre-commit-config.yaml
-    "ruff==0.12.7",
-    "tomli>=2.0.1; python_version < \"3.11\"",
-]
 
 [tool.pdm.build]
 source-includes = [
