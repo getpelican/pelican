@@ -156,12 +156,12 @@ class TestTemplateInheritance(LoggedTestCase):
         cat_file = os.path.join(self.temp_output, "category", "test.html")
         with open(cat_file) as f:
             cat_content = f.read()
-        self.assertIn('title="test Category Atom Feed"', cat_content)
+        self.assertIn('title="Test Category Atom Feed"', cat_content)
 
         tag_file = os.path.join(self.temp_output, "tag", "foo.html")
         with open(tag_file) as f:
             tag_content = f.read()
-        self.assertIn('title="foo Tag Atom Feed"', tag_content)
+        self.assertIn('title="Foo Tag Atom Feed"', tag_content)
 
 
 if __name__ == "__main__":
