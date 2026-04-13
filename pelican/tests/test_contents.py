@@ -172,6 +172,28 @@ class TestPage(TestBase):
         )
         self.assertIn("test_marker", page.summary)
 
+    def test_summary_strips_toc_elements(self):
+        """Auto-generated summary should strip TOC divs and toc-backref anchors."""
+        page_kwargs = self._copy_page_kwargs()
+        settings = get_settings()
+        page_kwargs["settings"] = settings
+        del page_kwargs["metadata"]["summary"]
+        toc_content = (
+            '<div class="contents topic" id="toc">'
+            "<p>Table of contents</p>"
+            '<ul><li><a href="#s1">Section</a></li></ul>'
+            "</div>"
+            '<h2><a class="toc-backref" href="#id1">My Section</a></h2>'
+            "<p>First paragraph of real content.</p>"
+        )
+        page_kwargs["content"] = toc_content
+        settings["SUMMARY_MAX_LENGTH"] = None
+        page = Page(**page_kwargs)
+        self.assertNotIn('<div class="contents', page.summary)
+        self.assertNotIn("toc-backref", page.summary)
+        self.assertIn("<h2>My Section</h2>", page.summary)
+        self.assertIn("<p>First paragraph of real content.</p>", page.summary)
+
     def test_summary_get_summary_warning(self):
         """calling ._get_summary() should issue a warning"""
         page_kwargs = self._copy_page_kwargs()
