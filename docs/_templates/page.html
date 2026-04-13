@@ -4,14 +4,16 @@
   {{ super() }}
   {% include "partials/icons.html" %}
 
-  <input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-  <input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-  <label class="overlay sidebar-overlay" for="__navigation">
-    <div class="visually-hidden">Hide navigation sidebar</div>
-  </label>
-  <label class="overlay toc-overlay" for="__toc">
-    <div class="visually-hidden">Hide table of contents sidebar</div>
-  </label>
+  <input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+  <input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+  <label class="overlay sidebar-overlay" for="__navigation"></label>
+  <label class="overlay toc-overlay" for="__toc"></label>
+
+  <a class="skip-to-content muted-link" href="#furo-main-content">
+    {%- trans -%}
+      Skip to content
+    {%- endtrans -%}
+  </a>
 
   {% if theme_announcement -%}
     <div class="announcement">
@@ -25,8 +27,7 @@
     <header class="mobile-header">
       <div class="header-left">
         <label class="nav-overlay-icon" for="__navigation">
-          <div class="visually-hidden">Toggle site navigation sidebar</div>
-          <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+          <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
         </label>
       </div>
       <div class="header-center">
@@ -34,16 +35,15 @@
       </div>
       <div class="header-right">
         <div class="theme-toggle-container theme-toggle-header">
-          <button class="theme-toggle">
-            <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-            <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+            <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+            <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
             <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
             <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
           </button>
         </div>
         <label class="toc-overlay-icon toc-header-icon{% if furo_hide_toc %} no-toc{% endif %}" for="__toc">
-          <div class="visually-hidden">Toggle table of contents sidebar</div>
-          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
         </label>
       </div>
     </header>
@@ -68,26 +68,46 @@
             <span>{% trans %}Back to top{% endtrans %}</span>
           </a>
           <div class="content-icon-container">
-            {% if theme_top_of_page_button == "edit" -%}
-              {%- include "components/edit-this-page.html" with context -%}
-            {%- elif theme_top_of_page_button != None -%}
-              {{ warning("Got an unsupported value for 'top_of_page_button'") }}
+            {% if theme_top_of_page_button != "edit" -%}
+              {{ warning("Got configuration for 'top_of_page_button': this is deprecated.") }}
             {%- endif -%}
+
+            {%- if theme_top_of_page_buttons == "" -%}
+              {% if theme_top_of_page_button == None -%}
+              {#- We respect the old configuration of disabling all the buttons -#}
+                {%- set theme_top_of_page_buttons = [] -%}
+              {% else %}
+                {%- set theme_top_of_page_buttons = ["view", "edit"] -%}
+              {%- endif -%}
+            {% else -%}
+              {% if theme_top_of_page_button != "edit" -%}
+                {%- set theme_top_of_page_buttons = [] -%}
+                {{ warning("Got configuration for both 'top_of_page_button' and 'top_of_page_buttons', ignoring both and removing all top of page buttons.") }}
+              {%- endif -%}
+            {%- endif -%}
+            {% for button in theme_top_of_page_buttons -%}
+              {% if button == "view" %}
+                {%- include "components/view-this-page.html" with context -%}
+              {% elif button == "edit" %}
+                {%- include "components/edit-this-page.html" with context -%}
+              {% else %}
+                {{ warning("Got an unsupported value in 'top_of_page_buttons' for theme configuration") }}
+              {% endif %}
+            {%- endfor -%}
           {#- Theme toggle -#}
             <div class="theme-toggle-container theme-toggle-content">
-              <button class="theme-toggle">
-                <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-                <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+                <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+                <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
                 <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
                 <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
               </button>
             </div>
             <label class="toc-overlay-icon toc-content-icon{% if furo_hide_toc %} no-toc{% endif %}" for="__toc">
-              <div class="visually-hidden">Toggle table of contents sidebar</div>
-              <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+              <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
             </label>
           </div>
-          <article role="main">
+          <article role="main" id="furo-main-content">
             {% block content %}{{ body }}{% endblock %}
           </article>
         </div>

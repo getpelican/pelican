@@ -66,6 +66,11 @@ Please note that while we do our best to review and maintain these plugins,
 they are submitted by the Pelican community and thus may have varying levels of
 support and interoperability.
 
+Community plugins can also be found on PyPI tagged with "`Framework ::
+Pelican :: Plugins`_".
+
+.. _Framework :: Pelican :: Plugins: https://pypi.org/search/?q=&o=-created&c=Framework+%3A%3A+Pelican+%3A%3A+Plugins
+
 How to create plugins
 =====================
 
@@ -112,10 +117,10 @@ and have a folder structure as follows::
 
     myplugin
     ├── pelican
-    │   └── plugins
-    │       └── myplugin
-    │           ├── __init__.py
-    │           └── ...
+    │   └── plugins
+    │       └── myplugin
+    │           ├── __init__.py
+    │           └── ...
     ├── ...
     └── setup.py
 
@@ -146,7 +151,9 @@ finalized                           pelican object                 invoked after
 generator_init                      generator                      invoked in the Generator.__init__
 all_generators_finalized            generators                     invoked after all the generators are executed and before writing output
 readers_init                        readers                        invoked in the Readers.__init__
-article_generator_context           article_generator, metadata
+article_generator_context           article_generator, metadata    invoked after the content and metadata for the article has been generated;
+                                                                   use if you need to adjust the article metadata before it gets used by
+                                                                   Pelican.
 article_generator_preread           article_generator              invoked before a article is read in ArticlesGenerator.generate_context;
                                                                    use if code needs to do something before every article is parsed
 article_generator_init              article_generator              invoked in the ArticlesGenerator.__init__

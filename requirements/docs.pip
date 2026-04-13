@@ -1,6 +1,5 @@
 sphinx
 sphinxext-opengraph
-furo==2023.9.10
+furo==2025.12.19
 livereload
 matplotlib
-tomli;python_version<"3.11"

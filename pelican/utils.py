@@ -11,7 +11,14 @@ import shutil
 import traceback
 import unicodedata
 import urllib
-from collections.abc import Collection, Generator, Hashable, Iterable, Sequence
+from collections.abc import (
+    Callable,
+    Collection,
+    Generator,
+    Hashable,
+    Iterable,
+    Sequence,
+)
 from contextlib import contextmanager
 from functools import partial
 from html import entities
@@ -21,7 +28,6 @@ from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
 )
 
 import dateutil.parser
@@ -234,7 +240,7 @@ def get_date(string: str) -> datetime.datetime:
 
 
 @contextmanager
-def pelican_open(filename: str, mode: str = "r") -> Generator[str, None, None]:
+def pelican_open(filename: str, mode: str = "r") -> Generator[str]:
     """Open a file and return its content"""
 
     # utf-8-sig will clear any BOM if present
@@ -253,7 +259,7 @@ def slugify(
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
 
-    Took from Django sources.
+    Taken from Django sources.
 
     For a set of sensible default regex substitutions to pass to regex_subs
     look into pelican.settings.DEFAULT_CONFIG['SLUG_REGEX_SUBSTITUTIONS'].
@@ -378,8 +384,8 @@ def clean_output_dir(path: str, retention: Iterable[str]) -> None:
     if not os.path.isdir(path):
         try:
             os.remove(path)
-        except Exception as e:
-            logger.error("Unable to delete file %s; %s", path, e)
+        except Exception:
+            logger.exception("Unable to delete file %s", path)
         return
 
     # remove existing content from output folder unless in retention list
@@ -393,14 +399,14 @@ def clean_output_dir(path: str, retention: Iterable[str]) -> None:
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
-            except Exception as e:
-                logger.error("Unable to delete directory %s; %s", file, e)
+            except Exception:
+                logger.exception("Unable to delete directory %s", file)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s", file)
-            except Exception as e:
-                logger.error("Unable to delete file %s; %s", file, e)
+            except Exception:
+                logger.exception("Unable to delete file %s", file)
         else:
             logger.error("Unable to delete %s, file type unknown", file)
 
@@ -795,7 +801,7 @@ def order_content(
             try:
                 content_list.sort(key=order_by)
             except Exception:
-                logger.error("Error sorting with function %s", order_by)
+                logger.exception("Error sorting with function %s", order_by)
         elif isinstance(order_by, str):
             if order_by.startswith("reversed-"):
                 order_reversed = True
@@ -963,7 +969,7 @@ def maybe_pluralize(count: int, singular: str, plural: str) -> str:
 @contextmanager
 def temporary_locale(
     temp_locale: str | None = None, lc_category: int = locale.LC_ALL
-) -> Generator[None, None, None]:
+) -> Generator[None]:
     """
     Enable code to run in a context with a temporary locale
     Resets the locale back when exiting context.

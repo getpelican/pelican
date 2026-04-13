@@ -18,6 +18,10 @@ from pelican.utils import (
 logger = logging.getLogger(__name__)
 
 
+class FileOverwriteFailedError(RuntimeError):
+    """Failed to overwrite an existing file."""
+
+
 class Writer:
     def __init__(self, output_path, settings=None):
         self.output_path = output_path
@@ -107,14 +111,20 @@ class Writer:
         """
         if filename in self._overridden_files:
             if override:
-                raise RuntimeError(f"File {filename} is set to be overridden twice")
-            logger.info("Skipping %s", filename)
+                raise FileOverwriteFailedError(
+                    f'Failed to overwrite "{filename}" a second time '
+                    "(was previously overwritten)"
+                )
+            logger.info('Skipping "%s", not overwriting', filename)
             filename = os.devnull
         elif filename in self._written_files:
             if override:
-                logger.info("Overwriting %s", filename)
+                logger.info('Overwriting "%s"', filename)
             else:
-                raise RuntimeError(f"File {filename} is to be overwritten")
+                raise FileOverwriteFailedError(
+                    f'Failed to overwrite "{filename}" as Pelican has already '
+                    "written to it previously (set `override=True` if intended)"
+                )
         if override:
             self._overridden_files.add(filename)
         self._written_files.add(filename)
@@ -161,14 +171,11 @@ class Writer:
         if path:
             complete_path = sanitised_join(self.output_path, path)
 
-            try:
-                os.makedirs(os.path.dirname(complete_path))
-            except Exception:
-                pass
+            os.makedirs(os.path.dirname(complete_path), exist_ok=True)
 
             with self._open_w(complete_path, "utf-8", override_output) as fp:
                 feed.write(fp, "utf-8")
-                logger.info("Writing %s", complete_path)
+                logger.info('Writing "%s"', complete_path)
 
             signals.feed_written.send(complete_path, context=context, feed=feed)
         return feed
@@ -215,14 +222,11 @@ class Writer:
             output = template.render(localcontext)
             path = sanitised_join(output_path, name)
 
-            try:
-                os.makedirs(os.path.dirname(path))
-            except Exception:
-                pass
+            os.makedirs(os.path.dirname(path), exist_ok=True)
 
             with self._open_w(path, "utf-8", override=override) as f:
                 f.write(output)
-            logger.info("Writing %s", path)
+            logger.info('Writing "%s"', path)
 
             # Send a signal to say we're writing a file with some specific
             # local context.

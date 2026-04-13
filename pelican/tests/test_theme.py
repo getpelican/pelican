@@ -133,6 +133,36 @@ class TestTemplateInheritance(LoggedTestCase):
         self.assertNotIn("Proudly powered by", content)
         self.assertIn("New footer", content)
 
+    def test_category_and_tag_feed_titles_use_slug(self):
+        """Feed link titles on category/tag pages should have unique titles."""
+
+        settings = read_settings(
+            path=None,
+            override={
+                "THEME": "simple",
+                "PATH": CONTENT_DIR,
+                "OUTPUT_PATH": self.temp_output,
+                "CACHE_PATH": self.temp_cache,
+                "SITEURL": "http://example.com",
+                "SITENAME": "My Site",
+                "CATEGORY_FEED_ATOM": "feeds/{slug}.atom.xml",
+                "TAG_FEED_ATOM": "feeds/tag-{slug}.atom.xml",
+            },
+        )
+
+        pelican = Pelican(settings=settings)
+        mute(True)(pelican.run)()
+
+        cat_file = os.path.join(self.temp_output, "category", "test.html")
+        with open(cat_file) as f:
+            cat_content = f.read()
+        self.assertIn('title="Test Category Atom Feed"', cat_content)
+
+        tag_file = os.path.join(self.temp_output, "tag", "foo.html")
+        with open(tag_file) as f:
+            tag_content = f.read()
+        self.assertIn('title="Foo Tag Atom Feed"', tag_content)
+
 
 if __name__ == "__main__":
     unittest.main()

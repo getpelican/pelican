@@ -11,11 +11,13 @@
             <section>{{ article.summary }}</section>
             <footer>
                 <p>Published: <time datetime="{{ article.date.isoformat() }}"> {{ article.locale_date }} </time></p>
-                <address>By
-                    {% for author in article.authors %}
-                        <a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
-                    {% endfor %}
-                </address>
+                {%- if article.authors %}
+                    <address>By
+                        {% for author in article.authors %}
+                            <a href="{{ SITEURL }}/{{ author.url }}">{{ author }}</a>
+                        {% endfor %}
+                    </address>
+                {%- endif %}
             </footer>
         </article>
     {% endfor %}

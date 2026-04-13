@@ -22,10 +22,15 @@ on:
         default: ""
         description: "The GitHub repo URL of a custom theme to use, for example: 'https://github.com/seanh/sidecar.git'"
         type: string
+      theme-checkout:
+        required: false
+        default: ""
+        description: "Git ref (branch, tag or commit) of the theme repo to checkout. This can be used to pin the version of your theme. If not specified defaults to the theme repo's default branch."
+        type: string
       python:
         required: false
-        default: "3.12"
-        description: "The version of Python to use, for example: '3.12' (to use the most recent version of Python 3.12, this is faster) or '3.12.1' (to use an exact version, slower)"
+        default: "3.14"
+        description: "The version of Python to use, for example: '3.14' (to use the most recent version of Python 3.14, this is faster) or '3.14.0' (to use an exact version, slower)"
         type: string
       siteurl:
         required: false
@@ -42,6 +47,11 @@ on:
         default: true
         description: "Whether to deploy the site. If true then build the site and deploy it. If false then just test that the site builds successfully but don't deploy anything."
         type: boolean
+      stork:
+        required: false
+        default: false
+        description: "Whether to add Stork search tool. If true, it will be installed on runner."
+        type: boolean
 permissions:
   contents: read
   pages: write
@@ -51,17 +61,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.python }}
-      - name: Checkout theme
+      - name: Clone theme
         if: ${{ inputs.theme }}
         run: git clone '${{ inputs.theme }}' .theme
+      - name: Checkout theme ref
+        if: ${{ inputs.theme && inputs.theme-checkout }}
+        run: git -C .theme checkout '${{ inputs.theme-checkout }}'
       - name: Configure GitHub Pages
         id: pages
         uses: actions/configure-pages@v5
+      - name: Install Stork
+        if: ${{ inputs.stork }}
+        run: cargo install stork-search --locked
       - name: Install requirements
         run: pip install ${{ inputs.requirements }}
       - name: Build Pelican site
@@ -82,13 +98,31 @@ jobs:
           subprocess.run(cmd, shell=True, check=True)
       - name: Fix permissions
         run: |
-          chmod -c -R +rX "${{ inputs.output-path }}" | while read line; do
+          chmod -c -R +rX "${{ inputs.output-path }}" | while read -r line; do
             echo "::warning title=Invalid file permissions automatically fixed::$line"
           done
+      - name: Archive artifact
+        shell: sh
+        run: |
+          echo "::group::Archive artifact"
+          tar \
+            --dereference \
+            --hard-dereference \
+            --directory "$OUTPUT_PATH" \
+            -cvf "$RUNNER_TEMP/artifact.tar" \
+            --exclude=.git \
+            --exclude=.github \
+            .
+          echo "::endgroup::"
+        env:
+          OUTPUT_PATH: ${{ inputs.output-path }}
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
-          path: ${{ inputs.output-path }}
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
   deploy:
     concurrency:
       group: "pages"

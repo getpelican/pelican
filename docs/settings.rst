@@ -63,7 +63,7 @@ Basic settings
 
 .. data:: DEFAULT_CATEGORY
 
-   The default category to fall back on. The default is ``'misc'``.
+   The default category to fall back on. The default is ``"misc"``.
 
 .. data:: DISPLAY_PAGES_ON_MENU
 
@@ -104,7 +104,7 @@ Basic settings
    A dictionary of custom Jinja2 environment variables you want to use. This
    also includes a list of extensions you may want to include. See `Jinja
    Environment documentation`_. The default is
-   ``{'extensions': [], 'trim_blocks': True, 'lstrip_blocks': True}``.
+   ``{"extensions": [], "trim_blocks": True, "lstrip_blocks": True}``.
 
 .. data:: JINJA_FILTERS
 
@@ -114,10 +114,10 @@ Basic settings
    Example::
 
     import sys
-    sys.path.append('to/your/path')
+    sys.path.append("to/your/path")
 
     from custom_filter import urlencode_filter
-    JINJA_FILTERS = {'urlencode': urlencode_filter}
+    JINJA_FILTERS = {"urlencode": urlencode_filter}
 
    See: `Jinja custom filters documentation`_. The default is ``{}``.
 
@@ -141,7 +141,7 @@ Basic settings
 
    Example::
 
-      LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
+      LOG_FILTER = [(logging.WARN, "TAG_SAVE_AS is set to False")]
 
    The default is ``[]``.
 
@@ -152,11 +152,11 @@ Basic settings
 
    For example, to avoid processing .html files, set::
 
-      READERS = {'html': None}
+      READERS = {"html": None}
 
    To add a custom reader for the ``foo`` extension, set::
 
-      READERS = {'foo': FooReader}
+      READERS = {"foo": FooReader}
 
    The default is ``{}``.
 
@@ -164,14 +164,14 @@ Basic settings
 
    A list of Unix glob patterns. Files and directories matching any of these patterns
    or any of the commonly hidden files and directories set by ``watchfiles.DefaultFilter``
-   will be ignored by the processor. For example, the default ``['**/.*']`` will
-   ignore "hidden" files and directories, and ``['__pycache__']`` would ignore
+   will be ignored by the processor. For example, the default ``["**/.*"]`` will
+   ignore "hidden" files and directories, and ``["__pycache__"]`` would ignore
    Python 3's bytecode caches.
 
    For a full list of the commonly hidden files set by ``watchfiles.DefaultFilter``,
    please refer to the `watchfiles documentation`_.
 
-   The default is ``['**/.*']``.
+   The default is ``["**/.*"]``.
 
 .. data:: MARKDOWN
 
@@ -184,12 +184,12 @@ Basic settings
    The default is::
 
         MARKDOWN = {
-            'extension_configs': {
-                'markdown.extensions.codehilite': {'css_class': 'highlight'},
-                'markdown.extensions.extra': {},
-                'markdown.extensions.meta': {},
+            "extension_configs": {
+                "markdown.extensions.codehilite": {"css_class": "highlight"},
+                "markdown.extensions.extra": {},
+                "markdown.extensions.meta": {},
             },
-            'output_format': 'html5',
+            "output_format": "html5",
         }
 
    .. Note::
@@ -201,18 +201,18 @@ Basic settings
    Where to output the generated files. This should correspond to your web
    server's virtual host root directory.
 
-   The default is ``'output'``.
+   The default is ``"output"``.
 
 .. data:: PATH
 
    Path to content directory to be processed by Pelican. If undefined, and
    content path is not specified via an argument to the ``pelican`` command,
-   Pelican will default to ``'.'``, the current working directory.
+   Pelican will default to ``"."``, the current working directory.
 
 .. data:: PAGE_PATHS
 
    A list of directories and files to look at for pages, relative to ``PATH``.
-   The default is ``['pages']``.
+   The default is ``["pages"]``.
 
 .. data:: PAGE_EXCLUDES
 
@@ -222,7 +222,7 @@ Basic settings
 .. data:: ARTICLE_PATHS
 
    A list of directories and files to look at for articles, relative to
-   ``PATH``. The default is ``['']``.
+   ``PATH``. The default is ``[""]``.
 
 .. data:: ARTICLE_EXCLUDES
 
@@ -239,7 +239,7 @@ Basic settings
 
    Controls the extension that will be used by the SourcesGenerator.  Defaults
    to ``.text``. If not a valid string the default value will be used. The
-   default is ``'.text'``.
+   default is ``".text"``.
 
 .. data:: PLUGINS
 
@@ -252,7 +252,7 @@ Basic settings
 
 .. data:: SITENAME
 
-   Your site's name. The default is ``'A Pelican Blog'``.
+   Your site's name. The default is ``"A Pelican Blog"``.
 
 .. data:: SITEURL
 
@@ -261,9 +261,9 @@ Basic settings
    properly-formed URLs. If your site is available via HTTPS, this setting
    should begin with ``https://`` — otherwise use ``http://``. Then append your
    domain, with no trailing slash at the end. Example: ``SITEURL =
-   'https://example.com'``
+   "https://example.com"``
 
-   The default is ``''``, the blank string.
+   The default is ``""``, the blank string.
 
 .. data:: STATIC_PATHS
 
@@ -272,7 +272,7 @@ Basic settings
    modification. Articles, pages, and other content source files will normally
    be skipped, so it is safe for a directory to appear both here and in
    ``PAGE_PATHS`` or ``ARTICLE_PATHS``.  Pelican's default settings include the
-   "images" directory here. The default is ``['images']``.
+   "images" directory here. The default is ``["images"]``.
 
 .. data:: STATIC_EXCLUDES
 
@@ -318,8 +318,8 @@ Basic settings
 
 .. data:: TYPOGRIFY_OMIT_FILTERS
 
-   A list of Typogrify filters to skip. Allowed values are: ``'amp'``,
-   ``'smartypants'``, ``'caps'``, ``'initial_quotes'``, ``'widont'``. By
+   A list of Typogrify filters to skip. Allowed values are: ``"amp"``,
+   ``"smartypants"``, ``"caps"``, ``"initial_quotes"``, ``"widont"``. By
    default, no filter is omitted (in other words, all filters get applied). This
    setting requires that Typogrify version 2.1.0 or later is installed. The
    default is ``[]``.
@@ -333,7 +333,7 @@ Basic settings
    ``oldschool`` setting renders both en-dashes and em-dashes when it sees two
    (``--``) and three (``---``) hyphen characters, respectively. The
    ``oldschool_inverted`` setting turns two hyphens into an em-dash and three
-   hyphens into an en-dash. The default is ``'default'``.
+   hyphens into an en-dash. The default is ``"default"``.
 
 .. data:: SUMMARY_MAX_LENGTH
 
@@ -354,7 +354,7 @@ Basic settings
 
    When creating a short summary of an article and the result was truncated to
    match the required word length, this will be used as the truncation suffix.
-   The default is ``'…'``.
+   The default is ``"…"``.
 
 .. data:: WITH_FUTURE_DATES
 
@@ -369,7 +369,7 @@ Basic settings
    ``filename``, in ``{}`` or ``||``. Identifier between ``{`` and ``}`` goes
    into the ``what`` capturing group.  For details see
    :ref:`ref-linking-to-internal-content`. The default is
-   ``'[{|](?P<what>.*?)[|}]'``.
+   ``"[{|](?P<what>.*?)[|}]"``.
 
 .. data:: PYGMENTS_RST_OPTIONS
 
@@ -385,13 +385,13 @@ Basic settings
 
 .. data:: CONTENT_CACHING_LAYER
 
-   If set to ``'reader'``, save only the raw content and metadata returned by
-   readers. If set to ``'generator'``, save processed content objects. The
-   default is ``'reader'``.
+   If set to ``"reader"``, save only the raw content and metadata returned by
+   readers. If set to ``"generator"``, save processed content objects. The
+   default is ``"reader"``.
 
 .. data:: CACHE_PATH
 
-   Directory in which to store cache files. The default is ``'cache'``.
+   Directory in which to store cache files. The default is ``"cache"``.
 
 .. data:: GZIP_CACHE
 
@@ -402,12 +402,12 @@ Basic settings
 
    Controls how files are checked for modifications.
 
-   - If set to ``'mtime'``, the modification time of the file is
+   - If set to ``"mtime"``, the modification time of the file is
      checked.
    - If set to a name of a function provided by the ``hashlib``
-     module, e.g. ``'md5'``, the file hash is checked.
+     module, e.g. ``"md5"``, the file hash is checked.
 
-   The default is ``'mtime'``.
+   The default is ``"mtime"``.
 
 .. data:: LOAD_CONTENT_CACHE
 
@@ -416,7 +416,7 @@ Basic settings
 .. data:: FORMATTED_FIELDS
 
    A list of metadata fields containing reST/Markdown content to be parsed and
-   translated to HTML. The default is ``['summary']``.
+   translated to HTML. The default is ``["summary"]``.
 
 .. data:: PORT
 
@@ -425,7 +425,7 @@ Basic settings
 
 .. data:: BIND
 
-   The IP to which to bind the HTTP server. The default is ``'127.0.0.1'``.
+   The IP to which to bind the HTTP server. The default is ``"127.0.0.1"``.
 
 .. _url-settings:
 
@@ -458,8 +458,8 @@ If you don't want that flexibility and instead prefer that your generated
 output paths mirror your source content's filesystem path hierarchy, try the
 following settings::
 
-    PATH_METADATA = r'(?P<path_no_ext>.*)\..*'
-    ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = '{path_no_ext}.html'
+    PATH_METADATA = r"(?P<path_no_ext>.*)\..*"
+    ARTICLE_URL = ARTICLE_SAVE_AS = PAGE_URL = PAGE_SAVE_AS = "{path_no_ext}.html"
 
 Otherwise, you can use a variety of file metadata attributes within URL-related
 settings:
@@ -472,10 +472,10 @@ settings:
 
 Example usage::
 
-   ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'
-   ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
-   PAGE_URL = 'pages/{slug}/'
-   PAGE_SAVE_AS = 'pages/{slug}/index.html'
+   ARTICLE_URL = "posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/"
+   ARTICLE_SAVE_AS = "posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html"
+   PAGE_URL = "pages/{slug}/"
+   PAGE_SAVE_AS = "pages/{slug}/index.html"
 
 This would save your articles into something like
 ``/posts/2011/Aug/07/sample-post/index.html``, save your pages into
@@ -499,111 +499,111 @@ This would save your articles into something like
 
 .. data:: ARTICLE_URL
 
-   The URL to refer to an article. The default is ``'{slug}.html'``.
+   The URL to refer to an article. The default is ``"{slug}.html"``.
 
 .. data:: ARTICLE_SAVE_AS
 
-   The place where we will save an article. The default is ``'{slug}.html'``.
+   The place where we will save an article. The default is ``"{slug}.html"``.
 
 .. data:: ARTICLE_LANG_URL
 
    The URL to refer to an article which doesn't use the default language.
-   The default is ``'{slug}-{lang}.html``.
+   The default is ``"{slug}-{lang}.html"``.
 
 .. data:: ARTICLE_LANG_SAVE_AS
 
    The place where we will save an article which doesn't use the default
-   language. The default is ``'{slug}-{lang}.html'``.
+   language. The default is ``"{slug}-{lang}.html"``.
 
 .. data:: DRAFT_URL
 
    The URL to refer to an article draft. The default is
-   ``'drafts/{slug}.html'``.
+   ``"drafts/{slug}.html"``.
 
 .. data:: DRAFT_SAVE_AS
 
-   The place where we will save an article draft. The default is ``'drafts/{slug}.html'``.
+   The place where we will save an article draft. The default is ``"drafts/{slug}.html"``.
 
 .. data:: DRAFT_LANG_URL
 
    The URL to refer to an article draft which doesn't use the default language.
-   The default is ``'drafts/{slug}-{lang}.html'``.
+   The default is ``"drafts/{slug}-{lang}.html"``.
 
 .. data:: DRAFT_LANG_SAVE_AS
 
    The place where we will save an article draft which doesn't use the default
-   language. The default is ``'drafts/{slug}-{lang}.html'``.
+   language. The default is ``"drafts/{slug}-{lang}.html"``.
 
 .. data:: PAGE_URL
 
    The URL we will use to link to a page. The default is
-   ``'pages/{slug}.html'``.
+   ``"pages/{slug}.html"``.
 
 .. data:: PAGE_SAVE_AS
 
    The location we will save the page. This value has to be the same as
    PAGE_URL or you need to use a rewrite in your server config. The default
-   is ``'pages/{slug}.html'``.
+   is ``"pages/{slug}.html"``.
 
 .. data:: PAGE_LANG_URL
 
    The URL we will use to link to a page which doesn't use the default
-   language. The default is ``'pages/{slug}-{lang}.html'``.
+   language. The default is ``"pages/{slug}-{lang}.html"``.
 
 .. data:: PAGE_LANG_SAVE_AS
 
    The location we will save the page which doesn't use the default language.
-   The default is ``'pages/{slug}-{lang}.html'``.
+   The default is ``"pages/{slug}-{lang}.html"``.
 
 .. data:: DRAFT_PAGE_URL
 
    The URL used to link to a page draft. The default is
-   ``'drafts/pages/{slug}.html'``.
+   ``"drafts/pages/{slug}.html"``.
 
 .. data:: DRAFT_PAGE_SAVE_AS
 
    The actual location a page draft is saved at. The default is
-   ``'drafts/pages/{slug}.html'``.
+   ``"drafts/pages/{slug}.html"``.
 
 .. data:: DRAFT_PAGE_LANG_URL
 
    The URL used to link to a page draft which doesn't use the default
-   language. The default is ``'drafts/pages/{slug}-{lang}.html'``.
+   language. The default is ``"drafts/pages/{slug}-{lang}.html"``.
 
 .. data:: DRAFT_PAGE_LANG_SAVE_AS
 
    The actual location a page draft which doesn't use the default language is
-   saved at. The default is ``'drafts/pages/{slug}-{lang}.html'``.
+   saved at. The default is ``"drafts/pages/{slug}-{lang}.html"``.
 
 .. data:: AUTHOR_URL
 
-   The URL to use for an author. The default is ``'author/{slug}.html'``.
+   The URL to use for an author. The default is ``"author/{slug}.html"``.
 
 .. data:: AUTHOR_SAVE_AS
 
-   The location to save an author. The default is ``'author/{slug}.html'``.
+   The location to save an author. The default is ``"author/{slug}.html"``.
 
 .. data:: CATEGORY_URL
 
-   The URL to use for a category. The default is ``'category/{slug}.html'``.
+   The URL to use for a category. The default is ``"category/{slug}.html"``.
 
 .. data:: CATEGORY_SAVE_AS
 
-   The location to save a category. The default is ``'category/{slug}.html'``.
+   The location to save a category. The default is ``"category/{slug}.html"``.
 
 .. data:: TAG_URL
 
-   The URL to use for a tag. The default is ``'tag/{slug}.html'``.
+   The URL to use for a tag. The default is ``"tag/{slug}.html"``.
 
 .. data:: TAG_SAVE_AS
 
-   The location to save the tag page. The default is ``'tag/{slug}.html'``.
+   The location to save the tag page. The default is ``"tag/{slug}.html"``.
 
 .. note::
 
     If you do not want one or more of the default pages to be created (e.g.,
     you are the only author on your site and thus do not need an Authors page),
-    set the corresponding ``*_SAVE_AS`` setting to ``''`` to prevent the
+    set the corresponding ``*_SAVE_AS`` setting to ``""`` to prevent the
     relevant page from being generated.
 
 Pelican can optionally create per-year, per-month, and per-day archives of your
@@ -615,10 +615,10 @@ written over time.
 
 Example usage::
 
-   YEAR_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/index.html'
-   YEAR_ARCHIVE_URL = 'posts/{date:%Y}/'
-   MONTH_ARCHIVE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/index.html'
-   MONTH_ARCHIVE_URL = 'posts/{date:%Y}/{date:%b}/'
+   YEAR_ARCHIVE_SAVE_AS = "posts/{date:%Y}/index.html"
+   YEAR_ARCHIVE_URL = "posts/{date:%Y}/"
+   MONTH_ARCHIVE_SAVE_AS = "posts/{date:%Y}/{date:%b}/index.html"
+   MONTH_ARCHIVE_URL = "posts/{date:%Y}/{date:%b}/"
 
 With these settings, Pelican will create an archive of all your posts for the
 year at (for instance) ``posts/2011/index.html`` and an archive of all your
@@ -632,31 +632,36 @@ through the URLs ``posts/2011/`` and ``posts/2011/Aug/``, respectively.
 
 .. data:: YEAR_ARCHIVE_SAVE_AS
 
-   The location to save per-year archives of your posts. The default is ``''``.
+   The location to save per-year archives of your posts. The default is ``""``,
+   i.e. this is disabled by default.
 
 .. data:: YEAR_ARCHIVE_URL
 
    The URL to use for per-year archives of your posts. You should set this if
-   you enable per-year archives. The default is ``''``.
+   you enable per-year archives. The default is ``""``, i.e. this is disabled
+   by default.
 
 .. data:: MONTH_ARCHIVE_SAVE_AS
 
    The location to save per-month archives of your posts. The default is
-   ``''``.
+   ``""``, i.e. this is disabled by default.
 
 .. data:: MONTH_ARCHIVE_URL
 
    The URL to use for per-month archives of your posts. You should set this if
-   you enable per-month archives. The default is ``''``.
+   you enable per-month archives. The default is ``""``, i.e. this is disabled
+   by default.
 
 .. data:: DAY_ARCHIVE_SAVE_AS
 
-   The location to save per-day archives of your posts. The default is ``''``.
+   The location to save per-day archives of your posts. The default is ``""``,
+   i.e. this is disabled by default.
 
 .. data:: DAY_ARCHIVE_URL
 
    The URL to use for per-day archives of your posts. You should set this if
-   you enable per-day archives. The default is ``''``.
+   you enable per-day archives. The default is ``""``, i.e. this is disabled by
+   default.
 
 ``DIRECT_TEMPLATES`` work a bit differently than noted above. Only the
 ``_SAVE_AS`` settings are available, but it is available for any direct
@@ -664,34 +669,34 @@ template.
 
 .. data:: ARCHIVES_SAVE_AS
 
-   The location to save the article archives page. The default is ``'archives.html'``.
+   The location to save the article archives page. The default is ``"archives.html"``.
 
 .. data:: AUTHORS_SAVE_AS
 
-   The location to save the author list. The default is ``'authors.html'``.
+   The location to save the author list. The default is ``"authors.html"``.
 
 .. data:: CATEGORIES_SAVE_AS
 
-   The location to save the category list. The default is ``'categories.html'``.
+   The location to save the category list. The default is ``"categories.html"``.
 
 .. data:: TAGS_SAVE_AS
 
-   The location to save the tag list. The default is ``'tags.html'``.
+   The location to save the tag list. The default is ``"tags.html"``.
 
 .. data:: INDEX_SAVE_AS
 
-   The location to save the list of all articles. The default is ``'index.html'``.
+   The location to save the list of all articles. The default is ``"index.html"``.
 
 URLs for direct template pages are theme-dependent. Some themes use
 corresponding ``*_URL`` setting as string, while others hard-code them:
-``'archives.html'``, ``'authors.html'``, ``'categories.html'``,
-``'tags.html'``.
+``"archives.html"``, ``"authors.html"``, ``"categories.html"``,
+``"tags.html"``.
 
 .. data:: SLUGIFY_SOURCE
 
    Specifies from where you want the slug to be automatically generated. Can be
    set to ``title`` to use the "Title:" metadata tag or ``basename`` to use the
-   article's file name when creating the slug. The default is ``'title'``.
+   article's file name when creating the slug. The default is ``"title"``.
 
 .. data:: SLUGIFY_USE_UNICODE
 
@@ -715,10 +720,10 @@ corresponding ``*_URL`` setting as string, while others hard-code them:
    backward compatibility with existing URLs. The default is::
 
        [
-           (r'[^\w\s-]', ''),   # remove non-alphabetical/whitespace/'-' chars
-           (r'(?u)\A\s*', ''),  # strip leading whitespace
-           (r'(?u)\s*\Z', ''),  # strip trailing whitespace
-           (r'[-\s]+', '-'),     # reduce multiple whitespace or '-' to single '-'
+           (r"[^\w\s-]", ""),   # remove non-alphabetical/whitespace/"-" chars
+           (r"(?u)\A\s*", ""),  # strip leading whitespace
+           (r"(?u)\s*\Z", ""),  # strip trailing whitespace
+           (r"[-\s]+", "-"),    # reduce multiple whitespace or "-" to single "-"
        ]
 
 .. data:: AUTHOR_REGEX_SUBSTITUTIONS
@@ -756,7 +761,7 @@ Time and Date
 
 .. data:: DEFAULT_DATE
 
-   The default date you want to use.  If ``'fs'``, Pelican will use the file
+   The default date you want to use.  If ``"fs"``, Pelican will use the file
    system timestamp information (mtime) if it can't get date information from
    the metadata.  If given any other string, it will be parsed by the same
    method as article metadata.  If set to a tuple object, the default datetime
@@ -765,7 +770,8 @@ Time and Date
 
 .. data:: DEFAULT_DATE_FORMAT
 
-   The default date format you want to use. The default is ``'%a %d %B %Y'``.
+   The default date format you want to use. The default is ``"%a %d %B %Y"``,
+   e.g. "Mon 06 April 2026".
 
 .. data:: DATE_FORMATS
 
@@ -785,8 +791,8 @@ Time and Date
    .. parsed-literal::
 
        DATE_FORMATS = {
-           'en': '%a, %d %b %Y',
-           'jp': '%Y-%m-%d(%a)',
+           "en": "%a, %d %b %Y",
+           "jp": "%Y-%m-%d(%a)",
        }
 
    It is also possible to set different locale settings for each language by
@@ -797,14 +803,14 @@ Time and Date
 
       # On Unix/Linux
       DATE_FORMATS = {
-          'en': ('en_US','%a, %d %b %Y'),
-          'jp': ('ja_JP','%Y-%m-%d(%a)'),
+          "en": ("en_US", "%a, %d %b %Y"),
+          "jp": ("ja_JP", "%Y-%m-%d(%a)"),
       }
 
       # On Windows
       DATE_FORMATS = {
-          'en': ('usa','%a, %d %b %Y'),
-          'jp': ('jpn','%Y-%m-%d(%a)'),
+          "en": ("usa", "%a, %d %b %Y"),
+          "jp": ("jpn", "%Y-%m-%d(%a)"),
       }
 
    The default is ``{}``.
@@ -819,8 +825,9 @@ Time and Date
 
    .. parsed-literal::
 
-      LOCALE = ['usa', 'jpn',      # On Windows
-                'en_US', 'ja_JP'   # On Unix/Linux
+      LOCALE = [
+          "usa", "jpn",      # On Windows
+          "en_US", "ja_JP"   # On Unix/Linux
       ]
 
    For a list of available locales refer to `locales on Windows`_  or on
@@ -854,28 +861,30 @@ Template pages
    For instance, if you have a blog with three static pages — a list of books,
    your resume, and a contact page — you could have::
 
-       TEMPLATE_PAGES = {'src/books.html': 'dest/books.html',
-                         'src/resume.html': 'dest/resume.html',
-                         'src/contact.html': 'dest/contact.html'}
+       TEMPLATE_PAGES = {
+           "src/books.html": "dest/books.html",
+           "src/resume.html": "dest/resume.html",
+           "src/contact.html": "dest/contact.html",
+       }
 
    The default is ``{}``.
 
 .. data:: TEMPLATE_EXTENSIONS
 
    The extensions to use when looking up template files from template names.
-   The default is ``['.html']``.
+   The default is ``[".html"]``.
 
 .. data:: DIRECT_TEMPLATES
 
    List of templates that are used directly to render content. Typically direct
    templates are used to generate index pages for collections of content (e.g.,
    category and tag index pages). If the author, category and tag collections are not
-   needed, set ``DIRECT_TEMPLATES = ['index', 'archives']``
+   needed, set ``DIRECT_TEMPLATES = ["index", "archives"]``
 
    ``DIRECT_TEMPLATES`` are searched for over paths maintained in
    ``THEME_TEMPLATES_OVERRIDES``.
 
-   The default is ``['index', 'tags', 'categories', 'authors', 'archives']``.
+   The default is ``["index", "tags", "categories", "authors", "archives"]``.
 
 Metadata
 ========
@@ -893,18 +902,37 @@ Metadata
 
    The regexp that will be used to extract any metadata from the filename. All
    named groups that are matched will be set in the metadata object.  The
-   default value will only extract the date from the filename.
+   default value is ``r"(?P<date>\d{4}-\d{2}-\d{2}).*"`` and will only extract
+   the date from the filename.
 
-   For example, to extract both the date and the slug::
+   For example, if your source file were titled ``2026-04-30_blog-article.md``,
+   you could extract both the date and the slug::
 
-      FILENAME_METADATA = r'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'
+      FILENAME_METADATA = r"(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)"
 
-   See also ``SLUGIFY_SOURCE``. The default is ``r'(?P<date>\d{4}-\d{2}-\d{2}).*'``.
+   giving you a date of *April 30, 2026* and a slug of *blog-article*.
+
+   See also ``SLUGIFY_SOURCE``. The default is
+   ``r"(?P<date>\d{4}-\d{2}-\d{2}).*"``, i.e. it assumed your filenames start
+   with an ISO-style date, e.g. ``2026-04-30``.
+
+   See also, ``FILENAME_METADATA``.
 
 .. data:: PATH_METADATA
 
    Like ``FILENAME_METADATA``, but parsed from a page's full path relative to
-   the content source directory. The default is ``''``.
+   the content source directory, include the source filename. The default
+   value is ``""``.
+
+   For example, if your source files were stored in folders by year and then my
+   month, with the filename being the day of the month, (e.g.
+   ``2026/04/30.rst``) you could extract that with::
+
+      PATH_METADATA = r"(?P<date>\d{4}/\d{2}/\d{2}).*"
+
+   (The above works on Windows as well.)
+
+   See also ``FILENAME_METADATA``.
 
 .. data:: EXTRA_PATH_METADATA
 
@@ -913,44 +941,44 @@ Metadata
    unlike some other Pelican file settings. Paths to a directory apply to all
    files under it. The most-specific path wins conflicts.
 
-Not all metadata needs to be :ref:`embedded in source file itself
-<internal_metadata>`. For example, blog posts are often named following a
-``YYYY-MM-DD-SLUG.rst`` pattern, or nested into ``YYYY/MM/DD-SLUG``
-directories. To extract metadata from the filename or path, set
-``FILENAME_METADATA`` or ``PATH_METADATA`` to regular expressions that use
-Python's `group name notation`_ ``(?P<name>…)``. If you want to attach
-additional metadata but don't want to encode it in the path, you can set
-``EXTRA_PATH_METADATA``:
+   Not all metadata needs to be :ref:`embedded in source file itself
+   <internal_metadata>`. For example, blog posts are often named following a
+   ``YYYY-MM-DD-SLUG.rst`` pattern, or nested into ``YYYY/MM/DD-SLUG``
+   directories. To extract metadata from the filename or path, set
+   ``FILENAME_METADATA`` or ``PATH_METADATA`` to regular expressions that use
+   Python's `group name notation`_ ``(?P<name>…)``. If you want to attach
+   additional metadata but don't want to encode it in the path, you can set
+   ``EXTRA_PATH_METADATA``:
 
-.. parsed-literal::
+   .. parsed-literal::
 
-    EXTRA_PATH_METADATA = {
-        'relative/path/to/file-1': {
-            'key-1a': 'value-1a',
-            'key-1b': 'value-1b',
-            },
-        'relative/path/to/file-2': {
-            'key-2': 'value-2',
-            },
-        }
+       EXTRA_PATH_METADATA = {
+           "relative/path/to/file-1": {
+               "key-1a": "value-1a",
+               "key-1b": "value-1b",
+           },
+           "relative/path/to/file-2": {
+               "key-2": "value-2",
+           },
+       }
 
-This can be a convenient way to shift the installed location of a particular
-file:
+   This can be a convenient way to shift the output location of a particular
+   file:
 
-.. parsed-literal::
+   .. parsed-literal::
 
-    # Take advantage of the following defaults
-    # STATIC_SAVE_AS = '{path}'
-    # STATIC_URL = '{path}'
-    STATIC_PATHS = [
-        'static/robots.txt',
-        ]
-    EXTRA_PATH_METADATA = {
-        'static/robots.txt': {'path': 'robots.txt'},
-        }
+       # Take advantage of the following defaults:
+       # STATIC_SAVE_AS = "{path}"
+       # STATIC_URL = "{path}"
+       STATIC_PATHS = [
+           "static/robots.txt",
+       ]
+       EXTRA_PATH_METADATA = {
+           "static/robots.txt": {"path": "robots.txt"},
+       }
 
-.. _group name notation:
-   https://docs.python.org/3/library/re.html#regular-expression-syntax
+   .. _group name notation:
+      https://docs.python.org/3/library/re.html#regular-expression-syntax
 
    The default is ``{}``.
 
@@ -993,7 +1021,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 .. data:: FEED_ALL_ATOM
 
    The location to save the all-posts Atom feed: this feed will contain all
-   posts regardless of their language. The default is ``'feeds/all.atom.xml'``.
+   posts regardless of their language. The default is ``"feeds/all.atom.xml"``.
 
 .. data:: FEED_ALL_ATOM_URL
 
@@ -1014,7 +1042,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 .. data:: CATEGORY_FEED_ATOM
 
    The location to save the category Atom feeds. [2]_ The default is
-   ``'feeds/{slug}.atom.xml'``.
+   ``"feeds/{slug}.atom.xml"``.
 
 .. data:: CATEGORY_FEED_ATOM_URL
 
@@ -1036,7 +1064,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 .. data:: AUTHOR_FEED_ATOM
 
    The location to save the author Atom feeds. [2]_ The default is
-   ``'feeds/{slug}.atom.xml'``.
+   ``"feeds/{slug}.atom.xml"``.
 
 .. data:: AUTHOR_FEED_ATOM_URL
 
@@ -1047,7 +1075,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 .. data:: AUTHOR_FEED_RSS
 
    The location to save the author RSS feeds. [2]_ The default is
-   ``'feeds/{slug}.rss.xml'``.
+   ``"feeds/{slug}.rss.xml"``.
 
 .. data:: AUTHOR_FEED_RSS_URL
 
@@ -1074,7 +1102,7 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
 .. data:: FEED_MAX_ITEMS
 
    Maximum number of items allowed in a feed. Setting to ``None`` will cause the
-   feed to contains every article. 100 if not specified. The default is ``100``.
+   feed to contains every article. The default is ``100``.
 
 .. data:: RSS_FEED_SUMMARY_ONLY
 
@@ -1118,7 +1146,7 @@ You can use the following settings to configure the pagination.
 
    The templates to use pagination with, and the number of articles to include
    on a page. If this value is ``None``, it defaults to ``DEFAULT_PAGINATION``.
-   The default is ``{'index': None, 'tag': None, 'category': None, 'author': None}``.
+   The default is ``{"index": None, "tag": None, "category": None, "author": None}``.
 
 .. data:: PAGINATION_PATTERNS
 
@@ -1126,8 +1154,8 @@ You can use the following settings to configure the pagination.
    default is::
 
        (
-           (1, '{name}{extension}', '{name}{extension}'),
-           (2, '{name}{number}{extension}', '{name}{number}{extension}'),
+           (1, "{name}{extension}", "{name}{extension}"),
+           (2, "{name}{number}{extension}", "{name}{number}{extension}""),
        )
 
 
@@ -1152,15 +1180,15 @@ subsequent pages at ``.../page/2/`` etc, you could set ``PAGINATION_PATTERNS``
 as follows::
 
   PAGINATION_PATTERNS = (
-      (1, '{url}', '{save_as}'),
-      (2, '{base_name}/page/{number}/', '{base_name}/page/{number}/index.html'),
+      (1, "{url}", "{save_as}"),
+      (2, "{base_name}/page/{number}/", "{base_name}/page/{number}/index.html"),
   )
 
 
 If you want a pattern to apply to the last page in the list, use ``-1``
 as the ``minimum_page`` value::
 
-    (-1, '{base_name}/last/', '{base_name}/last/index.html'),
+    (-1, "{base_name}/last/", "{base_name}/last/index.html"),
 
 Translations
 ============
@@ -1170,26 +1198,26 @@ section for more information.
 
 .. data:: DEFAULT_LANG
 
-   The default language to use. The default is ``'en'``.
+   The default language to use. The default is ``"en"``.
 
 .. data:: ARTICLE_TRANSLATION_ID
 
    The metadata attribute(s) used to identify which articles are translations
    of one another. May be a string or a collection of strings. Set to ``None``
    or ``False`` to disable the identification of translations. The default is
-   ``'slug'``.
+   ``"slug"``.
 
 .. data:: PAGE_TRANSLATION_ID
 
    The metadata attribute(s) used to identify which pages are translations of
    one another. May be a string or a collection of strings. Set to ``None`` or
    ``False`` to disable the identification of translations. The default is
-   ``'slug'``.
+   ``"slug"``.
 
 .. data:: TRANSLATION_FEED_ATOM
 
    The location to save the Atom feed for translations. [3]_ The default is
-   ``'feeds/all-{lang}.atom.xml'``.
+   ``"feeds/all-{lang}.atom.xml"``.
 
 .. data:: TRANSLATION_FEED_ATOM_URL
 
@@ -1227,18 +1255,18 @@ Ordering content
 
    Defines how the articles (``articles_page.object_list`` in the template) are
    sorted. Valid options are: metadata as a string (use ``reversed-`` prefix
-   to reverse the sort order), special option ``'basename'`` which will use
+   to reverse the sort order), special option ``"basename"`` which will use
    the basename of the file (without path), or a custom function to extract the
-   sorting key from articles. Using a value of ``'date'`` will sort articles in
-   chronological order, while the default value, ``'reversed-date'``, will sort
+   sorting key from articles. Using a value of ``"date"`` will sort articles in
+   chronological order, while the default value, ``"reversed-date"``, will sort
    articles by date in reverse order (i.e., newest article comes first). The
-   default is ``'reversed-date'``.
+   default is ``"reversed-date"``.
 
 .. data:: PAGE_ORDER_BY
 
    Defines how the pages (``pages`` variable in the template) are sorted.
-   Options are same as ``ARTICLE_ORDER_BY``.  The default value, ``'basename'``
-   will sort pages by their basename. The default is ``'basename'``.
+   Options are same as ``ARTICLE_ORDER_BY``.  The default value, ``"basename"``
+   will sort pages by their basename. The default is ``"basename"``.
 
 
 .. _settings/themes:
@@ -1260,14 +1288,14 @@ themes.
 
    Destination directory in the output path where Pelican will place the files
    collected from `THEME_STATIC_PATHS`. Default is `theme`. The default is
-   ``'theme'``.
+   ``"theme"``.
 
 .. data:: THEME_STATIC_PATHS
 
    Static theme paths you want to copy. Default value is `static`, but if your
    theme has other static paths, you can put them here. If files or directories
    with the same names are included in the paths defined in this settings, they
-   will be progressively overwritten. The default is ``['static']``.
+   will be progressively overwritten. The default is ``["static"]``.
 
 .. data:: THEME_TEMPLATES_OVERRIDES
 
@@ -1286,7 +1314,7 @@ themes.
 
 .. data:: CSS_FILE
 
-   Specify the CSS file you want to load. The default is ``'main.css'``.
+   Specify the CSS file you want to load. The default is ``"main.css"``.
 
 By default, two themes are available. You can specify them using the ``THEME``
 setting or by passing the ``-t`` option to the ``pelican`` command:
@@ -1313,7 +1341,10 @@ Following are example ways to specify your preferred theme::
     # Specify a customized theme, via absolute path
     THEME = "/home/myuser/projects/mysite/themes/mycustomtheme"
 
-The built-in ``simple`` theme can be customized using the following settings.
+Simple Theme
+------------
+
+The built-in ``simple`` theme can be customized using the following settings:
 
 .. data:: STYLESHEET_URL
 
@@ -1383,6 +1414,9 @@ Feel free to use them in your themes as well.
    Allows override of the name of the "social" widget.  If not specified,
    defaults to "social". The default is ``None``.
 
+Notmyidea Theme
+---------------
+
 In addition, you can use the "wide" version of the ``notmyidea`` theme by
 adding the following to your configuration::
 
@@ -1405,7 +1439,7 @@ they will be filtered out.
 For example::
 
    import logging
-   LOG_FILTER = [(logging.WARN, 'TAG_SAVE_AS is set to False')]
+   LOG_FILTER = [(logging.WARN, "TAG_SAVE_AS is set to False")]
 
 It is possible to filter out messages by a template. Check out source code to
 obtain a template.
@@ -1413,7 +1447,7 @@ obtain a template.
 For example::
 
    import logging
-   LOG_FILTER = [(logging.WARN, 'Empty alt attribute for image %s in %s')]
+   LOG_FILTER = [(logging.WARN, "Empty alt attribute for image %s in %s")]
 
 .. Warning::
 
@@ -1428,7 +1462,7 @@ For example::
 .. _reading_only_modified_content:
 
 
-Reading only modified content
+Reading Only Modified Content
 =============================
 
 To speed up the build process, Pelican can optionally read only articles and
@@ -1442,12 +1476,12 @@ When Pelican is about to read some content source file:
    file has no record in the cache file, it is read as usual.
 2. The file is checked according to ``CHECK_MODIFIED_METHOD``:
 
-    - If set to ``'mtime'``, the modification time of the file is
-      checked.
-    - If set to a name of a function provided by the ``hashlib``
-      module, e.g. ``'md5'``, the file hash is checked.
-    - If set to anything else or the necessary information about the
-      file cannot be found in the cache file, the content is read as usual.
+   - If set to ``"mtime"``, the modification time of the file is
+     checked.
+   - If set to a name of a function provided by the ``hashlib``
+     module, e.g. ``"md5"``, the file hash is checked.
+   - If set to anything else or the necessary information about the
+     file cannot be found in the cache file, the content is read as usual.
 
 3. If the file is considered unchanged, the content data saved in a
    previous build corresponding to the file is loaded from the cache, and the
@@ -1456,9 +1490,9 @@ When Pelican is about to read some content source file:
    modification information and the content data are saved to the cache if
    ``CACHE_CONTENT`` is ``True``.
 
-If ``CONTENT_CACHING_LAYER`` is set to ``'reader'`` (the default), the raw
+If ``CONTENT_CACHING_LAYER`` is set to ``"reader"`` (the default), the raw
 content and metadata returned by a reader are cached. If this setting is
-instead set to ``'generator'``, the processed content object is cached. Caching
+instead set to ``"generator"``, the processed content object is cached. Caching
 the processed content object may conflict with plugins (as some reading related
 signals may be skipped) and the ``WITH_FUTURE_DATES`` functionality (as the
 ``draft`` status of the cached content objects would not change automatically

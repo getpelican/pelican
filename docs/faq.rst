@@ -112,6 +112,11 @@ If you want to include metadata in templates outside the article context (e.g.,
 
     {% if article and article.modified %}
 
+.. note::
+
+    Because the colon symbol (``:``) is used as a separator, be aware that
+    metadata field names *containing* a colon will probably not work.
+
 How do I make my output folder structure identical to my content hierarchy?
 ===========================================================================
 

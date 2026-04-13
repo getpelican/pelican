@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PELICAN 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-07 16:25+0800\n"
-"PO-Revision-Date: 2024-06-27 19:00+0800\n"
+"POT-Creation-Date: 2026-02-02 10:32+0800\n"
+"PO-Revision-Date: 2026-02-02 10:32+0800\n"
 "Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
 "Language: zh_CN\n"
 "Language-Team: zh_CN <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.16.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../tips.rst:2 9c4618aaecd44b0d93537cb760e227fa
 msgid "Tips"
@@ -26,7 +26,7 @@ msgstr "小技巧"
 msgid "Here are some tips about Pelican that you might find useful."
 msgstr "以下是一些实用的小技巧。"
 
-#: ../../tips.rst:7 ../../tips.rst:309 95bea35d0347495bb551fe9486bcd29d
+#: ../../tips.rst:7 ../../tips.rst:319 95bea35d0347495bb551fe9486bcd29d
 #: b64b7ed713b64f588ea7488c6d0b0441
 msgid "Custom 404 Pages"
 msgstr "自定义404页面"
@@ -373,11 +373,11 @@ msgstr ""
 "``\"publishconf.py\"`` 。"
 
 #: ../../tips.rst:211 ../../tips.rst:216 ../../tips.rst:223 ../../tips.rst:227
-#: ../../tips.rst:231 ../../tips.rst:237 ../../tips.rst:243
-#: 073e18d8ae29406eb05040d4e3a9ae60 7d43e6cfb091410ebec7464da05b61b4
-#: 8837cc8935f148fb80f05cc5d3d53629 b2da1f7640f948039230cd835c49accd
-#: bfe3d052cdc443bb81fed82e77acf3c1 c93816e00a254ef69c69f05833e8762b
-#: ee35302c7e034070af1d234ab919c32a
+#: ../../tips.rst:231 ../../tips.rst:237 ../../tips.rst:243 ../../tips.rst:249
+#: 073e18d8ae29406eb05040d4e3a9ae60 6932c9139d4f4da7a34601a9d78ee622
+#: 7d43e6cfb091410ebec7464da05b61b4 8837cc8935f148fb80f05cc5d3d53629
+#: b2da1f7640f948039230cd835c49accd bfe3d052cdc443bb81fed82e77acf3c1
+#: c93816e00a254ef69c69f05833e8762b ee35302c7e034070af1d234ab919c32a
 msgid "string"
 msgstr "string"
 
@@ -386,11 +386,12 @@ msgid "``requirements``"
 msgstr "``requirements``"
 
 #: ../../tips.rst:216 ../../tips.rst:223 ../../tips.rst:227 ../../tips.rst:231
-#: ../../tips.rst:237 ../../tips.rst:243 ../../tips.rst:249
-#: 197d6ee11fce4a50996a0c458cfdbdad 2086d667b9b1475cb0f002924cdfde12
-#: 25e940621f5b48c9af487d898d7f93cf 5664232c9fdd46c7b8278b8ecef8e3b1
+#: ../../tips.rst:237 ../../tips.rst:243 ../../tips.rst:249 ../../tips.rst:255
+#: ../../tips.rst:261 197d6ee11fce4a50996a0c458cfdbdad
+#: 2086d667b9b1475cb0f002924cdfde12 25e940621f5b48c9af487d898d7f93cf
+#: 3052432fbf5d420d8f6adbadb908e6f0 5664232c9fdd46c7b8278b8ecef8e3b1
 #: 6693126a0da74c61b67e14ca8e535ec3 7f8a93a2048140748fa73537bfae2a54
-#: 85fd40a29f31490bb23b20f05e574aaa
+#: 85fd40a29f31490bb23b20f05e574aaa 9d02d6e4689b4b55bdf832e18b0ed4bb
 msgid "No"
 msgstr "否"
 
@@ -429,46 +430,60 @@ msgid ""
 "``\"https://github.com/seanh/sidecar.git\"``"
 msgstr "要使用的自定义主题的GitHub仓库URL，例如： ``\"https://github.com/seanh/sidecar.git\"``"
 
-#: ../../tips.rst:227 d94f331173334fb2a84b1caadffb72df
+#: ../../tips.rst:227 ../../tips.rst:231 919c0e36e8ff40bcbcc4480081b49ce5
+#: d94f331173334fb2a84b1caadffb72df
 msgid "``\"\"``"
 msgstr "``\"\"``"
 
-#: ../../tips.rst:231 44ceb2743481486b95c1c739d543f15d
+#: ../../tips.rst:231 921a2ae610a84349a5654e204ba6b034
+msgid "``theme-checkout``"
+msgstr "``theme-checkout``"
+
+#: ../../tips.rst:231 7815b328b5f94ca496107881f5bb8aab
+msgid ""
+"Git ref (branch, tag or commit) of the theme repo to checkout. This can "
+"be used to pin the version of your theme. If not specified defaults to "
+"the theme repo's default branch."
+msgstr ""
+"主题仓库要checkout的Git引用 (branch, tag 或 commit)。这可以用于固定主题的版本。若未指定，"
+"使用仓库的默认branch。"
+
+#: ../../tips.rst:237 44ceb2743481486b95c1c739d543f15d
 msgid "``python``"
 msgstr "``python``"
 
-#: ../../tips.rst:231 4b5cddab44d24c7c8560e16991b784c7
+#: ../../tips.rst:237 4b5cddab44d24c7c8560e16991b784c7
 msgid ""
 "The version of Python to use to build the site, for example: ``\"3.12\"``"
 " (to use the most recent version of Python 3.12, this is faster) or "
 "``\"3.12.1\"`` (to use an exact version, slower)"
 msgstr "构建站点时使用的Python版本，例如： ``\"3.12\"`` 或 ``\"3.12.1\"``"
 
-#: ../../tips.rst:231 919c0e36e8ff40bcbcc4480081b49ce5
+#: ../../tips.rst:237 919c0e36e8ff40bcbcc4480081b49ce5
 msgid "``\"3.12\"``"
 msgstr "``\"3.12\"``"
 
-#: ../../tips.rst:237 842af56c539f4a74a97c7a5b1525eb35
+#: ../../tips.rst:243 842af56c539f4a74a97c7a5b1525eb35
 msgid "``siteurl``"
 msgstr "``siteurl``"
 
-#: ../../tips.rst:237 7fc0777d6e174d6f8d757926a61aa3c8
+#: ../../tips.rst:243 7fc0777d6e174d6f8d757926a61aa3c8
 msgid ""
 "The base URL of your web site (Pelican's ``SITEURL`` setting). If not "
 "passed this will default to the URL of your GitHub Pages site, which is "
 "correct in most cases."
 msgstr "站点的基URL，会用于配置项 ``SITEURL`` 。若未指定，默认值为GitHub Pages站点的URL，这适用于大部分情况。"
 
-#: ../../tips.rst:237 ../../tips.rst:243 082f65333e224d71817b82b1e4f515c4
+#: ../../tips.rst:243 ../../tips.rst:249 082f65333e224d71817b82b1e4f515c4
 #: 3d786e828a4745db849bdb8f47738db8
 msgid "The URL of your GitHub Pages site."
 msgstr "GitHub Pages站点的URL"
 
-#: ../../tips.rst:243 e5adb69f985547b7b3cc2bd3f31d4cc3
+#: ../../tips.rst:249 e5adb69f985547b7b3cc2bd3f31d4cc3
 msgid "``feed_domain``"
 msgstr "``feed_domain``"
 
-#: ../../tips.rst:243 c88f037c9f1f4148bef6347228257f7d
+#: ../../tips.rst:249 c88f037c9f1f4148bef6347228257f7d
 msgid ""
 "The domain to be prepended to feed URLs (Pelican's ``FEED_DOMAIN`` "
 "setting). If not passed this will default to the URL of your GitHub Pages"
@@ -477,72 +492,89 @@ msgstr ""
 "订阅源URL前要附加的域名，会用于配置项 ``FEED_DOMAIN`` 。若未指定，默认值为GitHub "
 "Pages站点的URL，这适用于大部分情况。"
 
-#: ../../tips.rst:249 358c5aa434cd4ad09beab02df88413d5
+#: ../../tips.rst:255 358c5aa434cd4ad09beab02df88413d5
 msgid "``deploy``"
 msgstr "``deploy``"
 
-#: ../../tips.rst:249 b8748aeace5a448d9382e225be98f90c
+#: ../../tips.rst:255 b8748aeace5a448d9382e225be98f90c
 msgid ""
 "This is used to determine whether you will deploy the site or not to "
 "GitHub Pages. This is most useful if you want to test a change to your "
 "website in a pull request before deploying those change."
 msgstr "此项配置用于表示是否要将站点部署至GitHub Pages。当对站点做了更改，并且在正式部署前进行测试，就可以用到此项。"
 
-#: ../../tips.rst:249 034006b9b71b4cb486f230b8aad873ce
+#: ../../tips.rst:255 ../../tips.rst:261 034006b9b71b4cb486f230b8aad873ce
 msgid "bool"
 msgstr "bool"
 
-#: ../../tips.rst:249 078ac613a8b74703af98c75bb5a007c1
+#: ../../tips.rst:255 078ac613a8b74703af98c75bb5a007c1
 msgid "``true``"
 msgstr "``true``"
 
-#: ../../tips.rst:257 e63cf881e3204be8b52ee5d8635ba4cf
+#: ../../tips.rst:261 842af56c539f4a74a97c7a5b1525eb35
+msgid "``stork``"
+msgstr "``stork``"
+
+#: ../../tips.rst:261 b8748aeace5a448d9382e225be98f90c
+msgid ""
+"This is used to determine whether Stork will be installed on the runner "
+"to be able to build a site with Stork search enabled"
+msgstr ""
+"此配置项用于指定是否要在runner中安装Stork搜索。"
+
+#: ../../tips.rst:261 358c5aa434cd4ad09beab02df88413d5
+msgid "``false``"
+msgstr "``false``"
+
+#: ../../tips.rst:267 e63cf881e3204be8b52ee5d8635ba4cf
 msgid "Testing Your Build in a GitHub Pull Request"
 msgstr "在Github拉取请求时进行测试"
 
-#: ../../tips.rst:259 a2f6bd3420eb46a08f54efda35a6eaf4
+#: ../../tips.rst:269 a2f6bd3420eb46a08f54efda35a6eaf4
 msgid ""
 "If you want to test your build in a pull request before deploying to "
 "GitHub, your workflow might look something like this:"
 msgstr "如果想在正式部署到 GitHub 前在PR中进行测试，下面是一个可用的 workflow 示例"
 
-#: ../../tips.rst:288 84393693279741efa82c5ee6b27cbd28
+#: ../../tips.rst:298 84393693279741efa82c5ee6b27cbd28
 msgid ""
 "The ``on`` section of the workflow defines the events that will trigger "
 "the workflow. In this example, the workflow will run on pushes to the "
 "main branch, pull requests to the main branch, and manual runs of the "
 "workflow."
-msgstr "工作流的 ``on`` 部分定义了工作流的触发器。在此示例中，工作流将在main分支收到push、有PR提起到主分支以及"
-"手动运行工作流时执行。"
+msgstr "工作流的 ``on`` 部分定义了工作流的触发器。在此示例中，工作流将在main分支收到push、有PR提起到主分支以及手动运行工作流时执行。"
 
-#: ../../tips.rst:290 cd3c13b2af974a32aa4291d07fc11e9c
+#: ../../tips.rst:300 cd3c13b2af974a32aa4291d07fc11e9c
 msgid ""
 "``workflow_dispatch`` defines the deploy boolean to be true by default. "
 "This means that if you run the workflow manually, it will deploy the "
 "site."
 msgstr "``workflow_dispatch`` 将 deploy 的默认值设为 true。也就是说当手动运行工作流时，更改的内容就会正式部署。"
 
-#: ../../tips.rst:292 5402cd211d5b4aa8a244c916bb381a5b
+#: ../../tips.rst:302 5402cd211d5b4aa8a244c916bb381a5b
 msgid ""
 "The ``deploy`` input for the job is using a set of standard GitHub "
 "workflow variables to control when ``deploy`` will either be true or "
 "false (you can customize this to your needs)."
-msgstr "job中的 ``deploy`` 使用了一些 GitHub workflow 变量来计算 ``deploy`` 值为 true 还是 false（您可以根据需要自定义）。"
+msgstr ""
+"job中的 ``deploy`` 使用了一些 GitHub workflow 变量来计算 ``deploy`` 值为 true 还是 "
+"false（您可以根据需要自定义）。"
 
-#: ../../tips.rst:294 d084908e3a0749f0b802b43626cfe2c4
+#: ../../tips.rst:304 d084908e3a0749f0b802b43626cfe2c4
 msgid ""
 "In this example, the ``deploy`` will be true if the event is a push to "
 "the main branch (or merging into main from a PR) or a manual run of the "
 "workflow. If the event is a pull request, the ``deploy`` will be false "
 "and it will only build an artifact for the site."
-msgstr "在此示例中，如果触发事件是推送到主分支（或从 PR 合并到主分支）或手动运行工作流，则 deploy 将为 true；"
-"如果触发事件只是Pull Request，则 ``deploy`` 将为 false，并且此时只会为站点构建一个artifact。"
+msgstr ""
+"在此示例中，如果触发事件是推送到主分支（或从 PR 合并到主分支）或手动运行工作流，则 deploy 将为 true；如果触发事件只是Pull "
+"Request，则 ``deploy`` 将为 false，并且此时只会为站点构建一个artifact。"
 
-#: ../../tips.rst:297 85e70fc3faa04208979f7bbe92b025ef
+#: ../../tips.rst:307 85e70fc3faa04208979f7bbe92b025ef
 msgid "\"Insecure content\" warnings from browsers"
 msgstr "浏览器报“不安全的内容（Insecure content）”警告"
 
-#: ../../tips.rst:299 34f7075cf31f416da2aeb529c616d97d
+#: ../../tips.rst:309 34f7075cf31f416da2aeb529c616d97d
 msgid ""
 "If your site uses ``https://`` and is broken because the browser is "
 "blocking network requests (for example for CSS files) due to \"insecure "
@@ -553,7 +585,7 @@ msgstr ""
 "时，可能会损坏，无法正常显示，这是由于浏览器阻拦了一些对“不安全内容”的网络请求。可能的原因之一是GitHub Pages给你的站点生成了 "
 "``http://`` URL。"
 
-#: ../../tips.rst:303 47271df82577424c8e2c31a9e76a553a
+#: ../../tips.rst:313 47271df82577424c8e2c31a9e76a553a
 msgid ""
 "To fix this go into your site repo's settings and enable the **Enforce "
 "HTTPS** setting: go to **Settings → Pages** and check **Enforce HTTPS**. "
@@ -564,7 +596,7 @@ msgstr ""
 "**Enforce HTTPS** ，接着再重新执行工作流以重新部署站点。也可以尝试通过配置 ``siteurl`` 与 "
 "``feed_domain`` 解决问题。"
 
-#: ../../tips.rst:311 e69189ef4a8440fb8940d8012b4f19d6
+#: ../../tips.rst:321 e69189ef4a8440fb8940d8012b4f19d6
 msgid ""
 "GitHub Pages will display the custom 404 page described above, as noted "
 "in the relevant `GitHub docs "
@@ -573,11 +605,11 @@ msgstr ""
 "如果按前述进行配置，GitHub Pages是能够正确显示自定义的404页面的，相关内容在 `GitHub的文档中 "
 "<https://help.github.com/articles/custom-404-pages/>`_ 也有提到。"
 
-#: ../../tips.rst:315 1b8c2457f44a4d61a033363830b8bd90
+#: ../../tips.rst:325 1b8c2457f44a4d61a033363830b8bd90
 msgid "Update your site on each commit"
 msgstr "在每次commit后都更新站点"
 
-#: ../../tips.rst:317 476dbdb670924c02a962e78d6a7854c1
+#: ../../tips.rst:327 476dbdb670924c02a962e78d6a7854c1
 msgid ""
 "To automatically update your Pelican site on each commit, you can create "
 "a post-commit hook. For example, you can add the following to "
@@ -586,11 +618,11 @@ msgstr ""
 "要想在每次commit后自动更新Pelican站点，你可以创建一个post-commit钩子。例如，可以将下面的内容保存为 "
 "``.git/hooks/post-commit`` ："
 
-#: ../../tips.rst:324 36dc5f05eaf84573acada36c59d8d2fc
+#: ../../tips.rst:334 36dc5f05eaf84573acada36c59d8d2fc
 msgid "Copy static files to the root of your site"
 msgstr "将静态文件拷贝到站点根目录"
 
-#: ../../tips.rst:326 4a0722ad68e944ee80e6378259cc1dd6
+#: ../../tips.rst:336 4a0722ad68e944ee80e6378259cc1dd6
 msgid ""
 "To use a `custom domain <https://help.github.com/articles/setting-up-a"
 "-custom-domain-with-pages>`_ with GitHub Pages, you need to put the "
@@ -605,11 +637,11 @@ msgstr ""
 "）添加到站点根目录的 ``CNAME`` 文件中。为此，请创建 ``content/extra/`` 目录，并在里面添加一个 ``CNAME`` "
 "文件。然后使用Pelican的 ``STATIC_PATHS`` 来告诉Pelican将此文件复制到输出目录："
 
-#: ../../tips.rst:337 8ad906848762400d9e2462034d151a16
+#: ../../tips.rst:347 8ad906848762400d9e2462034d151a16
 msgid "Note: use forward slashes, ``/``, even on Windows."
 msgstr "请注意：务必使用正斜杠 ``/`` ，在Windows上也是。"
 
-#: ../../tips.rst:339 7b109f4944064382babc9158567c8e82
+#: ../../tips.rst:349 7b109f4944064382babc9158567c8e82
 msgid ""
 "You can also use the ``EXTRA_PATH_METADATA`` mechanism to place a "
 "``favicon.ico`` or ``robots.txt`` at the root of any site."
@@ -617,17 +649,17 @@ msgstr ""
 "利用 ``EXTRA_PATH_METADATA`` 机制，你可以将 ``favicon.ico`` 或 ``robots.txt`` "
 "也拷贝到站点的根目录下。"
 
-#: ../../tips.rst:343 678eea0644b5400496ad9173d05368d5
+#: ../../tips.rst:353 678eea0644b5400496ad9173d05368d5
 msgid "How to add YouTube or Vimeo Videos"
 msgstr "如何添加YouTube或Vimeo视频"
 
-#: ../../tips.rst:345 ca57b327dd6b432d82cdc91193bde6bb
+#: ../../tips.rst:355 ca57b327dd6b432d82cdc91193bde6bb
 msgid ""
 "The easiest way is to paste the embed code of the video from these sites "
 "directly into your source content."
 msgstr "最简单的方法是将这些网站的视频嵌入代码直接粘贴到您的源内容文件中。"
 
-#: ../../tips.rst:348 0a4f27e2edbe494ab52f73595646986e
+#: ../../tips.rst:358 0a4f27e2edbe494ab52f73595646986e
 msgid ""
 "Alternatively, you can also use Pelican plugins like ``liquid_tags``, "
 "``pelican_youtube``, or ``pelican_vimeo`` to embed videos in your "
@@ -636,7 +668,7 @@ msgstr ""
 "或者，您还可以使用例如 ``liquid_tags`` 、``pelican_youtube`` 或 ``pelican_vimeo`` "
 "等Pelican插件将视频嵌入。"
 
-#: ../../tips.rst:351 e73517b72da347738421784b776b1f1c
+#: ../../tips.rst:361 e73517b72da347738421784b776b1f1c
 msgid ""
 "Moreover, markup languages like reST and Markdown have plugins that let "
 "you embed videos in the markup. You can use `reST video directive "
@@ -647,31 +679,31 @@ msgstr ""
 "<https://gist.github.com/dbrgn/2922648>`_ 或者 `Markdown的mdx_video插件 "
 "<https://github.com/italomaia/mdx-video>`_ 。"
 
-#: ../../tips.rst:358 b9d27cda716048b2ab7c13646d7faf09
+#: ../../tips.rst:368 b9d27cda716048b2ab7c13646d7faf09
 msgid "Develop Locally Using SSL"
 msgstr "在本地使用SSL进行开发"
 
-#: ../../tips.rst:360 50df9ec072aa47eabbae132fd8f5cb68
+#: ../../tips.rst:370 50df9ec072aa47eabbae132fd8f5cb68
 msgid "Here's how you can set up your local pelican server to support SSL."
 msgstr "以下描述了如何在本地Pelican服务器上配置SSL。"
 
-#: ../../tips.rst:362 9b5045375a874c4d9c29f7109f05c539
+#: ../../tips.rst:372 9b5045375a874c4d9c29f7109f05c539
 msgid ""
 "First, create a self-signed certificate and key using ``openssl`` (this "
 "creates ``cert.pem`` and ``key.pem``)::"
 msgstr "首先，通过 ``openssl`` 创建自签名的证书和密钥，这会生成 ``cert.pem`` 和 ``key.pem`` 文件："
 
-#: ../../tips.rst:366 2f1cfa536fc540f69d671f8a118769d7
+#: ../../tips.rst:376 2f1cfa536fc540f69d671f8a118769d7
 msgid ""
 "And use this command to launch the server (the server starts within your "
 "``output`` directory)::"
 msgstr "接着使用下面的命令来开启服务器（此服务器会在 ``output`` 目录下开启）："
 
-#: ../../tips.rst:370 029ea2b0e4fe4b0f814158ae33e3a8ff
+#: ../../tips.rst:380 029ea2b0e4fe4b0f814158ae33e3a8ff
 msgid "If you are using ``develop-server.sh``,  add this to the top::"
 msgstr "如果你使用的是 ``develop-server.sh`` 脚本，在脚本的开头添加："
 
-#: ../../tips.rst:375 c2784fdd9fdb433799d57f903d0e49d8
+#: ../../tips.rst:385 c2784fdd9fdb433799d57f903d0e49d8
 msgid "and modify the ``pelican.server`` line as follows::"
 msgstr "然后修改按照下述修改 ``pelican.server`` 一行："
 
