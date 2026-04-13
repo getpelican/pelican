@@ -512,7 +512,7 @@ class ArticlesGenerator(CachingGenerator):
                 self.get_template(article.template),
                 self.context,
                 article=article,
-                category=article.category,
+                category=getattr(article, "category", None),
                 override_output=hasattr(article, "override_save_as"),
                 url=article.url,
                 blog=True,
@@ -727,7 +727,8 @@ class ArticlesGenerator(CachingGenerator):
         for article in self.articles:
             # only main articles are listed in categories and tags
             # not translations or hidden articles
-            self.categories[article.category].append(article)
+            if hasattr(article, "category"):
+                self.categories[article.category].append(article)
             if hasattr(article, "tags"):
                 for tag in article.tags:
                     self.tags[tag].append(article)
