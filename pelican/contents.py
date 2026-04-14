@@ -584,7 +584,7 @@ class Page(Content):
 
 
 class Article(Content):
-    mandatory_properties = ("title", "date", "category")
+    mandatory_properties = ("title", "date")
     allowed_statuses = ("published", "hidden", "draft", "skip")
     default_status = "published"
     default_template = "article"

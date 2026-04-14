@@ -746,7 +746,7 @@ def default_metadata(settings=None, process=None):
             if process:
                 value = process(name, value)
             metadata[name] = value
-        if "DEFAULT_CATEGORY" in settings:
+        if "DEFAULT_CATEGORY" in settings and settings.get("CATEGORY_SAVE_AS"):
             value = settings["DEFAULT_CATEGORY"]
             if process:
                 value = process("category", value)
@@ -811,7 +811,7 @@ def parse_path_metadata(source_path, settings=None, process=None):
         checks = []
         for key, data in [("FILENAME_METADATA", base), ("PATH_METADATA", source_path)]:
             checks.append((settings.get(key, None), data))
-        if settings.get("USE_FOLDER_AS_CATEGORY", None):
+        if settings.get("USE_FOLDER_AS_CATEGORY") and settings.get("CATEGORY_SAVE_AS"):
             checks.append(("(?P<category>.*)", subdir))
         for regexp, data in checks:
             if regexp and data:

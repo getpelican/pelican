@@ -133,6 +133,44 @@ class TestTemplateInheritance(LoggedTestCase):
         self.assertNotIn("Proudly powered by", content)
         self.assertIn("New footer", content)
 
+    def test_disabled_categories_no_links(self):
+        """When CATEGORY_SAVE_AS is empty, articles without an explicit
+        category should not get a default category or show category links."""
+
+        # Create an article without a Category metadata line
+        content_dir = mkdtemp(prefix="pelican_test_content.")
+        with open(os.path.join(content_dir, "no_category.md"), "w") as f:
+            f.write(
+                "Title: No Category Article\n"
+                "Date: 2024-01-01\n\n"
+                "Article without a category.\n"
+            )
+
+        try:
+            settings = read_settings(
+                path=None,
+                override={
+                    "THEME": "simple",
+                    "PATH": content_dir,
+                    "OUTPUT_PATH": self.temp_output,
+                    "CACHE_PATH": self.temp_cache,
+                    "SITEURL": "http://example.com",
+                    "CATEGORY_SAVE_AS": None,
+                    "CATEGORY_URL": None,
+                    "CATEGORIES_SAVE_AS": None,
+                },
+            )
+
+            pelican = Pelican(settings=settings)
+            mute(True)(pelican.run)()
+
+            with open(os.path.join(self.temp_output, "no-category-article.html")) as f:
+                content = f.read()
+
+            self.assertNotIn("Category:", content)
+        finally:
+            rmtree(content_dir)
+
     def test_category_and_tag_feed_titles_use_slug(self):
         """Feed link titles on category/tag pages should have unique titles."""
 
