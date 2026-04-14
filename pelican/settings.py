@@ -592,6 +592,17 @@ def configure_settings(settings: Settings) -> Settings:
         else:
             raise Exception("Could not find the theme {}".format(settings["THEME"]))
 
+    # Clear CSS_FILE if the file doesn't exist in the theme
+    css_file = settings.get("CSS_FILE")
+    if css_file:
+        theme = settings["THEME"]
+        static_paths = settings.get("THEME_STATIC_PATHS", ["static"])
+        if not any(
+            os.path.isfile(os.path.join(theme, sp, "css", css_file))
+            for sp in static_paths
+        ):
+            settings["CSS_FILE"] = ""
+
     # standardize strings to lowercase strings
     for key in ["DEFAULT_LANG"]:
         if key in settings:
