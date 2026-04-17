@@ -384,7 +384,7 @@ def clean_output_dir(path: str, retention: Iterable[str]) -> None:
     if not os.path.isdir(path):
         try:
             os.remove(path)
-        except Exception:
+        except OSError:
             logger.exception("Unable to delete file %s", path)
         return
 
@@ -399,13 +399,13 @@ def clean_output_dir(path: str, retention: Iterable[str]) -> None:
             try:
                 shutil.rmtree(file)
                 logger.debug("Deleted directory %s", file)
-            except Exception:
+            except OSError:
                 logger.exception("Unable to delete directory %s", file)
         elif os.path.isfile(file) or os.path.islink(file):
             try:
                 os.remove(file)
                 logger.debug("Deleted file/link %s", file)
-            except Exception:
+            except OSError:
                 logger.exception("Unable to delete file %s", file)
         else:
             logger.error("Unable to delete %s, file type unknown", file)

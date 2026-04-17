@@ -324,7 +324,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
             "EXTRA_TEMPLATES_PATHS is deprecated use THEME_TEMPLATES_OVERRIDES instead."
         )
         if settings.get("THEME_TEMPLATES_OVERRIDES"):
-            raise Exception(
+            raise ValueError(
                 "Setting both EXTRA_TEMPLATES_PATHS and "
                 "THEME_TEMPLATES_OVERRIDES is not permitted. Please move to "
                 "only setting THEME_TEMPLATES_OVERRIDES."
@@ -392,7 +392,7 @@ def handle_deprecated_settings(settings: Settings) -> Settings:
         if f + "_REGEX_SUBSTITUTIONS" in settings
     }
     if old_values and new_values:
-        raise Exception(
+        raise ValueError(
             "Setting both {new_key} and {old_key} (or variants thereof) is "
             "not permitted. Please move to only setting {new_key}.".format(
                 old_key="SLUG_SUBSTITUTIONS", new_key="SLUG_REGEX_SUBSTITUTIONS"
@@ -573,7 +573,7 @@ def configure_settings(settings: Settings) -> Settings:
     Also, specify the log messages to be ignored.
     """
     if "PATH" not in settings or not os.path.isdir(settings["PATH"]):
-        raise Exception(
+        raise ValueError(
             "You need to specify a path containing the content"
             " (see pelican --help for more information)"
         )
@@ -590,7 +590,7 @@ def configure_settings(settings: Settings) -> Settings:
         if os.path.exists(theme_path):
             settings["THEME"] = theme_path
         else:
-            raise Exception("Could not find the theme {}".format(settings["THEME"]))
+            raise ValueError("Could not find the theme {}".format(settings["THEME"]))
 
     # Clear CSS_FILE if the file doesn't exist in the theme
     css_file = settings.get("CSS_FILE")
