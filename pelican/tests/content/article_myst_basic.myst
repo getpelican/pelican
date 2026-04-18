@@ -1,0 +1,24 @@
+---
+title: Test MyST Article
+date: 2024-01-15
+author: Test Author
+category: Test Category
+tags: myst, test
+---
+
+# MyST Test Article
+
+This is a basic MyST article with **bold** and *italic* text.
+
+## Features
+
+- List item 1
+- List item 2
+- List item 3
+
+Here's a [link](https://example.com) and some `inline code`.
+
+```python
+def hello():
+    print("Hello, MyST!")
+```
