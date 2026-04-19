@@ -22,17 +22,16 @@ class TestServer(unittest.TestCase):
         self.temp_output = mkdtemp(prefix="pelicantests.")
         self.old_cwd = os.getcwd()
         os.chdir(self.temp_output)
+        self.handler = ComplexHTTPRequestHandler(
+            MockRequest(), ("0.0.0.0", 8888), self.server
+        )
+        self.handler.base_path = self.temp_output
 
     def tearDown(self):
         os.chdir(self.old_cwd)
         rmtree(self.temp_output)
 
     def test_get_path_that_exists(self):
-        handler = ComplexHTTPRequestHandler(
-            MockRequest(), ("0.0.0.0", 8888), self.server
-        )
-        handler.base_path = self.temp_output
-
         open(os.path.join(self.temp_output, "foo.html"), "a").close()
         os.mkdir(os.path.join(self.temp_output, "foo"))
         open(os.path.join(self.temp_output, "foo", "index.html"), "a").close()
@@ -44,17 +43,29 @@ class TestServer(unittest.TestCase):
 
         for suffix in ["", "/"]:
             # foo.html has precedence over foo/index.html
-            path = handler.get_path_that_exists("foo" + suffix)
+            path = self.handler.get_path_that_exists("foo" + suffix)
             self.assertEqual(path, "foo.html")
 
             # folder with index.html should return folder/index.html
-            path = handler.get_path_that_exists("bar" + suffix)
+            path = self.handler.get_path_that_exists("bar" + suffix)
             self.assertEqual(path, "bar/index.html")
 
             # folder without index.html should return same as input
-            path = handler.get_path_that_exists("baz" + suffix)
+            path = self.handler.get_path_that_exists("baz" + suffix)
             self.assertEqual(path, "baz" + suffix)
 
             # not existing path should return None
-            path = handler.get_path_that_exists("quux" + suffix)
+            path = self.handler.get_path_that_exists("quux" + suffix)
             self.assertIsNone(path)
+
+    def test_guess_type_method_returns_javascript_for_js_files(self):
+        js_file = os.path.join(self.temp_output, "script.js")
+        with open(js_file, "w") as f:
+            f.write("console.log('hello');")
+
+        mimetype = self.handler.guess_type(js_file)
+        self.assertIn(
+            mimetype,
+            ("text/javascript", "application/javascript"),
+            f"Expected .js MIME type to be 'text/javascript' or 'application/javascript', got '{mimetype}'",
+        )
