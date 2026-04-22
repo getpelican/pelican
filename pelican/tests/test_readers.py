@@ -139,6 +139,18 @@ class DefaultReaderTest(ReaderTest):
                     extra={"limit_msg": "Other images have empty alt attributes"},
                 )
 
+    def test_path_metadata_categories(self):
+        nested_content_path = os.path.join(CUR_DIR, "nested_content")
+        r = readers.Readers(
+            settings=get_settings(USE_FOLDER_AS_CATEGORY=True, CATEGORY_SAVE_AS=None)
+        )
+        mainpage = r.read_file(base_path=nested_content_path, path="maindir/maindir.md")
+        self.assertDictHasSubset(mainpage.metadata, {"category": "maindir"})
+        subpage = r.read_file(
+            base_path=nested_content_path, path="maindir/subdir/subdir.md"
+        )
+        self.assertDictHasSubset(subpage.metadata, {"category": "subdir"})
+
 
 class RstReaderTest(ReaderTest):
     def test_article_with_metadata(self):
