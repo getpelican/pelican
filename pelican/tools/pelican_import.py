@@ -968,6 +968,9 @@ def fields2pelican(
         if is_pandoc_needed(in_markup) and not pandoc_version:
             posts_require_pandoc.append(filename)
 
+        #Replace "/" with "-" in filename
+        filename = filename.replace("/", "-")
+
         slug = (not disable_slugs and filename) or None
         assert slug is None or filename == os.path.basename(filename), (
             f"filename is not a basename: {filename}"
