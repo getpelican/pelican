@@ -734,6 +734,16 @@ class TestArticle(TestBase):
         custom_article = Article(**article_kwargs)
         self.assertEqual("custom", custom_article.template)
 
+    def test_empty_title_invalid(self):
+        # articles with empty title should be invalid
+        settings = get_settings()
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs["metadata"]["title"] = ""
+        article_kwargs["metadata"]["date"] = datetime.datetime.now()
+        article_kwargs["settings"] = settings
+        article = Article(**article_kwargs)
+        self.assertFalse(article.is_valid())
+
     def test_slugify_category_author(self):
         settings = get_settings()
         settings["SLUG_REGEX_SUBSTITUTIONS"] = [
