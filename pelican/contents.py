@@ -172,7 +172,7 @@ class Content:
     def _has_valid_mandatory_properties(self) -> bool:
         """Test mandatory properties are set."""
         for prop in self.mandatory_properties:
-            if not hasattr(self, prop):
+            if not hasattr(self, prop) or getattr(self, prop) in (None, ""):
                 logger.error(
                     "Skipping %s: could not find information about '%s'", self, prop
                 )
