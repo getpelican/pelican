@@ -7,16 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PELICAN 4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-13 11:46+0800\n"
-"PO-Revision-Date: 2024-06-25 19:00+0800\n"
+"POT-Creation-Date: 2026-06-08 09:56+0800\n"
+"PO-Revision-Date: 2026-06-08 13:11+0800\n"
 "Last-Translator: GeorgeHu <dhxxhch@163.com>\n"
-"Language: zh_CN\n"
 "Language-Team: \n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Generated-By: Babel 2.10.3\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: ../../install.rst:2 e735e1393d63466092c9fc0a5ee4117d
 msgid "Installing Pelican"
@@ -24,197 +25,289 @@ msgstr "安装Pelican"
 
 #: ../../install.rst:4 e34bdf7c1bbb4c75a47f8bd16e626c67
 msgid ""
-"Pelican currently runs best on |min_python|; earlier versions of Python "
+"Pelican currently runs best on Python |min_python|; earlier versions of Python "
 "are not supported."
 msgstr "Pelican需要 |min_python| 以上版本的Python，不支持更低版本。"
 
-#: ../../install.rst:6 ff98ade47da6403e84dd1b2209896d9c
+#: ../../install.rst:6 2498d09099194317a62e67b907bdd5d3
 msgid ""
-"You can install Pelican via several different methods. The simplest is "
-"via Pip_::"
-msgstr "有多种方法可以安装Pelican，最简单的就是通过 Pip_："
-
-#: ../../install.rst:10 ae2fcb82534e4a3f81980f69ed94c9ad
-msgid "Or, if you plan on using Markdown::"
-msgstr "如果您需要使用Markdown，请使用下面的命令安装："
-
-#: ../../install.rst:14 ed597b1eb47949efba0f1781ef7bbd1f
-msgid ""
-"(Keep in mind that some operating systems will require you to prefix the "
-"above command with ``sudo`` in order to install Pelican system-wide.)"
-msgstr "（在某些操作系统中，需要在命令前加 ``sudo`` 才能在整个系统上安装Pelican）"
-
-#: ../../install.rst:17 04d6784f06dd40e7bff76bf6476aaba1
-msgid ""
-"While the above is the simplest method, the recommended approach is to "
-"create a virtual environment for Pelican via virtualenv_ before "
-"installing Pelican. Assuming you have virtualenv_ installed, you can then"
-" open a new terminal session and create a new virtual environment for "
-"Pelican::"
+"Once Pelican is installed, you can run ``pelican --help`` to see basic usage "
+"options. For more detail, refer to the :doc:`Publish<publish>` section."
 msgstr ""
-"尽管上面是最简单的安装方法，但我们推荐使用虚拟环境 virtualenv_ 完成Pelican的安装。当您安装好 virtualenv_ "
-"后，打开一个新的命令行并为Pelican创建一个虚拟环境："
+"当您安装好Pelican，可以执行 ``pelican --help`` 命令来查看一些基本用法。在 :doc:`"
+"发布站点<publish>` 章节中可以了解更多信息。"
 
-#: ../../install.rst:26 08aae819315e48a194a065a3fc3dddad
+#: ../../install.rst:9 ff98ade47da6403e84dd1b2209896d9c
+msgid "You can install Pelican via several different methods."
+msgstr "有多种方法可以安装Pelican。"
+
+#: ../../install.rst:11 eeeecf4680d2487cbf2a90ccff671e0a
+msgid "**Recommended method:** `Pip <https://pip.pypa.io/>`_ User Install"
+msgstr "**推荐安装方式：**  `Pip <https://pip.pypa.io/>`_"
+
+#: ../../install.rst:13 261e5439b61a4734a6ce7e678830aacd
+msgid "To install Pelican via Pip::"
+msgstr "通过Pip安装Pelican："
+
+#: ../../install.rst:17 190eabcd8f3a437cbf895ecee25aff4d
 msgid ""
-"Once the virtual environment has been created and activated, Pelican can "
-"be installed via ``python -m pip install pelican`` as noted above. "
-"Alternatively, if you have the project source, you can install Pelican "
-"using the setuptools method::"
+"Or, if you do not plan to use `Markdown <https://pypi.org/project/Markdown/>`_, "
+"you can omit the ``[markdown]`` suffix::"
 msgstr ""
-"当创建并激活虚拟环境后，使用之前提到过的命令 ``python -m pip install pelican`` "
-"就可以安装Pelican了。或者，如果您想要从源码安装，可以使用setuptools："
+"如您不使用 `Markdown <https://pypi.org/project/Markdown/>`_ 来写作，可以省略 "
+"``[markdown]`` 后缀："
 
-#: ../../install.rst:33 368febf14ca740e19fa470b0f832dea1
+#: ../../install.rst:22 def9b0888d8641e69417b1917bbc2ae8
+msgid "**Alternate method 1:** `Pipx <https://github.com/pypa/pipx>`_"
+msgstr "**替代安装方法1：** `Pipx <https://github.com/pypa/pipx>`_"
+
+#: ../../install.rst:24 35add90587264dbba68c7e5f1718ce9d
+msgid ""
+"Pipx lets you execute binaries from Python packages in isolated environments. "
+"You can install Pipx by following its `documentation <https://pipx.pypa.io>`_. "
+"After Pipx is installed, you can install Pelican via::"
+msgstr ""
+"Pipx可以让Python包中的命令在隔离的环境中执行。安装Pipx的文档参见 `documentation "
+"<https://pipx.pypa.io>`_ 。安装好Pipx后，就可以通过Pipx来安装Pelican了："
+
+#: ../../install.rst:31 998d417a354148b0a590f37c97e8c8bb
+msgid "**Alternate method 2:** `uv <https://docs.astral.sh/uv/>`_"
+msgstr "**替代安装方法2：** `uv <https://docs.astral.sh/uv/>`_"
+
+#: ../../install.rst:33 7defa330173d40748e4c744fac35b2f9
+msgid ""
+"Like Pipx, ``uv`` allows you to install tools in isolated environments. If you "
+"have ``uv`` installed, you can install Pelican via::"
+msgstr ""
+"和Pipx一样， ``uv`` 可以让命令在隔离的环境中运行。在安装好 ``uv`` 之后，使用如下"
+"命令安装Pelican："
+
+#: ../../install.rst:38 a82e85e7ff654fcaaab9c562e2531952
+msgid "**Alternate method 3:** Virtual Environment"
+msgstr "**替代安装方法3：** 虚拟环境"
+
+#: ../../install.rst:40 6fa4ae30ab5b4b6d93769dcc6fd8e9f6
+msgid ""
+"If you prefer to manually manage a virtual environment, you can create a "
+"virtual environment for Pelican via venv_ before installing Pelican::"
+msgstr "如果习惯于手动管理虚拟环境，可以先使用 venv_ 为Pelican创建一个虚拟环境："
+
+#: ../../install.rst:47 08aae819315e48a194a065a3fc3dddad
+msgid ""
+"Alternatively, if you have the project source, you can replace the last command "
+"with the following to install Pelican using the ``setuptools`` method::"
+msgstr ""
+"当然，也可以从Pelican的项目源码安装，此时需要使用 ``setuptools`` ，将刚才的最后"
+"一条命令替换为："
+
+#: ../../install.rst:53 368febf14ca740e19fa470b0f832dea1
 msgid ""
 "If you have Git installed and prefer to install the latest bleeding-edge "
-"version of Pelican rather than a stable release, use the following "
-"command::"
-msgstr "如果安装过Git，并且您希望安装Pelican的最最新版本（而不是稳定版），请使用下面的命令："
-
-#: ../../install.rst:38 2498d09099194317a62e67b907bdd5d3
-msgid ""
-"Once Pelican is installed, you can run ``pelican --help`` to see basic "
-"usage options. For more detail, refer to the :doc:`Publish<publish>` "
-"section."
+"version of Pelican rather than a stable release, use the following command::"
 msgstr ""
-"当您安装好Pelican，可以执行 ``pelican --help`` 命令来查看一些基本用法。在 :doc:`发布站点<publish>` "
-"章节中可以了解更多信息。"
+"如果安装过Git，并且您希望安装Pelican的最最新版本（而不是稳定版），请使用下面的命"
+"令："
 
-#: ../../install.rst:42 4ef93669753e4bb89252a8c9852e7a71
+#: ../../install.rst:58 3baac634fc304b949e0abae0ca5b854b
+msgid "To exit the virtual environment, type ``deactivate``."
+msgstr "使用 ``deactivate`` 退出虚拟环境。"
+
+#: ../../install.rst:61 4ef93669753e4bb89252a8c9852e7a71
 msgid "Optional packages"
 msgstr "可选包"
 
-#: ../../install.rst:44 190eabcd8f3a437cbf895ecee25aff4d
+#: ../../install.rst:63 190eabcd8f3a437cbf895ecee25aff4d
 msgid ""
-"If you plan on using `Markdown <https://pypi.org/project/Markdown/>`_ as "
-"a markup format, you can install Pelican with Markdown support::"
+"If you plan on using `Markdown <https://pypi.org/project/Markdown/>`_ as a "
+"markup format, you can install Pelican with Markdown support::"
 msgstr ""
-"如您希望使用 `Markdown <https://pypi.org/project/Markdown/>`_ "
-"来写作，执行下面的命令来安装Markdown支持："
+"如您希望使用 `Markdown <https://pypi.org/project/Markdown/>`_ 来写作，执行下面的"
+"命令来安装Markdown支持："
 
-#: ../../install.rst:49 fa8fc8ff397a412f839bc2805696aa45
+#: ../../install.rst:68 fa8fc8ff397a412f839bc2805696aa45
 msgid ""
-"Typographical enhancements can be enabled in your settings file, but "
-"first the requisite `Typogrify <https://pypi.org/project/typogrify/>`_ "
-"library must be installed::"
+"Typographical enhancements can be enabled in your settings file, but first the "
+"requisite `Typogrify <https://github.com/justinmayer/typogrify>`_ library must "
+"be installed::"
 msgstr ""
-"Pelican还支持排版增强，若您需要使用，请先安装 `Typogrify "
-"<https://pypi.org/project/typogrify/>`_ 库，稍后您可以在设置文件中启用它。"
+"Pelican还支持排版增强，若您需要使用，请先安装 `Typogrify <https://pypi.org/"
+"project/typogrify/>`_ 库，稍后您可以在设置文件中启用它："
 
-#: ../../install.rst:56 74911273a6934154bad4fadbc0d1f28b
+#: ../../install.rst:74 97417cb4416b4ef8989f056b494bd556
+msgid ""
+"If you are using Pipx, you can inject packages into the Pipx-managed virtual "
+"environment. For example, to add Typogrify::"
+msgstr ""
+"如果用的是Pipx，可以将额外的包注入到Pipx管理的虚拟环境中。例如，可以添加"
+"Typogrify："
+
+#: ../../install.rst:79 a783480b39e84a22ace0f10d83f19474
+msgid ""
+"To use ``uv`` to install Pelican with additional extra packages, use the "
+"following example command, which like above will also install Typogrify::"
+msgstr ""
+"若想用 ``uv`` 安装额外的包与Pelican配合使用，可以使用像下面这样的命令，仍以"
+"Typogrify为例："
+
+#: ../../install.rst:85 74911273a6934154bad4fadbc0d1f28b
 msgid "Dependencies"
 msgstr "依赖"
 
-#: ../../install.rst:58 77d44b11ae7e4945b119fd473bb53e67
+#: ../../install.rst:87 77d44b11ae7e4945b119fd473bb53e67
 msgid ""
-"When Pelican is installed, the following dependent Python packages should"
-" be automatically installed without any action on your part:"
-msgstr "当Pelican安装完成后，下面的所有Python依赖应该都会自动安装，无需另外做任何操作："
+"When Pelican is installed, the following dependent Python packages should be "
+"automatically installed without any action on your part:"
+msgstr ""
+"当Pelican安装完成后，下面的所有Python依赖应该都会自动安装，无需另外做任何操作："
 
-#: ../../install.rst:61 22bdf13ed0a3482fb66f10486518261c
+#: ../../install.rst:90 22bdf13ed0a3482fb66f10486518261c
 msgid ""
-"`feedgenerator <https://pypi.org/project/feedgenerator/>`_, to generate "
-"the Atom feeds"
-msgstr "`feedgenerator <https://pypi.org/project/feedgenerator/>`_，用于生成Atom feeds"
+"`feedgenerator <https://pypi.org/project/feedgenerator/>`_, to generate the "
+"Atom feeds"
+msgstr ""
+"`feedgenerator <https://pypi.org/project/feedgenerator/>`_，用于生成Atom feeds"
 
-#: ../../install.rst:63 21ddc5ce3bed4f9cab2a454e8319a8c4
+#: ../../install.rst:92 21ddc5ce3bed4f9cab2a454e8319a8c4
 msgid "`jinja2 <https://pypi.org/project/Jinja2/>`_, for templating support"
 msgstr "`jinja2 <https://pypi.org/project/Jinja2/>`_，用于模板系统"
 
-#: ../../install.rst:64 9302b2919a4f4de0927060911f69f5ed
+#: ../../install.rst:93 9302b2919a4f4de0927060911f69f5ed
 msgid "`pygments <https://pypi.org/project/Pygments/>`_, for syntax highlighting"
 msgstr "`pygments <https://pypi.org/project/Pygments/>`_，用于语法高亮"
 
-#: ../../install.rst:65 c6e45ac0f3ea4f91953fb2dfc66d29d9
+#: ../../install.rst:94 c6e45ac0f3ea4f91953fb2dfc66d29d9
 msgid ""
 "`docutils <https://pypi.org/project/docutils/>`_, for supporting "
 "reStructuredText as an input format"
-msgstr "`docutils <https://pypi.org/project/docutils/>`_，用于reStructuredText格式"
+msgstr ""
+"`docutils <https://pypi.org/project/docutils/>`_，用于reStructuredText格式"
 
-#: ../../install.rst:67 aea17a424f3c4e8eab50172b6653fe16
+#: ../../install.rst:96 aea17a424f3c4e8eab50172b6653fe16
 msgid ""
 "`blinker <https://pypi.org/project/blinker/>`_, an object-to-object and "
 "broadcast signaling system"
 msgstr "`blinker <https://pypi.org/project/blinker/>`_，对象-对象的信号广播系统"
 
-#: ../../install.rst:69 5da4c8d1fdf349c2afe23ffc9d832816
+#: ../../install.rst:98 5da4c8d1fdf349c2afe23ffc9d832816
 msgid ""
-"`unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII "
-"transliterations of Unicode text utilities"
+"`unidecode <https://pypi.org/project/Unidecode/>`_, for ASCII transliterations "
+"of Unicode text utilities"
 msgstr ""
-"`unidecode "
-"<https://pypi.org/project/Unidecode/>`_，用于将Unicode文本转为ASCII字符的音译"
+"`unidecode <https://pypi.org/project/Unidecode/>`_，用于将Unicode文本转为ASCII字"
+"符的音译"
 
-#: ../../install.rst:72 ff81051def5544e1b5d66532453aed25
+#: ../../install.rst:101 ff81051def5544e1b5d66532453aed25
 msgid ""
-"`MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup-safe "
-"string implementation"
-msgstr "`MarkupSafe <https://pypi.org/project/MarkupSafe/>`_，用于转义字符的安全处理"
-
-#: ../../install.rst:74 0222b4cdfdcb48839f5f6b092071db99
-msgid ""
-"`python-dateutil <https://pypi.org/project/python-dateutil/>`_, to read "
-"the date metadata"
+"`MarkupSafe <https://pypi.org/project/MarkupSafe/>`_, for a markup-safe string "
+"implementation"
 msgstr ""
-"`python-dateutil <https://pypi.org/project/python-"
-"dateutil/>`_，用于读取日期相关的元数据"
+"`MarkupSafe <https://pypi.org/project/MarkupSafe/>`_，用于转义字符的安全处理"
 
-#: ../../install.rst:78 49117127302b49b39bd5b86abae18709
+#: ../../install.rst:103 0222b4cdfdcb48839f5f6b092071db99
+msgid ""
+"`python-dateutil <https://pypi.org/project/python-dateutil/>`_, to read the "
+"date metadata"
+msgstr ""
+"`python-dateutil <https://pypi.org/project/python-dateutil/>`_，用于读取日期相关"
+"的元数据"
+
+#: ../../install.rst:107 49117127302b49b39bd5b86abae18709
 msgid "Upgrading"
 msgstr "更新升级"
 
-#: ../../install.rst:80 93962c7d303f4c9fa5ad9d43f86ea50a
+#: ../../install.rst:109 93962c7d303f4c9fa5ad9d43f86ea50a
 msgid ""
-"If you installed a stable Pelican release via Pip_ and wish to upgrade to"
-" the latest stable release, you can do so by adding ``--upgrade``::"
-msgstr "若是通过 Pip_ 安装了稳定版本的Pelican，可以通过在安装命令中添加 ``--upgrade`` 来升级到最新版："
+"If you installed a stable Pelican release via Pip_ and wish to upgrade to the "
+"latest stable release, you can do so by adding ``--upgrade``::"
+msgstr ""
+"若是通过 Pip_ 安装了稳定版本的Pelican，可以通过在安装命令中添加 ``--upgrade`` 来"
+"升级到最新版："
 
-#: ../../install.rst:85 1ac1fa009f9e4245ae7f975bda7d5a22
+#: ../../install.rst:114 1ac1fa009f9e4245ae7f975bda7d5a22
 msgid ""
-"If you installed Pelican via distutils or the bleeding-edge method, "
-"simply perform the same step to install the most recent version."
-msgstr "若是通过distutils安装或是通过Git安装了测试版的Pelican重新进行一遍和安装时同样的步骤即可。"
+"If you installed Pelican via ``setuptools`` or the bleeding-edge method, "
+"perform the same step to install the most recent version."
+msgstr ""
+"若是通过 ``setuptools`` 或其他较新方式安装Pelican，重新进行一遍和安装时同样的步"
+"骤即可完成升级。"
 
-#: ../../install.rst:89 7845fa285f0b4dcd8e881c9edd61f80c
+#: ../../install.rst:117 b311ca799e8c4bea93713a1dd3cb6733
+msgid "If you installed with Pipx, upgrade via::"
+msgstr "对于使用Pipx安装的Pelican，通过下面的命令升级："
+
+#: ../../install.rst:121 ce5470b22a35445f9b206b4cceed7221
+msgid "If you installed with ``uv``, upgrade via::"
+msgstr "对于使用 ``uv`` 安装的Pelican，通过下面的命令升级："
+
+#: ../../install.rst:126 7845fa285f0b4dcd8e881c9edd61f80c
 msgid "Kickstart your site"
 msgstr "启动网站"
 
-#: ../../install.rst:91 488ad84175cb45f6a6bb26cec24c1f10
+#: ../../install.rst:128 488ad84175cb45f6a6bb26cec24c1f10
 msgid ""
-"Once Pelican has been installed, you can create a skeleton project via "
-"the ``pelican-quickstart`` command, which begins by asking some questions"
-" about your site::"
+"Once Pelican has been installed, you can create a skeleton project via the "
+"``pelican-quickstart`` command, which begins by asking some questions about "
+"your site::"
 msgstr ""
-"Pelican安装完成后，通过 ``pelican-quickstart`` "
-"命令创建项目的整体框架，在运行这个命令时，您需要输入一些与站点相关的信息："
+"Pelican安装完成后，通过 ``pelican-quickstart`` 命令创建项目的整体框架，在运行这"
+"个命令时，您需要输入一些与站点相关的信息："
 
-#: ../../install.rst:97 63a773d35b91455b944206337e527a3a
+#: ../../install.rst:134 63a773d35b91455b944206337e527a3a
 msgid ""
-"If run inside an activated virtual environment, ``pelican-quickstart`` "
-"will look for an associated project path inside "
-"``$VIRTUAL_ENV/.project``. If that file exists and contains a valid "
-"directory path, the new Pelican project will be saved at that location. "
-"Otherwise, the default is the current working directory. To set the new "
-"project path on initial invocation, use: ``pelican-quickstart --path "
-"/your/desired/directory``"
+"If run inside an activated virtual environment, ``pelican-quickstart`` will "
+"look for an associated project path inside ``$VIRTUAL_ENV/.project``. If that "
+"file exists and contains a valid directory path, the new Pelican project will "
+"be saved at that location. Otherwise, the default is the current working "
+"directory. To set the new project path on initial invocation, use: ``pelican-"
+"quickstart --path /your/desired/directory``"
 msgstr ""
-"如果是在虚拟环境中执行 ``pelican-quickstart`` ，系统会自动在 ``$VIRTUAL_ENV/.project`` "
-"目录中查找这个命令。若这个这个命令存在并且路径是正确的，一个新的Pelican项目就会在目标位置创建。否则，会默认在当前的工作目录下创建这个项目。若要在初始化时指定项目路径，请使用"
-" ``pelican-quickstart --path /your/desired/directory``。"
+"如果是在虚拟环境中执行， ``pelican-quickstart`` 会自动在 ``$VIRTUAL_ENV/."
+"project`` 目录中搜索项目路径。若文件存在并且路径配置正确，一个新的Pelican项目就"
+"会在目标位置创建。否则，会默认在当前的工作目录下创建这个项目。若要在初始化时指定"
+"项目路径，请使用 ``pelican-quickstart --path /your/desired/directory``"
 
-#: ../../install.rst:104 b7cdf15328074880bb4fc69dcb7bd26f
+#: ../../install.rst:141 b7cdf15328074880bb4fc69dcb7bd26f
 msgid ""
-"Once you finish answering all the questions, your project will consist of"
-" the following hierarchy (except for *pages* — shown in parentheses below"
-" — which you can optionally add yourself if you plan to create non-"
-"chronological content)::"
+"Once you finish answering all the questions, your project will consist of the "
+"following hierarchy (except for *pages* — shown in parentheses below — which "
+"you can optionally add yourself if you plan to create non-chronological "
+"content)::"
 msgstr ""
-"当您回答完所有问题后，项目就会成功创建。项目中会包含下述的一些层级结构（除了用括号括起来的 "
-"*pages*）。如果有一些内容不需要按时间排序，您可以将它们放在（pages）所在的位置："
+"当您回答完所有问题后，项目就会成功创建。项目中会包含下述的一些层级结构（除了用括"
+"号括起来的 *pages*）。如果有一些内容不需要按时间排序，您可以将它们放在（pages）"
+"所在的位置："
 
-#: ../../install.rst:118 05e4fe3b0d0a4c998fba451692a68725
+#: ../../install.rst:155 05e4fe3b0d0a4c998fba451692a68725
 msgid ""
-"The next step is to begin to adding content to the *content* folder that "
-"has been created for you."
+"The next step is to begin to adding content to the *content* folder that has "
+"been created for you."
 msgstr "接下来就可以开始往 *content* 目录中添加自己创作的内容了。"
+
+#~ msgid "Or, if you plan on using Markdown::"
+#~ msgstr "如果您需要使用Markdown，请使用下面的命令安装："
+
+#~ msgid ""
+#~ "(Keep in mind that some operating systems will require you to prefix the "
+#~ "above command with ``sudo`` in order to install Pelican system-wide.)"
+#~ msgstr ""
+#~ "（在某些操作系统中，需要在命令前加 ``sudo`` 才能在整个系统上安装Pelican）"
+
+#~ msgid ""
+#~ "While the above is the simplest method, the recommended approach is to "
+#~ "create a virtual environment for Pelican via virtualenv_ before installing "
+#~ "Pelican. Assuming you have virtualenv_ installed, you can then open a new "
+#~ "terminal session and create a new virtual environment for Pelican::"
+#~ msgstr ""
+#~ "尽管上面是最简单的安装方法，但我们推荐使用虚拟环境 virtualenv_ 完成Pelican的"
+#~ "安装。当您安装好 virtualenv_ 后，打开一个新的命令行并为Pelican创建一个虚拟环"
+#~ "境："
+
+#~ msgid ""
+#~ "Once the virtual environment has been created and activated, Pelican can be "
+#~ "installed via ``python -m pip install pelican`` as noted above. "
+#~ "Alternatively, if you have the project source, you can install Pelican using "
+#~ "the setuptools method::"
+#~ msgstr ""
+#~ "当创建并激活虚拟环境后，使用之前提到过的命令 ``python -m pip install "
+#~ "pelican`` 就可以安装Pelican了。或者，如果您想要从源码安装，可以使用"
+#~ "setuptools："
