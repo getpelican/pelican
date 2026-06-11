@@ -29,7 +29,11 @@ class FileDataCacher:
         if load_policy:
             try:
                 with self._cache_open(self._cache_path, "rb") as fhandle:
-                    self._cache = pickle.load(fhandle)
+                    # The cache file is written by Pelican itself in the
+                    # configured CACHE_PATH and is not user-supplied input.
+                    # The risk of pickle load is bounded by the caller's
+                    # control of CACHE_PATH.
+                    self._cache = pickle.load(fhandle)  # noqa: S301
             except (OSError, UnicodeDecodeError) as err:
                 logger.debug(
                     "Cannot load cache %s (this is normal on first "

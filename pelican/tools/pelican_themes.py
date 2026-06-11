@@ -231,7 +231,10 @@ def install(path, v=False, u=False):
                         for root, dirs, files in os.walk(theme_path):
                             for d in dirs:
                                 dname = os.path.join(root, d)
-                                os.chmod(dname, 493)  # 0o755
+                                # Theme directories must be world-readable
+                                # and traversable when served by web servers
+                                # running under non-owner uids.
+                                os.chmod(dname, 493)  # 0o755  # noqa: S103
                             for f in files:
                                 fname = os.path.join(root, f)
                                 os.chmod(fname, 420)  # 0o644

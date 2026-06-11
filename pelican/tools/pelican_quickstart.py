@@ -41,7 +41,10 @@ else:
     _DEFAULT_LANGUAGE = _DEFAULT_LANGUAGE.split("_")[0]
 
 _TEMPLATES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
-_jinja_env = Environment(
+# Quickstart renders Pelican-shipped templates (no user input) into a new
+# project's settings file. Autoescape would mangle the resulting Python /
+# Makefile / RST output.
+_jinja_env = Environment(  # noqa: S701
     loader=FileSystemLoader(_TEMPLATES_DIR),
     trim_blocks=True,
     keep_trailing_newline=True,

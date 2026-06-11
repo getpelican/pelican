@@ -44,8 +44,10 @@ class Writer:
             feed_title = context["SITENAME"] + " - " + feed_title
         else:
             feed_title = context["SITENAME"]
+        # Markup() here serves as a wrapper for striptags(); the resulting
+        # plain text is fed to the feed library, not rendered as HTML.
         return feed_class(
-            title=Markup(feed_title).striptags(),
+            title=Markup(feed_title).striptags(),  # noqa: S704
             link=(self.site_url + "/"),
             feed_url=self.feed_url,
             description=context.get("SITESUBTITLE", ""),
@@ -53,7 +55,9 @@ class Writer:
         )
 
     def _add_item_to_the_feed(self, feed, item):
-        title = Markup(item.title).striptags()
+        # Same pattern as above: Markup is used to call striptags(); the
+        # result is plain text consumed by feedgenerator, not HTML output.
+        title = Markup(item.title).striptags()  # noqa: S704
         link = self.urljoiner(self.site_url, item.url)
 
         if self.settings["FEED_APPEND_REF"]:

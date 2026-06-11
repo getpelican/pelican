@@ -236,7 +236,12 @@ def blogger2fields(xml):
             continue
 
         try:
-            assert kind != "comment"
+            # Used as control flow: AssertionError is caught below and
+            # falls back to deriving filename from entry id. Replacing this
+            # with an explicit check is preferable but is a behavior change
+            # (asserts are stripped under `python -O`); deferred to a
+            # follow-up so this commit stays purely lint-enabling.
+            assert kind != "comment"  # noqa: S101
             filename = entry.find("link", {"rel": "alternate"})["href"]
             filename = os.path.splitext(os.path.basename(filename))[0]
         except (AssertionError, TypeError, KeyError):
@@ -421,12 +426,14 @@ def dc2fields(file):
 
 
 def _get_tumblr_posts(api_key, blogname, offset=0):
+    # URL is constructed in this function from a literal scheme + a caller-
+    # supplied blogname argument; no user-controlled scheme is possible.
     url = (
         f"https://api.tumblr.com/v2/blog/{blogname}.tumblr.com/"
         f"posts?api_key={api_key}&offset={offset}&filter=raw"
     )
-    request = urllib_request.Request(url)
-    handle = urllib_request.urlopen(request)
+    request = urllib_request.Request(url)  # noqa: S310
+    handle = urllib_request.urlopen(request)  # noqa: S310
     posts = json.loads(handle.read().decode("utf-8"))
     return posts.get("response").get("posts")
 
@@ -900,7 +907,12 @@ def download_attachments(output_path, urls):
             os.makedirs(full_path)
         print(f"downloading {filename}")
         try:
-            urlretrieve(url, os.path.join(full_path, filename))
+            # urlretrieve is used by the WordPress importer to fetch
+            # attachment URLs that originate from a user-supplied WP export
+            # XML. The scheme is normalized above (`if scheme != "file"`)
+            # but the importer is intentionally lenient about source URLs
+            # so users can re-host content from arbitrary locations.
+            urlretrieve(url, os.path.join(full_path, filename))  # noqa: S310
             locations[url] = os.path.join(localpath, filename)
         except (URLError, OSError) as e:
             # Python 2.7 throws an IOError rather Than URLError
@@ -913,9 +925,10 @@ def is_pandoc_needed(in_markup):
 
 
 def get_pandoc_version():
+    # cmd is a static literal list; no user input reaches subprocess here.
     cmd = ["pandoc", "--version"]
     try:
-        output = subprocess.check_output(cmd, text=True)
+        output = subprocess.check_output(cmd, text=True)  # noqa: S603
     except (subprocess.CalledProcessError, OSError) as e:
         logger.warning("Pandoc version unknown: %s", e)
         return ()
@@ -969,7 +982,11 @@ def fields2pelican(
             posts_require_pandoc.append(filename)
 
         slug = (not disable_slugs and filename) or None
-        assert slug is None or filename == os.path.basename(filename), (
+        # Programming invariant from the upstream WordPress XML parser; would
+        # be more robust as an explicit raise (asserts are stripped under
+        # `python -O`), but converting it is a behavior change deferred to
+        # a follow-up.
+        assert slug is None or filename == os.path.basename(filename), (  # noqa: S101
             f"filename is not a basename: {filename}"
         )
 
@@ -1064,7 +1081,13 @@ def fields2pelican(
                     )
 
                 try:
-                    rc = subprocess.call(cmd, shell=True)
+                    # cmd is composed from `out_filename` and `html_filename`,
+                    # both Pelican-controlled paths derived from the importer's
+                    # output_path argument. shell=True is needed for the
+                    # legacy invocation; this is a CLI tool the user runs
+                    # against their own export data, not a web-facing surface.
+                    # Removing shell=True is a behavior change and is deferred.
+                    rc = subprocess.call(cmd, shell=True)  # noqa: S602
                     if rc < 0:
                         error = f"Child was terminated by signal {-rc}"
                         sys.exit(error)

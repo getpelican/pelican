@@ -153,7 +153,10 @@ if __name__ == "__main__":
             args.path, (args.server, args.port), ComplexHTTPRequestHandler
         )
         if args.ssl:
-            httpd.socket = ssl.wrap_socket(
+            # ssl.wrap_socket is deprecated since Python 3.12 in favor of
+            # ssl.SSLContext.wrap_socket, which would also let us pass a
+            # tightened protocol.
+            httpd.socket = ssl.wrap_socket(  # noqa: S504
                 httpd.socket, keyfile=args.key, certfile=args.cert, server_side=True
             )
     except ssl.SSLError as e:
