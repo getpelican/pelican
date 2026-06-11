@@ -270,8 +270,10 @@ def slugify(
         # see: https://en.wikipedia.org/wiki/Unicode_equivalence
         return unicodedata.normalize("NFKC", text)
 
-    # strip tags from value
-    value = Markup(value).striptags()
+    # strip tags from value. Markup() here is used purely as a vehicle for
+    # striptags() on text we are about to slugify; the result is plain text
+    # and is never rendered as HTML.
+    value = Markup(value).striptags()  # noqa: S704
 
     # normalization
     value = normalize_unicode(value)

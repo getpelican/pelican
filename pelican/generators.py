@@ -76,7 +76,11 @@ class Generator:
             os.path.join(simple_theme_path, "themes", "simple", "templates")
         )
 
-        self.env = Environment(
+        # Pelican's intended behavior is to render whatever the theme author
+        # placed in their templates verbatim, including raw HTML in article
+        # content. Autoescape would break every existing theme. JINJA_ENVIRONMENT
+        # is exposed in settings so users who do want autoescape can enable it.
+        self.env = Environment(  # noqa: S701
             loader=ChoiceLoader(
                 [
                     FileSystemLoader(self._templates_path),

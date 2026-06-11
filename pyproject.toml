@@ -161,7 +161,7 @@ select = [
     "TCH", # flake8-type-checking
     "T10", # flake8-debugger
     "T20", # flake8-print
-    # TODO: "S",   # flake8-bandit
+    "S",   # flake8-bandit
     "YTT", # flake8-2020
     # TODO: add more flake8 rules
   ]
@@ -200,6 +200,19 @@ ignore = [
 "pelican/__init__.py" = [
     # allow imports after a call to a function, see the file
     "E402"
+]
+"pelican/tests/*" = [
+    # asserts are how tests assert; suppress flake8-bandit's blanket S101
+    "S101",
+    # tests legitimately use hardcoded values for fixtures, sample data,
+    # subprocess fixtures, partial paths, etc.
+    "S105",  # hardcoded password string
+    "S106",  # hardcoded password func arg
+    "S108",  # hardcoded /tmp paths in tests
+    "S311",  # standard pseudo-random not safe; tests don't need cryptographic randomness
+    "S603",  # subprocess without shell=True; tests intentionally invoke binaries
+    "S607",  # start-process-with-partial-path; tests rely on PATH lookup
+    "S104",  # bind-all-interfaces; tests bind to 0.0.0.0 inside loopback fixtures
 ]
 "pelican/tests/test_utils.py" = [
     # the tests have a bunch of unicode characters
