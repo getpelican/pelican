@@ -107,6 +107,13 @@ def decode_wp_content(content, br=True):
 
         content = _multi_replace(pre_tags, content)
 
+        # SyntaxHighlighter plugin format (on WP this is quote forgiving)
+        content = re.sub(
+            r'<pre\s+class="[^>]*\bbrush\s*:\s*([\w#+-]+)[^>]*>',
+            r'<pre class="sourceCode \1">',
+            content,
+        )
+
     # convert [caption] tags into <figure>
     content = re.sub(
         r"\[caption(?:.*?)(?:caption=\"(.*?)\")?\]"
