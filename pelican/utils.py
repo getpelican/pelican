@@ -49,12 +49,23 @@ logger = logging.getLogger(__name__)
 
 
 def sanitised_join(base_directory: str, *parts: str) -> str:
-    joined = posixize_path(os.path.abspath(os.path.join(base_directory, *parts)))
-    base = posixize_path(os.path.abspath(base_directory))
-    if not joined.startswith(base):
+    joined_path = os.path.abspath(os.path.join(base_directory, *parts))
+    base_path = os.path.abspath(base_directory)
+    real_joined_path = os.path.realpath(joined_path)
+    real_base_path = os.path.realpath(base_path)
+    try:
+        is_within_base = (
+            os.path.commonpath((real_base_path, real_joined_path)) == real_base_path
+        )
+    except ValueError:
+        # On Windows, paths on different drives have no common path.
+        is_within_base = False
+
+    if not is_within_base:
+        joined = posixize_path(joined_path)
         raise RuntimeError(f"Attempted to break out of output directory to {joined}")
 
-    return joined
+    return posixize_path(joined_path)
 
 
 def strftime(date: datetime.datetime, date_format: str) -> str:
