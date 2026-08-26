@@ -57,6 +57,12 @@ class TestSettingsConfiguration(unittest.TestCase):
         self.maxDiff = None
         self.assertDictEqual(settings, expected)
 
+    def test_read_settings_missing_file(self):
+        # A missing settings file should raise a clear FileNotFoundError
+        # rather than an obscure AttributeError from the import machinery.
+        missing = join(self.PATH, "does_not_exist")
+        self.assertRaises(FileNotFoundError, read_settings, missing)
+
     def test_settings_return_independent(self):
         # Make sure that the results from one settings call doesn't
         # effect past or future instances.
