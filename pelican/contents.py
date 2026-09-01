@@ -198,6 +198,18 @@ class Content:
             )
             return False
 
+        # "{slug}.html" with an empty slug becomes ".html", which the
+        # development server then treats as the site root.
+        name = os.path.basename(str(self.save_as).replace("\\", "/"))
+        if name in {".html", ".", ""}:
+            logger.warning(
+                "Skipping %s: slug %r produces an invalid output filename %r",
+                self,
+                getattr(self, "slug", ""),
+                self.save_as,
+            )
+            return False
+
         return True
 
     def _has_valid_status(self) -> bool:

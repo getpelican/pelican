@@ -811,6 +811,18 @@ class TestArticle(TestBase):
         article = Article(**article_kwargs)
         self.assertTrue(article._has_valid_save_as())
 
+    def test_symbol_only_title_does_not_write_dot_html(self):
+        settings = get_settings()
+        article_kwargs = self._copy_page_kwargs()
+        article_kwargs["metadata"]["title"] = "~"
+        article_kwargs["metadata"]["date"] = datetime.datetime(2005, 2, 4, 18, 59)
+        article_kwargs["settings"] = settings
+        article = Article(**article_kwargs)
+        self.assertEqual(article.slug, "")
+        self.assertEqual(article.save_as, ".html")
+        self.assertFalse(article._has_valid_save_as())
+        self.assertFalse(article.is_valid())
+
 
 class TestStatic(LoggedTestCase):
     def setUp(self):
