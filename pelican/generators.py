@@ -255,8 +255,10 @@ class Generator:
 
     def _check_disabled_readers(self, paths, exclude: list[str] | None) -> None:
         """Log warnings for files that would have been processed by disabled readers."""
-        for fil in self.get_files(
-            paths, exclude=exclude, extensions=self.readers.disabled_extensions
+        for fil in sorted(
+            self.get_files(
+                paths, exclude=exclude, extensions=self.readers.disabled_extensions
+            )
         ):
             self.readers.check_file(fil)
 
@@ -701,8 +703,11 @@ class ArticlesGenerator(CachingGenerator):
         all_articles = []
         all_drafts = []
         hidden_articles = []
-        for f in self.get_files(
-            self.settings["ARTICLE_PATHS"], exclude=self.settings["ARTICLE_EXCLUDES"]
+        for f in sorted(
+            self.get_files(
+                self.settings["ARTICLE_PATHS"],
+                exclude=self.settings["ARTICLE_EXCLUDES"],
+            )
         ):
             article = self.get_cached_data(f, None)
             if article is None:
@@ -916,8 +921,10 @@ class PagesGenerator(CachingGenerator):
         all_pages = []
         hidden_pages = []
         draft_pages = []
-        for f in self.get_files(
-            self.settings["PAGE_PATHS"], exclude=self.settings["PAGE_EXCLUDES"]
+        for f in sorted(
+            self.get_files(
+                self.settings["PAGE_PATHS"], exclude=self.settings["PAGE_EXCLUDES"]
+            )
         ):
             page = self.get_cached_data(f, None)
             if page is None:
@@ -1035,7 +1042,7 @@ class StaticGenerator(Generator):
             exclude=self.settings["STATIC_EXCLUDES"],
             extensions=False,
         )
-        for f in linked_files | found_files:
+        for f in sorted(linked_files | found_files):
             # skip content source files unless the user explicitly wants them
             if self.settings["STATIC_EXCLUDE_SOURCES"]:
                 if self._is_potential_source_path(f):
