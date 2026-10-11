@@ -84,8 +84,13 @@ class TestPage(TestBase):
         # If the title is not set, must throw an exception.
         page = Page("content")
         self.assertFalse(page._has_valid_mandatory_properties())
+        # An empty or `None` title must be treated the same as a missing title.
+        for title in ("", None):
+            with self.subTest(title=title):
+                page = Page("content", metadata={"title": title})
+                self.assertFalse(page._has_valid_mandatory_properties())
         self.assertLogCountEqual(
-            count=1,
+            count=3,
             msg="Skipping .*: could not find information about 'title'",
             level=logging.ERROR,
         )
@@ -735,12 +740,10 @@ class TestArticle(TestBase):
         self.assertEqual("custom", custom_article.template)
 
     def test_empty_title_invalid(self):
-        # articles with empty title should be invalid
-        settings = get_settings()
+        # Articles with an empty title should be invalid
         article_kwargs = self._copy_page_kwargs()
         article_kwargs["metadata"]["title"] = ""
-        article_kwargs["metadata"]["date"] = datetime.datetime.now()
-        article_kwargs["settings"] = settings
+        article_kwargs["metadata"]["date"] = datetime.datetime(2026, 2, 9)
         article = Article(**article_kwargs)
         self.assertFalse(article.is_valid())
 

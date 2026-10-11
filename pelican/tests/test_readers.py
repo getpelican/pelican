@@ -1,7 +1,9 @@
 import os
+from tempfile import TemporaryDirectory
 from unittest.mock import PropertyMock, patch
 
 from pelican import readers
+from pelican.contents import Article
 from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
 
@@ -82,6 +84,25 @@ class DefaultReaderTest(ReaderTest):
     def test_readfile_unknown_extension(self):
         with self.assertRaises(TypeError):
             self.read_file(path="article_with_metadata.unknownextension")
+
+    def test_empty_title_is_invalid(self):
+        """A source file with an empty title must be considered invalid rather
+        than producing a file named ".html"."""
+        sources = {"empty_title.rst": ":title:\n:date: 2026-02-09\n\nContent.\n"}
+        if readers.Markdown:
+            sources["empty_title.md"] = "Title:\nDate: 2026-02-09\n\nContent.\n"
+
+        with TemporaryDirectory() as content_path:
+            r = readers.Readers(settings=get_settings(PATH=content_path))
+            for filename, source in sources.items():
+                with self.subTest(filename=filename):
+                    with open(os.path.join(content_path, filename), "w") as f:
+                        f.write(source)
+                    article = r.read_file(
+                        base_path=content_path, path=filename, content_class=Article
+                    )
+                    self.assertEqual(article.title, "")
+                    self.assertFalse(article.is_valid())
 
     def test_readfile_path_metadata_implicit_dates(self):
         test_file = "article_with_metadata_implicit_dates.html"
