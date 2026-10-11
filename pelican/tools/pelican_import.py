@@ -107,6 +107,10 @@ def decode_wp_content(content, br=True):
 
         content = _multi_replace(pre_tags, content)
 
+    # Pandoc >= 3 only treats <pre><code> as a code block when the tags are adjacent
+    content = re.sub(r"<pre([^>]*)>\s*<code", r"<pre\1><code", content)
+    content = re.sub(r"</code>\s*</pre>", "</code></pre>", content)
+
     # convert [caption] tags into <figure>
     content = re.sub(
         r"\[caption(?:.*?)(?:caption=\"(.*?)\")?\]"
