@@ -65,6 +65,10 @@ Basic settings
 
    The default category to fall back on. The default is ``"misc"``.
 
+   To publish articles without any category, set ``DEFAULT_CATEGORY = None``
+   and ``USE_FOLDER_AS_CATEGORY = False``. Articles will then only have a
+   category if one is specified in their metadata.
+
 .. data:: DISPLAY_PAGES_ON_MENU
 
    Whether to display pages on the menu of the template. Templates may or may
@@ -590,6 +594,8 @@ This would save your articles into something like
 .. data:: CATEGORY_SAVE_AS
 
    The location to save a category. The default is ``"category/{slug}.html"``.
+   Set this to ``""`` to disable category pages. Articles still keep their
+   categories, which can be used in URL patterns such as ``ARTICLE_SAVE_AS``.
 
 .. data:: TAG_URL
 

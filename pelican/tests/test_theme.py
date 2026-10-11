@@ -134,8 +134,8 @@ class TestTemplateInheritance(LoggedTestCase):
         self.assertIn("New footer", content)
 
     def test_disabled_categories_no_links(self):
-        """When CATEGORY_SAVE_AS is empty, articles without an explicit
-        category should not get a default category or show category links."""
+        """When DEFAULT_CATEGORY is empty, articles without an explicit
+        category should not show a category."""
 
         # Create an article without a Category metadata line
         content_dir = mkdtemp(prefix="pelican_test_content.")
@@ -155,6 +155,8 @@ class TestTemplateInheritance(LoggedTestCase):
                     "OUTPUT_PATH": self.temp_output,
                     "CACHE_PATH": self.temp_cache,
                     "SITEURL": "http://example.com",
+                    "DEFAULT_CATEGORY": "",
+                    "USE_FOLDER_AS_CATEGORY": False,
                     "CATEGORY_SAVE_AS": None,
                     "CATEGORY_URL": None,
                     "CATEGORIES_SAVE_AS": None,
@@ -168,6 +170,45 @@ class TestTemplateInheritance(LoggedTestCase):
                 content = f.read()
 
             self.assertNotIn("Category:", content)
+        finally:
+            rmtree(content_dir)
+
+    def test_disabled_category_pages_no_links(self):
+        """When CATEGORY_SAVE_AS is empty, articles keep their category, but
+        themes should not link to category pages that are not generated."""
+
+        content_dir = mkdtemp(prefix="pelican_test_content.")
+        os.makedirs(os.path.join(content_dir, "blog"))
+        with open(os.path.join(content_dir, "blog", "in_blog.md"), "w") as f:
+            f.write("Title: In Blog\nDate: 2024-01-01\n\nArticle in a folder.\n")
+
+        try:
+            for theme in ("simple", "notmyidea"):
+                with self.subTest(theme=theme):
+                    settings = read_settings(
+                        path=None,
+                        override={
+                            "THEME": theme,
+                            "PATH": content_dir,
+                            "OUTPUT_PATH": self.temp_output,
+                            "CACHE_PATH": self.temp_cache,
+                            "SITEURL": "http://example.com",
+                            "ARTICLE_SAVE_AS": "{category}/{slug}.html",
+                            "CATEGORY_SAVE_AS": False,
+                            "CATEGORIES_SAVE_AS": False,
+                        },
+                    )
+
+                    pelican = Pelican(settings=settings)
+                    mute(True)(pelican.run)()
+
+                    with open(
+                        os.path.join(self.temp_output, "blog", "in-blog.html")
+                    ) as f:
+                        content = f.read()
+
+                    self.assertIn("blog", content)
+                    self.assertNotIn("/category/", content)
         finally:
             rmtree(content_dir)
 
