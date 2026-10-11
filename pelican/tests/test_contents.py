@@ -97,6 +97,54 @@ class TestPage(TestBase):
         page = Page("content", metadata={"title": "foobar"})
         self.assertTrue(page._has_valid_mandatory_properties())
 
+    def test_empty_slug_invalid(self):
+        # A title made only of punctuation produces an empty slug, which would
+        # otherwise result in a file named ".html".
+        page = Page("content", metadata={"title": "???"})
+        self.assertEqual(page.slug, "")
+        self.assertFalse(page.is_valid())
+        self.assertLogCountEqual(
+            count=1,
+            msg="Skipping .*: its slug is empty; set a 'slug' in its metadata",
+            level=logging.ERROR,
+        )
+
+        # An explicit slug, or a URL and save_as that don't use the slug, avoid
+        # the empty file name.
+        for metadata in (
+            {"slug": "question-marks"},
+            {"save_as": "q/index.html", "url": "q/"},
+        ):
+            with self.subTest(metadata=metadata):
+                page = Page("content", metadata={"title": "???", **metadata})
+                self.assertTrue(page.is_valid())
+        settings = get_settings(
+            ARTICLE_URL="{date:%Y}/{date:%m}/{date:%d}/",
+            ARTICLE_SAVE_AS="{date:%Y}/{date:%m}/{date:%d}/index.html",
+        )
+        article = Article(
+            "content",
+            metadata={"title": "???", "date": datetime.datetime(2026, 2, 9)},
+            settings=settings,
+        )
+        self.assertTrue(article.is_valid())
+
+        # Overriding save_as alone still leaves the URL as ".html".
+        page = Page("content", metadata={"title": "???", "save_as": "q.html"})
+        self.assertFalse(page.is_valid())
+        self.assertLogCountEqual(
+            count=2,
+            msg="Skipping .*: its slug is empty; set a 'slug' in its metadata",
+            level=logging.ERROR,
+        )
+
+        # An empty title is only reported as a missing title.
+        page = Page("content", metadata={"title": ""})
+        self.assertFalse(page.is_valid())
+        self.assertLogCountEqual(
+            count=2, msg="Skipping .*: its slug is empty.*", level=logging.ERROR
+        )
+
     def test_summary_from_metadata(self):
         # If a :summary: metadata is given, it should be used
         page = Page(**self.page_kwargs)

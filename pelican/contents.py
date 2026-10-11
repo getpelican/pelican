@@ -179,6 +179,29 @@ class Content:
                 return False
         return True
 
+    def _has_valid_slug(self) -> bool:
+        """Return false if the slug is empty (e.g., for a title made only of
+        punctuation) but used in the URL or save_as, which would produce file
+        names such as ".html"."""
+        # An empty title is already reported as a missing mandatory property.
+        if getattr(self, "slug", None) != "" or not getattr(self, "title", None):
+            return True
+
+        # Detect whether the slug is used by expanding with a placeholder.
+        paths = (self.url, self.save_as)
+        self.slug = "slug"
+        try:
+            uses_slug = (self.url, self.save_as) != paths
+        finally:
+            self.slug = ""
+        if not uses_slug:
+            return True
+
+        logger.error(
+            "Skipping %s: its slug is empty; set a 'slug' in its metadata", self
+        )
+        return False
+
     def _has_valid_save_as(self) -> bool:
         """Return true if save_as doesn't write outside output path, false
         otherwise."""
@@ -220,6 +243,7 @@ class Content:
         return all(
             [
                 self._has_valid_mandatory_properties(),
+                self._has_valid_slug(),
                 self._has_valid_save_as(),
                 self._has_valid_status(),
             ]
