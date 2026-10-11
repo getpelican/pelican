@@ -667,7 +667,7 @@ class ArticlesGenerator(CachingGenerator):
                 self.get_template(draft.template),
                 self.context,
                 article=draft,
-                category=draft.category,
+                category=getattr(draft, "category", None),
                 override_output=hasattr(draft, "override_save_as"),
                 blog=True,
                 all_articles=self.articles,
