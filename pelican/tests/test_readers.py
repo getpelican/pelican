@@ -161,16 +161,44 @@ class DefaultReaderTest(ReaderTest):
                 )
 
     def test_path_metadata_categories(self):
+        """Ensure folder names become categories even when category pages are
+        disabled, so {category} still works in URL patterns."""
         nested_content_path = os.path.join(CUR_DIR, "nested_content")
-        r = readers.Readers(
-            settings=get_settings(USE_FOLDER_AS_CATEGORY=True, CATEGORY_SAVE_AS=None)
-        )
-        mainpage = r.read_file(base_path=nested_content_path, path="maindir/maindir.md")
-        self.assertDictHasSubset(mainpage.metadata, {"category": "maindir"})
-        subpage = r.read_file(
-            base_path=nested_content_path, path="maindir/subdir/subdir.md"
-        )
-        self.assertDictHasSubset(subpage.metadata, {"category": "subdir"})
+        for category_save_as in ("", None, False):
+            with self.subTest(CATEGORY_SAVE_AS=category_save_as):
+                r = readers.Readers(
+                    settings=get_settings(
+                        USE_FOLDER_AS_CATEGORY=True, CATEGORY_SAVE_AS=category_save_as
+                    )
+                )
+                mainpage = r.read_file(
+                    base_path=nested_content_path, path="maindir/maindir.md"
+                )
+                self.assertDictHasSubset(mainpage.metadata, {"category": "maindir"})
+                subpage = r.read_file(
+                    base_path=nested_content_path, path="maindir/subdir/subdir.md"
+                )
+                self.assertDictHasSubset(subpage.metadata, {"category": "subdir"})
+
+    def test_default_category_when_category_pages_disabled(self):
+        for category_save_as in ("", None, False):
+            with self.subTest(CATEGORY_SAVE_AS=category_save_as):
+                page = self.read_file(
+                    path="article.rst",
+                    DEFAULT_CATEGORY="misc",
+                    CATEGORY_SAVE_AS=category_save_as,
+                )
+                self.assertEqual(page.metadata["category"], "misc")
+
+    def test_empty_default_category_omits_category(self):
+        for default_category in ("", None):
+            with self.subTest(DEFAULT_CATEGORY=default_category):
+                page = self.read_file(
+                    path="article.rst",
+                    DEFAULT_CATEGORY=default_category,
+                    USE_FOLDER_AS_CATEGORY=False,
+                )
+                self.assertNotIn("category", page.metadata)
 
 
 class RstReaderTest(ReaderTest):

@@ -82,9 +82,9 @@ def ensure_metadata_list(text):
 
 def _process_if_nonempty(processor, name, settings):
     """Removes extra whitespace from name and applies a metadata processor.
-    If name is empty or all whitespace, returns _DISCARD instead.
+    If name is None, empty, or all whitespace, returns _DISCARD instead.
     """
-    name = name.strip()
+    name = (name or "").strip()
     return processor(name, settings) if name else _DISCARD
 
 
@@ -746,7 +746,7 @@ def default_metadata(settings=None, process=None):
             if process:
                 value = process(name, value)
             metadata[name] = value
-        if "DEFAULT_CATEGORY" in settings and settings.get("CATEGORY_SAVE_AS"):
+        if "DEFAULT_CATEGORY" in settings:
             value = settings["DEFAULT_CATEGORY"]
             if process:
                 value = process("category", value)

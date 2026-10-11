@@ -49,7 +49,12 @@
       {% endif %}
       {% if article.category %}
         <p>
-          Category: <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
+          Category:
+          {% if CATEGORY_SAVE_AS %}
+            <a href="{{ SITEURL }}/{{ article.category.url }}">{{ article.category }}</a>
+          {% else %}
+            {{ article.category }}
+          {% endif %}
         </p>
       {% endif %}
       {% if article.tags %}
