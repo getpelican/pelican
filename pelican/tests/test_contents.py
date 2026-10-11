@@ -81,17 +81,22 @@ class TestPage(TestBase):
         self.assertEqual(page.content, TEST_CONTENT)
 
     def test_mandatory_properties(self):
-        # If the title is not set, must throw an exception.
+        # A missing title must make the content invalid.
         page = Page("content")
         self.assertFalse(page._has_valid_mandatory_properties())
-        # An empty or `None` title must be treated the same as a missing title.
+        self.assertLogCountEqual(
+            count=1,
+            msg="Skipping .*: required metadata 'title' is missing",
+            level=logging.ERROR,
+        )
+        # So must an empty or `None` title, with a message saying it is empty.
         for title in ("", None):
             with self.subTest(title=title):
                 page = Page("content", metadata={"title": title})
                 self.assertFalse(page._has_valid_mandatory_properties())
         self.assertLogCountEqual(
-            count=3,
-            msg="Skipping .*: could not find information about 'title'",
+            count=2,
+            msg="Skipping .*: required metadata 'title' is empty",
             level=logging.ERROR,
         )
         page = Page("content", metadata={"title": "foobar"})

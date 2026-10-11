@@ -170,12 +170,15 @@ class Content:
         return self.source_path or repr(self)
 
     def _has_valid_mandatory_properties(self) -> bool:
-        """Test mandatory properties are set."""
+        """Test mandatory properties are set and not empty."""
         for prop in self.mandatory_properties:
-            if not hasattr(self, prop) or getattr(self, prop) in (None, ""):
+            if not hasattr(self, prop):
                 logger.error(
-                    "Skipping %s: could not find information about '%s'", self, prop
+                    "Skipping %s: required metadata '%s' is missing", self, prop
                 )
+                return False
+            if getattr(self, prop) in (None, ""):
+                logger.error("Skipping %s: required metadata '%s' is empty", self, prop)
                 return False
         return True
 
