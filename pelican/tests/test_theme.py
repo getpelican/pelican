@@ -184,31 +184,33 @@ class TestTemplateInheritance(LoggedTestCase):
 
         try:
             for theme in ("simple", "notmyidea"):
-                with self.subTest(theme=theme):
-                    settings = read_settings(
-                        path=None,
-                        override={
-                            "THEME": theme,
-                            "PATH": content_dir,
-                            "OUTPUT_PATH": self.temp_output,
-                            "CACHE_PATH": self.temp_cache,
-                            "SITEURL": "http://example.com",
-                            "ARTICLE_SAVE_AS": "{category}/{slug}.html",
-                            "CATEGORY_SAVE_AS": False,
-                            "CATEGORIES_SAVE_AS": False,
-                        },
-                    )
+                for category_save_as in ("", None, False):
+                    with self.subTest(theme=theme, CATEGORY_SAVE_AS=category_save_as):
+                        settings = read_settings(
+                            path=None,
+                            override={
+                                "THEME": theme,
+                                "PATH": content_dir,
+                                "OUTPUT_PATH": self.temp_output,
+                                "CACHE_PATH": self.temp_cache,
+                                "SITEURL": "http://example.com",
+                                "ARTICLE_SAVE_AS": "{category}/{slug}.html",
+                                "CATEGORY_SAVE_AS": category_save_as,
+                            },
+                        )
 
-                    pelican = Pelican(settings=settings)
-                    mute(True)(pelican.run)()
+                        pelican = Pelican(settings=settings)
+                        mute(True)(pelican.run)()
 
-                    with open(
-                        os.path.join(self.temp_output, "blog", "in-blog.html")
-                    ) as f:
-                        content = f.read()
+                        for page in ("blog/in-blog.html", "categories.html"):
+                            with open(os.path.join(self.temp_output, page)) as f:
+                                content = f.read()
 
-                    self.assertIn("blog", content)
-                    self.assertNotIn("/category/", content)
+                            self.assertIn("blog", content)
+                            self.assertNotIn("/category/", content)
+                        self.assertFalse(
+                            os.path.exists(os.path.join(self.temp_output, "category"))
+                        )
         finally:
             rmtree(content_dir)
 
