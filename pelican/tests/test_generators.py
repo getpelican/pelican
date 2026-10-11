@@ -378,6 +378,74 @@ class TestArticlesGenerator(unittest.TestCase):
         ]
         self.assertEqual(sorted(draft_articles_expected), sorted(self.drafts))
 
+    def test_generate_drafts_without_category(self):
+        """Drafts without a category must not break draft page generation."""
+        content_dir = mkdtemp(prefix="pelican_test_drafts.")
+        try:
+            # Test one draft without any category metadata, one with an explicit
+            # category, and neither in a category subfolder.
+            with open(os.path.join(content_dir, "draft_no_category.md"), "w") as f:
+                f.write(
+                    "Title: Draft without category\n"
+                    "Date: 2024-01-01\n"
+                    "Status: draft\n"
+                    "\n"
+                    "Draft content without a category.\n"
+                )
+            with open(os.path.join(content_dir, "draft_with_category.md"), "w") as f:
+                f.write(
+                    "Title: Draft with category\n"
+                    "Date: 2024-01-02\n"
+                    "Status: draft\n"
+                    "Category: Test Category\n"
+                    "\n"
+                    "Draft content with a category.\n"
+                )
+
+            settings = get_settings()
+            settings["CACHE_PATH"] = self.temp_cache
+            settings["USE_FOLDER_AS_CATEGORY"] = False
+            settings["CATEGORY_SAVE_AS"] = None  # No default category fallback
+            context = get_context(settings)
+
+            generator = ArticlesGenerator(
+                context=context,
+                settings=settings,
+                path=content_dir,
+                theme=settings["THEME"],
+                output_path=None,
+            )
+            generator.generate_context()
+
+            drafts = {article.title: article for article in generator.drafts}
+            self.assertEqual(
+                sorted(drafts),
+                ["Draft with category", "Draft without category"],
+            )
+            # Sanity check: the drafts must be without categories as intended,
+            # otherwise this test would not exercise the regression.
+            self.assertFalse(hasattr(drafts["Draft without category"], "category"))
+            self.assertEqual(
+                drafts["Draft with category"].category.name, "Test Category"
+            )
+
+            write = MagicMock()
+            # Used to raise AttributeError for the draft without a category.
+            generator.generate_drafts(write)
+
+            self.assertEqual(write.call_count, len(generator.drafts))
+            written = {
+                call.kwargs["article"]: call.kwargs["category"]
+                for call in write.call_args_list
+            }
+            self.assertIsNone(written[drafts["Draft without category"]])
+            self.assertIs(
+                drafts["Draft with category"].category,
+                written[drafts["Draft with category"]],
+            )
+        finally:
+            rmtree(content_dir)
+
     def test_articles_hidden(self):
         hidden_articles_expected = [
             ["Hidden article", "hidden", "Default", "article"],
