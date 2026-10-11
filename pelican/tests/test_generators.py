@@ -402,7 +402,7 @@ class TestArticlesGenerator(unittest.TestCase):
                     "Draft content with a category.\n"
                 )
 
-            settings = get_settings()
+            settings = get_settings(PATH=content_dir)
             settings["CACHE_PATH"] = self.temp_cache
             settings["USE_FOLDER_AS_CATEGORY"] = False
             settings["CATEGORY_SAVE_AS"] = None  # No default category fallback
