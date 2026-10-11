@@ -596,6 +596,9 @@ This would save your articles into something like
    The location to save a category. The default is ``"category/{slug}.html"``.
    Set this to ``""`` to disable category pages. Articles still keep their
    categories, which can be used in URL patterns such as ``ARTICLE_SAVE_AS``.
+   To disable all category output, also set ``CATEGORIES_SAVE_AS = None``
+   and ``CATEGORY_FEED_ATOM = None`` (as well as ``CATEGORY_FEED_RSS``, if
+   you have enabled it).
 
 .. data:: TAG_URL
 
