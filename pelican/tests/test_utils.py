@@ -1008,6 +1008,10 @@ class TestSanitisedJoin(unittest.TestCase):
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "/test")
 
+    def test_reject_sibling_prefix(self):
+        with self.assertRaises(RuntimeError):
+            utils.sanitised_join("/foo/bar", "../barley/test")
+
     def test_pass_deep_subpaths(self):
         self.assertEqual(
             utils.sanitised_join("/foo/bar", "test"),
