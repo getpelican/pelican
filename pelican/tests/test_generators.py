@@ -1279,6 +1279,41 @@ class TestStaticGenerator(unittest.TestCase):
     def set_ancient_mtime(self, path, timestamp=1):
         os.utime(path, (timestamp, timestamp))
 
+    def test_static_files_processed_in_stable_order(self):
+        """Static files are processed in sorted order, not in the iteration
+        order of the sets returned by get_files(), which depends on the
+        interpreter's hash seed."""
+
+        class ReversedSet(set):
+            # Iterates in reverse sorted order, standing in for an unlucky
+            # PYTHONHASHSEED; set unions keep the behavior.
+            def __iter__(self):
+                return iter(sorted(super().__iter__(), reverse=True))
+
+            def __or__(self, other):
+                return ReversedSet(set(self) | set(other))
+
+            __ror__ = __or__
+
+        settings = get_settings(PATH=self.content_path, STATIC_PATHS=[""])
+        context = get_context(settings)
+        generator = StaticGenerator(
+            context=context,
+            settings=settings,
+            path=settings["PATH"],
+            output_path=self.temp_output,
+            theme=settings["THEME"],
+        )
+        get_files = generator.get_files
+        generator.get_files = lambda *args, **kwargs: ReversedSet(
+            get_files(*args, **kwargs)
+        )
+        generator.generate_context()
+
+        source_paths = [sf.source_path for sf in context["staticfiles"]]
+        self.assertGreater(len(source_paths), 1)
+        self.assertEqual(source_paths, sorted(source_paths))
+
     def test_theme_static_paths_dirs(self):
         """Test that StaticGenerator properly copies also files mentioned in
         TEMPLATE_STATIC_PATHS, not just directories."""
