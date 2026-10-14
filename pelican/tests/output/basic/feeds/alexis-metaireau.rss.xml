@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>A Pelican Blog - Alexis Métaireau</title><link>/</link><description/><atom:link href="/feeds/alexis-metaireau.rss.xml" rel="self"/><lastBuildDate>Sun, 17 Nov 2013 23:29:00 +0000</lastBuildDate><item><title>This is a super article !</title><link>/this-is-a-super-article.html</link><description>&lt;p class="first last"&gt;Multi-line metadata should be supported
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>A Pelican Blog - Alexis Métaireau</title><link>/</link><description/><atom:link href="/feeds/alexis-metaireau.rss.xml" rel="self"/><lastBuildDate>Sun, 17 Nov 2013 23:29:00 +0000</lastBuildDate><item><title>This is a super article !</title><link>/this-is-a-super-article.html</link><description>&lt;p&gt;Multi-line metadata should be supported
 as well as &lt;strong&gt;inline markup&lt;/strong&gt;.&lt;/p&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Alexis Métaireau</dc:creator><pubDate>Thu, 02 Dec 2010 10:14:00 +0000</pubDate><guid>tag:None,2010-12-02:/this-is-a-super-article.html</guid><category>yeah</category><category>foo</category><category>bar</category><category>foobar</category></item><item><title>Oh yeah !</title><link>/oh-yeah.html</link><description>&lt;div class="section" id="why-not"&gt;
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Alexis Métaireau</dc:creator><pubDate>Thu, 02 Dec 2010 10:14:00 +0000</pubDate><guid>tag:None,2010-12-02:/this-is-a-super-article.html</guid><category>yeah</category><category>foo</category><category>bar</category><category>foobar</category></item><item><title>Oh yeah !</title><link>/oh-yeah.html</link><description>&lt;section id="why-not"&gt;
 &lt;h2&gt;Why not ?&lt;/h2&gt;
 &lt;p&gt;After all, why not ? It's pretty simple to do it, and it will allow me to write my blogposts in rst !
 YEAH !&lt;/p&gt;
 &lt;img alt="alternate text" src="/pictures/Sushi.jpg" style="width: 600px; height: 450px;" /&gt;
-&lt;/div&gt;
+&lt;/section&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Alexis Métaireau</dc:creator><pubDate>Wed, 20 Oct 2010 10:14:00 +0000</pubDate><guid>tag:None,2010-10-20:/oh-yeah.html</guid><category>bar</category><category>oh</category><category>bar</category><category>yeah</category></item></channel></rss>
