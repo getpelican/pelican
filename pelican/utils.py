@@ -368,6 +368,9 @@ def copy(source: str, destination: str, ignores: Iterable[str] | None = None) ->
 
 def copy_file(source: str, destination: str) -> None:
     """Copy a file"""
+    if os.path.isdir(destination):
+        destination = os.path.join(destination, os.path.basename(source))
+
     try:
         shutil.copyfile(source, destination)
     except OSError as e:

@@ -868,6 +868,18 @@ class TestCopy(unittest.TestCase):
         self._exist_dir("b0", "b1", "b2", "b3", "b")
         self._exist_file("b0", "b1", "b2", "b3", "b", "a.txt")
 
+    def test_copy_file_to_existing_dir(self):
+        self._create_dir("a")
+        self._create_file("a", "a.txt")
+        self._create_dir("b0", "b1")
+        utils.copy(
+            os.path.join(self.root_dir, "a", "a.txt"),
+            os.path.join(self.root_dir, "b0", "b1"),
+        )
+        self._exist_dir("b0")
+        self._exist_dir("b0", "b1")
+        self._exist_file("b0", "b1", "a.txt")
+
 
 class TestDateFormatter(unittest.TestCase):
     """Tests that the output of DateFormatter jinja filter is same as
