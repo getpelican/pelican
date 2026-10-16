@@ -255,7 +255,7 @@ class PrintSettings(argparse.Action):
         init_logging(name=__name__)
 
         try:
-            instance, settings = get_instance(namespace)
+            _instance, settings = get_instance(namespace)
         except Exception as e:
             logger.critical("%s", e.__class__.__name__, exc_info=True)
             console.print_exception()

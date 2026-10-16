@@ -175,7 +175,38 @@ example, if you would like to extract both the date and the slug, you could set
 something like: ``'(?P<date>\d{4}-\d{2}-\d{2})_(?P<slug>.*)'``
 
 Please note that the metadata available inside your files takes precedence over
-the metadata extracted from the filename.
+metadata extracted from the filename.
+
+Metadata extraction from Markdown headings
+==========================================
+
+For Markdown files, you can also extract metadata from headings using the
+``HEADING_METADATA`` setting. This is particularly useful for articles where you
+want to use the first heading as the title without explicitly declaring it in
+the metadata section.
+
+When ``HEADING_METADATA`` is enabled, Pelican can extract metadata from headings
+using either level mappings or custom regex patterns. This allows Markdown files
+like::
+
+    Date: 2023-12-01
+    Category: tech
+
+    # My Article Title
+
+    Content goes here...
+
+This allows their titles to be extracted automatically without requiring
+explicit ``Title:`` metadata. Note that Markdown files must begin with the
+metadata block, and headings should follow it.
+
+The headings used for metadata extraction are automatically removed from the
+content to avoid duplication in the output.
+
+See the :ref:`HEADING_METADATA <settings/HEADING_METADATA>`,
+:ref:`HEADING_METADATA_MAP <settings/HEADING_METADATA_MAP>`, and
+:ref:`HEADING_METADATA_PATTERNS <settings/HEADING_METADATA_PATTERNS>` settings
+in the documentation for configuration options.
 
 Pages
 =====
