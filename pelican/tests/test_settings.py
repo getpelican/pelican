@@ -184,6 +184,13 @@ class TestSettingsConfiguration(unittest.TestCase):
         locale.setlocale(locale.LC_TIME, "")
         self.assertEqual(lc_time, locale.getlocale(locale.LC_TIME))
 
+    def test_read_settings_missing_file(self):
+        missing = join(self.PATH, "no_such_conf.py")
+        with self.assertRaises(FileNotFoundError):
+            read_settings(missing)
+        with self.assertRaises(FileNotFoundError):
+            read_settings(join(self.PATH, "no_such_conf"))
+
     def test_invalid_settings_throw_exception(self):
         # Test that the path name is valid
 

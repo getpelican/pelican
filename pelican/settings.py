@@ -17,6 +17,8 @@ from pelican.paginator import PaginationRule
 
 def load_source(name: str, path: str) -> ModuleType:
     spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot import settings from {path}")
     mod = importlib.util.module_from_spec(spec)
     sys.modules[name] = mod
     spec.loader.exec_module(mod)
@@ -242,6 +244,8 @@ def get_settings_from_module(module: ModuleType | None = None) -> Settings:
 def get_settings_from_file(path: str) -> Settings:
     """Loads settings from a file path, returning a dict."""
 
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f"Settings file not found: {path}")
     name, ext = os.path.splitext(os.path.basename(path))
     module = load_source(name, path)
     return get_settings_from_module(module)
