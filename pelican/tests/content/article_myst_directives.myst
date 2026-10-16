@@ -1,0 +1,30 @@
+---
+title: MyST with Directives
+date: 2024-01-16
+author: Test Author
+summary: Article demonstrating MyST **directives** and roles
+---
+
+# MyST Directives Test
+
+This article tests MyST directives and roles.
+
+:::{note}
+This is a note directive.
+:::
+
+:::{warning}
+This is a warning!
+:::
+
+## Roles
+
+Here's some {sub}`subscript` and {sup}`superscript` text.
+
+## Definition List
+
+term 1
+: Definition for term 1
+
+term 2
+: Definition for term 2

@@ -131,6 +131,20 @@ DEFAULT_CONFIG = {
         },
         "output_format": "html5",
     },
+    "MYST": {
+        "enable_extensions": [
+            "colon_fence",
+            "deflist",
+            "html_admonition",
+            "html_image",
+            # "linkify" requires linkify-it-py to be installed
+            "replacements",
+            "smartquotes",
+        ],
+        "disable_syntax": [],
+        "all_links_external": False,
+        "url_schemes": ["http", "https", "mailto", "ftp"],
+    },
     "JINJA_FILTERS": {},
     "JINJA_GLOBALS": {},
     "JINJA_TESTS": {},

@@ -24,6 +24,11 @@ try:
 except ImportError:
     Markdown = False
 
+try:
+    from myst_parser.docutils_ import Parser as MystParser
+except ImportError:
+    MystParser = False
+
 # Metadata processors have no way to discard an unwanted value, so we have
 # them return this value instead to signal that it should be discarded later.
 # This means that _filter_discardable_metadata() must be called on processed
@@ -45,8 +50,10 @@ DUPLICATES_DEFINITIONS_ALLOWED = {
 
 METADATA_PROCESSORS = {
     "tags": lambda x, y: ([Tag(tag, y) for tag in ensure_metadata_list(x)] or _DISCARD),
-    "date": lambda x, _y: get_date(x.replace("_", " ")),
-    "modified": lambda x, _y: get_date(x),
+    "date": lambda x, _y: x
+    if isinstance(x, datetime.datetime)
+    else get_date(x.replace("_", " ")),
+    "modified": lambda x, _y: x if isinstance(x, datetime.datetime) else get_date(x),
     "status": lambda x, _y: x.strip() or _DISCARD,
     "category": lambda x, y: _process_if_nonempty(Category, x, y),
     "author": lambda x, y: _process_if_nonempty(Author, x, y),
@@ -267,9 +274,12 @@ class RstReader(BaseReader):
         if user_params:
             extra_params.update(user_params)
 
+        from docutils.readers import standalone
+        from docutils.parsers.rst import Parser
+
         pub = docutils.core.Publisher(
-            reader="standalone",
-            parser="restructuredtext",
+            reader=standalone.Reader(),
+            parser=Parser(),
             writer=self.writer_class(),
             destination_class=docutils.io.StringOutput,
         )
@@ -359,6 +369,122 @@ class MarkdownReader(BaseReader):
         return (
             "Could not import 'markdown.Markdown'. "
             "Have you installed the 'markdown' package?"
+        )
+
+
+class MystReader(BaseReader):
+    enabled = bool(MystParser)
+    file_extensions = ["myst"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _parse_metadata(self, text):
+        formatted_fields = self.settings["FORMATTED_FIELDS"]
+        output = {}
+
+        if not text.strip().startswith("---"):
+            return output, text
+
+        parts = text.split("---", 2)
+        if len(parts) < 3:
+            return output, text
+
+        try:
+            import yaml
+        except ImportError:
+            logger.warning(
+                "PyYAML is required to parse MyST front-matter metadata. "
+                "Install it with: pip install PyYAML"
+            )
+            return output, text
+
+        try:
+            front_matter = yaml.safe_load(parts[1])
+            if not isinstance(front_matter, dict):
+                return output, text
+        except yaml.YAMLError as e:
+            logger.warning("Failed to parse MyST front-matter: %s", e)
+            return output, text
+
+        for name, value in front_matter.items():
+            name = name.lower()
+
+            if name in formatted_fields and isinstance(value, str):
+                if Markdown:
+                    md = Markdown(**self.settings.get("MARKDOWN", {}))
+                    value = md.convert(value)
+                else:
+                    logger.warning(
+                        "Markdown is required for formatted MyST metadata fields. "
+                        "Install it with: pip install markdown"
+                    )
+
+            output[name] = self.process_metadata(name, value)
+
+        return output, parts[2] if len(parts) >= 3 else text
+
+    def _get_publisher_settings(self):
+        myst_config = self.settings.get("MYST", {})
+        myst_settings = {
+            "myst_enable_extensions": myst_config.get("enable_extensions", []),
+            "myst_disable_syntax": myst_config.get("disable_syntax", []),
+            "myst_all_links_external": myst_config.get("all_links_external", False),
+            "myst_url_schemes": myst_config.get("url_schemes", None),
+        }
+
+        extra_params = {
+            "initial_header_level": "2",
+            "syntax_highlight": "short",
+            "input_encoding": "utf-8",
+            "halt_level": 4,  # Use SEVERE level for MyST to avoid halting on warnings
+            "traceback": True,
+            "warning_stream": StringIO(),
+            "embed_stylesheet": False,
+        }
+
+        user_params = self.settings.get("DOCUTILS_SETTINGS")
+        if user_params:
+            extra_params.update(user_params)
+
+        extra_params.update(myst_settings)
+        return extra_params
+
+    def read(self, source_path):
+        with pelican_open(source_path) as text:
+            metadata, content_text = self._parse_metadata(text)
+
+            from docutils.readers import standalone
+
+            parser = MystParser()
+            settings_overrides = self._get_publisher_settings()
+
+            # Create StringInput with the content (without frontmatter)
+            source = docutils.io.StringInput(
+                source=content_text, source_path=source_path
+            )
+
+            pub = docutils.core.Publisher(
+                reader=standalone.Reader(),
+                parser=parser,
+                writer=PelicanHTMLWriter(),
+                destination_class=docutils.io.StringOutput,
+            )
+            pub.process_programmatic_settings(None, settings_overrides, None)
+            pub.source = source
+            pub.publish()
+
+            parts = pub.writer.parts
+            content = parts.get("body")
+
+            metadata.setdefault("title", parts.get("title"))
+
+        return content, metadata
+
+    def disabled_message(self) -> str:
+        return (
+            "Could not import 'myst_parser.docutils_.Parser'. "
+            "Have you installed the 'myst-parser' package?"
         )
 
 
