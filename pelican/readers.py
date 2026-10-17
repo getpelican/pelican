@@ -552,6 +552,11 @@ class Readers(FileStampDataCacher):
             self.readers[fmt] = reader_class(self.settings)
 
         for fmt, reader_class in disabled_reader_classes.items():
+            # Extensions handled (or deliberately ignored) via the READERS
+            # setting or a plugin should not be reported as disabled.
+            if fmt in self.reader_classes:
+                continue
+
             self.disabled_readers[fmt] = reader_class(self.settings)
 
         # set up caching
