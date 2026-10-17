@@ -4,6 +4,7 @@ from unittest.mock import PropertyMock, patch
 
 from pelican import readers
 from pelican.contents import Article
+from pelican.plugins import signals
 from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
 
@@ -13,6 +14,17 @@ CONTENT_PATH = os.path.join(CUR_DIR, "content")
 
 def _path(*args):
     return os.path.join(CONTENT_PATH, *args)
+
+
+class OtherMarkdownReader:
+    """Stand-in for a third-party reader that handles Markdown files.
+
+    Deliberately not a BaseReader subclass, so that it is not picked up as a
+    default reader by other tests.
+    """
+
+    def __init__(self, settings):
+        self.settings = settings
 
 
 class ReaderTest(unittest.TestCase):
@@ -46,6 +58,34 @@ class ReaderTest(unittest.TestCase):
             )
             for val in readrs.disabled_readers.values():
                 self.assertEqual(readers.MarkdownReader, val.__class__)
+
+    def test_markdown_disabled_but_replaced_in_settings(self):
+        with patch.object(
+            readers.MarkdownReader, "enabled", new_callable=PropertyMock
+        ) as attr_mock:
+            attr_mock.return_value = False
+            for reader_class in (OtherMarkdownReader, None):
+                with self.subTest(reader_class=reader_class):
+                    readrs = readers.Readers(
+                        settings=get_settings(READERS={"md": reader_class})
+                    )
+                    self.assertNotIn("md", readrs.disabled_readers)
+                    # extensions that were not replaced are still reported
+                    self.assertIn("markdown", readrs.disabled_readers)
+
+    def test_markdown_disabled_but_replaced_by_plugin(self):
+        def add_reader(readrs):
+            readrs.reader_classes["md"] = OtherMarkdownReader
+
+        signals.readers_init.connect(add_reader)
+        self.addCleanup(signals.readers_init.disconnect, add_reader)
+        with patch.object(
+            readers.MarkdownReader, "enabled", new_callable=PropertyMock
+        ) as attr_mock:
+            attr_mock.return_value = False
+            readrs = readers.Readers(settings=get_settings())
+            self.assertIsInstance(readrs.readers["md"], OtherMarkdownReader)
+            self.assertNotIn("md", readrs.disabled_readers)
 
 
 class TestAssertDictHasSubset(ReaderTest):
