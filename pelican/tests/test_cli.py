@@ -13,6 +13,10 @@ class TestParseOverrides(unittest.TestCase):
         args = parse_arguments("-e k1=1 k2=2".split())
         self.assertDictEqual(args.overrides, {"k1": 1, "k2": 2})
 
+    def test_parse_repeated_flags(self):
+        args = parse_arguments("-e k1=1 k2=2 --extra-settings k3=3 -e k1=4".split())
+        self.assertDictEqual(args.overrides, {"k1": 4, "k2": 2, "k3": 3})
+
     def test_parse_valid_json(self):
         json_values_python_values_map = {
             '""': "",

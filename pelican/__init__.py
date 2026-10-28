@@ -288,7 +288,9 @@ class PrintSettings(argparse.Action):
 class ParseOverrides(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         del parser, option_string  # Unused arguments
-        overrides = {}
+        # Merge with values from earlier -e / --extra-settings flags so that
+        # repeating the flag adds settings instead of replacing them.
+        overrides = dict(getattr(namespace, self.dest, None) or {})
         for item in values:
             try:
                 k, v = item.split("=", 1)
