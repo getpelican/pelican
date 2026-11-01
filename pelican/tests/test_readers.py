@@ -180,6 +180,16 @@ class DefaultReaderTest(ReaderTest):
                 )
                 self.assertDictHasSubset(subpage.metadata, {"category": "subdir"})
 
+    def test_path_metadata_no_category_outside_path(self):
+        # https://github.com/getpelican/pelican/issues/3613
+        settings = get_settings(USE_FOLDER_AS_CATEGORY=True)
+        for path in ("../.gitignore", "./file.txt"):
+            with self.subTest(path=path):
+                metadata = readers.parse_path_metadata(path, settings=settings)
+                self.assertNotIn("category", metadata)
+        metadata = readers.parse_path_metadata("../extras/a.ico", settings=settings)
+        self.assertEqual(metadata["category"], "extras")
+
     def test_default_category_when_category_pages_disabled(self):
         for category_save_as in ("", None, False):
             with self.subTest(CATEGORY_SAVE_AS=category_save_as):
