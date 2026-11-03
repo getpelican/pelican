@@ -95,6 +95,7 @@ class Writer:
             title=title,
             link=link,
             unique_id=get_tag_uri(link, item.date),
+            unique_id_is_permalink=False,
             description=description,
             content=content,
             categories=categories or None,
