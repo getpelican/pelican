@@ -122,7 +122,7 @@ logging.setLoggerClass(FatalLogger)
 # force root logger to be of our preferred class
 logging.getLogger().__class__ = FatalLogger
 
-DEFAULT_LOG_HANDLER = RichHandler(console=console)
+DEFAULT_LOG_HANDLER = RichHandler(console=Console(stderr=True))
 
 
 def init(

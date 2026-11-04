@@ -1,10 +1,33 @@
 import logging
+import sys
 import unittest
 from collections import defaultdict
 from contextlib import contextmanager
 
 from pelican import log
 from pelican.tests.support import LogCountHandler
+
+
+def test_default_log_handler_writes_to_stderr(capsys):
+    assert log.DEFAULT_LOG_HANDLER.console.file is sys.stderr
+
+    logger = logging.Logger(__name__, level=logging.WARNING)
+    logger.addHandler(log.DEFAULT_LOG_HANDLER)
+    logger.warning("stderr warning")
+
+    captured = capsys.readouterr()
+    assert "stderr warning" in captured.err
+    assert captured.out == ""
+
+
+def test_shared_console_writes_to_stdout(capsys):
+    assert log.console.file is sys.stdout
+
+    log.console.print("program output")
+
+    captured = capsys.readouterr()
+    assert "program output" in captured.out
+    assert captured.err == ""
 
 
 class TestLog(unittest.TestCase):
