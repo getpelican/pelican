@@ -3,6 +3,20 @@
 
 {% block title %}{{ SITENAME|striptags }} - {{ page.title|striptags }}{%endblock%}
 
+{% block og_type %}article{% endblock og_type %}
+{% block og_title %}{{ page.title|striptags }}{% endblock og_title %}
+{% block og_description %}
+  {% set description = page.description or page.summary|striptags|trim %}
+  {% if description %}
+    <meta property="og:description" content="{{ description }}" />
+  {% endif %}
+{% endblock og_description %}
+{% block og_image %}
+  {% if page.image %}
+    <meta property="og:image" content="{% if page.image.startswith(('http://', 'https://')) %}{{ page.image }}{% else %}{{ SITEURL }}/{{ page.image }}{% endif %}" />
+  {% endif %}
+{% endblock og_image %}
+
 {% block head %}
   {{ super() }}
 
