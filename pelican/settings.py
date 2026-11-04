@@ -52,6 +52,7 @@ DEFAULT_CONFIG = {
     "AUTHOR_FEED_RSS": "feeds/{slug}.rss.xml",
     "TRANSLATION_FEED_ATOM": "feeds/all-{lang}.atom.xml",
     "FEED_MAX_ITEMS": 100,
+    "FEED_MINIMUM_DATE": None,
     "RSS_FEED_SUMMARY_ONLY": True,
     "FEED_APPEND_REF": False,
     "SITEURL": "",

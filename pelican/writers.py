@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 from posixpath import join as posix_join
@@ -9,6 +10,7 @@ from markupsafe import Markup
 from pelican.paginator import Paginator
 from pelican.plugins import signals
 from pelican.utils import (
+    get_date,
     get_relative_path,
     path_to_url,
     sanitised_join,
@@ -20,6 +22,24 @@ logger = logging.getLogger(__name__)
 
 class FileOverwriteFailedError(RuntimeError):
     """Failed to overwrite an existing file."""
+
+
+def _feed_minimum_date(settings):
+    """Normalize the feed cutoff to a timezone-aware datetime, if set."""
+    minimum_date = settings["FEED_MINIMUM_DATE"]
+    if minimum_date is None:
+        return None
+
+    if isinstance(minimum_date, str):
+        minimum_date = get_date(minimum_date)
+    elif isinstance(minimum_date, datetime.date) and not isinstance(
+        minimum_date, datetime.datetime
+    ):
+        minimum_date = datetime.datetime.combine(minimum_date, datetime.time.min)
+
+    if minimum_date.tzinfo is None:
+        minimum_date = set_date_tzinfo(minimum_date, settings.get("TIMEZONE", "UTC"))
+    return minimum_date
 
 
 class Writer:
@@ -166,6 +186,10 @@ class Writer:
         self.feed_url = self.urljoiner(self.feed_domain, url or path)
 
         feed = self._create_new_feed(feed_type, feed_title, context)
+
+        minimum_date = _feed_minimum_date(self.settings)
+        if minimum_date is not None:
+            elements = [element for element in elements if element.date >= minimum_date]
 
         # FEED_MAX_ITEMS = None means [:None] to get every element
         for element in elements[: self.settings["FEED_MAX_ITEMS"]]:
