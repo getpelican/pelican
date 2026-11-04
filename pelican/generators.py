@@ -240,6 +240,10 @@ class Generator:
         """Add file links in content to context to be processed as Static
         content.
         """
+        if content.status == "draft" and not content.save_as:
+            # Drafts that will not be generated (e.g. `DRAFT_SAVE_AS = ""`)
+            # must not pull their static files into the output.
+            return
         self.context["static_links"] |= content.get_static_links()
 
     def _update_context(self, items):
