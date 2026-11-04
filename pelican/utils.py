@@ -846,9 +846,45 @@ def order_content(
 
 
 class FileChangeFilter(watchfiles.DefaultFilter):
-    def __init__(self, ignore_file_patterns: Sequence[str], *args, **kwargs):
+    def __init__(
+        self,
+        ignore_file_patterns: Sequence[str],
+        *args,
+        watch_paths: Sequence[str] = (),
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.ignore_file_patterns = ignore_file_patterns
+        self.watch_paths = [os.path.abspath(p) for p in watch_paths]
+
+    def _ignore_candidates(self, path: str) -> list[str]:
+        """Return the strings the ignore patterns are matched against.
+
+        When the path lies under one of the watched paths, only its path
+        relative to that watched path (and its basename) are matched, so
+        that directory names *above* the watched paths — for example a
+        dot-prefixed directory in the user's home directory — cannot cause
+        every change to be ignored. Without a matching watched path, fall
+        back to matching the absolute path.
+        """
+        abspath = os.path.abspath(path)
+        candidates = {os.path.basename(abspath)}
+        matched_root = False
+        for root in self.watch_paths:
+            if abspath == root or abspath.startswith(root + os.sep):
+                matched_root = True
+                relpath = os.path.relpath(abspath, root)
+                candidates.add(relpath)
+                # Prefix with a separator so that patterns anchored at a
+                # directory boundary (like the default `**/.*`) also match
+                # the first component of the relative path.
+                candidates.add("/" + relpath)
+                # Patterns may also include the watched directory's own
+                # name, like `content/drafts/*`.
+                candidates.add(os.path.join(os.path.basename(root), relpath))
+        if not matched_root:
+            candidates.add(abspath)
+        return list(candidates)
 
     def __call__(self, change: watchfiles.Change, path: str) -> bool:
         """Returns `True` if a file should be watched for changes. The `IGNORE_FILES`
@@ -858,7 +894,9 @@ class FileChangeFilter(watchfiles.DefaultFilter):
         https://watchfiles.helpmanual.io/api/filters/#watchfiles.DefaultFilter.ignore_dirs
         """
         return super().__call__(change, path) and not any(
-            fnmatch.fnmatch(os.path.abspath(path), p) for p in self.ignore_file_patterns
+            fnmatch.fnmatch(candidate, pattern)
+            for candidate in self._ignore_candidates(path)
+            for pattern in self.ignore_file_patterns
         )
 
 
@@ -893,7 +931,10 @@ def wait_for_changes(
     return next(
         watchfiles.watch(
             *watching_paths,
-            watch_filter=FileChangeFilter(ignore_file_patterns=ignore_file_patterns),
+            watch_filter=FileChangeFilter(
+                ignore_file_patterns=ignore_file_patterns,
+                watch_paths=watching_paths,
+            ),
             rust_timeout=0,
         )
     )
