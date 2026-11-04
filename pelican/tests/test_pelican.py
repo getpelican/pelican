@@ -121,6 +121,50 @@ class TestPelican(LoggedTestCase):
             level=logging.WARNING,
         )
 
+    def test_generation_summary_shown_by_default(self):
+        settings = read_settings(
+            path=None,
+            override={
+                "PATH": INPUT_PATH,
+                "OUTPUT_PATH": self.temp_path,
+                "CACHE_PATH": self.temp_cache,
+                "LOCALE": locale.normalize("en_US"),
+            },
+        )
+        pelican = Pelican(settings=settings)
+        logger = logging.getLogger("pelican")
+        old_level = logger.level
+        out = io.StringIO()
+        try:
+            logger.setLevel(logging.WARNING)
+            with contextlib.redirect_stdout(out):
+                pelican.run()
+            self.assertIn("Done: Processed", out.getvalue())
+        finally:
+            logger.setLevel(old_level)
+
+    def test_generation_summary_suppressed_when_quiet(self):
+        settings = read_settings(
+            path=None,
+            override={
+                "PATH": INPUT_PATH,
+                "OUTPUT_PATH": self.temp_path,
+                "CACHE_PATH": self.temp_cache,
+                "LOCALE": locale.normalize("en_US"),
+            },
+        )
+        pelican = Pelican(settings=settings)
+        logger = logging.getLogger("pelican")
+        old_level = logger.level
+        out = io.StringIO()
+        try:
+            logger.setLevel(logging.CRITICAL)
+            with contextlib.redirect_stdout(out):
+                pelican.run()
+            self.assertNotIn("Done: Processed", out.getvalue())
+        finally:
+            logger.setLevel(old_level)
+
     @skipIfNoExecutable(["git", "--version"])
     def test_custom_generation_works(self):
         # the same thing with a specified set of settings should work
