@@ -182,8 +182,26 @@ def list_themes(v=False):
 def remove(theme_name, v=False):
     """Removes a theme"""
 
-    theme_name = theme_name.replace("/", "")
+    if theme_name in ("", ".", "..") or any(
+        sep in theme_name for sep in ("/", "\\", os.sep, os.altsep) if sep
+    ):
+        err(f"Invalid theme name {theme_name!r}: expected a single path component")
+        return
+
     target = os.path.join(_THEMES_PATH, theme_name)
+    themes_path = os.path.abspath(_THEMES_PATH)
+    target_path = os.path.abspath(target)
+    try:
+        inside_themes_path = (
+            os.path.commonpath([themes_path, target_path]) == themes_path
+            and target_path != themes_path
+        )
+    except ValueError:
+        inside_themes_path = False
+
+    if not inside_themes_path:
+        err(target + " : theme path must be inside the themes directory")
+        return
 
     if theme_name in _BUILTIN_THEMES:
         err(
