@@ -1020,6 +1020,13 @@ class TestSanitisedJoin(unittest.TestCase):
         ):  # (.*?:)? accounts for Windows root
             utils.sanitised_join("/foo/bar", "/test")
 
+    def test_reject_sibling_prefix(self):
+        with self.assertRaisesRegex(
+            RuntimeError,
+            "Attempted to break out of output directory to (.*?:)?/foo/barley/test",
+        ):
+            utils.sanitised_join("/foo/bar", "../barley/test")
+
     def test_pass_deep_subpaths(self):
         self.assertEqual(
             utils.sanitised_join("/foo/bar", "test"),
