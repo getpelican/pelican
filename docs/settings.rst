@@ -1113,6 +1113,14 @@ the ``TAG_FEED_ATOM`` and ``TAG_FEED_RSS`` settings:
    Maximum number of items allowed in a feed. Setting to ``None`` will cause the
    feed to contains every article. The default is ``100``.
 
+.. data:: FEED_MINIMUM_DATE
+
+   When set, only articles dated on or after the given date are included in
+   feeds. Accepts a ``datetime.date``, a ``datetime.datetime``, or an ISO-format
+   string such as ``"2026-08-18"``. Dates without a time use midnight, and
+   values without timezone information use ``TIMEZONE``. The default is
+   ``None``, for no date filtering.
+
 .. data:: RSS_FEED_SUMMARY_ONLY
 
    Only include item summaries in the ``description`` tag of RSS feeds. If set
