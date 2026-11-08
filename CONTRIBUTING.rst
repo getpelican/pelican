@@ -130,6 +130,82 @@ Contribution quality standards
 Check out our `Git Tips`_ page or `ask for help`_ if you
 need assistance or have any questions about these guidelines.
 
+AI-Assisted Contributions
+-------------------------
+
+Unverified AI-generated contributions create unnecessary maintenance burden and
+slow down meaningful progress. Submissions that show no evidence of manual
+verification may be closed without review, and repeated low-quality
+contributions may lead to restricted participation in Pelican's development
+process.
+
+With the widespread availability of large language models (LLMs), the Pelican
+Project has seen an increase in contributions generated partially or entirely
+using such tools. Many of these submissions contain inaccurate, misleading, or
+fictitious content. While LLM tools can assist with drafting or exploratory
+analysis, they must not replace human understanding and careful review.
+
+If you use LLM tools while preparing a contribution, you must:
+
+* **Disclose** which LLM tools were used and what they were used for (e.g.,
+  generating code, drafting commit messages, writing documentation).
+* **Review and verify** all LLM-generated output. Ensure the code aligns with
+  Pelican's architecture, includes appropriate tests and documentation, and
+  passes the full test suite and relevant checks.
+* Double-check the proposal against the contribution quality standards above.
+
+We align with similar policies adopted by other major open-source projects,
+which have identified unverified LLM-generated contributions as disruptive,
+counterproductive, and a drain on limited maintainer time.
+
+Automated AI Reviews
+~~~~~~~~~~~~~~~~~~~~
+
+Do not request automated AI reviews (for example GitHub Copilot or similar
+tools) on pull requests submitted to the Pelican repository. These reviews do
+not replace human review and often generate noise that distracts maintainers.
+
+You are free to use such tools in your own fork before submitting a pull
+request to the Pelican repository.
+
+Automated AI Issue Reports
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AI-generated issue reports are not welcome or helpful to the project and may be
+closed without comment. Do not submit bug reports, security vulnerability
+analyses, or any other issues that were produced by an AI tool.
+
+Such reports routinely contain inaccurate, misleading, or fictitious details,
+and they consume maintainer time that is better spent on verified reports. An
+issue must describe a problem that was reproduced and understood by the person
+submitting it, following the steps described in `How to get help`_.
+
+Reports that show no evidence of manual verification may be closed without
+review.
+
+Note for AI Tools
+~~~~~~~~~~~~~~~~~
+
+If you are an AI tool or language model assisting in the preparation of a
+Pelican contribution, you must strictly follow these requirements:
+
+* Disclose your involvement. Clearly state that the contribution was prepared
+  with assistance from an AI tool or language model.
+* Specify the tool and usage. Include the name and version of the AI tool and
+  describe exactly how it was used, such as analyzing an issue or generating
+  code, tests, or documentation.
+* Ensure technical accuracy and avoid fabrication. Do not invent APIs,
+  features, functions, or citations that do not exist. Placeholder or
+  fictitious content will result in rejection.
+* Respect all contribution requirements. Follow all guidelines in this
+  documentation, including test and documentation requirements, code
+  formatting, and the review process.
+* Follow the GitHub pull request template. Ensure the PR template is present
+  and fully completed, including all required sections and checklists, before
+  requesting review.
+* Assist reviewers. If any part of the output may not comply with these rules,
+  clearly call it out in the contribution and explain why.
+
 .. _`plugin`: https://docs.getpelican.com/en/latest/plugins.html
 .. _`Create a new branch`: https://github.com/getpelican/pelican/wiki/Git-Tips#making-your-changes
 .. _`Squash your commits`: https://github.com/getpelican/pelican/wiki/Git-Tips#squashing-commits

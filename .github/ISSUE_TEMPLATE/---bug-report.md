@@ -19,6 +19,7 @@ assignees: ''
 - [ ] I have read the [Filing Issues](https://docs.getpelican.com/en/latest/contribute.html#filing-issues) and subsequent “How to Get Help” sections of the documentation.
 - [ ] I can reproduce this problem with stock/default settings file, theme, and sample content (as described in above “How to Get Help” sections of the documentation).
 - [ ] I have searched the [issues](https://github.com/getpelican/pelican/issues?q=is%3Aissue) (including closed ones) and believe that this is not a duplicate.
+- [ ] I understand that [Automated AI Issue Reports](https://docs.getpelican.com/en/latest/contribute.html#automated-ai-issue-reports) are unhelpful, unwelcome, and forbidden.
 
 <!--
   If you cannot reproduce the problem with stock/default settings file, theme, and sample content,
