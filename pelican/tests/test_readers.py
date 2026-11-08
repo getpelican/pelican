@@ -2,6 +2,8 @@ import os
 from tempfile import TemporaryDirectory
 from unittest.mock import PropertyMock, patch
 
+from bs4 import BeautifulSoup
+
 from pelican import readers
 from pelican.contents import Article
 from pelican.tests.support import get_settings, unittest
@@ -1060,6 +1062,23 @@ class HTMLReaderTest(ReaderTest):
     """,
             page.content,
         )
+
+    def test_article_with_attributes_containing_mixed_quotes(self):
+        source = (
+            '<html><body><div data-info="User&#39;s &quot;Guide&quot;">Content</div>'
+            '<input data-info="User&#39;s &quot;Guide&quot;" /></body></html>'
+        )
+        with TemporaryDirectory() as content_path:
+            filename = os.path.join(content_path, "mixed_quotes.html")
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(source)
+            content, _ = readers.HTMLReader(get_settings()).read(filename)
+        body = BeautifulSoup(content, "html.parser")
+
+        for tag in ("div", "input"):
+            with self.subTest(tag=tag):
+                self.assertEqual(body.find(tag).attrs, {"data-info": 'User\'s "Guide"'})
+        self.assertEqual(body.div.get_text(), "Content")
 
     def test_article_metadata_key_lowercase(self):
         # Keys of metadata should be lowercase.
