@@ -795,7 +795,9 @@ Time and Date
    `Python datetime documentation`_, you can use the ``-`` character between
    ``%`` and the format character to remove any leading zeros. For example,
    ``%d/%m/%Y`` will output ``01/01/2014`` whereas ``%-d/%-m/%Y`` will result
-   in ``1/1/2014``.
+   in ``1/1/2014``. On Python 3.12 and later, ``%:z`` gives the UTC offset with
+   a colon, so ``%Y-%m-%dT%H:%M:%S%:z`` outputs an ISO 8601 date such as
+   ``2014-01-01T10:20:00+03:00``.
 
    .. parsed-literal::
 
