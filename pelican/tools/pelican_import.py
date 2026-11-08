@@ -985,6 +985,9 @@ def fields2pelican(
         if is_pandoc_needed(in_markup) and not pandoc_version:
             posts_require_pandoc.append(filename)
 
+        #Replace "/" with "-" in filename
+        filename = filename.replace("/", "-")
+
         slug = (not disable_slugs and filename) or None
         # Programming invariant from the upstream WordPress XML parser; would
         # be more robust as an explicit raise (asserts are stripped under
