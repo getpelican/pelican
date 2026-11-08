@@ -692,6 +692,13 @@ template.
 
    The location to save the tag list. The default is ``"tags.html"``.
 
+.. note::
+
+    If you do not want one or more of the list pages to be created (e.g.,
+    you are the only author on your site and thus do not need a listing of 
+    Authors), set the corresponding ``*S_SAVE_AS`` setting to ``""`` to prevent the 
+    relevant page from being generated.
+
 .. data:: INDEX_SAVE_AS
 
    The location to save the list of all articles. The default is ``"index.html"``.
