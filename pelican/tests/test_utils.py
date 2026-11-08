@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 from datetime import UTC
-from sys import platform
+from sys import platform, version_info
 from tempfile import mkdtemp
 
 import watchfiles
@@ -698,6 +698,14 @@ class TestUtils(LoggedTestCase):
 
         d = utils.SafeDatetime(2021, 1, 8)
         self.assertEqual(utils.strftime(d, "%G - %-V - %u"), "2021 - 1 - 5")
+
+    @unittest.skipIf(version_info < (3, 12), "%:z needs Python 3.12+")
+    def test_strftime_colon_utc_offset(self):
+        d = utils.SafeDatetime(2026, 11, 8, 2, 5, 21, tzinfo=ZoneInfo("Europe/Moscow"))
+        self.assertEqual(
+            utils.strftime(d, "%Y-%m-%dT%H:%M:%S%:z"), "2026-11-08T02:05:21+03:00"
+        )
+        self.assertEqual(utils.strftime(d, "%z %:z %-H"), "+0300 +03:00 2")
 
     # test the output of utils.strftime in a different locale
     # Turkish locale

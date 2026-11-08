@@ -87,8 +87,8 @@ def strftime(date: datetime.datetime, date_format: str) -> str:
     # includes ISO date parameters added by Python 3.6
     c89_directives = "aAbBcdfGHIjmMpSUuVwWxXyYzZ%"
 
-    # grab candidate format options
-    format_options = "%[-]?."
+    # grab candidate format options; "%:z" is a single directive (Python 3.12+)
+    format_options = "%(?:-.|:z|.)"
     candidates = re.findall(format_options, date_format)
 
     # replace candidates with placeholders for later % formatting
@@ -99,7 +99,7 @@ def strftime(date: datetime.datetime, date_format: str) -> str:
         # test for valid C89 directives only
         if candidate[-1] in c89_directives:
             # check for '-' prefix
-            if len(candidate) == 3:  # noqa: PLR2004
+            if candidate[1] == "-":
                 # '-' prefix
                 candidate = f"%{candidate[-1]}"
                 conversion = strip_zeros
