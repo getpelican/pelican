@@ -64,7 +64,7 @@ def formatcode(c, check=False, diff=False):
     if diff:
         diff_flag = "--diff"
     c.run(
-        f'"{VENV_BIN}/ruff" format {check_flag} {diff_flag} {PKG_PATH} tasks.py',
+        f'"{VENV_BIN}/ruff" format {check_flag} {diff_flag} "{PKG_PATH}" tasks.py',
         pty=PTY,
     )
 
