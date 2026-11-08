@@ -363,7 +363,6 @@ class Content:
                 if what == "attach":
                     linked_content.attach_to(self)  # type: ignore
                 origin = joiner(siteurl, linked_content.url)
-                origin = origin.replace("\\", "/")  # for Windows paths.
             else:
                 logger.warning(
                     "Unable to find '%s', skipping url replacement.",
@@ -388,6 +387,8 @@ class Content:
                 what,
                 origin,
             )
+
+        origin = origin.replace("\\", "/")  # for Windows paths.
 
         # keep all other parts, such as query, fragment, etc.
         parts = list(value)
