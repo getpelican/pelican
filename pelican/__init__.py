@@ -192,9 +192,11 @@ class Pelican:
             "draft pages",
         )
 
-        console.print(
-            f"Done: Processed {pluralized_articles}, {pluralized_drafts}, {pluralized_hidden_articles}, {pluralized_pages}, {pluralized_hidden_pages} and {pluralized_draft_pages} in {time.time() - start_time:.2f} seconds."
-        )
+        # Suppress the summary when --quiet sets the log level to CRITICAL.
+        if logger.isEnabledFor(logging.ERROR):
+            console.print(
+                f"Done: Processed {pluralized_articles}, {pluralized_drafts}, {pluralized_hidden_articles}, {pluralized_pages}, {pluralized_hidden_pages} and {pluralized_draft_pages} in {time.time() - start_time:.2f} seconds."
+            )
 
     def _get_generator_classes(self):
         discovered_generators = [
