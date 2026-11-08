@@ -12,6 +12,20 @@ class MockRequest:
         return BytesIO(b"")
 
 
+class MockRequestWithResponse:
+    """Serves one canned request and captures the response bytes."""
+
+    def __init__(self, request: bytes):
+        self.request = BytesIO(request)
+        self.response = BytesIO()
+
+    def makefile(self, mode, *_args, **_kwargs):
+        return self.request if "r" in mode else self.response
+
+    def sendall(self, data):
+        self.response.write(data)
+
+
 class MockServer:
     pass
 
@@ -57,6 +71,21 @@ class TestServer(unittest.TestCase):
             # not existing path should return None
             path = self.handler.get_path_that_exists("quux" + suffix)
             self.assertIsNone(path)
+
+    def test_get_missing_file_returns_404(self):
+        """A request for a nonexistent file gets an HTTP 404 response,
+        not an empty reply."""
+        request = MockRequestWithResponse(
+            b"GET /quux HTTP/1.1\r\nHost: localhost\r\n\r\n"
+        )
+        # The request is handled during construction, and the base path is
+        # a class attribute (set by `RootedHTTPServer` in production).
+        ComplexHTTPRequestHandler.base_path = self.temp_output
+        ComplexHTTPRequestHandler(request, ("0.0.0.0", 8888), self.server)
+
+        response = request.response.getvalue()
+        self.assertTrue(response.startswith(b"HTTP/1.0 404"), response)
+        self.assertIn(b"File not found", response)
 
     def test_guess_type_method_returns_javascript_for_js_files(self):
         js_file = os.path.join(self.temp_output, "script.js")

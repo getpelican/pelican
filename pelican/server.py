@@ -5,7 +5,7 @@ import posixpath
 import ssl
 import sys
 import urllib
-from http import server
+from http import HTTPStatus, server
 
 try:
     from magic import from_file as magic_from_file
@@ -88,6 +88,7 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
         self.path = self.get_path_that_exists(original_path)
 
         if not self.path:
+            self.send_error(HTTPStatus.NOT_FOUND, "File not found")
             return
 
         server.SimpleHTTPRequestHandler.do_GET(self)
