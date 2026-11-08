@@ -23,7 +23,7 @@ PRECOMMIT = which("pre-commit") or VENV_BIN / "pre-commit"
 @task
 def docbuild(c):
     """Build documentation"""
-    c.run(f"{VENV_BIN}/sphinx-build -W docs docs/_build", pty=PTY)
+    c.run(f'"{VENV_BIN}/sphinx-build" -W docs docs/_build', pty=PTY)
 
 
 @task(docbuild)
@@ -41,18 +41,18 @@ def docserve(c):
 @task
 def tests(c):
     """Run the test suite"""
-    c.run(f"{VENV_BIN}/pytest", pty=PTY)
+    c.run(f'"{VENV_BIN}/pytest"', pty=PTY)
 
 
 @task
 def coverage(c):
     """Generate code coverage of running the test suite."""
     c.run(
-        f"{VENV_BIN}/pytest --cov=pelican --cov-report term-missing "
+        f'"{VENV_BIN}/pytest" --cov=pelican --cov-report term-missing '
         "--cov-fail-under 75",
         pty=PTY,
     )
-    c.run(f"{VENV_BIN}/coverage html", pty=PTY)
+    c.run(f'"{VENV_BIN}/coverage" html', pty=PTY)
 
 
 @task
@@ -64,7 +64,8 @@ def formatcode(c, check=False, diff=False):
     if diff:
         diff_flag = "--diff"
     c.run(
-        f"{VENV_BIN}/ruff format {check_flag} {diff_flag} {PKG_PATH} tasks.py", pty=PTY
+        f'"{VENV_BIN}/ruff" format {check_flag} {diff_flag} "{PKG_PATH}" tasks.py',
+        pty=PTY,
     )
 
 
@@ -76,7 +77,7 @@ def ruff(c, fix=False, diff=False):
         fix_flag = "--fix"
     if diff:
         diff_flag = "--diff"
-    c.run(f"{VENV_BIN}/ruff check {diff_flag} {fix_flag} .", pty=PTY)
+    c.run(f'"{VENV_BIN}/ruff" check {diff_flag} {fix_flag} .', pty=PTY)
 
 
 @task
@@ -91,20 +92,20 @@ def tools(c):
     """Install tools in the virtual environment if not already on PATH"""
     for tool in TOOLS:
         if not which(tool):
-            c.run(f"{VENV_BIN}/python -m pip install {tool}", pty=PTY)
+            c.run(f'"{VENV_BIN}/python" -m pip install {tool}', pty=PTY)
 
 
 @task
 def precommit(c):
     """Install pre-commit hooks to .git/hooks/pre-commit"""
-    c.run(f"{PRECOMMIT} install", pty=PTY)
+    c.run(f'"{PRECOMMIT}" install', pty=PTY)
 
 
 @task
 def setup(c):
-    c.run(f"{VENV_BIN}/python -m pip install -U pip", pty=PTY)
+    c.run(f'"{VENV_BIN}/python" -m pip install -U pip', pty=PTY)
     tools(c)
-    c.run(f"{PDM} install", pty=PTY)
+    c.run(f'"{PDM}" install', pty=PTY)
     precommit(c)
 
 
