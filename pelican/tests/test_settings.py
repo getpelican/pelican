@@ -11,6 +11,7 @@ from pelican.settings import (
     _printf_s_to_format_field,
     configure_settings,
     handle_deprecated_settings,
+    load_source,
     read_settings,
 )
 from pelican.tests.support import LogCountHandler, unittest
@@ -186,10 +187,39 @@ class TestSettingsConfiguration(unittest.TestCase):
 
     def test_read_settings_missing_file(self):
         missing = join(self.PATH, "no_such_conf.py")
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(FileNotFoundError) as ctx:
             read_settings(missing)
-        with self.assertRaises(FileNotFoundError):
+        self.assertIn(missing, str(ctx.exception))
+        with self.assertRaises(FileNotFoundError) as ctx:
             read_settings(join(self.PATH, "no_such_conf"))
+        self.assertIn("no_such_conf", str(ctx.exception))
+
+    def test_load_source_missing_file_reports_path(self):
+        # A missing settings file should raise a clear error naming the
+        # path, not the cryptic "'NoneType' object has no attribute
+        # 'loader'" that importlib raises when spec_from_file_location
+        # can't determine a loader.
+        missing_path = join(self.PATH, "this_settings_file_does_not_exist")
+        with self.assertRaises(FileNotFoundError) as ctx:
+            load_source("test_missing", missing_path)
+        self.assertIn(missing_path, str(ctx.exception))
+
+    def test_load_source_missing_file_with_extension_reports_path(self):
+        missing_path = join(self.PATH, "this_settings_file_does_not_exist.py")
+        with self.assertRaises(FileNotFoundError) as ctx:
+            load_source("test_missing_py", missing_path)
+        self.assertIn(missing_path, str(ctx.exception))
+
+    def test_load_source_unsupported_extension_reports_path(self):
+        unsupported_path = join(self.PATH, "default_conf.py.bak")
+        with open(unsupported_path, "w") as f:
+            f.write("SITENAME = 'unused'\n")
+        try:
+            with self.assertRaises(ImportError) as ctx:
+                load_source("test_unsupported", unsupported_path)
+            self.assertIn(unsupported_path, str(ctx.exception))
+        finally:
+            os.remove(unsupported_path)
 
     def test_invalid_settings_throw_exception(self):
         # Test that the path name is valid
