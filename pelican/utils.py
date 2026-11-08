@@ -52,7 +52,7 @@ def sanitised_join(base_directory: str, *parts: str) -> str:
     """
     Join a base directory with path segments, rejecting components that escape the base.
     """
-    
+
     joined_path = os.path.abspath(os.path.join(base_directory, *parts))
     base_path = os.path.abspath(base_directory)
     real_joined_path = os.path.realpath(joined_path)
