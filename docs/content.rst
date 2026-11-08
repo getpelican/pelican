@@ -276,6 +276,9 @@ and ``article2.md``::
     [a link relative to the current file]({filename}category/article1.rst)
     [a link relative to the content root]({filename}/category/article1.rst)
 
+Markdown autolinks such as ``<{filename}path/to/file>`` are also supported,
+with the resolved URL used as the link text.
+
 Linking to static files
 -----------------------
 

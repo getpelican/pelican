@@ -421,7 +421,36 @@ class Content:
             return content
 
         hrefs = self._get_intrasite_link_regex()
-        return hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
+        content = hrefs.sub(lambda m: self._link_replacer(siteurl, m), content)
+
+        intrasite_link_regex = self.settings["INTRASITE_LINK_REGEX"]
+        autolinks = re.compile(
+            rf"&lt;(?P<path>{intrasite_link_regex}(?P<value>[^\s]*?))&gt;", re.X
+        )
+
+        def autolink_replacer(m: re.Match) -> str:
+            # Resolve the URL through the same machinery as attribute links.
+            probe = f'<a href="{m.group("path")}">'
+            probe_match = hrefs.match(probe)
+            if probe_match is None:
+                return m.group(0)
+
+            replacement = self._link_replacer(siteurl, probe_match)
+            if replacement == probe_match.group(0):
+                return m.group(0)
+
+            url = replacement[len('<a href="') : -1]
+            return f'<a href="{url}">{url}</a>'
+
+        # Keep escaped autolinks literal in inline and block code samples.
+        parts = re.split(
+            r"(<pre\b[^>]*>.*?</pre>|<code\b[^>]*>.*?</code>)",
+            content,
+            flags=re.I | re.S,
+        )
+        for i in range(0, len(parts), 2):
+            parts[i] = autolinks.sub(autolink_replacer, parts[i])
+        return "".join(parts)
 
     def get_static_links(self) -> set[str]:
         static_links = set()

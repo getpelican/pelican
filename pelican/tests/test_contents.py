@@ -535,6 +535,116 @@ class TestPage(TestBase):
         self.assertEqual(p.summary, linked)
         self.assertEqual(p.custom, linked)
 
+    def test_intrasite_link_autolink(self):
+        article = type("_DummyArticle", (object,), {"url": "article.html"})
+
+        args = self.page_kwargs.copy()
+        args["source_path"] = "content"
+        args["context"]["generated_content"] = {"article.rst": article}
+
+        for settings, reference in (
+            (get_settings(), "{filename}article.rst"),
+            (get_settings(), "|filename|article.rst"),
+            (
+                get_settings(INTRASITE_LINK_REGEX=r"\[(?P<what>\w+)\]"),
+                "[filename]article.rst",
+            ),
+        ):
+            args["settings"] = settings
+            for suffix in ("", "?highlight=word&amp;page=2#section-2"):
+                with self.subTest(reference=reference, suffix=suffix):
+                    args["content"] = f"See &lt;{reference}{suffix}&gt; for details"
+                    content = Page(**args).get_content("http://notmyidea.org")
+                    url = f"http://notmyidea.org/article.html{suffix}"
+                    self.assertEqual(
+                        content, f'See <a href="{url}">{url}</a> for details'
+                    )
+
+    def test_intrasite_link_autolink_static(self):
+        asset = type("_DummyAsset", (object,), {"url": "images/image.png"})
+
+        args = self.page_kwargs.copy()
+        args["settings"] = get_settings()
+        args["source_path"] = "content"
+        args["context"]["static_content"] = {"image.png": asset}
+        args["content"] = "See &lt;{static}image.png&gt; for details"
+
+        content = Page(**args).get_content("http://notmyidea.org")
+        self.assertEqual(
+            content,
+            'See <a href="http://notmyidea.org/images/image.png">'
+            "http://notmyidea.org/images/image.png</a> for details",
+        )
+
+    def test_intrasite_link_autolink_code(self):
+        article = type("_DummyArticle", (object,), {"url": "article.html"})
+
+        args = self.page_kwargs.copy()
+        args["settings"] = get_settings()
+        args["source_path"] = "content"
+        args["context"]["generated_content"] = {"article.rst": article}
+        reference = "&lt;{filename}article.rst&gt;"
+        anchor = (
+            '<a href="http://notmyidea.org/article.html">'
+            "http://notmyidea.org/article.html</a>"
+        )
+
+        for sample in (
+            f"<code>{reference}</code>",
+            f"<pre>{reference}</pre>",
+            f'<CODE class="language-md">\n{reference}\n</CODE>',
+            f'<PRE class="language-md">\n<code>{reference}</code>\n</PRE>',
+        ):
+            with self.subTest(sample=sample):
+                args["content"] = (
+                    f"{reference} {sample} {reference} {sample} {reference}"
+                )
+                content = Page(**args).get_content("http://notmyidea.org")
+                self.assertEqual(
+                    content, f"{anchor} {sample} {anchor} {sample} {anchor}"
+                )
+
+    def test_intrasite_link_autolink_unresolved(self):
+        args = self.page_kwargs.copy()
+        args["settings"] = get_settings()
+        args["source_path"] = "content"
+
+        for reference in (
+            "{filename}missing.rst",
+            "{static}missing.png",
+            "{unknown}article.rst",
+        ):
+            with self.subTest(reference=reference):
+                args["content"] = f"See &lt;{reference}&gt; for details"
+                content = Page(**args).get_content("http://notmyidea.org")
+                self.assertEqual(content, args["content"])
+
+    def test_intrasite_link_autolink_with_attribute(self):
+        article = type("_DummyArticle", (object,), {"url": "article.html"})
+        asset = type("_DummyAsset", (object,), {"url": "images/image.png"})
+
+        args = self.page_kwargs.copy()
+        args["settings"] = get_settings()
+        args["source_path"] = "content"
+        args["context"]["generated_content"] = {"article.rst": article}
+        args["context"]["static_content"] = {"image.png": asset}
+        args["content"] = (
+            '<a href="{filename}article.rst">Article</a> '
+            "&lt;{filename}article.rst&gt;&lt;{static}image.png&gt;"
+            '<code><a href="{filename}article.rst">Article</a></code>'
+        )
+
+        content = Page(**args).get_content("http://notmyidea.org")
+        self.assertEqual(
+            content,
+            '<a href="http://notmyidea.org/article.html">Article</a> '
+            '<a href="http://notmyidea.org/article.html">'
+            "http://notmyidea.org/article.html</a>"
+            '<a href="http://notmyidea.org/images/image.png">'
+            "http://notmyidea.org/images/image.png</a>"
+            '<code><a href="http://notmyidea.org/article.html">Article</a></code>',
+        )
+
     def test_intrasite_link_more(self):
         cls_name = "_DummyAsset"
 
