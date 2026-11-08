@@ -2,8 +2,10 @@ import datetime
 import locale
 import logging
 import os.path
+from ntpath import join as nt_join
 from posixpath import join as posix_join
 from sys import platform
+from unittest.mock import patch
 
 from jinja2.utils import generate_lorem_ipsum
 
@@ -646,6 +648,26 @@ class TestPage(TestBase):
         self.assertEqual(
             content, '<meta content="http://static.cool.site/images/poster.jpg"/>'
         )
+
+    def test_relative_intrasite_links_on_windows(self):
+        settings = get_settings(RELATIVE_URLS=True)
+        for kind, name, url in (
+            ("category", "news", "category/news.html"),
+            ("tag", "news", "tag/news.html"),
+            ("index", "", "index.html"),
+            ("author", "Blogger", "author/blogger.html"),
+        ):
+            with self.subTest(kind=kind):
+                page = Page(
+                    content=f'<a href="{{{kind}}}{name}?view=full#details">link</a>',
+                    settings=settings,
+                    metadata={"title": "Test"},
+                )
+                with patch("pelican.contents.os.path.join", nt_join):
+                    content = page.get_content("..")
+                self.assertEqual(
+                    content, f'<a href="../{url}?view=full#details">link</a>'
+                )
 
     def test_intrasite_link_escape(self):
         article = type("_DummyArticle", (object,), {"url": "article-spaces.html"})
