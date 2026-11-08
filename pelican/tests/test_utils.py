@@ -2,6 +2,7 @@ import locale
 import logging
 import os
 import shutil
+import tempfile
 from datetime import UTC
 from sys import platform
 from tempfile import mkdtemp
@@ -1124,6 +1125,32 @@ class TestFileChangeFilter(unittest.TestCase):
             for change in watchfiles.Change:
                 self.assertFalse(file_change_filter(change=change, path=basename))
                 self.assertFalse(file_change_filter(change=change, path=full_path))
+
+    def test_dot_prefixed_ancestor_not_filtered(self):
+        # A dot-prefixed directory *above* the watched path (for example
+        # `~/.dotfiles/blog`) must not cause every change inside the
+        # watched path to be ignored.
+        watch_root = os.path.join(
+            tempfile.gettempdir(), ".dotfiles_workspace", "content"
+        )
+        file_change_filter = utils.FileChangeFilter(
+            ignore_file_patterns=self.ignore_file_patterns,
+            watch_paths=[watch_root],
+        )
+
+        regular = os.path.join(watch_root, "article.rst")
+        nested = os.path.join(watch_root, "sub", "article.rst")
+        for change in watchfiles.Change:
+            self.assertTrue(file_change_filter(change=change, path=regular))
+            self.assertTrue(file_change_filter(change=change, path=nested))
+
+        # Dot files and directories *inside* the watched path are
+        # still filtered.
+        dotfile = os.path.join(watch_root, ".config")
+        in_dotdir = os.path.join(watch_root, ".hidden", "post.rst")
+        for change in watchfiles.Change:
+            self.assertFalse(file_change_filter(change=change, path=dotfile))
+            self.assertFalse(file_change_filter(change=change, path=in_dotdir))
 
     def test_custom_ignore_pattern(self):
         file_change_filter = utils.FileChangeFilter(ignore_file_patterns=["*.rst"])
