@@ -89,7 +89,12 @@ def decode_wp_content(content, br=True):
         def _preserve_newline(match):
             return match.group(0).replace("\n", "<WPPreserveNewline />")
 
-        content = re.sub(r"/<(script|style).*?<\/\\1>/s", _preserve_newline, content)
+        content = re.sub(
+            r"<(script|style)\b[^>]*>.*?</\1\s*>",
+            _preserve_newline,
+            content,
+            flags=re.DOTALL | re.IGNORECASE,
+        )
         # optionally make line breaks
         content = re.sub(r"(?<!<br />)\s*\n", "<br />\n", content)
         content = content.replace("<WPPreserveNewline />", "\n")

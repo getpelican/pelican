@@ -328,6 +328,24 @@ class TestWordpressXmlImporter(TestCaseWithCLocale):
         """Check that given an empty string we return an empty string."""
         self.assertEqual(decode_wp_content(""), "")
 
+    def test_decode_wp_content_preserves_script_and_style_newlines(self):
+        """Newlines inside <script> and <style> blocks must not be
+        converted to <br /> tags."""
+        script_content = "<script>\nvar items = 10;\nvar count = 2;\n</script>"
+        result = decode_wp_content(script_content)
+        self.assertNotIn("<br />", result)
+        self.assertIn("var items = 10;\nvar count = 2;", result)
+
+        style_content = (
+            '<style type="text/css">\n.a {\n  color: red;\n}\n</style>'
+            "\n\nSome text\nmore text"
+        )
+        result = decode_wp_content(style_content)
+        self.assertNotIn("<br />", result.split("</style>")[0])
+        self.assertIn(".a {\n  color: red;\n}", result)
+        # Line breaks in regular text are still converted.
+        self.assertIn("Some text<br />", result)
+
     def test_decode_wp_content(self):
         """Check that we can decode a wordpress content string."""
         with open(WORDPRESS_ENCODED_CONTENT_SAMPLE) as encoded_file:
