@@ -443,7 +443,8 @@ class HTMLReader(BaseReader):
                     # If the attribute value contains a double quote, surround
                     # with single quotes, otherwise use double quotes.
                     if '"' in v:
-                        result += f"='{escape(v, quote=False)}'"
+                        escaped_value = escape(v, quote=False).replace("'", "&#x27;")
+                        result += f"='{escaped_value}'"
                     else:
                         result += f'="{escape(v, quote=False)}"'
             if close_tag:
