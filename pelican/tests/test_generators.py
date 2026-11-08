@@ -446,6 +446,51 @@ class TestArticlesGenerator(unittest.TestCase):
         finally:
             rmtree(content_dir)
 
+    def test_draft_static_links_omitted_when_drafts_not_generated(self):
+        """Static files linked only from drafts must not be registered
+        when drafts will not be generated (``DRAFT_SAVE_AS = ""``)."""
+        content_dir = mkdtemp(prefix="pelican_test_draft_statics.")
+        try:
+            with open(os.path.join(content_dir, "draft.rst"), "w") as f:
+                f.write(
+                    "Draft with static link\n"
+                    "######################\n"
+                    "\n"
+                    ":date: 2024-01-01\n"
+                    ":status: draft\n"
+                    "\n"
+                    ".. image:: {static}/files/pic.png\n"
+                )
+
+            for draft_save_as, expected in [
+                ("", False),
+                ("drafts/{slug}.html", True),
+            ]:
+                settings = get_settings(PATH=content_dir)
+                settings["CACHE_PATH"] = self.temp_cache
+                settings["DRAFT_SAVE_AS"] = draft_save_as
+                context = get_context(settings)
+
+                generator = ArticlesGenerator(
+                    context=context,
+                    settings=settings,
+                    path=content_dir,
+                    theme=settings["THEME"],
+                    output_path=None,
+                )
+                generator.generate_context()
+
+                self.assertEqual(
+                    any(
+                        link.endswith("files/pic.png")
+                        for link in context["static_links"]
+                    ),
+                    expected,
+                    f"DRAFT_SAVE_AS={draft_save_as!r}",
+                )
+        finally:
+            rmtree(content_dir)
+
     def test_articles_hidden(self):
         hidden_articles_expected = [
             ["Hidden article", "hidden", "Default", "article"],
