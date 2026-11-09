@@ -1,0 +1,204 @@
+---
+title: MyST Markdown Support in Pelican
+date: 2024-01-15
+---
+
+# MyST Markdown Support in Pelican
+
+## What is MyST?
+
+- MyST (Markedly Structured Text) is an extended Markdown syntax with rich features
+- Built on top of Markdown and CommonMark
+- Supports directives, roles, and cross-references from reStructuredText
+- Provides YAML front-matter for metadata
+- More information: [MyST Parser Documentation](https://myst-parser.readthedocs.io/)
+
+## How to Enable MyST
+
+### Install Dependencies
+
+```bash
+pip install myst-parser pyyaml
+```
+
+### File Extensions
+
+By default, MyST processes files with the `.myst` extension:
+
+- `article.myst` - Processed as MyST content
+- `page.myst` - Processed as MyST content
+
+### Override .md Files to Use MyST
+
+To parse all `.md` files as MyST instead of standard Markdown, add to your `pelicanconf.py`:
+
+```python
+READERS = {"md": MystReader}
+```
+
+Note: This requires importing the reader:
+
+```python
+from pelican.readers import MystReader
+```
+
+## Configuration
+
+### Default Extensions
+
+The following MyST extensions are enabled by default:
+
+- `smartquotes` - Smart quotes and apostrophes
+- `replacements` - Text replacements (e.g., `(c)` → ©)
+- `linkify` - Auto-linkify URLs
+- `colon_fence` - Colon fence code blocks (`::: lang`)
+- `deflist` - Definition lists
+- `html_image` - HTML image support
+
+### Custom Configuration
+
+Add to your `pelicanconf.py`:
+
+```python
+MYST = {
+    "enable_extensions": [
+        "smartquotes",
+        "replacements",
+        "linkify",
+        "colon_fence",
+        "deflist",
+        "html_image",
+        "tasklist",  # Add task list support
+    ],
+    "disable_syntax": [],  # Disable specific syntax elements
+    "all_links_external": False,  # Mark all links as external
+    "url_schemes": ["http", "https", "mailto", "ftp"],  # Allowed URL schemes
+}
+```
+
+## Front-Matter Metadata
+
+MyST uses YAML front-matter for metadata:
+
+```yaml
+---
+title: My Article Title
+date: 2024-01-15 10:30
+modified: 2024-01-16
+category: Technology
+tags: [python, pelican, myst]
+author: Your Name
+summary: A **brief** summary with *inline* markup.
+---
+```
+
+Supported metadata fields:
+
+- `title` - Article title
+- `date` - Publication date (ISO 8601 format)
+- `modified` - Last modified date
+- `category` - Article category
+- `tags` - List of tags
+- `author` - Author name
+- `authors` - List of multiple authors
+- `summary` - Article summary (supports inline markup)
+- `slug` - URL slug
+- `status` - Article status (draft, published, hidden)
+
+## MyST Syntax Examples
+
+### Directives
+
+```
+:::{note}
+This is a note directive.
+:::
+
+:::{warning}
+This is a warning directive.
+:::
+```
+
+### Roles
+
+```
+This is {sub}`subscript` and {sup}`superscript` text.
+```
+
+### Code Blocks
+
+```python
+def hello():
+    print("Hello, MyST!")
+```
+
+Or using colon fence:
+
+```
+::: python
+def hello():
+    print("Hello, MyST!")
+:::
+```
+
+### Definition Lists
+
+```
+Term 1
+: Definition for term 1
+
+Term 2
+: Definition for term 2
+```
+
+### Task Lists
+
+(Requires `tasklist` extension)
+
+```
+- [ ] Incomplete task
+- [x] Completed task
+```
+
+## Differences from Markdown
+
+- Uses `---` delimited YAML front-matter (not key-value pairs)
+- Supports reStructuredText directives and roles
+- More extensible syntax
+- Better cross-reference support
+
+## Troubleshooting
+
+### MyST Reader Not Available
+
+If you see "myst-parser isn't installed" error:
+
+```bash
+pip install myst-parser pyyaml
+```
+
+### YAML Front-Matter Not Parsing
+
+- Ensure front-matter is at the top of the file
+- Check that `---` delimiters are on their own lines
+- Verify YAML syntax is valid
+- Ensure PyYAML is installed
+
+### Extensions Not Working
+
+- Check that extensions are spelled correctly in `MYST["enable_extensions"]`
+- Some extensions may require specific MyST parser versions
+- Refer to [MyST documentation](https://myst-parser.readthedocs.io/) for extension details
+
+## Resources
+
+- [MyST Parser Documentation](https://myst-parser.readthedocs.io/)
+- [MyST Syntax Guide](https://myst-parser.readthedocs.io/en/latest/syntax/syntax.html)
+- [Pelican Documentation](https://docs.getpelican.com/)
+
+## Notes
+
+- MyST support is optional and requires `myst-parser` and `pyyaml` packages
+- MyST uses Docutils under the hood (like reStructuredText)
+- Formatted fields (like summary) use Markdown converter for inline markup
+- MyST is ideal for technical documentation with need for directives/roles
