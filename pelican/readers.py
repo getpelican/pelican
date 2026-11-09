@@ -806,12 +806,13 @@ def parse_path_metadata(source_path, settings=None, process=None):
     metadata = {}
     dirname, basename = os.path.split(source_path)
     base, ext = os.path.splitext(basename)
-    subdir = os.path.basename(dirname)
+    subdir = os.path.basename(os.path.normpath(dirname))
     if settings:
         checks = []
         for key, data in [("FILENAME_METADATA", base), ("PATH_METADATA", source_path)]:
             checks.append((settings.get(key, None), data))
-        # A static file outside PATH, e.g. "../.gitignore", has no folder to use
+        # "." and ".." are not folder names and should never be used as category names.
+        # For example: "./a.md" or a static path such as "../.gitignore"
         if settings.get("USE_FOLDER_AS_CATEGORY") and subdir not in {".", ".."}:
             checks.append(("(?P<category>.*)", subdir))
         for regexp, data in checks:

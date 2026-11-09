@@ -3,7 +3,7 @@ from tempfile import TemporaryDirectory
 from unittest.mock import PropertyMock, patch
 
 from pelican import readers
-from pelican.contents import Article
+from pelican.contents import Article, Static
 from pelican.tests.support import get_settings, unittest
 from pelican.utils import SafeDatetime
 
@@ -181,14 +181,44 @@ class DefaultReaderTest(ReaderTest):
                 self.assertDictHasSubset(subpage.metadata, {"category": "subdir"})
 
     def test_path_metadata_no_category_outside_path(self):
-        # https://github.com/getpelican/pelican/issues/3613
+        """Ensure a dot-segment folder name never becomes a category."""
         settings = get_settings(USE_FOLDER_AS_CATEGORY=True)
-        for path in ("../.gitignore", "./file.txt"):
+        for path in ("../.gitignore", "./file.txt", "file.txt"):
             with self.subTest(path=path):
                 metadata = readers.parse_path_metadata(path, settings=settings)
                 self.assertNotIn("category", metadata)
         metadata = readers.parse_path_metadata("../extras/a.ico", settings=settings)
         self.assertEqual(metadata["category"], "extras")
+        # Dot segments are normalized away, keeping the real folder name.
+        metadata = readers.parse_path_metadata("foo/./bar.md", settings=settings)
+        self.assertEqual(metadata["category"], "foo")
+        metadata = readers.parse_path_metadata("foo/../bar.md", settings=settings)
+        self.assertNotIn("category", metadata)
+
+    def test_path_metadata_no_category_when_folder_category_disabled(self):
+        settings = get_settings(USE_FOLDER_AS_CATEGORY=False)
+        for path in ("sub/a.md", "../extras/a.ico", "../.gitignore", "./file.txt"):
+            with self.subTest(path=path):
+                metadata = readers.parse_path_metadata(path, settings=settings)
+                self.assertNotIn("category", metadata)
+
+    def test_static_file_outside_path_falls_back_to_default_category(self):
+        """A path such as "../.gitignore" must not produce a category called ".." that
+        results in a warning when its slug is generated."""
+        settings = get_settings(USE_FOLDER_AS_CATEGORY=True, DEFAULT_CATEGORY="misc")
+        with TemporaryDirectory() as tmp:
+            content_path = os.path.join(tmp, "content")
+            os.mkdir(content_path)
+            with open(os.path.join(tmp, ".gitignore"), "w", encoding="utf-8") as f:
+                f.write("*.pyc\n")
+            static = readers.Readers(settings=settings).read_file(
+                base_path=content_path,
+                path="../.gitignore",
+                content_class=Static,
+                fmt="static",
+            )
+        with self.assertNoLogs("pelican.urlwrappers", level="WARNING"):
+            self.assertEqual(static.metadata["category"].slug, "misc")
 
     def test_default_category_when_category_pages_disabled(self):
         for category_save_as in ("", None, False):
