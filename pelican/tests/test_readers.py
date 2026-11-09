@@ -205,12 +205,18 @@ class DefaultReaderTest(ReaderTest):
     def test_static_file_outside_path_falls_back_to_default_category(self):
         """A path such as "../.gitignore" must not produce a category called ".." that
         results in a warning when its slug is generated."""
-        settings = get_settings(USE_FOLDER_AS_CATEGORY=True, DEFAULT_CATEGORY="misc")
         with TemporaryDirectory() as tmp:
             content_path = os.path.join(tmp, "content")
             os.mkdir(content_path)
             with open(os.path.join(tmp, ".gitignore"), "w", encoding="utf-8") as f:
                 f.write("*.pyc\n")
+            # PATH must live beside the file under test: Content computes its
+            # relative source path against PATH, and on Windows the system temp
+            # directory (C:) can be on a different drive than the checkout (D:),
+            # which makes os.path.relpath() raise ValueError.
+            settings = get_settings(
+                USE_FOLDER_AS_CATEGORY=True, DEFAULT_CATEGORY="misc", PATH=content_path
+            )
             static = readers.Readers(settings=settings).read_file(
                 base_path=content_path,
                 path="../.gitignore",
