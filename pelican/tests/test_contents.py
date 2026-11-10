@@ -878,7 +878,7 @@ class TestArticle(TestBase):
         self.assertTrue(article._has_valid_save_as())
 
     def test_save_as_unpadded_date_directives(self):
-        """Confirm ``%-m`` and ``%-d`` directives work"""
+        """Confirm `%-m` and `%-d` directives work"""
         settings = get_settings(
             ARTICLE_SAVE_AS="posts/{date:%Y}/{date:%-m}/{date:%-d}/{slug}/index.html",
         )
