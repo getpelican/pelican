@@ -877,6 +877,40 @@ class TestArticle(TestBase):
         article = Article(**article_kwargs)
         self.assertTrue(article._has_valid_save_as())
 
+    def test_save_as_unpadded_date_directives(self):
+        """Confirm `%-m` and `%-d` directives work"""
+        settings = get_settings(
+            ARTICLE_SAVE_AS="posts/{date:%Y}/{date:%-m}/{date:%-d}/{slug}/index.html",
+        )
+        article = Article(
+            "content",
+            metadata={
+                "title": "Hello",
+                "slug": "my-post",
+                "date": datetime.datetime(2026, 1, 5),
+            },
+            settings=settings,
+        )
+        self.assertEqual(article.save_as, "posts/2026/1/5/my-post/index.html")
+
+    def test_save_as_unpadded_date_directives_on_undated_article(self):
+        """Confirm ``%-m`` and ``%-d`` directives work on undated content."""
+        # Undated content was falling back to ``datetime.now()``, which breaks
+        # on Windows. Use our ``SafeDatetime`` instead.
+        settings = get_settings(
+            ARTICLE_SAVE_AS="posts/{date:%Y}/{date:%-m}/{date:%-d}/{slug}/index.html",
+        )
+        article = Article(
+            "content",
+            metadata={"title": "Hello", "slug": "my-post"},
+            settings=settings,
+        )
+        now = datetime.datetime.now()
+        self.assertEqual(
+            article.save_as,
+            f"posts/{now.year}/{now.month}/{now.day}/my-post/index.html",
+        )
+
 
 class TestStatic(LoggedTestCase):
     def setUp(self):

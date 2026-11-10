@@ -20,6 +20,7 @@ from pelican.settings import DEFAULT_CONFIG, Settings
 # Import these so that they're available when you import from pelican.contents.
 from pelican.urlwrappers import Author, Category, Tag, URLWrapper  # NOQA
 from pelican.utils import (
+    SafeDatetime,
     deprecated_attribute,
     memoized,
     path_to_url,
@@ -262,7 +263,7 @@ class Content:
                 "path": path_to_url(path),
                 "slug": getattr(self, "slug", ""),
                 "lang": getattr(self, "lang", "en"),
-                "date": getattr(self, "date", datetime.datetime.now()),
+                "date": getattr(self, "date", SafeDatetime.now()),
                 "author": self.author.slug if hasattr(self, "author") else "",
                 "category": self.category.slug if hasattr(self, "category") else "",
             }
