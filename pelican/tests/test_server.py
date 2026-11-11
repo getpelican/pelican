@@ -5,7 +5,8 @@ from tempfile import mkdtemp
 
 from pelican.server import ComplexHTTPRequestHandler
 from pelican.tests.support import unittest
-
+from http.server import SimpleHTTPRequestHandler
+from unittest.mock import patch
 
 class MockRequest:
     def makefile(self, *_args, **_kwargs):
@@ -69,3 +70,30 @@ class TestServer(unittest.TestCase):
             ("text/javascript", "application/javascript"),
             f"Expected .js MIME type to be 'text/javascript' or 'application/javascript', got '{mimetype}'",
         )
+    def test_get_missing_path_sends_404(self):
+        self.handler.path = "/missing"
+
+        with patch.object(self.handler, "send_error") as send_error:
+            self.handler.do_GET()
+
+        send_error.assert_called_once_with(404, "File not found")
+
+    def test_head_resolves_html_suffix(self):
+        with open(os.path.join(self.temp_output, "page.html"), "w") as f:
+            f.write("Pelican test page")
+
+        self.handler.path = "/page"
+
+        with patch.object(SimpleHTTPRequestHandler, "do_HEAD") as parent_do_head:
+            self.handler.do_HEAD()
+
+        self.assertEqual(self.handler.path, "/page.html")
+        parent_do_head.assert_called_once_with(self.handler)
+
+    def test_head_missing_path_sends_404(self):
+        self.handler.path = "/missing"
+
+        with patch.object(self.handler, "send_error") as send_error:
+            self.handler.do_HEAD()
+
+        send_error.assert_called_once_with(404, "File not found")
