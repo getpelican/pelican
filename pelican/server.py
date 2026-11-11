@@ -88,9 +88,20 @@ class ComplexHTTPRequestHandler(server.SimpleHTTPRequestHandler):
         self.path = self.get_path_that_exists(original_path)
 
         if not self.path:
+            self.send_error(404, "File not found")
             return
 
         server.SimpleHTTPRequestHandler.do_GET(self)
+
+    def do_HEAD(self):
+        original_path = self.path.split("?", 1)[0]
+        self.path = self.get_path_that_exists(original_path)
+
+        if not self.path:
+            self.send_error(404, "File not found")
+            return
+
+        server.SimpleHTTPRequestHandler.do_HEAD(self)
 
     def get_path_that_exists(self, original_path):
         # Try to strip trailing slash
