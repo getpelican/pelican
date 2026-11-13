@@ -1,4 +1,7 @@
+import importlib.abc
+import importlib.util
 import os
+import sys
 from contextlib import contextmanager
 
 from pelican.plugins._utils import (
@@ -31,6 +34,36 @@ def tmp_namespace_path(path):
         yield
     finally:
         pelican.__path__ = old_path
+
+
+@contextmanager
+def tmp_meta_path_plugin(plugin_dir):
+    """Context manager simulating a setuptools PEP 660 editable install
+
+    plugin_dir: path to the `ns_plugin` package directory
+
+    Registers a meta path finder that makes `pelican.plugins.ns_plugin`
+    importable without extending `pelican.plugins.__path__`, so the plugin is
+    hidden from `pkgutil.iter_modules` used by `get_namespace_plugins`.
+    """
+
+    class EditableFinder(importlib.abc.MetaPathFinder):
+        def find_spec(self, fullname, path=None, target=None):  # noqa: ARG002
+            if fullname == "pelican.plugins.ns_plugin":
+                return importlib.util.spec_from_file_location(
+                    fullname,
+                    os.path.join(plugin_dir, "__init__.py"),
+                    submodule_search_locations=[plugin_dir],
+                )
+            return None
+
+    finder = EditableFinder()
+    sys.meta_path.append(finder)
+    try:
+        yield
+    finally:
+        sys.meta_path.remove(finder)
+        sys.modules.pop("pelican.plugins.ns_plugin", None)
 
 
 class PluginTest(unittest.TestCase):
@@ -170,6 +203,26 @@ class PluginTest(unittest.TestCase):
                 {"normal_plugin", "pelican.plugins.ns_plugin"},
                 get_plugin_names(plugins),
             )
+
+    def test_load_plugins_with_hidden_namespace_plugin(self):
+        # Namespace plugins hidden from `pkgutil.iter_modules`, e.g. those
+        # installed via setuptools' PEP 660 editable installs, can still be
+        # loaded when named in `PLUGINS` via the `find_spec` fallback.
+        ns_plugin_dir = os.path.join(
+            self._NS_PLUGIN_FOLDER, "pelican", "plugins", "ns_plugin"
+        )
+        with tmp_meta_path_plugin(ns_plugin_dir):
+            # the plugin is not discoverable
+            self.assertNotIn("pelican.plugins.ns_plugin", get_namespace_plugins())
+            # but `load_plugins` resolves it by short and by full name
+            for plugin_name in ("ns_plugin", "pelican.plugins.ns_plugin"):
+                sys.modules.pop("pelican.plugins.ns_plugin", None)
+                plugins = load_plugins({"PLUGINS": [plugin_name]})
+                self.assertEqual(len(plugins), 1, plugins)
+                self.assertEqual(
+                    {"pelican.plugins.ns_plugin"},
+                    {get_plugin_name(plugin) for plugin in plugins},
+                )
 
     def test_get_plugin_name(self):
         self.assertEqual(

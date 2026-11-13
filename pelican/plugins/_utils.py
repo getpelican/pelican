@@ -92,6 +92,23 @@ def load_legacy_plugin(plugin, plugin_paths):
         return mod
 
 
+def load_namespace_plugin(plugin):
+    """Try to load a namespace plugin by name and return it.
+
+    Namespace plugins installed with setuptools' PEP 660 editable installs are
+    exposed through a custom import hook rather than through
+    `pelican.plugins.__path__`, so `pkgutil.iter_modules` cannot discover them
+    but `importlib.util.find_spec` can still resolve them.
+    """
+    if "." not in plugin:
+        plugin = f"pelican.plugins.{plugin}"
+    elif not plugin.startswith("pelican.plugins."):
+        raise ImportError(f"Cannot import plugin `{plugin}`")
+    if importlib.util.find_spec(plugin) is None:
+        raise ImportError(f"Cannot import plugin `{plugin}`")
+    return importlib.import_module(plugin)
+
+
 def load_plugins(settings):
     logger.debug("Finding namespace plugins")
     namespace_plugins = get_namespace_plugins()
@@ -107,15 +124,19 @@ def load_plugins(settings):
                     plugin = namespace_plugins[plugin]
                 elif f"pelican.plugins.{plugin}" in namespace_plugins:
                     plugin = namespace_plugins[f"pelican.plugins.{plugin}"]
-                # try to import it
+                # try to import it as a namespace plugin hidden from
+                # discovery, e.g. by a setuptools editable install
                 else:
                     try:
-                        plugin = load_legacy_plugin(
-                            plugin, settings.get("PLUGIN_PATHS", [])
-                        )
-                    except ImportError as e:
-                        logger.error("Cannot load plugin `%s`\n%s", plugin, e)
-                        continue
+                        plugin = load_namespace_plugin(plugin)
+                    except ImportError:
+                        try:
+                            plugin = load_legacy_plugin(
+                                plugin, settings.get("PLUGIN_PATHS", [])
+                            )
+                        except ImportError as e:
+                            logger.error("Cannot load plugin `%s`\n%s", plugin, e)
+                            continue
             plugins.append(plugin)
     else:
         plugins = list(namespace_plugins.values())
