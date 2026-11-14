@@ -9,6 +9,14 @@
       {% if SITESUBTITLE %}
         <meta name="description" content="{{ SITESUBTITLE }}" />
       {% endif %}
+      {% block opengraph %}
+        <meta property="og:site_name" content="{{ SITENAME }}" />
+        <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}" />
+        <meta property="og:title" content="{% block og_title %}{{ SITENAME }}{% endblock og_title %}" />
+        <meta property="og:url" content="{{ SITEURL }}/{{ output_file }}" />
+        {% block og_description %}{% if SITESUBTITLE %}<meta property="og:description" content="{{ SITESUBTITLE }}" />{% endif %}{% endblock og_description %}
+        {% block og_image %}{% endblock og_image %}
+      {% endblock opengraph %}
       {% if CSS_FILE %}
         <link rel="stylesheet" href="{{ SITEURL }}/{{ THEME_STATIC_DIR }}/css/{{ CSS_FILE }}" />
       {% endif %}
