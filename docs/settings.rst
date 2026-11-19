@@ -19,6 +19,29 @@ Environment variables can also be used here but must be escaped appropriately::
 
     pelican content -e API_KEY=''\"$API_KEY\"''
 
+Windows shells
+==============
+
+The quoting shown above works in Bash-style shells (including Git Bash on
+Windows). Other Windows shells require different escaping because they strip
+or reinterpret double quotes before Pelican receives the argument.
+
+In ``cmd.exe`` (Command Prompt), wrap the entire argument in double quotes and
+double each inner double quote::
+
+    pelican content -e "SITEURL=""foo"""
+
+In PowerShell, wrap the argument in single quotes and escape each double quote
+with a backslash::
+
+    pelican content -e 'SITEURL=\"foo\"'
+
+When running Pelican from a VS Code task, use ``"type": "process"`` (not
+``"type": "shell"``) and escape the double quotes with a backslash in the
+argument::
+
+    "args": ["-m", "pelican", "-e", "SITEURL=\"foo\""]
+
 .. note::
 
    When experimenting with different settings (especially the metadata ones)
